@@ -1,0 +1,47 @@
+name: Bug 报告
+description: 组件行为与文档不符、报错或无障碍问题
+labels: [bug]
+body:
+    - type: dropdown
+      id: framework
+      attributes:
+          label: 框架
+          multiple: true
+          options: [React, Vue, Solid]
+      validations:
+          required: true
+    - type: input
+      id: version
+      attributes:
+          label: 版本
+          description: '`@fibrae/semi-ui-*` 的版本号'
+          placeholder: 0.1.0
+      validations:
+          required: true
+    - type: input
+      id: browser
+      attributes:
+          label: 浏览器与版本
+          placeholder: Chrome 130
+      validations:
+          required: true
+    - type: input
+      id: repro
+      attributes:
+          label: 复现链接
+          description: StackBlitz、CodeSandbox 或 GitHub 仓库链接
+    - type: textarea
+      id: steps
+      attributes:
+          label: 复现步骤
+          placeholder: |
+              1. 渲染 ...
+              2. 点击 ...
+      validations:
+          required: true
+    - type: textarea
+      id: expected
+      attributes:
+          label: 期望行为与实际行为
+      validations:
+          required: true

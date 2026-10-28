@@ -1,0 +1,110 @@
+packages:
+    - 'packages/*'
+    - 'website'
+
+overrides:
+    # Astro and the other Vite consumers share the vite-plus build used by tests and vp pack, so the shared Vite config
+    # in vite.semi.ts has a single set of types and runtime
+    vite: 'catalog:'
+
+peerDependencyRules:
+    allowedVersions:
+        # @astrojs/react only forwards the compiler to @vitejs/plugin-react, whose 6.1.2 calls the 0.152 API
+        '@astrojs/react>oxc-transform-react': 0.152.0
+
+# Every dependency declared by two or more manifests takes its range from here, so the workspace cannot drift apart;
+# catalogMode makes `pnpm add` write `catalog:` for a dependency listed here
+catalogMode: prefer
+
+catalog:
+    '@changesets/cli': ^3.0.3
+    # 0.x minors may break the API: patches only, a minor upgrade is a deliberate change
+    '@dnd-kit/abstract': ~0.5.1
+    '@dnd-kit/dom': ~0.5.1
+    '@dnd-kit/react': ~0.5.1
+    '@dnd-kit/solid': ~0.5.1
+    '@dnd-kit/vue': ~0.5.1
+    '@floating-ui/dom': ^1.7.4
+    '@nuxt/kit': ^4.6.2
+    # Must stay on shiki's own @shikijs/core version, otherwise two copies are installed
+    '@shikijs/core': ^4.5.0
+    '@tanstack/react-virtual': ^3.14.22
+    '@tanstack/solid-virtual': ^3.13.49
+    '@tanstack/vue-virtual': ^3.13.48
+    '@testing-library/react': ^16.3.3
+    # The @tiptap packages peer on each other's exact version, so the whole family is listed here and moves together;
+    # patches only, so a newer @tiptap/vue-3 cannot resolve ahead of the locked core
+    '@tiptap/core': ~3.32.0
+    '@tiptap/extension-blockquote': ~3.32.0
+    '@tiptap/extension-bold': ~3.32.0
+    '@tiptap/extension-code': ~3.32.0
+    '@tiptap/extension-code-block': ~3.32.0
+    '@tiptap/extension-document': ~3.32.0
+    '@tiptap/extension-hard-break': ~3.32.0
+    '@tiptap/extension-heading': ~3.32.0
+    '@tiptap/extension-horizontal-rule': ~3.32.0
+    '@tiptap/extension-image': ~3.32.0
+    '@tiptap/extension-italic': ~3.32.0
+    '@tiptap/extension-link': ~3.32.0
+    '@tiptap/extension-list': ~3.32.0
+    '@tiptap/extension-mention': ~3.32.0
+    '@tiptap/extension-paragraph': ~3.32.0
+    '@tiptap/extension-strike': ~3.32.0
+    '@tiptap/extension-text': ~3.32.0
+    '@tiptap/extension-text-align': ~3.32.0
+    '@tiptap/extension-text-style': ~3.32.0
+    '@tiptap/extensions': ~3.32.0
+    '@tiptap/pm': ~3.32.0
+    '@tiptap/react': ~3.32.0
+    '@tiptap/vue-3': ~3.32.0
+    '@types/react': ^19.3.0
+    '@types/react-dom': ^19.3.0
+    '@vitejs/plugin-vue': ^6.0.10
+    async-validator: ^4.2.5
+    clsx: ^2.1.1
+    css-loader: ^7.1.5
+    date-fns: ^4.4.0
+    es-toolkit: ^1.53.0
+    jsdom: ^30.1.3
+    motion-v: ^2.8.0
+    nuxt: ^4.6.2
+    playwright: 1.64.1
+    react: ^19.3.1
+    react-dom: ^19.3.1
+    sass: ^1.106.1
+    # Vite compiles SCSS with sass-embedded when installed (vite-plus-core pulls it in as a peer) and the plugins with
+    # sass, so both stay on the same release
+    sass-embedded: ^1.106.1
+    scroll-into-view-if-needed: ^3.1.0
+    shiki: ^4.5.0
+    solid-js: ^1.9.17
+    typescript: ^6.0.3
+    unified: ^11.0.5
+    # 3.x compiles for Solid 2; the packages stay on Solid 1.x until X15
+    unplugin-solid: ^2.0.0
+    vite: npm:@voidzero-dev/vite-plus-core@1.4.0
+    vue: ^3.5.44
+    vue-tsc: ^3.3.13
+    webpack: ^5.112.2
+
+catalogs:
+    # Published peer ranges stay wider than the versions the workspace develops against, so they cannot share an entry
+    # with the default catalog. React 19.3 is the floor: Tooltip reads its trigger through <Fragment ref>
+    peer:
+        react: ^19.3.0
+        react-dom: ^19.3.0
+        vue: ^3.5.0
+        webpack: ^5.77.0
+        # The dom build imports setStyleProperty, added in 1.9.8, and the tests only run on 1.9.17
+        solid-js: ^1.9.17
+
+allowBuilds:
+    esbuild: true
+    # sass's optional native watcher; only `sass --watch` uses it
+    '@parcel/watcher': false
+
+minimumReleaseAgeExclude:
+    - '@astrojs/vue@7.1.0'
+    - framer-motion@14.3.0
+    - motion-dom@14.3.0
+    - motion-v@2.8.0

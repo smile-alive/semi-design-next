@@ -1,0 +1,27 @@
+{
+    "files": [],
+    // Editors find a file's project through this list: the vitest projects own the __tests__ files, which the package
+    // tsconfigs exclude and which have no tsconfig of their own above them; the website's Vue and Solid configs own
+    // their demos, which website/tsconfig.json excludes
+    "references": [
+        { "path": "./tsconfig.node.json" },
+        { "path": "./packages/semi-ui-vue/tsconfig.json" },
+        { "path": "./packages/semi-ai-vue/tsconfig.json" },
+        { "path": "./packages/semi-icons-vue/tsconfig.json" },
+        { "path": "./packages/semi-illustrations-vue/tsconfig.json" },
+        { "path": "./packages/semi-ui-solid/tsconfig.json" },
+        { "path": "./packages/semi-ai-solid/tsconfig.json" },
+        { "path": "./packages/semi-icons-solid/tsconfig.json" },
+        { "path": "./packages/semi-illustrations-solid/tsconfig.json" },
+        { "path": "./vitest/tsconfig.json" },
+        { "path": "./vitest/tsconfig.browser.json" },
+        { "path": "./vitest/react/tsconfig.react.json" },
+        { "path": "./vitest/react/tsconfig.react.browser.json" },
+        { "path": "./vitest/vue/tsconfig.vue.json" },
+        { "path": "./vitest/vue/tsconfig.vue.browser.json" },
+        { "path": "./vitest/solid/tsconfig.solid.json" },
+        { "path": "./vitest/solid/tsconfig.solid.browser.json" },
+        { "path": "./website/tsconfig.vue.json" },
+        { "path": "./website/tsconfig.solid.json" }
+    ]
+}

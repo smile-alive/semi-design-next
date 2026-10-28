@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: 安全漏洞
+      url: https://github.com/smile-alive/semi-design-next/security/advisories/new
+      about: 请私下报告，不要公开提 issue
+    - name: 上游 Semi Design
+      url: https://github.com/DouyinFE/semi-design/issues
+      about: 上游 Semi Design 的问题请到上游仓库反馈

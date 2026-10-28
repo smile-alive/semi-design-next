@@ -1,0 +1,40 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "lib": ["esnext"],
+        "types": ["node"],
+        "composite": true,
+        "emitDeclarationOnly": true,
+        "outDir": "node_modules/.tmp/tsconfig.node",
+        "allowImportingTsExtensions": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": false,
+        "noImplicitThis": true
+    },
+    "include": [
+        "commitlint.config.ts",
+        "eslint.config.ts",
+        "stylelint.config.ts",
+        "vite.config.ts",
+        "vite.semi*.ts",
+        "lint",
+        "packages/**/vite.config.ts",
+        "packages/semi-vite/src",
+        "packages/semi-theme-shared/src",
+        "packages/semi-theme-shared/__tests__",
+        "packages/semi-scss-compile/src",
+        "packages/semi-scss-compile/__tests__",
+        "packages/semi-icons-core/src/types.ts",
+        "scripts",
+        "packages/*/scripts",
+        "packages/*/test/run.ts",
+        "vitest/packed",
+        "vitest/hosts",
+        "vitest/*/hosts",
+        "vitest/framework.ts",
+        "vitest/index.ts",
+        "vitest/*/index.ts",
+        "vitest/solid/hydration-setup.ts",
+        "vitest/solid/hydration-context.ts"
+    ]
+}

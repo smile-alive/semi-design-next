@@ -1,0 +1,38 @@
+# dependencies
+node_modules
+
+# build output
+dist
+.astro
+
+# test output
+coverage
+
+# local env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+
+# npm pack
+*.tgz
+
+# OS
+.DS_Store
+._*
+
+# editors: share the workspace settings and recommended extensions, keep everything else local
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Claude Code: agent worktrees and personal settings
+.claude/worktrees/
+.claude/settings.local.json
+
+# audit write-ups are one-off working papers, read locally and deleted afterwards
+docs/audit/
+tmp/
