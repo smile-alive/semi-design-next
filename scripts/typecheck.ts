@@ -14,6 +14,10 @@ for (const config of globSync('vitest/**/tsconfig*.json')) {
     console.error(`${config} is missing from tsconfig.json references`);
     failed.push(config);
 }
+// website/tsconfig.json includes Astro's generated .astro/types.d.ts, which a fresh checkout does not have yet
+const sync = spawnSync('pnpm', ['exec', 'astro', 'sync'], { cwd: 'website', stdio: 'inherit' });
+if (sync.error) throw sync.error;
+if (sync.status !== 0) process.exit(sync.status ?? 1);
 const started = performance.now();
 const seconds = (since: number) => `${((performance.now() - since) / 1000).toFixed(1)}s`;
 
