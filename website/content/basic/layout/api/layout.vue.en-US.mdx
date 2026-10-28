@@ -1,0 +1,25 @@
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| prefixCls | Class name prefix. | `string` | `semiDefault("Layout", "prefixCls", cssClasses.PREFIX)` |
+| tagName | Tag name of the root element. | `keyof HTMLElementTagNameMap` | `semiDefault("Layout", "tagName", "section")` |
+| hasSider | Indicates that a Sider is inside. A Sider among the direct children is detected automatically; a deeper one registers after mount, so pass true during server rendering to avoid style flashing. Passing false cannot remove the has-sider class that a Sider adds. | `boolean` | `semiGlobalDefault("Layout", "hasSider")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                           | Scope parameters |
+| ------- | ----------------------------------------------------------------------------------------------------- | ---------------- |
+| default | Content of the Layout: Layout.Header, Layout.Sider, Layout.Content, Layout.Footer or a nested Layout. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

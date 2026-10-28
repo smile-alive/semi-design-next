@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                             | Type               | Default                                         |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ----------------------------------------------- |
+| modelValue     | Whether the radio is checked, controlled with v-model. Ignored inside a RadioGroup.                                                     | `boolean`          | `undefined`                                     |
+| defaultChecked | Whether the radio is initially checked, for uncontrolled use. Ignored inside a RadioGroup.                                              | `boolean`          | `semiDefault("Radio", "defaultChecked", false)` |
+| value          | The radio's value, which a RadioGroup compares to decide whether it is checked. It is also the native input's value in form submission. | `RadioValue`       | `undefined`                                     |
+| disabled       | Whether the radio is disabled.                                                                                                          | `boolean`          | `semiGlobalDefault("Radio", "disabled")`        |
+| displayMode    | When set to vertical, the radio is displayed as a block and takes a line of its own.                                                    | `RadioDisplayMode` | `semiGlobalDefault("Radio", "displayMode")`     |
+| mode           | When set to advanced, a checked radio can be unchecked by clicking it or pressing Space. Inside a RadioGroup the group's mode applies.  | `RadioMode`        | `semiDefault("Radio", "mode", "")`              |
+| type           | Style type: default, button, card or pureCard. Inside a RadioGroup the group's type applies.                                            | `RadioType`        | `semiDefault("Radio", "type", "default")`       |
+| addonStyle     | Inline style of the container wrapping the content.                                                                                     | `StyleValue`       | `semiGlobalDefault("Radio", "addonStyle")`      |
+| addonClassName | Class name of the container wrapping the content.                                                                                       | `string`           | `semiGlobalDefault("Radio", "addonClassName")`  |
+| addonId        | Id of the addon node, which aria-labelledby points to. Generated when omitted.                                                          | `string`           | `undefined`                                     |
+| extraId        | Id of the extra node, which aria-describedby points to. Generated when omitted.                                                         | `string`           | `undefined`                                     |
+| prefixCls      | CSS class name prefix. When omitted it falls back to the enclosing RadioGroup's value, then the global default.                         | `string`           | `undefined`                                     |
+| preventScroll  | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method.                                | `boolean`          | `semiGlobalDefault("Radio", "preventScroll")`   |
+
+**Events**
+
+| Event             | Description                                                                                         | Callback parameters         |
+| ----------------- | --------------------------------------------------------------------------------------------------- | --------------------------- |
+| update:modelValue | Emitted when the checked state changes; drives v-model.                                             | `[checked: boolean]`        |
+| change            | Emitted when the checked state changes. The event's target is `{ checked, value, name, disabled }`. | `[event: RadioChangeEvent]` |
+
+**Slots**
+
+| Slot    | Description                                                                             | Scope parameters |
+| ------- | --------------------------------------------------------------------------------------- | ---------------- |
+| default | Label content of the radio, which is also the native input's accessible name.           | `any`            |
+| extra   | Supplementary text, which aria-describedby points to. Not rendered when type is button. | `any`            |
+
+**Exposes**
+
+| Name  | Description                          | Type                                          |
+| ----- | ------------------------------------ | --------------------------------------------- |
+| focus | Focuses the native input.            | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | Removes focus from the native input. | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,274 @@
+---
+order: 56
+title: 面包屑
+icon: doc-breadcrumb
+brief: 面包屑是用户界面中的一种辅助导航，可以显示当前页面在层级架构中的位置，并能返回之前的页面。
+---
+
+import BreadcrumbReactApi from './api/breadcrumb.react.zh-CN.mdx';
+import BreadcrumbItemReactApi from './api/breadcrumb-item.react.zh-CN.mdx';
+import BreadcrumbVueApi from './api/breadcrumb.vue.zh-CN.mdx';
+import BreadcrumbItemVueApi from './api/breadcrumb-item.vue.zh-CN.mdx';
+import BreadcrumbSolidApi from './api/breadcrumb.solid.zh-CN.mdx';
+import BreadcrumbItemSolidApi from './api/breadcrumb-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Breadcrumb } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Breadcrumb } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Breadcrumb.Item` 也可以按名导入：`BreadcrumbItem`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Breadcrumb } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 带图标的
+
+支持标题只显示图标或者同时显示图标和文本。
+
+<Framework only="vue">
+
+图标使用 `Breadcrumb.Item` 的 `#icon` 插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+图标通过 `Breadcrumb.Item` 的 `icon` 属性传入，可以是图标元素，例如 `icon={<IconHome />}`。
+
+</Framework>
+
+<Demo id="icon" />
+
+### 尺寸
+
+默认为 `compact`，设置属性为 `false` 可使图标和文字尺寸增加。
+
+<Demo id="size" />
+
+### 自定义的分隔符
+
+默认为 `/`。
+
+<Framework only="vue">
+
+`separator` 属性接收文字分隔符；节点形式的分隔符使用 `#separator` 插槽，插槽优先于 `separator`。`Breadcrumb.Item` 同样提供 `separator` 属性与 `#separator` 插槽，用来覆盖父级的分隔符。
+
+</Framework>
+
+<Framework only="solid">
+
+`separator` 属性接收文字或 JSX 元素，例如 `separator={<IconArrowRight />}`。`Breadcrumb.Item` 同样提供 `separator` 属性，用来覆盖父级的分隔符。
+
+</Framework>
+
+<Demo id="separator" />
+
+### 截断逻辑
+
+当级别名字溢出设定宽度后省略截断。可以通过 `showTooltip` 属性设置相关参数。默认宽度150px，鼠标悬停时显示 Tooltip 完整显示级别名称。`Breadcrumb.Item` 的子节点为数字时（含 `0`）按文字处理，同样参与截断与 Tooltip。
+
+<Demo id="truncate" />
+
+当路径层级超过 `maxItemCount`（默认 4）个，默认折叠第 2 项到第 n-m+1 项（n 为层级总数，m 为 `maxItemCount`，序号从 1 计，最多到倒数第二项），点击省略号展开显示全部级别；如果过长则自动换行。首项、当前项与末项始终可见。`activeIndex` 指向会被折叠的项时，当前项保持可见：当前项之前与之后各是一段候选折叠项，折叠项更多的一段被折叠（相等时折叠之前的一段），因此始终只有一个省略号；候选为空时不折叠，此时可见的项可能多于 `maxItemCount`。可以通过 `maxItemCount` 来控制超过多少个级别进行折叠。
+
+<Demo id="collapse" />
+
+### 自定义省略号区域
+
+组件内部提供了两种省略号区域渲染的类型，可通过 `moreType` 来设置，`moreType` 的可选值为 `default` 和 `popover`。
+
+<Demo id="more-type" />
+
+<Framework only="react">
+
+如果想要为省略号区域自定义其他形式的渲染，则可以使用 `renderMore()` 方法。
+
+</Framework>
+
+<Framework only="vue">
+
+如果想要为省略号区域自定义其他形式的渲染，则可以使用 `#more="{ restItems }"` 插槽。`restItems` 是被折叠的项，已去掉分隔符，可直接用 `<component :is>` 挂载。
+
+</Framework>
+
+<Framework only="solid">
+
+如果想要为省略号区域自定义其他形式的渲染，则可以使用 `renderMore` 属性。它的参数是被折叠的项的数据：routes 写法下是路由对象，children 写法下是各 `Breadcrumb.Item` 的 props（在需要显示的位置再读取其 `children`、`icon`）；返回值渲染到省略号区域，提供时优先于 `moreType`。
+
+</Framework>
+
+<Demo id="render-more" />
+
+### 路由对象
+
+<Framework only="react">
+
+Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href, icon }` 或字符串组成的数组。可以配合 renderItem 来渲染节点。通过这样实现的 Breadcrumb 同样会进行截断处理。
+
+- name 为展示的名称，不传入时为空字符串。当 route 为字符串时，默认将字符串设置为名称。
+- path 为路由路径
+- href 为链接目的地，挂载在 a 标签上。
+- icon 为标签的显示图标
+
+</Framework>
+
+<Framework only="vue">
+
+Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href }` 或字符串组成的数组。可以配合 `#item="{ route, index }"` 插槽自定义标题，用 `#icon="{ route, index }"` 插槽提供图标，插槽渲染为空时该项无图标。通过这样实现的 Breadcrumb 同样会进行截断处理。`routes` 中只放字符串和不含节点、函数的对象，不支持 `routes[].onClick`，改用 Breadcrumb 的 `@click`（Breadcrumb 的 `onClick` 是函数 prop，监听与否决定没有 `href` 的项能否用键盘操作），它的第一个参数是原始路由。
+
+- name 为展示的名称，不传入时为空字符串。当 route 为字符串时，默认将字符串设置为名称。
+- path 为路由路径
+- href 为链接目的地，挂载在 a 标签上。
+
+</Framework>
+
+<Framework only="solid">
+
+Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href }` 或字符串组成的数组。路由对象里只放数据；用 `renderItem` 渲染每一项的内容，用 `renderIcon(route, index)` 提供图标，参数都包含该项的路由对象。通过这样实现的 Breadcrumb 同样会进行截断处理。
+
+- name 为展示的名称，不传入时为空字符串。当 route 为字符串时，默认将字符串设置为名称。
+- path 为路由路径
+- href 为链接目的地，挂载在 a 标签上。
+
+</Framework>
+
+<Demo id="routes" />
+
+## API 参考
+
+### Breadcrumb
+
+<Framework only="react">
+
+<BreadcrumbReactApi />
+
+`id`、`data-*` 等其他原生属性落在根元素 `nav` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<BreadcrumbVueApi />
+
+`class`、`style`、`aria-label` 与其他原生属性经 attrs 落在根元素 `nav` 上。
+
+</Framework>
+
+<Framework only="solid">
+
+<BreadcrumbSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性（如 `id`、`data-*`）落在根元素 `nav` 上。
+
+</Framework>
+
+### Breadcrumb.Item
+
+<Framework only="react">
+
+<BreadcrumbItemReactApi />
+
+`id`、`data-*` 等其他原生属性落在包裹该项的外层 `span` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<BreadcrumbItemVueApi />
+
+`class`、`style` 与其他原生属性经 attrs 落在 Item 最外层的 `span` 上。
+
+</Framework>
+
+<Framework only="solid">
+
+<BreadcrumbItemSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性（如 `id`、`data-*`）落在 Item 最外层的 `span` 上。
+
+</Framework>
+
+使用方给 `Breadcrumb.Item` 设置的 key 会保留，带 key 的 Item 重排后内部状态跟随 key 移动。只有 `Breadcrumb.Item` 子节点会收到 `active`、`shouldRenderSeparator`，其他元素与文本原样渲染。
+
+### Route
+
+<Framework only="react">
+
+| 属性 | 说明           | 类型      | 默认值 |
+| ---- | -------------- | --------- | ------ |
+| href | 链接目的地     | string    | -      |
+| icon | 标签的显示图标 | ReactNode | -      |
+| name | 路由名         | string    | -      |
+| path | 路由路径       | string    | -      |
+
+路由还可以带 `noLink`、`separator` 与 `onClick`，作用与 `Breadcrumb.Item` 的同名属性相同。`data-*` 字段会传给对应的项。
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性      | 说明                                   | 类型               | 默认值 |
+| --------- | -------------------------------------- | ------------------ | ------ |
+| href      | 链接目的地                             | `string`           | -      |
+| name      | 路由名                                 | `string`           | -      |
+| path      | 路由路径                               | `string`           | -      |
+| noLink    | 移除该项 hover 和 active 的样式        | `boolean`          | -      |
+| separator | 该项的文字分隔符，可以覆盖父级的分隔符 | `string`           | -      |
+| key       | 该项的 key                             | `string \| number` | -      |
+
+路由的图标由 `#icon` 插槽渲染，自定义标题由 `#item` 插槽渲染；`data-*` 字段会传给对应的项。
+
+</Framework>
+
+<Framework only="solid">
+
+路由还可以带 `noLink`、`separator` 与 `onClick`，作用与 `Breadcrumb.Item` 的同名属性相同。`data-*` 字段会传给对应的项。
+
+| 属性 | 说明       | 类型     | 默认值 |
+| ---- | ---------- | -------- | ------ |
+| href | 链接目的地 | `string` | -      |
+| name | 路由名     | `string` | -      |
+| path | 路由路径   | `string` | -      |
+
+</Framework>
+
+## Accessibility
+
+- Breadcrumb 支持传入 `aria-label` 来表示该 Breadcrumb 作用
+- Breadcrumb 会对当前项设置 `aria-current='page'`
+
+## 文案规范
+
+- 每个页面链接都应该很简短，并且清楚地反映它链接到的位置或链接的实体
+- 按句子大小写书写
+
+## 设计变量
+
+<DesignToken />

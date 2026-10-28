@@ -1,0 +1,28 @@
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| raw | Markdown or MDX source text. Compiles again on change. | `string` | `undefined` |
+| components | Overrides Markdown elements and adds the custom components MDX sources refer to. Values are Vue components or HTML tag names; an element key such as h1 takes a component or its own tag name. Merged over MarkdownRender.defaultComponents; a change only renders again, it does not compile again. | `MarkdownRenderComponents` | `semiGlobalDefault("MarkdownRender", "components")` |
+| format | Format of raw: md is plain Markdown, mdx allows embedded JSX. Compiles again on change. | `"md" \| "mdx"` | `semiDefault("MarkdownRender", "format", "mdx")` |
+| remarkPlugins | Custom Remark plugins. Compiles again when an entry changes. | `PluggableList` | `semiGlobalDefault("MarkdownRender", "remarkPlugins")` |
+| rehypePlugins | Custom Rehype plugins. Compiles again when an entry changes. | `PluggableList` | `semiGlobalDefault("MarkdownRender", "rehypePlugins")` |
+| remarkGfm | Whether to enable GitHub GFM syntax. Compiles again on change. | `boolean` | `semiDefault("MarkdownRender", "remarkGfm", true)` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

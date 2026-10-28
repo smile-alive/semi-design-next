@@ -1,0 +1,30 @@
+**Props**
+
+| 属性   | 说明                                                              | 类型                 | 默认值                                              |
+| ------ | ----------------------------------------------------------------- | -------------------- | --------------------------------------------------- |
+| align  | 对齐方式，可选 center、justify、left、plain；row 为 true 时无效。 | `DescriptionsAlign`  | `semiDefault("Descriptions", "align", "center")`    |
+| row    | 是否双行显示。                                                    | `boolean`            | `semiDefault("Descriptions", "row", false)`         |
+| size   | 双行显示时的尺寸，可选 small、medium、large。                     | `DescriptionsSize`   | `semiDefault("Descriptions", "size", "medium")`     |
+| data   | 列表显示的数据；为空时使用默认插槽中的 Descriptions.Item。        | `DescriptionsData[]` | `semiDefault("Descriptions", "data", [])`           |
+| layout | 布局模式，可选 vertical、horizontal。                             | `DescriptionsLayout` | `semiDefault("Descriptions", "layout", "vertical")` |
+| column | 横向布局下每行的总列数。                                          | `number`             | `semiDefault("Descriptions", "column", 3)`          |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                                                                  | 作用域参数              |
+| ------- | --------------------------------------------------------------------- | ----------------------- |
+| default | Descriptions.Item 子节点，data 为空时使用；横向布局只识别直接子节点。 | `any`                   |
+| itemKey | 每个数据项的 key，默认渲染 item.key。                                 | `DescriptionsSlotProps` |
+| value   | 每个数据项的值，默认渲染 item.value。                                 | `DescriptionsSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

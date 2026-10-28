@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property         | Description                                                                                                                              | Type                                                              | Default    |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------- |
+| children         | Content to wrap. With content, Spin acts as a wrapper; while loading, the content is `inert` and cannot be focused or operated.          | `React.ReactNode`                                                 | -          |
+| childStyle       | Inline style of the inner children element.                                                                                              | `React.CSSProperties`                                             | -          |
+| delay            | Delay in milliseconds before the loading effect is shown.                                                                                | `number`                                                          | `0`        |
+| indicator        | Custom loading indicator, a ReactNode. When not set, the built-in loading icon is shown, which the global indicator config can override. | `React.ReactNode`                                                 | -          |
+| ref              | Reference to the root `div` element.                                                                                                     | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -          |
+| size             | Component size: `small`, `middle` or `large`.                                                                                            | `SpinSize`                                                        | `"middle"` |
+| spinning         | Whether it is loading. This is a controlled property.                                                                                    | `boolean`                                                         | `true`     |
+| style            | Inline style of the root element.                                                                                                        | `React.CSSProperties`                                             | -          |
+| tip              | Description text shown below the indicator while loading, often used when Spin wraps content. A ReactNode.                               | `React.ReactNode`                                                 | -          |
+| wrapperClassName | Extra class name added to the root element, together with `className`.                                                                   | `string`                                                          | -          |

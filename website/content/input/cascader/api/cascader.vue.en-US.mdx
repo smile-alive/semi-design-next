@@ -1,0 +1,92 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | The selected entry, bound with v-model. Passing it makes the component controlled, and undefined goes back to uncontrolled and clears the selection. Only a replaced value is noticed, changes made in place to a controlled array are not. In single mode it is a node or a path, in multiple mode it can also be an array of paths. | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue \u007c CascaderSimpleValue[], CascaderValue>"}>Type</ApiType> | `undefined` |
+| defaultValue | The initially selected entry, read once on mount. | <ApiType detail={"ByMultiple\u003cMultiple, CascaderSimpleValue \u007c CascaderSimpleValue[], CascaderValue>"}>Type</ApiType> | `semiGlobalDefault("Cascader", "defaultValue")` |
+| multiple | Whether several paths can be selected. The types of modelValue, defaultValue, change and select follow it; it has no global default. | `Multiple` | `undefined` |
+| treeData | Node data. The label is text only, use the label slot for node content. Changes made in place to reactive data are noticed, and a new array with equal content keeps the expanded and selected state. | `CascaderData[]` | `semiDefault("Cascader", "treeData", [])` |
+| keyMaps | Custom field names for value, label, children, disabled and isLeaf in a node. | `KeyMapProps` | `semiGlobalDefault("Cascader", "keyMaps")` |
+| changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `semiDefault("Cascader", "changeOnSelect", false)` |
+| autoMergeValue | In multiple mode, the value leaves out the descendants of a selected parent. Changes after mount are not followed; leafOnly takes precedence when both are on. | `boolean` | `semiDefault("Cascader", "autoMergeValue", true)` |
+| leafOnly | In multiple mode, the value and the tags shown only include leaf nodes. Changes after mount are not followed. | `boolean` | `semiDefault("Cascader", "leafOnly", false)` |
+| checkRelation | In multiple mode, how the checked states of the nodes relate: related links parents and children, unRelated keeps them independent. | `"related" \| "unRelated"` | `semiDefault("Cascader", "checkRelation", strings.RELATED)` |
+| disableStrictly | Whether to disable strictly. A disabled node then does not change when its parent or children are checked or unchecked. | `boolean` | `semiDefault("Cascader", "disableStrictly", false)` |
+| max | In multiple mode, the most paths that can be selected; exceeding it emits the exceed event. | `number` | `semiGlobalDefault("Cascader", "max")` |
+| maxTagCount | In multiple mode, the most tags shown; the rest appear as +N. | `number` | `semiGlobalDefault("Cascader", "maxTagCount")` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `semiDefault("Cascader", "showRestTagsPopover", false)` |
+| restTagsPopoverProps | Configuration of the Popover of the remaining tags, such as position and trigger. See Popover. | `PopoverProps` | `semiGlobalDefault("Cascader", "restTagsPopoverProps")` |
+| enableLeafClick | In multiple mode, whether clicking the option of a leaf node checks it. | `boolean` | `semiDefault("Cascader", "enableLeafClick", false)` |
+| clickToSelect | In multiple mode, clicking any node selects it. Often used with showNext set to hover: hovering expands the submenu and clicking selects the node. | `boolean` | `semiDefault("Cascader", "clickToSelect", false)` |
+| showNext | When the submenu expands: on click or on hover. | `"hover" \| "click"` | `semiDefault("Cascader", "showNext", strings.SHOW_NEXT_BY_CLICK)` |
+| loadData | Loads data asynchronously. It receives the path from the root to the current node and must return a Promise; after a rejection the node leaves the loading state and can be expanded again. Cannot be used with search. It remains a function prop because the returned Promise is read. | <ApiType detail={"((selectOptions: CascaderData[]) => Promise\u003cvoid>)"}>Type</ApiType> | `undefined` |
+| filterTreeNode | Whether search is on. True matches the input against the field named by treeNodeFilterProp, case-insensitively; a custom match function can be given instead. It remains a function prop because its result is read. | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: CascaderData \u007c undefined) => boolean)"}>Type</ApiType> | `undefined` |
+| filterSorter | Sorts the filtered results; it receives the two result paths (the node arrays from the root to the matched node) and the input. It remains a function prop because its result is read. | <ApiType detail={"((first: CascaderData[], second: CascaderData[], inputValue: string) => number)"}>Type</ApiType> | `undefined` |
+| filterLeafOnly | Whether the search results only show the paths of leaf nodes. | `boolean` | `semiDefault("Cascader", "filterLeafOnly", true)` |
+| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `semiDefault("Cascader", "treeNodeFilterProp", "label")` |
+| remote | Whether to search remotely. Input is then not filtered locally and only emits the search event, and the caller updates treeData asynchronously. | `boolean` | `semiDefault("Cascader", "remote", false)` |
+| displayProp | The node field shown in the trigger and the tags, label by default. | `string` | `semiDefault("Cascader", "displayProp", "label")` |
+| separator | The separator of a path in the search results and in the trigger in single mode. | `string` | `semiDefault("Cascader", "separator", " / ")` |
+| changeWithObject | Whether the change event carries the data of each node instead of its value. A controlled modelValue and defaultValue must then be node data too, with a value. This is a boolean attribute, not an event: do not write it as @changeWithObject. | `boolean` | `semiDefault("Cascader", "changeWithObject", false)` |
+| placeholder | Placeholder of the select box. | `string` | `semiGlobalDefault("Cascader", "placeholder")` |
+| searchPlaceholder | Placeholder of the search input; placeholder is used when it is not given. | `string` | `semiGlobalDefault("Cascader", "searchPlaceholder")` |
+| searchPosition | Where the search input is: trigger puts it in the trigger, custom leaves it to the caller, who passes the keyword with the search method. | `"trigger" \| "custom"` | <ApiType detail={"semiDefault(\"Cascader\", \"searchPosition\", strings.SEARCH_POSITION_TRIGGER)"}>Type</ApiType> |
+| disabled | Whether the Cascader is disabled. A disabled Cascader cannot be reached with Tab. | `boolean` | `semiDefault("Cascader", "disabled", false)` |
+| size | Size of the select box. | `Size` | `semiDefault("Cascader", "size", "default")` |
+| borderless | Whether to use the borderless style. | `boolean` | `semiDefault("Cascader", "borderless", false)` |
+| validateStatus | Validation status of the trigger; it only affects the style. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Cascader", "validateStatus")` |
+| insetLabelId | The id of the insetLabel content, used to name the combobox; the component generates one when the insetLabel slot is used and this is not given. | `string` | `undefined` |
+| showClear | Whether to show the clear button. | `boolean` | `semiDefault("Cascader", "showClear", false)` |
+| defaultOpen | Whether the dropdown is open on mount. | `boolean` | `semiDefault("Cascader", "defaultOpen", false)` |
+| motion | Whether the dropdown animates. | `boolean` | `semiDefault("Cascader", "motion", true)` |
+| autoAdjustOverflow | Whether the dropdown flips its direction when an edge covers it. | `boolean` | `semiGlobalDefault("Cascader", "autoAdjustOverflow")` |
+| position | Direction of the dropdown, bottomLeft by default and bottomRight in RTL. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Cascader", "position")` |
+| stopPropagation | Whether clicks on the dropdown stop bubbling. | `string \| boolean` | `semiDefault("Cascader", "stopPropagation", true)` |
+| dropdownClassName | Class of the dropdown. | `string` | `semiGlobalDefault("Cascader", "dropdownClassName")` |
+| dropdownStyle | Style of the dropdown. | `StyleValue` | `semiGlobalDefault("Cascader", "dropdownStyle")` |
+| preventScroll | Whether focusing inside the component stops the browser scrolling the document to show the focused element. | `boolean` | `semiGlobalDefault("Cascader", "preventScroll")` |
+| virtualizeInSearch | Virtual list configuration of the search results, made of height, width and itemSize, for large result sets; height defaults to 180, the same as the dropdown height. | `Virtualize` | `semiGlobalDefault("Cascader", "virtualizeInSearch")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| update:modelValue | Emitted when the selection changes; the update event of v-model, with the same payload as change. | <ApiType detail={"[value: ByMultiple\u003cMultiple, CascaderSimpleValue[], CascaderSimpleValue[][]>]"}>Type</ApiType> |
+| change | Emitted when the selection changes. In single mode the selected path, in multiple mode an array of the selected paths; node data with changeWithObject. It shares its name with the native change and hides the native one that bubbles from inside the root. | <ApiType detail={"[value: ByMultiple\u003cMultiple, CascaderSimpleValue[], CascaderSimpleValue[][]>]"}>Type</ApiType> |
+| select | Emitted when a node is selected, with the value of the node. In multiple mode, one checked node gives its value and more give an array. | <ApiType detail={"[value: ByMultiple\u003cMultiple, string \u007c number, string \u007c number \u007c (string \u007c number)[]>]"}>Type</ApiType> |
+| search | Emitted when the search input changes, with the text. | `[value: string]` |
+| focus | Emitted when a click or a key opens the dropdown, with that MouseEvent or KeyboardEvent. It is not a DOM focus event and Tabbing in or out does not emit it. | `[event: MouseEvent \| KeyboardEvent]` |
+| blur | Emitted when the dropdown closes: a MouseEvent for a click outside, a KeyboardEvent for Esc, undefined when the close method closes it. It is not a DOM blur event. | `[event?: MouseEvent \| KeyboardEvent \| undefined]` |
+| dropdownVisibleChange | Emitted when the dropdown opens or closes, with whether it is open. | `[visible: boolean]` |
+| clear | Emitted when the clear button clears the selection. | `[]` |
+| exceed | Emitted in multiple mode when the selection goes past max, with the Entity array of the checked nodes. | `[checkedItem: CascaderEntity[]]` |
+| load | Emitted when a node has loaded, with the set of loaded keys and the node data. | <ApiType detail={"[newLoadedKeys: Set\u003cstring>, data: CascaderData]"}>Type</ApiType> |
+| listScroll | Emitted when a column of the tree scrolls, with the scroll event and the column. Scrolling the search results does not emit it. | `[event: Event, panel: CascaderScrollPanelProps]` |
+| keydown | Emitted once per key press before the Cascader handles it; calling preventDefault there does not stop the Cascader. Except for a key on the clear button or a control inside a custom trigger, it is emitted in the capture phase on the trigger, so stopPropagation there keeps the key from the search input and skips the trigger's handling of it (opening the dropdown, closing it on Esc); the options still take it. It shares its name with the native keydown and hides the native one that bubbles from inside the root. | `[event: KeyboardEvent]` |
+
+**Slots**
+
+| Slot         | Description                                                                                                                                                                                | Scope parameters                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| label        | Content of an option in the columns; the search results, the selection and the tags still show the text of the node.                                                                       | `CascaderLabelSlotProps`                                                   |
+| display      | The selected path shown in single mode, with the displayProp of each node and the nodes; path holds the raw values when the value is not in treeData. Empty content shows the placeholder. | `CascaderDisplaySlotProps`                                                 |
+| tag          | Replaces each tag in multiple mode; onClose unchecks the node.                                                                                                                             | `CascaderTagSlotProps`                                                     |
+| filterItem   | Replaces a row of the search results. A single element root gets the id, role and state of the option, otherwise the component wraps it in an li.                                          | `CascaderFilterItemSlotProps`                                              |
+| trigger      | Replaces the content of the trigger.                                                                                                                                                       | <ApiType detail={"CascaderTriggerSlotProps\u003cMultiple>"}>Type</ApiType> |
+| expandIcon   | Custom expand icon; empty content keeps the default icon.                                                                                                                                  | `any`                                                                      |
+| arrowIcon    | Custom dropdown arrow on the right; an empty slot hides the arrow. Hovering shows the clear button first when it is visible.                                                               | `any`                                                                      |
+| clearIcon    | Custom icon of the clear button, effective when showClear is true; empty content keeps the default icon.                                                                                   | `any`                                                                      |
+| emptyContent | Content shown when there is no data to pick or the search has no result. The default text from the locale shows when it is not given, and an empty slot hides the empty state.             | `any`                                                                      |
+| prefix       | Prefix content.                                                                                                                                                                            | `any`                                                                      |
+| suffix       | Suffix content.                                                                                                                                                                            | `any`                                                                      |
+| insetLabel   | A label inside the select box; it is not rendered when prefix is also given.                                                                                                               | `any`                                                                      |
+| topSlot      | Extra content at the top of the dropdown.                                                                                                                                                  | `any`                                                                      |
+| bottomSlot   | Extra content at the bottom of the dropdown.                                                                                                                                               | `any`                                                                      |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

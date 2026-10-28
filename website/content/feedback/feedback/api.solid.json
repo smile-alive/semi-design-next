@@ -1,0 +1,143 @@
+{
+    "feedback": {
+        "source": "packages/semi-ui-solid/src/feedback/feedback.tsx",
+        "props": {
+            "afterClose": {
+                "zh-CN": "弹层完全关闭后的回调，两种模式都会调用。",
+                "en-US": "Called after the panel has fully closed, in both modes."
+            },
+            "bodyStyle": {
+                "zh-CN": "内容区域的样式，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Style of the content area, passed through to the Modal or SideSheet of the current mode."
+            },
+            "cancelButtonProps": {
+                "zh-CN": "取消按钮的属性。popup 模式下 loading 取内置挂起态与使用方的 loading 任一为真，onClick 先于内置处理调用。",
+                "en-US": "Props of the cancel button. In popup mode it is loading when either the built-in pending state or your loading says so, and onClick runs before the built-in handling."
+            },
+            "checkboxGroupProps": {
+                "zh-CN": "type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",
+                "en-US": "Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label."
+            },
+            "children": {
+                "zh-CN": "type 为 custom 时的反馈内容。",
+                "en-US": "Feedback content for type custom."
+            },
+            "class": {
+                "zh-CN": "根元素的类名，与内置类名合并。",
+                "en-US": "Class name of the root element, merged with the built-in class names."
+            },
+            "closable": {
+                "zh-CN": "是否显示关闭按钮，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Whether to show the close button. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "closeIcon": {
+                "zh-CN": "关闭按钮中的图标，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Icon inside the close button. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按 Esc 是否关闭弹层，透传给当前模式的 Modal 或 SideSheet。popup 模式需设为 true 才会在按 Esc 时触发 onCancel。",
+                "en-US": "Whether Esc closes the panel, passed through to the Modal or SideSheet of the current mode. In popup mode it must be true for Esc to call onCancel."
+            },
+            "footer": {
+                "zh-CN": "替换默认的取消、提交按钮所在的页脚，透传给当前模式的 Modal 或 SideSheet。传入 null 时不渲染页脚。",
+                "en-US": "Replaces the footer with the default cancel and submit buttons, passed through to the Modal or SideSheet of the current mode. Passing null renders no footer."
+            },
+            "getPopupContainer": {
+                "zh-CN": "弹层挂载的容器，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Container the panel is mounted into. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "height": {
+                "zh-CN": "弹层高度，透传给 SideSheet。popup 模式内置为 auto，给出后以使用方的值为准。",
+                "en-US": "Height of the panel, passed through to the SideSheet. Popup mode uses auto by default, and a value you give wins."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭后是否保留 DOM，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Whether the DOM is kept after closing. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "mask": {
+                "zh-CN": "是否显示遮罩，透传给当前模式的 Modal 或 SideSheet。popup 模式内置为无遮罩，给出后以使用方的值为准。",
+                "en-US": "Whether to show the mask. Passed through to the Modal or SideSheet of the current mode. Popup mode has no mask by default, and a value you give wins."
+            },
+            "maskClosable": {
+                "zh-CN": "点击遮罩是否关闭，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Whether a click on the mask closes the panel. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "maskStyle": {
+                "zh-CN": "遮罩的样式，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Style of the mask. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "mode": {
+                "zh-CN": "展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式透传给对应的 SideSheet 或 Modal。",
+                "en-US": "Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode."
+            },
+            "motion": {
+                "zh-CN": "是否启用动画，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Whether to animate. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "okButtonProps": {
+                "zh-CN": "提交按钮的属性。未给 disabled 时按值禁用（值为空时禁用），给出后以使用方的值为准，type 为 custom 时用它控制提交；loading 取内置挂起态与使用方的 loading 任一为真；onClick 先于内置处理调用，不会替换内置处理。",
+                "en-US": "Props of the submit button. Without disabled, it is disabled while the value is empty; a disabled you give wins, which is how the custom type controls submission. It is loading when either the built-in pending state or your loading says so. onClick runs before the built-in handling, which still runs."
+            },
+            "onCancel": {
+                "zh-CN": "取消按钮、关闭按钮、Esc（modal 模式另有点击遮罩）触发；按 Esc 时参数为原生 KeyboardEvent。popup 模式返回 Promise 时取消按钮保持加载，fulfill 后才清空已填写的值，reject 时保留。关闭由 visible 控制，组件不会自行关闭。",
+                "en-US": "Called by the cancel button, the close button, Esc and, in modal mode, a click on the mask; the argument is a native KeyboardEvent for Esc. In popup mode a returned Promise keeps the cancel button loading, the filled-in value is cleared only once it fulfills, and kept when it rejects. Closing is controlled by visible; the component never closes itself."
+            },
+            "onOk": {
+                "zh-CN": "点击提交按钮时调用。popup 模式返回 Promise 时提交按钮保持加载，fulfill 后才清空已填写的值，reject 时保留；其他返回值立即清空。关闭由 visible 控制，组件不会自行关闭。",
+                "en-US": "Called when the submit button is clicked. In popup mode a returned Promise keeps the submit button loading, the filled-in value is cleared only once it fulfills, and kept when it rejects; any other return clears the value at once. Closing is controlled by visible; the component never closes itself."
+            },
+            "onValueChange": {
+                "zh-CN": "反馈内容变化时的回调，参数为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。",
+                "en-US": "Called when the feedback content changes with the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox."
+            },
+            "radioGroupProps": {
+                "zh-CN": "type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",
+                "en-US": "Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label."
+            },
+            "ref": {
+                "zh-CN": "根元素的引用：popup 模式为 SideSheet 的根元素，modal 模式为 Modal 的最外层元素。",
+                "en-US": "Reference to the root element: the SideSheet root in popup mode, and the outermost element of the Modal in modal mode."
+            },
+            "renderContent": {
+                "zh-CN": "包裹反馈内容：接收内置内容（type 为 custom 时是子节点），返回包裹后的节点。",
+                "en-US": "Wraps the feedback content: receives the built-in content (the children for type custom) and returns the wrapped node."
+            },
+            "role": {
+                "zh-CN": "对话框的 role，可选 dialog 或 alertdialog，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Role of the dialog, dialog or alertdialog. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "size": {
+                "zh-CN": "弹层尺寸，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Size of the panel. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "style": {
+                "zh-CN": "内联样式，落在弹层的内容盒子上，位置见下方说明。",
+                "en-US": "Inline style, applied to the content box of the panel; see the note below for where it lands."
+            },
+            "textAreaProps": {
+                "zh-CN": "type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。",
+                "en-US": "Props of the multi-line input for the text and emoji types, written as the props of TextArea."
+            },
+            "title": {
+                "zh-CN": "弹层标题。",
+                "en-US": "Title of the panel."
+            },
+            "type": {
+                "zh-CN": "反馈内容的类型。custom 时内容写在子节点中。",
+                "en-US": "Type of the feedback content. For custom, the content goes in the children."
+            },
+            "visible": {
+                "zh-CN": "是否显示。组件不会自行关闭，由使用方在 onOk、onCancel 中把它设为 false。",
+                "en-US": "Whether the feedback is shown. The component never closes itself; set it to false in onOk or onCancel."
+            },
+            "width": {
+                "zh-CN": "弹层宽度，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Width of the panel. Passed through to the Modal or SideSheet of the current mode."
+            },
+            "zIndex": {
+                "zh-CN": "弹层的层级，透传给当前模式的 Modal 或 SideSheet。",
+                "en-US": "Stacking order of the panel. Passed through to the Modal or SideSheet of the current mode."
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 根元素 `div` 的类名，与组件自身的类名合并。 | `string` | - |
+| components | 用于覆盖 Markdown 元素，也可添加 MDX 中引用的自定义组件；值为 React 组件或 HTML 标签名，元素键（如 `h1`）只接受组件或自身的标签名。与 `MarkdownRender.defaultComponents` 合并，变化时只重新渲染，不重新编译。值为 `undefined` 的键回退为内置组件。 | `MarkdownRenderComponents` | - |
+| format | `raw` 的格式，`md` 为纯 Markdown，`mdx` 允许内嵌 JSX。变化时重新编译。 | `'md' \| 'mdx'` | `"mdx"` |
+| raw | Markdown 或 MDX 的纯文本。变化时重新编译。 | `string` | - |
+| ref | 根元素 `div` 的引用。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| rehypePlugins | 自定义 Rehype 插件，数组元素变化时重新编译。 | `PluggableList` | - |
+| remarkGfm | 是否开启 GitHub GFM 语法。变化时重新编译。 | `boolean` | `true` |
+| remarkPlugins | 自定义 Remark 插件，数组元素变化时重新编译。 | `PluggableList` | - |
+| style | 根元素 `div` 的样式。 | `React.CSSProperties` | - |

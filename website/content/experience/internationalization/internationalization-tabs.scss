@@ -1,0 +1,313 @@
+@mixin color-list-title($bg, $border) {
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: $bg;
+    border-right: 1px solid $border;
+    border-radius: 6px 0 0 6px;
+}
+
+@mixin color-image-card-title($bg, $icon-color) {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: $bg;
+
+    .semi-icon {
+        color: $icon-color;
+    }
+}
+
+.category-anchor {
+    top: 12vh;
+    right: 0;
+    z-index: 3;
+    width: 150px;
+    max-height: 77%;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    // Anchor's own root is position:relative at equal specificity; the extra class lets fixed win
+    &.semi-anchor {
+        position: fixed;
+    }
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .semi-anchor {
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 1920px) and (min-width: 1681px) {
+    .category-anchor {
+        min-width: 200px;
+
+        .semi-anchor-link {
+            .semi-anchor-link-title {
+                min-width: 180px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1599px) and (min-width: 1400px) {
+    .category-anchor {
+        width: 120px;
+
+        .semi-anchor-link {
+            .semi-anchor-link-title {
+                width: 100px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1399px) {
+    .category-anchor {
+        display: none;
+    }
+}
+
+.internationalization {
+    &-icon {
+        margin-right: 8px;
+    }
+
+    &-image-card {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        border: 1px solid var(--semi-color-border);
+        border-radius: 6px;
+
+        &-title {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        &-image {
+            width: 100%;
+            height: 180px;
+        }
+
+        &-description {
+            padding: 20px;
+        }
+    }
+
+    &-color-image-card {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 24px;
+        border-radius: 6px;
+
+        &-image {
+            padding: 16px 20px 0;
+        }
+
+        &-blue {
+            border: 1px solid var(--semi-light-blue-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-light-blue-0), var(--semi-light-blue-5));
+            }
+        }
+
+        &-cyan {
+            border: 1px solid var(--semi-cyan-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-cyan-0), var(--semi-cyan-5));
+            }
+        }
+
+        &-green {
+            border: 1px solid var(--semi-green-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-green-0), var(--semi-green-5));
+            }
+        }
+
+        &-lime {
+            border: 1px solid var(--semi-lime-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-lime-0), var(--semi-lime-5));
+            }
+        }
+
+        &-description {
+            padding: 16px 20px;
+
+            @at-root .internationalization-color-image-card-description .gatsby-p {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &-text-card {
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 6px;
+
+        &-blue {
+            border: 1px solid var(--semi-light-blue-1);
+
+            @at-root .internationalization-text-card-blue .internationalization-text-card-title {
+                background-color: var(--semi-light-blue-0);
+            }
+
+            @at-root .internationalization-text-card-blue .internationalization-text-card-description {
+                border-top: 1px solid var(--semi-light-blue-1);
+            }
+        }
+
+        &-cyan {
+            border: 1px solid var(--semi-cyan-1);
+
+            @at-root .internationalization-text-card-cyan .internationalization-text-card-title {
+                background-color: var(--semi-cyan-0);
+            }
+
+            @at-root .internationalization-text-card-cyan .internationalization-text-card-description {
+                border-top: 1px solid var(--semi-cyan-1);
+            }
+        }
+
+        &-title {
+            padding: 16px 20px;
+        }
+
+        &-description {
+            padding: 20px;
+            font-size: 16px;
+        }
+    }
+
+    &-image-list {
+        display: flex;
+        margin-bottom: 24px;
+        border: 1px solid var(--semi-color-border);
+        border-radius: 6px;
+
+        &-image {
+            width: 240px;
+            min-height: 240px;
+        }
+
+        &-title {
+            padding: 24px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        &-description {
+            padding: 0 24px;
+        }
+    }
+
+    &-color-card {
+        flex: 1;
+        border-radius: 6px;
+
+        &-blue {
+            border: 1px solid var(--semi-light-blue-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-light-blue-0), var(--semi-light-blue-5));
+            }
+        }
+
+        &-green {
+            border: 1px solid var(--semi-green-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-green-0), var(--semi-green-5));
+            }
+        }
+
+        &-orange {
+            border: 1px solid var(--semi-orange-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-orange-0), var(--semi-orange-5));
+            }
+        }
+
+        &-violet {
+            border: 1px solid var(--semi-violet-1);
+
+            &-title {
+                @include color-image-card-title(var(--semi-violet-0), var(--semi-violet-5));
+            }
+        }
+
+        &-description {
+            padding: 16px 20px;
+            margin-bottom: 0;
+        }
+    }
+
+    &-color-list {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        margin-bottom: 24px;
+        border-radius: 6px;
+
+        &-violet {
+            border: 1px solid var(--semi-violet-1);
+
+            &-title {
+                @include color-list-title(var(--semi-violet-0), var(--semi-violet-1));
+            }
+        }
+
+        &-indigo {
+            border: 1px solid var(--semi-indigo-1);
+
+            &-title {
+                @include color-list-title(var(--semi-indigo-0), var(--semi-indigo-1));
+            }
+        }
+
+        &-blue {
+            border: 1px solid var(--semi-light-blue-1);
+
+            &-title {
+                @include color-list-title(var(--semi-light-blue-0), var(--semi-light-blue-1));
+            }
+        }
+
+        &-cyan {
+            border: 1px solid var(--semi-cyan-1);
+
+            &-title {
+                @include color-list-title(var(--semi-cyan-0), var(--semi-cyan-1));
+            }
+        }
+
+        &-description {
+            padding: 16px 20px;
+            margin-bottom: 0;
+        }
+    }
+}

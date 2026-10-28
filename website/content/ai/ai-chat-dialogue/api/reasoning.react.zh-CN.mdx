@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                | 说明                                                                                  | 类型                                                                                | 默认值 |
+| ------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------ |
+| content             | 推理内容，`summary` 为空时按换行拼接其中的文本作为推理正文。                          | `{ text?: string; type?: string }[]`                                                | -      |
+| customRenderer      | 替换推理正文的渲染。参数为推理组件的全部属性，返回的内容放在正文区域中。              | <ApiType detail={"(props: ReasoningWidgetProps) => React.ReactNode"}>Type</ApiType> | -      |
+| markdownRenderProps | 透传给推理正文所用 MarkdownRender 的属性，`raw` 由推理正文决定。                      | `MarkdownRenderProps`                                                               | -      |
+| status              | 推理状态。为 `completed` 时标题显示已完成，且初次渲染时折叠；其他值显示思考中并展开。 | `string`                                                                            | -      |
+| summary             | 推理摘要，非空时按换行拼接其中的文本作为推理正文。                                    | `{ text?: string; type?: string }[]`                                                | -      |

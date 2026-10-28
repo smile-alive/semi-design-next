@@ -1,0 +1,87 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autofocus | 挂载后是否自动聚焦输入框。 | `boolean` | - |
+| autoSwitchDate | 通过面板上方的年月切换按钮或下拉菜单更改年月时，自动切换日期。仅对 date 类型生效。 | `boolean` | `true` |
+| borderless | 无边框模式。 | `boolean` | `false` |
+| bottomSlot | 渲染底部额外区域，传入 JSX 元素。 | `JSX.Element` | - |
+| class | 根元素的类名。 | `string` | - |
+| clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。传入 JSX 元素。 | `JSX.Element` | - |
+| defaultOpen | 面板默认显示或隐藏。 | `boolean` | `false` |
+| defaultPickerValue | 默认面板日期。按内容比较，内容变化时面板回到该日期；每次渲染都传 `new Date()` 会被视为变化。 | `ValueType` | - |
+| defaultValue | 默认值。 | `ValueType` | - |
+| density | 面板的尺寸，可选值：`default`、`compact`。 | `DensityType` | `"default"` |
+| disabled | 是否禁用。 | `boolean` | - |
+| disabledDate | 日期禁止判断方法，返回 true 时禁止该日期。options 含范围选择已选的 rangeStart、rangeEnd 与当前聚焦的输入框 rangeInputFocus；type 为 year 时以每年的 1 月 1 日调用，返回 true 时禁止该年。 | `DisabledDateType` | <ApiType detail={"() => false"}>Type</ApiType> |
+| disabledTime | 时间禁止配置，返回值会透传给 TimePicker 组件。 | `DisabledTimeType` | <ApiType detail={"() => ({})"}>Type</ApiType> |
+| disabledTimePicker | 是否禁止时间选择。 | `MonthsGridFoundationProps['disabledTimePicker']` | - |
+| dropdownClassName | 下拉面板的类名。 | `string` | - |
+| dropdownStyle | 下拉面板的内联样式，可传对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| endDateOffset | type 为 dateRange 时，设置单击选择范围的结束日期。 | `DateOffsetType` | - |
+| endYear | 年份滚轮的结束年，需大于 startYear。默认为当前年后 100 年。 | `number` | - |
+| format | 输入框中展示的日期字符串格式，默认值随 type 变化，见下方「日期时间格式」。 | `string` | - |
+| hideDisabledOptions | 隐藏禁止选择的时间选项。 | `MonthsGridFoundationProps['hideDisabledOptions']` | `false` |
+| inputReadOnly | 文本框是否为只读（readonly）。 | `boolean` | `false` |
+| inputStyle | 输入框的样式，可传对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| insetInput | 面板中是否嵌入输入框。可传布尔值，或传入 InsetInputProps 对象配置内嵌输入框的 placeholder。 | `DateInputFoundationProps['insetInput']` | `false` |
+| insetLabel | 输入框内的标签，由 Form 字段注入；直接使用 DatePicker 时也会显示在输入框中。 | `JSX.Element` | - |
+| insetLabelId | 输入框内标签的元素 id，由 Form 字段注入，用于为输入框提供可访问名称。 | `string` | - |
+| leftSlot | 渲染左侧额外区域，传入 JSX 元素。 | `JSX.Element` | - |
+| max | multiple 为 true 时最多可选的日期数量，不传或为 null、undefined 时不限制。 | `number` | - |
+| motion | 是否开启面板展开的动画。 | `boolean` | `true` |
+| multiple | 是否可以多选，仅支持 type 为 date。 | `boolean` | `false` |
+| needConfirm | 是否需要“确认选择”，仅 type 为 dateTime 或 dateTimeRange 时有效。 | `boolean` | - |
+| onBlur | 面板关闭时的回调，范围选择时不推荐使用。只有点击外部关闭时 e 为原生 mousedown 事件，确认、选中日期、Esc 等其他关闭方式不传。 | <ApiType detail={"(e?: MouseEvent) => void"}>Type</ApiType> | - |
+| onCancel | 取消选择时的回调，入参为上次确认的值，仅 type 为 dateTime 或 dateTimeRange 且 needConfirm 为 true 时有效。 | `OnCancelType` | - |
+| onChange | 值变化时的回调。范围与多选时两个参数都是数组。 | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onClear | 点击清除按钮时的回调。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onClickOutSide | 弹出层展示时，在弹出层与触发器之外按下鼠标时的回调，参数为原生 mousedown 事件。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onConfirm | 确认选择时的回调，入参为当前选择的值，仅 type 为 dateTime 或 dateTimeRange 且 needConfirm 为 true 时有效。 | `OnConfirmType` | - |
+| onFocus | 获得焦点时的回调，范围选择时不推荐使用。e 为输入框的 focus 事件，或聚焦范围起始的触发器点击、按键事件；rangeType 只在范围输入框聚焦时有值。 | <ApiType detail={"(e: FocusEvent \u007c MouseEvent \u007c KeyboardEvent, rangeType?: RangeInput \u007c false) => void"}>Type</ApiType> | - |
+| onOpenChange | 面板显示或隐藏状态切换时的回调，入参为面板是否展开。 | <ApiType detail={"(status: boolean) => void"}>Type</ApiType> | - |
+| onPanelChange | 面板的年份或日期切换时的回调。 | `OnPanelChangeType` | - |
+| onPresetClick | 点击快捷选择按钮时的回调。 | <ApiType detail={"(item: PresetType, e: MouseEvent) => void"}>Type</ApiType> | - |
+| open | 面板显示或隐藏的受控属性，配合 onOpenChange 使用。 | `boolean` | - |
+| placeholder | 输入框的提示文字，范围类型可传数组。 | `string \| string[]` | - |
+| position | 浮层位置，可选值与 Popover 的 position 相同。 | `Position` | - |
+| prefix | 输入框的前缀内容，传入 JSX 元素。 | `JSX.Element` | - |
+| prefixCls | 根元素与面板的类名前缀，一般无需修改。 | `string` | `"semi-datepicker"` |
+| presetPosition | 快捷选择面板的位置，可选值：left、right、top、bottom。 | `PresetPosition` | `"bottom"` |
+| presets | 日期时间快捷选择。start 与 end 可以是函数，函数每次打开面板时求值。 | `PresetsType` | - |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。 | `boolean` | - |
+| rangeSeparator | 范围类型输入框的日期分隔符，字符串解析同样使用它。 | `string` | `" ~ "` |
+| rangeSeparatorNode | 范围类型输入框分隔符的渲染节点，仅影响界面展示，字符串解析仍使用 rangeSeparator。 | `JSX.Element` | - |
+| ref | 根元素，携带 open、close、focus、blur 方法。 | <ApiType detail={"Ref\u003cDatePickerElement>"}>Type</ApiType> | - |
+| renderDate | 自定义日期的显示内容，入参为日（数字）与完整日期字符串，返回 JSX 元素。 | <ApiType detail={"(dayNumber?: number, fullDate?: string) => JSX.Element"}>Type</ApiType> | - |
+| renderFullDate | 自定义整个日期格子的渲染内容，入参为日（数字）、完整日期字符串与日期状态。 | <ApiType detail={"(dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => JSX.Element"}>Type</ApiType> | - |
+| rightSlot | 渲染右侧额外区域，传入 JSX 元素。 | `JSX.Element` | - |
+| showClear | 是否显示清除按钮。 | `boolean` | - |
+| size | 输入框的尺寸，可选值：small、default、large。 | `InputSize` | `"default"` |
+| spacing | 浮层与触发器之间的距离。 | `number` | - |
+| startDateOffset | type 为 dateRange 时，设置单击选择范围的开始日期。 | `DateOffsetType` | - |
+| startYear | 年份滚轮的开始年，默认为当前年前 100 年。 | `number` | - |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean \| string` | `true` |
+| style | 根元素的样式，可传对象（键为 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| syncSwitchMonth | 范围选择时，两个面板是否同步切换月份。 | `boolean` | `false` |
+| timePickerOpts | 传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps，含义见 TimePicker 的 API。格式、值和 onChange 由面板设置。 | `DatePickerTimePickerOpts` | - |
+| timeZone | 时区，值与面板日期按该时区解释和展示。字符串为 IANA 时区名，如 Asia/Shanghai；数字会原样传给 date-fns-tz 的 utcToZonedTime。 | `string \| number` | - |
+| topSlot | 渲染顶部额外区域，传入 JSX 元素。 | `JSX.Element` | - |
+| triggerRender | 自定义触发器的渲染函数，只调用一次。入参为触发器属性，其中每个键都是响应式的，需在返回的 JSX 中读取。 | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| type | 类型，可选值：date、dateRange、dateTime、dateTimeRange、month、monthRange、year。 | `Type` | `"date"` |
+| validateStatus | 校验状态，仅影响展示样式，success 与 default 样式相同。 | `ValidateStatus` | - |
+| value | 受控的值。 | `ValueType \| null` | - |
+| weekStartsOn | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推。 | `WeekStartNumber` | `0` |
+| yearAndMonthOpts | 透传给年月选择器的其他参数。list、onSelect、selectedIndex 与 type 由面板设置，不接受传入。 | `YearAndMonthOpts` | - |
+
+**Methods**
+
+| 方法  | 说明                                                                                                                 | 类型                                                                |
+| ----- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| blur  | 使输入框失焦。                                                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                       |
+| close | 关闭面板。受控的 open 优先，受控时 close 不改变面板的可见性。                                                        | <ApiType detail={"() => void"}>Type</ApiType>                       |
+| focus | 聚焦输入框。范围类型默认聚焦开始框，传入 `'rangeEnd'` 时聚焦结束框；开启 insetInput 且面板打开时聚焦面板内的输入框。 | <ApiType detail={"(focusType?: RangeInput) => void"}>Type</ApiType> |
+| open  | 展开面板。受控的 open 优先，受控时 open 不改变面板的可见性。                                                         | <ApiType detail={"() => void"}>Type</ApiType>                       |

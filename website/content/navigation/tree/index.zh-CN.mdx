@@ -1,0 +1,934 @@
+---
+order: 61
+title: 树形控件
+icon: doc-tree
+brief: 树型结构列表。
+---
+
+import TreeReactApi from './api/tree.react.zh-CN.mdx';
+import TreeVueApi from './api/tree.vue.zh-CN.mdx';
+import TreeSolidApi from './api/tree.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Tree } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tree } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tree } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+最简单的用法，默认为单选模式，每一级菜单项均可选择。
+
+<Demo id="basic" />
+
+### 多选
+
+设置 `multiple`，可以进行多选。多选情况下所有子项都被选择时，自动勾选显示其父项。
+
+<Demo id="multiple" />
+
+### 可搜索的
+
+通过设置 `filterTreeNode` 属性可支持搜索功能。默认对 `label` 值进行搜索，可通过 `treeNodeFilterProp` 更改。如果只希望展示过滤后的结果，可以设置 `showFilteredOnly` 。
+
+<Demo id="searchable" />
+
+<Framework only="react">
+
+设置 `filterTreeNode` 属性开启搜索后，可以通过设置 `searchRender` 自定义搜索框的渲染方法，设置为`false`时可以隐藏搜索框。
+
+</Framework>
+
+<Framework only="vue">
+
+设置 `filterTreeNode` 属性开启搜索后，可以通过 `#search` 插槽自定义搜索框，插槽参数为 `class`、`modelValue`、`placeholder`、`showClear` 和 `onChange`。插槽内容为空（`<template #search />`）时隐藏搜索框。
+
+</Framework>
+
+<Framework only="solid">
+
+设置 `filterTreeNode` 属性开启搜索后，可以通过设置 `searchRender` 自定义搜索框的渲染方法，设置为 `false` 时可以隐藏搜索框。`searchRender` 的参数是活对象，在返回的 JSX 中读取，不要解构。
+
+</Framework>
+
+<Demo id="search-render" />
+
+### 手动触发搜索
+
+<Framework only="react">
+
+可以通过ref的方式获取tree的实例，调用tree的`search`方法进行搜索。注意需要同时设置`filterTreeNode`开启搜索，如果搜索框在tree外部，可以通过设置`searchRender=false`隐藏tree内部的搜索框。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过模板 ref 获取 Tree 的实例，调用 `search` 方法进行搜索。注意需要同时设置 `filterTreeNode` 开启搜索，如果搜索框在 Tree 外部，可以用空的 `#search` 插槽隐藏 Tree 内部的搜索框。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `ref` 获取 Tree 的根元素，调用它的 `search` 方法进行搜索。注意需要同时设置 `filterTreeNode` 开启搜索，如果搜索框在 Tree 外部，可以通过设置 `searchRender={false}` 隐藏 Tree 内部的搜索框。
+
+</Framework>
+
+<Demo id="manual-search" />
+
+### 简单 JSON 格式的数据
+
+可以通过 `treeDataSimpleJson` 传入 JSON 形式的 `treeNodes` 数据。此时 key-value 键值对中的 key 值将作为 `TreeNodeData` 的 `key` 和 `label`，`value` 值将作为 `TreeNodeData` 的 `value`。返回值为包含选中节点的 JSON 数据。
+
+<Demo id="simple-json" />
+
+### 行显示节点
+
+可以通过设置 `blockNode` 使节点显示为整行，此时悬浮选中高亮状态都会显示整行。默认打开。关闭时只高亮节点 label。
+
+<Demo id="block-node" />
+
+### 自定义节点内容
+
+<Framework only="react">
+
+`TreeNodeData` 的 label 属性支持传入 ReactNode 来自定义显示的节点内容。注意如果设置 `filterTreeNode` 开启搜索，默认是对 label 的值进行搜索，当 label 为节点时，需要自定义 `filterTreeNode` 的函数来满足搜索需求。
+
+在**v>=1.6.0**的版本中，你也可以使用 `renderLabel` 来传入自定义的渲染方法，此时搜索值仍为treeData中的相应的label属性。
+
+节点内容最好只用于展示。节点里的按钮、链接虽然可以用 Tab 到达（见 [Accessibility](#accessibility)），但读屏软件会把它们当作节点名称的一部分，方向键浏览时也不会经过它们。需要对节点执行的操作请放在树外，例如 `onContextMenu` 打开的菜单或树旁的工具栏。
+
+</Framework>
+
+<Framework only="vue">
+
+`TreeNodeData` 的 `label` 只接受字符串或数字，节点的自定义内容通过 `#label` 插槽提供，插槽参数为 `item`（节点数据）、`label` 和 `searchWord`（当前搜索词）。开启 `filterTreeNode` 搜索时，仍按 `treeData` 中的 `label` 文本匹配。
+
+节点内容最好只用于展示。节点里的按钮、链接虽然可以用 Tab 到达（见 [Accessibility](#accessibility)），但读屏软件会把它们当作节点名称的一部分，方向键浏览时也不会经过它们。需要对节点执行的操作请放在树外，例如 `@contextMenu` 打开的菜单或树旁的工具栏。
+
+</Framework>
+
+<Framework only="solid">
+
+`TreeNodeData` 的 `label` 只接受字符串或数字，自定义节点内容使用 `renderLabel`。`renderLabel` 接收 label、节点数据和搜索词，返回节点内容，任一参数变化时重新调用。搜索仍按 treeData 中的 `label` 文本匹配。
+
+节点内容最好只用于展示。节点里的按钮、链接虽然可以用 Tab 到达（见 [Accessibility](#accessibility)），但读屏软件会把它们当作节点名称的一部分，方向键浏览时也不会经过它们。需要对节点执行的操作请放在树外，例如 `onContextMenu` 打开的菜单或树旁的工具栏。
+
+</Framework>
+
+<Demo id="custom-label" />
+
+<Framework only="react">
+
+过长省略。在**v>=1.6.0**的版本中，可以使用 `renderLabel` 来实现文本过长省略的效果。
+
+</Framework>
+
+<Framework only="vue">
+
+过长省略。可以在 `#label` 插槽中实现文本过长省略的效果。
+
+</Framework>
+
+<Framework only="solid">
+
+过长省略。可以在 `renderLabel` 中返回设置了 `ellipsis` 属性的 `Typography.Text`，实现文本过长省略的效果。
+
+</Framework>
+
+<Demo id="ellipsis-label" />
+
+### 自定义图标
+
+<Framework only="react">
+
+通过设置 `icon` 属性可添加自定义图标。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#icon` 插槽可添加自定义图标，插槽参数为 `item`、`level`、`expanded`、`isLeaf`、`loading`、`selected`、`checked` 和 `halfChecked`，可按节点返回不同的图标。`TreeNodeData` 没有 `icon` 字段。
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 `icon` 属性可添加自定义图标。可以传入元素，也可以传入函数：函数每行调用一次，参数为该行的属性（含节点数据），返回该行的图标，按节点数据区分图标时用函数形式。`TreeNodeData` 没有 `icon` 字段。
+
+</Framework>
+
+<Demo id="custom-icon" />
+
+### 目录树模式
+
+通过设置 `directory` 属性可显示为目录树模式。目录树模式下自带目录图标，可以通过自定义图标覆盖。
+
+<Demo id="directory" />
+
+### 禁用
+
+可以使用 `disableStrictly` 来开启严格禁用。开启严格禁用后，当节点是 disabled 的时候，则不能通过子级或者父级的关系改变选中状态。
+
+<Demo id="disabled" />
+
+### 节点选中关系
+
+版本：>= 2.5.0
+
+多选时，可以使用 `checkRelation` 来设置节点选中关系的类型，可选：'related'（默认）、'unRelated'。当选中关系为 'unRelated'，意味着节点之间的选中互不影响。
+
+<Demo id="checked-relation" />
+
+### 默认展开
+
+`defaultExpandAll` 和 `expandAll` 均可以设置 `Tree` 的默认展开/收起状态。二者的区别是，`defaultExpandAll` 只在初始化时生效，而 `expandAll` 不仅会在初始化时生效，当数据(`treeData`/`treeDataSimpleJson`)发生动态更新时，`expandAll` 也仍然生效。
+
+其中，`expandAll` 是从 1.30.0 开始支持的。
+
+在下面的 demo 中，点击按钮更新 `TreeData` 后，`defaultExpandAll` 失效，`expandAll` 仍然生效。
+
+<Demo id="default-expand" />
+
+### 开启搜索的展开受控
+
+<Framework only="react">
+
+传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys`（version: >= 2.38.0） 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Framework only="vue">
+
+传入 `expandedKeys` 时即为展开受控组件，可以用 `v-model:expandedKeys` 绑定，也可以配合 `@expand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `@search` 的第二个参数 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的第二个参数 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Demo id="controlled-expand-search" />
+
+### 受控
+
+<Framework only="react">
+
+传入 `value` 时即为受控组件，可以配合 `onChange` 使用。
+
+</Framework>
+
+<Framework only="vue">
+
+传入 `modelValue` 时即为受控组件，用 `v-model` 绑定，也可以配合 `@change` 使用。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `value` 时即为受控组件，可以配合 `onChange` 使用。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 自动展开父节点
+
+在展开受控的情况下，当开启了 `autoExpandParent` ，如果想要收起父元素，则需要把它的所有子元素均收起后才可以。默认情况下，`autoExpandParent` 为 false，即：父元素收起不受到子元素的影响。
+
+<Demo id="auto-expand-parent" />
+
+### 自定义展开 Icon
+
+<Framework only="react">
+
+可以通过 `expandIcon` 自定义展开 Icon。 支持传入 ReactNode 或者函数。`expandIcon` 自 2.75.0 开始支持。
+
+```ts
+expandIcon: ReactNode | ((props: {
+    onClick: (e: MouseEvent) => void;
+    className: string;
+    expanded: boolean;
+}))
+```
+
+示例如下：
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#expandIcon` 插槽自定义展开 Icon，插槽参数为 `onClick`、`class` 和 `expanded`。插槽只返回一个元素时，该元素自动获得 `class` 与展开的点击处理；也可以按参数自行绑定。
+
+```vue
+<Tree :treeData="treeData">
+    <template #expandIcon="{ expanded, onClick, class: className }">
+        <IconMinus v-if="expanded" :class="className" @click="onClick" />
+        <IconPlus v-else :class="className" @click="onClick" />
+    </template>
+</Tree>
+```
+
+示例如下：
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `expandIcon` 自定义展开 Icon，支持传入元素或函数。传入元素时，该元素自动获得展开图标的 `class` 与展开的点击处理；传入函数时，函数参数为 `onClick`、`class` 和 `expanded`，由函数返回整个图标。`expanded` 是活的属性，在 JSX 中读取，不要解构。
+
+```ts
+expandIcon: JSX.Element | ((props: { onClick: (e: MouseEvent) => void; class: string; expanded: boolean }) => JSX.Element);
+```
+
+示例如下：
+
+</Framework>
+
+<Demo id="custom-expand-icon" />
+
+### 连接线
+
+通过 `showLine` 设置节点之间的连接线，默认为 false，从 2.50.0 开始支持
+
+<Demo id="line" />
+
+### 虚拟化
+
+列表虚拟化，用于大量树节点的情况。开启后，动画效果将被关闭。
+
+`virtualize` 是一个包含下列值的对象：
+
+- height: 高度值，如果为 string 必须有计算高度才能被渲染出来，即其父节点有 offsetHeight
+- width: 宽度值，默认 100%
+- itemSize: 每行的treeNode的高度，必传
+
+如果带搜索框，建议开启 `showFilteredOnly` 减少多余节点的渲染。
+
+<Demo id="virtualize" />
+
+### 动态更新数据
+
+<Framework only="vue">
+
+`treeData` 只支持整体替换：传入新数组才会更新，原地修改数组或节点不会更新树。
+
+</Framework>
+
+<Framework only="solid">
+
+`treeData` 只支持整体替换：传入新数组才会更新，原地修改数组或节点不会更新树。
+
+</Framework>
+
+<Demo id="dynamic-update" />
+
+### 异步加载数据
+
+通过设置 loadData 可以动态加载数据，此时需要在数据中传入 isLeaf 标明叶子节点。
+
+<Demo id="load-data" />
+
+### 可拖拽的Tree
+
+<Framework only="react">
+
+通过设置 draggable 配合 onDrop 可以实现 Tree 节点的拖拽。
+
+</Framework>
+
+<Framework only="vue">
+
+通过设置 `draggable` 配合 `@drop` 可以实现 Tree 节点的拖拽。
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 `draggable` 配合 `onDrop` 可以实现 Tree 节点的拖拽。
+
+</Framework>
+
+<Notice title="注意">拖拽功能于 v 1.8.0 后开始提供。目前不支持与虚拟化同时使用</Notice>
+
+<Framework only="react">
+
+拖拽事件的回调入参如下：
+
+```
+- onDragEnd: function({ event, node: DragTreeNode })
+- onDragEnter:function({ event, node: DragTreeNode, expandedKeys: string[] })
+- onDragLeave:function({ event, node: DragTreeNode })
+- onDragOver:function({ event, node: DragTreeNode })
+- onDragStart: function({ event, node: DragTreeNode })
+- onDrop:function({ event, node: DragTreeNode, dragNode: DragTreeNode, dragNodesKeys: string[], dropPosition: number, dropToGap: Boolean })
+```
+
+数据类型 DragTreeNode，除了包含 TreeNodeData 所有属性外，还包含 expanded 和 pos 属性，
+
+```
+DragTreeNode {
+    expanded: Boolean,
+    pos: string
+    value?: string | number;
+    label?: React.ReactNode;
+    disabled?: boolean;
+    isLeaf?: boolean;
+    [key: string]: any;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+拖拽事件的载荷是一个对象，参数如下：
+
+```
+- @dragEnd: { event, node: TreeDragNode }
+- @dragEnter: { event, node: TreeDragNode, expandedKeys?: string[] }
+- @dragLeave: { event, node: TreeDragNode }
+- @dragOver: { event, node: TreeDragNode }
+- @dragStart: { event, node: TreeDragNode }
+- @drop: { event, node: TreeDragNode, dragNode: TreeDragNode, dragNodesKeys: string[], dropPosition: number, dropToGap: boolean }
+```
+
+数据类型 TreeDragNode，除了包含 TreeNodeData 所有属性外，还包含 expanded 和 pos 属性，
+
+```
+TreeDragNode {
+    expanded: boolean,
+    pos: string
+    value?: string | number;
+    label?: string | number;
+    disabled?: boolean;
+    isLeaf?: boolean;
+    [key: string]: any;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+拖拽事件的回调参数是对象，参数如下：
+
+```
+- onDragEnd: ({ event, node: TreeDragNode }) => void
+- onDragEnter: ({ event, node: TreeDragNode, expandedKeys?: string[] }) => void
+- onDragLeave: ({ event, node: TreeDragNode }) => void
+- onDragOver: ({ event, node: TreeDragNode }) => void
+- onDragStart: ({ event, node: TreeDragNode }) => void
+- onDrop: ({ event, node: TreeDragNode, dragNode: TreeDragNode, dragNodesKeys: string[], dropPosition: number, dropToGap: boolean }) => void
+```
+
+数据类型 TreeDragNode，除了包含 `TreeNodeData` 所有属性外，还包含 `expanded` 和 `pos` 属性：
+
+```ts
+interface TreeDragNode extends TreeNodeData {
+    expanded: boolean;
+    pos: string;
+}
+```
+
+</Framework>
+
+- `pos` 指的是当前节点在整个 treeData 中的位置关系，如第0层第1个节点的第2个节点的第0个节点：'0-1-2-0'
+- `dropPosition` 指的是被拖拽节点在当前层级中被 drop 的位置，如插入在同级的第0个节点前则为 -1，在第0个节点后则为 1，落在其上则为 0，以此类推。配合 dropToGap 可以得到更完整的判断。
+- `dropToGap` 指的是被拖拽节点是否被 drop 在节点之间的位置，如果为 false 则是 drop 在某个节点上方
+
+<Demo id="draggable" />
+
+### 高级定制
+
+**版本 v>=1.7.0**
+
+<Framework only="react">
+
+Tree 组件的 api 支持了大部分的渲染需求，但是如果有非常特殊的定制要求的话，可以使用 `renderFullLabel` 来接管整行 option 的渲染效果。
+
+renderFullLabel 参数类型如下：
+
+```ts
+type RenderFullLabelProps = {
+    /* 节点数据 */
+    data: BasicTreeNodeData;
+    /* 层级 */
+    level: number;
+    /* 虚拟化情况下，该 style 必须给到 DOM 节点上*/
+    style: any;
+    /* 样式类名，包括内置样式，如缩进、展开按钮、过滤器、禁用、选择等。 */
+    className: string;
+    /* 展开按钮 */
+    expandIcon: any;
+    /* 选中状态 */
+    checkStatus: {
+        /* 是否选中 */
+        checked: boolean;
+        /* 是否半选 */
+        halfChecked: boolean;
+    };
+    /* 展开状态 */
+    expandStatus: {
+        /* 是否展开 */
+        expanded: boolean;
+        /* 是否加载中 */
+        loading: boolean;
+    };
+    /* 该节点是否符合筛选条件 */
+    filtered: boolean | undefined;
+    /* 当前搜索框输入值 */
+    searchWord: string | undefined;
+    /* 点击回调 */
+    onClick: (e: MouseEvent) => void;
+    /* 多选点击回调 */
+    onCheck: (e: MouseEvent) => void;
+    /* 右键点击回调 */
+    onContextMenu: (e: MouseEvent) => void;
+    /* 二次点击回调 */
+    onDoubleClick: (e: MouseEvent) => void;
+    /* 展开回调 */
+    onExpand: (e: MouseEvent) => void;
+};
+```
+
+<Notice type="primary" title="注意事项">
+    <div>如果开启了虚拟化，需要将 style （虚拟化相关样式）赋予给渲染的 DOM 节点</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+Tree 组件的 api 支持了大部分的渲染需求，但是如果有非常特殊的定制要求的话，可以使用 `#fullLabel` 插槽来接管整行的内容。
+
+带有 `id`、`role="treeitem"` 和行状态的行元素（`li`）由 Tree 自己提供，虚拟化时的定位样式也在这个元素上，插槽只写行内的内容。把插槽参数中的 `class` 绑到内容元素上，该元素就获得与内置行相同的缩进、选中、焦点等样式和行内边距。
+
+插槽参数类型如下：
+
+```ts
+type TreeFullLabelSlotProps = {
+    /* 节点数据 */
+    data: TreeNodeData;
+    /* 层级 */
+    level: number;
+    /* 样式类名，包括内置样式，如缩进、选中、焦点、拖拽状态等 */
+    class: string;
+    /* 内置的展开按钮 */
+    expandIcon: VNode;
+    /* 选中状态 */
+    checkStatus: {
+        /* 是否选中 */
+        checked: boolean;
+        /* 是否半选 */
+        halfChecked: boolean;
+    };
+    /* 展开状态 */
+    expandStatus: {
+        /* 是否展开 */
+        expanded: boolean;
+        /* 是否加载中 */
+        loading: boolean;
+    };
+    /* 该节点是否符合筛选条件 */
+    filtered: boolean;
+    /* 当前搜索框输入值 */
+    searchWord: string;
+    /* 点击回调：单选时选中，多选时勾选 */
+    onClick: (event: MouseEvent) => void;
+    /* 多选点击回调 */
+    onCheck: (event: MouseEvent) => void;
+    /* 展开回调 */
+    onExpand: (event: MouseEvent) => void;
+    /* 右键点击回调 */
+    onContextmenu: (event: MouseEvent) => void;
+    /* 二次点击回调 */
+    onDblclick: (event: MouseEvent) => void;
+};
+```
+
+```vue
+<Tree :treeData="treeData">
+    <template #fullLabel="{ data, class: className, onClick }">
+        <div :class="className" @click="onClick">{{ data.label }}</div>
+    </template>
+</Tree>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Tree 的 API 支持了大部分的渲染需求，但是如果有非常特殊的定制要求的话，可以使用 `renderFullLabel` 来接管整行的渲染。每行调用一次，参数是活对象：字段在返回的 JSX 中读取，不要解构。
+
+`renderFullLabel` 参数类型如下：
+
+```ts
+type RenderFullLabelProps = {
+    /* 节点数据 */
+    data: TreeNodeData;
+    /* 层级 */
+    level: number;
+    /* 样式类名，包括内置样式，如缩进、选中、焦点、拖拽状态等 */
+    class: string;
+    /* 创建内置的展开按钮，每次调用都会创建新元素，在要放置按钮的位置调用 */
+    expandIcon: () => JSX.Element;
+    /* 选中状态 */
+    checkStatus: {
+        /* 是否选中 */
+        checked: boolean;
+        /* 是否半选 */
+        halfChecked: boolean;
+    };
+    /* 展开状态 */
+    expandStatus: {
+        /* 是否展开 */
+        expanded: boolean;
+        /* 是否加载中 */
+        loading: boolean;
+    };
+    /* 该节点是否符合筛选条件 */
+    filtered: boolean;
+    /* 当前搜索框输入值 */
+    searchWord: string;
+    /* 点击整行的回调：单选时选中，多选时勾选 */
+    onClick: (e: MouseEvent) => void;
+    /* 多选点击回调 */
+    onCheck: (e: MouseEvent) => void;
+    /* 展开回调 */
+    onExpand: (e: MouseEvent) => void;
+    /* 右键点击回调 */
+    onContextMenu: (e: MouseEvent) => void;
+    /* 二次点击回调 */
+    onDoubleClick: (e: MouseEvent) => void;
+};
+```
+
+Tree 自己提供带 `id`、`role="treeitem"` 和行状态的行元素（`li`），返回的内容放在它里面，虚拟化时的定位样式也在这个元素上。把参数中的 `class` 绑到内容元素上，该元素就获得与内置行相同的缩进、选中、焦点等样式和行内边距。
+
+```tsx
+<Tree treeData={treeData} renderFullLabel={(row) => <div class={row.class}>{row.data.label}</div>} />
+```
+
+</Framework>
+
+这里给几个常见的高级用法的 demo。
+
+第一个是针对 “希望只有叶子节点可以选中，父节点只起到分组作用” 的场景。
+
+<Framework only="react">
+
+- 你只需要渲染叶子节点前的 Checkbox，并且点击父节点时不触发选中，点击叶子节点触发。
+- 同时开启 leafOnly 可以使 onChange 的回调入参都是叶子节点。  
+  注意：renderFullLabel 只接管了渲染效果，并不影响内部的数据逻辑。但是你可以选取需要的逻辑进行渲染，或者配合受控来实现更复杂的需求。
+
+</Framework>
+
+<Framework only="vue">
+
+- 你只需要渲染叶子节点前的 Checkbox，并且点击父节点时不触发选中，点击叶子节点触发。
+- 同时开启 leafOnly 可以使 `change` 事件的载荷都是叶子节点。  
+  注意：`#fullLabel` 只接管了渲染效果，并不影响内部的数据逻辑。但是你可以选取需要的逻辑进行渲染，或者配合受控来实现更复杂的需求。
+
+</Framework>
+
+<Framework only="solid">
+
+- 你只需要渲染叶子节点前的 Checkbox，并且点击父节点时不触发选中，点击叶子节点触发。
+- 同时开启 leafOnly 可以使 `onChange` 的回调入参都是叶子节点。注意：`renderFullLabel` 只接管了渲染效果，并不影响内部的数据逻辑。但是你可以选取需要的逻辑进行渲染，或者配合受控来实现更复杂的需求。
+
+</Framework>
+
+<Demo id="full-label-checkbox" />
+
+第二个是针对 “希望只有叶子节点可以单选，父节点只起到分组作用” 的场景。
+
+- 你只需要点击父节点时不触发选中，点击叶子节点触发。
+
+<Demo id="full-label-leaf-select" />
+
+第三个是针对 “单选选中父节点同时也高亮子节点” 的场景。
+
+<Demo id="full-label-highlight" />
+
+### 可拖拽的高级定制
+
+<Framework only="react">
+
+我们从 1.27.0 版本开始支持可拖拽（`draggable`）和高级定制（`renderFullLabel`）同时使用，在该版本之前，并不支持二者同时使用。
+
+</Framework>
+
+<Framework only="vue">
+
+可拖拽（`draggable`）和高级定制（`#fullLabel`）可以同时使用。
+
+</Framework>
+
+<Framework only="solid">
+
+可拖拽（`draggable`）和高级定制（`renderFullLabel`）可以同时使用。
+
+</Framework>
+
+<Demo id="draggable-full-label" />
+
+## API参考
+
+### Tree
+
+<Framework only="react">
+
+<TreeReactApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby` 与 `tabIndex` 落在 `role="tree"` 的元素上，空状态下没有该元素，这些属性被丢弃；其余未列出的原生属性（如 `id`、`data-*`）落在根元素 `.semi-tree-wrapper` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TreeVueApi />
+
+Vue 版的 Tree 没有 `className` 属性：`class`、`style` 和 `data-*` 等未声明的属性落在根元素 `.semi-tree-wrapper` 上，`aria-*` 落在 `role="tree"` 的元素上。空状态下没有 `role="tree"` 的元素，`aria-*` 被丢弃。
+
+</Framework>
+
+<Framework only="solid">
+
+<TreeSolidApi />
+
+`class`、`style` 和 `ref` 以及未声明的原生属性（如 `data-*`）落在根元素 `.semi-tree-wrapper` 上，`aria-*` 与 `tabIndex` 落在 `role="tree"` 的元素上。空状态下没有 `role="tree"` 的元素，`aria-*` 与 `tabIndex` 被丢弃。
+
+</Framework>
+
+### TreeNodeData
+
+<Framework only="react">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填。此时 onChange, value, defaultValue 及 onChangeWithObject 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+</Framework>
+
+<Framework only="vue">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填，不填时 `change` 事件、`modelValue`、`defaultValue` 及 `changeWithObject` 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+</Framework>
+
+<Framework only="react">
+
+| 属性     | 说明                                                                                   | 类型              | 默认值 |
+| -------- | -------------------------------------------------------------------------------------- | ----------------- | ------ |
+| value    | 属性值                                                                                 | string\|number    | -      |
+| label    | 展示的文本                                                                             | string\|ReactNode | -      |
+| icon     | 自定义图标                                                                             | ReactNode         | -      |
+| disabled | 是否禁用，Tree 的 `disabled` 为 true 时整棵树都禁用，节点的 `disabled: false` 不会解除 | boolean           | false  |
+| key      | required且要求唯一                                                                     | string            | -      |
+| isLeaf   | 设置节点为叶子节点，在异步加载数据的情况即传入 loadData 时有效                         | boolean           | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性     | 说明                                                                                   | 类型           | 默认值 |
+| -------- | -------------------------------------------------------------------------------------- | -------------- | ------ |
+| value    | 属性值                                                                                 | string\|number | -      |
+| label    | 展示的文本，自定义内容使用 `#label` 插槽                                               | string\|number | -      |
+| disabled | 是否禁用，Tree 的 `disabled` 为 true 时整棵树都禁用，节点的 `disabled: false` 不会解除 | boolean        | false  |
+| key      | required且要求唯一                                                                     | string         | -      |
+| isLeaf   | 设置节点为叶子节点，在异步加载数据的情况即传入 loadData 时有效                         | boolean        | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填，不填时 `onChange`、`value`、`defaultValue` 及 `onChangeWithObject` 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+| 属性     | 说明                                                                                   | 类型               | 默认值  |
+| -------- | -------------------------------------------------------------------------------------- | ------------------ | ------- |
+| value    | 属性值                                                                                 | `string \| number` | -       |
+| label    | 展示的文本，自定义内容使用 `renderLabel`                                               | `string \| number` | -       |
+| disabled | 是否禁用，Tree 的 `disabled` 为 true 时整棵树都禁用，节点的 `disabled: false` 不会解除 | `boolean`          | `false` |
+| key      | 必填且唯一                                                                             | `string`           | -       |
+| isLeaf   | 设置节点为叶子节点，在异步加载数据的情况即传入 loadData 时有效                         | `boolean`          | -       |
+
+</Framework>
+
+### Virtualize Object
+
+> `itemSize` 必传。
+
+| 属性     | 说明                                                                | 类型           | 默认值 |
+| -------- | ------------------------------------------------------------------- | -------------- | ------ |
+| height   | 高度值，如果为 string 必须保证有计算高度，即其父节点有 offsetHeight | number\|string | '100%' |
+| itemSize | 每行的treeNode的高度，必传                                          | number         | -      |
+| width    | 宽度值                                                              | number\|string | '100%' |
+
+## Methods
+
+<Framework only="react">
+
+绑定在组件实例上的方法，可以通过 ref 调用实现某些特殊交互。方法说明见上方 Tree 的 API 表格。
+
+```tsx
+import { useRef } from 'react';
+import { Tree, type TreeHandle } from '@fibrae/semi-ui-react';
+
+const tree = useRef<TreeHandle>(null);
+const search = (value: string) => tree.current?.search(value);
+
+<Tree ref={tree} filterTreeNode treeData={treeData} />;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Tree 通过模板 ref 暴露 `search` 和 `scrollTo` 两个方法，说明见上方 Tree 表格的 Exposes 部分，类型为 `TreeHandle`。
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Tree } from '@fibrae/semi-ui-vue';
+    import type { TreeHandle } from '@fibrae/semi-ui-vue';
+
+    const tree = useTemplateRef<TreeHandle>('tree');
+    const search = (value: string) => tree.value?.search(value);
+</script>
+
+<template>
+    <Tree ref="tree" filterTreeNode :treeData="treeData" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Tree 的 `ref` 指向根元素，它带有 `search` 和 `scrollTo` 两个方法，类型为 `TreeElement`，方法说明见上方 Tree 的 API 表格。
+
+```tsx
+import { Tree, type TreeElement } from '@fibrae/semi-ui-solid';
+
+let tree: TreeElement | undefined;
+const search = (value: string) => tree?.search(value);
+
+<Tree ref={(element) => (tree = element)} filterTreeNode treeData={treeData} />;
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Tree 支持传入 `aria-label`、`aria-labelledby`、`aria-describedby` 来命名和描述该 Tree，它们都设置在 `role="tree"` 的元素上;
+- Tree 会自动为每个节点设置 `aria-level`、`aria-setsize`、`aria-posinset`、`aria-disabled`，可展开的节点设置 `aria-expanded`；单选时用 `aria-selected` 表示选中，多选时用 `aria-checked` 表示勾选（半选为 `mixed`）;
+- Tree 会自动为对应部分分别设置 `role` 为 `tree`、`treeitem`。
+
+<Framework only="react">
+
+- `renderFullLabel` 返回的元素同样会被设置 `role="treeitem"` 和上述状态；返回文本、数组、Fragment 等不能承载这些属性的内容时，由带这些属性的 `li` 包住。
+
+</Framework>
+
+<Framework only="vue">
+
+- `#fullLabel` 的内容由 Tree 自己的 `li` 包住，这个 `li` 带有 `id`、`role="treeitem"` 和上述状态。
+
+</Framework>
+
+<Framework only="solid">
+
+- `renderFullLabel` 返回的内容由 Tree 自己的 `li` 包住，这个 `li` 带有 `id`、`role="treeitem"` 和上述状态。
+
+</Framework>
+
+- 节点前的展开箭头和多选复选框只是状态的图示，对读屏软件隐藏，也不接收焦点。
+
+### 键盘交互
+
+Tree 按 [WAI-ARIA Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) 处理键盘：整棵树是一个 Tab 停靠点，焦点停在树上，`aria-activedescendant` 指向当前节点，当前节点显示焦点环。
+
+- `ArrowDown`、`ArrowUp`：移到下一个、上一个可见节点；`Home`、`End`：移到第一个、最后一个可见节点
+- `ArrowRight`：展开收起的节点；节点已展开时移到它的第一个子节点（RTL 下与 `ArrowLeft` 互换）
+- `ArrowLeft`：收起展开的节点；否则移到父节点
+- `Enter`、`Space`：选中当前节点，多选时勾选或取消勾选；禁用节点不响应
+- 输入字符：移到文本以输入内容开头的下一个节点
+
+用鼠标选中、勾选、展开、右键或双击的节点，同时成为键盘的当前节点，之后的方向键从它开始移动。
+
+键盘不触发 `expandAction`，展开、收起只用方向键。
+
+<Framework only="react">
+
+节点内容里的按钮、链接（如 `renderLabel` 返回的控件）可以用 Tab 到达，焦点在它们上面时，按键由控件自己处理，树不响应。
+
+示例:
+
+```typescript
+    <Tree
+        /* 其他属性 */
+        aria-label='example tree'
+    />
+```
+
+</Framework>
+
+<Framework only="vue">
+
+节点内容里的按钮、链接（如 `#label` 插槽中的控件）可以用 Tab 到达，焦点在它们上面时，按键由控件自己处理，树不响应。
+
+示例:
+
+```vue
+<Tree aria-label="example tree" :treeData="treeData" />
+```
+
+</Framework>
+
+<Framework only="solid">
+
+节点内容里的按钮、链接（如 `renderLabel` 或 `renderFullLabel` 中的控件）可以用 Tab 到达，焦点在它们上面时，按键由控件自己处理，树不响应。
+
+示例:
+
+```tsx
+<Tree aria-label="example tree" treeData={treeData} />
+```
+
+</Framework>
+
+## 文案规范
+
+- 尽量使用短语，首字母大写
+- 平级之间保持用语形式一致，例如全是地名或者是国家名
+
+## 设计变量
+
+<DesignToken />

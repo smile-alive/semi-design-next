@@ -1,0 +1,44 @@
+{
+    "config-provider": {
+        "source": "packages/semi-ui-solid/src/config-provider/config-provider.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "受该配置影响的内容。显式传入的 `direction` 与外层不同时（含最外层），内容外包一层带 `dir` 属性的 `div`。",
+                "en-US": "Content affected by the configuration. When an explicitly passed `direction` differs from the outer one, including at the outermost level, the content is wrapped in a `div` carrying the `dir` attribute."
+            },
+            "direction": {
+                "zh-CN": "文本方向，可选 `ltr` 或 `rtl`。未传时继承外层 ConfigProvider，最外层默认为 `ltr`。",
+                "en-US": "Text direction: `ltr` or `rtl`. Inherited from the outer ConfigProvider when omitted, and `ltr` at the outermost level."
+            },
+            "getPopupContainer": {
+                "zh-CN": "返回弹层容器的函数，只影响仍通过 Portal 渲染的 Modal、SideSheet、ImagePreview，容器需要设置 `position: relative`。未传时继承外层，最外层为 `document.body`。",
+                "en-US": "Function returning the popup container. It only affects Modal, SideSheet and ImagePreview, which still render through a Portal; the container needs `position: relative`. Inherited from the outer ConfigProvider when omitted, and `document.body` at the outermost level."
+            },
+            "locale": {
+                "zh-CN": "多语言配置，优先级高于 LocaleProvider。未传时继承外层 ConfigProvider；没有 ConfigProvider 设置时由 LocaleProvider 决定，两者都没有时使用 `zh_CN`。传 `null` 清除外层的 locale。",
+                "en-US": "Locale configuration, which takes precedence over LocaleProvider. Inherited from the outer ConfigProvider when omitted; when no ConfigProvider sets it, LocaleProvider decides, and `zh_CN` is used without either. Pass `null` to clear the outer locale."
+            },
+            "responsiveMap": {
+                "zh-CN": "自定义响应式断点，key 为 `xs`、`sm`、`md`、`lg`、`xl`、`xxl`，value 为 media query 字符串。按内容比较，内联写对象不会重新注册监听；未传时继承外层，最外层使用 `defaultResponsiveMap`。",
+                "en-US": "Custom responsive breakpoints: keys are `xs`, `sm`, `md`, `lg`, `xl` and `xxl`, values are media query strings. Compared by content, so an inline object does not re-register listeners. Inherited from the outer ConfigProvider when omitted, and `defaultResponsiveMap` at the outermost level."
+            },
+            "responsiveObserve": {
+                "zh-CN": "是否开启响应式断点监听。关闭时不注册任何 `matchMedia` 监听；开启后在首次订阅时注册，无订阅时注销。未传时继承外层，最外层为 `false`。",
+                "en-US": "Whether to observe responsive breakpoints. When off, no `matchMedia` listener is registered; when on, listeners are registered on the first subscription and removed when none remain. Inherited from the outer ConfigProvider when omitted, and `false` at the outermost level."
+            },
+            "timeZone": {
+                "zh-CN": "时间类组件使用的时区：数字（距 UTC 的小时偏移）、`GMT±HH:MM` 字符串或 IANA 标识。数字和 GMT 写法是全年固定的偏移。未传时继承外层。",
+                "en-US": "Time zone for time components: a number (hour offset from UTC), a `GMT±HH:MM` string or an IANA identifier. Numbers and GMT strings are fixed offsets all year. Inherited from the outer ConfigProvider when omitted."
+            }
+        }
+    },
+    "config-consumer": {
+        "source": "packages/semi-ui-solid/src/config-provider/config-consumer.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "函数子节点，参数为当前生效的配置（ContextValue）；在 ConfigProvider 内还包含 `screens` 与 `onBreakpoint`，没有 ConfigProvider 时为空对象。函数只执行一次，字段以 `config.xxx` 的形式在 JSX 中读取，不要解构。",
+                "en-US": "Function child receiving the effective configuration (ContextValue). Inside a ConfigProvider it also holds `screens` and `onBreakpoint`; without a ConfigProvider it is an empty object. The function runs once, so read fields in JSX as `config.xxx` instead of destructuring them."
+            }
+        }
+    }
+}

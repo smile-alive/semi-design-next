@@ -1,0 +1,791 @@
+---
+order: 28
+title: Chat
+icon: doc-chat
+brief: Used to quickly build conversation content
+---
+
+import ChatReactApi from './api/chat.react.en-US.mdx';
+import ChatVueApi from './api/chat.vue.en-US.mdx';
+import ChatSolidApi from './api/chat.solid.en-US.mdx';
+
+## When to use
+
+The `Chat` component can be used in scenarios such as regular conversations or AI conversations.
+
+<Framework only="react">
+
+The rendering of the conversation content is based on the [MarkdownRender](/en-US/react/plus/markdown-render) component, which supports Markdown and MDX (Note: The default format mode of MarkdownRender in Chat is md. If you need to use MDX format, you can set it through the markdownRenderProps API). It allows for common rich text features such as images, tables, links, bold text, code blocks, and more. More complex and customized document writing and display requirements can be achieved using JSX. Register the languages of code blocks with `CodeHighlight.register` of [CodeHighlight](/en-US/react/plus/code-highlight) to highlight them.
+
+</Framework>
+
+<Framework only="vue">
+
+The rendering of the conversation content is based on the [MarkdownRender](/en-US/react/plus/markdown-render) component, which supports Markdown and MDX (Note: The default format mode of MarkdownRender in Chat is md. If you need to use MDX format, you can set it through the markdownRenderProps API). It allows for common rich text features such as images, tables, links, bold text, code blocks, and more. More complex customization is achieved with scoped slots. Register the languages of code blocks with `CodeHighlight.register` of [CodeHighlight](/en-US/react/plus/code-highlight) to highlight them.
+
+</Framework>
+
+<Framework only="solid">
+
+The rendering of the conversation content is based on the [MarkdownRender](/en-US/react/plus/markdown-render) component, which supports Markdown and MDX (Note: The default format mode of MarkdownRender in Chat is md. If you need to use MDX format, you can set it through the markdownRenderProps API). It allows for common rich text features such as images, tables, links, bold text, code blocks, and more. More complex and customized document writing and display requirements can also be achieved using JSX. Register the languages of code blocks with `CodeHighlight.register` of [CodeHighlight](/en-US/react/plus/code-highlight) to highlight them.
+
+</Framework>
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Chat } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Chat } from '@fibrae/semi-ai-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Chat } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Framework only="react">
+
+By setting `chats`, `onChatsChange`, and `onMessageSend`, you can achieve basic conversation display and interaction.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the conversation list with `v-model:chats` and listen to `@messageSend` to achieve basic conversation display and interaction. When the list changes, `v-model:chats` first emits `update:chats`, then `chatsChange`; with a one-way `:chats` that is not written back, the list stays unchanged.
+
+</Framework>
+
+<Framework only="solid">
+
+Basic display and interaction are achieved by setting `chats`, `onChatsChange` and `onMessageSend`. `chats` is controlled: the conversation list changes only when the new list is written back in `onChatsChange`.
+
+</Framework>
+
+Attachments can be uploaded by clicking the upload button, pasting into the input box, or dragging files into the Chat area. Set the upload parameters through `uploadProps`. For details, refer to [Upload](/en-US/react/input/upload#API%20Reference).
+
+<Framework only="react">
+
+The prompt text of the upload button can be set through `uploadTipProps`. For details, please refer to [Tooltip](/en-US/react/show/tooltip#API%20Reference).
+
+</Framework>
+
+<Framework only="vue">
+
+The prompt text of the upload button is set through the `#uploadTip` slot, and the other properties of the Tooltip through `uploadTipProps` (without `content`). For details, please refer to [Tooltip](/en-US/react/show/tooltip#API%20Reference).
+
+</Framework>
+
+<Framework only="solid">
+
+The prompt text of the upload button can be set through `uploadTipProps`, where `content` is the prompt text. For details, please refer to [Tooltip](/en-US/react/show/tooltip#API%20Reference).
+
+</Framework>
+
+Dialogue is a scene involving multiple parties and multiple rounds of interaction. Role information (including name, avatar, etc.) can be passed in through `roleConfig`, and the specific parameter details are [RoleConfig](#roleConfig).
+
+Use the `align` attribute to set the layout of the dialog, supporting left and right layout (`leftRight`, default) and left alignment (`leftAlign`).
+
+<Demo id="basic" />
+
+### Chat status
+
+The chats type is `Message[]`, where each `Message` contains various information about the conversation, such as role, content, attachment, status, unique identifier (id), creation time (createAt), and more. For detailed information, please refer to [Message](#message). The conversation style may vary depending on the different status values.
+
+<Demo id="message-status" />
+
+### Dynamic update chats
+
+For the case of receiving Server-Sent Event data from the backend, the obtained data can be used to update the `chats`, and the conversation content will be updated in real-time.
+
+<Framework only="react">
+
+The `showStopGenerate` parameter can be used to determine whether to display the stop generation button, with a default value of `false`. The logic for stopping the generation can be handled in the `onStopGenerator` function.
+
+</Framework>
+
+<Framework only="vue">
+
+The `showStopGenerate` parameter can be used to determine whether to display the stop generation button, with a default value of `false`. The logic for stopping the generation can be handled in the `@stopGenerator` listener.
+
+</Framework>
+
+<Framework only="solid">
+
+The `showStopGenerate` parameter can be used to determine whether to display the stop generation button, with a default value of `false`. The logic for stopping the generation can be handled in the `onStopGenerator` function.
+
+</Framework>
+
+<Demo id="dynamic-update" />
+
+### Clear context
+
+<Framework only="react">
+
+Displaying the clear context button in the input box can be enabled through `showClearContext`, which defaults to `false`. The context can also be cleared by calling the `clearContext` method through ref.
+
+</Framework>
+
+<Framework only="vue">
+
+Displaying the clear context button in the input box can be enabled through `showClearContext`, which defaults to `false`. The context can also be cleared by calling the `clearContext` method through a template ref.
+
+</Framework>
+
+<Framework only="solid">
+
+Displaying the clear context button in the input box can be enabled through `showClearContext`, which defaults to `false`. The context can also be cleared by calling the `clearContext` method through ref.
+
+</Framework>
+
+<Demo id="clear-context" />
+
+### Custom rendering dialog box
+
+<Framework only="react">
+
+Pass in custom rendering configuration through `chatBoxRenderConfig`, the chatBoxRenderConfig type is as follows
+
+```ts
+export interface RenderTitleProps {
+    message?: Message;
+    role?: Metadata;
+    defaultTitle?: ReactNode;
+}
+
+export interface RenderAvatarProps {
+    message?: Message;
+    role?: Metadata;
+    defaultAvatar?: ReactNode;
+}
+
+export interface RenderContentProps {
+    message?: Message;
+    role?: Metadata;
+    defaultContent?: ReactNode | ReactNode[];
+    className?: string;
+}
+
+/* The buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message) */
+export interface DefaultActionNodeObj {
+    copyNode?: ReactNode;
+    likeNode?: ReactNode;
+    dislikeNode?: ReactNode;
+    resetNode?: ReactNode;
+    deleteNode?: ReactNode;
+}
+
+export interface RenderActionProps {
+    message?: Message;
+    defaultActions?: ReactNode | ReactNode[];
+    className: string;
+    defaultActionsObj?: DefaultActionNodeObj;
+}
+
+export interface FullChatBoxNodes {
+    avatar?: ReactNode;
+    title?: ReactNode;
+    content?: ReactNode;
+    action?: ReactNode;
+}
+
+export interface RenderFullChatBoxProps {
+    message?: Message;
+    role?: Metadata;
+    defaultNodes?: FullChatBoxNodes;
+    className: string;
+}
+
+export interface ChatBoxRenderConfig {
+    /* Custom rendering title */
+    renderChatBoxTitle?: (props: RenderTitleProps) => ReactNode;
+    /* Custom rendering avatar */
+    renderChatBoxAvatar?: (props: RenderAvatarProps) => ReactNode;
+    /* Custom rendering content */
+    renderChatBoxContent?: (props: RenderContentProps) => ReactNode;
+    /* Custom rendering action bar */
+    renderChatBoxAction?: (props: RenderActionProps) => ReactNode;
+    /* Fully customized rendering of the entire chat box */
+    renderFullChatBox?: (props: RenderFullChatBoxProps) => ReactNode;
+}
+```
+
+Custom render avatar and Title through `renderChatBoxAvatar` and `renderChatBoxTitle`.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass in custom rendering configuration through `chatBoxRenderConfig`, the chatBoxRenderConfig type is as follows
+
+```ts
+export interface RenderTitleProps {
+    readonly message?: Message;
+    readonly role?: Metadata;
+    /* Creates the default title; call it where it is inserted */
+    readonly defaultTitle?: () => JSX.Element;
+}
+
+export interface RenderAvatarProps {
+    readonly message?: Message;
+    readonly role?: Metadata;
+    /* Creates the default avatar; call it where it is inserted */
+    readonly defaultAvatar?: () => JSX.Element;
+}
+
+export interface RenderRoleAvatarProps {
+    readonly message?: Message;
+    readonly role?: Metadata;
+}
+
+export interface RenderContentProps {
+    readonly message?: Message;
+    readonly role?: Metadata;
+    /* Creates the default content; call it where it is inserted */
+    readonly defaultContent?: () => JSX.Element;
+    readonly class?: string;
+}
+
+/* The buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message). Values are the buttons' render functions */
+export interface DefaultActionNodeObj {
+    readonly copyNode?: () => JSX.Element;
+    readonly likeNode?: () => JSX.Element;
+    readonly dislikeNode?: () => JSX.Element;
+    readonly resetNode?: () => JSX.Element;
+    readonly deleteNode?: () => JSX.Element;
+}
+
+export interface RenderActionProps {
+    readonly message?: Message;
+    /* Render functions of the default buttons in display order; call each where it is inserted */
+    readonly defaultActions?: (() => JSX.Element)[];
+    readonly class: string;
+    defaultActionsObj?: DefaultActionNodeObj;
+}
+
+export interface FullChatBoxNodes {
+    readonly avatar?: JSX.Element;
+    readonly title?: JSX.Element;
+    readonly content?: JSX.Element;
+    readonly action?: JSX.Element;
+}
+
+export interface RenderFullChatBoxProps {
+    readonly message?: Message;
+    readonly role?: Metadata;
+    defaultNodes?: FullChatBoxNodes;
+    readonly class: string;
+}
+
+export interface ChatBoxRenderConfig {
+    /* Custom rendering title */
+    renderChatBoxTitle?: (props: RenderTitleProps) => JSX.Element;
+    /* Custom rendering avatar */
+    renderChatBoxAvatar?: (props: RenderAvatarProps) => JSX.Element;
+    /* The content inside the built-in avatar, for an avatar other than the avatar image URL */
+    renderRoleAvatar?: (props: RenderRoleAvatarProps) => JSX.Element;
+    /* Custom rendering content */
+    renderChatBoxContent?: (props: RenderContentProps) => JSX.Element;
+    /* Custom rendering action bar */
+    renderChatBoxAction?: (props: RenderActionProps) => JSX.Element;
+    /* Fully customized rendering of the entire chat box */
+    renderFullChatBox?: (props: RenderFullChatBoxProps) => JSX.Element;
+}
+```
+
+Each render function is called once per message, and again when the function is replaced. The fields of its argument are getters, so the returned JSX follows the message as it streams. The default nodes are render functions (`defaultTitle`, `defaultAvatar`, `defaultContent`, the items of `defaultNodes`, and the action bar buttons: the items of `defaultActions` and the values of `defaultActionsObj`). Each call creates the node, so call one only where it is inserted, and a node that is never called is never created, e.g. `{props.defaultTitle?.()}` or `<For each={props.defaultActions}>{(action) => action()}</For>`.
+
+</Framework>
+
+<Framework only="vue">
+
+Each part of the dialog box is customized with a scoped slot. The slot parameter types are as follows. The `class` in the slot parameters is the default class name of that part; the custom root element needs to bind it.
+
+```ts
+export interface ChatTitleSlotProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultTitle: VNode;
+}
+
+export interface ChatAvatarSlotProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultAvatar: VNode;
+}
+
+/* For a role without an image URL, renders the content inside the avatar */
+export interface ChatRoleAvatarSlotProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+}
+
+export interface ChatContentSlotProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultContent: VNode;
+    class: string;
+}
+
+/* The buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message) */
+export interface ChatDefaultActionNodeObj {
+    copyNode?: VNode;
+    likeNode?: VNode;
+    dislikeNode?: VNode;
+    resetNode?: VNode;
+    deleteNode?: VNode;
+}
+
+export interface ChatActionSlotProps {
+    message: ChatMessage;
+    defaultActions: VNode[];
+    defaultActionsObj: ChatDefaultActionNodeObj;
+    class: string;
+}
+
+/* Each part as the message would render it, including what the avatar, title, content and action slots give */
+export interface ChatFullChatBoxNodes {
+    avatar: VNode;
+    title: VNode;
+    content: VNode;
+    action: VNode;
+}
+
+export interface ChatFullChatBoxSlotProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultNodes: ChatFullChatBoxNodes;
+    class: string;
+}
+```
+
+Custom render avatar and title through the `#avatar` and `#title` slots. A provided but empty slot hides the avatar or title; the `avatar` of `roleConfig` only accepts an image URL, so use the `#roleAvatar` slot for a node avatar.
+
+</Framework>
+
+<Demo id="custom-avatar-title" />
+
+<Framework only="react">
+
+When hovering over a conversation, the conversation action area will be displayed. You can customize the rendering of the action area using `renderChatBoxAction`.
+
+</Framework>
+
+<Framework only="vue">
+
+When hovering over a conversation, the conversation action area will be displayed. You can customize the rendering of the action area using the `#action` slot.
+
+</Framework>
+
+<Framework only="solid">
+
+When hovering over a conversation, the conversation action area will be displayed. You can customize the rendering of the action area using `renderChatBoxAction`.
+
+</Framework>
+
+<Demo id="custom-action" />
+
+<Framework only="react">
+
+You can customize the content area using `renderChatBoxContent`.
+
+</Framework>
+
+<Framework only="vue">
+
+You can customize the content area using the `#content` slot.
+
+</Framework>
+
+<Framework only="solid">
+
+You can customize the content area using `renderChatBoxContent`.
+
+</Framework>
+
+<Demo id="custom-content" />
+
+<Framework only="react">
+
+Use `renderFullChatBox` to custom render the entire chat box
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#fullChatBox` slot to custom render the entire chat box
+
+</Framework>
+
+<Framework only="solid">
+
+Use `renderFullChatBox` to custom render the entire chat box
+
+</Framework>
+
+<Demo id="custom-full-chat-box" />
+
+### Custom render InputArea
+
+<Framework only="react">
+
+The rendering input box can be customized through `renderInputArea`, the parameters are as follows
+
+```ts
+export interface RenderInputAreaProps {
+    /* Default node */
+    defaultNode?: ReactNode;
+    /* If you customize the input box, you need to call it when sending a message. */
+    onSend?: (content?: string, attachment?: FileItem[]) => void;
+    /* If you customize the clear context button, it needs to be called when you click to clear the context */
+    onClear?: (e?: any) => void;
+    detailProps: {
+        /* clear context button */
+        clearContextNode?: ReactNode;
+        /* upload button */
+        uploadNode?: ReactNode;
+        /* text input area */
+        inputNode?: ReactNode;
+        /* send button */
+        sendNode?: ReactNode;
+        /* The processing function that triggers the focus of the text input box after clicking */
+        onClick?: () => void; // focuses the input
+    };
+}
+```
+
+Example of `detailProps`
+
+```jsx
+function CustomInputRender(props) {
+    const { detailProps } = props;
+    const { clearContextNode, uploadNode, inputNode, sendNode, onClick } = detailProps;
+
+    return (
+        <div
+            style={{
+                margin: '8px 16px',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-end',
+                borderRadius: 16,
+                padding: 10,
+                border: '1px solid var(--semi-color-border)',
+            }}
+            onClick={onClick}
+        >
+            {uploadNode}
+            {inputNode}
+            {sendNode}
+        </div>
+    );
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+The input box can be customized through the `#inputArea` slot, the slot parameters are as follows
+
+```ts
+export interface ChatInputAreaSlotProps {
+    /* Default node */
+    defaultNode: VNode;
+    /* clear context button */
+    clearContextNode: VNode;
+    /* upload button, null when every upload way is off */
+    uploadNode: VNode | null;
+    /* text input area */
+    inputNode: VNode;
+    /* send button */
+    sendNode: VNode;
+    /* If you customize the input box, you need to call it when sending a message. */
+    onSend: (content?: string, attachment?: FileItem[]) => void;
+    /* If you customize the clear context button, it needs to be called when you click to clear the context */
+    onClear: () => void;
+    /* The processing function that triggers the focus of the text input box after clicking */
+    onClick: () => void;
+}
+```
+
+Example of the part nodes
+
+```vue
+<template>
+    <Chat v-model:chats="chats">
+        <template #inputArea="{ uploadNode, inputNode, sendNode, onClick }">
+            <div
+                style="
+                    margin: 8px 16px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: flex-end;
+                    border-radius: 16px;
+                    padding: 10px;
+                    border: 1px solid var(--semi-color-border);
+                "
+                @click="onClick"
+            >
+                <component :is="uploadNode" />
+                <component :is="inputNode" />
+                <component :is="sendNode" />
+            </div>
+        </template>
+    </Chat>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The rendering input box can be customized through `renderInputArea`, the parameters are as follows
+
+```ts
+export interface RenderInputAreaProps {
+    /* Default node */
+    readonly defaultNode?: () => JSX.Element;
+    /* If you customize the input box, you need to call it when sending a message. */
+    onSend?: (content?: string, attachment?: FileItem[]) => void;
+    /* If you customize the clear context button, it needs to be called when you click to clear the context */
+    onClear?: (e?: MouseEvent) => void;
+    detailProps?: {
+        /* clear context button */
+        readonly clearContextNode?: () => JSX.Element;
+        /* upload button */
+        readonly uploadNode?: () => JSX.Element;
+        /* text input area */
+        readonly inputNode?: () => JSX.Element;
+        /* send button */
+        readonly sendNode?: () => JSX.Element;
+        /* The processing function that triggers the focus of the text input box after clicking */
+        onClick?: () => void;
+    };
+}
+```
+
+Node fields (such as `defaultNode` and `inputNode` in `detailProps`) are render functions: each call creates the node, so call one only where it is inserted, e.g. `{props.detailProps?.inputNode?.()}`. Example of `detailProps`
+
+```jsx
+function CustomInputRender(props) {
+    return (
+        <div
+            style={{
+                margin: '8px 16px',
+                display: 'flex',
+                'flex-direction': 'row',
+                'align-items': 'flex-end',
+                'border-radius': '16px',
+                padding: '10px',
+                border: '1px solid var(--semi-color-border)',
+            }}
+            onClick={() => props.detailProps?.onClick?.()}
+        >
+            {props.detailProps?.uploadNode?.()}
+            {props.detailProps?.inputNode?.()}
+            {props.detailProps?.sendNode?.()}
+        </div>
+    );
+}
+```
+
+</Framework>
+
+Other Example:
+
+<Demo id="custom-input-area" />
+
+### Hint
+
+<Framework only="react">
+
+The prompt area content can be set through `hints`. After clicking the prompt content, the prompt content will become the new user input content and trigger the `onHintClick` callback.
+
+</Framework>
+
+<Framework only="solid">
+
+The prompt area content can be set through `hints`. After clicking the prompt content, the prompt content is added to the conversation as a new user message and triggers the `onHintClick` callback.
+
+</Framework>
+
+<Framework only="vue">
+
+The prompt area content can be set through `hints`. After clicking the prompt content, the prompt content will become the new user input content and trigger the `hintClick` event.
+
+</Framework>
+
+<Demo id="hints" />
+
+### Custom render Hint
+
+<Framework only="react">
+
+Customize the content of the prompt area through `renderHintBox`, the parameters are as follows
+
+```ts
+type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => React.ReactNode;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Customize the content of the prompt area through the `#hintBox` slot, the parameters are as follows
+
+```ts
+export interface ChatHintBoxSlotProps {
+    content: string;
+    index: number;
+    onHintClick: () => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Customize the content of the prompt area through `renderHintBox`, the parameters are as follows
+
+```ts
+export interface RenderHintBoxProps {
+    readonly content: string;
+    index: number;
+    onHintClick: () => void;
+}
+```
+
+</Framework>
+
+Example:
+
+<Demo id="custom-hint-box" />
+
+## API Reference
+
+<Framework only="react">
+
+<ChatReactApi />
+
+Other undeclared native attributes (such as `data-*` and `id`) fall on the root `div` element. When the root element has `aria-label` or `aria-labelledby` and no `role`, `role="group"` is added automatically. The `onDragOver`, `onDragStart` and `onDragEnd` listeners also fall on the root element, and Chat's own drag upload handling runs before the listeners passed by the caller.
+
+#### RoleConfig
+
+| PROPERTIES | INSTRUCTIONS          | TYPE     | DEFAULT |
+| ---------- | --------------------- | -------- | ------- |
+| user       | User information      | Metadata | -       |
+| assistant  | Assistant information | Metadata | -       |
+| system     | System information    | Metadata | -       |
+
+#### Metadata
+
+| PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE                | DEFAULT |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------- |
+| name       | name                                                                                                                                                                                                                                                    | string              | -       |
+| avatar     | avatar, supports image URL or ReactNode (such as Semi icons)                                                                                                                                                                                            | ReactNode \| string | -       |
+| color      | Avatar background color, same as the color parameter of Avatar component, support `amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow` | AvatarColor         | `grey`  |
+
+</Framework>
+
+<Framework only="vue">
+
+<ChatVueApi />
+
+`class`, `style` and the other undeclared attributes land on the root element. When the root has `aria-label` or `aria-labelledby` and no `role`, it gets `role="group"`. The `dragover`, `dragstart` and `dragend` listeners also land on the root, and Chat's own drag-upload handling runs before the caller's listener.
+
+#### RoleConfig
+
+| PROPERTIES | INSTRUCTIONS          | TYPE         | DEFAULT |
+| ---------- | --------------------- | ------------ | ------- |
+| user       | User information      | ChatMetadata | -       |
+| assistant  | Assistant information | ChatMetadata | -       |
+| system     | System information    | ChatMetadata | -       |
+
+#### Metadata
+
+| PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE        | DEFAULT |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------- |
+| name       | name                                                                                                                                                                                                                                                    | string      | -       |
+| avatar     | avatar image URL. Use the `#roleAvatar` slot for a node avatar (such as Semi icons)                                                                                                                                                                     | string      | -       |
+| color      | Avatar background color, same as the color parameter of Avatar component, support `amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow` | AvatarColor | `grey`  |
+
+</Framework>
+
+<Framework only="solid">
+
+<ChatSolidApi />
+
+`class`, `style` and the other undeclared attributes (such as `data-*` and `aria-*`) land on the root `div`, and `class` is merged with the component's own class name. When the root has `aria-label` or `aria-labelledby` and no `role`, it gets `role="group"`. The `onDragOver`, `onDragStart` and `onDragEnd` listeners also land on the root, and Chat's own drag-upload handling runs before the caller's listener.
+
+#### RoleConfig
+
+| PROPERTIES | INSTRUCTIONS          | TYPE         | DEFAULT |
+| ---------- | --------------------- | ------------ | ------- |
+| user       | User information      | ChatMetadata | -       |
+| assistant  | Assistant information | ChatMetadata | -       |
+| system     | System information    | ChatMetadata | -       |
+
+#### Metadata
+
+| PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE        | DEFAULT |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------- |
+| name       | name                                                                                                                                                                                                                                                    | string      | -       |
+| avatar     | avatar image URL; other avatar content goes through `chatBoxRenderConfig.renderRoleAvatar`                                                                                                                                                              | string      | -       |
+| color      | Avatar background color, same as the color parameter of Avatar component, support `amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow` | AvatarColor | `grey`  |
+
+</Framework>
+
+#### Message
+
+| PROPERTIES | INSTRUCTIONS                                                            | TYPE                | DEFAULT  |
+| ---------- | ----------------------------------------------------------------------- | ------------------- | -------- |
+| role       | role                                                                    | string              | -        |
+| name       | name                                                                    | string              | -        |
+| id         | Uniquely identifies                                                     | string              | -        |
+| content    | all content                                                             | string \| Content[] | -        |
+| parentId   | parent Uniquely identifies                                              | string              | -        |
+| createAt   | creation time                                                           | number              | -        |
+| status     | Information status， `loading` \| `incomplete` \| `complete` \| `error` | string              | complete |
+
+#### Content
+
+| PROPERTIES | INSTRUCTIONS                                      | TYPE                                                        | DEFAULT |
+| ---------- | ------------------------------------------------- | ----------------------------------------------------------- | ------- |
+| type       | type, support `text` \| `image_url` \| `file_url` | string                                                      | -       |
+| text       | Content data when type is `text`                  | string                                                      | -       |
+| image_url  | Content data when type is `image_url`             | \{ url: string \}                                           | -       |
+| file_url   | Content data when type is `file_url`              | \{ url: string; name: string; size: string; type: string \} | -       |
+
+## Accessibility
+
+### Keyboard and Focus
+
+- In the input box, `Enter` or `Shift` + `Enter` sends the message, as decided by `sendHotKey`: with `enter`, `Enter` sends and `Shift` + `Enter` inserts a line break; `shift+enter` is the reverse.
+- `Shift` + `Tab` in the input box returns to the upload button. The default upload button is a native button: `Enter` or `Space` opens the file dialog. When an upload tip is set, its text is the description of that button and is shown while the button has focus.
+- The stop generation button only exists while generating. When generation ends and the button is unmounted, focus that was on it moves to the input box instead of falling to the start of the page.
+- Except on the last finished message, the message action bar stays hidden while remaining in the `Tab` order, and shows when focus enters one of its buttons. The confirmation opened by the delete button closes with `Esc` and focus returns to the delete button; inside a Modal only the confirmation closes and the Modal stays open.
+- The message list is a named `role="log"` region with `aria-busy="true"` while the last message is generating, so screen readers announce the reply once it completes rather than chunk by chunk.
+
+## Design Token
+
+<DesignToken />

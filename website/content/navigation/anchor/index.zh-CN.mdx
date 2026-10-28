@@ -1,0 +1,336 @@
+---
+order: 54
+title: 锚点
+icon: doc-anchor
+brief: 创建超链接导航栏。
+---
+
+import AnchorReactApi from './api/anchor.react.zh-CN.mdx';
+import AnchorLinkReactApi from './api/anchor-link.react.zh-CN.mdx';
+import AnchorVueApi from './api/anchor.vue.zh-CN.mdx';
+import AnchorLinkVueApi from './api/anchor-link.vue.zh-CN.mdx';
+import AnchorSolidApi from './api/anchor.solid.zh-CN.mdx';
+import AnchorLinkSolidApi from './api/anchor-link.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Anchor } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Anchor.Link` 也可以按名导入：`AnchorLink`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Anchor } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本示例
+
+使用 Link 可以创建锚点，点击它会跳转到指定位置。
+
+<Demo id="basic" />
+
+### 综合使用
+
+你可以搭配 `getContainer`，`targetOffset`，`style`，`offsetTop` 完成一个拆箱即用的超链接导航栏。
+
+- 滚动容器：你可以通过 `getContainer` 设置滚动内容的容器，默认值为 `window` 。
+
+- 距离顶部的距离：可以通过设置 `targetOffset` 设置文档滚动结束时，锚点距离容器顶部的距离。
+
+- 自定义定位方式：Anchor 自身不设置定位，你可以通过 `style` 对象为它指定定位方式，例如 `position: fixed`。
+
+- 偏移距离：`offsetTop` 可以在滚动内容距离容器顶部达到指定偏移量时触发当前 Link 切换。
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Anchor } from '@fibrae/semi-ui-react';
+
+() => {
+    const getContainer = () => {
+        return document.querySelector('window');
+    };
+    return (
+        <div>
+            <span>请看右侧固定的 Anchor </span>
+            <Anchor getContainer={getContainer} offsetTop={100} targetOffset={100} style={{ position: 'fixed', right: '20px', top: '100px', width: '200px', zIndex: 3 }}>
+                <Anchor.Link href="#基本示例" title="我是固定的 Anchor" />
+                <Anchor.Link href="#综合使用" title="综合使用" />
+                <Anchor.Link href="#尺寸" title="尺寸" />
+                <Anchor.Link href="#滑轨主题" title="滑轨主题" />
+                <Anchor.Link href="#动态展示" title="动态展示" />
+                <Anchor.Link href="#显示工具提示" title="显示工具提示" />
+                <Anchor.Link href="#工具提示位置" title="工具提示位置" />
+                <Anchor.Link href="#API参考" title="API参考">
+                    <Anchor.Link href="#Anchor" title="Anchor" />
+                    <Anchor.Link href="#Anchor.Link" title="Anchor.Link" />
+                </Anchor.Link>
+            </Anchor>
+        </div>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-vue';
+
+    const getContainer = () => window;
+</script>
+
+<template>
+    <div>
+        <span>请看右侧固定的 Anchor </span>
+        <Anchor :getContainer="getContainer" :offsetTop="100" :style="{ position: 'fixed', right: '20px', top: '100px', width: '200px', zIndex: 3 }" :targetOffset="100">
+            <Anchor.Link href="#基本示例" title="我是固定的 Anchor" />
+            <Anchor.Link href="#综合使用" title="综合使用" />
+            <Anchor.Link href="#尺寸" title="尺寸" />
+            <Anchor.Link href="#滑轨主题" title="滑轨主题" />
+            <Anchor.Link href="#动态展示" title="动态展示" />
+            <Anchor.Link href="#显示工具提示" title="显示工具提示" />
+            <Anchor.Link href="#工具提示位置" title="工具提示位置" />
+            <Anchor.Link href="#API参考" title="API参考">
+                <Anchor.Link href="#Anchor" title="Anchor" />
+                <Anchor.Link href="#Anchor.Link" title="Anchor.Link" />
+            </Anchor.Link>
+        </Anchor>
+    </div>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Anchor } from '@fibrae/semi-ui-solid';
+
+function AnchorExample() {
+    const getContainer = () => window;
+    return (
+        <div>
+            <span>请看右侧固定的 Anchor </span>
+            <Anchor getContainer={getContainer} offsetTop={100} targetOffset={100} style={{ position: 'fixed', right: '20px', top: '100px', width: '200px', 'z-index': '3' }}>
+                <Anchor.Link href="#基本示例" title="我是固定的 Anchor" />
+                <Anchor.Link href="#综合使用" title="综合使用" />
+                <Anchor.Link href="#尺寸" title="尺寸" />
+                <Anchor.Link href="#滑轨主题" title="滑轨主题" />
+                <Anchor.Link href="#动态展示" title="动态展示" />
+                <Anchor.Link href="#显示工具提示" title="显示工具提示" />
+                <Anchor.Link href="#工具提示位置" title="工具提示位置" />
+                <Anchor.Link href="#API参考" title="API参考">
+                    <Anchor.Link href="#Anchor" title="Anchor" />
+                    <Anchor.Link href="#Anchor.Link" title="Anchor.Link" />
+                </Anchor.Link>
+            </Anchor>
+        </div>
+    );
+}
+```
+
+</Framework>
+
+### 尺寸
+
+Anchor 设置 `size` 可以控制锚点的尺寸。
+
+<Demo id="size-default" />
+
+<Demo id="size-small" />
+
+### 滑轨主题
+
+Anchor 设置 `railTheme` 可以控制滑轨的主题色。默认值为 `primary`。
+
+<Demo id="rail-primary" />
+
+<Demo id="rail-tertiary" />
+
+<Demo id="rail-muted" />
+
+### 动态展示
+
+Anchor 设置 `autoCollapse` 可以动态展示下一级锚点。默认值为 `false`。
+
+<Demo id="auto-collapse" />
+
+<Demo id="no-auto-collapse" />
+
+### 显示工具提示
+
+Anchor 设置 `showTooltip` 可以在 Link 超出最大宽度时显示 Link 的文字内容。默认值为 `false`, 更多使用参考 API 说明。
+
+<Demo id="show-tooltip" />
+
+### 工具提示位置
+
+Anchor 设置 `position` 可以设置Tooltip的显示位置。它仅在 `showTooltip` 为 `true` 时起作用。
+
+<Demo id="tooltip-position" />
+
+### 自定义滚动位置
+
+通过 `scrollIntoViewOptions` 可以调整点击锚点后目标元素在容器中的位置，类型为 [scroll-into-view-if-needed](https://github.com/scroll-into-view/scroll-into-view-if-needed) 的 `Options`，支持 `block`、`inline`、`scrollMode`、`boundary`、`skipOverflowHiddenElements`。不传时 `block` 为 `start`，即目标元素滚动到容器顶部。
+
+- `scrollMotion` 决定滚动是否带动画（`behavior`），`targetOffset` 在 `block` 计算出的位置上再向上偏移，两者与 `scrollIntoViewOptions` 同时传入时依然生效。
+- 只会滚动离目标最近的、可纵向滚动的容器；仅当传入 `inline` 时才同时调整横向位置。
+
+<Demo id="scroll-into-view-options" />
+
+## API 参考
+
+### Anchor
+
+<Framework only="react">
+
+<AnchorReactApi />
+
+`id`、`data-*` 等其他原生属性落在根导航元素（`role="navigation"`）上；`onChange` 与 `onClick` 是锚点的回调，不绑定到根元素。
+
+</Framework>
+
+<Framework only="vue">
+
+<AnchorVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上；`style` 中的 `max-width`、`max-height` 优先于 `maxWidth`、`maxHeight` 属性。`click` 声明为组件事件后，`@click` 不再作为根元素的原生点击监听。
+
+</Framework>
+
+<Framework only="solid">
+
+<AnchorSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`、`aria-*`）落在根元素（`role="navigation"`）上；`onClick` 是组件回调，不是根元素的原生点击监听。`maxWidth`、`maxHeight` 覆盖 `style` 中同名的 `max-width`、`max-height`。
+
+</Framework>
+
+### Anchor.Link
+
+<Framework only="react">
+
+<AnchorLinkReactApi />
+
+`id`、`data-*` 等其他原生属性落在链接最外层的 div（`role="listitem"`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<AnchorLinkVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在链接最外层的 `div`（`role="listitem"`）上。`Anchor.Link` 必须放在 `Anchor` 内，否则抛出错误。
+
+</Framework>
+
+<Framework only="solid">
+
+<AnchorLinkSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`）落在链接最外层的 `div`（`role="listitem"`）上。
+
+</Framework>
+
+## 文案规范
+
+- 按句子大小写书写
+- 保持简洁，避免换行
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+1. **为何我的 Link 没有高亮和滑动跟随？**  
+   检查下点击锚点是否可以滚动到指定位置：
+    - 不可以，说明 href 有问题，检查文档中是否存在该 id；
+    - 可以，可能是滚动容器设置不正确，确保文档内容被包裹在滚动容器内。滚动容器默认为 window，如果你的容器是 .my-container 的 div，则应该将滚动容器设置为该 div。
+
+<Framework only="react">
+
+```text
+import React from 'react';
+import { Anchor } from '@fibrae/semi-ui-react';
+
+function() {
+    // 此容器不是 Anchor 组件的容器，是文档内容的容器，因为要根据文档容器去计算当前是哪个 id 在容器上方
+    const getContainer = () => {
+        return document.querySelector('.my-container');
+    }
+    return (
+        <Anchor
+            /* 其他属性 */
+            getContainer={getContainer}
+            >
+            /* Links */
+        </Anchor>
+    )
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```text
+<script setup lang="ts">
+import { Anchor } from '@fibrae/semi-ui-vue';
+
+// 此容器不是 Anchor 组件的容器，是文档内容的容器，因为要根据文档容器去计算当前是哪个 id 在容器上方
+const getContainer = () => document.querySelector<HTMLElement>('.my-container');
+</script>
+
+<template>
+    <Anchor :getContainer="getContainer">
+        <!-- Links -->
+    </Anchor>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```text
+import { Anchor } from '@fibrae/semi-ui-solid';
+
+// 此容器不是 Anchor 组件的容器，是文档内容的容器，因为要根据文档容器去计算当前是哪个 id 在容器上方
+const getContainer = () => document.querySelector<HTMLElement>('.my-container');
+
+function App() {
+    return (
+        <Anchor getContainer={getContainer}>
+            {/* Links */}
+        </Anchor>
+    );
+}
+```
+
+</Framework>

@@ -1,0 +1,155 @@
+---
+title: Spin
+order: 93
+icon: doc-spin
+brief: Spin is used to inform the user that the content is loading and may take an uncertain period of time.
+---
+
+import SpinReactApi from './api/spin.react.en-US.mdx';
+import SpinVueApi from './api/spin.vue.en-US.mdx';
+import SpinSolidApi from './api/spin.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Spin } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Spin } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Spin } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Demo id="basic" />
+
+### Size
+
+Supports three sizes: `large`, `medium` (default), and `small`.
+
+<Demo id="size" />
+
+### With Description
+
+<Framework only="react">
+
+Use `tip` to set the description texts when Spin is used as a wrapping element
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#tip` slot to set the description texts when Spin is used as a wrapping element; the wrapped content goes in the default slot.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `tip` to set the description texts when Spin is used as a wrapping element
+
+</Framework>
+
+<Demo id="tip" />
+
+### Customized Indicator
+
+<Framework only="react">
+
+Use `indicator` property to customize Spin's indicator style.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#indicator` slot to customize Spin's indicator style.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `indicator` property to customize Spin's indicator style.
+
+</Framework>
+
+<Demo id="indicator" />
+
+### Delay
+
+Delayed to display Spin.
+
+<Demo id="delay" />
+
+### Controlled
+
+Use `spinning` to determine if the component is in loading status
+
+<Demo id="controlled" />
+
+## API Reference
+
+<Framework only="react">
+
+<SpinReactApi />
+
+Other native attributes (such as `id`, `aria-*` and `onClick`) land on the root `div` element.
+
+</Framework>
+
+<Framework only="vue">
+
+<SpinVueApi />
+
+`class`, `style` and native attributes passed as attrs land on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<SpinSolidApi />
+
+`class`, `style`, `ref` and native attributes and events land on the root `div` element.
+
+</Framework>
+
+While a Spin that wraps content is loading, the wrapped content is `inert`: it cannot be focused or operated, and the root carries `aria-busy`. If focus was inside the wrapped content, it moves to the Spin root first and returns to the original element when loading ends.
+
+## Design Tokens
+
+<DesignToken />
+
+## Content Guidelines
+
+- Precisely state the loading status, using words such as "Loading", "Submitting", "Processing", etc.
+- Use as few words as possible to describe the state
+
+## FAQ
+
+- **How to modify the color of the spin icon?**
+
+    You can override the original color by adding the color property to the .semi-spin-wrapper class (it is recommended to override with a higher weight).
+
+    ```
+    .custom .semi-spin-wrapper {
+      color: red;
+    }
+    ```

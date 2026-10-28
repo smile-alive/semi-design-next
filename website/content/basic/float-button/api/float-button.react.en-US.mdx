@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                      | Type                                                                                          | Default     |
+| --------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------- |
+| badge     | Badge props, same as Badge. Applied to the Badge that wraps the button content.  | `BadgeProps`                                                                                  | -           |
+| className | Class name of the root element.                                                  | `string`                                                                                      | -           |
+| colorful  | Colorful float button.                                                           | `boolean`                                                                                     | `false`     |
+| disabled  | Disabled state. A disabled link drops `href` and sets `role` to `link`.          | `boolean`                                                                                     | -           |
+| href      | Link address. Renders an `<a>` element when set; a disabled link drops it.       | `string`                                                                                      | -           |
+| icon      | Button icon, rendered inside the button content.                                 | `React.ReactNode`                                                                             | -           |
+| onClick   | Click callback with a `React.MouseEvent`. Not called while disabled.             | <ApiType detail={"(e: React.MouseEvent) => void"}>Type</ApiType>                              | -           |
+| ref       | Points to the root element: an `<a>` when `href` is set, otherwise a `<button>`. | <ApiType detail={"React.Ref\u003cHTMLButtonElement \u007c HTMLAnchorElement>"}>Type</ApiType> | -           |
+| rel       | Relationship to the link target. Only takes effect with `href`.                  | `string`                                                                                      | -           |
+| shape     | Shape: `round` or `square`.                                                      | `'square' \| 'round'`                                                                         | `"round"`   |
+| size      | Size: `default`, `small` or `large`.                                             | `'small' \| 'default' \| 'large'`                                                             | `"default"` |
+| style     | Style of the root element.                                                       | `React.CSSProperties`                                                                         | -           |
+| target    | Where to display the linked URL. Only takes effect with `href`.                  | `string`                                                                                      | -           |

@@ -1,0 +1,185 @@
+---
+order: 34
+title: Lottie Animation
+icon: doc-lottie
+brief: Display Lottie animation on the web page
+---
+
+import LottieReactApi from './api/lottie.react.en-US.mdx';
+import LottieVueApi from './api/lottie.vue.en-US.mdx';
+import LottieSolidApi from './api/lottie.solid.en-US.mdx';
+
+## When to use
+
+The Lottie component can render Lottie animations conveniently and simply, and provides a way to obtain global Lottie and animation instances to meet a wider range of configuration needs. `lottie-web` is used internally to render Lottie animations. Compared to using `lottie-web` directly, use the Semi Lottie component
+
+- No need to worry about the creation and destruction of animation containers
+- No need to worry about the life cycle of the animation itself
+
+<Framework only="react">
+
+- Easier to use with React projects
+
+</Framework>
+
+<Framework only="vue">
+
+- Easier to use with Vue projects
+
+</Framework>
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Lottie } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Lottie } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Lottie } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+**When the Lottie animation resource JSON is on CDN**
+
+Pass path=your lottie json URL to the `params` props
+
+<Demo id="path" />
+
+**When Lottie animation resource JSON needs to be packaged into the website code**
+
+Pass animationData=your lottie json object into the `params` props (the Demo request JSON below is only for demonstration. In actual projects, json should be manually imported instead of obtained through network requests, so that JSON animation resources can be packaged into the website code)
+
+<Demo id="animation-data" />
+
+### Params Other common parameters
+
+`params` will be passed to `lottie.loadAnimation` of `lottie-web` by the component. Please refer to `lottie-web` [documentation](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
+
+Common parameters
+
+```json
+//params
+{
+  container: element, // Rendering container, if not passed, Semi Lottie component will automatically configure and generate
+  renderer: 'svg', // Rendering mode, default SVG
+  loop: true, // Whether to open loop, default true
+  autoplay: true, // Whether to play automatically, default true, when set to false, you need to manually play through the play method on the animation instance
+  path: 'data.json' // URL path of animation JSON file (mutually exclusive with animationData)
+  animationData: {/*...*/} // JSON object of animation (mutually exclusive with animationData)
+  /*...*/
+}
+```
+
+### Get the current animation instance
+
+<Framework only="react">
+
+Use `getAnimationInstance` to get the animation instance of the currently playing animation. The instance contains many methods for adjusting various parameters of the animation, such as playing and pausing, getting the current frame number, adjusting the playback speed, etc.
+
+</Framework>
+
+<Framework only="vue">
+
+Listen to the `@getAnimationInstance` event to get the animation instance of the currently playing animation. The instance contains many methods for adjusting various parameters of the animation, such as playing and pausing, getting the current frame number, adjusting the playback speed, etc. The event is emitted once per animation created, including every reload, and its payload is an `AnimationItem`, never `null`.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass a callback to the `getAnimationInstance` prop to get the animation instance of the currently playing animation. The instance contains many methods for adjusting various parameters of the animation, such as playing and pausing, getting the current frame number, adjusting the playback speed, etc. It is called once per animation created, including every reload.
+
+</Framework>
+
+For more information about the methods contained in the animation instance, please refer to the `lottie-web` [documentation](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
+
+<Demo id="animation-instance" />
+
+### Get global Lottie
+
+<Framework only="react">
+
+Use `getLottie` Props to get global lottie, or use the static method `Lottie.getLottie` on the Semi Lottie component to get global lottie
+
+`lottie-web` is large, so Semi loads it on demand when an animation needs to be created. The `getLottie` Props is called once it has loaded and the animation is created. The static method `Lottie.getLottie()` is asynchronous and returns a `Promise` that resolves to lottie (use `await` or `.then`). The component renders no animation until `lottie-web` has loaded, and if it unmounts before that, no animation is created.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass a callback to the `getLottie` prop to get global lottie, or use the static method `Lottie.getLottie` on the Semi Lottie component to get global lottie
+
+`lottie-web` is large, so Semi loads it on demand when an animation needs to be created. The `getLottie` prop is called once it has loaded and the animation is created, once per mount. The static method `Lottie.getLottie()` is asynchronous and returns a `Promise` that resolves to lottie (use `await` or `.then`). The component renders no animation until `lottie-web` has loaded, and if it unmounts before that, no animation is created.
+
+</Framework>
+
+<Framework only="vue">
+
+Listen to the `@getLottie` event to get global lottie, or use the static method `Lottie.getLottie` on the Semi Lottie component to get global lottie
+
+`lottie-web` is large, so Semi loads it on demand when an animation needs to be created. The `getLottie` event is emitted once it has loaded and the animation is created, once per mount. The static method `Lottie.getLottie()` is asynchronous and returns a `Promise` that resolves to lottie (use `await` or `.then`). The component renders no animation until `lottie-web` has loaded, and if it unmounts before that, no animation is created.
+
+</Framework>
+
+For more information about the methods on the global lottie, please refer to the `lottie-web` [documentation](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
+
+<Demo id="get-lottie" />
+
+### API
+
+<Framework only="react">
+
+<LottieReactApi />
+
+Other native attributes (such as `data-*`, `onClick` and `aria-*`) land on the container `div`. When `params.container` is set, the component renders nothing, and these attributes do not land anywhere.
+
+</Framework>
+
+<Framework only="vue">
+
+<LottieVueApi />
+
+`class`, `style` and native attributes land on the container element through attrs. `params` reloads by reference change plus a deep comparison: passing a new literal on every parent render does not reload, replacing it with different content does, and mutating `params` in place does not. Hold large animation data in a `shallowRef` or `markRaw`; the component passes the raw object to `lottie-web`. When `params.container` is set, the component renders only a comment node, `$el` is that comment, and attrs are dropped.
+
+</Framework>
+
+<Framework only="solid">
+
+<LottieSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the container `div`. When `params.container` is set, the component renders nothing, and these attributes do not land anywhere.
+
+</Framework>
+
+### Static methods
+
+| Method             | Description                                                                    | Type                    |
+| ------------------ | ------------------------------------------------------------------------------ | ----------------------- |
+| `Lottie.getLottie` | Get the global Lottie asynchronously; `lottie-web` is loaded on the first call | () => Promise\<Lottie\> |
+
+## Accessibility
+
+- An animation with `aria-label` or `aria-labelledby` is a named image, and its container gets `role="img"`; an animation without a name is decoration, and its container gets `aria-hidden="true"`. A `role` or `aria-*` you pass wins
+- With `prefers-reduced-motion: reduce` set in the system, the animation does not autoplay, and it pauses or plays as the setting changes while running; an explicit `params.autoplay` takes precedence
+
+## Design Tokens

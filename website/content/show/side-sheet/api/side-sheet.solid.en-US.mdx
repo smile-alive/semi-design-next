@@ -1,0 +1,30 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterVisibleChange | Called right in the update where visible becomes true, without waiting for the enter animation. When hiding, called after the leave animation ends, and once with false when unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| bodyStyle | Style of the content area, as an object with kebab-case keys (such as `'border-bottom'`) or as a string. | `JSX.CSSProperties \| string` | - |
+| canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | - |
+| closable | Whether the close button in the top right corner is shown. | `boolean` | `true` |
+| closeIcon | Icon inside the close button. `null` or `undefined` falls back to the default icon; hide the button with `closable={false}`. | `JSX.Element` | - |
+| closeOnEsc | Whether Esc closes the sheet. | `boolean` | `false` |
+| disableScroll | Whether body scrolling is locked (`overflow: hidden` on body) while a masked sheet is rendered in document.body. | `boolean` | `true` |
+| footer | Footer of the sheet, a JSX element. Nothing is rendered when it is empty. | `JSX.Element` | `null` |
+| getPopupContainer | Parent element the sheet is rendered into. A custom container needs `position: relative`; this changes where the sheet sits in the DOM, not where it is shown. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| headerStyle | Style of the header, in the same form as bodyStyle. | `JSX.CSSProperties \| string` | - |
+| height | Height, used when placement is top or bottom. A number is in pixels; a string is any valid CSS length. 448 when omitted. | `number \| string` | - |
+| keepDOM | Whether the sheet content stays mounted while closed. | `boolean` | `false` |
+| mask | Whether the mask is shown. When false the content outside stays operable, and body scrolling is not locked. | `boolean` | `true` |
+| maskClosable | Whether clicking the mask closes the sheet. | `boolean` | `true` |
+| maskStyle | Style of the mask, in the same form as bodyStyle. | `JSX.CSSProperties \| string` | - |
+| motion | Whether animation is enabled. | `boolean` | `true` |
+| onCancel | Called when the user closes the sheet with the close button, the mask or Esc. The argument is the native MouseEvent, or the native KeyboardEvent for Esc. The sheet does not close by itself; set `visible` to `false` in the callback. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| placement | Edge the sheet slides in from: `top`, `bottom`, `left` or `right`. | `Placement` | `"right"` |
+| size | Size: `small` is 448px, `medium` 684px, `large` 920px. Used only when placement is `left` or `right`. | `'small' \| 'medium' \| 'large'` | `"small"` |
+| style | Style of the dialog element (`.semi-sidesheet-inner`), merged with the computed width and height, which take precedence. | `JSX.CSSProperties \| string` | - |
+| title | Title, a JSX element. Nothing is rendered when it is empty, and it names the dialog. | `JSX.Element` | - |
+| visible | Whether the sheet is visible. A controlled prop: set it to false in onCancel to close the sheet. | `boolean` | `false` |
+| width | Width, used when placement is left or right. A number is in pixels; a string is any valid CSS length. Decided by size when omitted. | `number \| string` | - |
+| zIndex | z-index of the layer. | `number` | `1000` |

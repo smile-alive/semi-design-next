@@ -1,0 +1,154 @@
+{
+    "auto-complete": {
+        "source": "packages/semi-ui-vue/src/auto-complete/auto-complete.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "输入框的当前值，用 v-model 绑定。传入后为受控；传入 undefined 时按非受控处理。",
+                "en-US": "Current value of the input, bound with v-model. Passing it makes the component controlled; undefined leaves it uncontrolled."
+            },
+            "modelModifiers": {
+                "zh-CN": "v-model 修饰符 trim 与 number，由 Vue 在使用 v-model.trim、v-model.number 时传入。",
+                "en-US": "The trim and number v-model modifiers, passed by Vue for v-model.trim and v-model.number."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控时输入框的初始值。",
+                "en-US": "Initial value of the input when uncontrolled."
+            },
+            "data": {
+                "zh-CN": "候选项的数据源，可以是字符串、数字或对象的数组。对象项用 value 作选中值，label 作展示文本（缺省显示 value），disabled、class、style 与 data-* 字段落在对应的候选行上；节点内容用 item 插槽。数组原地修改也会更新列表。",
+                "en-US": "Data source of the candidates: an array of strings, numbers or objects. An object item uses value as the picked value and label as its text (value when label is missing); its disabled, class, style and data-* fields go to the matching row. Use the item slot for markup. Changing the array in place updates the list as well."
+            },
+            "autofocus": {
+                "zh-CN": "是否在挂载后自动聚焦输入框。",
+                "en-US": "Whether to focus the input after mount."
+            },
+            "autoAdjustOverflow": {
+                "zh-CN": "下拉面板被遮挡时是否自动调整方向。",
+                "en-US": "Whether the dropdown flips automatically when it would be clipped."
+            },
+            "defaultActiveFirstOption": {
+                "zh-CN": "面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。",
+                "en-US": "Whether the first candidate is highlighted when the panel opens, so that Enter picks it directly."
+            },
+            "defaultOpen": {
+                "zh-CN": "挂载时是否默认展开下拉面板。",
+                "en-US": "Whether the dropdown panel is open on mount."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the component is disabled." },
+            "dropdownClassName": {
+                "zh-CN": "下拉列表的类名，落在 role=\"listbox\" 元素上。",
+                "en-US": "Class name of the dropdown list, applied to the role=\"listbox\" element."
+            },
+            "dropdownMatchSelectWidth": {
+                "zh-CN": "下拉面板的最小宽度是否等于输入框宽度。",
+                "en-US": "Whether the minimum width of the dropdown equals the width of the input."
+            },
+            "dropdownStyle": {
+                "zh-CN": "下拉列表的内联样式，落在 role=\"listbox\" 元素上。",
+                "en-US": "Inline style of the dropdown list, applied to the role=\"listbox\" element."
+            },
+            "insetLabelId": {
+                "zh-CN": "insetLabel 前缀元素的 id，combobox 与 listbox 的名称引用它；不传时组件在渲染 insetLabel 时生成。",
+                "en-US": "The id of the insetLabel element, which names the combobox and the listbox. When omitted, the component generates one while an insetLabel is rendered."
+            },
+            "loading": {
+                "zh-CN": "下拉列表是否显示加载动画；为 true 时代替候选项和空内容。",
+                "en-US": "Whether the dropdown shows a loading spinner in place of the candidates and the empty content."
+            },
+            "maxHeight": {
+                "zh-CN": "下拉列表的最大高度，数字按 px 处理。",
+                "en-US": "Maximum height of the dropdown list; a number is in px."
+            },
+            "motion": {
+                "zh-CN": "下拉面板显示、隐藏时是否有动画。",
+                "en-US": "Whether the dropdown animates when it shows and hides."
+            },
+            "selectWithObject": {
+                "zh-CN": "布尔属性，不是事件：为 true 时，select 事件收到去掉内部字段的数据项对象，而不是选中值。",
+                "en-US": "A boolean attribute, not an event: when true, the select event receives the data item without internal fields instead of its value."
+            },
+            "placeholder": { "zh-CN": "输入框的提示文案。", "en-US": "Placeholder of the input." },
+            "position": {
+                "zh-CN": "下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。",
+                "en-US": "Position of the dropdown; the values are those of the Tooltip position. Unset, it is bottomLeft, or bottomRight when the ConfigProvider direction is rtl."
+            },
+            "renderSelectedItem": {
+                "zh-CN": "选中候选项后输入框显示的文本，必须返回字符串；字符串或数字项收到 `{ value, label }`，对象项收到数据项本身。保留为函数 prop，因为 foundation 在渲染之外调用它。",
+                "en-US": "The text the input shows for a picked item; it must return a string. A string or number item receives `{ value, label }`, an object item the item itself. It stays a function prop because the foundation calls it outside rendering."
+            },
+            "showClear": {
+                "zh-CN": "有内容时是否显示清除按钮。",
+                "en-US": "Whether to show the clear button when there is content."
+            },
+            "size": { "zh-CN": "输入框尺寸。", "en-US": "Size of the input." },
+            "stopPropagation": {
+                "zh-CN": "是否阻止下拉面板上的 click、mousedown 与焦点进出事件冒泡。",
+                "en-US": "Whether click, mousedown and focus in/out events on the dropdown stop propagating."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，只影响展示样式。",
+                "en-US": "Validation status; it only affects the style."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "输入框内容变化或选中候选项时触发，供 v-model 回写；先于 change 触发。",
+                "en-US": "Emitted when the input text changes or a candidate is picked, for v-model to write back. It fires before change."
+            },
+            "change": {
+                "zh-CN": "输入框内容变化或选中候选项时触发。它是组件事件，会遮住输入框原生的 change 事件。",
+                "en-US": "Emitted when the input text changes or a candidate is picked. It is a component event and hides the native change event of the input."
+            },
+            "search": {
+                "zh-CN": "用户输入时触发，参数为输入的文本。",
+                "en-US": "Emitted as the user types, with the typed text."
+            },
+            "select": {
+                "zh-CN": "选中候选项时触发，参数为选中值；设置 selectWithObject 时为去掉内部字段的数据项。",
+                "en-US": "Emitted when a candidate is picked, with its value, or with the item without internal fields when selectWithObject is set."
+            },
+            "clear": { "zh-CN": "用清除按钮清空内容后触发。", "en-US": "Emitted after the clear button is used." },
+            "focus": {
+                "zh-CN": "焦点进入组件时触发一次。它是组件事件，会遮住原生的 focus 事件。",
+                "en-US": "Emitted once when the focus enters the component. It is a component event and hides the native focus event."
+            },
+            "blur": {
+                "zh-CN": "焦点离开组件时触发一次。它是组件事件，会遮住原生的 blur 事件。",
+                "en-US": "Emitted once when the focus leaves the component. It is a component event and hides the native blur event."
+            },
+            "dropdownVisibleChange": {
+                "zh-CN": "下拉面板显示或隐藏时触发，参数为是否可见；放在 KeepAlive 中失活时也会以 false 触发。",
+                "en-US": "Emitted when the dropdown shows or hides, with its visibility. It also fires with false when the component is deactivated inside KeepAlive."
+            },
+            "keydown": {
+                "zh-CN": "组件处理完按键之后触发，参数为 KeyboardEvent。它会遮住原生的 keydown 事件。",
+                "en-US": "Emitted after the component has handled the key, with the KeyboardEvent. It hides the native keydown event."
+            }
+        },
+        "slots": {
+            "prefix": { "zh-CN": "输入框的前缀内容。", "en-US": "Prefix content of the input." },
+            "suffix": { "zh-CN": "输入框的后缀内容。", "en-US": "Suffix content of the input." },
+            "insetLabel": {
+                "zh-CN": "输入框内嵌标签。设置 prefix 或 trigger 时不渲染，也不作为可访问名称。",
+                "en-US": "Inset label of the input. It is not rendered, and does not name the component, when prefix or trigger is used."
+            },
+            "clearIcon": {
+                "zh-CN": "自定义清除图标，showClear 为 true 时有效。",
+                "en-US": "Custom clear icon, effective when showClear is true."
+            },
+            "emptyContent": {
+                "zh-CN": "data 为空时在下拉面板中显示的内容。",
+                "en-US": "Content shown in the dropdown when data is empty."
+            },
+            "item": {
+                "zh-CN": "候选项行内的内容，参数 item 是未经加工的数据项，index 是它在已渲染候选项中的位置；不提供时显示 label。",
+                "en-US": "Content of a candidate row. item is the data item as given and index is its position among the rendered items; without it the row shows the label."
+            },
+            "trigger": {
+                "zh-CN": "替换输入框。参数含 value、inputValue、placeholder、disabled、autofocus、size、validateStatus、showClear、insetLabelId、onChange（更新输入文本，触发 search 与 change 并展开列表）、onClear、onFocus、onBlur、controlAttrs（传给组件的 aria-* 属性，放到自定义触发器的可聚焦元素上）与 componentProps。使用时 id 落在根元素上。",
+                "en-US": "Replaces the input. Its parameters are value, inputValue, placeholder, disabled, autofocus, size, validateStatus, showClear, insetLabelId, onChange (updates the input text, emits search and change and opens the list), onClear, onFocus, onBlur, controlAttrs (the aria-* attributes given to the component, for the focusable element of the custom trigger) and componentProps. With it, id lands on the root element."
+            }
+        },
+        "exposed": {}
+    }
+}

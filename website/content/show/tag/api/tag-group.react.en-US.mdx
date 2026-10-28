@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| avatarShape | Avatar shape of the avatar tags in the group: `square` or `circle`. | `AvatarShape` | `"square"` |
+| className | Class name of the root element. | `string` | `""` |
+| maxTagCount | Maximum number of visible tags. The rest is shown as +N. | `number` | - |
+| mode | With `custom`, each `tagList` item is rendered as given instead of being wrapped in a Tag. | `'custom'` | - |
+| onPlusNMouseEnter | Callback when the pointer enters the +N tag. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onTagClose | Callback when a tag in the group is closed, with the tag content, the event and the `tagKey` of the tag. Update `tagList` in the callback. | <ApiType detail={"(tagChildren: React.ReactNode, event: React.MouseEvent\u003cHTMLElement> \u007c React.KeyboardEvent\u003cHTMLElement>, tagKey: string \u007c number) => void"}>Type</ApiType> | - |
+| popoverProps | Props passed to the Popover, such as `position` and `trigger`. See [Popover](/en-US/react/show/popover#API). | `PopoverProps` | - |
+| ref | Reference to the root element. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| restCount | The number shown in +N. Defaults to the number of tags beyond `maxTagCount`. | `number` | - |
+| showPopover | Whether hovering +N shows the remaining tags in a Popover. | `boolean` | - |
+| size | Size of the tags in the group: `default`, `small` or `large`. | `TagSize` | `"default"` |
+| style | Style of the root element. | `React.CSSProperties` | `{}` |
+| tagList | Tag configurations. Each item holds the props of a Tag, with `children` as the tag content. With `mode` set to `custom`, it is an array of ReactNode. | `React.ReactNode[] \| TagProps[]` | - |

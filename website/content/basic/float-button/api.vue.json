@@ -1,0 +1,69 @@
+{
+    "float-button": {
+        "source": "packages/semi-ui-vue/src/float-button/float-button.vue",
+        "props": {
+            "badge": {
+                "zh-CN": "徽章参数，同 Badge 的 props；class、style 以及 onClick、onMouseenter、onMouseleave 落在 Badge 根元素上。",
+                "en-US": "Badge props, same as Badge. class, style, onClick, onMouseenter and onMouseleave reach the Badge root element."
+            },
+            "colorful": { "zh-CN": "多彩悬浮按钮。", "en-US": "Colorful float button." },
+            "disabled": { "zh-CN": "禁用状态。", "en-US": "Disabled state." },
+            "href": {
+                "zh-CN": "链接地址，设置后渲染为 a；禁用时去掉 href。",
+                "en-US": "Link address. Renders an a element when set; a disabled link drops it."
+            },
+            "rel": {
+                "zh-CN": "与链接目标的关系，仅在设置 href 时生效。",
+                "en-US": "Relationship to the link target. Only takes effect with href."
+            },
+            "shape": { "zh-CN": "形状，可选 round、square。", "en-US": "Shape: round or square." },
+            "size": { "zh-CN": "尺寸，可选 default、small、large。", "en-US": "Size: default, small or large." },
+            "target": {
+                "zh-CN": "指定在何处显示链接的 URL，仅在设置 href 时生效。",
+                "en-US": "Where to display the linked URL. Only takes effect with href."
+            }
+        },
+        "events": {
+            "click": {
+                "zh-CN": "点击时触发，载荷为原生 click 事件；禁用时不触发。",
+                "en-US": "Emitted on click with the native click event. Not emitted while disabled."
+            }
+        },
+        "slots": {
+            "badgeCount": {
+                "zh-CN": "自定义徽章内容，代替 badge.count。",
+                "en-US": "Custom badge content, in place of badge.count."
+            },
+            "icon": { "zh-CN": "按钮图标。", "en-US": "Button icon." }
+        },
+        "exposed": {}
+    },
+    "float-button-group": {
+        "source": "packages/semi-ui-vue/src/float-button/float-button-group.vue",
+        "props": {
+            "disabled": { "zh-CN": "禁用全部子项。", "en-US": "Disables every item." },
+            "items": { "zh-CN": "子项列表。", "en-US": "List of items." }
+        },
+        "events": {
+            "click": {
+                "zh-CN": "点击未禁用子项时触发，载荷为子项的 value（未设置时为 undefined）与原生 click 事件；子项自己的 onClick 先于它调用。",
+                "en-US": "Emitted when an enabled item is clicked, with the item's value (undefined if unset) and the native click event. The item's own onClick runs first."
+            }
+        },
+        "slots": {
+            "badgeCount": {
+                "zh-CN": "自定义子项徽章内容，接收 item 与 index。",
+                "en-US": "Custom badge content of an item, receiving item and index."
+            },
+            "content": {
+                "zh-CN": "自定义子项文本内容，接收 item 与 index；缺省渲染 item.content。",
+                "en-US": "Custom content of an item, receiving item and index. Defaults to item.content."
+            },
+            "icon": {
+                "zh-CN": "子项图标，接收 item 与 index。",
+                "en-US": "Icon of an item, receiving item and index."
+            }
+        },
+        "exposed": {}
+    }
+}

@@ -1,0 +1,291 @@
+---
+title: TagInput
+order: 49
+icon: doc-tagInput
+brief: Taginput is a input component that can add content as a tag.
+---
+
+import TagInputReactApi from './api/tag-input.react.en-US.mdx';
+import TagInputVueApi from './api/tag-input.vue.en-US.mdx';
+import TagInputSolidApi from './api/tag-input.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { TagInput } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { TagInput } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+After pressing the Enter key, the input will add value as a tag. If the tag content is an empty string or pure space, it will be filtered.
+
+<Demo id="basic" />
+
+### Batch Add
+
+You can use `separator` to set the separator to achieve batch input, and its default value is a comma. Multiple separators are supported in string[] format.
+
+<Demo id="separator" />
+
+### Batch Remove
+
+You can also use `showClear` to set whether to support one-click deletion of all tags and input.
+
+<Demo id="show-clear" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Size
+
+Use `size` to set the size of the TagInput, optional: `small`, `default`, `large`.
+
+<Demo id="size" />
+
+### Different validate status
+
+validateStatus: `default`, `warning`, `error`.
+
+<Demo id="validate-status" />
+
+### Prefix / Suffix
+
+<Framework only="react">
+
+You can pass the input box prefix through `prefix`, the input box suffix through `suffix`, for text or React Node.  
+The left and right padding is automatically brought when the content passed in by prefix and suffix is text or Icon. If it is a custom ReactNode, the left and right padding is 0. If necessary, you can set it in the ReactNode you passed in.
+
+</Framework>
+
+<Framework only="vue">
+
+You can pass the input box prefix through the `#prefix` slot and the suffix through the `#suffix` slot, as text or nodes such as icons.  
+The left and right padding is added automatically when the slot content is plain text or an Icon. For custom nodes the padding is 0; set it on the nodes you pass in if needed.
+
+</Framework>
+
+<Framework only="solid">
+
+You can pass the input box prefix through `prefix` and the suffix through `suffix`, as text or JSX elements.  
+The left and right padding is automatically brought when the content passed in by prefix and suffix is text or an Icon. For a custom JSX element the padding is 0; set it on the element you pass in if needed.
+
+</Framework>
+
+<Demo id="prefix-suffix" />
+
+### Autocomplete
+
+You can use `addOnBlur` to set whether the current input value is automatically created as a tag when the blur event is triggered.
+
+<Demo id="add-on-blur" />
+
+### Allow Duplicates
+
+You can use `allowDuplicates` to set whether to allow the creation of the same tag.
+
+<Demo id="allow-duplicates" />
+
+### Limits
+
+<Framework only="react">
+
+You can use `max` to limit the number of tags. Tags added past the limit are dropped, and the `onExceed()` callback is invoked.
+
+You can use `maxLength` to limit the maximum length of a single tag, and the `onInputExceed()` callback will be invoked when this value is exceeded.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use `max` to limit the number of tags. Tags added past the limit are dropped, and the `exceed` event is emitted.
+
+You can use `maxLength` to limit the maximum length of a single tag, and the `inputExceed` event is emitted when this value is exceeded.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `max` to limit the number of tags. Tags added past the limit are dropped, and the `onExceed()` callback is invoked.
+
+You can use `maxLength` to limit the maximum length of a single tag, and the `onInputExceed()` callback will be invoked when this value is exceeded.
+
+</Framework>
+
+<Demo id="limits" />
+
+### Limit the number of tags displayed
+
+You can use `maxTagCount` to limit the number of tags displayed, and the excess will be displayed as +N. You can use `showRestTagsPopover` to set whether hover +N displays Popover after `maxTagCount` is exceeded, and you can configure Popover in the `restTagsPopoverProps` property.
+
+<Demo id="max-tag-count" />
+
+### Controlled Tag
+
+<Framework only="react">
+
+You can use `value` to set tags, and use `onChange` to achieve control of the tags.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the tags with `v-model` (`modelValue` plus `update:modelValue`) to control them.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `value` to set tags, and use `onChange` to achieve control of the tags.
+
+</Framework>
+
+<Demo id="controlled-tag" />
+
+### Controlled Input
+
+<Framework only="react">
+
+You can use `inputValue` to set input box, and use `onInputChange` to control the input content.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the input text with `v-model:inputValue` to control it.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `inputValue` to set the input box, and use `onInputChange` to control the input content.
+
+</Framework>
+
+<Demo id="controlled-input" />
+
+### Callback
+
+<Demo id="callbacks" />
+
+### Focus Management
+
+<Framework only="react">
+
+You can use the `blur()` and `focus()` methods to manage the focus.
+
+</Framework>
+
+<Framework only="vue">
+
+You can call the `blur()` and `focus()` methods through the component ref to manage the focus.
+
+</Framework>
+
+<Framework only="solid">
+
+Get the root element through the component's `ref`, then call its `focus()` and `blur()` methods to manage the focus. `focus()` focuses the input and activates the component; `blur()` removes the focus from whichever element inside the component holds it.
+
+</Framework>
+
+<Demo id="focus" />
+
+### Custom TagInput rendering
+
+<Framework only="react">
+
+You can use `renderTagItem` to customize tag rendering. `renderTagItem(value: string, index: number, onClose: function ) => React.ReactNode` The component adds a key to each item.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#tag` scoped slot to replace each tag as a whole; its scoped props are `{ value, index, onClose }`. Empty slot content renders no tag. `onClose` calls `preventDefault` on the event it receives, so you can bind it straight to a button's `@click`.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `renderTagItem` to customize tag rendering. `renderTagItem(value: string, index: number, onClose: () => void) => JSX.Element`; the third parameter `onClose` removes that tag and can be passed directly as a button's `onClick`.
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### Drag to sort
+
+Set `draggable` to true to enable drag and drop sorting. After the drag function is enabled, once TagInput is focused (by click or Tab) the tags can be dragged; after the focus leaves TagInput they cannot. The drag handle sits beside its tag and works from the keyboard, see "Keyboard and focus" below. Tags with the same value can be sorted separately.
+
+<Demo id="draggable" />
+
+## API Reference
+
+<Framework only="react">
+
+<TagInputReactApi />
+
+Among the native attributes, `id`, `name`, `role`, `tabIndex` and the `aria-*` attributes that describe the input (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-required`, `aria-controls`, `aria-expanded`, `aria-haspopup`, `aria-autocomplete`, `aria-activedescendant`, `aria-errormessage`) land on the inner input; the rest, such as `data-*`, `title`, `onClick` and `onMouseDown`, land on the root element, where your `onClick` and the component's own activation handler both run.
+
+</Framework>
+
+<Framework only="vue">
+
+<TagInputVueApi />
+
+Among the undeclared attributes, `id`, `name`, `role` and the `aria-*` ones that describe the input (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-required`, `aria-controls`, `aria-expanded`, `aria-haspopup`, `aria-autocomplete`, `aria-activedescendant`, `aria-errormessage`) land on the inner input; `class`, `style`, `data-*`, `title` and the rest land on the root element, where a `@click` listener and the component's own activation handler both run. The `focus` and `blur` events carry the focusin and focusout of the root element. Because they are declared component events, `@change`, `@focus`, `@blur` and `@keydown` receive only the component events, not native events bubbling up.
+
+</Framework>
+
+<Framework only="solid">
+
+<TagInputSolidApi />
+
+`class`, `style`, `ref`, and native attributes and events land on the root element, except `id`, `name`, `role`, `tabIndex`, and the `aria-*` attributes that describe the input (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-required`, `aria-controls`, `aria-expanded`, `aria-haspopup`, `aria-autocomplete`, `aria-activedescendant`, `aria-errormessage`), which land on the inner input. `onClick`, `onMouseDown`, `onFocusIn` and `onFocusOut` call the function you pass in addition to the component's own handling.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- TagInput supports the input of `aria-label` to indicate the function of the TagInput; it lands on the input box, not on the root node;
+- The root node has the `group` role, which holds the input, the tags and the clear button as one control; when disabled it carries `aria-disabled="true"`, otherwise it has no `aria-disabled`;
+- When disabled, the input is natively `disabled` and the tags are static text without an `aria-label`; with `validateStatus` set to `error` the input carries `aria-invalid`, and an explicit `aria-invalid` wins;
+- With `showClear`, tags or input text, and no `disabled`, a clear button is rendered. It is a native `button` named "Clear TagInput value" from the locale, shown on hover or while focus is inside the TagInput. From the input, `Tab` moves to the clear button; `Enter` or `Space` clears, as a mouse click does, and the focus goes back to the input. `Backspace` in the empty input also removes the last tag.
+
+### Keyboard and focus
+
+- `Enter` in the input adds the input text as a tag; with empty input it does nothing. `Enter` always has its default action prevented, so a TagInput inside a form never submits it.
+- `Backspace` in the empty input removes the last tag.
+- A closable tag is a `role="button"` Tab stop placed before the input; with a tag focused, `Backspace` or `Delete` closes it and the focus goes back to the input. When disabled, tags are static text and not focusable.
+- With `showClear` and some content, the clear button follows the input: `Tab` reaches it, `Enter` or `Space` clears, and the focus goes back to the input.
+- The active state follows the focus: it starts when the focus comes in from outside (click, `Tab` or `focus()`) and ends when it leaves the whole component. Moving the focus between the input, the tags and the clear button is not leaving, so it does not fire `focus` or `blur` and does not trigger `addOnBlur`. While active, tags folded by `maxTagCount` expand (unless `expandRestTagsOnClick` is `false`).
+- With `draggable` and the component active, each tag gets a drag handle that is its own Tab stop, placed before the tag it belongs to. Focus a handle, press `Space` to pick up, the arrow keys to move and `Space` to drop; screen readers announce the pick up, moves and drop.
+
+## Design Tokens
+
+<DesignToken />

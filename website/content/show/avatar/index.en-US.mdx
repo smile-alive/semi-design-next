@@ -1,0 +1,296 @@
+---
+order: 62
+title: Avatar
+icon: doc-avatar
+brief: Avatar, used for image or text display.
+---
+
+import AvatarReactApi from './api/avatar.react.en-US.mdx';
+import AvatarGroupReactApi from './api/avatar-group.react.en-US.mdx';
+import AvatarVueApi from './api/avatar.vue.en-US.mdx';
+import AvatarGroupVueApi from './api/avatar-group.vue.en-US.mdx';
+import AvatarSolidApi from './api/avatar.solid.en-US.mdx';
+import AvatarGroupSolidApi from './api/avatar-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Avatar, AvatarGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Avatar, AvatarGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, AvatarGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Size
+
+You can change the size of the avatars with `size` property. The following sizes are supported: `extra-extra-small`, `extra-small`,`small`, `default`, `medium`, `large`, `extra-large`.
+
+<Demo id="size" />
+
+### Color
+
+Avatars support 16 colors including `white`, `amber`, `blue`, `cyan`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `violet`, and `yellow`. You can also use the `style` prop to customize styles. The default color is`grey`.
+
+<Demo id="color" />
+
+### Adaptive character size
+
+For the avatar of the character type, the font size will be adjusted adaptively according to the width of the avatar. Use `gap` to adjust the pixel size on the left and right sides of the character avatar distance.
+
+<Demo id="gap" />
+
+### Image
+
+Image avatars can be created by using the `src` or `srcSet` prop.
+
+<Demo id="image" />
+
+### Shape
+
+Avatars support two shapes: `circle` and `square`. The shape is default to `circle`.
+
+<Demo id="shape" />
+
+### Event
+
+<Framework only="react">
+
+Avatars support `onClick`,`onMouseEnter`,`onMouseLeave`. You can use the `hoverMask` prop to pass in overlay content for `hover` state. The overlay has no default style.
+
+</Framework>
+
+<Framework only="vue">
+
+Avatars emit `@click`, `@mouseEnter` and `@mouseLeave`. Supply hover overlay content through the `#hoverMask` slot. The overlay has no default style.
+
+</Framework>
+
+<Framework only="solid">
+
+Avatars support `onClick`, `onMouseEnter` and `onMouseLeave`. You can use the `hoverMask` prop to pass in overlay content for `hover` state. The overlay has no default style.
+
+</Framework>
+
+<Demo id="hover-mask" />
+
+### Top and Bottom Slot
+
+<Framework only="vue">
+
+Use the `topSlot` and `bottomSlot` props to configure badge appearance, and `#topSlotText` and `#bottomSlotText` for badge content. The `#topSlot` and `#bottomSlot` slots replace the entire badge.
+
+</Framework>
+
+<Framework only="solid">
+
+Use the `topSlot` and `bottomSlot` props to configure badge appearance and text. A function as `text` renders custom content (such as an icon) and is called only when the badge shows. Pass a `render` function to replace the entire badge.
+
+</Framework>
+
+<Demo id="slot" />
+
+#### Top
+
+<Demo id="top-slot" />
+
+#### Bottom
+
+<Demo id="bottom-slot" />
+
+### Additional border
+
+<Demo id="border" />
+
+### Additional Animation
+
+Enable additional border and content animation through the `motion` field of `border` and the `contentMotion` prop.
+
+<Demo id="motion" />
+
+### AvatarGroup
+
+You can use `AvatarGroup` component to display avatars as a group.
+
+<Demo id="group" />
+
+You can set the number of avatars to display with `maxCount` property.
+
+<Demo id="max-count" />
+
+<Framework only="react">
+
+You can customize the more tag with `renderMore`.
+
+</Framework>
+
+<Framework only="solid">
+
+You can customize the more tag with `renderMore`.
+
+</Framework>
+
+<Framework only="vue">
+
+Customize the more label with the `#more="{ restNumber, restAvatars }"` scoped slot.
+
+</Framework>
+
+<Demo id="render-more" />
+
+You can set the coverage direction of the avatars with `overlapFrom`. It has two optional values A and B. The default value is `start`.
+
+<Demo id="overlap-from" />
+
+## API Reference
+
+---
+
+### Avatar
+
+<Framework only="react">
+
+<AvatarReactApi />
+
+Other native attributes (such as `id` and `data-*`) are applied to the avatar element (`.semi-avatar`); a clickable avatar applies `tabIndex` and `aria-*` to its single inner focus target. With `border`, `topSlot` or `bottomSlot`, `style`, `onClick`, `onMouseEnter` and `onMouseLeave` are applied to the outer wrapper instead.
+
+</Framework>
+
+<Framework only="vue">
+
+<AvatarVueApi />
+
+`class`, `style` and native attributes are passed through attrs. A clickable avatar applies `tabindex` and `aria-*` to its single inner focus target.
+
+</Framework>
+
+<Framework only="solid">
+
+<AvatarSolidApi />
+
+`class`, `style`, `ref` and native attributes are applied to the root element of the avatar. With `border`, `topSlot` or `bottomSlot`, the outer wrapper receives `style`, while `class`, `ref` and native attributes stay on the inner avatar element. A clickable avatar applies `tabindex` and `aria-*` to its single inner focus target.
+
+</Framework>
+
+### AvatarGroup
+
+<Framework only="react">
+
+<AvatarGroupReactApi />
+
+Other props such as `className`, `style`, `aria-*` and `data-*` are applied to the root element of the group (`role="list"`), not to the avatars inside it.
+
+</Framework>
+
+<Framework only="vue">
+
+<AvatarGroupVueApi />
+
+Attrs such as `class`, `style` and `aria-*` are applied to the group root, not to the avatars inside it.
+
+</Framework>
+
+<Framework only="solid">
+
+<AvatarGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes, including `aria-*`, are applied to the group root element, not to the avatars inside it.
+
+</Framework>
+
+## Accessibility
+
+- Avatars are generally not used for operations and do not need to be focused. But when the Avatar can be clicked (such as the avatar on the Semi official website), it needs to be focused and respond to the keyboard `Enter` and `Space` events.
+- A clickable Avatar with an image or text has a single Tab stop, the image or the text label. Its focus order and `aria-*` attributes, including those injected by Tooltip, are applied to that element.
+- When Avatar is used in combination with other components, also check the accessibility guidelines for that component.
+- Avatar's `alt` attribute can be read by screen readers, when using the avatar component, please use the `alt` attribute to explain the content of the image.
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Avatar } from '@fibrae/semi-ui-react';
+
+() => {
+    return (
+        <>
+            {/* Good case */}
+            <Avatar alt="A cut cat" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+            <Avatar alt="Jiang Pengzhi" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+            {/* Bad case: empty content */}
+            <Avatar alt="" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+            {/* Bad case: no need to include picture or image in alt */}
+            <Avatar alt="Picture of Jiang Pengzhi" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+        </>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Avatar } from '@fibrae/semi-ui-vue';
+
+    const src = '/assets/placeholder/avatar-a.svg';
+</script>
+
+<template>
+    <Avatar alt="一只可爱的猫咪" :src="src" />
+    <Avatar alt="姜鹏志" :src="src" />
+</template>
+```
+
+Describe the avatar content with alternative text. Avoid empty text and redundant words such as "picture". Declare an action with `@click`; the component supplies a Tab stop and activates the click on `Enter` and `Space`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar } from '@fibrae/semi-ui-solid';
+
+() => {
+    return (
+        <>
+            {/* Good case */}
+            <Avatar alt="A cut cat" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+            <Avatar alt="Jiang Pengzhi" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+            {/* Bad case: empty content */}
+            <Avatar alt="" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+            {/* Bad case: no need to include picture or image in alt */}
+            <Avatar alt="Picture of Jiang Pengzhi" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+        </>
+    );
+};
+```
+
+Describe the avatar content with alternative text. Avoid empty text and redundant words such as "picture". Declare an action with `onClick`; the component supplies a Tab stop and activates the click on `Enter` and `Space`.
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

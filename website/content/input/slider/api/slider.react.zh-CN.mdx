@@ -1,0 +1,39 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| aria-label | 滑块的可访问名称；`range` 模式下两个滑块在其后分别追加语言包中的起点、终点。 | `string` | - |
+| aria-labelledby | 引用标签元素的 id，作为滑块的可访问名称；`range` 模式下每个滑块的名称为该标签加上起点或终点。 | `string` | - |
+| aria-valuetext | 为当前值提供用户友好的名称；设置了 `getAriaValueText` 时以其结果为准。 | `string` | - |
+| className | `.semi-slider-wrapper` 元素的类名。 | `string` | - |
+| defaultValue | 非受控时的初始取值，未设置时为 `min`。 | `number \| number[]` | - |
+| disabled | 滑块是否禁用。 | `boolean` | `false` |
+| getAriaValueText | 为滑块的当前值提供用户友好的名称，参数为该滑块的值与顺序，优先于 `aria-valuetext`。 | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
+| handleDot | 滑块上的圆点，单个滑块传一个对象，`range` 模式下传与滑块一一对应的数组。 | `HandleDot \| HandleDot[]` | - |
+| id | 落在第一个滑块的 input 上，`<label htmlFor>` 指向它时点击 label 会聚焦该滑块。 | `string` | - |
+| included | `marks` 不为空对象时有效，值为 `true` 时表示值为包含关系，`false` 表示并列。 | `boolean` | `true` |
+| marks | 刻度，key 的类型必须为 `number` 且取值在闭区间 [min, max] 内，值为任意节点，显示在刻度旁与刻度提示中。 | <ApiType detail={"Record\u003cnumber, React.ReactNode>"}>Type</ApiType> | - |
+| max | 最大值。 | `number` | `100` |
+| min | 最小值。 | `number` | `0` |
+| name | 原生表单提交时的字段名，落在每个滑块的 input 上；`range` 模式下两个 input 同名，依次提交两个值。 | `string` | - |
+| onAfterChange | 值变化完成后触发，参数为当前取值；受控值被改回 `undefined` 时不触发。 | <ApiType detail={"(value: SliderProps['value']) => void"}>Type</ApiType> | - |
+| onChange | 值变化时触发，参数为当前取值。 | <ApiType detail={"(value: SliderProps['value']) => void"}>Type</ApiType> | - |
+| onFocus | 任一滑块获得焦点时触发，挂在 `.semi-slider-wrapper` 上。 | <ApiType detail={"React.FocusEventHandler\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| onMouseUp | 拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。 | <ApiType detail={"(e: any) => void"}>Type</ApiType> | - |
+| railStyle | 滑块轨道的样式。 | `React.CSSProperties` | - |
+| range | 是否支持两端同时可滑动。 | `boolean` | `false` |
+| ref | `.semi-slider-wrapper` 元素的引用。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| showArrow | 提示是否带箭头。 | `boolean` | `true` |
+| showBoundary | 是否在悬停时展示最大值与最小值。 | `boolean` | `false` |
+| showMarkLabel | 是否显示刻度标签。 | `boolean` | `true` |
+| step | 步长，从 `min` 起计算。 | `number` | `1` |
+| style | `.semi-slider-wrapper` 元素的样式。 | `React.CSSProperties` | - |
+| tipFormatter | 设置提示的展示格式，每个滑块单独调用，参数为该滑块的值；传 `null` 隐藏提示。 | <ApiType detail={"((value: number) => any) \u007c null"}>Type</ApiType> | <ApiType detail={"(value: number) => value"}>Type</ApiType> |
+| title | 落在 `.semi-slider-wrapper` 元素上的 title 属性。 | `string` | - |
+| tooltipOnMark | 滑轨上的刻度是否带有提示。 | `boolean` | `false` |
+| tooltipVisible | 是否始终显示提示。 | `boolean` | - |
+| value | 当前取值，受控使用；只传 `value` 而不在 `onChange` 中回写时，拖动、点击与方向键仅触发 `onChange`，滑块不移动。变回 `undefined` 时回到 `defaultValue`，没有则回到 `min`，且不触发 `onAfterChange`。 | `number \| number[]` | - |
+| vertical | 是否设置方向为垂直。 | `boolean` | `false` |
+| verticalReverse | 反转垂直方向，即上大下小。 | `boolean` | `false` |

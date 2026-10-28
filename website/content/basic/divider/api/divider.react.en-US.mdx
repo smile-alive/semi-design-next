@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                               | Type                                                              | Default        |
+| --------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | -------------- |
+| align     | Alignment of the content when the divider has content: `left`, `center` or `right`.                       | `'left' \| 'right' \| 'center'`                                   | `"center"`     |
+| children  | Content shown in a horizontal divider; a vertical divider shows no content.                               | `ReactNode`                                                       | -              |
+| className | Class name of the root element.                                                                           | `string`                                                          | -              |
+| dashed    | Whether the line is dashed.                                                                               | `boolean`                                                         | -              |
+| layout    | Direction of the divider: `horizontal` or `vertical`.                                                     | `'horizontal' \| 'vertical'`                                      | `"horizontal"` |
+| margin    | Margin above and below the divider, or left and right when `layout` is `vertical`. A number is in pixels. | `number \| string`                                                | -              |
+| ref       | Reference to the root `div` element.                                                                      | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -              |
+| style     | Style of the root element.                                                                                | `CSSProperties`                                                   | -              |

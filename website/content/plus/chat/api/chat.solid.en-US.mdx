@@ -1,0 +1,53 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | Conversation layout: `leftRight` or `leftAlign`. | `ChatAlign` | `"leftRight"` |
+| bottomSlot | Node below the input box. | `JSX.Element` | - |
+| canSend | Whether the send button is usable. The component normally decides this itself; a given value takes precedence. | `boolean` | - |
+| chatBoxRenderConfig | Custom render functions for parts of the message box; see `ChatBoxRenderConfig`. | `ChatBoxRenderConfig` | - |
+| chats | The conversation list, controlled; write changes back through `onChatsChange`. Only replacing the whole array counts as a change; mutating the same array in place does not update the view. | `Message[]` | - |
+| customMarkDownComponents | Custom Markdown renderers keyed by element name, passed to the MarkdownRender of message content. | `MarkdownRenderComponents` | - |
+| enableUpload | Whether uploading is enabled. A boolean controls paste, click and drag upload together; an object sets `pasteUpload`, `clickUpload` and `dragUpload` separately, and unset items are `true`. | `boolean \| EnableUploadProps` | - |
+| escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop their content. | `boolean` | `true` |
+| hintCls | Class name of the outermost element of the hint area. | `string` | - |
+| hints | The list of hints. Clicking one adds it to the conversation as a new user message and calls `onHintClick`. | `string[]` | - |
+| hintStyle | Style of the outermost element of the hint area. | `JSX.CSSProperties \| string` | - |
+| inputBoxCls | Class name of the input box. | `string` | - |
+| inputBoxStyle | Style of the input box. | `JSX.CSSProperties \| string` | - |
+| markdownRenderProps | Props passed to the MarkdownRender that renders message content; `format` defaults to `md`. Chat sets `raw` and `components` itself; use `customMarkDownComponents` for custom renderers. | `MarkdownRenderProps` | - |
+| mode | Conversation mode: `bubble`, `noBubble` or `userBubble`. | `ChatMode` | `"bubble"` |
+| onChatsChange | Called with the new list when the conversation list changes. | <ApiType detail={"(chats: Message[]) => void"}>Type</ApiType> | - |
+| onClear | Called when the context is cleared. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onHintClick | Called with the hint text when a hint is clicked. | <ApiType detail={"(hint: string) => void"}>Type</ApiType> | - |
+| onInputChange | Called when the input text or the attachments change, with `{ inputValue, attachment }`. | <ApiType detail={"(props: { inputValue: string; attachment: FileItem[] }) => void"}>Type</ApiType> | - |
+| onMessageBadFeedback | Called with the message on negative feedback. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageCopy | Called with the message when it is copied. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageDelete | Called with the message when it is deleted. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageGoodFeedback | Called with the message on positive feedback. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageReset | Called when a message is reset; the argument is `null` when the `resetMessage` method triggers it. | <ApiType detail={"(message: Message \u007c null) => void"}>Type</ApiType> | - |
+| onMessageSend | Called when a message is sent, with the text and the attachments. | <ApiType detail={"(content: string, attachment?: FileItem[]) => void"}>Type</ApiType> | - |
+| onStopGenerator | Called with the mouse event when the stop button is clicked. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the input box. | `string` | - |
+| ref | The root element, which carries the methods listed under Methods. | <ApiType detail={"Ref\u003cChatElement>"}>Type</ApiType> | - |
+| renderDivider | Renders the divider shown after the context is cleared, with the message, and returns a node. Called once per divider, and again when the function is replaced. | <ApiType detail={"(message?: Message) => JSX.Element"}>Type</ApiType> | - |
+| renderHintBox | Renders each hint item with `content`, `index` and `onHintClick`, and returns a node. | <ApiType detail={"(props: RenderHintBoxProps) => JSX.Element"}>Type</ApiType> | - |
+| renderInputArea | Renders the input area with `defaultNode`, `onSend`, `onClear` and `detailProps`, and returns a node. `defaultNode` and the nodes in `detailProps` are render functions, called where they are placed. | <ApiType detail={"(props: RenderInputAreaProps) => JSX.Element"}>Type</ApiType> | - |
+| roleConfig | Role information, keyed by the message role. `avatar` is an image URL; other avatar content goes through `chatBoxRenderConfig.renderRoleAvatar`. `color` is passed to Avatar. | `RoleConfig` | - |
+| sendHotKey | Send hot key: `enter` or `shift+enter`. With `enter`, Enter sends and Shift + Enter inserts a line break; `shift+enter` is the reverse. | `SendHotKey` | `"enter"` |
+| showClearContext | Whether to show the clear context button in the input box. | `boolean` | `false` |
+| showStopGenerate | Whether to show the stop button while the last message is generating. Sending is disabled meanwhile, and clicking the stop button calls `onStopGenerator`. | `boolean` | `false` |
+| topSlot | Node above the conversation area. | `JSX.Element` | - |
+| uploadProps | Props passed to Upload. Chat manages `fileList` and `defaultFileList`, and handles `onChange` itself, so it is not passed to Upload; `children` replaces the upload button as its trigger. | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'defaultFileList'>"}>Type</ApiType> | - |
+| uploadTipProps | Props of the upload button's Tooltip; `content` is the tip text. | `TooltipProps` | - |
+
+**Methods**
+
+| Method         | Description                                                                                                            | Type                                                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| clearContext   | Clears the context by appending a divider and calls `onClear`; does nothing when the list already ends with a divider. | <ApiType detail={"() => void"}>Type</ApiType>                                         |
+| resetMessage   | Resets the last message to an empty loading state and calls `onMessageReset` with `null`.                              | <ApiType detail={"() => void"}>Type</ApiType>                                         |
+| scrollToBottom | Scrolls to the bottom; smoothly when `animation` is `true`, otherwise jumps.                                           | <ApiType detail={"(animation?: boolean) => void"}>Type</ApiType>                      |
+| sendMessage    | Sends a message; without `attachment` the message content is a string.                                                 | <ApiType detail={"(content: string, attachment?: FileItem[]) => void"}>Type</ApiType> |

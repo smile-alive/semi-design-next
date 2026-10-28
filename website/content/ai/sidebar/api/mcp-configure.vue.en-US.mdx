@@ -1,0 +1,50 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| visible | Whether it is shown; bind it with v-model:visible. | `boolean` | `semiGlobalDefault("MCPConfigure", "visible")` |
+| title | Plain-text title, the locale's MCP configure text by default; the title slot takes precedence. | `string` | `semiGlobalDefault("MCPConfigure", "title")` |
+| motion | Whether showing and hiding use the expand animation. | `boolean` | `semiGlobalDefault("MCPConfigure", "motion")` |
+| resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | `semiGlobalDefault("MCPConfigure", "resizable")` |
+| minWidth | Minimum width when resizing; applies only when resizable is true. | `string \| number` | `semiGlobalDefault("MCPConfigure", "minWidth")` |
+| maxWidth | Maximum width when resizing; applies only when resizable is true. | `string \| number` | `semiGlobalDefault("MCPConfigure", "maxWidth")` |
+| defaultSize | Initial width and height; applies only when resizable is true. | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("MCPConfigure", "defaultSize")` |
+| showClose | Whether the header shows the close button. | `boolean` | `semiGlobalDefault("MCPConfigure", "showClose")` |
+| closeOnEsc | Whether pressing Esc emits cancel. | `boolean` | `semiGlobalDefault("MCPConfigure", "closeOnEsc")` |
+| options | Built-in MCP tools; bind it with v-model:options. Each item needs a unique value. | `MCPConfigureOption[]` | `semiGlobalDefault("MCPConfigure", "options")` |
+| customOptions | Custom MCP tools; bind it with v-model:customOptions. | `MCPConfigureOption[]` | `semiGlobalDefault("MCPConfigure", "customOptions")` |
+| filter | Custom search filter, called with the lower-cased input and an option; the label and desc are matched by default. | <ApiType detail={"((inputValue: string, option: MCPConfigureOption) => boolean)"}>Type</ApiType> | `undefined` |
+| placeholder | Placeholder of the search input, the locale text by default. | `string` | `semiGlobalDefault("MCPConfigure", "placeholder")` |
+
+**Events**
+
+| Event                | Description                                                                                                  | Callback parameters                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| update:visible       | Emitted before cancel when the close button or Esc cancels, with false, so v-model:visible closes it.        | `[visible: false]`                                 |
+| cancel               | Emitted when the close button is clicked, or when Esc is pressed while closeOnEsc is true.                   | `[event: MouseEvent \| KeyboardEvent]`             |
+| afterVisibleChange   | Emitted after the show or hide animation ends, with whether it is visible.                                   | `[visible: boolean]`                               |
+| update:options       | Emitted before statusChange when a built-in tool is switched, so v-model:options follows.                    | `[options: MCPConfigureOption[]]`                  |
+| update:customOptions | Emitted before statusChange when a custom tool is switched, so v-model:customOptions follows.                | `[options: MCPConfigureOption[]]`                  |
+| statusChange         | Emitted after a tool is switched, with the list whose active flag changed and whether it is the custom list. | `[options: MCPConfigureOption[], custom: boolean]` |
+| search               | Emitted when the search input changes, with the input value and whether the custom list is shown.            | `[inputValue: string, custom: boolean]`            |
+| addClick             | Emitted when the add button of the custom page is clicked.                                                   | `[event: MouseEvent]`                              |
+| configureClick       | Emitted when the configure button is clicked, with the event and its option.                                 | `[event: MouseEvent, option: MCPConfigureOption]`  |
+| editClick            | Emitted when the edit button of a custom tool is clicked, with the event and its option.                     | `[event: MouseEvent, option: MCPConfigureOption]`  |
+
+**Slots**
+
+| Slot   | Description                                                                                                                                       | Scope parameters            |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| title  | Header title; it takes precedence over the title prop.                                                                                            | `any`                       |
+| header | Replaces the whole header; empty content falls back to the built-in header.                                                                       | `any`                       |
+| icon   | Icon of an option, with item, index and custom. When provided it is used for every option; the icon field is an image URL only when it is absent. | `MCPConfigureItemSlotProps` |
+| desc   | Description of an option, with item, index and custom; the desc field is shown when absent.                                                       | `MCPConfigureItemSlotProps` |
+| item   | Replaces the whole built-in row, with item, index and custom.                                                                                     | `MCPConfigureItemSlotProps` |
+
+**Exposes**
+
+| Name | Description                                                  | Type                     |
+| ---- | ------------------------------------------------------------ | ------------------------ |
+| root | The .semi-sidebar-container root element; null while hidden. | `HTMLDivElement \| null` |

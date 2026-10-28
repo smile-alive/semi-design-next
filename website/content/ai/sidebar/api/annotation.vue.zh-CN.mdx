@@ -1,0 +1,43 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                    | 类型                                                                                                                                  | 默认值                                           |
+| ----------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| visible     | 是否显示，配合 v-model:visible 使用。                                   | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "visible")`     |
+| title       | 纯文本标题，默认使用语言包中的参考来源；传入 title 插槽时以插槽为准。   | `string`                                                                                                                              | `semiGlobalDefault("Annotation", "title")`       |
+| motion      | 显示与隐藏时是否使用展开动画。                                          | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "motion")`      |
+| resizable   | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "resizable")`   |
+| minWidth    | 可调整的最小宽度，仅在 resizable 为 true 时生效。                       | `string \| number`                                                                                                                    | `semiGlobalDefault("Annotation", "minWidth")`    |
+| maxWidth    | 可调整的最大宽度，仅在 resizable 为 true 时生效。                       | `string \| number`                                                                                                                    | `semiGlobalDefault("Annotation", "maxWidth")`    |
+| defaultSize | 初始宽高，仅在 resizable 为 true 时生效。                               | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Annotation", "defaultSize")` |
+| showClose   | 是否显示头部的关闭按钮。                                                | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "showClose")`   |
+| closeOnEsc  | 按下 Esc 键时是否触发 cancel。                                          | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "closeOnEsc")`  |
+| activeKey   | 当前展开的分组 key，配合 v-model:activeKey 使用。                       | `string \| string[]`                                                                                                                  | `semiGlobalDefault("Annotation", "activeKey")`   |
+| info        | 参考来源分组列表，每组包含 header、key 与 annotations。                 | `AnnotationInfo[]`                                                                                                                    | `semiGlobalDefault("Annotation", "info")`        |
+
+**Events**
+
+| 事件               | 说明                                                                              | 回调参数                                    |
+| ------------------ | --------------------------------------------------------------------------------- | ------------------------------------------- |
+| update:visible     | 关闭按钮或 Esc 触发取消时先于 cancel 触发，值为 false，供 v-model:visible 回写。  | `[visible: false]`                          |
+| cancel             | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。                           | `[event: MouseEvent \| KeyboardEvent]`      |
+| afterVisibleChange | 显示或隐藏动画结束后触发，参数为当前是否可见。                                    | `[visible: boolean]`                        |
+| update:activeKey   | 展开或收起分组时先于 change 触发，供 v-model:activeKey 回写。                     | `[activeKey: string[]]`                     |
+| change             | 展开或收起分组时触发，参数为当前展开的 key。                                      | `[activeKey: string \| string[]]`           |
+| click              | 点击某条参考来源时触发，参数为点击事件和对应条目；根元素的原生 click 不单独上报。 | `[event: MouseEvent, item: AnnotationItem]` |
+
+**Slots**
+
+| 插槽       | 说明                                                                           | 作用域参数                  |
+| ---------- | ------------------------------------------------------------------------------ | --------------------------- |
+| title      | 头部标题，优先于 title 属性。                                                  | `any`                       |
+| header     | 替换整个容器头部；内容为空时回退到内置头部。                                   | `any`                       |
+| infoHeader | 分组头部图标之后的内容，作用域参数为 item 与 index；未提供时显示 header 字段。 | `AnnotationHeaderSlotProps` |
+| item       | 替换内置的参考来源条目，作用域参数为 item 与 index（在分组内的位置）。         | `AnnotationItemSlotProps`   |
+
+**Exposes**
+
+| 名称 | 说明                                                | 类型                     |
+| ---- | --------------------------------------------------- | ------------------------ |
+| root | 容器根元素 .semi-sidebar-container；隐藏时为 null。 | `HTMLDivElement \| null` |

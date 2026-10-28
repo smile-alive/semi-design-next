@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Controlled index of the current item, counted from 0. The last item is current when omitted. | `number` | - |
+| aria-label | Accessible name of the navigation. The locale text is used when omitted. | `React.AriaAttributes['aria-label']` | - |
+| autoCollapse | Whether the levels beyond `maxItemCount` collapse into an ellipsis automatically. | `boolean` | `true` |
+| children | `Breadcrumb.Item` children. children are not rendered when `routes` is not empty. | `ReactNode` | - |
+| className | Class name of the root nav element. | `string` | - |
+| compact | Whether the compact size is used, which sets the size of text and Semi icons. | `boolean` | `true` |
+| maxItemCount | Number of levels above which the breadcrumb collapses. The first, current and last levels stay visible. | `number` | `4` |
+| moreType | Built-in rendering of the ellipsis area, `default` or `popover`. `renderMore` wins when it is provided. | `MoreType` | `"default"` |
+| onClick | Called when an item is clicked. With `routes` it receives the route object of the item, `{ name }` for a string route; with `Breadcrumb.Item` children it receives `{ name, href }`, where `name` is the children of the item. The second parameter is the native MouseEvent. Once it is passed, items without `href`, without `noLink` and not current can also be operated with Enter. | <ApiType detail={"(route: BreadcrumbItemInfo \u007c RouteProps, event: React.MouseEvent) => void"}>Type</ApiType> | - |
+| ref | Ref of the root nav element. | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
+| renderItem | Renders the content of each item with `routes`. The argument is the route object of the item, `{ name }` for a string route. | <ApiType detail={"(route: RouteProps) => React.ReactNode"}>Type</ApiType> | - |
+| renderMore | Renders the content of the ellipsis area. The argument holds the collapsed items without their separators. It wins over `moreType` when provided. | <ApiType detail={"(restItem: Array\u003cReact.ReactNode>) => React.ReactNode"}>Type</ApiType> | - |
+| routes | Route information as an array of route objects or strings. When it is not empty, the items come from it and children are not rendered. The fields of a route object are listed under Route below. | <ApiType detail={"Array\u003cRouteProps \u007c string>"}>Type</ApiType> | `[]` |
+| separator | Custom separator, either text or a ReactNode. | `React.ReactNode` | `"/"` |
+| showTooltip | Whether a Tooltip shows for an overflowing title, with its options: `width` is the truncation width in px, `ellipsisPos` truncates at the `end` or in the `middle`, and `opts` are passed to the Tooltip without `content`, defaulting to `{ autoAdjustOverflow: true, position: 'top' }`. `false` hides the Tooltip, and the title is still truncated at `width`. | `boolean \| showToolTipProps` | `{ width: 150, ellipsisPos: 'end' }` |
+| style | Inline style of the root nav element. | `React.CSSProperties` | - |

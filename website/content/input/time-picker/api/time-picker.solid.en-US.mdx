@@ -1,0 +1,58 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
+| borderless | Borderless mode. | `boolean` | `false` |
+| class | Class name of the root element. | `string` | - |
+| clearIcon | Custom clear icon; effective when showClear is true. | `JSX.Element` | - |
+| defaultOpen | Whether the panel is open by default when uncontrolled. | `boolean` | - |
+| defaultValue | Initial time when uncontrolled, in the same forms as value; an array when type is timeRange. | `BaseValueType \| BaseValueType[]` | - |
+| disabled | Disables all interaction. | `boolean` | - |
+| disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
+| disabledMinutes | Returns the minutes that cannot be selected for the selected hour. | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | - |
+| disabledSeconds | Returns the seconds that cannot be selected for the selected hour and minute. | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | - |
+| disabledTime | Range mode only: returns the disabled rules of the left and right panel from the current value and the panel. The unpicked side of value is undefined; a returned disabledHours, disabledMinutes or disabledSeconds overrides the prop of the same name, and one left out falls back to it. Ignored in single mode. | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| focusOnOpen | Focuses the input and selects its content once mounted, which opens the panel. | `boolean` | `false` |
+| format | Display format, following date-fns format. Defaults to a h:mm:ss with use12Hours, else HH:mm:ss. | `string` | - |
+| hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
+| hourStep | Interval of the hour options; a positive integer. | `number` | - |
+| inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices; the clear button stays usable. | `boolean` | `false` |
+| inputStyle | Style of the input's root element; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
+| insetLabel | Prefix label shown inside the input. | `JSX.Element` | - |
+| insetLabelId | id of the insetLabel, referenced through aria-labelledby and similar attributes. | `string` | - |
+| maxLength | Maximum number of characters of the input, passed through to the input. | `number` | - |
+| minLength | Minimum number of characters of the input, passed through to the input. | `number` | - |
+| minuteStep | Interval of the minute options; a positive integer. | `number` | - |
+| motion | Whether the popup animates. | `boolean` | `true` |
+| onBlur | Callback when a click outside closes the panel, with the native event of that mousedown. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | Callback when the time changes. With type time it gets (Date, formatted string); with timeRange both are arrays. | <ApiType detail={"((value: Date, str: string) => void) \u007c ((value: Date[], str: string[]) => void)"}>Type</ApiType> | - |
+| onFocus | Callback when the input gains focus. | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
+| onOpenChange | Callback when the panel opens or closes, with whether it is open. | <ApiType detail={"(open: boolean) => void"}>Type</ApiType> | - |
+| open | Whether the panel is open; a controlled property, and undefined means uncontrolled. | `boolean` | - |
+| panelFooter | Content below the panel. In range mode an array, whose item i is used for panel i. | `JSX.Element` | - |
+| panelHeader | Content above the panel. In range mode an array, whose item i is used for panel i. | `JSX.Element` | - |
+| panels | Range mode only: item i is used as both the header and the footer of panel i, taking precedence over panelHeader and panelFooter. Ignored in single mode. | `JSX.Element[]` | - |
+| placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | - |
+| popupClassName | Class name of the popup. | `string` | - |
+| popupStyle | Style of the popup; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
+| position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time; bottomRight under RTL. | `Position` | - |
+| prefix | Prefix content of the input. | `JSX.Element` | - |
+| prefixCls | Prefix of the class names. | `string` | `"semi-timepicker"` |
+| preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | - |
+| rangeSeparator | Separator between the two times of a range. | `string` | `" ~ "` |
+| ref | Reference to the root element; its focus() and blur() act on the input, and do nothing with a custom trigger. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| scrollItemProps | Props passed to the columns; only cycled, mode, motion and transform, as on the ScrollItem of ScrollList. | <ApiType detail={"Pick\u003cScrollItemProps, 'cycled' \u007c 'mode' \u007c 'motion' \u007c 'transform'>"}>Type</ApiType> | - |
+| secondStep | Interval of the second options; a positive integer. | `number` | - |
+| showClear | Whether to show the clear button. | `boolean` | `true` |
+| size | Size of the input: large, default or small. | `InputSize` | `"default"` |
+| stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
+| style | Style of the root element; an object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
+| timeZone | Time zone: a number is the hour offset from UTC, a string is an IANA time zone name; defaults to the timeZone of ConfigProvider. | `string \| number` | - |
+| triggerRender | Renders a custom trigger. It is called once, and its fields are live: read them in the returned JSX to update. The argument has disabled, placeholder, value (an array of Date, the unpicked side undefined), inputValue, componentProps (the props of the TimePicker, without ref) and onChange (updates the input text, as typing would). | <ApiType detail={"(props: TimePickerTriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| type | Selection type: time for a single time, timeRange for a range. | `Type` | `"time"` |
+| use12Hours | Uses the 12-hour clock; when true, format defaults to a h:mm:ss. | `boolean` | `false` |
+| validateStatus | Validation status, which only affects the display style. | `ValidateStatus` | - |
+| value | Current time; an array when type is timeRange. null is a controlled empty value, and undefined means uncontrolled. | `BaseValueType \| BaseValueType[] \| null` | - |

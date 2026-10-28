@@ -1,0 +1,34 @@
+**Props**
+
+| 属性         | 说明                                                                                                                                           | 类型               | 默认值                     |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | -------------------------- |
+| value        | 选项的值，用来识别选项，每个选项都应声明。                                                                                                     | `string \| number` | `undefined`                |
+| label        | 选项的文本，为字符串或数字。显示与匹配时优先取 label，没有时取默认插槽中的纯文本，再取 value；带标记的内容写在默认插槽里，显示时优先于 label。 | `string \| number` | `undefined`                |
+| disabled     | 是否禁用。                                                                                                                                     | `boolean`          | `undefined`                |
+| showTick     | 选中时是否显示 √ 图标。                                                                                                                        | `boolean`          | `undefined`                |
+| empty        | 供 Select 内部使用，渲染空状态行，使用方不需要设置。                                                                                           | `boolean`          | `undefined`                |
+| selected     | 供 Select 内部使用，表示选项被选中，使用方不需要设置。                                                                                         | `boolean`          | `undefined`                |
+| focused      | 供 Select 内部使用，表示选项被键盘或指针高亮，使用方不需要设置。                                                                               | `boolean`          | `undefined`                |
+| current      | 供 Select 与 AutoComplete 内部使用，表示 aria-activedescendant 指向该行，使用方不需要设置。                                                    | `boolean`          | `undefined`                |
+| inputValue   | 供 Select 内部使用，纯文本 label 中需要高亮的搜索关键字，使用方不需要设置。                                                                    | `string`           | `undefined`                |
+| semiOptionId | 供 Select 内部使用，选项行的 id，使用方不需要设置。                                                                                            | `string`           | `undefined`                |
+| prefixCls    | 供 Select 与 AutoComplete 内部使用，选项行的 CSS 类名前缀，使用方不需要设置。                                                                  | `string`           | `cssClasses.PREFIX_OPTION` |
+
+**Events**
+
+| 事件       | 说明                                                                                                         | 回调参数                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
+| select     | 供 Select 内部使用，点击未禁用的选项行时触发，载荷为选项记录与点击事件。使用方请监听 Select 的 select 事件。 | `[option: SelectOptionProps, event: MouseEvent]` |
+| mouseenter | 供 Select 内部使用，指针进入选项行时触发，用来移动高亮。                                                     | `[event: MouseEvent]`                            |
+
+**Slots**
+
+| 插槽    | 说明                                                                                                                                     | 作用域参数 |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| default | 选项的内容。纯文本参与搜索高亮；带标记的内容原样渲染在选项行中，选中后也原样回填到选择框，此时搜索按 label 匹配，没有 label 时按 value。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

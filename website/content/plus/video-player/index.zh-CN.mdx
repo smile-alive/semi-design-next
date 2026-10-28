@@ -1,0 +1,252 @@
+---
+order: 99
+title: 视频播放器
+icon: doc-videoplayer
+brief: 用于播放视频
+---
+
+import VideoPlayerReactApi from './api/video-player.react.zh-CN.mdx';
+import VideoPlayerVueApi from './api/video-player.vue.zh-CN.mdx';
+import VideoPlayerSolidApi from './api/video-player.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { VideoPlayer } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { VideoPlayer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { VideoPlayer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+基本使用，通过 `src` 传入视频地址， 通过 `poster` 传入视频封面地址
+
+<Demo id="basic" />
+
+### 设置菜单栏功能
+
+通过 `controlsList` 设置菜单栏的展示项，该项接受值为数组，默认值为`['play', 'next', 'time', 'volume', 'playbackRate', 'quality', 'route', 'mirror', 'fullscreen', 'pictureInPicture']`
+
+控件在 `controlsList` 允许、并且它所依赖的属性已提供时才显示：`next` 需要 `onNext`，`quality` 需要非空的 `qualityList`，`route` 需要非空的 `routeList`；其余控件只看 `controlsList`。
+
+<Framework only="vue">
+
+`onNext` 是函数 prop，模板里写 `@next` 或 `:onNext` 都可以；传与不传决定「下一个」按钮是否显示。
+
+</Framework>
+
+<Framework only="solid">
+
+`onNext` 是函数 prop，传入它且 `controlsList` 包含 `next` 时才显示「下一个」按钮，点击时调用该函数。
+
+</Framework>
+
+<Demo id="controls-list" />
+
+### 循环播放
+
+通过 `loop` 设置循环播放
+
+<Demo id="loop" />
+
+### 快进快退
+
+通过 `seekTime` 设置快进快退时间，通过键盘左右键执行快进快退
+
+<Demo id="seek-time" />
+
+### 播放速率
+
+通过 `playbackRateList` 设置速率选择列表。速率、清晰度与线路控件都是原生按钮，用 Tab 聚焦即展开菜单，键盘操作见「键盘和焦点」。按钮名称为用途加当前选项（如「倍速 1.0x」），菜单项是单选项
+
+<Demo id="playback-rate" />
+
+### 音量设置
+
+<Framework only="react">
+
+通过 `volume` 设置初始音量，值区间为 0 - 100， 设置 `muted` 为 `true` 可以静音播放。用户调整音量时会触发 `onVolumeChange`
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `volume` 设置初始音量，值区间为 0 - 100， 设置 `muted` 为 `true` 可以静音播放。用户调整音量时会触发 `volumeChange` 事件
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `volume` 设置初始音量，值区间为 0 - 100， 设置 `muted` 为 `true` 可以静音播放。用户调整音量时会调用 `onVolumeChange`
+
+</Framework>
+
+<Demo id="volume" />
+
+### 清晰度切换
+
+<Framework only="react">
+
+通过 `qualityList` 设置清晰度选择列表，`defaultQuality` 设置初始选择的清晰度，`onQualityChange` 设置点击后更新的 `src` 逻辑。
+
+线路切换同理，通过 `routeList` 设置线路选择列表，`defaultRoute` 设置初始选择的线路，`onRouteChange` 设置点击后更新的 `src` 逻辑。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `qualityList` 设置清晰度选择列表，`defaultQuality` 设置初始选择的清晰度，在 `qualityChange` 事件中更新 `src`。
+
+线路切换同理，通过 `routeList` 设置线路选择列表，`defaultRoute` 设置初始选择的线路，在 `routeChange` 事件中更新 `src`。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `qualityList` 设置清晰度选择列表，`defaultQuality` 设置初始选择的清晰度，`onQualityChange` 设置点击后更新的 `src` 逻辑。
+
+线路切换同理，通过 `routeList` 设置线路选择列表，`defaultRoute` 设置初始选择的线路，`onRouteChange` 设置点击后更新的 `src` 逻辑。
+
+</Framework>
+
+<Demo id="quality" />
+
+### 章节标记
+
+通过 `markers` 设置章节标记点
+
+<Demo id="markers" />
+
+### 主题
+
+通过 `theme` 设置主题， 主题仅影响背景色
+
+<Demo id="theme" />
+
+### 使用 ref 控制
+
+<Framework only="react">
+
+通过 `ref` 获取原生 video 元素，可以实现更灵活的控制，例如多个视频同步播放/暂停
+
+</Framework>
+
+<Framework only="vue">
+
+通过模板 ref（`useTemplateRef`）取得组件实例，其 `video` 属性是原生 video 元素，可以实现更灵活的控制，例如多个视频同步播放/暂停。元素在挂载前为 `null`
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `ref` 传入回调函数，回调以原生 video 元素被调用，可以实现更灵活的控制，例如多个视频同步播放/暂停
+
+</Framework>
+
+<Demo id="ref-control" />
+
+### 键盘和焦点
+
+- 焦点在播放器内时，空格键切换播放与暂停，焦点在按钮或输入控件上时空格键交给该控件；左右方向键按 `seekTime` 快退、快进，焦点在输入控件、进度条或菜单内时方向键交给它们。带 Alt、Ctrl、Meta 的组合键不处理。
+- 进度条是滑块（`role="slider"`），用方向键按 `seekTime` 增减，PageUp、PageDown 按总时长的十分之一增减，Home、End 跳到两端。读屏读出的是「当前时长 / 总时长」。
+- 倍速、清晰度、线路按钮用 Tab 聚焦即展开菜单，下、上方向键把焦点移到菜单的第一项、最后一项；菜单内用上下方向键与 Home、End 移动，Enter 或空格确认，Esc 关闭并回到按钮。
+- 音量按钮获得焦点时展开音量弹层，Enter 或空格切换静音；下方向键把焦点移进弹层，音量滑块用方向键调节。
+- 播放中指针离开播放器后，控制栏内有键盘焦点时控制栏保持显示。
+
+### API
+
+<Framework only="react">
+
+<VideoPlayerReactApi />
+
+其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素 `div` 上。根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`，自己传 `role` 则以传入的为准。媒体事件（`onTimeUpdate` 等）不会冒泡到根元素，因此不支持在组件上监听，需要时通过 `ref` 取得原生元素后自行监听。
+
+</Framework>
+
+<Framework only="vue">
+
+<VideoPlayerVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素 `div` 上，`style` 中的 width、height 覆盖 `width`、`height` 属性；根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`，自己传 `role` 则以传入的为准。媒体事件（`timeupdate`、`ended` 等）不会冒泡到根元素，因此不支持在组件上监听，需要时通过 `video` 取得原生元素后自行监听。
+
+</Framework>
+
+<Framework only="solid">
+
+<VideoPlayerSolidApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onClick`、`onMouseEnter`）落在根元素 `div` 上，`style` 中的 width、height 覆盖 `width`、`height` 属性；根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`，自己传 `role` 则以传入的为准。`ref` 指向的是 video 元素而不是根元素。媒体事件（`timeupdate`、`ended` 等）不会冒泡到根元素，因此不支持在组件上监听，需要时通过 `ref` 取得原生元素后自行监听。
+
+</Framework>
+
+#### Marker
+
+| 属性  | 说明       | 类型   | 默认值 |
+| ----- | ---------- | ------ | ------ |
+| start | 起始时间点 | number | -      |
+| title | 标题       | string | -      |
+
+<Framework only="vue">
+
+#### VideoPlayerOption
+
+`playbackRateList`、`qualityList`、`routeList` 的选项类型，`value` 的类型随列表而定（倍速为 `number`，清晰度与线路为 `string`）。
+
+| 属性  | 说明                 | 类型             | 默认值 |
+| ----- | -------------------- | ---------------- | ------ |
+| label | 菜单中显示的名称     | string           | -      |
+| value | 选项值，事件参数取此 | number \| string | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+#### VideoPlayerOption
+
+`playbackRateList` 的选项类型为 `VideoPlayerOption<number>`，`qualityList`、`routeList` 的选项类型为 `VideoPlayerOption<string>`，`value` 的类型即泛型参数。
+
+| 属性  | 说明                 | 类型     | 默认值 |
+| ----- | -------------------- | -------- | ------ |
+| label | 菜单中显示的名称     | `string` | -      |
+| value | 选项值，回调参数取此 | `T`      | -      |
+
+</Framework>
+
+<Framework only="react">
+
+#### VideoPlayerOption
+
+`playbackRateList` 的选项类型为 `VideoPlayerOption<number>`，`qualityList`、`routeList` 的选项类型为 `VideoPlayerOption<string>`，`value` 的类型即泛型参数。
+
+| 属性  | 说明                 | 类型     | 默认值 |
+| ----- | -------------------- | -------- | ------ |
+| label | 菜单中显示的名称     | `string` | -      |
+| value | 选项值，回调参数取此 | `T`      | -      |
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

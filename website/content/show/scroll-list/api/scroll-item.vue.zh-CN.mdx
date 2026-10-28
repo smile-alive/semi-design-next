@@ -1,0 +1,32 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                       | 类型                                                                                                 | 默认值                                             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| cycled        | 是否无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。                                           | `boolean`                                                                                            | `semiDefault("ScrollItem", "cycled", false)`       |
+| list          | 列表内容。                                                                                                                 | `T[]`                                                                                                | `semiGlobalDefault("ScrollItem", "list")`          |
+| mode          | 模式，可选 normal 或 wheel。                                                                                               | `"normal" \| "wheel"`                                                                                | `semiDefault("ScrollItem", "mode", "wheel")`       |
+| motion        | 是否开启滚动动画。                                                                                                         | `boolean`                                                                                            | `semiDefault("ScrollItem", "motion", true)`        |
+| selectedIndex | 选中项的索引，配合 v-model:selectedIndex 使用；没有非受控模式。                                                            | `number`                                                                                             | `semiGlobalDefault("ScrollItem", "selectedIndex")` |
+| transform     | 对选中项文案的变换，没有 text 的项参数为 undefined；未传时显示 text，没有 text 时显示 value。数据项自带的 transform 优先。 | <ApiType detail={"((value: T[\"value\"], text?: string \u007c undefined) => string)"}>Type</ApiType> | `undefined`                                        |
+| type          | 标识该列，供 TimePicker、DatePicker 等组件使用，不面向使用方。                                                             | `string \| number`                                                                                   | `semiGlobalDefault("ScrollItem", "type")`          |
+
+**Events**
+
+| 事件                 | 说明                                                                   | 回调参数                                                                |
+| -------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| update:selectedIndex | 选中项变化时触发，用于 v-model:selectedIndex。                         | `[index: number]`                                                       |
+| select               | 选中某项时触发，参数是该项数据加上列的 type 和该项在 list 中的 index。 | <ApiType detail={"[data: ScrollItemSelectData\u003cT>]"}>Type</ApiType> |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

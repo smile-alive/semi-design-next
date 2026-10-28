@@ -1,0 +1,81 @@
+{
+    "json-viewer": {
+        "source": "packages/semi-ui-solid/src/json-viewer/json-viewer.tsx",
+        "props": {
+            "value": {
+                "zh-CN": "展示与编辑的 JSON 文本，未传时按空文本创建。只有 value 变为与编辑器当前内容不同的值时才会重建编辑器，把 onChange 的值写回 value 不会丢失光标。",
+                "en-US": "JSON text to show and edit; the editor starts empty when omitted. The editor is re-created only when value becomes different from its current content, so writing the onChange value back keeps the caret."
+            },
+            "width": {
+                "zh-CN": "宽度，数字按 px 处理，字符串原样使用。",
+                "en-US": "Width. A number is taken as px; a string is used as is."
+            },
+            "height": {
+                "zh-CN": "高度，数字按 px 处理，字符串原样使用。",
+                "en-US": "Height. A number is taken as px; a string is used as is."
+            },
+            "showSearch": {
+                "zh-CN": "是否显示搜索按钮。",
+                "en-US": "Whether to show the search button."
+            },
+            "onChange": {
+                "zh-CN": "编辑内容变化时触发，参数为编辑器当前文本。",
+                "en-US": "Called with the editor's current text when the content changes."
+            },
+            "options": {
+                "zh-CN": "编辑器配置，字段见 JsonViewerOptions。ariaLabel、readOnly、autoWrap 的默认值按键合并，只传部分字段时其余仍取默认值。options 按深比较变化时重建编辑器；就地修改 formatOptions、customRenderRule 等嵌套对象不会被察觉，需替换为新对象。",
+                "en-US": "Editor configuration, fields described by JsonViewerOptions. The defaults of ariaLabel, readOnly and autoWrap are merged per key, so passing some fields keeps the defaults of the rest. A change in options, compared deeply, re-creates the editor; mutating nested objects such as formatOptions or customRenderRule in place is not noticed, so replace them with new objects."
+            },
+            "limitSearchButtonBounds": {
+                "zh-CN": "是否限制搜索按钮的拖动范围在组件容器内。",
+                "en-US": "Whether to limit the drag range of the search button to the component container."
+            },
+            "renderSearchButton": {
+                "zh-CN": "自定义渲染搜索按钮。第一个参数是创建默认按钮的函数，在插入处调用；第二个参数 `controls` 为搜索状态与方法；`controls.showSearchBar` 是 getter，需在返回的 JSX 内读取。",
+                "en-US": "Custom render for the search button. The first argument creates the default button: call it where the button is inserted. The second is `controls`, holding the search state and methods. `controls.showSearchBar` is a getter and must be read inside the returned JSX."
+            },
+            "ref": {
+                "zh-CN": "根元素，类型为 `JsonViewerElement`，上面挂载着 JsonViewerHandle 的方法。",
+                "en-US": "The root element, typed `JsonViewerElement`, which carries the JsonViewerHandle methods."
+            }
+        },
+        "methods": {
+            "getValue": {
+                "zh-CN": "获取编辑器当前文本。",
+                "en-US": "Gets the editor's current text."
+            },
+            "format": {
+                "zh-CN": "按 formatOptions 格式化当前内容。",
+                "en-US": "Formats the current content with formatOptions."
+            },
+            "search": {
+                "zh-CN": "搜索文本，可选参数控制大小写敏感、全词匹配和正则表达式。",
+                "en-US": "Searches for text; the optional arguments control case sensitivity, whole-word matching and regular expressions."
+            },
+            "getSearchResults": {
+                "zh-CN": "获取当前搜索结果。",
+                "en-US": "Gets the current search results."
+            },
+            "prevSearch": {
+                "zh-CN": "跳转到上一个搜索结果，可选步长。",
+                "en-US": "Moves to the previous search result, with an optional step."
+            },
+            "nextSearch": {
+                "zh-CN": "跳转到下一个搜索结果，可选步长。",
+                "en-US": "Moves to the next search result, with an optional step."
+            },
+            "replace": {
+                "zh-CN": "替换当前搜索匹配项；替换文本为空串时删除匹配，没有匹配时不做任何事，只读模式下同样不做任何事。",
+                "en-US": "Replaces the current search match; an empty replacement deletes the match, and nothing happens when there is no match or the viewer is read-only."
+            },
+            "replaceAll": {
+                "zh-CN": "替换所有搜索匹配项；替换文本为空串时删除全部匹配，只读模式下不做任何事。",
+                "en-US": "Replaces all search matches; an empty replacement deletes them all, and nothing happens when the viewer is read-only."
+            },
+            "getStyle": {
+                "zh-CN": "返回当前的 width 与 height。",
+                "en-US": "Returns the current width and height."
+            }
+        }
+    }
+}

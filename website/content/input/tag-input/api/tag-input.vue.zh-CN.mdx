@@ -1,0 +1,63 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 当前标签，配合 v-model 使用；undefined 时按非受控处理，null 表示受控且没有标签；从数组变回 undefined 时清空标签。 | `string[] \| null` | `undefined` |
+| defaultValue | 非受控时的初始标签。 | `string[]` | `semiGlobalDefault("TagInput", "defaultValue")` |
+| inputValue | 当前输入框内容，配合 v-model:inputValue 使用。 | `string` | `semiGlobalDefault("TagInput", "inputValue")` |
+| inputValueModifiers | v-model:inputValue 的修饰符 trim 与 number，由 Vue 在使用 v-model:inputValue.trim 时传入。 | `ModelModifiers` | `undefined` |
+| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("TagInput", "disabled")` |
+| maxLength | 单个标签的最大长度。 | `number` | `semiGlobalDefault("TagInput", "maxLength")` |
+| max | 允许的标签最大数量。 | `number` | `semiGlobalDefault("TagInput", "max")` |
+| maxTagCount | 标签的最大展示数量，超出后以 +N 形式展示。 | `number` | `semiGlobalDefault("TagInput", "maxTagCount")` |
+| showRestTagsPopover | 超过 maxTagCount 后，hover 到 +N 时是否通过 Popover 显示剩余标签。 | `boolean` | `semiDefault("TagInput", "showRestTagsPopover", true)` |
+| restTagsPopoverProps | +N 浮层的 Popover 属性，不含 content。 | `PopoverProps` | `semiGlobalDefault("TagInput", "restTagsPopoverProps")` |
+| showContentTooltip | 标签文字被截断时，hover 标签是否通过浮层显示全部内容；传对象时可指定浮层类型与透传给浮层的属性。 | `boolean \| ShowTooltip` | `semiDefault("TagInput", "showContentTooltip", true)` |
+| allowDuplicates | 是否允许添加相同的标签。 | `boolean` | `semiDefault("TagInput", "allowDuplicates", true)` |
+| addOnBlur | 焦点离开组件时，是否将输入框内容自动创建为标签。 | `boolean` | `semiDefault("TagInput", "addOnBlur", false)` |
+| draggable | 是否开启拖拽排序。 | `boolean` | `semiDefault("TagInput", "draggable", false)` |
+| expandRestTagsOnClick | 不可拖拽时，焦点进入组件（点击、Tab 或 focus 方法）后是否展开被折叠的标签。 | `boolean` | `semiDefault("TagInput", "expandRestTagsOnClick", true)` |
+| placeholder | 没有标签时输入框的占位文字。 | `string` | `semiGlobalDefault("TagInput", "placeholder")` |
+| insetLabelId | 内嵌标签容器的 id，供 aria-labelledby 引用。 | `string` | `undefined` |
+| separator | 批量输入时的分隔符，可传多个；传 null 不拆分。 | `string \| string[] \| null` | `semiDefault("TagInput", "separator", ",")` |
+| showClear | 是否显示一键清除所有标签和输入内容的按钮。 | `boolean` | `semiDefault("TagInput", "showClear", false)` |
+| size | 尺寸，可选 small、default、large。 | `Size` | `semiDefault("TagInput", "size", "default")` |
+| split | 自定义分隔符处理函数，返回拆分后的字符串数组。 | <ApiType detail={"((originString: string, separators: string \u007c string[] \u007c null) => string[])"}>Type</ApiType> | `undefined` |
+| validateStatus | 校验状态，仅影响样式；error 时输入框带 aria-invalid。 | `TagInputValidateStatus` | `semiDefault("TagInput", "validateStatus", "default")` |
+| autofocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `semiDefault("TagInput", "autofocus", false)` |
+| preventScroll | 组件内 focus 方法是否阻止浏览器滚动到新聚焦的元素。 | `boolean` | `semiGlobalDefault("TagInput", "preventScroll")` |
+
+**Events**
+
+| 事件              | 说明                                                                                                                           | 回调参数                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| update:modelValue | 标签变化时触发，供 v-model 使用。                                                                                              | `[value: string[]]`                     |
+| change            | 标签变化时触发。                                                                                                               | `[value: string[]]`                     |
+| update:inputValue | 输入框内容变化时触发，供 v-model:inputValue 使用。                                                                             | `[value: string]`                       |
+| inputChange       | 输入框内容变化时触发；事件对象可能是 input、keydown、focusout、click 或 composition 事件，读取专有字段前先按 event.type 收窄。 | `[value: string, event: Event]`         |
+| add               | 添加标签时触发，参数为新增的标签。                                                                                             | `[addedValue: string[]]`                |
+| remove            | 移除标签时触发，参数为被移除的标签及其序号。                                                                                   | `[removedValue: string, index: number]` |
+| exceed            | 添加后超过 max 时触发，参数为截断前的完整列表。                                                                                | `[value: string[]]`                     |
+| inputExceed       | 输入内容超过 maxLength 时触发，参数为被拒绝的输入内容。                                                                        | `[value: string]`                       |
+| focus             | 焦点从组件外进入时触发一次；焦点在输入框、标签、清除按钮之间移动不触发。                                                       | `[event: FocusEvent]`                   |
+| blur              | 焦点离开整个组件时触发一次；焦点在组件内部移动不触发。                                                                         | `[event: FocusEvent]`                   |
+| keydown           | 输入框按键时在组件处理之后触发；其中调用 preventDefault 不会阻止 Enter 添加标签。                                              | `[event: KeyboardEvent]`                |
+
+**Slots**
+
+| 插槽       | 说明                                                                                                                       | 作用域参数             |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| prefix     | 输入框前缀，文字或图标会自动带上左右间隔。                                                                                 | `any`                  |
+| suffix     | 输入框后缀，文字或图标会自动带上左右间隔。                                                                                 | `any`                  |
+| insetLabel | 内嵌标签，显示在输入框前；同时提供 prefix 插槽时只显示 prefix。显示时，没有 aria-label、aria-labelledby 的输入框以它命名。 | `any`                  |
+| clearIcon  | 替换清除按钮中的图标；内容为空时使用默认图标。                                                                             | `any`                  |
+| tag        | 整体替换单个标签，作用域参数为 value、index 和关闭函数 onClose；内容为空时不渲染该标签。                                   | `TagInputTagSlotProps` |
+
+**Exposes**
+
+| 名称  | 说明                                                           | 类型                                          |
+| ----- | -------------------------------------------------------------- | --------------------------------------------- |
+| focus | 使输入框获得焦点并激活组件。                                   | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | 使组件内任意持有焦点的元素（输入框、标签、清除按钮）失去焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |

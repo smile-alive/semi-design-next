@@ -1,0 +1,407 @@
+---
+order: 21
+title: 伸缩框
+icon: doc-steps
+brief: 根据用户的鼠标拖拽，改变组件的大小，支持单个组件伸缩与组合伸缩
+---
+
+import ResizableReactApi from './api/resizable.react.zh-CN.mdx';
+import ResizeGroupReactApi from './api/resize-group.react.zh-CN.mdx';
+import ResizeHandlerReactApi from './api/resize-handler.react.zh-CN.mdx';
+import ResizeItemReactApi from './api/resize-item.react.zh-CN.mdx';
+import ResizableVueApi from './api/resizable.vue.zh-CN.mdx';
+import ResizeGroupVueApi from './api/resize-group.vue.zh-CN.mdx';
+import ResizeHandlerVueApi from './api/resize-handler.vue.zh-CN.mdx';
+import ResizeItemVueApi from './api/resize-item.vue.zh-CN.mdx';
+import ResizableSolidApi from './api/resizable.solid.zh-CN.mdx';
+import ResizeGroupSolidApi from './api/resize-group.solid.zh-CN.mdx';
+import ResizeItemSolidApi from './api/resize-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Resizable } from '@fibrae/semi-ui-react';
+import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Resizable } from '@fibrae/semi-ui-vue';
+    import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Resizable } from '@fibrae/semi-ui-solid';
+import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 单个组件 基本使用
+
+通过`defaultSize`设置初始大小，可以通过`onResizeStart`、`onChange`、`onResizeEnd`设置拖拽的回调
+
+<Framework only="vue">
+
+用 `@resizeStart`、`@change`、`@resizeEnd` 监听。`onResizeStart` 是函数 prop（返回 `false` 可取消本次伸缩），使用方照常写 `@resizeStart`；`change`、`resizeEnd` 是事件。
+
+</Framework>
+
+```tsx
+interface Size {
+    width?: string | number;
+    height?: string | number;
+}
+```
+
+<Demo id="basic" />
+
+### 控制伸缩方向
+
+通过设置`enable`的值开启/关闭特定伸缩方向，默认值均为`true`；未写出的方向视为开启，要只开启部分方向，需把其余方向显式设为 `false`。`enable` 传 `false` 时不渲染任何手柄。
+
+```tsx
+interface Enable {
+    left?: boolean;
+    right?: boolean;
+    top?: boolean;
+    bottom?: boolean;
+    topLeft?: boolean;
+    topRight?: boolean;
+    bottomLeft?: boolean;
+    bottomRight?: boolean;
+}
+```
+
+<Demo id="enable" />
+
+### 设置变化比例
+
+通过`ratio`设置拖动和实际变化的比例
+
+<Demo id="ratio" />
+
+### 锁定横纵比
+
+通过`lockAspectRatio`设置锁定横纵比,可以为`boolean`或`number`,为`number`时表示横纵比为`number`,为`true`时锁定初始横纵比
+
+<Demo id="lock-aspect-ratio" />
+
+### 设置最大，最小宽高
+
+可通过 `maxHeight`，`maxWidth`，`minHeight`，`minWidth` 设置最大，最小宽高
+
+<Demo id="min-max" />
+
+### 受控宽高
+
+可通过 `size` 控制元素的宽高
+
+<Framework only="vue">
+
+Vue 中配合 `v-model:size` 使用。
+
+</Framework>
+
+<Framework only="solid">
+
+拖动时需在 `onChange` 中把新尺寸写回 `size` 对应的信号，尺寸才会随拖拽变化；未写回时，尺寸保持为 `size` 的值。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 设置缩放值
+
+通过设置 `scale`，整体缩放元素
+
+<Demo id="scale" />
+
+### 根据元素限制元素宽高
+
+通过 boundElement 设置用于限制宽高的元素，支持 `'parent'`、`'window'` 或一个 HTMLElement
+
+<Demo id="bound-element" />
+
+### 自定义边角 handler 样式
+
+<Framework only="react">
+
+可通过 handleNode 设置不同方向的拖动元素节点，可通过 handleStyle，handleClass 设置不同方向上的样式
+
+```jsx
+type HandleNode = {
+    left?: ReactNode,
+    right?: ReactNode,
+    top?: ReactNode,
+    bottom?: ReactNode,
+    topLeft?: ReactNode,
+    topRight?: ReactNode,
+    bottomLeft?: ReactNode,
+    bottomRight?: ReactNode,
+};
+
+type HandleStyle = {
+    left?: React.CSSProperties,
+    right?: React.CSSProperties,
+    top?: React.CSSProperties,
+    bottom?: React.CSSProperties,
+    topLeft?: React.CSSProperties,
+    topRight?: React.CSSProperties,
+    bottomLeft?: React.CSSProperties,
+    bottomRight?: React.CSSProperties,
+};
+
+type HandleClass = {
+    left?: string,
+    right?: string,
+    top?: string,
+    bottom?: string,
+    topLeft?: string,
+    topRight?: string,
+    bottomLeft?: string,
+    bottomRight?: string,
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+可通过 `handle` 插槽设置各方向的拖动元素节点：插槽对每个启用的方向调用一次，作用域参数 `direction` 为该手柄的方向，按方向返回内容；返回空内容的方向仍保留手柄本身。可通过 handleStyle，handleClass 设置不同方向上的样式。
+
+```ts
+type HandleStyle = {
+    left?: StyleValue;
+    right?: StyleValue;
+    top?: StyleValue;
+    bottom?: StyleValue;
+    topLeft?: StyleValue;
+    topRight?: StyleValue;
+    bottomLeft?: StyleValue;
+    bottomRight?: StyleValue;
+};
+
+type HandleClass = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+可通过 `renderHandle` 设置各方向的拖动元素节点：它对每个启用的方向调用一次，参数为该手柄的方向，按方向返回内容；返回空内容的方向仍保留手柄本身。可通过 handleStyle，handleClass 设置不同方向上的样式，样式可传对象或字符串。
+
+```tsx
+type RenderHandle = (direction: Direction) => JSX.Element;
+
+type HandleStyle = {
+    left?: JSX.CSSProperties | string;
+    right?: JSX.CSSProperties | string;
+    top?: JSX.CSSProperties | string;
+    bottom?: JSX.CSSProperties | string;
+    topLeft?: JSX.CSSProperties | string;
+    topRight?: JSX.CSSProperties | string;
+    bottomLeft?: JSX.CSSProperties | string;
+    bottomRight?: JSX.CSSProperties | string;
+};
+
+type HandleClass = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+```
+
+</Framework>
+
+<Demo id="handle-node" />
+
+### 允许阶段性调整宽高
+
+可通过 grid ，snap 属性允许逐渐调整宽高。 grid 属性用于指定调整大小应对齐的增量。默认为 [1, 1]。 snap 属性用于指定调整大小时应对齐的绝对像素值。 x 和 y 都是可选的，允许仅包含要定义的轴。默认为空。以上两个参数可结合 snapGap 使用，该参数用于指定移动到下一个目标所需的最小间隙。默认为 0，这意味着始终使用 grid/snap 设定的目标。
+
+```tsx
+interface Snap {
+    x?: number[];
+    y?: number[];
+}
+```
+
+<Demo id="grid-snap" />
+
+### 组合组件 基本使用
+
+<Notice type='primary' title='注意事项'>
+
+`ResizeGroup` 的父元素需要具有主轴方向上的尺寸。
+
+最好不要为 `ResizeItem` 设置 `padding`，会导致最小尺寸不符合预期，可以为子元素设置 `padding`。
+
+`ResizeItem` 与 `ResizeHandler` 必须放在 `ResizeGroup` 内，在组外使用会抛出错误。
+
+</Notice>
+
+通过`direction`设置伸缩方向，可选值为`horizontal`和`vertical`，缺省为`horizontal`。支持`onResizeStart`、`onChange`、`onResizeEnd`回调，支持`min`、`max`设置最大最小宽高
+
+<Framework only="vue">
+
+`ResizeItem` 同样用 `@resizeStart`、`@change`、`@resizeEnd` 监听：`onResizeStart` 是函数 prop，使用方照常写 `@resizeStart`；`change`、`resizeEnd` 是事件。
+
+</Framework>
+
+<Demo id="group-basic" />
+
+### 嵌套使用
+
+通过`direction`设置伸缩方向，可选值为`horizontal`和`vertical`
+
+<Demo id="group-nested" />
+
+<Demo id="group-nested-complex" />
+
+### 动态方向
+
+<Demo id="dynamic-direction" />
+
+## API 参考
+
+### Resizable
+
+单个伸缩框组件。
+
+<Framework only="react">
+
+<ResizableReactApi />
+
+其他原生 `div` 属性（如 `id`、`aria-*`）经 rest 展开到根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizableVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在根元素上；根元素的 `style` 先于组件计算出的尺寸，所以传入的 `width`、`height` 不会让拖拽失效。
+
+</Framework>
+
+<Framework only="solid">
+
+<ResizableSolidApi />
+
+`class`、`style`、`ref` 与原生属性经 rest 传入，落在根元素上；根元素的 `style` 先于组件计算出的尺寸应用，所以传入的 `width`、`height` 不会让拖拽失效。
+
+</Framework>
+
+### ResizeGroup
+
+<Framework only="react">
+
+<ResizeGroupReactApi />
+
+其他原生 `div` 属性经 rest 展开到根元素上；根元素的 `flex-direction` 始终由 `direction` 决定。
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizeGroupVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在根元素上；`flex-direction` 始终由 `direction` 决定。
+
+</Framework>
+
+<Framework only="solid">
+
+<ResizeGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性经 rest 传入，落在根元素上；`flex-direction` 始终由 `direction` 决定。
+
+</Framework>
+
+### ResizeHandler
+
+<Framework only="react">
+
+<ResizeHandlerReactApi />
+
+其他原生 `div` 属性经 rest 展开到手柄元素上；传入的 `aria-label` 优先于语言包名称，传入的 `onKeyDown`、`onPointerDown`、`onPointerMove`、`onLostPointerCapture` 会和组件自己的处理一并执行。
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizeHandlerVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在手柄元素上；传入的 `aria-label` 优先于语言包名称，传入的指针与键盘监听会和组件自己的监听一并执行。
+
+</Framework>
+
+<Framework only="solid">
+
+替换默认握把图标的内容通过 `children` 传入。`class`、`style` 与原生属性经 rest 传入，落在手柄元素上；传入的 `aria-label` 优先于语言包名称，传入的指针与键盘回调会和组件自己的处理一并执行。
+
+</Framework>
+
+### ResizeItem
+
+<Framework only="react">
+
+<ResizeItemReactApi />
+
+其他原生 `div` 属性经 rest 展开到根元素上。ResizeGroup 把尺寸直接写在元素的 `style.width` 与 `style.height` 上，因此不要通过 `style` 设置这两项。
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizeItemVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在根元素上。尺寸由 ResizeGroup 直接写在元素的 `style.width`、`style.height` 上，因此 `style` 请传对象，避免用字符串。
+
+</Framework>
+
+<Framework only="solid">
+
+<ResizeItemSolidApi />
+
+`class`、`style` 与原生属性经 rest 传入，落在根元素上。ResizeGroup 把尺寸直接写在元素的 `style.width` 与 `style.height` 上，因此 `style` 请传对象：字符串形式的 `style` 在变化时会整体重新写入，把尺寸丢掉。
+
+</Framework>
+
+## Accessibility
+
+- 单个伸缩框每个轴上只有一个手柄是可聚焦的 `separator`：右侧与下侧手柄始终是；对应的右侧或下侧被 `enable` 关闭时，该轴由左侧或上侧手柄接替。名称取自语言包，分别调整宽度与高度；聚焦后按方向键，每次固定改变 10px，不受 `ratio`、`scale` 影响；同时按住 Alt、Ctrl 或 Meta 时不响应。鼠标右键、中键按下手柄不开始调整。
+- `ResizeHandler` 是可聚焦的 `separator`，名称同样取自语言包，传入 `aria-label` 可覆盖。沿组的方向按方向键移动它两侧的项，每次移动组尺寸的 1%，按住 Shift 为 10%；`Home`、`End` 把它前一项调到最小、最大尺寸。
+- `Resizable`、`ResizeGroup`、`ResizeItem` 的根元素没有语义；传入 `aria-label` 或 `aria-labelledby` 时，根元素带上 `role="group"`。
+
+## 设计变量
+
+<DesignToken />

@@ -1,0 +1,120 @@
+---
+order: 77
+title: 折叠列表
+icon: doc-overflowList
+brief: OverflowList 是一个行为组件，用于展示列表，并支持自适应来展示尽可能多的项目。因过长而溢出项目将折叠为一个元素。当检测到调整大小时，可见项将被重新计算。
+---
+
+import OverflowListReactApi from './api/overflow-list.react.zh-CN.mdx';
+import OverflowListVueApi from './api/overflow-list.vue.zh-CN.mdx';
+import OverflowListSolidApi from './api/overflow-list.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { OverflowList } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { OverflowList } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 折叠模式 - 默认
+
+通过 `renderMode="collapse"` (默认) 来实现内容的折叠。
+
+<Framework only="vue">
+
+`items` 只放数据，不放节点。每个展示项用 `#item="{ item, index }"` 插槽渲染；溢出项用 `#overflow="{ items, position }"` 插槽渲染，collapse 模式只调用一次，`items` 是放不下的项。
+
+</Framework>
+
+<Framework only="solid">
+
+`items` 只放数据，不放节点。每个展示项由 `visibleItemRenderer` 返回的元素渲染；溢出项由 `overflowRenderer` 渲染，collapse 模式下只渲染一个溢出节点，参数是放不下的项。
+
+</Framework>
+
+<Demo id="collapse" />
+
+### 折叠模式 - 方向
+
+`collapse` 模式下支持 collapseFrom 设置折叠方向。
+
+<Demo id="collapse-from" />
+
+### 折叠模式 - 最小展示的数目
+
+`collapse` 模式下支持 minVisibleItems 设置最小展示的数目。
+
+<Demo id="min-visible-items" />
+
+### 滚动模式
+
+通过 `renderMode="scroll"` 来使用滚动模式的折叠列表。如果需要 scrollIntoView，可以通过选择器： ``document.querySelector(`.item-cls[data-scrollkey="${key}"]`` 来选取。
+
+<Framework only="vue">
+
+滚动模式下 `#overflow` 在两侧各调用一次，`position` 为 `start` 或 `end`，`items` 是该侧滚出可见区域的项。
+
+</Framework>
+
+<Framework only="solid">
+
+滚动模式下 `overflowRenderer` 的参数是 `[start, end]` 两组项，分别为滚出可见区域之前与之后的项，返回值为两侧各一个节点。
+
+</Framework>
+
+<Demo id="scroll" />
+
+## API 参考
+
+<Framework only="react">
+
+<OverflowListReactApi />
+
+其他原生属性（如 `aria-*`、`id`、`data-*`、`onClick`）落在根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<OverflowListVueApi />
+
+`class`、`style` 与 `aria-*` 等原生属性经 attrs 落在根元素上；滚动 wrapper 的类名、样式和其他属性用 `wrapperClassName`、`wrapperStyle`、`wrapperProps` 传入。
+
+</Framework>
+
+<Framework only="solid">
+
+<OverflowListSolidApi />
+
+`class`、`style`、`ref` 与 `aria-*` 等原生属性落在根元素上；滚动 wrapper 的类名、样式和其他属性用 `wrapperClassName`、`wrapperStyle`、`wrapperProps` 传入。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 传入 `aria-label` 或 `aria-labelledby` 时，根元素带 `role="group"`，使这组项目有可读的名称；未传时根元素没有角色

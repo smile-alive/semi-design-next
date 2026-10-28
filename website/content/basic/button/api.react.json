@@ -1,0 +1,75 @@
+{
+    "button": {
+        "source": "packages/semi-ui-react/src/button/button.tsx",
+        "props": {
+            "aria-label": { "zh-CN": "按钮的可访问名称，只有图标没有文字的按钮需要设置。", "en-US": "Accessible name of the button, needed when it shows only an icon." },
+            "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
+            "children": { "zh-CN": "按钮文字或内容。", "en-US": "Button text or content." },
+            "className": { "zh-CN": "原生 button 元素的类名。", "en-US": "Class name of the native button element." },
+            "colorful": {
+                "zh-CN": "多彩按钮，仅支持 primary 与 tertiary 类型；图标元素会获得多彩填充。未设置时使用所在 ButtonGroup 的值，不在组内时为 `false`。",
+                "en-US": "Colorful button, supported for the primary and tertiary types only; the icon element receives the colorful fill. Falls back to the ButtonGroup it is in, and to `false` outside a group."
+            },
+            "contentClassName": { "zh-CN": "内容区域的类名。", "en-US": "Class name of the content area." },
+            "disabled": {
+                "zh-CN": "禁用状态，优先于 loading。未设置时使用所在 ButtonGroup 的值，不在组内时为 `false`。",
+                "en-US": "Disabled state, which takes precedence over loading. Falls back to the ButtonGroup it is in, and to `false` outside a group."
+            },
+            "htmlType": { "zh-CN": "原生 button 的 type 值，可选 `button`、`reset` 或 `submit`。", "en-US": "Native type of the button: `button`, `reset` or `submit`." },
+            "icon": { "zh-CN": "按钮图标。", "en-US": "Button icon." },
+            "iconPosition": { "zh-CN": "图标位置，可选 `left` 或 `right`。", "en-US": "Icon position: `left` or `right`." },
+            "id": { "zh-CN": "原生 button 元素的 id。", "en-US": "Id of the native button element." },
+            "loading": {
+                "zh-CN": "加载状态。加载中按钮保持可聚焦，点击不触发 onClick，submit 按钮也不提交表单。",
+                "en-US": "Loading state. A loading button stays focusable, its onClick is ignored, and a submit button does not submit its form."
+            },
+            "noHorizontalPadding": {
+                "zh-CN": "去掉水平方向的内边距，可选 `true`、`left`、`right` 或二者的数组；只对设置了图标或处于加载状态的按钮有效。",
+                "en-US": "Removes horizontal padding: `true`, `left`, `right` or an array of both. Applies only to a button that shows an icon or the loading spinner."
+            },
+            "onClick": { "zh-CN": "单击按钮时调用；禁用或加载中不调用。", "en-US": "Called when the button is clicked; not called while disabled or loading." },
+            "onMouseDown": { "zh-CN": "鼠标按下时调用。", "en-US": "Called when the mouse button is pressed on the button." },
+            "onMouseEnter": { "zh-CN": "鼠标移入时调用。", "en-US": "Called when the pointer enters the button." },
+            "onMouseLeave": { "zh-CN": "鼠标移出时调用。", "en-US": "Called when the pointer leaves the button." },
+            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
+            "ref": { "zh-CN": "原生 button 元素的引用。", "en-US": "Reference to the native button element." },
+            "size": {
+                "zh-CN": "按钮尺寸，可选 `large`、`default` 或 `small`。未设置时使用所在 ButtonGroup 的值，不在组内时为 `default`。",
+                "en-US": "Button size: `large`, `default` or `small`. Falls back to the ButtonGroup it is in, and to `default` outside a group."
+            },
+            "style": { "zh-CN": "原生 button 元素的样式。", "en-US": "Style of the native button element." },
+            "theme": {
+                "zh-CN": "按钮主题，可选 `solid`、`borderless`、`light` 或 `outline`。未设置时使用所在 ButtonGroup 的值，不在组内时为 `light`。",
+                "en-US": "Button theme: `solid`, `borderless`, `light` or `outline`. Falls back to the ButtonGroup it is in, and to `light` outside a group."
+            },
+            "type": {
+                "zh-CN": "按钮类型，可选 `primary`、`secondary`、`tertiary`、`warning` 或 `danger`。未设置时使用所在 ButtonGroup 的值，不在组内时为 `primary`。",
+                "en-US": "Button type: `primary`, `secondary`, `tertiary`, `warning` or `danger`. Falls back to the ButtonGroup it is in, and to `primary` outside a group."
+            }
+        }
+    },
+    "button-group": {
+        "source": "packages/semi-ui-react/src/button/button-group.tsx",
+        "props": {
+            "children": { "zh-CN": "组内的按钮。", "en-US": "Buttons in the group." },
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "colorful": { "zh-CN": "多彩样式，作为组内按钮的默认值。", "en-US": "Colorful style, used as the default of the buttons in the group." },
+            "disabled": { "zh-CN": "禁用状态，作为组内按钮的默认值。", "en-US": "Disabled state, used as the default of the buttons in the group." },
+            "ref": { "zh-CN": "根元素（`role=\"group\"`）的引用。", "en-US": "Reference to the root element (`role=\"group\"`)." },
+            "size": { "zh-CN": "按钮尺寸，作为组内按钮的默认值。", "en-US": "Button size, used as the default of the buttons in the group." },
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "theme": { "zh-CN": "按钮主题，作为组内按钮的默认值。", "en-US": "Button theme, used as the default of the buttons in the group." },
+            "type": { "zh-CN": "按钮类型，作为组内按钮的默认值。", "en-US": "Button type, used as the default of the buttons in the group." }
+        }
+    },
+    "split-button-group": {
+        "source": "packages/semi-ui-react/src/button/split-button-group.tsx",
+        "props": {
+            "aria-label": { "zh-CN": "分裂按钮组的可访问名称。", "en-US": "Accessible name of the split button group." },
+            "children": { "zh-CN": "组内的按钮。", "en-US": "Buttons in the group." },
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "ref": { "zh-CN": "根元素（`role=\"group\"`）的引用。", "en-US": "Reference to the root element (`role=\"group\"`)." },
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." }
+        }
+    }
+}

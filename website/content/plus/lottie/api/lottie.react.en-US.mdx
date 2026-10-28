@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| className | Class name of the container `div`, merged with the component's own class name. | `string` | - |
+| getAnimationInstance | Called once per animation created, including every reload, with the AnimationItem of the animation. | <ApiType detail={"(animation: AnimationItem) => void"}>Type</ApiType> | - |
+| getLottie | Called once per mount after lottie-web has loaded, with the global lottie. | <ApiType detail={"(lottiePKG: typeof lottie) => void"}>Type</ApiType> | - |
+| height | Container height, with a unit such as 300px. | `string` | - |
+| params | Options passed to lottie-web's `lottie.loadAnimation`. It reloads only when the content differs from the last load, compared deeply: passing a new object with the same content on each render does not reload, and mutating the object in place does not either. Unset `renderer` is `svg`, `loop` is `true`, and `autoplay` is `false` when the system asks for reduced motion. | <ApiType detail={"Partial\u003cParameters\u003ctypeof lottie.loadAnimation>[0]>"}>Type</ApiType> | - |
+| ref | Reference to the container `div`; `null` when `params.container` is set, because nothing is rendered then. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| style | Style of the container `div`. The `width` and `height` props are applied on it, and `style` takes precedence for the same property. | `React.CSSProperties` | - |
+| width | Container width, with a unit such as 300px. | `string` | - |

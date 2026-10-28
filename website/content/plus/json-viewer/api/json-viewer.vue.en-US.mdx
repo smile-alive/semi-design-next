@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Text of the editor, used with v-model. A value different from the editor's current content re-creates the editor; echoing the current content back keeps the caret. Without it the editor starts empty. | `string` | `undefined` |
+| width | Width. A number is taken as px; a string is used as is. | `string \| number` | `semiDefault("JsonViewer", "width", 400)` |
+| height | Height. A number is taken as px; a string is used as is. | `string \| number` | `semiDefault("JsonViewer", "height", 400)` |
+| showSearch | Whether to show the search button. | `boolean` | `semiDefault("JsonViewer", "showSearch", true)` |
+| options | Editor options; see JsonViewerOptions for the fields. The defaults of ariaLabel, readOnly and autoWrap merge per key, so passing some fields keeps the defaults of the others. A deep change re-creates the editor; mutating a nested object such as formatOptions or customRenderRule in place goes unnoticed, so replace it with a new object. | `JsonViewerOptions` | `semiGlobalDefault("JsonViewer", "options")` |
+| limitSearchButtonBounds | Whether to limit the search button drag bounds within the component container. | `boolean` | `semiDefault("JsonViewer", "limitSearchButtonBounds", false)` |
+
+**Events**
+
+| Event             | Description                                                                                                                                                                        | Callback parameters |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| update:modelValue | Emitted when the content changes, for v-model to write back, with the editor's current text.                                                                                       | `[value: string]`   |
+| change            | Emitted when the content changes, with the editor's current text. It is a component event, so `@change` does not receive the native change bubbling up from the search bar inputs. | `[value: string]`   |
+
+**Slots**
+
+| Slot         | Description                                                                                                                                                                                                                                          | Scope parameters                  |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| customRender | Replaces the content of a token matched by options.customRenderRule, with the matched rule item, its index and the token text content as scope parameters. Without it, or when empty, the token keeps its text. Only takes effect in read-only mode. | `JsonViewerCustomRenderSlotProps` |
+| searchButton | Replaces the default search button as a whole. defaultButton is the default button's VNode, rendered with `<component :is>`; the other parameters build a custom search UI. Not rendered when showSearch is false.                                   | `JsonViewerSearchButtonSlotProps` |
+
+**Exposes**
+
+| Name             | Description                                                                                             | Type                                                                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| getValue         | Returns the editor's current text.                                                                      | <ApiType detail={"() => string"}>Type</ApiType>                                                                                                                                   |
+| format           | Formats the content with formatOptions.                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                     |
+| search           | Searches for text; the optional parameters control case sensitivity, whole word and regular expression. | <ApiType detail={"(searchText: string, caseSensitive?: boolean \u007c undefined, wholeWord?: boolean \u007c undefined, regex?: boolean \u007c undefined) => void"}>Type</ApiType> |
+| getSearchResults | Returns the current search results.                                                                     | <ApiType detail={"() => FindMatch[] \u007c null \u007c undefined"}>Type</ApiType>                                                                                                 |
+| prevSearch       | Moves to the previous search result, with an optional step.                                             | <ApiType detail={"(step?: number \u007c undefined) => void"}>Type</ApiType>                                                                                                       |
+| nextSearch       | Moves to the next search result, with an optional step.                                                 | <ApiType detail={"(step?: number \u007c undefined) => void"}>Type</ApiType>                                                                                                       |
+| replace          | Replaces the current search match. An empty string deletes the match; without a match it does nothing.  | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                                                                                  |
+| replaceAll       | Replaces all search matches. An empty string deletes them.                                              | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                                                                                  |
+| getStyle         | Returns the current width and height.                                                                   | <ApiType detail={"() => { width: string \u007c number; height: string \u007c number; }"}>Type</ApiType>                                                                           |

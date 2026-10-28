@@ -1,0 +1,153 @@
+---
+order: 74
+title: 图片裁切
+icon: doc-cropper
+brief: 通过设定裁切框的宽高比例，自由裁切图片
+---
+
+import CropperReactApi from './api/cropper.react.zh-CN.mdx';
+import CropperVueApi from './api/cropper.vue.zh-CN.mdx';
+import CropperSolidApi from './api/cropper.solid.zh-CN.mdx';
+
+## 使用场景
+
+Cropper 用于裁切图片，支持自定义裁切框样式，可通过拖动调整裁切框位置，被裁切图片位置；可缩放，旋转被裁切图片。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Cropper } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Cropper } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Cropper } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+通过 `src` 设置被裁切的图片; 可通过 `shape` 设置裁切框形状，默认为方形。
+
+<Demo id="basic" />
+
+### 自定义裁切框比例
+
+可通过 `defaultAspectRatio` 初始的裁切框比例（默认为 1）。可通过 `aspectRatio` 设置固定的裁切框比例。
+
+设置 `defaultAspectRatio`仅对初始的裁切框比例生效， 拖动时，裁切框比例会随着拖动而变化。
+
+设置 `aspectRatio` 时，裁切框比例固定，拖动时将裁切框将以此比例变化。图片加载后改变 `aspectRatio`，裁切框会按新比例重排：保持高度，宽度随比例变化，超出容器时缩到容器内，中心尽量保持不动；`aspectRatio` 变为 `undefined` 时不重排。
+
+<Demo id="aspect-ratio" />
+
+### 受控旋转/缩放图片
+
+<Framework only="react">
+
+通过 `rotate` 和 `zoom` 控制图片旋转和缩放, 可通过 `onZoomChange` 拿到最新的 `zoom` 值。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `rotate` 和 `zoom` 控制图片旋转和缩放。`zoom` 可用 `v-model:zoom` 双向绑定，或用 `:zoom` 加 `@zoomChange` 单向绑定，滚轮缩放时同时触发 `update:zoom` 与 `zoomChange`；`rotate` 只能单向绑定，组件不会改变它。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `rotate` 和 `zoom` 控制图片旋转和缩放，可通过 `onZoomChange` 拿到最新的 `zoom` 值。`rotate` 为单向绑定，组件不会改变它。滚轮缩放时会调用 `onZoomChange`，父组件需在回调中更新 `zoom`，否则缩放会被还原为受控的值。
+
+</Framework>
+
+<Demo id="rotate-zoom" />
+
+### 裁切框设置
+
+可通过 `cropperBoxStyle`, `cropperBoxCls` 自定义裁切框样式。可通过 `showResizeBox` 设置是否展示裁切框边角的调整块。
+
+<Demo id="cropper-box" />
+
+### 实时预览裁切效果
+
+<Framework only="react">
+
+通过 `preview` 指定预览容器，实时预览裁切效果。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `preview` 指定预览容器，实时预览裁切效果。`preview` 是返回容器 DOM 的函数，容器尚未挂载时可返回 `null`。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `preview` 指定预览容器，实时预览裁切效果。`preview` 是返回容器 DOM 的函数，容器尚未挂载时可返回 `null`。
+
+</Framework>
+
+<Demo id="preview" />
+
+### API
+
+<Framework only="react">
+
+<CropperReactApi />
+
+未声明的原生属性（如 `id`、`data-*`、`aria-*`、`onKeyDown`）落在根 `<div>` 上；`role` 可被覆盖。`ref` 拿到的是组件句柄，不是根元素。
+
+</Framework>
+
+<Framework only="vue">
+
+<CropperVueApi />
+
+`class`、`style`、`data-*`、`aria-*` 与原生监听（`click`、`keydown` 等）经 attrs 落在根元素上。组件 ref 只暴露 `getCropperCanvas`，不是根 DOM。`zoom` 与 `rotate` 的全局默认值设置后，所有 Cropper 都变为受控。
+
+</Framework>
+
+<Framework only="solid">
+
+<CropperSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`data-*`、`aria-*`、`onKeyDown`）落在根 `<div>` 上；`ref` 拿到的就是根元素，其上附加了 `getCropperCanvas` 方法。
+
+</Framework>
+
+## Accessibility
+
+- 根元素传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，自动带 `role="group"`；传入的 `role` 优先
+- 裁切框是可聚焦的命名分组（`role="group"`，名称与角色描述取自语言包，并通过 `aria-describedby` 指向操作提示），图片加载完成后才可聚焦。被裁切的 `img` 是装饰性的，`alt` 默认为空字符串，可经 `imgProps` 覆盖
+- 只有主按钮的鼠标按下，以及 touch、pen 触点，才开始拖动裁切框、调整块和图片；鼠标中键、右键按下不会开始拖动
+
+### 键盘和焦点
+
+- 裁切框是组件内唯一的 Tab 停靠点，图片加载完成后才可聚焦
+- 焦点在裁切框上时，方向键每次移动裁切框 10px，不会移出容器
+- Shift + 方向键每次移动裁切框右下角 10px 来调整大小，限制在容器内；设置了 `aspectRatio` 时保持该比例（横向的变化换算为高度）。仅在 `showResizeBox` 为 true（有调整块）时可用，为 false 时 Shift + 方向键不起作用
+- 缩放与旋转没有内置的键盘操作，需要使用方提供可用键盘操作的控件（如示例中的 Slider）
+
+## 设计变量
+
+<DesignToken />

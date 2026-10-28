@@ -1,0 +1,35 @@
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Controlled index of the current item, counted from 0. The last item is current when omitted. | `number` | `semiGlobalDefault("Breadcrumb", "activeIndex")` |
+| autoCollapse | Whether items beyond maxItemCount collapse automatically. | `boolean` | `semiDefault("Breadcrumb", "autoCollapse", true)` |
+| compact | Whether the compact size is used. | `boolean` | `semiDefault("Breadcrumb", "compact", true)` |
+| maxItemCount | Number of levels above which the breadcrumb collapses. | `number` | `semiDefault("Breadcrumb", "maxItemCount", 4)` |
+| moreType | Built-in rendering of the ellipsis area: default or popover. The more slot wins when it is provided. | `MoreType` | `semiDefault("Breadcrumb", "moreType", "default")` |
+| routes | Route information as an array of route objects or strings. When it is not empty, the items come from it and the default slot is not rendered. | `(string \| Route)[]` | `semiDefault("Breadcrumb", "routes", [])` |
+| separator | Text separator. The separator slot wins when it is provided. | `string` | `semiDefault("Breadcrumb", "separator", "/")` |
+| showTooltip | Whether a Tooltip shows for an overflowing title, with its options: width is the overflow width, ellipsisPos truncates at the end or in the middle, and opts are passed to the Tooltip without content, with class and style landing on the popup. | `boolean \| ShowTooltipProps` | `semiDefault("Breadcrumb", "showTooltip", DEFAULT_TOOLTIP)` |
+| onClick | Called on click. It is a function prop, bound with @click as usual; passing it makes items without href operable with Enter as well. With routes it receives the route of the item; with Breadcrumb.Item children it receives `{ name, href }`, where name is the text of the item. The second parameter is the native MouseEvent. | `BreadcrumbClick` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot      | Description                                                                                                                            | Scope parameters           |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| default   | Children made of Breadcrumb.Item.                                                                                                      | `any`                      |
+| separator | Custom separator. Takes precedence over the separator prop.                                                                            | `any`                      |
+| item      | With routes, the custom title of each item, with the route and its index as scope parameters.                                          | `BreadcrumbRouteSlotProps` |
+| icon      | With routes, the icon of each item, with the route and its index as scope parameters. An empty result renders no icon.                 | `BreadcrumbRouteSlotProps` |
+| more      | Custom ellipsis area. The scope parameter restItems holds the collapsed items without their separators, ready to mount with component. | `BreadcrumbMoreSlotProps`  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

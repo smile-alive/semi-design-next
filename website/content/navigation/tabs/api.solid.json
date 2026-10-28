@@ -1,0 +1,186 @@
+{
+    "tabs": {
+        "source": "packages/semi-ui-solid/src/tabs/tabs.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前激活的标签页的 itemKey，受控。传 null 时不激活任何标签页，仍是受控；不传或为 undefined 时按非受控处理。",
+                "en-US": "The itemKey of the active tab, controlled. null activates no tab and is still controlled; omitted or undefined means uncontrolled."
+            },
+            "arrowPosition": {
+                "zh-CN": "折叠模式下，左右切换箭头的位置。",
+                "en-US": "Position of the scroll arrows in collapsible mode."
+            },
+            "children": {
+                "zh-CN": "TabPane 子元素，必须是 Tabs 的直接子元素；其余节点按原顺序作为内容渲染。传了 tabList 时，TabPane 被忽略，其余节点是当前标签页的内容。",
+                "en-US": "TabPane children, which must be direct children of Tabs; any other node renders as content in its original order. With tabList, TabPane children are ignored and the other nodes are the content of the active tab."
+            },
+            "collapsible": {
+                "zh-CN": "是否开启滚动折叠（仅水平模式）。传 'auto' 时在标签溢出或换行时自动折叠，放得下时自动退出。",
+                "en-US": "Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit."
+            },
+            "contentStyle": {
+                "zh-CN": "内容区域外层的样式，可传对象或字符串。",
+                "en-US": "Style of the outer content area, an object or a string."
+            },
+            "defaultActiveKey": {
+                "zh-CN": "非受控时初始选中的 itemKey。不传时取第一个启用且有 itemKey 的标签页。",
+                "en-US": "The itemKey selected initially when uncontrolled. Defaults to the first enabled tab that has an itemKey."
+            },
+            "dropdownProps": {
+                "zh-CN": "折叠模式下，分别透传给起始侧（start）与末尾侧（end）箭头下拉菜单的 Dropdown 属性。",
+                "en-US": "In collapsible mode, the Dropdown props passed to the start-side (start) and end-side (end) arrow menus."
+            },
+            "keepDOM": {
+                "zh-CN": "使用 TabPane 子元素时，是否渲染未激活面板的 DOM。为 false 时只渲染当前面板，没有切换动画。",
+                "en-US": "With TabPane children, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion."
+            },
+            "lazyRender": {
+                "zh-CN": "懒渲染，面板被激活过才渲染内容，之后保留。",
+                "en-US": "Lazy rendering: a panel renders its content only after it has been active, and keeps it afterwards."
+            },
+            "more": {
+                "zh-CN": "将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 count 为标签数，render 返回自定义的触发器，dropdownProps 透传给下拉菜单。",
+                "en-US": "Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number, render returns a custom trigger and dropdownProps is passed to the dropdown."
+            },
+            "onChange": {
+                "zh-CN": "切换标签页时触发，参数为新激活的 itemKey。",
+                "en-US": "Called when the active tab changes, with the itemKey of the new active tab."
+            },
+            "onTabClick": {
+                "zh-CN": "单击，或用 Enter、Space 激活标签页时触发；用键盘激活时事件是 KeyboardEvent。",
+                "en-US": "Called when a tab is clicked or activated with Enter or Space; the event is a KeyboardEvent for keyboard activation."
+            },
+            "onTabClose": {
+                "zh-CN": "关闭标签页时触发，参数为被关闭标签页的 itemKey。标签页的移除由使用方完成。",
+                "en-US": "Called when a tab is closed, with the itemKey of the closed tab. The caller removes the tab."
+            },
+            "onVisibleTabsChange": {
+                "zh-CN": "折叠模式下溢出项的可见状态变化时触发，参数为 itemKey 到是否可见的 Map。",
+                "en-US": "In collapsible mode, called when the visibility of the tabs changes, with a Map from itemKey to whether it is visible."
+            },
+            "preventScroll": {
+                "zh-CN": "组件内部调用 focus 时，是否阻止浏览器滚动文档以显示新聚焦的元素。",
+                "en-US": "Whether focus calls inside the component stop the browser from scrolling the document to the newly focused element."
+            },
+            "renderArrow": {
+                "zh-CN": "替换折叠模式下的每个滚动箭头。参数依次为被滚出的 items、位置 pos、点击处理函数 handleArrowClick 与创建默认箭头的函数 defaultNode，在插入处调用 defaultNode()。items 是普通数据；TabPane 写法下不带 tab，需要标签文本时用 tabList。",
+                "en-US": "Replaces each scroll arrow in collapsible mode. The arguments are the scrolled-out items, the position pos, the click handler handleArrowClick and defaultNode, which creates the default arrow: call defaultNode() where it is inserted. items are plain data; with TabPane children they have no tab, so use tabList when you need the tab text."
+            },
+            "renderIcon": {
+                "zh-CN": "tabList 每一项的图标，参数为该项与其下标。在页签、菜单项等每个插入处各调用一次，该项数据或下标变化时重新调用。",
+                "en-US": "The icon of each tabList item, called with the item and its index. It is called once at each place the tab shows (the tab, a menu item) and again when the item's data or index changes."
+            },
+            "renderTab": {
+                "zh-CN": "tabList 每一项的标签内容，参数为该项与其下标；不传时显示该项的 tab。在页签、菜单项与面板名称等每个插入处各调用一次，该项数据或下标变化时重新调用。",
+                "en-US": "The content of each tabList tab, called with the item and its index; without it the item's tab shows. It is called once at each place the tab shows (the tab, a menu item, the panel's name) and again when the item's data or index changes."
+            },
+            "renderTabBar": {
+                "zh-CN": "替换整个标签栏，同一个函数只调用一次。tabBarProps 是活的标签栏属性，在返回的 JSX 中读取；DefaultTabBar 是默认标签栏组件。",
+                "en-US": "Replaces the whole tab bar; the same function is called once. tabBarProps is live, so read its fields inside the returned JSX; DefaultTabBar is the default tab bar component."
+            },
+            "showRestInDropdown": {
+                "zh-CN": "折叠模式下，是否将被收起的标签页展示在下拉菜单中。",
+                "en-US": "In collapsible mode, whether the collapsed tabs are listed in a dropdown menu."
+            },
+            "size": {
+                "zh-CN": "标签栏尺寸，目前仅线条式（line）标签栏支持。",
+                "en-US": "Size of the tab bar; currently only the line type supports it."
+            },
+            "tabBarClassName": { "zh-CN": "标签栏的类名。", "en-US": "Class name of the tab bar." },
+            "tabBarExtraContent": {
+                "zh-CN": "标签栏的附加内容，位于 tablist 之外。",
+                "en-US": "Extra content of the tab bar, placed outside the tablist."
+            },
+            "tabBarStyle": { "zh-CN": "标签栏的样式，可传对象或字符串。", "en-US": "Style of the tab bar, an object or a string." },
+            "tabList": {
+                "zh-CN": "标签页的数据数组，每项只含数据：itemKey、tab（文字）、disabled、closable，节点内容交给 renderTab、renderIcon。只要传了数组（含空数组），children 就是当前标签页的内容，并优先于 TabPane 子元素。",
+                "en-US": "An array of tab data. Each item holds data only (itemKey, the tab text, disabled and closable); markup goes to renderTab and renderIcon. Any array, even an empty one, makes children the content of the active tab and takes precedence over TabPane children."
+            },
+            "tabPaneMotion": { "zh-CN": "是否使用动画切换面板。", "en-US": "Whether switching panels is animated." },
+            "tabPosition": {
+                "zh-CN": "标签栏位置：top 为水平，left 为垂直。",
+                "en-US": "Position of the tab bar: top is horizontal, left is vertical."
+            },
+            "type": {
+                "zh-CN": "标签栏样式：line、card、button、slash。slash 仅支持水平模式。",
+                "en-US": "Style of the tab bar: line, card, button or slash. slash supports horizontal mode only."
+            },
+            "visibleTabsStyle": {
+                "zh-CN": "折叠模式下，整体滚动区域的样式，可传对象或字符串。",
+                "en-US": "In collapsible mode, the style of the whole scrolling area, an object or a string."
+            },
+            "aria-label": {
+                "zh-CN": "标签栏的可访问名称，落在 `role=\"tablist\"` 元素上。",
+                "en-US": "Accessible name of the tab bar, placed on the `role=\"tablist\"` element."
+            },
+            "aria-labelledby": {
+                "zh-CN": "指向标签栏名称元素的 id，落在 `role=\"tablist\"` 元素上。",
+                "en-US": "The id of the element that names the tab bar, placed on the `role=\"tablist\"` element."
+            }
+        }
+    },
+    "tab-pane": {
+        "source": "packages/semi-ui-solid/src/tabs/tab-pane.tsx",
+        "props": {
+            "children": { "zh-CN": "面板内容。", "en-US": "Panel content." },
+            "closable": {
+                "zh-CN": "是否允许关闭该标签页，关闭时触发 Tabs 的 onTabClose。",
+                "en-US": "Whether the tab can be closed; closing calls onTabClose of the Tabs."
+            },
+            "disabled": { "zh-CN": "是否禁用该标签页。", "en-US": "Whether the tab is disabled." },
+            "icon": {
+                "zh-CN": "标签栏中该标签的图标，由 Tabs 渲染。",
+                "en-US": "The icon of the tab in the bar, rendered by the Tabs."
+            },
+            "itemKey": {
+                "zh-CN": "标签页的唯一标识，对应 activeKey。",
+                "en-US": "Unique key of the tab, matched against activeKey."
+            },
+            "tab": {
+                "zh-CN": "标签栏中的标签内容，由 Tabs 渲染。",
+                "en-US": "The tab content in the bar, rendered by the Tabs."
+            }
+        }
+    },
+    "tab-item": {
+        "source": "packages/semi-ui-solid/src/tabs/tab-item.tsx",
+        "props": {
+            "closable": { "zh-CN": "是否显示关闭按钮。", "en-US": "Whether to show the close button." },
+            "deleteTabItem": {
+                "zh-CN": "点击关闭按钮时的处理函数，参数为 itemKey 与事件。在 Tabs 内默认由 Tabs 处理，触发 onTabClose。",
+                "en-US": "Handler for the close button, with the itemKey and the event. Inside a Tabs it defaults to the Tabs' own, which calls onTabClose."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用；禁用时点击与关闭按钮不生效，关闭按钮仍会显示。",
+                "en-US": "Whether the tab is disabled; clicks and the close button have no effect, while the close button still shows."
+            },
+            "handleKeyDown": {
+                "zh-CN": "键盘处理函数，参数为事件、itemKey 与 closable。在 Tabs 内默认由 Tabs 处理方向键、Home、End、Enter、Space 与 Delete。",
+                "en-US": "Keyboard handler, with the event, the itemKey and closable. Inside a Tabs it defaults to the Tabs' own, which handles the arrow keys, Home, End, Enter, Space and Delete."
+            },
+            "icon": {
+                "zh-CN": "标签图标；没有内容则不渲染图标。",
+                "en-US": "Tab icon; without content no icon is rendered."
+            },
+            "itemKey": { "zh-CN": "标签的唯一标识。", "en-US": "Unique key of the tab." },
+            "onClick": {
+                "zh-CN": "点击标签时触发，参数为 itemKey 与事件；禁用时不触发。TabItem 本身不会选中标签页，需在回调中更新 Tabs 的 activeKey。",
+                "en-US": "Called when the tab is clicked, with the itemKey and the event; not called while disabled. TabItem does not select the tab itself: update the activeKey of the Tabs in the callback."
+            },
+            "selected": { "zh-CN": "是否为选中状态。", "en-US": "Whether the tab is selected." },
+            "size": {
+                "zh-CN": "尺寸，small 与 medium 带对应的类名。",
+                "en-US": "Size; small and medium add the matching class name."
+            },
+            "tab": { "zh-CN": "标签内容。", "en-US": "Tab content." },
+            "tabPosition": {
+                "zh-CN": "位置，默认取所在 Tabs 的 tabPosition。",
+                "en-US": "Position; defaults to the tabPosition of the enclosing Tabs."
+            },
+            "type": {
+                "zh-CN": "样式，默认取所在 Tabs 的 type。",
+                "en-US": "Style; defaults to the type of the enclosing Tabs."
+            }
+        }
+    }
+}

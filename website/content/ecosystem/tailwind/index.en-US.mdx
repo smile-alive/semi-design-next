@@ -1,0 +1,365 @@
+---
+frameworks: [react, vue, solid]
+title: With TailwindCSS
+icon: doc-tailwind
+order: 13
+brief: Use TailwindCSS and Semi more elegantly
+---
+
+# Notice
+
+<br />
+
+This page will provide best practices for some issues encountered when using atomic style libraries such as TailwindCSS (v4) with Semi.
+
+These problems are often encountered when other component libraries are used with Tailwind, but Semi provides official solutions. It is recommended to follow the instructions in this article to configure the project correctly.
+
+<Notice title="Note">Semi does not rely on any third-party style libraries and can run without installing Tailwind. If you do not use atomic libraries such as Tailwind, please close this page directly.</Notice>
+
+### 1. Solve the problem of style override priority
+
+#### Problem performance
+
+There is no effect or component library style exception when using some atomic classes in components.
+
+#### Cause Analysis
+
+When using Tailwind, Tailwind modifies the dom style through class names, which also affects the Semi component library. At the same time, Tailwind enables [Preflight](https://tailwindcss.com/docs/preflight) by default to reset the browser's default style.
+
+Without any layer declaration there are only two possible outcomes, depending on the configuration of your project and the order of the entry imports:
+
+1. Tailwind is introduced before Semi style, and Semi has higher priority
+2. Semi style was introduced before Tailwind, and Tailwind has a higher priority.
+
+If it is 1, it will appear that when Tailwind adds certain atomic classes, if the component style has defined a certain css attribute, the priority of the atomic class is lower than that of Semi, and the atomic class becomes invalid. For example, under the premise of 1, setting padding on the Button component will cause failure.
+
+If it is 2, because Tailwind has a higher priority, its Preflight overwriting the browser's default style will also override Semi's style. For example, under the premise of 2, the background color of the light Button will be overwritten as transparent, causing the style to behave abnormally.
+
+#### Solution
+
+No matter which side of Tailwind or the component library has higher priority, problems will occur, so the solution lies in correctly handling the relationship between the priority of Preflight and the atomic classes required by users in the Tailwind style relative to the priority of the component library. **Declaring the layer order is a prerequisite of the integration, not an optional optimization.**
+
+**1. Semi styles are in the `semi` layer by default**
+
+Every stylesheet Semi ships is wrapped in `@layer semi { ... }`: the compiled CSS of each framework's component library, such as `@fibrae/semi-ui-react` (including `styles.css`), and the output of the Semi theme plugins (`@fibrae/semi-webpack-plugin`, `@fibrae/semi-rspack-plugin`, `@fibrae/semi-vite-plugin` and `@fibrae/semi-next`), whose `cssLayer` option defaults to `true`. Keep the default when using Tailwind and do not pass `cssLayer: false`: unlayered Semi styles are no longer controlled by the layer order and you are back to the two outcomes above.
+
+**2. Declare the layer order**
+
+1. Create a CSS file (e.g., `semi-layer.css`) with the following content, listing all five layers:
+
+```css
+@layer theme, base, semi, components, utilities;
+```
+
+`semi` must come after `base` and before `components` and `utilities`: Preflight (`base`) cannot override Semi, and utilities can. Leaving `components` out moves Tailwind's own `components` layer after `utilities`, which breaks Tailwind's default contract.
+
+2. Import this file at the **very top** of your project's JS entry file (e.g., `main.ts`, `main.tsx`, or `index.js`), before all other import statements:
+
+<Framework only="react">
+
+```js
+// main.tsx or index.js - must be at the very top
+import './semi-layer.css'; // must be first
+import './tailwind.css'; // file containing @import "tailwindcss";
+import { Button } from '@fibrae/semi-ui-react';
+// ... other imports
+```
+
+Server-side rendering frameworks have no such JS entry file. Put the two imports at the very top of the root component file instead: `app/layout.jsx` for the Next.js App Router, `app/root.tsx` for React Router. The root component loads before every page, so the server-rendered styles of the first paint start with the layer order declaration in both development and production.
+
+```jsx
+// app/layout.jsx (Next.js App Router) or app/root.tsx (React Router), at the very top
+import './semi-layer.css';
+import './tailwind.css';
+```
+
+Add Tailwind to the build as its official guides describe: `@tailwindcss/postcss` for Next.js, and `@tailwindcss/vite` for React Router, next to the Semi Vite plugin.
+
+```js
+// postcss.config.mjs, Next.js
+export default {
+    plugins: {
+        '@tailwindcss/postcss': {},
+    },
+};
+```
+
+```ts
+// vite.config.ts, React Router
+import { reactRouter } from '@react-router/dev/vite';
+import semi from '@fibrae/semi-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [tailwindcss(), semi(), reactRouter()],
+});
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```js
+// main.ts - must be at the very top
+import './semi-layer.css'; // must be first
+import './tailwind.css'; // file containing @import "tailwindcss";
+import { createApp } from 'vue';
+import App from './App.vue';
+// ... other imports
+```
+
+Nuxt has no JS entry file. Put the layer order declaration on the first line of the Tailwind entry CSS instead of a separate `semi-layer.css`, and register that file in the `css` option of `nuxt.config.ts`. With two separate files, Nuxt's dev server-side rendering does not emit the `<link>` tags in the order of the `css` array, so the first paint gets the wrong layer order until hydration. This setup works with `features.inlineStyles` on or off.
+
+```css
+/* app/assets/css/tailwind.css */
+@layer theme, base, semi, components, utilities;
+
+@import 'tailwindcss';
+```
+
+```ts
+// nuxt.config.ts
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineNuxtConfig({
+    modules: ['@fibrae/semi-nuxt'],
+    css: ['~/assets/css/tailwind.css'],
+    vite: { plugins: [tailwindcss()] },
+});
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```js
+// index.tsx - must be at the very top
+import './semi-layer.css'; // must be first
+import './tailwind.css'; // file containing @import "tailwindcss";
+import { render } from 'solid-js/web';
+import App from './App';
+// ... other imports
+```
+
+</Framework>
+
+<Notice type="warning" title="Important">
+
+`semi-layer.css` must be imported before any CSS file containing `@import "tailwindcss";` and before any Semi component imports, otherwise the CSS Layer order will be incorrect. It is recommended to place it on the first line of the entry file. You can also write the layer order declaration on the first line of the Tailwind entry CSS and import only that one file.
+
+</Notice>
+
+#### Principle
+
+Through the CSS Layer feature, priority setting of styles from different sources is achieved. All Semi styles are wrapped in `@layer semi { ... }`, and the declaration above sets the priority order of the layers:
+
+```css
+@layer theme, base, semi, components, utilities;
+```
+
+It means that `base` (including Preflight) has the lowest priority, followed by Semi, while Tailwind's `components` and the atomic classes set by the user (`p-0`, etc.) have the highest priority. A layer declared later wins regardless of selector specificity, so a single utility class can override Semi's root element styles without `!important`.
+
+### 2. Solve the problem of using Semi Token in Tailwind atomic class (optional)
+
+Tailwind supports users to configure their own Token to implement themes. At the same time, Semi also provides its own theme solution and corresponding Token. If you want to use Semi Token directly in the project, for example, set the text color of a span to `--semi-color-text-0` to automatically switch between light and dark colors to be consistent with the theme, you need to set the css `color: var(--semi-color-text-0)` separately, which is very inconvenient.
+
+Semi generates a Tailwind theme mapping file, `tailwind.css`, from the default theme at build time. It maps the semantic tokens and the palette to Tailwind tokens, so nothing needs to be copied by hand. Import it in the CSS file containing `@import "tailwindcss";`:
+
+<Framework only="react">
+
+```css
+@import 'tailwindcss';
+@import '@fibrae/semi-ui-react/tailwind.css';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```css
+@import 'tailwindcss';
+@import '@fibrae/semi-ui-vue/tailwind.css';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```css
+@import 'tailwindcss';
+@import '@fibrae/semi-ui-solid/tailwind.css';
+```
+
+</Framework>
+
+Then use utilities such as `bg-semi-color-primary` and `text-semi-color-text-0`; opacity modifiers work too:
+
+<Framework only="react">
+
+```jsx
+<div className="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <div class="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<div class="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
+```
+
+</Framework>
+
+The file uses `@theme inline` and only writes `var(--semi-*)` references, so utilities follow the current theme and dark mode, and inside `.semi-always-light` and `.semi-always-dark` subtrees they resolve at the element that uses them. Naming:
+
+| Semi Token                      | Tailwind Token               | Utility example                 |
+| ------------------------------- | ---------------------------- | ------------------------------- |
+| `--semi-color-*` (non-gradient) | `--color-semi-color-*`       | `bg-semi-color-primary`         |
+| Palette `--semi-<hue>-<shade>`  | `--color-semi-<hue>-<shade>` | `bg-semi-blue-5`                |
+| `--semi-border-radius-*`        | `--radius-semi-*`            | `rounded-semi-large`            |
+| `--semi-shadow-*`               | `--shadow-semi-*`            | `shadow-semi-elevated`          |
+| `--semi-transition_function-*`  | `--ease-semi-*`              | `ease-semi-easeIn`              |
+| `--semi-spacing-*`              | `--spacing-semi-*`           | `p-semi-base`, `gap-semi-tight` |
+| `--semi-font-size-*`            | `--text-semi-*`              | `text-semi-regular`             |
+| `--semi-line-height-*`          | `--text-semi-*--line-height` | set together with `text-semi-*` |
+| `--semi-font-weight-*`          | `--font-weight-semi-*`       | `font-semi-bold`                |
+| `--semi-font-family-*`          | `--font-semi-family-*`       | `font-semi-family-regular`      |
+
+`text-semi-regular` sets Semi's paired font size and line height (14px/20px). Font families carry a `family-` infix because Tailwind's `font-*` utilities read both the font family and the font weight namespaces; without it, `font-semi-regular` would name both the regular family and the regular weight.
+
+<Framework only="react">
+
+```jsx
+<div className="p-semi-base gap-semi-tight text-semi-header-6 font-semi-bold">...</div>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <div class="p-semi-base gap-semi-tight text-semi-header-6 font-semi-bold">...</div>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<div class="p-semi-base gap-semi-tight text-semi-header-6 font-semi-bold">...</div>
+```
+
+</Framework>
+
+z-index, control heights and border widths have no Tailwind namespace and are not mapped; use the arbitrary value syntax:
+
+<Framework only="react">
+
+```jsx
+<div className="z-(--semi-z-modal) h-(--semi-height-control-default) border-(length:--semi-border-thickness-control)">...</div>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <div class="z-(--semi-z-modal) h-(--semi-height-control-default) border-(length:--semi-border-thickness-control)">...</div>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<div class="z-(--semi-z-modal) h-(--semi-height-control-default) border-(length:--semi-border-thickness-control)">...</div>
+```
+
+</Framework>
+
+The palette has 212 colors: 16 hues with shades 0 to 9 (such as `semi-blue-5` and `semi-light-green-2`), `semi-white`, `semi-black`, the AI purple `semi-ai-purple-0` to `semi-ai-purple-9`, and the AI gradient stops `semi-ai-general-<shade>-<0 to 3>`. Palette values are complete colors; in dark mode each shade takes its dark value, and opacity modifiers work as well:
+
+<Framework only="react">
+
+```jsx
+<div className="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <div class="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<div class="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
+```
+
+</Framework>
+
+The AI gradients (`--semi-color-ai-general*`, `--semi-ai-general-<shade>`), animation durations and other tokens are not mapped; use the arbitrary value syntax for them too, for example `bg-(image:--semi-color-ai-general)`.
+
+The mapping is generated from the default theme. With another theme package, the spacing, font size, line height, font weight and font family utilities only have values if that theme's `global.scss` declares the same `--semi-*` variables.
+
+#### The `dark:` variant
+
+Semi switches to dark mode with the `theme-mode` attribute, not with Tailwind's default `prefers-color-scheme`. To use the `dark:` variant, declare it in your Tailwind entry CSS:
+
+```css
+@custom-variant dark (&:where([theme-mode='dark'], [theme-mode='dark'] *));
+```
+
+This variant only matches `[theme-mode='dark']`; it does not include `.semi-always-dark`.
+
+### 3. Known differences
+
+With the layer order in place, Tailwind's Preflight still rewrites properties that Semi does not declare and leaves to the browser (UA) defaults. These components look different on a Tailwind page than on a blank page:
+
+| Component / element                               | Property                   | Semi only       | With Tailwind                        |
+| ------------------------------------------------- | -------------------------- | --------------- | ------------------------------------ |
+| MarkdownRender `hr`                               | `color`, `border-color`    | gray            | black                                |
+| MarkdownRender outer `pre`                        | `font-family`, `font-size` | monospace, 13px | Tailwind's monospace stack, 16px     |
+| Empty: an `<img width height>` passed by the user | `height`, `max-width`      | HTML attributes | `height: auto` and `max-width: 100%` |
+
+Semi declares `line-height` on the root element (`:root`) explicitly (the 20px to 14px ratio), so component heights no longer change with the host page's line height; only `.semi-always-light` and `.semi-always-dark` subtrees inherit the page's own value. The documentation site uses modern-normalize, so its line height and element defaults differ from a blank page; compare component sizes on the same page base.
+
+#### Overriding tokens at runtime
+
+Semi declares its tokens on `:root`; tokens that change with the mode or read the palette are declared again on `[theme-mode='dark']`, `.semi-always-light` and `.semi-always-dark`. Override those with one unlayered rule per mode; unlayered styles always win over the `semi` layer:
+
+```css
+:root {
+    --semi-color-primary: rgb(0, 120, 90);
+}
+
+[theme-mode='dark'] {
+    --semi-color-primary: rgb(90, 200, 160);
+}
+```
+
+To change the mode of a local area only, also override `.semi-always-light` or `.semi-always-dark` (`.{prefixCls}-always-*` with a custom `prefixCls`).
+
+Spacing, font size, line height, font weight, font family, z-index, border width, border radius, the overlay color, `--semi-white` and `--semi-black` are the same in both modes and are declared on `:root` only, so one `:root` rule overrides them and `.semi-always-*` subtrees inherit it. Component stylesheets compute with `--semi-spacing-*` (except `none`, `loose` and `extra-loose`), `--semi-height-control-*`, `--semi-border-thickness`, `--semi-border-thickness-control` and `--semi-z-table-fixed` at compile time, so components use the compiled numbers instead of reading these variables; overriding them only affects Tailwind utilities. Change components through the theme's Sass variables.

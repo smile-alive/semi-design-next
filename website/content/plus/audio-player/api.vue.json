@@ -1,0 +1,24 @@
+{
+    "audio-player": {
+        "source": "packages/semi-ui-vue/src/audio-player/audio-player.vue",
+        "props": {
+            "audioUrl": {
+                "zh-CN": "音频地址，可以是字符串、AudioInfo 对象，或由它们组成的数组；传入数组时显示上一首、下一首按钮。",
+                "en-US": "Audio address: a string, an AudioInfo object, or an array of them. An array shows the previous and next track buttons."
+            },
+            "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
+            "showToolbar": { "zh-CN": "是否显示工具栏。", "en-US": "Whether to display the toolbar." },
+            "skipDuration": {
+                "zh-CN": "后退、前进按钮每次跳转的秒数。",
+                "en-US": "Seconds skipped by each backward or forward button press."
+            },
+            "theme": {
+                "zh-CN": "播放器主题，可选 dark 或 light。",
+                "en-US": "Player theme: dark or light."
+            }
+        },
+        "events": {},
+        "slots": {},
+        "exposed": {}
+    }
+}

@@ -1,0 +1,216 @@
+---
+title: LocaleProvider
+order: 96
+icon: doc-i18n
+brief: Internationalized components to provide multilingual support for Semi components
+---
+
+import LocaleProviderVueApi from './api/locale-provider.vue.en-US.mdx';
+import LocaleConsumerVueApi from './api/locale-consumer.vue.en-US.mdx';
+import LocaleProviderSolidApi from './api/locale-provider.solid.en-US.mdx';
+import LocaleConsumerSolidApi from './api/locale-consumer.solid.en-US.mdx';
+
+## Languages supported
+
+| Minimum supported version | Language |
+| --- | --- |
+| v0.0.1 | Simplified Chinese: zh_CN |
+| v0.7.0 | English: en_GB, Japanese: ja_JP, Korean: ko_KR |
+| v1.8.0 | Arabic: ar |
+| v1.11.0 | Vietnamese: vi_VN、Russian: ru_RU、Indonesian: id_ID、Malay: ms_MY、Thai: th_TH、Turkish: tr_TR |
+| v1.17.0 | Portuguese: pt_BR |
+| v1.28.0 | Traditional Chinese: zh_TW |
+| v2.2.0 | Spanish: es |
+| v2.15.0 | Italian: it、French：fr、German：de |
+| v2.21.0 | Romanian: ro |
+| v2.29.0 | Swedish: sv_SE、 Polish: pl_PL、Dutch: nl_NL |
+| v2.88.0 | Azerbaijani: az, Bulgarian: bg, Catalan: ca, Czech: cs_CZ, Cebu: ceb_PH, Danish: da, Greek: el_GR, Spanish (Latin America): es_419, Estonian: et, Persian: fa_IR, Filipino: fil_PH, Finnish: fi_FI, French (Canada): fr_CA, Irish: ga, Hebrew: he_IL, Hindi: hi_IN, Croatian: hr, Hungarian: hu_HU, Icelandic: is, Javanese: jv_ID, Kazakh: kk, Khmer: km_KH, Lithuanian: lt, Latvian: lv, Burmese: my_MM, Norwegian: nb, Portuguese: pt, Slovak: sk, Slovenian: sl, Albanian: sq, Swahili: sw, Ukrainian: uk_UA, Urdu: ur, Uzbek: uz |
+
+## Components supported
+
+Calendar、Cascader、Chat、DatePicker、Form、Image、List、Modal、Navigation、Nav、Pagination、Popconfirm、Select、Table、TimePicker、Transfer、Tree、TreeSelect、Typography、Upload
+
+## How to use
+
+<Framework only="react">
+
+`LocaleProvider` uses the context feature of React, and you only need to wrap the periphery of the application once to take effect globally.  
+When you need to switch the language, you can directly switch the locale passed in by the props.
+
+```jsx
+import React, { useCallback, useMemo, useState } from 'react';
+import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import ko_KR from '@fibrae/semi-foundation/locale/source/ko_KR';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import vi_VN from '@fibrae/semi-foundation/locale/source/vi_VN';
+import ru_RU from '@fibrae/semi-foundation/locale/source/ru_RU';
+import id_ID from '@fibrae/semi-foundation/locale/source/id_ID';
+import ms_MY from '@fibrae/semi-foundation/locale/source/ms_MY';
+import th_TH from '@fibrae/semi-foundation/locale/source/th_TH';
+import tr_TR from '@fibrae/semi-foundation/locale/source/tr_TR';
+import pt_BR from '@fibrae/semi-foundation/locale/source/pt_BR';
+import zh_TW from '@fibrae/semi-foundation/locale/source/zh_TW';
+import sv_SE from '@fibrae/semi-foundation/locale/source/sv_SE';
+import pl_PL from '@fibrae/semi-foundation/locale/source/pl_PL';
+import nl_NL from '@fibrae/semi-foundation/locale/source/nl_NL';
+import ar from '@fibrae/semi-foundation/locale/source/ar';
+import es from '@fibrae/semi-foundation/locale/source/es';
+import it from '@fibrae/semi-foundation/locale/source/it';
+import de from '@fibrae/semi-foundation/locale/source/de';
+import fr from '@fibrae/semi-foundation/locale/source/fr';
+import ro from '@fibrae/semi-foundation/locale/source/ro';
+
+import { LocaleProvider } from '@fibrae/semi-ui-react';
+
+() => {
+    return (
+        <LocaleProvider locale={en_GB}>
+            {/* eslint-disable-next-line react/jsx-no-undef */}
+            <App />
+        </LocaleProvider>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+`LocaleProvider` passes the locale pack to its descendants through provide/inject, and you only need to wrap the periphery of the application once to take effect globally.  
+When you need to switch the language, change the value of the `locale` prop.
+
+```vue
+<script setup lang="ts">
+    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import { LocaleProvider } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <LocaleProvider :locale="en_GB">
+        <App />
+    </LocaleProvider>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`LocaleProvider` passes the locale pack to its descendants through context, and you only need to wrap the periphery of the application once to take effect globally.  
+When you need to switch the language, bind `locale` to a value that changes; the subtree updates automatically.
+
+```jsx
+import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+import { LocaleProvider } from '@fibrae/semi-ui-solid';
+
+() => (
+    <LocaleProvider locale={en_GB}>
+        <App />
+    </LocaleProvider>
+);
+```
+
+</Framework>
+
+When `locale` is omitted, LocaleProvider inherits the language of the outer LocaleProvider; without any outer provider, `zh_CN` is used. The `locale` of ConfigProvider takes precedence over LocaleProvider.
+
+## Code example
+
+### Internationalization
+
+<Demo id="i18n" />
+
+### Custom Internationalization Component
+
+<Framework only="react">
+
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider Context or read the i18n text localeData of a specific component, you can use LocaleConsumer to get it
+
+</Framework>
+
+<Framework only="vue">
+
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use the default scoped slot of LocaleConsumer, which provides `locale`, `localeCode`, `dateFnsLocale` and `currency`. Inside `<script setup>`, call `useLocale(componentName)` instead; it returns a computed with the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
+
+</Framework>
+
+<Framework only="solid">
+
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its child is a function receiving the namespace text (`locale`), `localeCode`, `dateFnsLocale` and `currency`, in that order. Inside a component body, you can also call `useLocale(componentName)`, which returns an accessor; call it to read the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
+
+</Framework>
+
+<Demo id="custom-component" />
+
+### Components that support multilingualism
+
+The example gives all the current multilingual components
+
+When your site needs RTL support, use ConfigProvider directly: besides `locale`, it also configures `direction='rtl'`/`'ltr'`.  
+Without RTL needs, LocaleProvider is enough.
+
+<Demo id="all-components" />
+
+<Framework only="vue">
+
+## API Reference
+
+---
+
+### LocaleProvider
+
+<LocaleProviderVueApi />
+
+LocaleProvider does not accept undeclared attributes; attrs such as `class` and `style` are not applied to the DOM.
+
+### LocaleConsumer
+
+<LocaleConsumerVueApi />
+
+LocaleConsumer renders no element of its own and does not accept undeclared attributes.
+
+### useLocale
+
+`useLocale(componentName)` returns a `ComputedRef<LocaleResult>`. `componentName` can be a string, a ref or a getter.
+
+| Field         | Description                                                               | Type                |
+| ------------- | ------------------------------------------------------------------------- | ------------------- |
+| locale        | Text of the namespace named by `componentName`                            | `Locale[K]`         |
+| localeCode    | Language code                                                             | string              |
+| dateFnsLocale | date-fns locale object; date-fns uses its default enUS when it is missing | `Locale` (date-fns) |
+| currency      | ISO 4217 currency code of the language's region                           | string              |
+
+</Framework>
+
+<Framework only="solid">
+
+## API Reference
+
+---
+
+### LocaleProvider
+
+<LocaleProviderSolidApi />
+
+LocaleProvider renders no DOM element, so `class`, `style`, `ref` and native attributes and events are not applied to the page.
+
+### LocaleConsumer
+
+<LocaleConsumerSolidApi />
+
+LocaleConsumer renders no element of its own, so `class`, `style`, `ref` and native attributes and events are not applied to the page.
+
+### useLocale
+
+`useLocale(componentName)` returns an `Accessor<LocaleResult>`; call the accessor to read the result. `componentName` can be a string or an accessor that returns a string.
+
+| Field         | Description                                                               | Type                |
+| ------------- | ------------------------------------------------------------------------- | ------------------- |
+| locale        | Text of the namespace named by `componentName`                            | `Locale[K]`         |
+| localeCode    | Language code                                                             | string              |
+| dateFnsLocale | date-fns locale object; date-fns uses its default enUS when it is missing | `Locale` (date-fns) |
+| currency      | ISO 4217 currency code of the language's region                           | string              |
+
+</Framework>

@@ -1,0 +1,8 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| children | 函数子节点，参数依次为 componentName 对应的文案片段 locale、localeCode、dateFnsLocale 与 currency。 | <ApiType detail={"(componentLocale: Locale[K], localeCode: string, dateFnsLocale: LocaleResult\u003cLocale[K]>['dateFnsLocale'], currency: string) => JSX.Element"}>Type</ApiType> | - |
+| componentName | 要读取的语言包命名空间，如 TimePicker；只接受 Locale 中声明的组件名，自定义命名空间通过 declaration merging 扩展 Locale。 | `K` | - |

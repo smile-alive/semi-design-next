@@ -1,0 +1,274 @@
+---
+order: 56
+title: Breadcrumb
+icon: doc-breadcrumb
+brief: Breadcrumbs allow users to make selections from a range of values and provide an auxiliary navigation that can return to previous page.
+---
+
+import BreadcrumbReactApi from './api/breadcrumb.react.en-US.mdx';
+import BreadcrumbItemReactApi from './api/breadcrumb-item.react.en-US.mdx';
+import BreadcrumbVueApi from './api/breadcrumb.vue.en-US.mdx';
+import BreadcrumbItemVueApi from './api/breadcrumb-item.vue.en-US.mdx';
+import BreadcrumbSolidApi from './api/breadcrumb.solid.en-US.mdx';
+import BreadcrumbItemSolidApi from './api/breadcrumb-item.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Breadcrumb } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Breadcrumb } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Breadcrumb.Item` can also be imported by name as `BreadcrumbItem`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Breadcrumb } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### With Icons
+
+A level can show an icon only, or an icon together with text.
+
+<Framework only="vue">
+
+Use the `#icon` slot of `Breadcrumb.Item` to show an icon.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass the icon with the `icon` prop of `Breadcrumb.Item`, for example `icon={<IconHome />}`.
+
+</Framework>
+
+<Demo id="icon" />
+
+### Size
+
+You can set the `compact` property to `false` to increase the size of icons and texts.
+
+<Demo id="size" />
+
+### Custom Separator
+
+Default separator is `/`.
+
+<Framework only="vue">
+
+`separator` takes a text separator. For a separator made of nodes, use the `#separator` slot, which wins over `separator`. `Breadcrumb.Item` provides the same `separator` prop and `#separator` slot to override the parent one.
+
+</Framework>
+
+<Framework only="solid">
+
+`separator` takes text or a JSX element, for example `separator={<IconArrowRight />}`. `Breadcrumb.Item` provides the same `separator` prop to override the parent one.
+
+</Framework>
+
+<Demo id="separator" />
+
+### Truncated Logic
+
+The truncation happens if the text is overflowed. Default max-width is set to 150px. You could use `showTooltip` to customize ellipsis behavior. A number as the child of `Breadcrumb.Item` (including `0`) is treated as text and takes part in truncation and the Tooltip.
+
+<Demo id="truncate" />
+
+When the number of levels exceeds `maxItemCount` (default 4), the second level through level n-m+1 (counted from 1, and never past the penultimate level) are replaced by ellipsis by default, where n is the number of levels and m is `maxItemCount`. You can click the ellipsis to reveal all levels. The first, the current and the last level always stay visible. When `activeIndex` points at a level that would be collapsed, the current level stays visible instead: of the candidates before and after it, the run with more levels is collapsed (the one before it on a tie), so there is still only one ellipsis. With no candidates nothing is collapsed, and more levels than `maxItemCount` may show. You could use `maxItemCount` to set the number exceeded to trigger auto collapse.
+
+<Demo id="collapse" />
+
+### Custom Ellipsis
+
+There are two ellipsis area rendering types provided inside the component. You can set and select the desired rendering type through `moreType`. The optional values of `moreType` are `default` and `popover`.
+
+<Demo id="more-type" />
+
+<Framework only="react">
+
+If you want to customize other forms of rendering for the ellipsis area, you can use the `renderMore()` method.
+
+</Framework>
+
+<Framework only="vue">
+
+If you want to customize other forms of rendering for the ellipsis area, use the `#more="{ restItems }"` slot. `restItems` are the collapsed items without their separators, ready to mount with `<component :is>`.
+
+</Framework>
+
+<Framework only="solid">
+
+To customize the ellipsis area in another form, use the `renderMore` prop. It receives the data of the collapsed items: the route objects with `routes`, or the props of the `Breadcrumb.Item` children (read their `children` and `icon` where they are shown). It returns what the ellipsis area renders. It takes precedence over `moreType` when provided.
+
+</Framework>
+
+<Demo id="render-more" />
+
+### Route Object
+
+<Framework only="react">
+
+Breadcrumb supports passing in an array of strings or route objects consisting of `{ name, path, href, icon }`. You can also use `renderItem` to render React.nodes. Breadcrumbs created in this way will also be truncated.
+
+- `name`: Name displayed, default with an empty string. When route passed in is a string only, it is set to name property.
+- `path`: Routing path.
+- `href`: Link destination and is mounted on the `<a>` tag.
+- `icon`: Icon displayed.
+
+</Framework>
+
+<Framework only="vue">
+
+Breadcrumb supports passing in an array of strings or route objects consisting of `{ name, path, href }`. Use the `#item="{ route, index }"` slot to render a custom title, and the `#icon="{ route, index }"` slot for icons; an empty `#icon` renders no icon for that item. Breadcrumbs created in this way will also be truncated. `routes` holds only strings and objects without nodes or functions, and `routes[].onClick` is not supported: listen with `@click` of Breadcrumb (`onClick` of Breadcrumb is a function prop, and whether it is bound decides if items without `href` are keyboard operable), whose first parameter is the original route.
+
+- `name`: Name displayed, default with an empty string. When route passed in is a string only, it is set to name property.
+- `path`: Routing path.
+- `href`: Link destination and is mounted on the `<a>` tag.
+
+</Framework>
+
+<Framework only="solid">
+
+Breadcrumb supports passing in an array of strings or route objects consisting of `{ name, path, href }`. A route object holds data only: use `renderItem` to render the content of each item and `renderIcon(route, index)` to provide its icon. Breadcrumbs created in this way will also be truncated.
+
+- `name`: Name displayed, default with an empty string. When route passed in is a string only, it is set to name property.
+- `path`: Routing path.
+- `href`: Link destination and is mounted on the `<a>` tag.
+
+</Framework>
+
+<Demo id="routes" />
+
+## API reference
+
+### Breadcrumb
+
+<Framework only="react">
+
+<BreadcrumbReactApi />
+
+`id`, `data-*` and other native attributes land on the root `nav` element.
+
+</Framework>
+
+<Framework only="vue">
+
+<BreadcrumbVueApi />
+
+`class`, `style`, `aria-label` and other native attributes land on the `nav` root through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<BreadcrumbSolidApi />
+
+`class`, `style`, `ref` and other native attributes (such as `id` and `data-*`) land on the `nav` root.
+
+</Framework>
+
+### Breadcrumb.Item
+
+<Framework only="react">
+
+<BreadcrumbItemReactApi />
+
+`id`, `data-*` and other native attributes land on the outer `span` that wraps the item.
+
+</Framework>
+
+<Framework only="vue">
+
+<BreadcrumbItemVueApi />
+
+`class`, `style` and other native attributes land on the outermost `span` of the item through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<BreadcrumbItemSolidApi />
+
+`class`, `style`, `ref` and other native attributes (such as `id` and `data-*`) land on the outermost `span` of the item.
+
+</Framework>
+
+A key set by the caller on a `Breadcrumb.Item` is kept, so the state of a keyed Item follows its key when the items are reordered. Only `Breadcrumb.Item` children receive `active` and `shouldRenderSeparator`; other elements and text render as they are.
+
+### Route
+
+<Framework only="react">
+
+| Properties | Instructions      | type      | Default |
+| ---------- | ----------------- | --------- | ------- |
+| href       | Link destinations | string    | -       |
+| icon       | Displayed icon    | ReactNode | -       |
+| name       | Routing name      | string    | -       |
+| path       | Routing path      | string    | -       |
+
+A route can also carry `noLink`, `separator` and `onClick`, which work like the props of the same name on `Breadcrumb.Item`. `data-*` fields are passed to the item.
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties | Instructions                                                  | type               | Default |
+| ---------- | ------------------------------------------------------------- | ------------------ | ------- |
+| href       | Link destinations                                             | `string`           | -       |
+| name       | Routing name                                                  | `string`           | -       |
+| path       | Routing path                                                  | `string`           | -       |
+| noLink     | To remove hover and active effect on an item                  | `boolean`          | -       |
+| separator  | Text separator of the item, used to override parent separator | `string`           | -       |
+| key        | Key of the item                                               | `string \| number` | -       |
+
+The icon of a route is rendered by the `#icon` slot, and a custom title by the `#item` slot. `data-*` fields are passed to the item.
+
+</Framework>
+
+<Framework only="solid">
+
+A route can also carry `noLink`, `separator` and `onClick`, which work like the props of the same name on `Breadcrumb.Item`. `data-*` fields are passed to the item.
+
+| Properties | Instructions      | type     | Default |
+| ---------- | ----------------- | -------- | ------- |
+| href       | Link destinations | `string` | -       |
+| name       | Routing name      | `string` | -       |
+| path       | Routing path      | `string` | -       |
+
+</Framework>
+
+## Accessibility
+
+- Breadcrumb supports the `aria-label` props to indicate the function of the Breadcrumb
+- Breadcrumb will set `aria-current='page'` for the current item
+
+## Content Guidelines
+
+- Each page link should be short and clearly reflect the location or entity it links to
+- Write in sentence case
+
+## Design Tokens
+
+<DesignToken />

@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                 | Type                                                              | Default |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| children    | Panel content.                                                                                                              | `React.ReactNode`                                                 | -       |
+| className   | Class name of the root element.                                                                                             | `string`                                                          | -       |
+| disabled    | Whether the panel is disabled.                                                                                              | `boolean`                                                         | `false` |
+| extra       | Auxiliary content on the right of the panel header, outside the toggle button; may hold buttons, inputs and other controls. | `React.ReactNode`                                                 | -       |
+| header      | Panel header content, rendered inside the toggle button; must not contain interactive elements.                             | `React.ReactNode`                                                 | -       |
+| itemKey     | Required and unique, matched against `activeKey` and `defaultActiveKey`.                                                    | `string`                                                          | -       |
+| onMotionEnd | Called when the expand or collapse animation ends.                                                                          | <ApiType detail={"() => void"}>Type</ApiType>                     | -       |
+| ref         | Reference to the root element (`.semi-collapse-item`).                                                                      | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| showArrow   | Whether to show the arrow icon.                                                                                             | `boolean`                                                         | `true`  |
+| style       | Style of the root element (`.semi-collapse-item`).                                                                          | `React.CSSProperties`                                             | -       |

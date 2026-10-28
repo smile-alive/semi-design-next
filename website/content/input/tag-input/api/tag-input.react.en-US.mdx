@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addOnBlur | Whether the input text becomes a tag when the focus leaves the whole component. | `boolean` | `false` |
+| allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `true` |
+| aria-label | Accessible name of the input. It is set on the input, not on the root. | `string` | - |
+| autoFocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
+| className | Class name of the root element. | `string` | - |
+| clearIcon | Replaces the icon in the clear button; the default icon is used when omitted. | `React.ReactNode` | - |
+| defaultValue | Initial tags when uncontrolled. | `string[]` | - |
+| disabled | Whether the component is disabled. The input becomes native `disabled` and the tags become static text. | `boolean` | - |
+| draggable | Whether tags can be reordered by dragging. | `boolean` | `false` |
+| expandRestTagsOnClick | Whether the tags folded by `maxTagCount` expand once focus enters the component (click, Tab or `focus()`); when `false`, they stay folded. | `boolean` | `true` |
+| inputValue | Current input text. Pair it with `onInputChange` for a controlled input. | `string` | - |
+| insetLabel | Inset label shown before the input; it is hidden when `prefix` is also given. When shown, it names an input that has no `aria-label` or `aria-labelledby`. | `React.ReactNode` | - |
+| insetLabelId | `id` of the inset label container, for `aria-labelledby`; the component generates one when the inset label is shown and this is omitted. | `string` | - |
+| max | Maximum number of tags. The part beyond it does not become tags, and `onExceed` is called. | `number` | - |
+| maxLength | Maximum length of one tag. Input beyond it is rejected, and `onInputExceed` is called. | `number` | - |
+| maxTagCount | Maximum number of tags shown; the rest are folded into +N. They expand while the component is active, unless `expandRestTagsOnClick` is `false`. | `number` | - |
+| onAdd | Called when tags are added, with the tags actually added; those beyond `max` are excluded. | <ApiType detail={"(addedValue: string[]) => void"}>Type</ApiType> | - |
+| onBlur | Called once when the focus leaves the whole component; moving focus inside it does not call it. | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onChange | Called when the tags change, with the whole list of tags. | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onExceed | Called when adding would exceed `max`, with the whole list before it is cut. | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onFocus | Called once when the focus enters from outside; moving between the input, tags and clear button does not call it. | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onInputChange | Called when the input text changes, with the new text and the event that caused it. The event may be an input event, a KeyboardEvent (Enter adds), a FocusEvent (addOnBlur), a MouseEvent (clear) or a CompositionEvent (IME truncation); narrow it by `event.type` before reading its own fields. | <ApiType detail={"(value: string, e: React.SyntheticEvent) => void"}>Type</ApiType> | - |
+| onInputExceed | Called when the input text exceeds `maxLength`, with the rejected input text. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onKeyDown | Called on keydown in the input after the component has handled it; calling `preventDefault` there does not stop Enter from adding a tag. | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
+| onRemove | Called when a tag is removed, with the removed tag and its index. | <ApiType detail={"(removedValue: string, idx: number) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the input while there are no tags. | `string` | - |
+| prefix | Prefix of the input; text or an icon gets side spacing automatically, while a custom node gets none and can set its own. | `React.ReactNode` | - |
+| preventScroll | Whether the `focus()` calls inside the component stop the browser from scrolling the focused element into view. | `boolean` | - |
+| ref | Handle exposing the `focus()` and `blur()` methods; it is not the root element. | <ApiType detail={"React.Ref\u003cTagInputHandle>"}>Type</ApiType> | - |
+| renderTagItem | Renders each tag with a custom node in place of the default tag; the component adds a `key` to each item. The third argument, `onClose`, removes that tag and can be passed directly as a button's `onClick`. | <ApiType detail={"(value: string, index: number, onClose: () => void) => React.ReactNode"}>Type</ApiType> | - |
+| restTagsPopoverProps | Popover props of the +N overlay, such as `position` and `trigger`, which default to `top` and `hover`, see [Popover API Reference](/en-US/react/show/popover#API%20Reference); do not pass `content`, it replaces the list of remaining tags. | `RestTagsPopoverProps` | - |
+| separator | Separator(s) for adding several tags at once; `null` disables splitting. | `string \| string[] \| null` | `","` |
+| showClear | Whether to show the button that clears all tags and the input text. | `boolean` | `false` |
+| showContentTooltip | Whether hovering a truncated tag shows its full text in an overlay; an object sets the overlay `type` (`tooltip` or `popover`) and passes `opts` to it. | `boolean \| ShowTooltip` | `true` |
+| showRestTagsPopover | Whether hovering `+N` shows the remaining tags in a Popover once `maxTagCount` is exceeded. | `boolean` | `true` |
+| size | Size: `small`, `default` or `large`. | `Size` | `"default"` |
+| split | Custom split function that receives the raw string and `separator`, and returns the split strings. | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
+| style | Style of the root element. | `React.CSSProperties` | - |
+| suffix | Suffix of the input; text or an icon gets side spacing automatically, while a custom node gets none and can set its own. | `React.ReactNode` | - |
+| validateStatus | Validation status, which only affects styling; `error` also sets `aria-invalid` on the input. | `ValidateStatus` | `"default"` |
+| value | Current tags, pair it with `onChange` for a controlled list; `undefined` means uncontrolled, `null` means controlled with no tags. | `string[] \| null` | - |
+
+**Methods**
+
+| Method | Description                                                                                  | Type                                          |
+| ------ | -------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| blur   | Removes focus from the focused element inside the component and deactivates it.              | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Focuses the input and activates the component; the component is not activated when disabled. | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,110 @@
+{
+    "video-player": {
+        "source": "packages/semi-ui-vue/src/video-player/video-player.vue",
+        "props": {
+            "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
+            "captionsSrc": { "zh-CN": "字幕资源地址，传入后默认显示字幕。", "en-US": "Captions source URL; the captions are shown by default once set." },
+            "clickToPlay": {
+                "zh-CN": "点击视频画面时是否切换播放与暂停。",
+                "en-US": "Whether clicking the video toggles playback."
+            },
+            "controlsList": {
+                "zh-CN": "控制栏展示的控件，默认展示全部。控件还要满足依赖的属性已提供才会显示。",
+                "en-US": "Controls shown in the control bar, all by default. A control also needs the prop it depends on to show."
+            },
+            "crossOrigin": {
+                "zh-CN": "video 元素的 CORS 设置，允许的值为 anonymous 与 use-credentials，空串等同 anonymous。",
+                "en-US": "CORS setting of the video element: anonymous or use-credentials; an empty string means anonymous."
+            },
+            "defaultPlaybackRate": {
+                "zh-CN": "初始播放倍率，仅在挂载时读取。",
+                "en-US": "Initial playback rate, read once when the player mounts."
+            },
+            "defaultQuality": {
+                "zh-CN": "初始清晰度，仅在挂载时读取。",
+                "en-US": "Initial quality, read once when the player mounts."
+            },
+            "defaultRoute": {
+                "zh-CN": "初始线路，仅在挂载时读取。",
+                "en-US": "Initial route, read once when the player mounts."
+            },
+            "height": {
+                "zh-CN": "播放器高度，数字按像素处理，字符串原样使用。",
+                "en-US": "Player height; a number is in pixels, a string is used as is."
+            },
+            "loop": { "zh-CN": "是否循环播放。", "en-US": "Whether to loop playback." },
+            "markers": {
+                "zh-CN": "章节标记，每项含起始时间 start（秒）与标题 title。",
+                "en-US": "Chapter markers, each with a start time in seconds and a title."
+            },
+            "muted": {
+                "zh-CN": "是否静音播放，仅在挂载时读取。",
+                "en-US": "Whether to start muted, read once when the player mounts."
+            },
+            "onNext": {
+                "zh-CN": "点击下一个按钮时调用。设置后且 controlsList 包含 next 时才显示该按钮。",
+                "en-US": "Called by the next button, which shows only when this is set and controlsList includes next."
+            },
+            "playbackRateList": {
+                "zh-CN": "倍速选项列表，默认为 2.0、1.5、1.25、1.0、0.75 五档。",
+                "en-US": "Playback rate options, by default 2.0, 1.5, 1.25, 1.0 and 0.75."
+            },
+            "poster": { "zh-CN": "封面图地址。", "en-US": "Poster image URL." },
+            "qualityList": {
+                "zh-CN": "清晰度选项列表，非空时才显示清晰度控件。",
+                "en-US": "Quality options; the quality control shows only when this is non-empty."
+            },
+            "routeList": {
+                "zh-CN": "线路选项列表，非空时才显示线路控件。",
+                "en-US": "Route options; the route control shows only when this is non-empty."
+            },
+            "seekTime": {
+                "zh-CN": "快进快退一次的秒数。",
+                "en-US": "Seconds a fast forward or rewind moves."
+            },
+            "src": {
+                "zh-CN": "视频地址。未设置时显示资源缺失提示；移除后 video 元素保留上一个地址。",
+                "en-US": "Video URL. Without it a missing-resource message shows; removing it keeps the previous source on the video element."
+            },
+            "theme": {
+                "zh-CN": "主题，仅影响背景色，可选 dark 或 light。",
+                "en-US": "Theme, affecting only the background color: dark or light."
+            },
+            "volume": {
+                "zh-CN": "初始音量，取值 0 到 100，仅在挂载时读取。",
+                "en-US": "Initial volume from 0 to 100, read once when the player mounts."
+            },
+            "width": {
+                "zh-CN": "播放器宽度，数字按像素处理，字符串原样使用。",
+                "en-US": "Player width; a number is in pixels, a string is used as is."
+            }
+        },
+        "events": {
+            "play": { "zh-CN": "开始播放时触发。", "en-US": "Emitted when playback starts." },
+            "pause": { "zh-CN": "暂停时触发。", "en-US": "Emitted when playback pauses." },
+            "qualityChange": {
+                "zh-CN": "切换清晰度时触发，参数为所选清晰度的值。",
+                "en-US": "Emitted when the quality changes, with the selected quality value."
+            },
+            "rateChange": {
+                "zh-CN": "切换倍速时触发，参数为所选倍率。",
+                "en-US": "Emitted when the playback rate changes, with the selected rate."
+            },
+            "routeChange": {
+                "zh-CN": "切换线路时触发，参数为所选线路的值。",
+                "en-US": "Emitted when the route changes, with the selected route value."
+            },
+            "volumeChange": {
+                "zh-CN": "用户拖动音量滑块或切换静音时触发，参数为变化后的音量，静音时为 0；初始化不触发。",
+                "en-US": "Emitted when the user drags the volume slider or toggles mute, with the new volume (0 when muted); not emitted on initialization."
+            }
+        },
+        "slots": {},
+        "exposed": {
+            "video": {
+                "zh-CN": "原生 video 元素，挂载前为 null。",
+                "en-US": "The native video element, null before mount."
+            }
+        }
+    }
+}

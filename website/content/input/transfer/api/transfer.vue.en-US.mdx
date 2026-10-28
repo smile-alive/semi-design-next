@@ -1,0 +1,50 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Array of the values of the selected items, bound with v-model. Passing it makes the component controlled and its order is the order on the right; undefined returns to uncontrolled. | `TransferValue` | `undefined` |
+| defaultValue | The values selected initially, read once on mount. | `TransferValue` | `semiDefault("Transfer", "defaultValue", [])` |
+| dataSource | Data source: an array of items for list, an array of groups for groupList, or tree data with children for treeList. The tree of a treeList only updates when a new array is passed, changes made in place are not seen. | `TransferDataSource` | `semiDefault("Transfer", "dataSource", [])` |
+| type | Transfer type: list, groupList or treeList. | `TransferType` | `semiDefault("Transfer", "type", "list")` |
+| disabled | Whether the whole transfer is disabled. | `boolean` | `semiGlobalDefault("Transfer", "disabled")` |
+| draggable | Enables drag sorting of the selected items on the right. After a sort, update:modelValue and change carry the new order. | `boolean` | `semiGlobalDefault("Transfer", "draggable")` |
+| loading | Whether the options on the left are loading. | `boolean` | `semiGlobalDefault("Transfer", "loading")` |
+| showPath | treeList only: whether the selected items on the right show their path from the root. | `boolean` | `semiDefault("Transfer", "showPath", false)` |
+| filter | Filtering logic. false hides the search box; a function replaces the default case-insensitive label match and returns true to keep an item. For a custom search in treeList, set it to true and pass the matching function as filterTreeNode in treeProps. | <ApiType detail={"boolean \u007c ((searchValue: string, item: TransferDataItem) => boolean)"}>Type</ApiType> | `undefined` |
+| inputProps | Props passed to the search Input, see Input for the options. Transfer owns its value and change; to search from outside, call the search method. | `TransferInputProps` | `semiGlobalDefault("Transfer", "inputProps")` |
+| treeProps | treeList only: props passed to the Tree on the left, overriding the defaults multiple, disableStrictly, leafOnly, filterTreeNode and defaultExpandAll. Transfer decides the selection, the tree data and the Tree ref, so modelValue, defaultValue, keyMaps, treeData, treeDataSimpleJson, changeWithObject, change listeners and ref are ignored; of the Tree slots only label is forwarded. | `TransferTreeProps` | `semiGlobalDefault("Transfer", "treeProps")` |
+| pagination | Paging of the left panel, for list and groupList only. onPageChange lives inside the object. | `TransferPagination` | `semiGlobalDefault("Transfer", "pagination")` |
+| virtualize | Virtualizes the selected list on the right, only with the default right panel and draggable off. A numeric height applies as is; a string such as 100% is measured from the remaining panel height. | `TransferVirtualize` | `semiGlobalDefault("Transfer", "virtualize")` |
+
+**Events**
+
+| Event             | Description                                                                                                                                                                                                                                      | Callback parameters                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| update:modelValue | Emitted when the selection changes; used by v-model. The payload is the array of values.                                                                                                                                                         | `[values: TransferValue]`                            |
+| change            | Emitted when the selection changes, including after a drag sort. The payload is the array of values and the array of their items; the values equal those of update:modelValue. It shadows the native event of the same name on the root element. | `[values: TransferValue, items: TransferDataItem[]]` |
+| select            | Emitted when an item is checked, with that item. It shadows the native event of the same name on the root element.                                                                                                                               | `[item: TransferDataItem]`                           |
+| deselect          | Emitted when an item is unchecked, with that item.                                                                                                                                                                                               | `[item: TransferDataItem]`                           |
+| search            | Emitted when the text of the search box changes, with the search value. A search driven by the search method does not emit it.                                                                                                                   | `[searchValue: string]`                              |
+
+**Slots**
+
+| Slot           | Description                                                                                                                                                                       | Scope parameters                  |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| label          | Content of an item, used by the source row (the tree row in treeList), the selected row and the drag copy; the label of the item by default.                                      | `TransferLabelSlotProps`          |
+| sourceItem     | Replaces one item on the left. index is the position among the shown items after filtering and paging, not the position in dataSource.                                            | `TransferSourceItemSlotProps`     |
+| selectedItem   | Replaces one selected item on the right. With draggable, handle is the drag handle component to wrap the drag icon in. With treeList and showPath, fullPath holds the whole path. | `TransferSelectedItemSlotProps`   |
+| sourceHeader   | Replaces the header of the left panel. leafOnlyNum is provided for treeList only.                                                                                                 | `TransferSourceHeaderSlotProps`   |
+| selectedHeader | Replaces the header of the right panel.                                                                                                                                           | `TransferSelectedHeaderSlotProps` |
+| sourcePanel    | Replaces the whole left panel, reusing the filtering and selection logic of Transfer.                                                                                             | `TransferSourcePanelSlotProps`    |
+| selectedPanel  | Replaces the whole right panel. Call onSortEnd after a drag sort you implemented has finished.                                                                                    | `TransferSelectedPanelSlotProps`  |
+| emptyLeft      | Shown when the left list has no data. The locale text appears when it is not provided; an empty slot hides the empty state.                                                       | `any`                             |
+| emptyRight     | Shown when nothing is selected. The locale text appears when it is not provided; an empty slot hides the empty state.                                                             | `any`                             |
+| emptySearch    | Shown when the search matches nothing. The locale text appears when it is not provided; an empty slot hides the empty state.                                                      | `any`                             |
+
+**Exposes**
+
+| Name   | Description                                                                                                         | Type                                                       |
+| ------ | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| search | Searches as if the value were typed into the search box, and puts the value there; the search event is not emitted. | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

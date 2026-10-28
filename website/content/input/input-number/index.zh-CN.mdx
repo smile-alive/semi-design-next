@@ -1,0 +1,197 @@
+---
+title: 数字输入框
+order: 42
+icon: doc-inputnumber
+brief: 通过鼠标或键盘，输入范围内的数值，与 Input 不同的是它带有针对数字场景的步进器操作区，配合 Parser 使用可以展示更复杂的内容格式
+---
+
+import InputNumberReactApi from './api/input-number.react.zh-CN.mdx';
+import InputNumberVueApi from './api/input-number.vue.zh-CN.mdx';
+import InputNumberSolidApi from './api/input-number.solid.zh-CN.mdx';
+
+## 使用场景
+
+当需要获取一个标准数值时。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { InputNumber } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { InputNumber } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { InputNumber } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本输入框
+
+<Demo id="basic" />
+
+<Demo id="basic-more" />
+
+### 隐藏步进器
+
+通过innerButtons，你可以将右侧的步进器隐藏进内部，仅hover时才会显示
+
+<Demo id="inner-buttons" />
+
+<Framework only="vue">
+
+`innerButtons` 的按钮在悬停或聚焦时临时替换 `#suffix` 插槽，之后恢复原内容。
+
+</Framework>
+
+<Framework only="solid">
+
+`innerButtons` 的按钮在悬停或聚焦时临时替换 `suffix` 属性的内容，之后恢复原内容。
+
+</Framework>
+
+hideButtons设为true，彻底隐藏步进器
+
+<Demo id="hide-buttons" />
+
+### 尺寸
+
+<Demo id="size" />
+
+### 自定义显示格式与解析方式
+
+> formatter 和 parser 一对方法，一般需要同时设置，否则无法正确解析值
+
+<Notice type="info" title="行为调整">
+
+- **调整前**：当 InputNumber 处于**受控模式**（传入 `value`，Vue 为 `modelValue`）且 `value` 为 **number** 时，首次渲染阶段输入框的展示值可能不会先经过 `formatter` 处理，组件会在 mount 后（或后续更新）再应用 `formatter/parser`，从而出现首帧展示与后续不一致的现象。
+- **调整后**：受控模式下当 `value`（Vue 为 `modelValue`）为 **number** 时，首次渲染也会应用 `formatter`（并与 `parser` 配合得到内部数值），保证首帧展示与后续一致。例如百分比场景：`value=1` 且 `formatter/parser` 使展示乘以 100 时，首帧将直接展示 `100`。
+
+</Notice>
+
+<Demo id="formatter" />
+
+### 纯数字输入框
+
+搭配 formatter 和 onNumberChange（Vue 为 `numberChange` 事件）可以实现纯数字输入框。
+
+<Demo id="number-only" />
+
+### 货币展示
+
+国际化模式下通过 currency=\{true\}（Vue 中写 `currency`）开启，组件会自动根据 localeCode 展示对应货币种类。（注意切换语言类型后需要更新组件 key 值）
+
+<Demo id="currency-i18n" />
+
+也可以通过手动传 localeCode 和 currency 指定展示的货币种类
+
+<Demo id="currency-locale" />
+
+支持 symbol、code、name 三种展示方式，通过 currencyDisplay 属性控制，默认以货币符号展示。showCurrencySymbol 设置为 false 隐藏货币符号/代码/名称的展示
+
+<Demo id="currency-display" />
+
+隐藏货币符号、代码或名称的展示，通过前后缀展示货币符号
+
+<Demo id="currency-affix" />
+
+### 科学计数法显示
+
+当数字较长时，可以通过 `scientificNotation` 属性启用科学计数法显示。失去焦点时显示科学计数法，获得焦点时显示完整数字。
+
+<Demo id="scientific" />
+
+<Notice type="info">
+
+科学计数法仅影响显示格式，`onChange` 和 `onNumberChange` 回调（Vue 为 `change`、`numberChange` 事件）中的值仍为完整数字。该功能不支持货币模式（`currency`）。
+
+</Notice>
+
+## API 参考
+
+<Framework only="react">
+
+<InputNumberReactApi />
+
+其他原生属性（如 `id`、`name`、`tabindex`、`title`、`data-*`）落在原生 `input` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<InputNumberVueApi />
+
+`v-model` 绑定 `modelValue`（`number | string`），不支持 `.number`、`.trim` 修饰符；非受控初值用 `defaultValue`。`change` 与 `update:modelValue` 同时发出，载荷一致。回调改为同名事件：`@change`、`@numberChange`、`@upClick`、`@downClick`、`@focus`、`@blur`、`@keydown`。`focus`、`blur` 来自 Input 外层的 `focusin`、`focusout`；步进按钮不可聚焦，本身不触发这两个事件。
+
+`prefix`、`suffix`、`insetLabel`、`clearIcon`、`addonBefore`、`addonAfter` 是同名插槽，例如 `prefix="$"` 写成 `<template #prefix>$</template>`。
+
+没有 `prefixCls`、`className`；`class`、`style` 落在外层 `.semi-input-number`，其余属性（`id`、`name`、`tabindex`、`title`、`aria-*`、`data-*`、`role`）落在原生 input。上表未声明的 Input 事件（`enterPress`、`clear`、`input`、`keyup`、`compositionstart` 等）经 attrs 交给内部 Input，直接写 `@enterPress` 等即可。
+
+</Framework>
+
+<Framework only="solid">
+
+<InputNumberSolidApi />
+
+`class`、`style` 与 `ref` 落在外层 `.semi-input-number` 根元素上；其余原生属性和事件（`id`、`name`、`aria-*`、`data-*`、`onInput`、`onKeyUp` 等）落在原生 `input` 上。
+
+</Framework>
+
+## Methods
+
+<Framework only="vue">
+
+`ref` 拿到 `InputNumberHandle`，成员见上方 API 参考的 Exposes。
+
+</Framework>
+
+<Framework only="react">
+
+InputNumber 的 ref 是命令式句柄（类型为 `InputNumberHandle`），不是原生 DOM 节点。需要节点时读取句柄上的属性，属性每次读取都返回当前挂载的节点，卸载后为 `null`。句柄的方法与属性见 API 参考。
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` 拿到的是根元素（`HTMLDivElement`），不是句柄。根元素的 `focus()` 与 `blur()` 作用于输入框，`focus()` 未传参数时遵循 `preventScroll` 属性。`select()`、`setSelectionRange()` 等原生方法，通过 `inputRef` 取得 `input` 元素后调用。
+
+</Framework>
+
+## Accessibility
+
+参考标准：https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/
+
+### ARIA
+
+- 数字输入框具有 spinbutton role
+- spinbutton 使用 aria-valuenow 表示当前值，aria-valuemax 表示可以接受的最大值，aria-valuemin 表示可以接受的最小值
+- 当 InputNumber 在 Form 中使用时，输入框的 aria-labelledby 指向 Field label
+
+### 键盘和焦点
+
+- InputNumber 可被获取焦点，键盘用户可以使用 Tab 及 Shift + Tab 切换焦点（增加/减少按钮不可以被键盘聚焦）
+- 键盘用户可以按上键 ⬆️ 或下键 ⬇️ ，输入值将增加或减少 step（默认值为 1）
+- 按住 Shift + 上键 ⬆️ 或下键 ⬇️ ，输入值将增加或减少 shiftStep（默认值为 10）
+- 设置了 `min` 时按 Home 跳到最小值，设置了 `max` 时按 End 跳到最大值；未设置对应边界时，两个键照常移动光标
+- 值已在边界、按键后数值不变时，不会触发 `onChange`（Vue 为 `change` 事件）
+
+## 设计变量
+
+<DesignToken />

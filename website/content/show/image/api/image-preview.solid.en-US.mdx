@@ -1,0 +1,58 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| adaptiveTip | Tip of the fit-to-page button. | `string` | - |
+| children | The Image components to preview. | `JSX.Element` | - |
+| closable | Whether to show the close button. | `boolean` | `true` |
+| closeOnEsc | Whether pressing Esc closes the preview. | `boolean` | - |
+| crossOrigin | The crossorigin attribute passed to the preview img element. | `'anonymous' \| 'use-credentials'` | - |
+| currentIndex | Controlled index of the current image. | `number` | - |
+| defaultCurrentIndex | Index of the image shown initially. | `number` | - |
+| defaultVisible | Whether the preview is open initially. | `boolean` | - |
+| disableDownload | Disables downloads; the download button is also disabled when there is no current image (an empty src list). | `boolean` | - |
+| downloadTip | Tip of the download button. | `string` | - |
+| getPopupContainer | Parent DOM the preview renders into; returning `document.body` is the same as not passing it. A container other than `document.body` makes the preview non-modal, and a custom container needs `position: relative`. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| infinite | Whether switching wraps around infinitely. | `boolean` | - |
+| initialZoom | Initial zoom factor of an image, applied once when it first opens or is switched to, clamped by minZoom and maxZoom. | `number` | - |
+| lazyLoad | Whether to enable lazy loading, judged against the viewport; a scrolling ancestor with overflow still clips. | `boolean` | `true` |
+| lazyLoadMargin | The rootMargin passed to IntersectionObserver, computed against the viewport. | `string` | `"0px 100px 100px 0px"` |
+| maskClosable | Whether clicking the mask closes the preview. | `boolean` | - |
+| maxZoom | Maximum zoom factor of the preview image, such as `5` for 500%. | `number` | - |
+| minZoom | Minimum zoom factor of the preview image, such as `0.1` for 10%. | `number` | - |
+| nextTip | Tip of the next-image button, also its accessible name; without it the locale text is used. | `string` | - |
+| onChange | Called when the image switches, with the new index. | <ApiType detail={"(index: number) => void"}>Type</ApiType> | - |
+| onClose | Called when the preview is closed with the close button or Esc; closing by the mask only calls onVisibleChange. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDownload | Called when an image is downloaded, with its URL and index. | <ApiType detail={"(src: string, index: number) => void"}>Type</ApiType> | - |
+| onDownloadError | Called when a download fails, with the image URL. | <ApiType detail={"(src: string) => void"}>Type</ApiType> | - |
+| onNext | Called when switching to the next image, with the new index. | <ApiType detail={"(index: number) => void"}>Type</ApiType> | - |
+| onPrev | Called when switching to the previous image, with the new index. | <ApiType detail={"(index: number) => void"}>Type</ApiType> | - |
+| onRatioChange | Called when switching between original size and fit-to-page, with `'adaptation'` or `'realSize'`. | <ApiType detail={"(type: RatioType) => void"}>Type</ApiType> | - |
+| onRotateLeft | Called when the image rotates counterclockwise, with the current rotation angle. | <ApiType detail={"(angle: number) => void"}>Type</ApiType> | - |
+| onVisibleChange | Called when the visibility changes, with whether the preview is visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onZoomIn | Called when the image zooms in, with the new zoom factor. | <ApiType detail={"(zoom: number) => void"}>Type</ApiType> | - |
+| onZoomOut | Called when the image zooms out, with the new zoom factor. | <ApiType detail={"(zoom: number) => void"}>Type</ApiType> | - |
+| originTip | Tip of the original-size button. | `string` | - |
+| preLoad | Whether to enable preloading. | `boolean` | - |
+| preLoadGap | Step size of preloading. | `number` | - |
+| previewCls | Custom class name of the preview layer. | `string` | - |
+| previewStyle | Custom style of the preview layer, as a style object (kebab-case keys) or a string. | `JSX.CSSProperties \| string` | - |
+| previewTitle | Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence. | `JSX.Element` | - |
+| prevTip | Tip of the previous-image button, also its accessible name; without it the locale text is used. | `string` | - |
+| renderCloseIcon | Custom close icon: a JSX element, or a function that returns one. | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | - |
+| renderHeader | Renders the top area of the preview; it receives the current title and returns a JSX element. | <ApiType detail={"(title: JSX.Element) => JSX.Element"}>Type</ApiType> | - |
+| renderLeftIcon | Custom previous-image icon: a JSX element, or a function that receives the current index and returns one. | <ApiType detail={"JSX.Element \u007c ((index: number) => JSX.Element)"}>Type</ApiType> | - |
+| renderPreviewMenu | Renders the bottom action area of the preview; it receives MenuProps and returns a JSX element. | <ApiType detail={"(props: MenuProps) => JSX.Element"}>Type</ApiType> | - |
+| renderRightIcon | Custom next-image icon: a JSX element, or a function that receives the current index and returns one. | <ApiType detail={"JSX.Element \u007c ((index: number) => JSX.Element)"}>Type</ApiType> | - |
+| rotateTip | Tip of the rotate button. | `string` | - |
+| setDownloadName | Sets the download file name: receives the image URL and returns the file name. | <ApiType detail={"(src: string) => string"}>Type</ApiType> | - |
+| showTooltip | Whether to show tooltips on the bottom action area. | `boolean` | - |
+| src | Image URLs to preview. When wrapping Image components, it is merged with the preview images they register, with the src entries first. | `string \| string[]` | `[]` |
+| viewerVisibleDelay | Idle time in milliseconds before the preview action buttons hide. | `number` | - |
+| visible | Controlled visibility of the preview. | `boolean` | - |
+| zIndex | z-index of the preview layer. | `number` | - |
+| zoomInTip | Tip of the zoom-in button. | `string` | - |
+| zoomOutTip | Tip of the zoom-out button. | `string` | - |
+| zoomStep | Zoom factor changed per zoom step, such as `0.1` for 10% per step. | `number` | - |

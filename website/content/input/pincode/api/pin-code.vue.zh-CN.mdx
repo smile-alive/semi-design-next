@@ -1,0 +1,38 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                               | 类型                                             | 默认值                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------------------------------------ |
+| modelValue     | 输入框内容，配合 v-model 使用。                                                                                    | `string`                                         | `undefined`                                      |
+| modelModifiers | v-model 修饰符，由 Vue 在使用 v-model.trim 等修饰符时传入；声明后修饰符不再作为属性落到根元素上。                  | `ModelModifiers`                                 | `undefined`                                      |
+| defaultValue   | 非受控时的初始内容。                                                                                               | `string`                                         | `semiGlobalDefault("PinCode", "defaultValue")`   |
+| count          | 验证码位数。                                                                                                       | `number`                                         | `semiDefault("PinCode", "count", 6)`             |
+| format         | 单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。                                | `PinCodeFormat`                                  | `undefined`                                      |
+| autofocus      | 挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。 | `boolean`                                        | `semiDefault("PinCode", "autofocus", false)`     |
+| disabled       | 是否禁用。                                                                                                         | `boolean`                                        | `semiGlobalDefault("PinCode", "disabled")`       |
+| size           | 输入框大小，可选 large、default、small。                                                                           | `Size`                                           | `semiGlobalDefault("PinCode", "size")`           |
+| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                                                   | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("PinCode", "validateStatus")` |
+
+**Events**
+
+| 事件              | 说明                                               | 回调参数              |
+| ----------------- | -------------------------------------------------- | --------------------- |
+| update:modelValue | 内容变化时触发，供 v-model 回写。                  | `[value: string]`     |
+| change            | 内容变化时触发，参数为当前内容。                   | `[value: string]`     |
+| complete          | 所有位数输入完毕时触发，参数为当前内容。           | `[value: string]`     |
+| focus             | 焦点进入整个验证码时触发，在输入框之间移动不触发。 | `[event: FocusEvent]` |
+| blur              | 焦点离开整个验证码时触发。                         | `[event: FocusEvent]` |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称  | 说明                                                                         | 类型                                                       |
+| ----- | ---------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| focus | 聚焦第 index 个输入框，序号从 0 开始，超出范围时忽略；光标放在该格字符之后。 | <ApiType detail={"(index: number) => void"}>Type</ApiType> |
+| blur  | 让第 index 个输入框失焦，序号从 0 开始，超出范围时忽略。                     | <ApiType detail={"(index: number) => void"}>Type</ApiType> |

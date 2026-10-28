@@ -1,0 +1,656 @@
+---
+title: 日期选择器
+order: 39
+icon: doc-datepicker
+brief: 日期选择器用于帮助用户选择一个符合要求的、格式化的日期（时间）或日期（时间）范围
+---
+
+import { Image } from '@fibrae/semi-ui-react';
+import DatePickerReactApi from './api/date-picker.react.zh-CN.mdx';
+import DatePickerVueApi from './api/date-picker.vue.zh-CN.mdx';
+import DatePickerSolidApi from './api/date-picker.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { DatePicker } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { DatePicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, ButtonGroup, DatePicker, Space, TabPane, Tabs, Tooltip, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+<Demo id="basic" />
+
+### 小尺寸
+
+使用 density 可以控制日期面板的尺寸，`compact` 为小尺寸，`default` 为默认尺寸。
+
+<Demo id="density" />
+
+### 多个日期选择
+
+将 `multiple` 设为 `true`，可以多选日期
+
+<Demo id="multiple" />
+
+### 日期与时间选择
+
+将 `type` 设定为 `dateTime`，可以选择日期时间。  
+版本V2.22.0开始，我们将 TimePicker 内的 ScrollItem 的默认模式从 wheel 变更为了 normal, 若想应用回无限滚动的效果，可以通过 timePickerOpts 传入特定配置开启。
+
+<Demo id="date-time" />
+
+### 日期范围选择
+
+将 `type` 设定为 `dateRange`，可以选择日期范围
+
+<Demo id="date-range" />
+
+<Framework only="react">
+
+<Notice type="primary" title="注意事项">
+    <div>type=dateRange 或 dateTimeRange 时，只有开始日期和结束日期都被选择后才会触发 onChange。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="注意事项">
+    <div>type=dateRange 或 dateTimeRange 时，只有开始日期和结束日期都被选择后才会触发 change 与 update:modelValue。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="注意事项">
+    <div>type=dateRange 或 dateTimeRange 时，只有开始日期和结束日期都被选择后才会触发 onChange。</div>
+</Notice>
+
+</Framework>
+
+### 日期范围时间选择
+
+将 `type` 设定为 `dateTimeRange`， 可以选择日期时间范围  
+当未传入初始值或受控值时，底部面板默认时间为当前时间。如果你有特殊需求（如指定默认时分秒），可以通过 defaultPickerValue 指定
+
+<Demo id="date-time-range" />
+
+### 内嵌输入框
+
+使用 insetInput 可以控制日期面板是否展示内嵌输入框，默认为 false。v2.7.0 后支持。内嵌输入框适用于以下场景：
+
+- 日期时间选择，可以直接通过内嵌输入框单独修改时间，无须通过滚轮选择时间
+- 自定义触发器时 + 范围选择，使用内嵌输入框可以单独对开始和结束日期进行修改
+
+insetInput 开启后包括以下功能：
+
+- 点击触发器后，面板默认在原有位置弹出。你可以通过 position 自定义弹出位置
+- 点击内嵌日期输入框，面板切换到日期选择；点击内嵌时间输入框，面板切换到时间选择
+- 和外部的输入框一致，如果输入了非法日期，面板关闭后日期会回到之前的合法日期
+
+<Notice type="primary" title="注意事项">
+
+注意，开启后会对组件做一些调整和限制：
+
+1. 触发器样式：未打开面板时触发器只读，打开时触发器禁用
+2. 面板样式：type 包括 time 时，隐藏底部的切换按钮
+3. 开启 insetInput 后 format 只支持 `dateFormat[ timeFormat]` 格式，使用其他格式会影响内嵌输入框 placeholder 和触发器文本的展示。timeFormat 为 12 小时制（如 `hh:mm a`）时，内嵌时间输入框按 24 小时制显示和输入
+
+</Notice>
+
+<Demo id="inset-input" />
+
+### 同步切换双面板月份
+
+在范围选择的场景中, 开启 `syncSwitchMonth` 则允许双面板同步切换。默认为 false。
+
+> Note：点击年份按钮也会同步切换两个面板，从滚轮里面切换年月不会同步切换面板，这保证了用户选择非固定间隔月份的能力。
+
+<Demo id="sync-switch-month" />
+
+### 切换面板日期的回调
+
+<Framework only="react">
+
+`onPanelChange` 回调函数会在面板的月份或年份切换改变时被调用。
+
+</Framework>
+
+<Framework only="vue">
+
+`panelChange` 事件会在面板的月份或年份切换改变时触发。
+
+</Framework>
+
+<Framework only="solid">
+
+`onPanelChange` 回调函数会在面板的月份或年份切换改变时被调用。
+
+</Framework>
+
+<Demo id="panel-change" />
+
+### 周选择
+
+dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选择，如周选择、双周选择。
+
+<Demo id="week" />
+
+### 年月选择
+
+将 `type` 设定为 `month`，可以进行年月选择。
+
+<Demo id="month" />
+
+### 年月范围选择
+
+**版本：** >= 2.32.0
+
+将 `type` 设定为 `monthRange`，可以进行年月范围选择。暂不支持小尺寸与快捷面板。
+
+<Demo id="month-range" />
+
+### 年份选择
+
+将 `type` 设定为 `year`，可以进行年份选择。面板只有一列年份，选中的值为该年 1 月 1 日，默认格式为 `yyyy`。`disabledDate` 以每年的 1 月 1 日判断该年是否可选。
+
+<Demo id="year" />
+
+### 确认日期时间选择
+
+对于“日期时间”（type="dateTime"）或“日期时间范围”（type="dateTimeRange"）的选择，可以进行确认后才将值写入输入框内，你可以通过传递 needConfirm=true 来开启这种行为。
+
+<Framework only="react">
+
+同时支持 “确认”（onConfirm） 和 “取消”（onCancel） 两个按钮的点击回调。
+
+下面这个例子绑定了 onChange、onConfirm、onCancel 三种回调，你可以打开控制台查看打印信息的区别。
+
+</Framework>
+
+<Framework only="vue">
+
+同时支持 “确认”（`confirm` 事件） 和 “取消”（`cancel` 事件） 两个按钮的点击事件。
+
+下面这个例子监听了 `change`、`confirm`、`cancel` 三个事件，你可以打开控制台查看打印信息的区别。
+
+</Framework>
+
+<Framework only="solid">
+
+同时支持 “确认”（`onConfirm`） 和 “取消”（`onCancel`） 两个按钮的点击回调。
+
+下面这个例子绑定了 `onChange`、`onConfirm`、`onCancel` 三种回调，你可以打开控制台查看打印信息的区别。
+
+</Framework>
+
+> 注意：开启确认选择时，需要点击取消按钮关闭面板，点击空白区域不再关闭面板（v2.2.0）
+
+<Demo id="need-confirm" />
+
+### 带有快捷方式的日期时间选择
+
+通过 `presets` 设定快捷日期选择
+
+<Demo id="presets" />
+
+### 渲染顶部/底部额外区域
+
+<Framework only="react">
+
+通过 `topSlot` 和 `bottomSlot` 可以自定义渲染顶部和底部额外区域  
+通过 `leftSlot` 和 `rightSlot` 可以自定义渲染左侧和右侧额外区域（v2.65.0后支持）
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#topSlot` 和 `#bottomSlot` 插槽可以自定义渲染顶部和底部额外区域  
+通过 `#leftSlot` 和 `#rightSlot` 插槽可以自定义渲染左侧和右侧额外区域
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `topSlot` 和 `bottomSlot` 可以自定义渲染顶部和底部额外区域，通过 `leftSlot` 和 `rightSlot` 可以自定义渲染左侧和右侧额外区域。
+
+</Framework>
+
+<Demo id="slot" />
+
+```css
+.components-datepicker-demo-slot {
+    .semi-tabs-content {
+        padding: 0;
+    }
+
+    .semi-tabs-bar-line.semi-tabs-bar-top {
+        border-bottom: none;
+    }
+}
+```
+
+### 禁用日期选择
+
+<Demo id="disabled" />
+
+### 禁用部分日期或时间
+
+传入 `disabledDate` 可以禁用指定日期，传入 `disabledTime` 可以禁用指定时间，配合 `defaultPickerValue` 可以指定面板打开时所处的年月。
+
+`disabledDate` 和 `disabledTime`，接受的入参都为当前日期，前者返回一个 `boolean` 值，后者返回一个[对象](/zh-CN/react/input/time-picker#API_参考)，将会透传给 `TimePicker` 组件。
+
+<Notice type="primary" title="注意事项">
+    <div>当你使用 timeZone 时，第一个参数为你选择的时区下时间（与值变化时 React 的 onChange、Vue 的 change 事件收到的第一个参数类似）</div>
+</Notice>
+
+<Demo id="disabled-date" />
+
+在 type 包含 range 时，可以根据当前选择动态禁止日期。options 参数 1.9.0 后支持。
+
+<Demo id="disabled-date-range" />
+
+范围选择时，可以根据 focus 状态禁用日期。focus 状态通过 options 中的 rangeInputFocus 参数传递。
+
+<Demo id="disabled-date-focus" />
+
+### 自定义显示格式
+
+可以通过 `format` 自定义显示格式
+
+<Demo id="format" />
+
+### 自定义触发器
+
+<Framework only="react">
+
+默认情况下我们使用 `Input` 组件作为 `DatePicker` 组件的触发器，通过传递 `triggerRender` 方法你可以自定义这个触发器。
+
+自定义触发器是对触发器的完全自定义，默认的清除按钮将不生效，如果你需要清除功能，请自定义一个清除按钮。
+
+</Framework>
+
+<Framework only="vue">
+
+默认情况下我们使用 `Input` 组件作为 `DatePicker` 组件的触发器，通过 `#trigger` 作用域插槽你可以自定义这个触发器。
+
+自定义触发器是对触发器的完全自定义，默认的清除按钮将不生效，如果你需要清除功能，请自定义一个清除按钮，点击时调用插槽参数中的 `onClear`。
+
+插槽参数提供 `value`、`inputValue`、`placeholder`、`disabled`、`size`、`inputReadOnly`、`rangeInputFocus`、`type`、`format`、`multiple`、`autofocus`、`componentProps`，以及 `onChange`（更新输入文本，与键入相同）、`onEnterPress`（提交输入文本）、`onClear`（报告清除按钮的点击）。用户键入之前 `inputValue` 为 `null`，此时显示格式化后的 `value`。插槽参数不含 `aria-*` 属性，自定义内容需要自行设置可访问名称。
+
+</Framework>
+
+<Framework only="solid">
+
+默认情况下我们使用 `Input` 组件作为 `DatePicker` 组件的触发器，通过传递 `triggerRender` 方法你可以自定义这个触发器。
+
+自定义触发器是对触发器的完全自定义，默认的清除按钮将不生效，如果你需要清除功能，请自定义一个清除按钮。
+
+`triggerRender` 只调用一次，入参的每个属性都是响应式的，需要在返回的 JSX 中读取，不要解构。
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+<Notice type="primary" title="注意事项">
+    <div>范围选择时，面板打开后默认选择的日期为开始日期，选择后会切到结束日期选择。面板关闭后焦点会重置。</div>
+    <div>我们建议提供一个清除按钮，当你给 DatePicker 传入空值时，DatePicker 内部也会重置焦点。这样用户可以在清除后重新选择日期范围。（from v2.15）</div>
+</Notice>
+
+<Demo id="trigger-render-range" />
+
+### 自定义日期显示内容
+
+<Framework only="react">
+
+`renderDate: (dayNumber: number, fullDate: string) => ReactNode`，自定义日期内容。
+
+- `dayNumber`：当前日。如 `13`。
+- `fullDate`：当前日的完整日期。如 `2020-08-13`。
+
+</Framework>
+
+<Framework only="vue">
+
+`#date="{ dayNumber, fullDate }"` 作用域插槽，自定义日期内容。
+
+- `dayNumber`：当前日。如 `13`。
+- `fullDate`：当前日的完整日期。如 `2020-08-13`。
+
+</Framework>
+
+<Framework only="solid">
+
+`renderDate: (dayNumber?: number, fullDate?: string) => JSX.Element`，自定义日期内容。
+
+- `dayNumber`：当前日。如 `13`。
+- `fullDate`：当前日的完整日期。如 `2020-08-13`。
+
+</Framework>
+
+<Demo id="render-date" />
+
+### 自定义日期格子渲染
+
+<Framework only="react">
+
+`renderFullDate: (dayNumber: number, fullDate: string, dayStatus: object) => ReactNode`， 自定义日期格子的渲染内容。
+
+</Framework>
+
+<Framework only="vue">
+
+`#fullDate="{ dayNumber, fullDate, dayStatus }"` 作用域插槽，自定义整个日期格子的渲染内容，日期格只保留基础类名和 active 类名。
+
+</Framework>
+
+<Framework only="solid">
+
+`renderFullDate: (dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => JSX.Element`，自定义日期格子的渲染内容。
+
+</Framework>
+
+`dayStatus` 表示当前格子的状态，包括的 `key` 有：
+
+```md
+type DayStatusType = { isToday?: boolean; // 当前日 isSelected?: boolean; // 被选中 isDisabled?: boolean; // 被禁用 isSelectedStart?: boolean; // 选中开始 isSelectedEnd?: boolean; // 选中结束 isInRange?: boolean; // 范围选中日期内 isHover?: boolean; // 日期在选择项和hover日期之间 isOffsetRangeStart?: boolean; // 周选择开始 isOffsetRangeEnd?: boolean; // 周选择结束 isHoverInOffsetRange?: boolean; // hover在周选择内 };
+```
+
+<Demo id="render-full-date" />
+
+```css
+.components-datepicker-demo-day-inrange,
+.components-datepicker-demo-day-hover {
+    background: var(--semi-color-primary-light-hover);
+}
+
+.components-datepicker-demo-day-selected,
+.components-datepicker-demo-day-selected-start,
+.components-datepicker-demo-day-selected-end {
+    color: var(--semi-color-bg-2);
+    background: var(--semi-color-primary);
+}
+```
+
+## API 参考
+
+<Framework only="react">
+
+<DatePickerReactApi />
+
+其他原生属性（如 `id`、`title`、`data-*`、`aria-label`、`onClick`）落在根元素上，`tabIndex` 落在输入框上。`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 的落点：
+
+- 单输入框：都落在输入框上
+- 范围类型：根元素为 `role="group"`，`aria-labelledby` 落在根元素上，其余四项落在两个输入框上
+- `triggerRender` 渲染的内容没有可聚焦元素：`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 落在 role 为 `button` 的外层，`aria-required` 不转发
+- `triggerRender` 渲染的内容自带可聚焦元素：都不转发，在渲染内容上自行设置
+
+</Framework>
+
+<Framework only="vue">
+
+<DatePickerVueApi />
+
+`modelValue` 配合 `update:modelValue` 即 `v-model`，`open` 配合 `update:open` 即 `v-model:open`。`autofocus` 是小写，`triggerRender`、`renderDate`、`renderFullDate`、`rangeSeparatorNode` 及各 ReactNode 属性改为插槽。
+
+`class`、`style` 与 `id`、`title`、`data-*`、`aria-label` 等未声明的属性落在根元素上，带 `aria-label` 的根元素为 `role="group"`。`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 的落点：
+
+- 单输入框：都落在输入框上
+- 范围类型：根元素为 `role="group"`，`aria-labelledby` 落在根元素上，其余四项落在两个输入框上
+- `#trigger` 的内容没有可聚焦元素：`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 落在 role 为 `button` 的外层，`aria-required` 不转发
+- `#trigger` 的内容自带可聚焦元素：都不转发，在插槽内容上自行设置
+
+`change`、`focus`、`blur` 遮住根元素上冒泡的同名原生事件。放在 `<KeepAlive>` 中失活时面板关闭，只触发 `update:open` 与 `openChange`。
+
+</Framework>
+
+<Framework only="solid">
+
+<DatePickerSolidApi />
+
+`class`、`style`、`ref` 与未声明的原生属性和事件（如 `id`、`title`、`data-*`、`aria-label`、`onClick`）落在根元素上。`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 的落点：
+
+- 单输入框：都落在输入框上
+- 范围类型：根元素为 `role="group"`，`aria-labelledby` 落在根元素上，`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在两个输入框上
+- `triggerRender` 渲染的内容没有可聚焦元素：`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 落在 role 为 `button` 的外层，`aria-required` 不转发
+- `triggerRender` 渲染的内容自带可聚焦元素：都不转发，在渲染内容上自行设置
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+通过 `ref` 得到的句柄携带 `open()`、`close()`、`focus(focusType?)` 和 `blur()` 方法，说明见 API 参考中的 Methods 表。`focus` 聚焦输入框，范围类型默认聚焦开始框，传入 `'rangeEnd'` 时聚焦结束框；开启 `insetInput` 且面板打开时聚焦面板内的输入框。
+
+</Framework>
+
+<Framework only="vue">
+
+通过模板 ref 暴露 `open()`、`close()`、`focus(rangeEnd?)` 和 `blur()`：`focus` 聚焦输入框，范围类型默认聚焦开始框，传 `rangeEnd` 聚焦结束框，开启 insetInput 时聚焦面板内的输入框；`blur` 使输入框失焦。受控的 `open` 优先，受控时 `open()`、`close()` 不改变面板可见性。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `ref` 得到的根元素携带 `open()`、`close()`、`focus(focusType?)` 和 `blur()` 方法，说明见 API 参考中的 Methods 表。`focus` 聚焦输入框，范围类型默认聚焦开始框，传入 `'rangeEnd'` 时聚焦结束框；开启 `insetInput` 时聚焦面板内的输入框。
+
+</Framework>
+
+<Demo id="methods" />
+
+## 类型定义
+
+<Framework only="react">
+
+```typescript
+type BaseValueType = string | number | Date;
+type ValueType = BaseValueType | BaseValueType[];
+type DateType = Date | Date[];
+type StringType = string | string[];
+type TriggerRenderProps = {
+    value?: ValueType;
+    inputValue?: string | null;
+    placeholder?: string | string[];
+    autoFocus?: boolean;
+    size?: InputSize;
+    disabled?: boolean;
+    inputReadOnly?: boolean;
+    componentProps?: DatePickerProps;
+    [x: string]: any;
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```typescript
+type DatePickerBaseValueType = string | number | Date;
+type DatePickerValueType = DatePickerBaseValueType | DatePickerBaseValueType[];
+type DatePickerType = 'date' | 'dateRange' | 'dateTime' | 'dateTimeRange' | 'month' | 'monthRange' | 'year';
+type DatePickerRangeInput = 'rangeStart' | 'rangeEnd';
+type DatePickerTriggerSlotProps = {
+    value: Date[];
+    inputValue: string | null;
+    placeholder: string | string[];
+    disabled: boolean;
+    size: InputSize;
+    inputReadOnly: boolean;
+    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    type: DatePickerType;
+    format?: string;
+    multiple: boolean;
+    autofocus: boolean;
+    componentProps: DatePickerProps;
+    onChange: (inputValue: string) => void;
+    onEnterPress: (inputValue: string) => void;
+    onClear: (event: MouseEvent) => void;
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```typescript
+type DatePickerBaseValueType = string | number | Date;
+type DatePickerValueType = DatePickerBaseValueType | DatePickerBaseValueType[];
+type DatePickerDayStatusType = {
+    isToday?: boolean;
+    isSelected?: boolean;
+    isDisabled?: boolean;
+    isSelectedStart?: boolean;
+    isSelectedEnd?: boolean;
+    isInRange?: boolean;
+    isHover?: boolean;
+    isOffsetRangeStart?: boolean;
+    isOffsetRangeEnd?: boolean;
+    isHoverInOffsetRange?: boolean;
+};
+type DatePickerDisabledDateOptions = {
+    rangeStart?: string;
+    rangeEnd?: string;
+    rangeInputFocus?: 'rangeStart' | 'rangeEnd' | false;
+};
+type DatePickerDisabledDateType = (date: Date, options?: DatePickerDisabledDateOptions) => boolean;
+type DatePickerPresetType = {
+    start?: DatePickerBaseValueType | null | (() => DatePickerBaseValueType);
+    end?: DatePickerBaseValueType | null | (() => DatePickerBaseValueType);
+    text?: string;
+};
+type DatePickerPresetsType = Array<DatePickerPresetType | (() => DatePickerPresetType)>;
+interface DatePickerTriggerRenderProps extends DateInputProps {
+    componentProps: Omit<DatePickerProps, 'ref'>;
+}
+interface DatePickerHandle {
+    open: () => void;
+    close: () => void;
+    focus: (focusType?: 'rangeStart' | 'rangeEnd') => void;
+    blur: () => void;
+}
+type DatePickerElement = HTMLDivElement & DatePickerHandle;
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 输入框的 role 为 `combobox`，带 `aria-haspopup="dialog"`、随面板开关变化的 `aria-expanded`，`aria-controls` 指向面板；范围选择的两个输入框都是如此
+- 单输入框未选中日期时 `aria-label` 为 `Choose date`，选中日期时为 `Change date`（传入 `aria-labelledby` 时以它为准）
+- 自定义触发器（React 的 `triggerRender`，Vue 的 `#trigger` 插槽）渲染的内容没有可聚焦元素时，外层是 role 为 `button` 的焦点目标，名称同上
+- 日期面板中月的 role 为 `grid`，以面板顶部的年月标题命名，周的 role 设置为 `row`，日期格子设置为 `gridcell`
+- 年、月滚动列是 role 为 `listbox` 的列表，名称为「年」「月」
+- 日期和时间禁用时对应选项的 `aria-disabled` 为 true
+- 多选或范围选择时，月的 `aria-multiselectable` 为 true，选中时日期格子的 `aria-selected` 为 true
+- 面板中一些装饰作用的 icon，它们的 `aria-hidden` 为 true
+
+### 键盘和焦点
+
+- 输入框聚焦时按 `下箭头` 打开面板；面板打开后再按 `下箭头`，焦点移入面板
+- 日期网格是一个 Tab 停靠点，`方向键`、`Home`、`End`、`PageUp`、`PageDown`（加 `Shift` 按年）移动当前日期，`Enter` 或 `空格` 选中
+- dateTime 面板底部的日期、时间切换是按钮，`Enter` 或 `空格` 切换
+- 范围选择有值时，Tab 可以到达结束输入框之后的清除按钮，`Enter` 或 `空格` 清空
+- 按 `Esc` 关闭面板；焦点在面板内时回到输入框，使用自定义触发器时回到该触发器
+- 自定义触发器渲染的内容没有可聚焦元素时，外层可以用 Tab 到达，`Enter`、`空格` 或 `下箭头` 打开面板
+
+## 文案规范
+
+- 日期选择器建议搭配标签使用
+- 使用简洁的标签来表明日期选择所指的内容
+- 日期选择器中日期格式请参考[日期与时间](/zh-CN/react/experience/content-guidelines#8.%20%E6%97%A5%E6%9C%9F%E4%B8%8E%E6%97%B6%E9%97%B4)的规范
+
+## 设计变量
+
+<DesignToken />
+
+## 日期时间格式
+
+semi-ui 组件库中采用 [date-fns v4](https://date-fns.org/docs/Getting-Started) 作为日期时间引擎，格式化 token 含义如下：
+
+- `"y"` ：年
+- `"M"` ：月
+- `"d"` ：日
+- `"H"` ：小时
+- `"m"` ：分钟
+- `"s"` ：秒
+
+下面以 `new Date('2023-12-09 08:08:00')` 和 `[new Date('2023-12-09 08:08:00'), new Date('2023-12-10 10:08:00')]` 为例说明不同 `format` 值对展示值的影响：
+
+| 类型          | format              | 展示值                               |
+| ------------- | ------------------- | ------------------------------------ |
+| date          | yyyy-MM-dd          | 2023-12-09                           |
+| dateTime      | yyyy-MM-dd HH:mm:ss | 2023-12-09 08:08:00                  |
+| month         | yyyy-MM             | 2023-12                              |
+| year          | yyyy                | 2023                                 |
+| dateRange     | yyyy-MM-dd          | 2023-12-09 ～ 2023-12-10             |
+| dateTimeRange | yyyy-MM-dd HH:mm:ss | 2023-12-09 08:08 ～ 2023-12-10 10:08 |
+
+多个日期或时间默认使用 `","` （英文逗号）分隔。
+
+> 更多 token 可以查阅 [date-fns 官网](https://date-fns.org/docs/Unicode-Tokens)
+
+## FAQ
+
+- **日期时间选择器，时分秒选择时想要无限滚动效果如何实现？**  
+  版本V2.22.0开始，我们将 TimePicker 内的 ScrollItem 的默认模式从 wheel 变更为了 normal, 若想应用回无限滚动的效果，可以通过 timePickerOpts 中的特定开关控制该行为。
+
+      <Framework only="react">
+
+    即 timePickerOpts=\{\{ scrollItemProps: \{ mode: "wheel", cycled: true \} \}\}。
+
+      </Framework>
+
+      <Framework only="vue">
+
+    即 `:timePickerOpts="{ scrollItemProps: { mode: 'wheel', cycled: true } }"`。
+
+      </Framework>
+
+      <Framework only="solid">
+
+    即 `timePickerOpts={{ scrollItemProps: { mode: 'wheel', cycled: true } }}`。
+
+      </Framework>
+
+- **如何设置面板打开时默认显示的时间？**  
+   可通过 defaultPickerValue 属性。
+
+- **日期时间选择、范围日期选择，输入部分日期后，面板没有回显日期？**
+
+    输入框需要输入完整后才会回显到面板上。比如，日期时间选择，完整要求日期和时间都已输入。范围日期选择，完整要求开始日期和结束日期都已输入。
+
+- **日期时间选择面板底部的展示的时间是什么？**
+
+    未选择时间时，它为 defaultPickerValue 中时间的值，如果没有设置则是面板打开时的时间。选择时间后，它为已选择的时间。
+
+    由于设计上它有隐含两层含义，可能会导致歧义，建议使用内嵌样式，通过 `insetInput` 打开。使用前推荐阅读相关 <a href="#内嵌输入框">文档</a>。
+
+    <Image src="https://lf6-static.semi.design/obj/semi-tos/images/9c9e8500-bccf-11ed-a8cf-bfecde588f0d.png" alt="日期时间选择面板底部的时间" width={600} />

@@ -1,0 +1,60 @@
+{
+    "descriptions": {
+        "source": "packages/semi-ui-react/src/descriptions/index.tsx",
+        "props": {
+            "align": {
+                "zh-CN": "对齐方式，可选 `center`、`justify`、`left` 或 `plain`，`left` 指起始侧；`row` 为 `true` 时无效。",
+                "en-US": "Alignment: `center`, `justify`, `left` or `plain`, where `left` is the start side. Ignored when `row` is `true`."
+            },
+            "children": {
+                "zh-CN": "`data` 为空时渲染的内容，通常为 `Descriptions.Item`。",
+                "en-US": "Rendered when `data` is empty, usually `Descriptions.Item` elements."
+            },
+            "className": { "zh-CN": "根元素（`div`）的类名。", "en-US": "Class name of the root element (`div`)." },
+            "column": { "zh-CN": "横向布局下每行的总列数。", "en-US": "Total number of columns per row in the horizontal layout." },
+            "data": {
+                "zh-CN": "列表显示的数据；为空时渲染 `children`。",
+                "en-US": "Data to display; when empty, `children` are rendered."
+            },
+            "layout": { "zh-CN": "布局模式，可选 `vertical` 或 `horizontal`。", "en-US": "Layout mode: `vertical` or `horizontal`." },
+            "ref": { "zh-CN": "根元素（`div`）的引用。", "en-US": "Reference to the root element (`div`)." },
+            "row": {
+                "zh-CN": "是否双行显示，为 `true` 时 `align` 无效。",
+                "en-US": "Whether to show key and value in two rows; `align` is ignored when `true`."
+            },
+            "size": {
+                "zh-CN": "双行显示时的尺寸，可选 `small`、`medium` 或 `large`。",
+                "en-US": "Size in two-row mode: `small`, `medium` or `large`."
+            },
+            "style": { "zh-CN": "根元素（`div`）的样式。", "en-US": "Style of the root element (`div`)." }
+        }
+    },
+    "descriptions-item": {
+        "source": "packages/semi-ui-react/src/descriptions/item.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "值，可以是 `ReactNode`，也可以是渲染时调用的函数。",
+                "en-US": "Value: a `ReactNode`, or a function called when rendered."
+            },
+            "className": {
+                "zh-CN": "纵向布局下外部 wrapper `tr` 的类名；横向布局下无效。",
+                "en-US": "Class name of the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
+            },
+            "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
+            "itemKey": { "zh-CN": "键，可以是 `ReactNode`。", "en-US": "Key, a `ReactNode`." },
+            "keyStyle": {
+                "zh-CN": "key 的自定义样式，可用于设置宽度、对齐方式等。",
+                "en-US": "Custom style of the key, such as its width or alignment."
+            },
+            "ref": {
+                "zh-CN": "纵向布局下外部 wrapper `tr` 的引用；横向布局下无效。",
+                "en-US": "Reference to the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
+            },
+            "span": { "zh-CN": "单元格跨越的列数，未设置时为 1。", "en-US": "Number of columns the cell spans; 1 when unset." },
+            "style": {
+                "zh-CN": "纵向布局下外部 wrapper `tr` 的样式；横向布局下无效。",
+                "en-US": "Style of the outer wrapper `tr` in vertical layout; ignored in horizontal layout."
+            }
+        }
+    }
+}

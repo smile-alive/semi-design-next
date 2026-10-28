@@ -1,0 +1,39 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| dataSource | Data source: an array of items for `list`, an array of groups for `groupList`, or tree data with `children` for `treeList`. The data is derived from the array reference, so an in-place change is not seen; pass a new array. | `DataSource` | `[]` |
+| defaultValue | The values selected initially, read once when the Transfer is created. | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | `[]` |
+| disabled | Whether the whole transfer is disabled. | `boolean` | - |
+| draggable | Enables drag sorting of the selected items on the right. After a sort, the order of the array passed to `onChange` changes. | `boolean` | - |
+| emptyContent | Custom empty-state content: `left` when the left list has no data, `right` when nothing is selected, `search` when the search matches nothing. A `null` entry hides that empty state; a missing one shows the locale text. | `EmptyContent` | `{}` |
+| filter | Filtering logic. `false` hides the search box; a function replaces the default case-insensitive label match and returns `true` to keep an item. For a custom search in `treeList`, set it to `true` and pass the matching function as `filterTreeNode` in `treeProps`. | <ApiType detail={"boolean \u007c ((searchValue: string, item: DataItem) => boolean)"}>Type</ApiType> | - |
+| inputProps | Props passed to the search Input, see Input for the options. `value` and `onChange` belong to Transfer; to search from outside, call the `search` method on the ref. | `InputProps` | - |
+| loading | Whether the options on the left are loading; a Spin replaces the list while it is. | `boolean` | - |
+| onChange | Called when the selection changes, including after a drag sort, with the array of values and the array of their items. | <ApiType detail={"(values: Array\u003cstring \u007c number>, items: Array\u003cDataItem>) => void"}>Type</ApiType> | - |
+| onDeselect | Called when an item is unchecked, with that item. | <ApiType detail={"(item: DataItem) => void"}>Type</ApiType> | - |
+| onSearch | Called when the text of the search box changes, with the search value. A search driven by the ref's `search` method does not call it. | <ApiType detail={"(searchValue: string) => void"}>Type</ApiType> | - |
+| onSelect | Called when an item is checked, with that item. | <ApiType detail={"(item: DataItem) => void"}>Type</ApiType> | - |
+| pagination | Paging of the left panel, for `list` and `groupList` only. `onPageChange` lives inside the object. | `PaginationProps` | - |
+| ref | Receives the root `div` element, typed as TransferElement; the element carries the `search` method. | <ApiType detail={"Ref\u003cTransferElement>"}>Type</ApiType> | - |
+| renderLabel | Renders the content of each item in both lists and of each node in treeList; it receives the data item. Without it the label shows. The path with `showPath` stays label text. | <ApiType detail={"(item: DataItem) => JSX.Element"}>Type</ApiType> | - |
+| renderSelectedHeader | Replaces the header of the right panel; called once with a live object (SelectedHeaderProps). | <ApiType detail={"(headProps: SelectedHeaderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSelectedItem | Renders one selected item on the right; called once per item. The argument is the item and also carries `onRemove`; with `draggable` it also carries `sortableHandle`. With `treeList` and `showPath`, `fullPath` holds the whole path. | <ApiType detail={"(item: RenderSelectedItemProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSelectedPanel | Replaces the whole right panel; called once with a live object (SelectedPanelProps). Read its fields in the JSX. | <ApiType detail={"(selectedPanelProps: SelectedPanelProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSourceHeader | Replaces the header of the left panel; called once with a live object (SourceHeaderProps). `leafOnlyNum` is provided for `treeList` only. | <ApiType detail={"(headProps: SourceHeaderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSourceItem | Renders one candidate on the left; called once per item. The argument is the item and also carries `onChange` and `checked`; `checked` is a getter, read it in the returned JSX. | <ApiType detail={"(item: RenderSourceItemProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSourcePanel | Replaces the whole left panel; called once with a live object (SourcePanelProps). Read its fields in the JSX: destructuring takes only the values of the first render. | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => JSX.Element"}>Type</ApiType> | - |
+| showPath | `treeList` only: whether the selected items on the right show their path from the root. | `boolean` | `false` |
+| tabIndex | Set on the search box, including a value injected by a wrapping Tooltip; the root element is not a focus target. | `number \| string` | - |
+| treeProps | `treeList` only: props passed to the Tree on the left, overriding the defaults `multiple`, `disableStrictly`, `leafOnly`, `filterTreeNode`, `defaultExpandAll` and `searchRender` (`false`). `value`, `treeData`, `keyMaps`, `treeDataSimpleJson`, `onChangeWithObject`, `onChange` and `ref` belong to Transfer and are ignored. | <ApiType detail={"Omit\u003cTreeProps, 'value' \u007c 'ref' \u007c 'onChange' \u007c 'keyMaps' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'onChangeWithObject'>"}>Type</ApiType> | - |
+| type | Transfer type: `list`, `groupList` or `treeList`. | `Type` | `"list"` |
+| value | Array of the values of the selected items. Passing it makes the component controlled and its order is the order on the right; `undefined` returns to uncontrolled. | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | - |
+| virtualize | Virtualizes the selected list on the right, only with the default right panel and `draggable` off. A numeric `height` applies in pixels; any other value is measured from the remaining panel height. `itemSize` is the height of each row. | `VirtualizeProps` | - |
+
+**Methods**
+
+| Method | Description                                                                                                  | Type                                                       |
+| ------ | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| search | Searches as if the value were typed into the search box, and puts the value there; `onSearch` is not called. | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

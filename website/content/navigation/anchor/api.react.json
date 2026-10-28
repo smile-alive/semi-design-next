@@ -1,0 +1,120 @@
+{
+    "anchor": {
+        "source": "packages/semi-ui-react/src/anchor/index.tsx",
+        "props": {
+            "aria-label": {
+                "zh-CN": "根导航元素的可访问名称，未设置时使用语言包中的文案。",
+                "en-US": "Accessible name of the root navigation element. The locale text is used when it is not set."
+            },
+            "autoCollapse": {
+                "zh-CN": "是否动态展示下一级锚点：只展开当前高亮链接所在的分支。",
+                "en-US": "Whether child links are shown dynamically: only the branch that holds the highlighted link is expanded."
+            },
+            "children": {
+                "zh-CN": "`Anchor.Link` 元素，嵌套的 `Anchor.Link` 表示下一级锚点。",
+                "en-US": "`Anchor.Link` elements. Nested `Anchor.Link` elements form the next level of links."
+            },
+            "className": {
+                "zh-CN": "根导航元素的类名。",
+                "en-US": "Class name of the root navigation element."
+            },
+            "defaultAnchor": {
+                "zh-CN": "挂载后默认高亮并滚动到该锚点，不触发 onChange 与 onClick。",
+                "en-US": "Link highlighted and scrolled to after mounting. It does not call onChange or onClick."
+            },
+            "getContainer": {
+                "zh-CN": "指定滚动的容器；返回 null 时回落到 window。",
+                "en-US": "Returns the scrolling container. Returning null falls back to window."
+            },
+            "maxHeight": {
+                "zh-CN": "组件的 max-height，超出时显示滚动条。该属性覆盖 style 中的 max-height。",
+                "en-US": "max-height of the component, with a scrollbar when exceeded. This prop overrides max-height in style."
+            },
+            "maxWidth": {
+                "zh-CN": "组件的 max-width，超出时显示省略。该属性覆盖 style 中的 max-width。",
+                "en-US": "max-width of the component, truncating when exceeded. This prop overrides max-width in style."
+            },
+            "offsetTop": {
+                "zh-CN": "滚动内容距离容器顶部达到指定偏移量时触发当前链接切换。",
+                "en-US": "Offset from the top of the container at which the current link switches while content scrolls."
+            },
+            "onChange": {
+                "zh-CN": "高亮的锚点改变时调用，参数为当前锚点与上一个锚点。",
+                "en-US": "Called when the highlighted link changes, with the current and the previous link."
+            },
+            "onClick": {
+                "zh-CN": "点击锚点或在锚点上按 Enter 时调用，参数为原生 MouseEvent 或 KeyboardEvent 与当前锚点。",
+                "en-US": "Called when a link is clicked or activated with Enter, with the native MouseEvent or KeyboardEvent and the current link."
+            },
+            "position": {
+                "zh-CN": "showTooltip 开启时 Tooltip 的显示位置，可选值同 Tooltip 的 position。",
+                "en-US": "Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position."
+            },
+            "railTheme": {
+                "zh-CN": "滑轨主题，可选 `primary`、`tertiary`、`muted`。",
+                "en-US": "Theme of the rail: `primary`, `tertiary` or `muted`."
+            },
+            "ref": {
+                "zh-CN": "根导航元素（`role=\"navigation\"`）的引用。",
+                "en-US": "Reference to the root navigation element (`role=\"navigation\"`)."
+            },
+            "scrollIntoViewOptions": {
+                "zh-CN": "点击锚点滚动时传给 scroll-into-view-if-needed 的选项，与 scrollMotion、targetOffset 合并使用；未传 block 时为 `start`，仅传入 inline 时才同时调整横向位置。",
+                "en-US": "Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. Without block the value is `start`; the horizontal position changes only when inline is passed."
+            },
+            "scrollMotion": {
+                "zh-CN": "点击锚点滚动时是否带动画（behavior 为 smooth）。",
+                "en-US": "Whether scrolling after a click is animated (behavior is smooth)."
+            },
+            "showTooltip": {
+                "zh-CN": "文字缩略时是否显示浮层及相关配置：type 为浮层组件，支持 `tooltip`（默认）和 `popover`，opts 为传给浮层组件的属性。",
+                "en-US": "Whether a popup shows when the text is truncated, with its options: type is the popup component, `tooltip` (default) or `popover`, and opts are passed to it."
+            },
+            "size": {
+                "zh-CN": "锚点尺寸，可选 `small`、`default`。",
+                "en-US": "Size of the anchor: `small` or `default`."
+            },
+            "style": {
+                "zh-CN": "根导航元素的样式。",
+                "en-US": "Style of the root navigation element."
+            },
+            "targetOffset": {
+                "zh-CN": "锚点滚动结束时，目标距离容器顶部的偏移量。",
+                "en-US": "Distance between the target and the top of the container when scrolling ends."
+            }
+        }
+    },
+    "anchor-link": {
+        "source": "packages/semi-ui-react/src/anchor/link.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "下一级的 `Anchor.Link`，仅在链接展开时渲染。",
+                "en-US": "Child `Anchor.Link` elements, rendered only while the link is expanded."
+            },
+            "className": {
+                "zh-CN": "链接项的类名，落在最外层的 div 上。",
+                "en-US": "Class name of the link item, on its outermost div."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用，禁用后不响应点击跳转。",
+                "en-US": "Whether the link is disabled and ignores clicks."
+            },
+            "href": {
+                "zh-CN": "跳转的目标，以 # 开头时按元素 id 查找，其余按 CSS 选择器查找。",
+                "en-US": "Target of the link. A value starting with # is looked up by element id, anything else as a CSS selector."
+            },
+            "ref": {
+                "zh-CN": "链接项（`role=\"listitem\"`）最外层 div 的引用。",
+                "en-US": "Reference to the outermost div of the link item (`role=\"listitem\"`)."
+            },
+            "style": {
+                "zh-CN": "链接项的样式，落在最外层的 div 上。",
+                "en-US": "Style of the link item, on its outermost div."
+            },
+            "title": {
+                "zh-CN": "链接的文字内容，可以是节点；未开启 showTooltip 且为非空字符串时同时作为原生 title。",
+                "en-US": "Text of the link, which can be a node. When showTooltip is off and the value is a non-empty string, it is also the native title."
+            }
+        }
+    }
+}

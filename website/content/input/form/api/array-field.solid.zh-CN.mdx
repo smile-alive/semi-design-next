@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                                                        | 类型                                                                               | 默认值 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------ |
+| children  | 每一行的渲染函数，必填，只调用一次，参数为 `{ arrayFields, add, addWithInitValue }`，需在返回的 JSX 中读取 `arrayFields` 才会随行增删更新。 | <ApiType detail={"(props: ArrayFieldChildrenProps) => JSX.Element"}>Type</ApiType> | -      |
+| field     | 数组在 formState.values 中的路径，必填。例如各行字段为 a[0].name、a[1].name 时应传 a。                                                      | `string`                                                                           | -      |
+| initValue | 数组的初始值，必须是数组；与 Form 的 initValues 同时配置时优先。                                                                            | `any[]`                                                                            | -      |

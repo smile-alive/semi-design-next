@@ -1,0 +1,28 @@
+**Props**
+
+| Property  | Description                                                     | Type                 | Default             |
+| --------- | --------------------------------------------------------------- | -------------------- | ------------------- |
+| size      | Icon size; inherit uses the surrounding font size.              | `IconSize`           | `"default"`         |
+| spin      | Enables the spinning animation.                                 | `boolean`            | `false`             |
+| rotate    | Rotation angle in integer degrees.                              | `number`             | `undefined`         |
+| prefixCls | CSS class prefix, initially semi; build plugins can replace it. | `string`             | `BASE_CLASS_PREFIX` |
+| type      | Adds an icon type class name.                                   | `string`             | `undefined`         |
+| fill      | Fill colors for bicolor and multicolor icons.                   | `string \| string[]` | `undefined`         |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                       | Scope parameters |
+| ------- | ------------------------------------------------------------------------------------------------- | ---------------- |
+| default | Custom SVG content, with no scope parameters. The metadata tool infers the parameter type as any. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

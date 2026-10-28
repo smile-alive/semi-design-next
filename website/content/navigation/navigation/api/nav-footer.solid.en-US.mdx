@@ -1,0 +1,8 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                                                       | Type                                                                    | Default |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------- |
+| collapseButton | Whether to show the collapse button. `true` shows the built-in button; a node replaces it. Applies only when `mode` is `vertical` and the footer has no children. | `JSX.Element`                                                           | -       |
+| collapseText   | Text of the built-in collapse button, given the collapsed state. A text-only result also names the icon-only button.                                              | <ApiType detail={"(collapsed?: boolean) => JSX.Element"}>Type</ApiType> | -       |

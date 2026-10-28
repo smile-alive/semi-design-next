@@ -1,0 +1,53 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| mode | 展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 detailContent 插槽自行渲染。 | `string` | `semiDefault("Sidebar", "mode", strings.MODE.MAIN)` |
+| activeKey | 主视图中当前选中的选项 key，配合 v-model:activeKey 使用。 | `string` | `semiGlobalDefault("Sidebar", "activeKey")` |
+| options | 主视图顶部的选项按钮，每项包含 name 与 key；图标使用 optionIcon 插槽。 | `SideBarOption[]` | `semiGlobalDefault("Sidebar", "options")` |
+| detailContent | code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable 与 imgUploadProps 不生效，由 fileEditable 与 imgUploadProps 决定。 | `SideBarDetailContent` | `semiGlobalDefault("Sidebar", "detailContent")` |
+| fileEditable | file 模式的富文本是否可编辑。 | `boolean` | `semiDefault("Sidebar", "fileEditable", true)` |
+| imgUploadProps | file 模式的图片上传配置，编辑器创建时读取，之后变化不生效。 | `ImageUploadNodeOptions` | `semiGlobalDefault("Sidebar", "imgUploadProps")` |
+| visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `semiGlobalDefault("Sidebar", "visible")` |
+| title | 主视图的纯文本标题；传入 title 插槽时以插槽为准。详情视图使用内置的详情头部。 | `string` | `semiGlobalDefault("Sidebar", "title")` |
+| motion | 显示与隐藏时是否使用展开动画。 | `boolean` | `semiGlobalDefault("Sidebar", "motion")` |
+| resizable | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean` | `semiGlobalDefault("Sidebar", "resizable")` |
+| minWidth | 可调整的最小宽度，仅在 resizable 为 true 时生效。 | `string \| number` | `semiGlobalDefault("Sidebar", "minWidth")` |
+| maxWidth | 可调整的最大宽度，仅在 resizable 为 true 时生效。 | `string \| number` | `semiGlobalDefault("Sidebar", "maxWidth")` |
+| defaultSize | 初始宽高，仅在 resizable 为 true 时生效。 | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "defaultSize")` |
+| showClose | 是否显示头部的关闭按钮。 | `boolean` | `semiGlobalDefault("Sidebar", "showClose")` |
+| closeOnEsc | 按下 Esc 键时是否触发 cancel。 | `boolean` | `semiGlobalDefault("Sidebar", "closeOnEsc")` |
+
+**Events**
+
+| 事件               | 说明                                                                             | 回调参数                                                 |
+| ------------------ | -------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| update:activeKey   | 点击选项时先于 activeOptionChange 触发，供 v-model:activeKey 回写。              | `[activeKey: string]`                                    |
+| activeOptionChange | 点击选项时触发，参数为点击事件和该选项的 key。                                   | `[event: MouseEvent, activeKey: string]`                 |
+| backWard           | 点击详情头部的返回按钮时触发，参数为点击事件和 main。                            | `[event: MouseEvent, mode: string]`                      |
+| detailContentCopy  | 复制按钮写入剪贴板后触发，参数为点击事件、复制的内容和是否成功。                 | `[event: MouseEvent, content: string, success: boolean]` |
+| fileContentChange  | file 模式下编辑后触发，参数为 HTML 字符串。                                      | `[content: string]`                                      |
+| update:visible     | 关闭按钮或 Esc 触发取消时先于 cancel 触发，值为 false，供 v-model:visible 回写。 | `[visible: false]`                                       |
+| cancel             | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。                          | `[event: MouseEvent \| KeyboardEvent]`                   |
+| afterVisibleChange | 显示或隐藏动画结束后触发，参数为当前是否可见。                                   | `[visible: boolean]`                                     |
+
+**Slots**
+
+| 插槽          | 说明                                                                                         | 作用域参数                        |
+| ------------- | -------------------------------------------------------------------------------------------- | --------------------------------- |
+| title         | 主视图标题，优先于 title 属性。                                                              | `any`                             |
+| optionIcon    | 内置选项按钮的图标，作用域参数为 item 与 index。                                             | `SideBarOptionSlotProps`          |
+| optionItem    | 替换整个选项按钮，作用域参数为 item、index、active 与 onClick（选中该选项）。                | `SideBarOptionItemSlotProps`      |
+| mainContent   | 主视图中选项下方的内容，作用域参数为 activeKey。                                             | `SideBarMainContentSlotProps`     |
+| detailHeader  | 详情模式的头部，作用域参数为 mode 与 detailContent；内容为空时回退到内置头部。               | `SideBarDetailHeaderSlotProps`    |
+| detailContent | 详情模式的内容，作用域参数为 mode；内容为空时回退到内置的代码或富文本详情。                  | `SideBarDetailContentSlotProps`   |
+| customRender  | 转发给内置代码详情中 JsonViewer 的 customRender 插槽，用于渲染 customRenderRule 匹配的内容。 | `JsonViewerCustomRenderSlotProps` |
+| searchButton  | 转发给内置代码详情中 JsonViewer 的 searchButton 插槽，替换其搜索按钮。                       | `JsonViewerSearchButtonSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明                                                | 类型                     |
+| ---- | --------------------------------------------------- | ------------------------ |
+| root | 容器根元素 .semi-sidebar-container；隐藏时为 null。 | `HTMLDivElement \| null` |

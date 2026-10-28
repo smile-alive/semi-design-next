@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| bodyStyle | 导航项列表的自定义样式。 | `React.CSSProperties` | - |
+| children | 导航的子元素。`Nav.Item` 与 `Nav.Sub` 渲染进列表，`Nav.Header` 与 `Nav.Footer` 分别放进头部与底部，其他节点包在 `li` 中渲染。 | `React.ReactNode` | - |
+| className | 最外层 `nav` 元素的类名。 | `string` | - |
+| defaultIsCollapsed | 默认是否处于收起状态，仅 `mode` 为 `vertical` 时有效。默认为 `false`。 | `boolean` | - |
+| defaultOpenKeys | 初始展开的子导航 `itemKey` 数组，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。未传入时，竖向模式下会展开初始选中项所在的子导航。默认为 `[]`。 | `(string \| number)[]` | - |
+| defaultSelectedKeys | 初始选中的导航项 `itemKey` 数组。默认为 `[]`。 | `(string \| number)[]` | - |
+| expandIcon | `items` 生成的子导航的展开收起箭头图标。`Nav.Sub` 子元素自己的 `expandIcon` 优先。 | `React.ReactNode` | - |
+| footer | 底部区域：配置对象（`collapseButton`、`collapseText`，以及 `className`、`style` 等属性）、节点或字符串。也可以使用 `Nav.Footer` 子元素。 | `React.ReactNode \| NavFooterProps` | - |
+| header | 头部区域：配置对象（`text`、`logo`、`link`、`linkOptions`，以及 `className`、`style` 等属性）、节点或字符串。也可以使用 `Nav.Header` 子元素。 | `React.ReactNode \| NavHeaderProps` | - |
+| isCollapsed | 是否处于收起状态的受控值，仅 `mode` 为 `vertical` 时有效。配合 `onCollapseChange` 使用。 | `boolean` | - |
+| items | 导航项数据，带 `items` 的项渲染为子导航，字符串项同时作为 `text` 和 `itemKey`。配置对象中只有 `Nav.Item` 与 `Nav.Sub` 的属性、`className`、`style`、事件回调，以及 `data-*` 与 `aria-*` 会传给导航项，其余字段（如 `path`）会被忽略。 | `NavItems` | - |
+| limitIndent | 是否限制缩进。设为 `false` 后多级导航按 `level` 缩进，仅 `mode` 为 `vertical` 时生效，水平模式始终限制缩进。 | `boolean` | `true` |
+| mode | 导航方向，可选 `vertical` 或 `horizontal`。 | `Mode` | `"vertical"` |
+| multiple | 未使用，设置后不产生效果。 | `boolean` | - |
+| onClick | 点击任意导航项时触发。数据含 `itemKey`、`text`，点击子导航标题时还含 `openKeys` 与 `isOpen`；`domEvent` 为原生事件。 | <ApiType detail={"(data: { itemKey?: ItemKey; text?: React.ReactNode; openKeys?: ItemKey[]; domEvent?: MouseEvent \u007c KeyboardEvent; isOpen?: boolean }) => void"}>Type</ApiType> | - |
+| onCollapseChange | 收起状态变化时的回调，参数为变化后的收起状态。 | <ApiType detail={"(isCollapse: boolean) => void"}>Type</ApiType> | - |
+| onDeselect | 未使用，传入的回调不会被调用。 | <ApiType detail={"(data?: any) => void"}>Type</ApiType> | - |
+| onOpenChange | 切换子导航展开状态时触发。数据含 `itemKey`、`openKeys`、`isOpen`，`domEvent` 为原生事件；悬停打开浮层时没有 `domEvent`。 | <ApiType detail={"(data: { itemKey?: ItemKey; openKeys?: ItemKey[]; domEvent?: MouseEvent \u007c KeyboardEvent; isOpen?: boolean }) => void"}>Type</ApiType> | - |
+| onSelect | 第一次选中某个可选中导航项时触发。数据含 `itemKey`、`selectedKeys`、`selectedItems`，`domEvent` 为原生事件。 | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
+| openKeys | 展开的子导航 `itemKey` 数组的受控值，配合 `onOpenChange` 使用，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。 | `(string \| number)[]` | - |
+| ref | 最外层 `nav` 元素的引用。 | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
+| renderWrapper | 包裹每个导航项的渲染函数，入参为 `{ itemElement, isSubNav, isInSubNav, props }`，返回值放进列表。`itemElement` 只能渲染一次。 | <ApiType detail={"({ itemElement, isSubNav, isInSubNav, props }: { itemElement: ReactElement\u003cany>; isInSubNav: boolean; isSubNav: boolean; props: NavItemProps \u007c SubNavProps }) => ReactNode"}>Type</ApiType> | - |
+| selectedKeys | 选中的导航项 `itemKey` 数组的受控值，配合 `onSelect` 使用。 | `(string \| number)[]` | - |
+| style | 最外层 `nav` 元素的样式。 | `CSSProperties` | - |
+| subDropdownProps | `items` 生成的子导航在水平模式或收起状态下弹层 Dropdown 的参数。子导航自己的 `dropdownProps` 或 `subDropdownProps` 优先。 | `DropdownProps` | - |
+| subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒。收起或水平模式下有效。 | `number` | `100` |
+| subNavMotion | 子导航展开收起时是否有动画。 | `boolean` | `true` |
+| subNavOpenDelay | 子导航浮层显示的延迟，单位为毫秒。收起或水平模式下有效。 | `number` | `0` |
+| toggleIconPosition | 带有子导航项的父级导航项的箭头位置，可选 `left` 或 `right`。 | `'left' \| 'right'` | `"right"` |
+| tooltipHideDelay | 收起状态下 Tooltip 隐藏的延迟，单位为毫秒。 | `number` | `100` |
+| tooltipShowDelay | 收起状态下 Tooltip 显示的延迟，单位为毫秒。 | `number` | `0` |

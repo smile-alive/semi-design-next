@@ -1,0 +1,27 @@
+**Props**
+
+| 属性         | 说明                                                                                           | 类型               | 默认值                                            |
+| ------------ | ---------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------- |
+| audioUrl     | 音频地址，可以是字符串、AudioInfo 对象，或由它们组成的数组；传入数组时显示上一首、下一首按钮。 | `AudioUrl`         | `undefined`                                       |
+| autoPlay     | 是否自动播放。                                                                                 | `boolean`          | `semiDefault("AudioPlayer", "autoPlay", false)`   |
+| showToolbar  | 是否显示工具栏。                                                                               | `boolean`          | `semiDefault("AudioPlayer", "showToolbar", true)` |
+| skipDuration | 后退、前进按钮每次跳转的秒数。                                                                 | `number`           | `semiDefault("AudioPlayer", "skipDuration", 10)`  |
+| theme        | 播放器主题，可选 dark 或 light。                                                               | `AudioPlayerTheme` | `semiDefault("AudioPlayer", "theme", "dark")`     |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

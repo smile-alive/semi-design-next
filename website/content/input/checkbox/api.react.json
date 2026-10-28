@@ -1,0 +1,166 @@
+{
+    "checkbox": {
+        "source": "packages/semi-ui-react/src/checkbox/checkbox.tsx",
+        "props": {
+            "addonId": {
+                "zh-CN": "文案节点的 id，`aria-labelledby` 指向它；未设置时随机生成。",
+                "en-US": "Id of the addon node, which `aria-labelledby` points to. Generated when omitted."
+            },
+            "autoFocus": {
+                "zh-CN": "挂载时是否自动获取焦点，作用于原生 input。",
+                "en-US": "Whether the native input receives focus on mount."
+            },
+            "checked": {
+                "zh-CN": "是否选中，传入时为受控使用；在设置了 `value` 的 CheckboxGroup 中无效。",
+                "en-US": "Whether the checkbox is checked. Passing it makes the checkbox controlled. Ignored inside a CheckboxGroup that sets `value`."
+            },
+            "children": {
+                "zh-CN": "复选框的文案，可传入任意 `ReactNode`。",
+                "en-US": "Label of the checkbox, any `ReactNode`."
+            },
+            "className": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "defaultChecked": {
+                "zh-CN": "初始是否选中，非受控使用；在设置了 `value` 的 CheckboxGroup 中无效。",
+                "en-US": "Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup that sets `value`."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用；在设置了 `value` 的 CheckboxGroup 中，组禁用时该项同样禁用。",
+                "en-US": "Whether the checkbox is disabled. Inside a CheckboxGroup that sets `value`, a disabled group disables it too."
+            },
+            "extra": {
+                "zh-CN": "辅助文本，可传入任意 `ReactNode`，`aria-describedby` 指向它。",
+                "en-US": "Supplementary text, any `ReactNode`, which `aria-describedby` points to."
+            },
+            "extraId": {
+                "zh-CN": "辅助文本节点的 id，`aria-describedby` 指向它；未设置时随机生成。",
+                "en-US": "Id of the extra node, which `aria-describedby` points to. Generated when omitted."
+            },
+            "id": {
+                "zh-CN": "原生 input 的 id。",
+                "en-US": "Id of the native input."
+            },
+            "indeterminate": {
+                "zh-CN": "半选状态，只影响外观与原生 input 的 `indeterminate`，不改变选中值。",
+                "en-US": "Indeterminate state. It only affects the appearance and the native input's `indeterminate` flag, never the checked value."
+            },
+            "name": {
+                "zh-CN": "原生 input 的 `name`；在设置了 `value` 的 CheckboxGroup 中以组的 `name` 为准。",
+                "en-US": "The `name` of the native input. Inside a CheckboxGroup that sets `value`, the group's `name` applies."
+            },
+            "onChange": {
+                "zh-CN": "选中状态变化时调用，`e.target` 为组件的属性加上 `checked`，`checked` 为变化后的选中状态。",
+                "en-US": "Called when the checked state changes. `e.target` holds the component's props plus `checked`, the new checked state."
+            },
+            "onMouseEnter": {
+                "zh-CN": "鼠标移入时调用。",
+                "en-US": "Called when the pointer enters the checkbox."
+            },
+            "onMouseLeave": {
+                "zh-CN": "鼠标移出时调用。",
+                "en-US": "Called when the pointer leaves the checkbox."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 `focus()` 方法。",
+                "en-US": "Whether focusing prevents the browser from scrolling the element into view. Applies to the `focus()` method."
+            },
+            "prefixCls": {
+                "zh-CN": "CSS 类名前缀。",
+                "en-US": "CSS class name prefix."
+            },
+            "ref": {
+                "zh-CN": "句柄，提供 `focus()` 与 `blur()` 方法。",
+                "en-US": "Handle that provides the `focus()` and `blur()` methods."
+            },
+            "style": {
+                "zh-CN": "根元素 `span` 的样式。",
+                "en-US": "Style of the root `span` element."
+            },
+            "tabIndex": {
+                "zh-CN": "原生 input 的 `tabIndex`，即焦点所在的元素。",
+                "en-US": "`tabIndex` of the native input, which receives focus."
+            },
+            "type": {
+                "zh-CN": "样式类型，可选 `default`、`card` 或 `pureCard`；在设置了 `value` 的 CheckboxGroup 中以组的 `type` 为准。",
+                "en-US": "Style type: `default`, `card` or `pureCard`. Inside a CheckboxGroup that sets `value`, the group's `type` applies."
+            },
+            "value": {
+                "zh-CN": "该复选框在 CheckboxGroup 中代表的值；未设置时不属于任何分组。",
+                "en-US": "The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group."
+            }
+        },
+        "methods": {
+            "blur": {
+                "zh-CN": "移除焦点。",
+                "en-US": "Removes focus."
+            },
+            "focus": {
+                "zh-CN": "获取焦点，遵循 `preventScroll`。",
+                "en-US": "Moves focus to the checkbox, following `preventScroll`."
+            }
+        }
+    },
+    "checkbox-group": {
+        "source": "packages/semi-ui-react/src/checkbox/checkbox-group.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "组内的 Checkbox；未设置 `options` 时生效。",
+                "en-US": "Checkboxes inside the group. Used when `options` is not set."
+            },
+            "className": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控时组内默认选中的值，与 Checkbox 的 `value` 匹配。",
+                "en-US": "Values selected by default when uncontrolled, matched against each Checkbox's `value`."
+            },
+            "direction": {
+                "zh-CN": "组内布局方向，可选 `horizontal` 或 `vertical`。",
+                "en-US": "Layout direction inside the group: `horizontal` or `vertical`."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用整组。",
+                "en-US": "Whether the whole group is disabled."
+            },
+            "id": {
+                "zh-CN": "根元素的 id。",
+                "en-US": "Id of the root element."
+            },
+            "name": {
+                "zh-CN": "组内所有原生 input 的 `name`；未设置时每组生成唯一值。",
+                "en-US": "The `name` of every native input in the group. A unique value is generated per group when omitted."
+            },
+            "onChange": {
+                "zh-CN": "选中的值变化时调用，参数为新的选中值数组。",
+                "en-US": "Called when the selected values change, with the new array of values."
+            },
+            "options": {
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, style, className, onChange }`；`label` 与 `extra` 可传入 `ReactNode`。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, style, className, onChange }`; `label` and `extra` accept `ReactNode`."
+            },
+            "prefixCls": {
+                "zh-CN": "CSS 类名前缀。",
+                "en-US": "CSS class name prefix."
+            },
+            "ref": {
+                "zh-CN": "根元素（`role=\"group\"`）的引用。",
+                "en-US": "Reference to the root element (`role=\"group\"`)."
+            },
+            "style": {
+                "zh-CN": "根元素的样式。",
+                "en-US": "Style of the root element."
+            },
+            "type": {
+                "zh-CN": "组内所有 Checkbox 的样式类型，可选 `default`、`card` 或 `pureCard`。",
+                "en-US": "Style type of every Checkbox in the group: `default`, `card` or `pureCard`."
+            },
+            "value": {
+                "zh-CN": "选中的值，传入时为受控使用。",
+                "en-US": "Selected values. Passing it makes the group controlled."
+            }
+        }
+    }
+}

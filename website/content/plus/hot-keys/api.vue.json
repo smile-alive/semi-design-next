@@ -1,0 +1,36 @@
+{
+    "hot-keys": {
+        "source": "packages/semi-ui-vue/src/hot-keys/hot-keys.vue",
+        "props": {
+            "hotKeys": {
+                "zh-CN": "快捷键组合：任意个修饰键加一个普通键，取值参考 KeyboardEvent.key。组合不合法时抛错，更新后同样校验。",
+                "en-US": "The key combination: any number of modifiers plus one other key, as KeyboardEvent.key values. An invalid combination throws, including after an update."
+            },
+            "content": {
+                "zh-CN": "显示的按键文字，缺省显示 hotKeys。",
+                "en-US": "Key labels to show. Defaults to hotKeys."
+            },
+            "preventDefault": {
+                "zh-CN": "是否阻止快捷键的默认行为。",
+                "en-US": "Whether the default behavior of the key combination is prevented."
+            },
+            "getListenerTarget": {
+                "zh-CN": "返回监听 keydown 的元素；缺省或返回 null、undefined 时使用 document.body。",
+                "en-US": "Returns the element that listens for keydown. When omitted, or when it returns null or undefined, document.body is used."
+            }
+        },
+        "events": {
+            "hotKey": {
+                "zh-CN": "按下完整的快捷键组合时触发，参数为原生 KeyboardEvent。",
+                "en-US": "Emitted when the full key combination is pressed, with the native KeyboardEvent."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "替换按键提示的渲染。传入空插槽时不渲染任何元素，快捷键仍然有效。",
+                "en-US": "Replaces the key hint. An empty slot renders nothing and the hot keys stay active."
+            }
+        },
+        "exposed": {}
+    }
+}

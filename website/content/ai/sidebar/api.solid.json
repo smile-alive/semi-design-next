@@ -1,0 +1,516 @@
+{
+    "container": {
+        "source": "packages/semi-ai-solid/src/sidebar/container/container.tsx",
+        "props": {
+            "afterVisibleChange": {
+                "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
+                "en-US": "Called after a visibility change has completed, with whether the container is visible; with motion it runs when the animation ends."
+            },
+            "children": {
+                "zh-CN": "容器的内容。",
+                "en-US": "Content of the container."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否触发 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "containerRef": {
+                "zh-CN": "接收 `.semi-sidebar-container` 元素，作用同 `ref`。",
+                "en-US": "Receives the `.semi-sidebar-container` element, as `ref` does."
+            },
+            "defaultSize": {
+                "zh-CN": "初始尺寸（宽度与高度），仅在 resizable 为 true 时生效。",
+                "en-US": "Initial size (width and height); applies only when resizable is true."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画。",
+                "en-US": "Whether showing and hiding use the expand animation."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "renderHeader": {
+                "zh-CN": "自定义整个头部；返回内容为空时使用内置头部。",
+                "en-US": "Renders the whole header; the built-in header is used when it returns no content."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮。",
+                "en-US": "Whether the header shows the close button."
+            },
+            "style": {
+                "zh-CN": "容器元素的内联样式，可传样式对象或样式字符串。",
+                "en-US": "Inline style of the container element, a style object or a string."
+            },
+            "title": {
+                "zh-CN": "头部标题，可传任意内容。",
+                "en-US": "Title in the header; any content."
+            },
+            "visible": {
+                "zh-CN": "是否显示。",
+                "en-US": "Whether the container is shown."
+            }
+        }
+    },
+    "mcp-configure": {
+        "source": "packages/semi-ai-solid/src/sidebar/mcp-configure/mcp-configure.tsx",
+        "props": {
+            "afterVisibleChange": {
+                "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
+                "en-US": "Called after a visibility change has completed, with whether the container is visible; with motion it runs when the animation ends."
+            },
+            "children": {
+                "zh-CN": "不生效，内容由 MCP 工具列表渲染。",
+                "en-US": "Has no effect; the content is the MCP tool list."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否触发 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "containerRef": {
+                "zh-CN": "接收 `.semi-sidebar-container` 元素，作用同 `ref`。",
+                "en-US": "Receives the `.semi-sidebar-container` element, as `ref` does."
+            },
+            "customOptions": {
+                "zh-CN": "自定义 MCP 工具列表，在自定义页签中展示。",
+                "en-US": "Custom MCP tools, listed on the custom tab."
+            },
+            "defaultSize": {
+                "zh-CN": "初始尺寸（宽度与高度），仅在 resizable 为 true 时生效。",
+                "en-US": "Initial size (width and height); applies only when resizable is true."
+            },
+            "filter": {
+                "zh-CN": "自定义搜索过滤，参数为转为小写的输入值和选项；默认按 label 与 desc 匹配。",
+                "en-US": "Custom search filter, called with the lower-cased input and an option; the label and desc are matched by default."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效，默认 150。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true, 150 by default."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画，默认 true。",
+                "en-US": "Whether showing and hiding use the expand animation, true by default."
+            },
+            "onAddClick": {
+                "zh-CN": "点击自定义页签中的新增按钮时触发。",
+                "en-US": "Called when the add button on the custom tab is clicked."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "onConfigureClick": {
+                "zh-CN": "点击内置 MCP 工具的配置按钮时触发，参数为事件和该选项。",
+                "en-US": "Called when the configure button of a built-in tool is clicked, with the event and the option."
+            },
+            "onEditClick": {
+                "zh-CN": "点击自定义 MCP 工具的编辑按钮时触发，参数为事件和该选项。",
+                "en-US": "Called when the edit button of a custom tool is clicked, with the event and the option."
+            },
+            "onSearch": {
+                "zh-CN": "搜索时触发，参数为输入值和是否在自定义列表中搜索。",
+                "en-US": "Called on search, with the input value and whether the custom list is searched."
+            },
+            "onStatusChange": {
+                "zh-CN": "切换启用或关闭时触发，参数为切换后的完整选项列表和是否为自定义列表；需自行把新列表写回 options 或 customOptions。",
+                "en-US": "Called when a tool is enabled or disabled, with the whole updated list and whether it is the custom list; write the new list back to options or customOptions yourself."
+            },
+            "options": {
+                "zh-CN": "内置 MCP 工具列表；每项的 value 必填且唯一。",
+                "en-US": "Built-in MCP tools; each item needs a unique value."
+            },
+            "placeholder": {
+                "zh-CN": "搜索框的占位文字，默认使用语言包文案。",
+                "en-US": "Placeholder of the search input, the locale text by default."
+            },
+            "renderHeader": {
+                "zh-CN": "自定义整个头部；返回内容为空时使用内置头部。",
+                "en-US": "Renders the whole header; the built-in header is used when it returns no content."
+            },
+            "renderDesc": {
+                "zh-CN": "渲染工具项的描述，参数为 `{ option, custom }`；不传时显示选项的 desc 文本。",
+                "en-US": "Renders the description of a tool row, called with `{ option, custom }`; without it the option's desc text is shown."
+            },
+            "renderIcon": {
+                "zh-CN": "渲染工具项的图标，参数为 `{ option, custom }`；不传时选项的 icon 作为图片地址渲染。",
+                "en-US": "Renders the icon of a tool row, called with `{ option, custom }`; without it the option's icon is rendered as an image URL."
+            },
+            "renderItem": {
+                "zh-CN": "自定义整行工具项，参数为 `{ option, custom }`。",
+                "en-US": "Renders a whole tool row, called with `{ option, custom }`."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整，默认 true；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging, true by default; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮，默认 true。",
+                "en-US": "Whether the header shows the close button, true by default."
+            },
+            "style": {
+                "zh-CN": "容器元素的内联样式，可传样式对象或样式字符串。",
+                "en-US": "Inline style of the container element, a style object or a string."
+            },
+            "title": {
+                "zh-CN": "头部标题，默认使用语言包中的 MCP 配置。",
+                "en-US": "Title in the header, the locale's MCP configure text by default."
+            },
+            "visible": {
+                "zh-CN": "是否显示。",
+                "en-US": "Whether the container is shown."
+            }
+        }
+    },
+    "annotation": {
+        "source": "packages/semi-ai-solid/src/sidebar/annotation/annotation.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的分组 key，支持单个或多个。",
+                "en-US": "Keys of the expanded groups, one or several."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
+                "en-US": "Called after a visibility change has completed, with whether the container is visible; with motion it runs when the animation ends."
+            },
+            "children": {
+                "zh-CN": "不生效，内容由参考来源列表渲染。",
+                "en-US": "Has no effect; the content is the reference list."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否触发 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "containerRef": {
+                "zh-CN": "接收 `.semi-sidebar-container` 元素，作用同 `ref`。",
+                "en-US": "Receives the `.semi-sidebar-container` element, as `ref` does."
+            },
+            "defaultSize": {
+                "zh-CN": "初始尺寸（宽度与高度），仅在 resizable 为 true 时生效。",
+                "en-US": "Initial size (width and height); applies only when resizable is true."
+            },
+            "info": {
+                "zh-CN": "参考来源分组列表，每组包含 header、key 与 annotations。",
+                "en-US": "Groups of references; each has a header, a key and its annotations."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效，默认 150。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true, 150 by default."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画，默认 true。",
+                "en-US": "Whether showing and hiding use the expand animation, true by default."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "onChange": {
+                "zh-CN": "展开的分组变化时触发，参数为当前展开的 key。",
+                "en-US": "Called when the expanded groups change, with the expanded keys."
+            },
+            "onClick": {
+                "zh-CN": "点击某条参考来源时触发，参数为事件和该条目。",
+                "en-US": "Called when a reference is clicked, with the event and the item."
+            },
+            "renderHeader": {
+                "zh-CN": "自定义整个头部；返回内容为空时使用内置头部。",
+                "en-US": "Renders the whole header; the built-in header is used when it returns no content."
+            },
+            "renderInfoHeader": {
+                "zh-CN": "渲染分组标题图标后的内容，参数为该分组；不传时显示分组的 header 文本。即 AnnotationContent 的 renderHeader，与容器的 renderHeader 区分。",
+                "en-US": "Renders a group header after its icon, called with the group; without it the group's header text is shown. AnnotationContent's renderHeader, renamed beside the container's renderHeader."
+            },
+            "renderItem": {
+                "zh-CN": "自定义参考来源条目的渲染，参数为该条目。",
+                "en-US": "Renders a reference item, called with the item."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整，默认 true；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging, true by default; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮，默认 true。",
+                "en-US": "Whether the header shows the close button, true by default."
+            },
+            "style": {
+                "zh-CN": "容器元素的内联样式，可传样式对象或样式字符串。",
+                "en-US": "Inline style of the container element, a style object or a string."
+            },
+            "title": {
+                "zh-CN": "头部标题，默认使用语言包中的参考来源。",
+                "en-US": "Title in the header, the locale's references text by default."
+            },
+            "visible": {
+                "zh-CN": "是否显示。",
+                "en-US": "Whether the container is shown."
+            }
+        }
+    },
+    "annotation-content": {
+        "source": "packages/semi-ai-solid/src/sidebar/annotation/content.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的分组 key，支持单个或多个。",
+                "en-US": "Keys of the expanded groups, one or several."
+            },
+            "info": {
+                "zh-CN": "参考来源分组列表，每组包含 header、key 与 annotations。",
+                "en-US": "Groups of references; each has a header, a key and its annotations."
+            },
+            "onChange": {
+                "zh-CN": "展开的分组变化时触发，参数为当前展开的 key。",
+                "en-US": "Called when the expanded groups change, with the expanded keys."
+            },
+            "onClick": {
+                "zh-CN": "点击某条参考来源时触发，参数为事件和该条目。",
+                "en-US": "Called when a reference is clicked, with the event and the item."
+            },
+            "renderHeader": {
+                "zh-CN": "渲染分组标题图标后的内容，参数为该分组；不传时显示分组的 header 文本。",
+                "en-US": "Renders a group header after its icon, called with the group; without it the group's header text is shown."
+            },
+            "renderItem": {
+                "zh-CN": "自定义参考来源条目的渲染，参数为该条目。",
+                "en-US": "Renders a reference item, called with the item."
+            }
+        }
+    },
+    "sidebar": {
+        "source": "packages/semi-ai-solid/src/sidebar/sidebar.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "主视图中当前选中的选项 key。",
+                "en-US": "Key of the selected option in the main view."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
+                "en-US": "Called after a visibility change has completed, with whether the sidebar is visible; with motion it runs when the animation ends."
+            },
+            "children": {
+                "zh-CN": "不生效，内容由主视图或详情视图渲染。",
+                "en-US": "Has no effect; the content is the main or detail view."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否触发 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "containerRef": {
+                "zh-CN": "不生效，需要容器元素时使用 `ref`。",
+                "en-US": "Has no effect; use `ref` to get the container element."
+            },
+            "defaultSize": {
+                "zh-CN": "初始尺寸（宽度与高度），仅在 resizable 为 true 时生效。",
+                "en-US": "Initial size (width and height); applies only when resizable is true."
+            },
+            "detailContent": {
+                "zh-CN": "code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable、imgUploadProps 与 onContentChange 不生效，由 fileEditable、imgUploadProps 与 onFileContentChange 决定。",
+                "en-US": "The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable, imgUploadProps and onContentChange have no effect, as fileEditable, imgUploadProps and onFileContentChange decide them."
+            },
+            "fileEditable": {
+                "zh-CN": "file 模式的富文本是否可编辑。",
+                "en-US": "Whether the rich text in file mode is editable."
+            },
+            "imgUploadProps": {
+                "zh-CN": "file 模式的图片上传配置，编辑器创建时读取，之后变化不生效。",
+                "en-US": "Image upload options of file mode, read when the editor is created; later changes have no effect."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效，默认 150。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true, 150 by default."
+            },
+            "mode": {
+                "zh-CN": "展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 renderDetailContent 自行渲染。",
+                "en-US": "Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by renderDetailContent."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画，默认 true。",
+                "en-US": "Whether showing and hiding use the expand animation, true by default."
+            },
+            "onActiveOptionChange": {
+                "zh-CN": "点击选项按钮时触发，参数为事件和该选项的 key；需自行把 key 写回 activeKey。",
+                "en-US": "Called when an option button is clicked, with the event and the option key; write the key back to activeKey yourself."
+            },
+            "onBackWard": {
+                "zh-CN": "点击详情头部的返回按钮时触发，参数为事件和 main；需自行把 mode 改回 main，返回值被忽略。",
+                "en-US": "Called when the back button of the detail header is clicked, with the event and main; set mode back to main yourself. The return value is ignored."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "onDetailContentCopy": {
+                "zh-CN": "点击详情头部的复制按钮后触发，在写入剪贴板完成后异步调用，参数为事件、复制的内容和结果（写入被拒绝时为 false）。",
+                "en-US": "Called after the copy button of the detail header is clicked, once the clipboard write has settled, with the event, the copied content and the result (false when the write is rejected)."
+            },
+            "onFileContentChange": {
+                "zh-CN": "file 模式下编辑富文本后触发，参数为 HTML 字符串。",
+                "en-US": "Called after the rich text is edited in file mode, with the HTML string."
+            },
+            "options": {
+                "zh-CN": "主视图顶部的选项按钮，每项包含 name 与 key；图标由 renderOptionIcon 渲染。",
+                "en-US": "Option buttons at the top of the main view, each with a name and a key; the icons come from renderOptionIcon."
+            },
+            "renderDetailContent": {
+                "zh-CN": "自定义详情内容，参数为当前模式；返回内容为空时，code 与 file 模式回退到内置详情。",
+                "en-US": "Renders the detail content, called with the mode; when it returns no content, code and file modes fall back to the built-in detail."
+            },
+            "renderDetailHeader": {
+                "zh-CN": "自定义详情头部，参数为当前模式和 detailContent；返回内容为空时使用内置头部。",
+                "en-US": "Renders the detail header, called with the mode and detailContent; the built-in header is used when it returns no content."
+            },
+            "renderHeader": {
+                "zh-CN": "不生效，主视图使用 title，详情视图使用 renderDetailHeader。",
+                "en-US": "Has no effect; use title for the main view and renderDetailHeader for detail views."
+            },
+            "renderMainContent": {
+                "zh-CN": "渲染主视图内容，参数为当前选中的 activeKey。",
+                "en-US": "Renders the main view, called with the selected activeKey."
+            },
+            "renderOptionIcon": {
+                "zh-CN": "渲染内置选项按钮的图标，参数为该选项。",
+                "en-US": "Renders the icon of a built-in option button, called with the option."
+            },
+            "renderOptionItem": {
+                "zh-CN": "自定义选项按钮，第二个参数 onChange 用于选中该选项。",
+                "en-US": "Renders an option button; the second argument, onChange, selects the option."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整，默认 true；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging, true by default; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮，默认 true。",
+                "en-US": "Whether the header shows the close button, true by default."
+            },
+            "style": {
+                "zh-CN": "容器元素的内联样式，可传样式对象或样式字符串。",
+                "en-US": "Inline style of the container element, a style object or a string."
+            },
+            "title": {
+                "zh-CN": "主视图的标题；详情视图使用内置的详情头部。",
+                "en-US": "Title of the main view; detail views use the detail header."
+            },
+            "visible": {
+                "zh-CN": "是否显示。",
+                "en-US": "Whether the sidebar is shown."
+            }
+        }
+    },
+    "code-content": {
+        "source": "packages/semi-ai-solid/src/sidebar/widget/code.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的代码面板 key，支持单个或多个。",
+                "en-US": "Keys of the expanded code panels, one or several."
+            },
+            "codes": {
+                "zh-CN": "代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。",
+                "en-US": "The code entries, each with the CodeItem props and a key identifying its panel."
+            },
+            "onChange": {
+                "zh-CN": "展开的面板变化时触发，参数为当前展开的 key。",
+                "en-US": "Called when the expanded panels change, with the expanded keys."
+            },
+            "onExpand": {
+                "zh-CN": "点击面板头部的展开按钮时触发，参数为事件、该代码条目和 code；设置后才显示展开按钮。",
+                "en-US": "Called when the expand button in a panel header is clicked, with the event, the code entry and code; the button is shown only when this is set."
+            }
+        }
+    },
+    "file-content": {
+        "source": "packages/semi-ai-solid/src/sidebar/widget/file.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的文件面板 key，支持单个或多个。",
+                "en-US": "Keys of the expanded file panels, one or several."
+            },
+            "files": {
+                "zh-CN": "文件条目列表，以只读方式渲染，每项为 FileItem 的属性加用于标识面板的 key。",
+                "en-US": "The file entries, rendered read-only: each is the FileItem props plus a key identifying its panel."
+            },
+            "onChange": {
+                "zh-CN": "展开的面板变化时触发，参数为当前展开的 key。",
+                "en-US": "Called when the expanded panels change, with the expanded keys."
+            },
+            "onExpand": {
+                "zh-CN": "点击面板头部的展开按钮时触发，参数为事件、该文件条目和 file；设置后才显示展开按钮。",
+                "en-US": "Called when the expand button in a panel header is clicked, with the event, the file entry and file; the button is shown only when this is set."
+            }
+        }
+    },
+    "code-item": {
+        "source": "packages/semi-ai-solid/src/sidebar/widget/code.tsx#CodeItem",
+        "props": {
+            "codeHighlightProps": {
+                "zh-CN": "CodeHighlight 的属性，在 `code` 与 `language` 之后展开。",
+                "en-US": "Props of CodeHighlight, spread after `code` and `language`."
+            },
+            "content": { "zh-CN": "代码/文本内容。", "en-US": "Code or text content." },
+            "isJson": {
+                "zh-CN": "是否为 JSON 格式内容，为 true 时使用 JsonViewer 展示。",
+                "en-US": "Whether the content is JSON; when true, JsonViewer displays it."
+            },
+            "jsonViewerProps": {
+                "zh-CN": "JsonViewer 的属性，在 value、width、height 等默认值之后展开。",
+                "en-US": "Props of JsonViewer, spread after the defaults for value, width, height and so on."
+            },
+            "key": {
+                "zh-CN": "面板的唯一标识，用于 CodeContent 的 `activeKey`，也决定 Sidebar 详情的重新挂载。",
+                "en-US": "Identifies the panel for the `activeKey` of CodeContent, and decides when a Sidebar detail remounts."
+            },
+            "language": {
+                "zh-CN": "代码语言类型（如 js、ts、css 等），同 CodeHighlight 的 language。",
+                "en-US": "Language of the code (such as js, ts or css), same as `language` of CodeHighlight."
+            },
+            "name": { "zh-CN": "名称，显示在面板头部与 Sidebar 详情头部。", "en-US": "Name, shown in the panel header and in the Sidebar detail header." }
+        }
+    },
+    "file-item": {
+        "source": "packages/semi-ai-solid/src/sidebar/widget/file.tsx#FileItem",
+        "props": {
+            "content": {
+                "zh-CN": "富文本 HTML，挂载后变化会同步到编辑器，不触发 `onContentChange`。",
+                "en-US": "Rich text as HTML; a change after mount is synced to the editor without calling `onContentChange`."
+            },
+            "editable": { "zh-CN": "是否可编辑，挂载后变化会同步到编辑器。", "en-US": "Whether the content is editable; a change after mount is synced to the editor." },
+            "extensions": {
+                "zh-CN": "追加在内置扩展之后的 tiptap 扩展，编辑器创建时读取，之后变化不生效。",
+                "en-US": "tiptap extensions appended to the built-in ones, read when the editor is created."
+            },
+            "imgUploadProps": { "zh-CN": "图片上传配置，编辑器创建时读取，之后变化不生效。", "en-US": "Image upload options, read when the editor is created." },
+            "key": {
+                "zh-CN": "面板的唯一标识，用于 FileContent 的 `activeKey`，也决定 Sidebar 详情的重新挂载。",
+                "en-US": "Identifies the panel for the `activeKey` of FileContent, and decides when a Sidebar detail remounts."
+            },
+            "name": {
+                "zh-CN": "名称，显示在面板头部、Sidebar 详情头部，并作为编辑区的 `aria-label`。",
+                "en-US": "Name, shown in the panel header and the Sidebar detail header, and used as the `aria-label` of the editing area."
+            },
+            "onContentChange": { "zh-CN": "编辑后触发，参数为 HTML 字符串。", "en-US": "Called after an edit, with the content as HTML." }
+        }
+    }
+}

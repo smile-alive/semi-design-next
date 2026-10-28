@@ -1,0 +1,34 @@
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Controlled value, bound with v-model; same shape as defaultValue. undefined means uncontrolled, and going back to undefined from a controlled value shows defaultValue again. Treat ColorValue as immutable and replace it as a whole. | `ColorValue` | `undefined` |
+| defaultValue | Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of #39c5bb. | `ColorValue` | `semiDefault("ColorPicker", "defaultValue", DEFAULT_COLOR)` |
+| alpha | Whether to enable transparency selection. | `boolean` | `semiDefault("ColorPicker", "alpha", true)` |
+| eyeDropper | Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later. | `boolean` | `semiDefault("ColorPicker", "eyeDropper", true)` |
+| defaultFormat | Color format used by default for manual input: rgba, hex or hsva. | `ColorFormat` | `semiDefault("ColorPicker", "defaultFormat", "hex")` |
+| width | Width in pixels. | `number` | `semiDefault("ColorPicker", "width", 280)` |
+| height | Height in pixels. | `number` | `semiDefault("ColorPicker", "height", 280)` |
+| usePopover | Whether to render inside a Popover; the trigger comes from the default slot. | `boolean` | `semiDefault("ColorPicker", "usePopover", false)` |
+| popoverProps | Props and listeners (such as onVisibleChange) passed to the Popover when usePopover is on; class and style replace className and style. The popup opens on click with role dialog by default and takes its default name from the locale; ariaLabel and ariaLabelledby take precedence. | `ColorPickerPopoverProps` | `semiGlobalDefault("ColorPicker", "popoverProps")` |
+
+**Events**
+
+| Event             | Description                                                                                                                          | Callback parameters   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------- |
+| update:modelValue | Emitted when the user picks a color, with a ColorValue payload, for v-model to write back.                                           | `[value: ColorValue]` |
+| change            | Emitted when the user picks a color, with a ColorValue payload; native change events bubbling from the inner inputs do not reach it. | `[value: ColorValue]` |
+
+**Slots**
+
+| Slot       | Description                                                                                  | Scope parameters |
+| ---------- | -------------------------------------------------------------------------------------------- | ---------------- |
+| default    | The trigger when usePopover is on, a color swatch button by default; not rendered otherwise. | `any`            |
+| topSlot    | Renders extra elements at the top.                                                           | `any`            |
+| bottomSlot | Renders extra elements at the bottom.                                                        | `any`            |
+
+**Exposes**
+
+| Name | Description                                                                                         | Type                  |
+| ---- | --------------------------------------------------------------------------------------------------- | --------------------- |
+| root | The picker root element; inside the popup when usePopover is on, so null while the popup is closed. | `HTMLElement \| null` |

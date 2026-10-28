@@ -1,0 +1,45 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| code | Whether the text is wrapped in a code element. | `boolean` | `false` |
+| ellipsis | Truncates overflowing text; pass an object for the Ellipsis Config. | `boolean \| Ellipsis` | `false` |
+| size | Text size; inherit takes the size of the enclosing Text or Paragraph. | `"normal" \| "small" \| "inherit"` | `"normal"` |
+| weight | Font weight as a number. | `number` | `undefined` |
+| component | Element to render: a tag name or a Vue component. Defaults to span. | `string \| Component` | `undefined` |
+| copyable | Whether the text can be copied; pass an object for the Copyable Config. | `boolean \| TypographyCopyableConfig` | `false` |
+| delete | Adds a strikethrough. | `boolean` | `false` |
+| disabled | Disables the text. | `boolean` | `false` |
+| link | Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element. | `LinkType` | `false` |
+| mark | Adds a highlight. | `boolean` | `false` |
+| strong | Whether the text is bold. | `boolean` | `false` |
+| type | Text type. | <ApiType detail={"\"primary\" \u007c \"secondary\" \u007c \"danger\" \u007c \"warning\" \u007c \"success\" \u007c \"tertiary\" \u007c \"quaternary\""}>Type</ApiType> | `"primary"` |
+| underline | Adds an underline. | `boolean` | `false` |
+
+**Events**
+
+| Event  | Description                                                                                                                                                                  | Callback parameters                              |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| expand | Emitted when the expand or collapse control is clicked, with the expanded state after the action and the click event.                                                        | `[expanded: boolean, e: MouseEvent]`             |
+| copy   | Emitted after copying, with the click event, the copied content and whether the write succeeded. When the write is rejected it is false and the copied state is not entered. | `[e: MouseEvent, content: string, res: boolean]` |
+
+**Slots**
+
+| Slot            | Description                                                                                                                                                                                | Scope parameters                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- |
+| default         | Text content.                                                                                                                                                                              | `any`                            |
+| icon            | Prefix icon; a Semi icon is set to small or default according to size.                                                                                                                     | `any`                            |
+| copyIcon        | Content of the copy button; a single node with an aria-label names the button, otherwise the locale's "Copy" does.                                                                         | `any`                            |
+| copyTip         | Tooltip content of the copy button.                                                                                                                                                        | `any`                            |
+| copySuccessTip  | Content shown after a successful copy.                                                                                                                                                     | `any`                            |
+| copyAction      | Replaces the whole copy node; receives copied, copy and the resolved config.                                                                                                               | `TypographyCopyActionProps`      |
+| ellipsisContent | Content of the floating layer when truncated; defaults to the full text.                                                                                                                   | `any`                            |
+| ellipsisTooltip | Custom floating layer, rendered only when the text overflows; content is the full text and trigger is the text element, to be placed in your own layer with `<component :is="trigger" />`. | `TypographyEllipsisTooltipProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

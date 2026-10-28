@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allowInputDrag | Whether dragging is allowed when pressing on a native input or textarea. | `boolean` | `false` |
+| allowMove | Function that decides whether a drag may start on pointer down; returning false prevents it. It receives the pointer event and the dragged element. | <ApiType detail={"(e: PointerEvent, element: HTMLElement) => boolean"}>Type</ApiType> | - |
+| children | The content to drag. Each top-level DOM element is dragged on its own, including the top-level elements of a custom component. Text nodes cannot be dragged and need to be wrapped in an element. | `ReactNode` | - |
+| constrainer | The element that limits the draggable range: `'parent'` for the parent of the dragged element, or a function that returns it. When it returns null, the range is not limited. It needs to be positioned relatively. | <ApiType detail={"'parent' \u007c (() => HTMLElement \u007c null)"}>Type</ApiType> | - |
+| customMove | Custom position handling that receives the element, the new top and the new left. When set, the component no longer writes the element's top and left, and passes the position back in requestAnimationFrame. | <ApiType detail={"(e: HTMLElement, top: number, left: number) => void"}>Type</ApiType> | - |
+| handler | Returns the element that triggers dragging; a drag starts only when pressed inside it. Falls back to the dragged element itself when it returns null. | <ApiType detail={"() => HTMLElement \u007c null"}>Type</ApiType> | - |
+| onMouseDown | Called when a mouse or pen pointer is pressed, and only for the primary button of a mouse. Not affected by the result of allowMove. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| onMouseMove | Called when a mouse or pen pointer moves during a drag. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| onMouseUp | Called when a mouse or pen pointer is released after a drag has started. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| onTouchCancel | Called when the pointer is cancelled by the system (pointercancel) during a drag. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| onTouchEnd | Called when a touch pointer is released after a drag has started. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| onTouchMove | Called when a touch pointer moves during a drag. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| onTouchStart | Called when a touch pointer is pressed, whether or not allowMove allows the drag. | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType> | - |
+| positionStrategy | Positioning strategy. `relative` keeps the element's original layout position. | `'absolute' \| 'relative'` | `"absolute"` |

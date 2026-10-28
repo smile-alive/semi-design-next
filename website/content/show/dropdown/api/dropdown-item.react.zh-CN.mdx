@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                        | 类型                                                                           | 默认值  |
+| ------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------- |
+| active        | 当前项是否处于激活态，激活态时字体加粗、颜色加深；展示勾时（`showTick` 为 `true`）左侧还会展示 √。          | `boolean`                                                                      | -       |
+| children      | 菜单项的内容，渲染在图标之后。                                                                              | `ReactNode`                                                                    | -       |
+| className     | 根 `li` 元素的类名。                                                                                        | `string`                                                                       | -       |
+| disabled      | 是否禁用该项；禁用项不响应点击与鼠标事件，并带 `aria-disabled` 为 `true`。                                  | `boolean`                                                                      | `false` |
+| forwardRef    | 根 `li` 元素挂载时以该元素调用，供包装 `Dropdown.Item` 的组件获取元素。                                     | <ApiType detail={"(ele: HTMLLIElement) => void"}>Type</ApiType>                | -       |
+| icon          | 菜单项的图标，渲染在内容之前。                                                                              | `React.ReactNode`                                                              | -       |
+| onClick       | 单击时调用，参数为 `MouseEvent`；位于嵌套子菜单内的项在鼠标左键按下时调用，键盘激活时也调用；禁用项不调用。 | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -       |
+| onContextMenu | 右键点击时调用。禁用项不调用。                                                                              | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -       |
+| onMouseEnter  | 指针移入时调用。禁用项不调用。                                                                              | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -       |
+| onMouseLeave  | 指针移出时调用。禁用项不调用。                                                                              | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -       |
+| ref           | 根 `li` 元素的引用。                                                                                        | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType>               | -       |
+| showTick      | 仅在 Dropdown 之外使用时生效；在 Dropdown 内以 Dropdown 的 `showTick` 为准。                                | `boolean`                                                                      | -       |
+| style         | 根 `li` 元素的内联样式。                                                                                    | `CSSProperties`                                                                | -       |
+| type          | 文本颜色类型，可选 `primary`、`secondary`、`tertiary`、`warning`、`danger`。                                | `Type`                                                                         | -       |

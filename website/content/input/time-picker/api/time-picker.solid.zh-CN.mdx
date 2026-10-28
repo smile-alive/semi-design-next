@@ -1,0 +1,58 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| borderless | 无边框模式。 | `boolean` | `false` |
+| class | 根元素的类名。 | `string` | - |
+| clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `JSX.Element` | - |
+| defaultOpen | 非受控时面板是否默认打开。 | `boolean` | - |
+| defaultValue | 非受控时的初始时间，形态同 value；type 为 timeRange 时为数组。 | `BaseValueType \| BaseValueType[]` | - |
+| disabled | 禁用全部操作。 | `boolean` | - |
+| disabledHours | 返回禁止选择的小时。 | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
+| disabledMinutes | 按所选小时返回禁止选择的分钟。 | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | - |
+| disabledSeconds | 按所选小时和分钟返回禁止选择的秒。 | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | - |
+| disabledTime | 仅范围模式生效：按当前值与面板位置返回左右面板各自的禁用规则。value 中未选的一侧为 undefined；返回值中的 disabledHours、disabledMinutes、disabledSeconds 覆盖顶层的同名属性，未返回的回退到顶层。单选模式下忽略。 | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| focusOnOpen | 挂载后让输入框获得焦点并选中内容，同时打开面板。 | `boolean` | `false` |
+| format | 展示的时间格式，遵循 date-fns 的 format；use12Hours 为 true 时默认为 a h:mm:ss，否则为 HH:mm:ss。 | `string` | - |
+| hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `false` |
+| hourStep | 小时选项的间隔，必须是正整数。 | `number` | - |
+| inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘；只读时清除按钮仍可用。 | `boolean` | `false` |
+| inputStyle | 输入框根元素的样式，接受对象（键用 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| insetLabel | 输入框内部的前缀标签，显示在输入框内。 | `JSX.Element` | - |
+| insetLabelId | insetLabel 的 id，用于 aria-labelledby 等关联。 | `string` | - |
+| maxLength | 输入框的最大字符数，透传给输入框。 | `number` | - |
+| minLength | 输入框的最小字符数，透传给输入框。 | `number` | - |
+| minuteStep | 分钟选项的间隔，必须是正整数。 | `number` | - |
+| motion | 是否展示弹出层动画。 | `boolean` | `true` |
+| onBlur | 点击外部关闭面板时的回调，参数为该次 mousedown 的原生事件。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | 时间变化的回调。type 为 time 时参数为 (Date, 格式化字符串)，type 为 timeRange 时两者都是数组。 | <ApiType detail={"((value: Date, str: string) => void) \u007c ((value: Date[], str: string[]) => void)"}>Type</ApiType> | - |
+| onFocus | 输入框获得焦点时的回调。 | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
+| onOpenChange | 面板打开或关闭时的回调，参数为是否打开。 | <ApiType detail={"(open: boolean) => void"}>Type</ApiType> | - |
+| open | 面板是否打开，受控属性；undefined 视为非受控。 | `boolean` | - |
+| panelFooter | 面板底部的内容。范围模式下可传数组，第 i 项用于第 i 个面板。 | `JSX.Element` | - |
+| panelHeader | 面板头部的内容。范围模式下可传数组，第 i 项用于第 i 个面板。 | `JSX.Element` | - |
+| panels | 仅范围模式：第 i 项同时作为第 i 个面板的头部和底部，优先于 panelHeader 与 panelFooter。单选模式下忽略。 | `JSX.Element[]` | - |
+| placeholder | 没有值时显示的提示，默认取语言包中对应 type 的文案。 | `string` | - |
+| popupClassName | 弹出层的类名。 | `string` | - |
+| popupStyle | 弹出层的样式，接受对象（键用 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft；RTL 方向下默认为 bottomRight。 | `Position` | - |
+| prefix | 输入框的前缀内容。 | `JSX.Element` | - |
+| prefixCls | 样式类名的前缀。 | `string` | `"semi-timepicker"` |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 调用。 | `boolean` | - |
+| rangeSeparator | 时间范围的分隔符。 | `string` | `" ~ "` |
+| ref | 根元素的引用；其 focus() 与 blur() 作用于输入框，使用自定义触发器时无效。 | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| scrollItemProps | 传给各列的属性，只支持 cycled、mode、motion、transform，含义同 ScrollList 的 ScrollItem。 | <ApiType detail={"Pick\u003cScrollItemProps, 'cycled' \u007c 'mode' \u007c 'motion' \u007c 'transform'>"}>Type</ApiType> | - |
+| secondStep | 秒选项的间隔，必须是正整数。 | `number` | - |
+| showClear | 是否展示清除按钮。 | `boolean` | `true` |
+| size | 输入框的大小，可选 large、default 或 small。 | `InputSize` | `"default"` |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
+| style | 根元素的样式，接受对象（键用 kebab-case）或字符串。 | `JSX.CSSProperties \| string` | - |
+| timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名；未设置时取 ConfigProvider 的 timeZone。 | `string \| number` | - |
+| triggerRender | 自定义触发器的渲染函数，只调用一次，入参的字段都是活的，在返回的 JSX 中读取才会更新。入参含 disabled、placeholder、value（Date 数组，未选的一侧为 undefined）、inputValue、componentProps（TimePicker 的属性，不含 ref）和 onChange（更新输入框文本，效果同键入）。 | <ApiType detail={"(props: TimePickerTriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| type | 选择类型，time 为单个时间，timeRange 为时间范围。 | `Type` | `"time"` |
+| use12Hours | 使用 12 小时制，为 true 时 format 默认为 a h:mm:ss。 | `boolean` | `false` |
+| validateStatus | 校验状态，仅影响展示样式。 | `ValidateStatus` | - |
+| value | 当前时间，type 为 timeRange 时为数组；传 null 是受控的空值，undefined 视为非受控。 | `BaseValueType \| BaseValueType[] \| null` | - |

@@ -1,0 +1,124 @@
+{
+    "breadcrumb": {
+        "source": "packages/semi-ui-react/src/breadcrumb/index.tsx",
+        "props": {
+            "activeIndex": {
+                "zh-CN": "受控的当前项序号，从 0 开始计数；未设置时最后一项为当前项。",
+                "en-US": "Controlled index of the current item, counted from 0. The last item is current when omitted."
+            },
+            "aria-label": {
+                "zh-CN": "导航的可访问名称；未设置时使用语言包中的文案。",
+                "en-US": "Accessible name of the navigation. The locale text is used when omitted."
+            },
+            "autoCollapse": {
+                "zh-CN": "超出 `maxItemCount` 时是否自动折叠为省略号。",
+                "en-US": "Whether the levels beyond `maxItemCount` collapse into an ellipsis automatically."
+            },
+            "children": {
+                "zh-CN": "`Breadcrumb.Item` 子节点；传入非空的 `routes` 时不渲染 children。",
+                "en-US": "`Breadcrumb.Item` children. children are not rendered when `routes` is not empty."
+            },
+            "className": {
+                "zh-CN": "根元素 nav 的类名。",
+                "en-US": "Class name of the root nav element."
+            },
+            "compact": {
+                "zh-CN": "是否使用紧凑尺寸，影响文字与 Semi 图标的尺寸。",
+                "en-US": "Whether the compact size is used, which sets the size of text and Semi icons."
+            },
+            "maxItemCount": {
+                "zh-CN": "级别数超过该值后折叠，首项、当前项与末项始终可见。",
+                "en-US": "Number of levels above which the breadcrumb collapses. The first, current and last levels stay visible."
+            },
+            "moreType": {
+                "zh-CN": "内置省略号区域的渲染类型，可选 `default` 或 `popover`；提供 `renderMore` 时以 `renderMore` 为准。",
+                "en-US": "Built-in rendering of the ellipsis area, `default` or `popover`. `renderMore` wins when it is provided."
+            },
+            "onClick": {
+                "zh-CN": "单击某项时调用。`routes` 写法收到该项的路由对象，字符串路由为 `{ name }`；`Breadcrumb.Item` 写法收到 `{ name, href }`，`name` 为该项的子节点。第二个参数为原生 MouseEvent。传入后，没有 `href`、未设置 `noLink` 且不是当前项的项也可以用 Enter 键操作。",
+                "en-US": "Called when an item is clicked. With `routes` it receives the route object of the item, `{ name }` for a string route; with `Breadcrumb.Item` children it receives `{ name, href }`, where `name` is the children of the item. The second parameter is the native MouseEvent. Once it is passed, items without `href`, without `noLink` and not current can also be operated with Enter."
+            },
+            "ref": {
+                "zh-CN": "根元素 nav 的引用。",
+                "en-US": "Ref of the root nav element."
+            },
+            "renderItem": {
+                "zh-CN": "自定义每一项的内容，配合 `routes` 使用，参数为该项的路由对象；字符串路由为 `{ name }`。",
+                "en-US": "Renders the content of each item with `routes`. The argument is the route object of the item, `{ name }` for a string route."
+            },
+            "renderMore": {
+                "zh-CN": "自定义省略号区域的内容，参数为被折叠的项，已去掉分隔符；提供时以它为准。",
+                "en-US": "Renders the content of the ellipsis area. The argument holds the collapsed items without their separators. It wins over `moreType` when provided."
+            },
+            "routes": {
+                "zh-CN": "路由信息，由路由对象或字符串组成的数组；不为空时按它渲染各项，不再渲染 children。路由对象的字段见下方 Route。",
+                "en-US": "Route information as an array of route objects or strings. When it is not empty, the items come from it and children are not rendered. The fields of a route object are listed under Route below."
+            },
+            "separator": {
+                "zh-CN": "自定义分隔符，可以是文字或 React 节点。",
+                "en-US": "Custom separator, either text or a ReactNode."
+            },
+            "showTooltip": {
+                "zh-CN": "标题溢出时是否展示 Tooltip 及相关配置：`width` 为截断宽度，数字按 px 计算；`ellipsisPos` 为截断位置，`end` 或 `middle`；`opts` 为传给 Tooltip 的属性，不含 `content`，未设置时为 `{ autoAdjustOverflow: true, position: 'top' }`。传 `false` 时不展示 Tooltip，标题仍按 `width` 截断。",
+                "en-US": "Whether a Tooltip shows for an overflowing title, with its options: `width` is the truncation width in px, `ellipsisPos` truncates at the `end` or in the `middle`, and `opts` are passed to the Tooltip without `content`, defaulting to `{ autoAdjustOverflow: true, position: 'top' }`. `false` hides the Tooltip, and the title is still truncated at `width`."
+            },
+            "style": {
+                "zh-CN": "根元素 nav 的内联样式。",
+                "en-US": "Inline style of the root nav element."
+            }
+        }
+    },
+    "breadcrumb-item": {
+        "source": "packages/semi-ui-react/src/breadcrumb/item.tsx",
+        "props": {
+            "active": {
+                "zh-CN": "是否为当前项，由 `Breadcrumb` 设置，使用方不应传入。",
+                "en-US": "Whether the item is the current one. `Breadcrumb` sets it, and callers should not pass it."
+            },
+            "children": {
+                "zh-CN": "标题内容。数字与字符串会被截断并展示 Tooltip，其他节点原样渲染。",
+                "en-US": "Title content. Numbers and strings are truncated with a Tooltip, and other nodes render as they are."
+            },
+            "className": {
+                "zh-CN": "包裹该项的外层 span 的类名。",
+                "en-US": "Class name of the outer span that wraps the item."
+            },
+            "href": {
+                "zh-CN": "链接的目的地，挂载在 a 标签上；当前项不渲染为链接。",
+                "en-US": "Destination of the link, mounted on an a element. The current item does not render as a link."
+            },
+            "icon": {
+                "zh-CN": "标题前的图标。Semi 图标未设置 `size` 时，按 `Breadcrumb` 的 `compact` 取 `small` 或 `default`。",
+                "en-US": "Icon before the title. A Semi icon without `size` takes `small` or `default` from `compact` of Breadcrumb."
+            },
+            "noLink": {
+                "zh-CN": "移除 hover 和 active 样式；没有 `href` 的项也不再可以用键盘操作。",
+                "en-US": "Removes the hover and active styles. An item without `href` is no longer operable with the keyboard."
+            },
+            "onClick": {
+                "zh-CN": "单击时调用，参数同 `Breadcrumb` 的 `onClick`：`routes` 写法收到该项的路由对象，`children` 写法收到 `{ name, href }`；第二个参数为原生 MouseEvent。",
+                "en-US": "Called on click, with the same parameters as `onClick` of Breadcrumb: the route object of the item with `routes`, or `{ name, href }` with children. The second parameter is the native MouseEvent."
+            },
+            "ref": {
+                "zh-CN": "包裹该项的外层 span 的引用。",
+                "en-US": "Ref of the outer span that wraps the item."
+            },
+            "route": {
+                "zh-CN": "`Breadcrumb` 按 `routes` 渲染时传入的该项路由对象，作为 `onClick` 的参数；使用方不应传入。",
+                "en-US": "The route object of the item when `Breadcrumb` renders it from `routes`, passed to `onClick`. Callers should not pass it."
+            },
+            "separator": {
+                "zh-CN": "该项之后的分隔符，覆盖 `Breadcrumb` 的 `separator`，可以是文字或 React 节点。",
+                "en-US": "Separator after this item. It overrides `separator` of Breadcrumb and can be text or a ReactNode."
+            },
+            "shouldRenderSeparator": {
+                "zh-CN": "是否渲染该项之后的分隔符，由 `Breadcrumb` 按位置与折叠状态设置，使用方不应传入；缺省为 true。",
+                "en-US": "Whether the separator after this item renders. `Breadcrumb` sets it by position and collapse state, and callers should not pass it. It defaults to true."
+            },
+            "style": {
+                "zh-CN": "包裹该项的外层 span 的内联样式。",
+                "en-US": "Inline style of the outer span that wraps the item."
+            }
+        }
+    }
+}

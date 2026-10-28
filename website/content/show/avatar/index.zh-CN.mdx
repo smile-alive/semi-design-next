@@ -1,0 +1,294 @@
+---
+order: 62
+title: 头像
+icon: doc-avatar
+brief: 头像，支持图片或字符展示。
+---
+
+import AvatarReactApi from './api/avatar.react.zh-CN.mdx';
+import AvatarGroupReactApi from './api/avatar-group.react.zh-CN.mdx';
+import AvatarVueApi from './api/avatar.vue.zh-CN.mdx';
+import AvatarGroupVueApi from './api/avatar-group.vue.zh-CN.mdx';
+import AvatarSolidApi from './api/avatar.solid.zh-CN.mdx';
+import AvatarGroupSolidApi from './api/avatar-group.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Avatar, AvatarGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Avatar, AvatarGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, AvatarGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 尺寸
+
+可以通过 `size` 属性设置图标大小，支持`extra-extra-small`，`extra-small`，`small`，`default`，`medium`，`large`，`extra-large`。
+
+<Demo id="size" />
+
+### 颜色
+
+Avatar 支持默认色板的 15 种颜色和白色，包括：`amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow`。也可以通过 `style` 来自定义颜色样式。默认为`grey`。
+
+<Demo id="color" />
+
+### 自适应字符大小
+
+字符类型的头像，字体大小会根据头像宽度自适应调整。使用`gap`调整字符头像距离左右两侧的像素大小。
+
+<Demo id="gap" />
+
+### 图片
+
+可以通过 `src` 设置图片格式的头像。
+
+<Demo id="image" />
+
+### 形状
+
+Avatar 支持 `circle`、`square` 两种形状，默认为 `circle`。
+
+<Demo id="shape" />
+
+### 事件
+
+<Framework only="react">
+
+Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状态下可以通过 `hoverMask` 属性传入覆盖层的内容。覆盖层无默认样式。
+
+</Framework>
+
+<Framework only="vue">
+
+Avatar 支持 `@click`、`@mouseEnter`、`@mouseLeave`。通过 `#hoverMask` 插槽传入悬停覆盖层，覆盖层无默认样式。
+
+</Framework>
+
+<Framework only="solid">
+
+Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状态下可以通过 `hoverMask` 属性传入覆盖层的内容。覆盖层无默认样式。
+
+</Framework>
+
+<Demo id="hover-mask" />
+
+### 顶部和底部 Slot
+
+<Framework only="vue">
+
+`topSlot`、`bottomSlot` 属性配置标记外观，`#topSlotText`、`#bottomSlotText` 插槽提供内容。使用 `#topSlot`、`#bottomSlot` 可以完全自定义标记。
+
+</Framework>
+
+<Framework only="solid">
+
+`topSlot`、`bottomSlot` 属性配置标记的外观与文字；`text` 传函数时渲染自定义内容（如图标），只在标记显示时调用；传入 `render` 函数时，由它完全渲染标记。
+
+</Framework>
+
+<Demo id="slot" />
+
+#### 顶部
+
+<Demo id="top-slot" />
+
+#### 底部
+
+<Demo id="bottom-slot" />
+
+### 额外边框
+
+<Demo id="border" />
+
+### 额外动效
+
+通过 `border` 的 `motion` 字段和 `contentMotion` 开启边框和内容区域的额外动效。
+
+<Demo id="motion" />
+
+### 头像组
+
+可以通过 AvatarGroup 将 `avatar` 显示为组。
+
+<Demo id="group" />
+
+可以通过 `maxCount` 设置展示的头像数量。
+
+<Demo id="max-count" />
+
+<Framework only="react">
+
+可以通过 `renderMore` 自定义 more 标签。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `renderMore` 自定义 more 标签。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#more="{ restNumber, restAvatars }"` 作用域插槽自定义 more 标签。
+
+</Framework>
+
+<Demo id="render-more" />
+
+可以通过 `overlapFrom` 控制头像组的覆盖方式。可选值有 `start` 和 `end`，分别表示左边覆盖右边和右边覆盖左边。默认值为 `start`。
+
+<Demo id="overlap-from" />
+
+## API 参考
+
+---
+
+### Avatar
+
+<Framework only="react">
+
+<AvatarReactApi />
+
+其他原生属性（如 `id`、`data-*`）落在头像主体元素（`.semi-avatar`）上；可点击头像的 `tabIndex` 与 `aria-*` 落在内部唯一的焦点元素上。使用 `border`、`topSlot` 或 `bottomSlot` 时，`style`、`onClick`、`onMouseEnter` 与 `onMouseLeave` 落在外层包裹元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<AvatarVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入。可点击头像的 `tabindex`、`aria-*` 落在内部唯一的焦点元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<AvatarSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在头像的根元素上；使用 `border`、`topSlot` 或 `bottomSlot` 时，外层包裹元素接收 `style`，`class`、`ref` 与原生属性仍落在内部头像元素上。可点击头像的 `tabindex`、`aria-*` 落在内部唯一的焦点元素上。
+
+</Framework>
+
+### AvatarGroup
+
+<Framework only="react">
+
+<AvatarGroupReactApi />
+
+`className`、`style`、`aria-*`、`data-*` 等其他属性会落在 AvatarGroup 的根元素（`role="list"`）上，不会传给组内的头像。
+
+</Framework>
+
+<Framework only="vue">
+
+<AvatarGroupVueApi />
+
+`class`、`style`、`aria-*` 等 attrs 落在 AvatarGroup 根元素上，不会传给组内的头像。
+
+</Framework>
+
+<Framework only="solid">
+
+<AvatarGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性（包括 `aria-*`）落在 AvatarGroup 根元素上，不会传给组内的头像。
+
+</Framework>
+
+## Accessibility
+
+- Avatar 一般不用于操作，不需要被获取焦点。但当 Avatar 可以被点击操作时（如：Semi 官网上方的头像）需要被聚焦，并响应键盘 `Enter` 和空格事件。
+- 可点击且有图片或文字的 Avatar 只有一个 Tab 停靠点，即图片或文字标签；它收到的焦点顺序与 `aria-*` 属性（包括 Tooltip 注入的）都落在这个元素上。
+- 当 Avatar 与其他组件结合使用时，需要同时检查该组件的可访问性指南。
+- Avatar的`alt`属性可以被屏幕阅读器读取，使用头像组件时，请使用`alt` 属性解释头像的内容。
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Avatar } from '@fibrae/semi-ui-react';
+
+() => {
+    return (
+        <>
+            {/* Good case */}
+            <Avatar alt="一只可爱的猫咪" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+            <Avatar alt="姜鹏志" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+            {/* Bad case */}
+            <Avatar alt="" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+            <Avatar alt="姜鹏志的图片" src="/assets/placeholder/avatar-a.svg" style={{ margin: 4 }} />
+        </>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Avatar } from '@fibrae/semi-ui-vue';
+
+    const src = '/assets/placeholder/avatar-a.svg';
+</script>
+
+<template>
+    <Avatar alt="一只可爱的猫咪" :src="src" />
+    <Avatar alt="姜鹏志" :src="src" />
+</template>
+```
+
+替代文本描述头像内容，避免空字符串，也不必重复说明「图片」。可点击时用 `@click` 声明操作，组件自动提供 Tab 停靠点，并将 `Enter` 和空格转为点击。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar } from '@fibrae/semi-ui-solid';
+
+() => {
+    return (
+        <>
+            {/* Good case */}
+            <Avatar alt="一只可爱的猫咪" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+            <Avatar alt="姜鹏志" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+            {/* Bad case */}
+            <Avatar alt="" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+            <Avatar alt="姜鹏志的图片" src="/assets/placeholder/avatar-a.svg" style={{ margin: '4px' }} />
+        </>
+    );
+};
+```
+
+替代文本描述头像内容，避免空字符串，也不必重复说明「图片」。可点击时用 `onClick` 声明操作，组件自动提供 Tab 停靠点，并将 `Enter` 和空格转为点击。
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

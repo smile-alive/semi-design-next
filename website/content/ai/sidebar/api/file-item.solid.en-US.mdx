@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property        | Description                                                                                                      | Type                                                         | Default |
+| --------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------- |
+| content         | Rich text as HTML; a change after mount is synced to the editor without calling `onContentChange`.               | `string`                                                     | -       |
+| editable        | Whether the content is editable; a change after mount is synced to the editor.                                   | `boolean`                                                    | `true`  |
+| extensions      | tiptap extensions appended to the built-in ones, read when the editor is created.                                | `Extensions`                                                 | -       |
+| imgUploadProps  | Image upload options, read when the editor is created.                                                           | `ImageUploadNodeOptions`                                     | -       |
+| key             | Identifies the panel for the `activeKey` of FileContent, and decides when a Sidebar detail remounts.             | `string`                                                     | -       |
+| name            | Name, shown in the panel header and the Sidebar detail header, and used as the `aria-label` of the editing area. | `string`                                                     | -       |
+| onContentChange | Called after an edit, with the content as HTML.                                                                  | <ApiType detail={"(content: string) => void"}>Type</ApiType> | -       |

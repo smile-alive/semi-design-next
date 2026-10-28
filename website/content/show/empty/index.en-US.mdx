@@ -1,0 +1,159 @@
+---
+order: 71
+title: Empty
+icon: doc-empty
+brief: Placeholder component when the page is empty.
+---
+
+import EmptyReactApi from './api/empty.react.en-US.mdx';
+import EmptyVueApi from './api/empty.vue.en-US.mdx';
+import EmptySolidApi from './api/empty.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Empty } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Empty } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Empty } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Framework only="react">
+
+By setting a placeholder image with `image`, you can manually import the corresponding illustration from `@fibrae/semi-illustrations-react` (the default width and height of the illustration is 200x200), or you can import a custom illustration.
+
+A series of dark mode illustrations are added, and the illustrations that need to be used in dark mode can be passed in through `darkModeImage` to better adapt to the dark mode.
+
+</Framework>
+
+<Framework only="vue">
+
+Set a placeholder image with the `#image` slot. You can manually import the corresponding illustration from `@fibrae/semi-illustrations-vue` (the default width and height of the illustration is 200x200), or put in a custom illustration. The `image` prop only takes an image URL string or `{ id }`.
+
+A series of dark mode illustrations are added, and the illustrations that need to be used in dark mode can be put in the `#darkModeImage` slot to better adapt to the dark mode.
+
+</Framework>
+
+<Framework only="solid">
+
+By setting a placeholder image with `image`, you can manually import the corresponding illustration from `@fibrae/semi-illustrations-solid` (the default width and height of the illustration is 200x200), or pass in a custom JSX element. `image` also accepts an image URL string, or an SVG sprite symbol as `{ id }`.
+
+A series of dark mode illustrations are added, and the illustrations that need to be used in dark mode can be passed in through `darkModeImage` to better adapt to the dark mode.
+
+</Framework>
+
+An empty string `image` counts as no image, and the title is laid out as if there were none.
+
+<Demo id="basic" />
+
+### Custom content
+
+<Framework only="react">
+
+Description content goes in the `description` prop, and `children` is the actions area below it.
+
+</Framework>
+
+<Framework only="vue">
+
+Description content goes in the `#description` slot, and the default slot is the actions area below it.
+
+</Framework>
+
+<Framework only="solid">
+
+Description content goes in the `description` prop, and `children` is the actions area below it.
+
+</Framework>
+
+<Demo id="custom" />
+
+It is not necessary to use pictures.
+
+<Demo id="no-image" />
+
+### Different layout
+
+Two types of layouts are supported: `vertical`, `horizontal`. The default is `vertical`.
+
+<Demo id="layout" />
+
+### Placeholder illustration (under construction)
+
+Currently the following illustrations are supported in `@fibrae/semi-illustrations-react` (`@fibrae/semi-illustrations-vue` for Vue).
+
+<Demo id="illustrations" />
+
+## API reference
+
+<Framework only="react">
+
+<EmptyReactApi />
+
+Other native attributes (such as `id` and `aria-*`) land on the root `div` element.
+
+</Framework>
+
+<Framework only="vue">
+
+<EmptyVueApi />
+
+`class`, `style` and native attributes are passed through attrs to the root element. `title` is a component prop and does not land on the root element as an HTML attribute. In dark mode every Empty observes `theme-mode` on `document.body` after mount; server render and hydration use the light image.
+
+</Framework>
+
+<Framework only="solid">
+
+<EmptySolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root `div` element. `title`, `description`, `image`, `darkModeImage`, `imageStyle` and `layout` are component props and do not land on the root element.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Empty illustrations are decorative: an SVG illustration has `aria-hidden="true"`, and an `img` rendered from an image URL has an empty `alt`
+- `title` is styled as a heading but rendered as a `div` without heading semantics, so it does not disturb the page's heading levels
+
+## Content Guidelines
+
+- Title
+    - The title should be concise and easy to understand
+- Text
+    - The specific reasons for displaying the empty state can be displayed, and the subsequent operation behavior can also be displayed to help the user eliminate the empty state
+    - Don't repeat the content on the title
+    - Try to keep the body text within 1-2 sentences
+- Action button
+    - Button copy needs to be clear and easy to understand
+    - Use the verb + noun format
+
+## Design Token
+
+<DesignToken />
+
+## FAQ

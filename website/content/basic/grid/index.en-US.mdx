@@ -1,0 +1,165 @@
+---
+title: Grid
+order: 20
+icon: doc-grid
+brief: 24 grid system.
+---
+
+import RowReactApi from './api/row.react.en-US.mdx';
+import ColReactApi from './api/col.react.en-US.mdx';
+import RowVueApi from './api/row.vue.en-US.mdx';
+import ColVueApi from './api/col.vue.en-US.mdx';
+import RowSolidApi from './api/row.solid.en-US.mdx';
+import ColSolidApi from './api/col.solid.en-US.mdx';
+
+## Overview
+
+The grid system of layout, we define the external framework of information blocks based on row and column (col) to ensure that each area of the page can be robustly arranged.
+
+## Flex layout
+
+Our grid system supports the Flex layout, allowing the horizontal alignment of child elements within the parent node - left, center, right, equal width, scattered arrangement. Between child elements and child elements, support top alignment, vertical center alignment, bottom alignment. At the same time, support the use of `order` To define the order of the elements.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Col, Row } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Col, Row } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Col, Row } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+From stacking to horizontal arrangement.
+
+Using a single set of Row and Col grid components, you can create a basic grid system. All Col must be placed in the Row.
+
+<Framework only="vue">
+
+Numeric and object props such as `span`, `offset`, `gutter` and `xs` must be bound with `:`, for example `:span="12"`; a plain string is not converted to a number.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Gutter interval
+
+The grid often needs to work with the interval. You can use Row's `Gutter` Properties, we recommend using (16 + 8n) px as a grid interval. (n is a natural number)
+
+Vertical gutter can be in the form of an array. The first item of the array is horizontal gutter and the second item is vertical gutter.<br/>
+
+If you want to support responsiveness, you can write \{xs: 8, sm: 16, md: 24, lg: 32\}.<br/>
+
+Dark for content area, light for spacing
+
+<Demo id="gutter" />
+
+### Offset
+
+<Demo id="offset" />
+
+### Use Flex layout
+
+Set `type="flex"` on Row to define a Flex layout. The `justify` values `start`, `center`, `end`, `space-between` and `space-around` define how the child elements are arranged in the parent node.
+
+<Demo id="flex" />
+
+### Flex subelements vertically aligned
+
+<Demo id="flex-align" />
+
+### Flex element sorting
+
+Change the sorting of elements through `order` of the Col.
+
+<Demo id="flex-order" />
+
+### Responsive
+
+Referring to Bootstrap's responsive design, preset six response sizes:`xs`, `sm`, `md`, `lg`, `Xl`, `xxl`.
+
+`xs` is the base layer without a media query and applies at every screen width; `sm` and above override the smaller breakpoints step by step according to the viewport width.
+
+In the object form, `order`, `offset`, `push` and `pull` set to `0` reset the value a smaller breakpoint set, for example `md` set to `{ offset: 0 }`.
+
+<Demo id="responsive" />
+
+## API reference
+
+### Row
+
+<Framework only="react">
+
+<RowReactApi />
+
+Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `<div>` of Row.
+
+</Framework>
+
+<Framework only="vue">
+
+<RowVueApi />
+
+`class`, `style` and native attributes passed as attrs land on the root element of Row.
+
+</Framework>
+
+<Framework only="solid">
+
+<RowSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `id` and `aria-*`) land on the root `<div>` of Row.
+
+</Framework>
+
+### Col
+
+<Framework only="react">
+
+<ColReactApi />
+
+Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `<div>` of Col.
+
+</Framework>
+
+<Framework only="vue">
+
+<ColVueApi />
+
+`class`, `style` and native attributes passed as attrs land on the root element of Col; a custom `class` comes after the component's own class names.
+
+</Framework>
+
+<Framework only="solid">
+
+<ColSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `id` and `aria-*`) land on the root `<div>` of Col.
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

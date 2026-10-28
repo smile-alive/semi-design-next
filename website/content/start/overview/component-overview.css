@@ -1,0 +1,35 @@
+.semi-overview-list {
+    display: flex;
+    flex-wrap: wrap;
+    font-family: var(--site-mono);
+    background-color: var(--semi-color-bg-0);
+}
+
+.semi-overview-card {
+    display: block;
+    width: 195px;
+    margin-right: 16px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+
+.semi-overview-card-image {
+    width: 100%;
+    height: 129px;
+}
+
+.semi-overview-card-image-dark,
+[theme-mode='dark'] .semi-overview-card-image-light {
+    display: none;
+}
+
+[theme-mode='dark'] .semi-overview-card-image-dark {
+    display: block;
+}
+
+.semi-overview-card-text {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--semi-color-text-0);
+}

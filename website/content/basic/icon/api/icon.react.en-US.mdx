@@ -1,0 +1,11 @@
+**Props**
+
+| Property  | Description                                                                                                                                          | Type                 | Default     |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ----------- |
+| fill      | Fill colors for bicolor and multicolor icons, as a string or an array of strings. When set, Icon passes it to the `svg` element with `cloneElement`. | `string \| string[]` | -           |
+| prefixCls | Class name prefix; the root element's class is `<prefixCls>-icon`.                                                                                   | `string`             | `"semi"`    |
+| rotate    | Rotation angle in integer degrees. Non-integer values are ignored.                                                                                   | `number`             | -           |
+| size      | Icon size: `extra-small`, `small`, `default`, `large`, `extra-large` or `inherit`, which uses the surrounding font size.                             | `IconSize`           | `"default"` |
+| spin      | Enables the spinning animation.                                                                                                                      | `boolean`            | `false`     |
+| svg       | Icon content as a React element, such as `<StarIcon />`.                                                                                             | `ReactNode`          | -           |
+| type      | Adds an icon type class name, `<prefixCls>-icon-<type>`, to the root element.                                                                        | `string`             | -           |

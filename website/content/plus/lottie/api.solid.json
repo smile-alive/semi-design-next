@@ -1,0 +1,27 @@
+{
+    "lottie": {
+        "source": "packages/semi-ui-solid/src/lottie/lottie.tsx",
+        "props": {
+            "params": {
+                "zh-CN": "传给 lottie-web loadAnimation 的参数。内容与上次加载时不同才会重新加载，每次渲染传入内容相同的新对象不会重新加载；原地修改对象不会触发。",
+                "en-US": "Options passed to lottie-web's loadAnimation. It reloads only when the content differs from the last load: passing a new object with the same content on each render does not reload, and mutating the object in place does not either."
+            },
+            "width": {
+                "zh-CN": "容器宽度，需带单位，如 300px。",
+                "en-US": "Container width, with a unit such as 300px."
+            },
+            "height": {
+                "zh-CN": "容器高度，需带单位，如 300px。",
+                "en-US": "Container height, with a unit such as 300px."
+            },
+            "getAnimationInstance": {
+                "zh-CN": "每创建一次动画（包括每次重新加载）调用一次，参数为当前动画的 AnimationItem。",
+                "en-US": "Called once per animation created, including every reload, with the AnimationItem of the animation."
+            },
+            "getLottie": {
+                "zh-CN": "lottie-web 加载完成后，每次挂载调用一次，参数为全局 lottie。",
+                "en-US": "Called once per mount after lottie-web has loaded, with the global lottie."
+            }
+        }
+    }
+}

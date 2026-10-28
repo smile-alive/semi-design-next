@@ -1,0 +1,283 @@
+---
+title: 提示
+order: 94
+icon: doc-toast
+brief: Toast 提示是对用户的操作做出及时反馈，由用户的操作触发，反馈信息可以是操作的结果状态，如成功、失败、出错、警告等。
+---
+
+import TicketToast from './figures/ticket-toast.react.tsx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Toast } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Toast } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+静态方法在组件树之外渲染。可选 `app.use(Toast)`：安装后静态 Toast 用该 app 的上下文渲染，可以读到 `app.provide()` 的值和全局注册的组件；Toast、Notification、Modal 的静态方法共用这一记录，安装其中任何一个即对三者生效，多个 app 都安装时以最后一次为准。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 普通提示
+
+通过调用 Toast的相关 method 可以实现弹出提示。推荐设置 stack 属性应用堆叠样式到同屏多个 Toast，Hover 展开，可有效防止一次性弹出多个并列 Toast 对用户造成干扰。
+
+<Demo id="basic" />
+
+### 其他提示类型
+
+包括成功、失败、警告
+
+<Demo id="types" />
+
+### 多色样式
+
+可以使用 `theme` 设置浅色填充样式提高与界面的对比，默认为 'normal' 的白色模式。
+
+<Demo id="theme" />
+
+### 堆叠样式
+
+设置 `stack` 后，同屏 Toast 超过阈值时堆叠展示，Hover 展开。`true` 的阈值为 3，传数字可自定义阈值；堆叠时只显示最前面的 3 层。
+
+<Demo id="stack" />
+
+### 链接文本
+
+配合 Typography 可以自定义链接文本，用来配合更复杂的场景的使用。
+
+<Framework only="vue">
+
+`content`、`icon` 接受 `string`、VNode 或返回 VNodeChild 的函数；下面的 Typography 文本需要用 `h()` 构造 VNode。
+
+</Framework>
+
+<Demo id="link" />
+
+### 修改延时
+
+自定义时长 10s，默认时长为 3s
+
+<Demo id="duration" />
+
+### 手动关闭
+
+当 `duration` 设置为 0 时，toast 不会自动关闭，此时必须通过手动关闭。
+
+<Demo id="manual-close" />
+
+### 更新消息内容
+
+可以通过唯一的 `id` 来更新内容。
+
+<Demo id="update" />
+
+### 销毁所有
+
+全局销毁：
+
+- `Toast.destroyAll()`
+
+### 消费 Context
+
+<Framework only="react">
+
+通过 Toast.useToast 创建支持读取 context 的 contextHolder。此时的 toast 会渲染在 contextHolder 所在的节点处。
+
+`Toast.useToast()` 返回元组 `[toast, contextHolder]`：toast 对象的 `info`、`success`、`warning`、`error`、`open` 接收不含 `type`、`id`、`zIndex`、`getPopupContainer` 的 Options，返回 `toastId`；`close(toastId)` 手动关闭。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `Toast.useToast()` 创建支持读取 context 的 Holder。此时的 toast 会渲染在 `<Holder />` 所在的节点处，继承该位置的 provide、ConfigProvider 和语言。
+
+`Toast.useToast()` 返回元组 `[toast, Holder]`：toast 对象的 `info`、`success`、`warning`、`error`、`open` 接收不含 `type`、`id` 的 Options，返回 `toastId`；`close(toastId)` 手动关闭。`content`、`icon` 传函数时，函数在 Toast 内部作为函数式组件渲染，里面可以 `inject`。`top`、`zIndex`、`getPopupContainer` 等定位项在 hook 中不生效。ConfigProvider、LocaleProvider 是组件级 provide，静态 `Toast` 读不到它们，需要时改用 `useToast()`。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `Toast.useToast()` 创建支持读取 context 的 `contextHolder`。此时的 toast 会渲染在 `contextHolder` 所在的节点处，继承该位置的 context、ConfigProvider 和语言；`contextHolder` 在调用 `useToast()` 的 owner 下创建，只放置一次。
+
+`Toast.useToast()` 返回元组 `[toast, contextHolder]`：toast 对象的 `info`、`success`、`warning`、`error`、`open` 接收不含 `type`、`id`、`zIndex`、`getPopupContainer` 的 Options，返回 `toastId`；`close(toastId)` 手动关闭。`content`、`icon` 传元素时，元素在事件处理函数中创建，没有 owner，读不到 context；需要读取 context 时传函数，函数在 Toast 渲染处调用。ConfigProvider、LocaleProvider 的值静态 `Toast` 读不到，需要时改用 `useToast()`。
+
+</Framework>
+
+<Demo id="context" />
+
+### 创建不同配置 Toast
+
+<Notice>常用于覆盖全局配置</Notice>
+
+- `ToastFactory.create(config) => Toast`  
+  如果您的应用中需要使用不同 config 的 Toast，可以使用 ToastFactory.create(config)创建新的 Toast:
+
+<Demo id="factory" />
+
+## API 参考
+
+组件提供的静态方法，使用方式和参数如下：展示：可以直接传入 `options` 对象或 `string`：
+
+**全局配置, 在调用前提前配置，全局一次生效**
+
+- `Toast.config(config)`
+- `Toast.resetConfig()` 将全局配置恢复为默认值，只影响之后弹出的 Toast。`ToastFactory.create(config)` 创建的实例恢复为创建时传入的 `config`
+
+**直接展示 Toast**
+
+- `Toast.info(options || string)`
+- `Toast.error(options || string)`
+- `Toast.warning(options || string)`
+- `Toast.success(options || string)`
+
+**`info` `error` `warning` `success` 返回值为`toastId`, 可用于手动关闭**
+
+`const toastId = Toast.info({ /*...options*/ })`
+
+- `Toast.close(toastId)` 手动关闭
+
+## Options
+
+**Toast Options 支持以下 API 及 Config 中的 API**
+
+<Framework only="react">
+
+| 属性         | 说明                                                         | 类型              | 默认值 |
+| ------------ | ------------------------------------------------------------ | ----------------- | ------ |
+| content      | 提示内容                                                     | ReactNode         | ''     |
+| icon         | 自定义图标                                                   | ReactNode         |        |
+| showClose    | 是否展示关闭按钮                                             | boolean           | true   |
+| textMaxWidth | 内容的最大宽度                                               | number \| string  | 450    |
+| onClose      | toast 关闭的回调函数                                         | () => void        |        |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠 | boolean \| number | false  |
+| id           | 自定义 ToastId                                               | string            |        |
+| motion       | 是否开启进出场动画                                           | boolean           | true   |
+| className    | 类名                                                         | string            |        |
+| style        | 样式                                                         | CSSProperties     |        |
+
+`className`、`style` 与未声明的选项（如 `data-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性         | 说明                                                         | 类型                                  | 默认值 |
+| ------------ | ------------------------------------------------------------ | ------------------------------------- | ------ |
+| content      | 提示内容；函数在 Toast 内部作为函数式组件渲染，可以 `inject` | string \| VNode \| (() => VNodeChild) | ''     |
+| icon         | 自定义图标                                                   | string \| VNode \| (() => VNodeChild) |        |
+| showClose    | 是否展示关闭按钮                                             | boolean                               | true   |
+| textMaxWidth | 内容的最大宽度                                               | number \| string                      | 450    |
+| onClose      | toast 关闭的回调函数                                         | () => void                            |        |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠 | boolean \| number                     | false  |
+| id           | 自定义 ToastId                                               | string                                |        |
+| motion       | 是否开启进出场动画                                           | boolean                               | true   |
+| class        | 类名                                                         | string \| object \| array             |        |
+| style        | 样式                                                         | StyleValue                            |        |
+
+未声明的选项（如 `data-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性         | 说明                                                                                                                    | 类型                                 | 默认值  |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------- |
+| content      | 提示内容，可传元素或返回元素的函数；函数在 Toast 渲染处调用，用 `Toast.useToast()` 时可以读取 holder 所在位置的 context | `JSX.Element \| (() => JSX.Element)` | `''`    |
+| icon         | 自定义图标，可传元素或返回元素的函数，替换 `type` 对应的图标；未自带尺寸的 Semi 图标取 large                            | `JSX.Element \| (() => JSX.Element)` | -       |
+| showClose    | 是否展示关闭按钮                                                                                                        | `boolean`                            | `true`  |
+| textMaxWidth | 内容的最大宽度，数字单位为 px                                                                                           | `number \| string`                   | `450`   |
+| onClose      | Toast 关闭的回调函数                                                                                                    | `() => void`                         | -       |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠                                                            | `boolean \| number`                  | `false` |
+| id           | 自定义 ToastId，相同 id 的 Toast 会被更新                                                                               | `string`                             | -       |
+| motion       | 是否开启进出场动画                                                                                                      | `boolean`                            | `true`  |
+| class        | 类名                                                                                                                    | `string`                             | -       |
+| style        | 样式                                                                                                                    | `JSX.CSSProperties \| string`        | -       |
+
+`class`、`style` 与未声明的选项（如 `data-*`、`aria-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
+
+</Framework>
+
+## Config
+
+**以下 API 支持全局配置，用于更改当前 Toast 的默认配置**
+
+| 属性              | 说明                                                                                                                                                                  | 类型              | 默认值              |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------- |
+| bottom            | 弹出位置 bottom                                                                                                                                                       | number \| string  | -                   |
+| left              | 弹出位置 left                                                                                                                                                         | number \| string  | -                   |
+| right             | 弹出位置 right                                                                                                                                                        | number \| string  | -                   |
+| top               | 弹出位置 top                                                                                                                                                          | number \| string  | -                   |
+| zIndex            | 弹层 z-index 值                                                                                                                                                       | number            | 1010                |
+| theme             | 填充样式，支持 `light`, `normal`                                                                                                                                      | string            | `normal`            |
+| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                                           | number            | 3                   |
+| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 container 和 内部的 .semi-toast-wrapper `position: relative`, 这会改变浮层 DOM 树位置，但不会改变视图渲染位置。 | () => HTMLElement | () => document.body |
+
+## Accessibility
+
+### ARIA
+
+- Toast 的 role 按类型区分：`warning`、`error` 为 `alert`，`info`、`success` 与没有 `type` 的为 `status`
+- `status` 类 Toast 由列表常驻的 `aria-live="polite"` 播报区朗读，Toast 自身为 `aria-live="off"`，只播报 `content` 的文本；`warning`、`error` 仍由 `alert` 自行播报
+
+### 键盘和焦点
+
+- 关闭按钮是原生 `button`，可以用 `Tab` 聚焦，`Enter` 或 `Space` 触发关闭
+- Toast 出现时不会抢走焦点
+- 指针或键盘焦点进入 Toast 时暂停自动关闭的计时，并展开堆叠；移出后恢复计时
+
+## 文案规范
+
+<div
+    style={{
+        border: '1px solid var(--semi-color-border)',
+        padding: 10,
+        marginBottom: 24,
+        justifyContent: 'center',
+        display: 'flex',
+    }}
+>
+    <TicketToast type="success" content="Ticket transferred" />
+</div>
+
+- 保持简洁
+- 句尾不使用句号
+- 使用 名词 + 动词 的格式进行说明
+
+| ✅ 推荐用法            | ❌ 不推荐用法                            |
+| ---------------------- | ---------------------------------------- |
+| Language added         | New language has been added successfully |
+| Ticket transfer failed | Can't transfer ticket                    |
+
+- 提供动作的提示消息
+    - 只提供一个动作
+    - 不使用类似于「已读」类的动作，例如 OK, Got it, Dismiss, Cancel
+
+| ✅ 推荐用法                                                                  | ❌ 不推荐用法                                                                  |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| <TicketToast type='error' content='Ticket transfer failed' action='Retry' /> | <TicketToast type='error' content='Ticket transfer failed' action='Dismiss' /> |
+
+## 设计变量
+
+<DesignToken />

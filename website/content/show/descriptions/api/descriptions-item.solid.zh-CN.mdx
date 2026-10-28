@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性     | 说明                                            | 类型                                                                      | 默认值 |
+| -------- | ----------------------------------------------- | ------------------------------------------------------------------------- | ------ |
+| children | 值，可以是 JSX 元素，也可以是渲染时调用的函数。 | <ApiType detail={"JSX.Element \u007c (() => JSX.Element)"}>Type</ApiType> | -      |
+| hidden   | 是否隐藏该项。                                  | `boolean`                                                                 | -      |
+| itemKey  | 键，可以是 JSX 元素。                           | `JSX.Element`                                                             | -      |
+| keyStyle | key 的自定义样式，可以是样式对象或字符串。      | `JSX.CSSProperties \| string`                                             | -      |
+| span     | 单元格跨越的列数。                              | `number`                                                                  | -      |

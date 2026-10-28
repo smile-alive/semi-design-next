@@ -1,0 +1,31 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| boundElement | 限制宽高的元素：'parent'、'window' 或一个 HTMLElement。 | `'parent' \| 'window' \| HTMLElement` | - |
+| boundsByDirection | 是否按拖动方向计算边界：为 true 时，从左侧或上侧手柄拖动，最大尺寸按元素固定的那一侧到限制元素对侧边缘的距离计算。 | `boolean` | - |
+| defaultSize | 初始宽高，支持数字和字符串（px/vw/vh/%）。 | `Size` | - |
+| enable | 可伸缩的方向，未设置为 false 的方向均可拖动；传入 false 则不渲染任何手柄。 | `Enable \| false` | <ApiType detail={"{\n top: true,\n right: true,\n bottom: true,\n left: true,\n topRight: true,\n bottomRight: true,\n bottomLeft: true,\n topLeft: true,\n }"}>Type</ApiType> |
+| grid | 调整大小时对齐的增量。 | `[number, number]` | `[1, 1]` |
+| handleClass | 各方向手柄的类名。 | `HandleClassName` | - |
+| handleStyle | 各方向手柄的样式，可传对象或字符串。 | `HandleStyle` | - |
+| handleWrapperClass | 包裹所有手柄的容器类名。 | `string` | - |
+| handleWrapperStyle | 包裹所有手柄的容器样式。 | `JSX.CSSProperties \| string` | - |
+| lockAspectRatio | 锁定横纵比：true 按初始宽高锁定，数字为宽高比。 | `boolean \| number` | `false` |
+| lockAspectRatioExtraHeight | 锁定横纵比时，不参与比例计算的额外高度（如内边距），单位为像素。 | `number` | `0` |
+| lockAspectRatioExtraWidth | 锁定横纵比时，不参与比例计算的额外宽度（如内边距），单位为像素。 | `number` | `0` |
+| maxHeight | 最大高度。 | `string \| number` | - |
+| maxWidth | 最大宽度。 | `string \| number` | - |
+| minHeight | 最小高度。 | `string \| number` | - |
+| minWidth | 最小宽度。 | `string \| number` | - |
+| onChange | 拖动或方向键改变尺寸时调用，参数为新尺寸、事件与方向。 | `ResizeCallback` | - |
+| onResizeEnd | 结束伸缩时调用，参数为最终尺寸、事件与方向。 | `ResizeCallback` | - |
+| onResizeStart | 开始伸缩时调用，返回 false 取消本次伸缩。 | `ResizeStartCallback` | - |
+| ratio | 拖动距离与实际尺寸变化的比例，可传 [宽, 高]。方向键每次固定改变 10px，不受 ratio 与 scale 影响。 | `number \| [number, number]` | `1` |
+| renderHandle | 各启用方向手柄的内容，替换默认的握把图标；每个启用的方向调用一次，参数为该手柄的方向。 | <ApiType detail={"(direction: Direction) => JSX.Element"}>Type</ApiType> | - |
+| scale | 元素被外部缩放的比例，用于校正指针位移。 | `number` | `1` |
+| size | 受控尺寸，按轴生效：未设置的轴仍跟随拖拽。拖动时需在 onChange 中把新尺寸写回。 | `Size` | - |
+| snap | 调整大小时对齐的绝对像素值，x 与 y 均可省略。 | `{ x?: number[]; y?: number[]; }` | - |
+| snapGap | 移动到下一个对齐目标所需的最小间隙。 | `number` | `0` |

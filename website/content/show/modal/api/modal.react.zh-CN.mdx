@@ -1,0 +1,51 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| afterClose | 对话框完全关闭后的回调；显示期间被卸载，或所在子树被 `Activity` 隐藏时也会调用一次。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| bodyStyle | 对话框内容区的样式。 | `CSSProperties` | - |
+| cancelButtonProps | 取消按钮的属性，类型同 Button。打开后默认聚焦取消按钮，`autoFocus` 为 `false` 时不聚焦；`onClick` 先于内置的取消处理调用，不会替换内置处理。 | `ButtonProps` | - |
+| cancelLoading | 取消按钮是否加载中；不传时跟随 `onCancel` 返回的 Promise，显式传入 `false` 关闭该行为。 | `boolean` | - |
+| cancelText | 取消按钮文字，缺省取语言包 `Modal.cancel`。 | `string` | - |
+| centered | 是否垂直居中显示。 | `boolean` | `false` |
+| children | 对话框的正文。 | `React.ReactNode` | - |
+| className | 落在 portal 内最外层元素上的类名。 | `string` | - |
+| closable | 是否显示右上角的关闭按钮。 | `boolean` | `true` |
+| closeIcon | 关闭按钮的图标；传入 `null` 时回落到默认图标，隐藏关闭按钮请用 `closable={false}`。 | `ReactNode` | - |
+| closeOnEsc | 是否允许按 Esc 取消对话框。 | `boolean` | `true` |
+| confirmLoading | 确认按钮是否加载中；不传时跟随 `onOk` 返回的 Promise，显式传入 `false` 关闭该行为。 | `boolean` | - |
+| content | 组件版 Modal 不渲染该属性，对话框内容写在 `children` 中；它只用于 `Modal.info` 等命令式方法的选项。 | `ReactNode` | - |
+| direction | 文字方向，覆盖 ConfigProvider 的设置；不传时跟随所在位置的 ConfigProvider。 | `'ltr' \| 'rtl'` | - |
+| footer | 完全替换默认页脚按钮。传入 `null` 时隐藏页脚区域。 | `ReactNode` | - |
+| footerFill | 默认页脚的两个按钮是否撑满排列，默认 `false`。 | `boolean` | - |
+| fullScreen | 是否全屏显示，开启后 `width`、`height` 不再生效。 | `boolean` | `false` |
+| getPopupContainer | 指定弹层渲染到的父级 DOM；不传时取 ConfigProvider 的 `getPopupContainer`，都没有时渲染到 `document.body`。自定义容器需要设置 `position: relative`，这会改变浮层的 DOM 位置，不改变视图位置。 | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| hasCancel | 默认页脚是否显示取消按钮。 | `boolean` | `true` |
+| header | 完全替换默认头部（图标、标题与关闭按钮）。传入 `null` 时隐藏头部区域。 | `ReactNode` | - |
+| height | 对话框高度，数字按像素处理，字符串为合法 CSS 长度。 | `string \| number` | - |
+| icon | 标题前的图标。 | `ReactNode` | - |
+| keepDOM | 关闭时是否保留对话框内部节点而不销毁。 | `boolean` | `false` |
+| lazyRender | 配合 `keepDOM` 使用；为 `true` 时，首次显示之前不渲染对话框。 | `boolean` | `true` |
+| mask | 是否显示遮罩。 | `boolean` | `true` |
+| maskClosable | 是否允许点击遮罩取消对话框。 | `boolean` | `true` |
+| maskFixed | 遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理（aria-modal、页面 inert、Tab 锁定、body 滚动锁定）。 | `boolean` | `false` |
+| maskStyle | 遮罩的样式。 | `CSSProperties` | - |
+| modalContentClass | 对话框内容元素的类名。 | `string` | - |
+| modalRender | 自定义渲染对话框本身，参数是 `role="dialog"` 元素，返回值必须包含它，例如用 `DragMove` 包裹。 | <ApiType detail={"(node: ReactNode) => ReactNode"}>Type</ApiType> | - |
+| motion | 是否启用进出场动画。 | `boolean` | `true` |
+| okButtonProps | 确认按钮的属性，类型同 Button。`autoFocus` 为 `true` 时打开后聚焦该按钮；`onClick` 先于内置的确认处理调用，不会替换内置处理。 | `ButtonProps` | - |
+| okText | 确认按钮文字，缺省取语言包 `Modal.confirm`。 | `string` | - |
+| okType | 确认按钮的类型，同 Button 的 `type`。 | `OKType` | `"primary"` |
+| onCancel | 取消按钮、关闭按钮、遮罩和 Esc 触发；按 Esc 时参数为原生 `KeyboardEvent`。返回 Promise 时取消按钮保持加载直到落定；对话框不会自行关闭，由使用方把 `visible` 设为 `false`。 | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
+| onOk | 点击确认按钮时调用，参数是点击事件；返回 Promise 时确认按钮保持加载直到落定。对话框不会自行关闭，由使用方把 `visible` 设为 `false`。 | <ApiType detail={"(e: React.MouseEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
+| preventScroll | 组件内部调用 focus 时是否阻止浏览器滚动到被聚焦元素，不影响使用方自己的 focus 调用；未设置时聚焦会滚动到该元素。 | `boolean` | - |
+| ref | 接收 portal 内最外层 `div` 元素的引用，没有渲染内容时为 `null`。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| role | 对话框元素的 `role`，默认 `dialog`；命令式方法使用 `alertdialog`。 | `'dialog' \| 'alertdialog'` | - |
+| size | 对话框宽度档位：`small` 为 448px，`medium` 为 684px，`large` 为 920px，`full-width` 为 `100vw - 64px`。 | `Size` | `"small"` |
+| style | 落在 `.semi-modal` 对话框盒子上的样式。 | `CSSProperties` | - |
+| title | 对话框标题；未传入 `aria-label` 或自定义 `header` 时，标题用于命名对话框。 | `ReactNode` | - |
+| visible | 对话框是否可见，由使用方控制。 | `boolean` | `false` |
+| width | 对话框宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 `size` 决定。 | `string \| number` | - |
+| zIndex | 弹层外层的 `z-index`。 | `number` | `1000` |

@@ -1,0 +1,48 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property            | Description                                                                                                                                                  | Type                                                   | Default                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------- |
+| bodyStyle           | Style of the panel body.                                                                                                                                     | `StyleValue`                                           | `semiGlobalDefault("SideSheet", "bodyStyle")`           |
+| canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width.                                                          | `boolean`                                              | `semiGlobalDefault("SideSheet", "canVerticalSetWidth")` |
+| closable            | Whether the close button in the corner is shown.                                                                                                             | `boolean`                                              | `semiDefault("SideSheet", "closable", true)`            |
+| closeOnEsc          | Whether Esc closes the sheet.                                                                                                                                | `boolean`                                              | `semiDefault("SideSheet", "closeOnEsc", false)`         |
+| disableScroll       | Whether body scrolling is locked (overflow: hidden on body) while a masked sheet is rendered in document.body.                                               | `boolean`                                              | `semiDefault("SideSheet", "disableScroll", true)`       |
+| getPopupContainer   | Parent element the sheet is rendered into. A custom container needs position: relative; this changes where the sheet sits in the DOM, not where it is shown. | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined`                                             |
+| headerStyle         | Style of the panel header.                                                                                                                                   | `StyleValue`                                           | `semiGlobalDefault("SideSheet", "headerStyle")`         |
+| height              | Height, used when placement is top or bottom. A number is in pixels; a string is any valid CSS length. 448 when omitted.                                     | `string \| number`                                     | `semiGlobalDefault("SideSheet", "height")`              |
+| keepDOM             | Whether the sheet content stays mounted while closed.                                                                                                        | `boolean`                                              | `semiDefault("SideSheet", "keepDOM", false)`            |
+| mask                | Whether the mask is shown. When false the content outside stays operable.                                                                                    | `boolean`                                              | `semiDefault("SideSheet", "mask", true)`                |
+| maskClosable        | Whether clicking the mask closes the sheet.                                                                                                                  | `boolean`                                              | `semiDefault("SideSheet", "maskClosable", true)`        |
+| maskStyle           | Style of the mask.                                                                                                                                           | `StyleValue`                                           | `semiGlobalDefault("SideSheet", "maskStyle")`           |
+| motion              | Whether animation is enabled.                                                                                                                                | `boolean`                                              | `semiDefault("SideSheet", "motion", true)`              |
+| placement           | Edge the sheet slides in from.                                                                                                                               | `Placement`                                            | `semiDefault("SideSheet", "placement", "right")`        |
+| size                | Size: small is 448px, medium 684px, large 920px. Used only when placement is left or right.                                                                  | `"small" \| "medium" \| "large"`                       | `semiDefault("SideSheet", "size", "small")`             |
+| title               | Plain-text title. The title slot wins when both are given.                                                                                                   | `string`                                               | `semiGlobalDefault("SideSheet", "title")`               |
+| visible             | Whether the sheet is visible, used with v-model:visible.                                                                                                     | `boolean`                                              | `semiGlobalDefault("SideSheet", "visible")`             |
+| width               | Width, used when placement is left or right. A number is in pixels; a string is any valid CSS length. Decided by size when omitted.                          | `string \| number`                                     | `semiGlobalDefault("SideSheet", "width")`               |
+| zIndex              | z-index of the layer.                                                                                                                                        | `number`                                               | `semiDefault("SideSheet", "zIndex", 1000)`              |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| cancel | Emitted after update:visible when the user closes the sheet with the close button, the mask or Esc. The payload is the native MouseEvent, or the native KeyboardEvent for Esc. | `[event: MouseEvent \| KeyboardEvent]` |
+| update:visible | Emitted with false before cancel when the close button, the mask or Esc closes the sheet, for v-model:visible to write back. | `[visible: boolean]` |
+| afterVisibleChange | Emitted with true right after the commit that shows the sheet, without waiting for the enter animation. Emitted with false after the leave animation, and once with false if the sheet is unmounted while shown. Not emitted when a KeepAlive deactivates or reactivates it. | `[visible: boolean]` |
+
+**Slots**
+
+| Slot      | Description                                                                                                             | Scope parameters |
+| --------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| default   | Body of the sheet.                                                                                                      | `any`            |
+| title     | Title. It wins over the title prop and names the dialog. Nothing is rendered when it is empty.                          | `any`            |
+| footer    | Footer of the sheet. Nothing is rendered when it is empty.                                                              | `any`            |
+| closeIcon | Icon inside the close button. An empty slot falls back to the default icon; hide the button with closable set to false. | `any`            |
+
+**Exposes**
+
+| Name | Description                                                                             | Type                     |
+| ---- | --------------------------------------------------------------------------------------- | ------------------------ |
+| root | The outer .semi-sidesheet element inside the portal, or null while nothing is rendered. | `HTMLDivElement \| null` |

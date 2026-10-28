@@ -1,0 +1,64 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autoFocus | 挂载后将焦点交给输入框，透传给输入框的 `autoFocus`。 | `boolean` | - |
+| borderless | 无边框模式。 | `boolean` | `false` |
+| className | 根元素的类名。 | `string` | `""` |
+| clearIcon | 自定义清除图标，`showClear` 为 `true` 时有效。 | `React.ReactNode` | - |
+| defaultOpen | 非受控时面板是否默认打开。 | `boolean` | - |
+| defaultValue | 非受控时的初始时间，形态同 `value`；`type` 为 `timeRange` 时为数组。 | `BaseValueType \| BaseValueType[]` | - |
+| disabled | 禁用全部操作。 | `boolean` | - |
+| disabledHours | 返回禁止选择的小时数组。 | <ApiType detail={"() => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
+| disabledMinutes | 按所选小时返回禁止选择的分钟数组。 | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
+| disabledSeconds | 按所选小时和分钟返回禁止选择的秒数组。 | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | <ApiType detail={"(): number[] => []"}>Type</ApiType> |
+| disabledTime | 仅范围模式生效：按 `value` 与 `panelType`（`left` 或 `right`）返回左右面板各自的规则；`value` 没有值时为空数组，只含一个时间时长度为 1，未选的一侧为 `undefined`。返回的 `disabledHours` 等覆盖顶层同名属性，未返回的回退到顶层，关闭顶层规则需返回空数组的函数；单选模式下忽略。 | <ApiType detail={"( value: Date[], panelType: PanelType ) => { disabledHours?: () => number[]; disabledMinutes?: (selectedHour: number) => number[]; disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[]; }"}>Type</ApiType> | - |
+| focusOnOpen | 挂载后让输入框获得焦点并选中内容，同时打开面板。 | `boolean` | `false` |
+| format | 展示的时间格式，遵循 date-fns 的 format。未设置时，`use12Hours` 为 `true` 取 `a h:mm:ss`，否则取 `HH:mm:ss`。 | `string` | - |
+| hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `false` |
+| hourStep | 小时选项的间隔，必须是正整数，未设置时为 1。 | `number` | - |
+| id | 输入框的 `id`。 | `string` | - |
+| inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘；只读时清除按钮仍可用。 | `boolean` | `false` |
+| inputStyle | 输入框的样式，对象的键用 camelCase。 | `React.CSSProperties` | - |
+| insetLabel | 输入框内部的前缀标签，显示在输入框内。 | `React.ReactNode` | - |
+| insetLabelId | `insetLabel` 的 `id`，用于 `aria-labelledby` 等关联。 | `string` | - |
+| minuteStep | 分钟选项的间隔，必须是正整数，未设置时为 1。 | `number` | - |
+| motion | 是否展示弹出层动画。 | `boolean` | `true` |
+| onBlur | 点击外部关闭面板时的回调，参数为该次 mousedown 的原生事件。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | 时间变化的回调。`type` 为 `time` 时参数为 `(Date, 格式化字符串)`，为 `timeRange` 时两者都是数组。 | <ApiType detail={"((value: Date, str: string) => void) \u007c ((value: Date[], str: string[]) => void)"}>Type</ApiType> | - |
+| onFocus | 输入框获得焦点时的回调。 | <ApiType detail={"React.FocusEventHandler\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| onOpenChange | 面板打开或关闭时的回调，参数为是否打开。 | <ApiType detail={"(open: boolean) => void"}>Type</ApiType> | - |
+| open | 面板是否打开，受控属性；`undefined` 视为非受控。 | `boolean` | - |
+| panelFooter | 面板底部的内容。范围模式下可传数组，第 `i` 项用于第 `i` 个面板。 | `React.ReactNode \| React.ReactNode[]` | - |
+| panelHeader | 面板头部的内容。范围模式下可传数组，第 `i` 项用于第 `i` 个面板；未设置时范围模式显示语言包中的起止文案。 | `React.ReactNode \| React.ReactNode[]` | - |
+| panels | 仅范围模式：第 `i` 项同时作为第 `i` 个面板的头部和底部，优先于 `panelHeader` 与 `panelFooter`。单选模式下忽略。 | `React.ReactNode[]` | - |
+| placeholder | 没有值时显示的提示，默认取语言包中对应 `type` 的文案。 | `string` | - |
+| popupClassName | 弹出层的类名。 | `string` | `""` |
+| popupStyle | 弹出层的样式，对象的键用 camelCase。 | `React.CSSProperties` | - |
+| position | 浮层位置。未设置时，`type` 为 `timeRange` 取 `bottom`，为 `time` 取 `bottomLeft`；RTL 方向下取 `bottomRight`。 | `Position` | - |
+| prefixCls | 样式类名的前缀。 | `string` | `"semi-timepicker"` |
+| preventScroll | 聚焦时是否阻止浏览器滚动文档，直接作为 `focus()` 的 `preventScroll` 选项，作用于组件内部的聚焦调用。 | `boolean` | - |
+| rangeSeparator | 时间范围的分隔符。 | `string` | `" ~ "` |
+| ref | 组件句柄的引用，方法见 Methods 表。 | <ApiType detail={"React.Ref\u003cTimePickerHandle>"}>Type</ApiType> | - |
+| scrollItemProps | 传给各列的属性，只支持 `cycled`、`mode`、`motion`、`transform`，含义同 ScrollList 的 ScrollItem。 | <ApiType detail={"Pick\u003cScrollItemProps\u003cany>, 'cycled' \u007c 'mode' \u007c 'motion' \u007c 'transform'>"}>Type</ApiType> | - |
+| secondStep | 秒选项的间隔，必须是正整数，未设置时为 1。 | `number` | - |
+| showClear | 是否展示清除按钮。 | `boolean` | `true` |
+| size | 输入框的大小，可选 `large`、`default` 或 `small`。 | `InputSize` | `"default"` |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
+| style | 根元素的样式。 | `React.CSSProperties` | `{}` |
+| timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名；未设置时取 ConfigProvider 的 `timeZone`。 | `string \| number` | - |
+| triggerRender | 自定义触发器的渲染函数。入参含 `disabled`、`placeholder`、`value`（`Date` 数组，未选的一侧为 `undefined`）、`inputValue`、`componentProps`（TimePicker 的属性，不含 `ref`）和 `onChange`（更新输入框文本，效果同键入）。 | <ApiType detail={"(props: TimePickerTriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
+| type | 选择类型，`time` 为单个时间，`timeRange` 为时间范围。 | `Type` | `"time"` |
+| use12Hours | 使用 12 小时制，为 `true` 时 `format` 默认为 `a h:mm:ss`。 | `boolean` | `false` |
+| validateStatus | 校验状态，仅影响展示样式。 | `ValidateStatus` | - |
+| value | 当前时间，可为 `Date`、时间戳或字符串；`type` 为 `timeRange` 时为数组。`null` 是受控的空值，`undefined` 视为非受控。 | `BaseValueType \| BaseValueType[] \| null` | - |
+
+**Methods**
+
+| 方法  | 说明                                               | 类型                                          |
+| ----- | -------------------------------------------------- | --------------------------------------------- |
+| blur  | 移除输入框的焦点。                                 | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 聚焦输入框，聚焦会打开面板；`preventScroll` 生效。 | <ApiType detail={"() => void"}>Type</ApiType> |

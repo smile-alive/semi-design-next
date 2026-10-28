@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                                                                                                                            | Type                  | Default                                          |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- | ------------------------------------------------ |
+| min           | Minimum size (%, px, vw or vh).                                                                                                                                                                        | `string`              | `semiGlobalDefault("ResizeItem", "min")`         |
+| max           | Maximum size (%, px, vw or vh).                                                                                                                                                                        | `string`              | `semiGlobalDefault("ResizeItem", "max")`         |
+| defaultSize   | Initial size. A string supports %, px, vw and vh; a number or numeric string takes a proportional share of the remaining space.                                                                        | `string \| number`    | `semiGlobalDefault("ResizeItem", "defaultSize")` |
+| onResizeStart | Called when resizing starts. If the item on either side of the handler returns false, the resize is cancelled; it remains a function prop so its result can be read, bound with @resizeStart as usual. | `ResizeStartCallback` | `undefined`                                      |
+
+**Events**
+
+| Event     | Description                                                                                        | Callback parameters                                                                                             |
+| --------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| change    | Emitted when a drag or arrow key changes the size, with the new size, the event and the direction. | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+| resizeEnd | Emitted when resizing ends, with the final size, the event and the direction.                      | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+
+**Slots**
+
+| Slot    | Description          | Scope parameters |
+| ------- | -------------------- | ---------------- |
+| default | Content of the item. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

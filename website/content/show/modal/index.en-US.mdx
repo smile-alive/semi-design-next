@@ -1,0 +1,491 @@
+---
+order: 76
+title: Modal
+icon: doc-modal
+brief: Modals are used to wait for the user to interact, inform the user of important information, or display more information without losing context.
+---
+
+import ModalReactApi from './api/modal.react.en-US.mdx';
+import ModalVueApi from './api/modal.vue.en-US.mdx';
+import ModalSolidApi from './api/modal.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Modal } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Modal } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Modal } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Framework only="vue">
+
+Use `v-model:visible` to control visibility. `v-model:visible` updates only on the cancel paths: the cancel button, the close button, the mask and Esc. When `onCancel` returns a Promise, it updates after the Promise fulfills, and a rejection keeps the modal open. Clicking the ok button only triggers `@ok`; the caller sets `visible` to `false`. While the `@cancel` callback runs, the parent's `visible` is still `true`.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `visible` to control visibility. `onOk` and `onCancel` never close the modal by themselves; the caller sets `visible` to `false`. When either returns a Promise, the matching button stays loading until the Promise settles.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Bottom Button Fill up
+
+Set `footerFill` to true to make the bottom buttons of the Modal footer fill up the arrangement.
+
+<Demo id="footer-fill" />
+
+### Mask Closable
+
+You can set `maskClosable={false}` to prevent modal from closing when clicking on the mask.
+
+<Demo id="mask-closable" />
+
+### Custom Button Text
+
+You can set button text using `okText` and `cancelText`.
+
+<Framework only="react">
+
+> In the case of creating a modal with static methods, you will have to use these two properties to set i18 texts at this moment. Because we cannot modify the React component tree, imperatively inserted components cannot consume Locale-related Context
+
+</Framework>
+
+<Framework only="vue">
+
+> A modal created with static methods is rendered outside the component tree and cannot read the locale from ConfigProvider or LocaleProvider. Set the texts with these two properties, or use `Modal.useModal`.
+
+</Framework>
+
+<Framework only="solid">
+
+> A modal created with static methods is rendered outside the component tree. It reads only the global defaults and the default locale, not the locale from ConfigProvider or LocaleProvider. Set the texts with these two properties, or use `Modal.useModal`.
+
+</Framework>
+
+<Demo id="button-text" />
+
+### Custom Button Properties
+
+You can set button properties using `okButtonProps` and `cancelButtonProps`. Their `onClick` runs before the built-in handling and does not replace it.
+
+<Demo id="button-props" />
+
+### Custom Header & Footer
+
+<Framework only="react">
+
+For more customized modal, you could use `header` and `footer`. Set `header={null}` if you do not want header area, or `footer={null}` to remove footer area including buttons.
+
+</Framework>
+
+<Framework only="vue">
+
+For more customized modal, you could use the `#header` and `#footer` slots. An empty `#header` slot (`<template #header />`) removes the header area, and an empty `#footer` slot removes the footer area including buttons.
+
+</Framework>
+
+<Framework only="solid">
+
+For more customized modal, you could use `header` and `footer`. Set `header={null}` if you do not want header area, or `footer={null}` to remove footer area including buttons.
+
+</Framework>
+
+<Demo id="header-footer" />
+
+### Custom Style
+
+You can use `style` to customize styling or position e.g. `style.top = '30vh'`, or use `centered` to center modal. Also, you could use `maskStyle` to customize mask style or `bodyStyle` for content style.
+
+<Demo id="custom-style" />
+
+### Custom Modal
+
+<Framework only="react">
+
+By using `header`, `footer`, etc, you could create any modal to your needs.
+
+</Framework>
+
+<Framework only="vue">
+
+By using the `#header`, `#footer` slots, etc, you could create any modal to your needs.
+
+</Framework>
+
+<Framework only="solid">
+
+By using `header`, `footer`, etc, you could create any modal to your needs.
+
+</Framework>
+
+<Demo id="custom-modal" />
+
+### Full Screen Modal
+
+<Framework only="react">
+
+set `fullScreen={true}` can use full screen Modal
+
+</Framework>
+
+<Framework only="vue">
+
+Set `fullScreen` to use full screen Modal
+
+</Framework>
+
+<Framework only="solid">
+
+Set `fullScreen` to use full screen Modal
+
+</Framework>
+
+<Demo id="full-screen" />
+
+### Confirm Modal
+
+<Framework only="react">
+
+You could use static methods to create a confirm Modal. Use `icon` to customize icon.
+
+</Framework>
+
+<Framework only="vue">
+
+You could use static methods to create a confirm Modal. Use `icon` to customize icon. The `title`, `content`, `icon`, `closeIcon`, `header` and `footer` options take a `ModalNode`: a string, a VNode, or a function returning VNodeChild (rendered as a functional component, so it can `inject`).
+
+</Framework>
+
+<Framework only="solid">
+
+You could use static methods to create a confirm Modal. Use `icon` to customize icon; it takes a JSX element, and `null` removes the icon. Any other prop the Modal supports can be passed too.
+
+</Framework>
+
+<Demo id="confirm" />
+
+### useModal Hooks
+
+<Framework only="react">
+
+You could use `Modal.useModal` to create a `contextHolder` that could access context.
+
+</Framework>
+
+<Framework only="vue">
+
+`Modal.useModal()` returns `[modal, Holder]`. Place `<Holder />` where the context should be read, and the modals created with `modal.confirm` and the other methods can access the provides, ConfigProvider and locale at that position.
+
+</Framework>
+
+<Framework only="solid">
+
+`Modal.useModal()` returns `[modal, contextHolder]`. Place `contextHolder` where the context should be read, and the modals created with `modal.confirm` and the other methods can access the context, ConfigProvider and locale at that position.
+
+</Framework>
+
+<Demo id="use-modal" />
+
+### Draggable Modal
+
+<Framework only="react">
+
+The modal content is rendered customly through `modalRender`, and the draggable Modal is implemented through the DragMove component.
+
+</Framework>
+
+<Framework only="vue">
+
+The modal content is rendered customly through the `#modal="{ modal }"` slot. `modal` is the VNode of the `role="dialog"` element; place it with `<component :is="modal" />`. The draggable Modal is implemented through the DragMove component.
+
+</Framework>
+
+<Framework only="solid">
+
+The modal content is rendered customly through `modalRender`. Its argument is the `role="dialog"` element, which the returned result must contain. The draggable Modal is implemented through the DragMove component.
+
+</Framework>
+
+<Demo id="draggable" />
+
+## API Reference
+
+### Modal
+
+<Framework only="react">
+
+<ModalReactApi />
+
+`role` and every `aria-*` attribute land on the `role="dialog"` element, `style` lands on the `.semi-modal` dialog box, and `className` and other native attributes (such as `id` and `data-*`) land on the outermost element inside the portal.
+
+The Modal component does not render `content`; put the dialog content in children. `content` is only for the static methods below.
+
+</Framework>
+
+<Framework only="vue">
+
+<ModalVueApi />
+
+`role` and every `aria-*` attribute land on the `role="dialog"` element, `style` lands on the `.semi-modal` dialog box, and `class` and other native attributes land on the outermost element inside the portal. The Modal component has no `content` prop; put the dialog content in the default slot. The `content` option is only for the static methods below.
+
+</Framework>
+
+<Framework only="solid">
+
+<ModalSolidApi />
+
+`role` and every `aria-*` attribute land on the `role="dialog"` element, `style` lands on the `.semi-modal` dialog box, and `ref`, `class` and other native attributes and events land on the outermost element inside the portal. The Modal component does not render `content`; put the dialog content in `children`. The `content` option is only for the static methods below.
+
+</Framework>
+
+### Static Method
+
+- `Modal.info`
+- `Modal.success`
+- `Modal.error`
+- `Modal.warning`
+- `Modal.confirm`
+
+<Framework only="react">
+
+| Properties        | Instructions                                                                                                                                   | type                                                             | Default |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------- |
+| bodyStyle         | Content style                                                                                                                                  | CSSProperties                                                    | -       |
+| cancelButtonProps | Properties for cancel button                                                                                                                   | ButtonProps                                                      | -       |
+| cancelText        | Text for cancel button                                                                                                                         | string                                                           | -       |
+| centered          | Toggle whether to center modal                                                                                                                 | boolean                                                          | false   |
+| closable          | Toggle whether to show close button                                                                                                            | boolean                                                          | true    |
+| content           | Content                                                                                                                                        | ReactNode                                                        | -       |
+| confirmLoading    | Toggle loading state of confirm button; when unset it follows the pending state of the Promise returned by onOk, pass `false` to turn that off | boolean                                                          | -       |
+| footer            | Footer                                                                                                                                         | ReactNode                                                        | -       |
+| header            | Header                                                                                                                                         | ReactNode                                                        | -       |
+| height            | Height                                                                                                                                         | string \| number                                                 | -       |
+| icon              | Customized icon                                                                                                                                | ReactNode                                                        | -       |
+| mask              | Toggle whether to show mask                                                                                                                    | boolean                                                          | true    |
+| maskClosable      | Toggle whether to allow closing when clicking mask                                                                                             | boolean                                                          | true    |
+| maskStyle         | Mask style                                                                                                                                     | CSSProperties                                                    | -       |
+| modalContentClass | The class name that can be used to set the style of the dialog content                                                                         | string                                                           | -       |
+| modalRender       | Custom rendering Modal                                                                                                                         | (modal: ReactNode) => ReactNode                                  | -       |
+| motion            | Animation switch; changing it with `update` takes effect too                                                                                   | boolean                                                          | true    |
+| okButtonProps     | Properties for confirm button; its `onClick` runs before the built-in handling and does not replace it                                         | ButtonProps                                                      | -       |
+| okText            | Text for confirm button                                                                                                                        | string                                                           | -       |
+| okType            | Type for confirm button                                                                                                                        | string                                                           | primary |
+| size              | Size of modal, one of `small`(448px), `medium`(684px), `large`(920px), `full-width`(100vw - 64px)                                              | string                                                           | 'small' |
+| style             | Inline style                                                                                                                                   | CSSProperties                                                    | -       |
+| title             | Title                                                                                                                                          | ReactNode                                                        | -       |
+| width             | Width; when unset, `size` decides (448 for `small`)                                                                                            | string \| number                                                 | -       |
+| zIndex            | Z-index value for mask                                                                                                                         | number                                                           | 1000    |
+| onCancel          | Callback function when clicking cancel button; closing with Esc passes the native KeyboardEvent                                                | (e: React.MouseEvent \| KeyboardEvent) => void \| Promise\<any\> | -       |
+| onOk              | Callback function when clicking confirm button                                                                                                 | (e: any) => void \| Promise\<any\>                               | -       |
+
+Creating modal with the above methods will return a reference to the instance. You could use it to update or close the modal. `update` takes the same props as the methods above (ModalProps) and merges them into the current config; it does not take `type`.
+
+```
+const modal = Modal.info();
+
+modal.update({
+  title: 'Updated Title',
+  content: 'Updated Content',
+});
+
+modal.destroy();
+```
+
+</Framework>
+
+<Framework only="vue">
+
+`ModalNode` is `string | VNode | (() => VNodeChild)`. A function is rendered as a functional component, so it can `inject`.
+
+| Properties        | Instructions                                                                                                                                                                          | type                                                               | Default         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------- |
+| afterClose        | Callback function when modal closed completely                                                                                                                                        | () => void                                                         | -               |
+| bodyStyle         | Content style                                                                                                                                                                         | StyleValue                                                         | -               |
+| cancelButtonProps | Properties for cancel button; its `onClick` runs before the built-in handling and does not replace it                                                                                 | ModalButtonProps                                                   | -               |
+| cancelText        | Text for cancel button                                                                                                                                                                | string                                                             | -               |
+| centered          | Toggle whether to center modal                                                                                                                                                        | boolean                                                            | false           |
+| class             | Class name                                                                                                                                                                            | string \| object \| array                                          | -               |
+| closable          | Toggle whether to show close button                                                                                                                                                   | boolean                                                            | true            |
+| closeIcon         | Icon for close button                                                                                                                                                                 | ModalNode                                                          | \<IconClose /\> |
+| confirmLoading    | Toggle loading state of confirm button; when unset it follows the pending state of the Promise returned by onOk, pass `false` to turn that off                                        | boolean                                                            | -               |
+| content           | Content                                                                                                                                                                               | ModalNode                                                          | -               |
+| direction         | Text direction. The static methods render outside any ConfigProvider, so pass it yourself; the `useModal` methods follow the ConfigProvider where `Holder` is placed by default       | 'ltr' \| 'rtl'                                                     | -               |
+| footer            | Footer; `null` removes the footer area                                                                                                                                                | ModalNode \| null                                                  | -               |
+| footerFill        | Is the bottom button full                                                                                                                                                             | boolean                                                            | false           |
+| header            | Header; `null` removes the header area                                                                                                                                                | ModalNode \| null                                                  | -               |
+| height            | Height                                                                                                                                                                                | string \| number                                                   | -               |
+| icon              | Customized icon                                                                                                                                                                       | ModalNode                                                          | -               |
+| mask              | Toggle whether to show mask                                                                                                                                                           | boolean                                                            | true            |
+| maskClosable      | Toggle whether to allow closing when clicking mask                                                                                                                                    | boolean                                                            | true            |
+| maskStyle         | Mask style                                                                                                                                                                            | StyleValue                                                         | -               |
+| modalContentClass | The class name that can be used to set the style of the dialog content                                                                                                                | string                                                             | -               |
+| modalRender       | Custom rendering Modal; the argument is the VNode of the `role="dialog"` element                                                                                                      | (modal: VNode) => VNodeChild                                       | -               |
+| motion            | Animation switch; changing it with `update` takes effect too                                                                                                                          | boolean                                                            | true            |
+| okButtonProps     | Properties for confirm button; its `onClick` runs before the built-in handling and does not replace it                                                                                | ModalButtonProps                                                   | -               |
+| okText            | Text for confirm button                                                                                                                                                               | string                                                             | -               |
+| okType            | Type for confirm button                                                                                                                                                               | OKType                                                             | primary         |
+| style             | Inline style                                                                                                                                                                          | StyleValue                                                         | -               |
+| title             | Title                                                                                                                                                                                 | ModalNode                                                          | -               |
+| width             | Width; when unset, `size` decides (448 for `small`)                                                                                                                                   | string \| number                                                   | -               |
+| zIndex            | Z-index value for mask                                                                                                                                                                | number                                                             | 1000            |
+| onCancel          | Callback function when clicking cancel button; a returned Promise closes the modal after it fulfills, and a rejection keeps it open; closing with Esc passes the native KeyboardEvent | (event: MouseEvent \| KeyboardEvent) => void \| Promise\<unknown\> | -               |
+| onOk              | Callback function when clicking confirm button; a returned Promise closes the modal after it fulfills, and a rejection keeps it open                                                  | (event: MouseEvent) => void \| Promise\<unknown\>                  | -               |
+
+`aria-*` and `data-*` options land on the dialog. Creating modal with the above methods will return a reference to the instance. You could use it to update or close the modal. `update` takes the same options as the methods above (`ModalConfirmProps`) and merges them into the current config; it does not take `type`.
+
+```ts
+const modal = Modal.info({ title: 'Title' });
+
+modal.update({
+    title: 'Updated Title',
+    content: 'Updated Content',
+});
+
+modal.destroy();
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The options are the props of the Modal component (`ModalProps`); `title`, `content`, `icon`, `closeIcon`, `header` and `footer` take JSX elements. Unlike the component, a Promise returned by `onOk` or `onCancel` closes the modal after it fulfills, and a rejection keeps it open; any other return value closes it at once.
+
+`aria-*` options land on the dialog. Creating modal with the above methods will return a reference to the instance. You could use it to update or close the modal. `update` takes the same options as the methods above (`ModalProps`) and merges them into the current config; it does not take `type`.
+
+```tsx
+const modal = Modal.info({ title: 'Title' });
+
+modal.update({
+    title: 'Updated Title',
+    content: 'Updated Content',
+});
+
+modal.destroy();
+```
+
+</Framework>
+
+- `Modal.destroyAll`
+
+You could use Modal.destroyAll() to destroy Modal that created by methods above e.g. `.info()`
+
+<Framework only="react">
+
+- `Modal.useModal`  
+  When you need access Context, you could use `Modal.useModal` to create a `contextHolder` and insert to corresponding DOM tree. Modal created by hooks will be able to access the context where `contextHolder` is inserted. Hook modal shares the same methods with Modal.method.
+
+</Framework>
+
+<Framework only="vue">
+
+- `Modal.useModal`  
+  When you need to read context, call `const [modal, Holder] = Modal.useModal()` and place `<Holder />` at the corresponding position. Modals created through `modal` can access everything at the position of `Holder` (provide, ConfigProvider, locale). The `modal` object shares the same methods with Modal.method.
+- `app.use(Modal)`  
+  Optional. Imperative dialogs then render with that app's context, so they can read values from `app.provide()` and globally registered components. The static methods of Toast, Notification and Modal share this record, so installing any one of them applies to all three; when several apps install, the last one wins.
+
+</Framework>
+
+<Framework only="solid">
+
+- `Modal.useModal`  
+  When you need to read context, call `const [modal, contextHolder] = Modal.useModal()` and place `contextHolder` once at the corresponding position. Modals created through `modal` can access everything at the position of `contextHolder` (context, ConfigProvider, locale). The `modal` object shares the same methods with Modal.method.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+
+- The Modal component has role `dialog`, following the [APG Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) pattern
+- Confirm dialogs (`Modal.confirm`, `info`, `success`, `warning`, `error`, and the same-named `useModal` methods) have role `alertdialog`, and `aria-describedby` points to the message, following the [APG Alert Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/) pattern
+- aria-modal is set to true when the dialog is modal. A dialog is modal when it has a mask (`mask`) and is mounted in the body (judged by the actual container, so the `getPopupContainer` of ConfigProvider counts) or has `maskFixed`. With `mask={false}`, or a mask confined to a custom container, the page behind stays usable and aria-modal is omitted
+- aria-labelledby corresponds to the dialog title; it is not generated when `aria-label` or a custom header is given
+- The Modal component does not set aria-describedby by default: when the body holds a form, a list or several paragraphs, reading it out whole gets in the way. Pass it yourself when needed
+- `role` and every `aria-*` attribute passed by the caller land on the element that carries the role
+- The close button's aria-label comes from the current locale ('Close' in English, '关闭' in Simplified Chinese)
+
+### Keyboard and focus
+
+- Modal automatically gets the focus when it is popped up. An element with `autoFocus` (`autofocus` in Vue) inside the dialog gets the focus first; otherwise the cancel button does by default, which can be controlled by passing autoFocus in cancelButtonProps or okButtonProps. With `keepDOM`, opening it again gives the same result; with `keepDOM` and `lazyRender={false}` that starts hidden, an `autoFocus` element cannot take focus under `display: none`, so later openings land on the default button.
+- When a modal dialog is closed, the focus automatically returns to the element before it was opened. Keyboard users can use the `Tab` key and `Shift + Tab` to move the focus in a loop within the Modal, including the Modal's own close button and OK cancel button. At this time, the page behind the Modal cannot be interacted with or tab-focused.
+- A non-modal dialog (`mask={false}`, or a mask confined to a custom container without `maskFixed`) also takes focus when opened, but does not lock Tab and the rest of the page stays usable. When closed, focus is returned only if it is still inside the dialog or has fallen to the body; focus the user has moved elsewhere on the page stays. A Modal in the body with `mask={false}` does not lock body scrolling.
+- Modify the default value of closeOnEsc to true, allowing users to directly close Modal through the keyboard for a better experience
+
+## Content Guidelines
+
+- Imperative Modal and Default Modal The title of the two modal dialogs uses the format of verb + noun, whether it is a declarative sentence or a question sentence
+
+| ✅ Recommended usage | ❌ Deprecated usage                   |
+| -------------------- | ------------------------------------- |
+| Edit ticket          | Edit                                  |
+| Delete form？        | Are you sure you want to delete form? |
+
+- The operation buttons of the two modal dialog boxes only need to use the verbs in the title under the premise of ensuring that the title description is clear
+
+| ✅ Recommended usage | ❌ Deprecated usage |
+| -------------------- | ------------------- |
+| Edit                 | Edit ticket         |
+
+- Text specification for imperative Modal
+    - Give a specific explanation to the title, do not repeat the information of the title
+    - Make sure users know how to act if necessary
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- #### Why the button texts in Modal.confirm are not internationalized even when I use LocaleProvider?
+
+      <Framework only="react">
+
+    You could use `Modal.useModal` to create a `contextHolder` that is accessible to config from ConfigProvider or LocaleProvider.
+
+    If you don't want to use Hooks, you could also use `okText` and `cancelText` to set i18 texts at this moment.
+
+      </Framework>
+
+      <Framework only="vue">
+
+    A static Modal is rendered outside the component tree, so it cannot read the config from ConfigProvider or LocaleProvider. You could use `Modal.useModal()` and place the returned `Holder` where the config should be read, or use `okText` and `cancelText` to set the texts yourself.
+
+      </Framework>
+
+      <Framework only="solid">
+
+    A static Modal is rendered outside the component tree and reads only the global defaults and the default locale, so it cannot read the config from ConfigProvider or LocaleProvider. You could use `Modal.useModal()` and place the returned `contextHolder` where the config should be read, or use `okText` and `cancelText` to set the texts yourself.
+
+      </Framework>
+
+- #### Why is the spacing between title and content different under imperative and non-imperative calls?
+    In the imperative call scenario, the title and content are more closely related, so expressing this strong correlation with a closer distance is in line with expectations. If users don't want this effect, they can do their own style overrides.

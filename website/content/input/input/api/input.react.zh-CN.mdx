@@ -1,0 +1,59 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                    | 说明                                                                                              | 类型                                                                                       | 默认值      |
+| ----------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------- |
+| addonAfter              | 后置标签，可以是文本、Semi 图标或任意 `ReactNode`。                                               | `React.ReactNode`                                                                          | `""`        |
+| addonBefore             | 前置标签，可以是文本、Semi 图标或任意 `ReactNode`。                                               | `React.ReactNode`                                                                          | `""`        |
+| aria-describedby        | 原生 input 的 `aria-describedby`。                                                                | `React.AriaAttributes['aria-describedby']`                                                 | -           |
+| aria-errormessage       | 原生 input 的 `aria-errormessage`。                                                               | `React.AriaAttributes['aria-errormessage']`                                                | -           |
+| aria-invalid            | 原生 input 的 `aria-invalid`；`validateStatus` 为 `error` 时固定为 `true`。                       | `React.AriaAttributes['aria-invalid']`                                                     | -           |
+| aria-label              | 原生 input 的 `aria-label`。                                                                      | `React.AriaAttributes['aria-label']`                                                       | -           |
+| aria-labelledby         | 原生 input 的 `aria-labelledby`。未设置、没有 `aria-label` 且渲染了 `insetLabel` 时，指向该标签。 | `React.AriaAttributes['aria-labelledby']`                                                  | -           |
+| aria-required           | 原生 input 的 `aria-required`。                                                                   | `React.AriaAttributes['aria-required']`                                                    | -           |
+| borderless              | 无边框模式。                                                                                      | `boolean`                                                                                  | `false`     |
+| className               | 外层 wrapper `div` 的类名。                                                                       | `string`                                                                                   | `""`        |
+| clearIcon               | 清除按钮的图标，`showClear` 为 `true` 时有效。                                                    | `React.ReactNode`                                                                          | -           |
+| composition             | 是否开启输入法模式，开启后输入法组合期间不触发 `onChange`，组合结束后触发一次。                   | `boolean`                                                                                  | `false`     |
+| defaultValue            | 非受控时的初始内容。                                                                              | `string \| number`                                                                         | -           |
+| disabled                | 是否禁用。在 InputGroup 中未设置时，使用组的 `disabled`。                                         | `boolean`                                                                                  | -           |
+| getValueLength          | 自定义计算字符串长度，搭配 `maxLength`、`minLength` 使用，例如把 emoji 按可见长度计算。           | <ApiType detail={"(value: string) => number"}>Type</ApiType>                               | -           |
+| hideSuffix              | 清除按钮显示时隐藏后缀，默认两者并列。                                                            | `boolean`                                                                                  | `false`     |
+| inputStyle              | 原生 input 元素的内联样式。                                                                       | `React.CSSProperties`                                                                      | -           |
+| insetLabel              | 内嵌标签，未设置 `prefix` 时渲染在前缀位置。                                                      | `React.ReactNode`                                                                          | -           |
+| insetLabelId            | `insetLabel` 所在元素的 `id`，供 `aria-labelledby` 引用。                                         | `string`                                                                                   | -           |
+| mode                    | 输入框模式，可选 `password`，显示密码显隐按钮。                                                   | `InputMode`                                                                                | -           |
+| onBlur                  | 输入框失去焦点时的回调。监听在外层 `div` 上，焦点在输入框与组件内按钮之间移动时不触发。           | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType>      | -           |
+| onChange                | 输入内容变化时的回调，参数为新值与事件；点击清除按钮清空时也会触发。                              | <ApiType detail={"(value: string, e: InputChangeEvent) => void"}>Type</ApiType>            | -           |
+| onClear                 | 点击清除按钮时的回调。                                                                            | <ApiType detail={"(e: React.MouseEvent\u003cHTMLButtonElement>) => void"}>Type</ApiType>   | -           |
+| onEnterPress            | 按下回车时的回调（keydown），输入法组合中确认的回车不触发。                                       | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | -           |
+| onFocus                 | 输入框获得焦点时的回调。监听在外层 `div` 上，组件内部的焦点移动不会再次触发。                     | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType>      | -           |
+| onInput                 | 原生 `input` 事件的回调。                                                                         | <ApiType detail={"(e: React.InputEvent\u003cHTMLInputElement>) => void"}>Type</ApiType>    | -           |
+| onKeyDown               | keydown 回调，参数为原生事件。                                                                    | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | -           |
+| onKeyUp                 | keyup 回调，参数为原生事件。                                                                      | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | -           |
+| onlyBorder              | 外层 wrapper 的边框宽度，单位 px；`style` 中的同名值会覆盖它。                                    | `number`                                                                                   | -           |
+| placeholder             | 输入框为空时显示的提示文字。                                                                      | `string \| number`                                                                         | `""`        |
+| prefix                  | 前缀标签，可以是文本、Semi 图标或任意 `ReactNode`。                                               | `React.ReactNode`                                                                          | `""`        |
+| preventScroll           | 聚焦时是否阻止浏览器滚动文档，作用于 `focus()` 方法（未传 `options.preventScroll` 时）。          | `boolean`                                                                                  | -           |
+| readonly                | 是否只读：禁止输入，且不显示清除按钮。原生 `readOnly` 只禁止输入。                                | `boolean`                                                                                  | `false`     |
+| ref                     | 命令式句柄（`InputHandle`），成员见 **Methods** 表。                                              | <ApiType detail={"React.Ref\u003cInputHandle>"}>Type</ApiType>                             | -           |
+| showClear               | 输入框有内容且悬停或焦点位于组件内时展示清除按钮。                                                | `boolean`                                                                                  | `false`     |
+| showClearIgnoreDisabled | 内部属性，供 DatePicker 使用：禁用时仍可清除。                                                    | `boolean`                                                                                  | -           |
+| size                    | 输入框大小，可选 `large`、`default` 或 `small`。在 InputGroup 中由组的 `size` 替代。              | `InputSize`                                                                                | `"default"` |
+| style                   | 外层 wrapper `div` 的内联样式。                                                                   | `React.CSSProperties`                                                                      | -           |
+| suffix                  | 后缀标签，可以是文本、Semi 图标或任意 `ReactNode`。                                               | `React.ReactNode`                                                                          | `""`        |
+| type                    | 原生 input 的 `type`。                                                                            | `string`                                                                                   | `"text"`    |
+| validateStatus          | 校验状态，可选 `default`、`error` 或 `warning`；`error` 时输出 `aria-invalid` 为 `true`。         | `ValidateStatus`                                                                           | `"default"` |
+| value                   | 输入框内容，受控使用，配合 `onChange` 更新。                                                      | `string \| number`                                                                         | -           |
+
+**Methods**
+
+| 方法              | 说明                                                                       | 类型                                                                                                                                                   |
+| ----------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| blur              | 移出焦点。                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
+| focus             | 获取焦点。未传 `options.preventScroll` 时，使用 `preventScroll` 属性的值。 | <ApiType detail={"(options?: FocusOptions) => void"}>Type</ApiType>                                                                                    |
+| input             | 原生 `input` 元素。每次读取返回当前挂载的节点，卸载后为 `null`。           | `HTMLInputElement \| null`                                                                                                                             |
+| nativeElement     | 组件根元素，即外层 `div`。卸载后为 `null`。                                | `HTMLElement \| null`                                                                                                                                  |
+| select            | 选中输入框中的全部文本。                                                   | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
+| setSelectionRange | 设置选区，参数同原生 `setSelectionRange`。                                 | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'forward' \u007c 'backward' \u007c 'none') => void"}>Type</ApiType> |

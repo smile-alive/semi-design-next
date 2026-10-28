@@ -1,0 +1,124 @@
+{
+    "avatar": {
+        "source": "packages/semi-ui-react/src/avatar/index.tsx",
+        "props": {
+            "alt": {
+                "zh-CN": "图片的替代文本；文字头像上它是可访问名称，未设置时使用头像的文字内容。",
+                "en-US": "Alternative text of the image. On a text avatar it is the accessible name, falling back to the avatar text when unset."
+            },
+            "border": {
+                "zh-CN": "额外边框，传 `true` 或 `{ color, motion }`；`motion` 为 `true` 时开启边框动效。",
+                "en-US": "Additional border: `true` or `{ color, motion }`; `motion: true` enables the border animation."
+            },
+            "bottomSlot": {
+                "zh-CN": "底部标记配置，包含 `shape`、`text`、`bgColor`、`textColor`、`className` 和 `style`；传入 `render` 时完全由它渲染。仅在 `extra-small` 至 `extra-large` 的预设尺寸下显示。",
+                "en-US": "Bottom badge configuration: `shape`, `text`, `bgColor`, `textColor`, `className` and `style`; a `render` function replaces the whole badge. Shown only at the preset sizes from `extra-small` to `extra-large`."
+            },
+            "children": {
+                "zh-CN": "头像内的文字或自定义内容。",
+                "en-US": "Text or custom content inside the avatar."
+            },
+            "className": {
+                "zh-CN": "头像主体元素（`.semi-avatar`）的类名；使用额外边框或顶部、底部标记时，它位于外层包裹元素之内。",
+                "en-US": "Class name of the avatar element (`.semi-avatar`); when a border or a top or bottom badge is used, it sits inside the outer wrapper."
+            },
+            "color": {
+                "zh-CN": "头像的预设背景颜色，可选 `amber`、`blue`、`cyan`、`green`、`grey`、`indigo`、`light-blue`、`light-green`、`lime`、`orange`、`pink`、`purple`、`red`、`teal`、`violet`、`yellow`；图片头像不使用。",
+                "en-US": "Preset background color: `amber`, `blue`, `cyan`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `violet` or `yellow`; not used by image avatars."
+            },
+            "contentMotion": {
+                "zh-CN": "启用头像内容区域的动画。",
+                "en-US": "Enables animation in the avatar content area."
+            },
+            "gap": {
+                "zh-CN": "文字内容与头像左右两侧的间距，单位为像素。",
+                "en-US": "Space in pixels between the text and either side of the avatar."
+            },
+            "hoverMask": {
+                "zh-CN": "鼠标悬停时显示的覆盖层内容，覆盖层没有默认样式。",
+                "en-US": "Overlay content shown on hover; the overlay has no default style."
+            },
+            "imgAttr": {
+                "zh-CN": "传给内部 `img` 元素的原生属性，仅图片头像有效；其中的 `onError` 先于组件的 `onError` 调用。",
+                "en-US": "Native attributes applied to the inner `img` element, for image avatars only; its `onError` runs before the component's `onError`."
+            },
+            "onClick": {
+                "zh-CN": "单击头像时调用，参数为 React 鼠标事件。传入后头像可以聚焦，按 `Enter` 或空格键会触发点击。",
+                "en-US": "Called when the avatar is clicked, with the React mouse event. Once set, the avatar can be focused, and `Enter` or Space triggers a click."
+            },
+            "onError": {
+                "zh-CN": "图片加载失败时调用，不传事件参数。返回 `false` 时保留损坏的图片，不切换为文字回退。",
+                "en-US": "Called when the image fails to load, without an event argument. Returning `false` keeps the broken image instead of switching to the text fallback."
+            },
+            "onMouseEnter": {
+                "zh-CN": "鼠标移入时调用，参数为 React 鼠标事件。",
+                "en-US": "Called when the pointer enters the avatar, with the React mouse event."
+            },
+            "onMouseLeave": {
+                "zh-CN": "鼠标移出时调用，参数为 React 鼠标事件。",
+                "en-US": "Called when the pointer leaves the avatar, with the React mouse event."
+            },
+            "ref": {
+                "zh-CN": "头像主体元素（`.semi-avatar`）的引用；使用额外边框或顶部、底部标记时，它不是外层包裹元素。",
+                "en-US": "Reference to the avatar element (`.semi-avatar`); when a border or a top or bottom badge is used, it is not the outer wrapper."
+            },
+            "shape": {
+                "zh-CN": "头像形状，可选 `circle` 或 `square`。",
+                "en-US": "Avatar shape: `circle` or `square`."
+            },
+            "size": {
+                "zh-CN": "头像尺寸，可选 `extra-extra-small`、`extra-small`、`small`、`default`、`medium`、`large`、`extra-large`，也可以传合法的 CSS 尺寸，如 `10px`。",
+                "en-US": "Avatar size: `extra-extra-small`, `extra-small`, `small`, `default`, `medium`, `large` or `extra-large`, or a valid CSS size such as `10px`."
+            },
+            "src": {
+                "zh-CN": "图片头像的资源地址。",
+                "en-US": "Image source URL."
+            },
+            "srcSet": {
+                "zh-CN": "图片头像的响应式资源集合。",
+                "en-US": "Responsive image sources."
+            },
+            "style": {
+                "zh-CN": "头像样式；使用额外边框、顶部或底部标记时，样式落在外层包裹元素上。",
+                "en-US": "Avatar style; when a border or a top or bottom badge is used, the style goes to the outer wrapper."
+            },
+            "topSlot": {
+                "zh-CN": "顶部标记配置，包含 `text`、`gradientStart`、`gradientEnd`、`textColor`、`className` 和 `style`；传入 `render` 时完全由它渲染。仅在圆形且预设尺寸为 `extra-small` 至 `extra-large` 时显示，渐变色未设置时使用 `var(--semi-color-primary)`。",
+                "en-US": "Top badge configuration: `text`, `gradientStart`, `gradientEnd`, `textColor`, `className` and `style`; a `render` function replaces the whole badge. Shown only for circle avatars at the preset sizes from `extra-small` to `extra-large`; an unset gradient color uses `var(--semi-color-primary)`."
+            }
+        }
+    },
+    "avatar-group": {
+        "source": "packages/semi-ui-react/src/avatar/avatar-group.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "组内的 Avatar。",
+                "en-US": "Avatars in the group."
+            },
+            "maxCount": {
+                "zh-CN": "显示的最大头像数，超出后显示 `+N` 标签。",
+                "en-US": "Maximum number of visible avatars; overflow is shown as a `+N` label."
+            },
+            "overlapFrom": {
+                "zh-CN": "头像重叠方向，可选 `start` 或 `end`：`start` 时左边的头像覆盖右边，`end` 时右边的头像覆盖左边。",
+                "en-US": "Avatar overlap direction, `start` or `end`: with `start` the left avatar covers the right one, with `end` the right avatar covers the left one."
+            },
+            "ref": {
+                "zh-CN": "根元素（`role=\"list\"`）的引用。",
+                "en-US": "Reference to the root element (`role=\"list\"`)."
+            },
+            "renderMore": {
+                "zh-CN": "自定义溢出标签。调用时传入剩余数量和被隐藏的头像节点数组，返回的内容替代默认的 `+N`。",
+                "en-US": "Custom overflow label. It receives the remaining count and the hidden avatar nodes, and its result replaces the default `+N`."
+            },
+            "shape": {
+                "zh-CN": "组内头像的形状，可选 `circle` 或 `square`。",
+                "en-US": "Shape of the avatars in the group: `circle` or `square`."
+            },
+            "size": {
+                "zh-CN": "组内头像的尺寸，取值同 Avatar 的 `size`。",
+                "en-US": "Size of the avatars in the group, with the same values as the Avatar `size`."
+            }
+        }
+    }
+}

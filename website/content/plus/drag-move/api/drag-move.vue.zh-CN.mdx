@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                               | 类型                                                                                           | 默认值                                                    |
+| ---------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| handler          | 返回触发拖动的元素，返回 null 时回退为被拖动元素本身。                             | <ApiType detail={"(() => HTMLElement \u007c null)"}>Type</ApiType>                             | `undefined`                                               |
+| constrainer      | 限制拖动范围的元素：'parent' 或返回该元素的函数，该元素需要为 relative 定位。      | <ApiType detail={"\"parent\" \u007c (() => HTMLElement \u007c null)"}>Type</ApiType>           | `undefined`                                               |
+| allowInputDrag   | 在原生 input、textarea 上按下时是否允许拖动。                                      | `boolean`                                                                                      | `semiDefault("DragMove", "allowInputDrag", false)`        |
+| allowMove        | 按下时判断是否允许拖动的函数，返回 false 则不拖动。                                | <ApiType detail={"((e: PointerEvent, element: HTMLElement) => boolean)"}>Type</ApiType>        | `undefined`                                               |
+| customMove       | 自定义拖动后的位置处理；设置后组件只回传计算出的位置，不再改写元素的 top 与 left。 | <ApiType detail={"((element: HTMLElement, top: number, left: number) => void)"}>Type</ApiType> | `undefined`                                               |
+| positionStrategy | 定位策略，relative 保留元素原有的布局位置。                                        | `"absolute" \| "relative"`                                                                     | `semiDefault("DragMove", "positionStrategy", "absolute")` |
+
+**Events**
+
+| 事件        | 说明                     | 回调参数            |
+| ----------- | ------------------------ | ------------------- |
+| mouseDown   | 鼠标或触控笔按下时触发。 | `[e: PointerEvent]` |
+| mouseMove   | 鼠标或触控笔移动时触发。 | `[e: PointerEvent]` |
+| mouseUp     | 鼠标或触控笔抬起时触发。 | `[e: PointerEvent]` |
+| touchStart  | 触摸开始时触发。         | `[e: PointerEvent]` |
+| touchMove   | 触摸移动时触发。         | `[e: PointerEvent]` |
+| touchEnd    | 触摸结束时触发。         | `[e: PointerEvent]` |
+| touchCancel | 触摸取消时触发。         | `[e: PointerEvent]` |
+
+**Slots**
+
+| 插槽    | 说明                                                 | 作用域参数 |
+| ------- | ---------------------------------------------------- | ---------- |
+| default | 被拖动的内容，其中每个顶层元素或单根组件各自可拖动。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,67 @@
+{
+    "overflow-list": {
+        "source": "packages/semi-ui-solid/src/overflow-list/overflow-list.tsx",
+        "props": {
+            "collapseFrom": {
+                "zh-CN": "collapse 模式的折叠方向，可选 start 或 end。",
+                "en-US": "Collapse direction in collapse mode: start or end."
+            },
+            "items": {
+                "zh-CN": "渲染项目，只放数据，不放节点，节点由 visibleItemRenderer 渲染；scroll 模式要求每项含 key 字段（或由 itemKey 指定的字段）。",
+                "en-US": "Items to render. They are data, not nodes; visibleItemRenderer renders them. Scroll mode requires a key on each item, the field named by itemKey when it is set."
+            },
+            "itemKey": {
+                "zh-CN": "每项 key 的字段名，或取 key 的函数；默认读取 key 字段，没有时取该项在 items 中的位置。",
+                "en-US": "Property name of each item's key, or a function returning it. Defaults to the key property, then the item's position in items."
+            },
+            "minVisibleItems": {
+                "zh-CN": "collapse 模式下最少展示的项数，这些项即使放不下也不会折叠。",
+                "en-US": "Minimum number of visible items in collapse mode; these items are not collapsed even when they do not fit."
+            },
+            "onIntersect": {
+                "zh-CN": "scroll 模式下各项的相交状态变化时调用，参数以 key 为索引，值为对应项的 `IntersectionObserverEntry`。",
+                "en-US": "Called in scroll mode when the intersection state of the items changes, with each item's `IntersectionObserverEntry` keyed by its key."
+            },
+            "onOverflow": {
+                "zh-CN": "collapse 模式下溢出项变化时调用，全部放得下时以空数组调用。",
+                "en-US": "Called in collapse mode when the overflowing items change, with an empty array once everything fits."
+            },
+            "onVisibleStateChange": {
+                "zh-CN": "scroll 模式下各项的显示或隐藏状态变化时调用，参数为以 key 为索引的 `Map`。",
+                "en-US": "Called in scroll mode when the visible or hidden state of the items changes, with a `Map` keyed by item key."
+            },
+            "overflowRenderDirection": {
+                "zh-CN": "scroll 模式下两侧溢出节点的位置，可选 both、start 或 end；供 Tabs 使用，不面向使用方。",
+                "en-US": "Where scroll mode renders the two overflow nodes: both, start or end. Used by Tabs, not meant for end users."
+            },
+            "overflowRenderer": {
+                "zh-CN": "渲染溢出项。collapse 模式下参数为放不下的项，返回一个溢出节点；scroll 模式下参数为 `[start, end]` 两组项，返回两侧各一个节点。",
+                "en-US": "Renders the overflowing items. In collapse mode it receives the items that do not fit and returns one overflow node; in scroll mode it receives `[start, end]`, the items scrolled out before and after the visible ones, and returns one node for each side."
+            },
+            "renderMode": {
+                "zh-CN": "渲染模式，可选 collapse 或 scroll。",
+                "en-US": "Render mode: collapse or scroll."
+            },
+            "threshold": {
+                "zh-CN": "scroll 模式下触发相交回调的可见比例阈值。",
+                "en-US": "Visible ratio at which scroll mode reports an item's intersection."
+            },
+            "visibleItemRenderer": {
+                "zh-CN": "渲染单个可见项并返回该项的元素，参数 index 为该项在 items 中的位置。scroll 模式下该元素会被观察，并写入 `data-scrollkey`。",
+                "en-US": "Renders one visible item and returns its element; index is the item's position in items. In scroll mode the element is observed and gets a `data-scrollkey` attribute."
+            },
+            "wrapperClassName": {
+                "zh-CN": "scroll 模式下滚动 wrapper 的类名。",
+                "en-US": "Class name of the scroll wrapper in scroll mode."
+            },
+            "wrapperProps": {
+                "zh-CN": "scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role。",
+                "en-US": "Other attributes of the scroll wrapper in scroll mode, such as a role that owns the visible items."
+            },
+            "wrapperStyle": {
+                "zh-CN": "scroll 模式下滚动 wrapper 的样式，可传样式对象或样式字符串。",
+                "en-US": "Style of the scroll wrapper in scroll mode, as a style object or a string."
+            }
+        }
+    }
+}

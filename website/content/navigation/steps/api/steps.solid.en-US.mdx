@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                                                                 | Type                                                         | Default        |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
+| current   | Current step, counting from 0; a child Step can override the state with status.                                                                                             | `number`                                                     | `0`            |
+| direction | Direction of the steps, horizontal or vertical; applies to the basic and fill types.                                                                                        | `Direction`                                                  | `"horizontal"` |
+| hasLine   | Whether to show the line between steps; basic type only.                                                                                                                    | `boolean`                                                    | `true`         |
+| initial   | Starting index, counting from 0.                                                                                                                                            | `number`                                                     | `0`            |
+| onChange  | Called when a step is selected by click or by Enter or Space, with its number (initial plus index); not called for the current step. Passing it makes every Step clickable. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | -              |
+| prefixCls | Class name prefix of the root element.                                                                                                                                      | `string`                                                     | `"semi-steps"` |
+| size      | Size, small or default; applies to the basic and nav types.                                                                                                                 | `Size`                                                       | `"default"`    |
+| status    | Status of the current step: wait, process, finish, error or warning; applies to the basic and fill types.                                                                   | `Status`                                                     | `"process"`    |
+| type      | Steps type: fill, basic or nav.                                                                                                                                             | `'fill' \| 'basic' \| 'nav'`                                 | `"fill"`       |

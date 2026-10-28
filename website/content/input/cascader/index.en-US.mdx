@@ -1,0 +1,770 @@
+---
+title: Cascader
+order: 36
+icon: doc-cascader
+brief: Used to select an option under a multi-level classification.
+---
+
+import CascaderReactApi from './api/cascader.react.en-US.mdx';
+import CascaderVueApi from './api/cascader.vue.en-US.mdx';
+import CascaderSolidApi from './api/cascader.solid.en-US.mdx';
+
+## Usage scenarios
+
+Differences from TreeSelect component:
+
+- TreeSelect: The core value lies in **target node**. The structure is to facilitate users to quickly filter out target options. The final node is what the user wants. It is commonly used in file/folder selection, organizational structure, permission allocation and other scenarios.
+- Cascader: The core selection value lies in the **path**. What the user selects is not an isolated point, but a complete path from root to leaf, which is often used in scenarios such as geographical location and product classification.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Cascader } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Cascader } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Cascader } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Basic usage, only leaf nodes can be selected by default.
+
+<Demo id="basic" />
+
+### Multiple
+
+Set `multiple` to make multiple selections.
+
+<Demo id="multiple" />
+
+### Searchable
+
+Use `filterTreeNode` to support search input.
+
+<Framework only="react">
+
+By default, the `label` value is searched (using the includes method of the string for matching, case-insensitive). You can specify other attribute values through `treeNodeFilterProp` to search. For example, If `label` is ReactNode, you can use other fields in treeData to store plain text, and specify the field for search through `treeNodeFilterProp`.
+
+</Framework>
+
+<Framework only="vue">
+
+By default, the `label` value is searched (using the includes method of the string for matching, case-insensitive). You can specify other attribute values through `treeNodeFilterProp` to search. The `label` is text only, and search still matches the `label` text when you customize the node content with the `#label` slot. To match other text, store it in another field in treeData and specify the field through `treeNodeFilterProp`.
+
+</Framework>
+
+<Framework only="solid">
+
+By default, the `label` value is searched (using the includes method of the string for matching, case-insensitive). You can specify other attribute values through `treeNodeFilterProp` to search. The `label` is text only, and search still matches the `label` text when you customize the node content with `renderLabel`. To match other text, store it in another field in treeData and specify the field through `treeNodeFilterProp`.
+
+</Framework>
+
+The default search results will only display the paths of leaf nodes. If you want to display more results, you can set `filterLeafOnly` to `false`.
+
+<Demo id="searchable" />
+
+### Searchable Multiple Selection
+
+When multiple selection and search are supported at the same time, in this scenario, you can delete the corresponding selected item by pressing the BackSpace key.
+
+<Demo id="searchable-multiple" />
+
+Filtered data can be sorted using `filterSorter`.
+
+<Demo id="filter-sorter" />
+
+<Framework only="react">
+
+If you want to customize the rendering options after the search, you can use `filterRender` to achieve custom rendering of the entire line. Its parameters are as follows:
+
+```tsx
+interface filterRenderProps {
+    className: string;
+    inputValue: string; // Search bar search content
+    disabled: boolean; // Whether to disable
+    data: CascaderData[]; // Search result data
+    selected: boolean; // Selected state when single selection
+    checkStatus: {
+        // Checked state when multiple selection
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onClick: (e: React.MouseEvent) => void; // Callback when clicked option in single selection
+    onCheck: (e: CheckboxEvent) => void; // Callback when clicked option in multiple selection, the signature of the onChange of Checkbox
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+If you want to customize the rendering options after the search, you can use the `#filterItem` slot to achieve custom rendering of the entire line. The slot props have the type `CascaderFilterItemSlotProps`:
+
+```tsx
+interface CascaderFilterItemSlotProps {
+    class: ClassValue; // Class of the option, bind it to the root element of the slot
+    inputValue: string; // Search bar search content
+    disabled: boolean; // Whether to disable
+    data: CascaderData[]; // Search result data, the nodes on this path
+    selected: boolean; // Selected state when single selection
+    checkStatus: {
+        // Checked state when multiple selection
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onClick: (event: MouseEvent) => void; // Select the option in single selection
+    onCheck: (event: CheckboxEvent) => void; // Check the option in multiple selection, bind it to the change event of Checkbox
+}
+```
+
+When the slot renders a single element root, that element automatically gets the `id`, `role="option"` and the selected state of the option, plus the positioning style of the row when `virtualizeInSearch` is on; when it renders text or several nodes, the component wraps them in an `li`. The slot root should be a plain element.
+
+</Framework>
+
+<Framework only="solid">
+
+If you want to customize the rendering options after the search, you can use `filterRender` to achieve custom rendering of the entire line. The parameter has the type `CascaderFilterRenderProps`:
+
+```tsx
+interface CascaderFilterRenderProps {
+    class: string; // Class of the option, bind it to the root element of the returned element
+    inputValue: string; // Search bar search content
+    disabled: boolean; // Whether to disable
+    data: CascaderData[]; // Search result data, the nodes on this path
+    selected: boolean; // Selected state when single selection
+    checkStatus: {
+        // Checked state when multiple selection
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onClick: (e: MouseEvent) => void; // Callback when clicked option in single selection
+    onCheck: (e: CheckboxEvent) => void; // Callback when clicked option in multiple selection, the signature of the onChange of Checkbox
+}
+```
+
+When the returned element is a single element, it gets the `id`, `role="option"` and the selected state of the option; when it returns text or several nodes, the component wraps them in an `li`.
+
+</Framework>
+
+The example is as follows
+
+<Demo id="filter-render" />
+
+If there are a lot of options in the search results, you can optimize performance by setting virtualizeInSearch to enable the virtualization of the search result panel. virtualizeInSearch is an object containing the following values:
+
+- height: Option list height in px (number), default 180, the same as the dropdown height
+- width: Option list width value
+- itemSize: The height of each row of Option
+
+<Demo id="virtualize-in-search" />
+
+### Limit Tags Displayed
+
+When multiple selections, you can use `maxTagCount` to limit the number of tags displayed, and the excess will be displayed as +N.
+
+You can use `showRestTagsPopover` to set whether hover +N displays Popover after maxTagCount is exceeded, the default is false. And, you can also configure Popover in the `restTagsPopoverProps` property.
+
+<Demo id="max-tag-count" />
+
+### Limit Tags Number
+
+<Framework only="react">
+
+In a multi-selection scene, use max to limit the number of multi-selection selections. After max is exceeded, the onExceed callback will be triggered.
+
+</Framework>
+
+<Framework only="vue">
+
+In a multi-selection scene, use max to limit the number of multi-selection selections. After max is exceeded, the `exceed` event will be emitted.
+
+</Framework>
+
+<Framework only="solid">
+
+In a multi-selection scene, use `max` to limit the number of multi-selection selections. After `max` is exceeded, the `onExceed` callback will be triggered.
+
+</Framework>
+
+<Demo id="max" />
+
+### Change on Select
+
+In the case of single selection, you can also set `changeOnSelect` to allow the parent option to be selected.
+
+<Demo id="change-on-select" />
+
+### Custom Display Property
+
+Set `displayProp` to select which property in the data you would like to display. By default, `label` is displayed.
+
+<Demo id="display-prop" />
+
+<Framework only="react">
+
+The return format can be set by setting `displayRender`.
+
+When single selection (`multiple=false`), `displayRender((labelPath: ReactNode[]) => ReactNode)`, where labelPath is a path array composed of labels.
+
+When multiple selection (`multiple=true`), `displayRender((item: Entity, index: number) => ReactNode)`, where item is the relevant data of the node, and Entity is as follows:
+
+</Framework>
+
+<Framework only="solid">
+
+The return format can be set by setting `displayRender`.
+
+When single selection (`multiple=false`), `displayRender((labelPath: Array<string | number>) => JSX.Element)`, where labelPath is a path array composed of labels.
+
+When multiple selection (`multiple=true`), `displayRender((item: Entity, index: number) => JSX.Element)`, where item is the relevant data of the node, and Entity is listed below.
+
+</Framework>
+
+<Framework only="vue">
+
+`displayRender` is split into two slots.
+
+When single selection (`multiple` is false), use `#display="{ labels, path }"` to set the displayed content, where `labels` holds the `displayProp` of each node on the path and `path` holds the nodes on the path (the raw values when the value is not in treeData, as in the payload of `change` with `changeWithObject`); empty slot content shows the `placeholder`.
+
+When multiple selection (`multiple` is true), use `#tag="{ entity, index, disabled, onClose }"` to replace each tag, where `entity` is the relevant data of the node and `onClose` unchecks the node; bind it to your own Tag when you need a close button. It works in searchable multiple selection too. The type of `entity` is `CascaderEntity`, as follows:
+
+</Framework>
+
+```typescript
+interface Entity {
+    children?: Entity[]; // children list
+    data: CascaderData; // treedata
+    ind: number; // index
+    key: string; // key
+    level: number; // node level
+    parent?: Entity; // parent data
+    parentKey?: string; // parent key
+    path: string[]; // key path
+    pos: string; // position of the node in treeData, such as '0-0-1'
+    valuePath: string[]; // value path
+}
+```
+
+<Framework only="vue">
+
+The `label` of a data item is text only. To render custom content in an option of the columns, use the `#label="{ item }"` slot, where `item` is the data of the node; the search results, the selection and the tags still show the text of the node.
+
+</Framework>
+
+<Demo id="display-render" />
+
+### Custom Separator
+
+You can use `separator` to set the separator, including: the separator of the content displayed in the dropdown during search and displayed in the Trigger during single selection.
+
+<Demo id="separator" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Disable Strictly
+
+You can use disableStrictly to enable strict disabling. After enabling strict disabling, when the node is disabled, the selected state cannot be changed through the relationship between the child or the parent.
+
+Take the following demo as an example, the node "宁波市" is strictly disabled. Therefore, when we change the selected state of its parent node "浙江省", it will not affect the selected state of the node "宁波市".
+
+<Demo id="disable-strictly" />
+
+### the Way of Expand Menu
+
+You can use `showNext` to set the time to expand the Dropdown submenu, optional: `click` (default), `hover`.
+
+<Demo id="show-next" />
+
+### Click to Select
+
+In multiple mode, clicking on non-leaf nodes does not trigger selection by default. You can use `clickToSelect` to enable selecting any node on click.
+
+This API is especially useful when combined with `showNext="hover"`: hovering expands the submenu, while clicking selects the current node.
+
+<Demo id="click-to-select" />
+
+### Additional items
+
+<Framework only="react">
+
+We have reserved slots at the top and bottom of the cascade selector. You can set them through bottomSlot or topSlot.
+
+</Framework>
+
+<Framework only="vue">
+
+We have reserved slots at the top and bottom of the cascade selector. You can set them through the `#topSlot` or `#bottomSlot` slot.
+
+</Framework>
+
+<Framework only="solid">
+
+We have reserved slots at the top and bottom of the cascade selector. You can set them through `topSlot` or `bottomSlot`.
+
+</Framework>
+
+<Demo id="slot" />
+
+### Controlled Component
+
+<Framework only="react">
+
+You can use `value` along with `onChange` property if you want to use Cascader as a controlled component.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind `modelValue` with `v-model` to use Cascader as a controlled component; the `change` event is still emitted. `modelValue` must be replaced as a whole, changes made in place to a controlled array are not noticed; passing `undefined` goes back to uncontrolled and clears the selection.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `value` along with `onChange` property if you want to use Cascader as a controlled component. Changes made in place to a controlled array are not noticed; pass a new array to update the selection.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Auto Merge Value
+
+In the multi-selection (multiple=true) scenario, when we select the ancestor node, if we want the value not to include its corresponding descendant nodes, we can set it by `autoMergeValue`, and the default is true. When `autoMergeValue` and `leafOnly` are turned on at the same time, the latter has a higher priority.
+
+<Demo id="auto-merge-value" />
+
+### Leaf Only
+
+<Framework only="react">
+
+In multiple selection, you can set the value to include only leaf nodes by turning on leafOnly, that is, the displayed Tag and onChange parameter values only include value.
+
+</Framework>
+
+<Framework only="vue">
+
+In multiple selection, you can set the value to include only leaf nodes by turning on leafOnly, that is, the displayed Tag and the value of `v-model` and the `change` event only include leaf nodes.
+
+</Framework>
+
+<Framework only="solid">
+
+In multiple selection, you can set the value to include only leaf nodes by turning on `leafOnly`, that is, the displayed Tag and the `onChange` parameter value only include leaf nodes.
+
+</Framework>
+
+<Demo id="leaf-only" />
+
+### Checked RelationShip
+
+In multiple, `checkRelation` can be used to set the type of node selection relationship, optional: 'related' (default), 'unRelated'. When the selection relationship is 'unRelated', it means that selections between nodes do not affect each other.
+
+<Demo id="check-relation" />
+
+### Dynamic Update of Data
+
+<Framework only="vue">
+
+`treeData` can be replaced as a whole or changed in place in reactive data (such as `push`, or assigning `children`); both are noticed and recalculated, and a new array with equal content keeps the expanded and selected state.
+
+</Framework>
+
+<Framework only="solid">
+
+Replace `treeData` as a whole to update the data; a new array with equal content keeps the expanded and selected state.
+
+</Framework>
+
+<Demo id="dynamic-data" />
+
+### Load Async Data
+
+You could use `loadData` to load data asynchronously.
+
+**Could not be used together with searching**
+
+<Demo id="load-data" />
+
+### Remote Search
+
+<Framework only="react">
+
+Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `onSearch` callback is fired, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
+
+</Framework>
+
+<Framework only="vue">
+
+**v>=2.97.0** Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `search` event is emitted, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
+
+</Framework>
+
+<Framework only="solid">
+
+Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `onSearch` callback is fired, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
+
+</Framework>
+
+<Notice title='Usage notes'>
+
+You should typically handle the following yourself when using remote search:
+
+- **Debounce**: avoid firing a request on every keystroke; wrapping the search handler with `debounce` from `es-toolkit` (e.g. 200~300ms) is the common approach.
+- **Race-condition protection**: use an incrementing token or an `AbortController` to drop stale responses, otherwise an out-of-order earlier response may overwrite the latest one.
+- **Loading hint**: show a loading state via an outer `Spin` or other indicator while the request is in flight, otherwise users may misread an in-flight state as "no data".
+- **Empty / cleared input**: when the input is cleared, restore `treeData` to the initial state instead of querying with an empty keyword.
+
+</Notice>
+
+<Demo id="remote-search" />
+
+### Deep & long list
+
+When your data structure level is particularly deep, the Cascader drop-down menu may be at the top of the screen. At this time, we recommend setting overflow -x: auto and a suitable width for the drop-down menu (it is recommended to use a width of N+0.5 columns, the most Expand to display half a column to give users a visual cue that they can scroll in the horizontal direction)
+
+<Demo id="long-list" />
+
+```css
+.components-cascader-demo {
+    .semi-cascader-option-lists {
+        max-width: 510px;
+        overflow-x: auto;
+    }
+}
+```
+
+### Custom Trigger
+
+<Framework only="react">
+
+If the default trigger style cannot meet your needs, you can use `triggerRender` to customize the display of the select box
+
+The parameters of triggerRender are as follows
+
+```typescript
+interface TriggerRenderProps {
+    /* All props passed to Cascader by users */
+    componentProps: CascaderProps;
+    /* Whether to disable Cascader */
+    disabled: boolean;
+    /**
+     * The hierarchical position of the selected node in treeData,
+     *  as in the following example, when "浙江省-杭州市-萧山区" is
+     *  selected, the value here is '0-0-1'
+     */
+    value?: string | Set<string>;
+    /* The search text while open; while a searchable single Cascader is closed, the display text of the selected path, or what displayRender returns */
+    inputValue: ReactNode;
+    /**
+     * The function used to update the value of the input box. You
+     *  should call this function when the value of the Input component
+     *  customized by triggerRender is updated to synchronize the
+     *  state with Cascader, you need to set the filterTreeNode parameter
+     *  to non-false when use it
+     */
+    onSearch: (inputValue: string) => void;
+    /* Function to clear the value, the input parameter is the click event */
+    onClear: (e: React.MouseEvent) => void;
+    /* Placeholder of Cascader */
+    placeholder?: string;
+    /* Used to delete a single item, the input parameter is the hierarchical
+     * position of the node in treeData (the same format as value)
+     */
+    onRemove: (pos: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+If the default trigger style cannot meet your needs, you can use the `#trigger` slot to customize the display of the select box
+
+The slot props of `#trigger` are as follows, with the type `CascaderTriggerSlotProps`
+
+```typescript
+interface CascaderTriggerSlotProps {
+    /* All props passed to Cascader by users */
+    componentProps: CascaderProps;
+    /* Whether to disable Cascader */
+    disabled: boolean;
+    /**
+     * The hierarchical position of the selected node in treeData,
+     *  as in the following example, when "浙江省-杭州市-萧山区" is
+     *  selected, the value here is '0-0-1'; a Set<string> in multiple mode
+     */
+    value: string | undefined | Set<string>;
+    /* The search text while open; while a searchable single Cascader is closed, the display text of the selected path (the texts joined by separator) */
+    inputValue: string;
+    /**
+     * The function used to update the value of the input box. You
+     *  should call this function when the value of the Input component
+     *  customized by #trigger is updated to synchronize the
+     *  state with Cascader, you need to set the filterTreeNode parameter
+     *  to non-false when use it
+     */
+    onSearch: (inputValue: string) => void;
+    /* Function to clear the value; pass the click event when it is bound to a control inside the trigger, so the click does not open the dropdown */
+    onClear: (event?: MouseEvent) => void;
+    /* Placeholder of Cascader */
+    placeholder?: string;
+    /* Used to delete a single item, the input parameter is the hierarchical
+     * position of the node in treeData (the same format as value)
+     */
+    onRemove: (pos: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+If the default trigger style cannot meet your needs, you can use `triggerRender` to customize the display of the select box.
+
+The parameter of `triggerRender` has the type `CascaderTriggerRenderProps`, as follows:
+
+```tsx
+interface CascaderTriggerRenderProps {
+    /* All props passed to Cascader by users, without ref */
+    componentProps: CascaderProps;
+    /* Whether to disable Cascader */
+    disabled: boolean;
+    /**
+     * The hierarchical position of the selected node in treeData,
+     *  as in the following example, when "浙江省-杭州市-萧山区" is
+     *  selected, the value here is '0-0-1'; a Set<string> in multiple mode
+     */
+    value: string | undefined | Set<string>;
+    /* The search text while open, and the display text of the selected path while closed */
+    inputValue: JSX.Element;
+    /**
+     * The function used to update the value of the input box. You
+     *  should call this function when the value of the Input component
+     *  customized by triggerRender is updated to synchronize the
+     *  state with Cascader, you need to set the filterTreeNode parameter
+     *  to non-false when use it
+     */
+    onSearch: (inputValue: string) => void;
+    /* Function to clear the value; pass the click event when it is bound to a control inside the trigger, so the click does not open the dropdown */
+    onClear: (event?: MouseEvent) => void;
+    /* Placeholder of Cascader */
+    placeholder?: string;
+    /* Used to delete a single item, the input parameter is the hierarchical
+     * position of the node in treeData (the same format as value)
+     */
+    onRemove: (pos: string) => void;
+}
+```
+
+Read the parameter with its access form, such as `props.value`, and do not destructure it, or the reactivity is lost.
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+## API reference
+
+### Cascader
+
+<Framework only="react">
+
+<CascaderReactApi />
+
+`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` fall on the current combobox (see [ARIA](#aria)); other undeclared native attributes, such as `data-*` and `onClick`, fall on the root element (the trigger). `onFocus` and `onBlur` are called when the dropdown opens and closes; they are not DOM focus events.
+
+</Framework>
+
+<Framework only="vue">
+
+<CascaderVueApi />
+
+The Vue Cascader has no `className` prop: undeclared attributes such as `class`, `style` and `data-*` fall on the root element (the trigger), and `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` fall on the current combobox (see [ARIA](#aria)). `change`, `select`, `focus`, `blur` and `keydown` are component events and hide the native events of the same name on the root element; `focus` and `blur` are emitted when the dropdown opens and closes, they are not DOM focus events.
+
+</Framework>
+
+<Framework only="solid">
+
+<CascaderSolidApi />
+
+Cascader puts `class`, `style`, `ref` and undeclared native attributes on the root element (the trigger), and `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` on the current combobox (see [ARIA](#aria)). `onFocus` and `onBlur` are emitted when the dropdown opens and closes; they are not DOM focus events.
+
+</Framework>
+
+### CascaderData
+
+<Framework only="react">
+
+| Properties | Instructions                    | type           | Default |
+| ---------- | ------------------------------- | -------------- | ------- |
+| children   | children node                   | CascaderData[] | -       |
+| disabled   | Disabled status                 | boolean        | -       |
+| isLeaf     | leaf node                       | boolean        | -       |
+| label      | Text to be displayed (required) | ReactNode      | -       |
+| loading    | loading                         | boolean        | -       |
+| value      | Value property (required)       | string\|number | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties | Instructions                                                              | type           | Default |
+| ---------- | ------------------------------------------------------------------------- | -------------- | ------- |
+| children   | children node                                                             | CascaderData[] | -       |
+| disabled   | Disabled status                                                           | boolean        | -       |
+| isLeaf     | leaf node                                                                 | boolean        | -       |
+| label      | Text to be displayed (required), use the `#label` slot for custom content | string\|number | -       |
+| loading    | loading                                                                   | boolean        | -       |
+| value      | Value property (required)                                                 | string\|number | -       |
+
+</Framework>
+
+<Framework only="solid">
+
+| Properties | Instructions                                                          | type           | Default |
+| ---------- | --------------------------------------------------------------------- | -------------- | ------- |
+| children   | children node                                                         | CascaderData[] | -       |
+| disabled   | Disabled status                                                       | boolean        | -       |
+| isLeaf     | leaf node                                                             | boolean        | -       |
+| label      | Text to be displayed (required), use `renderLabel` for custom content | string\|number | -       |
+| loading    | loading                                                               | boolean        | -       |
+| value      | Value property (required)                                             | string\|number | -       |
+
+</Framework>
+
+## Methods
+
+<Framework only="solid">
+
+The `ref` of Cascader points at the trigger element, which carries the `open()`, `close()`, `focus()`, `blur()` and `search(value)` methods, typed as `CascaderElement`. `search` searches as if the value were typed; set `filterTreeNode` to enable search, and `searchPosition` to `custom` to customize the display search box.
+
+```tsx
+import { Cascader, type CascaderElement } from '@fibrae/semi-ui-solid';
+
+let cascader: CascaderElement | undefined;
+const open = () => cascader?.open();
+
+<Cascader ref={(node) => (cascader = node)} treeData={treeData} />;
+```
+
+</Framework>
+
+<Framework only="react">
+
+The `ref` of Cascader receives a `CascaderHandle`, which carries the `open()`, `close()`, `focus()`, `blur()` and `search(value)` methods, so that some special interactions can be implemented. See the API reference above for their parameters and descriptions.
+
+</Framework>
+
+<Framework only="vue">
+
+Cascader exposes `open()`, `close()`, `focus()`, `blur()` and `search(value)` through a template ref, typed as `CascaderHandle`. `search` searches as if the value were typed; set `filterTreeNode` to enable search, and `searchPosition` to `custom` to customize the display search box.
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Cascader } from '@fibrae/semi-ui-vue';
+    import type { CascaderHandle } from '@fibrae/semi-ui-vue';
+
+    const cascader = useTemplateRef<CascaderHandle>('cascader');
+    const open = () => cascader.value?.open();
+</script>
+
+<template>
+    <Cascader ref="cascader" :treeData="treeData" />
+</template>
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Cascader supports importing `aria-label`, `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-labelledby`, `aria-required` to indicate the relevant information of the Cascader;
+
+<Framework only="vue">
+
+- These `aria-*` attributes fall on the current combobox: the root element (the trigger) without search, the search input with search, and the tag input in multiple mode when the search input is in the trigger;
+
+</Framework>
+
+<Framework only="solid">
+
+- These `aria-*` attributes fall on the current combobox: the root element (the trigger) without search, the search input with search, and the tag input in multiple mode when the search input is in the trigger;
+
+</Framework>
+
+- The combobox takes its name from, in order: `aria-labelledby`, `aria-label`, the rendered insetLabel (the combobox's `aria-labelledby` points at it, with an id the component generates when `insetLabelId` is not given; with a prefix the insetLabel is not rendered and does not name it), and otherwise "Cascader" from the locale. The tree or the search-result listbox in the dropdown uses the same name source;
+- Following the ARIA 1.2 combobox pattern, exactly one element is the combobox at any time; its `aria-controls` points at the list in the dropdown, and the dropdown has the combobox's name. Without search the trigger is a select-only combobox and the selected path is its value; with search the input itself is the combobox, with `aria-autocomplete="list"`, and the trigger has no role and no Tab stop. In single mode the input appears only while searching, so the trigger is the combobox otherwise; the input is empty until the user types, so the selected path is linked to it as its description with `aria-describedby`; picking a result returns focus to the trigger;
+- The columns together are one `role="tree"`: options are `treeitem`s with `aria-level` (their column), `aria-setsize`, `aria-posinset` and `aria-disabled`, and `aria-expanded` on options that can expand; a single-choice Cascader uses `aria-selected`, a multi-choice one uses `aria-checked` (`mixed` when half checked);
+
+<Framework only="react">
+
+- Search results are a `role="listbox"` of `option`s, with `aria-selected` for selected, or checked in a multi-choice Cascader. The element returned by `filterRender` gets an `id`, `role="option"` and these states;
+
+</Framework>
+
+<Framework only="vue">
+
+- Search results are a `role="listbox"` of `option`s, with `aria-selected` for selected, or checked in a multi-choice Cascader. When `#filterItem` renders a single element root, that element gets an `id`, `role="option"` and these states; otherwise the component wraps the content in an `li` that has them;
+
+</Framework>
+
+<Framework only="solid">
+
+- Search results are a `role="listbox"` of `option`s, with `aria-selected` for selected, or checked in a multi-choice Cascader. When `filterRender` returns a single element, that element gets an `id`, `role="option"` and these states; otherwise the component wraps the content in an `li` that has them;
+
+</Framework>
+
+- The tick and the checkbox in front of an option only picture its state: they are hidden from screen readers and take no focus.
+
+### Keyboard Interaction
+
+Cascader follows the [WAI-ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) pattern: focus always stays on the trigger or the search input, `aria-activedescendant` points at the current option, and the current option shows the focus ring. There is no current option when the dropdown opens.
+
+- While the dropdown is closed: `ArrowDown`, `ArrowUp` and `Enter` open it; without search, `Space` also opens it, and `Home` and `End` open it and move to the first or last option of the first column. With search, `Space`, `Home` and `End` edit the text
+- `Enter`: with a current option, act like a click on it, or check and uncheck it in a multi-choice Cascader; disabled options do not respond
+- `ArrowDown`, `ArrowUp`: move to the next or previous option in the current option's column (or in the search results); the first `ArrowDown` moves to the first option of the first column; `Home`, `End`: move to the first or last option of that column
+- `ArrowRight`: expand the current option, showing its column; once expanded, move to the first option of that column (swapped with `ArrowLeft` in RTL)
+- `ArrowLeft`: collapse the expanded current option; otherwise move to the parent option in the previous column
+- `Space`: with a current option, the same as `Enter` (it types a space in the search input)
+- Typing characters: while the dropdown is open, move to the next option after the current one, across the shown columns, whose label starts with the typed text, leaving the columns as they are; characters typed in quick succession form one search string. In the search input the characters are typed as text; a closed dropdown ignores them
+- `Esc`: close the dropdown
+
+While focus is in the search input and text is typed, only `ArrowDown`, `ArrowUp` and `Enter` move and select; the other keys edit the text. The arrow keys only move the current option: unlike hovering, they do not expand the next column or trigger `loadData`, which loads when `ArrowRight` expands.
+
+With `showClear`, a selected value or search text, and no `disabled`, the trigger renders a clear button. It is a native `button` named "Clear selection" from the locale, shown on hover, while the dropdown is open, or while focus is inside the Cascader. From the trigger or the search input, `Tab` moves to the clear button; `Enter` or `Space` clears, as a mouse click does, and the focus goes back to the trigger or the search input. In multiple mode `Backspace` in the search input also removes tags.
+
+## Content Guidelines
+
+- Selector options
+    - If there is no default option, use "Select" as the placeholder text
+    - Arrange options in alphabetical order or another logical order, so that users can find them more easily
+    - Write in sentence case (capitalize the first letter, lowercase the rest) and avoid ending with commas or semicolons
+    - Clearly express the purpose of the choice that each option represents
+
+## Design Tokens
+
+<DesignToken />

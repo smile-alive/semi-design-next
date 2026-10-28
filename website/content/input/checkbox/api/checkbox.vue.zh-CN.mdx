@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                          | 类型            | 默认值                                             |
+| -------------- | ----------------------------------------------------------------------------- | --------------- | -------------------------------------------------- |
+| modelValue     | 是否选中，配合 v-model 受控使用；在 CheckboxGroup 中使用时无效。              | `boolean`       | `undefined`                                        |
+| defaultChecked | 初始是否选中，非受控使用；在 CheckboxGroup 中使用时无效。                     | `boolean`       | `semiDefault("Checkbox", "defaultChecked", false)` |
+| value          | 该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。           | `CheckboxValue` | `undefined`                                        |
+| disabled       | 是否禁用。                                                                    | `boolean`       | `semiGlobalDefault("Checkbox", "disabled")`        |
+| indeterminate  | 半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。             | `boolean`       | `semiDefault("Checkbox", "indeterminate", false)`  |
+| type           | 样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。 | `CheckboxType`  | `semiDefault("Checkbox", "type", "default")`       |
+| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。              | `string`        | `undefined`                                        |
+| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。             | `string`        | `undefined`                                        |
+| prefixCls      | CSS 类名前缀。                                                                | `string`        | `semiGlobalDefault("Checkbox", "prefixCls")`       |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                         | `boolean`       | `semiGlobalDefault("Checkbox", "preventScroll")`   |
+
+**Events**
+
+| 事件              | 说明                                                                        | 回调参数                 |
+| ----------------- | --------------------------------------------------------------------------- | ------------------------ |
+| update:modelValue | 选中状态变化时触发，用于 v-model。                                          | `[checked: boolean]`     |
+| change            | 选中状态变化时触发，参数的 target 为 `{ checked, value, name, disabled }`。 | `[event: CheckboxEvent]` |
+
+**Slots**
+
+| 插槽    | 说明                                                 | 作用域参数 |
+| ------- | ---------------------------------------------------- | ---------- |
+| default | Checkbox 的文本内容，同时是原生 input 的可访问名称。 | `any`      |
+| extra   | 辅助文本，aria-describedby 指向它。                  | `any`      |
+
+**Exposes**
+
+| 名称  | 说明                    | 类型                                          |
+| ----- | ----------------------- | --------------------------------------------- |
+| focus | 使原生 input 获得焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | 使原生 input 失去焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |

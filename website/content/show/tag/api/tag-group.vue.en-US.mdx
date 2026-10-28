@@ -1,0 +1,30 @@
+**Props**
+
+| Property     | Description                                                                                          | Type                              | Default                                            |
+| ------------ | ---------------------------------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------- |
+| tagList      | Tag configurations. Each item holds the props of a Tag, with children as the string or number label. | `TagGroupItem[]`                  | `undefined`                                        |
+| maxTagCount  | Maximum number of visible tags. The rest is shown as +N.                                             | `number`                          | `semiGlobalDefault("TagGroup", "maxTagCount")`     |
+| restCount    | The number shown in +N. Defaults to the number of tags beyond maxTagCount.                           | `number`                          | `semiGlobalDefault("TagGroup", "restCount")`       |
+| size         | Size of the tags in the group.                                                                       | `"default" \| "small" \| "large"` | `semiDefault("TagGroup", "size", "default")`       |
+| showPopover  | Whether hovering +N shows the remaining tags in a Popover.                                           | `boolean`                         | `semiGlobalDefault("TagGroup", "showPopover")`     |
+| popoverProps | Props passed to the Popover, such as position and trigger.                                           | `PopoverProps`                    | `semiGlobalDefault("TagGroup", "popoverProps")`    |
+| avatarShape  | Avatar shape of the avatar tags in the group.                                                        | `AvatarShape`                     | `semiDefault("TagGroup", "avatarShape", "square")` |
+
+**Events**
+
+| Event           | Description                                                                                                               | Callback parameters                                             |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| tagClose        | Emitted when a tag in the group is closed, with the close event and the tagKey of the tag. Update tagList in the handler. | `[event: TagCloseEvent, tagKey: string \| number \| undefined]` |
+| plusNMouseEnter | Emitted when the pointer enters the +N tag.                                                                               | `[]`                                                            |
+
+**Slots**
+
+| Slot | Description                                                                      | Scope parameters                        |
+| ---- | -------------------------------------------------------------------------------- | --------------------------------------- |
+| tag  | Custom rendering of each tag, receiving the tag configuration tag and its index. | `{ tag: TagGroupItem; index: number; }` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

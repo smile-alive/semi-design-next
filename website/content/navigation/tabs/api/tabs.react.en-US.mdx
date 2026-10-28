@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | The itemKey of the active tab, controlled. `null` activates no tab and is still controlled; omitted or `undefined` means uncontrolled. | `string \| null` | - |
+| arrowPosition | Position of the scroll arrows in collapsible mode: `start`, `end` or `both`. | `TabBarProps['arrowPosition']` | `"both"` |
+| children | TabPane children, which must be direct children of Tabs; any other node renders as content in its original order. With tabList, TabPane children are ignored and the other nodes are the content of the active tab. | <ApiType detail={"ReactNode \u007c Array\u003cReactNode>"}>Type</ApiType> | `[]` |
+| className | Class name of the root element. | `string` | - |
+| collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). `auto` collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
+| contentStyle | Style of the outer content area. | `CSSProperties` | - |
+| defaultActiveKey | The itemKey selected initially when uncontrolled. Omitted, the first enabled tab with an itemKey is selected. | `string` | - |
+| dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (`start`) and end-side (`end`) arrow menus. | `TabsDropDownProps` | - |
+| keepDOM | With TabPane children, whether to render the DOM of inactive panels. When `false`, only the active panel is rendered and panels switch without motion. | `boolean` | `true` |
+| lazyRender | Lazy rendering: a panel renders its content only after it has been active, and keeps it afterwards. | `boolean` | `false` |
+| more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; an object sets `count` to that number, `render` returns a custom trigger and `dropdownProps` is passed to the dropdown. | <ApiType detail={"number \u007c { count: number; render?: () => ReactNode; dropdownProps?: DropdownProps }"}>Type</ApiType> | - |
+| onChange | Called when the active tab changes, with the itemKey of the new active tab. | <ApiType detail={"(activeKey: string) => void"}>Type</ApiType> | - |
+| onTabClick | Called when a tab is clicked or activated with Enter or Space, with the itemKey and the event; the event is a `KeyboardEvent` for keyboard activation. | <ApiType detail={"(activeKey: string, e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onTabClose | Called when a tab is closed, with the itemKey of the closed tab. The caller removes the tab. | <ApiType detail={"(tabKey: string) => void"}>Type</ApiType> | - |
+| onVisibleTabsChange | In collapsible mode, called when the visibility of the tabs changes, with a `Map<string, boolean>` from itemKey to whether the tab is visible. | `TabBarProps['onVisibleTabsChange']` | - |
+| preventScroll | Whether focus calls inside the component stop the browser from scrolling the document to show the newly focused element. | `boolean` | - |
+| ref | Reference to the root `div` element. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| renderArrow | Replaces each scroll arrow in collapsible mode. The arguments are the overflowed `items`, the position `pos`, the click handler `handleArrowClick` and the default arrow `defaultNode`. | `TabBarProps['renderArrow']` | - |
+| renderTabBar | Replaces the whole tab bar, called on every render. The arguments are the tab bar props `tabBarProps` and the default tab bar component `defaultTabBar`. When replacing the tab bar, `aria-label` and `aria-labelledby` are in `tabBarProps` and must be set on the element with `role="tablist"`. | <ApiType detail={"(tabBarProps: TabBarProps, defaultTabBar: typeof TabBar) => ReactNode"}>Type</ApiType> | - |
+| showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `true` |
+| size | Size of the tab bar: `small`, `medium` or `large`. Currently only the `line` type supports it. | `TabSize` | `"large"` |
+| style | Style of the root element. | `CSSProperties` | - |
+| tabBarClassName | Class name of the tab bar. | `string` | - |
+| tabBarExtraContent | Extra content of the tab bar, placed outside the tablist. | `ReactNode` | - |
+| tabBarStyle | Style of the tab bar. | `CSSProperties` | - |
+| tabList | An array of tab data, each with `itemKey`, `tab`, `icon`, `disabled` and `closable`. Any array, even an empty one, makes `children` the content of the active tab and takes precedence over TabPane children. | `PlainTab[]` | - |
+| tabPaneMotion | Whether switching panels is animated. | `boolean` | `true` |
+| tabPosition | Position of the tab bar: `top` is horizontal, `left` is vertical. | `TabPosition` | `"top"` |
+| type | Style of the tab bar: `line`, `card`, `button` or `slash`. `slash` supports horizontal mode only. | `TabType` | `"line"` |
+| visibleTabsStyle | In collapsible mode, the style of the whole scrolling area. | `TabBarProps['visibleTabsStyle']` | - |

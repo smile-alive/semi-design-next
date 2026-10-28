@@ -1,0 +1,127 @@
+{
+    "radio": {
+        "source": "packages/semi-ui-solid/src/radio/radio.tsx",
+        "props": {
+            "addonClassName": {
+                "zh-CN": "包裹内容容器的类名。",
+                "en-US": "Class name of the container wrapping the content."
+            },
+            "addonId": {
+                "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
+                "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
+            },
+            "addonStyle": {
+                "zh-CN": "包裹内容容器的内联样式。",
+                "en-US": "Inline style of the container wrapping the content."
+            },
+            "checked": {
+                "zh-CN": "是否选中，受控使用；在 RadioGroup 中使用时无效。",
+                "en-US": "Whether the radio is checked, for controlled use. Ignored inside a RadioGroup."
+            },
+            "defaultChecked": {
+                "zh-CN": "初始是否选中，非受控使用；在 RadioGroup 中使用时无效。",
+                "en-US": "Whether the radio is initially checked, for uncontrolled use. Ignored inside a RadioGroup."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the radio is disabled." },
+            "displayMode": {
+                "zh-CN": "设为 vertical 时 Radio 以块级元素独占一行。",
+                "en-US": "When set to vertical, the radio is displayed as a block and takes a line of its own."
+            },
+            "extra": {
+                "zh-CN": "辅助文本，aria-describedby 指向它；type 为 button 时不渲染。",
+                "en-US": "Supplementary text, which aria-describedby points to. Not rendered when type is button."
+            },
+            "extraId": {
+                "zh-CN": "extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。",
+                "en-US": "Id of the extra node, which aria-describedby points to. Generated when omitted."
+            },
+            "mode": {
+                "zh-CN": "设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。",
+                "en-US": "When set to advanced, a checked radio can be unchecked by clicking it or pressing Space. Inside a RadioGroup the group's mode applies."
+            },
+            "name": {
+                "zh-CN": "原生 input 的 name，同时设置时优先于所在 RadioGroup 的 name。",
+                "en-US": "The native input's name. It takes precedence over the enclosing RadioGroup's name."
+            },
+            "onBlur": {
+                "zh-CN": "原生 input 失去焦点时的回调。",
+                "en-US": "Called when the native input loses focus."
+            },
+            "onChange": {
+                "zh-CN": "选中状态变化时的回调，event.target 为 `{ checked, value, name, disabled }`。",
+                "en-US": "Called when the checked state changes. event.target is `{ checked, value, name, disabled }`."
+            },
+            "onFocus": {
+                "zh-CN": "原生 input 获得焦点时的回调。",
+                "en-US": "Called when the native input receives focus."
+            },
+            "prefixCls": {
+                "zh-CN": "CSS 类名前缀，未设置时依次取所在 RadioGroup 的值与全局默认值。",
+                "en-US": "CSS class name prefix. When omitted it falls back to the enclosing RadioGroup's value, then the global default."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
+                "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
+            },
+            "type": {
+                "zh-CN": "样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。",
+                "en-US": "Style type: default, button, card or pureCard. Inside a RadioGroup the group's type applies."
+            },
+            "value": {
+                "zh-CN": "Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。",
+                "en-US": "The radio's value, which a RadioGroup compares to decide whether it is checked. It is also the native input's value in form submission."
+            }
+        }
+    },
+    "radio-group": {
+        "source": "packages/semi-ui-solid/src/radio/radio-group.tsx",
+        "props": {
+            "buttonSize": {
+                "zh-CN": "type 为 button 时按钮的尺寸，可选 small、middle、large。",
+                "en-US": "Button size when type is button: small, middle or large."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控时默认选中的值。",
+                "en-US": "The value selected by default when uncontrolled."
+            },
+            "direction": {
+                "zh-CN": "组内 Radio 的排列方向，可选 horizontal 或 vertical；type 为 button 时不支持。",
+                "en-US": "Layout direction of the radios: horizontal or vertical. Not supported when type is button."
+            },
+            "disabled": { "zh-CN": "是否禁用整组。", "en-US": "Whether the whole group is disabled." },
+            "mode": {
+                "zh-CN": "设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中。",
+                "en-US": "When set to advanced, a checked radio can be unchecked by clicking it or pressing Space."
+            },
+            "name": {
+                "zh-CN": "组内所有原生 input 的 name；未设置时每组生成唯一值。",
+                "en-US": "The name of every native input in the group. A unique value is generated per group when omitted."
+            },
+            "onChange": {
+                "zh-CN": "选中的值变化时的回调，event.target 为 `{ checked, value, name, disabled }`。",
+                "en-US": "Called when the selected value changes. event.target is `{ checked, value, name, disabled }`."
+            },
+            "options": {
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClassName, extraId }`，label、extra 只放字符串或数字，其他内容用 renderLabel、renderExtra；设置后忽略 children。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClassName, extraId }`, where label and extra hold only a string or number; other content goes through renderLabel and renderExtra. Children are ignored when set."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "renderExtra": {
+                "zh-CN": "渲染 options 中一项的副文本，参数为该项与序号；按钮型没有副文本，不会调用。",
+                "en-US": "Renders the extra text of an options item, given the item and its index. A button radio has no extra text and never calls it."
+            },
+            "renderLabel": {
+                "zh-CN": "渲染 options 中一项的标签，参数为该项与序号。",
+                "en-US": "Renders the label of an options item, given the item and its index."
+            },
+            "type": {
+                "zh-CN": "组内所有 Radio 的样式类型，可选 default、button、card、pureCard。",
+                "en-US": "Style type of every Radio in the group: default, button, card or pureCard."
+            },
+            "value": {
+                "zh-CN": "选中的值，受控使用。",
+                "en-US": "The selected value, for controlled use."
+            }
+        }
+    }
+}

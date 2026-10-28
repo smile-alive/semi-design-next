@@ -1,0 +1,75 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                         | 说明                                                                                                                                | 类型                                                                    | 默认值                                                              |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| canSend                      | 是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。                                                          | `boolean`                                                               | `semiGlobalDefault("AIChatInput", "canSend")`                       |
+| clearContentOnGenerating     | generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。               | `boolean`                                                               | `semiDefault("AIChatInput", "clearContentOnGenerating", true)`      |
+| defaultContent               | 输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。                                       | `Content`                                                               | `semiGlobalDefault("AIChatInput", "defaultContent")`                |
+| dropdownMatchTriggerWidth    | 下拉弹出层是否与输入框宽度一致。                                                                                                    | `boolean`                                                               | `semiDefault("AIChatInput", "dropdownMatchTriggerWidth", true)`     |
+| extensions                   | 自定义 tiptap 扩展；只在创建编辑器时读取，之后变化不生效。                                                                          | `Extensions`                                                            | `semiGlobalDefault("AIChatInput", "extensions")`                    |
+| generating                   | 是否正在生成中。为 true 时发送按钮变为停止生成按钮。                                                                                | `boolean`                                                               | `semiDefault("AIChatInput", "generating", false)`                   |
+| keepSkillAfterSend           | 发送消息后是否保留已选的技能。                                                                                                      | `boolean`                                                               | `semiDefault("AIChatInput", "keepSkillAfterSend", false)`           |
+| placeholder                  | 输入框占位符，可以是字符串，也可以是按节点返回字符串的函数。                                                                        | `PlaceholderProps`                                                      | `undefined`                                                         |
+| popoverProps                 | 下拉弹出层的配置参数；class 与内部类名合并，style 与面板宽度合并。                                                                  | `AIChatInputPopoverProps`                                               | `semiGlobalDefault("AIChatInput", "popoverProps")`                  |
+| references                   | 输入框的引用列表。                                                                                                                  | `Reference[]`                                                           | `semiGlobalDefault("AIChatInput", "references")`                    |
+| round                        | 底部的配置区域和操作区域按钮是否为全圆角。                                                                                          | `boolean`                                                               | `semiDefault("AIChatInput", "round", true)`                         |
+| sendHotKey                   | 发送输入内容的键盘快捷键。enter 表示单独按下 Enter 发送，Shift 与 Enter 同时按下仅换行；shift+enter 相反。                          | `"enter" \| "shift+enter"`                                              | `semiDefault("AIChatInput", "sendHotKey", "enter")`                 |
+| showPlaceholderWhenSkillOnly | 仅选中技能（无其他内容）时是否显示占位符，开启后占位符显示在技能后方；只在创建编辑器时读取。                                        | `boolean`                                                               | `semiDefault("AIChatInput", "showPlaceholderWhenSkillOnly", false)` |
+| showReference                | 是否展示引用区域，用于配合 #topSlot 使用。                                                                                          | `boolean`                                                               | `semiDefault("AIChatInput", "showReference", true)`                 |
+| showTemplateButton           | 是否展示模板按钮。未设置时，根据当前选中技能的 hasTemplate 决定。                                                                   | `boolean`                                                               | `semiDefault("AIChatInput", "showTemplateButton", false)`           |
+| showUploadButton             | 是否显示右侧上传按钮。设为 false 时粘贴上传仍然有效。                                                                               | `boolean`                                                               | `semiDefault("AIChatInput", "showUploadButton", true)`              |
+| showUploadFile               | 是否展示上传文件区域，用于配合 #topSlot 使用。                                                                                      | `boolean`                                                               | `semiDefault("AIChatInput", "showUploadFile", true)`                |
+| skillHotKey                  | 输入框中触发技能面板的热键。                                                                                                        | `string`                                                                | `semiGlobalDefault("AIChatInput", "skillHotKey")`                   |
+| skills                       | 技能列表。技能只含数据，图标使用 #skillIcon 插槽。                                                                                  | `Skill[]`                                                               | `semiGlobalDefault("AIChatInput", "skills")`                        |
+| suggestions                  | 建议列表，每项为字符串或带 content 的对象。                                                                                         | `Suggestion[]`                                                          | `semiGlobalDefault("AIChatInput", "suggestions")`                   |
+| templatesCls                 | 模板面板的类名。                                                                                                                    | `string`                                                                | `semiGlobalDefault("AIChatInput", "templatesCls")`                  |
+| templatesStyle               | 模板面板的样式。                                                                                                                    | `StyleValue`                                                            | `semiGlobalDefault("AIChatInput", "templatesStyle")`                |
+| topSlotPosition              | #topSlot 的位置，相对于引用区域与上传文件区域。                                                                                     | `"top" \| "bottom" \| "middle"`                                         | `semiDefault("AIChatInput", "topSlotPosition", "top")`              |
+| transformer                  | 自定义扩展的转换规则，键为节点名，值为把节点转换成 contentChange 内容项的函数。                                                     | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType>  | `semiGlobalDefault("AIChatInput", "transformer")`                   |
+| uploadTipProps               | 上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 #uploadTip 插槽。                                                           | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "uploadTipProps")`                |
+| uploadProps                  | 上传文件相关配置，同 Upload，但不接受 fileList 与 listType；onChange、onRemove 由 AIChatInput 自己调用，beforeRemove 支持 Promise。 | `AIChatInputUploadProps`                                                | `semiGlobalDefault("AIChatInput", "uploadProps")`                   |
+
+**Events**
+
+| 事件            | 说明                                                                                                        | 回调参数                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| blur            | 富文本输入框失焦时触发。会遮住根元素上的原生 blur。                                                         | `[event: FocusEvent]`                                                                                                |
+| configureChange | 配置区域发生变化时触发，参数为全部配置值和本次变化的值；移除配置项时第二个参数为 undefined。                | <ApiType detail={"[value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps \u007c undefined]"}>Type</ApiType> |
+| contentChange   | 输入框内容变化时触发，参数为当前内容项列表。                                                                | `[contents: Content[]]`                                                                                              |
+| focus           | 富文本输入框聚焦时触发。会遮住根元素上的原生 focus。                                                        | `[event: FocusEvent]`                                                                                                |
+| messageSend     | 点击发送按钮时触发，参数包含引用、上传文件、输入内容和配置区域内容。                                        | `[message: MessageContent]`                                                                                          |
+| paste           | 监听输入框的粘贴事件，不阻止默认粘贴行为，可通过 event.clipboardData 获取内容。会遮住根元素上的原生 paste。 | `[event: ClipboardEvent]`                                                                                            |
+| referenceClick  | 点击引用时触发。                                                                                            | `[reference: Reference]`                                                                                             |
+| referenceDelete | 删除引用时触发。引用由使用方持有，需要在回调中自行移除。                                                    | `[reference: Reference]`                                                                                             |
+| skillChange     | 技能切换时触发，移除技能时参数为 undefined。                                                                | `[skill: Skill \| undefined]`                                                                                        |
+| stopGenerate    | 点击停止生成按钮时触发。                                                                                    | `[]`                                                                                                                 |
+| uploadChange    | 上传文件列表变化时触发。                                                                                    | `[props: UploadOnChangeProps]`                                                                                       |
+
+**Slots**
+
+| 插槽           | 说明                                                                                                                                                              | 作用域参数                           |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| reference      | 自定义渲染每个引用，作用域参数为 item 与 index。                                                                                                                  | `AIChatInputReferenceSlotProps`      |
+| topSlot        | 自定义顶部区域，作用域参数含引用、上传内容、输入内容和删除方法。位置由 topSlotPosition 决定。                                                                     | `AIChatInputTopSlotProps`            |
+| uploadButton   | 自定义上传按钮内容，上传与粘贴上传逻辑仍由组件托管；作用域参数含 defaultNode、onOpenFileDialog、disabled、attachments。                                           | `AIChatInputUploadButtonSlotProps`   |
+| uploadTip      | 上传按钮提示的内容。                                                                                                                                              | `any`                                |
+| configureArea  | 底部配置区域，放置 AIChatInput.Configure 的各配置项。                                                                                                             | `any`                                |
+| actionArea     | 自定义底部操作区域，作用域参数 menuItem 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。 | `AIChatInputActionAreaSlotProps`     |
+| suggestionItem | 自定义每个建议项，作用域参数含 suggestion 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。                                            | `AIChatInputSuggestionItemSlotProps` |
+| skillItem      | 自定义技能列表的每一项，作用域参数含 skill 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。                                           | `AIChatInputSkillItemSlotProps`      |
+| skillIcon      | 技能面板中每个技能前的图标，作用域参数为 item 与 index。                                                                                                          | `AIChatInputSkillIconSlotProps`      |
+| template       | 模板面板的内容，作用域参数为当前技能 skill 与用传入内容替换输入框内容的 onTemplateClick。                                                                         | `AIChatInputTemplateSlotProps`       |
+
+**Exposes**
+
+| 名称                    | 说明                                                   | 类型                                                                              |
+| ----------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| changeTemplateVisible   | 切换模板弹出层的可见性。                               | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>                     |
+| deleteContent           | 删除富文本中的某一项，按 content 中的 uniqueKey 匹配。 | <ApiType detail={"(content: Content) => void"}>Type</ApiType>                     |
+| deleteUploadFile        | 删除上传文件中的某一项。                               | <ApiType detail={"(item: Attachment) => void"}>Type</ApiType>                     |
+| focusEditor             | 聚焦输入框，默认聚焦到末尾。                           | <ApiType detail={"(pos?: FocusPosition \u007c undefined) => void"}>Type</ApiType> |
+| getEditor               | 获取 tiptap 的 editor 实例，编辑器创建前为 null。      | <ApiType detail={"() => Editor \u007c null"}>Type</ApiType>                       |
+| setContent              | 设置输入框内容。                                       | <ApiType detail={"(content: Content) => void"}>Type</ApiType>                     |
+| setContentWhileSaveTool | 保留技能项的同时设置输入框内容。                       | <ApiType detail={"(content: string) => void"}>Type</ApiType>                      |

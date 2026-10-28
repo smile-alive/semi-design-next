@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                                  | 类型                                                                        | 默认值  |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------- |
+| children       | 底部区域的子元素。有子元素时，`collapseButton` 不生效。                                                               | `ReactNode`                                                                 | -       |
+| className      | 最外层 `div` 的类名。                                                                                                 | `string`                                                                    | -       |
+| collapseButton | 是否展示收起侧边栏按钮，`true` 时展示内置按钮，也可以传入节点替换它。仅 `mode` 为 `vertical` 且底部没有子元素时生效。 | `React.ReactNode`                                                           | `false` |
+| collapseText   | 内置收起按钮的文案，参数为是否收起。只含文本时也作为图标按钮的可访问名称。                                            | <ApiType detail={"(collapsed?: boolean) => React.ReactNode"}>Type</ApiType> | -       |
+| onClick        | 点击底部区域时调用。                                                                                                  | <ApiType detail={"(event: React.MouseEvent) => void"}>Type</ApiType>        | -       |
+| ref            | 底部最外层 `div` 元素的引用。                                                                                         | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>           | -       |
+| style          | 最外层 `div` 的样式。                                                                                                 | `CSSProperties`                                                             | -       |

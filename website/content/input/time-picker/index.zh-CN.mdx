@@ -1,0 +1,201 @@
+---
+title: 时间选择器
+order: 50
+icon: doc-timepicker
+brief: 用户使用时间选择器可以方便地选择某一符合要求的、格式化的时间点
+---
+
+import TimePickerReactApi from './api/time-picker.react.zh-CN.mdx';
+import TimePickerVueApi from './api/time-picker.vue.zh-CN.mdx';
+import TimePickerSolidApi from './api/time-picker.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { TimePicker } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { TimePicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { TimePicker } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基础使用
+
+点击 TimePicker，然后可以在浮层中选择或者输入某一时间。
+
+<Demo id="basic" />
+
+### 无限滚动
+
+版本V2.22.0开始，我们将 TimePicker 内的 ScrollItem 的默认模式从 `wheel` 变更为了 `normal`, 若想应用回无限滚动的效果，可参考以下示例。
+
+<Demo id="infinite-scroll" />
+
+### 受控组件
+
+<Framework only="react">
+
+当使用 `value` 而不是 `defaultValue` 时，作为受控组件使用。`value` 和 `onChange` 需要配合使用。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model` 作为受控组件，初始值用 `defaultValue`。传 `null` 是受控的空值，`undefined` 视为非受控；受控值从有值变回 `undefined` 时输入框清空并转为非受控。清除后 `v-model` 收到的单选值为 `undefined`，范围值为空数组。
+
+</Framework>
+
+<Framework only="solid">
+
+当使用 `value` 而不是 `defaultValue` 时，作为受控组件使用。`value` 和 `onChange` 需要配合使用，传 `null` 是受控的空值。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 不同的 Format 格式
+
+TimePicker 浮层中的列会随着 `format` 变化，当略去 `format` 中的某部分时，浮层中对应的列也会消失。
+
+NOTE: `format` 遵循 date-fns v4 的 `format` 格式。 https://date-fns.org/docs/format
+
+<Demo id="format" />
+
+### 设置面板头部，底部
+
+<Demo id="panel-header-footer" />
+
+### 禁用时间选择
+
+<Demo id="disabled" />
+
+### 设置步长
+
+可以使用 `hourStep`, `minuteStep`, `secondStep` 按步长展示可选的时分秒。
+
+<Demo id="step" />
+
+### 12 小时制
+
+12 小时制的时间选择器，默认的 `format` 为 `a h:mm:ss`，传入的 `format` 格式必须在 [dateFns 日期格式](https://date-fns.org/docs/format)范围之内。
+
+> 例如默认的 12 小时制格式串为：`a h:mm:ss`，如果传入 `A h:mm:ss` 则会导致无法正确格式化。
+
+<Demo id="use-12-hours" />
+
+### 时间范围
+
+传入 type="timeRange" 开启时间范围选择。
+
+<Demo id="time-range" />
+
+### Range 模式下分别禁用左右面板（disabledTime）
+
+当 `type="timeRange"` 时，你可以通过 `disabledTime(value, panelType)` 对左右面板分别应用不同的禁用规则。
+
+- `value`：当前已选时间数组，未选的一侧为 `undefined`（如 `[date, undefined]`）；没有值时为空数组，`value`、`defaultValue` 或输入框只含一个时间时长度为 1
+- `panelType`：`'left' | 'right'`，分别代表开始/结束面板
+
+下面示例实现：选择开始时间后，右侧结束时间面板会禁用早于开始时间的选项。
+
+<Demo id="disabled-time" />
+
+### 自定义触发器
+
+<Framework only="react">
+
+默认情况下我们使用 `Input` 组件作为 `TimePicker` 组件的触发器，通过传递 `triggerRender` 方法你可以自定义这个触发器。
+
+</Framework>
+
+<Framework only="vue">
+
+默认情况下我们使用 `Input` 组件作为 `TimePicker` 组件的触发器，通过 `#trigger` 作用域插槽你可以自定义这个触发器。作用域参数为 `{ value, inputValue, placeholder, disabled, componentProps, onChange }`，其中 `value` 未选的一侧为 `undefined`，`onChange` 用于更新输入框文本，效果同键入。
+
+</Framework>
+
+<Framework only="solid">
+
+默认情况下我们使用 `Input` 组件作为 `TimePicker` 组件的触发器，通过传递 `triggerRender` 函数你可以自定义这个触发器。`triggerRender` 只调用一次，入参的字段都是活的，需要在返回的 JSX 中读取（如 `props.placeholder`）才会随之更新。
+
+</Framework>
+
+<Demo id="custom-trigger" />
+
+## 时区设置
+
+Semi 所有关于时区的配置都收敛在 ConfigProvider 中，详细使用可以参考 [ConfigProvider](/zh-CN/react/other/config-provider)
+
+<Demo id="time-zone" />
+
+## API 参考
+
+<Framework only="react">
+
+<TimePickerReactApi />
+
+未声明的原生属性（如 `title`、`data-*`、`aria-label`、`onKeyDown`）落在内部输入框上，其中 `prefix` 作为输入框的前缀内容显示；使用 `triggerRender` 自定义触发器时，这些属性不落在任何元素上，可通过 `componentProps` 取用。
+
+使用自定义触发器时，`focus()` 与 `blur()` 作用于触发器中的第一个 `input`，没有 `input` 时无效。
+
+</Framework>
+
+<Framework only="vue">
+
+<TimePickerVueApi />
+
+未声明的属性中，`class`、`style` 落在根元素上，其余（`id`、`title`、`aria-*`、`data-*`、事件监听等）落在内部输入框上；使用 `#trigger` 自定义触发器时，全部落在根元素上，传 `aria-label` 或 `aria-labelledby` 时根元素的 role 为 `group`。`focus`、`blur` 事件声明为组件事件，`@focus`、`@blur` 只收到组件事件，不再收到冒泡上来的原生事件。
+
+通过 ref 调用 `focus()`、`blur()`，使用自定义触发器时无效。
+
+</Framework>
+
+<Framework only="solid">
+
+<TimePickerSolidApi />
+
+`class`、`style` 与 `ref` 落在根元素上，其余未声明的属性（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `triggerRender` 自定义触发器时，这些属性不落在任何元素上。`ref` 指向根元素，其 `focus()` 与 `blur()` 作用于输入框，使用自定义触发器时无效。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 输入框的 role 为 `combobox`，带 `aria-haspopup="dialog"`、随面板开关变化的 `aria-expanded`，`aria-controls` 指向面板
+- 时、分、秒与上午/下午列是 role 为 `listbox` 的列表，名称分别为「小时」「分钟」「秒」「上午或下午」
+
+### 键盘和焦点
+
+- 输入框获得焦点时打开面板；面板打开后按 `下箭头`，焦点移入第一列
+- 每列是一个 Tab 停靠点，`上箭头`、`下箭头`、`Home`、`End` 或输入字符选择该列的值
+- 按 `Esc` 关闭面板；焦点在面板内时回到输入框
+
+## 文案规范
+
+- 时间选择器至少包括时和分，如：11:30，它在本地化过程中，可以适应为12小时制或者24小时制
+- 当选择12小时制，需要和AM/PM一起搭配使用
+
+## 设计变量
+
+<DesignToken />

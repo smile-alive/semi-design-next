@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| collapseFrom | Collapse direction in collapse mode: start or end. | `'start' \| 'end'` | `"end"` |
+| itemKey | Property name of each item's key, or a function returning it. Defaults to the key property, then the item's position in items. | <ApiType detail={"string \u007c number \u007c ((item: T) => string \u007c number)"}>Type</ApiType> | - |
+| items | Items to render. They are data, not nodes; visibleItemRenderer renders them. Scroll mode requires a key on each item, the field named by itemKey when it is set. | <ApiType detail={"Array\u003cT>"}>Type</ApiType> | `[]` |
+| minVisibleItems | Minimum number of visible items in collapse mode; these items are not collapsed even when they do not fit. | `number` | `0` |
+| onIntersect | Called in scroll mode when the intersection state of the items changes, with each item's `IntersectionObserverEntry` keyed by its key. | <ApiType detail={"(res: { [key: string]: IntersectionObserverEntry }) => void"}>Type</ApiType> | - |
+| onOverflow | Called in collapse mode when the overflowing items change, with an empty array once everything fits. | <ApiType detail={"(overflowItems: Array\u003cT>) => void"}>Type</ApiType> | - |
+| onVisibleStateChange | Called in scroll mode when the visible or hidden state of the items changes, with a `Map` keyed by item key. | <ApiType detail={"(visibleState: Map\u003cstring, boolean>) => void"}>Type</ApiType> | - |
+| overflowRenderDirection | Where scroll mode renders the two overflow nodes: both, start or end. Used by Tabs, not meant for end users. | `'both' \| 'start' \| 'end'` | `"both"` |
+| overflowRenderer | Renders the overflowing items. In collapse mode it receives the items that do not fit and returns one overflow node; in scroll mode it receives `[start, end]`, the items scrolled out before and after the visible ones, and returns one node for each side. | <ApiType detail={"((overflowItems: Array\u003cT>) => JSX.Element) \u007c ((overflowItems: [Array\u003cT>, Array\u003cT>]) => [JSX.Element, JSX.Element])"}>Type</ApiType> | <ApiType detail={"() => null"}>Type</ApiType> |
+| renderMode | Render mode: collapse or scroll. | `'collapse' \| 'scroll'` | `"collapse"` |
+| threshold | Visible ratio at which scroll mode reports an item's intersection. | `number` | `0.75` |
+| visibleItemRenderer | Renders one visible item and returns its element; index is the item's position in items. In scroll mode the element is observed and gets a `data-scrollkey` attribute. | <ApiType detail={"(item: T, index: number) => JSX.Element"}>Type</ApiType> | <ApiType detail={"() => null"}>Type</ApiType> |
+| wrapperClassName | Class name of the scroll wrapper in scroll mode. | `string` | - |
+| wrapperProps | Other attributes of the scroll wrapper in scroll mode, such as a role that owns the visible items. | <ApiType detail={"JSX.HTMLAttributes\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| wrapperStyle | Style of the scroll wrapper in scroll mode, as a style object or a string. | `JSX.CSSProperties \| string` | - |

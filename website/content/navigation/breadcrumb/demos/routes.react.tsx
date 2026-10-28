@@ -1,0 +1,31 @@
+import { IconHome, IconArticle } from '@fibrae/semi-icons-react';
+import { Breadcrumb } from '@fibrae/semi-ui-react';
+
+export default function BreadcrumbDemo() {
+    // Several breadcrumbs on one page are told apart by aria-label
+    return (
+        <div>
+            <Breadcrumb routes={['Semi-ui', 'Breadcrumb', 'Default']} aria-label="字符串路由" />
+            <br />
+            <Breadcrumb
+                aria-label="带图标的路由"
+                routes={[
+                    {
+                        path: '/',
+                        href: '/',
+                        icon: <IconHome aria-label="首页" size="small" />,
+                    },
+                    {
+                        path: '/breadcrumb',
+                        href: '/zh-CN/navigation/breadcrumb',
+                        name: 'breadcrumb',
+                        icon: <IconArticle size="small" />,
+                    },
+                    'with icon',
+                ]}
+            />
+            <br />
+            <Breadcrumb routes={['首页', '当这个页面标题很长时需要省略', '详情页']} aria-label="长标题路由" />
+        </div>
+    );
+}

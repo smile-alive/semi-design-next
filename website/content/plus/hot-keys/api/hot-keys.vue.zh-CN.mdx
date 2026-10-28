@@ -1,0 +1,28 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性              | 说明                                                                                                 | 类型                                                                                | 默认值                                            |
+| ----------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------- |
+| hotKeys           | 快捷键组合：任意个修饰键加一个普通键，取值参考 KeyboardEvent.key。组合不合法时抛错，更新后同样校验。 | `string[]`                                                                          | `undefined`                                       |
+| content           | 显示的按键文字，缺省显示 hotKeys。                                                                   | `string[]`                                                                          | `semiGlobalDefault("HotKeys", "content")`         |
+| preventDefault    | 是否阻止快捷键的默认行为。                                                                           | `boolean`                                                                           | `semiDefault("HotKeys", "preventDefault", false)` |
+| getListenerTarget | 返回监听 keydown 的元素；缺省或返回 null、undefined 时使用 document.body。                           | <ApiType detail={"(() => HTMLElement \u007c null \u007c undefined)"}>Type</ApiType> | `undefined`                                       |
+
+**Events**
+
+| 事件   | 说明                                                   | 回调参数                 |
+| ------ | ------------------------------------------------------ | ------------------------ |
+| hotKey | 按下完整的快捷键组合时触发，参数为原生 KeyboardEvent。 | `[event: KeyboardEvent]` |
+
+**Slots**
+
+| 插槽    | 说明                                                             | 作用域参数 |
+| ------- | ---------------------------------------------------------------- | ---------- |
+| default | 替换按键提示的渲染。传入空插槽时不渲染任何元素，快捷键仍然有效。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

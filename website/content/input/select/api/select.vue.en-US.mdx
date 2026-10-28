@@ -1,0 +1,94 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | The selected value, bound with v-model; an array in multiple mode. Passing it makes the Select controlled; undefined is treated as uncontrolled and reads defaultValue. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | `undefined` |
+| defaultValue | The initially selected value, read on mount only; an array in multiple mode. | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | `semiGlobalDefault("Select", "defaultValue")` |
+| multiple | Whether multiple options can be selected. It decides the payload type of change and update:modelValue: an array in multiple mode, a single value or undefined otherwise. The global defaults cannot set it. | `Multiple` | `undefined` |
+| optionList | Options as an array. Each item needs value and label (a string or number); other fields travel with the option record. A non-empty array takes precedence over the default slot; groups are not supported. | `SelectOptionProps[]` | `semiGlobalDefault("Select", "optionList")` |
+| filter | Whether the Select is searchable. true turns search on with the default strategy, which matches options whose label (or group title) contains the input; a function receives the input value and the option and returns true for a match. | <ApiType detail={"boolean \u007c ((inputValue: string, option: SelectOptionProps) => boolean)"}>Type</ApiType> | `undefined` |
+| remote | Whether search is remote. When on, typing does not filter locally; update optionList from the search event instead. | `boolean` | `semiDefault("Select", "remote", false)` |
+| allowCreate | Whether items missing from the list can be created; use it together with filter. The create event fires on creation, and the createItem slot customizes the row. | `boolean` | `semiDefault("Select", "allowCreate", false)` |
+| autoClearSearchValue | In a searchable multiple Select, whether the search keyword is cleared after an option is selected. | `boolean` | `semiDefault("Select", "autoClearSearchValue", true)` |
+| autofocus | Whether the Select takes focus after mounting. | `boolean` | `semiDefault("Select", "autofocus", false)` |
+| defaultOpen | Whether the dropdown is open when mounted. | `boolean` | `semiDefault("Select", "defaultOpen", false)` |
+| clickToHide | Whether clicking the select box closes an open dropdown. | `boolean` | `semiDefault("Select", "clickToHide", false)` |
+| defaultActiveFirstOption | Whether opening the dropdown highlights the first enabled option when nothing is selected (press Enter to select it). With a selected value, the first selected option is always highlighted. | `boolean` | `semiDefault("Select", "defaultActiveFirstOption", true)` |
+| changeWithObject | A boolean attribute, not an event: when true, change, update:modelValue, modelValue and defaultValue use option objects, which must contain value and label. | `boolean` | `semiDefault("Select", "changeWithObject", false)` |
+| max | The maximum number of selected options, in multiple mode only; beyond it nothing more can be selected and the exceed event fires. | `number` | `semiGlobalDefault("Select", "max")` |
+| maxTagCount | In multiple mode, the most tags shown; the rest collapse into +N. | `number` | `semiGlobalDefault("Select", "maxTagCount")` |
+| maxHeight | The maximum height of the option list; a number is in pixels, a string is used as is. When the virtual list height exceeds the default, set this to the same value to avoid a double scrollbar. | `string \| number` | `semiDefault("Select", "maxHeight", numbers.LIST_HEIGHT)` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `semiDefault("Select", "showRestTagsPopover", false)` |
+| restTagsPopoverProps | Configuration of the Popover that shows the remaining tags, such as position and trigger. | `PopoverProps` | `semiGlobalDefault("Select", "restTagsPopoverProps")` |
+| expandRestTagsOnClick | In multiple mode with maxTagCount, whether all tags are shown while the dropdown is open. | `boolean` | `semiDefault("Select", "expandRestTagsOnClick", false)` |
+| ellipsisTrigger | In multiple mode with maxTagCount, whether the last tag is truncated when the width is short. It costs some performance, so avoid it in large forms. | `boolean` | `semiDefault("Select", "ellipsisTrigger", false)` |
+| size | Size: small, default or large. | `Size` | `semiGlobalDefault("Select", "size")` |
+| disabled | Whether the Select is disabled. | `boolean` | `semiDefault("Select", "disabled", false)` |
+| borderless | Whether the Select has no border. | `boolean` | `semiDefault("Select", "borderless", false)` |
+| validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Select", "validateStatus")` |
+| placeholder | Placeholder text shown while nothing is selected. | `string` | `semiGlobalDefault("Select", "placeholder")` |
+| searchPlaceholder | Placeholder of the search input when it sits in the dropdown (searchPosition is dropdown). | `string` | `semiGlobalDefault("Select", "searchPlaceholder")` |
+| searchPosition | Where the search input sits when search is on: trigger puts it in the select box, dropdown at the top of the list. With trigger the clear button also clears the search text; with dropdown it clears the selection only. | `"trigger" \| "dropdown"` | `semiDefault("Select", "searchPosition", "trigger")` |
+| loading | Whether the dropdown shows a loading indicator. | `boolean` | `semiDefault("Select", "loading", false)` |
+| showArrow | Whether the dropdown arrow is shown. | `boolean` | `semiDefault("Select", "showArrow", true)` |
+| showClear | Whether the clear button is shown. It appears in the select box when there is a selection or search text and the Select is enabled. | `boolean` | `semiDefault("Select", "showClear", false)` |
+| insetLabelId | The id of the insetLabel element, which the combobox's aria-labelledby points at. The component generates one when omitted. | `string` | `undefined` |
+| inputProps | Extra props of the search Input when search is on; listeners use Vue keys such as onFocus. Do not pass modelValue, defaultValue or onChange, which would override the Select's own state and search handling. | `SelectInputProps` | `semiGlobalDefault("Select", "inputProps")` |
+| dropdownClassName | Class of the dropdown popup. | `string` | `semiGlobalDefault("Select", "dropdownClassName")` |
+| dropdownStyle | Style of the dropdown popup, for example width. The style on the root element does not reach the popup. | `StyleValue` | `semiGlobalDefault("Select", "dropdownStyle")` |
+| dropdownMatchSelectWidth | Whether the minimum width of the popup equals the select box. | `boolean` | `semiDefault("Select", "dropdownMatchSelectWidth", true)` |
+| position | Where the popup opens; the values are those of the Tooltip position. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
+| spacing | The distance between the popup and the select box, in pixels. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
+| motion | Whether the popup is animated. | `boolean` | `semiDefault("Select", "motion", true)` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiDefault("Select", "autoAdjustOverflow", true)` |
+| stopPropagation | Whether click events inside the popup stop propagating. | `boolean` | `semiDefault("Select", "stopPropagation", true)` |
+| virtualize | Turns on list virtualization for many options. itemSize is the height of every row and is required; height defaults to 270 and width to 100%. | `SelectVirtualize` | `semiGlobalDefault("Select", "virtualize")` |
+| preventScroll | Whether focusing prevents the browser from scrolling the element into view; applies to the component's own focus calls. | `boolean` | `semiGlobalDefault("Select", "preventScroll")` |
+| id | The id of the trigger, from which the option ids derive. The component generates one when omitted; it does not read the global defaults. | `string` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| update:modelValue | Emitted when the selection changes; used by v-model. The payload equals that of change, and it is emitted before change. | <ApiType detail={"[value: SelectChangeValue\u003cT, Multiple>]"}>Type</ApiType> |
+| change | Emitted when the selection changes. The payload is the value or undefined in single mode and an array in multiple mode; with changeWithObject it holds option objects. It shadows the native event of the same name on the root element. | <ApiType detail={"[value: SelectChangeValue\u003cT, Multiple>]"}>Type</ApiType> |
+| dropdownVisibleChange | Emitted when the dropdown opens or closes. Deactivating the component inside KeepAlive closes it and emits false, without a blur. | `[visible: boolean]` |
+| search | Emitted when the search keyword changes, with the event that changed it: the input event while typing, a native MouseEvent when a click outside closes the list and clears it. There is no event when it comes from the ref's search or the trigger slot's onSearch. | `[value: string, event?: Event \| undefined]` |
+| select | Emitted when an option is selected; value is always the option's original value and option is its record. It shadows the native event of the same name on the root element. | `[value: string \| number, option: SelectOptionProps]` |
+| deselect | Emitted when an option is deselected, in multiple mode only; value is as in select. | `[value: string \| number, option: SelectOptionProps]` |
+| exceed | Emitted when a selection would exceed max, in multiple mode only, with the rejected option. | `[option: SelectOptionProps]` |
+| create | Emitted when allowCreate is on and an option is created, with the new option record. | `[option: SelectOptionProps]` |
+| clear | Emitted when the clear button is used by click or keyboard. | `[]` |
+| focus | Emitted once when focus enters the Select, including its search input and clear button; moving within it does not emit again. It shadows the native event of the same name on the root element. | `[event: FocusEvent]` |
+| blur | Emitted once when focus leaves the Select; a mouse press outside the open dropdown passes its mousedown event. It shadows the native event of the same name on the root element. | `[event: FocusEvent \| MouseEvent]` |
+| keydown | A key press, emitted after the Select has handled the key, so calling preventDefault in a listener does not affect the Select's own handling. It shadows the native event of the same name on the root element. | `[event: KeyboardEvent]` |
+| listScroll | Emitted when the option list scrolls. | `[event: Event]` |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| --- | --- | --- |
+| default | The options. Only Select.Option and Select.OptGroup are accepted as direct children; v-for, v-if and template are unfolded. Unused while optionList is not empty. | `any` |
+| prefix | A prefix in the select box. Text or an icon gets side spacing automatically; a custom node does not. | `any` |
+| suffix | A suffix in the select box. Text or an icon gets side spacing automatically; a custom node does not. | `any` |
+| insetLabel | A label inside the select box, which also names the combobox and the dropdown. It is not rendered, and does not name them, when a prefix is present. | `any` |
+| arrowIcon | The dropdown arrow on the right; an empty slot hides it. With showClear and a value, hovering shows the clear button first. | `any` |
+| clearIcon | The icon of the clear button, used when showClear is true. | `any` |
+| emptyContent | Content shown when there are no options or the search finds none; an empty slot hides the empty state, and without the slot the locale text is shown. | `any` |
+| outerTopSlot | Content at the top of the popup beside the option list; it does not scroll with the list and is always visible. | `any` |
+| innerTopSlot | Content at the top inside the option list, visible when the list is scrolled to its top. | `any` |
+| outerBottomSlot | Content at the bottom of the popup beside the option list; it does not scroll with the list and is always visible. | `any` |
+| innerBottomSlot | Content at the bottom inside the option list, visible when the list is scrolled to its bottom. | `any` |
+| optionItem | Replaces a whole option row. The parameters hold id, value, label, selected, focused, disabled, inputValue, class, style, onClick and onMouseenter. Put class, style and onMouseenter on the row element, and id together with role, aria-selected and aria-disabled on that same element. | `SelectOptionItemSlotProps` |
+| createItem | Content of the row that creates an option from the keyword when allowCreate is on. The parameters are inputValue, focus and style; with a virtual list, apply style to the custom element. | `SelectCreateItemSlotProps` |
+| selectedItem | A selected item: the content shown in the select box in single mode, or the content of a built-in tag in multiple mode. The parameters are option, index, disabled and onClose. | `SelectSelectedItemSlotProps` |
+| tag | Replaces each tag in multiple mode, taking precedence over selectedItem when both are given. The parameters are those of selectedItem. | `SelectSelectedItemSlotProps` |
+| trigger | Replaces the content of the trigger. The parameters hold the selected options as value, inputValue, placeholder, disabled, componentProps, and the onSearch, onClear and onRemove methods. When onClear is bound to a control inside the trigger, pass the click event so that click does not reopen the dropdown. To keep searching, set filter together with searchPosition as dropdown. | `SelectTriggerSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

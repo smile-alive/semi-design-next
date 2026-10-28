@@ -1,0 +1,31 @@
+**Props**
+
+| 属性                  | 说明                                                                                                                    | 类型              | 默认值      |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------- |
+| active                | 是否为当前项，由 Breadcrumb 注入；当前项带 aria-current="page" 且不渲染为链接。                                         | `boolean`         | `undefined` |
+| href                  | 链接的目的地。                                                                                                          | `string`          | `undefined` |
+| noLink                | 移除 hover 和 active 的样式。                                                                                           | `boolean`         | `undefined` |
+| route                 | 该项对应的路由对象，由 Breadcrumb 的 routes 写法注入；点击时作为回调的第一个参数。                                      | `Route`           | `undefined` |
+| separator             | 文字分隔符，覆盖 Breadcrumb 的分隔符；提供 separator 插槽时以插槽为准。                                                 | `string`          | `undefined` |
+| shouldRenderSeparator | 是否渲染分隔符，由 Breadcrumb 注入。                                                                                    | `boolean`         | `true`      |
+| onClick               | 点击时调用，参数同 Breadcrumb 的 onClick。是函数 prop，使用方照常写 @click；传入后没有 href 的该项也可以用 Enter 操作。 | `BreadcrumbClick` | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽      | 说明                                                                       | 作用域参数 |
+| --------- | -------------------------------------------------------------------------- | ---------- |
+| default   | 该项的文字；字符串与数字按文字处理，参与截断与 Tooltip，其他节点原样内联。 | `any`      |
+| icon      | 该项的图标。                                                               | `any`      |
+| separator | 自定义该项的分隔符，优先于 separator 属性。                                | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

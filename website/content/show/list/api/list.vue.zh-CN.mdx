@@ -1,0 +1,38 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                                                                      | 类型                                                             | 默认值                                      |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------- |
+| bordered     | 是否显示边框。                                                                                                                                            | `boolean`                                                        | `semiDefault("List", "bordered", false)`    |
+| dataSource   | 列表数据源；每一项通过 item 插槽渲染。                                                                                                                    | `T[]`                                                            | `semiGlobalDefault("List", "dataSource")`   |
+| grid         | 栅格配置：Row 的 align、gutter、justify、type 与 Col 的 span、offset、order、push、pull、响应式断点、class、style，class 与 style 落在每项外层的 Col 上。 | `Grid`                                                           | `semiGlobalDefault("List", "grid")`         |
+| layout       | 列表布局，可选 vertical 或 horizontal。                                                                                                                   | `"vertical" \| "horizontal"`                                     | `semiDefault("List", "layout", "vertical")` |
+| loading      | 是否处于加载中，为 true 时显示 Spin。                                                                                                                     | `boolean`                                                        | `semiDefault("List", "loading", false)`     |
+| size         | 列表尺寸，可选 small、default 或 large。                                                                                                                  | `Size`                                                           | `semiDefault("List", "size", "default")`    |
+| split        | 是否展示分割线。                                                                                                                                          | `boolean`                                                        | `semiDefault("List", "split", true)`        |
+| onClick      | 列表项的点击回调，作用于每个没有自己 onClick 的项；有处理函数的项渲染为原生按钮。使用方写 @click，保留为函数 prop 是因为它的有无决定项是否渲染按钮。      | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType> | `undefined`                                 |
+| onRightClick | 列表项的右键（上下文菜单）回调，作用于每个没有自己 onRightClick 的项，这些项同样渲染为原生按钮。使用方写 @rightClick，保留为函数 prop 的原因同 onClick。  | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType> | `undefined`                                 |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽         | 说明                                                                       | 作用域参数                                                   |
+| ------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| default      | List.Item 子节点，渲染在 dataSource 各项之后。                             | `any`                                                        |
+| item         | 渲染 dataSource 中的每一项，接收 item 与 index，返回一个或多个 List.Item。 | <ApiType detail={"ListItemSlotProps\u003cT>"}>Type</ApiType> |
+| header       | 列表头部。                                                                 | `any`                                                        |
+| footer       | 列表底部。                                                                 | `any`                                                        |
+| emptyContent | 没有数据时的展示内容，缺省为语言包中的空文案。                             | `any`                                                        |
+| loadMore     | 加载更多的按钮。                                                           | `any`                                                        |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

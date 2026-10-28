@@ -1,0 +1,51 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoPlay | 是否自动播放。 | `boolean` | `semiDefault("VideoPlayer", "autoPlay", false)` |
+| captionsSrc | 字幕资源地址，传入后默认显示字幕。 | `string` | `semiGlobalDefault("VideoPlayer", "captionsSrc")` |
+| clickToPlay | 点击视频画面时是否切换播放与暂停。 | `boolean` | `semiDefault("VideoPlayer", "clickToPlay", true)` |
+| controlsList | 控制栏展示的控件，默认展示全部。控件还要满足依赖的属性已提供才会显示。 | `VideoControl[]` | <ApiType detail={"semiDefault(\"VideoPlayer\", \"controlsList\", [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE])"}>Type</ApiType> |
+| crossOrigin | video 元素的 CORS 设置，允许的值为 anonymous 与 use-credentials，空串等同 anonymous。 | `"" \| "anonymous" \| "use-credentials"` | `semiGlobalDefault("VideoPlayer", "crossOrigin")` |
+| defaultPlaybackRate | 初始播放倍率，仅在挂载时读取。 | `number` | <ApiType detail={"semiDefault(\"VideoPlayer\", \"defaultPlaybackRate\", numbers.DEFAULT_PLAYBACK_RATE)"}>Type</ApiType> |
+| defaultQuality | 初始清晰度，仅在挂载时读取。 | `string` | `semiGlobalDefault("VideoPlayer", "defaultQuality")` |
+| defaultRoute | 初始线路，仅在挂载时读取。 | `string` | `semiGlobalDefault("VideoPlayer", "defaultRoute")` |
+| height | 播放器高度，数字按像素处理，字符串原样使用。 | `string \| number` | `semiGlobalDefault("VideoPlayer", "height")` |
+| loop | 是否循环播放。 | `boolean` | `semiDefault("VideoPlayer", "loop", false)` |
+| markers | 章节标记，每项含起始时间 start（秒）与标题 title。 | `Marker[]` | `semiGlobalDefault("VideoPlayer", "markers")` |
+| muted | 是否静音播放，仅在挂载时读取。 | `boolean` | `semiDefault("VideoPlayer", "muted", false)` |
+| onNext | 点击下一个按钮时调用。设置后且 controlsList 包含 next 时才显示该按钮。 | <ApiType detail={"(() => void)"}>Type</ApiType> | `undefined` |
+| playbackRateList | 倍速选项列表，默认为 2.0、1.5、1.25、1.0、0.75 五档。 | <ApiType detail={"VideoPlayerOption\u003cnumber>[]"}>Type</ApiType> | `semiDefault("VideoPlayer", "playbackRateList", DEFAULT_PLAYBACK_RATE)` |
+| poster | 封面图地址。 | `string` | `semiGlobalDefault("VideoPlayer", "poster")` |
+| qualityList | 清晰度选项列表，非空时才显示清晰度控件。 | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | `semiGlobalDefault("VideoPlayer", "qualityList")` |
+| routeList | 线路选项列表，非空时才显示线路控件。 | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | `semiGlobalDefault("VideoPlayer", "routeList")` |
+| seekTime | 快进快退一次的秒数。 | `number` | `semiDefault("VideoPlayer", "seekTime", numbers.DEFAULT_SEEK_TIME)` |
+| src | 视频地址。未设置时显示资源缺失提示；移除后 video 元素保留上一个地址。 | `string` | `semiGlobalDefault("VideoPlayer", "src")` |
+| theme | 主题，仅影响背景色，可选 dark 或 light。 | `VideoPlayerTheme` | `semiDefault("VideoPlayer", "theme", strings.DARK)` |
+| volume | 初始音量，取值 0 到 100，仅在挂载时读取。 | `number` | `semiDefault("VideoPlayer", "volume", numbers.DEFAULT_VOLUME)` |
+| width | 播放器宽度，数字按像素处理，字符串原样使用。 | `string \| number` | `semiGlobalDefault("VideoPlayer", "width")` |
+
+**Events**
+
+| 事件          | 说明                                                                             | 回调参数            |
+| ------------- | -------------------------------------------------------------------------------- | ------------------- |
+| play          | 开始播放时触发。                                                                 | `[]`                |
+| pause         | 暂停时触发。                                                                     | `[]`                |
+| qualityChange | 切换清晰度时触发，参数为所选清晰度的值。                                         | `[quality: string]` |
+| rateChange    | 切换倍速时触发，参数为所选倍率。                                                 | `[rate: number]`    |
+| routeChange   | 切换线路时触发，参数为所选线路的值。                                             | `[route: string]`   |
+| volumeChange  | 用户拖动音量滑块或切换静音时触发，参数为变化后的音量，静音时为 0；初始化不触发。 | `[volume: number]`  |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称  | 说明                             | 类型                       |
+| ----- | -------------------------------- | -------------------------- |
+| video | 原生 video 元素，挂载前为 null。 | `HTMLVideoElement \| null` |

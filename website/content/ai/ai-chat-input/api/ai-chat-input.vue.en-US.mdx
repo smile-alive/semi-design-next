@@ -1,0 +1,75 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | `semiGlobalDefault("AIChatInput", "canSend")` |
+| clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `semiDefault("AIChatInput", "clearContentOnGenerating", true)` |
+| defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `Content` | `semiGlobalDefault("AIChatInput", "defaultContent")` |
+| dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `semiDefault("AIChatInput", "dropdownMatchTriggerWidth", true)` |
+| extensions | Custom tiptap extensions. Read once, when the editor is created; later changes have no effect. | `Extensions` | `semiGlobalDefault("AIChatInput", "extensions")` |
+| generating | Whether a response is being generated. While true, the send button becomes the stop button. | `boolean` | `semiDefault("AIChatInput", "generating", false)` |
+| keepSkillAfterSend | Whether the selected skill is kept after a message is sent. | `boolean` | `semiDefault("AIChatInput", "keepSkillAfterSend", false)` |
+| placeholder | Placeholder of the input: a string, or a function that returns a string for a node. | `PlaceholderProps` | `undefined` |
+| popoverProps | Props of the dropdown layer. The class is merged with the internal class names and the style with the panel width. | `AIChatInputPopoverProps` | `semiGlobalDefault("AIChatInput", "popoverProps")` |
+| references | References shown with the input. | `Reference[]` | `semiGlobalDefault("AIChatInput", "references")` |
+| round | Whether the buttons of the footer configure and action areas are fully rounded. | `boolean` | `semiDefault("AIChatInput", "round", true)` |
+| sendHotKey | Keyboard shortcut that sends the input. enter sends on Enter alone and breaks the line on Shift+Enter; shift+enter is the reverse. | `"enter" \| "shift+enter"` | `semiDefault("AIChatInput", "sendHotKey", "enter")` |
+| showPlaceholderWhenSkillOnly | Whether the placeholder shows when only a skill is selected, after the skill. Read once, when the editor is created. | `boolean` | `semiDefault("AIChatInput", "showPlaceholderWhenSkillOnly", false)` |
+| showReference | Whether the reference area is shown; use it together with #topSlot. | `boolean` | `semiDefault("AIChatInput", "showReference", true)` |
+| showTemplateButton | Whether the template button is shown. When unset, it follows hasTemplate of the selected skill. | `boolean` | `semiDefault("AIChatInput", "showTemplateButton", false)` |
+| showUploadButton | Whether the upload button on the right is shown. Paste upload still works when false. | `boolean` | `semiDefault("AIChatInput", "showUploadButton", true)` |
+| showUploadFile | Whether the uploaded files area is shown; use it together with #topSlot. | `boolean` | `semiDefault("AIChatInput", "showUploadFile", true)` |
+| skillHotKey | Hotkey that opens the skill panel in the input. | `string` | `semiGlobalDefault("AIChatInput", "skillHotKey")` |
+| skills | Skills. A skill holds data only; its icon goes through the #skillIcon slot. | `Skill[]` | `semiGlobalDefault("AIChatInput", "skills")` |
+| suggestions | Suggestions, each a string or an object with content. | `Suggestion[]` | `semiGlobalDefault("AIChatInput", "suggestions")` |
+| templatesCls | Class name of the template panel. | `string` | `semiGlobalDefault("AIChatInput", "templatesCls")` |
+| templatesStyle | Style of the template panel. | `StyleValue` | `semiGlobalDefault("AIChatInput", "templatesStyle")` |
+| topSlotPosition | Position of #topSlot relative to the reference area and the uploaded files area. | `"top" \| "bottom" \| "middle"` | `semiDefault("AIChatInput", "topSlotPosition", "top")` |
+| transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into a contentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "transformer")` |
+| uploadTipProps | Tooltip props of the upload tip without content; the tip content goes through the #uploadTip slot. | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "uploadTipProps")` |
+| uploadProps | Upload settings, as Upload but without fileList and listType. AIChatInput calls onChange and onRemove itself; beforeRemove may return a Promise. | `AIChatInputUploadProps` | `semiGlobalDefault("AIChatInput", "uploadProps")` |
+
+**Events**
+
+| Event           | Description                                                                                                                                                       | Callback parameters                                                                                                  |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| blur            | Emitted when the rich text input loses focus. It shadows the native blur on the root element.                                                                     | `[event: FocusEvent]`                                                                                                |
+| configureChange | Emitted when the configure area changes, with the whole value and the changed value; the second argument is undefined when an item is removed.                    | <ApiType detail={"[value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps \u007c undefined]"}>Type</ApiType> |
+| contentChange   | Emitted when the input content changes, with the current content items.                                                                                           | `[contents: Content[]]`                                                                                              |
+| focus           | Emitted when the rich text input gets focus. It shadows the native focus on the root element.                                                                     | `[event: FocusEvent]`                                                                                                |
+| messageSend     | Emitted when the send button is clicked, with the references, attachments, input contents and configure values.                                                   | `[message: MessageContent]`                                                                                          |
+| paste           | Emitted on paste in the input without preventing the default behavior; read event.clipboardData for the content. It shadows the native paste on the root element. | `[event: ClipboardEvent]`                                                                                            |
+| referenceClick  | Emitted when a reference is clicked.                                                                                                                              | `[reference: Reference]`                                                                                             |
+| referenceDelete | Emitted when a reference is deleted. The caller owns the references and removes the item itself.                                                                  | `[reference: Reference]`                                                                                             |
+| skillChange     | Emitted when the skill changes; the argument is undefined when the skill is removed.                                                                              | `[skill: Skill \| undefined]`                                                                                        |
+| stopGenerate    | Emitted when the stop button is clicked.                                                                                                                          | `[]`                                                                                                                 |
+| uploadChange    | Emitted when the uploaded file list changes.                                                                                                                      | `[props: UploadOnChangeProps]`                                                                                       |
+
+**Slots**
+
+| Slot           | Description                                                                                                                                                                                                                                     | Scope parameters                     |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| reference      | Replaces each reference, with the scope parameters item and index.                                                                                                                                                                              | `AIChatInputReferenceSlotProps`      |
+| topSlot        | Custom top area, with the references, attachments, content and delete methods as scope parameters. Placed by topSlotPosition.                                                                                                                   | `AIChatInputTopSlotProps`            |
+| uploadButton   | Replaces the upload button content while Upload keeps handling uploads and pasted files. Scope parameters: defaultNode, onOpenFileDialog, disabled, attachments.                                                                                | `AIChatInputUploadButtonSlotProps`   |
+| uploadTip      | Content of the upload tip.                                                                                                                                                                                                                      | `any`                                |
+| configureArea  | Footer configure area, holding the AIChatInput.Configure items.                                                                                                                                                                                 | `any`                                |
+| actionArea     | Replaces the footer action area. menuItem holds the upload node (a hidden Upload when showUploadButton is false; it must still be rendered for pasted files to upload) and the send or stop button; class is the class name of the action area. | `AIChatInputActionAreaSlotProps`     |
+| suggestionItem | Replaces each suggestion. Scope parameters: suggestion, and id, class, role, aria-selected, onClick and onMouseenter to bind onto the root element.                                                                                             | `AIChatInputSuggestionItemSlotProps` |
+| skillItem      | Replaces each skill. Scope parameters: skill, and id, class, role, aria-selected, onClick and onMouseenter to bind onto the root element.                                                                                                       | `AIChatInputSkillItemSlotProps`      |
+| skillIcon      | Icon before each skill in the skill panel, with the scope parameters item and index.                                                                                                                                                            | `AIChatInputSkillIconSlotProps`      |
+| template       | Content of the template panel, with the current skill and onTemplateClick, which replaces the input content with the given content.                                                                                                             | `AIChatInputTemplateSlotProps`       |
+
+**Exposes**
+
+| Name                    | Description                                                            | Type                                                                              |
+| ----------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| changeTemplateVisible   | Shows or hides the template layer.                                     | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>                     |
+| deleteContent           | Deletes an item of the rich text, matched by uniqueKey of the content. | <ApiType detail={"(content: Content) => void"}>Type</ApiType>                     |
+| deleteUploadFile        | Deletes one uploaded file.                                             | <ApiType detail={"(item: Attachment) => void"}>Type</ApiType>                     |
+| focusEditor             | Focuses the input, at the end by default.                              | <ApiType detail={"(pos?: FocusPosition \u007c undefined) => void"}>Type</ApiType> |
+| getEditor               | Returns the tiptap editor, or null until the editor is created.        | <ApiType detail={"() => Editor \u007c null"}>Type</ApiType>                       |
+| setContent              | Sets the input content.                                                | <ApiType detail={"(content: Content) => void"}>Type</ApiType>                     |
+| setContentWhileSaveTool | Sets the input content and keeps the skill.                            | <ApiType detail={"(content: string) => void"}>Type</ApiType>                      |

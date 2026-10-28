@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| annotation | List of references, required. The `logo` of each item is shown as a source icon, and its `title` is the alternative text of the icon; `url` and `detail` are not rendered and are passed out with the click callback. | `AnnotationItemProps[] \| Annotation[]` | - |
+| description | Text after the source logos; the number of references is shown when it is not set. | `string` | - |
+| maxCount | Maximum number of source logos shown; the rest are shown as `+N`. Required. | `number` | - |
+| onClick | Called on click or on activation with Enter or Space, with the event and the references. | <ApiType detail={"(e: React.MouseEvent\u003cHTMLDivElement> \u007c React.KeyboardEvent\u003cHTMLDivElement>, item: AnnotationItemProps[]) => void"}>Type</ApiType> | - |

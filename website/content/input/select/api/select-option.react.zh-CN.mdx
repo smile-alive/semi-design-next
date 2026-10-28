@@ -1,0 +1,12 @@
+**Props**
+
+| 属性      | 说明                                                                                                     | 类型                                  | 默认值 |
+| --------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------- | ------ |
+| children  | 选项的内容。未设置 `label` 时作为展示的内容。                                                            | `React.ReactNode`                     | -      |
+| className | 选项的类名。                                                                                             | `string`                              | -      |
+| current   | 内部属性，由 AutoComplete 设置，标记该选项为当前项（`aria-selected`）。Select 的使用者无需设置。         | `boolean`                             | -      |
+| disabled  | 是否禁用该选项。                                                                                         | `boolean`                             | -      |
+| label     | 展示的文本，可以是字符串、数字或 ReactNode。渲染时优先取 `label`，未设置时依次取 `children` 与 `value`。 | `string \| number \| React.ReactNode` | -      |
+| showTick  | 选中时是否展示 √ 图标。由 Select 渲染的选项默认展示。                                                    | `boolean`                             | -      |
+| style     | 选项行的样式。                                                                                           | `React.CSSProperties`                 | -      |
+| value     | 选项的值。同一个 Select 内 `value` 不应重复，`label` 可以重复。                                          | `string \| number`                    | -      |

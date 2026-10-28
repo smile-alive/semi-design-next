@@ -1,0 +1,33 @@
+**Props**
+
+| 属性             | 说明                                                        | 类型                | 默认值      |
+| ---------------- | ----------------------------------------------------------- | ------------------- | ----------- |
+| disabled         | 是否禁用。                                                  | `boolean`           | `undefined` |
+| dropdownProps    | 弹层 Dropdown 的参数，水平模式与收起状态下使用。            | `SubDropdownProps`  | `undefined` |
+| dropdownStyle    | 弹层的样式，优先于 dropdownProps 中的 style。               | `StyleValue`        | `undefined` |
+| indent           | 没有图标时是否保留其占位，仅对一级导航生效。                | `number \| boolean` | `undefined` |
+| itemKey          | 子导航的唯一标识。                                          | `ItemKey`           | `undefined` |
+| level            | 当前项所在的嵌套层级，limitIndent 为 false 时用于确定缩进。 | `number`            | `undefined` |
+| subDropdownProps | 弹层 Dropdown 的参数，未传 dropdownProps 时生效。           | `SubDropdownProps`  | `undefined` |
+| text             | 子导航标题文案；显示的内容可用 #text 插槽替换。             | `string \| number`  | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽       | 说明                             | 作用域参数 |
+| ---------- | -------------------------------- | ---------- |
+| default    | 子导航中的 Nav.Item 与 Nav.Sub。 | `any`      |
+| expandIcon | 展开收起箭头图标。               | `any`      |
+| icon       | 子导航图标。                     | `any`      |
+| text       | 替换子导航标题显示的文案。       | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

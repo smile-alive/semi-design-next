@@ -1,0 +1,156 @@
+---
+title: 气泡确认框
+order: 90
+icon: doc-popconfirm
+brief: 目标元素的操作需要用户进一步的确认时使用。与 Popover 相比它内置了一系列可配置的操作按钮，与 Modal 相比它不强制全屏居中显示，交互也更轻量
+---
+
+import PopconfirmReactApi from './api/popconfirm.react.zh-CN.mdx';
+import PopconfirmVueApi from './api/popconfirm.vue.zh-CN.mdx';
+import PopconfirmSolidApi from './api/popconfirm.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Popconfirm } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Popconfirm } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Popconfirm, Radio, RadioGroup, Space, Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+Popconfirm 底层基于 Tooltip 封装，Children 支持类型同 Tooltip，注意事项详情可查阅 [Tooltip注意事项](/zh-CN/react/show/tooltip#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
+
+<Demo id="basic" />
+
+### 类型搭配
+
+<Framework only="react">
+
+开发者可以基于场景使用 `okType`/`cancelType`/`icon` 等参数搭配出不同风格的气泡式确认框。
+
+</Framework>
+
+<Framework only="vue">
+
+开发者可以基于场景使用 `okType`/`cancelType` 参数和 `#icon` 插槽搭配出不同风格的气泡式确认框。没有传入 `#icon` 插槽时显示默认警告图标，传入空插槽则不渲染图标。
+
+</Framework>
+
+<Framework only="solid">
+
+开发者可以基于场景使用 `okType`、`cancelType` 和 `icon` 参数搭配出不同风格的气泡式确认框。`icon` 接收 JSX 元素，传入 `null` 或 `false` 时不显示图标。
+
+</Framework>
+
+<Demo id="types" />
+
+### 延时关闭
+
+onConfirm、onCancel 可以通过 return Promise 实现点击后延时关闭。  
+onCancel、onConfirm 被触发时，对应的 Button 会自动切换为 loading: true, promise solve 会关闭气泡确认框， promise reject时气泡依然保留，同时 button loading 自动切换为 false
+
+<Demo id="delay" />
+
+### 初始化弹出层焦点位置
+
+okButtonProps 和 cancelButtonProps 支持传入 `autoFocus` 参数，传入后打开面板时会自动聚焦在该位置。
+
+<Framework only="react">
+
+content 支持传入函数，它的入参是一个对象，将 `initialFocusRef` 绑定在可聚焦 DOM 或组件上，打开面板时会自动聚焦在该位置。
+
+</Framework>
+
+<Framework only="vue">
+
+`#content` 插槽的作用域参数为 `{ initialFocusRef }`，用 `:ref` 将它绑定在可聚焦 DOM 或组件上，打开面板时会自动聚焦在该位置。同时指定按钮 `autoFocus` 与 `initialFocusRef` 时，按钮优先。
+
+</Framework>
+
+<Framework only="solid">
+
+`content` 支持传入函数，入参 `{ initialFocusRef }` 中的 `initialFocusRef` 是 ref 回调，用 `ref={initialFocusRef}` 绑定在可聚焦 DOM 或组件上，打开面板时会自动聚焦在该位置。同时指定按钮 `autoFocus` 与 `initialFocusRef` 时，按钮优先。
+
+</Framework>
+
+<Demo id="initial-focus" />
+
+### 搭配 Tooltip 或 Popover 使用
+
+请参考[搭配使用](/zh-CN/react/show/tooltip#%E6%90%AD%E9%85%8D%20Popover%20%E6%88%96%20Popconfirm%20%E4%BD%BF%E7%94%A8)
+
+## API 参考
+
+<Framework only="react">
+
+<PopconfirmReactApi />
+
+`className`、`style` 落在确认卡片上，`okButtonProps`、`cancelButtonProps` 中的 `className`、`style` 与其他属性落在对应按钮上（`autoFocus` 除外）。`aria-label`、`aria-labelledby` 落在 `role="dialog"` 的弹出层元素上，有标题和内容时该元素还通过 `aria-describedby` 指向内容。其他未声明的属性会被丢弃。
+
+</Framework>
+
+<Framework only="vue">
+
+<PopconfirmVueApi />
+
+`class`、`style` 落在确认卡片上，`okButtonProps`、`cancelButtonProps` 中的 `class`、`style` 落在按钮上；其他未声明的属性会被丢弃。`aria-label`、`aria-labelledby`、`aria-describedby` 是声明的 props，落在 `role="dialog"` 元素上。所在子树被 `<KeepAlive>` 缓存（失活）时，弹出层按关闭处理并通知 `update:visible`、`visibleChange`（`false`）；单向绑定 `visible` 为 `true` 的弹出层随缓存的子树隐藏，重新激活后再次显示。
+
+`visible` 受控时点击或悬停触发器会发出 `update:visible` 与 `visibleChange`，由使用方通过 `v-model:visible` 回写；父组件自己改变 `visible` 不发出这两个事件，`returnFocusOnClose` 照常生效。单向受控（只传 `:visible` 不回写）时，确认或取消不会立即把焦点还给触发器，焦点在确认框真正关闭时才回去。
+
+</Framework>
+
+<Framework only="solid">
+
+<PopconfirmSolidApi />
+
+`class` 与 `style` 落在确认卡片上，`okButtonProps`、`cancelButtonProps` 中的属性落在对应按钮上（`autoFocus` 除外）；`ref` 收到 `focusTrigger` 句柄。Popconfirm 没有根 DOM 元素，其他未声明的原生属性和事件会被丢弃。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 无论 trigger 是什么（包括 hover、focus），Popconfirm 的弹出层都具有 `dialog` role，以 `title` 命名（没有 `title` 时以 `content` 命名）；可用 `role` 属性覆盖
+- 其余语义化请参考 [Popover](/zh-CN/react/show/popover#ARIA)
+
+### 键盘和焦点
+
+- Popconfirm 必须带有触发器，触发器可被聚焦，使用 Enter 键打开 Popconfirm
+- Popconfirm 激活后，按下方向键 ⬇️ 将焦点移动到 Popconfirm 上。Popconfirm 的初始焦点应当遵循以下几个原则：
+    - 如果 Popconfirm 内包含一个不可逆转过程的最后一个步骤，比如：删除数据等，那么这个初始焦点最好放在破坏性最小的可交互元素上，如：关闭按钮 ( 通过向对象 cancelButtonProps 中传入 autoFocus 实现）
+    - 如果 Popconfirm 内仅为阅读文本，那么建议将初始焦点设置在最可能常用的交互元素上，如：确定按钮 ( 通过向对象 okButtonProps 中传入 autoFocus 实现）
+- 键盘用户能够通过按 Esc 关闭 Popconfirm，并且焦点应该返回到触发器上。用户通过 Popconfirm 内的交互元素关闭该 Pop 后，焦点也应当返回到触发器上（trigger 为 `custom` 时除外）
+- 打开的情况下，用户点击 Popconfirm 内的空白处 Esc 后，焦点也会回到触发器上 （trigger 为 `custom` 时除外）
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- **为什么 Popconfirm 浮层在靠近屏幕边界宽度不够时，丢失宽度意外换行?**  
+  在 chromium 104 后 对于屏幕边界文本宽度不够时的换行渲染策略发生变化，详细原因可查看 [issue #1022](https://github.com/DouyinFE/semi-design/issues/1022)，semi侧已经在v2.17.0版本修复了这个问题。

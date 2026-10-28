@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bodyStyle | Custom style of the navigation item list. | `React.CSSProperties` | - |
+| children | Children of the navigation. `Nav.Item` and `Nav.Sub` render into the list, `Nav.Header` and `Nav.Footer` go to the header and the footer, and other nodes are wrapped in an `li`. | `React.ReactNode` | - |
+| className | Class name of the outermost `nav` element. | `string` | - |
+| defaultIsCollapsed | Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. Defaults to `false`. | `boolean` | - |
+| defaultOpenKeys | `itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. When not given, the sub navigations holding the initially selected items open in vertical mode. Defaults to `[]`. | `(string \| number)[]` | - |
+| defaultSelectedKeys | `itemKey`s of the items selected initially. Defaults to `[]`. | `(string \| number)[]` | - |
+| expandIcon | Expand arrow of the sub navigations generated from `items`. The `expandIcon` of a `Nav.Sub` child takes precedence. | `React.ReactNode` | - |
+| footer | Footer: a configuration object (`collapseButton`, `collapseText`, and attributes such as `className` and `style`), a node or a string. A `Nav.Footer` child also works. | `React.ReactNode \| NavFooterProps` | - |
+| header | Header: a configuration object (`text`, `logo`, `link`, `linkOptions`, and attributes such as `className` and `style`), a node or a string. A `Nav.Header` child also works. | `React.ReactNode \| NavHeaderProps` | - |
+| isCollapsed | Controlled collapsed state, which applies only when `mode` is `vertical`. Use it with `onCollapseChange`. | `boolean` | - |
+| items | Navigation item data. An entry with `items` renders as a sub navigation, and a string entry is both the `text` and the `itemKey`. Only the props of `Nav.Item` and `Nav.Sub`, `className`, `style`, event callbacks, and `data-*` and `aria-*` reach the item; other fields such as `path` are ignored. | `NavItems` | - |
+| limitIndent | Whether to limit indentation. When `false`, nested items indent by `level`. Applies only when `mode` is `vertical`; horizontal mode always limits indentation. | `boolean` | `true` |
+| mode | Orientation of the navigation: `vertical` or `horizontal`. | `Mode` | `"vertical"` |
+| multiple | Unused; setting it has no effect. | `boolean` | - |
+| onClick | Called when any navigation item is clicked. The data holds `itemKey` and `text`; clicking a sub navigation title also holds `openKeys` and `isOpen`. `domEvent` is the native event. | <ApiType detail={"(data: { itemKey?: ItemKey; text?: React.ReactNode; openKeys?: ItemKey[]; domEvent?: MouseEvent \u007c KeyboardEvent; isOpen?: boolean }) => void"}>Type</ApiType> | - |
+| onCollapseChange | Called when the collapsed state changes, with the new collapsed state. | <ApiType detail={"(isCollapse: boolean) => void"}>Type</ApiType> | - |
+| onDeselect | Unused; the callback is never called. | <ApiType detail={"(data?: any) => void"}>Type</ApiType> | - |
+| onOpenChange | Called when a sub navigation opens or closes. The data holds `itemKey`, `openKeys` and `isOpen`; `domEvent` is the native event and is absent when the popup opens on hover. | <ApiType detail={"(data: { itemKey?: ItemKey; openKeys?: ItemKey[]; domEvent?: MouseEvent \u007c KeyboardEvent; isOpen?: boolean }) => void"}>Type</ApiType> | - |
+| onSelect | Called when a selectable navigation item is selected. The data holds `itemKey`, `selectedKeys` and `selectedItems`; `domEvent` is the native event. | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
+| openKeys | Controlled `itemKey`s of the open sub navigations. Use it with `onOpenChange`. Applies only when `mode` is `vertical` and the sidebar is expanded. | `(string \| number)[]` | - |
+| ref | Reference to the outermost `nav` element. | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
+| renderWrapper | Renders the wrapper around each navigation item. It receives `{ itemElement, isSubNav, isInSubNav, props }` and its return value goes into the list. Render `itemElement` exactly once. | <ApiType detail={"({ itemElement, isSubNav, isInSubNav, props }: { itemElement: ReactElement\u003cany>; isInSubNav: boolean; isSubNav: boolean; props: NavItemProps \u007c SubNavProps }) => ReactNode"}>Type</ApiType> | - |
+| selectedKeys | Controlled `itemKey`s of the selected items. Use it with `onSelect`. | `(string \| number)[]` | - |
+| style | Style of the outermost `nav` element. | `CSSProperties` | - |
+| subDropdownProps | Dropdown props of the sub navigations generated from `items`, used in horizontal mode or when collapsed. A sub navigation's own `dropdownProps` or `subDropdownProps` takes precedence. | `DropdownProps` | - |
+| subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or in horizontal mode. | `number` | `100` |
+| subNavMotion | Whether sub navigations animate when they expand and collapse. | `boolean` | `true` |
+| subNavOpenDelay | Delay in milliseconds before a sub navigation popup opens. Applies when collapsed or in horizontal mode. | `number` | `0` |
+| toggleIconPosition | Position of the arrow of an item with sub navigation: `left` or `right`. | `'left' \| 'right'` | `"right"` |
+| tooltipHideDelay | Delay in milliseconds before the Tooltip hides when collapsed. | `number` | `100` |
+| tooltipShowDelay | Delay in milliseconds before the Tooltip shows when collapsed. | `number` | `0` |

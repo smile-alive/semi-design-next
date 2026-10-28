@@ -1,0 +1,178 @@
+---
+order: 66
+title: Carousel
+icon: doc-carousel
+brief: Carousel is a media component that can display the effect of playing multiple pictures in turn in a visualization application.
+---
+
+import CarouselReactApi from './api/carousel.react.en-US.mdx';
+import CarouselVueApi from './api/carousel.vue.en-US.mdx';
+import CarouselSolidApi from './api/carousel.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Carousel } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Carousel } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Carousel
+
+Basic carousel
+
+<Demo id="basic" />
+
+### Theme Switch
+
+Three themes are defined by default: `primary`、`light`、`dark`
+
+<Demo id="theme" />
+
+### Indicators
+
+Indicators can be adjusted for type, position, size  
+type: `dot`、`line`、`columnar`  
+position: `left`、`center`、`right`  
+size: `small`、`medium`
+
+<Demo id="indicator" />
+
+### Arrows
+
+Control whether the arrow is visible through the showArrow property  
+If the arrow is visible, use the arrowType property to control the timing of the arrow display
+
+<Demo id="arrow" />
+
+### Custom Arrow
+
+<Framework only="react">
+
+Customize arrow styles and click events through the arrowProps property
+
+</Framework>
+
+<Framework only="vue">
+
+Customize the attributes of the arrow buttons (`aria-label`, `style`, `onClick` and so on) through `arrowProps`; your `onClick` runs before the built-in handler and your `class` is merged with the built-in classes. Use the `#leftArrow` and `#rightArrow` slots for the icons; an empty slot leaves the button empty.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass the arrow icons with the `leftArrow` and `rightArrow` props; `null` leaves the button empty. Pass the button's native attributes (such as `aria-label`) as `props` of `leftArrow` or `rightArrow` in `arrowProps`.
+
+</Framework>
+
+<Demo id="custom-arrow" />
+
+### Play Parameters
+
+Pass the parameter interval to autoPlay to control the time interval between two pictures, and pass hoverToPause to control whether to stop playing when the mouse is placed on the picture
+
+A carousel mounted with no more than one slide does not play; when slides are added later and there are more than one, it starts playing according to `autoPlay`.
+
+<Demo id="auto-play" />
+
+### Animation and Speed
+
+Control the animation by giving the animation property, optional values are `fade`, `slide`  
+Control the switching time between two pictures by giving the speed attribute, the unit is ms
+
+<Demo id="animation" />
+
+### Controlled Carousel
+
+<Framework only="vue">
+
+Bind the current index with `v-model:activeIndex`; `@change` additionally gives the new index and the previous one.
+
+</Framework>
+
+<Framework only="solid">
+
+Bind the current index with `activeIndex`; `onChange(index, preIndex)` gives the new index and the previous one.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### API reference
+
+<Framework only="react">
+
+<CarouselReactApi />
+
+Other native attributes, such as `aria-labelledby` and `data-*`, land on the root element (`role="region"`).
+
+**ArrowButton**
+
+| PROPERTIES | INSTRUCTIONS                                                         | TYPE                                                                                    | DEFAULT |
+| ---------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------- |
+| props      | Parameters on the arrow button, including style, onClick events, etc | DetailedHTMLProps\<React.ButtonHTMLAttributes\<HTMLButtonElement\>, HTMLButtonElement\> | -       |
+| children   | Arrow custom icon                                                    | React.ReactNode                                                                         | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+<CarouselVueApi />
+
+`class`, `style` and native attributes, including `aria-label` and `aria-labelledby`, land on the root element (`role="region"`) through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<CarouselSolidApi />
+
+`class`, `style`, `ref` and native attributes, including `aria-label` and `aria-labelledby`, land on the root element (`role="region"`).
+
+</Framework>
+
+## Accessibility
+
+Carousel follows the [WAI-ARIA Carousel](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/) pattern.
+
+### ARIA
+
+- The root is `role="region"` with `aria-roledescription` "carousel". A region needs a name to become a landmark, so describe what the carousel shows with `aria-label` or `aria-labelledby`.
+- With indicators, each slide is the `tabpanel` of its indicator (`tab`), linked by `aria-controls` and `aria-labelledby`; an `id` already on a slide is kept. Without indicators, each slide is `role="group"` with `aria-roledescription` "slide" and the name "Slide N".
+- Slides other than the current one are `inert`: their content cannot be focused and screen readers skip it. A slide must be an element or a component that puts props such as `inert`, `role` and `id` on its DOM, just like the class name and style.
+- The slides container is `aria-live="off"` while rotating and `polite` otherwise, so a slide the user switches to is announced and an automatic switch is not.
+- The arrow buttons are named from the locale ("Previous index", "Next index") by default; custom arrow content with readable text (text, or an element with `aria-label`) names the button instead; a name passed with `arrowProps.leftArrow.props['aria-label']` or its right counterpart wins over both.
+
+### Keyboard and Focus
+
+- Keyboard focus inside the carousel (an arrow, an indicator or focusable content in a slide) pauses autoplay until focus leaves, after which autoplay resumes (the APG advises staying stopped, which this differs from), and switching from the keyboard meanwhile does not restart it. A mouse click on an arrow does not pause.
+- The previous and next arrows are native `button` elements: focus them with `Tab` and activate them with `Enter` or `Space`.
+- The indicators form a `tablist` in which only the current one is in the `Tab` sequence. While focus is on an indicator:
+    - `ArrowLeft` goes to the previous slide and `ArrowRight` to the next one, wrapping around at both ends, and focus follows to the new current indicator. In RTL the directions are swapped.
+    - `Home` goes to the first slide and `End` to the last one.
+
+## Design Tokens
+
+<DesignToken />

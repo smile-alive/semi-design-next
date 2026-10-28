@@ -1,0 +1,26 @@
+**Props**
+
+| Property | Description                                                                                 | Type                            | Default                                          |
+| -------- | ------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------ |
+| align    | Alignment of the content: left, center or right.                                            | `"left" \| "right" \| "center"` | `semiDefault("Divider", "align", "center")`      |
+| margin   | Margin above and below the divider, or left and right when vertical. A number is in pixels. | `string \| number`              | `semiGlobalDefault("Divider", "margin")`         |
+| dashed   | Whether the line is dashed.                                                                 | `boolean`                       | `semiGlobalDefault("Divider", "dashed")`         |
+| layout   | Direction of the divider: horizontal or vertical.                                           | `"vertical" \| "horizontal"`    | `semiDefault("Divider", "layout", "horizontal")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                           | Scope parameters |
+| ------- | --------------------------------------------------------------------- | ---------------- |
+| default | Content of a horizontal divider. A vertical divider shows no content. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

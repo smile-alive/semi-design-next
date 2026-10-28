@@ -1,0 +1,249 @@
+---
+order: 83
+title: Timeline
+icon: doc-timeline
+brief: Timeline component is used to display a series of information vertically.
+---
+
+import TimelineReactApi from './api/timeline.react.en-US.mdx';
+import TimelineItemReactApi from './api/timeline-item.react.en-US.mdx';
+import TimelineVueApi from './api/timeline.vue.en-US.mdx';
+import TimelineItemVueApi from './api/timeline-item.vue.en-US.mdx';
+import TimelineSolidApi from './api/timeline.solid.en-US.mdx';
+import TimelineItemSolidApi from './api/timeline-item.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Timeline } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Timeline } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Timeline.Item` can also be imported by name as `TimelineItem`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Timeline } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Type
+
+You can use `type` to set the type of a time node, using one of: `default`,`ongoing`, `success`, `warning`, `Error`. The corresponding dot will have a corresponding color.
+
+<Demo id="type" />
+
+### Custom node
+
+<Framework only="react">
+
+You can use `dot` to customize icon, `color` to customize color or pass in `children` with style.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#dot` slot to customize icon, `color` to customize color or style the default slot content. Time and extra content use the `#time` and `#extra` slots.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `dot` to customize icon, `color` to customize color or pass in `children` with style.
+
+</Framework>
+
+<Demo id="custom-node" />
+
+### Timeline Position
+
+Use `mode` to set the position of the timeline, using one of: `left`, `center`, `alternate`, `right`.
+
+#### Left (default)
+
+<Demo id="mode-left" />
+
+#### Center
+
+<Demo id="mode-center" />
+
+#### Alternate
+
+Items alternate by the children actually rendered: a child that is not rendered because its condition is false takes no position.
+
+<Demo id="mode-alternate" />
+
+#### Right
+
+<Demo id="mode-right" />
+
+### DataSource
+
+<Framework only="vue">
+
+`content`, `time` and `extra` of a `dataSource` item only take a string or number. Use the scoped slots `#content`, `#dot`, `#time` and `#extra` for custom content, with `{ item, index }` as the parameters.
+
+</Framework>
+
+<Framework only="solid">
+
+`content`, `time` and `extra` of a `dataSource` item accept only strings or numbers. For custom rendering, pass `renderContent`, `renderDot`, `renderTime` and `renderExtra`, called with `(item, index)`.
+
+</Framework>
+
+<Demo id="data-source" />
+
+## API reference
+
+### TimeLine
+
+<Framework only="react">
+
+<TimelineReactApi />
+
+Other native attributes, such as `id` and `aria-label`, are passed to the root `ul` element.
+
+</Framework>
+
+<Framework only="vue">
+
+<TimelineVueApi />
+
+`class`, `style` and native attributes are passed through attrs to the root `ul`.
+
+Fields of a `dataSource` item:
+
+| Field    | Instruction                                              | type                                                          | Default   |
+| -------- | -------------------------------------------------------- | ------------------------------------------------------------- | --------- |
+| content  | Item content; use the `#content` slot for custom content | `string \| number`                                            | -         |
+| time     | Time value; use the `#time` slot for custom content      | `string \| number`                                            | -         |
+| extra    | Extra content; use the `#extra` slot for custom content  | `string \| number`                                            | -         |
+| color    | Color of dot                                             | `string`                                                      | -         |
+| type     | Pattern of dot                                           | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | `default` |
+| position | Custom node location to override TimeLine's mode setting | `'left' \| 'right'`                                           | -         |
+| class    | Class name                                               | `string`                                                      | -         |
+| style    | Inline style                                             | `StyleValue`                                                  | -         |
+| onClick  | Click event                                              | `(event: MouseEvent) => void`                                 | -         |
+
+</Framework>
+
+<Framework only="solid">
+
+<TimelineSolidApi />
+
+`class`, `style`, `ref` and native attributes are passed to the root `ul`.
+
+Fields of a `dataSource` item:
+
+| Field    | Instruction                                              | type                                                          | Default   |
+| -------- | -------------------------------------------------------- | ------------------------------------------------------------- | --------- |
+| content  | Item content; custom rendering uses `renderContent`      | `string \| number`                                            | -         |
+| time     | Time value; custom rendering uses `renderTime`           | `string \| number`                                            | -         |
+| extra    | Extra content; custom rendering uses `renderExtra`       | `string \| number`                                            | -         |
+| color    | Color of dot                                             | `string`                                                      | -         |
+| type     | Pattern of dot                                           | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | `default` |
+| position | Custom node location to override TimeLine's mode setting | `'left' \| 'right'`                                           | -         |
+| class    | Class name                                               | `string`                                                      | -         |
+| style    | Inline style                                             | `JSX.CSSProperties \| string`                                 | -         |
+| onClick  | Click event                                              | `JSX.EventHandlerUnion<HTMLLIElement, MouseEvent>`            | -         |
+
+</Framework>
+
+### TimeLine.Item
+
+<Framework only="react">
+
+<TimelineItemReactApi />
+
+Other native attributes, such as `id`, are passed to the root `li` element. `onClick` is the click event of the `li`, receiving a `MouseEvent`. With `onClick`, the content area has `role="button"` and `tabIndex` `0` and responds to `Enter` and `Space`.
+
+</Framework>
+
+<Framework only="vue">
+
+<TimelineItemVueApi />
+
+`class`, `style` and native attributes are passed through attrs to the `li`. Listen to clicks with `@click`; clicks in the `extra` area do not trigger it. With `@click`, the content area has `role="button"` and `tabindex="0"` and responds to `Enter` and `Space`. A container is not rendered when its `#dot`, `#time` or `#extra` slot is empty.
+
+</Framework>
+
+<Framework only="solid">
+
+<TimelineItemSolidApi />
+
+`class`, `style`, `ref` and native attributes are passed to the `li`. Listen to clicks with `onClick`; clicks in the `extra` area do not trigger it. With `onClick`, the content area has `role="button"` and `tabindex="0"` and responds to `Enter` and `Space`. A container is not rendered when its `time` or `extra` is empty.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The element of dot and line between dots in TimeLine have a `aria-hidden`, indicates that they do not support Accessibility API.
+- Supporting API `aria-label` to specify TimeLine's label.
+
+<Framework only="react">
+
+```text
+<Timeline aria-label="Accident timeline">
+    <Timeline.Item time="2015-09-01">Accident started</Timeline.Item>
+    <Timeline.Item time="2015-09-01">Process</Timeline.Item>
+</Timeline>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <Timeline aria-label="Accident timeline">
+        <Timeline.Item>
+            <template #time>2015-09-01</template>
+            Accident started
+        </Timeline.Item>
+        <Timeline.Item>
+            <template #time>2015-09-01</template>
+            Process
+        </Timeline.Item>
+    </Timeline>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<Timeline aria-label="Accident timeline">
+    <Timeline.Item time="2015-09-01">Accident started</Timeline.Item>
+    <Timeline.Item time="2015-09-01">Process</Timeline.Item>
+</Timeline>
+```
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

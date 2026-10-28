@@ -1,0 +1,25 @@
+**Props**
+
+| Property       | Description                                                                                                         | Type      | Default |
+| -------------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ------- |
+| collapseButton | Whether to show the collapse button. Applies only when mode is vertical and the Footer has no default slot content. | `boolean` | `false` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot           | Description                                                                                                                                | Scope parameters           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| default        | Footer content. When present the collapse button does not show.                                                                            | `any`                      |
+| collapseButton | Replaces the built-in collapse button. When given, the collapseButton prop is not needed; it shows under the same conditions as that prop. | `any`                      |
+| collapseText   | Text of the built-in collapse button, receiving collapsed. A text-only result also names the icon-only button.                             | `NavCollapseTextSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,26 @@
+**Props**
+
+| 属性   | 说明                                                         | 类型                            | 默认值                                           |
+| ------ | ------------------------------------------------------------ | ------------------------------- | ------------------------------------------------ |
+| align  | 带内容时内容的对齐方式，可选 left、center、right。           | `"left" \| "right" \| "center"` | `semiDefault("Divider", "align", "center")`      |
+| margin | 分割线上下 margin，垂直方向时为左右 margin；数字按像素处理。 | `string \| number`              | `semiGlobalDefault("Divider", "margin")`         |
+| dashed | 是否为虚线。                                                 | `boolean`                       | `semiGlobalDefault("Divider", "dashed")`         |
+| layout | 分割线方向，可选 horizontal 或 vertical。                    | `"vertical" \| "horizontal"`    | `semiDefault("Divider", "layout", "horizontal")` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                                     | 作用域参数 |
+| ------- | ---------------------------------------- | ---------- |
+| default | 水平分割线的内容；垂直分割线不显示内容。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

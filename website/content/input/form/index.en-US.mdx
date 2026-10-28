@@ -1,0 +1,1879 @@
+---
+title: Form
+order: 40
+icon: doc-form
+---
+
+import FormReactApi from './api/form.react.en-US.mdx';
+import ArrayFieldReactApi from './api/array-field.react.en-US.mdx';
+import FormSectionReactApi from './api/form-section.react.en-US.mdx';
+import FormLabelReactApi from './api/form-label.react.en-US.mdx';
+import FormInputGroupReactApi from './api/form-input-group.react.en-US.mdx';
+import FormSlotReactApi from './api/form-slot.react.en-US.mdx';
+import FormErrorMessageReactApi from './api/form-error-message.react.en-US.mdx';
+import FormVueApi from './api/form.vue.en-US.mdx';
+import ArrayFieldVueApi from './api/array-field.vue.en-US.mdx';
+import FormSectionVueApi from './api/form-section.vue.en-US.mdx';
+import FormLabelVueApi from './api/form-label.vue.en-US.mdx';
+import FormInputGroupVueApi from './api/form-input-group.vue.en-US.mdx';
+import FormSlotVueApi from './api/form-slot.vue.en-US.mdx';
+import FormErrorMessageVueApi from './api/form-error-message.vue.en-US.mdx';
+import FormSolidApi from './api/form.solid.en-US.mdx';
+import ArrayFieldSolidApi from './api/array-field.solid.en-US.mdx';
+import FormSectionSolidApi from './api/form-section.solid.en-US.mdx';
+import FormLabelSolidApi from './api/form-label.solid.en-US.mdx';
+import FormInputGroupSolidApi from './api/form-input-group.solid.en-US.mdx';
+import FormSlotSolidApi from './api/form-slot.solid.en-US.mdx';
+import FormErrorMessageSolidApi from './api/form-error-message.solid.en-US.mdx';
+
+## Form
+
+- **Rerender on demand**, avoids unnecessary full-volume rendering, higher performance
+- Easy to use, **simple structure**, avoids unnecessary hierarchical nesting
+- Perfect accessibility support
+- FormState / FieldState can also be easily obtained from outside the Form Provides an external method to operate inside the form: formApi / fieldApi
+- Support for encapsulating custom components into form controls, and you can quickly access your team's components through the extension mechanism provided by Form (through `withField`)
+- Support Form level / Field level assignment, verification (synchronous / asynchronous)
+
+## Field
+
+<Framework only="react">
+
+Semi encapsulates all form field component (Input、Select、Checkbox、DatePicker etc.) with `withField` once.  
+Taking over their data flow (`props.value` & `props.onChange`)  
+When in use, you need to import from the Form (note: only the control imported from the Form has data synchronization)
+
+### Supported Field Component
+
+- `Input`, `InputNumber`, `TextArea`, `Select`, `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup`, `Switch`, `DatePicker`, `TimePicker`, `Slider`, `InputGroup`, `TreeSelect`, `Cascader`, `Rating`, `AutoComplete`, `Upload`, `PinCode`, `Label`, `ErrorMessage`, `Section`, `Slot`, `TagInput` All mounted under Form and declared directly in `<Form.Input />` and `<Form.Select />` when used.
+
+```javascript
+import { Form } from '@fibrae/semi-ui-react';
+
+const FormInput = Form.Input;
+const FormSelect = Form.Select;
+const Option = FormSelect.Option;
+```
+
+The Field level component provided by Form, its `value` (or other properties specified by `valueKey`), onChange (or other callback functions specified by `onKeyChangeFnName`) Properties are hijacked by Form, so
+
+<Notice type="primary" title="Notice">
+
+1. No longer need to manually bind the onChange event and update the value as controlled component. But you can continue to listen onChange events for the latest values if you want
+2. You cannot set the state of component with attributes such as `value`, `defaultValue`, `checked`, `defaultChecked`, etc. The default value can be set by Field's `initValue` or Form's `unitValues`
+3. You should not modify the value of Form State directly, all changes to the data in the Form should be done by providing `formApi`, `fieldApi`
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+Semi encapsulates all form field component (Input、Select、Checkbox、DatePicker etc.) with `withField` once.  
+Taking over their data flow (`modelValue` & `change`)  
+When in use, you need to use the components whose names start with Form (note: only these components have data synchronization). They are named exports and are not mounted under Form.
+
+### Supported Field Component
+
+- Fields: `FormInput`, `FormInputNumber`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCheckboxGroup`, `FormRadio`, `FormRadioGroup`, `FormSwitch`, `FormDatePicker`, `FormTimePicker`, `FormSlider`, `FormTreeSelect`, `FormCascader`, `FormRating`, `FormAutoComplete`, `FormUpload`, `FormPinCode`, `FormTagInput`
+- Other parts: `ArrayField`, `FormInputGroup`, `FormLabel`, `FormErrorMessage`, `FormSection`, `FormSlot`
+
+```vue
+<script setup lang="ts">
+    // A field takes over its data flow when used inside <Form>
+    import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-vue';
+    // A plain Input is left untouched by the Form
+    import { Input } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <Form>
+        <FormInput field="name" />
+        <FormSelect field="role">
+            <FormSelect.Option value="rd">Engineer</FormSelect.Option>
+        </FormSelect>
+    </Form>
+</template>
+```
+
+The Field level component provided by Form, its `modelValue` (or other properties specified by `valueKey`) and `change` event (or other events specified by `onKeyChangeFnName`) are taken over by Form, so
+
+<Notice type="primary" title="Notice">
+
+1. No longer need to use `v-model` or the `change` event to keep the value in sync. But you can continue to listen to `@change` for the latest values if you want
+2. You cannot set the state of component with attributes such as `modelValue`, `defaultValue`, `defaultChecked`, etc. They are ignored and a warning is logged in development mode. The default value can be set by Field's `initValue` or Form's `initValues`
+3. You should not modify the value of Form State directly, all changes to the data in the Form should be done by providing `formApi`, `fieldApi`
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+Semi encapsulates all form field component (Input、Select、Checkbox、DatePicker etc.) with `withField` once.  
+Taking over their data flow (`value` & `onChange`)  
+When in use, you need to use the components whose names start with Form (note: only these components have data synchronization). They are named exports and are not mounted under Form.
+
+### Supported Field Component
+
+- Fields: `FormInput`, `FormInputNumber`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCheckboxGroup`, `FormRadio`, `FormRadioGroup`, `FormSwitch`, `FormDatePicker`, `FormTimePicker`, `FormSlider`, `FormTreeSelect`, `FormCascader`, `FormRating`, `FormAutoComplete`, `FormUpload`, `FormPinCode`, `FormTagInput`
+- Other parts: `ArrayField`, and `Form.InputGroup`, `Form.Label`, `Form.ErrorMessage`, `Form.Section`, `Form.Slot` mounted under Form
+
+```jsx
+// A field takes over its data flow when used inside <Form>
+import { Form, FormInput, FormSelect, FormCheckbox, FormCheckboxGroup, FormRadio, FormRadioGroup, FormSwitch, FormDatePicker, FormTimePicker, FormInputNumber, FormTextArea, FormSlider, FormTreeSelect, FormCascader, FormRating, FormUpload, FormTagInput } from '@fibrae/semi-ui-solid';
+// Dynamic forms and hooks
+import { ArrayField, useFormApi, useFormState, useFieldApi, useFieldState, withField } from '@fibrae/semi-ui-solid';
+// A plain Input is left untouched by the Form
+import { Input } from '@fibrae/semi-ui-solid';
+```
+
+The Field level component provided by Form, its `value` (or other properties specified by `valueKey`) and `onChange` (or other callbacks specified by `onKeyChangeFnName`) are taken over by Form, so
+
+<Notice type="primary" title="Notice">
+
+1. No longer need to use `onChange` to keep the value in sync. But you can continue to listen to `onChange` for the latest values if you want
+2. You cannot set the state of component with attributes such as `value`, `defaultValue`, `checked`, `defaultChecked`, etc. They are ignored. The default value can be set by Field's `initValue` or Form's `initValues`
+3. You should not modify the value of Form State directly, all changes to the data in the Form should be done by providing `formApi`, `fieldApi`
+
+</Notice>
+
+</Framework>
+
+## Demos
+
+### Various ways to declare form
+
+Semi Form supports multiple writing at the same time.
+
+#### Basic Usage
+
+<Framework only="react">
+
+Add `field` property to each field component. You can also set `label` properties for each field, by default is the same as field
+
+`label` can be passed in a string directly, or declared in the form of an object, configure `extra`, `required`, `optional` and other attributes to deal with more complex scenarios
+
+</Framework>
+
+<Framework only="vue">
+
+Use the fields whose names start with Form, such as `FormInput` and `FormSelect`, add the `field` property to each of them, and place them inside the Form. You can also set `label` properties for each field, by default is the same as field
+
+`label` can be passed in a string directly, or declared in the form of an object, configure `required`, `optional`, `align`, `width` and other attributes to deal with more complex scenarios. Use slots for nodes: `#fieldLabel` replaces the label content and `#labelExtra` places content after it (the help icon in the example below). Slots take precedence over the label property
+
+</Framework>
+
+<Framework only="solid">
+
+Use the fields whose names start with Form, such as `FormInput` and `FormSelect`, add the `field` property to each of them, and place them inside the Form. You can also set `label` properties for each field, by default is the same as field
+
+`label` can be passed in a string or JSX directly, or declared in the form of an object, configure `text`, `extra`, `required`, `optional`, `align`, `width` and other attributes to deal with more complex scenarios. Both `text` and `extra` can be JSX (the help icon in the example below)
+
+</Framework>
+
+<Notice type="primary" title="Notice">
+    The field attribute is required props
+</Notice>
+
+<Demo id="basic" />
+
+#### Other declaration methods
+
+When you need to get `formState`, `formApi`, `values`, etc. directly inside the Form structure, you can use the following writing
+
+<Framework only="react">
+
+#### Via render props
+
+<Demo id="render-props" />
+
+#### Via children function
+
+declare children as a function that returns all field components
+
+<Demo id="child-render-function" />
+
+#### Via props.component
+
+Pass the entire internal structure directly in the form through `component` attribute.
+
+<Demo id="props-component" />
+
+</Framework>
+
+<Framework only="vue">
+
+#### Via the default scoped slot
+
+The default slot of Form is a scoped slot with the parameters `{ formState, formApi, values }`. Destructure what you need with `#default="{ formState }"`. The render props, children function and props.component of React are all covered by this one in Vue.
+
+<Demo id="child-render-function" />
+
+</Framework>
+
+<Framework only="solid">
+
+The `render`, the children function and `component` receive the same argument: `{ formState, values, formApi }`. Each is called once, and `formState` and `values` in the argument follow the form; read them in the returned JSX (such as `form.values.name`) instead of destructuring them at the top of the function, which would only give the initial values.
+
+#### Via the render property
+
+That is, render props
+
+<Demo id="render-props" />
+
+#### Via child render function
+
+The children of Form is a function that returns all the fields. The function must declare a parameter, a function without parameters is treated as plain children
+
+<Demo id="child-render-function" />
+
+#### Via the component property
+
+Pass the whole inner structure as a component through the `component` property. `formState`, `values` and `formApi` are its props
+
+<Demo id="props-component" />
+
+</Framework>
+
+### All supported field components
+
+<Demo id="all-fields" />
+
+### Field binding syntax
+
+Every Field component must have a `field` property. This is how the form manages the state of this field. See the field syntax section below for additional details on what you can pass in for field.
+
+The field can be a simple string, can be contained`.`Or`[]`String that supports multi-level nesting  
+Below is an example of the field name and their mapping path in FormState
+
+| Field                  | Resolution                         |
+| ---------------------- | ---------------------------------- |
+| username               | formState.values.username          |
+| user\[0\]              | formState.values.user\[0\]         |
+| siblings.1             | formState.values.siblings\[1\]     |
+| siblings\['2'\]        | formState.values.siblings\[2\]     |
+| parents\[0\].name      | formState.values.parents\[0\].name |
+| parents\[1\]\['name'\] | formState.values.parents\[1\].name |
+
+<Demo id="field-binding" />
+
+### Form layout
+
+- Vertical Layout: Arrange each field vertically （By default）  
+   Semi Design Next recommends a vertical layout.
+
+<Demo id="layout-vertical" />
+
+- Horizontal Layout: Arrange each field horizontally You can use the horizontal layout by setting `layout='horizontal'`
+
+<Demo id="layout-horizontal" />
+
+- Label Position, Label Align  
+   You can control the position of the label in the Field and the direction of text alignment by setting `labelPosition`, `labelAlign`
+
+<Demo id="label-position" />
+
+- A more complex layout.  
+  You can also combine the `Row` and `Col` provided by the `Grid` to arrange the form structure as you want.
+
+<Demo id="layout-grid" />
+
+### Form grouping
+
+<Framework only="react">
+
+Forms with many fields should group them. Use `Form.Section` to group Fields (it only affects layout and does not change the data structure).
+
+</Framework>
+
+<Framework only="vue">
+
+Forms with many fields should group them. Use `FormSection` to group Fields and put the title in the `#text` slot (it only affects layout and does not change the data structure).
+
+</Framework>
+
+<Framework only="solid">
+
+Forms with many fields should group them. Use `Form.Section` to group Fields and pass the title through the `text` property (it only affects layout and does not change the data structure).
+
+</Framework>
+
+<Demo id="section" />
+
+### wrapper Col / label Col
+
+When you need to set a uniform layout for all Fields in a Form, you can set `wrapperCol` and `labelCol` on the `Form` to quickly generate the layout. No need to manually use `Row`, `Col` manual layout.  
+`wrapperCol`,`labelCol`Property Configuration Reference [Col components](/en-US/react/basic/grid#Col)
+
+<Demo id="wrapper-col" />
+
+### Remove automatically added Label
+
+Form will automatically insert `Label` for Field control. If you don't need to automatically insert the Label module, you can turn off the automatic label insertion function by setting `noLabel=true` in the Field (at this time, the Field still has the ability to automatically display ErrorMessage, so the DOM structure is still different from the original component)  
+If you want to keep the DOM structure consistent with the original component, you can use `pure=true`. At this time, the DOM structure will not change except that the data flow is taken over (you need to be responsible for the rendering of ErrorMessage, and it cannot be used by formProps.wrapperCol property impact)
+
+<Demo id="no-label" />
+
+### Embedded Label
+
+A Label can be inlined in a field control by setting labelPosition to `inset`. Components currently supporting this feature include `Input`, `InputNumber`, `DatePicker`, `TimePicker`, `Select`, `TreeSelect`, `Cascader`, `TagInput`, `AutoComplete`. With labelPosition `inset`, the other fields are laid out as `top` and warn in development mode.
+
+<Framework only="vue">
+
+A custom component wrapped with `withField` is laid out with an inset label only when it declares the `insetLabelId` property: it then receives the label content through the `#insetLabel` slot and writes `insetLabelId` to the element that holds the label. A component that does not declare it is laid out as `top` too.
+
+</Framework>
+
+<Framework only="solid">
+
+A custom component wrapped with `withField` receives the `insetLabel` and `insetLabelId` props when labelPosition is `inset`: it has to render the inset label itself and write `insetLabelId` to the element that holds the label. A component that does not render an inset label should not be used with `inset`.
+
+</Framework>
+
+<Demo id="inset-label" />
+
+### Export Label, ErrorMessage use
+
+<Framework only="react">
+
+When the built-in Label and ErrorMessage layout does not meet the business requirements, you need to combine the positions yourself, but you want to use the default styles of Label and ErrorMessage directly.  
+you can import them from the `Form` module, and combine `Form.Label` / `Form.ErrorMessage` by yourself.  
+For details of their API, refer to [Label](#Form.Label) / [ErrorMessage](#Form.ErrorMessage)
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Label, ErrorMessage } = Form;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+When the built-in Label and ErrorMessage layout does not meet the business requirements, you need to combine the positions yourself, but you want to use the default styles of Label and ErrorMessage directly.  
+you can import `FormLabel` / `FormErrorMessage` and combine them by yourself.  
+For details of their API, refer to [FormLabel](#FormLabel) / [FormErrorMessage](#FormErrorMessage)
+
+```ts
+import { FormErrorMessage, FormLabel } from '@fibrae/semi-ui-vue';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+When the built-in Label and ErrorMessage layout does not meet the business requirements, you need to combine the positions yourself, but you want to use the default styles of Label and ErrorMessage directly.  
+you can import them from the `Form` module, and combine `Form.Label` / `Form.ErrorMessage` by yourself.  
+For details of their API, refer to [Label](#Form.Label) / [ErrorMessage](#Form.ErrorMessage)
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Label, ErrorMessage } = Form;
+```
+
+</Framework>
+
+<Framework only="react">
+
+### Use Form.Slot
+
+When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `Form.Slot`  
+`labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `Form.Slot`  
+For the Slot property configuration, refer to [Form.Slot](#Form.Slot)
+
+</Framework>
+
+<Framework only="vue">
+
+### Use FormSlot
+
+When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `FormSlot`  
+`labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `FormSlot`  
+For the FormSlot property configuration, refer to [FormSlot](#FormSlot)
+
+</Framework>
+
+<Framework only="solid">
+
+### Use Form.Slot
+
+When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `Form.Slot`  
+`labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `Form.Slot`  
+For the Slot property configuration, refer to [Form.Slot](#Form.Slot)
+
+</Framework>
+
+<Demo id="slot" />
+
+### Use helpText、extraText set prompt information
+
+<Framework only="react">
+
+You can place custom prompt information through `helpText`, and display it in the same block as the verification information (error). When both have values, the verification information will be displayed first.  
+Additional prompt information can be placed through `extraText`. When the error message and prompt text need to appear at the same time, this configuration can be used. It is always displayed and located after helpText/error  
+When `validateStatus` is passed in, the UI style corresponding to the value of validateStatus will be displayed first. If not passed in, the internal verification status of the field shall prevail.
+
+</Framework>
+
+<Framework only="vue">
+
+You can place custom prompt information through the `#helpText` slot, and display it in the same block as the verification information (error). When both have values, the verification information will be displayed first.  
+Additional prompt information can be placed through the `#extraText` slot. When the error message and prompt text need to appear at the same time, this slot can be used. It is always displayed and located after helpText/error  
+When `validateStatus` is passed in, the UI style corresponding to the value of validateStatus will be displayed first. If not passed in, the internal verification status of the field shall prevail.
+
+</Framework>
+
+<Framework only="solid">
+
+You can place custom prompt information (a string or JSX) through `helpText`, and display it in the same block as the verification information (error). When both have values, the verification information will be displayed first.  
+Additional prompt information can be placed through `extraText`. When the error message and prompt text need to appear at the same time, this property can be used. It is always displayed and located after helpText/error  
+When `validateStatus` is passed in, the UI style corresponding to the value of validateStatus will be displayed first. If not passed in, the internal verification status of the field shall prevail.
+
+</Framework>
+
+<Demo id="help-text" />
+
+By configuring `extraTextPosition`, you can control the display position of extraText. Optional values `bottom`, `middle`  
+For example, when you want to display the extraText prompt information between the Label and Field component.  
+This attribute can be configured uniformly on the Form or individually on each Field. When passing in at the same time, the configuration of the Field shall prevail.
+
+<Demo id="extra-text-position" />
+
+### Using Input Group
+
+<Framework only="react">
+
+When you need to combine some fields to use, you can use `Form.InputGroup` to wrap them.  
+In Semi Form, when you using field components like `Form.Input`、`Form.Select`, Form will insert Label module automatically for them.  
+But usually, in`InputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `InputGroup` to insert a Label belonging to the Group  
+`label` configurable properties, see [Label](#Form.Label)
+
+</Framework>
+
+<Framework only="vue">
+
+When you need to combine some fields to use, you can use `FormInputGroup` to wrap them. Only the direct children that set `field` are rendered.  
+In Semi Form, when you using field components like `FormInput`、`FormSelect`, Form will insert Label module automatically for them.  
+But usually, in`FormInputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `FormInputGroup` to insert a Label belonging to the Group  
+`label` configurable properties, see [FormLabel](#FormLabel)
+
+</Framework>
+
+<Framework only="solid">
+
+When you need to combine some fields to use, you can use `Form.InputGroup` to wrap them. The fields inside no longer render their own Label and ErrorMessage, and their errors are shown together below the group.  
+But usually, in `Form.InputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `Form.InputGroup` to insert a Label belonging to the Group  
+`label` configurable properties, see [Label](#Form.Label)
+
+</Framework>
+
+<Demo id="input-group" />
+
+### Form in the Modal pop-up layer
+
+You can place the Form in Modal and load it as a popup.  
+When submitting, use `formApi.validate()` to centrally verify the Field
+
+<Demo id="modal" />
+
+### Configure initial values and verification rules
+
+- You can configure check rules for each Field through `rules`  
+   The verification library inside the Form is based on `async-validator`, and more configuration rules can be found in its [official documentation](https://github.com/yiminghe/async-validator)
+- You can uniformly set the initial value for the entire form through the `initValues` of form, or you can set the initial value through `initValue` in each field (the latter has a higher priority)
+- You can configure different verification trigger timings for each Field through `trigger`, and the default is `change` (that is, the verification is performed automatically when the value changes). Also supports `change`, `blur`, `mount`, `custom` or a combination of the above. It also supports unified configuration through FormProps. If both are configured, FieldProps shall prevail
+- You can use the `stopValidateWithError` switch to decide whether to continue to trigger the validation of subsequent rules when the first rule that fails the validation is encountered. Unified configuration through FormProps is also supported. If both are configured, FieldProps shall prevail
+
+<Demo id="rules" />
+
+### Custom Validate (Form Level)
+
+You can set a custom validation function for the `Form` as a whole with `validator`. It will be called on submit or when calling `formApi.validate()`.
+
+<Notice title="Notice">After the Form level validator is configured, the Field level validators (fieldProps.validator, fieldProps.rules) no longer take effect</Notice>
+
+#### Synchronous Validate
+
+When validate success, you should return an empty string.  
+When validate fails, you should return the error message (Object, key is fieldName, value is the corresponding error message)
+
+<Demo id="form-validate-sync" />
+
+#### Asynchronous Validate
+
+For asynchronous validation, you should return a promise. In promise.then() you need to return the corresponding error message.
+
+<Demo id="form-validate-async" />
+
+### Custom Validate (Field Level)
+
+You can specify a custom validation function for a single Field with `validator`. Supports synchronous and asynchronous validation (by returning promises)
+
+<Notice title='Field validator vs rules[].validator'>
+
+The Field-level `validator` prop and the `validator` field inside `rules[]` (powered by async-validator) are two different APIs:
+
+- Field `validator`: signature is `(fieldValue, values) => string | Promise<string>`; whole-field custom validation that returns the error message directly.
+- `rules[].validator`: signature is `(rule, value, callback) => void | Promise<void>`; per-rule validation in the [async-validator](https://github.com/yiminghe/async-validator) style, where errors are reported via `callback` or rejection.
+
+The two are **mutually exclusive**: if a Field `validator` is set, the `rules` array will not be evaluated. Use the Field `validator` for simple whole-field custom checks; use `rules` when you need multiple rules or want to reuse built-in async-validator rules (required / type / pattern, etc.).
+
+</Notice>
+
+<Demo id="field-validate" />
+
+### Manually Trigger specified validation
+
+When you want to manually trigger the validation of some specific Field, you can do it through `formApi.validate`.  
+ When no parameters are passed in, all Fields are checked by default. When parameters are passed in, the parameters specified shall prevail
+
+### Silent Validation
+
+When you need to get the validation result without triggering UI updates (no error messages shown, no touched state set), you can use `formApi.validate({ silent: true })`. This is useful in scenarios where you want to decide whether to make a backend request based on the validation result.
+
+<Demo id="silent-validate" />
+
+<Demo id="partial-validate" />
+
+### Linkage Fields
+
+<Framework only="react">
+
+You can achieve the linkage between Fields by listening to the `onChange` of Field and then using formApi to make modifications.
+
+</Framework>
+
+<Framework only="vue">
+
+You can achieve the linkage between Fields by listening to the `@change` of Field and then using formApi to make modifications.
+
+</Framework>
+
+<Framework only="solid">
+
+You can achieve the linkage between Fields by listening to the `onChange` of Field and then using formApi (for example saved through `getFormApi`) to make modifications.
+
+</Framework>
+
+<Demo id="linkage" />
+
+### Dynamic form
+
+#### Dynamically add and delete fields
+
+<Demo id="dynamic-fields" />
+
+#### Keep empty values (allowEmpty)
+
+By default a field whose value becomes empty is removed from `values`. Set `allowEmpty` on a Field to keep its key with an `undefined` value, or on Form to apply it to every field. Clear both selects below and compare the keys of `values`.
+
+<Demo id="allow-empty" />
+
+#### Keep field state on unmount (keepState)
+
+By default, when a Field component is unmounted, its value, error, and touched state are all reset. If you want to preserve these states after the field is unmounted (for example, in conditional rendering scenarios), you can use the `keepState` property.
+
+<Demo id="keep-state" />
+
+In the example above:
+
+- The field with `keepState` will retain its previously entered value, validation state, etc. after being hidden and then shown again
+- The field without `keepState` will have its state reset after being hidden and then shown again
+
+<Framework only="react">
+
+<Notice type="primary" title="Notes">
+
+- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
+- Fields inside an `ArrayField` do NOT support `keepState`: calling `remove(i)` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily revives state of removed rows.
+- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `ArrayField`'s own `add`, `remove`, `addWithInitValue` instead.
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="Notes">
+
+- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
+- Fields inside an `ArrayField` do NOT support `keepState`: calling `onRemove` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily revives state of removed rows.
+- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `onAdd` and `onAddWithInitValue` provided by the `ArrayField` slot and the `onRemove` of each row instead.
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="Notes">
+
+- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
+- Fields inside an `ArrayField` do NOT support `keepState`: calling `remove` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily causes problems such as removed state being "resurrected".
+- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `add` and `addWithInitValue` of the `ArrayField` and the `remove` of each row instead.
+
+</Notice>
+
+</Framework>
+
+### ArrayField Usage
+
+<Framework only="react">
+
+For array items that are dynamically added or deleted, we provide the `ArrayField` component to simplify the operation of add / remove
+
+For the detailed API of ArrayField, please refer to [ArrayField Props](#arrayfield-props) below
+
+> Note: The initValue type of ArrayField must be an array
+
+</Framework>
+
+<Framework only="vue">
+
+For array items that are dynamically added or deleted, we provide the `ArrayField` component to simplify the operation of adding and removing rows. The default scoped slot of ArrayField provides `onAdd` and `onAddWithInitValue` to add a blank row or a row with an initial value, and each row has an `onRemove` to delete itself
+
+For the detailed API of ArrayField, please refer to [ArrayField](#arrayfield) below
+
+> Note: The initValue type of ArrayField must be an array
+
+</Framework>
+
+<Framework only="solid">
+
+For array items that are dynamically added or deleted, we provide the `ArrayField` component to simplify the operation of adding and removing rows. The children of ArrayField is a function that is called once, with `{ arrayFields, add, addWithInitValue }`: `add` and `addWithInitValue` add a blank row or a row with an initial value, and the `remove` of each item in `arrayFields` deletes that row.
+
+Render the rows with `<For each={props.arrayFields}>`. A row object keeps its identity while the row exists, and its `field` follows the rows added or removed before it.
+
+For the detailed API of ArrayField, please refer to [ArrayField](#arrayfield) below
+
+> Note: The initValue type of ArrayField must be an array
+
+</Framework>
+
+<Demo id="array-field" />
+
+#### Nesting ArrayField
+
+ArrayField supports multi-level nesting. The following is an example of two-level nesting.
+
+<Demo id="nested-array-field" />
+
+#### Add or delete form items dynamically - by use formApi
+
+If you don't use ArrayField, you can use the provided formApi to manually add or delete formState.
+
+<Demo id="dynamic-form-api" />
+
+### Use of Hook
+
+<Framework only="react">
+
+We provide four Hooks so that you can easily access Form internal state and call Form and Field related api in Functional Component which placed inside the Form structure without passing through props.
+
+```jsx
+import { useFormApi, useFormState, useFieldApi, useFieldState } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+We provide four composables so that you can easily access Form internal state and call Form and Field related api in the `setup` of a component placed inside the Form structure without passing through props. They depend on the context provided by Form and throw an error when called outside a Form.
+
+```ts
+import { useFormApi, useFormState, useFieldApi, useFieldState } from '@fibrae/semi-ui-vue';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+We provide four hooks so that you can easily access Form internal state and call Form and Field related api in a component placed inside the Form structure without passing through props. They depend on the context provided by Form; outside a Form, `useFormApi` returns an empty object and the accessor of `useFormState` gives an empty object
+
+```jsx
+import { useFormApi, useFormState, useFieldApi, useFieldState } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+#### useFormApi
+
+<Framework only="react">
+
+`useFormApi` allows you to directly access the formApi of the parent Form component within Functional Component via hook
+
+</Framework>
+
+<Framework only="vue">
+
+`useFormApi` allows you to directly access the formApi of the parent Form component within a component inside the Form
+
+</Framework>
+
+<Framework only="solid">
+
+`useFormApi` allows you to directly access the formApi of the parent Form component within a component inside the Form
+
+</Framework>
+
+<Demo id="use-form-api" />
+
+#### useFormState
+
+<Framework only="react">
+
+`useFormState` allows you to directly access the form State of the parent Form component within Functional Component via hook
+
+</Framework>
+
+<Framework only="vue">
+
+`useFormState` allows you to directly access the form State of the parent Form component within a component inside the Form. It returns a `ComputedRef`, read through `.value` in scripts
+
+</Framework>
+
+<Framework only="solid">
+
+`useFormState` allows you to directly access the form State of the parent Form component within a component inside the Form. It returns an accessor (`Accessor<FormState>`), read through `formState()`, which follows the form when read in JSX
+
+</Framework>
+
+<Demo id="use-form-state" />
+
+#### useFieldApi
+
+<Framework only="react">
+
+`useFieldApi` allows you to call the api of the specified Field directly within Functional Component via hook
+
+</Framework>
+
+<Framework only="vue">
+
+`useFieldApi` allows you to call the api of the specified Field directly within a component inside the Form. The parameter can be a field name, a ref or a getter
+
+</Framework>
+
+<Framework only="solid">
+
+`useFieldApi` allows you to call the api of the specified Field directly within a component inside the Form. The parameter can be a field name or an accessor that returns one, which follows the field name when it changes
+
+</Framework>
+
+<Demo id="use-field-api" />
+
+#### useFieldState
+
+<Framework only="react">
+
+`useFieldState` allows you to directly access the State of the specified Field within Functional Component via hook
+
+</Framework>
+
+<Framework only="vue">
+
+`useFieldState` allows you to directly access the State of the specified Field within a component inside the Form. The parameter can be a field name, a ref or a getter, and it returns a `ComputedRef<{ value, error, touched }>`
+
+</Framework>
+
+<Framework only="solid">
+
+`useFieldState` allows you to directly access the State of the specified Field within a component inside the Form. The parameter can be a field name or an accessor that returns one, and it returns an accessor: `fieldState()` gives `{ value, error, touched }`
+
+</Framework>
+
+<Demo id="use-field-state" />
+
+<Framework only="react">
+
+### Use of HOC
+
+We provided two HOC: `withFormApi`、`withFormState`, you can access the API of the Form and the internal state within other components  
+Provided HOC: `withField`, to encapsulating custom components as Field that conform the Semi Form data flow.
+
+```jsx
+import { withFormApi, withFormState, withField } from '@fibrae/semi-ui-react';
+```
+
+#### HOC - withFormApi
+
+You can encapsulate the component via `withFormApi` HOC so that the formApi of the parent Form component can be called directly inside the component  
+Note that the encapsulated components must be placed inside the Form structure.
+
+<Demo id="with-form-api" />
+
+#### HOC - withFormState
+
+You can encapsulate the component via `withFormState` HOC so that the component has direct access to the Form State of the parent Form component.  
+Note that the encapsulated components must be placed inside the Form structure.
+
+<Demo id="with-form-state" />
+
+</Framework>
+
+<Framework only="vue">
+
+### Access formApi and formState through the default slot
+
+Vue has no `withFormApi` or `withFormState`. The default scoped slot of Form already provides `formApi` and `formState`; use `useFormApi` and `useFormState` above inside a child component
+
+#### Access formApi
+
+<Demo id="with-form-api" />
+
+#### Access formState
+
+<Demo id="with-form-state" />
+
+</Framework>
+
+<Framework only="solid">
+
+### Access formApi and formState through the render function
+
+Solid has no `withFormApi` or `withFormState`. The render function of Form (and the children function and component) already provides `formApi` and `formState`; use `useFormApi` and `useFormState` above inside a child component
+
+#### Access formApi
+
+<Demo id="with-form-api" />
+
+#### Access formState
+
+<Demo id="with-form-state" />
+
+</Framework>
+
+### Take over custom components
+
+<Framework only="react">
+
+Via `withField`, you can extend other custom components into Field. Form will taking over its behavior.
+
+<Notice type="primary" title="Notice">
+    Custom components must be controlled components.
+</Notice>
+
+With Field did the following things.
+
+- Take over the `value` of the component (or other properties specified by valueKey), `onChange` (or other callback functions specified by onKeyChangeFnName)
+- Insert Field's `<Form.Label>`above the field
+- Insert Field's `<ErrorMessage>` under the field
+- Insert Field's extraText under the field
+
+With Field Options specific configuration can be consulted [withFieldOption](#WithFieldOption)
+
+Your custom controlled component needs to do the following:
+
+- When the value changes, call `props.onChange` and use the latest value as an input parameter
+- Respond to changes in `props.value` and update your component UI rendering results
+
+```jsx
+withField(YourComponent, withFieldOption);
+```
+
+The props type of the returned component is inferred from the props of `YourComponent`: the component's own props plus [Field Props](#field-props), without `value`, `defaultValue`, `checked` and `defaultChecked` (the Form owns the value).
+
+</Framework>
+
+<Framework only="vue">
+
+Via `withField`, you can extend other custom components or native tags (such as `'input'`) into Field. Form will taking over its behavior.
+
+<Notice type="primary" title="Notice">
+    Custom components must be controlled components.
+</Notice>
+
+With Field did the following things.
+
+- Take over the `modelValue` of the component (or other properties specified by `valueKey`), the `change` event (or other events specified by `onKeyChangeFnName`)
+- Insert Field's `FormLabel` above the field
+- Insert Field's ErrorMessage under the field
+- Insert Field's extraText under the field
+
+With Field Options specific configuration can be consulted [withFieldOptions](#withFieldOptions)
+
+Your custom controlled component needs to do the following:
+
+- Declare the `modelValue` property (or the one specified by `valueKey`), respond to its changes and update your component UI rendering results
+- When the value changes, emit `change` (or the event specified by `onKeyChangeFnName`) with the latest value as the argument. A component that only emits `update:modelValue` can set `onKeyChangeFnName` to `'update:modelValue'`
+
+```ts
+withField(YourComponent, withFieldOptions);
+```
+
+The props type of the returned component is inferred from the props of `YourComponent`: the component's own props plus [Field Props](#field-props), without `modelValue`, `onUpdate:modelValue`, `defaultValue` and `defaultChecked` (the Form owns the value; passing them is ignored and a warning is logged in development mode).
+
+</Framework>
+
+<Framework only="solid">
+
+Via `withField`, you can extend other custom components into Field. Form will taking over its behavior.
+
+<Notice type="primary" title="Notice">
+    Custom components must be controlled components.
+</Notice>
+
+With Field did the following things.
+
+- Take over the `value` of the component (or other properties specified by `valueKey`), the `onChange` callback (or other callbacks specified by `onKeyChangeFnName`)
+- Insert Field's `Form.Label` above the field
+- Insert Field's `Form.ErrorMessage` under the field
+- Insert Field's extraText under the field
+
+With Field Options specific configuration can be consulted [withFieldOption](#withFieldOption)
+
+Your custom controlled component needs to do the following:
+
+- Read the value through `props.value` (or the property specified by `valueKey`) and update your component UI rendering results. Do not destructure props, or the component stops following the value
+- When the value changes, call `props.onChange` (or the callback specified by `onKeyChangeFnName`) with the latest value as the argument
+
+```jsx
+withField(YourComponent, withFieldOption);
+```
+
+When wrapping a native `input`, wrap it in a small component first as the demo does, so that props injected by the Form such as `validateStatus` do not land on the DOM. The native `onChange` of Solid fires on blur; to keep the value in sync while typing, set `onKeyChangeFnName` to `'onInput'` together with `valuePath: 'target.value'`.
+
+The props type of the returned component is inferred from the props of `YourComponent`: the component's own props plus [Field Props](#field-props), without `value`, `defaultValue`, `checked` and `defaultChecked` (the Form owns the value).
+
+</Framework>
+
+<Demo id="with-field-basic" />
+
+<Demo id="with-field-complex" />
+
+## API reference
+
+<Framework only="react">
+
+## Form
+
+<FormReactApi />
+
+Native attributes and events such as `aria-*` land on the `form` element. When both `labelCol` and `wrapperCol` are set, the `form` is wrapped in an extra Row and the other attributes still land on the `form`. The `form` element has `noValidate` by default, so only Semi validates; pass `noValidate={false}` to restore native validation.
+
+</Framework>
+
+<Framework only="vue">
+
+## Form
+
+```vue
+<script setup lang="ts">
+    import { Form } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+<FormVueApi />
+
+`class`, `style` and native attributes fall through attrs to the `form` element. When `labelCol` and `wrapperCol` are set, the `form` is wrapped in a Row, and the attributes still land on the `form`. The `change`, `submit` and `reset` events of Form have the names of native events and hide them. The `form` element has `novalidate` by default, so that validation is done by Semi only; pass `:novalidate="false"` to bring the native validation back.
+
+A template ref to the Form instance gives access to its `formApi` (type `FormHandle`).
+
+</Framework>
+
+<Framework only="solid">
+
+## Form
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+```
+
+<FormSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `aria-*` and `onKeyDown`) land on the `form` element. When `labelCol` and `wrapperCol` are set, the `form` is wrapped in a Row, and the other attributes still land on the `form`. The `form` element has `novalidate` by default, so only Semi validates; pass `novalidate={false}` to restore native validation.
+
+The form element received by `ref` carries the `formApi` (type `FormElement`).
+
+</Framework>
+
+## FormState
+
+FormState stores all the state values within the Form, including the values of each field, error information, touched status
+
+| Name    | Instructions                                                                                                                     | Initial value | Example                         |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------- |
+| values  | Value Collection of the form                                                                                                     | \{\}          | \{fieldA: 'str', fieldB: true\} |
+| errors  | Form error information collection, you can decide whether to allow users to submit by judging whether there is error information | \{\}          | \{fieldA: 'length not valid'\}  |
+| touched | The collection of fields the user has clicked on                                                                                 | \{\}          | \{fieldA: true\}                |
+
+### How to access the form state
+
+<Framework only="react">
+
+- By calling `formApi.getFormState()`
+- By declaring fields through [child render function](#Other%20declaration%20methods), formState will injected as a parameter
+- By declaring fields through [render props](#Other%20declaration%20methods), formState will injected as a parameter
+- Via [useFormState](#useFormState) hook
+- Via [withFormState](#HOC%20-%20withFormState) HOC
+
+</Framework>
+
+<Framework only="vue">
+
+- By calling `formApi.getFormState()`
+- Via the [default scoped slot](#Other%20declaration%20methods), formState will injected as a parameter
+- Via [useFormState](#useFormState) in a component inside the Form
+- Via the formState created by [useForm](#useForm), read reactively outside the Form
+
+</Framework>
+
+<Framework only="solid">
+
+- By calling `formApi.getFormState()`
+- Via the [child render function](#Other%20declaration%20methods), formState will injected as a parameter
+- Via the [render props](#Other%20declaration%20methods), formState will injected as a parameter
+- Via [useFormState](#useFormState) in a component inside the Form
+- Via the formState created by `Form.useForm()`, read as an accessor outside the Form
+
+</Framework>
+
+## FormApi
+
+We provide FormApi. You have easy access to FormApi both inside and outside the Form, which allows you to use getter and setter to get and manipulate the values of FormState.  
+The table below describes the features available in the formApi.
+
+<Notice title='About scope isolation'>
+
+In order to prevent the user from accidentally modifying the internal state of the Form component after reading the internal state of formState, values.
+
+Semi will automatically execute deepClone once for input parameters of `formApi.setValue` and `setValues` and the return results of `formApi.getFormState`, `getValue` and `getValues`.
+
+</Notice>
+
+| Function | Description | example |
+| --- | --- | --- |
+| getFormProps | Get Form Component Props | formApi.getFormProps(propNames?: string[]) |
+| getFormState | Get FormState | formApi.getFormState() |
+| submitForm | Manually submit form operation | formApi.submitForm() |
+| reset | Reset the form manually | formApi.reset(fields?: Array \<string\>) |
+| validate | Manually trigger validation of the entire form. the verification of the entire Field will be triggered by default when no parameters are passed , if you want to trigger the verification of some fields, pass in the target field array <br/><br/> After the Form level validator is configured, the Field level validator will not be triggered again when submit or formApi.validate()<br/><br/>**Silent validation**: Pass `{ silent: true }` to get validation results without triggering UI updates (no error messages shown, no touched state set). You can also use `{ fields: ['fieldA'], silent: true }` to perform silent validation on specific fields. | formApi.validate() <br/>.then(values => \{\})<br/>.catch(errors => \{\})<br/>OR formApi.validate(['fieldA','fieldB'])<br/>OR formApi.validate(\{ silent: true \})<br/>OR formApi.validate(\{ fields: ['fieldA'], silent: true \})<br/> |
+| setValues | Set the values of the entire form. The isOverride in the second parameter is false by default. <br/> **When isOverride is false**: Iterate through all registered fields in the Form, and update the values from `newValues` to `formState.values`. If a registered field is not included in `newValues`, that field will be set to undefined. <br/> **When isOverride is true**: Directly replace `formState.values` with `newValues`, including extra keys in `newValues` that don't have corresponding fields in the form. <br/><br/> **Recommended usage**: If you only need to update some fields, it's recommended to use `formApi.setValue(field, value)` for individual updates, or get current values first then merge: `formApi.setValues({ ...formApi.getValues(), name: newValue })` | formApi.setValues(newValues: object, \{isOverride: boolean\}) |
+| getValues | Get the values of all Field | formApi.getValues() |
+| setValue | provides direct modification of formState.values method.<br/>The difference from `setValues` is that it only modifies a single field. | formApi.setValue(field: string, newFieldValue: any) |
+| getValue | Get the value of all / single Field | formApi.getValue()<br/>formApi.getValue(field: string) |
+| setTouched | Modify formState.touched | formApi.setTouched(field: string, isTouched: boolean)<br/> |
+| getTouched | Get the touched state of the Field | formApi.getTouched(field: string) |
+| setError | Modify the error information of a field | formApi.setError(field: string, fieldErrorMessage: string) |
+| getError | Get Error Status of Field | formApi.getError(field: string) |
+| getFieldExist | Get whether the field exists in the Form | formApi.getFieldExist(field: string) |
+| scrollToField | Scroll to the specified field, the second input parameter will be passed to scroll-into-view-if-needed | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
+| scrollToError | Scroll to the field with validation error. You can pass a specified field or index. If you pass index, scroll to the index-th error DOM. If you do not pass any parameters, scroll to the first validation error position in the DOM tree. | formApi.scrollToError(<ApiType detail='{field?: string; index?: number; scrollOpts?: ScrollIntoViewOptions }'>ScrollToErrorOptions</ApiType>) |
+
+### How to access formApi
+
+<Framework only="react">
+
+- Use `Form.useForm()` to create formApi outside Form, then pass it via props.form to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
+- The Form component in the `ComponentDidMount` phase will execute the `getFormApi` callback passed in by props. You can save a reference to formApi in the callback function for subsequent calls (example code below) In addition, we provide other ways to get formApi, and you can choose different ways of calling according to your preference.
+- Use reference to get form instance，you can access form instance & its formApi
+- By declaring fields through "child render function", formApi will injected as a parameter
+- By declaring fields through "render props", formApi will injected as a parameter
+- Via [useFormApi](#useFormApi) hook for children component of Form
+- Via [withFormApi](#HOC%20-%20withFormApi) HOC for children component of Form
+
+</Framework>
+
+<Framework only="vue">
+
+- Use `useForm()` to create formApi outside Form, then pass it via the `form` property to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
+- The Form component emits `getFormApi` after it mounts. You can save a reference to formApi in the callback function for subsequent calls (example code below) In addition, we provide other ways to get formApi, and you can choose different ways of calling according to your preference.
+- Use a template ref to get the form instance，you can access its formApi
+- Via the [default scoped slot](#Other%20declaration%20methods), formApi will injected as a parameter
+- Via [useFormApi](#useFormApi) for children component of Form
+
+</Framework>
+
+<Framework only="solid">
+
+- Use `Form.useForm()` to create formApi outside Form, then pass it via the `form` property to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
+- After the Form component mounts, it calls the `getFormApi` callback passed in props. You can save a reference to formApi in the callback function for subsequent calls (example code below) In addition, we provide other ways to get formApi, and you can choose different ways of calling
+- Use the `ref` callback to get the form element, you can access its formApi
+- Via the [child render function](#Other%20declaration%20methods), formApi will injected as a parameter
+- Via the [render props](#Other%20declaration%20methods), formApi will injected as a parameter
+- Via [useFormApi](#useFormApi) for children component of Form
+
+</Framework>
+
+<Framework only="react">
+
+#### Using Form.useForm()
+
+`Form.useForm()` is used to **create** a formApi instance **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an array `[formApi, formState, formValues]`.
+
+<Notice type="primary" title="Difference between Form.useForm() and useFormApi">
+
+- **Form.useForm()**: Creates formApi **outside** Form, needs to be passed to Form via props.form. Used for parent components controlling child Form.
+- **useFormApi**: Gets formApi **inside** Form, used for child components of Form to access the parent Form. See [useFormApi](#useFormApi).
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+#### useForm
+
+`useForm()` is used to **create** a formApi **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an object `{ formApi, formState, values }`: `formState` is a read-only `shallowRef` and `values` is a `computed`, both updated once the Form binds the formApi through its `form` property.
+
+<Notice type="primary" title="Difference between useForm() and useFormApi">
+
+- **useForm()**: Creates formApi **outside** Form, needs to be passed to Form via the `form` property. Used for parent components controlling child Form.
+- **useFormApi**: Gets formApi **inside** Form, used for child components of Form to access the parent Form. See [useFormApi](#useFormApi).
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+#### Using Form.useForm()
+
+`Form.useForm()` (also available as the `useForm` import) is used to **create** a formApi **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an array `[formApi, formState, formValues]`: `formState` and `formValues` are accessors that follow the form once bound through the `form` property of Form, read through `formState()` and `formValues()`.
+
+<Notice type="primary" title="Difference between Form.useForm() and useFormApi">
+
+- **Form.useForm()**: Creates formApi **outside** Form, needs to be passed to Form via props.form. Used for parent components controlling child Form.
+- **useFormApi**: Gets formApi **inside** Form, used for child components of Form to access the parent Form. See [useFormApi](#useFormApi).
+
+</Notice>
+
+</Framework>
+
+Usage example:
+
+<Demo id="use-form" />
+
+<Framework only="react">
+
+<Notice type="primary" title="Notice">
+
+When using formApi created by `Form.useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="Notice">
+
+When using formApi created by `useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="Notice">
+
+When using formApi created by `Form.useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
+
+</Notice>
+
+</Framework>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Form, Button } from '@fibrae/semi-ui-react';
+
+class FormApiDemo extends React.Component {
+    constructor() {
+        super();
+        this.getFormApi = this.getFormApi.bind(this);
+        this.formBRef = React.createRef();
+    }
+    getFormApi(formApi) {
+        this.formApi = formApi;
+        // After getting the formApi object, you can use it to make any changes you want to the form
+    }
+
+    changeValues() {
+        // use formApi to update formA
+        this.formApi.setValues({ a: 1 });
+        // use formApi to update formB
+        this.formBRef.current.formApi.setValues({ b: 2 });
+    }
+
+    render() {
+        return (
+            <>
+                <Form getFormApi={this.getFormApi} />
+                <Form ref={this.formBRef} />
+                <Button onClick={() => this.changeValues()}>Change</Button>
+            </>
+        );
+    }
+}
+```
+
+```jsx
+import React from 'react';
+import { Form, Button } from '@fibrae/semi-ui-react';
+
+() => {
+    // functional compoentn usage
+    const api = useRef();
+
+    return (
+        <>
+            <Form getFormApi={(formApi) => (api.current = formApi)}>
+                <Form.Input field="a" />
+                <Button
+                    onClick={() => {
+                        console.log(api);
+                    }}
+                >
+                    log
+                </Button>
+            </Form>
+        </>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Button, Form } from '@fibrae/semi-ui-vue';
+    import type { FormApi, FormHandle } from '@fibrae/semi-ui-vue';
+
+    let formApiA: FormApi | undefined;
+    const formB = useTemplateRef<FormHandle>('formB');
+
+    const changeValues = () => {
+        // use formApi to update formA. After getting the formApi object, you can use it to make any changes you want to the form
+        formApiA?.setValues({ a: 1 });
+        // use formApi to update formB
+        formB.value?.formApi.setValues({ b: 2 });
+    };
+</script>
+
+<template>
+    <!-- save the formApi from the getFormApi event -->
+    <Form @getFormApi="(formApi) => (formApiA = formApi)" />
+    <!-- read the formApi of the Form instance through a template ref -->
+    <Form ref="formB" />
+    <Button @click="changeValues">Change</Button>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Form, FormInput } from '@fibrae/semi-ui-solid';
+
+function FormApiDemo() {
+    let formApiA;
+    let formB;
+
+    const changeValues = () => {
+        // use formApi to update formA. After getting the formApi object, you can use it to make any changes you want to the form
+        formApiA?.setValues({ a: 1 });
+        // use formApi to update formB
+        formB?.formApi.setValues({ b: 2 });
+    };
+
+    return (
+        <>
+            {/* save the formApi from the getFormApi callback */}
+            <Form getFormApi={(formApi) => (formApiA = formApi)}>
+                <FormInput field="a" />
+            </Form>
+            {/* read the formApi from the form element received by ref */}
+            <Form ref={(node) => (formB = node)}>
+                <FormInput field="b" />
+            </Form>
+            <Button onClick={changeValues}>Change</Button>
+        </>
+    );
+}
+```
+
+</Framework>
+
+## Field Props
+
+<Framework only="react">
+
+<Notice type="primary" title="About Field ref">
+    The underlying component instance can be obtained directly through ref, such as specifying ref to Form.Input and Form.Select, and directly obtaining the ref reference of the underlying original Input and Select components
+</Notice>
+
+| Properties | Description | Type | Default | Examples |
+| --- | --- | --- | --- | --- |
+| field | The mapping path of the field's value in formState.values. Form will use this value to distinguish the internal form control. <br/> **Required!!!** | string |  |  |
+| label | The label text for this field. When not passed, it defaults to the same name as field | string |  |  |
+| labelPosition | Label position of this field, optional 'top' / 'left' / 'inset' | string |  |  |
+| labelAlign | Text-align of the label text of this field | string |  |  |
+| labelWidth | The width of the label text of this field | string\|number |  |  |
+| labelCol | Grid layout of the label of this field, with [Col component](/en-US/react/basic/grid#Col). It overrides the same property of Form. When it is set together with wrapperCol while the Form does not set both, the Field wraps itself in a Row | object |  |  |
+| wrapperCol | Grid layout of the control of this field, with [Col component](/en-US/react/basic/grid#Col). It overrides the same property of Form. Used the same way as labelCol | object |  |  |
+| noLabel | When you don't need to add label automatically, you can set this value to true | boolean |  |  |
+| noErrorMessage | When you don't need to add the ErrorMessage module automatically, you can set this value to true. Note that helpText is not shown either | boolean |  |  |
+| name | Field name. When passed in, the corresponding className will be automatically added to the field wrapper div, such as: money => '.semi-form-field-money'. The name will also be transparently transmitted to the underlying component for consumption. For example, you can configure the name attribute of input | string |  |  |
+| fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | string |  |  |
+| fieldStyle | The inline style of the entire fieldWrapper | object |  |  |
+| initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | any(type depends on current component) |  |  |
+| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation. <br/>Rules does not take effect when validator is set | function(fieldValue, values) |  | (fieldValue) => fieldValue.length>5? 'error balabala': '' |
+| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator) | array |  | const rules = \[\{type:' string ', message:' invalidate string'\} \] |
+| validateStatus | The validation result status of this form control, optional: `success` / `error` / `warning` / `default` | string | 'default' |  |
+| trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount` <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | 'blur' \| 'change' \| 'custom' \| 'mount', or an array of them | 'change' |  |
+| onChange | Callback invoked when this field value changes. The last parameter of the callback is the latest form values `latestValues`, which can be used to solve the React closure trap problem.<br/>Usage example: `onChange={(value, e, ...other) => { const latestValues = other[other.length - 1]; }}` | function(fieldValue: any \| ev: \{ target: \{ value: any \}\}, ...args: any[], latestValues?: object) <br/>(see each component's onChange method) |  |  |
+| onBlur | Callback invoked when the control loses focus | function() (see each component's onBlur method) |  |  |
+| transform | transform field values before validation | function(fieldValue) |  | (value) => Number(value) |
+| allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | boolean |  | false |
+| allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | boolean |  | false |
+| emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | any | '' |  |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | boolean |  | false |
+| convert | After the field value changes, before rerender, update the value of filed | function(fieldValue) |  | (value) => newValue |
+| stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | boolean |  | false |
+| helpText | Custom prompt information, which is displayed in the same block as the verification information. When both have values, the verification information is displayed first | ReactNode |  |  |
+| extraText | Additional prompt information, you can use this when both error information and prompt copy are required, after helpText/errorMessage | ReactNode |  |  |
+| pure | Whether to only take over the data stream, when true, it will not automatically insert modules such as ErrorMessage, Label, extraText, etc. The style and DOM structure are consistent with the original components | boolean | false |  |
+| extraTextPosition | controls the display position of extraText. Middle (the vertical direction is displayed in the order of Label, extraText, and Field), bottom (the vertical direction is displayed in the order of Label, Field, and extraText) | string | 'bottom' |  |
+| ...other | The other configurable properties of the component can be passed in together with the above properties, such as the size / placeholder of Input，**Field passes it to the component itself** |  |  |  |
+
+</Framework>
+
+<Framework only="vue">
+
+A Field is a component made by withField, not a single-file component. The template ref of a field is `{ control }` (type `FieldHandle`), where `control` is the handle of the wrapped component itself. For example, the `control` of `FormInput` can call the `focus` of Input.
+
+**Props**
+
+| Properties | Description | Type | Default |
+| --- | --- | --- | --- |
+| convert | After the field value changes, before it is stored in formState and shown, update the value of the field | `(fieldValue) => any` |  |
+| field | The mapping path of the field's value in formState.values. Form will use this value to distinguish the internal form control. <br/> **Required!!!** (except a FormCheckbox or FormRadio inside its group) | `string` |  |
+| label | The label text for this field. When not passed, it defaults to the same name as field. An object can set `text`, `extra`, `required`, `optional`, `align`, `width` and `disabled`; its `text` and `extra` take strings or numbers only. The `#fieldLabel` and `#labelExtra` slots take precedence | `string \| number \| FieldLabel` |  |
+| labelPosition | Label position of this field. When passed on both Form and Field, the Field props prevail | `'top' \| 'left' \| 'inset'` |  |
+| labelAlign | Text-align of the label text of this field. When passed on both Form and Field, the Field props prevail | `'left' \| 'right'` |  |
+| labelWidth | The width of the label text of this field, a number is in px. When passed on both Form and Field, the Field props prevail | `string \| number` |  |
+| labelCol | Grid layout of the label of this field, with [Col component](/en-US/react/basic/grid#Col). It overrides the same property of Form. When it is set together with wrapperCol while the Form does not set both, the Field wraps itself in a Row | `ColProps` |  |
+| wrapperCol | Grid layout of the control of this field, with [Col component](/en-US/react/basic/grid#Col). It overrides the same property of Form. Used the same way as labelCol | `ColProps` |  |
+| noLabel | When you don't need to add label automatically, you can set this value to true | `boolean` |  |
+| noErrorMessage | When you don't need to add the ErrorMessage module automatically, you can set this value to true. Note that helpText is not shown either | `boolean` |  |
+| name | Field name. When passed in, the corresponding className will be automatically added to the field wrapper div, such as: money => '.semi-form-field-money'. It is also passed to the underlying component, for example to configure the name attribute of input | `string` |  |
+| id | The id of the control, generated when omitted. The `for` of the label and the ids of the label, helpText, extraText and errormessage are derived from it | `string` |  |
+| fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | `string` |  |
+| fieldStyle | The inline style of the entire fieldWrapper | `StyleValue` |  |
+| initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | `unknown` (type depends on current component) |  |
+| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation (by returning a promise). An empty string or `undefined` means valid; any other result is the error, which is data only. Use the `#error` slot to render an error differently. Rules does not take effect when validator is set | `(fieldValue, values) => string \| string[] \| boolean \| undefined \| Promise` |  |
+| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator); `message` takes strings only | `RuleItem[]` |  |
+| validateStatus | The validation result status of this form control, which only affects the style, optional: `success` / `error` / `warning` / `default`. When omitted, the Field's own validation status is used | `string` |  |
+| trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount`, or an array of them <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | `FieldValidateTriggerType` | `'change'` |
+| transform | transform field values before validation. The transformed value is only used for validation and does not affect formState | `(fieldValue) => any` |  |
+| allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | `boolean` | `false` |
+| allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | `boolean` | `false` |
+| emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | `unknown` | `''` |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | `boolean` | `false` |
+| stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | `boolean` | `false` |
+| pure | Whether to only take over the data stream, when true, it will not automatically insert modules such as ErrorMessage, Label, extraText, etc. The style and DOM structure are consistent with the original components | `boolean` | `false` |
+| extraTextPosition | controls the display position of extraText. Middle (the vertical direction is displayed in the order of Label, extraText, and Field), bottom (the vertical direction is displayed in the order of Label, Field, and extraText); when passed on both Form and Field, the Field props prevail | `'middle' \| 'bottom'` | `'bottom'` |
+
+A Field does not declare `disabled`, `helpText` or `extraText`: `disabled` takes the value of the Form and a `disabled` written on the Field wins; use the slots below for prompt information. The other properties of the component (such as `size` and `placeholder` of Input), together with `class`, `style` and `aria-*`, are written on the Field as well, and **Field passes them to the wrapped component itself**, not to the fieldWrapper.
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| change | Emitted when the value changes (the event specified by `onKeyChangeFnName`, when it is another one). The parameters are those of the event of the wrapped component, followed by the latest form values `latestValues`, which avoid reading a stale value from a closure; a FormCheckbox or FormRadio without `field` is a plain control and has no `latestValues`. It has the name of the native change event and hides it; the `.once` modifier is not supported and the event does not show in the Devtools event panel. The other events of the wrapped component (such as `select` and `focus`) are passed to it as they are and can be listened to directly | The parameters of the event of the wrapped component, `latestValues` |
+
+**Slots**
+
+| Slot       | Description                                                                                                                                                                  | Scope parameters                 |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| fieldLabel | Content of the label. It takes precedence over the text in the label property                                                                                                |                                  |
+| labelExtra | Content after the label text. It takes precedence over the `extra` in the label object                                                                                       |                                  |
+| helpText   | Custom prompt information, which is displayed in the same block as the verification information. When both have values, the verification information is displayed first      |                                  |
+| extraText  | Additional prompt information, you can use this when both error information and prompt copy are required, after helpText/errorMessage                                        |                                  |
+| error      | Custom rendering of the error                                                                                                                                                | `{ error }`                      |
+| Others     | The other slots (including `#default` and `#label`) are passed to the wrapped component as they are, such as the options of FormSelect and the `#label` of FormCheckboxGroup | Decided by the wrapped component |
+
+</Framework>
+
+<Framework only="solid">
+
+A Field is a component made by withField; the table below lists its own properties.
+
+| Properties | Description | Type | Default |
+| --- | --- | --- | --- |
+| convert | After the field value changes, before it is stored in formState and shown, update the value of the field | `(fieldValue) => any` |  |
+| field | The mapping path of the field's value in formState.values. Form will use this value to distinguish the internal form control. <br/> **Required!!!** (except a FormCheckbox or FormRadio inside its group) | `string` |  |
+| label | The label text for this field. When not passed, it defaults to the same name as field. An object is passed to Form.Label as its properties and can set `text`, `extra`, `required`, `optional`, `align`, `width` and `disabled`, see [Label](#Form.Label). `text` and `extra` can be JSX | `LabelProps \| JSX.Element` |  |
+| labelPosition | Label position of this field. When passed on both Form and Field, the Field props prevail | `'top' \| 'left' \| 'inset'` |  |
+| labelAlign | Text-align of the label text of this field. When passed on both Form and Field, the Field props prevail | `'left' \| 'right'` |  |
+| labelWidth | The width of the label text of this field, a number is in px. When passed on both Form and Field, the Field props prevail | `string \| number` |  |
+| labelCol | Grid layout of the label of this field, with [Col component](/en-US/react/basic/grid#Col). It overrides the same property of Form. When it is set together with wrapperCol while the Form does not set both, the Field wraps itself in a Row | `ColProps` |  |
+| wrapperCol | Grid layout of the control of this field, with [Col component](/en-US/react/basic/grid#Col). It overrides the same property of Form. Used the same way as labelCol | `ColProps` |  |
+| noLabel | When you don't need to add label automatically, you can set this value to true | `boolean` |  |
+| noErrorMessage | When you don't need to add the ErrorMessage module automatically, you can set this value to true. Note that helpText is not shown either | `boolean` |  |
+| name | Field name. When passed in, the corresponding className will be automatically added to the field wrapper div, such as: money => '.semi-form-field-money'. It is also passed to the underlying component, for example to configure the name attribute of an input | `string` |  |
+| id | The id of the control, generated when omitted. The `for` of the label and the ids of the label, helpText, extraText and errormessage are derived from it | `string` |  |
+| fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | `string` |  |
+| fieldStyle | The inline style of the entire fieldWrapper | `JSX.CSSProperties \| string` |  |
+| initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | `any` (type depends on current component) |  |
+| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation (by returning a promise). An empty string or `undefined` means valid; any other result (a string, JSX or an array) is the error. When validator is set, rules will not take effect | `(fieldValue, values) => FieldValidateResult \| Promise<FieldValidateResult>` |  |
+| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator) | `RuleItem[]` |  |
+| validateStatus | The validation result status of this form control, which only affects the style, optional: `success` / `error` / `warning` / `default`. When omitted, the Field's own validation status is used | `string` |  |
+| trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount`, or an array of them <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | `FieldValidateTriggerType` | `'change'` |
+| onChange | Callback when the value changes. The parameters are those of the callback of the wrapped component, followed by the latest form values `latestValues`; a FormCheckbox or FormRadio without `field` is a plain control and has no `latestValues` (see the onChange of each component) | `(...args, latestValues) => void` |  |
+| onBlur | Callback when the field loses focus (see the onBlur of each component) | `(...args) => void` |  |
+| transform | transform field values before validation. The transformed value is only used for validation and does not affect formState | `(fieldValue) => any` |  |
+| allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | `boolean` | `false` |
+| allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | `boolean` | `false` |
+| emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | `unknown` | `''` |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | `boolean` | `false` |
+| stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | `boolean` | `false` |
+| helpText | Custom prompt information, which is displayed in the same block as the verification information. When both have values, the verification information is displayed first | `JSX.Element` |  |
+| extraText | Additional prompt information, you can use this when both error information and prompt copy are required, after helpText/errorMessage | `JSX.Element` |  |
+| pure | Whether to only take over the data stream, when true, it will not automatically insert modules such as ErrorMessage, Label, extraText, etc. The style and DOM structure are consistent with the original components | `boolean` | `false` |
+| extraTextPosition | controls the display position of extraText. Middle (the vertical direction is displayed in the order of Label, extraText, and Field), bottom (the vertical direction is displayed in the order of Label, Field, and extraText); when passed on both Form and Field, the Field props prevail | `'middle' \| 'bottom'` | `'bottom'` |
+| ...other | Other configurable properties of the component, passed in together with the above properties, such as `size` and `placeholder` of Input. **The Field passes them, together with `class`, `style`, `ref` and `aria-*`, to the wrapped component itself**, not to the fieldWrapper |  |  |
+
+`disabled` takes the value of the Form and a `disabled` written on the Field wins.
+
+</Framework>
+
+## Field Api
+
+We also provide `fieldApi`, most of which is similar to `formApi`, with the difference that fieldApi limits the scope of modification, and it can only modify the bound field. Get it through [useFieldApi](#useFieldApi)
+
+| Function   | Instructions                                      | example                                    |
+| ---------- | ------------------------------------------------- | ------------------------------------------ |
+| setValue   | Modify the value of the current Field             | fieldApi.setValue(newValue: any)           |
+| getValue   | Gets the value of the current Field               | fieldApi.getValue()                        |
+| setTouched | Modify the touched state of the current Field     | fieldApi.setTouched(true)                  |
+| getTouched | Get the touched state of the current Field        | fieldApi.getTouched()                      |
+| setError   | Modify the error information of the current Field | fieldApi.setError(newErrorMessage: string) |
+| getError   | Gets field's error status                         | fieldApi.getError()                        |
+
+<Framework only="react">
+
+## ArrayField
+
+For dynamically added and deleted array form items, we provide the ArrayField scope to simplify add/remove operations
+
+<ArrayFieldReactApi />
+
+ArrayField has no DOM of its own, so undeclared attributes are dropped.
+
+```ts
+interface ArrayFieldChildrenProps {
+    arrayFields: ArrayFieldItem<>;                               // The current array form, which can be used to perform map operations to render each row
+    add: (index?: number | React.MouseEvent) => void;                         // Add a blank line; a number inserts it at that position, an event is ignored so it can be used as onClick
+    addWithInitValue: (lineObject: Record<string, any>, index?: number) => void; // Add a new row with an initial value, index is the insert position
+}
+
+interface ArrayFieldItem {
+    key: string;        // A key used to identify the current row, which should be bound to the wrapper of the current row
+    field: string;      // This row fieldPath, which is equivalent to ArrayFieldProps.field + [index]
+    remove: () => void; // Remove operation function of this line, when called, this line will be deleted directly
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+## ArrayField
+
+For dynamically added and deleted array form items, we provide the ArrayField scope to simplify adding and removing rows
+
+<ArrayFieldVueApi />
+
+ArrayField has no DOM of its own, so undeclared attributes are dropped. The scope of the default slot has this type:
+
+```ts
+interface ArrayFieldSlotProps {
+    arrayFields: ArrayFieldItem[]; // The current array form, which can be used to render each row with v-for
+    onAdd: (index?: number | Event) => void; // Add a blank line; a number inserts it at that position, an event is ignored so it can be written as @click="onAdd"
+    onAddWithInitValue: (row: unknown, index?: number) => void; // Add a new row with an initial value, index is the insert position
+}
+
+interface ArrayFieldItem {
+    key: string; // A key used to identify the current row, which should be bound to the wrapper of the current row
+    field: string; // This row fieldPath, which is equivalent to the field of ArrayField + [index]
+    onRemove: () => void; // Remove operation function of this line, when called, this line will be deleted directly
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+## ArrayField
+
+For dynamically added and deleted array form items, we provide the ArrayField scope to simplify adding and removing rows
+
+```jsx
+import { ArrayField } from '@fibrae/semi-ui-solid';
+```
+
+<ArrayFieldSolidApi />
+
+ArrayField has no DOM of its own, so undeclared attributes are dropped. The argument of the children function has this type:
+
+```ts
+interface ArrayFieldChildrenProps {
+    readonly arrayFields: ArrayFieldRow[]; // The current array form, which can be used to render each row
+    add: (index?: number | MouseEvent) => void; // Add a blank line; a number inserts it at that position, an event is ignored so it can be used directly as onClick
+    addWithInitValue: (lineObject: Record<string, any> | string, index?: number) => void; // Add a new row with an initial value, index is the insert position
+}
+
+interface ArrayFieldRow {
+    key: string; // A key used to identify the current row
+    readonly field: string; // This row fieldPath, which is equivalent to the field of ArrayField + [index], and follows the rows added or removed before it
+    remove: () => void; // Remove operation function of this line, when called, this line will be deleted directly
+}
+```
+
+</Framework>
+
+<Framework only="react">
+
+## Form.Section
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Section } = Form;
+```
+
+<FormSectionReactApi />
+
+Native attributes such as `aria-*` land on the `section` element.
+
+</Framework>
+
+<Framework only="vue">
+
+## FormSection
+
+```ts
+import { FormSection } from '@fibrae/semi-ui-vue';
+```
+
+<FormSectionVueApi />
+
+`class`, `style` and native attributes fall through attrs to the `section` element.
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.Section
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Section } = Form;
+```
+
+<FormSectionSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the `section` element.
+
+</Framework>
+
+<Framework only="react">
+
+## Form.Label
+
+By default, `Label` is self-inserted into each `Field` by `Form`.  
+If you need to self-insert Label elsewhere, we have provided the `Label` component for you.
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Label } = Form;
+```
+
+<FormLabelReactApi />
+
+Native attributes such as `htmlFor` and `aria-*` land on the `label` element. When both `name` and `htmlFor` are passed, `name` wins.
+
+</Framework>
+
+<Framework only="vue">
+
+## FormLabel
+
+By default, `Label` is self-inserted into each `Field` by `Form`.  
+If you need to self-insert Label elsewhere, we have provided the `FormLabel` component for you.
+
+```ts
+import { FormLabel } from '@fibrae/semi-ui-vue';
+```
+
+<FormLabelVueApi />
+
+`class`, `style` and native attributes fall through attrs to the `label` element.
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.Label
+
+By default, `Label` is self-inserted into each `Field` by `Form`.  
+If you need to self-insert Label elsewhere, we have provided the `Label` component for you.
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Label } = Form;
+```
+
+<FormLabelSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the `label` element.
+
+</Framework>
+
+<Framework only="react">
+
+## Form.InputGroup
+
+<FormInputGroupReactApi />
+
+`className`, `style` and `ref` land on the `role="group"` element of the InputGroup inside. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group and passed to every field in it, the caller's first. The outer element has `role="group"` when a label is set. Form.InputGroup works only inside a Form; outside one it renders nothing and logs a warning.
+
+When extraTextPositon is middle and labelPosition is left. Since extraText is allowed to be ReactNode, the height of the content is variable, and the Label will no longer ensure that it can be aligned with the first line of text in the Field / InputGroup.
+
+</Framework>
+
+<Framework only="vue">
+
+## FormInputGroup
+
+```ts
+import { FormInputGroup } from '@fibrae/semi-ui-vue';
+```
+
+<FormInputGroupVueApi />
+
+`class`, `style` and native attributes (such as `size`) fall through attrs to the inner InputGroup and are passed to every field in the group. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group, the caller's first. The outer element has `role="group"` when a label is set, and has none without a label.
+
+When extraTextPosition is middle and labelPosition is left. Since the content of `#extraText` has a variable height, the Label will no longer ensure that it can be aligned with the first line of text in the Field / FormInputGroup.
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.InputGroup
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { InputGroup } = Form;
+```
+
+<FormInputGroupSolidApi />
+
+`class`, `style` and `ref` land on the `role="group"` element of the inner InputGroup, and the other native attributes (such as `aria-*`) are passed to every field in the group. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group, the caller's first. The outer element has `role="group"` when a label is set, and has none without a label. Form.InputGroup works inside a Form only; outside one it renders nothing and logs a warning.
+
+When extraTextPosition is middle and labelPosition is left. Since the content of extraText has a variable height, the Label will no longer ensure that it can be aligned with the first line of text in the Field / InputGroup.
+
+</Framework>
+
+<Framework only="react">
+
+## Form.Slot
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Slot } = Form;
+```
+
+<FormSlotReactApi />
+
+Native attributes such as `aria-*` land on the root div. The root has `role="group"` when there is a label or `aria-label` or `aria-labelledby` is passed, and a `role` passed by the caller takes precedence. The width and alignment of the label come from the Form's `labelWidth` and `labelAlign`; `width` and `align` in the label object take precedence.
+
+</Framework>
+
+<Framework only="vue">
+
+## FormSlot
+
+```ts
+import { FormSlot } from '@fibrae/semi-ui-vue';
+```
+
+<FormSlotVueApi />
+
+`class`, `style` and native attributes fall through attrs to the root element. The root element has `role="group"` when `aria-label` or `aria-labelledby` is passed, and a `role` passed by the caller wins. The label width and alignment come from `labelWidth` and `labelAlign` of the Form, and `width` and `align` in the label object win.
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.Slot
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Slot } = Form;
+```
+
+<FormSlotSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root element. The root element has `role="group"` when a label is set or `aria-label` or `aria-labelledby` is passed, and a `role` passed by the caller wins. The label width and alignment come from `labelWidth` and `labelAlign` of the Form, and `width` and `align` in the label object win.
+
+</Framework>
+
+<Framework only="react">
+
+## Form.ErrorMessage
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { ErrorMessage } = Form;
+```
+
+- When the error is React Node or String, render directly; when it is true, only the error container is rendered, without text; when it is false, nothing is rendered
+- When the error is an array, the join operation is automatically performed to aggregate the error information in the array
+
+<FormErrorMessageReactApi />
+
+Native attributes such as `aria-*` land on the root div.
+
+</Framework>
+
+<Framework only="vue">
+
+## FormErrorMessage
+
+```ts
+import { FormErrorMessage } from '@fibrae/semi-ui-vue';
+```
+
+- When the error is a string, render directly; when it is true, only the error container is rendered, without text; when it is false, nothing is rendered
+- When the error is an array, the join operation is automatically performed to aggregate the error information in the array. An error is data only; use the `#error` slot to render it differently
+
+<FormErrorMessageVueApi />
+
+`class`, `style` and native attributes fall through attrs to the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.ErrorMessage
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { ErrorMessage } = Form;
+```
+
+- When the error is a string or JSX, render directly; when it is true, only the error container is rendered, without text; when it is false, nothing is rendered
+- When the error is an array, the errors in the array are aggregated and joined with commas
+
+<FormErrorMessageSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root element.
+
+</Framework>
+
+<Framework only="react">
+
+## withFieldOption
+
+| key | Description | Default |
+| --- | --- | --- |
+| valueKey | The component represents the property of the value, such as Switch, Radio is' checked 'and Input is' value ' | 'value' |
+| onKeyChangeFnName | The callback function when the component value changes, generally 'onChange' | 'onChange' |
+| valuePath | The path of the value attribute to the first parameter in the callback function, such as Radio's onChange (e.target. checked), then the value needs to be set to target .checked; Radio Group's onChange (e.target. value), which is' target .value '; if the first parameter is the value itself, there is no need to take the value down, the item does not need to be set |  |
+
+</Framework>
+
+<Framework only="vue">
+
+## withFieldOptions
+
+| key               | Description                                                                                                                                                                                                                                                                  | Default      |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| valueKey          | The property of the component that represents the value, such as `modelValue` of a custom component and `value` of the native `input` tag                                                                                                                                    | 'modelValue' |
+| onKeyChangeFnName | The name of the event the component emits when its value changes, such as `change` and `input`. A listener of this event on the Field receives `latestValues` after the original arguments                                                                                   | 'change'     |
+| valuePath         | The path of the value in the first argument of the event, such as `target.checked` of Checkbox, `target.value` of RadioGroup and of the native `input`; if the first argument is the value itself, there is no need to take the value down, the item does not need to be set | ''           |
+| shouldInject      | When false, a component without `field` is rendered as it is and not taken over by the Form, such as a FormCheckbox or FormRadio inside its group; when true and there is no `field`, a warning is logged in development mode                                                | true         |
+
+</Framework>
+
+<Framework only="solid">
+
+## withFieldOption
+
+| key               | Description                                                                                                                                                                                                                                                     | Default    |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| valueKey          | The property of the component that represents the value, such as `checked` of Switch and `value` of Input                                                                                                                                                       | 'value'    |
+| onKeyChangeFnName | The name of the callback property the component calls when its value changes, generally `onChange`; use `onInput` for a native `input` that should sync while typing                                                                                            | 'onChange' |
+| valuePath         | The path of the value in the first argument of the callback, such as `target.value` of RadioGroup and of the native `input`; if the first argument is the value itself, as in Switch, there is no need to take the value down, the item does not need to be set | ''         |
+| shouldInject      | When false, a component without `field` is rendered as it is and not taken over by the Form, such as a FormCheckbox or FormRadio inside its group; when true and there is no `field`, a warning is logged in development mode                                   | true       |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- [aria-labelledby](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-labelledby)、for
+    - Field component will automatically add label DOM. The id of the control is `props.id`, generated when omitted; the for attribute of label is the same as this id; the `id` attribute of label is `${control id}-label`;
+    - When the props.labelPosition of the Form or Field is set to `inset`, there is no label tag at this time, but a div tag. The div tag corresponding to insetLabel will be automatically appended with `id`, the value is the same as the id of the above label, corresponding to the `aria-labelledby` of the Field component. A field that does not support the inset label is laid out as `top`, and its `aria-labelledby` points to the label actually rendered
+    - The Field component will be automatically appended with `aria-labelledby`, the value is the same as the id of the above label; the `aria-labelledby` passed by the caller comes first and the two are merged instead of overwritten
+- [aria-required](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-required_attribute)
+    - When the Field is configured with required fields (that is, props.rules contains require: true or props.label is configured with required: true without optional: true), the Field component will be automatically appended with `aria-required = true` (except CheckboxGroup, Slider, Upload and a single Radio); an aria-required passed on the Field takes precedence
+- [aria-invalid](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-invalid_attribute) 、[aria-errormessage](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-errormessage)
+    - When the Field check fails, or validateStatus is error, the Field component will be automatically added with the `aria-invalid` = true attribute.
+    - When the Field check fails, the Field component will be automatically appended with the `aria-errormessage` attribute, the value of which is the id of the DOM element corresponding to the errorMessage (format like: `${control id}-errormessage`); for CheckboxGroup it is set on every checkbox in the group.
+- [aria-describedby](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute)
+    - When the Field is configured with `helpText` or `extraText`, the Field component will be automatically added with the `aria-describedby` attribute, whose value is the id of the DOM element corresponding to helpText and extraText (format like: `${control id}-helpText` , `${control id}-extraText`); the `aria-describedby` passed by the caller comes first and the two are merged instead of overwritten
+
+## Content Guidelines
+
+- Form title
+    - The title of the form needs to follow the writing specification of the title
+- Form label
+    - The label is a short description of the input box. The label is not a help text, so it should not be a description of the input
+    - Labels must:
+        - Place it above or below the input box
+        - Short (1-3 words)
+        - Use case conventions for statements (first letter uppercase, others lowercase)
+- Help text
+    - Help text use statement writing conventions, capitalized
+- Form button
+    - For the content Guidelines of the form button, refer to [Button component](/en-US/react/basic/button)
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Why did I declare the form, modify the value, and the data is not automatically mapped to formState.values?**  
+  Check that the field has been passed correctly, and the `field` attribute on the Field component is a must-fill property !
+
+- **Why doesn't the passed `defaultValue` or `defaultChecked` take effect?**  
+  Refer to the beginning of the document [Field](#Field). The Field component unifies the default value. You should pass the default value using `initValue` or `initValues`
+
+- **Why did the component not change and the value not take effect after `initValue` and `initValues` were updated asynchronously?**  
+  `initValue`, `initValues` are only consumed once when Field and Form mount, and subsequent asynchronous updates will not take effect.  
+  If your initial value needs to be taken remotely, you can update it using `formApi.setValue / setValues` after you get the value  
+  Or send a new `key` directly to Form or Field to force it to remount.
+
+- **Why can't getValues get a certain field?**
+
+    If the field has no initial value, `getValues` cannot get this item. You can set `initValues`/`initValue` or set the `allowEmpty` attribute to the form.
+
+- **Why does hitting enter on the input box trigger the form's submit?**
+
+    This is standard HTML behavior. We do not plan to intervene and we will remain the same as the HTML. If there is really only one input element in the form, and you don't want to trigger the submit callback when you press Enter, it is recommended to use preventDefault for the enter of the keydown event of input to prevent the default behavior.
+
+    Click <a href="https://github.com/DouyinFE/semi-design/issues/767" target="_blank">#767</a> for background and content.
+
+- **The form will automatically save the historical input items, what should I do if I don't want this function?**  
+  Before v2.3, Form did not configure `for`, `name`, `id` and other attributes for input controls strictly according to the A11y accessibility standard, so this function was not available in previous versions. After v2.3, we implemented it strictly according to the W3C standard. If you don't want the browser to automatically save history input items, you can also turn it off by setting `autoComplete=off` at the Form level or Field level

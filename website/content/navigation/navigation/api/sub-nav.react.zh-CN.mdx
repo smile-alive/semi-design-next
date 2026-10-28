@@ -1,0 +1,25 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                                                                 | 类型                                                                           | 默认值 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------ |
+| children         | 子导航的子元素，如 `Nav.Item`，渲染在展开的列表中。                                                                                  | `ReactNode`                                                                    | -      |
+| className        | 不生效，子导航外层的类名由组件固定。                                                                                                 | `string`                                                                       | -      |
+| disabled         | 是否禁用。默认为 `false`。                                                                                                           | `boolean`                                                                      | -      |
+| dropdownProps    | 弹层 Dropdown 的参数，水平模式与收起状态下使用，优先于 `subDropdownProps`。                                                          | `DropdownProps`                                                                | -      |
+| dropdownStyle    | 弹层的样式，优先于 `dropdownProps` 中的 `style`。                                                                                    | `React.CSSProperties`                                                          | -      |
+| expandIcon       | 展开收起箭头图标，未设置时使用默认箭头。                                                                                             | `React.ReactNode`                                                              | -      |
+| icon             | 子导航图标。                                                                                                                         | `React.ReactNode`                                                              | -      |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。默认为 `false`。                                                                     | `boolean \| number`                                                            | -      |
+| isCollapsed      | 不生效，收起状态由 `Nav` 的 `isCollapsed` 决定。                                                                                     | `boolean`                                                                      | -      |
+| isOpen           | 不生效，展开状态由 `Nav` 的 `openKeys` 与 `defaultOpenKeys` 决定。                                                                   | `boolean`                                                                      | -      |
+| itemKey          | 子导航的唯一标识，`openKeys` 与 `selectedKeys` 通过它匹配子导航。                                                                    | `string \| number`                                                             | -      |
+| level            | 当前项所在的嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 `Nav.Sub` 需要自己传入。默认为 `0`。 | `number`                                                                       | -      |
+| maxHeight        | 不生效。                                                                                                                             | `number`                                                                       | -      |
+| onMouseEnter     | 鼠标移入子导航时调用，事件落在 `li` 上。                                                                                             | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -      |
+| onMouseLeave     | 鼠标移出子导航时调用，事件落在 `li` 上。                                                                                             | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -      |
+| ref              | 子导航外层 `li` 元素的引用。                                                                                                         | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType>               | -      |
+| style            | 子导航最外层 `li` 的样式。                                                                                                           | `CSSProperties`                                                                | -      |
+| subDropdownProps | 弹层 Dropdown 的参数，未传 `dropdownProps` 时使用。                                                                                  | `DropdownProps`                                                                | -      |
+| text             | 子导航标题文案，可以是字符串或节点。                                                                                                 | `React.ReactNode`                                                              | -      |

@@ -1,0 +1,55 @@
+{
+    "steps": {
+        "source": "packages/semi-ui-solid/src/steps/steps.tsx",
+        "props": {
+            "type": {
+                "zh-CN": "步骤条类型，可选 fill、basic、nav。",
+                "en-US": "Steps type: fill, basic or nav."
+            },
+            "current": {
+                "zh-CN": "当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。",
+                "en-US": "Current step, counting from 0; a child Step can override the state with status."
+            },
+            "initial": { "zh-CN": "起始序号，从 0 开始计数。", "en-US": "Starting index, counting from 0." },
+            "direction": {
+                "zh-CN": "步骤条方向，可选 horizontal、vertical；用于 basic 与 fill 类型。",
+                "en-US": "Direction of the steps, horizontal or vertical; applies to the basic and fill types."
+            },
+            "status": {
+                "zh-CN": "当前步骤的状态，可选 wait、process、finish、error、warning；用于 basic 与 fill 类型。",
+                "en-US": "Status of the current step: wait, process, finish, error or warning; applies to the basic and fill types."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 small、default；用于 basic 与 nav 类型。",
+                "en-US": "Size, small or default; applies to the basic and nav types."
+            },
+            "hasLine": {
+                "zh-CN": "是否显示步骤间的连接线；仅用于 basic 类型。",
+                "en-US": "Whether to show the line between steps; basic type only."
+            },
+            "prefixCls": { "zh-CN": "根元素的类名前缀。", "en-US": "Class name prefix of the root element." },
+            "onChange": {
+                "zh-CN": "点击或按 Enter、空格选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有 Step 变为可点击。",
+                "en-US": "Called when a step is selected by click or by Enter or Space, with its number (initial plus index); not called for the current step. Passing it makes every Step clickable."
+            }
+        }
+    },
+    "step": {
+        "source": "packages/semi-ui-solid/src/steps/step.tsx",
+        "props": {
+            "status": {
+                "zh-CN": "该步骤自己的状态；缺省时随 Steps 的 current 与 status 自动决定。",
+                "en-US": "Own status of the step; when omitted it follows current and status of Steps."
+            },
+            "title": { "zh-CN": "标题。", "en-US": "Title." },
+            "description": {
+                "zh-CN": "详情描述；nav 类型不渲染。",
+                "en-US": "Description; not rendered by the nav type."
+            },
+            "icon": {
+                "zh-CN": "自定义图标，提供后替换状态图标，内容为空则不显示图标；nav 类型不渲染。",
+                "en-US": "Custom icon that replaces the status icon; empty content shows no icon. Not rendered by the nav type."
+            }
+        }
+    }
+}

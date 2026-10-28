@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                     | Type                                                                                | Default |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------- |
+| link        | `href` of the header. When given, the header content sits inside a link.                                                        | `string`                                                                            | -       |
+| linkOptions | Attributes passed to the link.                                                                                                  | <ApiType detail={"JSX.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -       |
+| logo        | Logo node, such as an image or an icon.                                                                                         | `JSX.Element`                                                                       | -       |
+| text        | Logo text, a string or number only; other content goes in children. It is hidden when collapsed and then names the header link. | `string \| number`                                                                  | -       |

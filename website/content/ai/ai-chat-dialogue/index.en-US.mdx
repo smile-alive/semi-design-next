@@ -1,0 +1,901 @@
+---
+order: 102
+title: AIChatDialogue
+icon: doc-aiDialogue
+brief: Display AI chat conversation messages to users
+showNew: true
+---
+
+import AIChatDialogueReactApi from './api/ai-chat-dialogue.react.en-US.mdx';
+import AnnotationReactApi from './api/annotation.react.en-US.mdx';
+import DialogueStepReactApi from './api/dialogue-step.react.en-US.mdx';
+import ReasoningReactApi from './api/reasoning.react.en-US.mdx';
+import AIChatDialogueVueApi from './api/ai-chat-dialogue.vue.en-US.mdx';
+import AnnotationVueApi from './api/annotation.vue.en-US.mdx';
+import DialogueStepVueApi from './api/dialogue-step.vue.en-US.mdx';
+import ReasoningVueApi from './api/reasoning.vue.en-US.mdx';
+import AIChatDialogueSolidApi from './api/ai-chat-dialogue.solid.en-US.mdx';
+import AnnotationSolidApi from './api/annotation.solid.en-US.mdx';
+import DialogueStepSolidApi from './api/dialogue-step.solid.en-US.mdx';
+import ReasoningSolidApi from './api/reasoning.solid.en-US.mdx';
+
+## When to use
+
+AIChatDialogue can be used together with AIChatInput to build richer, more comprehensive and easier-to-customize AI conversation experiences. The component message format is based on OpenAI's [Response Object](https://platform.openai.com/docs/api-reference/responses/object), and supports the OpenAI community's [Response](https://platform.openai.com/docs/api-reference/responses/create) / [Chat Completion](https://platform.openai.com/docs/api-reference/chat/create) format standards by default. Responses to GPT-5 and GPT-4o series models are supported out of the box. For details, see [Message Data Adapters](/en-US/react/ai/ai-chat-dialogue#Message%20Data%20Adapters).
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { AIChatDialogue } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AIChatDialogue } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Framework only="react">
+
+Set `chats` and `onChatsChange` to enable basic conversation display and interactions.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind `v-model:chats` to enable basic conversation display and interactions: when the message list changes, the component emits `update:chats` (and `chatsChange`, with the same payload). The component also detects in-place changes to `chats`: pushing a new message onto a reactive array, or appending text to the last message, emits `chatsChange` and follows the scroll. Changing only text deep inside a `content` array, or flipping `status` on its own, re-renders but neither emits `chatsChange` nor follows the scroll; replace that message or the whole array instead.
+
+</Framework>
+
+<Framework only="solid">
+
+Set `chats` and `onChatsChange` to enable basic conversation display and interactions. When updating, pass a new message array: when the array is held in a `createSignal`, mutating it in place (such as `push`) does not re-render, so replace it with a new array.
+
+</Framework>
+
+Use `align` to control layout: `leftRight` (default) and `leftAlign`.
+
+<Demo id="basic" />
+
+### Auto Scroll
+
+When the dialogue has a fixed height, new messages and streaming content keep the list at the bottom. Any upward scroll (wheel, scrollbar drag, keyboard) stops following; scrolling back to the bottom or sending a new message resumes it. Inserting earlier messages at the head of `chats` (such as loading history when scrolled to the top) does not scroll the list: the messages on screen stay in place.
+
+<Demo id="auto-scroll" />
+
+### Message Status
+
+`chats` is of type `Message[]`. Each `Message` contains various fields such as role `role`, content `content`, status `status`, unique identifier `id`, and creation time `createdAt`. See [Message](#Message) for details. The `status` follows the same values as the [Response API Status](https://platform.openai.com/docs/api-reference/responses/object#responses/object-status): 6 status values mapping to 3 official styles (success / in progress / failed).
+
+<Demo id="status" />
+
+### Message Display
+
+The message content uses [ContentItem[]](https://platform.openai.com/docs/api-reference/responses/list#responses/list-data). It supports blocks such as text, file, image, code, reasoning, annotation, and tool call. `AIChatDialogue.Step` is provided for step-by-step displays (e.g., workflows or plans).
+
+<Demo id="message-display" />
+
+### References
+
+<Framework only="react">
+
+Use `references` to define files or text cited by the current message. `showReference` controls whether a quotable style is shown for the current message. `onReferenceClick` configures the click handler for the reference button.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `references` to define files or text cited by the current message. `showReference` controls whether a quotable style is shown for the current message. Listen to `@referenceClick` for clicks on the reference button.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `references` to define files or text cited by the current message. `showReference` controls whether a quotable style is shown for the current message. `onReferenceClick` configures the click handler for the reference button.
+
+</Framework>
+
+<Demo id="references" />
+
+### Selection
+
+<Demo id="selecting" />
+
+### Hints
+
+<Framework only="react">
+
+Use `hints` to set the hint area content. Clicking a hint populates it as the new user input and triggers `onHintClick`.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `hints` to set the hint area content. Clicking a hint populates it as the new user input and emits `hintClick`.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `hints` to set the hint area content. Clicking a hint populates it as the new user input and triggers `onHintClick`.
+
+</Framework>
+
+<Demo id="hints" />
+
+### Custom Hint Rendering
+
+<Framework only="react">
+
+Customize the hint area with `renderHintBox`. Parameters:
+
+```ts
+type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => React.ReactNode;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Customize the hint area with the `#hintBox` slot. Its parameters are `{ content, index, onHintClick }`; calling `onHintClick` is the same as clicking the hint.
+
+```ts
+interface AIChatDialogueHintBoxSlotProps {
+    content: string;
+    index: number;
+    onHintClick: () => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Customize the hint area with `renderHintBox`. Parameters:
+
+```ts
+type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => JSX.Element;
+```
+
+</Framework>
+
+<Demo id="custom-hint-box" />
+
+### Custom Chat Box Rendering
+
+<Framework only="react">
+
+Pass custom rendering configuration via `dialogueRenderConfig`. Types:
+
+```ts
+export interface RenderTitleProps {
+    message?: Message;
+    role?: Metadata;
+    defaultTitle?: ReactNode;
+}
+
+export interface RenderAvatarProps {
+    message?: Message;
+    role?: Metadata;
+    defaultAvatar?: ReactNode;
+}
+
+export interface RenderContentProps {
+    message?: Message;
+    role?: Metadata;
+    defaultContent?: ReactNode | ReactNode[];
+    className?: string;
+}
+
+/* The buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message) */
+export interface DefaultActionNodeObj {
+    copyNode?: ReactNode;
+    likeNode?: ReactNode;
+    dislikeNode?: ReactNode;
+    resetNode?: ReactNode;
+    shareNode?: ReactNode;
+    editNode?: ReactNode;
+    moreNode?: ReactNode;
+}
+
+export interface RenderActionProps {
+    message?: Message;
+    defaultActions?: ReactNode | ReactNode[];
+    className: string;
+    defaultActionsObj?: DefaultActionNodeObj;
+}
+
+export interface FullDialogueNodes {
+    avatar?: ReactNode;
+    title?: ReactNode;
+    content?: ReactNode;
+    action?: ReactNode;
+}
+
+export interface RenderFullDialogueProps {
+    message?: Message;
+    role?: Metadata;
+    defaultNodes?: FullDialogueNodes;
+    className: string;
+}
+
+export interface DialogueRenderConfig {
+    /* Customize action bar rendering */
+    renderDialogueAction?: (props: RenderActionProps) => ReactNode;
+    /* Customize avatar rendering */
+    renderDialogueAvatar?: (props: RenderAvatarProps) => ReactNode;
+    /* Customize content rendering */
+    renderDialogueContent?: (props: RenderContentProps) => ReactNode;
+    /* Customize message title rendering */
+    renderDialogueTitle?: (props: RenderTitleProps) => ReactNode;
+    /* Fully customize the entire chat box */
+    renderFullDialogue?: (props: RenderFullDialogueProps) => ReactNode;
+}
+```
+
+You can customize the avatar and title via `renderDialogueAvatar` and `renderDialogueTitle`.
+
+</Framework>
+
+<Framework only="vue">
+
+Each part is customized with a named scoped slot. Providing a slot replaces that part, and every slot receives the default nodes, so you can recompose them:
+
+| Slot            | Description                                  | Parameters                                              |
+| --------------- | -------------------------------------------- | ------------------------------------------------------- |
+| `#avatar`       | Custom avatar                                | `{ message, role, defaultAvatar }`                      |
+| `#title`        | Custom title                                 | `{ message, role, defaultTitle }`                       |
+| `#content`      | Custom content area                          | `{ message, role, defaultContent, class }`              |
+| `#action`       | Custom message action bar                    | `{ message, defaultActions, defaultActionsObj, class }` |
+| `#fullDialogue` | Fully custom rendering of the whole dialogue | `{ message, role, defaultNodes, class }`                |
+
+`defaultActions` is the array of buttons in the default action bar, and `defaultActionsObj` holds the same buttons by name. They match the buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message). `defaultNodes` holds the four default nodes `avatar`, `title`, `content` and `action`. Default nodes are VNodes: render them with `<component :is="..." />`.
+
+```ts
+interface DefaultActionNodeObj {
+    copyNode?: VNode;
+    likeNode?: VNode;
+    dislikeNode?: VNode;
+    resetNode?: VNode;
+    shareNode?: VNode;
+    editNode?: VNode;
+    moreNode?: VNode;
+}
+
+interface FullDialogueNodes {
+    avatar: VNode;
+    title: VNode;
+    content: VNode;
+    action: VNode;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import type { JSX } from 'solid-js';
+
+export interface RenderTitleProps {
+    message?: Message;
+    role?: Metadata;
+    /* Creates the default title; call it where it is inserted */
+    defaultTitle?: () => JSX.Element;
+}
+
+export interface RenderAvatarProps {
+    message?: Message;
+    role?: Metadata;
+    /* Creates the default avatar; call it where it is inserted */
+    defaultAvatar?: () => JSX.Element;
+}
+
+export interface RenderContentProps {
+    message?: Message;
+    role?: Metadata;
+    /* Creates the default content; call it where it is inserted */
+    defaultContent?: () => JSX.Element;
+    class?: string;
+}
+
+/* Render functions of the buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message). Call one where it is inserted */
+export interface DefaultActionNodeObj {
+    copyNode?: () => JSX.Element;
+    dislikeNode?: () => JSX.Element;
+    editNode?: () => JSX.Element;
+    likeNode?: () => JSX.Element;
+    moreNode?: () => JSX.Element;
+    resetNode?: () => JSX.Element;
+    shareNode?: () => JSX.Element;
+}
+
+export interface RenderActionProps {
+    message?: Message;
+    /* Render functions of the default buttons in display order; call each where it is inserted */
+    defaultActions?: (() => JSX.Element)[];
+    class: string;
+    defaultActionsObj?: DefaultActionNodeObj;
+}
+
+/* Render functions of the default nodes; call one where it is inserted, and a node that is never called is never created */
+export interface FullDialogueNodes {
+    avatar?: () => JSX.Element;
+    title?: () => JSX.Element;
+    content?: () => JSX.Element;
+    action?: () => JSX.Element;
+}
+
+export interface RenderFullDialogueProps {
+    message?: Message;
+    role?: Metadata;
+    defaultNodes?: FullDialogueNodes;
+    class: string;
+}
+
+export interface DialogueRenderConfig {
+    /* Customize action bar rendering */
+    renderDialogueAction?: (props: RenderActionProps) => JSX.Element;
+    /* Customize avatar rendering */
+    renderDialogueAvatar?: (props: RenderAvatarProps) => JSX.Element;
+    /* Customize content rendering */
+    renderDialogueContent?: (props: RenderContentProps) => JSX.Element;
+    /* Customize message title rendering */
+    renderDialogueTitle?: (props: RenderTitleProps) => JSX.Element;
+    /* Fully customize the entire chat box */
+    renderFullDialogue?: (props: RenderFullDialogueProps) => JSX.Element;
+}
+```
+
+Customize the avatar and title via `renderDialogueAvatar` and `renderDialogueTitle`. The render function arguments, such as `role`, `message`, `defaultActions` and `class`, are accessors: read them directly in JSX (for example `props.role?.name`) and do not destructure them. `defaultTitle`, `defaultAvatar`, `defaultContent` and the items of `defaultNodes` are render functions: call one where it is inserted (for example `{props.defaultTitle?.()}`), and a node that is never called is never created.
+
+</Framework>
+
+<Demo id="custom-dialogue-render" />
+
+### Custom Message Content Rendering
+
+<Framework only="react">
+
+Use `renderDialogueContentItem` to provide renderers by message type. Example:
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#contentItem` slot to render by message type. Every content item (including the input text, images and files inside a `message` item) passes through the slot first, with the parameters `{ item, type, message, index, parent }`. `type` is the item's type, and a top-level item without a `type` counts as `message`; for an inner item, `parent` is the `message` item it belongs to. When the slot returns empty content, the built-in rendering takes over; non-empty content is wrapped in `semi-ai-chat-dialogue-content-custom-renderer`. A message whose content is plain text is not a content item: replace its Markdown rendering with the `#messageText` slot, whose parameters are `{ text, message }`. `AIChatDialogue.Reasoning` and `AIChatDialogue.Annotation` can be reused inside the slots; see Static Properties below. Example:
+
+</Framework>
+
+<Framework only="solid">
+
+Use `renderDialogueContentItem` to provide renderers by message type. The keys are the `type` of each content item: a tool call is indexed by its type and then by its `name` (such as `create_travel_guide` under `function_call`), and a plain-text message is rendered with the key `default`. Inside the renderers you can reuse `AIChatDialogue.Reasoning` and `AIChatDialogue.Annotation`; see Static Properties below. Example:
+
+</Framework>
+
+<Demo id="custom-content-render" />
+
+### Message Data Adapters
+
+The current component's dialogue messages are modeled after OpenAI's [Response Object](https://platform.openai.com/docs/api-reference/responses/object). To better support users in seamlessly integrating the [Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create) and [Response API](https://platform.openai.com/docs/api-reference/responses/create), we provide four `Adapter` transformation functions. Users can directly use these functions to transform the API's return results to obtain data that can be directly used for message display. Two `Adapter` functions are provided to process the data of the `ChatInput` component into an `input Message` format adapted to the `Response API` or the `Input Message` format in the `Chat Completion API`.
+
+<Framework only="react">
+
+```jsx
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-vue';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+```ts
+// Convert the data returned by the Chat Completion API into the Message format in Chat Dialogue
+function chatCompletionToMessage(chatCompletion: ChatCompletion): Message[];
+
+// Convert the Chat Completion API streaming data into Message format for Chat Dialogue.
+function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state?: StreamingChatState };
+
+// Convert the data returned by the Response API into the Message format in Chat Dialogue
+function responseToMessage(response: Response): Message;
+
+// Convert the streaming data returned by the Response API into the Message format in Chat Dialogue
+// ResponseChunk is the union of Response streaming events, discriminated by type; returns null for empty chunks
+function streamingResponseToMessage(chunks: ResponseChunk[], prevState?: StreamingResponseState): { message: Message | null; nextState: StreamingResponseState | null } | null;
+
+// Convert Chat Input data to the Message format in Chat Dialogue (same as the Response API Input Message format)
+// The result has no id; add one before putting it into chats
+function chatInputToMessage(inputContent: MessageContent): Omit<Message, 'id'>;
+
+// Convert Chat Input data to Input Message format in Chat Completion API
+function chatInputToChatCompletion(inputContent: MessageContent): ChatCompletionInput;
+```
+
+For example, when a user returns non-streaming data using the [Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create) interface, the `chatCompletionToMessage` function can be used to convert the Chat Completion Object into a Dialogue Message block format. Note that because the `Chat Completion API` allows control over the number of results generated for each input message via `n`, this function returns an array. (Note: If n > 1, the user needs to decide which data to add to the message for display.)
+
+<Demo id="chat-completion-to-message" />
+
+For example, when a user returns streaming data using the [Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create) interface, the `streamingChatCompletionToMessage` function can be used to convert the Chat Completion Chunk Object List into a Dialogue Message format.
+
+<Demo id="streaming-chat-completion-to-message" />
+
+When a user returns non-streaming data using the [Response API](https://platform.openai.com/docs/api-reference/responses/create) interface, the `responseToMessage` function can be used to convert the Response Object into a Dialogue Message block format.
+
+<Demo id="response-to-message" />
+
+When a user returns streaming data using the [Response API](https://platform.openai.com/docs/api-reference/responses/create) interface, the `streamingResponseToMessage` function can be used to convert the Response Chunk Object List into a Dialogue Message format.
+
+<Demo id="streaming-response-to-message" />
+
+## API Reference
+
+<Framework only="react">
+
+<AIChatDialogueReactApi />
+
+Other native attributes are applied to the root `div` element. When the root element has `aria-label` or `aria-labelledby` and no `role` is passed, its `role` is `group`; a `role` passed by the caller takes precedence. The message list is a named `role="log"` region, and `aria-busy="true"` is set while a reply is being generated.
+
+</Framework>
+
+<Framework only="vue">
+
+<AIChatDialogueVueApi />
+
+`class`, `style` and native attributes fall through to the root element via attrs. When the root has `aria-label` or `aria-labelledby` and no `role`, its `role` is `group`; a `role` passed by the caller wins. The message list is a named `role="log"` region with `aria-busy="true"` while a reply is being generated. `roleConfig` is a required prop and does not read the global defaults.
+
+</Framework>
+
+<Framework only="solid">
+
+<AIChatDialogueSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root `div` element. When the root has `aria-label` or `aria-labelledby` and no `role` is passed, its `role` is `group`; a `role` passed by the caller wins. The message list is a named `role="log"` region with `aria-busy="true"` while a reply is being generated. `roleConfig` is a required prop and does not read the global defaults.
+
+</Framework>
+
+### RoleConfig
+
+| Prop      | Description    | Type                               | Default |
+| --------- | -------------- | ---------------------------------- | ------- |
+| user      | user info      | Metadata \| Map\<string, Metadata> | -       |
+| assistant | assistant info | Metadata \| Map\<string, Metadata> | -       |
+| system    | system info    | Metadata \| Map\<string, Metadata> | -       |
+
+### MetaData
+
+| Prop   | Description                                                                                                                                                                                                           | Type        | Default |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------- |
+| name   | Name                                                                                                                                                                                                                  | string      | -       |
+| avatar | Avatar                                                                                                                                                                                                                | string      | -       |
+| color  | Avatar background color, same as Avatar `color` prop. Supports `amber`, `blue`, `cyan`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `violet`, `yellow` | AvatarColor | `grey`  |
+
+### Message
+
+| Prop       | Description                                                                                         | Type                                          | Default     |
+| ---------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------- | ----------- |
+| role       | Role                                                                                                | string                                        | -           |
+| name       | Name                                                                                                | string                                        | -           |
+| id         | Unique ID                                                                                           | string                                        | -           |
+| content    | Message content                                                                                     | string\| ContentItem[]                        | -           |
+| createdAt  | Created at (timestamp)                                                                              | number                                        | -           |
+| model      | Model name                                                                                          | string                                        | -           |
+| status     | Message status: `queued` \| `in_progress` \| `incomplete` \| `completed` \| `failed` \| `cancelled` | string                                        | `completed` |
+| editing    | Whether the message is being edited, written by the component                                       | boolean                                       | -           |
+| like       | Whether the message is liked, written by the component                                              | boolean                                       | -           |
+| dislike    | Whether the message is disliked, written by the component                                           | boolean                                       | -           |
+| references | Files or text cited by the message                                                                  | [Reference](#Reference)[]                     | -           |
+| error      | Streaming response error, written by streamingResponseToMessage                                     | \{ code?: string; message?: string \} \| null | -           |
+
+### Reference
+
+The same type as AIChatInput's Reference: `id` and `type` are required, other fields are kept as they are.
+
+| Prop    | Description                 | Type   | Default |
+| ------- | --------------------------- | ------ | ------- |
+| id      | Unique identifier, required | string | -       |
+| type    | Type, required              | string | -       |
+| name    | Name                        | string | -       |
+| url     | URL                         | string | -       |
+| content | Text content                | string | -       |
+
+### Methods
+
+<Framework only="vue">
+
+The methods are listed in the generated Exposes table above and are called through a template ref:
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+
+    const dialogue = useTemplateRef('dialogue');
+    const toBottom = () => dialogue.value?.scrollToBottom(true);
+</script>
+
+<template>
+    <AIChatDialogue ref="dialogue" v-model:chats="messages" :roleConfig="roleConfig" />
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+The methods are listed in the Methods table of the API Reference above. Get the handle through `ref` and call them:
+
+```tsx
+import { useRef } from 'react';
+import { AIChatDialogue, type AIChatDialogueHandle } from '@fibrae/semi-ai-react';
+
+const dialogue = useRef<AIChatDialogueHandle>(null);
+const toBottom = () => dialogue.current?.scrollToBottom(true);
+
+<AIChatDialogue ref={dialogue} chats={messages} roleConfig={roleConfig} onChatsChange={setMessages} />;
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The methods are listed in the Methods table of the API Reference above. Get the root element through `ref` and call them:
+
+```tsx
+import { AIChatDialogue, type AIChatDialogueElement } from '@fibrae/semi-ai-solid';
+
+let dialogue: AIChatDialogueElement | undefined;
+const toBottom = () => dialogue?.scrollToBottom(true);
+
+<AIChatDialogue ref={(element) => (dialogue = element)} chats={messages()} roleConfig={roleConfig} onChatsChange={onChatsChange} />;
+```
+
+</Framework>
+
+### Static Properties
+
+<Framework only="react">
+
+| Property          | Description                                                                                                                                                                             | Type                            |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| defaultComponents | Default Markdown rendering components, including an enhanced Code component with language identifier and copy functionality. Can be used for extending `markdownRenderProps.components` | \{ code: React.ComponentType \} |
+| Reasoning         | Reasoning block component; see [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning) below                                                                                              | `React.ComponentType`           |
+| Step              | Step display component; see [AIChatDialogue.Step](#AIChatDialogue.Step) below                                                                                                           | `React.ComponentType`           |
+| Annotation        | Reference source component; see [AIChatDialogue.Annotation](#AIChatDialogue.Annotation) below                                                                                           | `React.ComponentType`           |
+
+**Usage Example:**
+
+To preserve default functionality while customizing code block rendering, access the default component via `AIChatDialogue.defaultComponents.code`:
+
+```jsx
+import { AIChatDialogue } from '@fibrae/semi-ai-react';
+
+function CustomCodeDemo() {
+    return (
+        <AIChatDialogue
+            chats={messages}
+            roleConfig={roleConfig}
+            markdownRenderProps={{
+                components: {
+                    code: (props) => {
+                        // Get the default Code component
+                        const DefaultCode = AIChatDialogue.defaultComponents.code;
+                        // Add custom logic here
+                        return <DefaultCode {...props} />;
+                    },
+                },
+            }}
+        />
+    );
+}
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningReactApi />
+
+`className`, `style`, `ref` and other native attributes are applied to the root `div` element.
+
+### AIChatDialogue.Step
+
+<DialogueStepReactApi />
+
+`className`, `style`, `ref` and other native attributes are applied to the root `div` element.
+
+### AIChatDialogue.Annotation
+
+<AnnotationReactApi />
+
+`className`, `style`, `ref` and other native attributes are applied to the root `div` element.
+
+</Framework>
+
+<Framework only="vue">
+
+| Property          | Description                                                                                                                                                                         | Type                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| defaultComponents | Default Markdown rendering components. `code` is the enhanced code block component with a language label and copy button; it can be used to extend `markdownRenderProps.components` | `{ code: Component }` |
+| Reasoning         | Reasoning block component; see [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning) below for its API                                                                              | Component             |
+| Step              | Step display component; see [AIChatDialogue.Step](#AIChatDialogue.Step) below for its API                                                                                           | Component             |
+| Annotation        | References component; see [AIChatDialogue.Annotation](#AIChatDialogue.Annotation) below for its API                                                                                 | Component             |
+
+**Usage Example:**
+
+To preserve default functionality while customizing code block rendering, wrap the default component in your own component and pass it through `markdownRenderProps.components`:
+
+```vue
+<!-- CustomCode.vue -->
+<script setup lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+
+    defineOptions({ inheritAttrs: false });
+    const DefaultCode = AIChatDialogue.defaultComponents.code;
+</script>
+
+<template>
+    <!-- Add custom logic here -->
+    <DefaultCode v-bind="$attrs"><slot /></DefaultCode>
+</template>
+```
+
+```vue
+<script setup lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+    import CustomCode from './CustomCode.vue';
+
+    const markdownRenderProps = { components: { code: CustomCode } };
+</script>
+
+<template>
+    <AIChatDialogue v-model:chats="messages" :markdownRenderProps="markdownRenderProps" :roleConfig="roleConfig" />
+</template>
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningVueApi />
+
+### AIChatDialogue.Step
+
+<DialogueStepVueApi />
+
+### AIChatDialogue.Annotation
+
+<AnnotationVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+| Property          | Description                                                                                                                                                                         | Type                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| defaultComponents | Default Markdown rendering components. `code` is the enhanced code block component with a language label and copy button; it can be used to extend `markdownRenderProps.components` | `{ code: Component }` |
+| Reasoning         | Reasoning block component; see [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning) below for its API                                                                              | `Component`           |
+| Step              | Step display component; see [AIChatDialogue.Step](#AIChatDialogue.Step) below for its API                                                                                           | `Component`           |
+| Annotation        | References component; see [AIChatDialogue.Annotation](#AIChatDialogue.Annotation) below for its API                                                                                 | `Component`           |
+
+To preserve default functionality while customizing code block rendering, wrap the default component in your own component and pass it through `markdownRenderProps.components`:
+
+```tsx
+import type { ComponentProps } from 'solid-js';
+import { AIChatDialogue } from '@fibrae/semi-ai-solid';
+
+const DefaultCode = AIChatDialogue.defaultComponents.code;
+
+function CustomCode(props: ComponentProps<typeof DefaultCode>) {
+    // Add custom logic here
+    return <DefaultCode {...props} />;
+}
+
+<AIChatDialogue chats={messages()} roleConfig={roleConfig} markdownRenderProps={{ components: { code: CustomCode } }} />;
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root `div` element.
+
+### AIChatDialogue.Step
+
+<DialogueStepSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root `div` element.
+
+### AIChatDialogue.Annotation
+
+<AnnotationSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the root `div` element.
+
+</Framework>
+
+### ContentItem
+
+`ContentItem` supports all OpenAI Response [InputItem](https://platform.openai.com/docs/api-reference/responses/create#responses-create-input) and [OutputItem](https://platform.openai.com/docs/api-reference/responses/object#responses/object-output) types. Definitions:
+
+```ts
+type ContentItem = InputContentItem | OutputContentItem;
+
+type InputContentItem = InputMessage | ItemReference;
+type OutputContentItem = OutputMessage | MCPToolCall | Reasoning FileSearchToolCall |
+                        WebSearchToolCall | FunctionToolCall | CustomToolCall | ImageGenerationCall| CustomObject;
+
+interface CommonContentItem {
+    id?: string;
+    type?: string;
+    status?: string;
+    role?: string
+}
+
+interface CustomObject {
+    [key: string]: any
+}
+
+// input item
+interface InputMessage extends CommonContentItem {
+    content?: string | (InputText | InputImage | InputFile)[]
+}
+
+interface InputText extends CommonContentItem {
+    text?: string
+}
+
+interface InputImage extends CommonContentItem {
+    detail?: string;
+    file_id?: string;
+    image_url?: string
+}
+
+interface InputFile extends CommonContentItem {
+    file_id?: string;
+    file_data?: string;
+    file_url?: string;
+    filename?: string;
+    size?: string;
+    file_type?: string;
+    fileInstance?: any
+}
+
+interface ItemReference extends CommonContentItem {
+    file_id?: string
+}
+
+
+// output item
+interface OutputMessage extends CommonContentItem {
+    content?: (OutputText | Refusal)[]
+}
+
+interface OutputText {
+    text?: string;
+    type?: string;
+    annotations?: Annotation[]
+}
+
+interface Refusal extends CommonContentItem {
+    refusal?: string;
+    type?: string
+}
+
+type Annotation = URLCitation | CustomObject;
+
+interface URLCitation {
+    end_index?: number;
+    start_index?: number;
+    title?: string;
+    type?: string;
+    url?: string
+}
+
+interface Reasoning extends CommonContentItem {
+    summary?: {
+        text?: string;
+        type?: string
+    }[];
+    content?: {
+        text?: string;
+        type?: string
+    }[]
+}
+
+interface FileSearchToolCallResult {
+    attributes?: Map<string, string>;
+    score?: number;
+    file_id?: string;
+    filename?: string;
+    text?: string
+}
+
+interface FileSearchToolCall extends CommonContentItem {
+    queries?: string[];
+    results?: FileSearchToolCallResult[]
+}
+
+interface WebSearchToolCall extends CommonContentItem {
+    action?: SearchAction | OpenPageAction | FindAction
+}
+
+interface SearchAction {
+    type?: string;
+    query?: string;
+    sources?: { type: string; url: string }[]
+}
+
+interface OpenPageAction {
+    type?: string;
+    url?: string
+}
+
+interface FindAction {
+    action?: string;
+    type?: string;
+    query?: string
+}
+
+interface FunctionToolCall extends CommonContentItem {
+    call_id?: string;
+    name?: string;
+    arguments?: string
+}
+
+interface CustomToolCall extends CommonContentItem {
+    call_id?: string;
+    name?: string;
+    input?: string
+}
+
+interface ImageGenerationCall extends CommonContentItem {
+    result?: string
+}
+
+interface MCPToolCall extends CommonContentItem {
+    arguments?: string;
+    server_label?: string;
+    name?: string;
+    result?: string;
+    output?: string
+}
+
+interface FileUploadToolCall extends CommonContentItem {
+    result?: string
+}
+
+```
+
+## Design Tokens
+
+<DesignToken />

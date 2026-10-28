@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allowClear | Whether clicking the selected star again clears the value. | `boolean` | `true` |
+| allowHalf | Whether half stars can be selected. | `boolean` | `false` |
+| aria-invalid | Whether validation failed, set as `aria-invalid` on the root element. | `boolean` | - |
+| aria-required | Whether a value is required, set as `aria-required` on the root element. | `boolean` | - |
+| autoFocus | Focuses the rating on mount, on the same radio that `focus()` picks. | `boolean` | - |
+| character | Character drawn in every star, a React node such as `<IconLikeHeart />`; the star icon when not set. When it is a plain text string, that text is the unit in each star's accessible name and the group summary. | `React.ReactNode` | - |
+| className | Class name of the root element. | `string` | - |
+| count | Total number of stars. | `number` | `5` |
+| defaultValue | Initial value when uncontrolled. | `number` | `0` |
+| disabled | Read-only: no interaction and no focus. | `boolean` | - |
+| id | Id of the root element. | `string` | - |
+| onBlur | Called when focus leaves the whole rating; moving between stars does not call it. | <ApiType detail={"(e: React.FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the selection changes, with the new value. | <ApiType detail={"(value: number) => void"}>Type</ApiType> | - |
+| onClick | Called when a star is clicked or selected with Enter or Space, with the event and the star index. It is not a native click listener on the root element. | <ApiType detail={"(e: React.MouseEvent \u007c React.KeyboardEvent, index: number) => void"}>Type</ApiType> | - |
+| onFocus | Called when focus enters the whole rating; moving between stars does not call it. | <ApiType detail={"(e: React.FocusEvent) => void"}>Type</ApiType> | - |
+| onHoverChange | Called when the hovered value changes; receives `undefined` when the pointer leaves or a click clears the value. | <ApiType detail={"(value?: number) => void"}>Type</ApiType> | - |
+| onKeyDown | Called for an arrow key that moves the value; other keys do not call it. | <ApiType detail={"(e: React.KeyboardEvent) => void"}>Type</ApiType> | - |
+| prefixCls | Class name prefix of the component. | `string` | `"semi-rating"` |
+| preventScroll | Whether to keep the browser from scrolling the document to show a star focused inside the component, including focus from `autoFocus` and `focus()`. | `boolean` | - |
+| ref | Handle of the component, exposing the `focus()` and `blur()` methods. | <ApiType detail={"React.Ref\u003cRatingHandle>"}>Type</ApiType> | - |
+| size | Size: `default` or `small`, or a number for a custom size. | `'small' \| 'default' \| number` | `"default"` |
+| style | Style of the root element. | `React.CSSProperties` | `{}` |
+| tooltips | Tooltip text for each star, matched by array index to the star position; an empty or missing item shows no tooltip. | `string[]` | - |
+| value | Controlled value. When given, this value decides what is shown; back to `undefined` it returns to `defaultValue` and becomes uncontrolled. | `number` | - |
+
+**Methods**
+
+| Method | Description                                                                                     | Type                                          |
+| ------ | ----------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| blur   | Removes focus when it is inside the rating. Does nothing when disabled.                         | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Focuses the radio that Tab reaches, the same one `autoFocus` picks. Does nothing when disabled. | <ApiType detail={"() => void"}>Type</ApiType> |

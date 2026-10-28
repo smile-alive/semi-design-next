@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                            | Type                                                              | Default |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| align     | Cross-axis alignment of the children, passed to `Space`: `start`, `center`, `end` or `baseline`. Defaults to `center`. | `Align`                                                           | -       |
+| children  | Cards in the group.                                                                                                    | `React.ReactNode`                                                 | -       |
+| className | Class name of the root element.                                                                                        | `string`                                                          | -       |
+| ref       | Reference to the root element (`div`).                                                                                 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| spacing   | Spacing between cards, a number or `[horizontal, vertical]`. Ignored when `type` is `grid`.                            | `number \| [number, number]`                                      | `16`    |
+| style     | Inline style of the root element.                                                                                      | `React.CSSProperties`                                             | -       |
+| type      | Set to `grid` for a grid layout, which overrides `spacing`.                                                            | `CardGroupType`                                                   | -       |
+| vertical  | Whether to lay out vertically, passed to `Space`. Defaults to `false`.                                                 | `boolean`                                                         | -       |
+| wrap      | Whether to wrap, passed to `Space`. Ignored when vertical. Defaults to `true`.                                         | `boolean`                                                         | -       |

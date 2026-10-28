@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                             | 类型                                                                | 默认值 |
+| ------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------ |
+| codeHighlightProps | CodeHighlight 的属性，在 `code` 与 `language` 之后展开。                         | <ApiType detail={"Partial\u003cCodeHighlightProps>"}>Type</ApiType> | -      |
+| content            | 代码/文本内容。                                                                  | `string`                                                            | -      |
+| isJson             | 是否为 JSON 格式内容，为 true 时使用 JsonViewer 展示。                           | `boolean`                                                           | -      |
+| jsonViewerProps    | JsonViewer 的属性，在 value、width、height 等默认值之后展开。                    | <ApiType detail={"Partial\u003cJsonViewerProps>"}>Type</ApiType>    | -      |
+| key                | 面板的唯一标识，用于 CodeContent 的 `activeKey`，也决定 Sidebar 详情的重新挂载。 | `string`                                                            | -      |
+| language           | 代码语言类型（如 js、ts、css 等），同 CodeHighlight 的 language。                | `string`                                                            | -      |
+| name               | 名称，显示在面板头部与 Sidebar 详情头部。                                        | `string`                                                            | -      |

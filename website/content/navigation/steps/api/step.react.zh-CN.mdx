@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                                                                         | 类型                                                                            | 默认值 |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------ |
+| className   | 步骤项（根元素）的类名。                                                                                                                     | `string`                                                                        | -      |
+| description | 步骤的详情描述。`nav` 类型不渲染。                                                                                                           | `React.ReactNode`                                                               | -      |
+| icon        | 自定义图标，替换状态图标；内容为空时不显示图标。`nav` 类型不渲染。                                                                           | `React.ReactNode`                                                               | -      |
+| onClick     | 点击步骤项时调用，包括点击其中的控件时。传入后步骤可点击，`role` 默认为 `button`；先于 Steps 的 `onChange` 调用。                            | <ApiType detail={"React.MouseEventHandler\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| ref         | 步骤项（根元素，`div`）的引用。                                                                                                              | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>               | -      |
+| status      | 该步骤自己的状态，可选 `wait`、`process`、`finish`、`error` 或 `warning`。未设置时随 Steps 的 `current` 与 `status` 决定。`nav` 类型不生效。 | `Status`                                                                        | -      |
+| style       | 步骤项（根元素）的样式。                                                                                                                     | `React.CSSProperties`                                                           | -      |
+| title       | 步骤标题。                                                                                                                                   | `React.ReactNode`                                                               | -      |

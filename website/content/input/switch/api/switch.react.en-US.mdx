@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| checked | Checked state. When not `undefined` it is controlled: the value decides what is shown, and a click only calls onChange, so update the value in the callback. Setting it back to `undefined` unchecks the switch and makes it uncontrolled. | `boolean` | - |
+| checkedText | Content shown when checked. Not shown when size is `small`. | `React.ReactNode` | - |
+| className | Class name of the root element. | `string` | `""` |
+| defaultChecked | Initial checked state when uncontrolled. Read only once, on the first render. | `boolean` | - |
+| disabled | Whether the switch is disabled. | `boolean` | `false` |
+| id | Id of the native input. | `string` | - |
+| loading | Whether the switch is loading. While loading, the input stays focusable with `aria-disabled`; toggles are ignored and onChange is not called. | `boolean` | `false` |
+| name | Name of the native input, used when the form is submitted. | `string` | - |
+| onChange | Called when the user toggles the switch, with the new checked state and the native change event. Not called while loading. | <ApiType detail={"(checked: boolean, e: React.ChangeEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
+| onMouseEnter | Called when the pointer enters the root element. | <ApiType detail={"(e: React.MouseEvent) => any"}>Type</ApiType> | - |
+| onMouseLeave | Called when the pointer leaves the root element. | <ApiType detail={"(e: React.MouseEvent) => any"}>Type</ApiType> | - |
+| ref | Reference to the root `div` element. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| size | Switch size: `large`, `default` or `small`. | `Size` | `"default"` |
+| style | Style of the root element. | `React.CSSProperties` | - |
+| tabIndex | tabIndex of the native input. | `number` | - |
+| uncheckedText | Content shown when unchecked. Not shown when size is `small`. | `React.ReactNode` | - |

@@ -1,0 +1,27 @@
+**Props**
+
+| Property   | Description                                               | Type               | Default                                         |
+| ---------- | --------------------------------------------------------- | ------------------ | ----------------------------------------------- |
+| bodyHeight | Height of the list body.                                  | `string \| number` | `semiGlobalDefault("ScrollList", "bodyHeight")` |
+| footer     | Footer text. The footer slot takes precedence when given. | `string`           | `semiGlobalDefault("ScrollList", "footer")`     |
+| header     | Header text. The header slot takes precedence when given. | `string`           | `semiGlobalDefault("ScrollList", "header")`     |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description             | Scope parameters |
+| ------- | ----------------------- | ---------------- |
+| default | The ScrollItem columns. | `any`            |
+| footer  | Custom footer content.  | `any`            |
+| header  | Custom header content.  | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

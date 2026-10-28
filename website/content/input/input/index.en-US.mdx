@@ -1,0 +1,381 @@
+---
+title: Input
+order: 41
+icon: doc-input
+brief: Input is a basic component for users to enter and edit text.
+---
+
+import InputReactApi from './api/input.react.en-US.mdx';
+import TextAreaReactApi from './api/text-area.react.en-US.mdx';
+import InputGroupReactApi from './api/input-group.react.en-US.mdx';
+import InputVueApi from './api/input.vue.en-US.mdx';
+import TextAreaVueApi from './api/text-area.vue.en-US.mdx';
+import InputGroupVueApi from './api/input-group.vue.en-US.mdx';
+import InputSolidApi from './api/input.solid.en-US.mdx';
+import TextAreaSolidApi from './api/text-area.solid.en-US.mdx';
+import InputGroupSolidApi from './api/input-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Size
+
+Support three sizes: `large`, `default`, and `small`.
+
+<Demo id="size" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Prefix/Suffix
+
+<Framework only="react">
+
+When the content of `prefix` and `suffix` is text or Semi Icon, the left and right margin will be automatically added. If it is a custom ReactNode, the left and right margin will be 0
+
+</Framework>
+
+<Framework only="vue">
+
+Add a prefix or suffix with the `#prefix` and `#suffix` slots; the content can be text, an icon, or any node.
+
+When the slot content is only text or a single Semi Icon, the left and right margin will be automatically added. If it is a custom node, the left and right margin will be 0.
+
+</Framework>
+
+<Framework only="solid">
+
+Add a prefix or suffix to the input; the content can be text, an icon, or any JSX element.
+
+When the content of `prefix` and `suffix` is text or Semi Icon, the left and right margin will be automatically added. If it is a custom JSX element, the left and right margin will be 0.
+
+</Framework>
+
+<Demo id="prefix-suffix" />
+
+### Addon
+
+<Framework only="react">
+
+When the content of `addonBefore` and `addonAfter` is text or Semi Icon, the left and right margin will be automatically added. If it is a custom ReactNode, the left and right margin will be 0.
+
+</Framework>
+
+<Framework only="vue">
+
+Add an addon before or after the input with the `#addonBefore` and `#addonAfter` slots.
+
+When the slot content is only text or a single Semi Icon, the left and right margin will be automatically added. If it is a custom node, the left and right margin will be 0.
+
+</Framework>
+
+<Framework only="solid">
+
+Add an addon before or after the input; the content can be text, an icon, or any JSX element.
+
+When the content of `addonBefore` and `addonAfter` is text or Semi Icon, the left and right margin will be automatically added. If it is a custom JSX element, the left and right margin will be 0.
+
+</Framework>
+
+<Demo id="addon" />
+
+### Clear Icon
+
+Use `showClear` to allow clear current value when clicking on clear icon.
+
+<Demo id="clear" />
+
+### Password Mode
+
+Hide the content of input
+
+<Demo id="password" />
+
+### Validation
+
+You can set different `validateStatus` to provide style feedback to the user.
+
+<Demo id="validate-status" />
+
+### Controlled Component
+
+<Framework only="react">
+
+You can use `value` along with `onChange` property if you want to use Input as a controlled component.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the value with `v-model`. With one-way `:modelValue` the component does not change its own value: when the parent does not accept the new value from `change`, the input returns to `modelValue`.
+
+</Framework>
+
+<Framework only="solid">
+
+The value of `Input` is entirely determined by the `value` prop. Use it together with the `onChange` callback.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### InputGroup
+
+You could put multiple text field input into `<InputGroup>` and set `size`, `disabled` to the entire group. Supported fields include: `Input`， `InputNumber`， `Select`， `AutoComplete`、`TreeSelect`、`Cascader`、`DatePicker`
+
+<Notice type="primary" title="Notice">
+    <div>InputGroup does not recommend inserting non-supported elements. Form.InputGroup will perform error aggregation on supported elements without customizing the elements for processing.</div>
+</Notice>
+
+<Demo id="input-group" />
+
+<Demo id="input-group-tree" />
+
+### TextArea
+
+Used for multi-line text. You can set `maxCount` to restrict text entering and display text count. `showClear` is supported.
+
+<Demo id="textarea" />
+
+### Setting TextArea Height
+
+You can set the style of the internal textarea element through `textareaStyle`, such as height, background color, etc.
+
+<Demo id="textarea-height" />
+
+### Line Numbers
+
+Set `showLineNumber` to display line numbers. You can use `lineNumberStart` to set the starting line number, and customize the line number area via `lineNumberStyle`/`lineNumberClassName`.
+
+<Demo id="line-number" />
+
+### Line break by Shift + Enter
+
+By default, in a TextArea, both `Enter` and `Shift` + `Enter` can achieve line breaks. Through appropriate event listening and disabling the default behavior, you can achieve disabling line breaks with Enter and only allowing line breaks with Shift + Enter.
+
+<Demo id="shift-enter" />
+
+### Autosize TextArea
+
+You can set `autosize` to allow TextArea resizing height with content.
+
+<Demo id="autosize" />
+
+### Custom calculated character string length
+
+By setting the getValueLength property, you can customize the length of the character string. With maxLength and minLength (maxlength and minlength in Vue), you can support emoji length to calculate according to the visible length.
+
+What is done inside Semi when getValueLength is passed in:
+
+<Framework only="react">
+
+- maxLength: maxLength is not passed directly to the native input. If the input length exceeds the maximum limit, the legal length character entered last time is used.
+- minLength: dynamically switch the length of minLength, emoji is calculated according to a length.
+- maxCount: compare the values obtained using getValueLength with maxCount
+
+</Framework>
+
+<Framework only="vue">
+
+- maxlength: maxlength is not passed directly to the native input. If the input length exceeds the maximum limit, the legal length character entered last time is used.
+- minlength: dynamically switch the length of minlength, emoji is calculated according to a length.
+- maxCount: compare the values obtained using getValueLength with maxCount
+
+</Framework>
+
+<Framework only="solid">
+
+- maxLength: maxLength is not passed directly to the native input. If the input length exceeds the maximum limit, the legal length character entered last time is used.
+- minLength: dynamically switch the length of minLength, emoji is calculated according to a length.
+- maxCount: compare the values obtained using getValueLength with maxCount
+
+</Framework>
+
+<Demo id="value-length" />
+
+Answers to some questions:
+
+> Why not just import the `grapheme-splitter` package? The uncompressed size of this package is 200+ kB, which is a bit too large for users who do not need to calculate emoji according to the visible length. Therefore, Semi chose to use the length calculation function as an argument for users to pass in
+
+> Why not modify maxLength (maxlength in Vue) dynamically? Modify maxLength dynamically after the input operation is completed, calculate the remaining character length that can be entered. If the maxLength is set to 1, you want to enter a '💖' with a length of 2, but due to the limitation of input maxLength, you can't enter it at all here, and you can't update maxLength.
+
+### IME Input Mode
+
+<Framework only="react">
+
+By setting the `composition` property to `true`, you can enable IME input mode. In this mode, when using an IME (e.g., Chinese pinyin input), `onChange` will not be triggered during IME confirmation (e.g., while pinyin is being typed), and will only be triggered once after the IME confirms the input. This is useful for real-time search scenarios to avoid unnecessary requests during pinyin input.
+
+</Framework>
+
+<Framework only="vue">
+
+By setting the `composition` property to `true`, you can enable IME input mode. In this mode, when using an IME (e.g., Chinese pinyin input), the `change` event will not be triggered during IME confirmation (e.g., while pinyin is being typed), and will only be triggered once after the IME confirms the input. This is useful for real-time search scenarios to avoid unnecessary requests during pinyin input.
+
+</Framework>
+
+<Framework only="solid">
+
+By setting the `composition` property to `true`, you can enable IME input mode. In this mode, when using an IME (e.g., Chinese pinyin input), `onChange` will not be triggered during IME confirmation (e.g., while pinyin is being typed), and will only be triggered once after the IME confirms the input. This is useful for real-time search scenarios to avoid unnecessary requests during pinyin input.
+
+</Framework>
+
+Both Input and TextArea support this property.
+
+<Demo id="composition" />
+
+## API Reference
+
+### Input
+
+<Framework only="react">
+
+> Other attributes are same with html `<input>`
+
+<InputReactApi />
+
+`className` and `style` land on the outer wrapper `div`; other native attributes and events (such as `aria-*`, `id`, `name` and `onClick`) land on the native `input`. `onFocus` and `onBlur` are listened for on the outer `div`, so moving focus between the input and the buttons inside the component does not fire them. `onCompositionStart`, `onCompositionEnd` and `onCompositionUpdate` are called when an IME composition starts, ends and updates, with the native event.
+
+</Framework>
+
+<Framework only="vue">
+
+> Apart from `class` and `style`, undeclared attributes and listeners (including `@click`) are same with html `<input>` and land on the native input; `aria-*`, `id`, `name` and so on are among them. The `focus` and `blur` events are listened for on the outer element, so moving focus between the input and the buttons inside the component does not fire them.
+
+<InputVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<InputSolidApi />
+
+`class`, `style` and `ref` land on the outer wrapper `div`; other native attributes and events (such as `aria-*`, `id` and `name`) land on the native `input`. `onFocus` and `onBlur` are listened for on the wrapper, so moving focus between the input and the buttons inside the component does not fire them.
+
+</Framework>
+
+### TextArea
+
+<Framework only="react">
+
+> Other attributes are same with html `<textarea>`
+
+<TextAreaReactApi />
+
+`className` and `style` land on the outer wrapper `div`, and `textareaStyle` lands on the native `textarea`; other native attributes and events (such as `aria-*`, `id`, `name` and `onClick`) land on the native `textarea`. `onFocus` and `onBlur` are listened for on the outer `div`, so moving focus between the textarea and the clear button does not fire them. `onCompositionStart`, `onCompositionEnd` and `onCompositionUpdate` are called when an IME composition starts, ends and updates, with the native event.
+
+</Framework>
+
+<Framework only="vue">
+
+> Apart from `class` and `style`, undeclared attributes and listeners (including `@click`) are same with html `<textarea>` and land on the native textarea.
+
+<TextAreaVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<TextAreaSolidApi />
+
+`class`, `style` and `ref` land on the outer wrapper `div`; other native attributes and events (such as `aria-*`, `id` and `name`) land on the native `textarea`. `onFocus` and `onBlur` are listened for on the wrapper, so moving focus between the textarea and the clear button does not fire them.
+
+</Framework>
+
+### InputGroup
+
+<Framework only="react">
+
+Common attributes will be set to the child elements of InputGroup, such as size and disabled; a boolean disabled set explicitly on a child takes precedence over the InputGroup value. onFocus and onBlur are not passed down to the children: InputGroup listens for focus events on its own root element, so when a child gains or loses focus, the handlers of InputGroup and of the child both fire and neither overrides the other.
+
+<InputGroupReactApi />
+
+Other undeclared attributes such as `data-*` and `aria-*` do not land on the `role="group"` element. They are passed to every control in the group and override the controls' own attributes of the same name.
+
+</Framework>
+
+<Framework only="vue">
+
+Common attributes (`size`, `disabled`, `data-*`, `aria-*` and so on) are passed to every child; a `disabled` the child writes itself (including the template shorthand `disabled` and `:disabled="false"`) takes precedence over the group value, while `size` always comes from the group. `class` and `style` stay on the `role="group"` element. `focus` and `blur` are the group's own events and are not passed to the children: when a child gains or loses focus, the listeners of the group and of the child both fire and neither overrides the other. `labelPosition` is not passed down either. With a `label`, the `$el` of the component ref is the outer wrapper.
+
+<InputGroupVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<InputGroupSolidApi />
+
+`size` and `disabled` are passed to every control in the group: a control's own `disabled` takes precedence, while `size` always comes from the group. Other undeclared attributes (such as `data-*` and `aria-*`) are passed down the same way, with the control's own attributes taking precedence. `class`, `style` and `ref` land on the `span` with `role="group"`. `onFocus` and `onBlur` are listened for on the group's root element, so when a control gains or loses focus, the handlers of the group and of the control both fire and neither overrides the other.
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+The ref of Input and TextArea is an imperative handle (`InputHandle` and `TextAreaHandle`), not the native DOM node. Read a node from the handle's properties when you need one: each read returns the node mounted now, and `null` after unmount.
+
+Members are listed in the **Methods** tables of Input and TextArea above.
+
+</Framework>
+
+<Framework only="vue">
+
+The template ref of Input and TextArea is an imperative handle (`InputHandle` and `TextAreaHandle`); see the Exposes table of each component above for its members. `input`, `textarea` and `nativeElement` return the node mounted now on each read, and `null` after unmount.
+
+</Framework>
+
+<Framework only="solid">
+
+The ref of Input and TextArea is the outer wrapper `div`, not an imperative handle. `focus()` and `blur()` act on the inner input or textarea. For `select()`, `setSelectionRange()` and other native methods, get the native element through `inputRef` or `textareaRef`, then call the method on it.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- When validateStatus is error, the aria-invalid of the input box is true
+- When used in Form, the input is associated with the Field label through aria-labelledby
+
+### Keyboard and focus
+
+- Input can be focused, keyboard users can use Tab and Shift + Tab to switch focus
+- The password visibility toggle is a native `button` named by the locale's "Show password" or "Hidden password" for its state; it can be focused and toggled with Enter or Space, after which the focus goes back to the input
+- With `showClear`, a value, and no `disabled` (or with `showClearIgnoreDisabled`), the clear button is a native `button` named "Clear input" from the locale. Input shows it on hover or while focus is inside; TextArea does the same unless it is not editable. From the input, Tab moves to the clear button; Enter or Space clears and the focus goes back to the input. A mouse click on the clear button leaves the focus where it is
+
+## Design Tokens
+
+<DesignToken />

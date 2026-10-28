@@ -1,0 +1,145 @@
+{
+    "typography-text": {
+        "source": "packages/semi-ui-solid/src/typography/text.tsx",
+        "props": {
+            "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或组件，默认 span。",
+                "en-US": "Element to render: a tag name or a component. Defaults to span."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "ellipsis": {
+                "zh-CN": "设置自动溢出省略；传对象时见 Ellipsis Config。",
+                "en-US": "Truncates overflowing text; pass an object for the Ellipsis Config."
+            },
+            "icon": {
+                "zh-CN": "前缀图标，可传元素或图标组件；传图标组件时按文本大小取尺寸。",
+                "en-US": "Prefix icon, an element or an icon component; an icon component receives the size the text implies."
+            },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "size": {
+                "zh-CN": "文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸，默认 normal。",
+                "en-US": "Text size; inherit takes the size of the enclosing Text or Paragraph. Defaults to normal."
+            },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "type": { "zh-CN": "文本类型，默认 primary。", "en-US": "Text type. Defaults to primary." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." },
+            "weight": { "zh-CN": "字重，数字。", "en-US": "Font weight as a number." }
+        }
+    },
+    "typography-title": {
+        "source": "packages/semi-ui-solid/src/typography/title.tsx",
+        "props": {
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或组件，默认由 heading 决定（h1 到 h6）。",
+                "en-US": "Element to render: a tag name or a component. Defaults to h1 to h6 by heading."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "ellipsis": {
+                "zh-CN": "设置自动溢出省略；传对象时见 Ellipsis Config。",
+                "en-US": "Truncates overflowing text; pass an object for the Ellipsis Config."
+            },
+            "heading": { "zh-CN": "标题级别，对应 h1 到 h6，默认 1。", "en-US": "Heading level, matching h1 to h6. Defaults to 1." },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "type": { "zh-CN": "文本类型，默认 primary。", "en-US": "Text type. Defaults to primary." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." },
+            "weight": {
+                "zh-CN": "字重，可选 light、regular、medium、semibold、bold、default，或数字。",
+                "en-US": "Font weight: light, regular, medium, semibold, bold, default, or a number."
+            }
+        }
+    },
+    "typography-paragraph": {
+        "source": "packages/semi-ui-solid/src/typography/paragraph.tsx",
+        "props": {
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或组件，默认 p。",
+                "en-US": "Element to render: a tag name or a component. Defaults to p."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "ellipsis": {
+                "zh-CN": "设置自动溢出省略；传对象时见 Ellipsis Config。",
+                "en-US": "Truncates overflowing text; pass an object for the Ellipsis Config."
+            },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "size": {
+                "zh-CN": "文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸，默认 normal。",
+                "en-US": "Text size; inherit takes the size of the enclosing Text or Paragraph. Defaults to normal."
+            },
+            "spacing": { "zh-CN": "行距，extended 为更宽松的行距，默认 normal。", "en-US": "Line spacing; extended is looser. Defaults to normal." },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "type": { "zh-CN": "文本类型，默认 primary。", "en-US": "Text type. Defaults to primary." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." }
+        }
+    },
+    "typography-numeral": {
+        "source": "packages/semi-ui-solid/src/typography/numeral.tsx",
+        "props": {
+            "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或组件，默认 span；内容含 p 等块级元素时使用 div。",
+                "en-US": "Element to render: a tag name or a component. Defaults to span; use div when the content has block elements such as p."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "icon": {
+                "zh-CN": "前缀图标，可传元素或图标组件；传图标组件时按文本大小取尺寸。",
+                "en-US": "Prefix icon, an element or an icon component; an icon component receives the size the text implies."
+            },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "parser": { "zh-CN": "自定义数值解析函数。", "en-US": "Custom number parser." },
+            "precision": { "zh-CN": "小数点后保留的位数，默认 0。", "en-US": "Number of decimal places to keep. Defaults to 0." },
+            "rule": {
+                "zh-CN": "解析规则：text 仅取整，numbers 过滤非数字字符，bytes-decimal、bytes-binary 换算字节单位，percentages 转百分比，exponential 转科学计数法，默认 text。",
+                "en-US": "Parsing rule: text only rounds, numbers filters out non-numeric characters, bytes-decimal and bytes-binary convert byte units, percentages converts to percent, exponential converts to scientific notation. Defaults to text."
+            },
+            "size": {
+                "zh-CN": "文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸，默认 normal。",
+                "en-US": "Text size; inherit takes the size of the enclosing Text or Paragraph. Defaults to normal."
+            },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "truncate": {
+                "zh-CN": "小数点后保留位的取整方式，对应 Math.round、Math.ceil、Math.floor，默认 round。",
+                "en-US": "How the kept decimals are rounded, matching Math.round, Math.ceil and Math.floor. Defaults to round."
+            },
+            "type": { "zh-CN": "文本类型，默认 primary。", "en-US": "Text type. Defaults to primary." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." }
+        }
+    }
+}

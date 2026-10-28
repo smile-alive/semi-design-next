@@ -1,0 +1,26 @@
+**Props**
+
+| 属性     | 说明           | 类型                     | 默认值                                               |
+| -------- | -------------- | ------------------------ | ---------------------------------------------------- |
+| disabled | 禁用全部子项。 | `boolean`                | `semiDefault("FloatButtonGroup", "disabled", false)` |
+| items    | 子项列表。     | `FloatButtonGroupItem[]` | `undefined`                                          |
+
+**Events**
+
+| 事件  | 说明                                                                                                               | 回调参数                                          |
+| ----- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
+| click | 点击未禁用子项时触发，载荷为子项的 value（未设置时为 undefined）与原生 click 事件；子项自己的 onClick 先于它调用。 | `[value: string \| undefined, event: MouseEvent]` |
+
+**Slots**
+
+| 插槽       | 说明                                                            | 作用域参数                      |
+| ---------- | --------------------------------------------------------------- | ------------------------------- |
+| badgeCount | 自定义子项徽章内容，接收 item 与 index。                        | `FloatButtonGroupItemSlotProps` |
+| content    | 自定义子项文本内容，接收 item 与 index；缺省渲染 item.content。 | `FloatButtonGroupItemSlotProps` |
+| icon       | 子项图标，接收 item 与 index。                                  | `FloatButtonGroupItemSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

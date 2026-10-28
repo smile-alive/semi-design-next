@@ -1,0 +1,371 @@
+{
+    "nav": {
+        "source": "packages/semi-ui-react/src/navigation/index.tsx",
+        "props": {
+            "bodyStyle": {
+                "zh-CN": "导航项列表的自定义样式。",
+                "en-US": "Custom style of the navigation item list."
+            },
+            "children": {
+                "zh-CN": "导航的子元素。`Nav.Item` 与 `Nav.Sub` 渲染进列表，`Nav.Header` 与 `Nav.Footer` 分别放进头部与底部，其他节点包在 `li` 中渲染。",
+                "en-US": "Children of the navigation. `Nav.Item` and `Nav.Sub` render into the list, `Nav.Header` and `Nav.Footer` go to the header and the footer, and other nodes are wrapped in an `li`."
+            },
+            "className": {
+                "zh-CN": "最外层 `nav` 元素的类名。",
+                "en-US": "Class name of the outermost `nav` element."
+            },
+            "defaultIsCollapsed": {
+                "zh-CN": "默认是否处于收起状态，仅 `mode` 为 `vertical` 时有效。默认为 `false`。",
+                "en-US": "Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. Defaults to `false`."
+            },
+            "defaultOpenKeys": {
+                "zh-CN": "初始展开的子导航 `itemKey` 数组，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。未传入时，竖向模式下会展开初始选中项所在的子导航。默认为 `[]`。",
+                "en-US": "`itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. When not given, the sub navigations holding the initially selected items open in vertical mode. Defaults to `[]`."
+            },
+            "defaultSelectedKeys": {
+                "zh-CN": "初始选中的导航项 `itemKey` 数组。默认为 `[]`。",
+                "en-US": "`itemKey`s of the items selected initially. Defaults to `[]`."
+            },
+            "expandIcon": {
+                "zh-CN": "`items` 生成的子导航的展开收起箭头图标。`Nav.Sub` 子元素自己的 `expandIcon` 优先。",
+                "en-US": "Expand arrow of the sub navigations generated from `items`. The `expandIcon` of a `Nav.Sub` child takes precedence."
+            },
+            "footer": {
+                "zh-CN": "底部区域：配置对象（`collapseButton`、`collapseText`，以及 `className`、`style` 等属性）、节点或字符串。也可以使用 `Nav.Footer` 子元素。",
+                "en-US": "Footer: a configuration object (`collapseButton`, `collapseText`, and attributes such as `className` and `style`), a node or a string. A `Nav.Footer` child also works."
+            },
+            "header": {
+                "zh-CN": "头部区域：配置对象（`text`、`logo`、`link`、`linkOptions`，以及 `className`、`style` 等属性）、节点或字符串。也可以使用 `Nav.Header` 子元素。",
+                "en-US": "Header: a configuration object (`text`, `logo`, `link`, `linkOptions`, and attributes such as `className` and `style`), a node or a string. A `Nav.Header` child also works."
+            },
+            "isCollapsed": {
+                "zh-CN": "是否处于收起状态的受控值，仅 `mode` 为 `vertical` 时有效。配合 `onCollapseChange` 使用。",
+                "en-US": "Controlled collapsed state, which applies only when `mode` is `vertical`. Use it with `onCollapseChange`."
+            },
+            "items": {
+                "zh-CN": "导航项数据，带 `items` 的项渲染为子导航，字符串项同时作为 `text` 和 `itemKey`。配置对象中只有 `Nav.Item` 与 `Nav.Sub` 的属性、`className`、`style`、事件回调，以及 `data-*` 与 `aria-*` 会传给导航项，其余字段（如 `path`）会被忽略。",
+                "en-US": "Navigation item data. An entry with `items` renders as a sub navigation, and a string entry is both the `text` and the `itemKey`. Only the props of `Nav.Item` and `Nav.Sub`, `className`, `style`, event callbacks, and `data-*` and `aria-*` reach the item; other fields such as `path` are ignored."
+            },
+            "limitIndent": {
+                "zh-CN": "是否限制缩进。设为 `false` 后多级导航按 `level` 缩进，仅 `mode` 为 `vertical` 时生效，水平模式始终限制缩进。",
+                "en-US": "Whether to limit indentation. When `false`, nested items indent by `level`. Applies only when `mode` is `vertical`; horizontal mode always limits indentation."
+            },
+            "mode": {
+                "zh-CN": "导航方向，可选 `vertical` 或 `horizontal`。",
+                "en-US": "Orientation of the navigation: `vertical` or `horizontal`."
+            },
+            "multiple": {
+                "zh-CN": "未使用，设置后不产生效果。",
+                "en-US": "Unused; setting it has no effect."
+            },
+            "onClick": {
+                "zh-CN": "点击任意导航项时触发。数据含 `itemKey`、`text`，点击子导航标题时还含 `openKeys` 与 `isOpen`；`domEvent` 为原生事件。",
+                "en-US": "Called when any navigation item is clicked. The data holds `itemKey` and `text`; clicking a sub navigation title also holds `openKeys` and `isOpen`. `domEvent` is the native event."
+            },
+            "onCollapseChange": {
+                "zh-CN": "收起状态变化时的回调，参数为变化后的收起状态。",
+                "en-US": "Called when the collapsed state changes, with the new collapsed state."
+            },
+            "onDeselect": {
+                "zh-CN": "未使用，传入的回调不会被调用。",
+                "en-US": "Unused; the callback is never called."
+            },
+            "onOpenChange": {
+                "zh-CN": "切换子导航展开状态时触发。数据含 `itemKey`、`openKeys`、`isOpen`，`domEvent` 为原生事件；悬停打开浮层时没有 `domEvent`。",
+                "en-US": "Called when a sub navigation opens or closes. The data holds `itemKey`, `openKeys` and `isOpen`; `domEvent` is the native event and is absent when the popup opens on hover."
+            },
+            "onSelect": {
+                "zh-CN": "第一次选中某个可选中导航项时触发。数据含 `itemKey`、`selectedKeys`、`selectedItems`，`domEvent` 为原生事件。",
+                "en-US": "Called when a selectable navigation item is selected. The data holds `itemKey`, `selectedKeys` and `selectedItems`; `domEvent` is the native event."
+            },
+            "openKeys": {
+                "zh-CN": "展开的子导航 `itemKey` 数组的受控值，配合 `onOpenChange` 使用，仅 `mode` 为 `vertical` 且侧边栏处于展开状态时有效。",
+                "en-US": "Controlled `itemKey`s of the open sub navigations. Use it with `onOpenChange`. Applies only when `mode` is `vertical` and the sidebar is expanded."
+            },
+            "ref": {
+                "zh-CN": "最外层 `nav` 元素的引用。",
+                "en-US": "Reference to the outermost `nav` element."
+            },
+            "renderWrapper": {
+                "zh-CN": "包裹每个导航项的渲染函数，入参为 `{ itemElement, isSubNav, isInSubNav, props }`，返回值放进列表。`itemElement` 只能渲染一次。",
+                "en-US": "Renders the wrapper around each navigation item. It receives `{ itemElement, isSubNav, isInSubNav, props }` and its return value goes into the list. Render `itemElement` exactly once."
+            },
+            "selectedKeys": {
+                "zh-CN": "选中的导航项 `itemKey` 数组的受控值，配合 `onSelect` 使用。",
+                "en-US": "Controlled `itemKey`s of the selected items. Use it with `onSelect`."
+            },
+            "style": {
+                "zh-CN": "最外层 `nav` 元素的样式。",
+                "en-US": "Style of the outermost `nav` element."
+            },
+            "subDropdownProps": {
+                "zh-CN": "`items` 生成的子导航在水平模式或收起状态下弹层 Dropdown 的参数。子导航自己的 `dropdownProps` 或 `subDropdownProps` 优先。",
+                "en-US": "Dropdown props of the sub navigations generated from `items`, used in horizontal mode or when collapsed. A sub navigation's own `dropdownProps` or `subDropdownProps` takes precedence."
+            },
+            "subNavCloseDelay": {
+                "zh-CN": "子导航浮层关闭的延迟，单位为毫秒。收起或水平模式下有效。",
+                "en-US": "Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or in horizontal mode."
+            },
+            "subNavMotion": {
+                "zh-CN": "子导航展开收起时是否有动画。",
+                "en-US": "Whether sub navigations animate when they expand and collapse."
+            },
+            "subNavOpenDelay": {
+                "zh-CN": "子导航浮层显示的延迟，单位为毫秒。收起或水平模式下有效。",
+                "en-US": "Delay in milliseconds before a sub navigation popup opens. Applies when collapsed or in horizontal mode."
+            },
+            "toggleIconPosition": {
+                "zh-CN": "带有子导航项的父级导航项的箭头位置，可选 `left` 或 `right`。",
+                "en-US": "Position of the arrow of an item with sub navigation: `left` or `right`."
+            },
+            "tooltipHideDelay": {
+                "zh-CN": "收起状态下 Tooltip 隐藏的延迟，单位为毫秒。",
+                "en-US": "Delay in milliseconds before the Tooltip hides when collapsed."
+            },
+            "tooltipShowDelay": {
+                "zh-CN": "收起状态下 Tooltip 显示的延迟，单位为毫秒。",
+                "en-US": "Delay in milliseconds before the Tooltip shows when collapsed."
+            }
+        }
+    },
+    "nav-item": {
+        "source": "packages/semi-ui-react/src/navigation/item.tsx",
+        "props": {
+            "className": {
+                "zh-CN": "导航项的自定义类名，传入后替代默认的 `semi-navigation-item-normal`。",
+                "en-US": "Custom class name of the item. It replaces the default `semi-navigation-item-normal`."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。禁用项仍可聚焦，但激活无效。默认为 `false`。",
+                "en-US": "Whether the item is disabled. A disabled item can still take focus, but activating it has no effect. Defaults to `false`."
+            },
+            "forwardRef": {
+                "zh-CN": "接收导航项 `li` 元素的回调，与 `ref` 同时生效。",
+                "en-US": "Receives the `li` element of the item. It runs together with `ref`."
+            },
+            "icon": {
+                "zh-CN": "导航项图标。未设置尺寸的 Semi 图标按导航项的尺寸显示。",
+                "en-US": "Icon of the item. A Semi icon without a size of its own is shown at the size of the item."
+            },
+            "indent": {
+                "zh-CN": "如果没有图标，是否保留其占位，仅对一级导航生效。默认为 `false`。",
+                "en-US": "Whether to keep the icon's space when there is no icon. Applies to the first level only. Defaults to `false`."
+            },
+            "isCollapsed": {
+                "zh-CN": "为 `true` 时该项按收起状态显示，文案改由 Tooltip 提供。与导航的收起状态取或。",
+                "en-US": "When `true`, the item is shown as collapsed and its text is given by a Tooltip. It is combined with the collapsed state of the navigation by OR."
+            },
+            "isSubNav": {
+                "zh-CN": "是否为子导航的标题，由 `Nav.Sub` 内部设置，手写的 `Nav.Item` 不需要传入。",
+                "en-US": "Whether the item is the title of a sub navigation. `Nav.Sub` sets it internally; a hand-written `Nav.Item` does not need it."
+            },
+            "itemKey": {
+                "zh-CN": "导航项唯一标识。",
+                "en-US": "Unique key of the item."
+            },
+            "level": {
+                "zh-CN": "当前项所在嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 `Nav.Item` 需要自己传入。",
+                "en-US": "Nesting depth of the item, which sets the indentation when `limitIndent` is `false`. Items from `items` set it automatically; a `Nav.Item` written by hand must pass it."
+            },
+            "link": {
+                "zh-CN": "导航项的 `href`，传入时整个导航项渲染为链接。",
+                "en-US": "`href` of the item. When given, the item renders as a link."
+            },
+            "linkOptions": {
+                "zh-CN": "透传给链接的属性，如 `target`、`rel` 和 `onClick`。",
+                "en-US": "Attributes passed to the link, such as `target`, `rel` and `onClick`."
+            },
+            "onClick": {
+                "zh-CN": "点击导航项时触发。数据含 `itemKey`、`text`，`domEvent` 为原生事件。",
+                "en-US": "Called when the item is clicked. The data holds `itemKey` and `text`; `domEvent` is the native event."
+            },
+            "onMouseEnter": {
+                "zh-CN": "鼠标移入导航项时调用，事件落在 `li` 上。",
+                "en-US": "Called when the pointer enters the item. The event is on the `li`."
+            },
+            "onMouseLeave": {
+                "zh-CN": "鼠标移出导航项时调用，事件落在 `li` 上。",
+                "en-US": "Called when the pointer leaves the item. The event is on the `li`."
+            },
+            "ref": {
+                "zh-CN": "导航项 `li` 元素的引用；收起或水平模式的弹层内指向 `Dropdown.Item` 的 `li`。",
+                "en-US": "Reference to the `li` element of the item; inside a collapsed or horizontal popup, to the `li` of the `Dropdown.Item`."
+            },
+            "style": {
+                "zh-CN": "导航项 `li` 元素的样式。",
+                "en-US": "Style of the item's `li` element."
+            },
+            "tabIndex": {
+                "zh-CN": "获得焦点的链接或按钮的 `tabindex`。",
+                "en-US": "`tabindex` of the link or button that takes focus."
+            },
+            "text": {
+                "zh-CN": "导航项文案，可以是字符串或节点。",
+                "en-US": "Text of the item, a string or a node."
+            },
+            "toggleIcon": {
+                "zh-CN": "展开收起图标位置上的图标，位置由 `Nav` 的 `toggleIconPosition` 决定。",
+                "en-US": "Icon at the toggle position, which the `toggleIconPosition` of `Nav` decides."
+            },
+            "tooltipHideDelay": {
+                "zh-CN": "此导航项 Tooltip 隐藏的延迟，优先于 `Nav` 的同名属性，收起状态下有效，单位为毫秒。",
+                "en-US": "Delay in milliseconds before this item's Tooltip hides. Wins over the same prop of `Nav`. Applies when collapsed."
+            },
+            "tooltipShowDelay": {
+                "zh-CN": "此导航项 Tooltip 显示的延迟，优先于 `Nav` 的同名属性，收起状态下有效，单位为毫秒。",
+                "en-US": "Delay in milliseconds before this item's Tooltip shows. Wins over the same prop of `Nav`. Applies when collapsed."
+            }
+        }
+    },
+    "sub-nav": {
+        "source": "packages/semi-ui-react/src/navigation/sub-nav.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "子导航的子元素，如 `Nav.Item`，渲染在展开的列表中。",
+                "en-US": "Children of the sub navigation, such as `Nav.Item`, rendered in the expanded list."
+            },
+            "className": {
+                "zh-CN": "不生效，子导航外层的类名由组件固定。",
+                "en-US": "Has no effect; the class name of the outer element is fixed by the component."
+            },
+            "style": {
+                "zh-CN": "子导航最外层 `li` 的样式。",
+                "en-US": "Style of the outermost `li` of the sub navigation."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。默认为 `false`。",
+                "en-US": "Whether the sub navigation is disabled. Defaults to `false`."
+            },
+            "dropdownProps": {
+                "zh-CN": "弹层 Dropdown 的参数，水平模式与收起状态下使用，优先于 `subDropdownProps`。",
+                "en-US": "Props of the popup Dropdown, used in horizontal mode and when collapsed. Takes precedence over `subDropdownProps`."
+            },
+            "dropdownStyle": {
+                "zh-CN": "弹层的样式，优先于 `dropdownProps` 中的 `style`。",
+                "en-US": "Style of the popup. Takes precedence over the `style` in `dropdownProps`."
+            },
+            "expandIcon": {
+                "zh-CN": "展开收起箭头图标，未设置时使用默认箭头。",
+                "en-US": "Expand arrow icon. The default arrow is used when it is not set."
+            },
+            "icon": {
+                "zh-CN": "子导航图标。",
+                "en-US": "Icon of the sub navigation."
+            },
+            "indent": {
+                "zh-CN": "如果没有图标，是否保留其占位，仅对一级导航生效。默认为 `false`。",
+                "en-US": "Whether to keep the icon's space when there is no icon. Applies to the first level only. Defaults to `false`."
+            },
+            "isCollapsed": {
+                "zh-CN": "不生效，收起状态由 `Nav` 的 `isCollapsed` 决定。",
+                "en-US": "Has no effect; the collapsed state comes from the `isCollapsed` of `Nav`."
+            },
+            "isOpen": {
+                "zh-CN": "不生效，展开状态由 `Nav` 的 `openKeys` 与 `defaultOpenKeys` 决定。",
+                "en-US": "Has no effect; the open state comes from the `openKeys` and `defaultOpenKeys` of `Nav`."
+            },
+            "itemKey": {
+                "zh-CN": "子导航的唯一标识，`openKeys` 与 `selectedKeys` 通过它匹配子导航。",
+                "en-US": "Unique key of the sub navigation. `openKeys` and `selectedKeys` match it."
+            },
+            "level": {
+                "zh-CN": "当前项所在的嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 `Nav.Sub` 需要自己传入。默认为 `0`。",
+                "en-US": "Nesting depth of the item, which sets the indentation when `limitIndent` is `false`. Items from `items` set it automatically; a `Nav.Sub` written by hand must pass it. Defaults to `0`."
+            },
+            "maxHeight": {
+                "zh-CN": "不生效。",
+                "en-US": "Has no effect."
+            },
+            "onMouseEnter": {
+                "zh-CN": "鼠标移入子导航时调用，事件落在 `li` 上。",
+                "en-US": "Called when the pointer enters the sub navigation. The event is on the `li`."
+            },
+            "onMouseLeave": {
+                "zh-CN": "鼠标移出子导航时调用，事件落在 `li` 上。",
+                "en-US": "Called when the pointer leaves the sub navigation. The event is on the `li`."
+            },
+            "ref": {
+                "zh-CN": "子导航外层 `li` 元素的引用。",
+                "en-US": "Reference to the outer `li` element of the sub navigation."
+            },
+            "subDropdownProps": {
+                "zh-CN": "弹层 Dropdown 的参数，未传 `dropdownProps` 时使用。",
+                "en-US": "Props of the popup Dropdown, used when `dropdownProps` is not given."
+            },
+            "text": {
+                "zh-CN": "子导航标题文案，可以是字符串或节点。",
+                "en-US": "Title text of the sub navigation, a string or a node."
+            }
+        }
+    },
+    "nav-header": {
+        "source": "packages/semi-ui-react/src/navigation/header.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "头部区域的子元素，渲染在 Logo 与文案之后。",
+                "en-US": "Content of the header, rendered after the logo and the text."
+            },
+            "className": {
+                "zh-CN": "最外层 `div` 的类名。",
+                "en-US": "Class name of the outermost `div`."
+            },
+            "style": {
+                "zh-CN": "最外层 `div` 的样式。",
+                "en-US": "Style of the outermost `div`."
+            },
+            "link": {
+                "zh-CN": "头部的 `href`，传入时头部内容包裹在链接中。",
+                "en-US": "`href` of the header. When given, the header content sits inside a link."
+            },
+            "linkOptions": {
+                "zh-CN": "透传给链接的属性。",
+                "en-US": "Attributes passed to the link."
+            },
+            "logo": {
+                "zh-CN": "Logo 节点，如图片或图标。",
+                "en-US": "Logo node, such as an image or an icon."
+            },
+            "text": {
+                "zh-CN": "Logo 文案。收起后文案隐藏；收起且设置了 `link` 时，字符串或数字文案作为头部链接的可访问名称。",
+                "en-US": "Logo text. It is hidden when collapsed; when collapsed and `link` is set, a string or number text names the header link."
+            },
+            "ref": {
+                "zh-CN": "头部最外层 `div` 元素的引用。",
+                "en-US": "Reference to the outermost `div` of the header."
+            }
+        }
+    },
+    "nav-footer": {
+        "source": "packages/semi-ui-react/src/navigation/footer.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "底部区域的子元素。有子元素时，`collapseButton` 不生效。",
+                "en-US": "Content of the footer. When it has children, `collapseButton` does not apply."
+            },
+            "className": {
+                "zh-CN": "最外层 `div` 的类名。",
+                "en-US": "Class name of the outermost `div`."
+            },
+            "style": {
+                "zh-CN": "最外层 `div` 的样式。",
+                "en-US": "Style of the outermost `div`."
+            },
+            "collapseButton": {
+                "zh-CN": "是否展示收起侧边栏按钮，`true` 时展示内置按钮，也可以传入节点替换它。仅 `mode` 为 `vertical` 且底部没有子元素时生效。",
+                "en-US": "Whether to show the collapse button. `true` shows the built-in button; a node replaces it. Applies only when `mode` is `vertical` and the footer has no children."
+            },
+            "collapseText": {
+                "zh-CN": "内置收起按钮的文案，参数为是否收起。只含文本时也作为图标按钮的可访问名称。",
+                "en-US": "Text of the built-in collapse button, given the collapsed state. A text-only result also names the icon-only button."
+            },
+            "onClick": {
+                "zh-CN": "点击底部区域时调用。",
+                "en-US": "Called when the footer is clicked."
+            },
+            "ref": {
+                "zh-CN": "底部最外层 `div` 元素的引用。",
+                "en-US": "Reference to the outermost `div` of the footer."
+            }
+        }
+    }
+}

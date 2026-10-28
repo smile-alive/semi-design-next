@@ -1,0 +1,87 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| arrowIcon | Custom arrow icon on the right; `null` hides the arrow. When `showClear` is on and a value is selected, hovering shows the clear button first. | `ReactNode` | <ApiType detail={"\u003cIconChevronDown />"}>Type</ApiType> |
+| autoAdjustOverflow | Whether the dropdown flips its direction when an edge covers it. Defaults to `true`. | `boolean` | - |
+| autoMergeValue | In multiple mode, once a parent is selected the value leaves out its descendants. It cannot be switched dynamically. When `leafOnly` is also on, `leafOnly` takes precedence. | `boolean` | `true` |
+| borderless | Whether to use the borderless style. | `boolean` | `false` |
+| bottomSlot | Content at the bottom of the dropdown. | `ReactNode` | - |
+| changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `false` |
+| checkRelation | In multiple mode, how checked states relate: `related` links parents and children, `unRelated` keeps them independent. | `'related' \| 'unRelated'` | `"related"` |
+| children | Declared in the type for children, but the component does not render it. | `React.ReactNode` | - |
+| className | Class name of the trigger, which is the root element. | `string` | - |
+| clearIcon | Custom icon of the clear button; effective when `showClear` is true. | `ReactNode` | - |
+| clickToSelect | In multiple mode, clicking any node selects it. Often used with `showNext="hover"`: hovering expands the submenu and clicking selects the node. | `boolean` | `false` |
+| defaultOpen | Whether the dropdown is open on mount. | `boolean` | `false` |
+| defaultValue | The initially selected entry, read once on mount: a node or a path in single mode, an array of paths in multiple mode. | <ApiType detail={"ModeValue\u003cMultiple>"}>Type</ApiType> | - |
+| disabled | Whether the Cascader is disabled. | `boolean` | - |
+| disableStrictly | Whether strict disabling is on. A disabled node then does not change when its parent or children are checked. | `boolean` | `false` |
+| displayProp | The node field shown in the trigger and the tags. | `string` | `"label"` |
+| displayRender | Custom trigger content. In single mode it receives the array of labels on the path and returns the trigger content; in multiple mode it receives the Entity of a node and its index, and returns the content of its tag. When not set, single mode joins the labels with `separator`. | <ApiType detail={"ByMultiple\u003cMultiple, (selected: Array\u003cReactNode>) => ReactNode, (selected: Entity, idx: number) => ReactNode>"}>Type</ApiType> | - |
+| dropdownClassName | Class name of the dropdown menu. | `string` | - |
+| dropdownStyle | Inline style of the dropdown menu. | `CSSProperties` | - |
+| emptyContent | Content shown when there is no option or the search has no result. When not set, it uses the no-data text from the locale; `null` shows nothing. | `ReactNode` | - |
+| enableLeafClick | In multiple mode, whether clicking the option of a leaf node checks it. | `boolean` | `false` |
+| expandIcon | Custom icon that marks a node with children. | `ReactNode` | - |
+| filterLeafOnly | Whether the search results only show the paths of leaf nodes. | `boolean` | `true` |
+| filterRender | Renders each search result; it receives `FilterRenderProps`. When a single element is returned, it gets the option's `id`, `role="option"` and the selected state; text or several nodes are wrapped in an `li`. | <ApiType detail={"(props: FilterRenderProps) => ReactNode"}>Type</ApiType> | - |
+| filterSorter | Sorts the search results. It receives two result paths (the node arrays from the root to the matched node) and the input, and returns a comparison value. | <ApiType detail={"(first: CascaderData[], second: CascaderData[], inputValue: string) => number"}>Type</ApiType> | - |
+| filterTreeNode | Whether search is on. True matches the input against the `treeNodeFilterProp` value, case-insensitively. A match function receives the input, that string and the node data. | <ApiType detail={"((inputValue: string, treeNodeString: string, data?: CascaderData) => boolean) \u007c boolean"}>Type</ApiType> | `false` |
+| id | The id of the trigger, which is the root element. | `string` | - |
+| insetLabel | Label inset in the trigger, which names the combobox; it is not rendered when `prefix` is set. | `ReactNode` | - |
+| insetLabelId | The id of the insetLabel content, used to name the combobox; the component generates one when it is not set. | `string` | - |
+| keyMaps | Custom field names for value, label, children, disabled and isLeaf in a node. | `KeyMapProps` | - |
+| leafOnly | In multiple mode, the value and the tags only include leaf nodes. It cannot be switched dynamically. | `boolean` | `false` |
+| loadData | Loads data asynchronously. It receives the path from the root to the current node and must return a Promise. Cannot be used with search. | <ApiType detail={"(selectOptions: CascaderData[]) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| max | In multiple mode, the most paths that can be selected; exceeding it calls `onExceed`. | `number` | - |
+| maxTagCount | In multiple mode, the most tags shown; the rest appear as `+N`. | `number` | - |
+| motion | Whether the dropdown animates when it opens. | `boolean` | `true` |
+| multiple | Whether several paths can be selected. It changes the types of value, defaultValue, onChange, onSelect, displayRender and triggerRender. | `Multiple` | `false` |
+| onBlur | Called when focus leaves or the dropdown closes; it is not the DOM blur event. A click outside passes the native MouseEvent, Esc passes a KeyboardEvent, and closing with the ref's `close()` passes undefined. | <ApiType detail={"(e?: MouseEvent \u007c React.KeyboardEvent \u007c globalThis.MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the selection changes, with the value path of the selection, or an array of paths in multiple mode; with `onChangeWithObject` set to true it receives node data. | <ApiType detail={"(value: ByMultiple\u003cMultiple, Array\u003cSimpleValueType>, Array\u003cArray\u003cSimpleValueType>>>) => void"}>Type</ApiType> | - |
+| onChangeWithObject | When true, onChange receives node data, which includes the value key, instead of values; a controlled value and defaultValue must then be node data too. | `boolean` | - |
+| onClear | Called when the clear button is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | Called when the dropdown opens or closes, with whether it is visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onExceed | In multiple mode, called when `max` is exceeded, with the array of checked Entity. | <ApiType detail={"(checkedItem: Entity[]) => void"}>Type</ApiType> | - |
+| onFocus | Called when the combobox gets focus, or the dropdown is opened by the mouse or the keyboard; it is not the DOM focus event. | <ApiType detail={"(e: MouseEvent \u007c React.KeyboardEvent) => void"}>Type</ApiType> | - |
+| onListScroll | Called when a column scrolls, with the event and `{ panelIndex, activeNode }`; scrolling the search results does not call it. | <ApiType detail={"(e: React.UIEvent\u003cHTMLUListElement>, panel: ScrollPanelProps) => void"}>Type</ApiType> | - |
+| onLoad | Called when a node finishes loading, with the set of newly loaded keys and the data of that node. | <ApiType detail={"(newLoadedKeys: Set\u003cstring>, data: CascaderData) => void"}>Type</ApiType> | - |
+| onSearch | Called when the search text changes, with the input. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onSelect | Called when a node is selected, with its value; in multiple mode a single checked node gives its value, and more give an array. | <ApiType detail={"(value: ByMultiple\u003cMultiple, string \u007c number, string \u007c number \u007c Array\u003cstring \u007c number>>) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the select box. | `string` | - |
+| position | Direction of the dropdown, `bottomLeft` by default and `bottomRight` in RTL. | `Position` | - |
+| prefix | Prefix shown on the left inside the trigger. | `ReactNode` | - |
+| preventScroll | Whether focusing inside the component stops the browser scrolling the document to show the focused element. | `boolean` | - |
+| ref | Receives the `CascaderHandle`, which carries the open, close, focus, blur and search methods listed under Methods. | <ApiType detail={"React.Ref\u003cCascaderHandle>"}>Type</ApiType> | - |
+| remote | Whether to search remotely. Input is then not filtered locally; only `onSearch` is called, and the caller updates `treeData` asynchronously, as Select's remote does. | `boolean` | `false` |
+| restTagsPopoverProps | Props of the Popover that shows the remaining tags, such as `position` and `trigger`; the type is PopoverProps. | `PopoverProps` | `{}` |
+| searchPlaceholder | Placeholder of the search input; `placeholder` is used when it is not set. | `string` | - |
+| searchPosition | Where the search input is: `trigger` puts it in the trigger, `custom` leaves it to the caller, who passes the keyword with the ref's `search` method. | `'trigger' \| 'custom'` | `"trigger"` |
+| separator | Separator between the levels of a path, used in the search results and in the trigger in single mode. | `string` | `" / "` |
+| showClear | Whether to show the clear button. | `boolean` | `false` |
+| showNext | When a submenu expands: `click` or `hover`. | `ShowNextType` | `"click"` |
+| showRestTagsPopover | Once `maxTagCount` is exceeded, whether hovering `+N` shows the remaining tags in a Popover. | `boolean` | `false` |
+| size | Size of the select box: `small`, `default` or `large`. | `CascaderType` | `"default"` |
+| stopPropagation | Whether clicks on the dropdown stop bubbling. | `boolean \| string` | `true` |
+| style | Style of the trigger, which is the root element. | `CSSProperties` | - |
+| suffix | Suffix shown on the right inside the trigger. | `ReactNode` | - |
+| topSlot | Content at the top of the dropdown. | `ReactNode` | - |
+| treeData | Node data; see CascaderData. | <ApiType detail={"Array\u003cCascaderData>"}>Type</ApiType> | `[]` |
+| treeNodeFilterProp | The node field matched against the search input. | `string` | `"label"` |
+| triggerRender | Renders a custom trigger; it receives `TriggerRenderProps`, and the element it returns replaces the default trigger content. | <ApiType detail={"(props: TriggerRenderProps\u003cMultiple>) => ReactNode"}>Type</ApiType> | - |
+| validateStatus | Validation status of the trigger: `default`, `error` or `warning`; it only affects the style. When not set, it behaves as `default`. | `ValidateStatus` | - |
+| value | The selected entry under control, typed like `defaultValue`. Passing it makes the component controlled, to be updated with `onChange`. | <ApiType detail={"ModeValue\u003cMultiple>"}>Type</ApiType> | - |
+| virtualizeInSearch | Virtual list of the search results, made of `height`, `width` and `itemSize`, for large result sets; `height` defaults to 180. | `Virtualize` | - |
+
+**Methods**
+
+| Method | Description                                                                                                                              | Type                                                       |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| blur   | Removes focus from the combobox.                                                                                                         | <ApiType detail={"() => void"}>Type</ApiType>              |
+| close  | Closes the dropdown.                                                                                                                     | <ApiType detail={"() => void"}>Type</ApiType>              |
+| focus  | Focuses the combobox, which is the search input or the trigger, without opening the dropdown.                                            | <ApiType detail={"() => void"}>Type</ApiType>              |
+| open   | Opens the dropdown.                                                                                                                      | <ApiType detail={"() => void"}>Type</ApiType>              |
+| search | Searches as if the text were typed; needs `filterTreeNode`, and with `searchPosition` set to `custom` the caller draws the search input. | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

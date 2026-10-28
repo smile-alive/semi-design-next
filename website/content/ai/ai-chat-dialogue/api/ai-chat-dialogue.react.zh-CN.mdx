@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| align | 对话布局方式，可选 `leftRight`（左右分布）或 `leftAlign`（左对齐）。 | `'leftRight' \| 'leftAlign'` | `"leftRight"` |
+| chats | 受控对话消息列表，配合 onChatsChange 使用。 | `Message[]` | - |
+| className | 根元素的类名。 | `string` | - |
+| dialogueRenderConfig | 自定义各区块的渲染，可替换头像、标题、内容、操作栏或整条对话。 | `DialogueRenderConfig` | - |
+| disabledFileItemClick | 是否禁用文件卡片的点击。 | `boolean` | `false` |
+| escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理而丢失内容。 | `boolean` | `true` |
+| hintCls | 提示区最外层的类名。 | `string` | - |
+| hints | 提示信息。点击某条提示后，它成为新的用户消息，并触发 onHintClick。 | `string[]` | - |
+| hintStyle | 提示区最外层的样式。 | `React.CSSProperties` | - |
+| markdownRenderProps | 透传给每条消息所用 MarkdownRender 的属性，`raw` 与 `ref` 由消息决定，不可传入。`components` 与内置组件合并，同名的（如 `code`）覆盖内置组件，需要保留默认功能时可用 `AIChatDialogue.defaultComponents.code` 二次封装；代码块的高亮语言需先通过 `CodeHighlight.register` 注册。 | `MarkdownRenderProps` | - |
+| messageEditRender | 用户消息处于编辑状态时显示的编辑器，参数为消息转换得到的输入内容。 | <ApiType detail={"(props: MessageContent) => ReactNode"}>Type</ApiType> | - |
+| mode | 对话模式，可选 `bubble`、`noBubble` 或 `userBubble`。 | `'bubble' \| 'noBubble' \| 'userBubble'` | `"bubble"` |
+| onAnnotationClick | 点击参考来源时调用，参数为被点击消息块的注释数组。 | <ApiType detail={"(annotations: Annotation[]) => void"}>Type</ApiType> | - |
+| onChatsChange | 消息列表变化时调用，参数为新的消息数组。 | <ApiType detail={"(chats: Message[]) => void"}>Type</ApiType> | - |
+| onFileClick | 点击文件卡片时调用，参数为该文件。 | <ApiType detail={"(file?: InputFile) => void"}>Type</ApiType> | - |
+| onHintClick | 点击提示词时调用，参数为该提示文本。 | <ApiType detail={"(hint: string) => void"}>Type</ApiType> | - |
+| onImageClick | 点击图片时调用，参数为该图片。 | <ApiType detail={"(image?: InputImage) => void"}>Type</ApiType> | - |
+| onMessageBadFeedback | 对消息点踩时调用，参数为该消息。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageCopy | 复制消息时调用：文本写入剪贴板成功后才调用，复制的文本不含推理内容；没有可复制的文本时既不写入也不调用。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageDelete | 删除消息时调用，参数为该消息。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageEdit | 编辑消息时调用，参数为该消息。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageGoodFeedback | 对消息点赞时调用，参数为该消息。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageReset | 重置消息时调用，参数为该消息。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageShare | 分享消息时调用，参数为该消息。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onReferenceClick | 引用按钮点击时调用。参数没有 `id`，加入 AIChatInput 的 `references` 前由使用方补上；文件项没有 `type`。 | <ApiType detail={"(item: Partial\u003cReference>) => void"}>Type</ApiType> | - |
+| onSelect | 选中的消息变化时调用，参数为选中消息的 id 数组。 | <ApiType detail={"(selectedIds: string[]) => void"}>Type</ApiType> | - |
+| ref | 接收句柄对象，其上带有下方 Methods 表中的方法，不是 DOM 元素。 | <ApiType detail={"React.Ref\u003cAIChatDialogueHandle>"}>Type</ApiType> | - |
+| renderDialogueContentItem | 按内容项类型返回渲染内容的映射，键是内容项的 `type`。工具调用先按 `type` 再按 `name` 索引（如 `function_call` 下的 `create_travel_guide`），纯文本消息使用键 `default`。 | `DialogueContentItemRendererMap` | - |
+| renderHintBox | 自定义提示项的渲染，参数含提示文本 `content`、序号 `index` 与点击回调 `onHintClick`。 | <ApiType detail={"(props: { content: string; index: number; onHintClick: () => void }) => React.ReactNode"}>Type</ApiType> | - |
+| roleConfig | 各角色（user、assistant、system 等）的名称、头像与头像颜色，必填，不读取全局默认值。 | `RoleConfig` | - |
+| selecting | 是否开启多选模式。 | `boolean` | `false` |
+| showReference | 是否在文字或文件消息中展示可被引用的图标，仅对用户消息生效。 | `boolean` | `false` |
+| showReset | 是否展示重置操作。 | `boolean` | `true` |
+| style | 根元素的样式。 | `React.CSSProperties` | - |
+
+**Methods**
+
+| 方法           | 说明                                   | 类型                                                            |
+| -------------- | -------------------------------------- | --------------------------------------------------------------- |
+| deselectAll    | 取消全选所有消息。                     | <ApiType detail={"() => void"}>Type</ApiType>                   |
+| scrollToBottom | 滚动到最底部，参数为 `true` 时带动画。 | <ApiType detail={"(animation: boolean) => void"}>Type</ApiType> |
+| scrollToTop    | 滚动到最顶部，参数为 `true` 时带动画。 | <ApiType detail={"(animation: boolean) => void"}>Type</ApiType> |
+| selectAll      | 全选所有消息。                         | <ApiType detail={"() => void"}>Type</ApiType>                   |

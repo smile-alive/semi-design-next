@@ -1,0 +1,43 @@
+{
+    "layout": {
+        "source": "packages/semi-ui-react/src/layout/index.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "布局内容，可包含 `Layout.Header`、`Layout.Sider`、`Layout.Content`、`Layout.Footer` 或嵌套的 `Layout`。",
+                "en-US": "Content of the layout: `Layout.Header`, `Layout.Sider`, `Layout.Content`, `Layout.Footer` or a nested `Layout`."
+            },
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "hasSider": {
+                "zh-CN": "表示子元素里有 Sider，一般不用指定。直接子元素中的 Sider 在渲染时即可识别；更深层嵌套的 Sider 在挂载后才登记，服务端渲染时传 true 可避免样式闪动。传 false 不能去掉 Sider 带来的 has-sider 类。",
+                "en-US": "Indicates that a Sider is inside; usually not needed. A direct child Sider is detected during render; a Sider nested deeper registers after mount, so pass true during SSR to avoid a style flash. Passing false cannot remove the has-sider class that a Sider adds."
+            },
+            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
+            "ref": { "zh-CN": "根元素的引用，元素的标签由 `tagName` 决定。", "en-US": "Reference to the root element, whose tag is set by `tagName`." },
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." }
+        }
+    },
+    "layout-sider": {
+        "source": "packages/semi-ui-react/src/layout/sider.tsx",
+        "props": {
+            "aria-label": { "zh-CN": "侧边栏的可访问名称，描述该 Sider 的作用。", "en-US": "Accessible name of the sider, describing what it is for." },
+            "breakpoint": {
+                "zh-CN": "触发响应式布局的断点，可选 `xs`、`sm`、`md`、`lg`、`xl` 或 `xxl`。仅在挂载时读取一次。",
+                "en-US": "Breakpoints that trigger the responsive layout: `xs`, `sm`, `md`, `lg`, `xl` or `xxl`. Read once at mount."
+            },
+            "children": {
+                "zh-CN": "侧边栏内容，渲染在根元素内的包裹 `div` 中。",
+                "en-US": "Sider content, rendered inside a `div` wrapped by the root element."
+            },
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "onBreakpoint": {
+                "zh-CN": "断点命中状态变化时调用，参数为断点名与是否命中。挂载时对 `breakpoint` 中的每个断点按当前视口调用一次，之后在命中或离开时调用。",
+                "en-US": "Called with the breakpoint name and whether it matches: once for each breakpoint in `breakpoint` at mount with the current viewport, then whenever a match starts or stops."
+            },
+            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
+            "ref": { "zh-CN": "根元素 `aside` 的引用。", "en-US": "Reference to the root `aside` element." },
+            "role": { "zh-CN": "根元素 `aside` 的 `role`。", "en-US": "`role` of the root `aside` element." },
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." }
+        }
+    }
+}

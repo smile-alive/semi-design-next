@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| className | Class name of the root element. | `string` | `""` |
+| content | Key labels to show. Defaults to hotKeys. | `string[]` | `null` |
+| getListenerTarget | Returns the element that listens for keydown. When omitted, or when it returns null or undefined, document.body is used. It is read again after mount, so a ref of a parent container works; the listener moves when the returned element changes. | <ApiType detail={"() => HTMLElement \u007c null \u007c undefined"}>Type</ApiType> | - |
+| hotKeys | Key combination: any number of modifiers (`Shift`, `Control`, `Meta`, `Alt`) plus one other key, as `KeyboardEvent.key` values matched by physical key position. An invalid combination throws, including after an update. | `KeyboardEvent['key'][]` | - |
+| onHotKey | Called when the full key combination is pressed, with the native `KeyboardEvent`. | <ApiType detail={"(e: KeyboardEvent) => void"}>Type</ApiType> | - |
+| preventDefault | Whether the default behavior of the key combination is prevented. | `boolean` | `false` |
+| ref | Reference to the root `div` element. When `render` is `null` or returns `null` no root element is rendered, and the reference is `null`. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| render | Replaces the key hint. Accepts a React node or a function returning one. `null`, or a function returning `null`, renders no root element and the hot keys stay active. | <ApiType detail={"(() => ReactNode) \u007c ReactNode"}>Type</ApiType> | - |
+| style | Style of the root element. | `React.CSSProperties` | `null` |

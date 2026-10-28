@@ -1,0 +1,43 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| color | Preset background color of the avatar. | `AvatarColor` | `semiDefault("Avatar", "color", "grey")` |
+| shape | Avatar shape: circle or square. | `AvatarShape` | `undefined` |
+| size | Avatar size, as a preset name or a valid CSS size. | `string` | `undefined` |
+| src | Image source URL. | `string` | `semiGlobalDefault("Avatar", "src")` |
+| srcSet | Responsive image sources. | `string` | `semiGlobalDefault("Avatar", "srcSet")` |
+| alt | Alternative text for the avatar image or text. | `string` | `semiGlobalDefault("Avatar", "alt")` |
+| gap | Space in pixels between the text and either side of the avatar. | `number` | `semiDefault("Avatar", "gap", 3)` |
+| imgAttr | Native attributes applied to the inner img element. | `ImgHTMLAttributes` | `semiGlobalDefault("Avatar", "imgAttr")` |
+| topSlot | Gradient, text color, class and style of the top badge; use the topSlotText slot for its content. | `AvatarTopSlot` | `semiGlobalDefault("Avatar", "topSlot")` |
+| bottomSlot | Shape, background color, text color, class and style of the bottom badge; use the bottomSlotText slot for its content. | `AvatarBottomSlot` | `semiGlobalDefault("Avatar", "bottomSlot")` |
+| border | Additional border, with optional color and animation. | <ApiType detail={"boolean \u007c { color?: string \u007c undefined; motion?: boolean \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Avatar", "border")` |
+| contentMotion | Enables animation in the avatar content area. | `boolean` | `semiGlobalDefault("Avatar", "contentMotion")` |
+| onError | Called when the image fails to load. Return false to prevent the default fallback; this remains a function prop so its result can be read. | <ApiType detail={"(() => boolean \u007c void)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event      | Description                                 | Callback parameters   |
+| ---------- | ------------------------------------------- | --------------------- |
+| mouseEnter | Emitted when the pointer enters the avatar. | `[event: MouseEvent]` |
+| mouseLeave | Emitted when the pointer leaves the avatar. | `[event: MouseEvent]` |
+
+**Slots**
+
+| Slot           | Description                                                 | Scope parameters |
+| -------------- | ----------------------------------------------------------- | ---------------- |
+| default        | Avatar text or custom content.                              | `any`            |
+| hoverMask      | Overlay shown on hover, with styles supplied by the caller. | `any`            |
+| topSlot        | Replaces the entire top badge.                              | `any`            |
+| bottomSlot     | Replaces the entire bottom badge.                           | `any`            |
+| topSlotText    | Text or nodes inside the preset top badge.                  | `any`            |
+| bottomSlotText | Text or nodes inside the preset bottom badge.               | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

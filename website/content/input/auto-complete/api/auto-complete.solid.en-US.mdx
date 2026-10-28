@@ -1,0 +1,46 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | Whether the dropdown flips automatically when it would be clipped. | `boolean` | - |
+| autofocus | Whether the input is focused after mount. | `boolean` | `false` |
+| clearIcon | Custom clear icon, effective when showClear is true. | `JSX.Element` | - |
+| data | Data source of the candidates: an array of strings, numbers or objects. An object item's `value` is the picked value and its `label` is the row text (provide it; markup goes through `renderItem`). Other fields are kept as they are and reach the `renderItem` argument. Pass a new array to update the list. | `T[]` | `[]` |
+| defaultActiveFirstOption | Whether the first candidate is highlighted when the panel opens, so that Enter picks it directly. | `boolean` | `false` |
+| defaultOpen | Whether the dropdown panel is open on mount. | `boolean` | - |
+| defaultValue | Initial value of the input when uncontrolled, read on mount only. | `string \| number` | - |
+| disabled | Whether the component is disabled. | `boolean` | - |
+| dropdownClassName | Class name of the dropdown list, applied to the `role="listbox"` element. | `string` | - |
+| dropdownMatchSelectWidth | Whether the minimum width of the dropdown equals the width of the input. | `boolean` | `true` |
+| dropdownStyle | Inline style of the dropdown list, with kebab-case keys for an object, applied to the `role="listbox"` element. | `JSX.CSSProperties \| string` | - |
+| emptyContent | Content shown in the dropdown when data is empty. While loading, the spinner is shown instead. | `JSX.Element` | `null` |
+| id | The id of the input, for `<label for>`; with `triggerRender` it lands on the root element. | `string` | - |
+| insetLabel | Inset label of the input, rendered in the prefix position. It is not rendered, and does not name the component, when prefix or triggerRender is set. | `JSX.Element` | - |
+| insetLabelId | The id of the insetLabel element, which names the combobox and the listbox. When omitted, the component generates one while an insetLabel is rendered. | `string` | - |
+| loading | Whether the dropdown shows a loading spinner in place of the candidates and the empty content. | `boolean` | `false` |
+| maxHeight | Maximum height of the dropdown list; a number is in px. | `string \| number` | `300` |
+| motion | Whether the dropdown animates when it shows and hides. | `boolean` | `true` |
+| onBlur | Callback when the focus leaves the input area, with the FocusEvent. Moving the focus inside the area, for example to the clear button, does not fire it. | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Callback when the input text changes or a candidate is picked, with the current value. | <ApiType detail={"(value: string \u007c number) => void"}>Type</ApiType> | - |
+| onChangeWithObject | Has no effect; the component does not read it. | `boolean` | - |
+| onClear | Callback after the clear button empties the input. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | Callback when the dropdown shows or hides, with its visibility. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onFocus | Callback when the focus enters the input area, with the FocusEvent. Moving the focus inside the area, for example to the clear button, does not fire it. | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
+| onSearch | Callback as the user types, with the typed text. | <ApiType detail={"(inputValue: string) => void"}>Type</ApiType> | - |
+| onSelect | Callback when a candidate is picked, with its value, or with the item without internal fields when `onSelectWithObject` is set. | <ApiType detail={"(value: string \u007c number \u007c BaseDataItem) => void"}>Type</ApiType> | - |
+| onSelectWithObject | Boolean prop. When true, `onSelect` receives the data item without internal fields instead of its value. | `boolean` | `false` |
+| placeholder | Placeholder of the input. | `string` | - |
+| position | Position of the dropdown; the values are those of the Tooltip position. Unset, it is bottomLeft, or bottomRight when the ConfigProvider direction is rtl. | `Position` | - |
+| prefix | Prefix content of the input. When it is set, insetLabel is not rendered. | `JSX.Element` | - |
+| ref | The root div that wraps the input or the output of `triggerRender`. Its `focus()` and `blur()` act on the input. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| renderItem | Renders a candidate row. The argument is the data item itself, and the return value is JSX. Without it the row shows `label`. | <ApiType detail={"(option: T) => JSX.Element"}>Type</ApiType> | - |
+| renderSelectedItem | The text the input shows for a picked item; it must return a string. A string or number item receives `{ value, label }`, an object item the item itself. | <ApiType detail={"(option: T extends string \u007c number ? BaseDataItem : T) => string"}>Type</ApiType> | - |
+| showClear | Whether to show the clear button when there is content. | `boolean` | `false` |
+| size | Size of the input: small, default or large. | `Size` | `"default"` |
+| stopPropagation | Whether click, mousedown and focus in/out events on the dropdown stop propagating. | `TooltipProps['stopPropagation']` | `true` |
+| suffix | Suffix content of the input. | `JSX.Element` | - |
+| triggerRender | Custom trigger, which replaces the input. Its parameters include `value` (the array of selected items), `inputValue`, `placeholder`, `disabled`, `autofocus`, `size`, `validateStatus`, `showClear`, `prefix`, `suffix`, `clearIcon`, the `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` attributes (other `aria-*` attributes do not reach the custom trigger), `onChange` (updates the input text, calls onSearch and onChange and opens the list), `onClear`, `onFocus`, `onBlur` and `componentProps`. With it, `id` lands on the root element. | <ApiType detail={"(props: AutoCompleteTriggerRenderProps\u003cT>) => JSX.Element"}>Type</ApiType> | - |
+| validateStatus | Validation status: default, error or warning. It only affects the style. | `ValidateStatus` | `"default"` |
+| value | Current value. Passing it makes the component controlled; `undefined` leaves it uncontrolled. | `string \| number` | - |

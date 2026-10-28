@@ -1,0 +1,94 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aria-label | Accessible name of the combobox: the search input while it is in the trigger, otherwise the trigger. | `string` | - |
+| arrowIcon | Custom dropdown arrow icon on the right; `null` shows no arrow. With `showClear` on and a value selected, hovering shows the clear icon first. | `JSX.Element` | - |
+| autoAdjustOverflow | Whether the popup flips its direction automatically when it is covered. | `boolean` | `true` |
+| autoExpandParent | Whether parent nodes expand automatically. | `boolean` | `false` |
+| autoMergeValue | Whether to merge the value: when on, selecting a parent node keeps its descendants out of the value. Works only when `leafOnly` is false. | `boolean` | `true` |
+| borderless | Whether to use the borderless style. | `boolean` | `false` |
+| checkRelation | In multiple mode, the relationship between the checked states of nodes: `related` or `unRelated`. With `unRelated`, the checked states of nodes do not affect each other. | `CheckRelation` | `"related"` |
+| clearIcon | Custom icon of the clear button, effective when `showClear` is true. | `JSX.Element` | - |
+| clickToHide | Whether the dropdown closes automatically after a selection; only works in single mode. | `boolean` | `true` |
+| clickTriggerToHide | When the panel is open, whether clicking the trigger closes it. | `boolean` | `true` |
+| defaultExpandAll | Whether to expand all nodes on initialization. After `treeData` changes this prop no longer takes effect; use `expandAll` if you need that. | `boolean` | - |
+| defaultExpandedKeys | Keys of the nodes expanded by default. Their direct children are displayed. | `string[]` | - |
+| defaultOpen | Whether the dropdown is open by default. | `boolean` | `false` |
+| defaultValue | The initially selected value, read once on mount; an array in multiple mode. | <ApiType detail={"ModeValue\u003cT, Multiple>"}>Type</ApiType> | - |
+| disabled | Whether the component is disabled. | `boolean` | - |
+| disableStrictly | Strict disabling: when a node is disabled, its checked state cannot be changed through its parent or child nodes. | `boolean` | `false` |
+| dropdownClassName | Class name of the dropdown panel. | `string` | - |
+| dropdownMatchSelectWidth | Whether the minimum width of the dropdown panel matches the width of the select box. | `boolean` | `true` |
+| dropdownStyle | Style of the dropdown panel. | `JSX.CSSProperties \| string` | - |
+| emptyContent | Empty state shown when there is no data or the search finds no result. Without it the locale text is shown; `null` hides it. | `JSX.Element` | - |
+| expandAction | How a node expands: `false` (only the expand icon expands it), `click` or `doubleClick`. | `ExpandAction` | `false` |
+| expandAll | Whether to expand all nodes by default. The expansion still follows this prop after `treeData` changes. | `boolean` | `false` |
+| expandedKeys | (Controlled) Keys of the expanded nodes. Their direct children are displayed. | `string[]` | - |
+| expandIcon | Custom expand icon: an element or a function. An element gets the switcher class and the expand click from the component; a function receives `class`, `onClick` and `expanded`, and renders the switcher itself, attaching them to its element. | `TreeProps['expandIcon']` | - |
+| filterTreeNode | Whether the component is searchable, or a function that customizes the search; its third argument is the node data `data`. | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean)"}>Type</ApiType> | `false` |
+| icon | Custom node icon, as Tree's `icon`. An element is used for every node; a function is called once per row with the row's props, including its node data, and returns that row's icon. | <ApiType detail={"JSX.Element \u007c ((row: TreeRowProps) => JSX.Element)"}>Type</ApiType> | - |
+| insetLabel | A label inside the select box, which also names the dropdown tree. | `JSX.Element` | - |
+| insetLabelId | The id of the element around `insetLabel`, for `aria-labelledby` to point at. | `string` | - |
+| keyMaps | Custom names of the key, label, value, disabled, children, isLeaf and icon fields in a node. If you rename the label field and enable search, set `treeNodeFilterProp` to one of the fields in `treeData`, or pass a custom search function to `filterTreeNode`. | `KeyMapProps` | - |
+| labelEllipsis | Whether labels are truncated with an ellipsis on overflow. Without it, it is true when virtualized and false otherwise. | `boolean` | - |
+| leafOnly | In multiple mode, whether only leaf nodes are displayed as tags, and the values passed to `onChange` are leaf nodes only. | `boolean` | - |
+| loadData | Loads child nodes asynchronously and returns a Promise. Mark leaf nodes with `isLeaf` in `treeData`. | <ApiType detail={"(treeNode?: TreeNodeData) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| loadedKeys | (Controlled) Keys of the nodes that have finished loading, used together with `loadData`. | `string[]` | - |
+| maxTagCount | Maximum number of tags displayed; the rest are shown as +N. | `number` | - |
+| motion | Whether the dropdown animates in and out. | `boolean` | `true` |
+| motionExpand | Whether expanding and collapsing nodes animates. | `boolean` | `true` |
+| multiple | Whether several nodes can be selected. | `Multiple` | `false` |
+| onBlur | Called when the TreeSelect loses focus, once after each onFocus. Focus leaving the trigger and the dropdown passes a native FocusEvent, a click outside a native MouseEvent, and selecting a node that closes the dropdown the click or key event of that selection. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent \u007c FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the selected value changes, with the value of the node (an array in multiple mode), the node data and the event. The event is null when a tag is closed and a KeyboardEvent when a node is selected from the keyboard; clearing a single selection passes `undefined`. With `onChangeWithObject` set to true, the arguments become the node data and the event. | <ApiType detail={"(...args: OnChangeArgs\u003cT, Multiple, WithObject>) => void"}>Type</ApiType> | - |
+| onChangeWithObject | Whether `onChange` receives all properties of the node. When true, the arguments of `onChange` become `(node, e)`. | `WithObject` | `false` |
+| onClear | Called when the clear button is clicked. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onExpand | Called when a node expands or collapses, with the array of expanded keys and `{ expanded, node }`. | <ApiType detail={"(expandedKeys: string[], expandedOtherProps: ExpandedOtherProps) => void"}>Type</ApiType> | - |
+| onFocus | Called when focus enters the trigger (including its search input and clear button) or the dropdown from outside, with the native FocusEvent; moving focus among them does not call it again. Opening again with a click or key after a selection closed the dropdown also calls it, with that click or key event, and the focus `searchAutoFocus` gives on mount passes null. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent \u007c FocusEvent \u007c null) => void"}>Type</ApiType> | - |
+| onLoad | Called when a node has finished loading. | <ApiType detail={"(loadedKeys: Set\u003cstring>, treeNode: TreeNodeData) => void"}>Type</ApiType> | - |
+| onSearch | Called when the search value changes, with the search value, `filteredExpandedKeys` (keys of the nodes expanded by the search or by the value, useful when the expansion is controlled) and `filteredNodes` (the nodes that match the search). | <ApiType detail={"(searchValue: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => void"}>Type</ApiType> | - |
+| onSelect | Called when a node is selected or deselected, with the key of the node, whether it is selected, and the node data. | <ApiType detail={"(selectedKey: string, selected: boolean, selectedNode: TreeNodeData) => void"}>Type</ApiType> | - |
+| onVisibleChange | Called when the dropdown panel is shown or hidden, with whether it is visible. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| optionListStyle | Style of the option list. | `JSX.CSSProperties \| string` | - |
+| outerBottomSlot | Custom content rendered at the bottom of the dropdown panel, at the same level as the option list. | `JSX.Element` | - |
+| outerTopSlot | Custom content rendered at the top of the dropdown panel, at the same level as the option list. With `filterTreeNode` on, it replaces the search box; to customize the search, use the `search` method through `ref`. | `JSX.Element` | - |
+| placeholder | Placeholder of the input box. | `string` | - |
+| position | Position of the popup; the values follow the position of Tooltip. Defaults to `bottomLeft` (`bottomRight` in RTL). | `Position` | - |
+| prefix | Content in front of the select box. | `JSX.Element` | - |
+| preventScroll | Whether the browser avoids scrolling the document to show the newly focused element when the component calls `focus` internally. It does not apply to elements passed in by the user. | `boolean` | - |
+| ref | The root element, which carries the `search` and `close` methods; its type is `TreeSelectElement`. Its `focus()` focuses the combobox (the search input while it is in the trigger) without opening the dropdown. | <ApiType detail={"Ref\u003cTreeSelectElement>"}>Type</ApiType> | - |
+| remote | Whether remote search is enabled. When enabled, input skips local filtering and only triggers `onSearch`; the caller fetches the data and updates `treeData`. | `boolean` | `false` |
+| renderFullLabel | Custom rendering of the whole row. It receives a live object, and the returned element is wrapped in a row element that carries `role="treeitem"` and the state attributes. Usage is the same as Tree's `renderFullLabel`. | <ApiType detail={"(renderFullLabelProps: RenderFullLabelProps) => JSX.Element"}>Type</ApiType> | - |
+| renderLabel | Custom rendering of the node label. It receives the original label, the node data and the search word. | <ApiType detail={"(label?: string \u007c number, treeNode?: TreeNodeData, searchWord?: string) => JSX.Element"}>Type</ApiType> | - |
+| renderSelectedItem | Custom rendering of the selected items in the select box. In single mode it returns the content; in multiple mode it returns `{ content, isRenderInTag }`, and when `isRenderInTag` is true the content is wrapped in a Tag with a background color and a close button. | <ApiType detail={"ByMultiple\u003cMultiple, RenderSelectedItemInSingle, RenderSelectedItemInMultiple>"}>Type</ApiType> | - |
+| restTagsPopoverProps | Popover configuration for the collapsed tags beyond `maxTagCount`; see [Popover](/en-US/solid/show/popover#API%20Reference). | `PopoverProps` | - |
+| searchAutoFocus | Whether the search box is focused on mount. | `boolean` | `false` |
+| searchPlaceholder | Placeholder of the search box in the dropdown. | `string` | - |
+| searchPosition | Position of the search box: `dropdown` or `trigger`. | `'dropdown' \| 'trigger'` | `"dropdown"` |
+| searchRender | Custom search box. It receives a live object whose `ref` and ARIA attributes belong on the input; `false` renders no search box. | <ApiType detail={"boolean \u007c ((inputProps: SearchRenderProps) => JSX.Element)"}>Type</ApiType> | - |
+| showClear | Whether the trigger shows the clear button when the value is not empty. | `boolean` | `false` |
+| showFilteredOnly | Whether only the filtered results are displayed while searching. | `boolean` | - |
+| showLine | Whether the nodes in the option panel show connecting lines. | `boolean` | - |
+| showRestTagsPopover | When the number of tags exceeds `maxTagCount`, whether hovering +N shows the remaining tags in a Popover. | `boolean` | `false` |
+| showSearchClear | Whether the search box in the dropdown can be cleared. | `boolean` | `true` |
+| size | Size of the input box: `large`, `small` or `default`. | `Size` | `"default"` |
+| stopPropagation | Whether click events on the dropdown panel stop bubbling. | `boolean \| string` | `true` |
+| style | Inline style of the trigger. Object keys use kebab-case, such as `'margin-right'`. | `JSX.CSSProperties \| string` | - |
+| suffix | Content after the select box. | `JSX.Element` | - |
+| treeData | Node data; keys are unique across the tree. Only a new array updates the options, changes made in place are not seen. | `TreeNodeData[]` | - |
+| treeNodeFilterProp | Property of `TreeNodeData` matched by search. | `string` | `"label"` |
+| treeNodeLabelProp | Property of `TreeNodeData` used to display the text. | `string` | `"label"` |
+| triggerRender | Custom trigger. It receives a `TriggerRenderProps` live object; read its fields in the returned JSX. | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| triggerTagWrap | Whether selected tags wrap onto multiple lines within the trigger. Only works when `multiple` and search are enabled and `searchPosition` is `trigger`. | `boolean` | `false` |
+| validateStatus | Validation status: `warning`, `error` or `default`. It only affects the background color of the component. | `ValidateStatus` | - |
+| value | (Controlled) The selected value. Passing it makes the component controlled, used together with `onChange`; an array in multiple mode. | <ApiType detail={"ModeValue\u003cT, Multiple>"}>Type</ApiType> | - |
+| virtualize | Virtual list configuration: an object with `itemSize` (required, the height of each row), `height` (the height of the dropdown, a number recommended) and `width`. Animation is disabled when virtualized. | `Virtualize` | - |
+
+**Methods**
+
+| Method | Description                                                                              | Type                                                       |
+| ------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| close  | Closes the dropdown.                                                                     | <ApiType detail={"() => void"}>Type</ApiType>              |
+| search | Searches as if the value were typed, opening the dropdown first. Needs `filterTreeNode`. | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

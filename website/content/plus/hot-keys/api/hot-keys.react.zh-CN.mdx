@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性              | 说明                                                                                                                                                            | 类型                                                                              | 默认值  |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------- |
+| className         | 根元素的类名。                                                                                                                                                  | `string`                                                                          | `""`    |
+| content           | 显示的按键文字，缺省显示 hotKeys。                                                                                                                              | `string[]`                                                                        | `null`  |
+| getListenerTarget | 返回监听 keydown 的元素；缺省或返回 null、undefined 时使用 document.body。挂载后会再读取一次，因此读取父容器的 ref 也能取到元素；返回的元素变化后监听随之切换。 | <ApiType detail={"() => HTMLElement \u007c null \u007c undefined"}>Type</ApiType> | -       |
+| hotKeys           | 快捷键组合：任意个修饰键（`Shift`、`Control`、`Meta`、`Alt`）加一个普通键，取值参考 `KeyboardEvent.key`，按物理按键位置匹配。组合不合法时抛错，更新后同样校验。 | `KeyboardEvent['key'][]`                                                          | -       |
+| onHotKey          | 按下完整的快捷键组合时调用，参数为原生 `KeyboardEvent`。                                                                                                        | <ApiType detail={"(e: KeyboardEvent) => void"}>Type</ApiType>                     | -       |
+| preventDefault    | 是否阻止快捷键的默认行为。                                                                                                                                      | `boolean`                                                                         | `false` |
+| ref               | 根元素（`div`）的引用。`render` 为 `null` 或返回 `null` 时不渲染根元素，引用为 `null`。                                                                         | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                 | -       |
+| render            | 替换按键提示的渲染，可以是 React 节点或返回 React 节点的函数。传入 `null` 或返回 `null` 时不渲染根元素，快捷键仍然有效。                                        | <ApiType detail={"(() => ReactNode) \u007c ReactNode"}>Type</ApiType>             | -       |
+| style             | 根元素的样式。                                                                                                                                                  | `React.CSSProperties`                                                             | `null`  |

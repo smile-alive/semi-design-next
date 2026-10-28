@@ -1,0 +1,90 @@
+---
+title: Divider
+order: 25
+icon: doc-divider
+brief: Divider is a linear, lightweight component used to logically organize element content and page structure or areas.
+---
+
+import DividerReactApi from './api/divider.react.en-US.mdx';
+import DividerVueApi from './api/divider.vue.en-US.mdx';
+import DividerSolidApi from './api/divider.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Divider } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Divider } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Divider } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### With Children
+
+<Framework only="vue">
+
+The content of a horizontal divider is passed through the default slot; a vertical divider shows no content.
+
+</Framework>
+
+<Framework only="solid">
+
+The content of a horizontal divider is passed through `children`; a vertical divider shows no content.
+
+</Framework>
+
+<Demo id="with-children" />
+
+## API Reference
+
+<Framework only="react">
+
+<DividerReactApi />
+
+`id`, `onClick`, `role`, `aria-*` and other native attributes land on the root element. The default `role` is `separator`, which is not set when the divider has content; a `role` you pass overrides the default.
+
+</Framework>
+
+<Framework only="vue">
+
+<DividerVueApi />
+
+`class`, `style` and native attributes passed as attrs land on the root element; the default `separator` role can be overridden with `role`.
+
+</Framework>
+
+<Framework only="solid">
+
+<DividerSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `role` and `aria-*`) land on the root element. The default `role` is `separator`, which is not set when the divider has content; a `role` you pass overrides the default.
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

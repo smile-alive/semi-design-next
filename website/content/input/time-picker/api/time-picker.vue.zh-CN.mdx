@@ -1,0 +1,72 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 当前时间，配合 v-model 使用；type 为 timeRange 时为数组。传 null 是受控的空值，undefined 视为非受控。 | `TimePickerValue \| (TimePickerValue \| undefined)[] \| null` | `undefined` |
+| defaultValue | 非受控时的初始时间，形态同 modelValue。 | `TimePickerValue \| (TimePickerValue \| undefined)[]` | `semiGlobalDefault("TimePicker", "defaultValue")` |
+| open | 面板是否打开，配合 v-model:open 使用；undefined 视为非受控。 | `boolean` | `undefined` |
+| defaultOpen | 非受控时面板是否默认打开。 | `boolean` | `semiDefault("TimePicker", "defaultOpen", false)` |
+| type | 选择类型，time 为单个时间，timeRange 为时间范围。 | `TimePickerType` | `semiDefault("TimePicker", "type", strings.DEFAULT_TYPE)` |
+| format | 展示的时间格式，遵循 date-fns 的 format；use12Hours 时默认为 a h:mm:ss，否则为 HH:mm:ss。 | `string` | `semiGlobalDefault("TimePicker", "format")` |
+| use12Hours | 使用 12 小时制。 | `boolean` | `semiDefault("TimePicker", "use12Hours", false)` |
+| hourStep | 小时选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "hourStep")` |
+| minuteStep | 分钟选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "minuteStep")` |
+| secondStep | 秒选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "secondStep")` |
+| disabled | 禁用全部操作。 | `boolean` | `semiDefault("TimePicker", "disabled", false)` |
+| disabledHours | 返回禁止选择的小时。 | <ApiType detail={"(() => number[])"}>Type</ApiType> | `undefined` |
+| disabledMinutes | 按所选小时返回禁止选择的分钟。 | <ApiType detail={"((selectedHour: number) => number[])"}>Type</ApiType> | `undefined` |
+| disabledSeconds | 按所选小时和分钟返回禁止选择的秒。 | <ApiType detail={"((selectedHour: number, selectedMinute: number) => number[])"}>Type</ApiType> | `undefined` |
+| disabledTime | 仅范围模式生效：按当前值与面板位置返回左右面板各自的禁用规则。value 中未选的一侧为 undefined；返回的 disabledHours、disabledMinutes、disabledSeconds 覆盖对应的同名属性，未返回的回退到同名属性。 | <ApiType detail={"((value: (Date \u007c undefined)[], panelType: PanelType) => DisabledTimeFns)"}>Type</ApiType> | `undefined` |
+| hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `semiDefault("TimePicker", "hideDisabledOptions", false)` |
+| placeholder | 没有值时显示的提示，默认按 type 取语言包文案。 | `string` | `semiGlobalDefault("TimePicker", "placeholder")` |
+| rangeSeparator | 时间范围的分隔符。 | `string` | <ApiType detail={"semiDefault(\"TimePicker\", \"rangeSeparator\", strings.DEFAULT_RANGE_SEPARATOR)"}>Type</ApiType> |
+| size | 输入框的大小。 | `Size` | `semiDefault("TimePicker", "size", "default")` |
+| borderless | 无边框模式。 | `boolean` | `semiDefault("TimePicker", "borderless", false)` |
+| showClear | 是否展示清除按钮。 | `boolean` | `semiDefault("TimePicker", "showClear", true)` |
+| inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘。 | `boolean` | `semiDefault("TimePicker", "inputReadOnly", false)` |
+| validateStatus | 校验状态。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TimePicker", "validateStatus")` |
+| insetLabelId | insetLabel 的 id，用于 aria-labelledby 关联。 | `string` | `undefined` |
+| inputStyle | 输入框根元素的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "inputStyle")` |
+| autofocus | 挂载时让输入框获得焦点，同时打开面板。 | `boolean` | `semiDefault("TimePicker", "autofocus", false)` |
+| focusOnOpen | 挂载后让输入框获得焦点并选中内容，同时打开面板。 | `boolean` | `semiDefault("TimePicker", "focusOnOpen", false)` |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。 | `boolean` | `semiGlobalDefault("TimePicker", "preventScroll")` |
+| motion | 是否展示弹出层动画。 | `boolean` | `semiDefault("TimePicker", "motion", true)` |
+| autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("TimePicker", "autoAdjustOverflow", true)` |
+| position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
+| popupClassName | 弹出层的类名。 | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
+| popupStyle | 弹出层的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `semiDefault("TimePicker", "stopPropagation", true)` |
+| timeZone | 时区，未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | `undefined` |
+| scrollItemProps | 传给各列的属性，只支持 cycled、mode、motion、transform，含义同 ScrollList 的 ScrollItem。 | `TimePickerScrollItemProps` | `semiGlobalDefault("TimePicker", "scrollItemProps")` |
+
+**Events**
+
+| 事件              | 说明                                                                                                  | 回调参数                                                                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| update:modelValue | 时间变化时触发，供 v-model 回写；清除后单选为 undefined，范围为空数组，范围中未选的一侧为 undefined。 | `[value: Date \| (Date \| undefined)[] \| undefined]`                                                                           |
+| change            | 时间变化时触发，参数为 (Date 值, 格式化字符串)，范围模式下两者都是数组。                              | <ApiType detail={"[value: Date \u007c (Date \u007c undefined)[] \u007c undefined, str: string \u007c string[]]"}>Type</ApiType> |
+| update:open       | 面板打开或关闭时触发，供 v-model:open 回写。                                                          | `[open: boolean]`                                                                                                               |
+| openChange        | 面板打开或关闭时触发。                                                                                | `[open: boolean]`                                                                                                               |
+| focus             | 输入框根元素获得焦点时触发；焦点在输入框与清除按钮之间移动不触发。                                    | `[event: FocusEvent]`                                                                                                           |
+| blur              | 点击外部关闭面板时触发，参数为该次 mousedown 的原生事件；离开输入框不触发。                           | `[event: MouseEvent]`                                                                                                           |
+
+**Slots**
+
+| 插槽        | 说明                                                                                                                                                                                            | 作用域参数                   |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| trigger     | 自定义触发器，替代默认的输入框，点击其中任意位置打开面板。参数含 value（未选的一侧为 undefined）、inputValue、placeholder、disabled、componentProps 与 onChange（更新输入框文本，效果同键入）。 | `TimePickerTriggerSlotProps` |
+| panelHeader | 面板头部内容，参数 index 为面板序号（单选为 0，范围为 0 或 1）。范围模式下未提供时显示语言包的「开始时间」「结束时间」。                                                                        | `TimePickerPanelSlotProps`   |
+| panelFooter | 面板底部内容，参数 index 为面板序号。                                                                                                                                                           | `TimePickerPanelSlotProps`   |
+| panel       | 仅范围模式：同时作为第 index 个面板的头部和底部，有内容时优先于 panelHeader 与 panelFooter。                                                                                                    | `TimePickerPanelSlotProps`   |
+| prefix      | 输入框的前缀内容。                                                                                                                                                                              | `any`                        |
+| insetLabel  | 输入框的内嵌标签。                                                                                                                                                                              | `any`                        |
+| clearIcon   | 自定义清除图标，showClear 为 true 时有效。                                                                                                                                                      | `any`                        |
+
+**Exposes**
+
+| 名称  | 说明                                                 | 类型                                          |
+| ----- | ---------------------------------------------------- | --------------------------------------------- |
+| focus | 使输入框获得焦点，同时打开面板；自定义触发器时无效。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | 移除输入框的焦点；自定义触发器时无效。               | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,1144 @@
+---
+title: Upload
+order: 53
+icon: doc-upload
+brief: File selection upload
+---
+
+import UploadReactApi from './api/upload.react.en-US.mdx';
+import UploadFileCardReactApi from './api/upload-file-card.react.en-US.mdx';
+import UploadVueApi from './api/upload.vue.en-US.mdx';
+import UploadFileCardVueApi from './api/upload-file-card.vue.en-US.mdx';
+import UploadSolidApi from './api/upload.solid.en-US.mdx';
+import UploadFileCardSolidApi from './api/upload-file-card.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Upload } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Upload } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip, Upload } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+The most basic usage is to place a Button in the trigger area; clicking it opens the file selection box, and the upload starts automatically after the selection is completed
+
+<Demo id="basic" />
+
+### File name too long ellipsis
+
+Customize the file name tooltip using the `showTooltip` property
+
+When the type is `boolean`, control whether to show the tooltip
+
+<Demo id="show-tooltip" />
+
+<Framework only="react">
+
+When the type is `object`, you can customize the tooltip style.
+
+</Framework>
+
+<Framework only="vue">
+
+Customize the popup through the `#ellipsisTooltip` slot, which receives `content` (the full file name) and `trigger` (the file name element, placed in the popup with `<component :is="trigger" />`); an object `showTooltip` configures the tooltip type and the props passed to it.
+
+</Framework>
+
+<Framework only="solid">
+
+When the type is `object`, you can customize the popup through the `renderTooltip` function, which receives `content` (the full file name) and `children` (the file name element). `type` and `opts` configure the tooltip type and the props passed to the popup.
+
+</Framework>
+
+<Demo id="show-tooltip-custom" />
+
+### Add prompt text
+
+Set a custom prompt text through the `prompt` slot. Set the slot position by `promptPosition`, optional `left`, `right`, `bottom`, the default is `right`
+
+<Demo id="prompt" />
+
+When listType is picture, the reference object at promptPosition is the whole picture wall list
+
+<Demo id="prompt-picture" />
+
+### Click on the avatar to trigger upload
+
+<Demo id="avatar" />
+
+```css
+.avatar-upload .semi-upload-add {
+    border-radius: 50%; // Make sure that only the circle is clicked on the hot zone
+}
+```
+
+### Custom upload attributes
+
+Custom upload attributes can be added by setting `data`, `headers`
+
+<Demo id="custom-data" />
+
+### Upload file type
+
+The type of files uploaded can be restricted through the `accept` attribute (the native `html` attribute of `input`).
+
+`accept` supports the following two types of strings:
+
+- A collection of file extensions (recommended), such as .jpg, .png, etc.;
+- MIME types collection of file types, please refer to [MDN document](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types)
+
+For example, only allowing users to upload PNG and PDF files, `accept` can be written like this: `accept ='.pdf,.png'` or `accept ='application/pdf,image/png'` (the MIME type of PNG and PDF Connect through `,`).
+
+<Framework only="react">
+
+<Notice type="primary" title="Notes">
+    <div>Upload will intercept files that do not meet the accept format internally. When files that do not meet the format requirements are intercepted, the onAcceptInvalid method will be triggered;</div>
+    <div>accept uses the suffix to avoid the incompatibility between file.type and MIME due to different browsers or operating systems. </div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="Notes">
+    <div>Upload will intercept files that do not meet the accept format internally. When files that do not meet the format requirements are intercepted, the acceptInvalid event will be emitted;</div>
+    <div>accept uses the suffix to avoid the incompatibility between file.type and MIME due to different browsers or operating systems. </div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="Notes">
+    <div>Upload intercepts files that do not match the accept format internally. When such a file is intercepted, the onAcceptInvalid method is triggered;</div>
+    <div>Using a suffix in accept avoids file.type incompatibility with MIME types caused by different browsers or operating systems.</div>
+</Notice>
+
+</Framework>
+
+<Demo id="accept" />
+
+### Upload folder
+
+By passing in `directory` as `true`, all files in the folder can be uploaded
+
+<Demo id="directory" />
+
+### Select multiple files at once
+
+You can select multiple files to upload at the same time by setting the `multiple` attribute.
+
+<Demo id="multiple" />
+
+### Limit the total number of files
+
+<Framework only="react">
+
+You can limit the maximum number of files that can be uploaded by setting the `limit` property. When `limit` is 1, always replace the current one with the latest upload, and will not trigger the onExceed callback
+
+</Framework>
+
+<Framework only="vue">
+
+You can limit the maximum number of files that can be uploaded by setting the `limit` property. When `limit` is 1, always replace the current one with the latest upload, and will not emit the `exceed` event
+
+</Framework>
+
+<Framework only="solid">
+
+Set the `limit` property to limit the maximum number of files that can be uploaded  
+When `limit` is 1, the latest upload always replaces the current one, and the `onExceed` callback is not triggered
+
+</Framework>
+
+<Demo id="limit" />
+
+When the limit is reached, disable the trigger control rather than Upload, so uploaded files can still be removed.
+
+<Demo id="limit-disabled" />
+
+In the photo wall mode, when the number of uploaded files is equal to the limit, the upload entry will be automatically hidden
+
+<Demo id="limit-picture" />
+
+### Limit upload file size
+
+<Framework only="react">
+
+The upload file size limit can be customized through the `maxSize` and `minSize` properties, and the callback when the limit is exceeded can be set by setting `onSizeError`.
+
+</Framework>
+
+<Framework only="vue">
+
+The upload file size limit can be customized through the `maxSize` and `minSize` properties, and you can listen to `@sizeError` to be notified when the limit is exceeded.
+
+</Framework>
+
+<Framework only="solid">
+
+Use the `maxSize` and `minSize` properties to customize the file size limits, and set `onSizeError` to get a callback when a file exceeds them.
+
+</Framework>
+
+<Demo id="size-limit" />
+
+### Custom list operation area
+
+<Framework only="react">
+
+When `listType` is `list`, you can customize the list operation area by passing in `renderFileOperation`
+
+</Framework>
+
+<Framework only="vue">
+
+When `listType` is `list`, you can customize the list operation area through the `#fileOperation` slot, which receives `UploadFileItemSlotProps`
+
+</Framework>
+
+<Framework only="solid">
+
+When `listType` is `list`, you can customize the list operation area by passing `renderFileOperation`
+
+</Framework>
+
+<Demo id="render-file-operation" />
+
+### Custom file list title
+
+<Framework only="react">
+
+When `listType` is `list`, you can customize the title area at the top of the file list through `fileListTitle`. Two forms are supported:
+
+#### String or ReactNode form
+
+When passing a string or ReactNode, only the title text is replaced, and the clear button retains its default style:
+
+<Demo id="file-list-title" />
+
+#### Function form
+
+When passing a function, you can fully customize the title area, including the clear button. The function receives the following parameters:
+
+- `fileList`: Current file list
+- `onClear`: Callback function to clear files
+- `clearText`: Default text for the clear button (based on current locale)
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
+<Framework only="vue">
+
+When `listType` is `list`, you can customize the title area at the top of the file list through two slots:
+
+#### Replace only the title text
+
+`#fileListTitle` replaces only the title text, and the clear button retains its default style:
+
+<Demo id="file-list-title" />
+
+#### Replace the whole title area
+
+`#fileListHeader` replaces the whole title area, including the clear button. Once the slot is provided, the default title does not come back even when it renders nothing. The slot receives the following parameters:
+
+- `fileList`: Current file list
+- `onClear`: Function to clear files
+- `clearText`: Default text for the clear button (based on current locale)
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
+<Framework only="solid">
+
+When `listType` is `list`, you can customize the title area at the top of the file list through `fileListTitle`. Two forms are supported:
+
+#### JSX form
+
+When a JSX element is passed, only the title text is replaced and the clear button keeps its default style:
+
+<Demo id="file-list-title" />
+
+#### Function form
+
+When a function is passed, the whole title area can be customized, including the clear button. The function receives the following arguments:
+
+- `fileList`: the current file list
+- `onClear`: the callback that clears the files
+- `clearText`: the default text of the clear button (based on the current locale)
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
+### Custom preview logic
+
+<Framework only="react">
+
+When `listType` is list, the preview logic can be implemented by passing in `previewFile`.  
+For example, when you don't need thumbnail preview for image types, you can constantly return a `<IconFile />` in previewFile.  
+If you want to enlarge and preview the image when clicked, you can use the `Image` component in `previewFile`.  
+Or if you want to use an additional operation area to achieve enlarged preview when clicked, you can also combine `renderFileOperation` to place some custom elements such as Icon to achieve enlarged preview when clicked.
+
+</Framework>
+
+<Framework only="vue">
+
+When `listType` is list, the preview logic can be implemented through the `#previewFile` slot. Its content replaces the thumbnail, and the default thumbnail does not come back even when the slot renders nothing.  
+For example, when you don't need thumbnail preview for image types, you can constantly render a `<IconFile />` in `#previewFile`.  
+If you want to enlarge and preview the image when clicked, you can use the `Image` component in `#previewFile`.  
+Or if you want to use an additional operation area to achieve enlarged preview when clicked, you can also combine `#fileOperation` to place some custom elements such as Icon to achieve enlarged preview when clicked.
+
+</Framework>
+
+<Framework only="solid">
+
+When `listType` is `list`, you can customize the preview logic through `previewFile`  
+For example, if you do not need thumbnail previews for image files, you can always return an `<IconFile />` from `previewFile`  
+If you want to enlarge an image when it is clicked, use the Image component inside `previewFile`  
+Or, if you want an extra operation area for the click-to-enlarge preview, you can also combine it with `renderFileOperation` and place custom elements such as an Icon there
+
+</Framework>
+
+<Demo id="preview-file" />
+
+<Framework only="react">
+
+The following is an example of combining `renderFileOperation` and `ImagePreview`. In this example, clicking the first Icon on the right can enlarge the image for preview.
+
+</Framework>
+
+<Framework only="vue">
+
+The following is an example of combining `#fileOperation` and `ImagePreview`. In this example, clicking the first Icon on the right can enlarge the image for preview.
+
+</Framework>
+
+<Framework only="solid">
+
+An example that combines `renderFileOperation` with ImagePreview. Clicking the first Icon on the right enlarges the image preview.
+
+</Framework>
+
+<Demo id="preview-file-image-preview" />
+
+### Default file list
+
+The uploaded files can be displayed through `defaultFileList`. When you need to preview the thumbnail of the default file, you can set the `preview` attribute of the corresponding `item` in `defaultFileList` to `true`
+
+<Notice title="Notice">The uid of every item in defaultFileList must be unique</Notice>
+
+<Demo id="default-file-list" />
+
+### Controlled component
+
+<Framework only="react">
+
+When `fileList` is passed in, it is used as a controlled component. Need to listen to the onChange callback, and pass the fileList back to Upload (note that a new array object needs to be passed in)
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the file list with `v-model:fileList`; Upload writes it back through the `update:fileList` event whenever the list changes. With a one-way `:fileList` binding that is never written back, the list keeps the value passed in. The `@change` event still receives `{ fileList, currentFile }`, where `currentFile` is `null` after files are added with the `insert` method.
+
+</Framework>
+
+<Framework only="solid">
+
+When `fileList` is passed, Upload is used as a controlled component. Listen to the onChange callback and pass a new array object back to Upload as fileList.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Photo Wall
+
+Set `listType ='picture'`, users can upload pictures and display thumbnails in the list  
+When the uploaded file list is set through defaultFileList or fileList, the url property of the objects in the array is read automatically to display the pictures
+
+<Demo id="picture-wall" />
+
+Set `showPicInfo`, you can view the basic information of the picture
+
+<Demo id="pic-info" />
+
+### Photo Wall With Preview
+
+<Framework only="react">
+
+With the Image component, through the renderThumbnail API, you can click on the image to enlarge the preview
+
+</Framework>
+
+<Framework only="vue">
+
+With the Image component, through the `#thumbnail` slot, you can click on the image to enlarge the preview
+
+</Framework>
+
+<Framework only="solid">
+
+Use the Image component together with the `renderThumbnail` property to enlarge the picture when it is clicked.
+
+</Framework>
+
+<Demo id="render-thumbnail" />
+
+<Framework only="react">
+
+You can customize the preview icon through `renderPicPreviewIcon`, `onPreviewClick`, when the replacement icon `showReplace` is displayed, the preview icon will no longer be displayed. <br /> When you need to customize the preview/replacement function, you need to turn off the replacement function and use `renderPicPreviewIcon` to listen for icon click events. <br /> `onPreviewClick` listens for the click event of the single image container
+
+</Framework>
+
+<Framework only="vue">
+
+You can customize the preview icon through the `#picPreviewIcon` slot and the `@previewClick` event, when the replacement icon `showReplace` is displayed, the preview icon will no longer be displayed. <br /> When you need to customize the preview/replacement function, you need to turn off the replacement function and use `#picPreviewIcon` to listen for icon click events. <br /> `@previewClick` listens for the click event of the single image container. Listening to it also makes the file cards clickable and shows a preview button
+
+</Framework>
+
+<Framework only="solid">
+
+You can customize the preview icon through `renderPicPreviewIcon` and `onPreviewClick`. When the replace icon is shown through `showReplace`, the preview icon is not shown.<br /> To customize the preview or replace feature, turn off the replace feature and listen to the icon click in `renderPicPreviewIcon`.<br /> `onPreviewClick` listens to clicks on the container of a single picture.
+
+</Framework>
+
+<Demo id="preview-icon" />
+
+### Photo Wall Width/Height
+
+<Framework only="react">
+
+By setting picHeight, picWidth, the width and height of picture wall elements can be uniformly set. If you also use `renderThumbnail` to return an Image component for click-to-enlarge preview, you need to specify both the width and height of the Image component
+
+</Framework>
+
+<Framework only="vue">
+
+By setting picHeight, picWidth, the width and height of picture wall elements can be uniformly set. If you also render an Image component in the `#thumbnail` slot for click-to-enlarge preview, you need to specify both the width and height of the Image component
+
+</Framework>
+
+<Framework only="solid">
+
+Set `picHeight` and `picWidth` to set the width and height of the picture wall items uniformly. If you also return an Image component from `renderThumbnail` to enlarge the picture on click, you need to specify both the width and height of the Image component.
+
+</Framework>
+
+<Demo id="pic-size" />
+
+Set `hotSpotLocation` to customize the order of click hotspots, the default is at the end of the photo wall list
+
+<Demo id="hot-spot-location" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Manually trigger upload
+
+<Framework only="react">
+
+`uploadTrigger='custom'`, the upload will not be triggered automatically after the file is selected. Need to manually call the upload method on the ref to trigger
+
+</Framework>
+
+<Framework only="vue">
+
+`uploadTrigger="custom"`, the upload will not be triggered automatically after the file is selected. Call the exposed `upload` method through a template ref to trigger it
+
+</Framework>
+
+<Framework only="solid">
+
+`uploadTrigger='custom'`: after files are selected, the upload will not start automatically. Get the upload component through `ref` and call its `upload` method to start it.
+
+</Framework>
+
+<Demo id="manual-upload" />
+
+### Drag and drop upload
+
+`draggable='true'`, you can use the drag and drop function
+
+<Notice type="primary" title="Notice">
+    <div>When the directory is true, because the browser automatically imposes restrictions, it is not allowed to select a single file when clicking upload. When dragging, we think it is more reasonable to allow folders and files to be dragged, so no additional interception processing is performed.</div>
+</Notice>
+
+<Demo id="draggable" />
+
+<Framework only="react">
+
+You can quickly set the content of the drag area through `dragIcon`, `dragMainText`, `dragSubText`
+
+</Framework>
+
+<Framework only="vue">
+
+You can quickly set the content of the drag area through the `#dragIcon`, `#dragMainText`, `#dragSubText` slots. `#dragIcon` and `#dragMainText` fall back to the default icon and text when they render nothing
+
+</Framework>
+
+<Framework only="solid">
+
+Use `dragIcon`, `dragMainText` and `dragSubText` to quickly set the content of the drag area.
+
+</Framework>
+
+<Demo id="drag-text" />
+
+<Framework only="react">
+
+You can also pass in ReactNode through `children` to completely customize the display of the drag area
+
+</Framework>
+
+<Framework only="vue">
+
+You can also pass content through the default slot to completely customize the display of the drag area
+
+</Framework>
+
+<Framework only="solid">
+
+You can also pass JSX elements through `children` to fully customize the content of the drag area.
+
+</Framework>
+
+<Demo id="drag-children" />
+
+The scss style is as follows
+
+```scss
+.components-upload-demo-drag-area {
+    border-radius: var(--semi-border-radius-small);
+    border: 2px dashed var(--semi-color-border);
+    width: 100%;
+    padding: 12px;
+    background-color: var(--semi-color-tertiary-light-default);
+    display: flex;
+    cursor: pointer;
+    flex-wrap: wrap;
+    justify-content: center;
+    &:hover {
+        background-color: var(--semi-color-primary-light-default);
+        border-color: var(--semi-color-primary);
+    }
+}
+```
+
+### Paste upload
+
+<Framework only="react">
+
+With `addOnPasting`, files pasted anywhere on the page (the `paste` event) are added to the file list, with no clipboard permission prompt. `onPastingError` is called when a pasted file cannot be read.
+
+</Framework>
+
+<Framework only="vue">
+
+With `addOnPasting`, files pasted anywhere on the page (the `paste` event) are added to the file list, with no clipboard permission prompt. The `pastingError` event is emitted when a pasted file cannot be read. An Upload deactivated by KeepAlive does not respond to pasting.
+
+</Framework>
+
+<Framework only="solid">
+
+After `addOnPasting` is set, files pasted anywhere on the page (the `paste` event) are added to the file list without clipboard permission. `onPastingError` is triggered when reading a pasted file fails.
+
+</Framework>
+
+<Demo id="paste" />
+
+### Custom check before upload
+
+The file status can be updated through the `beforeUpload` hook, which is to verify the file after selecting the file before uploading online, `({ file: FileItem, fileList: Array<FileItem> }) => beforeUploadResult | Promise | boolean` During synchronization verification, a boolean (true means the verification passed, false means the verification failed, and the verification failure will prevent the file from uploading online) or an Object object. The specific structure is as follows
+
+<Framework only="react">
+
+```ts
+// beforeUploadResult:
+{
+     fileInstance?: File,
+     status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
+     validateMessage?: React.ReactNode | string, // file validation information
+     shouldUpload: boolean, // Whether to upload. The default is true, if it is false, the fileItem will only be displayed in the list, and the upload operation will not be triggered
+     autoRemove: boolean, // Whether to remove the file from the fileList, the default is false
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+// beforeUploadResult:
+{
+     fileInstance?: File,
+     status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
+     validateMessage?: string, // file validation information; use the #fileValidateMessage slot for a node
+     shouldUpload: boolean, // Whether to upload. The default is true, if it is false, the fileItem will only be displayed in the list, and the upload operation will not be triggered
+     autoRemove: boolean, // Whether to remove the file from the fileList, the default is false
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+// beforeUploadResult:
+{
+    fileInstance?: File,
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait',
+    validateMessage?: string, // the validation message of the file; use renderValidateMessage for a node
+    shouldUpload: boolean, // Whether to upload. Defaults to true. If false, the fileItem is only shown in the list and no upload is triggered
+    autoRemove: boolean, // Whether to remove the file from fileList. Defaults to false
+}
+```
+
+</Framework>
+
+<Demo id="before-upload" />
+
+In the case of asynchronous verification, a Promise must be returned. Promise resolve means that the verification is passed, and reject means that the verification fails and the upload will not be triggered. Object can be passed in when resolve/reject (the structure is the same as beforeUploadResult)
+
+<Demo id="before-upload-async" />
+
+### Update file information after upload
+
+The file status, verification information, and file name can be updated through the `afterUpload` hook. `({ response: any, file: FileItem, fileList: Array<FileItem> }) => afterUploadResult` afterUpload is triggered when the upload is completed (xhr.onload) and no error occurs, it needs to return an Object object (asynchronous return is not supported), the specific structure is as follows
+
+<Framework only="react">
+
+```ts
+// afterUploadResult:
+{
+    status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
+    validateMessage?: React.ReactNode | string, // file validation information
+    autoRemove?: boolean, // Whether to remove the file from the fileList, the default is false
+    name?: string;
+    // The URL for previewing image file, usually the storage address returned by the Server after receiving response
+    url?: string;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+// afterUploadResult:
+{
+    status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
+    validateMessage?: string, // file validation information; use the #fileValidateMessage slot for a node
+    autoRemove?: boolean, // Whether to remove the file from the fileList, the default is false
+    name?: string;
+    // The URL for previewing image file, usually the storage address returned by the Server after receiving response
+    url?: string;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+// afterUploadResult:
+{
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    // the validation message of the file; use renderValidateMessage for a node
+    validateMessage?: string;
+    // whether to remove the file from fileList, defaults to false
+    autoRemove?: boolean;
+    // the name of the file
+    name?: string;
+    // the url of the file for preview, usually the storage address returned by the server after it receives the file in this upload request
+    url?: string
+}
+```
+
+</Framework>
+
+<Demo id="after-upload" />
+
+### Custom request
+
+When customRequest is passed in, it is equivalent to using the custom request method to replace the upload built-in xhr request, and the user needs to take over the upload behavior by himself. The file object of the current operation can be obtained in the input parameters, and the user implements the upload process by himself, and calls onProgress, onError, and onSuccess in the customRequest input parameters when appropriate to update the internal state of the Upload component customRequest contains the following input parameters
+
+```ts
+{
+     // current file name
+     fileName: string,
+     // props.data set by the user
+     data: object,
+     // FileItem, refer to the following document for the specific structure
+     file: FileItem,
+     // original File Object which extends Blob, the file object actually obtained by the browser (https://developer.mozilla.org/zh-CN/docs/Web/API/File)
+     fileInstance: File,
+     // Function that should be called during upload, event needs to include total and loaded attributes
+     onProgress: (event: {total: number, loaded: number }) => any,
+     // Function to be called when upload error
+     onError: (userXhr: { status?: number }, e?: Event) => any,
+     // The function that should be called after the upload is successful, response is the request result after the upload is successful
+     onSuccess: (response: any, e?: Event) => any,
+     // props.withCredentials set by the user
+     withCredentials: boolean,
+     // props.action set by the user
+     action: string,
+}
+```
+
+<Demo id="custom-request" />
+
+### Image Cropping
+
+Enable image cropping functionality through the `crop` property. Supports cropping when clicking to select, dragging, pasting, and replacing files.
+
+#### Basic Usage
+
+<Framework only="react">
+
+Set `crop={true}` to enable default cropping configuration.
+
+</Framework>
+
+<Framework only="vue">
+
+Set `crop` to enable default cropping configuration (`:crop="true"` or the boolean shorthand `crop`).
+
+</Framework>
+
+`accept` and `limit` are applied before cropping, so images that are rejected or exceed the limit are never cropped. Browsers encode only PNG, JPEG and WebP; the cropped result of any other format (GIF, BMP, SVG) is a PNG, and the file's `type` and extension become `image/png` and `.png`.
+
+<Framework only="solid">
+
+Set `crop={true}` to enable the default cropping configuration.
+
+</Framework>
+
+<Demo id="crop" />
+
+#### Custom Cropping Configuration
+
+Configure cropping parameters through object form, including aspect ratio, shape, quality, etc.
+
+<Demo id="crop-custom" />
+
+#### Round Cropping
+
+Suitable for avatar upload scenarios, set `shape: 'round'` to enable round cropping.
+
+<Demo id="crop-round" />
+
+#### Confirm Before Cropping
+
+Use the `beforeCrop` callback to confirm or perform other processing before cropping. Return `false` to skip cropping and upload directly.
+
+<Demo id="before-crop" />
+
+#### Drag and Drop Upload with Cropping
+
+Cropping is also triggered when uploading via drag and drop.
+
+<Demo id="crop-draggable" />
+
+#### Custom Cropping Modal Style
+
+Customize the style and properties of the cropping modal through `cropModalProps`. The `width` of the modal defaults to 600, and the value passed in wins.
+
+`cropModalProps` is typed as `UploadCropModalProps`, which leaves out `visible`, `title`, `okText`, `cancelText`, `onOk` and `onCancel`: set the title and button texts with `modalTitle`, `modalOkText` and `modalCancelText` of `crop`, and the rest belongs to Upload.
+
+<Demo id="crop-modal-props" />
+
+## API Reference
+
+---
+
+### Upload
+
+<Framework only="vue">
+
+<UploadVueApi />
+
+Undeclared attrs such as `class`, `style` and `aria-*` land on the root element, which gets `role="group"` automatically when it has `aria-label` or `aria-labelledby`.
+
+### Upload.FileCard
+
+`Upload.FileCard` is the default file card, used to keep the default look inside slots such as `#fileItem`: `<Upload.FileCard v-bind="props" />`. `class`, `style`, `data-*` and `aria-*` land on its root element.
+
+<UploadFileCardVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<UploadSolidApi />
+
+Undeclared props and events such as `class`, `style` and `aria-*` land on the root element, and `ref` gives the root element. The root gets `role="group"` automatically when it has `aria-label` or `aria-labelledby`.
+
+### Upload.FileCard
+
+`Upload.FileCard` is the default file card, used to keep the default look inside `renderFileItem`: `<Upload.FileCard {...props} />`. `data-*` and `aria-*` land on its root element.
+
+<UploadFileCardSolidApi />
+
+</Framework>
+
+<Framework only="react">
+
+<UploadReactApi />
+
+Undeclared native attributes such as `aria-label`, `id` and `onClick` land on the root element, which gets `role="group"` automatically when it has `aria-label` or `aria-labelledby`.
+
+### Upload.FileCard
+
+`Upload.FileCard` is the default file card, used to keep the default look inside `renderFileItem`: `<Upload.FileCard {...props} />`. `data-*` and `aria-*` land on its root element.
+
+<UploadFileCardReactApi />
+
+</Framework>
+
+## Interfaces
+
+### FileItem Interface
+
+<Notice title="Notice">
+    uid is the unique identifier of the file, and upload update and delete logic strongly relies on this value. If the current file is selected and added by upload, uid will be automatically generated. If it is passed in by props.defaultFileList or props.fileList, it must be passed, and you need to ensure that it will
+    not be repeated
+</Notice>
+
+<Framework only="react">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr event
+    fileInstance?: File; // original File Object which extends Blob, the file object actually obtained by the browser (https://developer.mozilla.org/zh-CN/docs/Web/API/File)
+    name: string;
+    percent?: number; // upload progress percentage
+    preview?: boolean; // Whether to preview according to url
+    response?: any; // xhr's response, response body when the request is successful, and corresponding error when the request fails
+    shouldUpload?: boolean; // Should you continue to upload
+    showReplace?: boolean; // Separately control whether the file displays the replace button
+    showRetry?: boolean; // Separately control whether the file displays the retry button
+    size: string; // file size, unit kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // The unique identifier of the file. If the current file is selected and added by upload, the uid will be automatically generated. If it is defaultFileList, you need to ensure that it will not be repeated
+    url?: string;
+    validateMessage?: ReactNode | string;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr event
+    fileInstance?: File; // original File Object which extends Blob, the file object actually obtained by the browser (https://developer.mozilla.org/zh-CN/docs/Web/API/File)
+    name: string;
+    percent?: number; // upload progress percentage
+    preview?: boolean; // Whether to preview according to url
+    response?: any; // xhr's response, response body when the request is successful, and corresponding error when the request fails
+    shouldUpload?: boolean; // Should you continue to upload
+    showReplace?: boolean; // Separately control whether the file displays the replace button
+    showRetry?: boolean; // Separately control whether the file displays the retry button
+    size: string; // file size, unit kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // The unique identifier of the file. If the current file is selected and added by upload, the uid will be automatically generated. If it is defaultFileList, you need to ensure that it will not be repeated
+    url?: string;
+    validateMessage?: string; // use the #fileValidateMessage slot for a node
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr event
+    fileInstance?: File; // the File object the browser provides, which extends Blob (https://developer.mozilla.org/en-US/docs/Web/API/File)
+    name: string;
+    percent?: number; // upload progress in percent
+    preview?: boolean; // whether to preview from url
+    response?: any; // the xhr response: the response body on success, the corresponding error on failure
+    shouldUpload?: boolean; // whether to continue uploading
+    showReplace?: boolean; // controls whether this file shows the replace button
+    showRetry?: boolean; // controls whether this file shows the retry button
+    size: string; // file size in KB
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // unique identifier of the file. Generated automatically for files selected through upload; for defaultFileList, make sure it is unique
+    url?: string;
+    validateMessage?: string; // the validation message; use renderValidateMessage for a node
+}
+```
+
+</Framework>
+
+FileItem has only the fields above; writing an undeclared field is a type error.
+
+<Framework only="react">
+
+### RenderFileItemProps Interface
+
+The parameter that `renderFileItem`, `renderThumbnail`, `renderPicInfo`, `renderPicPreviewIcon`, `renderFileOperation` and `previewFile` receive: a FileItem plus the file card's props. `renderFileItem` also receives `key: string`, to use as the React key of the list item.
+
+```ts
+interface RenderFileItemProps extends FileItem {
+    index?: number; // position of the file in the list
+    listType?: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    style?: CSSProperties; // from itemStyle
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    onRemove?: () => void; // removes this file
+    onRetry?: () => void; // uploads this file again
+    onReplace?: () => void; // replaces this file
+    onPreviewClick?: () => void; // undefined when Upload has no onPreviewClick
+    previewFile?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderPicInfo?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderPicPreviewIcon?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderPicClose?: (renderPicCloseProps: { className: string; remove: (e: MouseEvent) => void }) => ReactNode;
+    renderThumbnail?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderFileOperation?: (renderProps: RenderFileItemProps) => ReactNode;
+}
+```
+
+### RenderFileListTitleProps Interface
+
+The parameter type when `fileListTitle` is passed as a function:
+
+```ts
+interface RenderFileListTitleProps {
+    fileList: Array<FileItem>; // Current file list
+    onClear: () => void; // Callback function to clear files
+    clearText: string; // Default text for the clear button (based on current locale)
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+### RenderFileItemProps Interface
+
+The arguments received by `renderFileItem`, `renderThumbnail`, `renderPicInfo`, `renderPicPreviewIcon`, `renderFileOperation`, `renderValidateMessage` and `previewFile`. They add the file card properties on top of FileItem.
+
+```ts
+interface RenderFileItemProps extends FileItem {
+    index?: number; // position of the file in the list
+    listType?: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    style?: JSX.CSSProperties; // from itemStyle
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    onRemove?: () => void; // remove this file
+    onRetry?: () => void; // upload this file again
+    onReplace?: () => void; // replace this file
+    onPreviewClick?: () => void; // called when the file card is clicked
+    previewFile?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderPicInfo?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderPicPreviewIcon?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderPicClose?: (renderPicCloseProps: { class: string; remove: (e: MouseEvent) => void }) => JSX.Element;
+    renderThumbnail?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderFileOperation?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderValidateMessage?: (renderProps: RenderFileItemProps) => JSX.Element; // empty content falls back to validateMessage
+}
+```
+
+### RenderFileListTitleProps Interface
+
+The argument type when `fileListTitle` is passed a function:
+
+```ts
+interface RenderFileListTitleProps {
+    fileList: Array<FileItem>; // the current file list
+    onClear: () => void; // the callback that clears the files
+    clearText: string; // the default text of the clear button (based on the current locale)
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+### UploadFileItemSlotProps Interface
+
+The parameter that the `#fileItem`, `#thumbnail`, `#picInfo`, `#picPreviewIcon`, `#fileOperation`, `#previewFile` and `#fileValidateMessage` slots receive. The file data sits in the `file` field, next to the file card's props. It has no `key`, so `<Upload.FileCard v-bind="props" />` renders the default card.
+
+```ts
+interface UploadFileItemSlotProps {
+    file: FileItem;
+    index?: number; // position of the file in the list
+    listType: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    validateMessage?: string;
+    style?: StyleValue; // from itemStyle
+    onRemove: () => void; // removes this file
+    onRetry: () => void; // uploads this file again
+    onReplace: () => void; // replaces this file
+    onPreviewClick?: () => void; // present only when Upload has a previewClick listener
+}
+```
+
+### UploadPicCloseSlotProps Interface
+
+The parameter that `#picClose` receives:
+
+```ts
+interface UploadPicCloseSlotProps {
+    class: string;
+    onRemove: (e: MouseEvent) => void;
+}
+```
+
+### UploadFileListHeaderSlotProps Interface
+
+The parameter that `#fileListHeader` receives:
+
+```ts
+interface UploadFileListHeaderSlotProps {
+    fileList: FileItem[]; // Current file list
+    onClear: () => void; // Function to clear files
+    clearText: string; // Default text for the clear button (based on current locale)
+}
+```
+
+</Framework>
+
+### CropProps Interface
+
+Configuration object accepted by the `crop` prop:
+
+<Framework only="vue">
+
+In Vue the type is exported as `UploadCropProps`.
+
+</Framework>
+
+```ts
+interface CropProps {
+    aspectRatio?: number; // Crop box aspect ratio, e.g. 16/9, 1, 4/3
+    shape?: 'rect' | 'round' | 'roundRect'; // Crop box shape, default 'rect'
+    minZoom?: number; // Minimum zoom ratio
+    maxZoom?: number; // Maximum zoom ratio
+    zoomStep?: number; // Zoom step size
+    quality?: number; // Output image quality, range 0 - 1, default 0.92
+    fill?: string; // Fill color of the area outside the cropped region, default transparent 'rgba(0, 0, 0, 0)'
+    modalTitle?: string; // Title text of the crop modal
+    modalOkText?: string; // Confirm button text of the crop modal
+    modalCancelText?: string; // Cancel button text of the crop modal
+}
+```
+
+## Methods
+
+<Framework only="react">
+
+Some internal methods provided by Upload can be accessed through ref. See the **Methods** table under Upload above.
+
+</Framework>
+
+<Framework only="vue">
+
+Upload exposes `insert`, `upload` and `openFileDialog` through `defineExpose`. Call them through a template ref typed as `UploadHandle`; see the Exposes table of Upload above.
+
+</Framework>
+
+<Framework only="solid">
+
+Some internal methods provided by Upload can be accessed through the ref of the root element:
+
+| Name           | Description                                                                                                                     | Type                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| insert         | Upload file, when index is passed, it will be inserted at the specified position, if not passed, it will be inserted at the end | (files: Array\<File\>, index?: number) => void |
+| upload         | Start upload manually, use with uploadTrigger="custom"                                                                          | () => void                                     |
+| openFileDialog | Open the file selection dialog                                                                                                  | () => void                                     |
+
+</Framework>
+
+## Accessibility
+
+The Upload component is an interactive control that can trigger file selection when clicking or dragging. After the file is selected, the status will be displayed in the file list.
+
+### ARIA
+
+- The trigger area is a `role="button"` that Enter and Space activate. When the trigger content holds its own control, such as a Button, the area takes no role and that control is the button; its click opens the file dialog. A disabled control (native `disabled` or `aria-disabled="true"`) still counts as your own control: the area does not become a button, and Enter and Space do not open the file dialog
+- When Upload is disabled, pass `disabled` to that control as well. When `limit` is reached, disable only that control and not Upload, so users can still remove uploaded files
+- When the root element has `aria-label` or `aria-labelledby`, it gets `role="group"` automatically; a `role` you pass yourself wins
+- Add `role="list"` to the file list and describe it with `aria-label`; in the picture wall the add button sits beside the list
+- In list mode the replace button is the trigger of its Tooltip, so Tab stops on it once
+
+## Content Guidelines
+
+- Upload button
+    - For the copywriting specification of the form button, refer to [The content Guidelines of the Button component](/en-US/react/basic/button#content-guidelines)
+- Help text
+    - The help text is written in sentences, the first letter is capitalized, and periods may not be required
+- Error message
+    - Clearly tell the user why the file cannot be uploaded, and tell the user how to upload it successfully
+    - Help texts are written using sentences, capitalized
+    - Concise language that users can read at a glance, such as `File size must be less than 20MB`, `File type must be .gif, .jpg, .png or .svg`
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- When will the retry button appear?
+    - When `showRetry` is true and the upload of the current file fails due to a network error, the retry button will be displayed. Other statuses such as verification failed, upload successful, etc. will not display the retry button.
+- When will the replace button appear?
+    - When `showReplace` is true and the current file status is uploaded, the replace button will be displayed.
+- Where did Semi save the pictures?
+    - Semi is not responsible for the preservation of the image, you need to customize the action when you use the Upload component. You can choose to set action as your own server address or image service address.
+- Form.Upload props.name does not work?
+    - Form.Field has props.name and so does Upload, so the two clash. With Form.Upload, use props.fileName instead to avoid the clash
+- Didn't call the XXX method after uploading the picture?
+    - If you set `accept`, you can try to remove the accept attribute, and then see if the modified method is called. After removing it, the method is called to explain that the file type obtained by accept in the current environment does not match the set accept, and the upload behavior is terminated early. You can make a breakpoint to upload/foundation.js checkFileFormat function to see if the actual value of file.type obtained meets expectations.
+
+<Notice title={'About the progress bar'}>
+    The progress bar indicates the upload progress. The upload progress is divided into two parts: data upload and server return. If all the data has been sent, but the server does not return a response, the progress bar will stay at 95%. The user upload is not completed. At this time, the request in the developer tool
+    will be pending, which is normal.{' '}
+</Notice>

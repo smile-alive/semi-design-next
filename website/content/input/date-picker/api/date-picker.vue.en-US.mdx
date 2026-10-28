@@ -1,0 +1,94 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | The bound value: a Date, a timestamp or a string in format, and an array for range and multiple. null is a controlled empty value; undefined leaves the picker uncontrolled. | `ValueType \| null` | `undefined` |
+| defaultValue | The initial value when uncontrolled. | `ValueType` | `semiGlobalDefault("DatePicker", "defaultValue")` |
+| open | Controls whether the panel is open; use it with v-model:open. | `boolean` | `undefined` |
+| defaultOpen | Whether the panel is open initially. | `boolean` | `semiDefault("DatePicker", "defaultOpen", false)` |
+| type | Type: date, dateRange, dateTime, dateTimeRange, month, monthRange or year. | `Type` | `semiDefault("DatePicker", "type", "date")` |
+| format | Format of the text in the input; the default depends on type. A format without time tokens turns dateTime into date and dateTimeRange into dateRange. | `string` | `semiGlobalDefault("DatePicker", "format")` |
+| defaultPickerValue | The date the panel shows while there is no value; for dateTime types it is also the default time at the bottom. Compared by content: when the content changes the panel moves back to it, so passing `new Date()` on every render counts as a change. | `ValueType` | `semiGlobalDefault("DatePicker", "defaultPickerValue")` |
+| multiple | Whether several dates can be chosen; only for type date. | `boolean` | `semiDefault("DatePicker", "multiple", false)` |
+| max | The number of dates multiple allows; unlimited when omitted. | `number` | `semiGlobalDefault("DatePicker", "max")` |
+| needConfirm | Whether the value is written only after a confirmation; for dateTime and dateTimeRange only. | `boolean` | `semiDefault("DatePicker", "needConfirm", false)` |
+| disabled | Whether the picker is disabled. | `boolean` | `semiDefault("DatePicker", "disabled", false)` |
+| disabledDate | Returns true to disable a date. The second argument carries rangeStart, rangeEnd and rangeInputFocus. When type is year, it is called with January 1 of each year, and returning true disables that year. | `DisabledDateType` | `undefined` |
+| disabledTime | Returns disabledHours, disabledMinutes and disabledSeconds for the current date and panel position. | `DisabledTimeType` | `undefined` |
+| disabledTimePicker | Whether the time selection is disabled; for dateTime and dateTimeRange only. | `boolean` | `semiDefault("DatePicker", "disabledTimePicker", false)` |
+| hideDisabledOptions | Hides the times that are disabled. | `boolean` | `semiDefault("DatePicker", "hideDisabledOptions", false)` |
+| startDateOffset | For dateRange, the start date of a range chosen with one click. | `DateOffsetType` | `undefined` |
+| endDateOffset | For dateRange, the end date of a range chosen with one click. | `DateOffsetType` | `undefined` |
+| placeholder | Placeholder of the input; an array for range types. Defaults to the text of the locale for type. | `string \| string[]` | `semiGlobalDefault("DatePicker", "placeholder")` |
+| rangeSeparator | Separator between the dates of a range input, also used to parse the text. Use the rangeSeparator slot to change only how it is shown. | `string` | <ApiType detail={"semiDefault(\"DatePicker\", \"rangeSeparator\", strings.DEFAULT_SEPARATOR_RANGE)"}>Type</ApiType> |
+| size | Size of the input: small, default or large. | `Size` | `semiDefault("DatePicker", "size", "default")` |
+| density | Size of the panel: default or compact. | `DensityType` | `semiDefault("DatePicker", "density", "default")` |
+| borderless | Removes the border of the input. | `boolean` | `semiDefault("DatePicker", "borderless", false)` |
+| showClear | Whether the clear button is shown. | `boolean` | `semiDefault("DatePicker", "showClear", true)` |
+| inputReadOnly | Whether the input is read-only. | `boolean` | `semiDefault("DatePicker", "inputReadOnly", false)` |
+| inputStyle | Style of the root element of the input. | `StyleValue` | `semiGlobalDefault("DatePicker", "inputStyle")` |
+| insetInput | Moves the inputs into the panel; pass an object to set the placeholders of the inputs. | `boolean \| InsetInputProps` | `semiDefault("DatePicker", "insetInput", false)` |
+| insetLabelId | The id of the inset label element. | `string` | `undefined` |
+| validateStatus | Validation status: default, error or warning. Only affects the style. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("DatePicker", "validateStatus")` |
+| autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `semiDefault("DatePicker", "autofocus", false)` |
+| preventScroll | Whether focusing the input prevents the browser from scrolling to it. | `boolean` | `semiGlobalDefault("DatePicker", "preventScroll")` |
+| weekStartsOn | The first day of the week: 0 is Sunday, 1 is Monday, and so on. | `WeekStartNumber` | `semiDefault("DatePicker", "weekStartsOn", numbers.WEEK_START_ON)` |
+| startYear | First year of the year wheel. Defaults to 100 years before this year. | `number` | `semiGlobalDefault("DatePicker", "startYear")` |
+| endYear | Last year of the year wheel, which must be after the start year. Defaults to 100 years after this year. | `number` | `semiGlobalDefault("DatePicker", "endYear")` |
+| autoSwitchDate | Switches the selected date automatically when the year or month is changed with the arrow buttons or the dropdown. Only for the date type. | `boolean` | `semiDefault("DatePicker", "autoSwitchDate", true)` |
+| syncSwitchMonth | Switches both panels of a range together. | `boolean` | `semiDefault("DatePicker", "syncSwitchMonth", false)` |
+| presets | Shortcuts for dates and times. An item, and its start or end, can be a function that is called when the panel renders and when it is clicked. | `PresetsType` | `semiGlobalDefault("DatePicker", "presets")` |
+| presetPosition | Position of the presets: left, right, top or bottom. | `"top" \| "bottom" \| "left" \| "right"` | `semiDefault("DatePicker", "presetPosition", "bottom")` |
+| timePickerOpts | Options for the time panel: use12Hours, hourStep, minuteStep, secondStep, defaultIsAM and scrollItemProps. The panel owns the format, the value and the disabled times. | <ApiType detail={"Partial\u003cPick\u003cComboboxProps, \"use12Hours\" \u007c \"hourStep\" \u007c \"minuteStep\" \u007c \"secondStep\" \u007c \"scrollItemProps\" \u007c \"defaultIsAM\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "timePickerOpts")` |
+| yearAndMonthOpts | Options for the year and month columns: cycled, mode, motion and transform. The panel owns the list and the selection. | <ApiType detail={"Partial\u003cPick\u003cScrollItemProps\u003cItem>, \"motion\" \u007c \"mode\" \u007c \"cycled\" \u007c \"transform\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "yearAndMonthOpts")` |
+| timeZone | Time zone; a number is the offset from UTC in hours. Falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | `undefined` |
+| motion | Whether the panel animates when it opens. | `boolean` | `semiDefault("DatePicker", "motion", true)` |
+| autoAdjustOverflow | Whether the panel adjusts its direction when it is clipped. | `boolean` | `semiDefault("DatePicker", "autoAdjustOverflow", true)` |
+| position | Position of the panel. Defaults to bottomLeft (bottomRight in RTL), and to leftTopOver with insetInput. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("DatePicker", "position")` |
+| spacing | Distance between the panel and the trigger. 1 for an insetInput panel over the trigger, otherwise the Popover spacing. | `number` | `semiGlobalDefault("DatePicker", "spacing")` |
+| stopPropagation | Whether click events on the panel stop propagating. | `string \| boolean` | `semiDefault("DatePicker", "stopPropagation", true)` |
+| dropdownClassName | Class name of the panel. | `string` | `semiGlobalDefault("DatePicker", "dropdownClassName")` |
+| dropdownStyle | Inline style of the panel. | `StyleValue` | `semiGlobalDefault("DatePicker", "dropdownStyle")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| update:modelValue | Emitted when the value changes, for v-model. It is undefined when a single value is cleared and [] for range and multiple. | `[value: Date \| Date[] \| undefined]` |
+| change | Emitted when the value changes, with the date and the date string; both are arrays for range and multiple. A range type emits it only after both dates are chosen. Shadows the native change event bubbling from the root. | `[date: Date \| Date[] \| undefined, dateString: string \| string[]]` |
+| update:open | Emitted when the panel opens or closes, for v-model:open. | `[open: boolean]` |
+| openChange | Emitted when the panel opens or closes, together with update:open. | `[open: boolean]` |
+| focus | Emitted when an input gets focus, or when a click or key press on the trigger focuses the range start. rangeType is set for range inputs only, and moving between them does not emit again. Shadows the native focus event. | <ApiType detail={"[event: MouseEvent \u007c FocusEvent \u007c KeyboardEvent, rangeType?: RangeInput \u007c undefined]"}>Type</ApiType> |
+| blur | Emitted when the panel closes. The argument is the mousedown that closed it from outside; other ways to close, such as confirming, choosing a date or Esc, pass none. Shadows the native blur event. | `[event?: MouseEvent \| undefined]` |
+| clear | Emitted when the clear button is clicked. | `[event: MouseEvent]` |
+| cancel | Emitted when the selection is cancelled, with the last confirmed value. Only with needConfirm. | `[date: Date \| Date[], dateString: string \| string[]]` |
+| confirm | Emitted when the selection is confirmed, with the selected value. Only with needConfirm. | `[date: Date \| Date[], dateString: string \| string[]]` |
+| panelChange | Emitted when the year or month of the panel changes. | `[date: Date \| Date[], dateString: string \| string[]]` |
+| presetClick | Emitted when a preset button is clicked; the second argument is the native MouseEvent. | `[item: PresetType, event: MouseEvent]` |
+| clickOutSide | Emitted when the panel is open and the user presses outside the panel and the trigger, with the native mousedown event. | `[event: MouseEvent]` |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| --- | --- | --- |
+| trigger | Replaces the trigger. It receives value, inputValue, placeholder, disabled, size, inputReadOnly, rangeInputFocus, type, format, multiple, autofocus and componentProps, plus onChange (sets the input text), onEnterPress (commits it) and onClear. The default clear button no longer applies. | `DatePickerTriggerSlotProps` |
+| date | Content of a day cell, with dayNumber and fullDate (yyyy-MM-dd). | `DatePickerDateSlotProps` |
+| fullDate | Replaces the whole day cell, with dayNumber, fullDate and dayStatus. The cell keeps only its base and active classes. | `DatePickerFullDateSlotProps` |
+| topSlot | Extra area at the top of the panel. | `any` |
+| bottomSlot | Extra area at the bottom of the panel. | `any` |
+| leftSlot | Extra area at the left of the panel. | `any` |
+| rightSlot | Extra area at the right of the panel. | `any` |
+| prefix | Prefix of the input. | `any` |
+| insetLabel | Inset label of the input. | `any` |
+| clearIcon | Custom clear icon, used when showClear is true. | `any` |
+| rangeSeparator | How the separator between the range inputs is shown. It does not affect parsing. | `any` |
+
+**Exposes**
+
+| Name  | Description                                                                                                                            | Type                                                                                 |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| close | Closes the panel. A controlled open wins.                                                                                              | <ApiType detail={"() => void"}>Type</ApiType>                                        |
+| focus | Focuses the input. A range focuses its start input unless rangeEnd is given. With insetInput the focus goes to the input in the panel. | <ApiType detail={"(focusType?: RangeInput \u007c undefined) => void"}>Type</ApiType> |
+| blur  | Blurs the input.                                                                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                                        |

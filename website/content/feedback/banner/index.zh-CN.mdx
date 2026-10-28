@@ -1,0 +1,166 @@
+---
+title: 通知横幅
+order: 87
+icon: doc-banner
+brief: 横幅通常用于标识全页的状态或通知等。它通常是常驻的，需要用户主动将其关闭。
+---
+
+import BannerReactApi from './api/banner.react.zh-CN.mdx';
+import BannerVueApi from './api/banner.vue.zh-CN.mdx';
+import BannerSolidApi from './api/banner.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Banner } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Banner } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Banner } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 不同类型
+
+支持4种类型：`info`、`warning`、`danger`、`success`。默认为 `info`。
+
+<Demo id="types" />
+
+### 非全屏模式
+
+<Framework only="react">
+
+可以设置 `fullMode={false}` 使用非全屏模式的 banner 样式。通过 `bordered` 属性可以设置边框。`icon={null}` 与 `closeIcon={null}` 分别隐藏图标和关闭按钮。
+
+</Framework>
+
+<Framework only="vue">
+
+可以设置 `:fullMode="false"` 使用非全屏模式的 banner 样式。通过 `bordered` 属性可以设置边框。传入空的 `#icon` 与 `#closeIcon` 插槽分别隐藏图标和关闭按钮。
+
+</Framework>
+
+<Framework only="solid">
+
+可以设置 `fullMode={false}` 使用非全屏模式的 banner 样式。通过 `bordered` 属性可以设置边框。`icon={null}` 与 `closeIcon={null}` 分别隐藏图标和关闭按钮。
+
+</Framework>
+
+<Demo id="not-full-mode" />
+
+```
+.components-banner-demo {
+    .semi-banner-info.semi-banner-bordered {
+        border: 1px solid var(--semi-color-primary-disabled);
+    }
+    .semi-banner-warning.semi-banner-bordered {
+        border: 1px solid var(--semi-color-warning-light-active);
+    }
+    .semi-banner-danger.semi-banner-bordered {
+        border: 1px solid var(--semi-color-danger-light-active);
+    }
+    .semi-banner-success.semi-banner-bordered {
+        border: 1px solid var(--semi-color-success-light-active);
+    }
+}
+```
+
+### 自定义内容
+
+<Framework only="react">
+
+可以通过 children 自定义其他渲染内容。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过默认插槽自定义其他渲染内容。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 children 自定义其他渲染内容。
+
+</Framework>
+
+<Demo id="custom-content" />
+
+## API参考
+
+<Framework only="react">
+
+<BannerReactApi />
+
+其他原生属性（如 `aria-*`、`onClick`、`id`）落在根元素 `div` 上；根元素的 `role="alert"` 固定，不能被覆盖。
+
+</Framework>
+
+<Framework only="vue">
+
+<BannerVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在根元素上；根元素的 `role="alert"` 固定，不能被覆盖。`title` 另有 string prop，同时给出 `#title` 插槽时以插槽为准。`title`、`description` 与默认插槽的内容为 `0` 时也会渲染。关闭状态在组件内部，没有 v-model，用 `v-if` 卸载再挂载即可重新显示。
+
+</Framework>
+
+<Framework only="solid">
+
+<BannerSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `aria-*`、`onClick`）落在根元素（`role="alert"`）上，根元素的 `role` 固定，不能被覆盖。关闭状态在组件内部，卸载后再挂载即可重新显示。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 组件的 `role` 为 'alert'
+- 关闭按钮的 `aria-label` 来自当前语言包（简体中文为「关闭」，英文为 'Close'）
+
+### 键盘和焦点
+
+- Banner 的关闭按钮可以使用 `Tab` 键聚焦，按钮聚焦后，敲击 `Enter` 键或 `Space` 键可以关闭 banner
+
+## 文案规范
+
+- 全屏 Banner
+    - 尽量保持内容一行展示完全
+    - 使用正确的标点符号，句子内使用逗号，句子间使用句号
+- 非全屏 Banner
+    - 标题
+        - 使用精简的语言进行说明
+        - 标题上尽量避免使用逗号，句号等标点符号，有且只有是疑问句的时候，支持使用问号结尾
+    - 正文
+        - 在信息传递完整的前提下，尽可能地将正文压缩至 1 -2 句话
+        - 对标题进行详尽地描述或者解释，而不是对标题的重复说明
+        - 使用正确的标点符号，句子内使用逗号，句子间使用句号
+
+## 设计变量
+
+<DesignToken />

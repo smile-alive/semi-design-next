@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                      | 类型                                                       | 默认值      |
+| ------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------- |
+| disabled      | 是否禁用，下发给组内未自行设置 disabled 的控件。                                          | `boolean`                                                  | -           |
+| label         | 组的标签，对象形式，属性同 Form.Label（如 text、required、extra）；text 可以是 JSX 元素。 | `LabelProps`                                               | -           |
+| labelPosition | 标签位置，可选 top 或 left。                                                              | `'top' \| 'left' \| (string & {})`                         | -           |
+| onBlur        | 组内任一控件失去焦点时的回调，组内控件之间移动焦点也会触发。                              | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | -           |
+| onFocus       | 组内任一控件获得焦点时的回调，组内控件之间移动焦点也会触发。                              | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | -           |
+| size          | 输入框大小，可选 large、default、small；下发给组内每个控件，替代控件自身的 size。         | `InputSize`                                                | `"default"` |

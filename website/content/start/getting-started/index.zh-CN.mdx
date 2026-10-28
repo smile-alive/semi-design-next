@@ -1,0 +1,493 @@
+---
+frameworks: [react, vue, solid]
+title: 快速开始
+icon: doc-gettingstarted
+order: 2
+---
+
+<Framework only="react">
+
+`@fibrae/semi-ui-react` 是 Semi Design Next 的 React 组件库。
+
+</Framework>
+
+<Framework only="vue">
+
+`@fibrae/semi-ui-vue` 是 Semi Design Next 的 Vue 组件库。
+
+</Framework>
+
+<Framework only="solid">
+
+`@fibrae/semi-ui-solid` 是 Semi Design Next 的 Solid 组件库，服务端渲染见[服务端渲染](#服务端渲染)。
+
+</Framework>
+
+## 环境要求
+
+<Framework only="react">
+
+peer 依赖：`react`、`react-dom` ^19.3.0。
+
+</Framework>
+
+<Framework only="vue">
+
+peer 依赖：`vue` ^3.5.0。
+
+</Framework>
+
+<Framework only="solid">
+
+peer 依赖：`solid-js` ^1.9.0。
+
+</Framework>
+
+| 项目       | 要求                                                                                                                 |
+| ---------- | -------------------------------------------------------------------------------------------------------------------- |
+| 浏览器     | Chrome 120、Firefox 125、Safari 17.2 及以上。支持 Safari 17.4 以下时需要导入 `@fibrae/semi-polyfill`，见下方「安装」 |
+| 模块与语法 | 只发布 ESM，语法与内置 API 按 ESNext 原样发布，不降级                                                                |
+| Node.js    | 24 及以上，服务端渲染会执行组件代码；Node 只运行构建插件与 `semi-build-scss` 时，22.17 及以上                        |
+| 构建插件   | Vite 8 及以上、webpack 5.77 及以上、rspack 2                                                                         |
+
+## 安装
+
+<Framework only="react">
+
+```bash
+pnpm add @fibrae/semi-ui-react @fibrae/semi-icons-react
+```
+
+图标包 `@fibrae/semi-icons-react` 与插画包 `@fibrae/semi-illustrations-react` 都是组件库的依赖。应用代码直接导入它们时，要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。
+
+</Framework>
+
+<Framework only="vue">
+
+```bash
+pnpm add @fibrae/semi-ui-vue @fibrae/semi-icons-vue
+```
+
+图标包 `@fibrae/semi-icons-vue` 是组件库的依赖，应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。插画包 `@fibrae/semi-illustrations-vue` 不随组件库安装，用到时单独安装。
+
+</Framework>
+
+<Framework only="solid">
+
+```bash
+pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
+```
+
+图标包 `@fibrae/semi-icons-solid` 是组件库的依赖，应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。插画包 `@fibrae/semi-illustrations-solid` 不随组件库安装，用到时单独安装。
+
+</Framework>
+
+使用 npm 或 yarn 时换成对应的命令。
+
+需要支持 Safari 17.4 以下时，另装 `@fibrae/semi-polyfill`，并在应用入口的第一行导入（早于任何 Semi 组件）。它只补齐 `AbortSignal.any` 与 `Element.prototype.checkVisibility`，浏览器已有原生实现时什么都不做；只用到其中一项时可以导入 `@fibrae/semi-polyfill/abort-signal-any` 或 `@fibrae/semi-polyfill/check-visibility`。
+
+```js
+import '@fibrae/semi-polyfill';
+```
+
+## 引入 token
+
+组件会自己导入主题 token（`--semi-*` CSS 变量）与 base 规则，不引入也能正常显示。首个组件懒加载时，token 要等该组件的 chunk 加载后才生效；在应用入口文件最先导入 tokens 入口，token 就随入口的 CSS 一起加载，首屏的应用样式也能用上 `--semi-*` 变量。
+
+<Framework only="react">
+
+```ts
+// main.tsx，放在其他导入之前
+import '@fibrae/semi-ui-react/tokens';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+// main.ts，放在其他导入之前
+import '@fibrae/semi-ui-vue/tokens';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+// index.tsx，放在其他导入之前
+import '@fibrae/semi-ui-solid/tokens';
+```
+
+</Framework>
+
+tokens 入口是 JS 模块，导入的是组件所用的同一份 token，构建产物里只有一份，`prefixCls` 等构建插件选项对它同样生效。开启 `omitCss` 时它和组件样式一起被移除，token 由整包样式提供。
+
+## 使用组件
+
+<Framework only="react">
+
+```jsx
+import { Button, Toast } from '@fibrae/semi-ui-react';
+
+export function App() {
+    return <Button onClick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>;
+}
+```
+
+也可以按目录深路径导入单个组件，路径写到 `/index`，如 `import Button from '@fibrae/semi-ui-react/button/index'`。
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Button, Toast } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <Button @click="Toast.warning({ content: 'welcome' })">Hello Semi</Button>
+</template>
+```
+
+也可以按目录深路径导入单个组件，路径写到 `/index`，如 `import Button from '@fibrae/semi-ui-vue/button/index'`。
+
+</Framework>
+
+<Framework only="solid">
+
+```tsx
+import { Button, Toast } from '@fibrae/semi-ui-solid';
+
+export function App() {
+    return <Button onClick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>;
+}
+```
+
+也可以按目录深路径导入单个组件，路径写到 `/index`，如 `import Button from '@fibrae/semi-ui-solid/button/index'`。
+
+</Framework>
+
+样式与 token 随组件按需加载，只有用到的组件会被打包。Semi 自带 `box-sizing: border-box` 与滚动条基础样式，不需要 reset.css 一类的重置样式，额外的重置样式会改变组件尺寸。
+
+## 构建插件
+
+使用默认前缀 `semi`、分层样式且由组件各自导入样式时，webpack、rspack 不需要构建插件。组件导入的是预编译的 CSS，类名前缀为 `semi`，包在 `@layer semi` 中：需要有处理 `.css` 导入的规则，如 webpack 的 `css-loader` 加 `style-loader`（或 `mini-css-extract-plugin` 的 loader）、rspack 的 `type: 'css'`。Vite 的开发服务器可以不用插件，但 `vite build` 需要 `@fibrae/semi-vite-plugin`，原因见下。服务端渲染的宿主另见[服务端渲染](#服务端渲染)。
+
+需要下列能力时，使用对应构建工具的插件：Vite 用 `@fibrae/semi-vite-plugin`，webpack 5 用 `@fibrae/semi-webpack-plugin`，rspack 2 用 `@fibrae/semi-rspack-plugin`。插件对组件库、图标包与 AI 包都生效。
+
+| 选项        | 默认值   | 说明                                                                    |
+| ----------- | -------- | ----------------------------------------------------------------------- |
+| `prefixCls` | `'semi'` | 类名前缀，同时改写组件 JS 中的前缀与编译出的样式                        |
+| `cssLayer`  | `true`   | 样式是否包在 `@layer semi` 中，`false` 输出不分层的样式                 |
+| `omitCss`   | `false`  | 去掉 Semi 包内的样式导入，改由应用加载整包样式，见[整包样式](#整包样式) |
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+export default defineConfig({
+    plugins: [semi({ prefixCls: 'my' })],
+});
+```
+
+```js
+// webpack.config.mjs
+import SemiWebpackPlugin from '@fibrae/semi-webpack-plugin';
+
+export default {
+    plugins: [new SemiWebpackPlugin({ prefixCls: 'my' })],
+};
+```
+
+```js
+// rspack.config.mjs，项目需要有把 .scss 当作 CSS 处理的规则
+import { SemiRspackPlugin } from '@fibrae/semi-rspack-plugin';
+
+export default {
+    module: { rules: [{ test: /\.s?css$/, type: 'css' }] },
+    plugins: [new SemiRspackPlugin({ prefixCls: 'my' })],
+};
+```
+
+webpack 插件另有 `extractCssOptions`（如改用 `mini-css-extract-plugin` 的 loader）与 `overrideStylesheetLoaders`（在默认 loader 链上追加自己的 loader）。`vite dev` 中类名仍是 `semi-*` 时，预构建缓存来自修改前的配置，用 `vite --force` 重新预构建。
+
+<Framework only="solid">
+
+Solid 项目的构建配置有以下区别：
+
+- Vite：开发服务器也需要 `@fibrae/semi-vite-plugin`，写成 `plugins: [solid(), semi()]`。vite-plugin-solid 把 Solid 包排除在预构建之外，foundation 的 CommonJS 依赖（如 `style-to-js`）原样进入浏览器，页面白屏，插件会把它们加入预构建。
+- webpack 5、rspack 2：Semi 的 webpack、rspack 插件不处理 Solid 包，所以插件的选项（`prefixCls`、`cssLayer: false`、`omitCss`）对 Solid 包不起作用，只支持默认前缀与分层样式，不使用这两个插件。应用的 JSX 用 `babel-loader` 加 `babel-preset-solid` 编译（需要 `@babel/core` 7）；打包器不识别 `solid` 导出条件，取到 `default` 条件下已为 DOM 编译的 `dist/*.js`。样式由组件各自导入：webpack 用 `css-loader` 加 `style-loader`，rspack 用 `type: 'css'`。
+
+</Framework>
+
+Semi 发布的 `.scss` 使用普通 Sass 无法解析的 `semi:` 地址，请通过构建插件或 `@fibrae/semi-scss-compile` 编译。
+
+## 整包样式
+
+需要一次性加载全部组件样式时，导入整包样式并开启构建插件的 `omitCss`，否则组件自带的样式导入会被再打包一份，同一组件的样式出现两次。整包样式已含 token 与图标样式，类名前缀为 `semi`，包在 `@layer semi` 中。
+
+<Framework only="react">
+
+```ts
+import '@fibrae/semi-ui-react/styles.css';
+// 使用 AI 组件时，在其后导入
+import '@fibrae/semi-ai-react/styles.css';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import '@fibrae/semi-ui-vue/styles.css';
+// 使用 AI 组件时，在其后导入
+import '@fibrae/semi-ai-vue/styles.css';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import '@fibrae/semi-ui-solid/styles.css';
+// 使用 AI 组件时，在其后导入
+import '@fibrae/semi-ai-solid/styles.css';
+```
+
+</Framework>
+
+`omitCss` 时插件不再编译样式，`cssLayer` 不起作用，webpack、rspack 插件同时传入会报错。需要自定义前缀或不分层的整包样式时，用 `@fibrae/semi-scss-compile` 生成：`--prefix` 与插件的 `prefixCls` 一致，`--no-layer` 输出不分层的样式。`-f`、`-i` 可省略，缺省使用 `@fibrae/semi-scss-compile` 自己依赖的 foundation 与 icons-core，所以它的版本要与组件库一致；版本不一致时用 `-f`、`-i` 指向应用里安装的 `@fibrae/semi-foundation`、`@fibrae/semi-icons-core` 的 `dist`，pnpm 下这两个包要加为直接依赖。`--ai` 必须给出路径，指向 `@fibrae/semi-ai-foundation` 的 `dist`，pnpm 下要把它加为直接依赖，版本与组件库相同。
+
+```bash
+pnpm add -D @fibrae/semi-scss-compile
+pnpm exec semi-build-scss -o src/semi.css --min --prefix my
+# 使用 AI 组件时另生成一份，在上面那份之后导入（需再安装 @fibrae/semi-ai-foundation）
+pnpm add -D @fibrae/semi-ai-foundation
+pnpm exec semi-build-scss --ai node_modules/@fibrae/semi-ai-foundation/dist -o src/semi-ai.css --min --prefix my
+```
+
+## 定制样式
+
+样式定制不需要构建插件：在应用的样式中覆写 `--semi-*` CSS 变量即可改变全局的颜色、圆角、字号、间距等，变量清单见[设计变量](/zh-CN/react/basic/tokens)，暗色模式的取值见[暗色模式](/zh-CN/react/advanced/dark-mode)。Semi 的样式位于 `@layer semi` 中，应用中不分层的 CSS 规则总是优先，可以直接覆盖某个组件的具体样式，不需要 `!important`。
+
+```css
+:root {
+    --semi-color-primary: var(--semi-violet-5);
+}
+
+.my-toolbar .semi-button {
+    border-radius: 0;
+}
+```
+
+与 Tailwind 同用时，层的声明顺序与原子类中使用 Semi token 的方式见 [Tailwind](/zh-CN/react/ecosystem/tailwind)。
+
+## 图标与插画
+
+<Framework only="react">
+
+```jsx
+import { IconHome } from '@fibrae/semi-icons-react';
+
+export function HomeIcon() {
+    return <IconHome aria-label="首页" />;
+}
+```
+
+插画从 `@fibrae/semi-illustrations-react` 导入，如 `IllustrationNoContent`。
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { IconHome } from '@fibrae/semi-icons-vue';
+</script>
+
+<template>
+    <IconHome aria-label="首页" />
+</template>
+```
+
+自定义 SVG 使用 Icon 的默认插槽。插画从 `@fibrae/semi-illustrations-vue` 导入，如 `IllustrationNoContent`。
+
+</Framework>
+
+<Framework only="solid">
+
+```tsx
+import { IconHome } from '@fibrae/semi-icons-solid';
+
+export function HomeIcon() {
+    return <IconHome aria-label="首页" />;
+}
+```
+
+插画从 `@fibrae/semi-illustrations-solid` 导入，如 `IllustrationNoContent`。
+
+</Framework>
+
+图标样式随图标组件加载。图标列表与用法见[图标](/zh-CN/react/basic/icon)。
+
+## AI 组件
+
+AIChatInput、AIChatDialogue、Chat、Sidebar 等 AI 组件在独立的 AI 包中，基于组件库，样式随组件加载；加载整包样式时，AI 包的整包样式在组件库的之后导入。能力介绍见 [AI 组件](/zh-CN/react/ai/ai-component)。
+
+<Framework only="react">
+
+```bash
+pnpm add @fibrae/semi-ai-react
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```bash
+pnpm add @fibrae/semi-ai-vue
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```bash
+pnpm add @fibrae/semi-ai-solid
+```
+
+</Framework>
+
+## 服务端渲染
+
+服务端渲染与 hydration 按下表配置宿主，多数宿主需要加上 Semi 的构建插件。默认按组件加载样式：组件 JS 自带样式导入，不导入 `styles.css`。整包样式是可选路线：构建插件开 `omitCss`，再导入一次 `styles.css`，见[整包样式](#整包样式)。两条路线不混用，混用时 CSS 体积约翻倍。
+
+<Framework only="react">
+
+| 宿主                                                          | 安装                                                   | 宿主配置                                       | 样式                                                |
+| ------------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------- | --------------------------------------------------- |
+| Next.js 16 App Router，`--webpack`                            | `@fibrae/semi-ui-react`                                | 无                                             | 无                                                  |
+| Next.js 16 默认的 Turbopack、Pages Router，或两种 Router 混用 | 另加 `-D @fibrae/semi-next`                            | `export default semiNext()({ ... })`           | 无                                                  |
+| Next.js 自定义前缀                                            | 另加 `-D @fibrae/semi-next @fibrae/semi-scss-compile`  | `semiNext({ prefixCls: 'my', omitCss: true })` | 导入一次 `semi-build-scss --prefix my` 生成的样式表 |
+| React Router 8 framework mode（含 `serverBundles`）           | `@fibrae/semi-ui-react`、`-D @fibrae/semi-vite-plugin` | `plugins: [semi(), reactRouter()]`             | 无                                                  |
+
+```js
+// next.config.mjs，Turbopack 与 Pages Router
+import semiNext from '@fibrae/semi-next';
+
+export default semiNext()({
+    // 你的 Next.js 配置
+});
+```
+
+```ts
+// vite.config.ts，React Router
+import { reactRouter } from '@react-router/dev/vite';
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+export default defineConfig({
+    plugins: [semi(), reactRouter()],
+});
+```
+
+Next.js 自定义前缀时，`prefixCls` 必须配 `omitCss: true`，样式表用 `semi-build-scss` 生成，在根 layout（Pages Router 为 `pages/_app`）导入一次：
+
+```js
+// next.config.mjs
+import semiNext from '@fibrae/semi-next';
+
+export default semiNext({ prefixCls: 'my', omitCss: true })({});
+```
+
+```bash
+pnpm add -D @fibrae/semi-next @fibrae/semi-scss-compile
+pnpm exec semi-build-scss --prefix my -o app/semi-my.css --min
+```
+
+```jsx
+// app/layout.jsx
+import './semi-my.css';
+```
+
+React Router 的 RSC 模式同样只加这个插件：`plugins: [semi(), reactRouterRSC(), rsc()]`（`reactRouterRSC` 即 `@react-router/dev/vite` 的 `unstable_reactRouterRSC`，`rsc` 来自 `@vitejs/plugin-rsc`）。Server Component 中，Next.js App Router 与 React Router 的 RSC 模式可以直接导入扁平组件和少数子组件的命名导出（如 `TypographyTitle`，点语法 `Typography.Title` 在 Server Component 中是 `undefined`）。`semiGlobal`、Form 的 HOC 与 hooks，以及传给 `ConfigProvider` 的语言包只能在 `'use client'` 文件中使用或导入。
+
+</Framework>
+
+<Framework only="vue">
+
+| 宿主   | 安装                                          | 宿主配置                                                   | 样式 |
+| ------ | --------------------------------------------- | ---------------------------------------------------------- | ---- |
+| Nuxt 4 | `@fibrae/semi-ui-vue`、`-D @fibrae/semi-nuxt` | `modules: ['@fibrae/semi-nuxt']`，选项写在 `semi: { ... }` | 无   |
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+    modules: ['@fibrae/semi-nuxt'],
+});
+```
+
+模块不做组件自动导入，组件照常从 `@fibrae/semi-ui-vue` 导入。
+
+`@fibrae/semi-nuxt` 在应用没有设置 `features.inlineStyles` 时把它设为 `false`，生产环境的 SSR 页面只用 `<link>` 加载样式。原因是 Nuxt 把页面 chunk 里的全部 CSS 都内联进该页的 HTML，而这份 CSS 同时仍以 `<link>` 加载：几个常用组件只被一个页面导入时，该页 HTML 从约 5KB 增至约 210KB。代价是应用自己的 SFC `<style>` 也不再内联。要保留 Nuxt 的内联，在 `nuxt.config.ts` 中显式设置，模块不覆盖：
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+    modules: ['@fibrae/semi-nuxt'],
+    features: { inlineStyles: true },
+});
+```
+
+</Framework>
+
+<Framework only="solid">
+
+| 宿主         | 安装                                                   | 宿主配置                                                    | 样式                                                  |
+| ------------ | ------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------- |
+| SolidStart 2 | `@fibrae/semi-ui-solid`、`-D @fibrae/semi-vite-plugin` | `plugins: [solidStart(), nitro(), semi({ omitCss: true })]` | `app.tsx` 导入一次 `@fibrae/semi-ui-solid/styles.css` |
+
+```ts
+// vite.config.ts
+import { solidStart } from '@solidjs/start/config';
+import { nitro } from 'nitro/vite';
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+export default defineConfig({
+    plugins: [solidStart(), nitro(), semi({ omitCss: true })],
+});
+```
+
+```tsx
+// src/app.tsx
+import '@fibrae/semi-ui-solid/styles.css';
+```
+
+SolidStart 选整包样式，是因为它的 dev 服务端默认不收集 `node_modules` 内组件导入的 CSS：按组件路线在生产环境正常，dev 首屏无样式。给 `solidStart()` 传 `css: { filter: { exclude: [/^(?!.*\/node_modules\/@fibrae\/semi-).*\/node_modules\//] } }` 后 dev 也收集 Semi 包的组件 CSS，代价是多一处宿主配置，且 dev 首屏的样式略大于整包样式（约多 20%），分成数十个 `<style>`。
+
+</Framework>
+
+共同约定：
+
+- 语言包从 UI 包的 `locale/source/` 子路径导入（如 `locale/source/en_US`），不需要直接安装 `@fibrae/semi-foundation`。
+- `semiGlobal` 只在应用启动时设置，按请求变化的配置用 `ConfigProvider`。
+- 默认打开的弹层在 hydration 后出现。
+- CodeHighlight 不内置语言：应用要直接安装 `shiki`（pnpm 不允许导入未声明的包），用 `CodeHighlight.register` 或 `languages` 传入 `shiki/langs/*` 的语言，见 [CodeHighlight](/zh-CN/react/plus/code-highlight)。
+
+<Framework only="vue">
+
+## 同一页面挂载多个 Vue app
+
+组件内部的 id 由 Vue 的 `useId` 生成，按 app 计数。同一页面挂载多个 app（微前端、Astro island 等）时，给每个 app 设置不同的 `app.config.idPrefix`，否则各 app 生成相同的 id，`aria-labelledby` 等引用会指向其他 app 里的元素。
+
+```ts
+const app = createApp(App);
+app.config.idPrefix = 'checkout';
+app.mount('#checkout');
+```
+
+</Framework>

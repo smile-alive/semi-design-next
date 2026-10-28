@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                    | Type                                                                | Default  |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------- |
+| align     | Vertical alignment in flex layout: `top`, `middle` or `bottom`. Takes effect only when `type` is `flex`.                       | `'top' \| 'middle' \| 'bottom'`                                     | -        |
+| children  | The `Col` cells in the row.                                                                                                    | `React.ReactNode`                                                   | -        |
+| className | Class name of the root element.                                                                                                | `string`                                                            | -        |
+| gutter    | Grid gutter in pixels, a responsive object `{ xs, sm, md, lg, xl, xxl }`, or a `[horizontal, vertical]` pair. Defaults to `0`. | `Gutter \| [Gutter, Gutter]`                                        | -        |
+| justify   | Horizontal arrangement in flex layout: `start`, `end`, `center`, `space-around` or `space-between`. Defaults to `start`.       | `'start' \| 'end' \| 'center' \| 'space-around' \| 'space-between'` | -        |
+| prefixCls | CSS class name prefix.                                                                                                         | `string`                                                            | `"semi"` |
+| ref       | Reference to the root `div` element.                                                                                           | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>   | -        |
+| style     | Style of the root element.                                                                                                     | `React.CSSProperties`                                               | -        |
+| type      | Layout mode: `flex`.                                                                                                           | `'flex'`                                                            | -        |

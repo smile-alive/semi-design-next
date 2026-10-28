@@ -1,0 +1,71 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| cancelButtonProps | Props of the cancel button. autoFocus focuses it on open; class and style land on the button. | `PopconfirmButtonProps` | `semiGlobalDefault("Popconfirm", "cancelButtonProps")` |
+| cancelText | Cancel button text. Defaults to the locale entry Popconfirm.cancel. | `string` | `semiGlobalDefault("Popconfirm", "cancelText")` |
+| cancelType | Type of the cancel button. | `Type` | `semiDefault("Popconfirm", "cancelType", "tertiary")` |
+| defaultVisible | Whether it is initially shown when uncontrolled. | `boolean` | `semiGlobalDefault("Popconfirm", "defaultVisible")` |
+| disabled | Whether it is disabled. A disabled Popconfirm renders only the trigger and never opens. | `boolean` | `semiDefault("Popconfirm", "disabled", false)` |
+| okButtonProps | Props of the confirm button. autoFocus focuses it on open; class and style land on the button. | `PopconfirmButtonProps` | `semiGlobalDefault("Popconfirm", "okButtonProps")` |
+| okText | Confirm button text. Defaults to the locale entry Popconfirm.confirm. | `string` | `semiGlobalDefault("Popconfirm", "okText")` |
+| okType | Type of the confirm button. | `Type` | `semiDefault("Popconfirm", "okType", "primary")` |
+| showCloseIcon | Whether the close button in the corner is shown. | `boolean` | `semiDefault("Popconfirm", "showCloseIcon", true)` |
+| title | Plain-text title, which also names the dialog. The #title slot wins when both are given. It is a declared prop, so it never lands on an element as the native title attribute. | `string` | `undefined` |
+| onCancel | Called when the cancel or close button is clicked. A returned Promise keeps the button loading and closes the card once it resolves; a rejection keeps it open. This remains a function prop so its result can be read. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| onConfirm | Called when the confirm button is clicked. A returned Promise keeps the button loading and closes the card once it resolves; a rejection keeps it open. This remains a function prop so its result can be read. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| ariaLabel | aria-label of the dialog. When given, it takes precedence over the title. | `string` | `semiGlobalDefault("Popconfirm", "ariaLabel")` |
+| ariaLabelledby | aria-labelledby of the dialog. Defaults to the title, or to the content without a title. | `string` | `semiGlobalDefault("Popconfirm", "ariaLabelledby")` |
+| ariaDescribedby | aria-describedby of the dialog. Defaults to the content when there are both a title and content. | `string` | `semiGlobalDefault("Popconfirm", "ariaDescribedby")` |
+| role | ARIA role of the popup. Defaults to dialog. | `string` | `semiDefault("Popconfirm", "role", "dialog")` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiGlobalDefault("Popconfirm", "autoAdjustOverflow")` |
+| visible | Whether it is shown, used with v-model:visible. When given, this value decides; trigger keeps its value and the trigger events still work. | `boolean` | `semiGlobalDefault("Popconfirm", "visible")` |
+| position | Popup position. Defaults to bottomLeft (bottomRight in RTL). | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "position")` |
+| motion | Whether the popup is animated. | `boolean` | `semiGlobalDefault("Popconfirm", "motion")` |
+| mouseEnterDelay | Milliseconds before it shows after the pointer enters. Applies to the hover and focus triggers. | `number` | `semiGlobalDefault("Popconfirm", "mouseEnterDelay")` |
+| mouseLeaveDelay | Milliseconds before it hides after the pointer leaves. Applies to the hover and focus triggers. | `number` | `semiGlobalDefault("Popconfirm", "mouseLeaveDelay")` |
+| trigger | When it shows: hover, focus, click, contextMenu or custom. | `"hover" \| "focus" \| "click" \| "custom" \| "contextMenu"` | `semiDefault("Popconfirm", "trigger", "click")` |
+| contentClassName | Class name of the content container. | `string \| unknown[]` | `semiGlobalDefault("Popconfirm", "contentClassName")` |
+| showArrow | Whether the arrow is shown. | `boolean` | `semiGlobalDefault("Popconfirm", "showArrow")` |
+| spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Popconfirm", "spacing")` |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. Clicks inside the card never propagate. | `string \| boolean` | `semiDefault("Popconfirm", "stopPropagation", true)` |
+| arrowStyle | Border color, background color and border opacity of the arrow. | `ArrowStyle` | `semiGlobalDefault("Popconfirm", "arrowStyle")` |
+| arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires showArrow. | `boolean` | `semiGlobalDefault("Popconfirm", "arrowPointAtCenter")` |
+| prefixCls | Class prefix of the confirmation card. | `string` | `semiDefault("Popconfirm", "prefixCls", cssClasses.PREFIX)` |
+| closeOnEsc | Whether Esc closes the open card. With trigger custom it only emits escKeyDown and the caller decides whether to close. | `boolean` | `semiGlobalDefault("Popconfirm", "closeOnEsc")` |
+| guardFocus | Whether Tab cycles inside the card while focus is in it. | `boolean` | `semiGlobalDefault("Popconfirm", "guardFocus")` |
+| returnFocusOnClose | Whether focus returns to the trigger after closing. It also works with a controlled visible, and has no effect with trigger custom. | `boolean` | `semiGlobalDefault("Popconfirm", "returnFocusOnClose")` |
+| clickToHide | Whether a click on the popup or anything inside it closes it. | `boolean` | `semiGlobalDefault("Popconfirm", "clickToHide")` |
+| disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the card. | `boolean` | `semiGlobalDefault("Popconfirm", "disableArrowKeyDown")` |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | `semiGlobalDefault("Popconfirm", "disableFocusListener")` |
+| keepDOM | Whether the content stays mounted while closed. | `boolean` | `semiGlobalDefault("Popconfirm", "keepDOM")` |
+| condition | Whether it may be triggered. Only an explicit false disables the hover, click and focus triggers. Changing it from true to false closes an open card at once; with a controlled visible it only emits update:visible and visibleChange(false), and the card closes once the caller writes back. | `boolean` | `semiGlobalDefault("Popconfirm", "condition")` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                                                                                 | Callback parameters      |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| open           | Emitted once per opening when the card is shown, as its enter animation starts, before afterOpen, controlled or not; not emitted for a hover open withdrawn because the pointer already left.                               | `[]`                     |
+| update:visible | Emitted when it should show or hide, for v-model:visible to write back.                                                                                                                                                     | `[visible: boolean]`     |
+| visibleChange  | Emitted when the visibility changes. After a click on the trigger it fires before the card appears. With a controlled visible it reports only requests from user interaction, not changes the parent makes to visible.      | `[visible: boolean]`     |
+| clickOutSide   | Emitted when the mouse is pressed outside of the trigger and the open card. Only for trigger click, contextMenu or custom.                                                                                                  | `[event: MouseEvent]`    |
+| escKeyDown     | Emitted when Esc is pressed while the card is open and closeOnEsc is true (the default).                                                                                                                                    | `[event: KeyboardEvent]` |
+| afterOpen      | Emitted after the card has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not emitted for an open that is closed before the enter animation ends. | `[]`                     |
+| afterClose     | Emitted after the card has closed and its leave animation has finished.                                                                                                                                                     | `[]`                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                                                       | Scope parameters                                                        |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| default | The trigger.                                                                                                                                      | `any`                                                                   |
+| title   | Title of the card.                                                                                                                                | `any`                                                                   |
+| content | Content of the card. The scope parameter initialFocusRef binds to the element that receives focus on open. An empty slot renders no content area. | <ApiType detail={"RenderContentProps\u003cFocusTarget>"}>Type</ApiType> |
+| icon    | Custom icon. The default warning icon shows when omitted; an empty slot renders no icon.                                                          | `any`                                                                   |
+
+**Exposes**
+
+| Name         | Description                                                                                                            | Type                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| focusTrigger | Focuses the trigger. Only works when returnFocusOnClose is true and trigger is not custom; does nothing when disabled. | <ApiType detail={"() => void"}>Type</ApiType> |

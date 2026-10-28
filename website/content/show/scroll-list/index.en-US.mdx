@@ -1,0 +1,173 @@
+---
+order: 79
+title: ScrollList
+icon: doc-scrolllist
+brief: Scroll through the list.
+---
+
+import ScrollListReactApi from './api/scroll-list.react.en-US.mdx';
+import ScrollItemReactApi from './api/scroll-item.react.en-US.mdx';
+import ScrollListVueApi from './api/scroll-list.vue.en-US.mdx';
+import ScrollItemVueApi from './api/scroll-item.vue.en-US.mdx';
+import ScrollListSolidApi from './api/scroll-list.solid.en-US.mdx';
+import ScrollItemSolidApi from './api/scroll-item.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { ScrollList, ScrollItem } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ScrollList, ScrollItem } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+The scrolling list provides a scrolling selection mode similar to the iOS operating system, while supporting scrolling to the specified window location selection and click selection.
+
+<Framework only="vue">
+
+Bind the selected item with `v-model:selectedIndex`; there is no uncontrolled mode. `header` and `footer` are string props; use the slots of the same name for custom content.
+
+</Framework>
+
+<Framework only="solid">
+
+Bind the selected item with `selectedIndex` and `onSelect`; there is no uncontrolled mode. `header` and `footer` are JSX elements passed directly.
+
+</Framework>
+
+<Demo id="basic" />
+
+## API Reference
+
+### ScrollList
+
+<Framework only="react">
+
+<ScrollListReactApi />
+
+Other attributes such as `aria-*` land on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<ScrollListVueApi />
+
+`class`, `style` and native attributes such as `aria-*` land on the root element through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<ScrollListSolidApi />
+
+`class`, `style`, `ref` and native attributes such as `aria-*` land on the root element.
+
+</Framework>
+
+### ScrollItem
+
+<Framework only="react">
+
+<ScrollItemReactApi />
+
+`aria-label`, `aria-labelledby` and `aria-describedby` land on the list (`role="listbox"`); other attributes land on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<ScrollItemVueApi />
+
+`aria-label`, `aria-labelledby` and `aria-describedby` land on the list (`role="listbox"`); `class`, `style` and other attributes land on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<ScrollItemSolidApi />
+
+`class`, `style`, `ref` and native attributes such as `data-*` land on the root element; `aria-label`, `aria-labelledby` and `aria-describedby` land on the list (`role="listbox"`).
+
+</Framework>
+
+#### ItemData
+
+| Properties | Instructions | type | Default |
+| --- | --- | --- | --- |
+| disabled | Whether the item is prohibited or not | boolean |  |
+| text | The copy of each item. | string |  |
+| transform | When the transformation is in the selected state, the return value is displayed as a copy, and if the ScrollItem component is passed at the same time, the transform method in ItemData will be selected first. When omitted, `text` is shown, or `value` when there is no `text`. | (value: any, text: string \| undefined) => string |  |
+| value | The value of each item | any |  |
+
+#### Methods
+
+<Framework only="react">
+
+Call these through the `ref` of ScrollItem, for example to realign the selected item after the container is resized.
+
+</Framework>
+
+<Framework only="vue">
+
+Call these through a template ref of ScrollItem, for example to realign the selected item after the container is resized.
+
+</Framework>
+
+<Framework only="solid">
+
+Call these through the `ref` of ScrollItem, for example to realign the selected item after the container is resized.
+
+</Framework>
+
+<Framework only="vue">
+
+| Name                                                     | Description                                                                                                                                                                                                |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| scrollToIndex(selectedIndex?: number, duration?: number) | Scrolls the list to the current selected item. `selectedIndex` has no effect yet and the target is always the item last selected. `duration` is the scroll animation duration in milliseconds, default 120 |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- When `aria-label` or `aria-labelledby` is passed, the root element of `ScrollList` gets `role="group"`
+- `ScrollItem` is a `role="listbox"` and supports `aria-label`, which indicates the label of the current column.
+- `ScrollItem` uses `aria-disabled` to indicate whether the item is disabled
+- `ScrollItem` uses `aria-selected` to indicate whether the item is selected
+- The copies that fill the wheel of a `cycled` column carry `aria-hidden="true"`, so screen readers only read the real options
+
+### Keyboard and Focus
+
+- Each column is a `listbox`: focus it with `Tab`. Focus stays on the list and the selected item is exposed through `aria-activedescendant`; selection follows focus, and each selection fires the select callback
+- `ArrowUp` selects the previous item and `ArrowDown` the next one, skipping disabled items; `Home` selects the first item and `End` the last one
+- With `cycled`, the arrow keys wrap around at both ends in either mode; without it they stop at the ends
+- Typing characters selects the item whose text starts with them; typing the same character repeatedly moves on to the next match
+
+## Design Tokens
+
+<DesignToken />

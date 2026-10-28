@@ -1,0 +1,63 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| contentClassName | Class name of the dropdown menu root element. | `string \| unknown[]` | `semiGlobalDefault("Dropdown", "contentClassName")` |
+| menu | Configures the menu from data, see DropdownMenuItem below. The content slot wins when it is provided. | `DropDownMenuItem[]` | `semiGlobalDefault("Dropdown", "menu")` |
+| selectionMode | How the items of this menu are selected; active marks the selected ones. With single the items are menuitemradio with aria-checked, with multiple menuitemcheckbox with aria-checked; unset, they are menuitemcheckbox with aria-checked when showTick is on, otherwise menuitem. It sets roles and states only: showTick alone shows the tick. Nested submenus do not inherit it. | `DropdownSelectionMode` | `semiGlobalDefault("Dropdown", "selectionMode")` |
+| showTick | Whether an active Dropdown.Item shows a tick on its leading side. It applies to the menu of this Dropdown only; nested submenus do not inherit it. | `boolean` | `semiDefault("Dropdown", "showTick", false)` |
+| motion | Whether the popup is animated. | `boolean` | `semiDefault("Dropdown", "motion", true)` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiGlobalDefault("Dropdown", "autoAdjustOverflow")` |
+| position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiDefault("Dropdown", "position", "bottom")` |
+| prefixCls | Class prefix of the popup. A custom value drops the Dropdown styles. | `string` | `semiDefault("Dropdown", "prefixCls", cssClasses.PREFIX)` |
+| spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Dropdown", "spacing")` |
+| role | ARIA role of the popup container around the menu. The menu itself has role menu. | `string` | `semiDefault("Dropdown", "role", "presentation")` |
+| ariaLabel | aria-label of the popup when its role is dialog. | `string` | `semiGlobalDefault("Dropdown", "ariaLabel")` |
+| ariaLabelledby | aria-labelledby of the popup when its role is dialog. | `string` | `semiGlobalDefault("Dropdown", "ariaLabelledby")` |
+| ariaDescribedby | aria-describedby of the popup when its role is dialog. | `string` | `semiGlobalDefault("Dropdown", "ariaDescribedby")` |
+| wrapWhenSpecial | Whether a disabled or loading trigger is wrapped in a span so that it still triggers the popup. | `boolean` | `semiGlobalDefault("Dropdown", "wrapWhenSpecial")` |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | `semiGlobalDefault("Dropdown", "stopPropagation")` |
+| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | `semiGlobalDefault("Dropdown", "wrapperClassName")` |
+| wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | `undefined` |
+| keepDOM | Whether the popup content stays mounted while closed. | `boolean` | `semiGlobalDefault("Dropdown", "keepDOM")` |
+| clickToHide | Whether a click inside the popup closes it. | `boolean` | `semiGlobalDefault("Dropdown", "clickToHide")` |
+| clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | `semiGlobalDefault("Dropdown", "clickTriggerToHide")` |
+| closeOnEsc | Whether Esc on the trigger or in the popup closes the menu. With trigger custom it only emits escKeyDown and the caller decides whether to close. | `boolean` | `semiDefault("Dropdown", "closeOnEsc", true)` |
+| condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only emits update:visible and visibleChange(false), and the popup closes once the caller writes back. | `boolean` | `semiGlobalDefault("Dropdown", "condition")` |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | `semiGlobalDefault("Dropdown", "disableFocusListener")` |
+| guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | `semiGlobalDefault("Dropdown", "guardFocus")` |
+| mouseEnterDelay | Milliseconds before the menu shows after the pointer enters the trigger. Applies to the hover and focus triggers. | `number` | `semiGlobalDefault("Dropdown", "mouseEnterDelay")` |
+| mouseLeaveDelay | Milliseconds before the menu hides after the pointer leaves the popup. Applies to the hover and focus triggers; not less than mouseEnterDelay. | `number` | <ApiType detail={"semiDefault(\"Dropdown\", \"mouseLeaveDelay\", strings.DEFAULT_LEAVE_DELAY)"}>Type</ApiType> |
+| preventScroll | Whether focusing an element avoids scrolling it into view. | `boolean` | `semiGlobalDefault("Dropdown", "preventScroll")` |
+| returnFocusOnClose | Whether focus returns to the trigger after the menu closes. | `boolean` | `semiDefault("Dropdown", "returnFocusOnClose", true)` |
+| trigger | What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides. | `"hover" \| "focus" \| "click" \| "custom" \| "contextMenu"` | `semiDefault("Dropdown", "trigger", "hover")` |
+| visible | Whether the menu is shown, used with trigger custom and v-model:visible. When given, this value decides. | `boolean` | `semiGlobalDefault("Dropdown", "visible")` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                                                                                 | Callback parameters      |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| open           | Emitted once per opening when the menu is shown, as its enter animation starts, before afterOpen, controlled or not; not emitted for a hover open withdrawn because the pointer already left.                               | `[]`                     |
+| update:visible | Emitted when the menu should show or hide, for v-model:visible to write back.                                                                                                                                               | `[visible: boolean]`     |
+| visibleChange  | Emitted when the visibility of the menu changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible.                                                         | `[visible: boolean]`     |
+| clickOutSide   | Emitted when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom, or with clickTriggerToHide.                                                                     | `[event: MouseEvent]`    |
+| escKeyDown     | Emitted when Esc is pressed while the menu is open and closeOnEsc is true.                                                                                                                                                  | `[event: KeyboardEvent]` |
+| afterOpen      | Emitted after the menu has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not emitted for an open that is closed before the enter animation ends. | `[]`                     |
+| afterClose     | Emitted after the menu has closed and its leave animation has finished.                                                                                                                                                     | `[]`                     |
+
+**Slots**
+
+| Slot     | Description                                                                                                                                                             | Scope parameters            |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| default  | The trigger. A single element or component receives the trigger attributes directly; text or several nodes are wrapped in a span that responds to the keyboard as well. | `any`                       |
+| content  | Menu content made of Dropdown.Menu with Dropdown.Item, Dropdown.Title and Dropdown.Divider. It takes precedence over menu once provided.                                | `any`                       |
+| menuIcon | Icon of each item entry of menu, with the entry and its index as scope parameters. An empty result renders no icon.                                                     | `DropdownMenuIconSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| --- | --- | --- |
+| focusTrigger | Focuses the trigger element. Takes effect only when returnFocusOnClose is true and trigger is not custom. | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition | Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

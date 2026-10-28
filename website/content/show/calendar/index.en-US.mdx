@@ -1,0 +1,250 @@
+---
+order: 64
+title: Calendar
+icon: doc-calendar
+brief: Calendar component that allows to display corresponding events in day/week/month view
+---
+
+import CalendarReactApi from './api/calendar.react.en-US.mdx';
+import CalendarVueApi from './api/calendar.vue.en-US.mdx';
+import CalendarSolidApi from './api/calendar.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Calendar } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Calendar } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Calendar } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Day Mode
+
+Day mode. You could toggle the red line of current time using `showCurrTime`.
+
+<Demo id="day" />
+
+### Week Mode
+
+Week mode. You could toggle the red line of current time using `showCurrTime`.
+
+<Demo id="week" />
+
+### Month Mode
+
+Month Mode.
+
+<Demo id="month" />
+
+### Set week start day
+
+The day of the week can be set as the first day of the week through weekStartsOn, 0 for Sunday, 1 for Monday, and so on. Default is Sunday.  
+`weekStartsOn` takes effect for month view and week view.
+
+<Demo id="week-start" />
+
+### Range Mode
+
+Range Mode. `range` is required which is a left-closed and right-open interval.
+
+<Demo id="range" />
+
+### Render Events
+
+You could pass in an array of event objects to `events` to render items. For detailed format, refer to Event Object below.
+
+<Framework only="vue">
+
+The content of an event renders the text of `children` by default. Use the `#event="{ event }"` scoped slot for custom DOM: `event` is the original object from `events` and may carry any custom field. When one event is shown in several places (such as a multi-day event), the slot is called once for each place.
+
+</Framework>
+
+<Framework only="solid">
+
+`children` holds the content of an event: a JSX element, or a function that returns one. When one event is shown in several places (such as a multi-day event), the function is called once for each place; for an element, the original element is shown in one place and the other places show copies without event handlers.
+
+</Framework>
+
+<Demo id="events" />
+
+### Custom Render
+
+<Framework only="react">
+
+You could use `dateGridRender` to render customized date cell or column. Use absolute positioning for elements.
+
+</Framework>
+
+<Framework only="vue">
+
+You could use the `#dateGrid="{ date, dateString }"` scoped slot to render customized date cell or column. Use absolute positioning for elements.
+
+</Framework>
+
+<Framework only="solid">
+
+You could use `dateGridRender` to render customized date cell or column. Use absolute positioning for elements.
+
+</Framework>
+
+#### Custom Render Events
+
+<Demo id="custom-events" />
+
+#### Customized Date Cell Style
+
+<Framework only="react">
+
+You could also use `dateGridRender` to customize date cell style, e.g. backgroundColor. Please notice that in Month View, the date text on the right corner has a z-index of 3. Use a larger z-index if you would like to cover the text as well.
+
+</Framework>
+
+<Framework only="vue">
+
+You could also use `#dateGrid` to customize date cell style, e.g. backgroundColor. Please notice that in Month View, the date text on the right corner has a z-index of 3. Use a larger z-index if you would like to cover the text as well.
+
+</Framework>
+
+<Framework only="solid">
+
+You could also use `dateGridRender` to customize date cell style, e.g. backgroundColor. Please notice that in Month View, the date text on the right corner has a z-index of 3. Use a larger z-index if you would like to cover the text as well.
+
+</Framework>
+
+<Demo id="custom-cell-style" />
+
+#### Customized Date Render
+
+<Framework only="react">
+
+You could use `renderDateDisplay` to customize the display of date
+
+</Framework>
+
+<Framework only="vue">
+
+You could use `#dateDisplay="{ date }"` to customize the display of date
+
+</Framework>
+
+<Framework only="solid">
+
+You could use `renderDateDisplay` to customize the display of date.
+
+</Framework>
+
+<Demo id="custom-date-display" />
+
+## API Reference
+
+### Calendar
+
+<Framework only="react">
+
+<CalendarReactApi />
+
+`className`, `style` and other native attributes (such as `id`, `data-*`, `aria-label`) land on the root element of the current view; `aria-label` takes precedence over the default table name. `onClick`, `onClose` and `onMoreClick` are callbacks of Calendar itself and do not land on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<CalendarVueApi />
+
+`class`, `style` and native attributes are passed through attrs to the root element of the current view; `aria-label` takes precedence over the default table name.
+
+</Framework>
+
+<Framework only="solid">
+
+<CalendarSolidApi />
+
+`class`, `style`, `ref` and other native attributes (such as `id`, `data-*`) land on the root element of the current view; `aria-label` takes precedence over the default table name. `onClick`, `onClose` and `onMoreClick` are callbacks of Calendar itself and do not land on the root element.
+
+</Framework>
+
+### Event Object
+
+`events` is an array of event objects.  
+An event needs at least a start or an end time to be valid; an event with neither is skipped with a warning. An all-day event with only an end time starts on the day of its end. A timed event with only one end is extended by 1 hour, without crossing into another day. The end time is exclusive: a timed event that ends exactly at 00:00 is shown only on its start day, with no extra segment on the next day.
+
+<Notice type="primary" title="Attention">
+    Key property is required and must be unique. It identifies the event. When `events` changes, the layout is recomputed from its content, so an event that keeps its key but changes its time or children is updated as well.
+</Notice>
+
+<Framework only="react">
+
+| Properties | Instructions                   | type       | Default |
+| ---------- | ------------------------------ | ---------- | ------- |
+| allDay     | Whether it is an all-day event | boolean    | false   |
+| children   | Displayed content              | React.node | -       |
+| end        | End time of the event          | Date       | -       |
+| key        | Required and must be unique.   | string     | -       |
+| start      | Start time of the event        | Date       | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties   | Instructions                                                                    | type             | Default |
+| ------------ | ------------------------------------------------------------------------------- | ---------------- | ------- |
+| allDay       | Whether it is an all-day event                                                  | boolean          | false   |
+| children     | Displayed content, rendered as text when no `#event` slot is provided           | string \| number | -       |
+| end          | End time of the event                                                           | Date             | -       |
+| key          | Required and must be unique.                                                    | string           | -       |
+| start        | Start time of the event                                                         | Date             | -       |
+| Other fields | Custom fields are kept as they are for the `#event` slot (such as color, title) | any              | -       |
+
+</Framework>
+
+<Framework only="solid">
+
+| Properties   | Instructions                                                                                           | type                                 | Default |
+| ------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------ | ------- |
+| allDay       | Whether it is an all-day event                                                                         | boolean                              | false   |
+| children     | Displayed content: a JSX element, or a function that returns one (called once for each place it shows) | `JSX.Element \| (() => JSX.Element)` | -       |
+| end          | End time of the event                                                                                  | Date                                 | -       |
+| key          | Required and must be unique.                                                                           | string                               | -       |
+| start        | Start time of the event                                                                                | Date                                 | -       |
+| Other fields | Custom fields are kept on the event object (such as color, title)                                      | any                                  | -       |
+
+</Framework>
+
+## Accessibility
+
+### Keyboard and Focus
+
+- The day, week and range views scroll, and the view itself is one Tab stop that the arrow keys scroll
+- In the month view, "N more" for the collapsed events is a button: `Enter` or `Space` opens the card of the day and moves focus to its close button; `Esc` or the close button closes the card and returns focus to "N more"
+- Clicks on a day cell or a time slot (`onClick` in React, `@click` in Vue) respond to the pointer only and have no keyboard equivalent
+
+## Content Guidelines
+
+- Both 12-hour and 24-hour clocks can be used when the time needs to be displayed
+- If the 12-hour clock is used, it needs to be used together with AM/PM. For details, please refer to [Time Specification](/en-US/react/experience/content-guidelines#8.%20%E6%97%A5%E6%9C%9F%E4%B8%8E%E6%97%B6%E9%97%B4)
+- For the abbreviation rules for month, week and time, please refer to [Abbreviation Specification](/en-US/react/experience/content-guidelines#1.%20%E7%BC%A9%E5%86%99)
+
+## Design Tokens
+
+<DesignToken />

@@ -1,0 +1,173 @@
+{
+    "chat": {
+        "source": "packages/semi-ai-vue/src/chat/chat.vue",
+        "props": {
+            "chats": {
+                "zh-CN": "对话列表，配合 v-model:chats 使用。只有整体替换数组才视为变化，就地 push 不会触发跟随滚动。",
+                "en-US": "The conversation list, used with v-model:chats. Only replacing the whole array counts as a change; pushing into the same array does not trigger scroll following."
+            },
+            "align": {
+                "zh-CN": "对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。",
+                "en-US": "Conversation layout: leftRight or leftAlign."
+            },
+            "mode": {
+                "zh-CN": "对话模式，可选 bubble、noBubble 或 userBubble。",
+                "en-US": "Conversation mode: bubble, noBubble or userBubble."
+            },
+            "roleConfig": {
+                "zh-CN": "角色信息，键为消息的 role。avatar 只接受图片 URL，节点头像使用 roleAvatar 插槽；color 传给 Avatar。",
+                "en-US": "Role information, keyed by the message role. avatar takes an image URL only; use the roleAvatar slot for a node avatar. color is passed to Avatar."
+            },
+            "hints": {
+                "zh-CN": "提示信息列表。点击某项后触发 hintClick，并将该项作为新的用户消息。",
+                "en-US": "The list of hints. Clicking one emits hintClick and the hint becomes a new user message."
+            },
+            "sendHotKey": {
+                "zh-CN": "发送快捷键，可选 enter 或 shift+enter。enter 时单独按 Enter 发送，Shift+Enter 换行；shift+enter 相反。",
+                "en-US": "Send hot key: enter or shift+enter. With enter, Enter sends and Shift+Enter inserts a line break; shift+enter is the reverse."
+            },
+            "placeholder": { "zh-CN": "输入框占位符。", "en-US": "Placeholder of the input." },
+            "showStopGenerate": {
+                "zh-CN": "是否在最后一条消息生成中时显示停止生成按钮。生成中发送按钮不可用，点击停止按钮触发 stopGenerator。",
+                "en-US": "Whether to show the stop button while the last message is generating. Sending is unavailable meanwhile, and clicking the stop button emits stopGenerator."
+            },
+            "showClearContext": {
+                "zh-CN": "是否在输入框中显示清除上下文按钮。",
+                "en-US": "Whether to show the clear context button in the input."
+            },
+            "enableUpload": {
+                "zh-CN": "是否启用上传。布尔值同时控制粘贴、点击和拖拽上传；传对象时分别设置 pasteUpload、clickUpload、dragUpload，未设置的项为 true。",
+                "en-US": "Whether uploading is enabled. A boolean controls paste, click and drag upload together; an object sets pasteUpload, clickUpload and dragUpload separately, and unset items are true."
+            },
+            "canSend": {
+                "zh-CN": "发送按钮是否可用。通常由内部逻辑决定，设置后以此值为准。",
+                "en-US": "Whether the send button is usable. The internal logic decides by default; a given value overrides it."
+            },
+            "escapeHtml": {
+                "zh-CN": "是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理导致内容丢失。",
+                "en-US": "Whether to escape HTML tags in the user's messages, so the Markdown parser does not treat them as HTML and drop the content."
+            },
+            "uploadProps": {
+                "zh-CN": "传给 Upload 的属性，fileList 与 defaultFileList 由 Chat 管理，Upload 的事件以 onXxx 形式传入。添加或移除附件时 Chat 自己处理 onChange。",
+                "en-US": "Props passed to Upload. Chat owns fileList and defaultFileList, and Upload events are given as onXxx. Chat handles onChange itself when an attachment is added or removed."
+            },
+            "uploadTipProps": {
+                "zh-CN": "上传按钮提示 Tooltip 的属性，不含 content；提示文字使用 uploadTip 插槽。",
+                "en-US": "Props of the upload button's Tooltip, without content; use the uploadTip slot for the text."
+            },
+            "markdownRenderProps": {
+                "zh-CN": "传给消息内容所用 MarkdownRender 的属性，默认 format 为 md。raw 与 components 不可设置，自定义渲染组件使用 customMarkDownComponents。",
+                "en-US": "Props passed to the MarkdownRender that renders message content; format defaults to md. raw and components cannot be set; use customMarkDownComponents for custom renderers."
+            },
+            "customMarkDownComponents": {
+                "zh-CN": "自定义 Markdown 渲染组件，键为元素名，传给消息内容的 MarkdownRender。",
+                "en-US": "Custom Markdown renderers keyed by element name, passed to the MarkdownRender of message content."
+            },
+            "inputBoxCls": { "zh-CN": "输入框的类名。", "en-US": "Class name of the input box." },
+            "inputBoxStyle": { "zh-CN": "输入框的样式。", "en-US": "Style of the input box." },
+            "hintCls": {
+                "zh-CN": "提示区最外层的类名。",
+                "en-US": "Class name of the outermost element of the hint area."
+            },
+            "hintStyle": {
+                "zh-CN": "提示区最外层的样式。",
+                "en-US": "Style of the outermost element of the hint area."
+            }
+        },
+        "events": {
+            "update:chats": {
+                "zh-CN": "对话列表变化时触发，供 v-model:chats 回写；先于 chatsChange。",
+                "en-US": "Emitted when the conversation list changes, for v-model:chats to write back; fires before chatsChange."
+            },
+            "chatsChange": { "zh-CN": "对话列表变化时触发。", "en-US": "Emitted when the conversation list changes." },
+            "messageSend": {
+                "zh-CN": "发送消息时触发，参数为文本内容和附件。",
+                "en-US": "Emitted when a message is sent, with the text and the attachments."
+            },
+            "messageCopy": { "zh-CN": "复制消息时触发。", "en-US": "Emitted when a message is copied." },
+            "messageGoodFeedback": {
+                "zh-CN": "消息正向反馈时触发。",
+                "en-US": "Emitted on positive feedback for a message."
+            },
+            "messageBadFeedback": {
+                "zh-CN": "消息负向反馈时触发。",
+                "en-US": "Emitted on negative feedback for a message."
+            },
+            "messageReset": {
+                "zh-CN": "重置消息时触发；由 resetMessage 方法触发时参数为 null。",
+                "en-US": "Emitted when a message is reset; the argument is null when it comes from the resetMessage method."
+            },
+            "messageDelete": { "zh-CN": "删除消息时触发。", "en-US": "Emitted when a message is deleted." },
+            "clear": { "zh-CN": "清除上下文时触发。", "en-US": "Emitted when the context is cleared." },
+            "hintClick": { "zh-CN": "点击提示信息时触发。", "en-US": "Emitted when a hint is clicked." },
+            "inputChange": {
+                "zh-CN": "输入内容或附件变化时触发，参数为 `{ inputValue, attachment }`。",
+                "en-US": "Emitted when the input text or the attachments change, with `{ inputValue, attachment }`."
+            },
+            "stopGenerator": {
+                "zh-CN": "点击停止生成按钮时触发。",
+                "en-US": "Emitted when the stop button is clicked."
+            }
+        },
+        "slots": {
+            "topSlot": { "zh-CN": "对话区域顶部的内容。", "en-US": "Content above the conversation area." },
+            "bottomSlot": { "zh-CN": "输入框下方的内容。", "en-US": "Content below the input box." },
+            "title": {
+                "zh-CN": "自定义消息标题，参数为 message、role 和默认标题 defaultTitle。提供但内容为空时不显示标题。",
+                "en-US": "Custom message title, with message, role and the default title defaultTitle. Provided but empty, it hides the title."
+            },
+            "avatar": {
+                "zh-CN": "自定义消息头像，参数为 message、role 和默认头像 defaultAvatar。提供但内容为空时不显示头像。",
+                "en-US": "Custom message avatar, with message, role and the default avatar defaultAvatar. Provided but empty, it hides the avatar."
+            },
+            "roleAvatar": {
+                "zh-CN": "没有图片 URL 的角色的头像内容，参数为 message 和 role。",
+                "en-US": "Avatar content for a role without an image URL, with message and role."
+            },
+            "content": {
+                "zh-CN": "自定义消息内容区域，参数为 message、role、默认内容 defaultContent 和类名 class。",
+                "en-US": "Custom message content area, with message, role, the default content defaultContent and the class name class."
+            },
+            "action": {
+                "zh-CN": "自定义消息操作栏，参数为 message、默认按钮数组 defaultActions、按名称索引的 defaultActionsObj 和类名 class。",
+                "en-US": "Custom message action bar, with message, the default buttons defaultActions, defaultActionsObj keyed by name and the class name class."
+            },
+            "fullChatBox": {
+                "zh-CN": "完全自定义整个消息框，参数为 message、role、各部分默认节点 defaultNodes 和类名 class。",
+                "en-US": "Replaces the whole message box, with message, role, the default node of each part defaultNodes and the class name class."
+            },
+            "inputArea": {
+                "zh-CN": "自定义输入区域，参数为 defaultNode、各部分节点（clearContextNode、uploadNode、inputNode、sendNode）以及需要自行调用的 onSend、onClear、onClick。",
+                "en-US": "Custom input area, with defaultNode, the part nodes (clearContextNode, uploadNode, inputNode, sendNode) and onSend, onClear and onClick for you to call."
+            },
+            "hintBox": {
+                "zh-CN": "自定义提示项，参数为 content、index 和点击处理函数 onHintClick。",
+                "en-US": "Custom hint item, with content, index and the click handler onHintClick."
+            },
+            "divider": {
+                "zh-CN": "自定义清除上下文后的分割线，参数为 message。",
+                "en-US": "Custom divider shown after the context is cleared, with message."
+            },
+            "uploadButton": { "zh-CN": "替换上传按钮。", "en-US": "Replaces the upload button." },
+            "uploadTip": { "zh-CN": "上传按钮的提示文字。", "en-US": "Text of the upload button's tooltip." }
+        },
+        "exposed": {
+            "resetMessage": {
+                "zh-CN": "将最后一条消息重置为空内容的 loading 状态并触发 messageReset，参数为 null。",
+                "en-US": "Resets the last message to an empty loading one and emits messageReset with null."
+            },
+            "clearContext": {
+                "zh-CN": "在对话末尾追加分割线以清除上下文并触发 clear；末尾已是分割线时无效果。",
+                "en-US": "Clears the context by appending a divider and emits clear; does nothing when the list already ends with one."
+            },
+            "scrollToBottom": {
+                "zh-CN": "滚动到最底部，animation 为 true 时平滑滚动，否则直接跳转。",
+                "en-US": "Scrolls to the bottom; smoothly when animation is true, otherwise jumps."
+            },
+            "sendMessage": {
+                "zh-CN": "发送消息，不传 attachment 时消息的 content 为字符串。",
+                "en-US": "Sends a message; without attachment the message content is a string."
+            }
+        }
+    }
+}

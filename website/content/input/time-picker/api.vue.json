@@ -1,0 +1,175 @@
+{
+    "time-picker": {
+        "source": "packages/semi-ui-vue/src/time-picker/time-picker.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "当前时间，配合 v-model 使用；type 为 timeRange 时为数组。传 null 是受控的空值，undefined 视为非受控。",
+                "en-US": "Current time, used with v-model; an array when type is timeRange. null is a controlled empty value, and undefined means uncontrolled."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控时的初始时间，形态同 modelValue。",
+                "en-US": "Initial time when uncontrolled, in the same forms as modelValue."
+            },
+            "open": {
+                "zh-CN": "面板是否打开，配合 v-model:open 使用；undefined 视为非受控。",
+                "en-US": "Whether the panel is open, used with v-model:open; undefined means uncontrolled."
+            },
+            "defaultOpen": {
+                "zh-CN": "非受控时面板是否默认打开。",
+                "en-US": "Whether the panel is open by default when uncontrolled."
+            },
+            "type": {
+                "zh-CN": "选择类型，time 为单个时间，timeRange 为时间范围。",
+                "en-US": "Selection type: time for a single time, timeRange for a range."
+            },
+            "format": {
+                "zh-CN": "展示的时间格式，遵循 date-fns 的 format；use12Hours 时默认为 a h:mm:ss，否则为 HH:mm:ss。",
+                "en-US": "Display format, following date-fns format. Defaults to a h:mm:ss with use12Hours, else HH:mm:ss."
+            },
+            "use12Hours": { "zh-CN": "使用 12 小时制。", "en-US": "Uses the 12-hour clock." },
+            "hourStep": {
+                "zh-CN": "小时选项的间隔，必须是正整数。",
+                "en-US": "Interval of the hour options; a positive integer."
+            },
+            "minuteStep": {
+                "zh-CN": "分钟选项的间隔，必须是正整数。",
+                "en-US": "Interval of the minute options; a positive integer."
+            },
+            "secondStep": {
+                "zh-CN": "秒选项的间隔，必须是正整数。",
+                "en-US": "Interval of the second options; a positive integer."
+            },
+            "disabled": { "zh-CN": "禁用全部操作。", "en-US": "Disables all interaction." },
+            "disabledHours": {
+                "zh-CN": "返回禁止选择的小时。",
+                "en-US": "Returns the hours that cannot be selected."
+            },
+            "disabledMinutes": {
+                "zh-CN": "按所选小时返回禁止选择的分钟。",
+                "en-US": "Returns the minutes that cannot be selected for the selected hour."
+            },
+            "disabledSeconds": {
+                "zh-CN": "按所选小时和分钟返回禁止选择的秒。",
+                "en-US": "Returns the seconds that cannot be selected for the selected hour and minute."
+            },
+            "disabledTime": {
+                "zh-CN": "仅范围模式生效：按当前值与面板位置返回左右面板各自的禁用规则。value 中未选的一侧为 undefined；返回的 disabledHours、disabledMinutes、disabledSeconds 覆盖对应的同名属性，未返回的回退到同名属性。",
+                "en-US": "Range mode only: returns the disabled rules of the left and right panel from the current value and the panel. The unpicked side of value is undefined; a returned disabledHours, disabledMinutes or disabledSeconds overrides the prop of the same name, and one left out falls back to it."
+            },
+            "hideDisabledOptions": {
+                "zh-CN": "隐藏禁止选择的选项。",
+                "en-US": "Hides the options that cannot be selected."
+            },
+            "placeholder": {
+                "zh-CN": "没有值时显示的提示，默认按 type 取语言包文案。",
+                "en-US": "Hint shown without a value; defaults to the locale text of type."
+            },
+            "rangeSeparator": { "zh-CN": "时间范围的分隔符。", "en-US": "Separator between the two times of a range." },
+            "size": { "zh-CN": "输入框的大小。", "en-US": "Size of the input." },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "showClear": { "zh-CN": "是否展示清除按钮。", "en-US": "Whether to show the clear button." },
+            "inputReadOnly": {
+                "zh-CN": "输入框只读，避免在移动设备上打开虚拟键盘。",
+                "en-US": "Makes the input read-only, which avoids opening the virtual keyboard on mobile devices."
+            },
+            "validateStatus": { "zh-CN": "校验状态。", "en-US": "Validation status." },
+            "insetLabelId": {
+                "zh-CN": "insetLabel 的 id，用于 aria-labelledby 关联。",
+                "en-US": "id of the insetLabel, referenced through aria-labelledby."
+            },
+            "inputStyle": { "zh-CN": "输入框根元素的样式。", "en-US": "Style of the input's root element." },
+            "autofocus": {
+                "zh-CN": "挂载时让输入框获得焦点，同时打开面板。",
+                "en-US": "Focuses the input on mount, which opens the panel."
+            },
+            "focusOnOpen": {
+                "zh-CN": "挂载后让输入框获得焦点并选中内容，同时打开面板。",
+                "en-US": "Focuses the input and selects its content once mounted, which opens the panel."
+            },
+            "preventScroll": {
+                "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。",
+                "en-US": "Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component."
+            },
+            "motion": { "zh-CN": "是否展示弹出层动画。", "en-US": "Whether the popup animates." },
+            "autoAdjustOverflow": {
+                "zh-CN": "浮层被遮挡时是否自动调整方向。",
+                "en-US": "Whether to flip the popup automatically when it is clipped."
+            },
+            "position": {
+                "zh-CN": "浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。",
+                "en-US": "Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time."
+            },
+            "popupClassName": { "zh-CN": "弹出层的类名。", "en-US": "Class name of the popup." },
+            "popupStyle": { "zh-CN": "弹出层的样式。", "en-US": "Style of the popup." },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的点击事件冒泡。",
+                "en-US": "Whether to stop click events on the popup from bubbling."
+            },
+            "timeZone": {
+                "zh-CN": "时区，未设置时依次取 ConfigProvider 的 timeZone、全局默认值。",
+                "en-US": "Time zone; falls back to the timeZone of ConfigProvider, then to the global default."
+            },
+            "scrollItemProps": {
+                "zh-CN": "传给各列的属性，只支持 cycled、mode、motion、transform，含义同 ScrollList 的 ScrollItem。",
+                "en-US": "Props passed to the columns; only cycled, mode, motion and transform, as on the ScrollItem of ScrollList."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "时间变化时触发，供 v-model 回写；清除后单选为 undefined，范围为空数组，范围中未选的一侧为 undefined。",
+                "en-US": "Emitted when the time changes, for v-model to write back. Cleared, it is undefined (single) or an empty array (range); the unpicked side of a range is undefined."
+            },
+            "change": {
+                "zh-CN": "时间变化时触发，参数为 (Date 值, 格式化字符串)，范围模式下两者都是数组。",
+                "en-US": "Emitted when the time changes, with (Date value, formatted string); both are arrays in range mode."
+            },
+            "update:open": {
+                "zh-CN": "面板打开或关闭时触发，供 v-model:open 回写。",
+                "en-US": "Emitted when the panel opens or closes, for v-model:open to write back."
+            },
+            "openChange": { "zh-CN": "面板打开或关闭时触发。", "en-US": "Emitted when the panel opens or closes." },
+            "focus": {
+                "zh-CN": "输入框根元素获得焦点时触发；焦点在输入框与清除按钮之间移动不触发。",
+                "en-US": "Emitted when the input's root element gains focus; moving focus between the input and the clear button does not emit it."
+            },
+            "blur": {
+                "zh-CN": "点击外部关闭面板时触发，参数为该次 mousedown 的原生事件；离开输入框不触发。",
+                "en-US": "Emitted when a click outside closes the panel, with the native event of that mousedown; leaving the input does not emit it."
+            }
+        },
+        "slots": {
+            "trigger": {
+                "zh-CN": "自定义触发器，替代默认的输入框，点击其中任意位置打开面板。参数含 value（未选的一侧为 undefined）、inputValue、placeholder、disabled、componentProps 与 onChange（更新输入框文本，效果同键入）。",
+                "en-US": "Custom trigger that replaces the default input; a click anywhere in it opens the panel. Receives value (the unpicked side undefined), inputValue, placeholder, disabled, componentProps and onChange (updates the input text, as typing would)."
+            },
+            "panelHeader": {
+                "zh-CN": "面板头部内容，参数 index 为面板序号（单选为 0，范围为 0 或 1）。范围模式下未提供时显示语言包的「开始时间」「结束时间」。",
+                "en-US": "Content above the panel; index is the panel's position (0 for time, 0 or 1 for timeRange). Without it, a range shows the locale's start and end text."
+            },
+            "panelFooter": {
+                "zh-CN": "面板底部内容，参数 index 为面板序号。",
+                "en-US": "Content below the panel; index is the panel's position."
+            },
+            "panel": {
+                "zh-CN": "仅范围模式：同时作为第 index 个面板的头部和底部，有内容时优先于 panelHeader 与 panelFooter。",
+                "en-US": "Range mode only: used as both the header and the footer of panel index, taking precedence over panelHeader and panelFooter while it has content."
+            },
+            "prefix": { "zh-CN": "输入框的前缀内容。", "en-US": "Prefix content of the input." },
+            "insetLabel": { "zh-CN": "输入框的内嵌标签。", "en-US": "Inset label of the input." },
+            "clearIcon": {
+                "zh-CN": "自定义清除图标，showClear 为 true 时有效。",
+                "en-US": "Custom clear icon; effective when showClear is true."
+            }
+        },
+        "exposed": {
+            "focus": {
+                "zh-CN": "使输入框获得焦点，同时打开面板；自定义触发器时无效。",
+                "en-US": "Focuses the input, which opens the panel; does nothing with a custom trigger."
+            },
+            "blur": {
+                "zh-CN": "移除输入框的焦点；自定义触发器时无效。",
+                "en-US": "Removes focus from the input; does nothing with a custom trigger."
+            }
+        }
+    }
+}

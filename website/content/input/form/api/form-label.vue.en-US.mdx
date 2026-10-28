@@ -1,0 +1,31 @@
+**Props**
+
+| Property | Description                                                                                 | Type               | Default     |
+| -------- | ------------------------------------------------------------------------------------------- | ------------------ | ----------- |
+| text     | Text of the label. The default slot takes precedence.                                       | `string \| number` | `undefined` |
+| extra    | Content after the label text. The extra slot takes precedence.                              | `string \| number` | `undefined` |
+| align    | Text alignment of the label.                                                                | `string`           | `"left"`    |
+| disabled | Whether the label looks disabled.                                                           | `boolean`          | `undefined` |
+| required | Whether to display the required \* symbol.                                                  | `boolean`          | `false`     |
+| optional | Whether to append the optional text of the locale. When true, the \* of required is hidden. | `boolean`          | `false`     |
+| name     | The id of the labeled control, written to the for attribute.                                | `string`           | `undefined` |
+| width    | Width of the label. A number is in px.                                                      | `string \| number` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                   | Scope parameters |
+| ------- | ------------------------------------------------------------- | ---------------- |
+| default | Content of the label. It takes precedence over text.          | `any`            |
+| extra   | Content after the label text. It takes precedence over extra. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

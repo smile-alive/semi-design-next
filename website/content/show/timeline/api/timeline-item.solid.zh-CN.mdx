@@ -1,0 +1,10 @@
+**Props**
+
+| 属性     | 说明                                                            | 类型                                                          | 默认值 |
+| -------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------ |
+| color    | 节点的颜色，作为圆点的背景色，覆盖 type 对应的颜色。            | `string`                                                      | -      |
+| dot      | 自定义节点图标，替换默认圆点。                                  | `JSX.Element`                                                 | -      |
+| extra    | 辅助说明内容，为空时不渲染。                                    | `JSX.Element`                                                 | -      |
+| position | 覆盖 Timeline 的 mode，指定该项所在的一侧，可选 left 或 right。 | `'left' \| 'right'`                                           | -      |
+| time     | 时间文本，为空时不渲染。                                        | `JSX.Element`                                                 | -      |
+| type     | 节点类型，可选 default、ongoing、success、warning、error。      | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | -      |

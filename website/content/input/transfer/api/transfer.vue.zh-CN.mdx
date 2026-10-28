@@ -1,0 +1,50 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 已选中项的 value 数组，用 v-model 绑定。传入后即为受控组件，数组顺序就是右侧的显示顺序；传入 undefined 回到非受控。 | `TransferValue` | `undefined` |
+| defaultValue | 默认已选中的 value 数组，只在挂载时读取。 | `TransferValue` | `semiDefault("Transfer", "defaultValue", [])` |
+| dataSource | 数据源。type 为 list 时是数据项数组，groupList 时是分组数组，treeList 时是带 children 的树形数据。treeList 的左侧树只在传入新数组时更新，原地修改不会生效。 | `TransferDataSource` | `semiDefault("Transfer", "dataSource", [])` |
+| type | 穿梭框类型，可选 list、groupList、treeList。 | `TransferType` | `semiDefault("Transfer", "type", "list")` |
+| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("Transfer", "disabled")` |
+| draggable | 是否开启右侧已选项的拖拽排序。排序后 update:modelValue 与 change 的数组顺序随之改变。 | `boolean` | `semiGlobalDefault("Transfer", "draggable")` |
+| loading | 左侧选项是否正在加载。 | `boolean` | `semiGlobalDefault("Transfer", "loading")` |
+| showPath | 仅 treeList 有效，控制右侧已选项是否显示从根节点到自身的选择路径。 | `boolean` | `semiDefault("Transfer", "showPath", false)` |
+| filter | 筛选逻辑。为 false 时不显示搜索框；传入函数时自定义匹配，返回 true 表示保留该项；默认按 label 不区分大小写匹配。treeList 想自定义搜索时需设为 true，并通过 treeProps 的 filterTreeNode 传入匹配函数。 | <ApiType detail={"boolean \u007c ((searchValue: string, item: TransferDataItem) => boolean)"}>Type</ApiType> | `undefined` |
+| inputProps | 传给搜索框 Input 的属性，可配置项参考 Input；值与 change 由 Transfer 占用，需要外部驱动搜索时调用 search 方法。 | `TransferInputProps` | `semiGlobalDefault("Transfer", "inputProps")` |
+| treeProps | 仅 treeList 有效，传给左侧 Tree 的属性，会覆盖默认的 multiple、disableStrictly、leafOnly、filterTreeNode、defaultExpandAll。选中值、树数据与 Tree 的引用由 Transfer 决定，modelValue、defaultValue、keyMaps、treeData、treeDataSimpleJson、changeWithObject、change 监听器与 ref 会被忽略；Tree 的插槽只转发 label。 | `TransferTreeProps` | `semiGlobalDefault("Transfer", "treeProps")` |
+| pagination | 左侧面板的分页配置，仅对 list 与 groupList 生效。onPageChange 在对象内。 | `TransferPagination` | `semiGlobalDefault("Transfer", "pagination")` |
+| virtualize | 右侧已选列表虚拟化，仅在使用默认右侧面板且 draggable 为 false 时生效。height 为数字时直接生效，为字符串（如 100%）时按面板剩余高度测量。 | `TransferVirtualize` | `semiGlobalDefault("Transfer", "virtualize")` |
+
+**Events**
+
+| 事件              | 说明                                                                                                                                           | 回调参数                                             |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| update:modelValue | 已选中的值变化时触发，v-model 使用。载荷是 value 数组。                                                                                        | `[values: TransferValue]`                            |
+| change            | 已选中的值变化时触发，拖拽排序后也会触发。载荷依次为 value 数组与对应的数据项数组，值与 update:modelValue 相同。会遮住根元素上同名的原生事件。 | `[values: TransferValue, items: TransferDataItem[]]` |
+| select            | 勾选一项时触发，载荷为该数据项。会遮住根元素上同名的原生事件。                                                                                 | `[item: TransferDataItem]`                           |
+| deselect          | 取消勾选一项时触发，载荷为该数据项。                                                                                                           | `[item: TransferDataItem]`                           |
+| search            | 搜索框输入内容变化时触发，载荷为搜索值。search 方法驱动的搜索不触发。                                                                          | `[searchValue: string]`                              |
+
+**Slots**
+
+| 插槽           | 说明                                                                                                                          | 作用域参数                        |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| label          | 数据项的内容，同时用于左侧条目（treeList 为树行）、右侧已选条目与拖拽副本；默认显示数据项的 label。                           | `TransferLabelSlotProps`          |
+| sourceItem     | 完全自定义左侧单个候选项。index 是过滤与分页后可见条目中的下标，不是在 dataSource 中的位置。                                  | `TransferSourceItemSlotProps`     |
+| selectedItem   | 完全自定义右侧单个已选项。draggable 时 handle 是拖拽手柄组件，用它包住拖拽图标。treeList 且 showPath 时 fullPath 为完整路径。 | `TransferSelectedItemSlotProps`   |
+| sourceHeader   | 自定义左侧面板头部。leafOnlyNum 仅 treeList 提供。                                                                            | `TransferSourceHeaderSlotProps`   |
+| selectedHeader | 自定义右侧面板头部。                                                                                                          | `TransferSelectedHeaderSlotProps` |
+| sourcePanel    | 完全自定义左侧候选面板，可复用 Transfer 的筛选与选择逻辑。                                                                    | `TransferSourcePanelSlotProps`    |
+| selectedPanel  | 完全自定义右侧已选面板。onSortEnd 在自行实现拖拽排序结束后调用。                                                              | `TransferSelectedPanelSlotProps`  |
+| emptyLeft      | 左侧没有数据时的提示。未提供时显示语言包文案，提供空插槽则隐藏该空状态。                                                      | `any`                             |
+| emptyRight     | 右侧没有已选项时的提示。未提供时显示语言包文案，提供空插槽则隐藏该空状态。                                                    | `any`                             |
+| emptySearch    | 搜索没有结果时的提示。未提供时显示语言包文案，提供空插槽则隐藏该空状态。                                                      | `any`                             |
+
+**Exposes**
+
+| 名称   | 说明                                                         | 类型                                                       |
+| ------ | ------------------------------------------------------------ | ---------------------------------------------------------- |
+| search | 按输入了该值来搜索，该值会被置给搜索框；不触发 search 事件。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

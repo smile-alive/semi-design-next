@@ -1,0 +1,157 @@
+---
+title: PinCode
+order: 43
+icon: doc-pincode
+brief: For easy and intuitive verification code entry
+---
+
+import PinCodeReactApi from './api/pin-code.react.en-US.mdx';
+import PinCodeVueApi from './api/pin-code.vue.en-US.mdx';
+import PinCodeSolidApi from './api/pin-code.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { PinCode } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { PinCode } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Demo id="basic" />
+
+### Controlled
+
+<Framework only="react">
+
+Use value to pass in the verification code string and use it with onChange for controlled use
+
+</Framework>
+
+<Framework only="vue">
+
+Use `v-model` to bind the verification code string
+
+</Framework>
+
+<Framework only="solid">
+
+Use `value` to pass in the verification code string and `onChange` to write the new content back into a signal for controlled use
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Limit verification code format
+
+#### Set the number of digits
+
+Set the number of digits through count, the default is 6 digits, the demo below is set to 4 digits
+
+<Demo id="count" />
+
+#### Set character range
+
+Use format to control the character range that can be entered
+
+- Pass "number" to only allow numbers
+- Pass "mixed" to allow numbers and letters
+- Pass in a regular expression to only allow characters that can be judged by the regular expression
+- Pass in a function, and the verification code will be passed in as parameters in units of characters for verification when entering. When the function returns true, the character is allowed to be entered into the PinCode
+
+<Demo id="format" />
+
+### Manual focus and blur
+
+<Framework only="react">
+
+Use the focus and blur methods on Ref, and the input parameter is the serial number of the corresponding Input, counted from 0
+
+</Framework>
+
+<Framework only="vue">
+
+Use the focus and blur methods on the template ref, and the input parameter is the serial number of the corresponding Input, counted from 0
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` points at the group root element (`role="group"`). Call `focus()` to focus the first empty box, or the last box once all of them are filled; call `blur()` to remove focus. Focusing a box by index is not available yet; reach the input directly instead, for example `ref.querySelectorAll('input')[2].focus()` focuses the third box, counted from 0.
+
+</Framework>
+
+<Demo id="focus" />
+
+## API Reference
+
+<Framework only="react">
+
+<PinCodeReactApi />
+
+`aria-label`, `aria-labelledby`, `data-*` and other undeclared attributes land on the `role="group"` root element. `onBlur` fires once when focus leaves the whole code, not when it moves between input boxes. `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-required` and `tabIndex` land on every input box. `id` lands on the first input box, and clicking the `Form` label focuses it. `name`, `insetLabel` and `insetLabelId` are discarded. `onFocus` passes through to the root element and fires whenever any input box gains focus; use `onBlur` to tell when focus leaves the whole code.
+
+</Framework>
+
+<Framework only="vue">
+
+<PinCodeVueApi />
+
+`class`, `style`, `aria-label`, `aria-labelledby` and `data-*` land on the `role="group"` root element through attrs. `id` lands on the first input box, so `<label for>` points at the first digit. `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-required` and `tabindex` land on every input box. `name`, `insetLabel` and `insetLabelId` are discarded.
+
+Call `focus(index)` and `blur(index)` through the template ref. The index is counted from 0 and ignored when out of range; after `focus` the caret sits after that digit's character.
+
+</Framework>
+
+<Framework only="solid">
+
+<PinCodeSolidApi />
+
+`class`, `style`, `aria-label`, `aria-labelledby` and `data-*` land on the `role="group"` root element. `id` lands on the first input box, so `<label for>` points at the first digit. `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-required` and `tabindex` land on every input box. `name` is discarded. `autofocus` focuses the first input box on mount and defaults to `false`; turn it on only when the user has just entered the code step.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The root element is `role="group"`, named through `aria-label` or `aria-labelledby`; pass `aria-label` when there is no visible label, otherwise the group has no name.
+- Each input box takes its accessible name from the locale, for example "Digit 1 of 6", which follows `count` and the box index, so nothing needs to be set by hand.
+- `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on every input box; `validateStatus` is passed to every input box.
+- With `format` set to `"number"` the input boxes use the numeric soft keyboard (`inputmode="numeric"`); otherwise the text keyboard.
+
+### Keyboard and Focus
+
+- Each box is its own input; after a valid character is entered, focus moves to the next box, and entering the last box blurs it. The filled characters always run from the first box without gaps, so a character typed after an empty box lands in the first empty box. `Tab` and `Shift` + `Tab` move between boxes.
+- `Left Arrow` and `Right Arrow` move focus between boxes. `Backspace` and `Delete` both delete the character in the current box and the following characters move forward; `Backspace` also moves focus to the previous box.
+- Pasting a whole code fills the boxes by character from the current box, and stops at the first invalid character.
+- `autoFocus` (`autofocus` in Vue) should be turned on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it.
+
+<Framework only="solid">
+
+The prop is named `autofocus` and behaves as described above.
+
+</Framework>

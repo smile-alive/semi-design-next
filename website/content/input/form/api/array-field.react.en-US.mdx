@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                               | Type                                                                                   | Default |
+| --------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------- |
+| children  | Required. A function that renders the rows. It receives `{ arrayFields, add, addWithInitValue }` and returns a ReactNode. | <ApiType detail={"(props: ArrayFieldChildrenProps) => React.ReactNode"}>Type</ApiType> | -       |
+| field     | Required. Path of the array in formState.values. For rows with fields `a[0].name` and `a[1].name`, pass `a`.              | `string`                                                                               | -       |
+| initValue | Initial value of the array, which must be an array. It takes precedence over the initValues of the Form.                  | `any[]`                                                                                | -       |

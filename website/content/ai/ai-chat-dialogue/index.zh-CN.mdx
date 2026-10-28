@@ -1,0 +1,901 @@
+---
+order: 102
+title: AI对话
+icon: doc-aiDialogue
+brief: 用户展示 AI 聊天中的对话信息
+showNew: true
+---
+
+import AIChatDialogueReactApi from './api/ai-chat-dialogue.react.zh-CN.mdx';
+import AnnotationReactApi from './api/annotation.react.zh-CN.mdx';
+import DialogueStepReactApi from './api/dialogue-step.react.zh-CN.mdx';
+import ReasoningReactApi from './api/reasoning.react.zh-CN.mdx';
+import AIChatDialogueVueApi from './api/ai-chat-dialogue.vue.zh-CN.mdx';
+import AnnotationVueApi from './api/annotation.vue.zh-CN.mdx';
+import DialogueStepVueApi from './api/dialogue-step.vue.zh-CN.mdx';
+import ReasoningVueApi from './api/reasoning.vue.zh-CN.mdx';
+import AIChatDialogueSolidApi from './api/ai-chat-dialogue.solid.zh-CN.mdx';
+import AnnotationSolidApi from './api/annotation.solid.zh-CN.mdx';
+import DialogueStepSolidApi from './api/dialogue-step.solid.zh-CN.mdx';
+import ReasoningSolidApi from './api/reasoning.solid.zh-CN.mdx';
+
+## 使用场景
+
+AIChatDialogue 组件可搭配 AIChatInput 使用，实现更丰富的、功能覆盖更全面、定制更加便捷的 AI 会话场景。组件消息格式以 OpenAI 的 [Response Object](https://platform.openai.com/docs/api-reference/responses/object) 为原型，默认支持 OpenAI 社区 [Response](https://platform.openai.com/docs/api-reference/responses/create) / [Chat Completion](https://platform.openai.com/docs/api-reference/chat/create) 格式标准，对 GPT-5、GPT-4o 系列模型的响应均支持开箱即用，详见[消息数据转换](/zh-CN/react/ai/ai-chat-dialogue#%E6%B6%88%E6%81%AF%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2)。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { AIChatDialogue } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AIChatDialogue } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+通过设置 `chats` 和 `onChatsChange` 实现基础对话显示和交互。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `v-model:chats` 实现基础对话显示和交互：消息列表变化时组件触发 `update:chats`（同时触发 `chatsChange`，载荷相同）。组件也检测对 `chats` 的就地修改：向 reactive 数组 `push` 新消息、往最后一条消息的文本里追加内容，都会触发 `chatsChange` 并跟随滚动；只改 `content` 数组深处的文本、或单独改 `status` 会重新渲染，但不触发 `chatsChange`，也不跟随滚动，此时整体替换该消息或整个数组。
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 `chats` 和 `onChatsChange` 实现基础对话显示和交互。更新时传入新的消息数组：消息数组保存在 `createSignal` 中时，原地修改（如 `push`）不会重新渲染，需要替换为新的数组。
+
+</Framework>
+
+使用 `align` 属性可以设置对话的布局，支持左右分布（`leftRight`， 默认）和左对齐（`leftAlign`）。
+
+<Demo id="basic" />
+
+### 自动滚动
+
+对话区高度固定时，新消息和流式输出的内容会让列表保持在底部。任何向上的滚动（滚轮、拖动滚动条、键盘）都会停止跟随；滚回底部或发送新消息后恢复。在 `chats` 头部插入更早的消息（如滚到顶部时加载历史）不会滚动列表，已显示的消息保持在原位置。
+
+<Demo id="auto-scroll" />
+
+### 消息状态
+
+chats 类型为 `Message[]`， `Message` 包含对话的各种信息，如角色 `role`、内容 `content`、状态 `status` 、唯一标识 `id`、创建时间 `createdAt` 等，具体见 [Message](#Message)。其中 status 和 [Response API Status](https://platform.openai.com/docs/api-reference/responses/object#responses/object-status) 相同，存在 6 种状态，对应 3 种官方样式（成功 / 请求中 / 失败）。
+
+<Demo id="status" />
+
+### 消息展示
+
+消息内容展示的类型为 [ContentItem[]](https://platform.openai.com/docs/api-reference/responses/list#responses/list-data)，支持文本 `text`、文件 `file`、图片 `image`、代码 `code`、思考块 `reasoning`、参考来源 `annotation`、工具调用 `tool call` 等消息块的展示，同时提供 `AIChatDialogue.Step` 组件用于步骤等信息的分步展示。
+
+<Demo id="message-display" />
+
+### 引用
+
+<Framework only="react">
+
+通过 `references` 字段定义当前消息引用的文件或者文本， `showReference` 配置当前消息是否显示可被引用样式, `onReferenceClick` 配置引用按钮点击回调。具体和 AIChatInput 的搭配使用见 [AI 组件构建对话](/zh-CN/react/ai/ai-component#AI%20%E7%BB%84%E4%BB%B6%E6%9E%84%E5%BB%BA%E5%AF%B9%E8%AF%9D)
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `references` 字段定义当前消息引用的文件或者文本， `showReference` 配置当前消息是否显示可被引用样式, `@referenceClick` 监听引用按钮的点击。具体和 AIChatInput 的搭配使用见 [AI 组件构建对话](/zh-CN/react/ai/ai-component#AI%20%E7%BB%84%E4%BB%B6%E6%9E%84%E5%BB%BA%E5%AF%B9%E8%AF%9D)
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `references` 字段定义当前消息引用的文件或者文本， `showReference` 配置当前消息是否显示可被引用样式, `onReferenceClick` 配置引用按钮点击回调。具体和 AIChatInput 的搭配使用见 [AI 组件构建对话](/zh-CN/react/ai/ai-component#AI%20%E7%BB%84%E4%BB%B6%E6%9E%84%E5%BB%BA%E5%AF%B9%E8%AF%9D)
+
+</Framework>
+
+<Demo id="references" />
+
+### 选择
+
+<Demo id="selecting" />
+
+### 提示
+
+<Framework only="react">
+
+通过 `hints` 可设置提示区域内容, 点击提示内容后，提示内容将成为新的用户输入内容，并触发 `onHintClick` 回调。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `hints` 可设置提示区域内容, 点击提示内容后，提示内容将成为新的用户输入内容，并触发 `hintClick` 事件。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `hints` 可设置提示区域内容, 点击提示内容后，提示内容将成为新的用户输入内容，并触发 `onHintClick` 回调。
+
+</Framework>
+
+<Demo id="hints" />
+
+### 自定义渲染提示
+
+<Framework only="react">
+
+通过 `renderHintBox` 可自定义提示区域内容， 参数如下
+
+```ts
+type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => React.ReactNode;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#hintBox` 插槽可自定义提示区域内容，插槽参数为 `{ content, index, onHintClick }`，调用 `onHintClick` 即等同于点击该提示。
+
+```ts
+interface AIChatDialogueHintBoxSlotProps {
+    content: string;
+    index: number;
+    onHintClick: () => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `renderHintBox` 可自定义提示区域内容， 参数如下
+
+```ts
+type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => JSX.Element;
+```
+
+</Framework>
+
+<Demo id="custom-hint-box" />
+
+### 自定义渲染会话框
+
+<Framework only="react">
+
+通过 `dialogueRenderConfig` 传入自定义渲染配置, dialogueRenderConfig 类型如下
+
+```ts
+export interface RenderTitleProps {
+    message?: Message;
+    role?: Metadata;
+    defaultTitle?: ReactNode;
+}
+
+export interface RenderAvatarProps {
+    message?: Message;
+    role?: Metadata;
+    defaultAvatar?: ReactNode;
+}
+
+export interface RenderContentProps {
+    message?: Message;
+    role?: Metadata;
+    defaultContent?: ReactNode | ReactNode[];
+    className?: string;
+}
+
+/* 与默认操作栏显示的按钮一致，按钮不显示时（如消息未完成）对应的键不存在 */
+export interface DefaultActionNodeObj {
+    copyNode?: ReactNode;
+    likeNode?: ReactNode;
+    dislikeNode?: ReactNode;
+    resetNode?: ReactNode;
+    shareNode?: ReactNode;
+    editNode?: ReactNode;
+    moreNode?: ReactNode;
+}
+
+export interface RenderActionProps {
+    message?: Message;
+    defaultActions?: ReactNode | ReactNode[];
+    className: string;
+    defaultActionsObj?: DefaultActionNodeObj;
+}
+
+export interface FullDialogueNodes {
+    avatar?: ReactNode;
+    title?: ReactNode;
+    content?: ReactNode;
+    action?: ReactNode;
+}
+
+export interface RenderFullDialogueProps {
+    message?: Message;
+    role?: Metadata;
+    defaultNodes?: FullDialogueNodes;
+    className: string;
+}
+
+export interface DialogueRenderConfig {
+    /* 自定义渲染消息操作栏 */
+    renderDialogueAction?: (props: RenderActionProps) => ReactNode;
+    /* 自定义渲染头像 */
+    renderDialogueAvatar?: (props: RenderAvatarProps) => ReactNode;
+    /* 自定义渲染内容区域 */
+    renderDialogueContent?: (props: RenderContentProps) => ReactNode;
+    /* 自定义渲染标题 */
+    renderDialogueTitle?: (props: RenderTitleProps) => ReactNode;
+    /* 完全自定义渲染整个聊天框 */
+    renderFullDialogue?: (props: RenderFullDialogueProps) => ReactNode;
+}
+```
+
+自定义渲染头像和标题，可通过 `renderDialogueAvatar` 和 `renderDialogueTitle` 实现。
+
+</Framework>
+
+<Framework only="vue">
+
+各区块通过具名作用域插槽自定义，提供插槽即替换对应区块，每个插槽的参数都带有默认节点，可在其中二次组合：
+
+| 插槽            | 说明                   | 参数                                                    |
+| --------------- | ---------------------- | ------------------------------------------------------- |
+| `#avatar`       | 自定义头像             | `{ message, role, defaultAvatar }`                      |
+| `#title`        | 自定义标题             | `{ message, role, defaultTitle }`                       |
+| `#content`      | 自定义内容区域         | `{ message, role, defaultContent, class }`              |
+| `#action`       | 自定义消息操作栏       | `{ message, defaultActions, defaultActionsObj, class }` |
+| `#fullDialogue` | 完全自定义渲染整条对话 | `{ message, role, defaultNodes, class }`                |
+
+`defaultActions` 是默认操作栏的按钮数组，`defaultActionsObj` 是同样的按钮按名称索引的对象，与默认操作栏显示的按钮一致，按钮不显示时（如消息未完成）对应的键不存在。`defaultNodes` 含 `avatar`、`title`、`content`、`action` 四个默认节点。默认节点是 VNode，用 `<component :is="..." />` 渲染。
+
+```ts
+interface DefaultActionNodeObj {
+    copyNode?: VNode;
+    likeNode?: VNode;
+    dislikeNode?: VNode;
+    resetNode?: VNode;
+    shareNode?: VNode;
+    editNode?: VNode;
+    moreNode?: VNode;
+}
+
+interface FullDialogueNodes {
+    avatar: VNode;
+    title: VNode;
+    content: VNode;
+    action: VNode;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import type { JSX } from 'solid-js';
+
+export interface RenderTitleProps {
+    message?: Message;
+    role?: Metadata;
+    /* 创建默认标题，在插入处调用 */
+    defaultTitle?: () => JSX.Element;
+}
+
+export interface RenderAvatarProps {
+    message?: Message;
+    role?: Metadata;
+    /* 创建默认头像，在插入处调用 */
+    defaultAvatar?: () => JSX.Element;
+}
+
+export interface RenderContentProps {
+    message?: Message;
+    role?: Metadata;
+    /* 创建默认内容，在插入处调用 */
+    defaultContent?: () => JSX.Element;
+    class?: string;
+}
+
+/* 默认按钮的渲染函数，与默认操作栏显示的按钮一致，按钮不显示时（如消息未完成）对应的键不存在；在插入处调用 */
+export interface DefaultActionNodeObj {
+    copyNode?: () => JSX.Element;
+    dislikeNode?: () => JSX.Element;
+    editNode?: () => JSX.Element;
+    likeNode?: () => JSX.Element;
+    moreNode?: () => JSX.Element;
+    resetNode?: () => JSX.Element;
+    shareNode?: () => JSX.Element;
+}
+
+export interface RenderActionProps {
+    message?: Message;
+    /* 按显示顺序排列的默认按钮渲染函数，在插入处逐个调用 */
+    defaultActions?: (() => JSX.Element)[];
+    class: string;
+    defaultActionsObj?: DefaultActionNodeObj;
+}
+
+/* 各默认节点的渲染函数，在插入处调用；没有调用的节点不会创建 */
+export interface FullDialogueNodes {
+    avatar?: () => JSX.Element;
+    title?: () => JSX.Element;
+    content?: () => JSX.Element;
+    action?: () => JSX.Element;
+}
+
+export interface RenderFullDialogueProps {
+    message?: Message;
+    role?: Metadata;
+    defaultNodes?: FullDialogueNodes;
+    class: string;
+}
+
+export interface DialogueRenderConfig {
+    /* 自定义渲染消息操作栏 */
+    renderDialogueAction?: (props: RenderActionProps) => JSX.Element;
+    /* 自定义渲染头像 */
+    renderDialogueAvatar?: (props: RenderAvatarProps) => JSX.Element;
+    /* 自定义渲染内容区域 */
+    renderDialogueContent?: (props: RenderContentProps) => JSX.Element;
+    /* 自定义渲染标题 */
+    renderDialogueTitle?: (props: RenderTitleProps) => JSX.Element;
+    /* 完全自定义渲染整个聊天框 */
+    renderFullDialogue?: (props: RenderFullDialogueProps) => JSX.Element;
+}
+```
+
+通过 `renderDialogueAvatar` 和 `renderDialogueTitle` 可自定义头像和标题。渲染函数参数中的 `role`、`message`、`defaultActions`、`class` 等是访问器，在 JSX 中直接读取（如 `props.role?.name`），不要解构。`defaultTitle`、`defaultAvatar`、`defaultContent` 和 `defaultNodes` 的各项是渲染函数，在插入处调用（如 `{props.defaultTitle?.()}`），没有调用的节点不会创建。
+
+</Framework>
+
+<Demo id="custom-dialogue-render" />
+
+### 自定义渲染消息内容
+
+<Framework only="react">
+
+通过 `renderDialogueContentItem` 按照消息类型返回内容渲染，用法如下
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#contentItem` 插槽按照消息类型返回内容渲染：每个内容项（包括 `message` 类型内层的输入文本、图片、文件）都会先经过该插槽，参数为 `{ item, type, message, index, parent }`，`type` 是内容项的类型，没有 `type` 的顶层内容项视为 `message`；内层项的 `parent` 是所属的 `message` 项。插槽返回空内容时由内置渲染接管，返回非空内容时，外面包一层 `semi-ai-chat-dialogue-content-custom-renderer`。内容为纯文本的消息不是内容项，用 `#messageText` 插槽替换其 Markdown 渲染，参数为 `{ text, message }`。`AIChatDialogue.Reasoning`、`AIChatDialogue.Annotation` 可在插槽中复用，见下文 Static Properties。用法如下
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `renderDialogueContentItem` 按照消息类型返回内容渲染，映射的键是内容项的 `type`。工具调用先按 `type` 再按 `name` 索引（如 `function_call` 下的 `create_travel_guide`）；内容为纯文本的消息用键 `default` 渲染。渲染函数中可以复用 `AIChatDialogue.Reasoning` 与 `AIChatDialogue.Annotation`，见下文 Static Properties。用法如下
+
+</Framework>
+
+<Demo id="custom-content-render" />
+
+### 消息数据转换
+
+当前组件的对话消息以 OpenAI 的 [Response Object](https://platform.openai.com/docs/api-reference/responses/object) 为原型，为了支持用户更好地无缝集成 [Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create) 和 [Response API](https://platform.openai.com/docs/api-reference/responses/create)，我们提供了四种 `Adapter` 转换函数，用户可直接使用该函数转换 API 的返回结果，得到可直接用于消息展示的数据，提供两种 `Adapter` 用于将 `ChatInput` 组件的数据处理成适配于 `Response API` 的 `input Message` 或者 `Chat Completion API` 中的 `Input Message` 格式。
+
+<Framework only="react">
+
+```jsx
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-vue';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+```ts
+// 将 Chat Completion API 返回的数据转换为 Chat Dialogue 中的 Message 格式
+function chatCompletionToMessage(chatCompletion: ChatCompletion): Message[];
+
+// 将 Chat Completion API 流式返回数据转换为 Chat Dialogue 中的 Message 格式
+function streamingChatCompletionToMessage(chatCompletionChunks: ChatCompletionChunk[], state?: StreamingChatState): { messages: Message[]; state?: StreamingChatState };
+
+// 将 Response API 返回的数据转换为 Chat Dialogue 中的 Message 格式
+function responseToMessage(response: Response): Message;
+
+// 将 Response API 返回流式数据转换为 Chat Dialogue 中的 Message 格式
+// ResponseChunk 是按 type 区分的 Response 流式事件联合类型；chunks 为空时返回 null
+function streamingResponseToMessage(chunks: ResponseChunk[], prevState?: StreamingResponseState): { message: Message | null; nextState: StreamingResponseState | null } | null;
+
+// 将 Chat Input 数据转换为 Chat Dialogue 中的 Message 格式，（同 Response API Input Message 格式）
+// 返回值不含 id，放进 chats 前需要自行补上
+function chatInputToMessage(inputContent: MessageContent): Omit<Message, 'id'>;
+
+// 将 Chat Input 数据转换为 Chat Completion API 中的 Input Message 格式
+function chatInputToChatCompletion(inputContent: MessageContent): ChatCompletionInput;
+```
+
+比如，当用户使用 [Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create) 接口返回非流式数据时，可以通过 `chatCompletionToMessage` 函数将 Chat Completion Object 转换为 Dialogue Message 消息块格式。注意，因为 `Chat Completion API` 可以通过 `n` 来控制每条输入消息生成多少个结果所以该函数的返回值为数组。(注意：如果 n > 1，用户需要自行决定将哪条数据添加到 message 中展示)
+
+<Demo id="chat-completion-to-message" />
+
+比如，当用户使用 [Chat Completion API](https://platform.openai.com/docs/api-reference/chat/create) 接口返回流式数据时，可以通过 `streamingChatCompletionToMessage` 函数将 Chat Completion Chunk Object List 转换为 Dialogue Message 消息块格式。
+
+<Demo id="streaming-chat-completion-to-message" />
+
+当用户使用 [Response API](https://platform.openai.com/docs/api-reference/responses/create) 接口返回非流式数据时，可以通过 `responseToMessage` 函数将 Response Object 转换为 Dialogue Message 消息块格式。
+
+<Demo id="response-to-message" />
+
+当用户使用 [Response API](https://platform.openai.com/docs/api-reference/responses/create) 接口返回流式数据时，可以通过 `streamingResponseToMessage` 函数将 Response Chunk Object List 转换为 Dialogue Message 消息块格式。
+
+<Demo id="streaming-response-to-message" />
+
+## API 参考
+
+<Framework only="react">
+
+<AIChatDialogueReactApi />
+
+其他原生属性落在根元素 `div` 上。根元素带 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，`role` 为 `group`，使用方传入的 `role` 优先。消息列表是带名称的 `role="log"` 区域，回复生成期间带 `aria-busy="true"`。
+
+</Framework>
+
+<Framework only="vue">
+
+<AIChatDialogueVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上；根元素带 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，`role` 为 `group`，使用方传入的 `role` 优先。消息列表是带名称的 `role="log"` 区域，回复生成期间带 `aria-busy="true"`。`roleConfig` 是必填 prop，不读取全局默认值。
+
+</Framework>
+
+<Framework only="solid">
+
+<AIChatDialogueSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素 `div` 上。根元素带 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，`role` 为 `group`，使用方传入的 `role` 优先。消息列表是带名称的 `role="log"` 区域，回复生成期间带 `aria-busy="true"`。`roleConfig` 是必填 prop，不读取全局默认值。
+
+</Framework>
+
+### RoleConfig
+
+| 属性      | 说明     | 类型                               | 默认值 |
+| --------- | -------- | ---------------------------------- | ------ |
+| user      | 用户信息 | Metadata \| Map\<string, Metadata> | -      |
+| assistant | 助手信息 | Metadata \| Map\<string, Metadata> | -      |
+| system    | 系统信息 | Metadata \| Map\<string, Metadata> | -      |
+
+### MetaData
+
+| 属性   | 说明                                                                                                                                                                                                                | 类型        | 默认值 |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| name   | 名称                                                                                                                                                                                                                | string      | -      |
+| avatar | 头像                                                                                                                                                                                                                | string      | -      |
+| color  | 头像背景色，同 Avatar 组件的 color 参数, 支持 `amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow` | AvatarColor | `grey` |
+
+### Message
+
+| 属性       | 说明                                                                                                   | 类型                                          | 默认值    |
+| ---------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------- | --------- |
+| role       | 角色                                                                                                   | string                                        | -         |
+| name       | 名称                                                                                                   | string                                        | -         |
+| id         | 唯一标识                                                                                               | string                                        | -         |
+| content    | 消息内容                                                                                               | string\| ContentItem[]                        | -         |
+| createdAt  | 创建时间                                                                                               | number                                        | -         |
+| model      | 模型名称                                                                                               | string                                        | -         |
+| status     | 消息状态，可选值为 `queued` \| `in_progress` \| `incomplete` \| `completed` \| `failed` \| `cancelled` | string                                        | completed |
+| editing    | 是否处于编辑状态，由组件在编辑时写入                                                                   | boolean                                       | -         |
+| like       | 是否已点赞，由组件在点赞时写入                                                                         | boolean                                       | -         |
+| dislike    | 是否已点踩，由组件在点踩时写入                                                                         | boolean                                       | -         |
+| references | 当前消息引用的文件或文本                                                                               | [Reference](#Reference)[]                     | -         |
+| error      | 流式响应的错误信息，由 streamingResponseToMessage 写入                                                 | \{ code?: string; message?: string \} \| null | -         |
+
+### Reference
+
+与 AIChatInput 的 Reference 是同一类型，`id`、`type` 必填，其他字段原样保留。
+
+| 属性    | 说明           | 类型   | 默认值 |
+| ------- | -------------- | ------ | ------ |
+| id      | 唯一标识，必填 | string | -      |
+| type    | 类型，必填     | string | -      |
+| name    | 名称           | string | -      |
+| url     | 地址           | string | -      |
+| content | 文本内容       | string | -      |
+
+### Methods
+
+<Framework only="vue">
+
+方法在上方生成的 Exposes 表中，通过模板引用调用：
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+
+    const dialogue = useTemplateRef('dialogue');
+    const toBottom = () => dialogue.value?.scrollToBottom(true);
+</script>
+
+<template>
+    <AIChatDialogue ref="dialogue" v-model:chats="messages" :roleConfig="roleConfig" />
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+方法列在上方 API 参考的 Methods 表中。通过 `ref` 拿到句柄后调用：
+
+```tsx
+import { useRef } from 'react';
+import { AIChatDialogue, type AIChatDialogueHandle } from '@fibrae/semi-ai-react';
+
+const dialogue = useRef<AIChatDialogueHandle>(null);
+const toBottom = () => dialogue.current?.scrollToBottom(true);
+
+<AIChatDialogue ref={dialogue} chats={messages} roleConfig={roleConfig} onChatsChange={setMessages} />;
+```
+
+</Framework>
+
+<Framework only="solid">
+
+方法列在上方 API 参考的 Methods 表中。通过 `ref` 拿到根元素后调用：
+
+```tsx
+import { AIChatDialogue, type AIChatDialogueElement } from '@fibrae/semi-ai-solid';
+
+let dialogue: AIChatDialogueElement | undefined;
+const toBottom = () => dialogue?.scrollToBottom(true);
+
+<AIChatDialogue ref={(element) => (dialogue = element)} chats={messages()} roleConfig={roleConfig} onChatsChange={onChatsChange} />;
+```
+
+</Framework>
+
+### Static Properties
+
+<Framework only="react">
+
+| 属性              | 说明                                                                                                                                 | 类型                            |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------- |
+| defaultComponents | 默认的 Markdown 渲染组件集合，包含增强版的 Code 组件，支持代码语言标识和复制功能。可用于 `markdownRenderProps.components` 的二次封装 | \{ code: React.ComponentType \} |
+| Reasoning         | 推理块组件，API 见下方 [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning)                                                         | `React.ComponentType`           |
+| Step              | 步骤展示组件，API 见下方 [AIChatDialogue.Step](#AIChatDialogue.Step)                                                                 | `React.ComponentType`           |
+| Annotation        | 参考来源组件，API 见下方 [AIChatDialogue.Annotation](#AIChatDialogue.Annotation)                                                     | `React.ComponentType`           |
+
+**使用示例：**
+
+当需要在自定义代码块渲染时保留默认功能，可以通过 `AIChatDialogue.defaultComponents.code` 获取默认组件：
+
+```jsx
+import { AIChatDialogue } from '@fibrae/semi-ai-react';
+
+function CustomCodeDemo() {
+    return (
+        <AIChatDialogue
+            chats={messages}
+            roleConfig={roleConfig}
+            markdownRenderProps={{
+                components: {
+                    code: (props) => {
+                        // 获取默认的 Code 组件
+                        const DefaultCode = AIChatDialogue.defaultComponents.code;
+                        // 可以在此处添加自定义逻辑
+                        return <DefaultCode {...props} />;
+                    },
+                },
+            }}
+        />
+    );
+}
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningReactApi />
+
+`className`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+### AIChatDialogue.Step
+
+<DialogueStepReactApi />
+
+`className`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+### AIChatDialogue.Annotation
+
+<AnnotationReactApi />
+
+`className`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性              | 说明                                                                                                                                      | 类型                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| defaultComponents | 默认的 Markdown 渲染组件集合，`code` 是增强版的代码块组件，支持代码语言标识和复制功能，可用于 `markdownRenderProps.components` 的二次封装 | `{ code: Component }` |
+| Reasoning         | 推理块组件，API 见下方 [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning)                                                              | Component             |
+| Step              | 步骤展示组件，API 见下方 [AIChatDialogue.Step](#AIChatDialogue.Step)                                                                      | Component             |
+| Annotation        | 参考来源组件，API 见下方 [AIChatDialogue.Annotation](#AIChatDialogue.Annotation)                                                          | Component             |
+
+**使用示例：**
+
+当需要在自定义代码块渲染时保留默认功能，可以把默认组件包进自己的组件，再通过 `markdownRenderProps.components` 传入：
+
+```vue
+<!-- CustomCode.vue -->
+<script setup lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+
+    defineOptions({ inheritAttrs: false });
+    const DefaultCode = AIChatDialogue.defaultComponents.code;
+</script>
+
+<template>
+    <!-- 可以在此处添加自定义逻辑 -->
+    <DefaultCode v-bind="$attrs"><slot /></DefaultCode>
+</template>
+```
+
+```vue
+<script setup lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-vue';
+    import CustomCode from './CustomCode.vue';
+
+    const markdownRenderProps = { components: { code: CustomCode } };
+</script>
+
+<template>
+    <AIChatDialogue v-model:chats="messages" :markdownRenderProps="markdownRenderProps" :roleConfig="roleConfig" />
+</template>
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningVueApi />
+
+### AIChatDialogue.Step
+
+<DialogueStepVueApi />
+
+### AIChatDialogue.Annotation
+
+<AnnotationVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性              | 说明                                                                                                                                      | 类型                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| defaultComponents | 默认的 Markdown 渲染组件集合，`code` 是增强版的代码块组件，支持代码语言标识和复制功能，可用于 `markdownRenderProps.components` 的二次封装 | `{ code: Component }` |
+| Reasoning         | 推理块组件，API 见下方 [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning)                                                              | `Component`           |
+| Step              | 步骤展示组件，API 见下方 [AIChatDialogue.Step](#AIChatDialogue.Step)                                                                      | `Component`           |
+| Annotation        | 参考来源组件，API 见下方 [AIChatDialogue.Annotation](#AIChatDialogue.Annotation)                                                          | `Component`           |
+
+当需要在自定义代码块渲染时保留默认功能，可以把默认组件包进自己的组件，再通过 `markdownRenderProps.components` 传入：
+
+```tsx
+import type { ComponentProps } from 'solid-js';
+import { AIChatDialogue } from '@fibrae/semi-ai-solid';
+
+const DefaultCode = AIChatDialogue.defaultComponents.code;
+
+function CustomCode(props: ComponentProps<typeof DefaultCode>) {
+    // 可以在此处添加自定义逻辑
+    return <DefaultCode {...props} />;
+}
+
+<AIChatDialogue chats={messages()} roleConfig={roleConfig} markdownRenderProps={{ components: { code: CustomCode } }} />;
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+### AIChatDialogue.Step
+
+<DialogueStepSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+### AIChatDialogue.Annotation
+
+<AnnotationSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+</Framework>
+
+### ContentItem
+
+`ContentItem` 支持所有 OpenAI Response [InputItem](https://platform.openai.com/docs/api-reference/responses/create#responses-create-input) 和 [OutputItem](https://platform.openai.com/docs/api-reference/responses/object#responses/object-output) 类型，具体类型定义如下
+
+```ts
+type ContentItem = InputContentItem | OutputContentItem;
+
+type InputContentItem = InputMessage | ItemReference;
+type OutputContentItem = OutputMessage | MCPToolCall | Reasoning FileSearchToolCall |
+                        WebSearchToolCall | FunctionToolCall | CustomToolCall | ImageGenerationCall| CustomObject;
+
+interface CommonContentItem {
+    id?: string;
+    type?: string;
+    status?: string;
+    role?: string
+}
+
+interface CustomObject {
+    [key: string]: any
+}
+
+// 输入条目
+interface InputMessage extends CommonContentItem {
+    content?: string | (InputText | InputImage | InputFile)[]
+}
+
+interface InputText extends CommonContentItem {
+    text?: string
+}
+
+interface InputImage extends CommonContentItem {
+    detail?: string;
+    file_id?: string;
+    image_url?: string
+}
+
+interface InputFile extends CommonContentItem {
+    file_id?: string;
+    file_data?: string;
+    file_url?: string;
+    filename?: string;
+    size?: string;
+    file_type?: string;
+    fileInstance?: any
+}
+
+interface ItemReference extends CommonContentItem {
+    file_id?: string
+}
+
+
+// 输出条目
+interface OutputMessage extends CommonContentItem {
+    content?: (OutputText | Refusal)[]
+}
+
+interface OutputText {
+    text?: string;
+    type?: string;
+    annotations?: Annotation[]
+}
+
+interface Refusal extends CommonContentItem {
+    refusal?: string;
+    type?: string
+}
+
+type Annotation = URLCitation | CustomObject;
+
+interface URLCitation {
+    end_index?: number;
+    start_index?: number;
+    title?: string;
+    type?: string;
+    url?: string
+}
+
+interface Reasoning extends CommonContentItem {
+    summary?: {
+        text?: string;
+        type?: string
+    }[];
+    content?: {
+        text?: string;
+        type?: string
+    }[]
+}
+
+interface FileSearchToolCallResult {
+    attributes?: Map<string, string>;
+    score?: number;
+    file_id?: string;
+    filename?: string;
+    text?: string
+}
+
+interface FileSearchToolCall extends CommonContentItem {
+    queries?: string[];
+    results?: FileSearchToolCallResult[]
+}
+
+interface WebSearchToolCall extends CommonContentItem {
+    action?: SearchAction | OpenPageAction | FindAction
+}
+
+interface SearchAction {
+    type?: string;
+    query?: string;
+    sources?: { type: string; url: string }[]
+}
+
+interface OpenPageAction {
+    type?: string;
+    url?: string
+}
+
+interface FindAction {
+    action?: string;
+    type?: string;
+    query?: string
+}
+
+interface FunctionToolCall extends CommonContentItem {
+    call_id?: string;
+    name?: string;
+    arguments?: string
+}
+
+interface CustomToolCall extends CommonContentItem {
+    call_id?: string;
+    name?: string;
+    input?: string
+}
+
+interface ImageGenerationCall extends CommonContentItem {
+    result?: string
+}
+
+interface MCPToolCall extends CommonContentItem {
+    arguments?: string;
+    server_label?: string;
+    name?: string;
+    result?: string;
+    output?: string
+}
+
+interface FileUploadToolCall extends CommonContentItem {
+    result?: string
+}
+
+```
+
+## 设计变量
+
+<DesignToken />

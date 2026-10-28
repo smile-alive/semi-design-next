@@ -1,0 +1,231 @@
+---
+order: 59
+title: 步骤
+icon: doc-steps
+brief: 将复杂任务或存在先后关系的任务分解，使用步骤组件引导用户按规定流程操作，并让其知道其当前的进度
+---
+
+import StepsReactApi from './api/steps.react.zh-CN.mdx';
+import StepReactApi from './api/step.react.zh-CN.mdx';
+import StepsVueApi from './api/steps.vue.zh-CN.mdx';
+import StepVueApi from './api/step.vue.zh-CN.mdx';
+import StepsSolidApi from './api/steps.solid.zh-CN.mdx';
+import StepSolidApi from './api/step.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Steps } from '@fibrae/semi-ui-react';
+const Step = Steps.Step;
+```
+
+Steps 把每个子元素按顺序当作一个步骤位置（文本除外），fill 的列宽按它计数。自行封装的 Step 组件把属性透传给 Steps.Step 即可正常编号，不需要声明静态属性；原生元素只占序号、原样渲染。
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Steps } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Steps.Step` 也可以按名导入：`Step`。Step 的 `title`、`description`、`icon` 是插槽（`#title`、`#description`、`#icon`）。Steps 只识别直接子节点中的 Steps.Step，其他子节点不渲染、不占序号，开发环境给出警告；Step 在 Steps 之外不渲染任何内容。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Steps } from '@fibrae/semi-ui-solid';
+```
+
+只有 Steps.Step 占一个步骤位置；其他子节点（包括原生元素与文本）不渲染、不占序号，开发环境给出警告。Step 在 Steps 之外不渲染任何内容。
+
+</Framework>
+
+### 默认步骤条（旧版）
+
+建议使用简易版 steps（新版），旧版后续会逐渐 deprecate
+
+<Demo id="default" />
+
+### 简单步骤条（新版）
+
+通过设置 type="basic" 显示为简洁风格步骤条
+
+<Demo id="basic" />
+
+### 导航步骤条
+
+通过设置 type="nav" 显示为导航风格步骤条。导航风格的步骤条有以下特点：
+
+1. 步骤条同样支持交互：Steps 监听步骤切换或 Step 绑定点击回调后，步骤可聚焦、可点击，行为与其他类型一致。
+
+2. 适用于步骤间互相关联较小，内容互不影响，且需要突出页面视觉元素时使用。
+
+3. 步骤条的宽度按照内容物撑开。
+
+4. Steps.Step 只渲染标题，`description`、`icon`、`status` 不生效；其余属性与事件（`aria-label`、`role`、点击与键盘回调、类名与样式等）与其他类型相同。
+
+<Demo id="nav" />
+
+### 迷你尺寸步骤条
+
+通过设置 size="small" 显示迷你尺寸步骤条
+
+<Demo id="small" />
+
+<Demo id="small-nav" />
+
+### 处理进度
+
+配合内容及按钮使用，表示一个流程的处理进度
+
+<Demo id="progress" />
+
+### 竖直方向的步骤条
+
+通过设置 `direction`，使用竖直方向的步骤条
+
+<Demo id="vertical" />
+
+<Demo id="vertical-basic" />
+
+### 指定步骤状态
+
+步骤运行错误，使用 Steps 的 `status` 属性来指定当前步骤的状态。
+
+<Demo id="status" />
+
+### 自定义图标/状态
+
+<Framework only="react">
+
+通过设置 Steps.Step 的 `icon` 属性，可以启用自定义图标
+
+</Framework>
+
+<Framework only="vue">
+
+通过 Steps.Step 的 `#icon` 插槽，可以启用自定义图标；插槽存在但内容为空时不显示图标
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 Steps.Step 的 `icon` 属性，可以启用自定义图标；传入的内容为空时不显示图标。
+
+</Framework>
+
+通过设置 Steps.Step 的 `status` 属性，可以自定义每个 step 的状态
+
+<Demo id="custom-icon" />
+
+### onChange 回调
+
+<Framework only="react">
+
+可以使用 onChange 来实现处理进度。onChange 接收一个 number 类型的参数，等于 initial 加所选步骤的索引；点击当前步骤不会触发。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `@change` 监听步骤切换（Steps 的 `onChange` 是函数 prop，监听与否决定步骤是否可点击），回调接收一个 number 类型的参数，等于 initial 加所选步骤的索引；点击当前步骤不会触发。`current` 也支持 `v-model:current`，绑定后所有步骤同样变为可点击。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `onChange` 监听步骤切换，回调接收一个 number 类型的参数，等于 initial 加所选步骤的索引；点击当前步骤不会触发。传入 `onChange` 后所有步骤变为可点击。
+
+</Framework>
+
+<Demo id="on-change" />
+
+## Accessibility
+
+### ARIA
+
+- Steps、Step 组件支持传入 `aria-label` 或 `aria-labelledby`。Steps 根元素与不可点击的 Step 本身没有语义角色，传入名称时带 `role="group"`，名称因此能进入可访问名称；没有名称时不加 `role`。fill、basic、nav 三种类型一致
+- 当前步骤带有 `aria-current="step"`，其余步骤不带该属性
+- Steps 监听步骤切换或 Step 绑定点击回调后，步骤可通过 Tab 聚焦，`role` 默认为 `button`（优先于 `group`，显式传入的 `role` 优先于二者）；焦点在步骤上时按 `Enter` 或空格与鼠标点击一致，同时触发 Step 的点击回调与 Steps 的切换回调；不可点击的步骤不可聚焦
+- 点击来自步骤内其他可聚焦元素（`input`、`button`、链接等）时只触发 Step 的点击回调，不触发 Steps 的切换回调。可点击的步骤本身是 `role="button"`，title、description 中放可聚焦控件会形成嵌套交互元素，此时不要让步骤可点击
+
+## API 参考
+
+### Steps
+
+整体步骤条。
+
+<Framework only="react">
+
+<StepsReactApi />
+
+`aria-labelledby`、`id` 与其他原生属性落在 Steps 根元素（`div`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<StepsVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在 Steps 根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<StepsSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性落在 Steps 根元素上。
+
+</Framework>
+
+### Steps.Step
+
+步骤条内的每一个步骤。
+
+<Framework only="react">
+
+<StepReactApi />
+
+`aria-label`、`role`、`onKeyDown` 与其他原生属性落在步骤项（根元素）上。`role` 在步骤可点击时默认为 `button`，显式传入时优先；`onKeyDown` 任意按键都会调用。步骤可点击时，焦点在步骤项上按 `Enter` 或空格等同于点击。
+
+</Framework>
+
+<Framework only="vue">
+
+<StepVueApi />
+
+`class`、`style`、`aria-*`、`role`、`tabindex` 与 `@click`、`@keydown` 等原生属性和事件经 attrs 落在 Step 的根元素上。使用方的 `@click` 让该 Step 可点击；Steps 的 `onChange` 先于 Step 自身的 `@click` 执行。`tabindex` 可由使用方覆盖。
+
+</Framework>
+
+<Framework only="solid">
+
+<StepSolidApi />
+
+`class`、`style`、`aria-*` 与原生事件（如 `onClick`、`onKeyDown`）落在 Step 的根元素（步骤项）上。`role` 由步骤是否可点击决定，传入时优先；`tabindex` 同样由步骤是否可点击决定，不能覆盖。
+
+</Framework>
+
+## 文案规范
+
+- 步骤标题
+    - 标题应保持简洁，避免截断和换行；
+    - 使用句子大小写书写；
+    - 不要包含标点符号
+- 描述
+    - 为标题补充上下文信息
+    - 不要以标点符号结尾
+
+## 设计变量
+
+<DesignToken />

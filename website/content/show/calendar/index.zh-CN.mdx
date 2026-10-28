@@ -1,0 +1,249 @@
+---
+order: 64
+title: 日历
+icon: doc-calendar
+brief: 日历组件，允许以日/周/月视图展示对应事件
+---
+
+import CalendarReactApi from './api/calendar.react.zh-CN.mdx';
+import CalendarVueApi from './api/calendar.vue.zh-CN.mdx';
+import CalendarSolidApi from './api/calendar.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Calendar } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Calendar } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Calendar } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 日视图
+
+日视图的日历模板，可通过 `showCurrTime` 控制是否显示当前时间的位置红线。
+
+<Demo id="day" />
+
+### 周视图
+
+周视图的日历模板，可通过 `showCurrTime` 控制是否显示当前时间的位置红线。
+
+<Demo id="week" />
+
+### 月视图
+
+月视图的日历模板。
+
+<Demo id="month" />
+
+### 设置周起始日
+
+可以通过 weekStartsOn 设置周几作为每周第一天，0 代表周日，1 代表周一，以此类推。默认为周日。对月视图、周视图生效。
+
+<Demo id="week-start" />
+
+### 多日视图
+
+多日视图模式。 `range` 必传，左闭右开。
+
+<Demo id="range" />
+
+### 事件渲染用法
+
+通过 `events` 传入需要渲染的事件，`events` 是一个由 event objects 组成的数组，具体形式请参考 Event Object。
+
+<Framework only="vue">
+
+事件的内容默认渲染 `children` 文本；需要自定义 DOM 时用 `#event="{ event }"` 作用域插槽，`event` 是 `events` 中的原对象，可以带任意自定义字段。同一事件在多处显示（如跨天事件）时，插槽每处各调用一次。
+
+</Framework>
+
+<Framework only="solid">
+
+`children` 是事件的展示内容，可以是 JSX 元素，也可以是返回 JSX 元素的函数。同一事件在多处显示（如跨天事件）时，函数每处各调用一次；传入元素时，元素只显示在一处，其余处显示不带事件处理的副本。
+
+</Framework>
+
+<Demo id="events" />
+
+### 自定义渲染
+
+<Framework only="react">
+
+通过 dateGridRender 可以自定义渲染日期单元格/列。需要使用绝对定位。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#dateGrid="{ date, dateString }"` 作用域插槽可以自定义渲染日期单元格/列。需要使用绝对定位。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 dateGridRender 可以自定义渲染日期单元格/列。需要使用绝对定位。
+
+</Framework>
+
+#### 自定义渲染事件
+
+<Demo id="custom-events" />
+
+#### 自定义渲染单元格样式
+
+<Framework only="react">
+
+可以通过 dateGridRender 自定义单元格的背景，月视图的文字 zIndex 默认为 3，如需完全覆盖单元格可以设置更大的 zIndex 来实现。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#dateGrid` 自定义单元格的背景，月视图的文字 zIndex 默认为 3，如需完全覆盖单元格可以设置更大的 zIndex 来实现。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 dateGridRender 自定义单元格的背景，月视图的文字 zIndex 默认为 3，如需完全覆盖单元格可以设置更大的 zIndex 来实现。
+
+</Framework>
+
+<Demo id="custom-cell-style" />
+
+#### 自定义日期文案
+
+<Framework only="react">
+
+可以通过 renderDateDisplay 自定义日期文案。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#dateDisplay="{ date }"` 自定义日期文案。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 renderDateDisplay 自定义日期文案。
+
+</Framework>
+
+<Demo id="custom-date-display" />
+
+## API 参考
+
+### Calendar
+
+<Framework only="react">
+
+<CalendarReactApi />
+
+`className`、`style` 与其他原生属性（如 `id`、`data-*`、`aria-label`）落在当前视图的根元素上；`aria-label` 优先于默认的表格名称。`onClick`、`onClose`、`onMoreClick` 是 Calendar 自身的回调，不会落到根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<CalendarVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在当前视图的根元素上；`aria-label` 优先于默认的表格名称。
+
+</Framework>
+
+<Framework only="solid">
+
+<CalendarSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性（如 `id`、`data-*`）落在当前视图的根元素上；`aria-label` 优先于默认的表格名称。`onClick`、`onClose`、`onMoreClick` 是 Calendar 自身的回调，不会落到根元素上。
+
+</Framework>
+
+### Event Object
+
+`events` 是一个 event object 组成的数组，event object 约定格式如下：  
+起始时间和结束时间至少传入一个才会被视为有效事件，两者都缺失的事件会被跳过并给出警告。全天事件只传结束时间时，以结束时间当天为起始；非全天事件只传一端时，补足 1 小时（不跨过当天）。结束时间区间为半开：非全天事件的结束时间恰为 0 点时，只显示在开始当天，不会在次日多出一段。
+
+<Notice type="primary" title="注意">
+    不同 event 的 key 值要求必填且唯一，用于标识事件。`events` 变化时按传入的内容重新布局，同一 key 的事件换了时间或 children 也会随之更新。
+</Notice>
+
+<Framework only="react">
+
+| 属性     | 说明                | 类型       | 默认值 |
+| -------- | ------------------- | ---------- | ------ |
+| allDay   | 全天事件            | boolean    | false  |
+| children | 展示内容            | React.node | -      |
+| end      | 事情结束的时间      | Date       | -      |
+| key      | required 且要求唯一 | string     | -      |
+| start    | 事情起始的时间      | Date       | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性     | 说明                                                     | 类型             | 默认值 |
+| -------- | -------------------------------------------------------- | ---------------- | ------ |
+| allDay   | 全天事件                                                 | boolean          | false  |
+| children | 展示内容，未提供 `#event` 插槽时渲染为文本               | string \| number | -      |
+| end      | 事情结束的时间                                           | Date             | -      |
+| key      | required 且要求唯一                                      | string           | -      |
+| start    | 事情起始的时间                                           | Date             | -      |
+| 其他字段 | 自定义字段原样保留，供 `#event` 插槽读取（如颜色、标题） | any              | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性     | 说明                                                                   | 类型                                 | 默认值 |
+| -------- | ---------------------------------------------------------------------- | ------------------------------------ | ------ |
+| allDay   | 全天事件                                                               | boolean                              | false  |
+| children | 展示内容，可以是 JSX 元素，或返回 JSX 元素的函数（每处显示时调用一次） | `JSX.Element \| (() => JSX.Element)` | -      |
+| end      | 事情结束的时间                                                         | Date                                 | -      |
+| key      | required 且要求唯一                                                    | string                               | -      |
+| start    | 事情起始的时间                                                         | Date                                 | -      |
+| 其他字段 | 自定义字段原样保留在事件对象上（如颜色、标题）                         | any                                  | -      |
+
+</Framework>
+
+## Accessibility
+
+### 键盘和焦点
+
+- 日、周、多日视图可以滚动，视图本身是一个 Tab 停靠点，用方向键滚动
+- 月视图中折叠事件的「还有 N 项」是按钮，`Enter` 或 `空格` 打开当天的事件卡片，焦点移到卡片的关闭按钮；按 `Esc` 或关闭按钮关闭卡片，焦点回到「还有 N 项」
+- 日期格与时间槽的点击（React 的 `onClick`，Vue 的 `@click`）只响应指针，没有键盘方式
+
+## 文案规范
+
+- 当需要显示时间时，12 小时制和 24 小时制都是可以使用的
+- 如果采用12小时制，需要搭配 AM/PM 一起使用，具体内容可参考 [时间规范](/zh-CN/react/experience/content-guidelines#8.%20%E6%97%A5%E6%9C%9F%E4%B8%8E%E6%97%B6%E9%97%B4)
+- 关于月份、星期、时间的缩写使用规则，可参考 [缩写规范](/zh-CN/react/experience/content-guidelines#1.%20%E7%BC%A9%E5%86%99)
+
+## 设计变量
+
+<DesignToken />

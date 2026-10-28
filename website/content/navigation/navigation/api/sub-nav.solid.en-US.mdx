@@ -1,0 +1,14 @@
+**Props**
+
+| Property         | Description                                                                                                                                                           | Type                          | Default |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------- |
+| disabled         | Whether the sub navigation is disabled.                                                                                                                               | `boolean`                     | -       |
+| dropdownProps    | Props of the popup Dropdown, used in horizontal mode and when collapsed. Takes precedence over `subDropdownProps`.                                                    | `DropdownProps`               | -       |
+| dropdownStyle    | Style of the popup. Takes precedence over the `style` in `dropdownProps`.                                                                                             | `JSX.CSSProperties \| string` | -       |
+| expandIcon       | Expand arrow icon.                                                                                                                                                    | `JSX.Element`                 | -       |
+| icon             | Icon of the sub navigation.                                                                                                                                           | `JSX.Element`                 | -       |
+| indent           | Whether to keep the icon's space when there is no icon. Applies to the first level only.                                                                              | `boolean \| number`           | -       |
+| itemKey          | Unique key of the sub navigation. `openKeys` and `selectedKeys` match it.                                                                                             | `ItemKey`                     | -       |
+| level            | Nesting depth of the item, which sets the indentation when `limitIndent` is `false`. Items from `items` set it automatically; a Nav.Sub written by hand must pass it. | `number`                      | -       |
+| subDropdownProps | Props of the popup Dropdown, used when `dropdownProps` is not given.                                                                                                  | `DropdownProps`               | -       |
+| text             | Title text of the sub navigation, a string or JSX.                                                                                                                    | `JSX.Element`                 | -       |

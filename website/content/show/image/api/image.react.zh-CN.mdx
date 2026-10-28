@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性            | 说明                                                                                                                                                                  | 类型                                                                | 默认值 |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------ |
+| alt             | 图像描述，同时作为可预览缩略图的读屏名称。                                                                                                                            | `string`                                                            | -      |
+| children        | 组件不渲染该属性，设置后无效。                                                                                                                                        | `ReactNode`                                                         | -      |
+| className       | 缩略图根元素的类名。                                                                                                                                                  | `string`                                                            | -      |
+| crossOrigin     | 透传给原生 img 标签的 crossOrigin，可选 `anonymous` 或 `use-credentials`。设置后预览图片也使用同一值，未设置时预览图片取 `preview.crossOrigin`。                      | `'anonymous' \| 'use-credentials'`                                  | -      |
+| fallback        | 加载失败时显示的内容：字符串作为容错图片地址，React 元素原样显示；未设置时显示默认的加载失败图标。                                                                    | `string \| ReactNode`                                               | -      |
+| height          | 图片显示高度，数值按 px 处理。                                                                                                                                        | `string \| number`                                                  | -      |
+| imgCls          | 自定义样式类名，透传给 img 节点。                                                                                                                                     | `string`                                                            | -      |
+| imgStyle        | 自定义样式，透传给 img 节点。                                                                                                                                         | `React.CSSProperties`                                               | -      |
+| onClick         | 点击图片时调用，绑定在内部的 img 节点上。                                                                                                                             | <ApiType detail={"(event: any) => void"}>Type</ApiType>             | -      |
+| placeholder     | 图片加载成功前显示的占位内容；未设置时显示骨架屏。                                                                                                                    | `ReactNode`                                                         | -      |
+| preview         | 预览参数，为 false 时禁用预览。对象接受 ImagePreview 的属性，但不含 lazyLoad、lazyLoadMargin、children、className 与 style（预览样式请用 previewCls、previewStyle）。 | `boolean \| ImagePreviewProps`                                      | `true` |
+| ref             | 内部 img 元素的引用。                                                                                                                                                 | <ApiType detail={"React.Ref\u003cHTMLImageElement>"}>Type</ApiType> | -      |
+| setDownloadName | 设置图片下载文件名，接收图片地址并返回文件名。                                                                                                                        | <ApiType detail={"(src: string) => string"}>Type</ApiType>          | -      |
+| src             | 图片获取地址。                                                                                                                                                        | `string`                                                            | -      |
+| style           | 缩略图根元素的样式。                                                                                                                                                  | `CSSProperties`                                                     | -      |
+| width           | 图片显示宽度，数值按 px 处理。                                                                                                                                        | `string \| number`                                                  | -      |

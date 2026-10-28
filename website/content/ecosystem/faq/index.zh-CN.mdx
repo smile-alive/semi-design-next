@@ -1,0 +1,41 @@
+---
+frameworks: [react]
+title: 常见问题
+icon: doc-faq
+order: 12
+---
+
+#### Semi 的默认的主题风格跟我们系统的定位不符，可以配置另外的主题吗？
+
+- 可以。Semi 的样式都通过 `--semi-*` CSS 变量暴露，覆盖这些变量即可定制主题，具体请参考 [Design Token](/zh-CN/react/basic/tokens)。
+
+#### 什么情况下推荐使用 Design Token 定制样式，什么情况下推荐通过 css 覆盖方式定制样式？
+
+- Design Token 主要适用于需要做品牌化、样式风格定制的场景，通过覆盖 `--semi-*` CSS 变量完成。Design Token的作用范围为全局生效。例如调整了 Button、Table 的组件级Token，那么对于 App 内所有 Semi Button、Semi Table 都会生效，无法仅针对某个特定子模块调整
+- 如果你只需要将某个特定模块下的某个组件的样式做调整，不推荐使用 Design Token，推荐直接使用 CSS 选择器覆盖样式
+
+#### Semi 是否支持 Tree Shaking
+
+Semi 执行发包时，发布的其实是 esModule 源码，因此天然支持 tree shaking，不需要再进行额外的配置; 发布的样式是编译好的 CSS，由各组件的实现模块负责 import，主题 Token 随根入口 `@fibrae/semi-ui-react` 一起加载，因此样式也会 shaking。简单来说，只有你使用的组件会被打包。
+
+#### 为什么 defaultValue、defaultXXX 不起作用？
+
+Semi 组件中，所有的 defaultValue、defaultXXX 传参只会在组件被 mounted 时进行消费（即仅消费一次）。如果你的 defaultXXX 属性是后期进行异步更新的，组件不会重新进行消费该值。如有需要，你应该使用受控的 value，受控的 xxx。或者直接通过传入一个不一样的`key`值，强制 React 重新挂载该组件。
+
+#### Semi 支持 i18n 吗？
+
+Semi 支持 57 种语言，具体使用可以查阅 [Semi·LocaleProvider](/zh-CN/react/other/locale)
+
+#### Semi 的样式是基于 Scss 还是 Less ？为什么不用 CSS Module？
+
+我们的样式基于 Scss，与此我们还使用了 CSS Variable 作为色盘变量。色盘变量和通用变量挂载在 `:root` 下。不使用 CSS Module 是因为我们希望有固定的 className，为业务方保留修改/覆盖 Semi 样式的能力（虽然不提倡，但有些业务场景下确实需要）
+
+#### 为什么 Tooltip content 配置很长很长的内容时，某些情况下内容会超出显示区域?
+
+Tooltip 的弹出层设置了 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap" target="_blank" rel="noopener noreferrer">overflow-wrap</a> 为 break-word，过长的单词会断开换行。不同语言内容（纯英文、中文、中英文混合、其他语种混合）对换行的需求不一致，默认设置不符合预期时，可以通过 style/className API 设置换行相关 CSS 属性进行调整。
+
+#### 希望自定义滚动条的样式？
+
+Semi 组件自带统一的滚动条样式：细滚动条、透明轨道，滑块何时显示与浏览器默认一致（系统使用悬浮滚动条时只在滚动时出现）。滑块颜色由主题变量 `$color-scrollbar-thumb` 控制。
+
+希望自己的元素也使用这套样式时，在最外层的 DOM 元素上加 `.semi-scrollbar` 类名（自定义 `prefixCls` 时为 `.<prefixCls>-scrollbar`），它和所有子元素都会生效。也可以在 SCSS 中 `@include scrollbar`（`@fibrae/semi-foundation/base/mixin.scss`）。样式基于标准属性 `scrollbar-width` 与 `scrollbar-color`，设置后 Chrome 不再应用 `::-webkit-scrollbar` 的定制。

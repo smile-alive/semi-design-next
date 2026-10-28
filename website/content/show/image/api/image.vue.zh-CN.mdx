@@ -1,0 +1,41 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性            | 说明                                                                             | 类型                                                         | 默认值                                      |
+| --------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------- |
+| src             | 图片获取地址。                                                                   | `string`                                                     | `semiGlobalDefault("Image", "src")`         |
+| width           | 图片显示宽度，数值按 px 处理。                                                   | `string \| number`                                           | `semiGlobalDefault("Image", "width")`       |
+| height          | 图片显示高度，数值按 px 处理。                                                   | `string \| number`                                           | `semiGlobalDefault("Image", "height")`      |
+| alt             | 图像描述，同时作为可预览缩略图的读屏名称。                                       | `string`                                                     | `semiGlobalDefault("Image", "alt")`         |
+| crossOrigin     | 透传给原生 img 标签的 crossorigin。                                              | `"anonymous" \| "use-credentials"`                           | `semiGlobalDefault("Image", "crossOrigin")` |
+| fallback        | 加载失败时显示的容错图片地址；自定义内容使用 fallback 插槽，插槽优先。           | `string`                                                     | `semiGlobalDefault("Image", "fallback")`    |
+| preview         | 预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的插槽。 | `boolean \| ImagePreviewProps`                               | `semiDefault("Image", "preview", true)`     |
+| imgStyle        | 自定义样式，透传给 img 节点。                                                    | `StyleValue`                                                 | `semiGlobalDefault("Image", "imgStyle")`    |
+| imgCls          | 自定义样式类名，透传给 img 节点。                                                | `string`                                                     | `semiGlobalDefault("Image", "imgCls")`      |
+| setDownloadName | 设置图片下载名称。                                                               | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined`                                 |
+
+**Events**
+
+| 事件  | 说明                 | 回调参数         |
+| ----- | -------------------- | ---------------- |
+| load  | 图片加载成功时触发。 | `[event: Event]` |
+| error | 图片加载失败时触发。 | `[event: Event]` |
+
+**Slots**
+
+| 插槽        | 说明                                                                                                                      | 作用域参数                   |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| placeholder | 图片未加载成功时的占位内容。                                                                                              | `any`                        |
+| fallback    | 加载失败时显示的自定义内容，优先于 fallback 属性。                                                                        | `any`                        |
+| title       | 替换预览顶部标题区的内容，有标题时对话框以插槽渲染出的文字命名；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。 | `ImagePreviewTitleSlotProps` |
+| previewMenu | 自定义预览底部操作区；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                           | `MenuProps`                  |
+| leftIcon    | 自定义向左切换图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                             | `ImagePreviewIconSlotProps`  |
+| rightIcon   | 自定义向右切换图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                             | `ImagePreviewIconSlotProps`  |
+| closeIcon   | 自定义关闭图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                                 | `any`                        |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

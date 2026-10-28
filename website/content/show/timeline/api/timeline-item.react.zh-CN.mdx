@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                   | 类型                                                             | 默认值      |
+| --------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| children  | 节点内容。                                                             | `React.ReactNode`                                                | -           |
+| className | 根元素 `li` 的类名。                                                   | `string`                                                         | -           |
+| color     | 圆点的背景色，覆盖 type 对应的颜色。                                   | `string`                                                         | -           |
+| dot       | 自定义圆点内容，替换默认圆点。                                         | `React.ReactNode`                                                | -           |
+| extra     | 辅助说明内容，为空时不渲染；点击该区域不触发 onClick。                 | `React.ReactNode`                                                | -           |
+| position  | 覆盖 Timeline 的 mode，指定该项位于 `left` 或 `right` 一侧。           | `'left' \| 'right'`                                              | -           |
+| ref       | 根元素 `li` 的引用。                                                   | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType> | -           |
+| style     | 根元素 `li` 的样式。                                                   | `React.CSSProperties`                                            | -           |
+| time      | 时间文本，为空时不渲染。                                               | `React.ReactNode`                                                | `""`        |
+| type      | 圆点类型，可选 `default`、`ongoing`、`success`、`warning` 或 `error`。 | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'`    | `"default"` |

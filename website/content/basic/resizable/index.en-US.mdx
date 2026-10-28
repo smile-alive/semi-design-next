@@ -1,0 +1,407 @@
+---
+order: 21
+title: Resizable
+icon: doc-steps
+brief: The component size is adjusted based on the user's mouse drag, supporting both resizing of a single component and combined resizing.
+---
+
+import ResizableReactApi from './api/resizable.react.en-US.mdx';
+import ResizeGroupReactApi from './api/resize-group.react.en-US.mdx';
+import ResizeHandlerReactApi from './api/resize-handler.react.en-US.mdx';
+import ResizeItemReactApi from './api/resize-item.react.en-US.mdx';
+import ResizableVueApi from './api/resizable.vue.en-US.mdx';
+import ResizeGroupVueApi from './api/resize-group.vue.en-US.mdx';
+import ResizeHandlerVueApi from './api/resize-handler.vue.en-US.mdx';
+import ResizeItemVueApi from './api/resize-item.vue.en-US.mdx';
+import ResizableSolidApi from './api/resizable.solid.en-US.mdx';
+import ResizeGroupSolidApi from './api/resize-group.solid.en-US.mdx';
+import ResizeItemSolidApi from './api/resize-item.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Resizable } from '@fibrae/semi-ui-react';
+import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Resizable } from '@fibrae/semi-ui-vue';
+    import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Resizable } from '@fibrae/semi-ui-solid';
+import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Single Component
+
+Basic Usage and Callbacks You can set the initial size using defaultSize, and set drag callbacks with `onResizeStart`, `onChange`, and `onResizeEnd`.
+
+<Framework only="vue">
+
+Listen with `@resizeStart`, `@change` and `@resizeEnd`. `onResizeStart` is a function prop (return `false` to cancel the resize), bound with `@resizeStart` as usual; `change` and `resizeEnd` are events.
+
+</Framework>
+
+```tsx
+interface Size {
+    width?: string | number;
+    height?: string | number;
+}
+```
+
+<Demo id="basic" />
+
+### Controlling Resize Directions
+
+You can enable or disable specific resizing directions by setting the value of enable. All directions are enabled by default. A direction that is left out counts as enabled, so to enable only some directions, set the others to `false` explicitly. Passing `false` for `enable` renders no handles.
+
+```tsx
+interface Enable {
+    left?: boolean;
+    right?: boolean;
+    top?: boolean;
+    bottom?: boolean;
+    topLeft?: boolean;
+    topRight?: boolean;
+    bottomLeft?: boolean;
+    bottomRight?: boolean;
+}
+```
+
+<Demo id="enable" />
+
+### Setting Resizing Ratio
+
+You can set the drag and resize ratio using ratio.
+
+<Demo id="ratio" />
+
+### Locking Aspect Ratio
+
+You can lock the aspect ratio by setting lockAspectRatio. It can be a boolean or a number. If true, it locks to the initial aspect ratio; if a number, it locks to the given ratio.
+
+<Demo id="lock-aspect-ratio" />
+
+### Setting Maximum and Minimum Width/Height
+
+You can set the maximum and minimum width and height using maxHeight, maxWidth, minHeight, and minWidth.
+
+<Demo id="min-max" />
+
+### Control Width/Height
+
+You can control the size of the element through the size prop.
+
+<Framework only="vue">
+
+In Vue, use it with `v-model:size`.
+
+</Framework>
+
+<Framework only="solid">
+
+While dragging, write the new size back to the signal behind `size` in `onChange`; otherwise the size stays at the value of `size`.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Setting Scale
+
+You can scale the entire element by setting the scale prop.
+
+<Demo id="scale" />
+
+### Restricting Width/Height by an Element
+
+You can restrict the width and height by setting the boundElement, which supports `'parent'`, `'window'` or an HTMLElement.
+
+<Demo id="bound-element" />
+
+### Customizing Corner Handler Styles
+
+<Framework only="react">
+
+You can customize the drag handles for each direction using handleNode, and apply different styles using handleStyle and handleClass.
+
+```jsx
+type HandleNode = {
+  left?: ReactNode;
+  right?: ReactNode;
+  top?: ReactNode;
+  bottom?: ReactNode;
+  topLeft?: ReactNode;
+  topRight?: ReactNode;
+  bottomLeft?: ReactNode;
+  bottomRight?: ReactNode;
+}
+
+type HandleStyle = {
+  left?: React.CSSProperties;
+  right?: React.CSSProperties;
+  top?: React.CSSProperties;
+  bottom?: React.CSSProperties;
+  topLeft?: React.CSSProperties;
+  topRight?: React.CSSProperties;
+  bottomLeft?: React.CSSProperties;
+  bottomRight?: React.CSSProperties;
+}
+
+type HandleClass = {
+  left?: string;
+  right?: string;
+  top?: string;
+  bottom?: string;
+  topLeft?: string;
+  topRight?: string;
+  bottomLeft?: string;
+  bottomRight?: string;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+You can customize the drag handle content for each direction with the `handle` slot. It is called once for each enabled direction, and its scoped `direction` parameter is that handle's direction, so return the content for the direction you want. A direction that returns nothing keeps its handle element. Apply different styles with handleStyle and handleClass.
+
+```ts
+type HandleStyle = {
+    left?: StyleValue;
+    right?: StyleValue;
+    top?: StyleValue;
+    bottom?: StyleValue;
+    topLeft?: StyleValue;
+    topRight?: StyleValue;
+    bottomLeft?: StyleValue;
+    bottomRight?: StyleValue;
+};
+
+type HandleClass = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+You can customize the drag handle content for each direction with `renderHandle`. It is called once for each enabled direction with that handle's direction, so return the content for the direction you want. A direction that returns nothing keeps its handle element. Use handleStyle and handleClass to set styles per direction; a style can be an object or a string.
+
+```tsx
+type RenderHandle = (direction: Direction) => JSX.Element;
+
+type HandleStyle = {
+    left?: JSX.CSSProperties | string;
+    right?: JSX.CSSProperties | string;
+    top?: JSX.CSSProperties | string;
+    bottom?: JSX.CSSProperties | string;
+    topLeft?: JSX.CSSProperties | string;
+    topRight?: JSX.CSSProperties | string;
+    bottomLeft?: JSX.CSSProperties | string;
+    bottomRight?: JSX.CSSProperties | string;
+};
+
+type HandleClass = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+```
+
+</Framework>
+
+<Demo id="handle-node" />
+
+### Allowing Incremental Width and Height Adjustment
+
+You can allow gradual adjustments in width and height using the grid and snap properties. The grid property specifies the increments to which resizing should snap. The default value is [1, 1]. The snap property specifies the absolute pixel values to which resizing should snap. Both x and y are optional, allowing you to define only the desired axis. These two parameters can be combined with the snapGap property, which specifies the minimum gap required to move to the next target. The default is 0, meaning the target defined by grid/snap is always used.
+
+```tsx
+interface Snap {
+    x?: number[];
+    y?: number[];
+}
+```
+
+<Demo id="grid-snap" />
+
+### Group Component
+
+<Notice type='primary' title='notice'>
+
+The parent element of `ResizeGroup` needs to have a size in the main axis direction.
+
+It's best not to set padding for ResizeItem, as it may cause the minimum size to not match the expected value. You can set padding for child elements instead.
+
+`ResizeItem` and `ResizeHandler` must be placed inside a `ResizeGroup`; using them outside one throws an error.
+
+</Notice>
+
+Use the direction prop to set the resizing direction. Options are `horizontal` and `vertical`, defaulting to `horizontal`. Supports `onResizeStart`, `onChange`, and `onResizeEnd` callbacks, as well as setting `min` and `max` to control the maximum and minimum width/height.
+
+<Framework only="vue">
+
+`ResizeItem` is listened to with `@resizeStart`, `@change` and `@resizeEnd` as well: `onResizeStart` is a function prop, bound with `@resizeStart` as usual; `change` and `resizeEnd` are events.
+
+</Framework>
+
+<Demo id="group-basic" />
+
+### Nested
+
+Set the resizing direction using the direction prop. Options are horizontal and vertical.
+
+<Demo id="group-nested" />
+
+<Demo id="group-nested-complex" />
+
+### Dynamic Direction
+
+<Demo id="dynamic-direction" />
+
+## API
+
+### Resizable
+
+A single resizable box.
+
+<Framework only="react">
+
+<ResizableReactApi />
+
+Other native `div` attributes, such as `id` and `aria-*`, are passed through rest onto the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizableVueApi />
+
+`class`, `style` and native attributes are passed in through attrs and land on the root element. The root `style` is applied before the size the component computes, so a `width` or `height` you pass does not freeze the drag.
+
+</Framework>
+
+<Framework only="solid">
+
+<ResizableSolidApi />
+
+`class`, `style`, `ref` and native attributes are passed in through rest and land on the root element. The root `style` is applied before the size the component computes, so a `width` or `height` you pass does not freeze the drag.
+
+</Framework>
+
+### ResizeGroup
+
+<Framework only="react">
+
+<ResizeGroupReactApi />
+
+Other native `div` attributes are passed through rest onto the root element. The root `flex-direction` is always decided by `direction`.
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizeGroupVueApi />
+
+`class`, `style` and native attributes are passed in through attrs and land on the root element. `flex-direction` is always decided by `direction`.
+
+</Framework>
+
+<Framework only="solid">
+
+<ResizeGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes are passed in through rest and land on the root element. `flex-direction` is always decided by `direction`.
+
+</Framework>
+
+### ResizeHandler
+
+<Framework only="react">
+
+<ResizeHandlerReactApi />
+
+Native attributes are passed through rest onto the handle element. An `aria-label` you pass wins over the locale name, and the `onKeyDown`, `onPointerDown`, `onPointerMove` and `onLostPointerCapture` you pass run alongside the component's own.
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizeHandlerVueApi />
+
+`class`, `style` and native attributes are passed in through attrs and land on the handle element. An `aria-label` you pass wins over the locale name, and the pointer and key listeners you pass run alongside the component's own.
+
+</Framework>
+
+<Framework only="solid">
+
+The content that replaces the default grip icon is passed in through `children`. `class`, `style` and native attributes are passed in through rest and land on the handle element. An `aria-label` you pass wins over the locale name, and the pointer and key callbacks you pass run alongside the component's own.
+
+</Framework>
+
+### ResizeItem
+
+<Framework only="react">
+
+<ResizeItemReactApi />
+
+Other native `div` attributes are passed through rest onto the root element. ResizeGroup writes the size straight onto the element's `style.width` and `style.height`, so do not set those two through `style`.
+
+</Framework>
+
+<Framework only="vue">
+
+<ResizeItemVueApi />
+
+`class`, `style` and native attributes are passed in through attrs and land on the root element. ResizeGroup writes the size straight onto the element's `style.width` and `style.height`, so pass `style` as an object rather than a string.
+
+</Framework>
+
+<Framework only="solid">
+
+<ResizeItemSolidApi />
+
+`class`, `style` and native attributes are passed in through rest and land on the root element. ResizeGroup writes the size straight onto the element's `style.width` and `style.height`, so pass `style` as an object: a string `style` is written again whole when it changes, which drops the size.
+
+</Framework>
+
+## Accessibility
+
+- Each axis of a single resizable box has one focusable `separator` handle: the right and bottom handles always are; when the right or bottom side is turned off in `enable`, the left or top handle takes over that axis. They are named from the locale pack and adjust the width and the height. Arrow keys change the size by a fixed 10px per press, regardless of `ratio` and `scale`, and are ignored while Alt, Ctrl or Meta is held. Pressing a handle with the right or middle mouse button does not start a resize.
+- `ResizeHandler` is a focusable `separator`. Its name also comes from the locale pack, and an `aria-label` you pass overrides it. Arrow keys along the group's direction move the items on either side of it by 1% of the group per press, or 10% with Shift; `Home` and `End` take the item before it to its smallest and largest size.
+- The root elements of `Resizable`, `ResizeGroup` and `ResizeItem` carry no semantics. When you pass `aria-label` or `aria-labelledby`, the root gets `role="group"`.
+
+## Design Tokens
+
+<DesignToken />

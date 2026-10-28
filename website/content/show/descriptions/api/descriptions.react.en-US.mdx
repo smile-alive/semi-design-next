@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                      | Type                                                              | Default      |
+| --------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------ |
+| align     | Alignment: `center`, `justify`, `left` or `plain`, where `left` is the start side. Ignored when `row` is `true`. | `DescriptionsAlign`                                               | `"center"`   |
+| children  | Rendered when `data` is empty, usually `Descriptions.Item` elements.                                             | `React.ReactNode`                                                 | -            |
+| className | Class name of the root element (`div`).                                                                          | `string`                                                          | -            |
+| column    | Total number of columns per row in the horizontal layout.                                                        | `number`                                                          | `3`          |
+| data      | Data to display; when empty, `children` are rendered.                                                            | `Data[]`                                                          | `[]`         |
+| layout    | Layout mode: `vertical` or `horizontal`.                                                                         | `DescriptionLayout`                                               | `"vertical"` |
+| ref       | Reference to the root element (`div`).                                                                           | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -            |
+| row       | Whether to show key and value in two rows; `align` is ignored when `true`.                                       | `boolean`                                                         | `false`      |
+| size      | Size in two-row mode: `small`, `medium` or `large`.                                                              | `DescriptionsSize`                                                | `"medium"`   |
+| style     | Style of the root element (`div`).                                                                               | `React.CSSProperties`                                             | -            |

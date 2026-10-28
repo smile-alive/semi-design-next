@@ -1,0 +1,155 @@
+{
+    "popover": {
+        "source": "packages/semi-ui-vue/src/popover/popover.vue",
+        "props": {
+            "ariaLabel": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",
+                "en-US": "aria-label of the popup when its role is dialog."
+            },
+            "ariaLabelledby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-labelledby。",
+                "en-US": "aria-labelledby of the popup when its role is dialog."
+            },
+            "ariaDescribedby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
+                "en-US": "aria-describedby of the popup when its role is dialog."
+            },
+            "role": {
+                "zh-CN": "弹出层的 role。不传时 trigger 为 click、contextMenu、custom 是 dialog，其余是 tooltip；弹出层只是另一个控件的附属（如 combobox 的下拉）时传 presentation。",
+                "en-US": "ARIA role of the popup. Omitted, it is dialog for the click, contextMenu and custom triggers and tooltip for the rest; pass presentation when the popup only belongs to another control, such as a combobox list."
+            },
+            "autoAdjustOverflow": {
+                "zh-CN": "弹出层被遮挡时是否自动调整方向。",
+                "en-US": "Whether the popup flips automatically when it would be clipped."
+            },
+            "visible": {
+                "zh-CN": "弹出层是否显示，配合 trigger 为 custom 与 v-model:visible 使用；传入后由该值决定显示。",
+                "en-US": "Whether the popup is shown, used with trigger custom and v-model:visible. When given, this value decides."
+            },
+            "position": {
+                "zh-CN": "弹出层相对触发元素的位置，共十二个方向。",
+                "en-US": "Position of the popup relative to the trigger element, in twelve directions."
+            },
+            "motion": { "zh-CN": "是否展示弹出层动画。", "en-US": "Whether the popup is animated." },
+            "mouseEnterDelay": {
+                "zh-CN": "指针移入后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。",
+                "en-US": "Milliseconds before the popup shows after the pointer enters. Applies to the hover and focus triggers."
+            },
+            "mouseLeaveDelay": {
+                "zh-CN": "指针移出后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效，不小于 mouseEnterDelay。",
+                "en-US": "Milliseconds before the popup hides after the pointer leaves. Applies to the hover and focus triggers; not less than mouseEnterDelay."
+            },
+            "trigger": {
+                "zh-CN": "触发显示的时机。custom 时显示与否完全由 visible 决定。",
+                "en-US": "When the popup shows. With custom, visible alone decides."
+            },
+            "contentClassName": {
+                "zh-CN": "弹出层内容卡片的类名。",
+                "en-US": "Class name of the content card in the popup."
+            },
+            "showArrow": { "zh-CN": "是否显示箭头三角形。", "en-US": "Whether the arrow is shown." },
+            "spacing": {
+                "zh-CN": "弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。不传时无箭头为 4，有箭头为 10。",
+                "en-US": "Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. Omitted, it is 4 without an arrow and 10 with one."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。",
+                "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating."
+            },
+            "arrowStyle": {
+                "zh-CN": "箭头的 borderColor、backgroundColor 与 borderOpacity；缺省跟随卡片 style 中的 backgroundColor 与 borderColor。",
+                "en-US": "borderColor, backgroundColor and borderOpacity of the arrow. They follow backgroundColor and borderColor of the card style by default."
+            },
+            "arrowPointAtCenter": {
+                "zh-CN": "箭头是否指向触发元素中心，需要同时开启 showArrow。",
+                "en-US": "Whether the arrow points at the center of the trigger. Requires showArrow."
+            },
+            "prefixCls": {
+                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Popover 的样式。",
+                "en-US": "Class prefix of the popup. A custom value drops the Popover styles."
+            },
+            "closeOnEsc": {
+                "zh-CN": "弹出层打开期间按 Esc 是否关闭弹出层；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。",
+                "en-US": "Whether Esc closes the open popup. With trigger custom it only emits escKeyDown and the caller decides whether to close."
+            },
+            "guardFocus": {
+                "zh-CN": "焦点位于弹出层内时，Tab 是否在弹出层内循环。",
+                "en-US": "Whether Tab cycles inside the popup while focus is in it."
+            },
+            "returnFocusOnClose": {
+                "zh-CN": "按 Esc 关闭弹出层后焦点是否回到触发元素。",
+                "en-US": "Whether focus returns to the trigger after Esc closes the popup."
+            },
+            "clickToHide": {
+                "zh-CN": "点击弹出层及其内部任一元素时是否关闭弹出层。",
+                "en-US": "Whether a click on the popup or anything inside it closes the popup."
+            },
+            "disableArrowKeyDown": {
+                "zh-CN": "是否禁用在触发元素上按方向键把焦点移入弹出层。",
+                "en-US": "Whether the arrow keys on the trigger are prevented from moving focus into the popup."
+            },
+            "disableFocusListener": {
+                "zh-CN": "trigger 为 hover 时，是否不响应键盘聚焦打开弹出层。",
+                "en-US": "Whether keyboard focus is ignored when trigger is hover."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留弹出层内容而不销毁。",
+                "en-US": "Whether the popup content stays mounted while closed."
+            },
+            "condition": {
+                "zh-CN": "是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。",
+                "en-US": "Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only emits update:visible and visibleChange(false), and the popup closes once the caller writes back."
+            }
+        },
+        "events": {
+            "update:visible": {
+                "zh-CN": "弹出层需要显示或隐藏时触发，供 v-model:visible 回写。",
+                "en-US": "Emitted when the popup should show or hide, for v-model:visible to write back."
+            },
+            "visibleChange": {
+                "zh-CN": "弹出层显示状态变化时触发；visible 受控时只报告用户交互发起的请求，父组件自己改变 visible 不触发。",
+                "en-US": "Emitted when the visibility of the popup changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible."
+            },
+            "clickOutSide": {
+                "zh-CN": "弹出层打开时在触发元素与弹出层以外的区域按下鼠标时触发，仅 trigger 为 click、contextMenu、custom 时有效。",
+                "en-US": "Emitted when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom."
+            },
+            "escKeyDown": {
+                "zh-CN": "closeOnEsc 为 true 时，弹出层打开期间按 Esc 触发。",
+                "en-US": "Emitted when Esc is pressed while the popup is open and closeOnEsc is true."
+            },
+            "open": {
+                "zh-CN": "弹出层显示、进场动画开始时触发，每次打开一次，早于 afterOpen，受控与非受控相同；悬停打开后指针已离开而撤回的打开不触发。",
+                "en-US": "Emitted once per opening when the popup is shown, as its enter animation starts, before afterOpen, controlled or not; not emitted for a hover open withdrawn because the pointer already left."
+            },
+            "afterOpen": {
+                "zh-CN": "弹出层打开且进场动画结束后触发；没有进场动画时打开后即触发，受控与非受控相同；进场结束前被关闭的打开不触发。",
+                "en-US": "Emitted after the popup has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not emitted for an open that is closed before the enter animation ends."
+            },
+            "afterClose": {
+                "zh-CN": "弹出层关闭且离场动画结束后触发。",
+                "en-US": "Emitted after the popup has closed and its leave animation has finished."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "触发元素。单个元素或组件直接接收触发属性，文本或多个节点会被 span 包裹。",
+                "en-US": "The trigger. A single element or component receives the trigger attributes directly; text or several nodes are wrapped in a span."
+            },
+            "content": {
+                "zh-CN": "卡片内容，作用域参数 initialFocusRef 绑定到弹出层打开时需要聚焦的元素。",
+                "en-US": "Card content. The scope parameter initialFocusRef binds to the element that receives focus when the popup opens."
+            }
+        },
+        "exposed": {
+            "focusTrigger": {
+                "zh-CN": "让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。",
+                "en-US": "Focuses the trigger element. Only works when returnFocusOnClose is true and trigger is not custom."
+            },
+            "rePosition": {
+                "zh-CN": "按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。",
+                "en-US": "Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame."
+            }
+        }
+    }
+}

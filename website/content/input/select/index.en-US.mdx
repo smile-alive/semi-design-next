@@ -1,0 +1,966 @@
+---
+title: Select
+order: 46
+icon: doc-select
+brief: The user can select one or more options from a set of options through the Select selector and present the final selection result
+---
+
+import SelectReactApi from './api/select.react.en-US.mdx';
+import SelectOptionReactApi from './api/select-option.react.en-US.mdx';
+import SelectOptGroupReactApi from './api/select-opt-group.react.en-US.mdx';
+import SelectVueApi from './api/select.vue.en-US.mdx';
+import SelectOptionVueApi from './api/select-option.vue.en-US.mdx';
+import SelectOptGroupVueApi from './api/select-opt-group.vue.en-US.mdx';
+import SelectSolidApi from './api/select.solid.en-US.mdx';
+import SelectOptionSolidApi from './api/select-option.solid.en-US.mdx';
+import SelectOptGroupSolidApi from './api/select-opt-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Select } from '@fibrae/semi-ui-react';
+const Option = Select.Option;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Select } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+Write the options as `<Select.Option>` and `<Select.OptGroup>`, or use the named exports `SelectOption` and `SelectOptGroup`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Select } from '@fibrae/semi-ui-solid';
+```
+
+Write the options as `<Select.Option>` and `<Select.OptGroup>`.
+
+</Framework>
+
+<Notice title="Notice">The direct children of Select must be Option or OptGroup; other elements are not allowed, while a Fragment is unfolded</Notice>
+
+### Basic Usage
+
+<Framework only="react">
+
+Each Option tag must declare the `value` attribute, and the Option `children` content will be rendered to the drop-down list
+
+</Framework>
+
+<Framework only="vue">
+
+Each Option tag must declare the `value` attribute, and the default slot content of the Option, or its `label`, will be rendered to the drop-down list
+
+</Framework>
+
+<Framework only="solid">
+
+Each Option tag must declare the `value` attribute. `label` is the text of the option, used for search and in callbacks; `children` is what the option shows and can be a JSX element, and without children the label shows
+
+</Framework>
+
+<Demo id="basic" />
+
+### Pass Option as an array
+
+You can pass an array of objects directly through `optionList`. Each object must contain the value / label attribute.
+
+<Framework only="vue">
+
+`label` accepts a string or a number; content with markup goes in the default slot of `Select.Option`.
+
+</Framework>
+
+<Demo id="option-list" />
+
+### Multi-choice
+
+Since v2.28, the selector will have its own maxHeight 270, and the content can be viewed by scrolling vertically after it exceeds.
+
+Configuration `multiple` properties that can support multi-selection
+
+Configuration `maxTagCount`. You can limit the number of options displayed, and the excess will be displayed in the form of + N
+
+Configure `ellipsisTrigger` (>= v2.28.0) to do adaptive processing on the overflow part of the tag. When the width is insufficient, the last tag content will be truncated. After enabling this function, there will be a certain performance loss, and it is not recommended to use it in large form scenarios
+
+Configure `expandRestTagsOnClick` (>= v2.28.0) to display all remaining tags by clicking when `maxTagCount` is set
+
+Use `showRestTagsPopover` (>= v2.22.0) to set whether hover +N displays Popover after exceeding `maxTagCount`, the default is `false`. Also, popovers can be configured in the `restTagsPopoverProps` property
+
+<Framework only="react">
+
+Configuration `max` Properties can limit the maximum number of options and cannot be selected beyond the maximum limit, while triggering`On Exceed`callback
+
+</Framework>
+
+<Framework only="vue">
+
+Configuration `max` Properties can limit the maximum number of options and cannot be selected beyond the maximum limit, while emitting the `exceed` event
+
+</Framework>
+
+<Framework only="solid">
+
+Configuration `max` Properties can limit the maximum number of options and cannot be selected beyond the maximum limit, while triggering the `onExceed` callback
+
+</Framework>
+
+<Demo id="multiple" />
+
+### With Group
+
+<Framework only="react">
+
+Grouping Option with `OptGroup`(Only supports the declaration of children through jsx, and does not support pass in through optionList)
+
+</Framework>
+
+<Framework only="vue">
+
+Grouping Option with `Select.OptGroup` (only supports declaring the options in the default slot, and does not support pass in through optionList). Use the `label` prop for the group title, or the `#label` slot for a title with markup
+
+</Framework>
+
+<Framework only="solid">
+
+Grouping Option with `Select.OptGroup` (only supports declaring the options as children, and does not support pass in through optionList). Use the `label` prop for the group title, which takes text only
+
+</Framework>
+
+<Framework only="react">
+
+<Notice title="Notice">OptGroup must be a direct child of Select; a DIV or any other element in between is not allowed, while a Fragment is unfolded</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice title="Notice">Select.OptGroup must be a direct child in the default slot of Select; a div or any other element in between is not allowed, while v-for, v-if and template are unfolded</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice title="Notice">Select.OptGroup must be a direct child of Select; a div or any other element in between is not allowed, while control-flow components such as For and Show are unfolded</Notice>
+
+</Framework>
+
+<Demo id="group" />
+
+<Demo id="group-data" />
+
+### Different sizes
+
+Size: small / default / large
+
+<Demo id="size" />
+
+### Different validate status
+
+validateStatus: default / warning / error
+
+<Demo id="validate-status" />
+
+### Configure Prefix, Suffix, Clear Button
+
+<Framework only="react">
+
+- You can pass the selection box prefix through `prefix`, the selection box suffix through `suffix`, for text or React Node  
+  The left and right padding is automatically brought when the content passed in by prefix and reactix is text or Icon. If it is a custom ReactNode, the left and right padding is 0.
+
+</Framework>
+
+<Framework only="vue">
+
+- You can pass the selection box prefix through the `#prefix` slot, the selection box suffix through the `#suffix` slot, for text or nodes  
+  The left and right padding is automatically brought when the slot content is text or Icon. If it is a custom node, the left and right padding is 0.
+
+</Framework>
+
+<Framework only="solid">
+
+- You can pass the selection box prefix through `prefix`, the selection box suffix through `suffix`, for text or a JSX element  
+  The left and right padding is automatically brought when the content passed in by prefix and suffix is text or Icon. If it is a custom element, the left and right padding is 0.
+
+</Framework>
+
+- Whether to show the clear button is displayed by `showClear`
+- Whether to show the right drop-down arrow is displayed by `showArrow`
+
+<Demo id="prefix-suffix" />
+
+### Additional items
+
+We have reserved two slots at the bottom of the pop-up layer, which you can use when you need to add a custom node to the pop-up layer.  
+Use`innerTopSlot` or `outerTopSlot` to pass the custom node, which will be rendered at the top of the pop-up layer. Use`innerBottomSlot` or `outerBottomSlot` instead at the bottom.
+
+<Framework only="vue">
+
+In Vue they are named slots of the same names: `#innerBottomSlot`, `#outerBottomSlot`, `#innerTopSlot` and `#outerTopSlot`.
+
+</Framework>
+
+- `innerTopSlot` and `innerBottomSlot` will be rendered inside the Option List
+- `outerTopSlot` and `outerBottomSlot` will be rendered to level with the option List
+
+<Demo id="slot-bottom" />
+
+Using outerTopSlot to insert content
+
+<Demo id="slot-top" />
+
+### Controlled component
+
+<Framework only="react">
+
+When `value` is passed, Select is a controlled component, and the value selected is entirely determined by `value`.
+
+</Framework>
+
+<Framework only="vue">
+
+Once bound with `v-model` (that is, `modelValue`), Select is a controlled component, and the value selected is entirely determined by it. A `modelValue` of `undefined` is treated as uncontrolled.
+
+</Framework>
+
+<Framework only="solid">
+
+When `value` is passed in, Select is a controlled component, and the value selected is entirely determined by `value`.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Dynamic Modification Options
+
+<Framework only="react">
+
+If you need to update Options dynamically, you should use controlled value
+
+</Framework>
+
+<Framework only="vue">
+
+If you need to update Options dynamically, you should use a controlled `modelValue`
+
+</Framework>
+
+<Framework only="solid">
+
+If you need to update Options dynamically, you should use a controlled `value`
+
+</Framework>
+
+<Demo id="dynamic-options" />
+
+### Linkage Select
+
+<Framework only="react">
+
+Use a controlled `value` to link different Selects. If it is a complex linkage with a hierarchical relationship, it is recommended to use Cascader components directly
+
+</Framework>
+
+<Framework only="vue">
+
+Use a controlled `modelValue` to link different Selects. If it is a complex linkage with a hierarchical relationship, it is recommended to use Cascader components directly
+
+</Framework>
+
+<Framework only="solid">
+
+Use a controlled `value` to link different Selects. If it is a complex linkage with a hierarchical relationship, it is recommended to use Cascader components directly
+
+</Framework>
+
+<Demo id="linkage" />
+
+### Search
+
+You can turn on the search capability by setting `filter` to true.  
+The default search strategy will include comparison of the input value with the label value of option
+
+By default, the search keywords will be cleared automatically after multiple selection is selected. If you want to keep it, you can turn off the default behavior by setting `autoClearSearchValue` to false (provided after v2.3)
+
+<Demo id="search" />
+
+### Search position
+
+The default search input is displayed on the Select Trigger. You can specify different positions through `searchPosition`, and you can choose `dropdown` or `trigger`. Available after `v2.61.0`  
+If you want to customize the placeholder of the Input search box in the dropdown, you can control it through `searchPlaceholder`  
+If the `searchPosition` is `trigger`, when `showClear=true`, clicking the clear button of the input will clear the selected items and the search text in the input at the same time  
+If the `searchPosition` is `dropdown`, when `showClear=true`, clicking the clear button of the trigger will clear the selected items, clicking the clear button in the dropdown input will clear search text
+
+<Demo id="search-position" />
+
+### Remote search
+
+A multi-select example with remote search, request debounce, loading status.
+
+- Use `filter` turn on the search capability.
+- Use `remote` to disabled local filter
+- Dynamic Update `optionList` after `onSearch` callback
+- Update `loading` when fetching data / finish
+
+<Framework only="react">
+
+- Use controlled value attribute
+
+</Framework>
+
+<Framework only="vue">
+
+- Use a controlled `modelValue`, and get the keyword from the `@search` event
+
+</Framework>
+
+<Framework only="solid">
+
+- Use a controlled `value`, and get the keyword from `onSearch`
+
+</Framework>
+
+<Demo id="remote-search" />
+
+### Custom search strategy
+
+By default, the user's search input will be compared with the option's label value as a string include.  
+You can set `filter` as a custom function to customize your filter strategy.
+
+<Demo id="custom-filter" />
+
+### Custom selection rendering
+
+<Framework only="react">
+
+By default, the content of `option.label` or `option.children` will be backfilled into the selection box when the option is selected.  
+But you can customize the rendering of the selection box through the `renderSelectedItem` function
+
+- Select: `renderSelectedItem(optionNode: object) => content: ReactNode`
+- Multiple Select: `renderSelectedItem(optionNode: object, { index: number, onClose: function }) => { isRenderInTag: boolean, content: ReactNode }`
+    - When `isRenderInTag` is true, content will automatically wrapped in `Tag` rendering (with background color and close button)
+    - When `isRenderInTag` is false, it renders the returned content directly
+
+</Framework>
+
+<Framework only="vue">
+
+By default, the `label` of the option, or the content of its default slot, will be backfilled into the selection box when the option is selected.  
+But you can customize the rendering of the selection box through scoped slots, whose parameters are `{ option, index, disabled, onClose }`
+
+- `#selectedItem`: in a single Select it replaces the content shown in the selection box; in a multiple Select it replaces only the content inside the built-in tag, which keeps its background color and close button
+- `#tag`: in a multiple Select it replaces the whole tag, and takes precedence over `#selectedItem` when both are given
+- Call `onClose` to remove the option; in a single Select it clears the value
+
+</Framework>
+
+<Framework only="solid">
+
+By default, the `children` of the selected Option, or its `label` without children, is backfilled into the selection box.  
+But you can customize the rendering of the selection box through the `renderSelectedItem` function
+
+- Select: `renderSelectedItem(optionNode: object) => content: JSX.Element`
+- Multiple Select: `renderSelectedItem(optionNode: object, { index: number, disabled: boolean, onClose: function }) => { isRenderInTag: boolean, content: JSX.Element }`
+    - When `isRenderInTag` is true, content will automatically wrapped in `Tag` rendering (with background color and close button)
+    - When `isRenderInTag` is false, it renders the returned content directly
+- Other props written on `Select.Option` (such as `email` in the demo) are passed in with `optionNode`
+
+</Framework>
+
+<Demo id="render-selected-item" />
+
+### Custom pop-up layer style
+
+You can control the style of the pop-up layer through `dropdownClassName`, `dropdownStyle`  
+For example, when you customize the width of the pop-up layer, you can pass the width through `drowndownStyle`
+
+<Demo id="dropdown-style" />
+
+### Get all attribute of selected option
+
+<Framework only="react">
+
+By default, through `onChange` uou can only get value attribute of selected option.  
+If you need to take other attributes of the selected option, you can use `onChangeWithObject` Properties  
+At this time, the argument of `onChange` will be object, containing various attributes of selected option, eg: `onChange({ value, label, ...rest })`
+
+</Framework>
+
+<Framework only="vue">
+
+By default, the `change` event only gives you the value of the selected option.  
+If you need to take other attributes of the selected option, you can use the `changeWithObject` property (a boolean property, not an event)  
+At this time, the payload of `change` and `update:modelValue` will be an object containing various attributes of the selected option, eg: `{ value, label, ...rest }`
+
+</Framework>
+
+<Framework only="solid">
+
+By default, through `onChange` you can only get value attribute of selected option.  
+If you need to take other attributes of the selected option, you can use `onChangeWithObject` Properties  
+At this time, the argument of `onChange` will be object, containing various attributes of selected option, eg: `onChange({ value, label, ...rest })`
+
+</Framework>
+
+<Framework only="react">
+
+<Notice title="Notice">Note that when onChangeWithObject is set to true, `defaultValue` / `value` should also be an object and must have `value` and `label` keys</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice title="Notice">Note that when changeWithObject is set to true, `defaultValue` / `modelValue` should also be an object and must have `value` and `label` keys</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice title="Notice">Note that when onChangeWithObject is set to true, `defaultValue` / `value` should also be an object and must have `value` and `label` keys</Notice>
+
+</Framework>
+
+<Demo id="on-change-with-object" />
+
+### Create entries
+
+You can create and select entries that do not exist in the options by setting `allowCreate=true`
+
+<Framework only="react">
+
+You can customize the content display when creating the label through renderCreateItem (by returning ReactNode, note that you need to customize the style)
+
+</Framework>
+
+<Framework only="vue">
+
+You can customize the content display when creating the label through the `#createItem="{ inputValue, focus, style }"` scoped slot (note that you need to customize the style, and with virtualization you must apply `style` to the custom element). Without it the locale text for "Create" followed by the input is shown. The `create` event fires when an option is created
+
+</Framework>
+
+<Framework only="solid">
+
+You can customize the content display when creating the label through `renderCreateItem` (by returning a JSX element, note that you need to customize the style). Without it the locale text for "Create" followed by the input is shown. Its arguments are `(inputValue, isFocus, style)`, and with virtualization you must apply `style` to the custom element
+
+</Framework>
+
+In addition, can be used with the `defaultActiveFirstOption` property to automatically select the first item. When you enter directly and press Enter, you can immediately create an Option
+
+<Demo id="allow-create" />
+
+### Virtualize
+
+Turn on list virtualization when passing in `virtualize` to optimize performance when there are a large number of Option nodes virtualize is an object containing the following values:
+
+- height: Option list height value, default 270 （before v2.20.8 was 300）
+- width: Option list width value, default 100%
+- itemSize: The height of each line of Option, must be passed
+
+<Notice title="Note">When virtualize.height is greater than the default value of 270px, to avoid the double scrollbar issue, you need to set the maxHeight property to the same value as virtualize.height. For example: when setting virtualize.height to 400px, you should also set maxHeight to 400.</Notice>
+
+<Demo id="virtualize" />
+
+### Custom Trigger
+
+<Framework only="react">
+
+If the default layout style of the selection box does not meet your needs, you can use `triggerRender` to customize the display of the selection box
+
+If you want to keep the search and filter ability without rendering the Input structure yourself, you can also set searchPosition='dropdown' to put the default search box in the dropdown list
+
+The parameters of triggerRender are as follows
+
+```typescript
+interface TriggerRenderProps {
+  value: array<object> // All currently selected options
+  inputValue: string; // The input value of the current input box
+  onSearch: (inputValue: string) => void; // The function used to update the value of the input box. You should call this function when the value of the Input component you customize in triggerRender is updated to synchronize the state to the Select internal. props.filter needs to be true, support after v2.32
+  onClear: () => void; // Function to clear the value
+  onRemove: (option: object) => void; // support after v2.32
+  disabled: boolean; // Whether to disable Select
+  placeholder: ReactNode; // Select placeholder
+  componentProps: //All props passed to Select by users
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+If the default layout style of the selection box does not meet your needs, you can use the `#trigger` scoped slot to customize the content of the selection box
+
+If you want to keep the search and filter ability without rendering the Input structure yourself, you can also set searchPosition='dropdown' to put the default search box in the dropdown list
+
+The parameters of `#trigger` are as follows
+
+```typescript
+interface SelectTriggerSlotProps {
+    value: SelectOptionProps[]; // All currently selected options
+    inputValue: string; // The current search keyword
+    placeholder?: string; // Select placeholder
+    disabled: boolean; // Whether to disable Select
+    componentProps: Record<string, unknown>; // All props passed to Select by users
+    onSearch: (inputValue: string) => void; // Updates the search keyword. Call it when the value of your custom Input changes, to synchronize the state to the Select internal. filter needs to be set too
+    onClear: (event?: MouseEvent) => void; // Clears the selection. When bound to a control inside the trigger, pass the click event so that click does not reopen the dropdown
+    onRemove: (option: SelectOptionProps) => void; // Removes a single selected option, which needs at least label and value
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+If the default layout style of the selection box does not meet your needs, you can use `triggerRender` to customize the display of the selection box
+
+If you want to keep the search and filter ability without rendering the Input structure yourself, you can also set searchPosition='dropdown' to put the default search box in the dropdown list
+
+The parameters of triggerRender are as follows
+
+```typescript
+interface TriggerRenderProps {
+    value: SelectedItemProps[]; // All currently selected options
+    inputValue: string; // The current search keyword
+    onSearch: (inputValue: string) => void; // Updates the search keyword. Call it when the value of your custom Input changes, to synchronize the state to the Select internal. filter needs to be set too
+    onRemove: (option: OptionProps) => void; // Removes a single selected option, which needs at least label and value
+    onClear: (e?: MouseEvent) => void; // Clears the selection. When bound to a control inside the trigger, pass the click event so that click does not reopen the dropdown
+    disabled: boolean; // Whether to disable Select
+    placeholder: JSX.Element; // Select placeholder
+    componentProps: Record<string, unknown>; // All props passed to Select by users
+}
+```
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+The following is a more complex example: Reusing the drag-and-sort capability of TagInput and adding sorting to Select through a custom trigger.
+
+<Demo id="trigger-render-sortable" />
+
+### Custom Option Render
+
+<Framework only="react">
+
+- Simple customization: Pass the label property of Option or children into ReactNode, you can control the rendering of the candidates, and the content will automatically bring styles such as padding, background color, etc.
+- Complete customization: By passing in `renderOptionItem`, you can completely take over the rendering of the candidates in the list, and get the relevant state values from the callback input parameters. Achieve a higher degree of freedom of structural rendering  
+  Notice:
+    1. The style passed in by props needs to be consumed on wrapper dom, otherwise it will not be able to be used normally in virtualization scenarios
+    2. The styles of selected, focused, disabled, etc. state need to be added by yourself, and you can get the relative boolean value from props
+    3. `onMouseEnter`、`className` needs to be bound on the wrapper dom, otherwise the display will be problematic when the upper and lower keyboards are operated
+    4. If your custom item is Select.Option, you need to pass renderProps.onClick transparently to the onSelect prop of Option
+    5. Put `id` on the wrapper dom with `role="option"`, `aria-selected` and `aria-disabled`: the Select points `aria-activedescendant` at that id, so screen readers announce the option reached with the arrow keys; Select also uses this id to scroll the option into view when the dropdown opens or the arrow keys move
+
+</Framework>
+
+<Framework only="vue">
+
+- Simple customization: Put content with markup in the default slot of `Select.Option`, you can control the rendering of the candidates, and the content will automatically bring styles such as padding, background color, etc.
+- Complete customization: Through the `#optionItem` scoped slot, you can completely take over the rendering of the candidates in the list, and get the relevant state values from the slot parameters. Achieve a higher degree of freedom of structural rendering  
+  The parameters are `{ id, value, label, selected, focused, disabled, inputValue, class, style, onClick, onMouseenter }`. Notice:
+    1. The `style` in the parameters needs to be consumed on wrapper dom, otherwise it will not be able to be used normally in virtualization scenarios
+    2. The `class` and `onMouseenter` in the parameters need to be bound on the wrapper dom, otherwise the display will be problematic when the upper and lower keyboards are operated
+    3. The styles of selected, focused, disabled, etc. state need to be added by yourself, and you can get the relative boolean value from the parameters
+    4. Bind the `onClick` in the parameters to the wrapper dom so that a click selects the option
+    5. Put the `id` in the parameters on the wrapper dom with `role="option"`, `aria-selected` and `aria-disabled`: the Select points `aria-activedescendant` at that id, so screen readers announce the option reached with the arrow keys; Select also uses this id to scroll the option into view when the dropdown opens or the arrow keys move
+
+</Framework>
+
+<Framework only="solid">
+
+- Simple customization: Pass a JSX element as the children of Option to control the rendering of the candidates, and the content will automatically bring styles such as padding, background color, etc.; pass a text `label` as well for search
+- Complete customization: By passing in `renderOptionItem`, you can completely take over the rendering of the candidates in the list, and get the relevant state values from the callback input parameters. Achieve a higher degree of freedom of structural rendering  
+  The parameter is `{ id, value, label, selected, focused, disabled, inputValue, class, style, onClick, onMouseEnter }` plus any other props written on the Option. Its fields update with the state, so do not destructure it; read `props.xxx` in the JSX. Notice:
+    1. The `style` in the parameter needs to be consumed on wrapper dom, otherwise it will not be able to be used normally in virtualization scenarios
+    2. The `class` and `onMouseEnter` in the parameter need to be bound on the wrapper dom, otherwise the display will be problematic when the upper and lower keyboards are operated
+    3. The styles of selected, focused, disabled, etc. state need to be added by yourself, and you can get the relative boolean value from the parameter
+    4. Bind the `onClick` in the parameter to the wrapper dom so that a click selects the option
+    5. Put the `id` in the parameter on the wrapper dom with `role="option"`, `aria-selected` and `aria-disabled`: the Select points `aria-activedescendant` at that id, so screen readers announce the option reached with the arrow keys; Select also uses this id to scroll the option into view when the dropdown opens or the arrow keys move
+
+</Framework>
+
+<Demo id="render-option-item" />
+
+```scss
+.components-select-demo-renderOptionItem {
+    .custom-option-render {
+        display: flex;
+        font-size: 14px;
+        line-height: 20px;
+        word-break: break-all;
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        color: var(--semi-color-text-0);
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        box-sizing: border-box;
+        .option-right {
+            margin-left: 8px;
+            display: inline-flex;
+            align-items: center;
+        }
+        &:active {
+            background-color: var(--semi-color-fill-1);
+        }
+        &-focused {
+            background-color: var(--semi-color-fill-0);
+        }
+        &-selected {
+            //font-weight: 700;
+        }
+        &-disabled {
+            color: var(--semi-color-disabled-text);
+            cursor: not-allowed;
+        }
+        &:first-of-type {
+            margin-top: 4px;
+        }
+        &:last-of-type {
+            margin-bottom: 4px;
+        }
+    }
+}
+```
+
+## API reference
+
+### Select Props
+
+<Framework only="react">
+
+<SelectReactApi />
+
+Other native attributes (such as `data-*`) land on the trigger root element, and `style` is not passed to the dropdown (use `dropdownStyle`). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; when the search input mounts in a searchable Select, it becomes the combobox and these attributes move to it.
+
+</Framework>
+
+<Framework only="vue">
+
+<SelectVueApi />
+
+`class`, `style`, `data-*` and native listeners land on the root element, and `style` does not reach the dropdown popup (use `dropdownStyle`). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it.
+
+</Framework>
+
+<Framework only="solid">
+
+<SelectSolidApi />
+
+`class`, `style`, `data-*` and native attributes and listeners land on the root element, and `style` does not reach the dropdown popup (use `dropdownStyle`); with `triggerRender` the root no longer carries the style classes of Select itself. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it. `ref` receives the root element, see Methods below.
+
+</Framework>
+
+### Option Props
+
+<Framework only="react">
+
+> **An option is identified by its value, which should not repeat within one Select; labels may repeat**
+
+<SelectOptionReactApi />
+
+`className`, `style` and `data-*` land on the option row; other undeclared attributes never reach the DOM and travel with the option record to `onSelect`, `onDeselect`, `renderSelectedItem` and `renderOptionItem`.
+
+</Framework>
+
+<Framework only="vue">
+
+> **An option is identified by its value, which should not repeat within one Select; labels may repeat**
+
+<SelectOptionVueApi />
+
+`Select.Option` is only read inside the default slot of Select, and its props become the option record. `class`, `style` and `data-*` land on the option row; other undeclared attributes never reach the DOM and travel with the option record in the payload of the `select` event, and of `change` once `changeWithObject` is on.
+
+</Framework>
+
+<Framework only="solid">
+
+> **An option is identified by its value, which should not repeat within one Select; labels may repeat**
+
+<SelectOptionSolidApi />
+
+`Select.Option` is only read inside Select and renders nothing itself; its props become the option record. `class`, `style` and `data-*` land on the option row; other undeclared attributes never reach the DOM and travel with the option record to `onSelect`, `onDeselect`, `renderSelectedItem` and `renderOptionItem`, and to `onChange` once `onChangeWithObject` is on.
+
+</Framework>
+
+### OptGroup Props
+
+<Framework only="react">
+
+<SelectOptGroupReactApi />
+
+`className`, `style` and other native attributes (such as `id` and `data-*`) land on the group title element.
+
+</Framework>
+
+<Framework only="vue">
+
+<SelectOptGroupVueApi />
+
+Attrs such as `class` and `style` land on the group title element.
+
+</Framework>
+
+<Framework only="solid">
+
+<SelectOptGroupSolidApi />
+
+`Select.OptGroup` is only read inside Select and renders nothing itself. `class`, `style`, `id` and other undeclared attributes land on the group title element.
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+Some internal methods provided by Select can be accessed through ref:
+
+The methods are listed in the Methods table after Select Props.
+
+</Framework>
+
+<Framework only="vue">
+
+Select exposes the following methods through a template ref, typed as `SelectHandle`:
+
+| Method | Instructions |
+| --- | --- |
+| open() | Manually open dropdown list |
+| close() | Manually close dropdown list |
+| focus() | Manually focus: a searchable Select focuses the search input and opens the dropdown list, otherwise it focuses the trigger without opening |
+| clearInput() | Manually clear value of the search input |
+| selectAll() | Select every shown, enabled option; multiple mode only |
+| deselectAll() | Manually clear selected options |
+| search(value: string, event?: Event) | Searches as if the value were typed into the search input, and the value is set to the input; without an event, the second parameter of the `search` event is undefined |
+| rePosition() | Recomputes the dropdown position from the trigger's current position at once; the dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame |
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Select } from '@fibrae/semi-ui-vue';
+    import type { SelectHandle } from '@fibrae/semi-ui-vue';
+
+    const select = useTemplateRef<SelectHandle>('select');
+    const open = () => select.value?.open();
+</script>
+
+<template>
+    <Select ref="select" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The `ref` of Select receives the root element (the trigger), which carries the methods, typed as `SelectElement` (that is, `HTMLDivElement & SelectHandle`). Besides the methods below, the `focus()` of the element focuses the combobox (the search input while it is in the trigger) without opening the dropdown list.
+
+| Method | Instructions |
+| --- | --- |
+| open() | Manually open dropdown list |
+| close() | Manually close dropdown list |
+| clearInput() | Manually clear value of the search input |
+| selectAll() | Select every shown, enabled option; multiple mode only |
+| deselectAll() | Manually clear selected options |
+| search(value: string, event?: Event) | Searches as if the value were typed into the search input, and the value is set to the input; without an event, the second parameter of `onSearch` is undefined |
+| rePosition() | Recomputes the dropdown position from the trigger's current position at once; the dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame |
+
+```tsx
+import { Select, type SelectElement } from '@fibrae/semi-ui-solid';
+
+function App() {
+    let select: SelectElement | undefined;
+    return (
+        <>
+            <Select ref={select} />
+            <button onClick={() => select?.open()}>Open</button>
+        </>
+    );
+}
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Following the ARIA 1.2 combobox pattern, exactly one element is the combobox at any time; the popup layer is a listbox and each option an option:
+    - Without search, or with the search input in the dropdown (`searchPosition="dropdown"`), the Select trigger is a select-only combobox and the selected content is its value
+    - With the search input in the trigger, the input itself is the combobox, with `aria-autocomplete="list"`, and the trigger has no role and no Tab stop. In single mode the input appears only while searching, so the trigger is the combobox otherwise; the input is empty until the user types, so the selected text is linked to it as its description with `aria-describedby`. In multiple mode the input is always there
+    - A search input in the dropdown stays a text box with `aria-controls`, `aria-autocomplete` and `aria-activedescendant`, named like the combobox
+- The combobox takes its name from, in order: `aria-labelledby`, `aria-label`, the rendered insetLabel (the combobox's `aria-labelledby` points at it, with an id the component generates when `insetLabelId` is not given; with a prefix the insetLabel is not rendered and does not name it), and otherwise "Select" from the locale. Pass a name that matches the form label. The listbox and a search input in the dropdown use the same name source, never the combobox itself. The selected content is the value of the combobox and is not part of the name
+- The combobox has aria-haspopup, aria-expanded, and aria-controls properties, indicating its relationship with the popup layer
+- When multiple selections are made, listbox aria-multiselectable is true, indicating that multiple selections are currently available
+- aria-selected is true when Option is selected; aria-disabled is true when Option is disabled
+- The options of an OptGroup with a label sit in a `role="group"` named by the group title (`aria-labelledby`), so screen readers announce the group of an option; a virtualized list shows no group titles and has no groups
+- While the dropdown is open, aria-activedescendant points at the option focused from the keyboard, which ensures that it is recognized when the narration is spoken; with a fully custom option rendering, put the `id` from the parameters on the option element (for more information, please refer to [Managing Focus in Composites Using aria-activedescendant](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_activedescendant))
+
+### Keyboard and Focus
+
+**Select without Filter, or with the search box in the dropdown (`searchPosition="dropdown"`):**
+
+- After Select is focused, keyboard users can open the dropdown menu with `Space`, `Up Arrow`, `Down Arrow` (including `Alt` + `Down Arrow`) or `Enter`. With a selected value the focus goes to the first selected option, so pressing Enter right away keeps the value; without one the current highlight stays, starting on the first enabled option (`defaultActiveFirstOption` defaults to true)
+- `Home` and `End` open the dropdown menu and move the focus to the first and the last enabled option
+- Typing a character opens the dropdown menu and moves the focus to the next option that starts with it; characters typed in quick succession match as a whole, and typing the same character again cycles through the options that start with it
+- When the dropdown menu is open:
+    - Use `Esc` key or `Tab` key to close the menu
+    - Use `Up Arrow` or `Down Arrow` to toggle options, `Home` and `End` to move to either end, and a typed character to move to an option that starts with it
+    - `Enter` or `Space` selects the focused option: a single Select selects it and collapses the panel, a multiple Select toggles it and stays open. While characters are being typed in quick succession, `Space` joins the search string instead of selecting. With the focus in the search box inside the dropdown, `Home`, `End`, `Space` and characters edit the search text without moving the option focus
+- In a multiple Select with the focus on a selected tag, keys act on the tag only: `Backspace` and `Delete` remove it, and `Enter` and `Space` neither open the dropdown menu nor change the value
+- When the focus is on the dropdown menu and the user uses an `innerBottomSlot` or `outerBottomSlot` attribute with a custom slot with an interactive element:
+    - You can use the `Tab` key to switch to these interactive elements
+    - When the focus is on the first interactive element of the custom slot, use `Shift` + `Tab` to return the focus to the Select box
+
+**Select with Filter function:**
+
+- When Select is focused, keyboard users can open dropdown menus with `Up Arrow` or `Down Arrow` or `Enter` keys. At this point, the focus is still on the Select box, the user can enter content, and can also use the `up arrow` or `down arrow` to switch options
+- When the dropdown menu is open: `Up Arrow` and `Down Arrow` switch options; `Enter` selects the focused option, collapsing the panel in a single Select and toggling it while staying open in a multiple Select; `Esc` or `Tab` closes the menu. `Home`, `End`, `Space` and characters belong to the input in the Select box and edit the search text without moving the option focus
+- When the focus is on the Select box, and the user uses an `innerBottomSlot` or `outerBottomSlot` property with a custom slot with an interactive element:
+    - You can use the `Tab` key to switch to these interactive elements
+    - When the focus is on the first interactive element of the custom slot, use `Shift` + `Tab` to return the focus to the Select box
+
+**Clear button:**
+
+- With `showClear`, a selected value or search text, and no `disabled`, the trigger renders a clear button. It is a native `button` named "Clear selection" from the locale, shown on hover, while the dropdown is open, or while focus is inside the Select
+- From the Select box, `Tab` moves to the clear button; `Enter` or `Space` clears, as a mouse click does, and the focus goes back to the Select box
+
+## Content Guidelines
+
+- Selector trigger
+    - Describe in 1-3 words the input that the user needs to make
+    - Use statement writing conventions (first letter uppercase, rest lowercase)
+    - Avoid punctuation and prepositions ("the", "an", "a")
+    - Labels need to be independent statements. Don't let the label be the first half of the statement and the option the second half of the statement.
+    - Use descriptive sentences, not indicative ones. Help text is available under the select box if the option needs more explanation.
+- Selector options
+    - If there is no default option, use "Select" as placeholder copy
+    - Options should be in alphabetical order or other logical order to make it easier for users to find options
+    - Use statement writing conventions (first letter uppercase, rest lowercase), avoid commas and semicolons at the end of sentences
+    - Clearly articulate the purpose of the choice indicated by the option
+
+## Design Tokens
+
+<DesignToken />
+
+## TypeScript Generic Support
+
+<Framework only="vue">
+
+`Select` is a generic component with two generic parameters: `T`, the type of an option's value (the option object when `changeWithObject` is set), and `Multiple`, the type of the `multiple` prop. The payload of `change` and `update:modelValue` is `T | undefined` in single mode and `T[]` in multiple mode; when `multiple` is a `boolean` variable it is `T | T[] | undefined`. The payload of `select` and `deselect` is the option's raw value (`string | number`), whatever `T` is. Both parameters are usually inferred from `modelValue` and `multiple`; the global defaults cannot set `multiple`, because giving it a default would break that inference.
+
+```vue
+<script setup lang="ts">
+    import { ref } from 'vue';
+    import { Select } from '@fibrae/semi-ui-vue';
+
+    // T is inferred from modelValue: string
+    const value = ref<string | undefined>();
+    // In multiple mode, modelValue is string[]
+    const values = ref<string[]>([]);
+</script>
+
+<template>
+    <Select v-model="value">
+        <Select.Option value="option1">Option 1</Select.Option>
+        <Select.Option value="option2">Option 2</Select.Option>
+    </Select>
+    <Select v-model="values" multiple>
+        <Select.Option value="option1">Option 1</Select.Option>
+        <Select.Option value="option2">Option 2</Select.Option>
+    </Select>
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+`Select` takes two generic parameters: `T`, the type of an option's value (the option object when `onChangeWithObject` is set), and `Multiple`, the type of the `multiple` prop. `onChange` receives `T | undefined` in single mode and `T[]` in multiple mode; when `multiple` is a `boolean` variable it receives `T | T[] | undefined`. `onSelect` and `onDeselect` receive the option's raw value (`string | number`), whatever `T` is. Both parameters are usually inferred from `value` and `multiple`; when you write `T` explicitly in multiple mode, write `Multiple` too.
+
+```jsx
+import { Select } from '@fibrae/semi-ui-react';
+
+// T is inferred from value: string; value is string | undefined
+<Select
+    value={selectedValue}
+    onChange={(value) => setSelectedValue(value)}
+>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+</Select>
+
+// In multiple mode, value is string[]
+<Select
+    multiple
+    value={selectedValues}
+    onChange={(value) => setSelectedValues(value)}
+>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+</Select>
+
+// Explicit generic parameters in multiple mode
+<Select<string, true> multiple onChange={(value) => setSelectedValues(value)}>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+</Select>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`Select` takes two generic parameters: `T`, the type of an option's value (the option object when `onChangeWithObject` is set), and `Multiple`, the type of the `multiple` prop. `onChange` receives `T | undefined` in single mode and `T[]` in multiple mode; when `multiple` is a `boolean` variable it receives `T | T[] | undefined`. `onSelect` and `onDeselect` receive the option's raw value (`string | number`), whatever `T` is. Both parameters are usually inferred from `value` and `multiple`; when you write `T` explicitly in multiple mode, write `Multiple` too.
+
+```jsx
+import { Select } from '@fibrae/semi-ui-solid';
+
+// T is inferred from value: string; value is string | undefined
+<Select value={selectedValue()} onChange={(value) => setSelectedValue(value)}>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+</Select>
+
+// In multiple mode, value is string[]
+<Select multiple value={selectedValues()} onChange={(value) => setSelectedValues(value)}>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+</Select>
+
+// Explicit generic parameters in multiple mode
+<Select<string, true> multiple onChange={(value) => setSelectedValues(value)}>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+</Select>
+```
+
+</Framework>
+
+## FAQ
+
+- **Searchable Select, using remote data to dynamically update the `optionList`, why sometimes there is no data before the asynchronous request is completed?**  
+   Please check whether `remote` is turned on. If remote is not turned on, the input value of the input box will be compared with the current optionList by default. If there is no match, no data will be displayed.  
+   You can turn off matching filtering on the current local data by turning on remote.
+
+- **Will Select automatically limit the width of the drop-down menu?**  
+  MinWidth will be given, but width will not be written dead. If necessary, you can add it yourself through dropdownStyle.
+
+- **Why is the blur event not fired after a radio selection option?**
+
+    Before V2.17.0, after Select radio is selected, the blur event of Select will be triggered. After V2.17.0, Select has added A11y support, which will not trigger Select's blur event. In single-selection selection, the Select floating layer is closed, and the focus is still on the trigger (at this time, the Select floating layer can be opened again by pressing the Enter key) No matter single selection or multiple selection, press Esc, only the Select floating layer is closed, and the trigger keeps the focus (the Select floating layer can be opened again by pressing the Enter key at this time)

@@ -1,0 +1,180 @@
+---
+order: 68
+title: Collapsible
+icon: doc-collapsible
+brief: The collapsible component is a container component used to put long sections of information under a block that can be expanded or collapsed.
+---
+
+import CollapsibleReactApi from './api/collapsible.react.en-US.mdx';
+import CollapsibleVueApi from './api/collapsible.vue.en-US.mdx';
+import CollapsibleSolidApi from './api/collapsible.solid.en-US.mdx';
+
+## When to use
+
+- `Collapsible`is a behavior component with animation effect by default. It is used in various components in Semi Components, including: `Navigation`, `Collapse`, `Tree`, `TreeSelect`, and `Typography`.
+- When the above components do not meet requirements or customized collapsed behavior, you can use `Collapsible` to put in contents that need to be expanded or folded.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Collapsible } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Collapsible } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Collapsible } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Use `isOpen` to control the expansion or folding of the content.
+
+<Demo id="basic" />
+
+### Custom Animation Duration
+
+You can use `duration` to set animation duration or turn off animation by setting `motion` to false.
+
+<Demo id="duration" />
+
+### Nested use
+
+<Demo id="nested" />
+
+### Custom CollapseHeight
+
+You could use `collapseHeight` to customize collapsed height.
+
+<Demo id="collapse-height" />
+
+## API reference
+
+<Framework only="react">
+
+<CollapsibleReactApi />
+
+Other native attributes (such as `aria-*`, `data-*` and `onMouseEnter`) land on the outer wrapper. The `onTransitionEnd` handler you pass runs together with the component's own handling.
+
+</Framework>
+
+<Framework only="vue">
+
+<CollapsibleVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the outer wrapper. `id` is a declared prop and lands on the inner content element; it does not read the global default (a global id would repeat on every instance). A `@transitionend` from the caller runs together with the component's own handler.
+
+</Framework>
+
+<Framework only="solid">
+
+<CollapsibleSolidApi />
+
+`class`, `style`, `ref` and other native attributes and events land on the outer wrapper; `id` is a declared prop and lands on the inner content element. An `onTransitionEnd` from the caller runs together with the component's own handler.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Collapsible has `id` props, the value passed in will be set as the id of the inner content element (not the outer wrapper). The trigger button points at it with `aria-controls` and reports whether it is open with `aria-expanded`, see the usage example below.
+
+<Framework only="react">
+
+```jsx
+import { useState } from 'react';
+import { Button, Collapsible } from '@fibrae/semi-ui-react';
+
+() => {
+    const collapseId = 'myCollapsible';
+    const [visible, setVisible] = useState(false);
+    return (
+        <>
+            <Button onClick={() => setVisible(!visible)} aria-expanded={visible} aria-controls={collapseId}>
+                {visible ? 'hide' : 'show'}
+            </Button>
+            <Collapsible isOpen={visible} id={collapseId}>
+                <div>hide content</div>
+            </Collapsible>
+        </>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ref } from 'vue';
+    import { Button, Collapsible } from '@fibrae/semi-ui-vue';
+
+    const collapseId = 'myCollapsible';
+    const visible = ref(false);
+</script>
+
+<template>
+    <Button :aria-expanded="visible" :aria-controls="collapseId" @click="visible = !visible">
+        {{ visible ? 'hide' : 'show' }}
+    </Button>
+    <Collapsible :isOpen="visible" :id="collapseId">
+        <div>hide content</div>
+    </Collapsible>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { createSignal } from 'solid-js';
+import { Button, Collapsible } from '@fibrae/semi-ui-solid';
+
+() => {
+    const collapseId = 'myCollapsible';
+    const [visible, setVisible] = createSignal(false);
+    return (
+        <>
+            <Button onClick={() => setVisible(!visible())} aria-expanded={visible()} aria-controls={collapseId}>
+                {visible() ? 'hide' : 'show'}
+            </Button>
+            <Collapsible isOpen={visible()} id={collapseId}>
+                <div>hide content</div>
+            </Collapsible>
+        </>
+    );
+};
+```
+
+</Framework>
+
+### Focus
+
+- With `collapseHeight` of 0, the collapsed content is `inert`: screen readers skip it and Tab cannot reach it.
+- With `collapseHeight` above 0, the visible preview and the clipped part are the same element, and the clipped part cannot be hidden on its own, so the whole content stays readable and focusable and screen reader users get the full text. Do not put links, buttons or other focusable elements in the clipped part, or keyboard focus lands where it cannot be seen.
+
+## FAQ
+
+- Why Collapsible does not expand as expected?  
+   The expanded height of `Collapsible` is computed by CSS and does not depend on measuring the node, so toggling `isOpen` under a parent with `display: none` still gives the correct expanded height. First check that `isOpen` follows your state; with `collapseHeight` above 0, part of the content is visible while collapsed by design.

@@ -1,0 +1,29 @@
+**Props**
+
+| Property          | Description                                                                                                                                                     | Type                                      | Default     |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ----------- |
+| disabled          | The disabled state applied to the fields in the group. Falls back to the Form's disabled when not set.                                                          | `boolean`                                 | `undefined` |
+| label             | Label of the whole group: a string is the text and an object is the label configuration, whose id becomes the id of the label. The label slot takes precedence. | `string \| number \| FormInputGroupLabel` | `undefined` |
+| labelPosition     | Label position. Defaults to the Form's, and can be top or left.                                                                                                 | `"top" \| "left"`                         | `undefined` |
+| extraTextPosition | Position of the extra text: middle puts it between the label and the group, bottom after the group.                                                             | `"bottom" \| "middle"`                    | `"bottom"`  |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot       | Description                                                                                           | Scope parameters |
+| ---------- | ----------------------------------------------------------------------------------------------------- | ---------------- |
+| default    | The fields in the group. Only direct children that set field are rendered.                            | `any`            |
+| label      | Content of the group label. It takes precedence over the text in the label property.                  | `any`            |
+| labelExtra | Content after the group label text.                                                                   | `any`            |
+| extraText  | Extra text that is always shown and referenced by the aria-describedby of every control in the group. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

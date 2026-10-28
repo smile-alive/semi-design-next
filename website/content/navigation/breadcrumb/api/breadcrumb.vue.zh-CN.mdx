@@ -1,0 +1,35 @@
+**Props**
+
+| 属性         | 说明                                                                                                                                                                                                          | 类型                          | 默认值                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------------------- |
+| activeIndex  | 受控使用，当前项的序号（从 0 起）；缺省时最后一项为当前项。                                                                                                                                                   | `number`                      | `semiGlobalDefault("Breadcrumb", "activeIndex")`            |
+| autoCollapse | 超出 maxItemCount 后是否自动折叠。                                                                                                                                                                            | `boolean`                     | `semiDefault("Breadcrumb", "autoCollapse", true)`           |
+| compact      | 是否使用紧凑尺寸。                                                                                                                                                                                            | `boolean`                     | `semiDefault("Breadcrumb", "compact", true)`                |
+| maxItemCount | 超出多少个级别后自动折叠。                                                                                                                                                                                    | `number`                      | `semiDefault("Breadcrumb", "maxItemCount", 4)`              |
+| moreType     | 内置省略号区域的渲染类型，可选 default、popover；提供 more 插槽时以插槽为准。                                                                                                                                 | `MoreType`                    | `semiDefault("Breadcrumb", "moreType", "default")`          |
+| routes       | 路由信息，由路由对象或字符串组成的数组；不为空时按 routes 渲染，不再渲染默认插槽。                                                                                                                            | `(string \| Route)[]`         | `semiDefault("Breadcrumb", "routes", [])`                   |
+| separator    | 文字分隔符；提供 separator 插槽时以插槽为准。                                                                                                                                                                 | `string`                      | `semiDefault("Breadcrumb", "separator", "/")`               |
+| showTooltip  | 是否在标题溢出时展示 Tooltip 及相关配置：width 为溢出宽度，ellipsisPos 为截断方式（从末尾或中间），opts 为传给 Tooltip 的属性，不含 content，class 与 style 落在弹层上。                                      | `boolean \| ShowTooltipProps` | `semiDefault("Breadcrumb", "showTooltip", DEFAULT_TOOLTIP)` |
+| onClick      | 点击时调用。是函数 prop，使用方照常写 @click；传入后没有 href 的项也可以用 Enter 操作。routes 写法收到该项的路由；Breadcrumb.Item 写法收到 `{ name, href }`，name 是该项的文字。第二个参数为原生 MouseEvent。 | `BreadcrumbClick`             | `undefined`                                                 |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽      | 说明                                                                                         | 作用域参数                 |
+| --------- | -------------------------------------------------------------------------------------------- | -------------------------- |
+| default   | 由 Breadcrumb.Item 组成的子项。                                                              | `any`                      |
+| separator | 自定义分隔符，优先于 separator 属性。                                                        | `any`                      |
+| item      | routes 写法下自定义每一项的标题，作用域参数为该项的路由与序号。                              | `BreadcrumbRouteSlotProps` |
+| icon      | routes 写法下每一项的图标，作用域参数为该项的路由与序号；渲染为空时该项无图标。              | `BreadcrumbRouteSlotProps` |
+| more      | 自定义省略号区域，作用域参数 restItems 是被折叠的项，已去掉分隔符，可直接用 component 挂载。 | `BreadcrumbMoreSlotProps`  |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

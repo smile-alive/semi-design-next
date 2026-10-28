@@ -1,0 +1,12 @@
+**Props**
+
+| Property  | Description                                                                                                                    | Type                                  | Default |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------- | ------- |
+| children  | Content of the option. It is shown when `label` is unset.                                                                      | `React.ReactNode`                     | -       |
+| className | Class name of the option.                                                                                                      | `string`                              | -       |
+| current   | Internal prop set by AutoComplete to mark the option as the current one (`aria-selected`). Select users do not need to set it. | `boolean`                             | -       |
+| disabled  | Whether the option is disabled.                                                                                                | `boolean`                             | -       |
+| label     | Displayed text, a string, a number or a ReactNode. Rendering prefers `label`, then falls back to `children` and then `value`.  | `string \| number \| React.ReactNode` | -       |
+| showTick  | Whether a check icon is shown when the option is selected. Options rendered by Select show it by default.                      | `boolean`                             | -       |
+| style     | Style of the option row.                                                                                                       | `React.CSSProperties`                 | -       |
+| value     | Value of the option. It should be unique within a Select, while `label` may repeat.                                            | `string \| number`                    | -       |

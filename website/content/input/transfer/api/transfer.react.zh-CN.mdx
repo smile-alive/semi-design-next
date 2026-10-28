@@ -1,0 +1,39 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 根元素的类名。 | `string` | - |
+| dataSource | 数据源。`list` 类型为数据项数组，`groupList` 为分组数组，`treeList` 为带 `children` 的树形数据。 | `DataSource` | `[]` |
+| defaultValue | 默认已选中的 value 数组，只在创建时读取。 | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | `[]` |
+| disabled | 是否禁用整个穿梭框，包括搜索框、选项和操作按钮。 | `boolean` | - |
+| draggable | 是否开启右侧已选项的拖拽排序。排序后 `onChange` 的数组顺序随之改变。 | `boolean` | - |
+| emptyContent | 自定义空状态的提示：`left` 为左侧没有数据时，`right` 为右侧没有已选项时，`search` 为搜索没有结果时。某一项为 `null` 时不渲染对应的空状态；未提供时显示语言包文案。 | `EmptyContent` | `{}` |
+| filter | 搜索的筛选逻辑。为 `false` 时不显示搜索框；传入函数时用它替代默认匹配，返回 `true` 表示保留该项；默认按 `label` 不区分大小写匹配。`treeList` 想自定义搜索时需设为 `true`，并通过 `treeProps` 的 `filterTreeNode` 传入匹配函数。 | <ApiType detail={"boolean \u007c ((searchValue: string, item: DataItem) => boolean)"}>Type</ApiType> | - |
+| inputProps | 传给搜索框 Input 的属性，可配置项参考 Input；`value` 与 `onChange` 由 Transfer 占用，需要外部驱动搜索时调用 ref 上的 `search` 方法。 | `InputProps` | - |
+| loading | 左侧选项是否正在加载，加载中用 Spin 代替列表。 | `boolean` | - |
+| onChange | 选中值变化时触发，拖拽排序后也会触发。参数依次为 value 数组与对应的数据项数组。 | <ApiType detail={"(values: Array\u003cstring \u007c number>, items: Array\u003cDataItem>) => void"}>Type</ApiType> | - |
+| onDeselect | 取消勾选一项时触发，参数为该数据项。 | <ApiType detail={"(item: DataItem) => void"}>Type</ApiType> | - |
+| onSearch | 搜索框输入内容变化时触发，参数为搜索值。通过 ref 的 `search` 方法驱动的搜索不触发。 | <ApiType detail={"(searchValue: string) => void"}>Type</ApiType> | - |
+| onSelect | 勾选一项时触发，参数为该数据项。 | <ApiType detail={"(item: DataItem) => void"}>Type</ApiType> | - |
+| pagination | 左侧面板的分页配置，仅对 `list` 与 `groupList` 生效。`onPageChange` 写在该对象内。 | `PaginationProps` | - |
+| ref | 接收 `TransferHandle` 句柄，只暴露 `search` 方法，不是根元素。 | <ApiType detail={"React.Ref\u003cTransferHandle>"}>Type</ApiType> | - |
+| renderSelectedHeader | 自定义右侧面板头部，每次渲染时调用，参数为 SelectedHeaderProps。 | <ApiType detail={"(headProps: { num: number; showButton: boolean; onClear: () => void; }) => React.ReactNode"}>Type</ApiType> | - |
+| renderSelectedItem | 自定义右侧单个已选项的渲染，每次渲染时为每个选项调用一次。参数为数据项，另含 `onRemove`；`draggable` 时还有 `sortableHandle`。`treeList` 且 `showPath` 时可通过 `fullPath` 获取完整路径。 | <ApiType detail={"(item: RenderSelectedItemProps) => React.ReactNode"}>Type</ApiType> | - |
+| renderSelectedPanel | 完全自定义右侧已选面板，每次渲染时调用，参数为 SelectedPanelProps。 | <ApiType detail={"(selectedPanelProps: SelectedPanelProps) => React.ReactNode"}>Type</ApiType> | - |
+| renderSourceHeader | 自定义左侧面板头部，每次渲染时调用，参数为 SourceHeaderProps。`leafOnlyNum` 仅 `treeList` 提供。 | <ApiType detail={"(headProps: { num: number; showButton: boolean; allChecked: boolean; onAllClick: () => void; leafOnlyNum?: number; }) => React.ReactNode"}>Type</ApiType> | - |
+| renderSourceItem | 自定义左侧单个候选项的渲染，每次渲染时为每个选项调用一次。参数为数据项，另含 `checked` 与 `onChange`，`onChange` 切换该项的勾选状态。 | <ApiType detail={"(item: RenderSourceItemProps) => React.ReactNode"}>Type</ApiType> | - |
+| renderSourcePanel | 完全自定义左侧候选面板，每次渲染时调用，参数为 SourcePanelProps。 | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => React.ReactNode"}>Type</ApiType> | - |
+| showPath | 仅 `treeList` 有效，控制右侧已选项是否显示从根节点到自身的选择路径。 | `boolean` | `false` |
+| style | 根元素的内联样式。 | `React.CSSProperties` | - |
+| treeProps | 仅 `treeList` 有效，传给左侧 Tree 的属性，会覆盖默认的 `multiple`、`disableStrictly`、`leafOnly`、`filterTreeNode`、`defaultExpandAll` 与 `searchRender`（为 `false`）。`value`、`treeData`、`keyMaps`、`treeDataSimpleJson`、`onChangeWithObject`、`onChange` 与 `ref` 由 Transfer 决定，传入会被忽略。 | <ApiType detail={"Omit\u003cTreeProps, 'value' \u007c 'ref' \u007c 'onChange' \u007c 'keyMaps' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'onChangeWithObject'>"}>Type</ApiType> | - |
+| type | 穿梭框类型，可选 `list`、`groupList`、`treeList`。 | `Type` | `"list"` |
+| value | 已选中的 value 数组，传入后即为受控组件，数组顺序就是右侧的显示顺序；传入 `undefined` 回到非受控。 | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | - |
+| virtualize | 右侧已选列表虚拟化，仅在默认右侧面板且 `draggable` 为 `false` 时生效。`height` 为数字时按像素生效，为其他值时按面板剩余高度测量；`itemSize` 为每行高度。 | `VirtualizeProps` | - |
+
+**Methods**
+
+| 方法   | 说明                                                        | 类型                                                       |
+| ------ | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| search | 按输入了该值来搜索，该值会被置给搜索框；不触发 `onSearch`。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

@@ -1,0 +1,63 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Current tags, for v-model. undefined makes it uncontrolled; null means controlled with no tags; going back from an array to undefined clears the tags. | `string[] \| null` | `undefined` |
+| defaultValue | Initial tags when uncontrolled. | `string[]` | `semiGlobalDefault("TagInput", "defaultValue")` |
+| inputValue | Current input text, for v-model:inputValue. | `string` | `semiGlobalDefault("TagInput", "inputValue")` |
+| inputValueModifiers | The trim and number modifiers of v-model:inputValue, passed by Vue for v-model:inputValue.trim. | `ModelModifiers` | `undefined` |
+| disabled | Whether the component is disabled. | `boolean` | `semiGlobalDefault("TagInput", "disabled")` |
+| maxLength | Maximum length of one tag. | `number` | `semiGlobalDefault("TagInput", "maxLength")` |
+| max | Maximum number of tags. | `number` | `semiGlobalDefault("TagInput", "max")` |
+| maxTagCount | Maximum number of tags shown; the rest are shown as +N. | `number` | `semiGlobalDefault("TagInput", "maxTagCount")` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `semiDefault("TagInput", "showRestTagsPopover", true)` |
+| restTagsPopoverProps | Popover props of the +N popover, without content. | `PopoverProps` | `semiGlobalDefault("TagInput", "restTagsPopoverProps")` |
+| showContentTooltip | Whether hovering a truncated tag shows its full text in an overlay; an object picks the overlay type and the props passed to it. | `boolean \| ShowTooltip` | `semiDefault("TagInput", "showContentTooltip", true)` |
+| allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `semiDefault("TagInput", "allowDuplicates", true)` |
+| addOnBlur | Whether the input text becomes a tag when the focus leaves the component. | `boolean` | `semiDefault("TagInput", "addOnBlur", false)` |
+| draggable | Whether tags can be reordered by dragging. | `boolean` | `semiDefault("TagInput", "draggable", false)` |
+| expandRestTagsOnClick | When not draggable, whether the collapsed tags expand once focus enters the component (click, Tab or the focus method). | `boolean` | `semiDefault("TagInput", "expandRestTagsOnClick", true)` |
+| placeholder | Placeholder of the input while there are no tags. | `string` | `semiGlobalDefault("TagInput", "placeholder")` |
+| insetLabelId | id of the inset label container, for aria-labelledby. | `string` | `undefined` |
+| separator | Separator(s) for adding several tags at once; null disables splitting. | `string \| string[] \| null` | `semiDefault("TagInput", "separator", ",")` |
+| showClear | Whether to show the button that clears all tags and the input text. | `boolean` | `semiDefault("TagInput", "showClear", false)` |
+| size | Size: small, default or large. | `Size` | `semiDefault("TagInput", "size", "default")` |
+| split | Custom split function that returns the split strings. | <ApiType detail={"((originString: string, separators: string \u007c string[] \u007c null) => string[])"}>Type</ApiType> | `undefined` |
+| validateStatus | Validation status, which only affects styling; error also sets aria-invalid on the input. | `TagInputValidateStatus` | `semiDefault("TagInput", "validateStatus", "default")` |
+| autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `semiDefault("TagInput", "autofocus", false)` |
+| preventScroll | Whether the focus calls inside the component stop the browser from scrolling the focused element into view. | `boolean` | `semiGlobalDefault("TagInput", "preventScroll")` |
+
+**Events**
+
+| Event             | Description                                                                                                                                                           | Callback parameters                     |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| update:modelValue | Emitted when the tags change, for v-model.                                                                                                                            | `[value: string[]]`                     |
+| change            | Emitted when the tags change.                                                                                                                                         | `[value: string[]]`                     |
+| update:inputValue | Emitted when the input text changes, for v-model:inputValue.                                                                                                          | `[value: string]`                       |
+| inputChange       | Emitted when the input text changes. The event may be an input, keydown, focusout, click or composition event; narrow it by event.type before reading its own fields. | `[value: string, event: Event]`         |
+| add               | Emitted when tags are added, with the added tags.                                                                                                                     | `[addedValue: string[]]`                |
+| remove            | Emitted when a tag is removed, with the removed tag and its index.                                                                                                    | `[removedValue: string, index: number]` |
+| exceed            | Emitted when adding would exceed max, with the whole list before it is cut.                                                                                           | `[value: string[]]`                     |
+| inputExceed       | Emitted when the input text exceeds maxLength, with the rejected input text.                                                                                          | `[value: string]`                       |
+| focus             | Emitted once when the focus enters from outside; moving between the input, tags and clear button does not emit it.                                                    | `[event: FocusEvent]`                   |
+| blur              | Emitted once when the focus leaves the whole component; moving inside it does not emit it.                                                                            | `[event: FocusEvent]`                   |
+| keydown           | Emitted on keydown in the input after the component handled it; calling preventDefault there does not stop Enter from adding a tag.                                   | `[event: KeyboardEvent]`                |
+
+**Slots**
+
+| Slot       | Description                                                                                                                                                            | Scope parameters       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| prefix     | Prefix of the input; text or an icon gets side spacing automatically.                                                                                                  | `any`                  |
+| suffix     | Suffix of the input; text or an icon gets side spacing automatically.                                                                                                  | `any`                  |
+| insetLabel | Inset label shown before the input; when the prefix slot is also given, only prefix is shown. When shown, it names an input that has no aria-label or aria-labelledby. | `any`                  |
+| clearIcon  | Replaces the icon in the clear button; empty content keeps the default icon.                                                                                           | `any`                  |
+| tag        | Replaces each tag as a whole, with the scoped props value, index and the close function onClose; empty content renders no tag.                                         | `TagInputTagSlotProps` |
+
+**Exposes**
+
+| Name  | Description                                                                                      | Type                                          |
+| ----- | ------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| focus | Focuses the input and activates the component.                                                   | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | Removes focus from whichever element inside the component holds it (input, tag or clear button). | <ApiType detail={"() => void"}>Type</ApiType> |

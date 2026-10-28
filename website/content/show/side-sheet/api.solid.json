@@ -1,0 +1,103 @@
+{
+    "side-sheet": {
+        "source": "packages/semi-ui-solid/src/side-sheet/side-sheet.tsx",
+        "props": {
+            "afterVisibleChange": {
+                "zh-CN": "面板显示时在 visible 变为 true 的那次更新中立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次。",
+                "en-US": "Called right in the update where visible becomes true, without waiting for the enter animation. When hiding, called after the leave animation ends, and once with false when unmounted while shown."
+            },
+            "bodyStyle": {
+                "zh-CN": "面板内容区的样式，可以是对象（键用 kebab-case，如 `'border-bottom'`）或字符串。",
+                "en-US": "Style of the content area, as an object with kebab-case keys (such as `'border-bottom'`) or as a string."
+            },
+            "canVerticalSetWidth": {
+                "zh-CN": "placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。",
+                "en-US": "Whether width applies when placement is top or bottom. By default those sheets span the full width."
+            },
+            "closable": {
+                "zh-CN": "是否显示右上角的关闭按钮。",
+                "en-US": "Whether the close button in the top right corner is shown."
+            },
+            "closeIcon": {
+                "zh-CN": "关闭按钮中的图标；传入 `null` 或 `undefined` 时回落到默认图标，隐藏关闭按钮请用 `closable={false}`。",
+                "en-US": "Icon inside the close button. `null` or `undefined` falls back to the default icon; hide the button with `closable={false}`."
+            },
+            "closeOnEsc": {
+                "zh-CN": "是否允许按 Esc 关闭面板。",
+                "en-US": "Whether Esc closes the sheet."
+            },
+            "disableScroll": {
+                "zh-CN": "带遮罩且渲染在 document.body 中时是否禁止 body 滚动，即给 body 添加 `overflow: hidden`。",
+                "en-US": "Whether body scrolling is locked (`overflow: hidden` on body) while a masked sheet is rendered in document.body."
+            },
+            "footer": {
+                "zh-CN": "面板底部，传入 JSX 元素；内容为空时不渲染底部。",
+                "en-US": "Footer of the sheet, a JSX element. Nothing is rendered when it is empty."
+            },
+            "getPopupContainer": {
+                "zh-CN": "指定弹层渲染到的父级 DOM。自定义容器需要设置 `position: relative`；这会改变浮层的 DOM 位置，不改变视图位置。",
+                "en-US": "Parent element the sheet is rendered into. A custom container needs `position: relative`; this changes where the sheet sits in the DOM, not where it is shown."
+            },
+            "headerStyle": {
+                "zh-CN": "面板头部的样式，写法同 bodyStyle。",
+                "en-US": "Style of the header, in the same form as bodyStyle."
+            },
+            "height": {
+                "zh-CN": "高度，placement 为 top、bottom 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时为 448。",
+                "en-US": "Height, used when placement is top or bottom. A number is in pixels; a string is any valid CSS length. 448 when omitted."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留面板内部节点而不销毁。",
+                "en-US": "Whether the sheet content stays mounted while closed."
+            },
+            "mask": {
+                "zh-CN": "是否显示遮罩；为 false 时允许操作外部区域，且不锁定 body 滚动。",
+                "en-US": "Whether the mask is shown. When false the content outside stays operable, and body scrolling is not locked."
+            },
+            "maskClosable": {
+                "zh-CN": "是否允许点击遮罩关闭面板。",
+                "en-US": "Whether clicking the mask closes the sheet."
+            },
+            "maskStyle": {
+                "zh-CN": "遮罩的样式，写法同 bodyStyle。",
+                "en-US": "Style of the mask, in the same form as bodyStyle."
+            },
+            "motion": {
+                "zh-CN": "是否开启动画。",
+                "en-US": "Whether animation is enabled."
+            },
+            "onCancel": {
+                "zh-CN": "用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，参数为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。面板不会自行关闭，需要在回调中把 `visible` 设为 `false`。",
+                "en-US": "Called when the user closes the sheet with the close button, the mask or Esc. The argument is the native MouseEvent, or the native KeyboardEvent for Esc. The sheet does not close by itself; set `visible` to `false` in the callback."
+            },
+            "placement": {
+                "zh-CN": "面板滑出的位置，支持 `top`、`bottom`、`left`、`right`。",
+                "en-US": "Edge the sheet slides in from: `top`, `bottom`, `left` or `right`."
+            },
+            "size": {
+                "zh-CN": "尺寸，`small` 为 448px、`medium` 为 684px、`large` 为 920px，仅 placement 为 `left`、`right` 时生效。",
+                "en-US": "Size: `small` is 448px, `medium` 684px, `large` 920px. Used only when placement is `left` or `right`."
+            },
+            "style": {
+                "zh-CN": "对话框元素（`.semi-sidesheet-inner`）的样式，与组件计算出的 width、height 合并，计算出的尺寸优先。",
+                "en-US": "Style of the dialog element (`.semi-sidesheet-inner`), merged with the computed width and height, which take precedence."
+            },
+            "title": {
+                "zh-CN": "标题，传入 JSX 元素；内容为空时不渲染标题，并作为对话框的可访问名称。",
+                "en-US": "Title, a JSX element. Nothing is rendered when it is empty, and it names the dialog."
+            },
+            "visible": {
+                "zh-CN": "面板是否可见，受控属性；关闭时需在 onCancel 中同步设为 false。",
+                "en-US": "Whether the sheet is visible. A controlled prop: set it to false in onCancel to close the sheet."
+            },
+            "width": {
+                "zh-CN": "宽度，placement 为 left、right 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时由 size 决定。",
+                "en-US": "Width, used when placement is left or right. A number is in pixels; a string is any valid CSS length. Decided by size when omitted."
+            },
+            "zIndex": {
+                "zh-CN": "弹层的 z-index。",
+                "en-US": "z-index of the layer."
+            }
+        }
+    }
+}

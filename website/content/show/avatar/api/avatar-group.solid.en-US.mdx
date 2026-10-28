@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Avatars in the group. | `JSX.Element` | - |
+| maxCount | Maximum number of visible avatars; overflow is shown as `+N`. | `number` | - |
+| overlapFrom | Avatar overlap direction: `start` or `end`. | `AvatarGroupOverlapFrom` | `"start"` |
+| renderMore | Custom overflow label. It receives the remaining count and render functions for the hidden avatars, and its result replaces the default `+N`. A hidden avatar is created where its render function is called; the props passed override the avatar's own. | <ApiType detail={"(restNumber: number, restAvatars: ((props?: AvatarProps) => JSX.Element)[]) => JSX.Element"}>Type</ApiType> | - |
+| shape | Shape of the avatars in the group. | `AvatarGroupShape` | `"circle"` |
+| size | Size of the avatars in the group. | `string` | `"medium"` |

@@ -1,0 +1,783 @@
+---
+title: Transfer
+order: 51
+icon: doc-transfer
+brief: A more intuitive and efficient multiple-selection selector, which can reveal more information about options, and supports search functions. The disadvantage is that it takes up more space
+---
+
+import TransferReactApi from './api/transfer.react.en-US.mdx';
+import TransferVueApi from './api/transfer.vue.en-US.mdx';
+import TransferSolidApi from './api/transfer.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Transfer } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Transfer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, ButtonGroup, Checkbox, Highlight, Input, Spin, Transfer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+dataSource should have value、label、key.
+
+<Demo id="basic" />
+
+### Grouped
+
+Set type to `groupList`
+
+For grouped dataSource, the first-level child elements must have title and children attributes, structure reference \<GroupItem\>
+
+Does not support multi-level nesting
+
+<Demo id="group" />
+
+### Custom filtering logic, custom option data rendering
+
+Use `filter` to customize the search logic. When it returns true, it means that the current item meets the filter rules and keeps the display of the current item in the list. If it returns false, it means it does not match, and the current item will be hidden.  
+When type is `treeList`, if you need to customize search logic, you need to set `filter` to true and set a custom search function through `filterTreeNode` of `treeProps`.
+
+<Framework only="react">
+
+Using `renderSourceItem`, you can customize the rendering structure of each source data on the left.  
+Using `renderSelectedItem` you can customize the rendering structure of each selected item on the right.
+
+</Framework>
+
+<Framework only="vue">
+
+Using the `#sourceItem` slot, you can customize the rendering structure of each source data on the left.  
+Using the `#selectedItem` slot you can customize the rendering structure of each selected item on the right.  
+The custom fields of an item (such as `abbr` and `color` in the demo) are all on the `item` slot parameter. To replace only the text of the rows, the `#label` slot is simpler: it applies to the source row, the selected row and the drag copy.
+
+</Framework>
+
+<Framework only="solid">
+
+Using `renderSourceItem`, you can customize the rendering structure of each source data on the left. For example, combine it with the Highlight component to highlight the matched search text.  
+Using `renderSelectedItem` you can customize the rendering structure of each selected item on the right. Both are called once per item; the `checked` in the argument is a getter, read it in the returned JSX.
+
+</Framework>
+
+<Demo id="custom-filter" />
+
+```css
+.components-transfer-demo-selected-item {
+    .remove {
+        opacity: 0;
+    }
+    &:hover,
+    &:focus-within {
+        .remove {
+            opacity: 1;
+        }
+    }
+}
+
+.components-transfer-demo-selected-item,
+.components-transfer-demo-source-item {
+    height: 52px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    &:hover {
+        background-color: var(--semi-color-fill-0);
+    }
+    .info {
+        margin-left: 8px;
+        flex-grow: 1;
+    }
+    .name {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .email {
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--semi-color-text-2);
+    }
+}
+```
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Drag and drop sort
+
+Set `draggable` to true to enable the drag sort function.
+
+<Demo id="draggable" />
+
+### Left panel pagination
+
+When there are many options on the left, you can enable pagination through the `pagination` prop.
+
+`pagination` accepts an object with the following properties:
+
+- `pageSize`: Number of items per page, default is 10
+- `currentPage`: Current page number (controlled mode)
+- `defaultCurrentPage`: Default current page number (uncontrolled mode)
+- `onPageChange`: Callback when page changes
+
+<Demo id="pagination" />
+
+### Left panel pagination + controlled page
+
+You can control the current page number through `pagination.currentPage`.
+
+<Demo id="pagination-controlled" />
+
+### Drag and drop + custom selected rendering
+
+<Framework only="react">
+
+Set `draggable` to true to enable the drag and drop sorting function; use `renderSelectedItem` to customize the rendering of the selected items on the right; You can define the trigger as any ReactNode you want and add styles. Drag the trigger and use `sortableHandle` to wrap it
+
+</Framework>
+
+<Framework only="vue">
+
+Set `draggable` to true to enable the drag and drop sorting function; use the `#selectedItem` slot to customize the rendering of the selected items on the right; You can define the trigger as any content you want and add styles. With `draggable`, the slot parameter `handle` is the drag handle component: wrap the trigger in `<component :is="handle">`.
+
+</Framework>
+
+<Framework only="solid">
+
+Set `draggable` to true to enable the drag and drop sorting function; use `renderSelectedItem` to customize the rendering of the selected items on the right. `sortableHandle` takes a component that wraps the drag icon and returns the drag handle component; render it in the returned JSX. The handle is a native `button`. Without `draggable`, `sortableHandle` is not provided.
+
+</Framework>
+
+<Demo id="drag-custom-item" />
+
+### Custom rendering header information in panel
+
+<Framework only="react">
+
+Semi has provided `renderSourceHeader` and `renderSelectedHeader` parameter allows users to customize the header information of the left and right panels.  
+`renderSourceHeader: (props: SourceHeaderProps) => ReactNode`  
+`renderSelectedHeader: (props: SelectedHeaderProps) => ReactNode`  
+The parameter types are as follows:
+
+```ts
+type SourceHeaderProps = {
+    num: number; // The total number of data or the number of filtered results
+    showButton: boolean; // Whether to show select all/unselect all buttons
+    allChecked: boolean; // Whether the current data has been selected
+    onAllClick: () => void; // Function that should be called after clicking the select/unselect all button
+    leafOnlyNum?: number; // Only valid when type is treeList, represents the number of leaf nodes
+};
+
+type SelectedHeaderProps = {
+    num: number; // The total number of selected data
+    showButton: boolean; // Whether to show the clear button
+    onClear: () => void; // Function that should be called after clicking the clear button
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+The `#sourceHeader` and `#selectedHeader` slots allow users to customize the header information of the left and right panels. The slot parameter types are `TransferSourceHeaderSlotProps` and `TransferSelectedHeaderSlotProps`:
+
+```ts
+type TransferSourceHeaderSlotProps = {
+    num: number; // The total number of data or the number of filtered results
+    showButton: boolean; // Whether to show select all/unselect all buttons
+    allChecked: boolean; // Whether the current data has been selected
+    onAllClick: () => void; // Function that should be called after clicking the select/unselect all button
+    leafOnlyNum?: number; // Only provided when type is treeList, represents the number of leaf nodes
+};
+
+type TransferSelectedHeaderSlotProps = {
+    num: number; // The total number of selected data
+    showButton: boolean; // Whether to show the clear button
+    onClear: () => void; // Function that should be called after clicking the clear button
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`renderSourceHeader` and `renderSelectedHeader` receive live objects, typed as `TransferSourceHeaderProps` and `TransferSelectedHeaderProps`, and each panel calls them once. Read their fields in the JSX; destructuring takes only the values of the first render:
+
+```ts
+type SourceHeaderProps = {
+    num: number; // The total number of data or the number of filtered results
+    showButton: boolean; // Whether to show select all/unselect all buttons
+    allChecked: boolean; // Whether the current data has been selected
+    onAllClick: () => void; // Function that should be called after clicking the select/unselect all button
+    leafOnlyNum?: number; // Only provided when type is treeList, represents the number of leaf nodes
+};
+
+type SelectedHeaderProps = {
+    num: number; // The total number of selected data
+    showButton: boolean; // Whether to show the clear button
+    onClear: () => void; // Function that should be called after clicking the clear button
+};
+```
+
+</Framework>
+
+The example is as follows:
+
+<Demo id="custom-header" />
+
+### Fully custom rendering
+
+<Framework only="react">
+
+Semi provides `renderSourcePanel` and `renderSelectedPanel` input parameters, allowing you to completely customize the rendering structure of the left and right panels. With this function, you can directly reuse the logic capabilities inside the Transfer to implement the `Transfer` component with a highly customized style structure `renderSourcePanel: (sourcePanelProps: SourcePanelProps) => ReactNode` `SourcePanelProps` contains the following parameters, from which you can get data to render your Panel structure
+
+```ts
+interface SourcePanelProps {
+    value: Array<string | number>; // value of all selected items
+    loading?: boolean; // Whether loading
+    noMatch: boolean; // Whether there is no matching item that matches the current search value
+    filterData: Array<Item>; // items that match the current search value
+    sourceData: Array<Item>; // All items
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // The dataSource of Transfer
+    allChecked: boolean; // Whether to select all
+    showNumber: number; // Filter the number of results
+    inputValue: string; // the value of the input search box
+    onSearch: (searchString: string) => void; // The function that should be called when the search box changes, the input parameter is the search value
+    onAllClick: () => void; // The function that should be called when all the buttons on the left are clicked
+    onSelectOrRemove: (item: Item) => void; // The function that should be called when selecting or deleting a single option, the input should be the current operation item
+    onSelect: (value: Array<string | number>) => void; // controlled batch selection, the input is the values of the selected items
+    selectedItems: Map<string | number, Item>; // collection of all selected items, the key of the Map is item.key
+}
+```
+
+`renderSelectedPanel: (selectedPanelProps: SelectedPanelProps) => ReactNode` `SelectedPanelProps` contains the following parameters
+
+```ts
+interface SelectedPanelProps {
+    length: number; // number of selected options
+    onClear: () => void; // The callback function that should be called when clicking to clear
+    onRemove: (item: Item) => void; // The function that should be called when deleting a single option
+    onSortEnd: ({ oldIndex, newIndex }) => void; // The function that should be called when reordering the results
+    selectedData: Array<Item>; // All selected items collection
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Semi provides the `#sourcePanel` and `#selectedPanel` slots, allowing you to completely customize the rendering structure of the left and right panels. With this function, you can directly reuse the logic capabilities inside the Transfer to implement the `Transfer` component with a highly customized style structure  
+The parameter type of `#sourcePanel` is `TransferSourcePanelSlotProps`, from which you can get data to render your Panel structure
+
+```ts
+interface TransferSourcePanelSlotProps {
+    value: Array<string | number>; // value of all selected items
+    loading: boolean | undefined; // Whether loading
+    noMatch: boolean; // Whether there is no matching item that matches the current search value
+    filterData: Array<Item>; // items that match the current search value
+    sourceData: Array<Item>; // All items
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // The dataSource of Transfer
+    allChecked: boolean; // Whether to select all
+    showNumber: number; // Filter the number of results
+    inputValue: string; // the value of the input search box
+    selectedItems: Map<string | number, Item>; // collection of all selected items, the key of the Map is item.key
+    onSearch: (searchString: string) => void; // The function that should be called when the search box changes, the input parameter is the search value
+    onAllClick: () => void; // The function that should be called when all the buttons on the left are clicked
+    onSelectOrRemove: (item: Item) => void; // The function that should be called when selecting or deleting a single option, the input should be the current operation item
+    onSelect: (values: Array<string | number>) => void; // controlled batch selection, the input is the values of the selected items
+}
+```
+
+The parameter type of `#selectedPanel` is `TransferSelectedPanelSlotProps`
+
+```ts
+interface TransferSelectedPanelSlotProps {
+    length: number; // number of selected options
+    selectedData: Array<Item>; // All selected items collection
+    onClear: () => void; // The callback function that should be called when clicking to clear
+    onRemove: (item: Item) => void; // The function that should be called when deleting a single option
+    onSortEnd: (payload: { oldIndex: number; newIndex: number }) => void; // The function that should be called when reordering the results
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`renderSourcePanel` and `renderSelectedPanel` let you fully customize the rendering of the left and right panels, and reuse the filtering and selection logic inside Transfer. Both arguments are live objects, typed as `TransferSourcePanelProps` and `TransferSelectedPanelProps`, and each panel calls its render function once; read the fields in the JSX.
+
+```ts
+interface SourcePanelProps {
+    value: Array<string | number>; // The values of all selected items
+    loading?: boolean; // Whether it is loading
+    noMatch: boolean; // Whether no item matches the current search value
+    filterData: Array<Item>; // Items matching the current search value
+    sourceData: Array<Item>; // All items
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // The dataSource of Transfer
+    allChecked: boolean; // Whether all items are selected
+    showNumber: number; // The number of filtered results
+    inputValue: string; // The value of the search input
+    onSearch: (searchString: string) => void; // Called when the search box changes, with the search value
+    onAllClick: () => void; // Called when the select all button on the left is clicked
+    onSelectOrRemove: (item: Item) => void; // Called when an item is selected or removed, with the current item
+    onSelect: (value: Array<string | number>) => void; // Controlled batch selection, with the values of the selected items
+    selectedItems: Map<string | number, Item>; // All selected items, keyed by item.key
+}
+```
+
+```ts
+interface SelectedPanelProps {
+    length: number; // The number of selected items
+    onClear: () => void; // Callback called when clearing
+    onRemove: (item: Item) => void; // Called when a single item is removed, with the item
+    onSortEnd: ({ oldIndex, newIndex }) => void; // Called when the results are reordered, with the positions before and after the drag
+    selectedData: Array<Item>; // All selected items
+}
+```
+
+</Framework>
+
+<Demo id="custom-panel" />
+
+```scss
+.component-transfer-demo-custom-panel {
+    .sp-font {
+        color: var(--semi-grey-9);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+    }
+
+    .empty {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .panel-item {
+        flex-shrink: 0;
+        height: 56px;
+        border-radius: 4px;
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        background-color: rgba(22, 24, 35, 0.03);
+
+        &-main {
+            flex-grow: 1;
+        }
+
+        p {
+            margin: 0 12px;
+            flex-basis: 100%;
+        }
+
+        .panel-item-remove {
+            cursor: pointer;
+            color: var(--semi-color-primary);
+        }
+    }
+
+    .panel-header {
+        padding: 10px 12px;
+        border: 1px solid rgba(22, 24, 35, 0.16);
+        border-radius: 4px 4px 0 0;
+        height: 38px;
+        box-sizing: border-box;
+        background-color: var(--semi-color-tertiary-light-default);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .clear {
+            cursor: pointer;
+            color: var(--semi-color-primary);
+        }
+    }
+
+    .source-panel {
+        display: flex;
+        flex-direction: column;
+        width: 482px;
+        height: 353px;
+
+        .panel-main {
+            border: 1px solid var(--semi-color-border);
+            border-top: none;
+
+            .panel-list {
+                display: flex;
+                flex-wrap: wrap;
+                row-gap: 8px;
+                column-gap: 8px;
+                overflow-y: auto;
+                height: 214px;
+                margin-left: 12px;
+                margin-right: 12px;
+                padding-bottom: 8px;
+            }
+        }
+
+        .panel-controls {
+            margin: 10px 12px;
+            font-size: 12px;
+            line-height: 20px;
+
+            .semi-button {
+                margin-left: 8px;
+                font-size: 12px;
+            }
+        }
+
+        .panel-item {
+            width: 176px;
+        }
+
+        margin-right: 16px;
+    }
+
+    .selected-panel {
+        width: 200px;
+        height: 353px;
+
+        .panel-main {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 12px;
+            border: 1px solid var(--semi-color-border);
+            border-top: none;
+            height: 323px;
+            box-sizing: border-box;
+            row-gap: 8px;
+        }
+    }
+}
+```
+
+### Fully custom rendering, drag and drop sorting
+
+In a completely custom rendering scene, since the rendering of the drag area has also been completely taken over by you, you do not need to declare draggable. But you need to implement the drag and drop logic yourself, You can use the drag-and-drop tool library [dnd-kit](https://github.com/clauderic/dnd-kit) to quickly realize the function.
+
+Besides, To support drag sorting, you need to call onSortEnd with oldIndex and newIndex as the input parameters after the drag sorting is over
+
+<Framework only="react">
+
+Example using dnd-kit，The core dependency that needs to be used is @dnd-kit/react. `DragDropProvider` provides the drag and drop context, and the core hook is useSortable exported from `@dnd-kit/react/sortable`. The usage instructions of useSortable are as follows
+
+```
+1. Function: Obtain the necessary information during the drag and drop process through the unique id and the current index
+2. Core input parameters:
+    - id: unique identifier, which can be a number or a string
+    - index: the current position of the item in the list
+    - handle: optional, the drag handle element; the whole node is draggable when omitted
+3. Core return value description:
+    - ref: Associate the dom node to make it a draggable item
+    - handleRef: Associate the dom node of the drag handle
+    - isDragging: whether the node is being dragged
+```
+
+After dragging ends, in the `onDragEnd` of `DragDropProvider`, use `initialIndex` and `index` of `event.operation.source` to get the positions before and after the drag; `event.canceled` being true means the drag was canceled.
+
+</Framework>
+
+<Framework only="vue">
+
+Example using dnd-kit，The core dependency that needs to be used is @dnd-kit/dom. `DragDropManager` provides the drag and drop context, and every selected item gets a `Sortable` exported from `@dnd-kit/dom/sortable`. Its parameters are as follows (with @dnd-kit/vue, its `useSortable` takes the same id, index, element and handle)
+
+```
+1. Function: Obtain the necessary information during the drag and drop process through the unique id and the current index
+2. Core input parameters:
+    - id: unique identifier, which can be a number or a string
+    - index: the current position of the item in the list; keep it up to date when the list changes
+    - element: the draggable dom node
+    - handle: optional, the drag handle element; the whole node is draggable when omitted
+3. The second argument is the DragDropManager instance; call destroy on every Sortable and on the manager when the component unmounts
+```
+
+After dragging ends, in the `dragend` event of `manager.monitor`, use `initialIndex` and `index` of `event.operation.source` to get the positions before and after the drag; `event.canceled` being true means the drag was canceled.
+
+The example keeps the selected values in `v-model` and writes the new order back to it once a drag ends. Without a value of your own, take `onSortEnd` from the parameters of `#selectedPanel` and call it instead.
+
+</Framework>
+
+<Framework only="solid">
+
+The dnd-kit example is as follows. The core dependency is @dnd-kit/solid: `DragDropProvider` provides the drag context, and `useSortable` exported from `@dnd-kit/solid/sortable` takes `id` and `index`. Both are passed as getters, so the `index` read after the list is reordered is up to date.
+
+```
+1. Purpose: get the information needed during dragging from the unique id and the current position index
+2. Core input parameters:
+    - id: unique identifier, a number or a string
+    - index: the current position of the item in the list
+3. Core return values:
+    - ref: binds the dom node of a draggable item, used as ref={(node) => ref(node)}
+    - handleRef: binds the dom node of the drag handle; only the handle drags
+    - isDragSource: whether this node is being dragged
+```
+
+After dragging ends, in the `onDragEnd` of `DragDropProvider`, use `initialIndex` and `index` of `event.operation.source` to get the positions before and after the drag; `event.canceled` being true means the drag was canceled.
+
+</Framework>
+
+<Demo id="custom-panel-dnd-kit" />
+
+### Tree Transfer
+
+The input type is `treeList`, and the [`Tree`](/en-US/react/navigation/tree) component is used as a custom rendering list.
+
+The properties of the default tree can be overridden by treeProps([TreeProps](/en-US/react/navigation/tree)). The default properties of the tree on the left are
+
+<Framework only="react">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+    searchRender:false,
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+}
+```
+
+The Tree's own search box is hidden with an empty `#search` slot, and the search box of Transfer drives the filtering. Of the Tree slots only `#label` is forwarded, through the `#label` slot of Transfer, and it applies to both the tree rows on the left and the selected items on the right; the `#icon`, `#expandIcon` and `#fullLabel` slots of the Tree are not available.
+
+</Framework>
+
+<Framework only="solid">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+    searchRender:false,
+}
+```
+
+The Tree's own search box is hidden by `searchRender` set to `false`, and filtering is driven by the search box of Transfer.
+
+</Framework>
+
+<Demo id="tree" />
+
+### Tree Transfer with Custom Header Showing Leaf Node Count
+
+<Framework only="react">
+
+When type is `treeList`, the `SourceHeaderProps` parameter of `renderSourceHeader` provides an additional `leafOnlyNum` field, which represents the number of leaf nodes. This is useful in scenarios like file selection, where you can display only the file count instead of the total including folders.
+
+</Framework>
+
+<Framework only="vue">
+
+When type is `treeList`, the `TransferSourceHeaderSlotProps` parameter of `#sourceHeader` provides an additional `leafOnlyNum` field, which represents the number of leaf nodes. This is useful in scenarios like file selection, where you can display only the file count instead of the total including folders.
+
+</Framework>
+
+<Framework only="solid">
+
+When type is `treeList`, the `SourceHeaderProps` argument of `renderSourceHeader` additionally provides the `leafOnlyNum` field, which is the number of leaf nodes. This is useful in scenarios such as file selection, where the header can show only the number of files instead of the total count including folders.
+
+</Framework>
+
+<Demo id="tree-leaf-count" />
+
+## Accessibility
+
+### ARIA
+
+- The container of the search box is a native `search` element (the search landmark), named from the locale
+- When the root element has `aria-label` or `aria-labelledby` and no `role`, it gets `role` `group`
+- Add `role` `list` to the option list on the left and `listitem` to its options; in `groupList` every group is a `listitem` of the outer list, and its title names the nested `list` that holds the options
+- Add `role` `list` to the selected list on the right, add `role` `listitem` to the selected item; custom rendered items on either side are wrapped in an element with `role` `listitem`
+
+### Keyboard
+
+- The default filter ignores case
+- When disabled, the two lists are Tab stops so the keyboard can scroll their content
+- With `draggable`, the drag handle is a native `button` with a name: Tab focuses the handle, Space picks up, the arrow keys move, Space drops; the sort is announced to screen readers. Mouse dragging is unchanged
+- Until the dnd-kit needed for sorting has loaded, the handle is a placeholder with `aria-disabled="true"`
+
+## API Reference
+
+<Framework only="react">
+
+### Transfer
+
+<TransferReactApi />
+
+Native attributes not listed above, such as `id`, `aria-*` and event handlers, land on the root `div`; with `aria-label` or `aria-labelledby` and no `role`, the root element gets `role="group"`. `tabIndex` is set on the search box, including a value injected by a wrapping Tooltip. Pass the props of the search box through `inputProps`, and those of the left Tree of a treeList through `treeProps`.
+
+In `@fibrae/semi-ui-react`, the types of the interfaces below are exported as `TransferDataItem` for Item, `TransferGroupItem` for GroupItem and `TransferTreeItem` for TreeItem.
+
+### Item Interface
+
+| props    | description                                                                                                              | data type        | default |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------- | ------- |
+| disabled | Whether to disable                                                                                                       | boolean          | false   |
+| key      | Required, unique identification of each option, no repetition is allowed                                                 | string \| number |         |
+| label    | Options display content                                                                                                  | ReactNode        |         |
+| fullPath | When `type="treeList"` and `showPath` is `true`, returns the full path node array from the root node to the current node | Array\<Item\>    |         |
+| value    | The value represented by the option                                                                                      | string \| number |         |
+
+</Framework>
+
+<Framework only="vue">
+
+### Transfer
+
+<TransferVueApi />
+
+`class`, `style`, `aria-*` and other attrs land on the root element of Transfer; with `aria-label` or `aria-labelledby` and no `role`, the root element gets `role="group"`. Pass the props of the search box through `inputProps`, and those of the Tree on the left of a treeList through `treeProps`.
+
+The types of the interfaces below are exported from `@fibrae/semi-ui-vue` as: `TransferDataItem` for Item, `TransferGroupItem` for GroupItem, `TransferTreeItem` for TreeItem, `TransferVirtualize` for VirtualizeProps and `TransferPagination` for PaginationProps.
+
+### Item Interface
+
+An item can carry any custom fields; they appear unchanged on `item` in the slot parameters and event payloads.
+
+| props    | description                                                                                                              | data type        | default |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------- | ------- |
+| disabled | Whether to disable                                                                                                       | boolean          | false   |
+| key      | Required, unique identification of each option, no repetition is allowed                                                 | string \| number |         |
+| label    | Option display text, matched by the default filter; use the `#label` slot for other content                              | string           |         |
+| fullPath | When `type="treeList"` and `showPath` is `true`, returns the full path node array from the root node to the current node | Array\<Item\>    |         |
+| value    | The value represented by the option                                                                                      | string \| number |         |
+
+</Framework>
+
+<Framework only="solid">
+
+### Transfer
+
+<TransferSolidApi />
+
+`class`, `style`, `aria-*` and other native attributes and events land on the root `div`. When the root has `aria-label` or `aria-labelledby` and no `role`, it gets `role="group"`. `ref` receives the root element; attributes of the search box are passed with `inputProps`, and attributes of the left Tree in treeList with `treeProps`.
+
+### Item Interface
+
+Data items can also carry any custom fields; they appear unchanged on the arguments of `renderSourceItem` and `renderSelectedItem`.
+
+| Property | Description                                                                                                       | Type             | Default |
+| -------- | ----------------------------------------------------------------------------------------------------------------- | ---------------- | ------- |
+| disabled | Whether the item is disabled                                                                                      | boolean          | false   |
+| key      | Required, unique identifier of each option, duplicates are not allowed                                            | string \| number |         |
+| label    | Text of the option, matched by the default search; use `renderLabel` for custom content                           | string \| number |         |
+| fullPath | When `type="treeList"` and `showPath` is `true`, the array of nodes from the root node to the current node itself | Array\<Item\>    |         |
+| value    | The value the option represents                                                                                   | string \| number |         |
+
+</Framework>
+
+### GroupItem Interface
+
+A group is not an item itself, it only has the following properties
+
+| props    | description           | data type     | default |
+| -------- | --------------------- | ------------- | ------- |
+| children | Elements of the group | array\<Item\> |         |
+| title    | Group Name            | string        |         |
+
+### TreeItem Interface
+
+TreeItem inherits all the properties of Item
+
+| props    | description    | data type         | default |
+| -------- | -------------- | ----------------- | ------- |
+| children | Children Items | array\<TreeItem\> |         |
+
+### VirtualizeProps Interface
+
+| props    | description                                                                                                                                     | data type        | default |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------- |
+| height   | Height of the virtualized list. If it is a `number`, it takes effect directly. If it is a `string` (e.g. `100%`), it adapts to remaining height | number \| string |         |
+| width    | Width of the virtualized list                                                                                                                   | number \| string |         |
+| itemSize | Fixed height of each item row                                                                                                                   | number           |         |
+
+### PaginationProps Interface
+
+| props              | description                                     | data type                     | default |
+| ------------------ | ----------------------------------------------- | ----------------------------- | ------- |
+| currentPage        | Current page number (controlled mode)           | number                        |         |
+| defaultCurrentPage | Default current page number (uncontrolled mode) | number                        | 1       |
+| pageSize           | Number of items per page                        | number                        | 10      |
+| onPageChange       | Callback when page changes                      | (currentPage: number) => void |         |
+
+<Framework only="react">
+
+## Methods
+
+Methods on the `TransferHandle` that `ref` receives can be called through the ref:
+
+```tsx
+const transferRef = useRef<TransferHandle>(null);
+
+<Transfer ref={transferRef} />;
+
+transferRef.current?.search('Option 1');
+```
+
+</Framework>
+
+<Framework only="solid">
+
+## Methods
+
+Methods on the root element. Get the root element through `ref`; its type is `TransferElement`.
+
+```jsx
+let transfer: TransferElement | undefined;
+
+<Transfer ref={(element) => (transfer = element)} />;
+
+transfer?.search('选项名称 1');
+```
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

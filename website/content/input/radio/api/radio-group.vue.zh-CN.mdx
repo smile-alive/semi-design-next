@@ -1,0 +1,36 @@
+**Props**
+
+| 属性         | 说明                                                                                                                             | 类型                            | 默认值                                                 |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------ |
+| modelValue   | 选中的值，配合 v-model 受控使用。                                                                                                | `RadioValue`                    | `undefined`                                            |
+| defaultValue | 非受控时默认选中的值。                                                                                                           | `RadioValue`                    | `semiGlobalDefault("RadioGroup", "defaultValue")`      |
+| disabled     | 是否禁用整组。                                                                                                                   | `boolean`                       | `semiDefault("RadioGroup", "disabled", false)`         |
+| name         | 组内所有原生 input 的 name；未设置时每组生成唯一值。                                                                             | `string`                        | `semiGlobalDefault("RadioGroup", "name")`              |
+| options      | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`。 | `(string \| RadioOptionItem)[]` | `semiGlobalDefault("RadioGroup", "options")`           |
+| direction    | 组内 Radio 的排列方向，可选 horizontal 或 vertical；type 为 button 时不支持。                                                    | `RadioDirection`                | `semiDefault("RadioGroup", "direction", "horizontal")` |
+| mode         | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中，此时选中值变为 undefined。                                          | `RadioMode`                     | `semiDefault("RadioGroup", "mode", "")`                |
+| type         | 组内所有 Radio 的样式类型，可选 default、button、card、pureCard。                                                                | `RadioType`                     | `semiDefault("RadioGroup", "type", "default")`         |
+| buttonSize   | type 为 button 时按钮的尺寸，可选 small、middle、large。                                                                         | `RadioGroupButtonSize`          | `semiDefault("RadioGroup", "buttonSize", "middle")`    |
+| prefixCls    | CSS 类名前缀。                                                                                                                   | `string`                        | `semiGlobalDefault("RadioGroup", "prefixCls")`         |
+
+**Events**
+
+| 事件              | 说明                                                                        | 回调参数                           |
+| ----------------- | --------------------------------------------------------------------------- | ---------------------------------- |
+| update:modelValue | 选中的值变化时触发，用于 v-model；advanced 模式取消选中时参数为 undefined。 | `[value: RadioValue \| undefined]` |
+| change            | 选中的值变化时触发，参数的 target 为 `{ checked, value, name, disabled }`。 | `[event: RadioChangeEvent]`        |
+| blur              | 焦点离开整个分组时触发，在组内 Radio 之间移动焦点不触发。                   | `[event: FocusEvent]`              |
+
+**Slots**
+
+| 插槽    | 说明                                                              | 作用域参数                  |
+| ------- | ----------------------------------------------------------------- | --------------------------- |
+| default | 组内的 Radio；设置 options 时忽略。                               | `any`                       |
+| label   | 自定义 options 中每一项的文本，作用域参数为 option 与 index。     | `RadioGroupOptionSlotProps` |
+| extra   | 自定义 options 中每一项的辅助文本，作用域参数为 option 与 index。 | `RadioGroupOptionSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

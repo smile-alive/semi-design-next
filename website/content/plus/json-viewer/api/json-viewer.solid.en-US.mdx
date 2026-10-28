@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| height | Height. A number is taken as px; a string is used as is. | `number \| string` | `400` |
+| limitSearchButtonBounds | Whether to limit the drag range of the search button to the component container. | `boolean` | - |
+| onChange | Called with the editor's current text when the content changes. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| options | Editor configuration, fields described by JsonViewerOptions. The defaults of ariaLabel, readOnly and autoWrap are merged per key, so passing some fields keeps the defaults of the rest. A change in options, compared deeply, re-creates the editor; mutating nested objects such as formatOptions or customRenderRule in place is not noticed, so replace them with new objects. | `JsonViewerOptions` | - |
+| ref | The root element, typed `JsonViewerElement`, which carries the JsonViewerHandle methods. | <ApiType detail={"Ref\u003cJsonViewerElement>"}>Type</ApiType> | - |
+| renderSearchButton | Custom render for the search button. The first argument creates the default button: call it where the button is inserted. The second is `controls`, holding the search state and methods. `controls.showSearchBar` is a getter and must be read inside the returned JSX. | <ApiType detail={"(defaultSearchButton: () => JSX.Element, searchControls: JsonViewerSearchControls) => JSX.Element"}>Type</ApiType> | - |
+| showSearch | Whether to show the search button. | `boolean` | `true` |
+| value | JSON text to show and edit; the editor starts empty when omitted. The editor is re-created only when value becomes different from its current content, so writing the onChange value back keeps the caret. | `string` | `""` |
+| width | Width. A number is taken as px; a string is used as is. | `number \| string` | `400` |
+
+**Methods**
+
+| Method           | Description                                                                                                                                       | Type                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| format           | Formats the current content with formatOptions.                                                                                                   | <ApiType detail={"() => void"}>Type</ApiType>                                                                                  |
+| getSearchResults | Gets the current search results.                                                                                                                  | <ApiType detail={"() => ReturnType\u003cJsonViewerFoundation['getSearchResults']>"}>Type</ApiType>                             |
+| getStyle         | Returns the current width and height.                                                                                                             | <ApiType detail={"() => { width: number \u007c string; height: number \u007c string }"}>Type</ApiType>                         |
+| getValue         | Gets the editor's current text.                                                                                                                   | <ApiType detail={"() => string"}>Type</ApiType>                                                                                |
+| nextSearch       | Moves to the next search result, with an optional step.                                                                                           | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |
+| prevSearch       | Moves to the previous search result, with an optional step.                                                                                       | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |
+| replace          | Replaces the current search match; an empty replacement deletes the match, and nothing happens when there is no match or the viewer is read-only. | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                               |
+| replaceAll       | Replaces all search matches; an empty replacement deletes them all, and nothing happens when the viewer is read-only.                             | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                               |
+| search           | Searches for text; the optional arguments control case sensitivity, whole-word matching and regular expressions.                                  | <ApiType detail={"(searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void"}>Type</ApiType> |

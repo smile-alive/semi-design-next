@@ -1,0 +1,45 @@
+{
+    "empty": {
+        "source": "packages/semi-ui-vue/src/empty/empty.vue",
+        "props": {
+            "layout": {
+                "zh-CN": "布局模式，可选 vertical、horizontal。",
+                "en-US": "Layout mode: vertical or horizontal."
+            },
+            "imageStyle": { "zh-CN": "占位图的样式。", "en-US": "Style of the placeholder image." },
+            "title": {
+                "zh-CN": "纯文本标题；同时传入 title 插槽时以插槽为准。",
+                "en-US": "Plain-text title. The title slot wins when both are given."
+            },
+            "image": {
+                "zh-CN": "占位图的 URL，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。其他内容使用 image 插槽。",
+                "en-US": "Placeholder image URL, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image. Use the image slot for other content."
+            },
+            "darkModeImage": {
+                "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。",
+                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "描述下方的操作区。",
+                "en-US": "Actions below the description."
+            },
+            "title": {
+                "zh-CN": "自定义标题，优先于 title 属性。",
+                "en-US": "Custom title, preferred over the title prop."
+            },
+            "description": { "zh-CN": "描述内容。", "en-US": "Description content." },
+            "image": {
+                "zh-CN": "自定义占位图，优先于 image 属性。",
+                "en-US": "Custom placeholder image, preferred over the image prop."
+            },
+            "darkModeImage": {
+                "zh-CN": "暗色模式下的自定义占位图，优先于 darkModeImage 属性。",
+                "en-US": "Custom placeholder image in dark mode, preferred over the darkModeImage prop."
+            }
+        },
+        "exposed": {}
+    }
+}

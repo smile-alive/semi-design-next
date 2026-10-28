@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                                           | 类型                                                                                             | 默认值 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------ |
+| className | 根元素的类名。                                                                                                                 | `string`                                                                                         | -      |
+| disabled  | 禁用全部子项。                                                                                                                 | `boolean`                                                                                        | -      |
+| items     | 子项列表，类型见下方 `FloatButtonGroupItem`。                                                                                  | `FloatButtonGroupItem[]`                                                                         | -      |
+| onClick   | 点击未禁用子项时调用，参数为该子项的 `value`（未设置时为 `undefined`）与 `React.MouseEvent`；子项自己的 `onClick` 先于它调用。 | <ApiType detail={"(value: string \u007c undefined, e: React.MouseEvent) => void"}>Type</ApiType> | -      |
+| ref       | 根元素（`role="group"`）的引用。                                                                                               | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                | -      |
+| style     | 根元素的样式。                                                                                                                 | `React.CSSProperties`                                                                            | -      |

@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property          | Description                                                                                                                                                                    | Type                                                                              | Default |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | ------- |
+| content           | Key labels to show. Defaults to hotKeys.                                                                                                                                       | `string[]`                                                                        | -       |
+| getListenerTarget | Returns the element that listens for keydown. When omitted, or when it returns null or undefined, document.body is used. Signals read here move the listener when they change. | <ApiType detail={"() => HTMLElement \u007c null \u007c undefined"}>Type</ApiType> | -       |
+| hotKeys           | The key combination: any number of modifiers plus one other key, as `KeyboardEvent.key` values. An invalid combination throws, including after an update.                      | `KeyboardEvent['key'][]`                                                          | -       |
+| onHotKey          | Called when the full key combination is pressed, with the native `KeyboardEvent`.                                                                                              | <ApiType detail={"(e: KeyboardEvent) => void"}>Type</ApiType>                     | -       |
+| preventDefault    | Whether the default behavior of the key combination is prevented.                                                                                                              | `boolean`                                                                         | `false` |
+| render            | Replaces the key hint. Accepts a JSX element or a function returning one. `null`, or a function returning `null`, renders nothing and the hot keys stay active.                | <ApiType detail={"(() => JSX.Element) \u007c JSX.Element"}>Type</ApiType>         | -       |

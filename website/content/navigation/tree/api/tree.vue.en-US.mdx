@@ -1,0 +1,82 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Value of the selected node (its key when it has no value), bound with v-model; an array when multiple. Passing it makes the tree controlled. | `TreeValue` | `undefined` |
+| defaultValue | The initially selected items, read once on mount. | `TreeValue` | `semiGlobalDefault("Tree", "defaultValue")` |
+| treeData | Node data; keys are unique across the tree. Only a new array updates the tree, changes made in place are not seen. | `TreeNodeData[]` | `semiGlobalDefault("Tree", "treeData")` |
+| treeDataSimpleJson | Node data as a plain JSON object; the value is a JSON object holding the selected nodes. | `TreeDataSimpleJson` | `semiGlobalDefault("Tree", "treeDataSimpleJson")` |
+| keyMaps | Custom field names for key, label and value in a node. When label is mapped and search is on, set treeNodeFilterProp to one of the keys in treeData or provide filterTreeNode. | `KeyMapProps` | `semiGlobalDefault("Tree", "keyMaps")` |
+| expandedKeys | Expanded nodes, bound with v-model:expandedKeys. Passing it makes expansion fully controlled. | `string[]` | `semiGlobalDefault("Tree", "expandedKeys")` |
+| defaultExpandedKeys | Nodes expanded initially, showing their direct children. | `string[]` | `semiGlobalDefault("Tree", "defaultExpandedKeys")` |
+| defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `semiDefault("Tree", "defaultExpandAll", false)` |
+| expandAll | Expands every node, and keeps doing so when the data changes. | `boolean` | `semiDefault("Tree", "expandAll", false)` |
+| autoExpandParent | Whether the parents of the nodes in expandedKeys expand automatically when expandedKeys changes; they always do on mount. When on, a controlled tree collapses a parent only after its expanded children are collapsed. | `boolean` | `semiDefault("Tree", "autoExpandParent", false)` |
+| autoExpandWhenDragEnter | Whether dragging over a collapsed node expands it. | `boolean` | `semiDefault("Tree", "autoExpandWhenDragEnter", true)` |
+| autoMergeValue | When a parent is selected the value leaves out its descendants; applies when leafOnly is false. | `boolean` | `semiDefault("Tree", "autoMergeValue", true)` |
+| blockNode | Shows each node as a whole row, highlighting the row on hover and selection; when off only the label is highlighted. | `boolean` | `semiDefault("Tree", "blockNode", true)` |
+| checkRelation | How the checked states of nodes relate in a multiple tree: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `semiDefault("Tree", "checkRelation", "related")` |
+| directory | Directory mode with built-in folder icons, which the icon slot can replace. | `boolean` | `semiDefault("Tree", "directory", false)` |
+| disabled | Disables the whole tree. A node with disabled: false does not lift it. | `boolean` | `semiDefault("Tree", "disabled", false)` |
+| disableStrictly | Strict disabling: a disabled node cannot change state through the selection of its parent or children. | `boolean` | `semiDefault("Tree", "disableStrictly", false)` |
+| draggable | Whether nodes can be dragged, used together with the drop event. It cannot be combined with virtualize. | `boolean` | `semiDefault("Tree", "draggable", false)` |
+| hideDraggingNode | Hides the drag image of the node being dragged. | `boolean` | `semiDefault("Tree", "hideDraggingNode", false)` |
+| expandAction | How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it. | `ExpandAction` | `semiDefault("Tree", "expandAction", false)` |
+| leafOnly | In a multiple tree, the value and the payload of change hold leaf nodes only. | `boolean` | `semiDefault("Tree", "leafOnly", false)` |
+| loadedKeys | Nodes already loaded, used with loadData and bound with v-model:loadedKeys. | `string[]` | `semiGlobalDefault("Tree", "loadedKeys")` |
+| motion | Whether expanding and collapsing are animated; animation is off for a virtualized tree. | `boolean` | `semiDefault("Tree", "motion", true)` |
+| multiple | Whether several nodes can be selected. A parent is checked automatically once all its children are. | `boolean` | `semiDefault("Tree", "multiple", false)` |
+| changeWithObject | A boolean attribute, not an event: when true the payload of change is the node object with value, label and other fields instead of the value; a controlled modelValue and defaultValue must then be objects with a value. | `boolean` | `semiDefault("Tree", "changeWithObject", false)` |
+| showClear | Whether the search box shows a clear button. | `boolean` | `semiDefault("Tree", "showClear", true)` |
+| showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `semiDefault("Tree", "showFilteredOnly", false)` |
+| showLine | Shows connecting lines between nodes. | `boolean` | `semiDefault("Tree", "showLine", false)` |
+| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `semiDefault("Tree", "treeNodeFilterProp", "label")` |
+| labelEllipsis | Whether an overflowing label is truncated; on by default for a virtualized tree. | `boolean` | `semiGlobalDefault("Tree", "labelEllipsis")` |
+| virtualize | List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled. | `Virtualize` | `semiGlobalDefault("Tree", "virtualize")` |
+| searchClassName | Class of the search box container. | `string` | `semiGlobalDefault("Tree", "searchClassName")` |
+| searchPlaceholder | Placeholder of the search box. | `string` | `semiGlobalDefault("Tree", "searchPlaceholder")` |
+| searchStyle | Style of the search box container. | `StyleValue` | `semiGlobalDefault("Tree", "searchStyle")` |
+| filterTreeNode | Whether search is on. true matches by treeNodeFilterProp; a function customizes the match, with data as the node. | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData \u007c undefined) => boolean)"}>Type</ApiType> | `undefined` |
+| loadData | Loads the children of a node and returns a Promise. Mark leaves with isLeaf in the data; a node without isLeaf shows the expand arrow while this is set. | <ApiType detail={"((treeNode?: TreeNodeData \u007c undefined) => Promise\u003cvoid>)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event               | Description                                                                                                                                                                                 | Callback parameters                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| update:modelValue   | Emitted when the selection changes; used by v-model.                                                                                                                                        | `[value: TreeValue]`                                                                  |
+| change              | Emitted when the selection changes, with the same payload as update:modelValue. It shadows the native event of the same name on the root element.                                           | `[value: TreeValue]`                                                                  |
+| update:expandedKeys | Emitted when the expanded nodes change; used by v-model:expandedKeys.                                                                                                                       | `[expandedKeys: string[]]`                                                            |
+| expand              | Emitted when a node expands or collapses; info holds expanded and node.                                                                                                                     | `[expandedKeys: string[], info: TreeExpandedOtherProps]`                              |
+| update:loadedKeys   | Emitted when the loaded nodes change; used by v-model:loadedKeys.                                                                                                                           | `[loadedKeys: string[]]`                                                              |
+| load                | Emitted when a node has loaded; loadedKeys is the set of loaded nodes.                                                                                                                      | <ApiType detail={"[loadedKeys: Set\u003cstring>, node: TreeNodeData]"}>Type</ApiType> |
+| select              | Emitted when a node is selected or deselected, with its key, whether it is selected and its data. It shadows the native event of the same name on the root element.                         | `[selectedKey: string, selected: boolean, node: TreeNodeData]`                        |
+| search              | Emitted when the search input changes; filteredExpandedKeys are the nodes expanded by the search or by modelValue and defaultValue, which controlled expansion can use to show the results. | `[input: string, filteredExpandedKeys: string[]]`                                     |
+| contextMenu         | Emitted on a right click on a node.                                                                                                                                                         | `[event: MouseEvent, node: TreeNodeData]`                                             |
+| doubleClick         | Emitted on a double click on a node.                                                                                                                                                        | `[event: MouseEvent, node: TreeNodeData]`                                             |
+| dragStart           | Emitted when a node starts to be dragged.                                                                                                                                                   | `[info: TreeDragProps]`                                                               |
+| dragEnter           | Emitted when a drag enters a node; the payload holds expandedKeys when that expanded a collapsed node.                                                                                      | `[info: TreeDragEnterProps]`                                                          |
+| dragOver            | Emitted while a drag is over a node.                                                                                                                                                        | `[info: TreeDragProps]`                                                               |
+| dragLeave           | Emitted when a drag leaves a node.                                                                                                                                                          | `[info: TreeDragProps]`                                                               |
+| dragEnd             | Emitted when a drag ends.                                                                                                                                                                   | `[info: TreeDragProps]`                                                               |
+| drop                | Emitted when a node is dropped; the payload holds dragNode, dragNodesKeys, dropPosition and dropToGap. It shadows the native event of the same name on the root element.                    | `[info: TreeOnDragProps]`                                                             |
+
+**Slots**
+
+| Slot               | Description                                                                                                                                                                                                                                                          | Scope parameters            |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| label              | Content of a node's label. Search still matches the label text in treeData.                                                                                                                                                                                          | `TreeLabelSlotProps`        |
+| icon               | A node's icon, which can differ by node data; empty content keeps the directory icon.                                                                                                                                                                                | `TreeIconSlotProps`         |
+| expandIcon         | The expand icon. A single element gets the class and the click that expands; the parameters can also be bound by hand.                                                                                                                                               | `TreeExpandIconSlotProps`   |
+| fullLabel          | Content of the whole row. Tree provides the row element carrying the id, role and state, and virtualized positioning; the slot holds only what is inside.                                                                                                            | `TreeFullLabelSlotProps`    |
+| search             | Replaces the search box; an empty slot hides it.                                                                                                                                                                                                                     | `TreeSearchSlotProps`       |
+| emptyContent       | Content shown when there are no nodes, or when the search finds none with showFilteredOnly on; an empty slot hides the empty state.                                                                                                                                  | `any`                       |
+| renderDraggingNode | The element the browser shows while a node is dragged, with the node element nodeInstance and the node data node as parameters; on dragstart the slot content is rendered into a detached container and used as the drag image, so only app-level provides reach it. | `TreeDraggingNodeSlotProps` |
+
+**Exposes**
+
+| Name     | Description                                                                            | Type                                                                    |
+| -------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| search   | Searches as if the value were typed into the search box; filterTreeNode must be set.   | <ApiType detail={"(value: string) => void"}>Type</ApiType>              |
+| scrollTo | In a virtualized tree, scrolls an expanded node into view; align is center by default. | <ApiType detail={"(scrollData: TreeScrollData) => void"}>Type</ApiType> |

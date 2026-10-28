@@ -1,0 +1,31 @@
+{
+    "lottie": {
+        "source": "packages/semi-ui-vue/src/lottie/lottie.vue",
+        "props": {
+            "params": {
+                "zh-CN": "传给 lottie-web loadAnimation 的参数。内容变化时重新加载，原地修改不会触发：请整体替换，较大的动画数据用 shallowRef 持有。",
+                "en-US": "Options passed to lottie-web's loadAnimation. It reloads when the content changes, not when the object is mutated in place: replace it as a whole, and hold large animation data in a shallowRef."
+            },
+            "width": {
+                "zh-CN": "容器宽度，需带单位，如 300px。",
+                "en-US": "Container width, with a unit such as 300px."
+            },
+            "height": {
+                "zh-CN": "容器高度，需带单位，如 300px。",
+                "en-US": "Container height, with a unit such as 300px."
+            }
+        },
+        "events": {
+            "getAnimationInstance": {
+                "zh-CN": "每创建一次动画（包括每次重新加载）触发一次，载荷为当前动画的 AnimationItem。",
+                "en-US": "Emitted once per animation created, including every reload, with the AnimationItem of the animation."
+            },
+            "getLottie": {
+                "zh-CN": "lottie-web 加载完成后，每次挂载触发一次，载荷为全局 Lottie。",
+                "en-US": "Emitted once per mount after lottie-web has loaded, with the global Lottie."
+            }
+        },
+        "slots": {},
+        "exposed": {}
+    }
+}

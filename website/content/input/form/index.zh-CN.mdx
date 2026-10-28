@@ -1,0 +1,1893 @@
+---
+title: 表单
+order: 40
+icon: doc-form
+---
+
+import FormReactApi from './api/form.react.zh-CN.mdx';
+import ArrayFieldReactApi from './api/array-field.react.zh-CN.mdx';
+import FormSectionReactApi from './api/form-section.react.zh-CN.mdx';
+import FormLabelReactApi from './api/form-label.react.zh-CN.mdx';
+import FormInputGroupReactApi from './api/form-input-group.react.zh-CN.mdx';
+import FormSlotReactApi from './api/form-slot.react.zh-CN.mdx';
+import FormErrorMessageReactApi from './api/form-error-message.react.zh-CN.mdx';
+import FormVueApi from './api/form.vue.zh-CN.mdx';
+import ArrayFieldVueApi from './api/array-field.vue.zh-CN.mdx';
+import FormSectionVueApi from './api/form-section.vue.zh-CN.mdx';
+import FormLabelVueApi from './api/form-label.vue.zh-CN.mdx';
+import FormInputGroupVueApi from './api/form-input-group.vue.zh-CN.mdx';
+import FormSlotVueApi from './api/form-slot.vue.zh-CN.mdx';
+import FormErrorMessageVueApi from './api/form-error-message.vue.zh-CN.mdx';
+import FormSolidApi from './api/form.solid.zh-CN.mdx';
+import ArrayFieldSolidApi from './api/array-field.solid.zh-CN.mdx';
+import FormSectionSolidApi from './api/form-section.solid.zh-CN.mdx';
+import FormLabelSolidApi from './api/form-label.solid.zh-CN.mdx';
+import FormInputGroupSolidApi from './api/form-input-group.solid.zh-CN.mdx';
+import FormSlotSolidApi from './api/form-slot.solid.zh-CN.mdx';
+import FormErrorMessageSolidApi from './api/form-error-message.solid.zh-CN.mdx';
+
+## 表单(Form)
+
+- **按需重绘**，避免了不必要的全量渲染, 性能更高
+- 简单易用，**结构极简**，避免了不必要的层级嵌套
+- 完善的无障碍支持
+- 在 Form 外部可方便地获取 formState / fieldState  
+  提供在外部对表单内部进行操作的方法：formApi / fieldApi
+- 支持将自定义组件封装成表单控件，你可以通过 Form 提供的扩展机制（withField）快捷接入自己团队的组件
+- 支持 Form level / Field level 级别的赋值、校验（同步/异步）
+
+## 表单控件(Field)
+
+<Framework only="react">
+
+Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都使用 withField 封装了一次。接管了他们的数据流（value & onChange）  
+使用的时候，需要从 Form 中导出（注意：从 Form 导出的控件才具有数据同步功能）
+
+#### 目前 Form 提供了如下表单控件
+
+- `Input`、`InputNumber`、`TextArea`、`Select`、`Checkbox`、`CheckboxGroup`、`Radio`、`RadioGroup`、`Switch`、`DatePicker`、`TimePicker`、`Slider`、`InputGroup`、`TreeSelect`、`Cascader`、`Rating`、`AutoComplete`、`Upload`、`PinCode`、`Label`、`ErrorMessage`、`Section`、`Slot`、`TagInput` 都挂载在 Form 下，使用时直接以\<Form.Input\> 、\<Form.Select\>声明即可
+
+```javascript import
+import { Form } from '@fibrae/semi-ui-react';
+// 具有数据同步功能的表单控件，在<Form></Form>内使用时，数据流会被Form自动接管
+// 从Form中导出表单控件时，你还可以进行重命名（这里命名为FormInput仅仅是为了在以下示例中跟普通Input做区分）
+const FormInput = Form.Input;
+const FormSelect = Form.Select;
+const Option = FormSelect.Option;
+// 普通Input，在<Form></Form>内部使用时，Form不会对其做任何处理
+import { Input } from '@fibrae/semi-ui-react';
+```
+
+Form 提供的 Field 级别组件，它的 value（或者 valueKey 指定的其他属性）、onChange（或 onKeyChangeFnName 指定的其他回调函数）属性都会被 Form 劫持，所以
+
+<Notice type="primary" title="注意事项">
+
+1. 你不需要也不应该用 onChange 来作同步，当然你可以继续监听 onChange 事件获取最新的值
+2. 你不能再用控件的 `value`、`defaultValue`、`checked`、`defaultChecked` 等属性来设置表单控件的值，默认值可以通过 Field 的 `initValue` 或者 Form 的 `initValues` 设置
+3. 你不应该直接修改 FormState 的值，所有对 Form 内数据的修改都应该通过提供的 formApi、fieldApi 来完成
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都使用 withField 封装了一次。接管了他们的数据流（`modelValue` & `change`）  
+使用的时候，需要使用以 Form 开头的控件（注意：只有这些控件才具有数据同步功能），它们是具名导出，不挂载在 Form 上
+
+#### 目前 Form 提供了如下表单控件
+
+- 表单控件：`FormInput`、`FormInputNumber`、`FormTextArea`、`FormSelect`、`FormCheckbox`、`FormCheckboxGroup`、`FormRadio`、`FormRadioGroup`、`FormSwitch`、`FormDatePicker`、`FormTimePicker`、`FormSlider`、`FormTreeSelect`、`FormCascader`、`FormRating`、`FormAutoComplete`、`FormUpload`、`FormPinCode`、`FormTagInput`
+- 其他部件：`ArrayField`、`FormInputGroup`、`FormLabel`、`FormErrorMessage`、`FormSection`、`FormSlot`
+
+```vue
+<script setup lang="ts">
+    // 具有数据同步功能的表单控件，在 <Form> 内使用时，数据流会被 Form 自动接管
+    import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-vue';
+    // 普通 Input，在 <Form> 内部使用时，Form 不会对其做任何处理
+    import { Input } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <Form>
+        <FormInput field="name" />
+        <FormSelect field="role">
+            <FormSelect.Option value="rd">开发</FormSelect.Option>
+        </FormSelect>
+    </Form>
+</template>
+```
+
+Form 提供的 Field 级别组件，它的 `modelValue`（或者 `valueKey` 指定的其他属性）、`change` 事件（或 `onKeyChangeFnName` 指定的其他事件）都会被 Form 接管，所以
+
+<Notice type="primary" title="注意事项">
+
+1. 你不需要也不应该用 `v-model` 或 `change` 事件来作同步，当然你可以继续监听 `@change` 事件获取最新的值
+2. 你不能再用控件的 `modelValue`、`defaultValue`、`defaultChecked` 等属性来设置表单控件的值，它们会被忽略并在开发模式下给出警告。默认值可以通过 Field 的 `initValue` 或者 Form 的 `initValues` 设置
+3. 你不应该直接修改 FormState 的值，所有对 Form 内数据的修改都应该通过提供的 formApi、fieldApi 来完成
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都使用 withField 封装了一次。接管了他们的数据流（`value` & `onChange`）  
+使用的时候，需要使用以 Form 开头的控件（注意：只有这些控件才具有数据同步功能），它们是具名导出，不挂载在 Form 上
+
+#### 目前 Form 提供了如下表单控件
+
+- 表单控件：`FormInput`、`FormInputNumber`、`FormTextArea`、`FormSelect`、`FormCheckbox`、`FormCheckboxGroup`、`FormRadio`、`FormRadioGroup`、`FormSwitch`、`FormDatePicker`、`FormTimePicker`、`FormSlider`、`FormTreeSelect`、`FormCascader`、`FormRating`、`FormAutoComplete`、`FormUpload`、`FormPinCode`、`FormTagInput`
+- 其他部件：`ArrayField`，以及挂载在 Form 下的 `Form.InputGroup`、`Form.Label`、`Form.ErrorMessage`、`Form.Section`、`Form.Slot`
+
+```jsx
+// 具有数据同步功能的表单控件，在 <Form> 内使用时，数据流会被 Form 自动接管
+import { Form, FormInput, FormSelect, FormCheckbox, FormCheckboxGroup, FormRadio, FormRadioGroup, FormSwitch, FormDatePicker, FormTimePicker, FormInputNumber, FormTextArea, FormSlider, FormTreeSelect, FormCascader, FormRating, FormUpload, FormTagInput } from '@fibrae/semi-ui-solid';
+// 动态表单与 Hooks
+import { ArrayField, useFormApi, useFormState, useFieldApi, useFieldState, withField } from '@fibrae/semi-ui-solid';
+// 普通 Input，在 <Form> 内部使用时，Form 不会对其做任何处理
+import { Input } from '@fibrae/semi-ui-solid';
+```
+
+Form 提供的 Field 级别组件，它的 `value`（或者 `valueKey` 指定的其他属性）、`onChange`（或 `onKeyChangeFnName` 指定的其他回调）都会被 Form 接管，所以
+
+<Notice type="primary" title="注意事项">
+
+1. 你不需要也不应该用 `onChange` 来作同步，当然你可以继续监听 `onChange` 获取最新的值
+2. 你不能再用控件的 `value`、`defaultValue`、`checked`、`defaultChecked` 等属性来设置表单控件的值，它们会被忽略。默认值可以通过 Field 的 `initValue` 或者 Form 的 `initValues` 设置
+3. 你不应该直接修改 FormState 的值，所有对 Form 内数据的修改都应该通过提供的 formApi、fieldApi 来完成
+
+</Notice>
+
+</Framework>
+
+## 代码演示
+
+### 声明表单的多种写法
+
+Semi Form 同时支持多种写法
+
+#### 基本写法
+
+<Framework only="react">
+
+从 Form 中导出表单控件，给表单控件添加`field`属性，将其放置于 Form 内部即可  
+还可以给每个表单控件设置`label`属性，不传入时默认与 field 相同  
+`label`可以直接传入字符串，亦可以以 object 方式声明，配置 `extra`、`required`、`optional`等属性应对更复杂的场景
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `FormInput`、`FormSelect` 等以 Form 开头的表单控件，给表单控件添加`field`属性，将其放置于 Form 内部即可  
+还可以给每个表单控件设置`label`属性，不传入时默认与 field 相同  
+`label`可以直接传入字符串，亦可以以 object 方式声明，配置 `required`、`optional`、`align`、`width` 等属性应对更复杂的场景。需要放置节点时使用插槽：`#fieldLabel` 替换 label 内容，`#labelExtra` 放置紧随其后的内容（如下例的帮助图标），插槽优先于 label 属性
+
+</Framework>
+
+<Framework only="solid">
+
+使用 `FormInput`、`FormSelect` 等以 Form 开头的表单控件，给表单控件添加`field`属性，将其放置于 Form 内部即可  
+还可以给每个表单控件设置`label`属性，不传入时默认与 field 相同  
+`label`可以直接传入字符串或 JSX，亦可以以 object 方式声明，配置 `text`、`extra`、`required`、`optional`、`align`、`width` 等属性应对更复杂的场景，其中 `text`、`extra` 都可以是 JSX（如下例的帮助图标）
+
+</Framework>
+
+<Notice type="primary" title="注意事项">
+    对于Field级别组件来说，field 属性是必填项!
+</Notice>
+
+<Demo id="basic" />
+
+#### 支持的其他写法
+
+当你需要在 Form 结构内部直接获取到 `formState`、`formApi`、`values` 等值时，你还可以使用以下的写法
+
+<Notice type="primary" title="注意事项">
+    注意，此处获取的 formState、values 等并没有经过 deepClone。你应该只做读操作，而不应该做写操作，否则会导致你可能意外修改了form内部的状态。所有对 Form 内部状态的更新都应该通过 formApi 去操作
+</Notice>
+
+<Framework only="react">
+
+#### 通过 render 属性传入
+
+即 render props
+
+<Demo id="render-props" />
+
+#### 通过 child render function
+
+Form 的 children 是一个 function，return 出所有表单控件
+
+<Demo id="child-render-function" />
+
+#### 通过 props.component
+
+通过 component 属性直接将整个内部结构以 ReactNode 形式传入
+
+<Demo id="props-component" />
+
+</Framework>
+
+<Framework only="vue">
+
+#### 通过默认作用域插槽
+
+Form 的默认插槽是作用域插槽，参数为 `{ formState, formApi, values }`，用 `#default="{ formState }"` 解构需要的部分。React 中的 render props、child render function、props.component 三种写法，在 Vue 中都对应这一种，不再区分
+
+<Demo id="child-render-function" />
+
+</Framework>
+
+<Framework only="solid">
+
+render、child render function、component 三种写法收到的参数相同：`{ formState, values, formApi }`。它们都只调用一次，参数里的 `formState`、`values` 是随表单更新的属性，需要在返回的 JSX 中读取（如 `form.values.name`）；不要在函数体顶部解构它们，否则只能取到初始值
+
+#### 通过 render 属性传入
+
+即 render props
+
+<Demo id="render-props" />
+
+#### 通过 child render function
+
+Form 的 children 是一个 function，return 出所有表单控件。函数需要声明参数，没有参数的函数会被当作普通 children 处理
+
+<Demo id="child-render-function" />
+
+#### 通过 component 属性
+
+通过 component 属性直接将整个内部结构以组件形式传入，`formState`、`values`、`formApi` 作为该组件的 props
+
+<Demo id="props-component" />
+
+</Framework>
+
+### 已支持的表单控件
+
+<Demo id="all-fields" />
+
+### 表单控件值的绑定
+
+每个表单控件都需要以`field`属性绑定一个字段名称，用于将表单项的值正确映射到`FormState` values / errors / touched 中  
+字段可以是简单的字符串，可以是包含`.`或者`[]`的字符串, 支持多级嵌套  
+下面是字段名称以及他们在 FormState 中的映射路径的示例
+
+| Field                  | Resolution                         |
+| ---------------------- | ---------------------------------- |
+| username               | formState.values.username          |
+| user\[0\]              | formState.values.user\[0\]         |
+| siblings.1             | formState.values.siblings\[1\]     |
+| siblings\['2'\]        | formState.values.siblings\[2\]     |
+| parents\[0\].name      | formState.values.parents\[0\].name |
+| parents\[1\]\['name'\] | formState.values.parents\[1\].name |
+
+<Demo id="field-binding" />
+
+### 表单布局
+
+- 垂直布局：表单控件之间上下垂直排列（默认）  
+   Semi Design Next 更推荐表单采用垂直布局
+
+<Demo id="layout-vertical" />
+
+- 水平布局：表单控件之间水平排列你可以通过设置 `layout='horizontal'`来使用水平布局
+
+<Demo id="layout-horizontal" />
+
+- labelPosition、labelAlign  
+  你可以通过设置 labelPosition、labelAlign 控制 label 在 Field 中出现的位置，文本对齐的方向
+
+<Demo id="label-position" />
+
+- 更复杂的布局你还可以结合 Grid 提供的 Row、Col，来对表单进行你想要的排列
+
+<Demo id="layout-grid" />
+
+### 表单分组
+
+<Framework only="react">
+
+字段数量较多的表单应考虑对字段进行分组，可以使用`Form.Section`对 Fields 进行分组（仅影响布局，不会影响数据结构）
+
+</Framework>
+
+<Framework only="vue">
+
+字段数量较多的表单应考虑对字段进行分组，可以使用`FormSection`对 Fields 进行分组，分组标题放在 `#text` 插槽（仅影响布局，不会影响数据结构）
+
+</Framework>
+
+<Framework only="solid">
+
+字段数量较多的表单应考虑对字段进行分组，可以使用`Form.Section`对 Fields 进行分组，分组标题通过 `text` 属性传入（仅影响布局，不会影响数据结构）
+
+</Framework>
+
+<Demo id="section" />
+
+### wrapperCol / labelCol
+
+需要为 Form 内的所有 Field 设置统一的布局时，可以在 Form 上设置 wrapperCol 、labelCol 快速生成布局，无需手动使用 Row、Col 手动布局  
+`wrapperCol`、`labelCol`属性配置参考[Col 组件](/zh-CN/react/basic/grid#Col)
+
+<Demo id="wrapper-col" />
+
+### 隐藏Label
+
+Form 会自动为 Field 控件插入 Label。如果你不需要自动插入 Label 模块, 可以通过在 Field 中设置`noLabel=true`将自动插入 Label 功能关闭（此时 Field 仍然具备自动展示 ErrorMessage 的能力，因此 DOM 结构与原始控件依然会有区别）  
+如果你希望与原始控件保持 DOM 结构一致，可以使用 pure=true，此时除了数据流被接管外，DOM结构不会有任何变化（你需要自行负责 ErrorMessage的渲染，同时它也无法被 formProps.wrapperCol 属性影响）
+
+<Demo id="no-label" />
+
+### 内嵌 Label
+
+通过将 labelPosition 设为`inset`，可以将 Label 内嵌在表单控件中。目前支持这项功能的组件有`Input`、`InputNumber`、`DatePicker`、`TimePicker`、`Select`、`TreeSelect`、`Cascader`、`TagInput`、`AutoComplete`。其余字段在 labelPosition 为`inset`时按`top`布局，并在开发模式下给出警告。
+
+<Framework only="vue">
+
+用 `withField` 封装的自定义组件，声明了 `insetLabelId` 属性才会按内嵌标签布局：此时组件通过 `#insetLabel` 插槽收到标签内容，并把 `insetLabelId` 写到承载标签的元素上；没有声明的组件同样按 `top` 布局。
+
+</Framework>
+
+<Framework only="solid">
+
+用 `withField` 封装的自定义组件在 labelPosition 为`inset`时会收到 `insetLabel` 与 `insetLabelId` 两个 props：组件需要自行渲染内嵌标签，并把 `insetLabelId` 写到承载标签的元素上；不渲染内嵌标签的组件不应使用`inset`。
+
+</Framework>
+
+<Demo id="inset-label" />
+
+### 导出 Label、ErrorMessage 使用
+
+<Framework only="react">
+
+如果你需要 Form.Label、Form.ErrorMessage 模块自行组合使用，可以从 Form 中导出
+
+- Label 的 API 详见 [Label](#Form.Label)
+- ErrorMessage 的 API 详见 [ErrorMessage](#Form.ErrorMessage)
+
+例如：当自带的 Label、ErrorMessage 布局不满足业务需求，需要自行组合位置，但又希望能直接使用 Label、ErrorMessage 的默认样式时
+
+```
+import { Form } from '@fibrae/semi-ui-react';
+const { Label, ErrorMessage } = Form;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+如果你需要 FormLabel、FormErrorMessage 模块自行组合使用，可以直接导入
+
+- FormLabel 的 API 详见 [FormLabel](#FormLabel)
+- FormErrorMessage 的 API 详见 [FormErrorMessage](#FormErrorMessage)
+
+例如：当自带的 Label、ErrorMessage 布局不满足业务需求，需要自行组合位置，但又希望能直接使用 Label、ErrorMessage 的默认样式时
+
+```
+import { FormErrorMessage, FormLabel } from '@fibrae/semi-ui-vue';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+如果你需要 Form.Label、Form.ErrorMessage 模块自行组合使用，可以从 Form 中导出
+
+- Label 的 API 详见 [Label](#Form.Label)
+- ErrorMessage 的 API 详见 [ErrorMessage](#Form.ErrorMessage)
+
+例如：当自带的 Label、ErrorMessage 布局不满足业务需求，需要自行组合位置，但又希望能直接使用 Label、ErrorMessage 的默认样式时
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Label, ErrorMessage } = Form;
+```
+
+</Framework>
+
+<Framework only="react">
+
+### 使用 Form.Slot 放置自定义组件
+
+当你的自定义组件，需要与 Field 组件保持同样的布局样式时，你可以通过 Form.Slot 放置你的自定义组件  
+在 Form 组件上设置的 `labelWidth`、`labelAlign`、`wrapperCol`、`labelCol` 会自动作用在 Form.Slot 上  
+Slot 属性配置详见[Form.Slot](#Form.Slot)
+
+</Framework>
+
+<Framework only="vue">
+
+### 使用 FormSlot 放置自定义组件
+
+当你的自定义组件，需要与 Field 组件保持同样的布局样式时，你可以通过 FormSlot 放置你的自定义组件  
+在 Form 组件上设置的 `labelWidth`、`labelAlign`、`wrapperCol`、`labelCol` 会自动作用在 FormSlot 上  
+FormSlot 属性配置详见[FormSlot](#FormSlot)
+
+</Framework>
+
+<Framework only="solid">
+
+### 使用 Form.Slot 放置自定义组件
+
+当你的自定义组件，需要与 Field 组件保持同样的布局样式时，你可以通过 Form.Slot 放置你的自定义组件  
+在 Form 组件上设置的 `labelWidth`、`labelAlign`、`wrapperCol`、`labelCol` 会自动作用在 Form.Slot 上  
+Slot 属性配置详见[Form.Slot](#Form.Slot)
+
+</Framework>
+
+<Demo id="slot" />
+
+### 使用 helpText、extraText 放置提示信息
+
+<Framework only="react">
+
+可以通过`helpText`放置自定义提示信息，与校验信息（error）公用同一区块展示，两者均有值时，优先展示校验信息。  
+可以通过`extraText`放置额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个配置，常显，位于 helpText/error 后  
+当传入 validateStatus 时，优先展示 validateStatus 值对应的 UI 样式。不传入时，以 field 内部校验状态为准。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过`#helpText`插槽放置自定义提示信息，与校验信息（error）公用同一区块展示，两者均有值时，优先展示校验信息。  
+可以通过`#extraText`插槽放置额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个插槽，常显，位于 helpText/error 后  
+当传入 validateStatus 时，优先展示 validateStatus 值对应的 UI 样式。不传入时，以 field 内部校验状态为准。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过`helpText`放置自定义提示信息（字符串或 JSX），与校验信息（error）公用同一区块展示，两者均有值时，优先展示校验信息。  
+可以通过`extraText`放置额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个配置，常显，位于 helpText/error 后  
+当传入 validateStatus 时，优先展示 validateStatus 值对应的 UI 样式。不传入时，以 field 内部校验状态为准。
+
+</Framework>
+
+<Demo id="help-text" />
+
+通过配置 `extraTextPosition`，你可以控制 extraText 的显示位置。可选值 `bottom`、`middle`  
+例如如当你希望将 extraText 提示信息显示在 Label 与 Field 控件中间时  
+该属性可在 Form 上统一配置，亦可在每个 Field 上单独配置，同时传入时，以 Field 的配置为准。
+
+<Demo id="extra-text-position" />
+
+### 使用 InputGroup 组合多个 Field
+
+<Framework only="react">
+
+当你需要将一些表单控件组合起来使用时，你可以用`Form.InputGroup`将其包裹起来  
+当你给`Select`、`Input`等表单控件加上 field 属性时，`Form`会默认给每个 Field 控件自动插入`Label`  
+而在`InputGroup`中一般仅需要一个属于整个 Group 的 Label，你可以在 InputGroup 中设置 label 属性，插入一个属于 Group 的`Label`  
+`label`可配置属性详见[Label](#Form.Label)
+
+</Framework>
+
+<Framework only="vue">
+
+当你需要将一些表单控件组合起来使用时，你可以用`FormInputGroup`将其包裹起来，组内只有设置了 `field` 的直接子项会被渲染  
+当你给`FormSelect`、`FormInput`等表单控件加上 field 属性时，`Form`会默认给每个 Field 控件自动插入`Label`  
+而在`FormInputGroup`中一般仅需要一个属于整个 Group 的 Label，你可以在 FormInputGroup 中设置 label 属性，插入一个属于 Group 的`Label`  
+`label`可配置属性详见[FormLabel](#FormLabel)
+
+</Framework>
+
+<Framework only="solid">
+
+当你需要将一些表单控件组合起来使用时，你可以用`Form.InputGroup`将其包裹起来，组内的表单控件不再单独渲染 Label 与错误信息，它们的错误信息合并显示在整个 Group 下方  
+而在`Form.InputGroup`中一般仅需要一个属于整个 Group 的 Label，你可以在 Form.InputGroup 中设置 label 属性，插入一个属于 Group 的`Label`  
+`label`可配置属性详见[Label](#Form.Label)
+
+</Framework>
+
+<Demo id="input-group" />
+
+### Modal 弹出层中的表单
+
+你可以将 Form 放置于 Modal 中，以弹窗形式承载  
+在提交时，通过 formApi.validate()对 Field 进行集中校验
+
+<Demo id="modal" />
+
+### 配置初始值与校验规则
+
+- 你可以通过`rules`为每个 Field 表单控件配置校验规则  
+  Form 内部的校验库基于 async-validator，更多配置规则可查阅其[官方文档](https://github.com/yiminghe/async-validator)
+- 你可以通过 form 的`initValues`为整个表单统一设置初始值，也可以在每个 field 中通过`initValue`设置初始值（后者优先级更高）
+- 可以通过 trigger 为每个 Field 配置不同的校验触发时机，默认为 change（即值变化时，自动进行校验）。还支持 change、blur、mount、custom 或以上的组合。也支持通过 FormProps 统一配置，若都配置时，以 FieldProps 为准
+- 可以通过 stopValidateWithError 开关，决定使用 rules 校验时，当碰到第一个检验不通过的 rules 后，是否继续触发后续 rules 的校验。也支持通过 FormProps 统一配置，若都配置时，以 FieldProps 为准
+
+<Demo id="rules" />
+
+### 自定义校验(Form 级别)
+
+你可以通过 `validator` 给`Form`整体设置自定义校验函数。submit 或调用 formApi.validate() 时会进行调用
+
+<Notice title="注意">当配置了 Form 级别校验器（validator）后，Field 级别的校验器（fieldProps.validator、fieldProps.rules）将不再生效</Notice>
+
+#### 同步校验
+
+校验通过时，你应该返回一个空字符串；  
+校验失败时，你应该返回错误信息(Object，key 为 fieldName，value 为对应的错误信息）
+
+<Demo id="form-validate-sync" />
+
+#### 异步校验
+
+异步校验时，你应当返回一个 promise，在 promise.then()中 你需要 return 对应的错误信息
+
+<Demo id="form-validate-async" />
+
+### 自定义校验(Field 级别)
+
+你可以通过 `validator` 指定单个表单控件的自定义校验函数，支持同步、异步校验（通过返回 promise）
+
+<Notice title='关于 validator 与 rules[].validator'>
+
+Field 上的 `validator` 和 `rules[]` 数组里的 `validator`（基于 async-validator）是两个不同的 API：
+
+- Field `validator`：签名为 `(fieldValue, values) => string | Promise<string>`，整字段级别的自定义校验，返回错误信息字符串。
+- `rules[].validator`：签名为 `(rule, value, callback) => void | Promise<void>`，基于 [async-validator](https://github.com/yiminghe/async-validator) 的单条规则级校验，由 callback 或 reject 上报错误。
+
+两者**互斥**：只要设置了 Field 的 `validator`，`rules` 就不会再被触发。如果只需要简单的整字段自定义判断，建议使用 Field `validator`；如果需要多条规则、复用 async-validator 内置规则（如 required / type / pattern），请使用 `rules`。
+
+</Notice>
+
+<Demo id="field-validate" />
+
+### 手动触发指定 Field 校验
+
+当你希望手动触发某些特定 Field 的校验操作时，可以通过 formApi.validate 完成。不传入参数时，默认对全部 Field 进行校验，传入参数时，以参数指定为准
+
+### 静默校验
+
+当你需要获取校验结果但不想触发 UI 更新时（如不显示错误提示、不设置 touched 状态），可以通过 `formApi.validate({ silent: true })` 实现。这在根据校验结果决定是否发起后端请求等场景中非常有用。
+
+<Demo id="silent-validate" />
+
+<Demo id="partial-validate" />
+
+### 表单联动
+
+<Framework only="react">
+
+你可以通过监听 Field 的 onChange 事件，然后使用 formApi 进行相关修改，来使 Field 之间达到联动
+
+</Framework>
+
+<Framework only="vue">
+
+你可以通过监听 Field 的 `@change` 事件，然后使用 formApi 进行相关修改，来使 Field 之间达到联动
+
+</Framework>
+
+<Framework only="solid">
+
+你可以通过监听 Field 的 `onChange`，然后使用 formApi（如通过 `getFormApi` 保存）进行相关修改，来使 Field 之间达到联动
+
+</Framework>
+
+<Demo id="linkage" />
+
+### 动态表单
+
+#### 动态删减表单项
+
+<Demo id="dynamic-fields" />
+
+#### 保留空值（allowEmpty）
+
+默认情况下，值变为空的 field 会从 `values` 中移除。在 Field 上设置 `allowEmpty` 可以保留它的 key（值为 `undefined`），在 Form 上设置则对所有 field 生效。清空下面两个选择框，对比 `values` 中的 key。
+
+<Demo id="allow-empty" />
+
+#### 动态表单保留状态（keepState）
+
+默认情况下，当 Field 组件卸载后，其对应的值（value）、校验信息（error）、交互状态（touched）都会被重置。如果你希望 Field 卸载后保留这些状态（例如在条件渲染的场景中），可以使用 `keepState` 属性。
+
+<Demo id="keep-state" />
+
+在上面的示例中：
+
+- 设置了 `keepState` 的字段在隐藏再显示后，之前输入的值、校验状态等会被保留
+- 未设置 `keepState` 的字段在隐藏再显示后，状态会被重置
+
+<Framework only="react">
+
+<Notice type="primary" title="注意事项">
+
+- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
+- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `remove(i)` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
+- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 自身的 `add`、`remove`、`addWithInitValue` 管理数组项。
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="注意事项">
+
+- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
+- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `onRemove` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
+- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 插槽提供的 `onAdd`、`onAddWithInitValue` 与各行的 `onRemove` 管理数组项。
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="注意事项">
+
+- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
+- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `remove` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
+- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 自身的 `add`、`addWithInitValue` 与各行的 `remove` 管理数组项。
+
+</Notice>
+
+</Framework>
+
+### 使用 ArrayField
+
+<Framework only="react">
+
+针对动态增删的数组类表单项，我们提供了 ArrayField 作用域来简化 add/remove 的操作  
+ArrayField 自带了 add、remove、addWithInitValue 等 api 用来执行新增行，删除行，新增带有初始值的行等操作  
+ArrayField 详细的 API请查阅下方 [ArrayField Props](#arrayfield-props) 注意：ArrayField 的 initValue 类型必须是数组
+
+</Framework>
+
+<Framework only="vue">
+
+针对动态增删的数组类表单项，我们提供了 ArrayField 作用域来简化新增、删除行的操作  
+ArrayField 的默认作用域插槽提供 `onAdd`、`onAddWithInitValue` 用来新增行、新增带有初始值的行，每一行的 `onRemove` 用来删除本行  
+ArrayField 详细的 API请查阅下方 [ArrayField](#arrayfield) 注意：ArrayField 的 initValue 类型必须是数组
+
+</Framework>
+
+<Framework only="solid">
+
+针对动态增删的数组类表单项，我们提供了 ArrayField 作用域来简化 add/remove 的操作  
+ArrayField 的 children 是一个函数，只调用一次，参数为 `{ arrayFields, add, addWithInitValue }`：`add`、`addWithInitValue` 用来新增行、新增带有初始值的行，`arrayFields` 中每一行的 `remove` 用来删除本行  
+用 `<For each={props.arrayFields}>` 渲染各行，行对象在该行存在期间保持同一引用，行的 `field` 会随前面行的增删更新  
+ArrayField 详细的 API请查阅下方 [ArrayField](#arrayfield) 注意：ArrayField 的 initValue 类型必须是数组
+
+</Framework>
+
+<Demo id="array-field" />
+
+#### 嵌套 ArrayField
+
+ArrayField 支持多级嵌套，如下是一个两级嵌套的例子
+
+<Demo id="nested-array-field" />
+
+#### 动态删减表单项 - 通过 formApi
+
+如果不使用 ArrayField，也可以通过 Form 提供的 formApi，手动增删 formState 中的数据。
+
+<Demo id="dynamic-form-api" />
+
+### Hooks 的使用
+
+<Framework only="react">
+
+我们提供了四个 Hooks，使你在不需要通过 props 传递的情况下，也能在放置于 Form 结构内部的 Functional Component 中也能轻易访问到 Form 内部状态数据，以及调用 Form、Field 的相关 api
+
+```jsx
+import { useFormApi, useFormState, useFieldApi, useFieldState } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+我们提供了四个组合式函数，使你在不需要通过 props 传递的情况下，也能在放置于 Form 结构内部的组件的 `setup` 中轻易访问到 Form 内部状态数据，以及调用 Form、Field 的相关 api。它们依赖 Form 提供的上下文，在 Form 外部调用会抛出错误
+
+```ts
+import { useFormApi, useFormState, useFieldApi, useFieldState } from '@fibrae/semi-ui-vue';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+我们提供了四个 Hooks，使你在不需要通过 props 传递的情况下，也能在放置于 Form 结构内部的组件中轻易访问到 Form 内部状态数据，以及调用 Form、Field 的相关 api。它们依赖 Form 提供的 context；在 Form 外部调用时，`useFormApi` 返回空对象，`useFormState` 返回的访问器得到空对象
+
+```jsx
+import { useFormApi, useFormState, useFieldApi, useFieldState } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+#### useFormApi
+
+<Framework only="react">
+
+useFormApi 允许你通过 hook，在 Functional Component 内直接访问父级 Form 组件的 formApi
+
+</Framework>
+
+<Framework only="vue">
+
+useFormApi 允许你在 Form 内部的组件中直接访问父级 Form 组件的 formApi
+
+</Framework>
+
+<Framework only="solid">
+
+useFormApi 允许你在 Form 内部的组件中直接访问父级 Form 组件的 formApi
+
+</Framework>
+
+<Demo id="use-form-api" />
+
+#### useFormState
+
+<Framework only="react">
+
+useFormState 允许你通过 hook，在 Functional Component 内直接访问父级 Form 组件的 formState
+
+</Framework>
+
+<Framework only="vue">
+
+useFormState 允许你在 Form 内部的组件中直接访问父级 Form 组件的 formState，返回值是 `ComputedRef`，在脚本中通过 `.value` 读取
+
+</Framework>
+
+<Framework only="solid">
+
+useFormState 允许你在 Form 内部的组件中直接访问父级 Form 组件的 formState，返回值是访问器（`Accessor<FormState>`），通过 `formState()` 读取，在 JSX 中读取时会随表单更新
+
+</Framework>
+
+<Demo id="use-form-state" />
+
+#### useFieldApi
+
+<Framework only="react">
+
+useFieldApi 允许你通过 hook，在 Functional Component 内直接调用指定 Field 的 api
+
+</Framework>
+
+<Framework only="vue">
+
+useFieldApi 允许你在 Form 内部的组件中直接调用指定 Field 的 api，参数可以是字段名、ref 或 getter
+
+</Framework>
+
+<Framework only="solid">
+
+useFieldApi 允许你在 Form 内部的组件中直接调用指定 Field 的 api，参数可以是字段名，也可以是返回字段名的访问器，后者在字段名变化时跟随变化
+
+</Framework>
+
+<Demo id="use-field-api" />
+
+#### useFieldState
+
+<Framework only="react">
+
+useFieldState 允许你通过 hook，在 Functional Component 内直接访问指定 Field 的 State
+
+</Framework>
+
+<Framework only="vue">
+
+useFieldState 允许你在 Form 内部的组件中直接访问指定 Field 的 State，参数可以是字段名、ref 或 getter，返回值是 `ComputedRef<{ value, error, touched }>`
+
+</Framework>
+
+<Framework only="solid">
+
+useFieldState 允许你在 Form 内部的组件中直接访问指定 Field 的 State，参数可以是字段名，也可以是返回字段名的访问器，返回值是访问器，`fieldState()` 得到 `{ value, error, touched }`
+
+</Framework>
+
+<Demo id="use-field-state" />
+
+<Framework only="react">
+
+### HOC 的使用
+
+我们提供了两个 HOC: `withFormApi`、`withFormState`，可以在其他组件内部访问到 Form 的 formApi 以及内部状态 formState 提供了 HOC： `withField`，用于将自定义组件封装成符合 Semi Form 数据流的表单控件
+
+```
+import { withFormApi, withFormState, withField } from '@fibrae/semi-ui-react';
+```
+
+#### HOC-withFormApi
+
+你可以通过 withFormApi HOC 来封装组件，使得该组件内部可以直接调用父级 Form 组件的 formApi  
+注意封装后的组件必须放置于 Form 结构内部
+
+<Demo id="with-form-api" />
+
+#### HOC-withFormState
+
+你可以通过 withFormState HOC 来封装组件，使得该组件内部可直接访问到父级 Form 组件的 FormState  
+注意封装后的组件必须放置于 Form 结构内部 (因其强依赖 Context 机制进行消费)
+
+<Demo id="with-form-state" />
+
+</Framework>
+
+<Framework only="vue">
+
+### 通过默认插槽访问 formApi、formState
+
+Vue 不提供 `withFormApi`、`withFormState`。Form 的默认作用域插槽已经提供了 `formApi`、`formState`；需要在子组件内访问时使用上面的 `useFormApi`、`useFormState`
+
+#### 访问 formApi
+
+<Demo id="with-form-api" />
+
+#### 访问 formState
+
+<Demo id="with-form-state" />
+
+</Framework>
+
+<Framework only="solid">
+
+### 通过 render 函数访问 formApi、formState
+
+Solid 不提供 `withFormApi`、`withFormState`。Form 的 render 函数（以及 children 函数、component）已经提供了 `formApi`、`formState`；需要在子组件内访问时使用上面的 `useFormApi`、`useFormState`
+
+#### 访问 formApi
+
+<Demo id="with-form-api" />
+
+#### 访问 formState
+
+<Demo id="with-form-state" />
+
+</Framework>
+
+### withField 封装自定义表单控件
+
+<Framework only="react">
+
+通过 withField，你可以将其他自定义组件扩展成为表单控件，由 Form 接管其行为
+
+<Notice type="primary" title="注意">
+    自定义组件必须为受控组件，只有受控组件，才能被 Form 接管，正确地进行值的更新
+</Notice>
+
+withField 主要做了以下事情
+
+- 负责接管组件的 value（或者 valueKey 指定的其他属性）、onChange（或 onKeyChangeFnName 指定的其他回调函数）
+- 负责在表单控件上方插入 Field 的`<Form.Label>`
+- 负责在表单控件下方插入 Field 的`<ErrorMessage>`
+- 负责在表单控件下方插入 Field 的 extraText
+
+withFieldOption 具体配置可参考 [withField Option](#withFieldOption)
+
+你的自定义受控组件需要做以下事情：
+
+- 值发生变化时，调用props.onChange (或 onKeyChangeFnName 指定的其他回调函数) 并且将最新的值作为入参
+- 响应props.value（或者 valueKey 指定的其他属性）的变化，并更新你的组件UI渲染结果
+
+```jsx
+withField(YourComponent, withFieldOption);
+```
+
+返回组件的 Props 类型由 `YourComponent` 的 Props 推断：保留组件自身的属性，加上 [Field Props](#field-props)，去掉 `value`、`defaultValue`、`checked`、`defaultChecked`（值由 Form 接管）。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 withField，你可以将其他自定义组件或原生标签（如 `'input'`）扩展成为表单控件，由 Form 接管其行为
+
+<Notice type="primary" title="注意">
+    自定义组件必须为受控组件，只有受控组件，才能被 Form 接管，正确地进行值的更新
+</Notice>
+
+withField 主要做了以下事情
+
+- 负责接管组件的 `modelValue`（或者 `valueKey` 指定的其他属性）、`change` 事件（或 `onKeyChangeFnName` 指定的其他事件）
+- 负责在表单控件上方插入 Field 的 `FormLabel`
+- 负责在表单控件下方插入 Field 的 ErrorMessage
+- 负责在表单控件下方插入 Field 的 extraText
+
+withFieldOptions 具体配置可参考 [withFieldOptions](#withFieldOptions)
+
+你的自定义受控组件需要做以下事情：
+
+- 声明 `modelValue` 属性（或者 `valueKey` 指定的其他属性），响应它的变化，并更新你的组件UI渲染结果
+- 值发生变化时，发出 `change` 事件 (或 `onKeyChangeFnName` 指定的其他事件) 并且将最新的值作为参数。组件只发出 `update:modelValue` 时，把 `onKeyChangeFnName` 设为 `'update:modelValue'` 即可
+
+```ts
+withField(YourComponent, withFieldOptions);
+```
+
+返回组件的 Props 类型由 `YourComponent` 的 Props 推断：保留组件自身的属性，加上 [Field Props](#field-props)，去掉 `modelValue`、`onUpdate:modelValue`、`defaultValue`、`defaultChecked`（值由 Form 接管，写了会被忽略并在开发模式下给出警告）。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 withField，你可以将其他自定义组件扩展成为表单控件，由 Form 接管其行为
+
+<Notice type="primary" title="注意">
+    自定义组件必须为受控组件，只有受控组件，才能被 Form 接管，正确地进行值的更新
+</Notice>
+
+withField 主要做了以下事情
+
+- 负责接管组件的 `value`（或者 `valueKey` 指定的其他属性）、`onChange`（或 `onKeyChangeFnName` 指定的其他回调函数）
+- 负责在表单控件上方插入 Field 的 `Form.Label`
+- 负责在表单控件下方插入 Field 的 `Form.ErrorMessage`
+- 负责在表单控件下方插入 Field 的 extraText
+
+withFieldOption 具体配置可参考 [withField Option](#withFieldOption)
+
+你的自定义受控组件需要做以下事情：
+
+- 通过 `props.value`（或者 `valueKey` 指定的其他属性）读取值并更新你的组件 UI 渲染结果，不要解构 props，否则值变化时不会更新
+- 值发生变化时，调用 `props.onChange`（或 `onKeyChangeFnName` 指定的其他回调函数）并且将最新的值作为入参
+
+```jsx
+withField(YourComponent, withFieldOption);
+```
+
+封装原生 `input` 时，建议像示例那样先包一层组件，避免 Form 注入的 `validateStatus` 等属性落到 DOM 上；Solid 的原生 `onChange` 在失焦时才触发，需要随输入同步时把 `onKeyChangeFnName` 设为 `'onInput'`，并配合 `valuePath: 'target.value'`。
+
+返回组件的 Props 类型由 `YourComponent` 的 Props 推断：保留组件自身的属性，加上 [Field Props](#field-props)，去掉 `value`、`defaultValue`、`checked`、`defaultChecked`（值由 Form 接管）。
+
+</Framework>
+
+<Demo id="with-field-basic" />
+
+<Demo id="with-field-complex" />
+
+## API 参考
+
+<Framework only="react">
+
+## Form
+
+<FormReactApi />
+
+`aria-*` 等原生属性与事件落在 `form` 元素上；设置了 `labelCol` 与 `wrapperCol` 时 `form` 外层多一层 Row，其余属性仍落在 `form` 上。`form` 元素默认带 `noValidate`，校验只由 Semi 负责，传 `noValidate={false}` 可以恢复原生校验。
+
+</Framework>
+
+<Framework only="vue">
+
+## Form
+
+```vue
+<script setup lang="ts">
+    import { Form } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+<FormVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 `form` 元素上；设置了 `labelCol` 与 `wrapperCol` 时 `form` 外层多一层 Row，attrs 仍落在 `form` 上。Form 的 `change`、`submit`、`reset` 事件与原生事件同名，会遮住原生事件。`form` 元素默认带 `novalidate`，校验只由 Semi 负责，传 `:novalidate="false"` 可以恢复原生校验。
+
+通过模板 ref 取得 Form 实例时，可以访问其 `formApi`（类型 `FormHandle`）。
+
+</Framework>
+
+<Framework only="solid">
+
+## Form
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+```
+
+<FormSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `aria-*`、`onKeyDown`）落在 `form` 元素上；设置了 `labelCol` 与 `wrapperCol` 时 `form` 外层多一层 Row，其余属性仍落在 `form` 上。`form` 元素默认带 `novalidate`，校验只由 Semi 负责，传 `novalidate={false}` 可以恢复原生校验。
+
+`ref` 取得的 form 元素上带有 `formApi`（类型 `FormElement`）。
+
+</Framework>
+
+## FormState
+
+FormState 存储了所有 Form 内部的状态值，包括各表单控件的值，错误信息、touched 状态  
+进行表单提交时，实际提交的就是 formState.values
+
+| Name    | 说明                                                                | 初始值 | 示例                              |
+| ------- | ------------------------------------------------------------------- | ------ | --------------------------------- |
+| values  | 表单的值                                                            | \{\}   | \{ fieldA: 'str', fieldB: true \} |
+| errors  | 表单错误信息集合,你可以通过判断是否有错误信息来决定是否允许用户提交 | \{\}   | \{ fieldA: 'length not valid'\}   |
+| touched | 用户点击过的 field 集合                                             | \{\}   | \{ fieldA: true \}                |
+
+### 如何访问 formState
+
+<Framework only="react">
+
+- 通过调用 formApi.getFormState()，在 Form 外部也可以获取 formState
+- 通过 [child render function 方式声明表单](#支持的其他写法)，formState 会作为参数注入
+- 通过 [render props 方式声明表单](#支持的其他写法)，formState 会作为参数注入
+- 通过 [useFormState](#useFormState) hook，Functional Component 访问父级 Form 的 formState，无需繁琐的引用传递
+- 通过 [withFormState](#HOC-withFormState) HOC
+
+</Framework>
+
+<Framework only="vue">
+
+- 通过调用 formApi.getFormState()，在 Form 外部也可以获取 formState
+- 通过 [默认作用域插槽](#支持的其他写法)，formState 会作为参数注入
+- 通过 [useFormState](#useFormState)，Form 内部的组件访问父级 Form 的 formState，无需繁琐的引用传递
+- 通过 [useForm](#useForm) 创建的 formState，在 Form 外部以响应式的方式读取
+
+</Framework>
+
+<Framework only="solid">
+
+- 通过调用 formApi.getFormState()，在 Form 外部也可以获取 formState
+- 通过 [child render function 方式声明表单](#支持的其他写法)，formState 会作为参数注入
+- 通过 [render props 方式声明表单](#支持的其他写法)，formState 会作为参数注入
+- 通过 [useFormState](#useFormState)，Form 内部的组件访问父级 Form 的 formState，无需繁琐的引用传递
+- 通过 `Form.useForm()` 创建的 formState，在 Form 外部以访问器的方式读取
+
+</Framework>
+
+## FormApi
+
+我们提供了 FormApi。你在 Form 内部、外部都可以很方便地获取到 formApi，它允许你使用 getter 和 setter 来获取和操作 formState 的值。  
+下面的表格描述了 formApi 中可用的功能。
+
+<Notice title="关于作用域隔离">为了防止用户在读取 formState、values 等内部状态后，意外操作直接了修改 Form 组件的内部状态等情况，Semi 对于 formApi.setValue、setValues的入参、formApi.getFormState、getValue、getValues的返回结果都会自动进行 deepClone</Notice>
+
+| Function | 说明 | example |
+| --- | --- | --- |
+| getFormProps | 获取 Form 组件上当前所有props的值，例如可用于读取 disabled 等。 | formApi.getFormProps(propNames?: string[]) |
+| getFormState | 获取 FormState | formApi.getFormState() |
+| submitForm | 可手动触发 submit 提交操作 | formApi.submitForm() |
+| reset | 可手动对 form 进行重置 | formApi.reset(fields?: Array \<string\>) |
+| validate | 可手动触发对表单的校验，不传参时默认触发整全体Field的校验（配置Form级别校验器后，Field级别校验器在submit或formApi.validate()时不会再被触发），若想触发部分field的校验，将目标field数组传入即可<br/><br/>**支持静默校验**：传入 `{ silent: true }` 可在不触发 UI 更新（不显示错误提示、不设置 touched 状态）的情况下获取校验结果，也可通过 `{ fields: ['fieldA'], silent: true }` 对指定字段进行静默校验 | formApi.validate()<br/>.then(values=>\{\})<br/>.catch(errors=>\{\}) <br/>或 formApi.validate(\['fieldA','fieldB'\])<br/>或 formApi.validate(\{ silent: true \})<br/>或 formApi.validate(\{ fields: \['fieldA'\], silent: true \})<br/> |
+| setValues | 设置整个表单的值。第二个参数中的 isOverride 默认为 false<br/>**isOverride 为 false 时**：遍历 Form 中所有已注册的 field，从 `newValues` 中取对应字段的值更新到 `formState.values` 中。如果 `newValues` 中不包含某个已注册 field 的值，该字段会被设置为 undefined。<br/>**isOverride 为 true 时**：直接用 `newValues` 整体替换 `formState.values`，包括 `newValues` 中存在但表单中没有对应 field 的额外 key 也会写入。<br/><br/>**推荐用法**：如果只需要更新部分字段，建议使用 `formApi.setValue(field, value)` 逐个更新，或者先获取当前值再合并：`formApi.setValues({ ...formApi.getValues(), name: newValue })` | formApi.setValues(newValues: object, \{ isOverride: boolean \}) |
+| setValue | 提供直接修改 formState.values 方法，与 setValues 的区别是它仅修改单个 field | formApi.setValue(field: string, newFieldValue: any) |
+| getValue | 获取 单个 Field 的值 | formApi.getValue() <br/>formApi.getValue(field: string) |
+| getValues | 获取 所有 Field 的值 | formApi.getValues() |
+| setTouched | 修改 formState.touched | formApi.setTouched(field: string, isTouched: boolean) <br/> |
+| getTouched | 获取 Field 的 touched 状态 | formApi.getTouched(field: string) |
+| setError | 修改 某个 field 的 error 信息 | formApi.setError(field: string, fieldErrorMessage: string) |
+| getError | 获取 Field 的 error 状态 | formApi.getError(field: string) |
+| getFieldExist | 获取 Form 中是否存在对应的 field | formApi.getFieldExist(field: string) |
+| scrollToField | 滚动至指定的 field, 第二个入参将透传至scroll-into-view-if-needed | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
+| scrollToError | 滚动至校验错误的field，可传指定 field 或者 index，传入 index 则滚动到第 index 个错误的 DOM，若不传参则滚动到DOM树中第一个校验出错的位置。 | formApi.scrollToError(<ApiType detail='{field?: string; index?: number; scrollOpts?: ScrollIntoViewOptions }'>ScrollToErrorOptions</ApiType>) |
+
+### 如何获取 formApi
+
+<Framework only="react">
+
+- 通过 `Form.useForm()` 在 Form 外部创建 formApi，然后通过 props.form 传入 Form 组件。这种方式允许你在 Form 渲染前就获取 formApi，适合需要在组件外部控制表单的场景。
+- Form 组件在 ComponentDidMount 阶段，会执行 props 传入的 getFormApi 回调，你可以在回调函数中保存 formApi 的引用，以便后续进行调用(**示例如下代码**)  
+   除此之外，我们还提供了其他方式获取 formApi，你可以根据喜好选择不同的调用方式
+- 通过 ref 的方式获取 Form 组件实例，直接访问实例上的 formApi
+- 通过 [child render function 方式声明表单](#支持的其他写法)，formApi 会作为参数注入
+- 通过 [render props 方式声明表单](#支持的其他写法)，formApi 会作为参数注入
+- 通过 [useFormApi](#useFormApi) hook
+- 通过 [withFormApi](#HOC-withFormApi) HOC
+
+</Framework>
+
+<Framework only="vue">
+
+- 通过 `useForm()` 在 Form 外部创建 formApi，然后通过 `form` 属性传入 Form 组件。这种方式允许你在 Form 渲染前就获取 formApi，适合需要在组件外部控制表单的场景。
+- Form 组件挂载后，会发出 `getFormApi` 事件，你可以在回调函数中保存 formApi 的引用，以便后续进行调用(**示例如下代码**)  
+   除此之外，我们还提供了其他方式获取 formApi，你可以根据喜好选择不同的调用方式
+- 通过模板 ref 获取 Form 组件实例，直接访问实例上的 formApi
+- 通过 [默认作用域插槽](#支持的其他写法)，formApi 会作为参数注入
+- 通过 [useFormApi](#useFormApi)，在 Form 内部的组件中获取
+
+</Framework>
+
+<Framework only="solid">
+
+- 通过 `Form.useForm()` 在 Form 外部创建 formApi，然后通过 props.form 传入 Form 组件。这种方式允许你在 Form 渲染前就获取 formApi，适合需要在组件外部控制表单的场景。
+- Form 组件挂载后，会执行 props 传入的 getFormApi 回调，你可以在回调函数中保存 formApi 的引用，以便后续进行调用(**示例如下代码**)  
+   除此之外，我们还提供了其他方式获取 formApi，你可以根据喜好选择不同的调用方式
+- 通过 ref 回调获取 form 元素，直接访问元素上的 formApi
+- 通过 [child render function 方式声明表单](#支持的其他写法)，formApi 会作为参数注入
+- 通过 [render props 方式声明表单](#支持的其他写法)，formApi 会作为参数注入
+- 通过 [useFormApi](#useFormApi)，在 Form 内部的组件中获取
+
+</Framework>
+
+<Framework only="react">
+
+#### 使用 Form.useForm()
+
+`Form.useForm()` 用于在 Form 组件**外部创建** formApi 实例，适合需要在 Form 渲染前就控制表单的场景。它返回一个数组 `[formApi, formState, formValues]`。
+
+<Notice type="primary" title="Form.useForm() 与 useFormApi 的区别">
+
+- **Form.useForm()**：在 Form **外部创建** formApi，需要通过 props.form 传入 Form 组件。用于父组件控制子 Form 的场景。
+- **useFormApi**：在 Form **内部获取** formApi，用于 Form 的子组件访问父级 Form。详见 [useFormApi](#useFormApi)。
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+#### useForm
+
+`useForm()` 用于在 Form 组件**外部创建** formApi，适合需要在 Form 渲染前就控制表单的场景。它返回对象 `{ formApi, formState, values }`，其中 `formState` 是只读的 `shallowRef`，`values` 是 `computed`，通过 Form 的 `form` 属性绑定后随表单更新。
+
+<Notice type="primary" title="useForm() 与 useFormApi 的区别">
+
+- **useForm()**：在 Form **外部创建** formApi，需要通过 `form` 属性传入 Form 组件。用于父组件控制子 Form 的场景。
+- **useFormApi**：在 Form **内部获取** formApi，用于 Form 的子组件访问父级 Form。详见 [useFormApi](#useFormApi)。
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+#### 使用 Form.useForm()
+
+`Form.useForm()`（也可以直接导入 `useForm`）用于在 Form 组件**外部创建** formApi 实例，适合需要在 Form 渲染前就控制表单的场景。它返回一个数组 `[formApi, formState, formValues]`，其中 `formState`、`formValues` 是访问器，通过 Form 的 `form` 属性绑定后随表单更新，通过 `formState()`、`formValues()` 读取。
+
+<Notice type="primary" title="Form.useForm() 与 useFormApi 的区别">
+
+- **Form.useForm()**：在 Form **外部创建** formApi，需要通过 props.form 传入 Form 组件。用于父组件控制子 Form 的场景。
+- **useFormApi**：在 Form **内部获取** formApi，用于 Form 的子组件访问父级 Form。详见 [useFormApi](#useFormApi)。
+
+</Notice>
+
+</Framework>
+
+使用示例：
+
+<Demo id="use-form" />
+
+<Framework only="react">
+
+<Notice type="primary" title="注意事项">
+
+使用 `Form.useForm()` 创建的 formApi 在 Form 组件挂载前调用方法时，会在控制台输出警告。建议在 Form 挂载后再调用 formApi 的方法。
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="注意事项">
+
+使用 `useForm()` 创建的 formApi 在 Form 组件挂载前调用方法时，会在控制台输出警告。建议在 Form 挂载后再调用 formApi 的方法。
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="注意事项">
+
+使用 `Form.useForm()` 创建的 formApi 在 Form 组件挂载前调用方法时，会在控制台输出警告。建议在 Form 挂载后再调用 formApi 的方法。
+
+</Notice>
+
+</Framework>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Form, Button } from '@fibrae/semi-ui-react';
+
+() => {
+    // 函数式组件通过useRef存储formApi
+    const api = useRef();
+
+    return (
+        <Form getFormApi={(formApi) => (api.current = formApi)}>
+            <Form.Input field="a" />
+            <Button
+                onClick={() => {
+                    console.log(api);
+                }}
+            >
+                log
+            </Button>
+        </Form>
+    );
+};
+```
+
+```jsx
+import React from 'react';
+import { Form, Button } from '@fibrae/semi-ui-react';
+
+class FormApiDemo extends React.Component {
+    constructor() {
+        super();
+        this.getFormApi = this.getFormApi.bind(this);
+        this.formBRef = React.createRef();
+    }
+
+    getFormApi(formApi) {
+        this.formApi = formApi;
+        // 获取到formApi对象后，你可以使用它来对表单进行任何你想做的修改 ~
+    }
+
+    changeValues() {
+        // 使用 FormA的 formApi
+        this.formApi.setValues({ a: 1 });
+        // 使用 FormB的 formApi
+        this.formBRef.current.formApi.setValues({ b: 2 });
+    }
+
+    render() {
+        return (
+            <>
+                {/* 通过getFormApi回调获取并保存formApi */}
+                <Form getFormApi={this.getFormApi} />
+                {/* 通过ref直接获取Form组件实例上的formApi */}
+                <Form ref={this.formBRef} />
+                <Button onClick={() => this.changeValues()}>Change</Button>
+            </>
+        );
+    }
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Button, Form } from '@fibrae/semi-ui-vue';
+    import type { FormApi, FormHandle } from '@fibrae/semi-ui-vue';
+
+    let formApiA: FormApi | undefined;
+    const formB = useTemplateRef<FormHandle>('formB');
+
+    const changeValues = () => {
+        // 使用 FormA 的 formApi，获取到 formApi 后，你可以使用它来对表单进行任何你想做的修改 ~
+        formApiA?.setValues({ a: 1 });
+        // 使用 FormB 的 formApi
+        formB.value?.formApi.setValues({ b: 2 });
+    };
+</script>
+
+<template>
+    <!-- 通过 getFormApi 事件获取并保存 formApi -->
+    <Form @getFormApi="(formApi) => (formApiA = formApi)" />
+    <!-- 通过模板 ref 直接获取 Form 组件实例上的 formApi -->
+    <Form ref="formB" />
+    <Button @click="changeValues">Change</Button>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Form, FormInput } from '@fibrae/semi-ui-solid';
+
+function FormApiDemo() {
+    let formApiA;
+    let formB;
+
+    const changeValues = () => {
+        // 使用 FormA 的 formApi，获取到 formApi 后，你可以使用它来对表单进行任何你想做的修改 ~
+        formApiA?.setValues({ a: 1 });
+        // 使用 FormB 的 formApi
+        formB?.formApi.setValues({ b: 2 });
+    };
+
+    return (
+        <>
+            {/* 通过 getFormApi 回调获取并保存 formApi */}
+            <Form getFormApi={(formApi) => (formApiA = formApi)}>
+                <FormInput field="a" />
+            </Form>
+            {/* 通过 ref 回调直接获取 form 元素上的 formApi */}
+            <Form ref={(node) => (formB = node)}>
+                <FormInput field="b" />
+            </Form>
+            <Button onClick={changeValues}>Change</Button>
+        </>
+    );
+}
+```
+
+</Framework>
+
+## Field Props
+
+<Framework only="react">
+
+<Notice type="primary" title="关于Field ref">
+    可直接通过ref获取底层控件实例，例如给Form.Input、Form.Select指定ref，直接获取到底层原始Input、Select组件的ref引用
+</Notice>
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| convert | field 值改变后，在 rerender 前，对 filed 的值进行二次更新<br/> 使用示例: (value) => newValue | function(fieldValue) |  |
+| field | 该表单控件的值在 formState.values 中的映射路径，Form 会使用该值来区分内部的表单控件<br/>**必填!!!** 示例：[Bindding Syntax](#表单控件值的绑定) | string |  |
+| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名, 传入 object 时会将其透传给 Form.Label，具体配置请参考[Label](#Form.Label) | string\|object |  |
+| labelPosition | 该表单控件的 label 位置，可选'top'/'left'/'inset'。在Form与Field上同时传入时，以Field props为准 | string |  |
+| labelAlign | 该表单控件的 label 文本的 text-align。在Form与Field上同时传入时，以Field props为准 | string |  |
+| labelWidth | 该表单控件的 label 文本的 width。在Form与Field上同时传入时，以Field props为准 | string\|number |  |
+| labelCol | 该表单控件的 label 栅格布局，同[Col 组件](/zh-CN/react/basic/grid#Col)，覆盖 Form 上的同名属性。与 wrapperCol 一起设置，且 Form 没有同时设置二者时，Field 会在内部自行包一层 Row | object |  |
+| wrapperCol | 该表单控件的控件栅格布局，同[Col 组件](/zh-CN/react/basic/grid#Col)，覆盖 Form 上的同名属性。使用方式同 labelCol | object |  |
+| noLabel | 当你不需要自动添加 label 时，可以将该值置为 true | boolean |  |
+| noErrorMessage | 当你不需要自动添加 ErrorMessage 模块时，可以将该值置为 true，注意此时 helpText 也不会被展示 | boolean |  |
+| name | 控件名称，传入时会自动在对应 field wrapper div 追加对应的 className，如：abc => '.semi-form-field-abc'。 还会将 name 透传至底层组件消费，例如你可以用于配置 input的name属性 | string |  |
+| fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | string |  |
+| fieldStyle | 整个 fieldWrapper 的 内联样式 | object |  |
+| initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | any（类型取决于当前组件，详细见各组件的 api） |  |
+| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。<br/>设置了 validator 时，rules 不会生效<br/>使用示例：(fieldValue, values) => fieldValue >= 5 ? 'value not valid' : '' | function(fieldValue, values) |  |
+| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator) <br/> 使用示例：const rules=\[\{ required: true, message: 'can't be null ' \},<br/>\{ max: 10, message: 'can't more than 10 word' \}\] | array |  |
+| validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default` | string | 'default' |
+| trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合\[`'blur'`,`'change'`\]<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | 'blur' \| 'change' \| 'custom' \| 'mount'，或其数组 | 'change' |
+| onChange | 值变化时触发的回调。回调函数的最后一个参数为最新的表单值 `latestValues`，可用于解决 React 闭包陷阱问题。<br/>使用示例：`onChange={(value, e, ...other) => { const latestValues = other[other.length - 1]; }}` | function(fieldValue: any \| ev: \{ target: \{ value: any \}\}, ...args: any[], latestValues?: object) <br/>（具体参见各组件的 onChange 方法） |  |
+| onBlur | 失去焦点时触发的回调 | function() （具体参见各组件的 onBlur 方法） |  |
+| transform | 校验前转换字段值，转换后的值仅会在校验时被消费，对 formState 无影响<br/> 使用示例: (value) => Number | function(fieldValue) |  |
+| allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | boolean | false |
+| allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | boolean | false |
+| emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | any | '' |
+| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | boolean | false |
+| stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | boolean | false |
+| helpText | 自定义提示信息，与校验信息公用同一区块展示，两者均有值时，优先展示校验信息 | ReactNode |  |
+| extraText | 额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个，位于 helpText/errorMessage 后 | ReactNode |  |
+| pure | 是否仅接管数据流，为 true 时不会自动插入 ErrorMessage、Label、extraText 等模块，样式、DOM 结构与原始的组件保持一致 | boolean | false |
+| extraTextPosition | 控制extraText的显示位置，可选`middle`（垂直方向以Label、extraText、Field主体的顺序显示）、`bottom` (垂直方向以Label、Field主体、extraText的顺序显示)；在Form与Field上同时传入时，以Field props为准 | string | 'bottom' |
+| ...other | 组件的其他可配置属性，与上面的属性平级一并传入即可，例如 Input 的 size/placeholder，**Field 会将其透传至组件本身** |  |  |
+
+</Framework>
+
+<Framework only="vue">
+
+Field 是 withField 生成的组件，不是单文件组件。字段通过模板 ref 取得的是 `{ control }`（类型 `FieldHandle`），其中 `control` 是被包装组件自身的句柄，例如 `FormInput` 的 `control` 可以调用 Input 的 `focus`。
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| convert | field 值改变后，在存入 formState 与展示前，对 field 的值进行二次更新 | `(fieldValue) => any` |  |
+| field | 该表单控件的值在 formState.values 中的映射路径，Form 会使用该值来区分内部的表单控件<br/>**必填!!!**（放在各自 Group 内的 FormCheckbox、FormRadio 除外）示例：[Bindding Syntax](#表单控件值的绑定) | `string` |  |
+| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名；传入对象时可配置 `text`、`extra`、`required`、`optional`、`align`、`width`、`disabled`，对象中的 `text`、`extra` 只收字符串或数字。`#fieldLabel`、`#labelExtra` 插槽优先 | `string \| number \| FieldLabel` |  |
+| labelPosition | 该表单控件的 label 位置。在Form与Field上同时传入时，以Field props为准 | `'top' \| 'left' \| 'inset'` |  |
+| labelAlign | 该表单控件的 label 文本的 text-align。在Form与Field上同时传入时，以Field props为准 | `'left' \| 'right'` |  |
+| labelWidth | 该表单控件的 label 文本的 width，数字单位为 px。在Form与Field上同时传入时，以Field props为准 | `string \| number` |  |
+| labelCol | 该表单控件的 label 栅格布局，同[Col 组件](/zh-CN/react/basic/grid#Col)，覆盖 Form 上的同名属性。与 wrapperCol 一起设置，且 Form 没有同时设置二者时，Field 会在内部自行包一层 Row | `ColProps` |  |
+| wrapperCol | 该表单控件的控件栅格布局，同[Col 组件](/zh-CN/react/basic/grid#Col)，覆盖 Form 上的同名属性。使用方式同 labelCol | `ColProps` |  |
+| noLabel | 当你不需要自动添加 label 时，可以将该值置为 true | `boolean` |  |
+| noErrorMessage | 当你不需要自动添加 ErrorMessage 模块时，可以将该值置为 true，注意此时 helpText 也不会被展示 | `boolean` |  |
+| name | 控件名称，传入时会自动在对应 field wrapper div 追加对应的 className，如：abc => '.semi-form-field-abc'，同时传给底层组件，例如可以用于配置 input 的 name 属性 | `string` |  |
+| id | 控件的 id，不传时自动生成。label 的 `for`，以及 label、helpText、extraText、errormessage 的 id 都由它派生 | `string` |  |
+| fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | `string` |  |
+| fieldStyle | 整个 fieldWrapper 的内联样式 | `StyleValue` |  |
+| initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | `unknown`（类型取决于当前组件，详细见各组件的 api） |  |
+| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。返回空字符串或 `undefined` 表示通过，其他结果为错误信息，只能是数据，自定义渲染错误信息使用 `#error` 插槽。设置了 validator 时，rules 不会生效 | `(fieldValue, values) => string \| string[] \| boolean \| undefined \| Promise` |  |
+| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator)，`message` 只收字符串 | `RuleItem[]` |  |
+| validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default`，不传时取 Field 自身的校验状态 | `string` |  |
+| trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | `FieldValidateTriggerType` | `'change'` |
+| transform | 校验前转换字段值，转换后的值仅会在校验时被消费，对 formState 无影响 | `(fieldValue) => any` |  |
+| allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | `boolean` | `false` |
+| allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | `boolean` | `false` |
+| emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | `unknown` | `''` |
+| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | `boolean` | `false` |
+| stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | `boolean` | `false` |
+| pure | 是否仅接管数据流，为 true 时不会自动插入 ErrorMessage、Label、extraText 等模块，样式、DOM 结构与原始的组件保持一致 | `boolean` | `false` |
+| extraTextPosition | 控制extraText的显示位置，可选`middle`（垂直方向以Label、extraText、Field主体的顺序显示）、`bottom` (垂直方向以Label、Field主体、extraText的顺序显示)；在Form与Field上同时传入时，以Field props为准 | `'middle' \| 'bottom'` | `'bottom'` |
+
+Field 不声明 `disabled`、`helpText`、`extraText`：`disabled` 取 Form 的值，写在 Field 上的 `disabled` 优先；提示信息使用下面的插槽。组件自身的其他属性（如 Input 的 `size`、`placeholder`）与 `class`、`style`、`aria-*` 一并写在 Field 上，**Field 会将其透传至被包装的组件本身**，而不是 fieldWrapper。
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| --- | --- | --- |
+| change | 值变化时触发（`onKeyChangeFnName` 指定了其他事件时，为那个事件）。回调参数是被包装组件该事件的原始参数，最后追加最新的表单值 `latestValues`，用于避免读到闭包里的旧值；不传 `field` 的 FormCheckbox、FormRadio 只是普通控件，没有 `latestValues`。与原生 change 事件同名，会遮住原生事件；不支持 `.once` 修饰符，也不出现在 Devtools 的事件面板。被包装组件的其他事件（如 `select`、`focus`）原样传给该组件，可以直接监听 | 被包装组件该事件的参数，`latestValues` |
+
+**Slots**
+
+| 插槽       | 说明                                                                                                       | 作用域参数       |
+| ---------- | ---------------------------------------------------------------------------------------------------------- | ---------------- |
+| fieldLabel | label 内容，优先于 label 属性中的文本                                                                      |                  |
+| labelExtra | 跟随在 label 文本后的内容，优先于 label 对象中的 `extra`                                                   |                  |
+| helpText   | 自定义提示信息，与校验信息公用同一区块展示，两者均有值时，优先展示校验信息                                 |                  |
+| extraText  | 额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个，位于 helpText/errorMessage 后            |                  |
+| error      | 自定义错误信息的渲染                                                                                       | `{ error }`      |
+| 其他       | 其余插槽（含 `#default`、`#label`）原样传给被包装组件，如 FormSelect 的选项、FormCheckboxGroup 的 `#label` | 由被包装组件决定 |
+
+</Framework>
+
+<Framework only="solid">
+
+Field 是 withField 生成的组件，下表列出 Field 自有的属性。
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| convert | field 值改变后，在存入 formState 与展示前，对 field 的值进行二次更新 | `(fieldValue) => any` |  |
+| field | 该表单控件的值在 formState.values 中的映射路径，Form 会使用该值来区分内部的表单控件<br/>**必填!!!**（放在各自 Group 内的 FormCheckbox、FormRadio 除外）示例：[Bindding Syntax](#表单控件值的绑定) | `string` |  |
+| label | 该表单控件的 label 标签文本，不传的时候默认与 field 同名；传入对象时作为 Form.Label 的属性，可配置 `text`、`extra`、`required`、`optional`、`align`、`width`、`disabled` 等，详见 [Label](#Form.Label)。`text`、`extra` 可以是 JSX | `LabelProps \| JSX.Element` |  |
+| labelPosition | 该表单控件的 label 位置。在Form与Field上同时传入时，以Field props为准 | `'top' \| 'left' \| 'inset'` |  |
+| labelAlign | 该表单控件的 label 文本的 text-align。在Form与Field上同时传入时，以Field props为准 | `'left' \| 'right'` |  |
+| labelWidth | 该表单控件的 label 文本的 width，数字单位为 px。在Form与Field上同时传入时，以Field props为准 | `string \| number` |  |
+| labelCol | 该表单控件的 label 栅格布局，同[Col 组件](/zh-CN/react/basic/grid#Col)，覆盖 Form 上的同名属性。与 wrapperCol 一起设置，且 Form 没有同时设置二者时，Field 会在内部自行包一层 Row | `ColProps` |  |
+| wrapperCol | 该表单控件的控件栅格布局，同[Col 组件](/zh-CN/react/basic/grid#Col)，覆盖 Form 上的同名属性。使用方式同 labelCol | `ColProps` |  |
+| noLabel | 当你不需要自动添加 label 时，可以将该值置为 true | `boolean` |  |
+| noErrorMessage | 当你不需要自动添加 ErrorMessage 模块时，可以将该值置为 true，注意此时 helpText 也不会被展示 | `boolean` |  |
+| name | 控件名称，传入时会自动在对应 field wrapper div 追加对应的 className，如：abc => '.semi-form-field-abc'，同时传给底层组件，例如可以用于配置 input 的 name 属性 | `string` |  |
+| id | 控件的 id，不传时自动生成。label 的 `for`，以及 label、helpText、extraText、errormessage 的 id 都由它派生 | `string` |  |
+| fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | `string` |  |
+| fieldStyle | 整个 fieldWrapper 的内联样式 | `JSX.CSSProperties \| string` |  |
+| initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | `any`（类型取决于当前组件，详细见各组件的 api） |  |
+| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。返回空字符串或 `undefined` 表示通过，其他结果（字符串、JSX、数组）为错误信息。设置了 validator 时，rules 不会生效 | `(fieldValue, values) => FieldValidateResult \| Promise<FieldValidateResult>` |  |
+| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator) | `RuleItem[]` |  |
+| validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default`，不传时取 Field 自身的校验状态 | `string` |  |
+| trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | `FieldValidateTriggerType` | `'change'` |
+| onChange | 值变化时调用的回调，参数是被包装组件该回调的原始参数，最后追加最新的表单值 `latestValues`；不传 `field` 的 FormCheckbox、FormRadio 只是普通控件，没有 `latestValues`（具体参见各组件的 onChange） | `(...args, latestValues) => void` |  |
+| onBlur | 失去焦点时调用的回调（具体参见各组件的 onBlur） | `(...args) => void` |  |
+| transform | 校验前转换字段值，转换后的值仅会在校验时被消费，对 formState 无影响 | `(fieldValue) => any` |  |
+| allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | `boolean` | `false` |
+| allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | `boolean` | `false` |
+| emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | `unknown` | `''` |
+| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | `boolean` | `false` |
+| stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | `boolean` | `false` |
+| helpText | 自定义提示信息，与校验信息公用同一区块展示，两者均有值时，优先展示校验信息 | `JSX.Element` |  |
+| extraText | 额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个，位于 helpText/errorMessage 后 | `JSX.Element` |  |
+| pure | 是否仅接管数据流，为 true 时不会自动插入 ErrorMessage、Label、extraText 等模块，样式、DOM 结构与原始的组件保持一致 | `boolean` | `false` |
+| extraTextPosition | 控制extraText的显示位置，可选`middle`（垂直方向以Label、extraText、Field主体的顺序显示）、`bottom` (垂直方向以Label、Field主体、extraText的顺序显示)；在Form与Field上同时传入时，以Field props为准 | `'middle' \| 'bottom'` | `'bottom'` |
+| ...other | 组件的其他可配置属性，与上面的属性平级一并传入即可，例如 Input 的 size/placeholder，**Field 会将其连同 `class`、`style`、`ref`、`aria-*` 一并传至被包装的组件本身**，而不是 fieldWrapper |  |  |
+
+`disabled` 取 Form 的值，写在 Field 上的 `disabled` 优先。
+
+</Framework>
+
+## Field Api
+
+我们同样提供了 `fieldApi`，其功能与 `formApi` 大部分相似，区别在于 fieldApi 限定了修改的范围，它只能修改所绑定的 field。通过 [useFieldApi](#useFieldApi) 获取
+
+| Function   | 说明                      | example                                    |
+| ---------- | ------------------------- | ------------------------------------------ |
+| setValue   | 修改当前 Field 的值       | fieldApi.setValue(newValue: any)           |
+| getValue   | 获取当前 Field 的值       | fieldApi.getValue()                        |
+| setTouched | 修改当前 Field 的 touched | fieldApi.setTouched(true)                  |
+| getTouched | 获取当前 Field 的 touched | fieldApi.getTouched()                      |
+| setError   | 修改当前 Field 的错误信息 | fieldApi.setError(newErrorMessage: string) |
+| getError   | 获取当前 Field 的错误信息 | fieldApi.getError()                        |
+
+<Framework only="react">
+
+## ArrayField
+
+针对动态增删的数组类表单项，我们提供了 ArrayField 作用域来简化 add/remove 的操作
+
+<ArrayFieldReactApi />
+
+ArrayField 没有自己的 DOM，未声明的属性会被丢弃。
+
+```ts
+interface ArrayFieldChildrenProps {
+    arrayFields: ArrayFieldItem<>;                               // 当前数组表单，可以用来执行map操作渲染出每一行
+    add: (index?: number | React.MouseEvent) => void;                         // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接用作 onClick
+    addWithInitValue: (lineObject: Record<string, any>, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+}
+
+interface ArrayFieldItem {
+    key: string;        // 一个用于标识当前行的key，应当绑定在当前行的 wrapper 上
+    field: string;      // 本行 fieldPath, 它等同于 ArrayFieldProps.field + [index]
+    remove: () => void; // 移除本行的操作函数，调用时将直接删除本行
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+## ArrayField
+
+针对动态增删的数组类表单项，我们提供了 ArrayField 作用域来简化新增、删除行的操作
+
+<ArrayFieldVueApi />
+
+ArrayField 没有自己的 DOM，未声明的属性会被丢弃。默认作用域插槽的参数类型如下：
+
+```ts
+interface ArrayFieldSlotProps {
+    arrayFields: ArrayFieldItem[]; // 当前数组表单，可以用来执行 v-for 渲染出每一行
+    onAdd: (index?: number | Event) => void; // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接写成 @click="onAdd"
+    onAddWithInitValue: (row: unknown, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+}
+
+interface ArrayFieldItem {
+    key: string; // 一个用于标识当前行的 key，应当绑定在当前行的 wrapper 上
+    field: string; // 本行 fieldPath，它等同于 ArrayField 的 field + [index]
+    onRemove: () => void; // 移除本行的操作函数，调用时将直接删除本行
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+## ArrayField
+
+针对动态增删的数组类表单项，我们提供了 ArrayField 作用域来简化 add/remove 的操作
+
+```jsx
+import { ArrayField } from '@fibrae/semi-ui-solid';
+```
+
+<ArrayFieldSolidApi />
+
+ArrayField 没有自己的 DOM，未声明的属性会被丢弃。children 函数的参数类型如下：
+
+```ts
+interface ArrayFieldChildrenProps {
+    readonly arrayFields: ArrayFieldRow[]; // 当前数组表单，可以用来渲染出每一行
+    add: (index?: number | MouseEvent) => void; // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接用作 onClick
+    addWithInitValue: (lineObject: Record<string, any> | string, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+}
+
+interface ArrayFieldRow {
+    key: string; // 一个用于标识当前行的 key
+    readonly field: string; // 本行 fieldPath，它等同于 ArrayField 的 field + [index]，随前面行的增删更新
+    remove: () => void; // 移除本行的操作函数，调用时将直接删除本行
+}
+```
+
+</Framework>
+
+<Framework only="react">
+
+## Form.Section
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Section } = Form;
+```
+
+<FormSectionReactApi />
+
+`aria-*` 等原生属性落在 `section` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+## FormSection
+
+```ts
+import { FormSection } from '@fibrae/semi-ui-vue';
+```
+
+<FormSectionVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 `section` 元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.Section
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Section } = Form;
+```
+
+<FormSectionSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在 `section` 元素上。
+
+</Framework>
+
+<Framework only="react">
+
+## Form.Label
+
+默认情况下，Label 会由 Form 自行插入到每个 Field 中。如果你需要在其他地方自行插入 Label，我们提供了 Label 组件可以导出
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Label } = Form;
+```
+
+<FormLabelReactApi />
+
+`htmlFor`、`aria-*` 等原生属性落在 `label` 元素上；`name` 与 `htmlFor` 同时传入时以 `name` 为准。
+
+</Framework>
+
+<Framework only="vue">
+
+## FormLabel
+
+默认情况下，Label 会由 Form 自行插入到每个 Field 中。如果你需要在其他地方自行插入 Label，我们提供了 FormLabel 组件可以导入
+
+```ts
+import { FormLabel } from '@fibrae/semi-ui-vue';
+```
+
+<FormLabelVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 `label` 元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.Label
+
+默认情况下，Label 会由 Form 自行插入到每个 Field 中。如果你需要在其他地方自行插入 Label，我们提供了 Label 组件可以导出
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Label } = Form;
+```
+
+<FormLabelSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在 `label` 元素上。
+
+</Framework>
+
+<Framework only="react">
+
+## Form.InputGroup
+
+<FormInputGroupReactApi />
+
+`className`、`style`、`ref` 落在内部 InputGroup 的 `role="group"` 元素上；`aria-labelledby`、`aria-describedby` 与组生成的 id 合并后传给组内每个字段，使用方的在前。设置了 label 时外层带 `role="group"`。Form.InputGroup 只能在 Form 内使用，在 Form 外不渲染任何内容并给出警告。
+
+当 extraTextPositon 为 middle，且 labelPosition 为 left时。由于 extraText允许为 ReactNode，内容高度不定，Label将不再确保能与 Field / InputGroup 中的首行文本对齐。
+
+</Framework>
+
+<Framework only="vue">
+
+## FormInputGroup
+
+```ts
+import { FormInputGroup } from '@fibrae/semi-ui-vue';
+```
+
+<FormInputGroupVueApi />
+
+`class`、`style` 与原生属性（如 `size`）落在内部的 InputGroup 上，并传给组内每个字段；`aria-labelledby`、`aria-describedby` 与组生成的 id 合并，使用方的在前。设置了 label 时外层带 `role="group"`，没有 label 时没有。
+
+当 extraTextPosition 为 middle，且 labelPosition 为 left时。由于 `#extraText` 的内容高度不定，Label将不再确保能与 Field / FormInputGroup 中的首行文本对齐。
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.InputGroup
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { InputGroup } = Form;
+```
+
+<FormInputGroupSolidApi />
+
+`class`、`style`、`ref` 落在内部 InputGroup 的 `role="group"` 元素上，其他原生属性（如 `aria-*`）传给组内每个字段；`aria-labelledby`、`aria-describedby` 与组生成的 id 合并，使用方的在前。设置了 label 时外层带 `role="group"`，没有 label 时没有。Form.InputGroup 只能在 Form 内使用，在 Form 外不渲染任何内容并给出警告。
+
+当 extraTextPosition 为 middle，且 labelPosition 为 left时。由于 extraText 的内容高度不定，Label将不再确保能与 Field / InputGroup 中的首行文本对齐。
+
+</Framework>
+
+<Framework only="react">
+
+## Form.Slot
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { Slot } = Form;
+```
+
+<FormSlotReactApi />
+
+`aria-*` 等原生属性落在根 div 上；有 label，或传入 `aria-label`、`aria-labelledby` 时根元素带 `role="group"`，使用方传入的 `role` 优先。label 的宽度、对齐取自 Form 的 `labelWidth`、`labelAlign`，label 对象中的 `width`、`align` 优先。
+
+</Framework>
+
+<Framework only="vue">
+
+## FormSlot
+
+```ts
+import { FormSlot } from '@fibrae/semi-ui-vue';
+```
+
+<FormSlotVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上；传入 `aria-label` 或 `aria-labelledby` 时根元素带 `role="group"`，使用方传入的 `role` 优先。label 的宽度、对齐取自 Form 的 `labelWidth`、`labelAlign`，label 对象中的 `width`、`align` 优先。
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.Slot
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { Slot } = Form;
+```
+
+<FormSlotSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素上；有 label，或传入 `aria-label`、`aria-labelledby` 时根元素带 `role="group"`，使用方传入的 `role` 优先。label 的宽度、对齐取自 Form 的 `labelWidth`、`labelAlign`，label 对象中的 `width`、`align` 优先。
+
+</Framework>
+
+<Framework only="react">
+
+## Form.ErrorMessage
+
+```jsx
+import { Form } from '@fibrae/semi-ui-react';
+const { ErrorMessage } = Form;
+```
+
+- 当 error 为 ReactNode、String 时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
+- 当 error 为数组时，会自动执行 join 操作聚合数组内的错误信息
+
+<FormErrorMessageReactApi />
+
+`aria-*` 等原生属性落在根 div 上。
+
+</Framework>
+
+<Framework only="vue">
+
+## FormErrorMessage
+
+```ts
+import { FormErrorMessage } from '@fibrae/semi-ui-vue';
+```
+
+- 当 error 为字符串时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
+- 当 error 为数组时，会自动执行 join 操作聚合数组内的错误信息；错误只能是数据，自定义渲染使用 `#error` 插槽
+
+<FormErrorMessageVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+## Form.ErrorMessage
+
+```jsx
+import { Form } from '@fibrae/semi-ui-solid';
+const { ErrorMessage } = Form;
+```
+
+- 当 error 为字符串、JSX 时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
+- 当 error 为数组时，会自动用逗号聚合数组内的错误信息
+
+<FormErrorMessageSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素上。
+
+</Framework>
+
+<Framework only="react">
+
+## withFieldOption
+
+| key               | 描述                                                                                                                                                                                                                           | 默认值     |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| valueKey          | 组件表示值的属性，如 Switch、Radio 的是'checked'，Input 的是'value'                                                                                                                                                            | 'value'    |
+| onKeyChangeFnName | 组件值变化时的回调函数，一般为'onChange'                                                                                                                                                                                       | 'onChange' |
+| valuePath         | 值属性在回调函数中第一个参数的路径,如 Radio 的 onChange(e.target.checked)，那么该值需要设为 target.checked；RadioGroup 的 onChange(e.target.value)，该值为'target.value'；若第一个参数就是值本身，无需再往下取值，该项不需要设 |            |
+
+</Framework>
+
+<Framework only="vue">
+
+## withFieldOptions
+
+| key               | 描述                                                                                                                                                                            | 默认值       |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| valueKey          | 组件表示值的属性，如自定义组件的 `modelValue`、原生 `input` 标签的 `value`                                                                                                      | 'modelValue' |
+| onKeyChangeFnName | 组件值变化时发出的事件名，如 `change`、`input`；Field 上该事件的监听器会在原参数后收到 `latestValues`                                                                           | 'change'     |
+| valuePath         | 值在事件第一个参数中的路径，如 Checkbox 的 `target.checked`、RadioGroup 的 `target.value`、原生 `input` 的 `target.value`；若第一个参数就是值本身，无需再往下取值，该项不需要设 | ''           |
+| shouldInject      | 为 false 时，没有传 `field` 的组件原样渲染而不被 Form 接管，如 Group 内的 FormCheckbox、FormRadio；为 true 且没有 `field` 时开发模式下给出警告                                  | true         |
+
+</Framework>
+
+<Framework only="solid">
+
+## withFieldOption
+
+| key               | 描述                                                                                                                                                                                    | 默认值     |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| valueKey          | 组件表示值的属性，如 Switch 的 `checked`、Input 的 `value`                                                                                                                              | 'value'    |
+| onKeyChangeFnName | 组件值变化时的回调属性名，一般为 `onChange`；原生 `input` 标签要随输入同步时用 `onInput`                                                                                                | 'onChange' |
+| valuePath         | 值属性在回调函数中第一个参数的路径，如 Switch 的 onChange 第一个参数就是值本身，无需设置；RadioGroup 的 onChange(e.target.value)，该值为 'target.value'；原生 `input` 的 `target.value` | ''         |
+| shouldInject      | 为 false 时，没有传 `field` 的组件原样渲染而不被 Form 接管，如 Group 内的 FormCheckbox、FormRadio；为 true 且没有 `field` 时开发模式下给出警告                                          | true       |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- [aria-labelledby](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-labelledby)、for
+    - Field 组件，会自动添加 label DOM。控件的 id 取 `props.id`，未传入时自动生成；label 的 `for` 属性与该 id 相同；label 的 id 属性为 `${控件 id}-label`;
+    - 当 Form 或者 Field 的 props.labelPosition 设置为 inset时，此时不存在 label 标签，而是 div 标签。insetLabel 对应的 div 标签会被自动追加 id，值与上述 label 的 id 相同，对应 Field 组件的 `aria-labelledby`。不支持内嵌标签的字段按 top 布局，`aria-labelledby` 指向实际渲染的 label
+    - Field 组件会被自动追加 `aria-labelledby`，值与上述 label 的id 相同；使用方传入的 `aria-labelledby` 排在前面，两者合并而不是覆盖
+- [aria-required](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-required_attribute)
+    - 当 Field 配置了必填时（即 props.rules中包含 require: true 或 props.label配置了required: true 且没有 optional: true），Field 组件会被自动追加 aria-required = true（CheckboxGroup、Slider、Upload 和单个 Radio 除外）；字段上显式传入的 aria-required 优先
+- [aria-invalid](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-invalid_attribute) 、[aria-errormessage](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-errormessage)
+    - 当 Field 校验未通过，或 validateStatus 为 error 时，Field 组件会被自动添加 `aria-invalid` = true 属性。
+    - 当 Field 校验未通过时，Field 组件会被自动追加 `aria-errormessage` 属性，值为 errorMessage 所对应DOM元素的 id （格式: `${控件 id}-errormessage`）；CheckboxGroup 落在组内每个 checkbox 上。
+- [aria-describedby](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-describedby_attribute)
+    - 当 Field 配置了 `helpText` 或 `extraText` 时，Field 组件会被自动添加 `aria-describedby` 属性，值为 helpText、extraText 所对应DOM元素的 id （格式：`${控件 id}-helpText` 、`${控件 id}-extraText`）；使用方传入的 `aria-describedby` 排在前面，两者合并而不是覆盖
+
+## 文案规范
+
+- 表单标题
+    - 表单标题需要跟随标题的书写规范
+- 表单标签
+    - 标签是输入框的简短描述。标签不是注释信息（help text），因此不应该是输入框的填写说明
+    - 标签必须要：
+        - 放在输入框的上方或下方
+        - 简短（1-3个词）
+        - 使用语句的大小写规范（首字母大写，其他小写）
+- 帮助文本
+    - 帮助文本使用语句书写规范，首字母大写
+- 表单按钮
+    - 关于表单按钮的文案规范，参考[按钮Button组件的文案规范](/zh-CN/react/basic/button#%E6%96%87%E6%A1%88%E8%A7%84%E8%8C%83)
+
+| ✅ 推荐用法                                                                      | ❌ 不推荐用法                                                                   |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| <img src='/assets/content_guide/formdemogood.jpg' style={{ height: '280px' }} /> | <img src='/assets/content_guide/formdemobad.jpg' style={{ height: '280px' }} /> |
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- **为什么我声明了表单，对值进行了修改，数据没有自动映射到 formState.values 中？**  
+   请检查是否正确传入了 field，Field 上的`field`属性是必填项！！！
+
+- **为什么传入了 defaultValue、defaultChecked 不生效？**  
+   请参考文档开头[表单控件](#声明表单的多种写法)，Field 组件对默认值做了统一处理，你应该使用`initValue`或者`initValues`来传入默认值
+
+- **为什么异步更新了 initValue、initValues 后，组件没有发生变化，值没有生效？**  
+   `initValue`、`initValues`只在 Field、Form mounted 时进行消费，后续做的异步更新并不会起效。  
+   如果你的初始值需要从远程取，那么你可以在获取到值之后，使用`formApi.setValue/setValues`进行更新。  
+   或者直接给 Form、Field 传入一个新的`key`强制它重新挂载
+
+- **为什么调用了 formApi.setValues 更新 fields 的值，但是实际渲染并没有更新？**
+
+    setValues 默认情况下对尚未存在的 field 进行赋值不会生效。如果你的 fields 是动态加载的话，请检查在 setValues 时，该 field 是否已 mounted。  
+     如有需要，可以使用 override 模式 `formApi.setValues(newValue, { isOverride: true })`
+
+- **为什么 rules 中的 validator 校验失败，但是对应的错误信息没有被展示？**
+
+    async-validator 的自定义 validator 返回值必须是 boolean 类型，否则它不执行任何回调，semi 后续的钩子也不会被调用。建议通过加 !! 或者 Boolean() 强制转换返回类型
+
+- **为什么 getValues 拿不到某个 field？**
+
+    field 没有初始值的话，`getValues` 获取不到这一项。可以设置 `initValues`/`initValue` 或者给 form 设置 `allowEmpty` 属性。
+
+- **为什么在输入框（如 Input）上敲击 enter 回车键会触发了 Form 的 submit？**
+
+    这个是标准 HTML 行为，我们不计划进行干预，会与原生保持一致。如果表单内确实只有一个 Input 元素，又不想回车时触发 submit 回调，建议对 Input 的 keydown 事件的 enter 采取 preventDefault 阻止默认行为。
+
+    点击 <a href="https://github.com/DouyinFE/semi-design/issues/767" target="_blank">#767</a> 查看相关背景和内容。
+
+- **表单会自动保存历史输入项，不想要这个功能怎么办？**  
+  在 v2.3 之前，Form 并没有严格按照 A11y 无障碍标准为输入控件配置`for`、`name`、`id` 等属性，因此在之前的版本并没有该功能。v2.3 后我们严格按照 W3C 标准进行了实现。如果你不希望浏览器自动保存历史输入项，也可以通过在 Form 级别或者 Field 级别设置 `autoComplete=off` 关掉

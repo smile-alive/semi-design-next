@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| avatarShape | 头像标签中头像的形状，可选 `square` 和 `circle`。 | `AvatarShape` | `"square"` |
+| avatarSrc | 头像的资源地址，设置后生成头像标签。 | `string` | - |
+| closable | 标签是否可以关闭。 | `boolean` | `false` |
+| color | 标签颜色，可选色板中的 16 种颜色和 `white`。 | `TagColor` | `"grey"` |
+| colorful | 是否为多彩标签。 | `boolean` | `false` |
+| gradient | 多彩标签是否为渐变色，需 `colorful` 为 `true`。 | `boolean` | `false` |
+| onClose | 关闭标签时的回调，参数为标签内容、事件与 `tagKey`。`event` 为点击关闭图标的 click 事件，或按 Backspace、Delete 时的 keydown 事件。对事件调用 `preventDefault` 可保持标签显示。 | <ApiType detail={"(tagChildren: JSX.Element, event: TagCloseEvent, tagKey?: string \u007c number) => void"}>Type</ApiType> | - |
+| prefixIcon | 内容前的图标，传入 JSX 元素。 | `JSX.Element` | - |
+| shape | 标签形状，可选 `square` 和 `circle`。 | `TagShape` | `"square"` |
+| size | 标签尺寸，可选 `default`、`small` 或 `large`。 | `TagSize` | `"default"` |
+| suffixIcon | 内容后的图标，传入 JSX 元素。 | `JSX.Element` | - |
+| tagKey | 标签的唯一标识，作为 `onClose` 的第三个参数。 | `string \| number` | - |
+| type | 样式类型，可选 `light`、`ghost` 或 `solid`。 | `TagType` | `"light"` |
+| visible | 标签是否可见。不传时关闭标签后会隐藏；传入后由该值决定显示。 | `boolean` | - |

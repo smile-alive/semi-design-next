@@ -1,0 +1,31 @@
+**Props**
+
+| Property              | Description                                                                                                                                                                             | Type              | Default     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------- |
+| active                | Whether this is the current item, injected by Breadcrumb. The current item has aria-current="page" and does not render as a link.                                                       | `boolean`         | `undefined` |
+| href                  | Destination of the link.                                                                                                                                                                | `string`          | `undefined` |
+| noLink                | Removes the hover and active styles.                                                                                                                                                    | `boolean`         | `undefined` |
+| route                 | Route object of the item, injected by the routes form of Breadcrumb. It is the first parameter of the click handler.                                                                    | `Route`           | `undefined` |
+| separator             | Text separator overriding the one of Breadcrumb. The separator slot wins when it is provided.                                                                                           | `string`          | `undefined` |
+| shouldRenderSeparator | Whether the separator renders, injected by Breadcrumb.                                                                                                                                  | `boolean`         | `true`      |
+| onClick               | Called on click, with the same parameters as onClick of Breadcrumb. It is a function prop, bound with @click as usual; passing it makes the item operable with Enter even without href. | `BreadcrumbClick` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot      | Description                                                                                                                                   | Scope parameters |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| default   | Text of the item. Strings and numbers are treated as text and take part in truncation and the Tooltip; other nodes render inline as they are. | `any`            |
+| icon      | Icon of the item.                                                                                                                             | `any`            |
+| separator | Custom separator of this item. Takes precedence over the separator prop.                                                                      | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

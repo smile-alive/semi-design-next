@@ -1,0 +1,27 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| alt | 图片的替代文本；文字头像上它是可访问名称，未设置时使用头像的文字内容。 | `string` | - |
+| border | 额外边框，传 `true` 或 `{ color, motion }`；`motion` 为 `true` 时开启边框动效。 | `{ color?: string; motion?: boolean; } \| boolean` | - |
+| bottomSlot | 底部标记配置，包含 `shape`、`text`、`bgColor`、`textColor`、`className` 和 `style`；传入 `render` 时完全由它渲染。仅在 `extra-small` 至 `extra-large` 的预设尺寸下显示。 | <ApiType detail={"{ render?: () => React.ReactNode; shape?: 'circle' \u007c 'square'; text: React.ReactNode; bgColor?: string; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |
+| children | 头像内的文字或自定义内容。 | `React.ReactNode` | - |
+| className | 头像主体元素（`.semi-avatar`）的类名；使用额外边框或顶部、底部标记时，它位于外层包裹元素之内。 | `string` | - |
+| color | 头像的预设背景颜色，可选 `amber`、`blue`、`cyan`、`green`、`grey`、`indigo`、`light-blue`、`light-green`、`lime`、`orange`、`pink`、`purple`、`red`、`teal`、`violet`、`yellow`；图片头像不使用。 | `AvatarColor` | `"grey"` |
+| contentMotion | 启用头像内容区域的动画。 | `boolean` | - |
+| gap | 文字内容与头像左右两侧的间距，单位为像素。 | `number` | `3` |
+| hoverMask | 鼠标悬停时显示的覆盖层内容，覆盖层没有默认样式。 | `React.ReactNode` | - |
+| imgAttr | 传给内部 `img` 元素的原生属性，仅图片头像有效；其中的 `onError` 先于组件的 `onError` 调用。 | <ApiType detail={"React.ImgHTMLAttributes\u003cHTMLImageElement>"}>Type</ApiType> | - |
+| onClick | 单击头像时调用，参数为 React 鼠标事件。传入后头像可以聚焦，按 `Enter` 或空格键会触发点击。 | `React.MouseEventHandler` | - |
+| onError | 图片加载失败时调用，不传事件参数。返回 `false` 时保留损坏的图片，不切换为文字回退。 | `React.MouseEventHandler` | - |
+| onMouseEnter | 鼠标移入时调用，参数为 React 鼠标事件。 | `React.MouseEventHandler` | - |
+| onMouseLeave | 鼠标移出时调用，参数为 React 鼠标事件。 | `React.MouseEventHandler` | - |
+| ref | 头像主体元素（`.semi-avatar`）的引用；使用额外边框或顶部、底部标记时，它不是外层包裹元素。 | <ApiType detail={"React.Ref\u003cHTMLSpanElement>"}>Type</ApiType> | - |
+| shape | 头像形状，可选 `circle` 或 `square`。 | `AvatarShape` | `"circle"` |
+| size | 头像尺寸，可选 `extra-extra-small`、`extra-small`、`small`、`default`、`medium`、`large`、`extra-large`，也可以传合法的 CSS 尺寸，如 `10px`。 | `string` | `"medium"` |
+| src | 图片头像的资源地址。 | `string` | - |
+| srcSet | 图片头像的响应式资源集合。 | `string` | - |
+| style | 头像样式；使用额外边框、顶部或底部标记时，样式落在外层包裹元素上。 | `CSSProperties` | - |
+| topSlot | 顶部标记配置，包含 `text`、`gradientStart`、`gradientEnd`、`textColor`、`className` 和 `style`；传入 `render` 时完全由它渲染。仅在圆形且预设尺寸为 `extra-small` 至 `extra-large` 时显示，渐变色未设置时使用 `var(--semi-color-primary)`。 | <ApiType detail={"{ render?: () => React.ReactNode; gradientStart?: string; gradientEnd?: string; text: React.ReactNode; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |

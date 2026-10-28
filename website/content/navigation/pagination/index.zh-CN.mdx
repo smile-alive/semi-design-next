@@ -1,0 +1,166 @@
+---
+order: 58
+title: 翻页器
+icon: doc-pagination
+brief: 分页器帮助用户在多个页之间进行导航
+---
+
+import PaginationReactApi from './api/pagination.react.zh-CN.mdx';
+import PaginationVueApi from './api/pagination.vue.zh-CN.mdx';
+import PaginationSolidApi from './api/pagination.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Pagination } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Pagination } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Pagination } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本
+
+基础分页，通过 `total` 设置总条数，`pageSize` 设置每页容量
+
+<Demo id="basic" />
+
+### 禁用
+
+通过 `disabled` 设置禁用
+
+<Demo id="disabled" />
+
+### 总页数显示
+
+通过 `showTotal` 属性控制是否展示总页数
+
+<Demo id="show-total" />
+
+### 指定当前页码
+
+可以通过 `defaultCurrentPage` 指定当前激活的页码
+
+<Demo id="default-current-page" />
+
+### 每页容量切换
+
+通过设置 `showSizeChanger` 为 `true`，允许通过 Select 组件快速切换每页容量
+
+<Demo id="size-changer" />
+
+### 快速跳转至某页
+
+通过设置 `showQuickJumper` 为 `true`, 允许通过Input控件输入页码，快速跳转  
+当Input失去焦点时，若Input中为有效数字，会直接进行跳转。你亦可在Input聚焦时，输入期望跳转的页码后直接敲击回车进行跳转  
+若你输入页码大于分页器总页数，我们会自动为你跳转至最后一页
+
+<Demo id="quick-jumper" />
+
+### 页码受控
+
+<Framework only="react">
+
+传入 `currentPage` 后，分页器即为受控组件，一般配合 `onPageChange` 使用。当前激活页码完全取决于传入的 `currentPage` 的值
+
+</Framework>
+
+<Framework only="vue">
+
+用 `v-model:currentPage` 绑定页码，分页器即为受控组件，当前激活页码完全取决于绑定的值；也可以只传 `currentPage` 并监听 `@pageChange` 自行更新
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `currentPage` 后分页器受控，页码由该值决定；配合 `onPageChange` 把新页码写回状态即可翻页。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 预设每页容量可选值
+
+传入 `pageSizeOpts` 数组，指定切换每页容量的可选值
+
+<Demo id="page-size-opts" />
+
+### 迷你版本
+
+`size` 设置为 `small`
+
+<Demo id="small" />
+
+开启 `hoverShowPageSelect`，可以 hover 页码打开页码列表快速切换
+
+<Demo id="hover-show-page-select" />
+
+## API 参考
+
+<Framework only="react">
+
+<PaginationReactApi />
+
+`id`、`aria-*`、`data-*`、`onClick` 等其他原生属性落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<PaginationVueApi />
+
+`class`、`style` 与原生属性（`id`、`aria-*`、`data-*`、事件监听）经 attrs 落在根元素 `ul` 上，default 与 small 两种尺寸一致；`change` 已声明为组件事件，`@change` 只收到页码与每页条数，不会收到快速跳转输入框冒泡的原生 change 事件。`ref` 取到的是组件实例，根元素为实例的 `$el`。
+
+</Framework>
+
+<Framework only="solid">
+
+<PaginationSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onClick`）落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
+
+</Framework>
+
+## Accessibility
+
+Pagination 按 [WAI-ARIA 分页导航](https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/examples/navigation.html) 的常见做法实现。
+
+### ARIA
+
+- 根元素是 `ul`，每一项（总数、上一页、页码、下一页、每页条数、快速跳转）都是其中的 `li`
+- 上一页、下一页、页码和「…」都是原生 `button`。页码的名称为「第 N 页」，「…」为「更多」，上一页、下一页按钮默认以语言包文案命名；传入 `prevText`、`nextText`（Vue 中为同名插槽）且内容是纯文本时以该文字命名，图标、元素等其他内容仍使用语言包文案
+- 当前页的按钮带 `aria-current="page"`；禁用的按钮使用原生 `disabled`
+- 快速跳转输入框以「跳至」命名，总页数小于 2 时禁用
+- 组件本身不是导航地标。页面上的分页是主要导航手段时，建议包在 `<nav aria-label="...">` 里，并用名称区分页面上的多个分页
+
+### 键盘和焦点
+
+- 上一页、下一页、页码和「…」都可以用 `Tab` 聚焦，`Enter` 或 `Space` 翻页；
+- 键盘聚焦「…」或 small 模式下开启 `hoverShowPageSelect` 的页码文字时，会打开被省略的页码列表：
+    - `下箭头` 聚焦列表中的第一页，`上箭头` 聚焦最后一页；
+    - 在列表中用 `Tab`、`Shift + Tab` 移动，`Enter` 或 `Space` 跳到该页；
+    - `Esc` 关闭列表，焦点回到触发按钮。
+
+## 设计变量
+
+<DesignToken />

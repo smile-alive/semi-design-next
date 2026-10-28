@@ -1,0 +1,30 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                             | 类型                                                                | 默认值      |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------- |
+| align        | header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。     | `"flex-start" \| "flex-end" \| "center" \| "baseline" \| "stretch"` | `undefined` |
+| onClick      | 点击回调，优先于 List 的 onClick；有处理函数时项渲染为原生按钮。使用方写 @click，保留为函数 prop 的原因同 List。 | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>    | `undefined` |
+| onRightClick | 右键（上下文菜单）回调，优先于 List 的 onRightClick；只设置它时项同样渲染为原生按钮。使用方写 @rightClick。      | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>    | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                                                                                   | 作用域参数 |
+| ------- | -------------------------------------------------------------------------------------- | ---------- |
+| default | 列表项内容；可点击且没有 header 与 main 插槽时放在按钮内，否则放在按钮之外。           | `any`      |
+| header  | 列表项头部内容。                                                                       | `any`      |
+| main    | 列表项主体内容。                                                                       | `any`      |
+| extra   | 列表项附加内容，渲染在按钮外，其中的交互元素可正常聚焦与点击，点击不会触发整行的点击。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

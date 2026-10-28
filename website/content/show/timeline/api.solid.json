@@ -1,0 +1,60 @@
+{
+    "timeline": {
+        "source": "packages/semi-ui-solid/src/timeline/timeline.tsx",
+        "props": {
+            "dataSource": {
+                "zh-CN": "数据数组；非空时按数据渲染，忽略子节点。项的字段见下表。",
+                "en-US": "Data array. When it is not empty the items are rendered from it and the children are ignored. See the item fields below."
+            },
+            "mode": {
+                "zh-CN": "时间轴与内容的相对位置，可选 left、right、center、alternate。",
+                "en-US": "Position of the timeline relative to the content: left, right, center or alternate."
+            },
+            "renderContent": {
+                "zh-CN": "渲染 dataSource 每一项的内容，参数为 (item, index)；不传时显示 item.content。",
+                "en-US": "Renders the content of each dataSource item, called with (item, index); defaults to item.content."
+            },
+            "renderDot": {
+                "zh-CN": "渲染 dataSource 每一项的自定义节点图标，参数为 (item, index)。",
+                "en-US": "Renders the custom dot of each dataSource item, called with (item, index)."
+            },
+            "renderTime": {
+                "zh-CN": "渲染 dataSource 每一项的时间，参数为 (item, index)；不传时显示 item.time。",
+                "en-US": "Renders the time of each dataSource item, called with (item, index); defaults to item.time."
+            },
+            "renderExtra": {
+                "zh-CN": "渲染 dataSource 每一项的辅助内容，参数为 (item, index)；不传时显示 item.extra。",
+                "en-US": "Renders the extra content of each dataSource item, called with (item, index); defaults to item.extra."
+            }
+        }
+    },
+    "timeline-item": {
+        "source": "packages/semi-ui-solid/src/timeline/item.tsx",
+        "props": {
+            "color": {
+                "zh-CN": "节点的颜色，作为圆点的背景色，覆盖 type 对应的颜色。",
+                "en-US": "Color of the dot, used as its background and overriding the color of type."
+            },
+            "dot": {
+                "zh-CN": "自定义节点图标，替换默认圆点。",
+                "en-US": "Custom dot content, replacing the default dot."
+            },
+            "extra": {
+                "zh-CN": "辅助说明内容，为空时不渲染。",
+                "en-US": "Extra content, not rendered when empty."
+            },
+            "position": {
+                "zh-CN": "覆盖 Timeline 的 mode，指定该项所在的一侧，可选 left 或 right。",
+                "en-US": "Overrides the mode of the Timeline for this item: left or right."
+            },
+            "time": {
+                "zh-CN": "时间文本，为空时不渲染。",
+                "en-US": "Time text, not rendered when empty."
+            },
+            "type": {
+                "zh-CN": "节点类型，可选 default、ongoing、success、warning、error。",
+                "en-US": "Dot type: default, ongoing, success, warning or error."
+            }
+        }
+    }
+}

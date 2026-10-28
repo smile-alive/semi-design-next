@@ -1,0 +1,31 @@
+**Props**
+
+| 属性     | 说明                                                                    | 类型               | 默认值      |
+| -------- | ----------------------------------------------------------------------- | ------------------ | ----------- |
+| text     | Label 文本，默认插槽优先。                                              | `string \| number` | `undefined` |
+| extra    | 跟随在 label 文本后的内容，extra 插槽优先。                             | `string \| number` | `undefined` |
+| align    | Label 文本的对齐方式。                                                  | `string`           | `"left"`    |
+| disabled | 是否为禁用样式。                                                        | `boolean`          | `undefined` |
+| required | 是否显示必填的 \* 号。                                                  | `boolean`          | `false`     |
+| optional | 是否在文本后追加语言包中的可选标识。为 true 时不再显示 required 的 \*。 | `boolean`          | `false`     |
+| name     | 所标注控件的 id，写入 label 的 for 属性。                               | `string`           | `undefined` |
+| width    | Label 宽度，数字单位为 px。                                             | `string \| number` | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                                      | 作用域参数 |
+| ------- | ----------------------------------------- | ---------- |
+| default | Label 内容，优先于 text。                 | `any`      |
+| extra   | 跟随在 label 文本后的内容，优先于 extra。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

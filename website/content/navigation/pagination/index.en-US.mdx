@@ -1,0 +1,166 @@
+---
+order: 58
+title: Pagination
+icon: doc-pagination
+brief: The Pager helps users navigate between multiple pages
+---
+
+import PaginationReactApi from './api/pagination.react.en-US.mdx';
+import PaginationVueApi from './api/pagination.vue.en-US.mdx';
+import PaginationSolidApi from './api/pagination.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Pagination } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Pagination } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Pagination } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Set the total number via `total`, set capacity per page via `pageSize`.
+
+<Demo id="basic" />
+
+### disabled
+
+Disabled via the `disabled` setting
+
+<Demo id="disabled" />
+
+### Show total page number
+
+Use the showTotal property to control whether the total number of pages is shown.
+
+<Demo id="show-total" />
+
+### Specify current page number
+
+You can specify the currently active page number via `defaultCurrentPage`.
+
+<Demo id="default-current-page" />
+
+### Capacity switching per page
+
+By setting `showSizeChanger` for `true`, allowing quick switching of capacity per page via the Select component
+
+<Demo id="size-changer" />
+
+### Jump to a page quickly
+
+By setting `showQuickJumper` to `true`, you can enter the page number through the Input control to quickly jump  
+When Input loses focus, if there is a valid number in Input, it will jump directly. You can also enter the page number you want to jump to when the Input is focused, and then hit enter to jump directly  
+If you enter a page number greater than the total page number of the pager, we will automatically jump to the last page for you
+
+<Demo id="quick-jumper" />
+
+### Page number controlled
+
+<Framework only="react">
+
+After the currentPage is passed in, the pager is a controlled component and is generally used in conjunction with `onPageChange`. The current active page number depends entirely on the value of the `currentPage` passed in.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the page number with `v-model:currentPage` and the pager is a controlled component: the current active page number depends entirely on the bound value. You can also pass only `currentPage` and update it yourself from `@pageChange`.
+
+</Framework>
+
+<Framework only="solid">
+
+A passed `currentPage` makes the pagination controlled: the active page is entirely determined by that value, so write the new page from `onPageChange` back into your state to change it.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Preset capacity per page
+
+Specify an optional value for switching the capacity per page by using the `pageSizeOpts` array
+
+<Demo id="page-size-opts" />
+
+### Mini version
+
+Show mini pagination via size properties.
+
+<Demo id="small" />
+
+Turn on `hoverShowPageSelect` to open the page list by hovering the page text and switch pages quickly
+
+<Demo id="hover-show-page-select" />
+
+## API reference
+
+<Framework only="react">
+
+<PaginationReactApi />
+
+Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall through to the root `ul`, in both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<PaginationVueApi />
+
+`class`, `style` and native attributes (`id`, `aria-*`, `data-*`, event listeners) fall through attrs onto the root `ul`, for both the default and the small size. `change` is a declared component event, so `@change` receives only the page and the page size, never the native change event bubbling up from the quick jump input. A template `ref` gives the component instance; the root element is its `$el`.
+
+</Framework>
+
+<Framework only="solid">
+
+<PaginationSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onClick`) land on the root `ul`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
+
+</Framework>
+
+## Accessibility
+
+Pagination follows the common practice of the [WAI-ARIA navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/examples/navigation.html).
+
+### ARIA
+
+- The root is a `ul`, and every part (total, previous, pages, next, page size, quick jumper) is an `li` in it
+- Previous, next, the pages and "…" are native `button`s. A page is named "Page N", "…" is named "More", and previous and next are named by the locale by default; with `prevText` or `nextText` (slots of the same name in Vue) holding plain text they are named by that text, while icons, elements and other content keep the locale name
+- The button of the current page has `aria-current="page"`; disabled buttons use the native `disabled`
+- The quick jumper input is named "Jump to" and is disabled when there are fewer than 2 pages
+- The component itself is not a navigation landmark. When the pagination is a main way to navigate the page, wrap it in a `<nav aria-label="...">` and tell multiple paginations on the page apart by their names
+
+### Keyboard and Focus
+
+- Previous, next, the pages and "…" can be focused with `Tab`, and `Enter` or `Space` turns the page;
+- Keyboard focus on "…", or on the page text in small mode with `hoverShowPageSelect`, opens the list of the omitted pages:
+    - `Down Arrow` focuses the first page in the list, `Up Arrow` focuses the last one;
+    - `Tab` and `Shift + Tab` move in the list, `Enter` or `Space` jumps to the page;
+    - `Esc` closes the list and returns focus to the trigger button.
+
+## Design Tokens
+
+<DesignToken />

@@ -1,0 +1,53 @@
+.compare {
+    position: relative;
+    width: 100%;
+
+    img {
+        max-width: 100%;
+        min-height: 725px;
+        margin: 0.2em 0;
+    }
+
+    .clip {
+        position: relative;
+        z-index: 998;
+    }
+
+    .handle {
+        position: relative;
+        width: 4px;
+        height: 100%;
+        background: var(--semi-color-primary);
+    }
+
+    .knob {
+        position: absolute;
+        top: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        color: #fff;
+        background: var(--semi-color-primary);
+        border-radius: 50%;
+        box-shadow: var(--semi-shadow-elevated);
+        transform: translate(-45%, -50%);
+    }
+
+    .knob .semi-icons {
+        transform: rotate(-45deg);
+    }
+
+    .absolute {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .a {
+        z-index: 999;
+        height: 100%;
+    }
+}

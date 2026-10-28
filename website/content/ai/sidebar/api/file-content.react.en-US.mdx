@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                                                                 | Type                                                                                                | Default |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------- |
+| activeKey | Keys of the expanded file panels, one or several.                                                                                                                           | `string \| string[]`                                                                                | -       |
+| className | Class name of the Collapse root element.                                                                                                                                    | `string`                                                                                            | -       |
+| files     | The file entries, rendered read-only: each is the FileItem props plus a key identifying its panel; its `className`, `style` and other attributes are passed to the preview. | `FileItemProps[]`                                                                                   | `[]`    |
+| onChange  | Called when the expanded panels change, with the expanded keys.                                                                                                             | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>                      | -       |
+| onExpand  | Called when the expand button in a panel header is clicked, with the event, the file entry and the mode `file`; the button is shown only when this is set.                  | <ApiType detail={"(e: React.MouseEvent, file: FileItemProps, mode: string) => void"}>Type</ApiType> | -       |
+| style     | Inline style of the Collapse root element.                                                                                                                                  | `React.CSSProperties`                                                                               | -       |

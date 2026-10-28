@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property           | Description                                                                                                                         | Type                                                                            | Default |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------- |
+| afterVisibleChange | Called after a visibility change has completed, with whether the container is visible; with motion it runs when the animation ends. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType>                 | -       |
+| children           | Content of the container.                                                                                                           | `JSX.Element`                                                                   | -       |
+| closeOnEsc         | Whether pressing Esc calls onCancel.                                                                                                | `boolean`                                                                       | -       |
+| containerRef       | Receives the `.semi-sidebar-container` element, as `ref` does.                                                                      | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType>                     | -       |
+| defaultSize        | Initial size (width and height); applies only when resizable is true.                                                               | `{ width?: number \| string; height?: number \| string }`                       | -       |
+| maxWidth           | Maximum width when resizing; applies only when resizable is true.                                                                   | `string \| number`                                                              | -       |
+| minWidth           | Minimum width when resizing; applies only when resizable is true.                                                                   | `string \| number`                                                              | `150`   |
+| motion             | Whether showing and hiding use the expand animation.                                                                                | `boolean`                                                                       | `true`  |
+| onCancel           | Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true.                                           | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | -       |
+| renderHeader       | Renders the whole header; the built-in header is used when it returns no content.                                                   | <ApiType detail={"() => JSX.Element"}>Type</ApiType>                            | -       |
+| resizable          | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true.                              | `boolean`                                                                       | `true`  |
+| showClose          | Whether the header shows the close button.                                                                                          | `boolean`                                                                       | `true`  |
+| style              | Inline style of the container element, a style object or a string.                                                                  | `JSX.CSSProperties \| string`                                                   | -       |
+| title              | Title in the header; any content.                                                                                                   | `JSX.Element`                                                                   | -       |
+| visible            | Whether the container is shown.                                                                                                     | `boolean`                                                                       | -       |

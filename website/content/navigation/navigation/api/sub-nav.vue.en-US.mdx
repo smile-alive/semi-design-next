@@ -1,0 +1,33 @@
+**Props**
+
+| Property         | Description                                                                              | Type                | Default     |
+| ---------------- | ---------------------------------------------------------------------------------------- | ------------------- | ----------- |
+| disabled         | Whether the sub navigation is disabled.                                                  | `boolean`           | `undefined` |
+| dropdownProps    | Props of the popup Dropdown, used in horizontal mode and when collapsed.                 | `SubDropdownProps`  | `undefined` |
+| dropdownStyle    | Style of the popup. Wins over the style in dropdownProps.                                | `StyleValue`        | `undefined` |
+| indent           | Whether to keep the icon's space when there is no icon. Applies to the first level only. | `number \| boolean` | `undefined` |
+| itemKey          | Unique key of the sub navigation.                                                        | `ItemKey`           | `undefined` |
+| level            | Nesting level of the item. Determines the indentation when limitIndent is false.         | `number`            | `undefined` |
+| subDropdownProps | Props of the popup Dropdown, used when dropdownProps is not given.                       | `SubDropdownProps`  | `undefined` |
+| text             | Title text of the sub navigation. The #text slot replaces what is shown.                 | `string \| number`  | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot       | Description                                             | Scope parameters |
+| ---------- | ------------------------------------------------------- | ---------------- |
+| default    | The Nav.Item and Nav.Sub entries of the sub navigation. | `any`            |
+| expandIcon | Expand arrow icon.                                      | `any`            |
+| icon       | Icon of the sub navigation.                             | `any`            |
+| text       | Replaces the title text shown.                          | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

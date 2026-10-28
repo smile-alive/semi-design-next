@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| className | Class name of the root `div` element, merged with the component's own class name. | `string` | - |
+| components | Overrides Markdown elements and adds the custom components MDX sources refer to. Values are React components or HTML tag names; an element key such as `h1` takes a component or its own tag name. Merged over `MarkdownRender.defaultComponents`; a change only renders again, it does not compile again. A key whose value is `undefined` falls back to the built-in component. | `MarkdownRenderComponents` | - |
+| format | Format of `raw`: `md` is plain Markdown, `mdx` allows embedded JSX. Compiles again on change. | `'md' \| 'mdx'` | `"mdx"` |
+| raw | Markdown or MDX source text. Compiles again on change. | `string` | - |
+| ref | Reference to the root `div` element. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| rehypePlugins | Custom Rehype plugins. Compiles again when an entry changes. | `PluggableList` | - |
+| remarkGfm | Whether to enable GitHub GFM syntax. Compiles again on change. | `boolean` | `true` |
+| remarkPlugins | Custom Remark plugins. Compiles again when an entry changes. | `PluggableList` | - |
+| style | Style of the root `div` element. | `React.CSSProperties` | - |

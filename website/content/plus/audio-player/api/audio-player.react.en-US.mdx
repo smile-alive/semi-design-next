@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property     | Description                                                                                                              | Type                                                              | Default  |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- | -------- |
+| audioUrl     | Audio address: a string, an `AudioInfo` object, or an array of them. An array shows the previous and next track buttons. | `AudioUrl`                                                        | -        |
+| autoPlay     | Whether to play automatically.                                                                                           | `boolean`                                                         | `false`  |
+| className    | Class name of the root element.                                                                                          | `string`                                                          | -        |
+| ref          | Reference to the root `div` element.                                                                                     | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
+| showToolbar  | Whether to show the toolbar: the volume, backward, forward, playback rate and refresh buttons.                           | `boolean`                                                         | `true`   |
+| skipDuration | Seconds skipped by each backward or forward button press.                                                                | `number`                                                          | `10`     |
+| style        | Inline style of the root element.                                                                                        | `React.CSSProperties`                                             | -        |
+| theme        | Player theme: `dark` or `light`.                                                                                         | `AudioPlayerTheme`                                                | `"dark"` |

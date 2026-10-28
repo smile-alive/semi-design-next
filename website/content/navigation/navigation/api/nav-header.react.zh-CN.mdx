@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                          | 类型                                                                                  | 默认值 |
+| ----------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------ |
+| children    | 头部区域的子元素，渲染在 Logo 与文案之后。                                                    | `ReactNode`                                                                           | -      |
+| className   | 最外层 `div` 的类名。                                                                         | `string`                                                                              | -      |
+| link        | 头部的 `href`，传入时头部内容包裹在链接中。                                                   | `string`                                                                              | -      |
+| linkOptions | 透传给链接的属性。                                                                            | <ApiType detail={"React.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -      |
+| logo        | Logo 节点，如图片或图标。                                                                     | `Logo`                                                                                | -      |
+| ref         | 头部最外层 `div` 元素的引用。                                                                 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                     | -      |
+| style       | 最外层 `div` 的样式。                                                                         | `CSSProperties`                                                                       | -      |
+| text        | Logo 文案。收起后文案隐藏；收起且设置了 `link` 时，字符串或数字文案作为头部链接的可访问名称。 | `React.ReactNode`                                                                     | -      |

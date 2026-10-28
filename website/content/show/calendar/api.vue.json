@@ -1,0 +1,86 @@
+{
+    "calendar": {
+        "source": "packages/semi-ui-vue/src/calendar/calendar.vue",
+        "props": {
+            "displayValue": {
+                "zh-CN": "展示日期，未传时为当前日期并在午夜更新。",
+                "en-US": "Display date. When omitted it is the current date and updates at midnight."
+            },
+            "events": {
+                "zh-CN": "渲染的事件，格式见 Event Object。",
+                "en-US": "Events to render, see Event Object."
+            },
+            "height": {
+                "zh-CN": "日历高度，数字按像素处理。",
+                "en-US": "Height of the calendar; a number is in pixels."
+            },
+            "markWeekend": {
+                "zh-CN": "以灰色区分周末列和工作日。",
+                "en-US": "Shows weekend columns in grey to tell them from weekdays."
+            },
+            "minEventHeight": {
+                "zh-CN": "日视图、多日视图以及周视图下事件的最小高度，单位为像素。",
+                "en-US": "Minimum height in pixels of events in the day, range and week views."
+            },
+            "mode": {
+                "zh-CN": "视图模式，可选 day、week、month、range，变化后立即切换视图。",
+                "en-US": "View mode: day, week, month or range. The view switches as soon as it changes."
+            },
+            "range": {
+                "zh-CN": "range 模式下展示的日期范围，左闭右开；range 模式必传。",
+                "en-US": "Date range shown in range mode, left-closed and right-open. Required in range mode."
+            },
+            "scrollTop": {
+                "zh-CN": "日、周、多日视图下展示内容的默认滚动高度。",
+                "en-US": "Default scroll offset of the content in the day, week and range views."
+            },
+            "showCurrTime": {
+                "zh-CN": "日、周、多日视图下显示当前时间的红线。",
+                "en-US": "Shows the red line of the current time in the day, week and range views."
+            },
+            "weekStartsOn": {
+                "zh-CN": "以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。",
+                "en-US": "Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views."
+            },
+            "width": { "zh-CN": "日历宽度，数字按像素处理。", "en-US": "Width of the calendar; a number is in pixels." }
+        },
+        "events": {
+            "click": {
+                "zh-CN": "单击日期格时触发，参数为事件和该格的日期；日、周、多日视图以半小时为单位，月视图以日为单位。",
+                "en-US": "Emitted when a date cell is clicked, with the event and the date of the cell. The unit is half an hour in the day, week and range views and one day in the month view."
+            },
+            "close": {
+                "zh-CN": "月视图下展示全部事件的卡片关闭时触发；关闭按钮或再次点击「还有 N 项」传点击事件，Esc 传键盘事件，点击外部或组件在 KeepAlive 中停用时传 null。",
+                "en-US": "Emitted when the card showing all events of a day closes in the month view: the click event for the close button or a second click on \"N more\", the keyboard event for Esc, and null for a click outside or when the component is deactivated in KeepAlive."
+            },
+            "moreClick": {
+                "zh-CN": "月视图下点击「还有 N 项」打开卡片时触发，参数为事件、日期和被折叠的事件数；再次点击收起卡片时不触发。",
+                "en-US": "Emitted when a click on \"N more\" opens the card in the month view, with the event, the date and the number of collapsed events. It is not emitted when a second click closes the card."
+            }
+        },
+        "slots": {
+            "header": { "zh-CN": "自定义头部内容。", "en-US": "Custom header content." },
+            "event": {
+                "zh-CN": "自定义事件内容，参数 event 为 events 中的原对象，同一事件在多处显示时每处各调用一次；未提供时渲染 children 文本。",
+                "en-US": "Custom event content. event is the original object from events and the slot is called once for each place the event appears. The text of children is rendered when it is absent."
+            },
+            "dateDisplay": {
+                "zh-CN": "自定义日期文案（周、多日视图的列标题与月视图的每个日期格），日视图不使用。",
+                "en-US": "Custom date text: the column titles of the week and range views and every cell of the month view. The day view does not use it."
+            },
+            "dateGrid": {
+                "zh-CN": "自定义单元格或列的内容，参数为日期和 date.toString() 得到的 dateString，需要绝对定位。",
+                "en-US": "Custom content of a date cell or column, with the date and its dateString (date.toString()). Use absolute positioning for elements."
+            },
+            "timeDisplay": {
+                "zh-CN": "自定义日、周、多日视图下的时间文案，参数 time 为小时数。",
+                "en-US": "Custom time text in the day, week and range views; time is the hour."
+            },
+            "allDayEvents": {
+                "zh-CN": "自定义日、多日、周视图顶部的全天事件区域，参数 events 为传入的全部事件，需自行筛选。",
+                "en-US": "Custom area for events at the top of the day, range and week views; events is the whole events array that was passed in, to be filtered by the slot."
+            }
+        },
+        "exposed": {}
+    }
+}

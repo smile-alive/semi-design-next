@@ -1,0 +1,790 @@
+---
+order: 101
+title: AIChatInput
+icon: doc-aiInput
+brief: Input box used in AI chat scenarios
+showNew: true
+---
+
+import AIChatInputReactApi from './api/ai-chat-input.react.en-US.mdx';
+import McpReactApi from './api/mcp.react.en-US.mdx';
+import AIChatInputVueApi from './api/ai-chat-input.vue.en-US.mdx';
+import McpVueApi from './api/mcp.vue.en-US.mdx';
+import AIChatInputSolidApi from './api/ai-chat-input.solid.en-US.mdx';
+import McpSolidApi from './api/mcp.solid.en-US.mdx';
+
+## Usage Scenarios
+
+In AI chat scenarios, users can use `AIChatInput` to achieve rich text input, uploading, quoting, suggestions, templates, feature configuration, and rich custom display.
+
+`AIChatInput`'s rich text input is based on `tiptap` (https://tiptap.dev/docs/editor/getting-started/overview), a modern rich text editor development framework that supports mainstream front-end frameworks such as React and Vue, and boasts strong customizability and extensibility. Its componentization capabilities are excellent, performance is high, it has many built-in commonly used extensions, and it supports user-defined nodes, commands, plugins, and menus, enabling flexible adaptation and expansion of rich text input capabilities in complex AI scenarios. Semi's `AIChatInput` component encapsulates tiptap, allowing developers to use it out of the box or extend it as needed according to business requirements.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { AIChatInput } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Supports text input and file upload. You can configure the following parameters as needed:
+
+<Framework only="react">
+
+- `uploadProps`: Configure parameters related to file upload. See [UploadProps](/en-US/react/input/upload#API)
+- `onUploadChange`: Callback when file upload changes
+- When deleting uploaded files, `uploadProps.onRemove` will be triggered, and `uploadProps.beforeRemove` will be respected (Promise supported)
+- `placeholder`: Placeholder for the input box
+- `defaultContent`: Default content for the input box
+- `onContentChange`: Callback when the content of the input box changes; the parameter is the current content
+
+</Framework>
+
+<Framework only="vue">
+
+- `uploadProps`: Configure parameters related to file upload. It takes the props of [Upload](/en-US/react/input/upload#API) except `fileList` and `listType`; pass Upload's events as listener props such as `onSuccess` and `onError`
+- `@uploadChange`: Emitted when file upload changes
+- When deleting uploaded files, `uploadProps.onRemove` will be called, and `uploadProps.beforeRemove` will be respected (Promise supported)
+- `placeholder`: Placeholder for the input box
+- `defaultContent`: Default content for the input box
+- `@contentChange`: Emitted when the content of the input box changes; the argument is the current content
+
+</Framework>
+
+<Framework only="solid">
+
+- `uploadProps`: Configure parameters related to file upload. See [UploadProps](/en-US/react/input/upload#API)
+- `onUploadChange`: Callback when file upload changes
+- When deleting uploaded files, `uploadProps.onRemove` will be triggered, and `uploadProps.beforeRemove` will be respected (Promise supported)
+- `placeholder`: Placeholder for the input box
+- `defaultContent`: Default content for the input box
+- `onContentChange`: Callback when the content of the input box changes; the parameter is the current content
+
+</Framework>
+
+<Demo id="basic" />
+
+### Message Sending
+
+<Framework only="react">
+
+When there is content in the input box (text entry or uploaded content), sending messages is allowed. Clicking the send message button triggers the `onMessageSend` callback; the argument is the input content, including text, reference content, uploaded files, and configuration area content. References do not count towards whether sending is allowed; `canSend` can also set it directly.
+
+You can manage generating status with `generating`. If `generating` is `true`, AIChatInput will show a stop-generating button instead of the send button and clear the input area as well as uploaded files. References require manual handling.
+
+Clicking the stop button triggers `onStopGenerate`, where you can handle logic such as setting `generating` to `false`.
+
+</Framework>
+
+<Framework only="vue">
+
+When there is content in the input box (text entry or uploaded content), sending messages is allowed. Clicking the send message button emits `@messageSend`; the argument is the input content, including text, reference content, uploaded files, and configuration area content. References do not count towards whether sending is allowed; `canSend` can also set it directly.
+
+You can manage generating status with `generating`. If `generating` is `true`, AIChatInput will show a stop-generating button instead of the send button and clear the input area as well as uploaded files. References require manual handling.
+
+Clicking the stop button emits `@stopGenerate`, where you can handle logic such as setting `generating` to `false`.
+
+</Framework>
+
+<Framework only="solid">
+
+When there is content in the input box (text entry or uploaded content), sending messages is allowed. Clicking the send message button triggers the `onMessageSend` callback; the argument is the input content, including text, reference content, uploaded files, and configuration area content. References do not count towards whether sending is allowed; `canSend` can also set it directly.
+
+You can manage generating status with `generating`. If `generating` is `true`, AIChatInput will show a stop-generating button instead of the send button and clear the input area as well as uploaded files. References require manual handling.
+
+Clicking the stop button triggers `onStopGenerate`, where you can handle logic such as setting `generating` to `false`.
+
+</Framework>
+
+<Demo id="send-message" />
+
+### Rich Text Input
+
+AIChatInput uses [tiptap](https://tiptap.dev/docs/editor/getting-started/overview) for its rich text editor. You can enter text, use built-in extensions (including `input-slot`, `select-slot`, `skill-slot`), or extend with your own.
+
+- `input-slot`: Supports text input and placeholder display.
+- `select-slot`: Supports in-box option selection with string options.
+- `skill-slot`: For skill display blocks.
+
+<Framework only="react">
+
+You can set input content with the `setContent` ref method and focus the editor with `focusEditor`.
+
+</Framework>
+
+<Framework only="vue">
+
+You can set input content with the `setContent` method of the component instance (template ref) and focus the editor with `focusEditor`.
+
+</Framework>
+
+<Framework only="solid">
+
+You can set input content with the `setContent` method of the ref handle and focus the editor with `focusEditor`.
+
+</Framework>
+
+<Demo id="rich-text" />
+
+### Reference
+
+You can pass in references via the `references`, which will display at the top of the input box.
+
+<Framework only="react">
+
+- `renderReference`: Custom renderer for an individual reference.
+- `onReferenceDelete`: Callback for deleting a reference.
+- `onReferenceClick`: Callback for clicking a reference.
+
+</Framework>
+
+<Framework only="vue">
+
+- `#reference` slot: Custom renderer for an individual reference, with the scope parameters `{ item, index }`.
+- `@referenceDelete`: Emitted when a reference is deleted.
+- `@referenceClick`: Emitted when a reference is clicked.
+
+</Framework>
+
+<Framework only="solid">
+
+- `renderReference`: Custom renderer for an individual reference.
+- `onReferenceDelete`: Callback for deleting a reference.
+- `onReferenceClick`: Callback for clicking a reference.
+
+</Framework>
+
+<Demo id="reference" />
+
+### Configuration Area
+
+You can configure options such as model parameters, web search, and critical thinking through the configuration area, or display/view MCP tools.
+
+<Framework only="react">
+
+- `renderConfigureArea`: Custom renderer for config area buttons.
+- Use `Configure` components such as `Select`, `Button`, `Mcp`, `RadioButton`, etc.
+
+The `Configure` component manages the state and provides a callback via `onConfigureChange` (make sure to set the unique `field`). For initial values, use `initValue`.
+
+You can also use `getConfigureItem` to adapt your custom components.
+
+</Framework>
+
+<Framework only="vue">
+
+- `#configureArea` slot: Custom content for config area buttons.
+- Use `AIChatInput.Configure` components such as `Select`, `Button`, `Mcp`, `RadioButton`, etc.
+
+AIChatInput manages the state and emits `@configureChange` (make sure to set the unique `field`). For initial values, use `initValue`. The value change of a single item is also available through its `@change`, with the new value as the argument.
+
+You can also use `getConfigureItem` to adapt your custom components.
+
+</Framework>
+
+<Framework only="solid">
+
+- `renderConfigureArea`: Custom renderer for config area buttons.
+- Use `AIChatInput.Configure` components such as `Select`, `Button`, `Mcp`, `RadioButton`, etc.
+
+AIChatInput manages the state and fires `onConfigureChange` (make sure to set the unique `field`). For initial values, use `initValue`.
+
+You can also use `getConfigureItem` to adapt your custom components.
+
+</Framework>
+
+<Demo id="configure" />
+
+You can extend any custom component for configuration using `getConfigureItem`.
+
+<Framework only="react">
+
+```ts
+function getConfigureItem<P, VK extends keyof P = 'value', CK extends keyof P = 'onChange'>(
+    component: React.ComponentType<P>,
+    opts?: {
+        // the prop that receives the value, value by default
+        valueKey?: VK;
+        // the prop called when the value changes, onChange by default
+        onKeyChangeFnName?: CK;
+        // where the value sits in the change callback's first argument, the argument itself by default
+        valuePath?: string;
+        className?: string;
+        defaultProps?: Partial<P>;
+    }
+): React.ComponentType<
+    Omit<P, VK | CK | 'onChange' | 'className'> & {
+        // the key of this item in the Configure value, required
+        field: string;
+        initValue?: P[VK];
+        onChange?: (value: unknown) => void;
+        className?: string;
+    }
+>;
+```
+
+The returned component checks its props against the wrapped component's props: `field` is required, and `initValue` has the type of the prop named by `valueKey`. `onChange` belongs to the item and receives its new value; the wrapped component's own `onChange` is not accepted.
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+function getConfigureItem<C extends Component, VK extends keyof PropsOf<C>, CK extends keyof PropsOf<C>>(
+    component: C,
+    opts?: {
+        // the prop that receives the value, modelValue by default
+        valueKey?: VK;
+        // the listener called when the value changes, onUpdate:modelValue by default
+        onKeyChangeFnName?: CK;
+        className?: string;
+        defaultProps?: Partial<PropsOf<C>>;
+    }
+): Component<
+    Omit<PropsOf<C>, VK | CK | 'onChange'> & {
+        // the key of this item in the AIChatInput configure value, required
+        field: string;
+        initValue?: PropsOf<C>[VK];
+    }
+>;
+```
+
+The returned component checks its props against the wrapped component's props: `field` is required, and `initValue` has the type of the prop named by `valueKey`. The other props, listeners and slots of the wrapped component are passed on as they are. The first argument of the value listener must be the new value, which the item also emits through its `@change` event.
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+function getConfigureItem<P extends object, VK extends keyof P, CK extends keyof P>(
+    Item: Component<P>,
+    opts?: {
+        // the prop that receives the value, value by default
+        valueKey?: VK;
+        // the callback called when the value changes, onChange by default
+        onKeyChangeFnName?: CK;
+        // where the value sits in the change callback's first argument, the argument itself by default
+        valuePath?: string;
+        class?: string;
+        defaultProps?: Partial<P>;
+    }
+): (
+    props: Omit<P, VK | CK | 'onChange' | 'class'> & {
+        // the key of this item in the Configure value, required
+        field: string;
+        initValue?: P[VK];
+        onChange?: (value: unknown) => void;
+        class?: string;
+    }
+) => JSX.Element;
+```
+
+The returned component checks its props against the wrapped component's props: `field` is required, and `initValue` has the type of the prop named by `valueKey`. `onChange` belongs to the item and receives its new value; the wrapped component's own `onChange` is not accepted.
+
+</Framework>
+
+Demo:
+
+<Demo id="configure-item" />
+
+### Action Area
+
+<Framework only="react">
+
+The lower right corner is the action area. Use `renderActionArea` to customize buttons (e.g. for deleting or other operations). `menuItem` holds the upload node (a hidden Upload when `showUploadButton` is `false`; it must still be rendered for pasted files to upload) and the send or stop button, in that order.
+
+```ts
+interface ActionAreaProps {
+    menuItem: ReactNode[];
+    className: string;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+The lower right corner is the action area. Use the `#actionArea` slot to customize buttons (e.g. for deleting or other operations). `menuItem` holds the upload node (a hidden Upload when `showUploadButton` is `false`; it must still be rendered for pasted files to upload) and the send or stop button, in that order; render them with `<component :is>`.
+
+```ts
+interface AIChatInputActionAreaSlotProps {
+    menuItem: VNode[];
+    class: string;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The lower right corner is the action area. Use `renderActionArea` to customize buttons (e.g. for deleting or other operations). `menuItem` holds the upload node (a hidden Upload when `showUploadButton` is `false`; it must still be rendered for pasted files to upload) and the send or stop button, in that order.
+
+```ts
+interface ActionAreaProps {
+    menuItem: JSX.Element[];
+    class: string;
+}
+```
+
+</Framework>
+
+<Demo id="action-area" />
+
+### Custom Upload Button
+
+<Framework only="react">
+
+By default, an upload button is rendered on the left side of the footer action area. Use `renderUploadButton` for **UI-only** customization (e.g. icon-only button, tooltip, etc.).
+
+Note: This does not affect upload / paste-upload behavior (`Upload` is still managed internally). `openFileDialog` triggers the internal Upload file chooser.
+
+</Framework>
+
+<Framework only="vue">
+
+By default, an upload button is rendered on the left side of the footer action area. Use the `#uploadButton` slot for **UI-only** customization (e.g. icon-only button, tooltip, etc.).
+
+Note: This does not affect upload / paste-upload behavior (`Upload` is still managed internally). `onOpenFileDialog` triggers the internal Upload file chooser.
+
+```ts
+interface AIChatInputUploadButtonSlotProps {
+    defaultNode: VNode;
+    onOpenFileDialog: () => void;
+    disabled: boolean;
+    attachments: Attachment[];
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+By default, an upload button is rendered on the left side of the footer action area. Use `renderUploadButton` for **UI-only** customization (e.g. icon-only button, tooltip, etc.).
+
+Note: This does not affect upload / paste-upload behavior (`Upload` is still managed internally). `openFileDialog` triggers the internal Upload file chooser.
+
+```ts
+interface RenderUploadButtonProps {
+    /* Creates the default upload button; call it where the button goes, and it is never created when a custom node does not call it */
+    defaultNode: () => JSX.Element;
+    openFileDialog: () => void;
+    disabled: boolean;
+    attachments: Attachment[];
+}
+```
+
+</Framework>
+
+<Demo id="custom-upload-button" />
+
+### Button Shape
+
+You can use the `round` API to configure the button shape at the bottom. The default is `true` (rounded). Set it to `false` for square buttons.
+
+<Demo id="round" />
+
+### Suggestions
+
+Configure suggestions with the `suggestions` API. This works similarly to the AutoComplete component. Users can dynamically show suggestions based on input.
+
+Use up/down keys to navigate suggestions. Pressing `ESC` or clicking outside the suggestion/input area will close the suggestions.
+
+<Framework only="react">
+
+You can customize rendering using `renderSuggestionItem`; spread `id`, `role`, `aria-selected` and the event handlers of its argument onto the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+You can customize rendering using the `#suggestionItem` slot; bind the scope parameters other than `suggestion`, that is `id`, `class`, `role`, `aria-selected`, `onClick` and `onMouseenter`, onto the root element with `v-bind`.
+
+</Framework>
+
+<Framework only="solid">
+
+You can customize rendering using `renderSuggestionItem`; spread `id`, `class`, `role`, `aria-selected` and the event handlers of its argument onto the root element.
+
+</Framework>
+
+<Demo id="suggestion" />
+
+### Skills & Templates
+
+Configure a skill list with `skills`, and use `skillHotKey` to set the shortcut for skill panel.
+
+- `skills` sample format:
+
+<Framework only="react">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    icon?: React.ReactNode;
+    // If this skill has a template, set hasTemplate to true, affects the display of template display buttons
+    hasTemplate?: boolean;
+}
+```
+
+Because templates can be displayed in a variety of ways, we don't provide a default display method. Users can customize the template display through the `renderTemplate` API. The template panel can be displayed and closed by clicking the template button.
+
+```ts
+renderTemplate?: (
+    // undefined when the template button is shown without a selected skill
+    skill: Skill | undefined,
+    // called when a template is clicked, which replaces the input content with the template content
+    onTemplateClick: (content: string) => void
+) => ReactNode;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    // If this skill has a template, set hasTemplate to true, affects the display of template display buttons
+    hasTemplate?: boolean;
+}
+```
+
+A skill holds data only. The icon before a skill goes through the `#skillIcon="{ item, index }"` slot, and the whole item can be customized with the `#skillItem` slot (bound like a suggestion item).
+
+Because templates can be displayed in a variety of ways, we don't provide a default display method. Users can customize the template display through the `#template` slot. The template panel can be displayed and closed by clicking the template button.
+
+```ts
+interface AIChatInputTemplateSlotProps {
+    skill: Skill | undefined;
+    // called when a template is clicked, which replaces the input content with the template content
+    onTemplateClick: (content: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    // If this skill has a template, set hasTemplate to true, affects the display of template display buttons
+    hasTemplate?: boolean;
+}
+```
+
+A skill holds data only. The icon before a skill goes through `renderSkillIcon(skill)`, and the whole item can be customized with `renderSkillItem`.
+
+Because templates can be displayed in a variety of ways, we don't provide a default display method. Users can customize the template display through the `renderTemplate` API. The template panel can be displayed and closed by clicking the template button.
+
+```ts
+renderTemplate?: (
+    // undefined when the template button is shown without a selected skill
+    skill: Skill | undefined,
+    // called when a template is clicked, which replaces the input content with the template content
+    onTemplateClick: (content: string) => void
+) => JSX.Element;
+```
+
+</Framework>
+
+Usage examples are as follows:
+
+<Demo id="skill-template" />
+
+### Custom Top Slot
+
+<Framework only="react">
+
+Users can customize the top rendering area using the `renderTopSlot` API, rendering references, uploaded content, and configuration items. This can be combined with the `showReference` and `showUploadFile` APIs to control whether references and uploaded files are displayed. Additionally, the `topSlotPosition` API allows you to configure the relative position of customized rendered content relative to the reference and upload display areas.
+
+```ts
+interface TopSlotProps {
+    references: Reference[];
+    attachments: Attachment[];
+    // User input into the input box
+    content: Content[];
+    handleUploadFileDelete: (attachment: Attachment) => void;
+    handleReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Users can customize the top rendering area using the `#topSlot` slot, rendering references, uploaded content, and configuration items. This can be combined with the `showReference` and `showUploadFile` APIs to control whether references and uploaded files are displayed. Additionally, the `topSlotPosition` API allows you to configure the relative position of customized rendered content relative to the reference and upload display areas.
+
+```ts
+interface AIChatInputTopSlotProps {
+    references: Reference[];
+    attachments: Attachment[];
+    // User input into the input box
+    content: Content[];
+    onUploadFileDelete: (attachment: Attachment) => void;
+    // Emits @referenceDelete; the caller owns the references and removes the item in the event
+    onReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Users can customize the top rendering area using the `renderTopSlot` API, rendering references, uploaded content, and configuration items. This can be combined with the `showReference` and `showUploadFile` APIs to control whether references and uploaded files are displayed. Additionally, the `topSlotPosition` API allows you to configure the relative position of customized rendered content relative to the reference and upload display areas. `renderTopSlot` is called once; its getters follow the current values, so read data that changes inside JSX.
+
+```ts
+interface TopSlotProps {
+    references: Reference[];
+    attachments: Attachment[];
+    // User input into the input box
+    content: Content[];
+    handleUploadFileDelete: (attachment: Attachment) => void;
+    handleReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
+Usage examples are as follows:
+
+<Demo id="custom-top-slot" />
+
+### Custom Extensions
+
+Rich text areas support custom extensions. For implementation details, see [Tiptap Custom Extensions](https://tiptap.dev/docs/editor/extensions/custom-extensions/create-new). Custom extensions can be added to the AIChatInput component using the `extensions` API.
+
+<Framework only="react">
+
+If you add a custom extension, you must configure the corresponding transformation rules in `transformer` to ensure that the data returned in `onContentChange` matches your expectations.
+
+</Framework>
+
+<Framework only="vue">
+
+Render the view of a custom node with `VueNodeViewRenderer` of `@tiptap/vue-3`. If you add a custom extension, you must configure the corresponding transformation rules in `transformer` to ensure that the data emitted by `@contentChange` matches your expectations.
+
+</Framework>
+
+<Framework only="solid">
+
+If you add a custom extension, you must configure the corresponding transformation rules in `transformer` to ensure that the data returned in `onContentChange` matches your expectations. The node views in the example are plain DOM (tiptap's `addNodeView`), and the candidate panel mounts a Solid component with `render` from `solid-js/web`.
+
+</Framework>
+
+When adding a custom extension, please note the following:
+
+- Please add the `isCustomSlot` property to your custom extension. This property is related to the cursor height before and after the custom extension.
+- Since `AIChatInput` uses `Enter` as the send hotkey, if your custom extension uses `Enter` as a shortcut, you need to manually configure `SemiAIChatInput.allowHotKeySend` in `editor.storage` to indicate whether the hotkey should be used by AIChatInput for sending, in order to avoid hotkey conflicts. When `sendHotKey` is `shift+enter`, a plain `Enter` no longer breaks the line while `allowHotKeySend` is `false`; it is left to the custom extension.
+
+An example of a custom extension definition and related notes is as follows:
+
+<Demo id="custom-extension" />
+
+## API Reference
+
+When the root element carries `aria-label` or `aria-labelledby` and no `role` is passed, `role="group"` is added. The thumbnail on an attachment card is decorative (empty `alt`); the file name comes from the visible text in the card.
+
+### AIChatInput
+
+<Framework only="react">
+
+<AIChatInputReactApi />
+
+`className`, `style` and undeclared native attributes (such as `id` and `aria-label`) land on the root `div`. `onFocus`, `onBlur` and `onPaste` are callbacks of the rich text input and do not land on the root element.
+
+`Configure.Select`, `Configure.Button` and `Configure.RadioButton` are made with `getConfigureItem`, and `Configure` owns their value: they take no `value`, `field` is required, `initValue` sets the initial value, and `onChange` receives the item's new value.
+
+| Property  | Description                                           | Type                                  | Default |
+| --------- | ----------------------------------------------------- | ------------------------------------- | ------- |
+| field     | The key of this item in the Configure value, required | string                                | -       |
+| initValue | Initial value                                         | Same as the wrapped component's value | -       |
+| onChange  | Called when the item's value changes                  | (value: unknown) => void              | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+<AIChatInputVueApi />
+
+`class`, `style` and undeclared attributes land on the root element. The `focus`, `blur` and `paste` events come from the rich text input and share their names with native events, so they shadow the native ones on the root element.
+
+Data item types:
+
+```ts
+type Suggestion = string | { content: string; [key: string]: any };
+
+interface Reference {
+    type?: string;
+    id: string;
+    [key: string]: any;
+}
+
+interface Content {
+    type: string;
+    [key: string]: any;
+}
+
+interface MessageContent {
+    references?: Reference[];
+    attachments?: Attachment[];
+    inputContents?: Content[];
+    setup?: Setup;
+}
+```
+
+`Configure.Select`, `Configure.Button` and `Configure.RadioButton` are made with `getConfigureItem`, and AIChatInput owns their value: they take no `modelValue`, `field` is required, `initValue` sets the initial value, and `@change` receives the item's new value.
+
+| Property  | Description                                           | Type                                       | Default |
+| --------- | ----------------------------------------------------- | ------------------------------------------ | ------- |
+| field     | The key of this item in the configure value, required | string                                     | -       |
+| initValue | Initial value                                         | Same as the wrapped component's modelValue | -       |
+| @change   | Emitted when the item's value changes, with the value | (value: unknown) => void                   | -       |
+
+</Framework>
+
+<Framework only="solid">
+
+<AIChatInputSolidApi />
+
+`class`, `style`, `ref` and undeclared native attributes land on the root `div`. `onFocus`, `onBlur` and `onPaste` are callbacks of the rich text input and do not land on the root element.
+
+Data item types:
+
+```ts
+type Suggestion = string | { content: string; [key: string]: any };
+
+interface Reference {
+    type?: string;
+    id: string;
+    [key: string]: any;
+}
+
+interface Content {
+    type: string;
+    [key: string]: any;
+}
+
+interface MessageContent {
+    references?: Reference[];
+    attachments?: Attachment[];
+    inputContents?: Content[];
+    setup?: Setup;
+}
+```
+
+`Configure.Select`, `Configure.Button` and `Configure.RadioButton` are generated by `getConfigureItem`, and their value is taken over by `Configure`: `value` is not accepted, `field` is required, `initValue` sets the initial value, and `onChange` receives the new value of the item.
+
+| Property  | Description                                       | Type                                  | Default |
+| --------- | ------------------------------------------------- | ------------------------------------- | ------- |
+| field     | Key of this item in the Configure value, required | string                                | -       |
+| initValue | Initial value                                     | Same as the wrapped component's value | -       |
+| onChange  | Callback when the item's value changes            | (value: unknown) => void              | -       |
+
+</Framework>
+
+### Configure.Select
+
+Other props are the same as [SelectProps](/en-US/react/input/select)
+
+### Configure.Button
+
+<Framework only="react">
+
+Other props are the same as [ButtonProps](/en-US/react/basic/button#Button). The value is a boolean toggled on click, and `onClick` receives the toggled value: `(value: boolean) => void`
+
+</Framework>
+
+<Framework only="vue">
+
+Other props are the same as [ButtonProps](/en-US/react/basic/button#Button), and the icon goes through the `#icon` slot. The value is a boolean toggled on click, `@click` receives the toggled value `(value: boolean) => void`, and `aria-pressed` is rendered
+
+</Framework>
+
+<Framework only="solid">
+
+Other props are the same as [ButtonProps](/en-US/react/basic/button#Button). The value is a boolean toggled on click, and `onClick` receives the toggled value: `(value: boolean) => void`
+
+</Framework>
+
+### Configure.RadioButton
+
+Other props are the same as [RadioGroupProps](/en-US/react/input/radio#RadioGroup)
+
+### Configure.Mcp
+
+<Framework only="react">
+
+<McpReactApi />
+
+`className`, `style` and undeclared attributes fall through to the inner Dropdown and land where they do on Dropdown.
+
+</Framework>
+
+<Framework only="vue">
+
+<McpVueApi />
+
+Undeclared attributes (the Dropdown props, `class` and `style`) fall through to the inner Dropdown and land where they do on Dropdown.
+
+An option holds data only; its icon goes through the `#optionIcon` slot:
+
+```ts
+interface McpOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    [key: string]: unknown;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+<McpSolidApi />
+
+`class`, `style` and undeclared attributes fall through to the inner Dropdown and land where they do on Dropdown.
+
+An option holds data only; its icon goes through `renderOptionIcon(option)`:
+
+```ts
+interface McpOption {
+    value: string;
+    label: string;
+    [key: string]: unknown;
+}
+```
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

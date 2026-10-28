@@ -1,0 +1,252 @@
+---
+title: Skeleton
+order: 92
+icon: doc-skeleton
+brief: A placeholder preview of content before the data loaded.
+---
+
+import SkeletonReactApi from './api/skeleton.react.en-US.mdx';
+import SkeletonAvatarReactApi from './api/skeleton-avatar.react.en-US.mdx';
+import SkeletonParagraphReactApi from './api/skeleton-paragraph.react.en-US.mdx';
+import SkeletonImageReactApi from './api/skeleton-image.react.en-US.mdx';
+import SkeletonTitleReactApi from './api/skeleton-title.react.en-US.mdx';
+import SkeletonButtonReactApi from './api/skeleton-button.react.en-US.mdx';
+import SkeletonVueApi from './api/skeleton.vue.en-US.mdx';
+import SkeletonAvatarVueApi from './api/skeleton-avatar.vue.en-US.mdx';
+import SkeletonParagraphVueApi from './api/skeleton-paragraph.vue.en-US.mdx';
+import SkeletonImageVueApi from './api/skeleton-image.vue.en-US.mdx';
+import SkeletonTitleVueApi from './api/skeleton-title.vue.en-US.mdx';
+import SkeletonButtonVueApi from './api/skeleton-button.vue.en-US.mdx';
+import SkeletonSolidApi from './api/skeleton.solid.en-US.mdx';
+import SkeletonAvatarSolidApi from './api/skeleton-avatar.solid.en-US.mdx';
+import SkeletonParagraphSolidApi from './api/skeleton-paragraph.solid.en-US.mdx';
+import SkeletonImageSolidApi from './api/skeleton-image.solid.en-US.mdx';
+import SkeletonTitleSolidApi from './api/skeleton-title.solid.en-US.mdx';
+import SkeletonButtonSolidApi from './api/skeleton-button.solid.en-US.mdx';
+
+## Overview
+
+- `Avatar`: Avatar placeholder, by default uses Avatar medium sizing: `width: 48px`, `height: 48px`. Supports the `size` and `shape` properties; see the API reference for their values.
+- `Image`: Image placeholder, default size: `width: 100%`, `height: 100%`.
+- `Title`: Title placeholder, default size: `width: 100%`, `height: 24px`.
+- `Paragraph`: Content part placeholder, default size: `width: 100%`, `height: 16px`, `margin-bottom: 10px`.
+- `Button`: Button placeholder, default size: `width: 115px`, `height: 32px`.
+
+<Framework only="react">
+
+> Note: Default styles could by overwritten through `className` or `style`.
+
+</Framework>
+
+<Framework only="vue">
+
+> Note: Default styles could by overwritten through `class` or `style`.
+
+</Framework>
+
+<Framework only="solid">
+
+> Note: Default styles can be overridden through `class` or `style`.
+
+</Framework>
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Skeleton } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Skeleton } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Skeleton } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Combinations
+
+Image and caption.
+
+<Demo id="image-title" />
+
+Statistics.
+
+<Demo id="statistics" />
+
+Avatar and title.
+
+<Demo id="avatar-title" />
+
+Centered paragraphs and button.
+
+<Demo id="centered" />
+
+Avatar, headline and paragraph.
+
+<Demo id="avatar-paragraph" />
+
+Table.
+
+<Demo id="table" />
+
+### Animated Loading
+
+Use `active` property to display animated loading effects.
+
+<Demo id="active" />
+
+## API reference
+
+### Skeleton
+
+<Framework only="react">
+
+<SkeletonReactApi />
+
+Other native attributes (such as `id`, `aria-*` and events) fall through onto the placeholder root `div`. When `loading` is `false` the component renders only the children and has no root element, so these are dropped together with the placeholder. The root's `aria-busy="true"` cannot be switched off.
+
+</Framework>
+
+<Framework only="vue">
+
+<SkeletonVueApi />
+
+`class`, `style` and native attributes fall through attrs onto the placeholder root element. When `loading` is `false` the component renders only the default slot and has no root element, so attrs are dropped together with the placeholder. The root's `aria-busy="true"` cannot be switched off through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<SkeletonSolidApi />
+
+`class`, `style`, `ref` and native attributes and events fall through onto the placeholder root element. When `loading` is `false` the component renders only the children and has no root element, so these are dropped together with the placeholder. The root's `aria-busy="true"` cannot be switched off.
+
+</Framework>
+
+### Skeleton.Avatar
+
+<Framework only="react">
+
+<SkeletonAvatarReactApi />
+
+Other native attributes (such as `id`, `aria-*` and events) fall through onto the placeholder block; an `aria-hidden` passed by the caller takes precedence over the block's `aria-hidden="true"`.
+
+### Skeleton.Image
+
+<SkeletonImageReactApi />
+
+### Skeleton.Title
+
+<SkeletonTitleReactApi />
+
+### Skeleton.Button
+
+<SkeletonButtonReactApi />
+
+`Skeleton.Image`, `Skeleton.Title` and `Skeleton.Button` have no `size` or `shape`; other native attributes fall through onto the placeholder block as well.
+
+</Framework>
+
+<Framework only="vue">
+
+<SkeletonAvatarVueApi />
+
+`class`, `style` and native attributes fall through attrs onto the placeholder block.
+
+### Skeleton.Image
+
+<SkeletonImageVueApi />
+
+### Skeleton.Title
+
+<SkeletonTitleVueApi />
+
+### Skeleton.Button
+
+<SkeletonButtonVueApi />
+
+`Skeleton.Image`, `Skeleton.Title` and `Skeleton.Button` have no `size` or `shape`; `class`, `style` and native attributes fall through attrs onto the placeholder block.
+
+</Framework>
+
+<Framework only="solid">
+
+<SkeletonAvatarSolidApi />
+
+`class`, `style`, `ref` and native attributes and events fall through onto the placeholder block.
+
+### Skeleton.Image
+
+<SkeletonImageSolidApi />
+
+### Skeleton.Title
+
+<SkeletonTitleSolidApi />
+
+### Skeleton.Button
+
+<SkeletonButtonSolidApi />
+
+`Skeleton.Image`, `Skeleton.Title` and `Skeleton.Button` have no `size` or `shape`; `class`, `style`, `ref` and native attributes and events fall through onto the placeholder block.
+
+</Framework>
+
+### Skeleton.Paragraph
+
+<Framework only="react">
+
+<SkeletonParagraphReactApi />
+
+`className`, `style` and native attributes fall through onto the root `ul` element.
+
+</Framework>
+
+<Framework only="vue">
+
+<SkeletonParagraphVueApi />
+
+`class`, `style` and native attributes fall through attrs onto the root `ul` element.
+
+</Framework>
+
+<Framework only="solid">
+
+<SkeletonParagraphSolidApi />
+
+`class`, `style`, `ref` and native attributes and events fall through onto the root `ul` element.
+
+</Framework>
+
+## Accessibility
+
+- While loading, the outer element of Skeleton carries `aria-busy="true"`, and the placeholder blocks and paragraph carry `aria-hidden="true"`, so screen readers only know that content is loading. An `aria-hidden` passed by the caller takes precedence on a placeholder block; `aria-busy` cannot be switched off.
+- Once loading ends, the children are rendered directly and Skeleton adds no outer element.
+
+## Content Guidelines
+
+- Unchanged fixed content directly displays fixed content, and variable content is displayed using skeleton screen
+
+## Design Tokens
+
+<DesignToken />

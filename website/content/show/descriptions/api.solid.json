@@ -1,0 +1,52 @@
+{
+    "descriptions": {
+        "source": "packages/semi-ui-solid/src/descriptions/descriptions.tsx",
+        "props": {
+            "align": {
+                "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",
+                "en-US": "Alignment: center, justify, left or plain; ignored when row is true."
+            },
+            "row": { "zh-CN": "是否双行显示。", "en-US": "Whether to display key and value in two rows." },
+            "size": {
+                "zh-CN": "双行显示时的尺寸，可选 small、medium、large。",
+                "en-US": "Size in two-row mode: small, medium or large."
+            },
+            "data": {
+                "zh-CN": "列表显示的数据；为空时使用 Descriptions.Item 子节点。",
+                "en-US": "Data to display; when empty, the Descriptions.Item children are used."
+            },
+            "renderKey": {
+                "zh-CN": "渲染 data 每一项的键，参数为 (item, index)，index 包含隐藏项；隐藏项不调用。不传时显示 item.key。",
+                "en-US": "Renders the key of each data item, called with (item, index) where index counts hidden items; not called for hidden items. Defaults to item.key."
+            },
+            "renderValue": {
+                "zh-CN": "渲染 data 每一项的值，参数为 (item, index)，index 包含隐藏项；隐藏项不调用。不传时显示 item.value。",
+                "en-US": "Renders the value of each data item, called with (item, index) where index counts hidden items; not called for hidden items. Defaults to item.value."
+            },
+            "layout": {
+                "zh-CN": "布局模式，可选 vertical、horizontal。",
+                "en-US": "Layout mode: vertical or horizontal."
+            },
+            "column": {
+                "zh-CN": "横向布局下每行的总列数。",
+                "en-US": "Total number of columns per row in the horizontal layout."
+            }
+        }
+    },
+    "descriptions-item": {
+        "source": "packages/semi-ui-solid/src/descriptions/item.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "值，可以是 JSX 元素，也可以是渲染时调用的函数。",
+                "en-US": "Value: a JSX element, or a function called when rendered."
+            },
+            "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
+            "itemKey": { "zh-CN": "键，可以是 JSX 元素。", "en-US": "Key, a JSX element." },
+            "span": { "zh-CN": "单元格跨越的列数。", "en-US": "Number of columns the cell spans." },
+            "keyStyle": {
+                "zh-CN": "key 的自定义样式，可以是样式对象或字符串。",
+                "en-US": "Custom style of the key: a style object or a string."
+            }
+        }
+    }
+}

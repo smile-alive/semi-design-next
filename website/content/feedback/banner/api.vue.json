@@ -1,0 +1,43 @@
+{
+    "banner": {
+        "source": "packages/semi-ui-vue/src/banner/banner.vue",
+        "props": {
+            "bordered": {
+                "zh-CN": "是否展示边框，仅在非全屏模式下有效。",
+                "en-US": "Whether to show a border. Only takes effect in non-full mode."
+            },
+            "fullMode": { "zh-CN": "是否为全屏模式。", "en-US": "Whether the banner is in full mode." },
+            "title": {
+                "zh-CN": "纯文本标题；同时传入 title 插槽时以插槽为准。",
+                "en-US": "Plain-text title. The title slot wins when both are given."
+            },
+            "type": {
+                "zh-CN": "类型，可选 info、success、danger、warning。",
+                "en-US": "Type: info, success, danger or warning."
+            }
+        },
+        "events": {
+            "close": {
+                "zh-CN": "点击关闭按钮时触发，载荷为按钮的原生 click 事件；监听器返回后横幅隐藏。",
+                "en-US": "Emitted when the close button is clicked, with its native click event. The banner hides once the listeners return."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "消息下方的自定义内容。",
+                "en-US": "Custom content below the message."
+            },
+            "description": { "zh-CN": "描述内容。", "en-US": "Description content." },
+            "icon": {
+                "zh-CN": "替换类型图标；传入空插槽则不显示图标。",
+                "en-US": "Replaces the icon of the type. An empty slot hides the icon."
+            },
+            "closeIcon": {
+                "zh-CN": "替换关闭按钮内的图标；传入空插槽则不显示关闭按钮。",
+                "en-US": "Replaces the icon in the close button. An empty slot removes the button."
+            },
+            "title": { "zh-CN": "标题内容。", "en-US": "Title content." }
+        },
+        "exposed": {}
+    }
+}

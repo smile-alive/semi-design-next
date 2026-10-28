@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| current | 当前步骤的索引，对应 v-model:current；不传时由组件自己保存，从 0 开始。 | `number` | `semiGlobalDefault("UserGuide", "current")` |
+| finishText | 最后一步完成按钮的文本；为空时使用语言包中的文案。 | `string` | `semiGlobalDefault("UserGuide", "finishText")` |
+| getPopupContainer | modal 模式下弹窗渲染至该 DOM 中；popup 模式下指向 body 以外的元素时不锁定 body 滚动。气泡卡片位于 top layer，不受此属性影响。 | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined` |
+| mask | 是否显示蒙层，可被步骤的 mask 覆盖。 | `boolean` | `semiDefault("UserGuide", "mask", true)` |
+| mode | 引导模式：popup 为气泡卡片，modal 为弹窗。 | `"popup" \| "modal"` | `semiDefault("UserGuide", "mode", "popup")` |
+| nextButtonProps | 下一步按钮的属性，可含 class、style 与 onClick；onClick 先于内置处理调用，按钮文本使用 nextText 插槽。 | `UserGuideButtonProps` | `semiGlobalDefault("UserGuide", "nextButtonProps")` |
+| position | 气泡卡片相对于目标元素的位置，可被步骤的 position 覆盖。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiDefault("UserGuide", "position", "bottom")` |
+| prevButtonProps | 上一步按钮的属性，可含 class、style 与 onClick；onClick 先于内置处理调用，按钮文本使用 prevText 插槽。 | `UserGuideButtonProps` | `semiGlobalDefault("UserGuide", "prevButtonProps")` |
+| showPrevButton | 是否显示上一步按钮，第一步不显示。 | `boolean` | `semiDefault("UserGuide", "showPrevButton", true)` |
+| showSkipButton | 是否显示跳过按钮，最后一步不显示。 | `boolean` | `semiDefault("UserGuide", "showSkipButton", true)` |
+| spotlightPadding | 高亮区域的外扩距离，单位为像素，可被步骤的 spotlightPadding 覆盖；都未设置时为 5。 | `number` | `semiGlobalDefault("UserGuide", "spotlightPadding")` |
+| steps | 引导步骤的数据；标题、描述和封面的自定义内容使用 title、description、cover 插槽。 | `UserGuideStepItem[]` | `semiDefault("UserGuide", "steps", [])` |
+| theme | popup 模式的主题，可被步骤的 theme 覆盖。 | `"default" \| "primary"` | `semiDefault("UserGuide", "theme", "default")` |
+| visible | 是否显示引导，对应 v-model:visible。 | `boolean` | `semiDefault("UserGuide", "visible", false)` |
+| zIndex | popup 模式下遮罩的层级，modal 模式下弹窗的层级。气泡卡片位于 top layer，始终在遮罩之上。 | `number` | `semiDefault("UserGuide", "zIndex", numbers.DEFAULT_Z_INDEX)` |
+
+**Events**
+
+| 事件           | 说明                                                                                          | 回调参数            |
+| -------------- | --------------------------------------------------------------------------------------------- | ------------------- |
+| update:current | 步骤改变时触发，值为新的索引，供 v-model:current 回写；先于 change。                          | `[current: number]` |
+| update:visible | 点击跳过、按 Esc 或完成引导时触发，值为 false，供 v-model:visible 回写；先于 skip 与 finish。 | `[visible: false]`  |
+| change         | 步骤改变时触发，参数为新的索引。                                                              | `[current: number]` |
+| next           | 点击下一步按钮时触发，参数为新的索引；最后一步触发 finish。                                   | `[current: number]` |
+| prev           | 点击上一步按钮时触发，参数为新的索引。                                                        | `[current: number]` |
+| skip           | 点击跳过按钮或按 Esc 时触发。                                                                 | `[]`                |
+| finish         | 点击最后一步的完成按钮时触发。                                                                | `[]`                |
+
+**Slots**
+
+| 插槽        | 说明                                                                        | 作用域参数               |
+| ----------- | --------------------------------------------------------------------------- | ------------------------ |
+| title       | 步骤标题，作用域参数为 `{ item, index }`；渲染为空时使用 item.title。       | `UserGuideStepSlotProps` |
+| description | 步骤描述，作用域参数为 `{ item, index }`；渲染为空时使用 item.description。 | `UserGuideStepSlotProps` |
+| cover       | 步骤封面，作用域参数为 `{ item, index }`；不提供时该步骤没有封面区。        | `UserGuideStepSlotProps` |
+| nextText    | 下一步按钮的文本，最后一步显示 finishText；不提供时使用语言包中的文案。     | `any`                    |
+| prevText    | 上一步按钮的文本；不提供时使用语言包中的文案。                              | `any`                    |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

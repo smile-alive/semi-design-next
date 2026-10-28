@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                        | Type                                                              | Default  |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | -------- |
+| children  | Content of the cell.                                                                                                               | `React.ReactNode`                                                 | -        |
+| className | Class name of the root element.                                                                                                    | `string`                                                          | -        |
+| lg        | Responsive grid for screens ≥992px, as a column count or a `{ span, offset, order, push, pull }` object.                           | `number \| ColSize`                                               | -        |
+| md        | Responsive grid for screens ≥768px, as a column count or a `{ span, offset, order, push, pull }` object.                           | `number \| ColSize`                                               | -        |
+| offset    | Number of columns to offset from the start side. No column can sit inside the offset. Defaults to `0`.                             | `number`                                                          | -        |
+| order     | Column order. Takes effect in flex layout. Defaults to `0`.                                                                        | `number`                                                          | -        |
+| prefixCls | CSS class name prefix.                                                                                                             | `string`                                                          | `"semi"` |
+| pull      | Number of columns to move toward the start side. Defaults to `0`.                                                                  | `number`                                                          | -        |
+| push      | Number of columns to move toward the end side. Defaults to `0`.                                                                    | `number`                                                          | -        |
+| ref       | Reference to the root `div` element.                                                                                               | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
+| sm        | Responsive grid for screens ≥576px, as a column count or a `{ span, offset, order, push, pull }` object.                           | `number \| ColSize`                                               | -        |
+| span      | Number of columns the cell spans. 0 behaves like `display: none`.                                                                  | `number`                                                          | -        |
+| style     | Style of the root element.                                                                                                         | `React.CSSProperties`                                             | -        |
+| xl        | Responsive grid for screens ≥1200px, as a column count or a `{ span, offset, order, push, pull }` object.                          | `number \| ColSize`                                               | -        |
+| xs        | Base-layer responsive grid. It applies at every screen width, as a column count or a `{ span, offset, order, push, pull }` object. | `number \| ColSize`                                               | -        |
+| xxl       | Responsive grid for screens ≥1600px, as a column count or a `{ span, offset, order, push, pull }` object.                          | `number \| ColSize`                                               | -        |

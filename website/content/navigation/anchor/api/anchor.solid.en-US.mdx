@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoCollapse | Whether child links are shown dynamically: only the branch that holds the highlighted link is expanded. | `boolean` | `false` |
+| defaultAnchor | Link highlighted on mount. It does not call onChange or onClick. | `string` | `""` |
+| getContainer | Returns the scrolling container, window when omitted. Returning null also falls back to window. | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
+| maxHeight | max-height of the component, with a scrollbar when exceeded. This prop overrides max-height in style. | `string \| number` | `"750px"` |
+| maxWidth | max-width of the component, truncating when exceeded. This prop overrides max-width in style. | `string \| number` | `"200px"` |
+| offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `0` |
+| onChange | Called when the highlighted link changes, with the current and the previous link. | <ApiType detail={"(currentLink: string, previousLink: string) => void"}>Type</ApiType> | - |
+| onClick | Called when a link is clicked or activated with Enter, with the native MouseEvent or KeyboardEvent and the current link. | <ApiType detail={"(e: AnchorClickEvent, currentLink: string) => void"}>Type</ApiType> | - |
+| position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | `Position` | - |
+| railTheme | Theme of the rail: primary, tertiary or muted. | `'primary' \| 'tertiary' \| 'muted'` | `"primary"` |
+| scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. Without block the value is `start`; the horizontal position changes only when inline is passed. | `AnchorBaseProps['scrollIntoViewOptions']` | - |
+| scrollMotion | Whether scrolling after a click is animated (behavior is smooth). | `boolean` | `false` |
+| showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
+| size | Size of the anchor: small or default. | `'small' \| 'default'` | `"default"` |
+| targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |

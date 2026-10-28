@@ -1,0 +1,27 @@
+**Props**
+
+| Property  | Description                                                                                                   | Type                                                                | Default                                              |
+| --------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------- |
+| type      | Layout mode: flex.                                                                                            | `"flex"`                                                            | `semiGlobalDefault("Row", "type")`                   |
+| align     | Vertical alignment in flex layout: top, middle or bottom.                                                     | `"top" \| "bottom" \| "middle"`                                     | `semiGlobalDefault("Row", "align")`                  |
+| justify   | Horizontal arrangement in flex layout: start, end, center, space-around or space-between.                     | `"start" \| "end" \| "center" \| "space-around" \| "space-between"` | `semiGlobalDefault("Row", "justify")`                |
+| gutter    | Grid gutter in pixels, a responsive object `{ xs, sm, md, lg, xl, xxl }`, or a `[horizontal, vertical]` pair. | `Gutter \| [Gutter, Gutter]`                                        | `semiDefault("Row", "gutter", 0)`                    |
+| prefixCls | CSS class name prefix.                                                                                        | `string`                                                            | `semiDefault("Row", "prefixCls", cssClasses.PREFIX)` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                | Scope parameters |
+| ------- | -------------------------- | ---------------- |
+| default | Col components in the row. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,84 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addonAfter | Trailing addon, shown outside the input on the right. | `React.ReactNode` | - |
+| addonBefore | Leading addon, shown outside the input on the left. | `React.ReactNode` | - |
+| aria-describedby | Id of the element describing the input. | `React.AriaAttributes['aria-describedby']` | - |
+| aria-errormessage | Id of the element with the error message. | `React.AriaAttributes['aria-errormessage']` | - |
+| aria-invalid | Whether validation failed. Fixed to `true` when `validateStatus` is `error`. | `React.AriaAttributes['aria-invalid']` | - |
+| aria-label | Accessible name of the input. | `React.AriaAttributes['aria-label']` | - |
+| aria-labelledby | Id of the element labelling the input, used as its accessible name. When not set and there is an inset label (`insetLabel`), it points to that label. | `React.AriaAttributes['aria-labelledby']` | - |
+| aria-required | Whether a value is required. | `React.AriaAttributes['aria-required']` | - |
+| autofocus | The native `autofocus` attribute, set on the native `input`. | `boolean` | - |
+| borderless | Borderless mode. | `boolean` | - |
+| className | Class name of the root element (`.semi-input-number`). | `string` | - |
+| clearIcon | Icon of the clear button, as a ReactNode. Takes effect only when `showClear` is `true`. | `React.ReactNode` | - |
+| composition | Whether to enable composition mode. When enabled, `onChange` is not called during IME composition and is called once after it ends. | `boolean` | - |
+| currency | Currency, such as CNY, EUR or USD. When `true`, uses `defaultCurrency`, or the currency of the locale pack when that is not set. | `string \| boolean` | - |
+| currencyDisplay | How the currency is shown: `symbol`, `code` or `name`. | `'code' \| 'symbol' \| 'name'` | - |
+| defaultCurrency | Currency used when `currency` is `true`. Priority: own prop, global default, locale pack. | `string` | - |
+| defaultValue | Initial value when uncontrolled. | `number \| string` | - |
+| disabled | Whether disabled. Falls back to the value of the enclosing `InputGroup` when not set. | `boolean` | - |
+| formatter | Format of the displayed value, usually set together with `parser`. | <ApiType detail={"(value: number \u007c string) => string"}>Type</ApiType> | - |
+| getValueLength | Function that measures the text length. When set, it enforces `maxLength` and `minLength` instead of the native `maxlength` attribute. | <ApiType detail={"(value: string) => number"}>Type</ApiType> | - |
+| hideButtons | Hides the step buttons; with `innerButtons` also `true`, no built-in button is shown either. | `boolean` | - |
+| hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | - |
+| innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing `suffix`. | `boolean` | `false` |
+| inputStyle | Style of the native `input`, typed as `CSSProperties`. | `React.CSSProperties` | - |
+| insetLabel | Inset label, shown inside the input. | `React.ReactNode` | - |
+| insetLabelId | The id of the inset label. | `string` | - |
+| keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `false` |
+| localeCode | Locale code used for formatting in currency mode, such as zh-CN, en-US or de-DE. Priority: own prop, global default, locale pack of LocaleProvider or ConfigProvider. | `string` | - |
+| max | Maximum value. | `number` | `Infinity` |
+| maximumFractionDigits | Maximum number of fraction digits shown, passed to `Intl.NumberFormat`. | `number` | - |
+| min | Minimum value. | `number` | `-Infinity` |
+| minimumFractionDigits | Minimum number of fraction digits shown, passed to `Intl.NumberFormat`. | `number` | - |
+| mode | Input mode, `password`, which shows a button to toggle visibility. | `InputMode` | - |
+| onBlur | Called when focus leaves the input; the event is the `focusout` of the wrapper. | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onChange | Called when the value changes, with the displayed value (`number` or `string`) and `e`, which is the typing, the `pointerdown` of a step button, the arrow or Home/End keydown, or the blur that caused it. Mounting and `value` changes do not call it; an out-of-range value is shown as given and is corrected and reported only after a user action. | <ApiType detail={"(value: number \u007c string, e: InputNumberChangeEvent) => void"}>Type</ApiType> | - |
+| onClear | Called when the clear button is clicked. | <ApiType detail={"(e: React.MouseEvent\u003cHTMLButtonElement>) => void"}>Type</ApiType> | - |
+| onDownClick | Called when the decrease button is clicked, with the stepped value and the `pointerdown` event. While held, it is called on every step with the event that began the press. | <ApiType detail={"(value: string, e: React.PointerEvent\u003cHTMLSpanElement>) => void"}>Type</ApiType> | - |
+| onEnterPress | Called when the Enter key is pressed. | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
+| onFocus | Called when focus enters the input; the event is the `focusin` of the wrapper. | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onInput | Called on the native `input` event of the input, passed through to it. | <ApiType detail={"(e: React.InputEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
+| onKeyDown | Called when a key is pressed in the input; the event is its `keydown`. | <ApiType detail={"React.KeyboardEventHandler\u003cHTMLInputElement>"}>Type</ApiType> | - |
+| onKeyUp | Called when a key is released in the input; the event is its `keyup`. | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
+| onlyBorder | Internal prop giving the border width of the wrapper in pixels, set by other components; callers normally do not pass it. | `number` | - |
+| onNumberChange | Called when the number changes; the first argument is the number, and the second is as in `onChange`. | <ApiType detail={"(value: number, e: InputNumberChangeEvent) => void"}>Type</ApiType> | - |
+| onUpClick | Called when the increase button is clicked, with the stepped value and the `pointerdown` event. While held, it is called on every step with the event that began the press. | <ApiType detail={"(value: string, e: React.PointerEvent\u003cHTMLSpanElement>) => void"}>Type</ApiType> | - |
+| parser | Converts the text from `formatter` back to a number string; used together with `formatter`. | <ApiType detail={"(value: string) => string"}>Type</ApiType> | - |
+| placeholder | Placeholder text. | `string \| number` | - |
+| precision | Numerical precision, the number of fraction digits kept. | `number` | - |
+| prefix | Prefix content, shown inside the input on the left. | `React.ReactNode` | - |
+| prefixCls | Class name prefix of the component; the root class is the prefix plus `-number`. The default prefix is `semi-input`, so the root class is `semi-input-number`. | `string` | `"semi-input"` |
+| pressInterval | Interval in milliseconds between repeats while a step button is held. | `number` | `250` |
+| pressTimeout | Delay in milliseconds before repeating starts while a step button is held. | `number` | `250` |
+| preventScroll | Whether focusing stops the browser from scrolling the document to the input; applies to focusing inside the component, including the default of the handle's `focus()`. | `boolean` | - |
+| readonly | Whether read-only. Locks typing and hides the clear button; the native `readOnly` locks typing only. | `boolean` | - |
+| ref | Imperative handle of the component, typed `InputNumberHandle`, not a native DOM node. Its members are listed in Methods below. | <ApiType detail={"React.Ref\u003cInputNumberHandle>"}>Type</ApiType> | - |
+| scientificNotation | Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode. | `boolean \| ScientificNotationConfig` | - |
+| shiftStep | Step of each change while Shift is held; may be a decimal. | `number` | `10` |
+| showClear | Whether to show the clear button. | `boolean` | - |
+| showClearIgnoreDisabled | Internal prop set by DatePicker; callers normally do not pass it. | `boolean` | - |
+| showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `true` |
+| size | Input size: `default`, `small` or `large`. The `size` of the enclosing `InputGroup` takes precedence when it is set. | `'small' \| 'large' \| 'default'` | `"default"` |
+| step | Step of each change; may be a decimal. | `number` | `1` |
+| style | Style of the root element (`.semi-input-number`). | `React.CSSProperties` | - |
+| suffix | Suffix content, shown inside the input on the right. | `React.ReactNode` | - |
+| type | The `type` attribute of the native `input`, `text` by default. | `string` | - |
+| validateStatus | Validation status: `default`, `error`, `warning` or `success`. | `ValidateStatus` | - |
+| value | Current value; passing it makes the component controlled, so update it in `onChange`. An explicit `undefined` is treated as uncontrolled. | `number \| string` | - |
+
+**Methods**
+
+| Method            | Description                                                                                                   | Type                                                                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| blur              | Removes focus from the input.                                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
+| focus             | Focuses the input. When `options.preventScroll` is not passed, the value of the `preventScroll` prop is used. | <ApiType detail={"(options?: FocusOptions) => void"}>Type</ApiType>                                                                                    |
+| input             | The native `input` element, `null` after unmounting.                                                          | `HTMLInputElement \| null`                                                                                                                             |
+| nativeElement     | The root element (`.semi-input-number`), `null` after unmounting.                                             | `HTMLElement \| null`                                                                                                                                  |
+| select            | Selects all the text in the input.                                                                            | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
+| setSelectionRange | Sets the selection of the input; the arguments are those of the native `setSelectionRange`.                   | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'forward' \u007c 'backward' \u007c 'none') => void"}>Type</ApiType> |

@@ -1,0 +1,39 @@
+{
+    "banner": {
+        "source": "packages/semi-ui-solid/src/banner/banner.tsx",
+        "props": {
+            "bordered": {
+                "zh-CN": "是否展示边框，仅在非全屏模式下有效。",
+                "en-US": "Whether to show a border. Only takes effect in non-full mode."
+            },
+            "closeIcon": {
+                "zh-CN": "替换关闭按钮内的图标；传 null 时不显示关闭按钮。",
+                "en-US": "Replaces the icon in the close button. Pass null to remove the close button."
+            },
+            "description": {
+                "zh-CN": "描述内容。",
+                "en-US": "Description content."
+            },
+            "fullMode": {
+                "zh-CN": "是否为全屏模式。",
+                "en-US": "Whether the banner is in full mode."
+            },
+            "icon": {
+                "zh-CN": "替换 type 对应的图标；传 null 时不显示图标。",
+                "en-US": "Replaces the icon of `type`. Pass null to hide the icon."
+            },
+            "onClose": {
+                "zh-CN": "点击关闭按钮时调用，参数为按钮的原生 click 事件；回调返回后横幅隐藏。",
+                "en-US": "Called when the close button is clicked, with its native click event. The banner hides after the callback returns."
+            },
+            "title": {
+                "zh-CN": "标题内容。",
+                "en-US": "Title content."
+            },
+            "type": {
+                "zh-CN": "类型，可选 info、success、danger、warning。",
+                "en-US": "Type: info, success, danger or warning."
+            }
+        }
+    }
+}

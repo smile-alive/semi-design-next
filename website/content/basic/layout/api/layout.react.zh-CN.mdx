@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                                                                                                            | 类型                                                           | 默认值          |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | --------------- |
+| children  | 布局内容，可包含 `Layout.Header`、`Layout.Sider`、`Layout.Content`、`Layout.Footer` 或嵌套的 `Layout`。                                                                                         | `React.ReactNode`                                              | -               |
+| className | 根元素的类名。                                                                                                                                                                                  | `string`                                                       | -               |
+| hasSider  | 表示子元素里有 Sider，一般不用指定。直接子元素中的 Sider 在渲染时即可识别；更深层嵌套的 Sider 在挂载后才登记，服务端渲染时传 true 可避免样式闪动。传 false 不能去掉 Sider 带来的 has-sider 类。 | `boolean`                                                      | -               |
+| prefixCls | 类名前缀。                                                                                                                                                                                      | `string`                                                       | `"semi-layout"` |
+| ref       | 根元素的引用，元素的标签由 `tagName` 决定。                                                                                                                                                     | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | -               |
+| style     | 根元素的样式。                                                                                                                                                                                  | `CSSProperties`                                                | -               |
+| tagName   | 根元素的标签名。                                                                                                                                                                                | `keyof HTMLElementTagNameMap`                                  | `"section"`     |

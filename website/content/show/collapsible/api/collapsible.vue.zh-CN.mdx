@@ -1,0 +1,31 @@
+**Props**
+
+| 属性                   | 说明                                                                   | 类型      | 默认值                                                        |
+| ---------------------- | ---------------------------------------------------------------------- | --------- | ------------------------------------------------------------- |
+| isOpen                 | 是否展开内容区域。                                                     | `boolean` | `semiDefault("Collapsible", "isOpen", false)`                 |
+| duration               | 动画执行的时间，单位为毫秒。                                           | `number`  | `semiDefault("Collapsible", "duration", 250)`                 |
+| motion                 | 是否开启动画。                                                         | `boolean` | `semiDefault("Collapsible", "motion", true)`                  |
+| keepDOM                | 是否保留隐藏的内容 DOM 树，默认销毁。                                  | `boolean` | `semiDefault("Collapsible", "keepDOM", false)`                |
+| lazyRender             | 配合 keepDOM 使用，为 true 时挂载时不渲染内容，首次展开后才渲染。      | `boolean` | `semiDefault("Collapsible", "lazyRender", false)`             |
+| collapseHeight         | 收起时的高度，单位为像素。                                             | `number`  | `semiDefault("Collapsible", "collapseHeight", 0)`             |
+| collapseHeightAdaptive | 内容高度小于 collapseHeight 时，收起高度是否取内容高度。               | `boolean` | `semiDefault("Collapsible", "collapseHeightAdaptive", false)` |
+| fade                   | 是否开启淡入淡出。                                                     | `boolean` | `semiDefault("Collapsible", "fade", false)`                   |
+| id                     | 内层内容元素的 id，可配合触发器的 aria-controls 使用；不读全局默认值。 | `string`  | `undefined`                                                   |
+
+**Events**
+
+| 事件      | 说明                       | 回调参数 |
+| --------- | -------------------------- | -------- |
+| motionEnd | 展开或收起动画结束时触发。 | `[]`     |
+
+**Slots**
+
+| 插槽    | 说明                   | 作用域参数 |
+| ------- | ---------------------- | ---------- |
+| default | 需要展开或收起的内容。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

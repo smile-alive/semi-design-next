@@ -1,0 +1,362 @@
+---
+order: 32
+title: Json编辑器
+icon: doc-jsonviewer
+brief: 用于展示和编辑 JSON 数据
+---
+
+import JsonViewerReactApi from './api/json-viewer.react.zh-CN.mdx';
+import JsonViewerVueApi from './api/json-viewer.vue.zh-CN.mdx';
+import JsonViewerSolidApi from './api/json-viewer.solid.zh-CN.mdx';
+
+## 使用场景
+
+JsonViewer 组件可用于 JSON 数据的展示与编辑。Semi 重点参考了 [VS Code](https://github.com/microsoft/vscode)的 text-buffer 数据结构设计思路，复用了部分 utils与数据类型定义（Token解析，语言服务等），结合我们的功能/样式定制需求，实现了 JsonViewer 组件, 视觉上会与 Semi Design Next 体系内的其他组件更协调，对于特定数据类型的定制化渲染定制会更方便。  
+相比于直接使用 MonacoEditor，Semi JsonViewer 在工程化构建上做了额外处理，使用更为简单，无需关注 Webpack插件、worker loader等复杂的配置。  
+同时由于我们仅关注 Json 数据格式，更轻量化，在开箱即用的同时，拥有更小的体积<strong>（📦 -96%）</strong> ，更极致的加载速度<strong>（🚀 -53.5%）</strong> ，更少的内存占用<strong>（⬇️ 71.6%）</strong>。  
+对于五百万行及以下的数据，均可以做到1s内完成数据加载与解析。详细的对比数据可查阅 [Performance](#Performance) 章节
+
+- 如果你仅需要对 Json 做预览/编辑，无需对更复杂的其他编程语言作修改，我们建议你选用 JsonViewer
+- 如果你还需要处理其他格式的数据/代码文件，完整的代码编辑器能力（语法高亮、代码补全、错误提示、复杂编辑等）是刚需，构建产物体积不是关注重点，我们建议你选用 Monaco Editor
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { JsonViewer } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { JsonViewer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Image, JsonViewer, Popover, Rating, Tag } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+JsonViewer 的基本用法。传入 height 和 width 参数，设置组件的高度和宽度和初始值。通过 value 传入 Json 字符串  
+编辑内容变化时触发 onChange，参数为编辑器当前文本。value 变为与编辑器当前内容不同的值时才会重建编辑器，在 onChange 中把文本写回 value（setState）不会丢失光标；value 不变时编辑器保留用户的输入。若需要获取组件的值，可以通过 ref 获取，具体可参考 [Methods](#Methods)。
+
+</Framework>
+
+<Framework only="vue">
+
+JsonViewer 的基本用法。传入 `height` 和 `width` 参数，设置组件的高度和宽度，通过 `modelValue` 传入 Json 字符串作为初始值。  
+编辑内容变化时触发 `update:modelValue` 与 `change`，载荷都是编辑器的当前文本，因此可以配合 `v-model` 使用。`modelValue` 变为与编辑器当前内容不同的值时才会重建编辑器，`v-model` 回写同一内容不会丢失光标；单向绑定 `:modelValue` 时，编辑器保留用户的输入，不会被拉回。若需要获取组件的值，也可以通过模板 ref 调用 `getValue()`，具体可参考 [Methods](#Methods)。
+
+</Framework>
+
+<Framework only="solid">
+
+JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度和宽度，通过 `value` 传入 Json 字符串作为初始值。编辑内容变化时触发 `onChange`，参数为编辑器当前文本。`value` 变为与编辑器当前内容不同的值时才会重建编辑器，在 `onChange` 中把文本写回 `value` 不会丢失光标；`value` 不变时编辑器保留用户的输入。若需要获取组件的值，可以通过 ref 调用 `getValue()`，具体可参考 [Methods](#Methods)。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 设置行高
+
+配置 options 的 lineHeight 参数，设置固定行高（单位：px, 默认 20）。
+
+<Demo id="line-height" />
+
+### 自动换行
+
+配置 options 的 autoWrap 参数，设置为 true 时，组件会根据内容长度自动换行。
+
+<Demo id="auto-wrap" />
+
+### 格式化配置
+
+配置 options 的 formatOptions 参数，设置组件的格式化配置。
+
+- tabSize: number，设置缩进大小为4，表示每级缩进 4 个空格
+- insertSpaces: boolean，true 表示使用空格进行缩进，false 表示使用制表符(Tab)
+- eol: string，设置换行符，可以是\n，\r\n，
+
+<Demo id="format" />
+
+### 自定义渲染规则
+
+通过配置 `options.customRenderRule` 参数，你可以自定义 JSON 内容的渲染方式（注意：仅在只读模式下生效）。
+
+> **行为说明**
+>
+> `customRenderRule` 在计算 `path` 时更精确：**同一条键值对的 key token 与 value token 会拥有相同的 `path`**（即都对应到该属性所在的路径，例如 `root.<key>`）。
+>
+> 因此，像 `path === 'root.<key>'` 这类仅依赖 `path` 的规则，可能同时命中 key 和 value，导致与后续 value 匹配规则产生“覆盖/优先级”差异。
+>
+> 若你希望只匹配 key 或只匹配 value，请使用函数匹配的第三个参数 `tokenType`：
+>
+> ```ts
+> const targetPath = 'root.<key>';
+> // 仅匹配 key
+> match: (_value, path, tokenType) => tokenType === 'key' && path === targetPath;
+> // 仅匹配 value
+> match: (value, path, tokenType) => tokenType === 'value' && path === targetPath;
+> ```
+
+<Framework only="react">
+
+`customRenderRule` 是一个规则数组，每条规则包含两个属性：
+
+</Framework>
+
+<Framework only="vue">
+
+`customRenderRule` 是一个规则数组，规则只保存数据：`match` 为匹配条件，可选的 `name` 用于在 `#customRender` 插槽里区分规则。命中 token 的内容由 `#customRender="{ item, index, content }"` 插槽绘制，`item` 是命中的规则，`index` 是它在 `customRenderRule` 中的序号。
+
+</Framework>
+
+<Framework only="solid">
+
+`customRenderRule` 是一个规则数组，每条规则包含两个属性：
+
+</Framework>
+
+- `match`: 匹配条件，可以是以下三种类型之一：
+    - 字符串：精确匹配
+    - 正则表达式：按正则匹配
+    - 函数：自定义匹配逻辑，函数签名为 `(value: string | number | boolean | null, path: string, tokenType: 'key' | 'value') => boolean`
+        - `value`: 待匹配的值（JSON 键或值）。当 `match` 为函数时，`value` 会尽量传入解析后的原始类型（number / boolean / null / string），因此可以使用 `===` 进行严格匹配；当 `match` 为字符串或正则时，仍基于文本内容匹配（字符串类型会去除两侧引号）
+        - `path`: 当前匹配到的路径，格式为 `root.key1.key2.key3[0].key4`
+        - `tokenType`: 当前 token 的类型，`'key'` 表示 JSON 键名，`'value'` 表示 JSON 值。可用于区分同名键和值的匹配
+
+<Framework only="react">
+
+- `render`: 自定义渲染函数，函数签名为 `(content: string) => React.ReactNode`
+    - `content`: 匹配到的内容。如果是字符串类型的值，将包含双引号（如 `"name"`，`"Semi"`）
+    - 返回 `null`、`undefined` 或 `false` 时不做自定义渲染，保留 token 原文，因此可以写成 `(content) => cond && <X />`
+
+</Framework>
+
+<Framework only="solid">
+
+- `render`: 自定义渲染函数，函数签名为 `(content: string) => JSX.Element`
+    - `content`: 匹配到的内容。如果是字符串类型的值，将包含双引号（如 `"name"`，`"Semi"`）
+    - 返回 `null`、`undefined` 或 `false` 时不做自定义渲染，保留 token 原文，因此可以写成 `(content) => cond && <X />`
+
+</Framework>
+
+<Framework only="vue">
+
+- `name`: 可选，规则名称，在 `#customRender` 插槽中用 `item.name` 区分规则
+- `#customRender` 插槽：作用域参数为 `item`、`index`、`content`
+    - `content`: 匹配到的内容。如果是字符串类型的值，将包含双引号（如 `"name"`，`"Semi"`）
+    - 未提供插槽或插槽渲染为空时不做自定义渲染，保留 token 原文
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### 自定义搜索按钮
+
+<Framework only="react">
+
+通过 `renderSearchButton` 属性，你可以自定义搜索按钮的渲染方式，实现固定位置、自定义样式等需求。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `renderSearchButton` 属性，你可以自定义搜索按钮的渲染方式，实现固定位置、自定义样式等需求。第一个参数是创建默认按钮的函数，在返回的 JSX 中要放按钮的位置调用 `defaultButton()`；第二个参数 `controls` 的 `showSearchBar` 是 getter，需要在返回的 JSX 内读取，搜索栏显示状态变化时才会同步更新。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#searchButton` 插槽，你可以自定义搜索按钮的渲染方式，实现固定位置、自定义样式等需求。提供插槽即整体替换默认按钮，`defaultButton` 是默认按钮的 VNode，用 `<component :is>` 渲染；`showSearch` 为 `false` 时两者都不渲染。
+
+</Framework>
+
+<Demo id="custom-search-button" />
+
+## API 参考
+
+### JsonViewer
+
+<Framework only="react">
+
+<JsonViewerReactApi />
+
+`className`、`style` 与其他原生属性（如 `id`、`aria-label`）落在根元素上。根元素没有 `role`、而传了 `aria-label` 或 `aria-labelledby` 时，根元素加 `role="group"`；显式传入的 `role` 优先。
+
+</Framework>
+
+<Framework only="vue">
+
+<JsonViewerVueApi />
+
+`class`、`style` 与原生属性落在根元素上。根元素没有 `role`、而传了 `aria-label` 或 `aria-labelledby` 时，根元素加 `role="group"`；显式传入的 `role` 优先。
+
+</Framework>
+
+<Framework only="solid">
+
+<JsonViewerSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素上。根元素没有 `role`、而传了 `aria-label` 或 `aria-labelledby` 时，根元素加 `role="group"`；显式传入的 `role` 优先。
+
+</Framework>
+
+### JsonViewerOptions
+
+| 属性              | 说明                                                     | 类型               | 默认值                      |
+| ----------------- | -------------------------------------------------------- | ------------------ | --------------------------- |
+| lineHeight        | 行高                                                     | number             | 20                          |
+| autoWrap          | 是否自动换行                                             | boolean            | true                        |
+| readOnly          | 是否只读                                                 | boolean            | false                       |
+| customRenderRule  | 自定义渲染规则                                           | CustomRenderRule[] | -                           |
+| formatOptions     | 格式化配置                                               | FormattingOptions  | -                           |
+| completionOptions | 自动补全配置                                             | CompletionOptions  | -                           |
+| ariaLabel         | 内容区的可访问名称（只读时的滚动区域、可编辑时的文本框） | string             | 语言包 `JsonViewer.content` |
+
+### CustomRenderRule
+
+<Framework only="react">
+
+| 属性   | 说明     | 类型                                                                                                                   | 默认值 |
+| ------ | -------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| match  | 匹配规则 | string \| RegExp \| (value: string \| number \| boolean \| null, path: string, tokenType: 'key' \| 'value') => boolean | -      |
+| render | 渲染函数 | (content: string) => React.ReactNode                                                                                   | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+Vue 中的类型名为 `JsonViewerCustomRenderRule`，规则只保存数据，命中 token 的内容由 `#customRender` 插槽绘制。
+
+| 属性  | 说明                                        | 类型                                                                                                                   | 默认值 |
+| ----- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| match | 匹配规则                                    | string \| RegExp \| (value: string \| number \| boolean \| null, path: string, tokenType: 'key' \| 'value') => boolean | -      |
+| name  | 规则名称，在 `#customRender` 插槽中区分规则 | string                                                                                                                 | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+类型名为 `JsonViewerCustomRenderRule`，`render` 返回 JSX 元素。
+
+| 属性   | 说明     | 类型                                                                                                                   | 默认值 |
+| ------ | -------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| match  | 匹配规则 | string \| RegExp \| (value: string \| number \| boolean \| null, path: string, tokenType: 'key' \| 'value') => boolean | -      |
+| render | 渲染函数 | (content: string) => JSX.Element                                                                                       | -      |
+
+</Framework>
+
+### FormattingOptions
+
+| 属性         | 说明                 | 类型    | 默认值 |
+| ------------ | -------------------- | ------- | ------ |
+| tabSize      | 缩进大小             | number  | 4      |
+| insertSpaces | 是否使用空格进行缩进 | boolean | true   |
+| eol          | 换行符               | string  | '\n'   |
+
+### CompletionOptions
+
+| 属性              | 说明                                                                                                                                                                                           | 类型             | 默认值 |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------ |
+| staticCompletions | 静态补全项。只在按文档结构已推断出候选项时追加在其后，推断不出任何候选项时不提供；与已有候选项同 `label` 的不重复添加。只读取每项的 `label`、`insertText`（缺省时用 `label`）、`documentation` | CompletionItem[] | -      |
+
+### SearchControls
+
+<Framework only="react">
+
+当使用 `renderSearchButton` 时，第二个参数 `searchControls` 包含以下属性：
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `#searchButton` 插槽时，作用域参数（类型 `JsonViewerSearchButtonSlotProps`）除 `defaultButton` 外还包含以下属性：
+
+</Framework>
+
+<Framework only="solid">
+
+当使用 `renderSearchButton` 时，第二个参数 `controls` 包含以下属性：
+
+</Framework>
+
+| 属性              | 说明                 | 类型                                                                                  |
+| ----------------- | -------------------- | ------------------------------------------------------------------------------------- |
+| showSearchBar     | 当前是否显示搜索栏   | boolean                                                                               |
+| onToggleSearchBar | 切换搜索栏显示/隐藏  | () => void                                                                            |
+| onSearch          | 执行搜索             | (text: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void |
+| onPrevSearch      | 跳转到上一个搜索结果 | () => void                                                                            |
+| onNextSearch      | 跳转到下一个搜索结果 | () => void                                                                            |
+| onReplace         | 替换当前搜索结果     | (text: string) => void                                                                |
+| onReplaceAll      | 替换所有搜索结果     | (text: string) => void                                                                |
+
+## Methods
+
+<Framework only="react">
+
+可以通过 `ref` 调用组件实例上绑定的方法，实现某些特殊交互。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过模板 ref（类型 `JsonViewerHandle`）调用组件暴露的方法，实现某些特殊交互。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `ref` 得到的根元素（类型 `JsonViewerElement`）上挂载着下表中的方法，可以直接调用，例如 `jsonViewer?.format()`。
+
+</Framework>
+
+| 名称                                                                                      | 描述                                                   |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| getValue()                                                                                | 获取当前值                                             |
+| format()                                                                                  | 格式化当前内容                                         |
+| search(searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) | 搜索文本，可选参数控制大小写敏感、全词匹配和正则表达式 |
+| getSearchResults()                                                                        | 获取当前搜索结果                                       |
+| prevSearch(step?: number)                                                                 | 导航到上一个搜索结果，可选步长参数                     |
+| nextSearch(step?: number)                                                                 | 导航到下一个搜索结果，可选步长参数                     |
+| replace(replaceText: string)                                                              | 替换当前搜索匹配项                                     |
+| replaceAll(replaceText: string)                                                           | 替换所有搜索匹配项                                     |
+| getStyle()                                                                                | 获取当前的 width 与 height                             |
+
+### Performance
+
+#### Bundle Size
+
+| 组件         | 体积      | 体积(Gzip) |
+| ------------ | --------- | ---------- |
+| JsonViewer   | 203.14kb  | 51.23kb    |
+| MonacoEditor | 5102.0 KB | 1322.7 KB  |
+
+#### 渲染不同量级数据耗时
+
+> 注：
+>
+> - 测试数据生成方式详情可查阅 [url](https://github.com/DouyinFE/semi-design/blob/main/packages/semi-ui-react/jsonViewer/_story/jsonViewer.stories.jsx)
+> - 当数据量级超出50w行时，ReactMonacoEditor 默认关闭高亮等行为，数据对比不遵循单一变量原则
+
+| 组件              | 1k行    | 5k行    | 1w行    | 10w行   | 50w行    | 100w行   | 300w行   |
+| ----------------- | ------- | ------- | ------- | ------- | -------- | -------- | -------- |
+| JsonViewer        | 30.42ms | 30.66ms | 36.87ms | 52.73ms | 111.02ms | 178.81ms | 506.25ms |
+| ReactMonacoEditor | 72.01ms | 73.76ms | 76.64ms | 97.89ms | 133.31ms | 202.79ms | 495.53ms |
+| 性能提升          | 57.70%  | 58.41%  | 51.87%  | 46.11%  | -        | -        | -        |

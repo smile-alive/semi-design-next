@@ -1,0 +1,51 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoPlay | Whether to play automatically. | `boolean` | `semiDefault("VideoPlayer", "autoPlay", false)` |
+| captionsSrc | Captions source URL; the captions are shown by default once set. | `string` | `semiGlobalDefault("VideoPlayer", "captionsSrc")` |
+| clickToPlay | Whether clicking the video toggles playback. | `boolean` | `semiDefault("VideoPlayer", "clickToPlay", true)` |
+| controlsList | Controls shown in the control bar, all by default. A control also needs the prop it depends on to show. | `VideoControl[]` | <ApiType detail={"semiDefault(\"VideoPlayer\", \"controlsList\", [strings.PLAY, strings.NEXT, strings.TIME, strings.VOLUME, strings.PLAYBACK_RATE, strings.QUALITY, strings.ROUTE, strings.MIRROR, strings.FULLSCREEN, strings.PICTURE_IN_PICTURE])"}>Type</ApiType> |
+| crossOrigin | CORS setting of the video element: anonymous or use-credentials; an empty string means anonymous. | `"" \| "anonymous" \| "use-credentials"` | `semiGlobalDefault("VideoPlayer", "crossOrigin")` |
+| defaultPlaybackRate | Initial playback rate, read once when the player mounts. | `number` | <ApiType detail={"semiDefault(\"VideoPlayer\", \"defaultPlaybackRate\", numbers.DEFAULT_PLAYBACK_RATE)"}>Type</ApiType> |
+| defaultQuality | Initial quality, read once when the player mounts. | `string` | `semiGlobalDefault("VideoPlayer", "defaultQuality")` |
+| defaultRoute | Initial route, read once when the player mounts. | `string` | `semiGlobalDefault("VideoPlayer", "defaultRoute")` |
+| height | Player height; a number is in pixels, a string is used as is. | `string \| number` | `semiGlobalDefault("VideoPlayer", "height")` |
+| loop | Whether to loop playback. | `boolean` | `semiDefault("VideoPlayer", "loop", false)` |
+| markers | Chapter markers, each with a start time in seconds and a title. | `Marker[]` | `semiGlobalDefault("VideoPlayer", "markers")` |
+| muted | Whether to start muted, read once when the player mounts. | `boolean` | `semiDefault("VideoPlayer", "muted", false)` |
+| onNext | Called by the next button, which shows only when this is set and controlsList includes next. | <ApiType detail={"(() => void)"}>Type</ApiType> | `undefined` |
+| playbackRateList | Playback rate options, by default 2.0, 1.5, 1.25, 1.0 and 0.75. | <ApiType detail={"VideoPlayerOption\u003cnumber>[]"}>Type</ApiType> | `semiDefault("VideoPlayer", "playbackRateList", DEFAULT_PLAYBACK_RATE)` |
+| poster | Poster image URL. | `string` | `semiGlobalDefault("VideoPlayer", "poster")` |
+| qualityList | Quality options; the quality control shows only when this is non-empty. | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | `semiGlobalDefault("VideoPlayer", "qualityList")` |
+| routeList | Route options; the route control shows only when this is non-empty. | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | `semiGlobalDefault("VideoPlayer", "routeList")` |
+| seekTime | Seconds a fast forward or rewind moves. | `number` | `semiDefault("VideoPlayer", "seekTime", numbers.DEFAULT_SEEK_TIME)` |
+| src | Video URL. Without it a missing-resource message shows; removing it keeps the previous source on the video element. | `string` | `semiGlobalDefault("VideoPlayer", "src")` |
+| theme | Theme, affecting only the background color: dark or light. | `VideoPlayerTheme` | `semiDefault("VideoPlayer", "theme", strings.DARK)` |
+| volume | Initial volume from 0 to 100, read once when the player mounts. | `number` | `semiDefault("VideoPlayer", "volume", numbers.DEFAULT_VOLUME)` |
+| width | Player width; a number is in pixels, a string is used as is. | `string \| number` | `semiGlobalDefault("VideoPlayer", "width")` |
+
+**Events**
+
+| Event         | Description                                                                                                                       | Callback parameters |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| play          | Emitted when playback starts.                                                                                                     | `[]`                |
+| pause         | Emitted when playback pauses.                                                                                                     | `[]`                |
+| qualityChange | Emitted when the quality changes, with the selected quality value.                                                                | `[quality: string]` |
+| rateChange    | Emitted when the playback rate changes, with the selected rate.                                                                   | `[rate: number]`    |
+| routeChange   | Emitted when the route changes, with the selected route value.                                                                    | `[route: string]`   |
+| volumeChange  | Emitted when the user drags the volume slider or toggles mute, with the new volume (0 when muted); not emitted on initialization. | `[volume: number]`  |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name  | Description                                  | Type                       |
+| ----- | -------------------------------------------- | -------------------------- |
+| video | The native video element, null before mount. | `HTMLVideoElement \| null` |

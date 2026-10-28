@@ -1,0 +1,697 @@
+---
+order: 57
+title: Navigation
+icon: doc-navigation
+brief: A menu list that provides navigation for pages and features.
+---
+
+import NavReactApi from './api/nav.react.en-US.mdx';
+import NavItemReactApi from './api/nav-item.react.en-US.mdx';
+import SubNavReactApi from './api/sub-nav.react.en-US.mdx';
+import NavHeaderReactApi from './api/nav-header.react.en-US.mdx';
+import NavFooterReactApi from './api/nav-footer.react.en-US.mdx';
+import NavVueApi from './api/nav.vue.en-US.mdx';
+import NavItemVueApi from './api/nav-item.vue.en-US.mdx';
+import SubNavVueApi from './api/sub-nav.vue.en-US.mdx';
+import NavHeaderVueApi from './api/nav-header.vue.en-US.mdx';
+import NavFooterVueApi from './api/nav-footer.vue.en-US.mdx';
+import NavSolidApi from './api/nav.solid.en-US.mdx';
+import NavItemSolidApi from './api/nav-item.solid.en-US.mdx';
+import SubNavSolidApi from './api/sub-nav.solid.en-US.mdx';
+import NavHeaderSolidApi from './api/nav-header.solid.en-US.mdx';
+import NavFooterSolidApi from './api/nav-footer.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Nav } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Nav } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Nav } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+By passing `items` Parameters, you can quickly get a navigation bar.
+
+<Framework only="react">
+
+Each navigation item includes:
+
+- `itemKey`: The unique identity of the navigation project (must)
+- `text`: Navigation copywriting
+- `icon`: Navigation icon, which you can pick from `@fibrae/semi-icons-react` and `@fibrae/semi-icons-react/lab`, see the [Icon documentation](/en-US/react/basic/icon)
+
+</Framework>
+
+<Framework only="vue">
+
+Each navigation item includes:
+
+- `itemKey`: The unique identity of the navigation project (must)
+- `text`: Navigation copywriting
+
+`items` holds data only. Icons are provided through the `#icon="{ item, level }"` scoped slot of Nav, and you can pick them from `@fibrae/semi-icons-vue` and `@fibrae/semi-icons-vue/lab`, see the [Icon documentation](/en-US/react/basic/icon).
+
+</Framework>
+
+<Framework only="solid">
+
+Each navigation item includes:
+
+- `itemKey`: The unique identity of the navigation project (must)
+- `text`: Navigation copywriting
+
+`items` holds data only. Icons are provided through `renderItemIcon({ item, level })` of Nav, and you can pick them from `@fibrae/semi-icons-solid` and `@fibrae/semi-icons-solid/lab`, see the [Icon documentation](/en-US/react/basic/icon). The shown text and the toggle and expand arrows come from `renderItemText`, `renderItemToggleIcon` and `renderItemExpandIcon` in the same way, called only when the item is shown.
+
+</Framework>
+
+For the meaning of the parameters, see [Nav.Item](#Nav.Item) Or [Nav.Sub](#Nav.Sub)
+
+Developers may often define the Logo area and the put away button area, while Navigation provides such a container for developers to quickly define the navigation head and bottom, and you only need to pass in the `header` or `footer` as required.
+
+For `footer`, semi-ui extra encapsulates a pull-up feature button that developers can pass through `collapseButton = true` to turn on the function, but the parameter takes effect only with `mode = "vertical"` (Vertical navigation).
+
+<Framework only="vue">
+
+`header` and `footer` accept data only. Nodes such as the logo are provided through the `#logo` slot of `<Nav.Header>` and the `#header` and `#footer` slots of Nav.
+
+</Framework>
+
+<Framework only="solid">
+
+The configuration objects of `header` and `footer` hold data only: `logo` is a render function returning the logo, such as `logo: () => <IconSemiLogo />`, called only when shown, and `text` is a string or number. For other nodes, pass JSX directly or use Nav.Header and Nav.Footer children.
+
+</Framework>
+
+For the parameters, see [Nav.Header](#Nav.Header) and [Nav.Footer](#Nav.Footer).
+
+<Demo id="basic" />
+
+### Navigation Indentation
+
+> Navigation indentation is currently effective only for first-level navigation.
+
+#### Pure Copywriting Navigation
+
+<Framework only="react">
+
+If the navigation project doesn't come in, `icon` field, then the copy will be automatically filled to the left.
+
+</Framework>
+
+<Framework only="vue">
+
+If the `#icon` slot is not provided, then the copy will be automatically filled to the left.
+
+</Framework>
+
+<Framework only="solid">
+
+If `renderItemIcon` is not provided, or returns nothing for an item, the copy is automatically filled to the left.
+
+</Framework>
+
+<Demo id="text-only" />
+
+### Define The Head And Bottom
+
+<Framework only="react">
+
+Use `header` and `footer` to quickly define the navigation head and bottom. `collapseButton` in `footer` takes effect only with `mode = "vertical"` (vertical navigation).
+
+</Framework>
+
+<Framework only="vue">
+
+Use `<Nav.Header>` and `header` to quickly define the navigation head, and `footer` to quickly define the navigation bottom. `collapseButton` in `footer` takes effect only with `mode = "vertical"` (vertical navigation).
+
+</Framework>
+
+<Framework only="solid">
+
+Use `header` and `footer` to quickly define the navigation head and bottom. `collapseButton` in `footer` takes effect only with `mode = "vertical"` (vertical navigation).
+
+</Framework>
+
+<Demo id="header-footer" />
+
+### Navigation Style Definition
+
+<Framework only="react">
+
+Navigation currently provides two parameters to define navigation styles:`style` and `bodyStyle`, in which `style` The style used to define the outermost layer of the navigation component, while `bodyStyle` The style used to define the navigation list. (Both the navigation head and the bottom of the navigation accept their respective `style` Parameters).
+
+</Framework>
+
+<Framework only="vue">
+
+Navigation currently provides two ways to define navigation styles: `style` and `bodyStyle`. `style` is passed as an attr and lands on the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list. (Both the navigation head and the bottom of the navigation accept their respective `style`).
+
+</Framework>
+
+<Framework only="solid">
+
+Navigation provides two parameters to define navigation styles: `style` and `bodyStyle`. `style` defines the style of the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list. (Both the navigation head and the bottom accept their own `style` parameter.)
+
+</Framework>
+
+For example, you need a navigation list to scroll, navigate the head and bottom fixed navigation components, which can be used this way:
+
+<Demo id="style" />
+
+<Framework only="react">
+
+### JSX Writing
+
+Users can use JSX to define navigation headers, navigation items, and navigation bottoms. Nav collects the elements that carry `itemKey` (recursing into their children) to open the ancestors of the default selected items and mark the top-level parent as selected. A component that wraps a navigation item takes part as long as it passes `itemKey` and its other props on to Nav.Item or Nav.Sub; no static property is needed.
+
+</Framework>
+
+<Framework only="vue">
+
+### Template Writing
+
+Users can use templates to define navigation headers, navigation items, and navigation bottoms. Besides Nav.Header, Nav.Item, Nav.Sub and Nav.Footer, the default slot of Nav also accepts other custom elements. Nodes such as icons and the logo are provided through slots of the child components, such as `#icon` and `#logo`.
+
+</Framework>
+
+<Framework only="solid">
+
+### JSX Writing
+
+Users can use JSX to define navigation headers, navigation items, and navigation bottoms. Besides Nav.Header, Nav.Item, Nav.Sub and Nav.Footer, the children of Nav can also hold other custom JSX elements; they are wrapped in a `li` of the list. Nav collects the items that carry `itemKey` from Nav.Item and Nav.Sub, to open the ancestors of the default selected items and mark the top-level parent as selected. A component that wraps a navigation item takes part by returning a Nav.Item or Nav.Sub; no static property is needed.
+
+</Framework>
+
+<Demo id="jsx" />
+
+### Use router lib
+
+<Framework only="react">
+
+In order to use routing components such as react-router, NavItem can be wrapped in the Link or NavLink provided by the routing component to let users click NavItem to trigger the routing component. We need to customize rendering.
+
+Use renderWrapper to customize navigation components in each navigation item. [See CodeSandBox demo](https://codesandbox.io/s/semi-navigation-with-react-router-9kk9dm?file=/src/App.js)
+
+```jsx
+import { Link } from 'react-router-dom';
+
+() => {
+    return (
+        <Nav
+            renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
+                const routerMap = {
+                    Home: '/',
+                    About: '/about',
+                    Dashboard: '/dashboard',
+                    'Nothing Here': '/nothing-here',
+                };
+                return (
+                    <Link style={{ textDecoration: 'none' }} to={routerMap[props.itemKey]}>
+                        {itemElement}
+                    </Link>
+                );
+            }}
+            items={[
+                { itemKey: 'Home', text: 'Home' },
+                { itemKey: 'About', text: 'About' },
+                {
+                    text: 'Sub',
+
+                    itemKey: 'Sub',
+                    items: ['Dashboard', 'Nothing Here'],
+                },
+            ]}
+        ></Nav>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+In order to use routing components such as vue-router, Nav.Item can be wrapped in the RouterLink provided by the routing component to let users click an item to trigger the routing component. We need to customize rendering.
+
+Use the `#wrapper="{ itemElement, isSubNav, isInSubNav, props }"` scoped slot to wrap each navigation item in a custom component, and mount the `li` of the item with `<component :is="itemElement" />`.
+
+```vue
+<script setup lang="ts">
+    import { RouterLink } from 'vue-router';
+    import { Nav } from '@fibrae/semi-ui-vue';
+
+    const routerMap = {
+        Home: '/',
+        About: '/about',
+        Dashboard: '/dashboard',
+        'Nothing Here': '/nothing-here',
+    };
+    const items = [
+        { itemKey: 'Home', text: 'Home' },
+        { itemKey: 'About', text: 'About' },
+        { itemKey: 'Sub', text: 'Sub', items: ['Dashboard', 'Nothing Here'] },
+    ];
+</script>
+
+<template>
+    <Nav :items="items">
+        <template #wrapper="{ itemElement, props }">
+            <RouterLink :to="routerMap[props.itemKey as keyof typeof routerMap]" style="text-decoration: none">
+                <component :is="itemElement" />
+            </RouterLink>
+        </template>
+    </Nav>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+In order to use routing components such as `@solidjs/router`, a navigation item can be wrapped in the link provided by the routing component, so that clicking the item triggers a route change. We need to customize rendering.
+
+Use `renderWrapper` to wrap each navigation item in a custom component. `itemElement` is the `li` of the item and must be rendered exactly once.
+
+```jsx
+import { A } from '@solidjs/router';
+import { Nav } from '@fibrae/semi-ui-solid';
+
+const routerMap = {
+    Home: '/',
+    About: '/about',
+    Dashboard: '/dashboard',
+    'Nothing Here': '/nothing-here',
+};
+
+export default function RouterNav() {
+    return (
+        <Nav
+            renderWrapper={({ itemElement, props }) => (
+                <A href={routerMap[props.itemKey as keyof typeof routerMap]} style={{ 'text-decoration': 'none' }}>
+                    {itemElement}
+                </A>
+            )}
+            items={[
+                { itemKey: 'Home', text: 'Home' },
+                { itemKey: 'About', text: 'About' },
+                { itemKey: 'Sub', text: 'Sub', items: ['Dashboard', 'Nothing Here'] },
+            ]}
+        />
+    );
+}
+```
+
+</Framework>
+
+### Navigation Direction
+
+Navigation currently offers navigation in two directions:
+
+- Vertical (default)
+- Horizontal
+
+You can pass `mode = "vertical"` (default) or `mode = "horizontal"` to control.
+
+In particular, there are some functions (parameters) only in `mode = "vertical"` effective:
+
+- `isCollapsed` (Navigation put away to the side)
+- `defaultOpenKeys` | `openKeys` (Specifies the default and controlled array of expanded subnavigation items key, which is valid only in `mode = "vertical"`and `isCollapsed = false`)
+- `collapseButton` of `Footer`
+
+#### Vertical Direction
+
+<Demo id="vertical" />
+
+#### Horizontal Direction
+
+<Demo id="horizontal" />
+
+#### Horizontal Plus Vertical
+
+The general platform design will adopt the mode of horizontal and vertical navigation. Here is a common example.
+
+<Demo id="horizontal-vertical" />
+
+### Expand and collapse arrow position
+
+`toggleIconPosition` set 'left' or 'right', default right
+
+<Demo id="toggle-icon-position" />
+
+### Indentation limit
+
+No indentation by default. If you need to indent the navigation items according to the level, please set limitIndent to false
+
+<Framework only="react">
+
+When using Nav.Item to pass navigation items in React Jsx mode, please pass level props to Nav.Item manually.
+
+</Framework>
+
+<Framework only="vue">
+
+When using Nav.Item to pass navigation items in the template, please pass the level attribute to Nav.Item manually.
+
+</Framework>
+
+Object method No need to care about level when passing in navigation items.
+
+limitIndent only takes effect in the vertical direction.
+
+<Framework only="solid">
+
+- When passing navigation items with Nav.Item in JSX, pass the `level` prop to Nav.Item manually.
+- When passing navigation items with `items`, you do not need to care about level.
+
+</Framework>
+
+<Demo id="limit-indent" />
+
+### Uncontrolled Properties
+
+Including:
+
+- `defaultSelectedKeys` (default selected navigation item `key` array)
+- `defaultOpenKeys` (default expanded navigation item `key` array, valid only with `mode = "vertical"` and `isCollapsed = false` | `defaultIsCollapsed = false`)
+- `defaultIsCollapsed` (whether the sidebar is closed by default, valid only when `mode = "vertical"`)
+
+<Demo id="uncontrolled" />
+
+### Controlled Properties
+
+<Framework only="react">
+
+The Navigation component provides several controlled properties that, combined with a variety of callbacks, can easily control navigation.
+
+The properties currently controlled are:
+
+- `isCollapsed`(whether the sidebar is closed, effective only when `mode="vertical"`)
+- `selectedKeys` (currently selected navigation item `key` array)
+- `openKeys` (currently expanded array of navigation items, only `mode="vertical"` and `isCollapsed=false` valid)
+
+The corresponding callback is:
+
+- `onCollapseChange(isCollapsed: boolean) => void`
+- `onSelect ({ itemKey: string, selectedKeys: string[], domEvent: MouseEvent | KeyboardEvent }) => void`
+- `onOpenChange ({ itemKey: string, openKeys: string[], domEvent?: MouseEvent | KeyboardEvent, isOpen: boolean }) => void`
+
+</Framework>
+
+<Framework only="vue">
+
+The Navigation component provides several controlled properties. Use `v-model` to control navigation easily, optionally together with events.
+
+The properties currently controlled are:
+
+- `v-model:isCollapsed` (whether the sidebar is closed, effective only when `mode="vertical"`)
+- `v-model:selectedKeys` (currently selected navigation item `key` array, containing the selected item only)
+- `v-model:openKeys` (currently expanded array of navigation items, only `mode="vertical"` and `isCollapsed=false` valid)
+
+The corresponding events are:
+
+- `@collapseChange(isCollapsed: boolean)`
+- `@select({ itemKey: string, selectedKeys: string[], domEvent: MouseEvent | KeyboardEvent })`
+- `@openChange({ itemKey: string, openKeys: string[], domEvent?: MouseEvent | KeyboardEvent, isOpen: boolean })`
+
+In horizontal or collapsed mode, opening a submenu on hover also emits `update:openKeys`, and the popup is not controlled by `openKeys`.
+
+</Framework>
+
+<Framework only="solid">
+
+The Navigation component provides several controlled properties. Combined with callbacks, they can easily control navigation.
+
+The properties currently controlled are:
+
+- `isCollapsed` (whether the sidebar is collapsed, effective only when `mode = "vertical"`)
+- `selectedKeys` (currently selected navigation item `key` array)
+- `openKeys` (currently expanded array of navigation items, valid only when `mode = "vertical"` and `isCollapsed = false`)
+
+The corresponding callbacks are:
+
+- `onCollapseChange(isCollapse: boolean): void`
+- `onSelect({ itemKey, selectedKeys, selectedItems, domEvent }): void`
+- `onOpenChange({ itemKey, openKeys, domEvent, isOpen }): void`
+
+</Framework>
+
+<Demo id="controlled" />
+
+## API Reference
+
+### Nav
+
+<Framework only="react">
+
+<NavReactApi />
+
+Other native attributes (such as `id` and `aria-label`) land on the outermost `nav`.
+
+</Framework>
+
+<Framework only="vue">
+
+<NavVueApi />
+
+`class`, `style` and native attributes land on the outermost `nav` as attrs.
+
+#### items data entries
+
+`items` is `(string | NavItemConfig)[]`. A string entry is both the `text` and the `itemKey`. An entry with non-empty `items` renders as a Nav.Sub, any other entry as a Nav.Item. Entries hold data only; nodes are provided through the `#icon`, `#text`, `#toggleIcon` and `#expandIcon` scoped slots of Nav, whose parameters are `{ item, level }`.
+
+| Properties       | Description                                                                           | Type                        | Default |
+| ---------------- | ------------------------------------------------------------------------------------- | --------------------------- | ------- |
+| itemKey          | Unique item identifier                                                                | string \| number            |         |
+| text             | Navigation item copy                                                                  | string \| number            |         |
+| items            | Child entries; an entry with non-empty `items` renders as a Nav.Sub                   | (string \| NavItemConfig)[] |         |
+| disabled         | Disabled state                                                                        | boolean                     |         |
+| indent           | If there is no icon, keep its space or not. Only effective for first level navigation | boolean \| number           |         |
+| link             | Navigation item href link, Nav.Item only                                              | string                      |         |
+| linkOptions      | Parameters transparently passed to the a tag, Nav.Item only                           | AnchorHTMLAttributes        |         |
+| tooltipHideDelay | Delay for hiding the tooltip of this item, Nav.Item only                              | number                      |         |
+| tooltipShowDelay | Delay for showing the tooltip of this item, Nav.Item only                             | number                      |         |
+| dropdownProps    | Popup layer `dropdown` parameter configuration, Nav.Sub only                          | SubDropdownProps            |         |
+| dropdownStyle    | Style of dropdown layer, Nav.Sub only                                                 | StyleValue                  |         |
+| class            | Class name of the `li` of the item                                                    | string \| object \| array   |         |
+| style            | Custom style of the `li` of the item                                                  | StyleValue                  |         |
+| onMouseenter     | Callback of mouse enter event                                                         | (event: MouseEvent) => void |         |
+| onMouseleave     | Callback of mouse leave event                                                         | (event: MouseEvent) => void |         |
+| data-\*, aria-\* | `data-*` land on the `li`, `aria-*` on the link or button that takes focus            | unknown                     |         |
+
+Other fields (such as `path`) are ignored.
+
+</Framework>
+
+<Framework only="solid">
+
+<NavSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `aria-label`) land on the outermost `nav`.
+
+</Framework>
+
+### Nav.Item
+
+<Framework only="react">
+
+<NavItemReactApi />
+
+`aria-*` land on the link or button that takes focus; other native attributes (such as `id` and `data-*`) land on the `li`.
+
+</Framework>
+
+<Framework only="vue">
+
+<NavItemVueApi />
+
+`aria-*` land on the link or button that takes focus; `class`, `style`, `data-*`, `@mouseenter`, `@mouseleave` and other attributes land on the `li`; a given `class` replaces the default `semi-navigation-item-normal`. Use the native `tabindex`, which lands on the link or button.
+
+</Framework>
+
+<Framework only="solid">
+
+<NavItemSolidApi />
+
+`class` replaces the default `semi-navigation-item-normal`. `style`, `ref`, `data-*` and native events (such as `onMouseEnter`) land on the `li`; `aria-*` and `tabIndex` land on the link or button that takes focus.
+
+</Framework>
+
+### Nav.Sub
+
+<Framework only="react">
+
+<SubNavReactApi />
+
+`aria-*` land on the title that takes focus; other native attributes (such as `id` and `data-*`) land on the outer `li`.
+
+</Framework>
+
+<Framework only="vue">
+
+<SubNavVueApi />
+
+`aria-*` land on the title button that takes focus; `class`, `style`, `data-*`, `@mouseenter`, `@mouseleave` and other attributes land on the `li`.
+
+</Framework>
+
+<Framework only="solid">
+
+<SubNavSolidApi />
+
+`aria-*` land on the title button that takes focus; `class`, `style`, `ref`, `data-*` and native events (such as `onMouseEnter`) land on the `li`.
+
+</Framework>
+
+### Nav.Header
+
+<Framework only="react">
+
+<NavHeaderReactApi />
+
+Other native attributes (such as `id` and `aria-label`) land on the outermost `div`.
+
+</Framework>
+
+<Framework only="vue">
+
+<NavHeaderVueApi />
+
+`class`, `style` and native attributes land on the outermost element as attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<NavHeaderSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the outermost `div`.
+
+</Framework>
+
+### Nav.Footer
+
+<Framework only="react">
+
+<NavFooterReactApi />
+
+Other native attributes (such as `id` and `aria-label`) land on the outermost `div`.
+
+</Framework>
+
+<Framework only="vue">
+
+<NavFooterVueApi />
+
+`class`, `style` and native attributes (including `@click`) land on the outermost element as attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<NavFooterSolidApi />
+
+`class`, `style`, `ref` and native attributes (including `onClick`) land on the outermost `div`.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+Navigation follows the WAI-ARIA APG [Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) example and does not use the `menu` role.
+
+- The root element is a `nav` (navigation landmark). When a page has several Navigations, give each a different `aria-label`, such as "Top navigation" and "Side navigation"
+- The items are a plain `ul` / `li` list. Header and Footer are outside the list; other children that are not items are wrapped in a `li` that renders no box
+- A Nav.Item with `link` is a link (`a href`), any other Nav.Item is a native `button`. The selected item has `aria-current="page"`, a disabled item has `aria-disabled="true"`
+- In the expanded vertical mode, the title of a Nav.Sub is a native `button` with `aria-expanded` telling whether its list is shown and `aria-controls` pointing to that list
+- In horizontal and collapsed mode, the title of a Nav.Sub is a menu button with `aria-haspopup="menu"` and an `aria-expanded` that follows the popup. The popup is a `menu` whose items are `menuitem`s; the selected one has `aria-current="page"`
+- `aria-*` passed to Nav.Item or Nav.Sub land on the link or button that takes focus, other undeclared props on the `li`
+- When the Nav is collapsed, the link of Nav.Header is named by its `text`
+
+### Keyboard and Focus
+
+- Every item and every inline sub title is a `Tab` stop; `Tab` and `Shift + Tab` move between them. Items in a closed sub are not in the Tab sequence
+- On an item, `Enter` follows its link; an item without `link` is selected with `Enter` or `Space`
+- On the title of an inline sub, `Enter` or `Space` expands or collapses its list
+- In collapsed mode, a focused top level item shows its text in a Tooltip, which also describes the item
+- The title of a sub in horizontal or collapsed mode:
+    - Opens its popup when it gets focus (hover trigger); `Down Arrow` and `Up Arrow` move focus to the first and last item of the menu
+    - In the menu, `Up Arrow`, `Down Arrow`, `Home` and `End` move focus, `Enter` or `Space` selects an item, `Right Arrow` opens a nested submenu and `Left Arrow` closes it and returns to the parent item (swapped on RTL pages)
+    - `Esc` closes the current menu and returns focus to the title that opened it; `Tab` closes all menus and moves focus as usual
+
+<Framework only="react">
+
+- The return value of renderWrapper is placed directly in the `ul`; when it is not a `li`, the list structure is invalid, so make sure it returns a `li` or content that is allowed in a `ul`. When renderWrapper wraps an item in the link of a router, the link contains the item's own button, which nests interactive elements. For client-side routing, prefer `link` with `linkOptions.onClick`
+
+</Framework>
+
+<Framework only="vue">
+
+- The return value of the `#wrapper` slot is placed directly in the `ul`; when it is not a `li`, the list structure is invalid, so make sure it returns a `li` or content that is allowed in a `ul`. When `#wrapper` wraps an item in the link of a router, the link contains the item's own button, which nests interactive elements. For client-side routing, prefer `link` with `linkOptions.onClick`
+
+</Framework>
+
+<Framework only="solid">
+
+- The return value of renderWrapper is placed directly in the `ul`; when it is not a `li`, the list structure is invalid, so make sure it returns a `li` or content that is allowed in a `ul`. When renderWrapper wraps an item in the link of a router, the link contains the item's own button, which nests interactive elements. For client-side routing, prefer `link` with `linkOptions.onClick`
+
+</Framework>
+
+## Content Guidelines
+
+- Navigation bar menu uses sentence case format
+- Keep it as simple as possible
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+<Framework only="react">
+
+- **Lost animation in navigation bar?**
+
+    When using functional components, you should give items with useState or useMemo, because passing an array directly to items will trigger component rerendering.
+
+</Framework>
+
+<Framework only="vue">
+
+- **Lost animation in navigation bar?**
+
+    Do not write a `:items="[...]"` literal in the template: the parent creates a new array on every render, which rebuilds the navigation and resets the uncontrolled selection to `defaultSelectedKeys`. Define items at the top level of `script setup`, or in a `ref` or `computed`.
+
+</Framework>
+
+<Framework only="solid">
+
+- **Lost animation in navigation bar?**
+
+    When a signal read inside `items` changes, every navigation item is created again, so focus is lost. Only let the data that really changes pass through a signal, and keep frequently updated signals out of `items`.
+
+</Framework>
+
+- **Lost item when subNav is too height >=999px ?** Please refer to [this issue](https://github.com/DouyinFE/semi-design/issues/563)

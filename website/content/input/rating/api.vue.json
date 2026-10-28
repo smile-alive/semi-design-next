@@ -1,0 +1,83 @@
+{
+    "rating": {
+        "source": "packages/semi-ui-vue/src/rating/rating.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "当前值，配合 v-model 使用；传入后由该值决定显示，变回 undefined 时回到 defaultValue 并转为非受控。",
+                "en-US": "Current value, used with v-model. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始值。", "en-US": "Initial value when uncontrolled." },
+            "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
+            "allowHalf": { "zh-CN": "是否允许半选。", "en-US": "Whether half stars can be selected." },
+            "allowClear": {
+                "zh-CN": "是否允许再次点击后清除。",
+                "en-US": "Whether clicking the selected star again clears the value."
+            },
+            "disabled": {
+                "zh-CN": "只读，无法进行交互，也无法获得焦点。",
+                "en-US": "Read-only: no interaction and no focus."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 default、small，也可传入 number 自定义尺寸。",
+                "en-US": "Size: default or small, or a number for a custom size."
+            },
+            "tooltips": { "zh-CN": "每一项的提示信息。", "en-US": "Prompt text for each item." },
+            "prefixCls": { "zh-CN": "组件的样式类名前缀。", "en-US": "Class name prefix of the component." },
+            "autofocus": { "zh-CN": "挂载时自动获取焦点。", "en-US": "Whether to focus on mount." },
+            "preventScroll": {
+                "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。",
+                "en-US": "Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component."
+            },
+            "ariaLabel": {
+                "zh-CN": "radiogroup 的可访问名称；缺省时名称概括当前取值。",
+                "en-US": "Accessible name of the radiogroup; without it the name summarizes the value."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "选择变化时触发，供 v-model 回写。",
+                "en-US": "Emitted when the selection changes, for v-model to write back."
+            },
+            "change": {
+                "zh-CN": "选择变化时触发，参数为新的值。",
+                "en-US": "Emitted when the selection changes, with the new value."
+            },
+            "hoverChange": {
+                "zh-CN": "指针经过时数值变化；指针移出或点击清除时收到 undefined。",
+                "en-US": "Emitted when the hovered value changes; receives undefined when the pointer leaves or a click clears the value."
+            },
+            "click": {
+                "zh-CN": "点击星或按 Enter、Space 选中时触发，参数为事件与星的序号；会遮住根元素上的原生 click 监听。",
+                "en-US": "Emitted when a star is clicked or selected with Enter or Space, with the event and the star index. It shadows a native click listener on the root element."
+            },
+            "focus": {
+                "zh-CN": "焦点进入整个评分组件时触发，在星之间移动不触发。",
+                "en-US": "Emitted when focus enters the rating; moving between stars does not emit it."
+            },
+            "blur": {
+                "zh-CN": "焦点离开整个评分组件时触发。",
+                "en-US": "Emitted when focus leaves the rating."
+            },
+            "keydown": {
+                "zh-CN": "仅在方向键使值移动时触发。",
+                "en-US": "Emitted only for an arrow key that moved the value."
+            }
+        },
+        "slots": {
+            "character": {
+                "zh-CN": "每颗星中绘制的字符；只含文本时，该文本作为各星可访问名称与整组摘要的单位，否则用语言包的单位。",
+                "en-US": "Character drawn in every star. When it is plain text, that text is the unit in each star's accessible name and the group summary; otherwise the locale's unit is used."
+            }
+        },
+        "exposed": {
+            "focus": {
+                "zh-CN": "聚焦 Tab 会到达的 radio，与 autofocus 的落点相同；disabled 时无效果。",
+                "en-US": "Focuses the radio that Tab reaches, the same one autofocus uses. Does nothing when disabled."
+            },
+            "blur": {
+                "zh-CN": "让评分内获得焦点的元素失焦；焦点不在评分内或 disabled 时无效果。",
+                "en-US": "Blurs the focused element inside the rating. Does nothing when focus is elsewhere or the rating is disabled."
+            }
+        }
+    }
+}

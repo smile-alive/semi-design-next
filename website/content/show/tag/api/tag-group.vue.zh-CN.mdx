@@ -1,0 +1,30 @@
+**Props**
+
+| 属性         | 说明                                                                       | 类型                              | 默认值                                             |
+| ------------ | -------------------------------------------------------------------------- | --------------------------------- | -------------------------------------------------- |
+| tagList      | 标签配置数组，每项为 Tag 的属性，children 为 string 或 number 的标签文字。 | `TagGroupItem[]`                  | `undefined`                                        |
+| maxTagCount  | 最多显示的标签数，超出的部分显示为 +N。                                    | `number`                          | `semiGlobalDefault("TagGroup", "maxTagCount")`     |
+| restCount    | +N 中显示的数量，缺省为超出 maxTagCount 的标签数。                         | `number`                          | `semiGlobalDefault("TagGroup", "restCount")`       |
+| size         | 组内标签的尺寸。                                                           | `"default" \| "small" \| "large"` | `semiDefault("TagGroup", "size", "default")`       |
+| showPopover  | 悬停在 +N 上时，是否通过 Popover 显示剩余标签。                            | `boolean`                         | `semiGlobalDefault("TagGroup", "showPopover")`     |
+| popoverProps | 传给 Popover 的属性，可设置 position、trigger 等。                         | `PopoverProps`                    | `semiGlobalDefault("TagGroup", "popoverProps")`    |
+| avatarShape  | 组内头像标签的头像形状。                                                   | `AvatarShape`                     | `semiDefault("TagGroup", "avatarShape", "square")` |
+
+**Events**
+
+| 事件            | 说明                                                                            | 回调参数                                                        |
+| --------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| tagClose        | 组内标签被关闭时触发，参数为关闭事件与该标签的 tagKey；需在回调中更新 tagList。 | `[event: TagCloseEvent, tagKey: string \| number \| undefined]` |
+| plusNMouseEnter | 指针移入 +N 标签时触发。                                                        | `[]`                                                            |
+
+**Slots**
+
+| 插槽 | 说明                                                          | 作用域参数                              |
+| ---- | ------------------------------------------------------------- | --------------------------------------- |
+| tag  | 自定义每个标签的渲染，作用域参数为标签配置 tag 与序号 index。 | `{ tag: TagGroupItem; index: number; }` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

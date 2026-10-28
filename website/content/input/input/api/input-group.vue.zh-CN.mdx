@@ -1,0 +1,29 @@
+**Props**
+
+| 属性          | 说明                                                                                                                              | 类型              | 默认值                                             |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------- |
+| size          | 输入框大小，可选 large、default、small，下发给每个子级。                                                                          | `Size`            | `semiDefault("InputGroup", "size", "default")`     |
+| disabled      | 是否禁用，下发给子级；子级自己写的 disabled 优先。                                                                                | `boolean`         | `semiGlobalDefault("InputGroup", "disabled")`      |
+| label         | 组的标签配置（Form.Label 的属性，另可设 id、class、style）；text、extra 只接受字符串或数字，节点内容使用 label、labelExtra 插槽。 | `InputGroupLabel` | `semiGlobalDefault("InputGroup", "label")`         |
+| labelPosition | 标签位置，可选 top 或 left。                                                                                                      | `string`          | `semiGlobalDefault("InputGroup", "labelPosition")` |
+
+**Events**
+
+| 事件  | 说明                                                                           | 回调参数              |
+| ----- | ------------------------------------------------------------------------------ | --------------------- |
+| focus | 组内元素获得焦点时触发（focusin），焦点在子级之间移动也会触发；不下发给子级。  | `[event: FocusEvent]` |
+| blur  | 组内元素失去焦点时触发（focusout），焦点在子级之间移动也会触发；不下发给子级。 | `[event: FocusEvent]` |
+
+**Slots**
+
+| 插槽       | 说明                                                                                              | 作用域参数 |
+| ---------- | ------------------------------------------------------------------------------------------------- | ---------- |
+| default    | 组内的输入类组件，如 Input、InputNumber、Select、AutoComplete、TreeSelect、Cascader、DatePicker。 | `any`      |
+| label      | 标签的节点内容。                                                                                  | `any`      |
+| labelExtra | 标签的附加内容。                                                                                  | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

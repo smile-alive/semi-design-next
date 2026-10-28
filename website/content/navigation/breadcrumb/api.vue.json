@@ -1,0 +1,101 @@
+{
+    "breadcrumb": {
+        "source": "packages/semi-ui-vue/src/breadcrumb/breadcrumb.vue",
+        "props": {
+            "activeIndex": {
+                "zh-CN": "受控使用，当前项的序号（从 0 起）；缺省时最后一项为当前项。",
+                "en-US": "Controlled index of the current item, counted from 0. The last item is current when omitted."
+            },
+            "autoCollapse": {
+                "zh-CN": "超出 maxItemCount 后是否自动折叠。",
+                "en-US": "Whether items beyond maxItemCount collapse automatically."
+            },
+            "compact": { "zh-CN": "是否使用紧凑尺寸。", "en-US": "Whether the compact size is used." },
+            "maxItemCount": {
+                "zh-CN": "超出多少个级别后自动折叠。",
+                "en-US": "Number of levels above which the breadcrumb collapses."
+            },
+            "moreType": {
+                "zh-CN": "内置省略号区域的渲染类型，可选 default、popover；提供 more 插槽时以插槽为准。",
+                "en-US": "Built-in rendering of the ellipsis area: default or popover. The more slot wins when it is provided."
+            },
+            "routes": {
+                "zh-CN": "路由信息，由路由对象或字符串组成的数组；不为空时按 routes 渲染，不再渲染默认插槽。",
+                "en-US": "Route information as an array of route objects or strings. When it is not empty, the items come from it and the default slot is not rendered."
+            },
+            "separator": {
+                "zh-CN": "文字分隔符；提供 separator 插槽时以插槽为准。",
+                "en-US": "Text separator. The separator slot wins when it is provided."
+            },
+            "showTooltip": {
+                "zh-CN": "是否在标题溢出时展示 Tooltip 及相关配置：width 为溢出宽度，ellipsisPos 为截断方式（从末尾或中间），opts 为传给 Tooltip 的属性，不含 content，class 与 style 落在弹层上。",
+                "en-US": "Whether a Tooltip shows for an overflowing title, with its options: width is the overflow width, ellipsisPos truncates at the end or in the middle, and opts are passed to the Tooltip without content, with class and style landing on the popup."
+            },
+            "onClick": {
+                "zh-CN": "点击时调用。是函数 prop，使用方照常写 @click；传入后没有 href 的项也可以用 Enter 操作。routes 写法收到该项的路由；Breadcrumb.Item 写法收到 `{ name, href }`，name 是该项的文字。第二个参数为原生 MouseEvent。",
+                "en-US": "Called on click. It is a function prop, bound with @click as usual; passing it makes items without href operable with Enter as well. With routes it receives the route of the item; with Breadcrumb.Item children it receives `{ name, href }`, where name is the text of the item. The second parameter is the native MouseEvent."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "由 Breadcrumb.Item 组成的子项。", "en-US": "Children made of Breadcrumb.Item." },
+            "separator": {
+                "zh-CN": "自定义分隔符，优先于 separator 属性。",
+                "en-US": "Custom separator. Takes precedence over the separator prop."
+            },
+            "item": {
+                "zh-CN": "routes 写法下自定义每一项的标题，作用域参数为该项的路由与序号。",
+                "en-US": "With routes, the custom title of each item, with the route and its index as scope parameters."
+            },
+            "icon": {
+                "zh-CN": "routes 写法下每一项的图标，作用域参数为该项的路由与序号；渲染为空时该项无图标。",
+                "en-US": "With routes, the icon of each item, with the route and its index as scope parameters. An empty result renders no icon."
+            },
+            "more": {
+                "zh-CN": "自定义省略号区域，作用域参数 restItems 是被折叠的项，已去掉分隔符，可直接用 component 挂载。",
+                "en-US": "Custom ellipsis area. The scope parameter restItems holds the collapsed items without their separators, ready to mount with component."
+            }
+        },
+        "exposed": {}
+    },
+    "breadcrumb-item": {
+        "source": "packages/semi-ui-vue/src/breadcrumb/breadcrumb-item.vue",
+        "props": {
+            "active": {
+                "zh-CN": "是否为当前项，由 Breadcrumb 注入；当前项带 aria-current=\"page\" 且不渲染为链接。",
+                "en-US": "Whether this is the current item, injected by Breadcrumb. The current item has aria-current=\"page\" and does not render as a link."
+            },
+            "href": { "zh-CN": "链接的目的地。", "en-US": "Destination of the link." },
+            "noLink": { "zh-CN": "移除 hover 和 active 的样式。", "en-US": "Removes the hover and active styles." },
+            "route": {
+                "zh-CN": "该项对应的路由对象，由 Breadcrumb 的 routes 写法注入；点击时作为回调的第一个参数。",
+                "en-US": "Route object of the item, injected by the routes form of Breadcrumb. It is the first parameter of the click handler."
+            },
+            "separator": {
+                "zh-CN": "文字分隔符，覆盖 Breadcrumb 的分隔符；提供 separator 插槽时以插槽为准。",
+                "en-US": "Text separator overriding the one of Breadcrumb. The separator slot wins when it is provided."
+            },
+            "shouldRenderSeparator": {
+                "zh-CN": "是否渲染分隔符，由 Breadcrumb 注入。",
+                "en-US": "Whether the separator renders, injected by Breadcrumb."
+            },
+            "onClick": {
+                "zh-CN": "点击时调用，参数同 Breadcrumb 的 onClick。是函数 prop，使用方照常写 @click；传入后没有 href 的该项也可以用 Enter 操作。",
+                "en-US": "Called on click, with the same parameters as onClick of Breadcrumb. It is a function prop, bound with @click as usual; passing it makes the item operable with Enter even without href."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "该项的文字；字符串与数字按文字处理，参与截断与 Tooltip，其他节点原样内联。",
+                "en-US": "Text of the item. Strings and numbers are treated as text and take part in truncation and the Tooltip; other nodes render inline as they are."
+            },
+            "icon": { "zh-CN": "该项的图标。", "en-US": "Icon of the item." },
+            "separator": {
+                "zh-CN": "自定义该项的分隔符，优先于 separator 属性。",
+                "en-US": "Custom separator of this item. Takes precedence over the separator prop."
+            }
+        },
+        "exposed": {}
+    }
+}

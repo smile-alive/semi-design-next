@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                                                                  | 类型                                                              | 默认值 |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
+| className  | 根元素的类名。                                                                                                                        | `string`                                                          | -      |
+| code       | 代码纯文本，未传时按空字符串处理。`code` 变化后先显示新文本，高亮完成后再替换。                                                       | `string`                                                          | -      |
+| language   | 语言类型，需已注册或经 `languages` 传入。                                                                                             | `string`                                                          | -      |
+| languages  | 该代码块额外使用的 Shiki 语法，加载后其他代码块也可使用。替换为新的数组引用会重新高亮。                                               | `LanguageInput[]`                                                 | -      |
+| lineNumber | 是否开启行数显示。                                                                                                                    | `boolean`                                                         | `true` |
+| ref        | 根元素（`div`）的引用。                                                                                                               | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| style      | 根元素的样式。                                                                                                                        | `React.CSSProperties`                                             | -      |
+| themes     | 替换该代码块亮色、暗色模式下的 Shiki 主题。未设置时使用 `CodeHighlight.register` 注册的主题，默认为 `github-light` 与 `github-dark`。 | `CodeHighlightThemes`                                             | -      |

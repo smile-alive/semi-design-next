@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| aria-label | 按钮的可访问名称；未传且没有 children 时取语言包中的「回到顶部」。 | `string` | - |
+| badge | 徽章参数，同 FloatButton。 | `BadgeProps` | - |
+| children | 按钮内的静态内容，传入时代替 `icon` 显示。不能包含链接、按钮、输入框等可交互元素，开发环境下检测到会警告。 | `JSX.Element` | - |
+| colorful | 多彩按钮，同 FloatButton。 | `boolean` | - |
+| duration | 滚动到顶部所需的毫秒数；点击事件按此间隔节流。 | `number` | `450` |
+| icon | 按钮图标，传入元素；未设置时为 IconBackTop。 | `JSX.Element` | - |
+| onClick | 点击时调用，参数为原生 click 事件；按 duration 节流，调用时滚动已开始。 | <ApiType detail={"JSX.EventHandlerUnion\u003cFloatButtonElement, MouseEvent>"}>Type</ApiType> | - |
+| ref | 指向按钮 `<button>`，只在按钮显示时存在。 | <ApiType detail={"FloatButtonElement \u007c ((element: FloatButtonElement) => void)"}>Type</ApiType> | - |
+| shape | 形状，可选 round、square；未设置时取 FloatButton 的默认值。 | `FloatButtonShape` | - |
+| size | 尺寸，可选 default、small、large；未设置时取 FloatButton 的默认值。 | `FloatButtonSize` | - |
+| target | 返回被监听滚动元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载后调用一次，此时父容器的 ref 已可读取；之后只在函数本身变化时重新调用。稳定的函数晚于挂载才返回元素时，需要重新挂载 BackTop。 | <ApiType detail={"() => Target \u007c null"}>Type</ApiType> | - |
+| visibilityHeight | 出现 BackTop 需要达到的滚动高度。 | `number` | `400` |

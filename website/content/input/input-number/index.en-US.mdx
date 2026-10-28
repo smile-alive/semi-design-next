@@ -1,0 +1,197 @@
+---
+title: InputNumber
+order: 42
+icon: doc-inputnumber
+brief: Through the mouse or keyboard, input the value in the range. Unlike Input, it has a stepper operation area for digital scenes, and it can display more complex content formats when used with Parser.
+---
+
+import InputNumberReactApi from './api/input-number.react.en-US.mdx';
+import InputNumberVueApi from './api/input-number.vue.en-US.mdx';
+import InputNumberSolidApi from './api/input-number.solid.en-US.mdx';
+
+## When to Use
+
+When you need to get a standard value.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { InputNumber } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { InputNumber } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { InputNumber } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Input Box
+
+<Demo id="basic" />
+
+<Demo id="basic-more" />
+
+### Inner Buttons
+
+With `innerButtons`, you can hide the buttons on the right into the interior, which will only be displayed when hover occurs
+
+<Demo id="inner-buttons" />
+
+<Framework only="vue">
+
+The `innerButtons` buttons temporarily replace the `#suffix` slot while hovered or focused, and the slot content comes back afterwards.
+
+</Framework>
+
+<Framework only="solid">
+
+The `innerButtons` buttons temporarily replace the content of the `suffix` prop while hovered or focused, and the original content comes back afterwards.
+
+</Framework>
+
+Set `hideButtons` to `true` to hide the buttons completely
+
+<Demo id="hide-buttons" />
+
+### Size
+
+<Demo id="size" />
+
+### Custom Display Format and Resolution
+
+> A pair of methods for `formatter` and `parser`, which generally need to be set at the same time, otherwise the value cannot be resolved correctly.
+
+<Notice type="info" title="Behavior change">
+
+- **Before the change**: In **controlled** mode (passing `value`, or `modelValue` in Vue), when `value` is a **number**, the initial render might not apply `formatter` to the displayed text. `formatter/parser` could be applied after mount (or on subsequent updates), causing the first paint to differ from later renders.
+- **After the change**: In controlled mode, when `value` is a **number**, `formatter` is applied on the initial render (and paired with `parser` to derive the internal numeric value), keeping the first paint consistent with later renders. For example, in a percentage formatter/parser setup where `value=1` should display `100`, the first paint will display `100`.
+
+</Notice>
+
+<Demo id="formatter" />
+
+### Can Only Enter Numbers
+
+With formatter and onNumberChange (the `numberChange` event in Vue), a pure digital input box can be implemented.
+
+<Demo id="number-only" />
+
+### Currency Display
+
+In internationalization mode, enable currency=\{true\} (just `currency` in Vue) and the component will automatically display the corresponding currency type according to localeCode. (Note that the component key value needs to be updated after switching the language type)
+
+<Demo id="currency-i18n" />
+
+You can also specify the currency to be displayed by manually passing localeCode and currency.
+
+<Demo id="currency-locale" />
+
+Supports three display modes: symbol, code, and name. It is controlled by the currencyDisplay property. The currency symbol is displayed by default. Set showCurrencySymbol to false to hide the display of currency symbol/code/name
+
+<Demo id="currency-display" />
+
+Hide the display of currency symbols/codes/names, and display the currency symbol through the prefix/suffix
+
+<Demo id="currency-affix" />
+
+### Scientific Notation Display
+
+When the number is long, you can enable scientific notation display via the `scientificNotation` property. It displays in scientific notation when out of focus, and displays the full number when in focus.
+
+<Demo id="scientific" />
+
+<Notice type="info">
+
+Scientific notation only affects the display format. The values in `onChange` and `onNumberChange` callbacks (the `change` and `numberChange` events in Vue) are still full numbers. This feature is not supported in currency mode (`currency`).
+
+</Notice>
+
+## API Reference
+
+<Framework only="react">
+
+<InputNumberReactApi />
+
+Other native attributes (such as `id`, `name`, `tabindex`, `title` and `data-*`) land on the native `input`.
+
+</Framework>
+
+<Framework only="vue">
+
+<InputNumberVueApi />
+
+`v-model` binds `modelValue` (`number | string`); the `.number` and `.trim` modifiers are not supported. Use `defaultValue` for an uncontrolled initial value. `change` and `update:modelValue` are emitted together with the same payload. Callbacks are events of the same name: `@change`, `@numberChange`, `@upClick`, `@downClick`, `@focus`, `@blur`, `@keydown`. `focus` and `blur` come from the `focusin` and `focusout` of the Input wrapper; the step buttons are not focusable and emit neither event themselves.
+
+`prefix`, `suffix`, `insetLabel`, `clearIcon`, `addonBefore` and `addonAfter` are slots of the same name; for example `prefix="$"` becomes `<template #prefix>$</template>`.
+
+There are no `prefixCls` or `className`. `class` and `style` land on the outer `.semi-input-number`; the other attributes (`id`, `name`, `tabindex`, `title`, `aria-*`, `data-*`, `role`) land on the native input. Input events not declared in the table above (`enterPress`, `clear`, `input`, `keyup`, `compositionstart` and so on) are passed through attrs to the Input inside, so write `@enterPress` and the like directly.
+
+</Framework>
+
+<Framework only="solid">
+
+<InputNumberSolidApi />
+
+`class`, `style` and `ref` land on the outer `.semi-input-number` root element; the other native attributes and events (`id`, `name`, `aria-*`, `data-*`, `onInput`, `onKeyUp` and so on) land on the native `input`.
+
+</Framework>
+
+## Methods
+
+<Framework only="vue">
+
+The `ref` gives an `InputNumberHandle`; see Exposes in the API Reference above.
+
+</Framework>
+
+<Framework only="react">
+
+The ref of InputNumber is an imperative handle (`InputNumberHandle`), not the native DOM node. Read a node from the handle's properties when you need one: each read returns the node mounted now, and `null` after unmount. The handle's methods and properties are listed in the API Reference.
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` gets the root element (`HTMLDivElement`), not a handle. `focus()` and `blur()` on the root act on the input, and `focus()` without arguments follows the `preventScroll` prop. Native methods such as `select()` and `setSelectionRange()` are called on the `input` element that `inputRef` receives.
+
+</Framework>
+
+## Accessibility
+
+Guideline: https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/
+
+### ARIA
+
+- InputNumber has `spinbutton` role
+- spinbutton uses `aria-valuenow` for current value, `aria-valuemax` for acceptable maximum value, and `aria-valuemin` for acceptable minimum value
+- When InputNumber is used in Form, the value of the input box's `aria-labelledby` reference is Field label
+
+### Keyboard and Focus
+
+- InputNumber can get focus, keyboard users can use `Tab` and `Shift + Tab` to switch focus (Increase and decrease buttons are not focusable)
+- Keyboard users can press up key ⬆️ or down key ⬇️ and the input value will increase or decrease by `step` (default is 1)
+- Hold down Shift + Up ⬆️ or Down ⬇️ , the input value will increase or decrease by `shiftStep` (default is 10)
+- Home jumps to the value of `min` and End to `max`, when that bound is set; without it the key moves the caret as usual
+- When the value is already at a bound and a key leaves it unchanged, `onChange` is not called (the `change` event in Vue)
+
+## Design Tokens
+
+<DesignToken />

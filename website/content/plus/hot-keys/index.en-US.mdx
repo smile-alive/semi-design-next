@@ -1,0 +1,136 @@
+---
+order: 33
+title: HotKeys
+icon: doc-configprovider
+brief: used to facilitate the customization of keyboard shortcut
+---
+
+import HotKeysReactApi from './api/hot-keys.react.en-US.mdx';
+import HotKeysVueApi from './api/hot-keys.vue.en-US.mdx';
+import HotKeysSolidApi from './api/hot-keys.solid.en-US.mdx';
+
+## When to use
+
+When it is necessary to express the usage method of shortcut key combinations to users, using the `Hotkeys` component can quickly render the corresponding UI elements and automatically obtain event bindings.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { HotKeys } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { HotKeys } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { HotKeys } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Explanation
+
+A hotkey is one regular key plus zero or more modifier keys (`Shift`, `Control`, `Meta`, `Alt`). A single regular key without modifiers (such as `['k']`) is valid too. The listener is a keydown handler on `document.body` (or the element returned by `getListenerTarget`), so it also fires while focus is inside an input; check `event.target` in `onHotKey` (`@hotKey` in Vue) to skip typing contexts. Modifiers must match exactly: with `['k']`, pressing Ctrl and K does not trigger it.
+
+Keys are matched by physical key position. Symbols that need Shift to type, such as `!`, `@` and `?`, are not valid keys and throw when set. Write them as `Shift` plus the base key instead, for example `['Shift', '1']` or `['Shift', '/']`.
+
+> [Meta](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/metaKey) corresponds to Command on macOS and Win on Windows.
+
+When setting a shortcut that overlaps with common shortcuts like Ctrl/Meta + C, the preventDefault setting can be used to control whether the default event is triggered.
+
+### Basic Usage
+
+Pass in key combinations via `hotKeys` and bind a shortcut handler function using `onHotKey` (`@hotKey` in Vue) to respond to the action.
+
+When pressing `Ctrl + Shift + A`, it opens the modal. By default, it listens on the body, making it effective globally.
+
+[values reference](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values)
+
+It's also recommended to use the `HotKeys.Keys` wrapper to set hotkeys.
+
+<Demo id="basic" />
+
+### Custom content
+
+Set the characters through `content`
+
+<Demo id="content" />
+
+<Framework only="react">
+
+Replace the element through `render`
+
+</Framework>
+
+<Framework only="vue">
+
+Replace the element through the default slot. An empty default slot renders nothing and the hot keys stay active.
+
+</Framework>
+
+<Framework only="solid">
+
+Replace the element through `render`, which takes a JSX element or a function returning one. `null`, or a function returning `null`, renders nothing and the hot keys stay active.
+
+</Framework>
+
+<Demo id="render" />
+
+### prevent Default event
+
+Control the default event by setting `preventDefault`.
+
+<Demo id="prevent-default" />
+
+### change the DOM element the listener is mounted on
+
+The hotkey is listened to on the body by default, through `getListenerTarget`
+
+<Demo id="listener-target" />
+
+## API Reference
+
+### HotKeys
+
+<Framework only="react">
+
+<HotKeysReactApi />
+
+Other native attributes (such as `id`, `aria-*` and `onClick`) land on the root element (`div`). When `render` is `null` or returns `null` there is no root element, so they have nowhere to land.
+
+</Framework>
+
+<Framework only="vue">
+
+<HotKeysVueApi />
+
+`class`, `style` and native attributes (including `@click`) land on the root element. With an empty default slot there is no root element, so they have nowhere to land.
+
+</Framework>
+
+<Framework only="solid">
+
+<HotKeysSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `id`, `aria-*` and `onClick`) land on the root element (`div`). When `render` is `null` or returns `null` there is no root element, so they have nowhere to land.
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

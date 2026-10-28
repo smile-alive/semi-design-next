@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                                           | 类型                                                                                     | 默认值          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | --------------- |
+| aria-label   | 侧边栏的可访问名称，描述该 Sider 的作用。                                                                                      | `React.AriaAttributes['aria-label']`                                                     | -               |
+| breakpoint   | 触发响应式布局的断点，可选 `xs`、`sm`、`md`、`lg`、`xl` 或 `xxl`。仅在挂载时读取一次。                                         | <ApiType detail={"Array\u003ckeyof ResponsiveMap>"}>Type</ApiType>                       | -               |
+| children     | 侧边栏内容，渲染在根元素内的包裹 `div` 中。                                                                                    | `React.ReactNode`                                                                        | -               |
+| className    | 根元素的类名。                                                                                                                 | `string`                                                                                 | -               |
+| onBreakpoint | 断点命中状态变化时调用，参数为断点名与是否命中。挂载时对 `breakpoint` 中的每个断点按当前视口调用一次，之后在命中或离开时调用。 | <ApiType detail={"(screen: keyof ResponsiveMap, match: boolean) => void"}>Type</ApiType> | -               |
+| prefixCls    | 类名前缀。                                                                                                                     | `string`                                                                                 | `"semi-layout"` |
+| ref          | 根元素 `aside` 的引用。                                                                                                        | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType>                           | -               |
+| role         | 根元素 `aside` 的 `role`。                                                                                                     | `React.AriaRole`                                                                         | -               |
+| style        | 根元素的样式。                                                                                                                 | `CSSProperties`                                                                          | -               |

@@ -1,0 +1,18 @@
+**Props**
+
+| 属性               | 说明                                                                                     | 类型                          | 默认值  |
+| ------------------ | ---------------------------------------------------------------------------------------- | ----------------------------- | ------- |
+| actions            | 操作区，每个元素作为一个操作，位于内容区底部，操作之间以 12px 的水平间距排列。           | `JSX.Element[]`               | -       |
+| bodyStyle          | 内容区的内联样式，键使用 kebab-case 的 CSS 属性名。                                      | `JSX.CSSProperties \| string` | -       |
+| bordered           | 是否显示卡片外边框。                                                                     | `boolean`                     | `true`  |
+| cover              | 卡片封面，位于标题区之下。                                                               | `JSX.Element`                 | -       |
+| footer             | 自定义页脚，位于卡片底部。                                                               | `JSX.Element`                 | -       |
+| footerLine         | 页脚区与内容区之间是否有边线。                                                           | `boolean`                     | `false` |
+| footerStyle        | 页脚区的内联样式，键使用 kebab-case 的 CSS 属性名。                                      | `JSX.CSSProperties \| string` | -       |
+| header             | 自定义整个标题区，传入后取代 title 与 headerExtraContent。                               | `JSX.Element`                 | -       |
+| headerExtraContent | 标题右侧的额外内容。                                                                     | `JSX.Element`                 | -       |
+| headerLine         | 标题区与内容区之间是否有边线。                                                           | `boolean`                     | `true`  |
+| headerStyle        | 标题区的内联样式，键使用 kebab-case 的 CSS 属性名。                                      | `JSX.CSSProperties \| string` | -       |
+| loading            | 是否在内容区显示加载占位，开启时根元素的 aria-busy 为 true。                             | `boolean`                     | `false` |
+| shadows            | 显示阴影的时机，可选 hover 或 always；不设置则没有阴影。                                 | `Shadows`                     | -       |
+| title              | 标题。字符串按 6 号标题的样式渲染为 div，超长时省略并显示提示；传入 JSX 元素时原样渲染。 | `JSX.Element`                 | -       |

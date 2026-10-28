@@ -1,0 +1,42 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| align | 列内容的对齐方式，可选 `left`、`right` 或 `center`，RTL 时自动切换。未设置时为 `left`。 | `Align` | - |
+| children | 表头合并时的子列配置。 | <ApiType detail={"Array\u003cColumnProps\u003cRecordType>>"}>Type</ApiType> | - |
+| className | 列样式名。 | `string` | - |
+| colSpan | 表头单元格横跨的列数，设置为 `0` 时不渲染该表头单元格。 | `number` | - |
+| dataIndex | 列数据在数据项中对应的字段。使用 `sorter` 或 `onFilter` 时必须提供唯一的 `dataIndex`。 | `string` | - |
+| defaultFilteredValue | 筛选的默认值，值为已筛选的 value 数组，非受控时作为初始筛选状态。 | `any[]` | - |
+| defaultSortOrder | 排序的默认方向，可选 `ascend`、`descend` 或 `false`，非受控时作为初始排序状态。 | `SortOrder` | - |
+| ellipsis | 文本超出单元格时省略显示，开启后表格布局自动切换为 `fixed`。传对象时，`showTitle` 设为 `false` 可隐藏原生 HTML title 提示，配合 `render` 可自定义内容提示。 | `BaseEllipsis` | - |
+| filterChildrenRecord | 树形表格中筛选时是否同时筛选子数据。开启后，子数据符合条件时父数据即使不符合也会保留。 | `boolean` | - |
+| filterConfirmMode | 筛选确认模式。`immediate` 为点击筛选项立即生效；`confirm` 为点击筛选项后需点击确定按钮才生效，此时下拉面板底部会显示确定和重置按钮。未设置时为 `immediate`。 | `FilterConfirmMode` | - |
+| filterDropdown | 传入元素替换默认的筛选菜单，菜单内的交互由使用方自行编写。 | `ColumnFilterProps['filterDropdown']` | - |
+| filterDropdownProps | 透传给 Dropdown 的属性，详见 [Dropdown API](/zh-CN/react/show/dropdown#Dropdown)。 | `ColumnFilterProps['filterDropdownProps']` | - |
+| filterDropdownVisible | 控制筛选 Dropdown 的 `visible`，详见 [Dropdown API](/zh-CN/react/show/dropdown#Dropdown)。 | `boolean` | - |
+| filteredValue | 筛选的受控值，值为已筛选的 value 数组。传入后筛选状态由使用方控制。 | `any[]` | - |
+| filterIcon | 自定义筛选图标。传元素，或接收 `filtered` 并返回节点的函数。 | `FilterIcon` | - |
+| filterMultiple | 是否允许多选筛选项，未设置时允许多选。 | `boolean` | - |
+| filters | 表头的筛选菜单项。使用 `renderFilterDropdown` 时可以不传。 | `Filter[]` | - |
+| fixed | 列是否固定，可选 `true`（等效于 `left`）、`left` 或 `right`，RTL 时自动切换。 | `Fixed` | - |
+| key | 列的标识，用于选择、排序、筛选与列宽；已设置唯一的 `dataIndex` 时可以省略。 | `string \| number` | - |
+| onCell | 设置数据单元格的属性与事件，参数为数据项与行索引，返回的对象会合并到 `td` 上。 | <ApiType detail={"OnCell\u003cRecordType>"}>Type</ApiType> | - |
+| onFilter | 本地模式下的筛选函数，接收筛选值与数据项，返回 `true` 时保留该数据项。使用时必须提供唯一的 `dataIndex`。 | <ApiType detail={"OnFilter\u003cRecordType>"}>Type</ApiType> | - |
+| onFilterDropdownVisibleChange | 筛选下拉菜单显示状态变化时的回调。 | `OnFilterDropdownVisibleChange` | - |
+| onHeaderCell | 设置表头单元格的属性与事件，参数为列、列索引与表头行的序号，返回的对象会合并到 `th` 上。 | <ApiType detail={"OnHeaderCell\u003cRecordType>"}>Type</ApiType> | - |
+| render | 自定义单元格内容，参数为 `(text, record, index, options)`。返回节点，或返回 `{ children, props }` 对象以合并单元格属性（`colSpan` 为 `0` 时不渲染该单元格）。`options` 包含 `expandIcon`、`selection`、`indentText` 与 `isHovering`。 | <ApiType detail={"ColumnRender\u003cRecordType>"}>Type</ApiType> | - |
+| renderFilterDropdown | 自定义筛选下拉菜单的内容。参数包含临时筛选值、设置方法，以及 `confirm`、`clear`、`close` 与 `reset` 方法，详见[自定义筛选器](#自定义筛选器)。 | `ColumnFilterProps['renderFilterDropdown']` | - |
+| renderFilterDropdownItem | 自定义筛选菜单的每一项，参数包含 `text`、`value`、`checked`、`onChange`、`level`、`filteredValue` 与 `filterMultiple`。 | `RenderFilterDropdownItem` | - |
+| resize | 表格开启 `resizable` 时，传 `false` 让该列没有伸缩手柄。 | `boolean` | - |
+| shouldCellUpdate | 自定义单元格是否需要更新，返回 `true` 时渲染单元格。默认对单元格的 props 做深对比；数据项较复杂时，可由此接管渲染判断。 | <ApiType detail={"(props: TableCellProps, prevProps: TableCellProps) => boolean"}>Type</ApiType> | - |
+| showSortTip | 是否展示排序提示，未设置时不展示。设置了 `sortOrder` 时不生效。 | `boolean` | - |
+| sortChildrenRecord | 树形表格中排序时是否同时排序子数据。 | `boolean` | - |
+| sorter | 排序函数，参数为两个数据项与当前排序方向，返回负数、0 或正数，与 `Array.sort` 的比较函数相同。需要服务端排序时设为 `true`。本地排序时必须提供唯一的 `dataIndex`，且 `dataSource` 中每条数据项需有独立的 `key`。 | <ApiType detail={"Sorter\u003cRecordType>"}>Type</ApiType> | - |
+| sortIcon | 自定义排序按钮，接收 `sortOrder` 并返回节点。返回的节点替换整个排序按钮（包含升序和降序），需根据 `sortOrder` 控制高亮。 | `SortIcon` | - |
+| sortOrder | 排序的受控方向，可选 `ascend`、`descend` 或 `false`。传入后排序状态由使用方控制。 | `SortOrder` | - |
+| title | 列头内容，可以是节点，或接收 `{ filter, sorter, selection }` 的函数。未开启 `useFullRender` 时函数以空对象调用，返回值与排序、筛选按钮组合；开启后整个列头由函数的返回值决定。 | `ColumnTitle` | - |
+| useFullRender | 是否完全自定义渲染，开启后可在 `title` 与 `render` 中读取 `sorter`、`filter`、`selection` 与 `expandIcon` 等节点，会带来一定的性能损耗。 | `boolean` | - |
+| width | 列宽，数字为像素。使用 `resizable` 时需要提供。 | `string \| number` | - |

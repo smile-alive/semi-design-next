@@ -1,0 +1,199 @@
+---
+title: 开关
+order: 48
+icon: doc-switch
+brief: 开关是用于切换两种互斥状态的交互形式
+---
+
+import SwitchReactApi from './api/switch.react.zh-CN.mdx';
+import SwitchVueApi from './api/switch.vue.zh-CN.mdx';
+import SwitchSolidApi from './api/switch.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Switch } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Switch } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本
+
+<Framework only="react">
+
+你可以通过 `onChange` 监听状态变化，通过 `defaultChecked` 或受控的 `checked` 制定选中状态。  
+通过 `aria-label` 描述该 Switch 开关的具体作用
+
+</Framework>
+
+<Framework only="vue">
+
+你可以通过 `@change` 监听状态变化，通过 `defaultChecked` 或 `modelValue`（`v-model`）指定选中状态。  
+通过 `aria-label` 描述该 Switch 开关的具体作用
+
+</Framework>
+
+<Framework only="solid">
+
+你可以通过 `onChange` 监听状态变化，通过 `defaultChecked` 或受控的 `checked` 指定选中状态。  
+通过 `aria-label` 描述该 Switch 开关的具体作用
+
+</Framework>
+
+<Demo id="basic" />
+
+### 尺寸
+
+你可以通过 size 指定尺寸
+
+<Demo id="size" />
+
+### 不可用
+
+<Demo id="disabled" />
+
+### 带文本
+
+<Framework only="react">
+
+可以通过 `checkedText` 与 `uncheckedText` 设置开关时的文本  
+注意：此项功能在最小的开关(即 size='small'时)无效
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#checkedText` 与 `#uncheckedText` 插槽设置开关时的文本  
+注意：此项功能在最小的开关(即 size='small'时)无效
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `checkedText` 与 `uncheckedText` 设置开关时的文本  
+注意：此项功能在最小的开关(即 size='small'时)无效
+
+</Framework>
+
+<Demo id="text" />
+
+相比于通过 checkedText 与 uncheckedText 设置内嵌的文本，我们更推荐将文本说明放置在 Switch 外部
+
+<Demo id="text-outside" />
+
+### 受控组件
+
+<Framework only="react">
+
+组件是否选中完全取决于传入的 checked 值，配合 onChange 回调函数使用
+
+</Framework>
+
+<Framework only="vue">
+
+组件是否选中完全取决于传入的 `modelValue`，配合 `v-model` 使用。只传 `:modelValue` 而不回写时，点击仅触发通知，显示由传入的值决定。
+
+</Framework>
+
+<Framework only="solid">
+
+组件是否选中完全取决于传入的 `checked` 值，配合 `onChange` 回调函数使用。只传 `checked` 而不在回调中回写时，点击仅触发通知，显示由传入的值决定。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 加载中
+
+可以通过设置 loading="true" 开启加载中状态。
+
+<Demo id="loading" />
+
+## API 参考
+
+<Framework only="react">
+
+<SwitchReactApi />
+
+`className`、`style`、`ref`、`onFocus`、`onBlur` 与其他原生属性（如 `data-*`）落在根元素上，`onFocus`、`onBlur` 接收到的是内部 input 冒泡上来的焦点事件；`autoFocus` 与 `aria-*` 落在内部的原生 input 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SwitchVueApi />
+
+`class`、`style` 落在根元素上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 focus、blur 监听经 attrs 落在内部的原生 input 上，其余原生属性与事件监听（如 `@mouseenter`）落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SwitchSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性和事件（如 `onMouseEnter`）落在根元素上；`id`、`name`、`tabIndex`、`autofocus`、`aria-*`，以及 `onFocus`、`onBlur` 落在内部的原生 input 上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Switch 内部的 input 具有 `switch` role，开关状态由原生 input 的 checked 表达
+- 作为表单控件应该带有 Label
+
+<Framework only="react">
+
+- 使用 Form.Switch 时 Label 会自动被带上；如果你单独使用 Switch，建议使用 `aria-label` 描述当前标签作用
+
+</Framework>
+
+<Framework only="vue">
+
+- 建议使用 `aria-label` 描述当前标签作用，或用 `aria-labelledby` 关联页面上的可见标签
+
+</Framework>
+
+<Framework only="solid">
+
+- 使用 `FormSwitch` 时 Label 会自动被带上；如果你单独使用 Switch，建议使用 `aria-label` 描述当前标签作用，或用 `aria-labelledby` 关联页面上的可见标签
+
+</Framework>
+
+### 键盘和焦点
+
+- 键盘用户可以使用 `Tab` 及 `Shift + Tab` 切换焦点
+- 聚焦时可以通过 `Space` 键切换开启或关闭状态
+
+## 文案规范
+
+- 开关描述
+    - 首字母大写，不需要标点符号
+    - 间接明了地说明该设置的开启或关闭状态
+    - 如果需要，解释给用户开启和关闭状态所代表的情况
+
+## 设计变量
+
+<DesignToken />

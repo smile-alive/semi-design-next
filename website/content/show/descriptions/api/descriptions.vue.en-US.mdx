@@ -1,0 +1,30 @@
+**Props**
+
+| Property | Description                                                                               | Type                 | Default                                             |
+| -------- | ----------------------------------------------------------------------------------------- | -------------------- | --------------------------------------------------- |
+| align    | Alignment: center, justify, left or plain; ignored when row is true.                      | `DescriptionsAlign`  | `semiDefault("Descriptions", "align", "center")`    |
+| row      | Whether to display key and value in two rows.                                             | `boolean`            | `semiDefault("Descriptions", "row", false)`         |
+| size     | Size in two-row mode: small, medium or large.                                             | `DescriptionsSize`   | `semiDefault("Descriptions", "size", "medium")`     |
+| data     | Data to display; when empty, the Descriptions.Item elements in the default slot are used. | `DescriptionsData[]` | `semiDefault("Descriptions", "data", [])`           |
+| layout   | Layout mode: vertical or horizontal.                                                      | `DescriptionsLayout` | `semiDefault("Descriptions", "layout", "vertical")` |
+| column   | Total number of columns per row in the horizontal layout.                                 | `number`             | `semiDefault("Descriptions", "column", 3)`          |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                 | Scope parameters        |
+| ------- | ----------------------------------------------------------------------------------------------------------- | ----------------------- |
+| default | Descriptions.Item children, used when data is empty; the horizontal layout only recognizes direct children. | `any`                   |
+| itemKey | Key of each data item, rendering item.key by default.                                                       | `DescriptionsSlotProps` |
+| value   | Value of each data item, rendering item.value by default.                                                   | `DescriptionsSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

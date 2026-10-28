@@ -1,0 +1,23 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                               | 类型                                                                                                  | 默认值    |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | --------- |
+| className     | 根元素的类名。                                                                                                                     | `string`                                                                                              | -         |
+| cycled        | 是否为无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。                                                 | `boolean`                                                                                             | `false`   |
+| list          | 列表内容。                                                                                                                         | `T[]`                                                                                                 | `[]`      |
+| mode          | 模式，可选 `normal` 或 `wheel`。                                                                                                   | `string`                                                                                              | `"wheel"` |
+| motion        | 是否开启滚动动画。                                                                                                                 | `Motion`                                                                                              | `true`    |
+| onSelect      | 选中某项时的回调，参数是该项数据加上列的 `type` 和该项在 list 中的 `index`。组件不保存选中状态，需在回调中用它更新 selectedIndex。 | <ApiType detail={"(data: T & { type?: string \u007c number; index: number }) => void"}>Type</ApiType> | -         |
+| ref           | 接收 `ScrollItemHandle` 句柄，其上的 `scrollToIndex` 方法见下方 Methods。                                                          | <ApiType detail={"React.Ref\u003cScrollItemHandle>"}>Type</ApiType>                                   | -         |
+| selectedIndex | 选中项的索引，没有非受控模式，需配合 onSelect 更新。                                                                               | `number`                                                                                              | `0`       |
+| style         | 根元素的样式。                                                                                                                     | `React.CSSProperties`                                                                                 | -         |
+| transform     | 对选中项文案的变换，返回值作为文案显示；未传时显示 text，没有 text 时显示 value。数据项自带的 transform 优先。                     | <ApiType detail={"(value: any, text?: string) => string"}>Type</ApiType>                              | -         |
+| type          | 标识该列，供 TimePicker、DatePicker 等组件使用，不面向使用方。                                                                     | `string \| number`                                                                                    | -         |
+
+**Methods**
+
+| 方法          | 说明                                                                                                                          | 类型                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| scrollToIndex | 将列表滚动到当前选中项。`selectedIndex` 暂不生效，目标始终是最近一次选中的项；`duration` 为滚动动画时长，单位毫秒，默认 120。 | <ApiType detail={"(selectedIndex?: number, duration?: number) => void"}>Type</ApiType> |

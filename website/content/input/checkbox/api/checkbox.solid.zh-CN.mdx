@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                          | 类型                                                                                        | 默认值      |
+| -------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ----------- |
+| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。              | `string`                                                                                    | -           |
+| checked        | 是否选中，传入时为受控使用；在 CheckboxGroup 中使用时无效。                   | `boolean`                                                                                   | -           |
+| defaultChecked | 初始是否选中，非受控使用；在 CheckboxGroup 中使用时无效。                     | `boolean`                                                                                   | `false`     |
+| disabled       | 是否禁用。                                                                    | `boolean`                                                                                   | -           |
+| extra          | 辅助文本，可传入任意 JSX，aria-describedby 指向它。                           | `JSX.Element`                                                                               | -           |
+| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。             | `string`                                                                                    | -           |
+| indeterminate  | 半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。             | `boolean`                                                                                   | `false`     |
+| name           | 原生 input 的 name；在 CheckboxGroup 中以组的 name 为准。                     | `string`                                                                                    | -           |
+| onBlur         | 原生 input 失去焦点时触发。                                                   | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
+| onChange       | 选中状态变化时触发，参数的 `target` 为 `{ checked, value, name, disabled }`。 | <ApiType detail={"(event: CheckboxEvent) => any"}>Type</ApiType>                            | -           |
+| onFocus        | 原生 input 获得焦点时触发。                                                   | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
+| prefixCls      | CSS 类名前缀。                                                                | `string`                                                                                    | -           |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                         | `boolean`                                                                                   | -           |
+| type           | 样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。 | `CheckboxType`                                                                              | `"default"` |
+| value          | 该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。           | `CheckboxValue`                                                                             | -           |

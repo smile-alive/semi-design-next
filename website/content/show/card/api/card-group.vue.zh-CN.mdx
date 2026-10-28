@@ -1,0 +1,27 @@
+**Props**
+
+| 属性     | 说明                                                                  | 类型                         | 默认值                                        |
+| -------- | --------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- |
+| spacing  | 卡片间距，数值或 [水平间距, 垂直间距]；type 为 grid 时不生效。        | `number \| [number, number]` | `semiDefault("CardGroup", "spacing", 16)`     |
+| type     | 设为 grid 时呈现为网格型，覆盖 spacing。                              | `"grid"`                     | `semiGlobalDefault("CardGroup", "type")`      |
+| wrap     | 是否换行，传给 Space；纵向排列时不生效。                              | `boolean`                    | `semiDefault("CardGroup", "wrap", true)`      |
+| align    | 子项的交叉轴对齐方式，传给 Space，可选 start、center、end、baseline。 | `Align`                      | `semiGlobalDefault("CardGroup", "align")`     |
+| vertical | 是否纵向排列，传给 Space。                                            | `boolean`                    | `semiDefault("CardGroup", "vertical", false)` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明           | 作用域参数 |
+| ------- | -------------- | ---------- |
+| default | 要排列的卡片。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

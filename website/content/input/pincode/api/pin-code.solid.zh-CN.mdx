@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                | 类型                                                                                                         | 默认值     |
+| -------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------- |
+| count          | 验证码位数。                                                                        | `number`                                                                                                     | `6`        |
+| defaultValue   | 非受控时的初始内容。                                                                | `string`                                                                                                     | -          |
+| disabled       | 是否禁用。                                                                          | `boolean`                                                                                                    | -          |
+| format         | 单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。 | <ApiType detail={"'number' \u007c 'mixed' \u007c RegExp \u007c ((value: string) => boolean)"}>Type</ApiType> | `"number"` |
+| onBlur         | 焦点离开整个验证码时调用，参数为原生 `FocusEvent`。                                 | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType>                                                   | -          |
+| onChange       | 内容变化时调用，参数为当前内容。                                                    | <ApiType detail={"(value: string) => void"}>Type</ApiType>                                                   | -          |
+| onComplete     | 所有位数输入完毕时调用，参数为当前内容。                                            | <ApiType detail={"(value: string) => void"}>Type</ApiType>                                                   | -          |
+| onFocus        | 焦点进入整个验证码时调用，参数为原生 `FocusEvent`；在输入框之间移动不调用。         | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType>                                                   | -          |
+| size           | 输入框大小，可选 large、default、small。                                            | `InputSize`                                                                                                  | -          |
+| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                    | `ValidateStatus`                                                                                             | -          |
+| value          | 输入框内容。传入即为受控，需配合 onChange 更新。                                    | `string`                                                                                                     | -          |

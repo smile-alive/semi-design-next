@@ -1,0 +1,59 @@
+{
+    "scroll-list": {
+        "source": "packages/semi-ui-vue/src/scroll-list/scroll-list.vue",
+        "props": {
+            "bodyHeight": { "zh-CN": "列表主体的高度。", "en-US": "Height of the list body." },
+            "footer": {
+                "zh-CN": "底部内容；传入 footer 插槽时以插槽为准。",
+                "en-US": "Footer text. The footer slot takes precedence when given."
+            },
+            "header": {
+                "zh-CN": "头部内容；传入 header 插槽时以插槽为准。",
+                "en-US": "Header text. The header slot takes precedence when given."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "列表中的 ScrollItem。", "en-US": "The ScrollItem columns." },
+            "footer": { "zh-CN": "自定义底部内容。", "en-US": "Custom footer content." },
+            "header": { "zh-CN": "自定义头部内容。", "en-US": "Custom header content." }
+        },
+        "exposed": {}
+    },
+    "scroll-item": {
+        "source": "packages/semi-ui-vue/src/scroll-list/scroll-item.vue",
+        "props": {
+            "cycled": {
+                "zh-CN": "是否无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。",
+                "en-US": "Whether the column cycles. In wheel mode the list scrolls without end; in both modes the arrow keys wrap around."
+            },
+            "list": { "zh-CN": "列表内容。", "en-US": "Items of the column." },
+            "mode": { "zh-CN": "模式，可选 normal 或 wheel。", "en-US": "Mode: normal or wheel." },
+            "motion": { "zh-CN": "是否开启滚动动画。", "en-US": "Whether to animate scrolling." },
+            "selectedIndex": {
+                "zh-CN": "选中项的索引，配合 v-model:selectedIndex 使用；没有非受控模式。",
+                "en-US": "Index of the selected item, used with v-model:selectedIndex. There is no uncontrolled mode."
+            },
+            "transform": {
+                "zh-CN": "对选中项文案的变换，没有 text 的项参数为 undefined；未传时显示 text，没有 text 时显示 value。数据项自带的 transform 优先。",
+                "en-US": "Formats the text of the selected item; the text is undefined for an item without one. When omitted, text is shown, or value when there is no text. An item's own transform takes precedence."
+            },
+            "type": {
+                "zh-CN": "标识该列，供 TimePicker、DatePicker 等组件使用，不面向使用方。",
+                "en-US": "Identifies the column to components such as TimePicker and DatePicker, not meant for end users."
+            }
+        },
+        "events": {
+            "update:selectedIndex": {
+                "zh-CN": "选中项变化时触发，用于 v-model:selectedIndex。",
+                "en-US": "Emitted when the selection changes, backing v-model:selectedIndex."
+            },
+            "select": {
+                "zh-CN": "选中某项时触发，参数是该项数据加上列的 type 和该项在 list 中的 index。",
+                "en-US": "Emitted when an item is selected, with the item's data plus the column's type and the item's index in list."
+            }
+        },
+        "slots": {},
+        "exposed": {}
+    }
+}

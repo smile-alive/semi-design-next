@@ -1,0 +1,58 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| ariaLabel | aria-label of the popup when its role is dialog. | `string` | `semiGlobalDefault("Popover", "ariaLabel")` |
+| ariaLabelledby | aria-labelledby of the popup when its role is dialog. | `string` | `semiGlobalDefault("Popover", "ariaLabelledby")` |
+| ariaDescribedby | aria-describedby of the popup when its role is dialog. | `string` | `semiGlobalDefault("Popover", "ariaDescribedby")` |
+| role | ARIA role of the popup. Omitted, it is dialog for the click, contextMenu and custom triggers and tooltip for the rest; pass presentation when the popup only belongs to another control, such as a combobox list. | `string` | `semiGlobalDefault("Popover", "role")` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiDefault("Popover", "autoAdjustOverflow", true)` |
+| visible | Whether the popup is shown, used with trigger custom and v-model:visible. When given, this value decides. | `boolean` | `semiGlobalDefault("Popover", "visible")` |
+| position | Position of the popup relative to the trigger element, in twelve directions. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiDefault("Popover", "position", "bottom")` |
+| motion | Whether the popup is animated. | `boolean` | `semiDefault("Popover", "motion", true)` |
+| mouseEnterDelay | Milliseconds before the popup shows after the pointer enters. Applies to the hover and focus triggers. | `number` | `semiGlobalDefault("Popover", "mouseEnterDelay")` |
+| mouseLeaveDelay | Milliseconds before the popup hides after the pointer leaves. Applies to the hover and focus triggers; not less than mouseEnterDelay. | `number` | `semiGlobalDefault("Popover", "mouseLeaveDelay")` |
+| trigger | When the popup shows. With custom, visible alone decides. | `"hover" \| "focus" \| "click" \| "custom" \| "contextMenu"` | `semiDefault("Popover", "trigger", "hover")` |
+| contentClassName | Class name of the content card in the popup. | `string \| unknown[]` | `semiGlobalDefault("Popover", "contentClassName")` |
+| showArrow | Whether the arrow is shown. | `boolean` | `semiDefault("Popover", "showArrow", false)` |
+| spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. Omitted, it is 4 without an arrow and 10 with one. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Popover", "spacing")` |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `string \| boolean` | `semiGlobalDefault("Popover", "stopPropagation")` |
+| arrowStyle | borderColor, backgroundColor and borderOpacity of the arrow. They follow backgroundColor and borderColor of the card style by default. | `ArrowStyle` | `semiGlobalDefault("Popover", "arrowStyle")` |
+| arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires showArrow. | `boolean` | `semiGlobalDefault("Popover", "arrowPointAtCenter")` |
+| prefixCls | Class prefix of the popup. A custom value drops the Popover styles. | `string` | `semiDefault("Popover", "prefixCls", cssClasses.PREFIX)` |
+| closeOnEsc | Whether Esc closes the open popup. With trigger custom it only emits escKeyDown and the caller decides whether to close. | `boolean` | `semiDefault("Popover", "closeOnEsc", true)` |
+| guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | `semiDefault("Popover", "guardFocus", true)` |
+| returnFocusOnClose | Whether focus returns to the trigger after Esc closes the popup. | `boolean` | `semiDefault("Popover", "returnFocusOnClose", true)` |
+| clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | `semiGlobalDefault("Popover", "clickToHide")` |
+| disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the popup. | `boolean` | `semiGlobalDefault("Popover", "disableArrowKeyDown")` |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | `semiGlobalDefault("Popover", "disableFocusListener")` |
+| keepDOM | Whether the popup content stays mounted while closed. | `boolean` | `semiGlobalDefault("Popover", "keepDOM")` |
+| condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only emits update:visible and visibleChange(false), and the popup closes once the caller writes back. | `boolean` | `semiGlobalDefault("Popover", "condition")` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                                                                                  | Callback parameters      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| open           | Emitted once per opening when the popup is shown, as its enter animation starts, before afterOpen, controlled or not; not emitted for a hover open withdrawn because the pointer already left.                               | `[]`                     |
+| update:visible | Emitted when the popup should show or hide, for v-model:visible to write back.                                                                                                                                               | `[visible: boolean]`     |
+| visibleChange  | Emitted when the visibility of the popup changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible.                                                         | `[visible: boolean]`     |
+| clickOutSide   | Emitted when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom.                                                                                                  | `[event: MouseEvent]`    |
+| escKeyDown     | Emitted when Esc is pressed while the popup is open and closeOnEsc is true.                                                                                                                                                  | `[event: KeyboardEvent]` |
+| afterOpen      | Emitted after the popup has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not emitted for an open that is closed before the enter animation ends. | `[]`                     |
+| afterClose     | Emitted after the popup has closed and its leave animation has finished.                                                                                                                                                     | `[]`                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                                       | Scope parameters                                                        |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| default | The trigger. A single element or component receives the trigger attributes directly; text or several nodes are wrapped in a span. | `any`                                                                   |
+| content | Card content. The scope parameter initialFocusRef binds to the element that receives focus when the popup opens.                  | <ApiType detail={"RenderContentProps\u003cFocusTarget>"}>Type</ApiType> |
+
+**Exposes**
+
+| Name | Description | Type |
+| --- | --- | --- |
+| focusTrigger | Focuses the trigger element. Only works when returnFocusOnClose is true and trigger is not custom. | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition | Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,36 @@
+{
+    "locale-provider": {
+        "source": "packages/semi-ui-vue/src/locale/locale-provider.vue",
+        "props": {
+            "locale": {
+                "zh-CN": "语言包。不传、传 undefined 或 null 时继承外层 LocaleProvider 的语言，最外层都没有时组件回退 zh_CN；ConfigProvider 的 locale 优先于它。",
+                "en-US": "Locale pack. When omitted, undefined or null, the language of the outer LocaleProvider is inherited; without any outer provider, components fall back to zh_CN. The locale of ConfigProvider takes precedence over it."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "使用该语言包的子树。",
+                "en-US": "Subtree that uses the locale pack."
+            }
+        },
+        "exposed": {}
+    },
+    "locale-consumer": {
+        "source": "packages/semi-ui-vue/src/locale/locale-consumer.vue",
+        "props": {
+            "componentName": {
+                "zh-CN": "要读取的语言包命名空间，如 TimePicker；只接受 Locale 中声明的组件名，自定义命名空间通过 declaration merging 扩展 Locale。",
+                "en-US": "Namespace of the locale pack to read, such as TimePicker. Only component names declared in Locale are accepted; extend Locale by declaration merging for custom namespaces."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "作用域插槽，参数为 locale（componentName 对应的文案片段）、localeCode、dateFnsLocale 与 currency。",
+                "en-US": "Scoped slot receiving locale (the text of componentName), localeCode, dateFnsLocale and currency."
+            }
+        },
+        "exposed": {}
+    }
+}

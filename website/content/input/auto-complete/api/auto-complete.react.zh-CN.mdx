@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。未设置时取 Popover 的默认值 `true`。 | `boolean` | - |
+| autoFocus | 挂载后是否自动聚焦输入框。 | `boolean` | `false` |
+| className | 根 div 的类名。 | `string` | - |
+| clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `ReactNode` | - |
+| data | 候选项的数据源，可以是字符串、数字或对象的数组。对象项的 `value` 是选中值，`label` 是候选行的内容，不传时候选行为空。其余字段原样保留，出现在 `renderItem` 的参数里。需替换为新数组才会更新列表。 | `T[]` | `[]` |
+| defaultActiveFirstOption | 面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。 | `boolean` | `false` |
+| defaultOpen | 挂载时是否默认展开下拉面板。 | `boolean` | - |
+| defaultValue | 非受控时输入框的初始值，只在挂载时读取。 | `string \| number` | - |
+| disabled | 是否禁用。 | `boolean` | - |
+| dropdownClassName | 下拉列表的类名，落在 `role="listbox"` 元素上。 | `string` | - |
+| dropdownMatchSelectWidth | 下拉面板的最小宽度是否等于输入框宽度。 | `boolean` | `true` |
+| dropdownStyle | 下拉列表的内联样式，与 `maxHeight` 合并后落在 `role="listbox"` 元素上。 | `React.CSSProperties` | - |
+| emptyContent | data 为空时在下拉面板中显示的内容；加载中时代替它显示加载动画。 | `React.ReactNode` | `null` |
+| id | 输入框的 id，供 `<label for>` 关联；使用 `triggerRender` 时落在根 div 上。 | `string` | - |
+| insetLabel | 输入框内嵌标签，渲染在前缀位置；设置 prefix 或 triggerRender 时不渲染，也不作为可访问名称。 | `React.ReactNode` | - |
+| insetLabelId | insetLabel 元素的 id，combobox 与 listbox 的名称引用它；不传时组件在渲染 insetLabel 时生成。 | `string` | - |
+| loading | 下拉列表是否显示加载动画；为 true 时代替候选项和空内容。 | `boolean` | `false` |
+| maxHeight | 下拉列表的最大高度，数字按 px 处理。 | `string \| number` | `300` |
+| motion | 下拉面板显示、隐藏时是否有动画。 | `boolean` | `true` |
+| onBlur | 焦点离开输入框所在区域时的回调，参数为 FocusEvent；焦点在区域内移动（例如移到清除按钮）时不触发。 | <ApiType detail={"(e: React.FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 输入框内容变化或选中候选项时的回调，参数为当前值。 | <ApiType detail={"(value: string \u007c number) => void"}>Type</ApiType> | - |
+| onChangeWithObject | 不生效：组件不读取该属性。 | `boolean` | - |
+| onClear | 用清除按钮清空内容后的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | 下拉面板显示或隐藏时的回调，参数为是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onFocus | 焦点进入输入框所在区域时的回调，参数为 FocusEvent；焦点在区域内移动（例如移到清除按钮）时不触发。 | <ApiType detail={"(e: React.FocusEvent) => void"}>Type</ApiType> | - |
+| onKeyDown | 键盘按下时的回调，在根 div 上触发，参数为 `React.KeyboardEvent<HTMLDivElement>`。 | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onSearch | 用户输入时的回调，参数为输入的文本。 | <ApiType detail={"(inputValue: string) => void"}>Type</ApiType> | - |
+| onSelect | 候选项被选中时的回调，参数为选中值；设置 `onSelectWithObject` 时为去掉内部字段的数据项对象。 | <ApiType detail={"(value: string \u007c number \u007c BaseDataItem) => void"}>Type</ApiType> | - |
+| onSelectWithObject | 为 true 时 `onSelect` 收到去掉内部字段的数据项对象，而不是选中值。 | `boolean` | `false` |
+| placeholder | 输入框的提示文案。 | `string` | - |
+| position | 下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。 | `Position` | - |
+| prefix | 输入框的前缀内容；设置后 insetLabel 不渲染。 | `React.ReactNode` | - |
+| ref | 根 div 的引用，包裹输入框或 `triggerRender` 的输出。得到的是原生 div 元素，其 `focus()` 不会聚焦输入框。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| renderItem | 自定义候选项的渲染，参数为数据项本身，返回 ReactNode；未设置时显示 `label`。 | <ApiType detail={"(option: T) => React.ReactNode"}>Type</ApiType> | - |
+| renderSelectedItem | 选中候选项后输入框显示的文本，必须返回字符串；字符串或数字项收到 `{ value, label }`，对象项收到数据项本身。 | <ApiType detail={"(option: T extends string \u007c number ? BaseDataItem : T) => string"}>Type</ApiType> | - |
+| showClear | 有内容时是否显示清除按钮。 | `boolean` | `false` |
+| size | 输入框尺寸，可选 small、default 或 large。 | `Size` | `"default"` |
+| stopPropagation | 是否阻止下拉面板上的 click、mousedown 与焦点进出事件冒泡。 | `boolean \| string` | `true` |
+| style | 根 div 的内联样式。 | `React.CSSProperties` | - |
+| suffix | 输入框的后缀内容。 | `React.ReactNode` | - |
+| triggerRender | 自定义触发器，替换输入框。参数含 `value`（已选项数组）、`inputValue`、`placeholder`、`disabled`、`autoFocus`、`size`、`validateStatus`、`showClear`、`prefix`、`suffix`、`clearIcon`、`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required`（其他 `aria-*` 不作为直接参数传入，可从 `componentProps` 取得）、`onChange`（更新输入文本，触发 onSearch 与 onChange 并展开列表）、`onClear`、`onFocus`、`onBlur` 与 `componentProps`。使用时 `id` 落在根 div 上。 | <ApiType detail={"(props?: any) => React.ReactNode"}>Type</ApiType> | - |
+| validateStatus | 校验状态，可选 default、error 或 warning，只影响展示样式。 | `ValidateStatus` | `"default"` |
+| value | 当前值。传入后为受控；之后改回 `undefined` 时输入框清空，组件转为非受控。 | `string \| number` | - |

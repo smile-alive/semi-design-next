@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                                   | 类型                                                                           | 默认值         |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | -------------- |
+| align        | header 与 main 的垂直对齐方式，可选 `flex-start`、`flex-end`、`center`、`baseline` 或 `stretch`。                      | `'flex-start' \| 'flex-end' \| 'center' \| 'baseline' \| 'stretch'`            | `"flex-start"` |
+| children     | 列表项内容。可点击的列表项同时设置 header 或 main 时，它渲染在按钮外面，会被铺满整行的按钮覆盖，交互内容请放进 extra。 | `React.ReactNode`                                                              | -              |
+| className    | 列表项 `li` 的类名；使用 grid 时落在 `li` 上，不落在外层的 Col 上。                                                    | `string`                                                                       | -              |
+| extra        | 列表项附加内容，渲染在按钮外，其中的交互元素可正常聚焦与点击，点击它们不会触发整行的点击。                             | `React.ReactNode`                                                              | -              |
+| header       | 列表项头部内容。                                                                                                       | `React.ReactNode`                                                              | -              |
+| main         | 列表项主体内容。                                                                                                       | `React.ReactNode`                                                              | -              |
+| onRightClick | 右键（上下文菜单）回调，优先于 List 的 onRightClick；只设置它时列表项同样渲染为原生按钮。                              | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType> | -              |
+| ref          | `li` 元素的引用。                                                                                                      | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType>               | -              |
+| style        | `li` 元素的样式；使用 grid 时落在 `li` 上，不落在外层的 Col 上。                                                       | `React.CSSProperties`                                                          | -              |

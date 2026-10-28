@@ -1,0 +1,26 @@
+**Props**
+
+| Property      | Description                                                                         | Type          | Default     |
+| ------------- | ----------------------------------------------------------------------------------- | ------------- | ----------- |
+| options       | MCP options. An option holds data only; its icon goes through the #optionIcon slot. | `McpOption[]` | `undefined` |
+| num           | The count shown on the trigger and in the header; the number of options by default. | `number`      | `undefined` |
+| showConfigure | Whether the configure button is shown.                                              | `boolean`     | `true`      |
+
+**Events**
+
+| Event                | Description                                   | Callback parameters |
+| -------------------- | --------------------------------------------- | ------------------- |
+| configureButtonClick | Emitted when the configure button is clicked. | `[]`                |
+
+**Slots**
+
+| Slot       | Description                                                    | Scope parameters         |
+| ---------- | -------------------------------------------------------------- | ------------------------ |
+| default    | Replaces the built-in menu below the header.                   | `any`                    |
+| optionIcon | Icon of each option, with the scope parameters item and index. | `McpOptionIconSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

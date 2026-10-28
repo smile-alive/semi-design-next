@@ -1,0 +1,34 @@
+**Props**
+
+| Property            | Description                                                                                                                            | Type                                                          | Default                                                                |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| block               | Renders the button as a block-level button.                                                                                            | `boolean`                                                     | `semiDefault("Button", "block", false)`                                |
+| colorful            | Colorful button, supported for the primary and tertiary types only. Falls back to the ButtonGroup it is in, and finally to false.      | `boolean`                                                     | `undefined`                                                            |
+| contentClassName    | Class name of the content area.                                                                                                        | `string`                                                      | `semiGlobalDefault("Button", "contentClassName")`                      |
+| disabled            | Disabled state, which takes precedence over loading. Falls back to the ButtonGroup it is in, and finally to false.                     | `boolean`                                                     | `undefined`                                                            |
+| htmlType            | Native type of the button: button, reset or submit.                                                                                    | `HtmlType`                                                    | `semiDefault("Button", "htmlType", "button")`                          |
+| iconPosition        | Icon position: left or right.                                                                                                          | `"left" \| "right"`                                           | `semiDefault("Button", "iconPosition", strings.DEFAULT_ICON_POSITION)` |
+| loading             | Loading state. A loading button stays focusable, its click is ignored, and a submit button does not submit its form.                   | `boolean`                                                     | `semiDefault("Button", "loading", false)`                              |
+| noHorizontalPadding | Removes horizontal padding: true, left, right or an array of both. Applies only to a button that shows an icon or the loading spinner. | `boolean \| HorizontalPaddingType \| HorizontalPaddingType[]` | `semiDefault("Button", "noHorizontalPadding", false)`                  |
+| size                | Button size: large, default or small. Falls back to the ButtonGroup it is in, and finally to default.                                  | `Size`                                                        | `undefined`                                                            |
+| theme               | Button theme: solid, borderless, light or outline. Falls back to the ButtonGroup it is in, and finally to light.                       | `Theme`                                                       | `undefined`                                                            |
+| type                | Button type: primary, secondary, tertiary, warning or danger. Falls back to the ButtonGroup it is in, and finally to primary.          | `Type`                                                        | `undefined`                                                            |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                          | Scope parameters |
+| ------- | ------------------------------------ | ---------------- |
+| default | Button text.                         | `any`            |
+| icon    | Button icon, placed by iconPosition. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

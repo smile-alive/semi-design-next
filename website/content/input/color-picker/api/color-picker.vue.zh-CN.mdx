@@ -1,0 +1,34 @@
+**Props**
+
+| 属性          | 说明                                                                                                                                                                                            | 类型                      | 默认值                                                      |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ----------------------------------------------------------- |
+| modelValue    | 受控值，使用 v-model 绑定；形态同 defaultValue。传 undefined 视为非受控，从受控变回 undefined 时显示回到 defaultValue。ColorValue 按不可变值对待，更新时整体替换。                              | `ColorValue`              | `undefined`                                                 |
+| defaultValue  | 非受控的初始值，是同时包含 hsva、hex、rgba 三种格式的对象，默认对应 #39c5bb。                                                                                                                   | `ColorValue`              | `semiDefault("ColorPicker", "defaultValue", DEFAULT_COLOR)` |
+| alpha         | 是否开启透明度选择。                                                                                                                                                                            | `boolean`                 | `semiDefault("ColorPicker", "alpha", true)`                 |
+| eyeDropper    | 是否开启滴管拾色器，需要安全 context 与 Chromium 95 以上。                                                                                                                                      | `boolean`                 | `semiDefault("ColorPicker", "eyeDropper", true)`            |
+| defaultFormat | 手动输入时默认使用的颜色格式，可选 rgba、hex、hsva。                                                                                                                                            | `ColorFormat`             | `semiDefault("ColorPicker", "defaultFormat", "hex")`        |
+| width         | 宽度，单位为像素。                                                                                                                                                                              | `number`                  | `semiDefault("ColorPicker", "width", 280)`                  |
+| height        | 高度，单位为像素。                                                                                                                                                                              | `number`                  | `semiDefault("ColorPicker", "height", 280)`                 |
+| usePopover    | 是否放入 Popover 渲染，触发器使用默认插槽。                                                                                                                                                     | `boolean`                 | `semiDefault("ColorPicker", "usePopover", false)`           |
+| popoverProps  | 放入 Popover 时传给 Popover 的属性与监听器（onVisibleChange 等）；class、style 替代 className、style。弹层默认以 click 触发、role 为 dialog，默认名称取语言包，ariaLabel、ariaLabelledby 优先。 | `ColorPickerPopoverProps` | `semiGlobalDefault("ColorPicker", "popoverProps")`          |
+
+**Events**
+
+| 事件              | 说明                                                                                       | 回调参数              |
+| ----------------- | ------------------------------------------------------------------------------------------ | --------------------- |
+| update:modelValue | 用户选中颜色时触发，载荷为 ColorValue，供 v-model 回写。                                   | `[value: ColorValue]` |
+| change            | 用户选中颜色时触发，载荷为 ColorValue；picker 内部输入框冒泡的原生 change 不会到达该事件。 | `[value: ColorValue]` |
+
+**Slots**
+
+| 插槽       | 说明                                                                 | 作用域参数 |
+| ---------- | -------------------------------------------------------------------- | ---------- |
+| default    | usePopover 时的触发器，默认是一个色块按钮；不使用 Popover 时不渲染。 | `any`      |
+| topSlot    | 在顶部渲染额外元素。                                                 | `any`      |
+| bottomSlot | 在底部渲染额外元素。                                                 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明                                                        | 类型                  |
+| ---- | ----------------------------------------------------------- | --------------------- |
+| root | picker 根元素；usePopover 时位于弹层内，弹层关闭时为 null。 | `HTMLElement \| null` |

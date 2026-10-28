@@ -1,0 +1,252 @@
+---
+title: 骨架屏
+order: 92
+icon: doc-skeleton
+brief: 在需要等待加载内容的位置提供的占位组件。
+---
+
+import SkeletonReactApi from './api/skeleton.react.zh-CN.mdx';
+import SkeletonAvatarReactApi from './api/skeleton-avatar.react.zh-CN.mdx';
+import SkeletonParagraphReactApi from './api/skeleton-paragraph.react.zh-CN.mdx';
+import SkeletonImageReactApi from './api/skeleton-image.react.zh-CN.mdx';
+import SkeletonTitleReactApi from './api/skeleton-title.react.zh-CN.mdx';
+import SkeletonButtonReactApi from './api/skeleton-button.react.zh-CN.mdx';
+import SkeletonVueApi from './api/skeleton.vue.zh-CN.mdx';
+import SkeletonAvatarVueApi from './api/skeleton-avatar.vue.zh-CN.mdx';
+import SkeletonParagraphVueApi from './api/skeleton-paragraph.vue.zh-CN.mdx';
+import SkeletonImageVueApi from './api/skeleton-image.vue.zh-CN.mdx';
+import SkeletonTitleVueApi from './api/skeleton-title.vue.zh-CN.mdx';
+import SkeletonButtonVueApi from './api/skeleton-button.vue.zh-CN.mdx';
+import SkeletonSolidApi from './api/skeleton.solid.zh-CN.mdx';
+import SkeletonAvatarSolidApi from './api/skeleton-avatar.solid.zh-CN.mdx';
+import SkeletonParagraphSolidApi from './api/skeleton-paragraph.solid.zh-CN.mdx';
+import SkeletonImageSolidApi from './api/skeleton-image.solid.zh-CN.mdx';
+import SkeletonTitleSolidApi from './api/skeleton-title.solid.zh-CN.mdx';
+import SkeletonButtonSolidApi from './api/skeleton-button.solid.zh-CN.mdx';
+
+## 概述
+
+- `Avatar`：占位头像，默认为圆形，默认尺寸：Avatar medium: `width: 48px`，`height: 48px`。支持 `size`、`shape` 属性，取值见 API 参考。
+- `Image`：占位图像，默认尺寸：`width: 100%`，`height: 100%`。
+- `Title`：占位标题，默认尺寸：`width: 100%`， `height: 24px`。
+- `Paragraph`：占位内容部分，默认尺寸：`width: 100%`，`height: 16px`，`margin-bottom: 10px`。
+- `Button`：占位按钮，默认尺寸：`width: 115px`，`height: 32px`。
+
+<Framework only="react">
+
+> 注意：默认样式均可通过 `className` 或 `style` 进行自定义。
+
+</Framework>
+
+<Framework only="vue">
+
+> 注意：默认样式均可通过 `class` 或 `style` 进行自定义。
+
+</Framework>
+
+<Framework only="solid">
+
+> 注意：默认样式均可通过 `class` 或 `style` 进行自定义。
+
+</Framework>
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Skeleton } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Skeleton } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Skeleton } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+<Demo id="basic" />
+
+### 组合使用
+
+图片和标题。
+
+<Demo id="image-title" />
+
+统计数字。
+
+<Demo id="statistics" />
+
+头像和标题。
+
+<Demo id="avatar-title" />
+
+居中段落和按钮。
+
+<Demo id="centered" />
+
+头像、标题和段落。
+
+<Demo id="avatar-paragraph" />
+
+表格。
+
+<Demo id="table" />
+
+### 加载动画
+
+通过设置 `active` 属性可以展示动画效果。
+
+<Demo id="active" />
+
+## API 参考
+
+### Skeleton
+
+<Framework only="react">
+
+<SkeletonReactApi />
+
+其他原生属性（如 `id`、`aria-*` 与事件）落在占位根 `div` 上。`loading` 为 `false` 时组件只渲染子内容，不再有根元素，这些属性随占位一起丢弃。根元素的 `aria-busy="true"` 不能被关闭。
+
+</Framework>
+
+<Framework only="vue">
+
+<SkeletonVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在占位根元素上。`loading` 为 `false` 时组件只渲染默认插槽，不再有根元素，attrs 随占位一起丢弃。根元素的 `aria-busy="true"` 不能被 attrs 关闭。
+
+</Framework>
+
+<Framework only="solid">
+
+<SkeletonSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在占位根元素上。`loading` 为 `false` 时组件只渲染子内容，不再有根元素，这些属性随占位一起丢弃。根元素的 `aria-busy="true"` 不能被关闭。
+
+</Framework>
+
+### Skeleton.Avatar
+
+<Framework only="react">
+
+<SkeletonAvatarReactApi />
+
+其他原生属性（如 `id`、`aria-*` 与事件）落在占位块上，`aria-hidden="true"` 可被传入的同名属性覆盖。
+
+### Skeleton.Image
+
+<SkeletonImageReactApi />
+
+### Skeleton.Title
+
+<SkeletonTitleReactApi />
+
+### Skeleton.Button
+
+<SkeletonButtonReactApi />
+
+`Skeleton.Image`、`Skeleton.Title`、`Skeleton.Button` 没有 `size`、`shape`，其他原生属性同样落在占位块上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SkeletonAvatarVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在占位块上。
+
+### Skeleton.Image
+
+<SkeletonImageVueApi />
+
+### Skeleton.Title
+
+<SkeletonTitleVueApi />
+
+### Skeleton.Button
+
+<SkeletonButtonVueApi />
+
+`Skeleton.Image`、`Skeleton.Title`、`Skeleton.Button` 没有 `size`、`shape`，`class`、`style` 与原生属性经 attrs 落在占位块上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SkeletonAvatarSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在占位块上。
+
+### Skeleton.Image
+
+<SkeletonImageSolidApi />
+
+### Skeleton.Title
+
+<SkeletonTitleSolidApi />
+
+### Skeleton.Button
+
+<SkeletonButtonSolidApi />
+
+`Skeleton.Image`、`Skeleton.Title`、`Skeleton.Button` 没有 `size`、`shape`，`class`、`style`、`ref` 与原生属性和事件落在占位块上。
+
+</Framework>
+
+### Skeleton.Paragraph
+
+<Framework only="react">
+
+<SkeletonParagraphReactApi />
+
+`className`、`style` 与原生属性落在 `ul` 根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SkeletonParagraphVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 `ul` 根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SkeletonParagraphSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在 `ul` 根元素上。
+
+</Framework>
+
+## Accessibility
+
+- 加载时 Skeleton 的外层带有 `aria-busy="true"`，占位块与段落占位带有 `aria-hidden="true"`，读屏只知道内容正在加载；使用方传入的同名属性优先于占位块上的 `aria-hidden`，`aria-busy` 不能被关闭。
+- 加载结束后直接渲染子内容，不再有 Skeleton 的外层元素。
+
+## 文案规范
+
+- 不变的固定内容直接展示固定内容，可变的内容使用骨架屏展示
+
+## 设计变量
+
+<DesignToken />

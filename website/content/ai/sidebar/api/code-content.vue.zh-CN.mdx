@@ -1,0 +1,27 @@
+**Props**
+
+| 属性      | 说明                                                       | 类型                 | 默认值      |
+| --------- | ---------------------------------------------------------- | -------------------- | ----------- |
+| codes     | 代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。 | `CodeItemData[]`     | `[]`        |
+| activeKey | 当前展开的代码面板 key，配合 v-model:activeKey 使用。      | `string \| string[]` | `undefined` |
+
+**Events**
+
+| 事件             | 说明                                                                                              | 回调参数                                                |
+| ---------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| update:activeKey | 展开或收起面板时先于 change 触发，供 v-model:activeKey 回写。                                     | `[activeKey: string[]]`                                 |
+| change           | 通过箭头展开或收起面板时触发，参数为当前展开的 key。                                              | `[activeKey: string \| string[]]`                       |
+| expand           | 点击面板头部旁的展开按钮时触发，参数为点击事件、对应条目和 code。仅在绑定了该事件时渲染展开按钮。 | `[event: MouseEvent, item: CodeItemData, mode: string]` |
+
+**Slots**
+
+| 插槽         | 说明                                                                     | 作用域参数                        |
+| ------------ | ------------------------------------------------------------------------ | --------------------------------- |
+| customRender | 转发给每个 JSON 面板中 JsonViewer 的 customRender 插槽。                 | `JsonViewerCustomRenderSlotProps` |
+| searchButton | 转发给每个 JSON 面板中 JsonViewer 的 searchButton 插槽，替换其搜索按钮。 | `JsonViewerSearchButtonSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,61 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the card has closed and its leave animation has finished. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterOpen | Called after the card has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not. An open that is closed before the enter animation ends does not call it. | `TooltipProps['afterOpen']` | - |
+| aria-label | `aria-label` of the dialog. When given, it takes precedence over the title. | `string` | - |
+| aria-labelledby | `aria-labelledby` of the dialog. Defaults to the title, or to the content without a title. | `string` | - |
+| arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`. | `boolean` | - |
+| arrowStyle | Border color, background color and border opacity of the arrow. | `ArrowStyle` | - |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. Defaults to `true`. | `boolean` | - |
+| cancelButtonProps | Props of the cancel button. `autoFocus` focuses it on open; `class`, `style` and other props land on the button. | `PopconfirmButtonProps` | - |
+| cancelText | Cancel button text. Defaults to the locale entry `Popconfirm.cancel`. | `string` | - |
+| cancelType | Cancel button type. Defaults to `tertiary`. | `ButtonType` | `"tertiary"` |
+| children | The trigger. Use the function form `(getTriggerProps) => JSX.Element` and spread `{...getTriggerProps()}` onto the focusable element, which gets the focus, keyboard and ARIA attributes. Any other form is wrapped in the span of Tooltip. | `TooltipProps['children']` | - |
+| class | Class name of the confirmation card (`.semi-popconfirm`), not of the popup. | `string` | - |
+| clickToHide | Whether a click on the popup or anything inside it closes it. | `TooltipProps['clickToHide']` | - |
+| closeOnEsc | Whether Esc closes the open card, wherever focus is. Defaults to `true`. With `trigger` `custom` it only calls `onEscKeyDown`, and the caller decides whether to close. | `TooltipProps['closeOnEsc']` | - |
+| condition | Whether it may be triggered, defaults to `true`. Only an explicit `false` disables the `hover`, `click` and `focus` triggers. Changing it from `true` to `false` closes an open card at once; with a controlled `visible` it only requests the close through `onVisibleChange`, and the card closes once the caller writes back. | `boolean` | - |
+| content | Content of the card: a JSX element or a function. The function receives `{ initialFocusRef }`; pass `initialFocusRef` as the `ref` of the element that takes focus on open. | `TooltipProps['content']` | - |
+| contentClassName | Class name of the content container. | `ClassValue` | - |
+| defaultVisible | Whether it is initially shown when uncontrolled. | `boolean` | - |
+| disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the card. | `TooltipProps['disableArrowKeyDown']` | - |
+| disabled | Whether it is disabled, defaults to `false`. A disabled Popconfirm renders only the trigger and never opens. | `boolean` | `false` |
+| disableFocusListener | Whether keyboard focus is ignored when `trigger` is `hover`. | `boolean` | - |
+| guardFocus | Whether Tab cycles inside the card while focus is in it. Defaults to `true`. | `TooltipProps['guardFocus']` | - |
+| icon | Custom icon, a JSX element. The default warning icon shows when omitted; `null` or `false` renders no icon. | `JSX.Element` | - |
+| keepDOM | Whether the content stays mounted while closed. | `boolean` | - |
+| motion | Whether the popup animates when it appears and hides. Defaults to `true`. | `boolean` | - |
+| mouseEnterDelay | Milliseconds before it shows after the pointer enters. Applies when `trigger` is `hover` or `focus`. | `number` | - |
+| mouseLeaveDelay | Milliseconds before it hides after the pointer leaves. Applies when `trigger` is `hover` or `focus`. | `number` | - |
+| okButtonProps | Props of the confirm button. `autoFocus` focuses it on open; `class`, `style` and other props land on the button. | `PopconfirmButtonProps` | - |
+| okText | Confirm button text. Defaults to the locale entry `Popconfirm.confirm` (`确定` in zh_CN, `Confirm` in en_US). | `string` | - |
+| okType | Confirm button type. Defaults to `primary`. | `ButtonType` | `"primary"` |
+| onCancel | Called with the native `MouseEvent` when the cancel or close button is clicked. A returned Promise keeps the button loading and closes the card once it settles; a rejection keeps the card open. Any other return value is ignored. | <ApiType detail={"(e: MouseEvent) => unknown"}>Type</ApiType> | - |
+| onClickOutSide | Called with the native `MouseEvent` when the popup is shown and the mouse is pressed outside the trigger and the popup. | `TooltipProps['onClickOutSide']` | - |
+| onConfirm | Called with the native `MouseEvent` when the confirm button is clicked. A returned Promise keeps the button loading and closes the card once it settles; a rejection keeps the card open. Any other return value is ignored. | <ApiType detail={"(e: MouseEvent) => unknown"}>Type</ApiType> | - |
+| onEscKeyDown | Called with the native `KeyboardEvent` when Esc is pressed while the popup is open. | `TooltipProps['onEscKeyDown']` | - |
+| onOpen | Called once per opening when the card is shown, as its enter animation starts, before `afterOpen`, controlled or not. A hover open withdrawn because the pointer already left does not call it. | `TooltipProps['onOpen']` | - |
+| onVisibleChange | Called with the requested visibility. With a controlled `visible` it reports only requests from user interaction, not changes the caller makes to `visible`. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| position | Popup position. Defaults to `bottomLeft` (`bottomRight` in RTL). | `Position` | - |
+| prefixCls | Class prefix of the confirmation card. Defaults to `semi-popconfirm`. | `string` | `"semi-popconfirm"` |
+| ref | Callback that receives the handle, which only has `focusTrigger`. It is called once when the component is created. | <ApiType detail={"Ref\u003cPopconfirmHandle>"}>Type</ApiType> | - |
+| returnFocusOnClose | Whether focus returns to the trigger after closing. Defaults to `true`. It has no effect when `trigger` is `custom`, and works as usual with a controlled `visible`. | `TooltipProps['returnFocusOnClose']` | - |
+| role | ARIA role of the popup. Defaults to `dialog` whatever the `trigger`. | `string` | `"dialog"` |
+| showArrow | Whether the arrow triangle is shown. Defaults to `false`. | `boolean` | - |
+| showCloseIcon | Whether the close button in the top-right corner is shown. Defaults to `true`. It calls `onCancel`. | `boolean` | `true` |
+| spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number }` | - |
+| stopPropagation | Whether click events on the popup stop bubbling, defaults to `true`. Clicks inside the card never reach document listeners. | `boolean \| string` | `true` |
+| style | Style of the confirmation card, as an object with kebab-case keys or as a string. | `JSX.CSSProperties \| string` | - |
+| title | Title, a string or a JSX element. With a title, the dialog is named by it (see `aria-labelledby`). | `JSX.Element` | - |
+| trigger | When it shows: `hover`, `focus`, `click`, `contextMenu` or `custom`. Defaults to `click`. With a controlled `visible`, trigger events only request opening or closing through `onVisibleChange`. | `Trigger` | `"click"` |
+| visible | Controlled visibility. When given, this value decides whether it shows. Clicking the trigger, confirming, cancelling, clicking outside and Esc only request a change through `onVisibleChange`, which takes effect once the caller writes `visible` back. | `boolean` | - |
+
+**Methods**
+
+| Method       | Description                                                                                                                                                                                                  | Type                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| focusTrigger | Moves focus to the trigger element. It only takes effect when `returnFocusOnClose` is `true` and `trigger` is not `custom`. When `disabled`, there is no trigger element to focus and the call does nothing. | <ApiType detail={"() => void"}>Type</ApiType> |

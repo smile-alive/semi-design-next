@@ -1,0 +1,63 @@
+{
+    "cropper": {
+        "source": "packages/semi-ui-vue/src/cropper/cropper.vue",
+        "props": {
+            "src": { "zh-CN": "被裁切图片的地址。", "en-US": "Address of the image to crop." },
+            "imgProps": {
+                "zh-CN": "传给被裁切图片 img 标签的属性。src 与布局样式由组件决定，class、style 与组件自身的合并，onLoad 在组件处理完成后调用；alt 默认为空字符串，crossorigin 默认为 anonymous，均可覆盖。",
+                "en-US": "Attributes passed to the img element being cropped. src and the layout style belong to the component; class and style are merged with its own, and onLoad is called after the component has handled it. alt defaults to an empty string and crossorigin to anonymous; both can be overridden."
+            },
+            "shape": { "zh-CN": "裁切框形状。", "en-US": "Shape of the crop box." },
+            "aspectRatio": {
+                "zh-CN": "固定的裁切框宽高比；加载后改变时，裁切框按新比例重排。",
+                "en-US": "Fixed aspect ratio of the crop box. When it changes after loading, the box is laid out again at the new ratio."
+            },
+            "defaultAspectRatio": {
+                "zh-CN": "裁切框的初始宽高比，拖动时会随之变化。",
+                "en-US": "Initial aspect ratio of the crop box, which changes while dragging."
+            },
+            "zoom": {
+                "zh-CN": "受控的缩放比例，叠加在图片适应裁切区域的初始缩放之上。",
+                "en-US": "Controlled zoom, applied on top of the initial scaling that fits the image into the cropper."
+            },
+            "rotate": {
+                "zh-CN": "图片旋转角度，单向绑定，组件不会改变它。",
+                "en-US": "Image rotation angle. It is one-way: the component never changes it."
+            },
+            "showResizeBox": {
+                "zh-CN": "是否展示裁切框边角的调整块。",
+                "en-US": "Whether to show the resize handles on the corners of the crop box."
+            },
+            "cropperBoxStyle": { "zh-CN": "裁切框样式。", "en-US": "Style of the crop box." },
+            "cropperBoxCls": { "zh-CN": "裁切框类名。", "en-US": "Class name of the crop box." },
+            "fill": {
+                "zh-CN": "裁切结果中非图片部分的填充色。",
+                "en-US": "Fill color of the parts of the result that are not the image."
+            },
+            "maxZoom": { "zh-CN": "最大缩放倍数。", "en-US": "Maximum zoom factor." },
+            "minZoom": { "zh-CN": "最小缩放倍数。", "en-US": "Minimum zoom factor." },
+            "zoomStep": { "zh-CN": "滚轮缩放的步长。", "en-US": "Zoom change per wheel step." },
+            "preview": {
+                "zh-CN": "返回预览容器 DOM 的函数，裁切效果会实时镜像到该容器；可返回 null，表示容器尚未挂载。",
+                "en-US": "Function returning the DOM element that mirrors the cropped area live. It may return null while the element is not mounted yet."
+            }
+        },
+        "events": {
+            "update:zoom": {
+                "zh-CN": "滚轮缩放时触发，用于 v-model:zoom。",
+                "en-US": "Emitted by wheel zooming, for v-model:zoom."
+            },
+            "zoomChange": {
+                "zh-CN": "滚轮缩放时触发，载荷与 update:zoom 相同。",
+                "en-US": "Emitted by wheel zooming, with the same payload as update:zoom."
+            }
+        },
+        "slots": {},
+        "exposed": {
+            "getCropperCanvas": {
+                "zh-CN": "按图片原始分辨率，把裁切框内的区域绘制到新的 canvas 并返回；图片加载前调用会抛出错误。",
+                "en-US": "Draws the area inside the crop box at the image's own resolution onto a new canvas and returns it. It throws when called before the image has loaded."
+            }
+        }
+    }
+}

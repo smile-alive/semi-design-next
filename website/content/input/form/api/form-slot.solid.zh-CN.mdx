@@ -1,0 +1,8 @@
+**Props**
+
+| 属性          | 说明                                                                                         | 类型                               | 默认值 |
+| ------------- | -------------------------------------------------------------------------------------------- | ---------------------------------- | ------ |
+| error         | 错误信息，渲染在内容之后：对象作为 ErrorMessage 的属性，其他内容作为错误内容；不传则不显示。 | `ErrorMessageProps \| JSX.Element` | -      |
+| label         | Label 的文本，或 text、extra、align、width、required、optional 等 Label 配置。               | `LabelProps \| JSX.Element`        | -      |
+| labelPosition | Label 的位置，默认取自 Form，可选 top 或 left。                                              | `'top' \| 'left'`                  | -      |
+| noLabel       | 是否不渲染 Label；Form 同时设置了 labelCol 与 wrapperCol 时，Label 列仍保留。                | `boolean`                          | -      |

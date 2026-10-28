@@ -1,0 +1,221 @@
+{
+    "dropdown": {
+        "source": "packages/semi-ui-vue/src/dropdown/dropdown.vue",
+        "props": {
+            "contentClassName": {
+                "zh-CN": "下拉菜单根元素的类名。",
+                "en-US": "Class name of the dropdown menu root element."
+            },
+            "menu": {
+                "zh-CN": "通过数据快速配置菜单，数据项见下方 DropdownMenuItem；提供了 content 插槽时以插槽为准。",
+                "en-US": "Configures the menu from data, see DropdownMenuItem below. The content slot wins when it is provided."
+            },
+            "selectionMode": {
+                "zh-CN": "本层菜单项的选择方式，已选项由 active 标记：single 时菜单项为带 aria-checked 的 menuitemradio，multiple 时为带 aria-checked 的 menuitemcheckbox；未设置时 showTick 开启则为带 aria-checked 的 menuitemcheckbox，否则为 menuitem。只影响角色与状态，勾的显示仍由 showTick 决定；嵌套的子菜单不继承。",
+                "en-US": "How the items of this menu are selected; active marks the selected ones. With single the items are menuitemradio with aria-checked, with multiple menuitemcheckbox with aria-checked; unset, they are menuitemcheckbox with aria-checked when showTick is on, otherwise menuitem. It sets roles and states only: showTick alone shows the tick. Nested submenus do not inherit it."
+            },
+            "showTick": {
+                "zh-CN": "是否在 active 的 Dropdown.Item 左侧展示表示选中的勾；只作用于本 Dropdown 的菜单，嵌套的子菜单不继承。",
+                "en-US": "Whether an active Dropdown.Item shows a tick on its leading side. It applies to the menu of this Dropdown only; nested submenus do not inherit it."
+            },
+            "motion": { "zh-CN": "是否展示弹出层动画。", "en-US": "Whether the popup is animated." },
+            "autoAdjustOverflow": {
+                "zh-CN": "弹出层被遮挡时是否自动调整方向。",
+                "en-US": "Whether the popup flips automatically when it would be clipped."
+            },
+            "position": {
+                "zh-CN": "弹出菜单相对触发元素的位置，常用 bottom、bottomLeft、bottomRight，更多见 Tooltip 的位置。",
+                "en-US": "Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more."
+            },
+            "prefixCls": {
+                "zh-CN": "弹出层类名前缀，设置后弹出层不再带 Dropdown 的样式。",
+                "en-US": "Class prefix of the popup. A custom value drops the Dropdown styles."
+            },
+            "spacing": {
+                "zh-CN": "弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 4，嵌套的子菜单为 2。",
+                "en-US": "Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu."
+            },
+            "role": {
+                "zh-CN": "包裹菜单的弹层容器的 ARIA role，默认 presentation，菜单本身的 role 为 menu。",
+                "en-US": "ARIA role of the popup container around the menu. The menu itself has role menu."
+            },
+            "ariaLabel": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",
+                "en-US": "aria-label of the popup when its role is dialog."
+            },
+            "ariaLabelledby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-labelledby。",
+                "en-US": "aria-labelledby of the popup when its role is dialog."
+            },
+            "ariaDescribedby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",
+                "en-US": "aria-describedby of the popup when its role is dialog."
+            },
+            "wrapWhenSpecial": {
+                "zh-CN": "触发元素禁用或加载中时，是否在外层包裹 span 以保证触发行为。",
+                "en-US": "Whether a disabled or loading trigger is wrapped in a span so that it still triggers the popup."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。",
+                "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating."
+            },
+            "wrapperClassName": {
+                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
+                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
+            },
+            "wrapperId": {
+                "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",
+                "en-US": "id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留弹出层内容而不销毁。",
+                "en-US": "Whether the popup content stays mounted while closed."
+            },
+            "clickToHide": {
+                "zh-CN": "在弹出层内点击时是否自动关闭弹出层。",
+                "en-US": "Whether a click inside the popup closes it."
+            },
+            "clickTriggerToHide": {
+                "zh-CN": "点击触发元素时是否关闭已打开的弹出层。",
+                "en-US": "Whether a click on the trigger closes an open popup."
+            },
+            "closeOnEsc": {
+                "zh-CN": "在触发元素或弹出层按 Esc 是否关闭菜单；trigger 为 custom 时只触发 escKeyDown，由使用方决定是否关闭。",
+                "en-US": "Whether Esc on the trigger or in the popup closes the menu. With trigger custom it only emits escKeyDown and the caller decides whether to close."
+            },
+            "condition": {
+                "zh-CN": "是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的弹出层；visible 受控时只发出 update:visible 与 visibleChange(false)，使用方回写后才关闭。",
+                "en-US": "Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only emits update:visible and visibleChange(false), and the popup closes once the caller writes back."
+            },
+            "disableFocusListener": {
+                "zh-CN": "trigger 为 hover 时，是否不响应键盘聚焦打开菜单。",
+                "en-US": "Whether keyboard focus is ignored when trigger is hover."
+            },
+            "guardFocus": {
+                "zh-CN": "焦点位于弹出层内时，Tab 是否在弹出层内循环。",
+                "en-US": "Whether Tab cycles inside the popup while focus is in it."
+            },
+            "mouseEnterDelay": {
+                "zh-CN": "指针移入触发元素后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。",
+                "en-US": "Milliseconds before the menu shows after the pointer enters the trigger. Applies to the hover and focus triggers."
+            },
+            "mouseLeaveDelay": {
+                "zh-CN": "指针移出弹出层后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效，不小于 mouseEnterDelay。",
+                "en-US": "Milliseconds before the menu hides after the pointer leaves the popup. Applies to the hover and focus triggers; not less than mouseEnterDelay."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素。",
+                "en-US": "Whether focusing an element avoids scrolling it into view."
+            },
+            "returnFocusOnClose": {
+                "zh-CN": "菜单关闭后焦点是否回到触发元素。",
+                "en-US": "Whether focus returns to the trigger after the menu closes."
+            },
+            "trigger": {
+                "zh-CN": "触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu；custom 时显示与否完全由 visible 决定。",
+                "en-US": "What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides."
+            },
+            "visible": {
+                "zh-CN": "菜单是否显示，配合 trigger 为 custom 与 v-model:visible 使用；传入后由该值决定显示。",
+                "en-US": "Whether the menu is shown, used with trigger custom and v-model:visible. When given, this value decides."
+            }
+        },
+        "events": {
+            "update:visible": {
+                "zh-CN": "菜单需要显示或隐藏时触发，供 v-model:visible 回写。",
+                "en-US": "Emitted when the menu should show or hide, for v-model:visible to write back."
+            },
+            "visibleChange": {
+                "zh-CN": "菜单显示状态变化时触发；visible 受控时只报告用户交互发起的请求，父组件自己改变 visible 不触发。",
+                "en-US": "Emitted when the visibility of the menu changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible."
+            },
+            "clickOutSide": {
+                "zh-CN": "菜单打开时在触发元素与弹出层以外的区域按下鼠标时触发，仅 trigger 为 click、contextMenu、custom 或开启 clickTriggerToHide 时有效。",
+                "en-US": "Emitted when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom, or with clickTriggerToHide."
+            },
+            "escKeyDown": {
+                "zh-CN": "closeOnEsc 为 true 时，菜单打开期间按 Esc 触发。",
+                "en-US": "Emitted when Esc is pressed while the menu is open and closeOnEsc is true."
+            },
+            "open": {
+                "zh-CN": "菜单显示、进场动画开始时触发，每次打开一次，早于 afterOpen，受控与非受控相同；悬停打开后指针已离开而撤回的打开不触发。",
+                "en-US": "Emitted once per opening when the menu is shown, as its enter animation starts, before afterOpen, controlled or not; not emitted for a hover open withdrawn because the pointer already left."
+            },
+            "afterOpen": {
+                "zh-CN": "菜单打开且进场动画结束后触发；没有进场动画时打开后即触发，受控与非受控相同；进场结束前被关闭的打开不触发。",
+                "en-US": "Emitted after the menu has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not emitted for an open that is closed before the enter animation ends."
+            },
+            "afterClose": {
+                "zh-CN": "菜单关闭且离场动画结束后触发。",
+                "en-US": "Emitted after the menu has closed and its leave animation has finished."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "触发元素。单个元素或组件直接接收触发属性，文本或多个节点会被 span 包裹，同样响应键盘。",
+                "en-US": "The trigger. A single element or component receives the trigger attributes directly; text or several nodes are wrapped in a span that responds to the keyboard as well."
+            },
+            "content": {
+                "zh-CN": "菜单内容，由 Dropdown.Menu 及 Dropdown.Item、Dropdown.Title、Dropdown.Divider 构成；提供后优先于 menu。",
+                "en-US": "Menu content made of Dropdown.Menu with Dropdown.Item, Dropdown.Title and Dropdown.Divider. It takes precedence over menu once provided."
+            },
+            "menuIcon": {
+                "zh-CN": "menu 中每个 item 项的图标，作用域参数为该数据项与序号；渲染为空时该项无图标。",
+                "en-US": "Icon of each item entry of menu, with the entry and its index as scope parameters. An empty result renders no icon."
+            }
+        },
+        "exposed": {
+            "focusTrigger": {
+                "zh-CN": "让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效。",
+                "en-US": "Focuses the trigger element. Takes effect only when returnFocusOnClose is true and trigger is not custom."
+            },
+            "rePosition": {
+                "zh-CN": "按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。",
+                "en-US": "Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame."
+            }
+        }
+    },
+    "dropdown-menu": {
+        "source": "packages/semi-ui-vue/src/dropdown/dropdown-menu.vue",
+        "props": {},
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "菜单的子元素，一般为 Dropdown.Item、Dropdown.Title 或 Dropdown.Divider。",
+                "en-US": "Children of the menu, usually Dropdown.Item, Dropdown.Title or Dropdown.Divider."
+            }
+        },
+        "exposed": {}
+    },
+    "dropdown-item": {
+        "source": "packages/semi-ui-vue/src/dropdown/dropdown-item.vue",
+        "props": {
+            "active": {
+                "zh-CN": "当前项是否处于激活态，激活态时字体加粗、颜色加深；Dropdown 的 showTick 为 true 时左侧还会展示 √。",
+                "en-US": "Whether the item is active: bolder text and a deeper color, plus a tick on its leading side when the Dropdown has showTick."
+            },
+            "disabled": { "zh-CN": "是否禁用该项。", "en-US": "Whether the item is disabled." },
+            "showTick": {
+                "zh-CN": "仅在 Dropdown 之外使用时生效；在 Dropdown 内以 Dropdown 的 showTick 为准。",
+                "en-US": "Takes effect only outside a Dropdown. Inside one, the showTick of the Dropdown applies."
+            },
+            "type": {
+                "zh-CN": "文本颜色类型，可选 primary、secondary、tertiary、warning、danger。",
+                "en-US": "Text color type: primary, secondary, tertiary, warning or danger."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "菜单项的内容。", "en-US": "Content of the item." },
+            "icon": { "zh-CN": "菜单项的图标。", "en-US": "Icon of the item." }
+        },
+        "exposed": {}
+    },
+    "dropdown-title": {
+        "source": "packages/semi-ui-vue/src/dropdown/dropdown-title.vue",
+        "props": {},
+        "events": {},
+        "slots": { "default": { "zh-CN": "分组标题的内容。", "en-US": "Content of the group title." } },
+        "exposed": {}
+    }
+}

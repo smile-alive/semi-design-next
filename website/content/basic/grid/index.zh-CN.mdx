@@ -1,0 +1,165 @@
+---
+title: 栅格
+order: 20
+icon: doc-grid
+brief: 24 栅格系统。
+---
+
+import RowReactApi from './api/row.react.zh-CN.mdx';
+import ColReactApi from './api/col.react.zh-CN.mdx';
+import RowVueApi from './api/row.vue.zh-CN.mdx';
+import ColVueApi from './api/col.vue.zh-CN.mdx';
+import RowSolidApi from './api/row.solid.zh-CN.mdx';
+import ColSolidApi from './api/col.solid.zh-CN.mdx';
+
+## 概述
+
+布局的栅格化系统，我们是基于行（row）和列（col）来定义信息区块的外部框架，以保证页面的每个区域能够稳健地排布起来。
+
+## 弹性布局
+
+我们的栅格化系统支持 Flex 布局，允许子元素在父节点内的水平对齐方式 - 居左、居中、居右、等宽排列、分散排列。子元素与子元素之间，支持顶部对齐、垂直居中对齐、底部对齐的方式。同时，支持使用 `order` 来定义元素的排列顺序。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Col, Row } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Col, Row } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Col, Row } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基础使用
+
+从堆叠到水平排列。
+
+使用单一的一组 Row 和 Col 栅格组件，就可以创建一个基本的栅格系统，所有 Col 必须放在 Row 内。
+
+<Framework only="vue">
+
+`span`、`offset`、`gutter`、`xs` 等数字与对象属性要用 `:` 绑定，例如 `:span="12"`，写成字符串不会被转换为数字。
+
+</Framework>
+
+<Demo id="basic" />
+
+### Gutter 间隔
+
+栅格常常需要和间隔进行配合，你可以使用 Row 的 `gutter` 属性，我们推荐使用 (16+8n)px 作为栅格间隔。(n 是自然数)
+
+垂直间隔可以使用数组形式，数组第一项为横向间隔，第二项为垂直间隔。
+
+如果要支持响应式，可以写成 `{ xs: 8, sm: 16, md: 24, lg: 32 }`
+
+深色为内容物区域，浅色为间隔
+
+<Demo id="gutter" />
+
+### Offset 偏移
+
+<Demo id="offset" />
+
+### Flex 布局
+
+给 Row 设置 `type="flex"` 定义 Flex 布局，`justify` 取不同的值 `start`、`center`、`end`、`space-between`、`space-around`，分别定义子元素在父节点里面的排版方式。
+
+<Demo id="flex" />
+
+### Flex 子元素垂直对齐
+
+<Demo id="flex-align" />
+
+### Flex 元素排序
+
+通过 Flex 布局的 Order 来改变元素的排序。
+
+<Demo id="flex-order" />
+
+### 响应式
+
+参照 Bootstrap 的 响应式设计，预设六个响应尺寸：`xs`, `sm`, `md`, `lg`, `xl`, `xxl`。
+
+`xs` 是不带媒体查询的基础层，在所有屏幕宽度都生效；`sm` 及以上按视口宽度逐级覆盖更小的断点。
+
+对象写法中 `order`、`offset`、`push`、`pull` 设为 `0` 会重置更小断点设置的值，例如 `md` 设为 `{ offset: 0 }`。
+
+<Demo id="responsive" />
+
+## API 参考
+
+### Row
+
+<Framework only="react">
+
+<RowReactApi />
+
+其他原生属性（如 `id`、`aria-*`、`data-*`）落在 Row 的根 `<div>` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<RowVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 Row 的根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<RowSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `id`、`aria-*`）落在 Row 的根 `<div>` 上。
+
+</Framework>
+
+### Col
+
+<Framework only="react">
+
+<ColReactApi />
+
+其他原生属性（如 `id`、`aria-*`、`data-*`）落在 Col 的根 `<div>` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ColVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 Col 的根元素上，自定义 `class` 排在组件类名之后。
+
+</Framework>
+
+<Framework only="solid">
+
+<ColSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `id`、`aria-*`）落在 Col 的根 `<div>` 上。
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

@@ -1,0 +1,335 @@
+---
+order: 54
+title: Anchor
+icon: doc-anchor
+brief: The Anchor component is used to create a hyper Link navigation bar.
+---
+
+import AnchorReactApi from './api/anchor.react.en-US.mdx';
+import AnchorLinkReactApi from './api/anchor-link.react.en-US.mdx';
+import AnchorVueApi from './api/anchor.vue.en-US.mdx';
+import AnchorLinkVueApi from './api/anchor-link.vue.en-US.mdx';
+import AnchorSolidApi from './api/anchor.solid.en-US.mdx';
+import AnchorLinkSolidApi from './api/anchor-link.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Anchor } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Anchor.Link` can also be imported by name as `AnchorLink`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Anchor } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Use `Link` to create an anchor, click it to jump to the hash tag location.
+
+<Demo id="basic" />
+
+### Integrated Usage
+
+You can use `getContainer`, `targetOffset`, `offsetTop`, and `style` to create a out of the box hyperAnchor.Link navigation bar.
+
+- getContainer：you can set the container of scroll content with `getContainer` property. Its default value is `window`.
+
+- targetOffset: you can set the distance between the anchor point and the top of the container by setting `targetOffset`.
+
+- style：Anchor does not position itself. Position it yourself with the `style` object, for example `position: fixed`.
+
+- offsetTop：`offsetTop` can trigger the current Link switch when the scrolling content reaches a specified offset from the top of the container.
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Anchor } from '@fibrae/semi-ui-react';
+
+() => {
+    const getContainer = () => {
+        return document.querySelector('window');
+    };
+    return (
+        <div>
+            <span>See the fixed Anchor on the right </span>
+            <Anchor getContainer={getContainer} offsetTop={100} targetOffset={100} style={{ position: 'fixed', right: '20px', top: '100px', width: '200px', zIndex: 3 }}>
+                <Anchor.Link href="#Basic_Usage" title="Fixed Anchor" />
+                <Anchor.Link href="#Integrated_Usage" title="Integrated Usage" />
+                <Anchor.Link href="#Size" title="Size" />
+                <Anchor.Link href="#Rail_Theme" title="Rail Theme" />
+                <Anchor.Link href="#Auto_Collapse" title="Auto Collapse" />
+                <Anchor.Link href="#Show_Tooltip" title="Show Tooltip" />
+                <Anchor.Link href="#Tooltip_Position" title="Tooltip Position" />
+                <Anchor.Link href="#API_Reference" title="API Reference">
+                    <Anchor.Link href="#Anchor" title="Anchor" />
+                    <Anchor.Link href="#Anchor.Link" title="Anchor.Link" />
+                </Anchor.Link>
+            </Anchor>
+        </div>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-vue';
+
+    const getContainer = () => window;
+</script>
+
+<template>
+    <div>
+        <span>See the fixed Anchor on the right </span>
+        <Anchor :getContainer="getContainer" :offsetTop="100" :style="{ position: 'fixed', right: '20px', top: '100px', width: '200px', zIndex: 3 }" :targetOffset="100">
+            <Anchor.Link href="#Basic_Usage" title="Fixed Anchor" />
+            <Anchor.Link href="#Integrated_Usage" title="Integrated Usage" />
+            <Anchor.Link href="#Size" title="Size" />
+            <Anchor.Link href="#Rail_Theme" title="Rail Theme" />
+            <Anchor.Link href="#Auto_Collapse" title="Auto Collapse" />
+            <Anchor.Link href="#Show_Tooltip" title="Show Tooltip" />
+            <Anchor.Link href="#Tooltip_Position" title="Tooltip Position" />
+            <Anchor.Link href="#API_Reference" title="API Reference">
+                <Anchor.Link href="#Anchor" title="Anchor" />
+                <Anchor.Link href="#Anchor.Link" title="Anchor.Link" />
+            </Anchor.Link>
+        </Anchor>
+    </div>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Anchor } from '@fibrae/semi-ui-solid';
+
+function AnchorExample() {
+    const getContainer = () => window;
+    return (
+        <div>
+            <span>See the fixed Anchor on the right </span>
+            <Anchor getContainer={getContainer} offsetTop={100} targetOffset={100} style={{ position: 'fixed', right: '20px', top: '100px', width: '200px', 'z-index': '3' }}>
+                <Anchor.Link href="#Basic_Usage" title="Fixed Anchor" />
+                <Anchor.Link href="#Integrated_Usage" title="Integrated Usage" />
+                <Anchor.Link href="#Size" title="Size" />
+                <Anchor.Link href="#Rail_Theme" title="Rail Theme" />
+                <Anchor.Link href="#Auto_Collapse" title="Auto Collapse" />
+                <Anchor.Link href="#Show_Tooltip" title="Show Tooltip" />
+                <Anchor.Link href="#Tooltip_Position" title="Tooltip Position" />
+                <Anchor.Link href="#API_Reference" title="API Reference">
+                    <Anchor.Link href="#Anchor" title="Anchor" />
+                    <Anchor.Link href="#Anchor.Link" title="Anchor.Link" />
+                </Anchor.Link>
+            </Anchor>
+        </div>
+    );
+}
+```
+
+</Framework>
+
+### Size
+
+You can change Anchor size with `size` property.
+
+<Demo id="size-default" />
+
+<Demo id="size-small" />
+
+### Rail Theme
+
+You can change rail color with `railTheme` property. Three themes are supported and the default value is `primary`.
+
+<Demo id="rail-primary" />
+
+<Demo id="rail-tertiary" />
+
+<Demo id="rail-muted" />
+
+### Auto Collapse
+
+Anchor can dynamically display child links with `autoCollapse` property. The default is `false`.
+
+<Demo id="auto-collapse" />
+
+<Demo id="no-auto-collapse" />
+
+### Show Tooltip
+
+`showTooltip` can display the title of link when it exceeds the max-width. The default value is `false`.
+
+<Demo id="show-tooltip" />
+
+### Tooltip Position
+
+You can change the Tooltip position with `position` property. It only works when `showTooltip` is `true`.
+
+<Demo id="tooltip-position" />
+
+### Custom Scroll Position
+
+`scrollIntoViewOptions` adjusts where the target ends up in the container after a link is clicked. Its type is the `Options` of [scroll-into-view-if-needed](https://github.com/scroll-into-view/scroll-into-view-if-needed): `block`, `inline`, `scrollMode`, `boundary` and `skipOverflowHiddenElements`. Without it `block` is `start`, which scrolls the target to the top of the container.
+
+- `scrollMotion` still decides whether the scroll is animated (`behavior`), and `targetOffset` still shifts the position `block` produces, when passed together with `scrollIntoViewOptions`.
+- Only the innermost vertically scrollable container is scrolled; the horizontal position is adjusted only when `inline` is passed.
+
+<Demo id="scroll-into-view-options" />
+
+## API Reference
+
+### Anchor
+
+<Framework only="react">
+
+<AnchorReactApi />
+
+`id`, `data-*` and other native attributes are placed on the root navigation element (`role="navigation"`). `onChange` and `onClick` are the anchor callbacks and are not bound to the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<AnchorVueApi />
+
+`class`, `style` and native attributes land on the root element through attrs. A `max-width` or `max-height` in `style` takes precedence over the `maxWidth` and `maxHeight` props. As a component event, `@click` no longer listens for native clicks on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<AnchorSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the root element (`role="navigation"`). `onClick` is a component callback, not a native click listener on the root element. `maxWidth` and `maxHeight` override the `max-width` and `max-height` in `style`.
+
+</Framework>
+
+### Anchor.Link
+
+<Framework only="react">
+
+<AnchorLinkReactApi />
+
+`id`, `data-*` and other native attributes are placed on the outermost div of the link (`role="listitem"`).
+
+</Framework>
+
+<Framework only="vue">
+
+<AnchorLinkVueApi />
+
+`class`, `style` and native attributes land on the outermost `div` (`role="listitem"`) of the link through attrs. `Anchor.Link` must be used inside `Anchor`, otherwise an error is thrown.
+
+</Framework>
+
+<Framework only="solid">
+
+<AnchorLinkSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*`) land on the outermost `div` (`role="listitem"`) of the link.
+
+</Framework>
+
+## Content Guidelines
+
+- Write in sentence case
+- Keep it concise and avoid line breaks
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+1. **Why didn't my link highlight and slide to follow?**  
+   Check whether you can scroll to the specified position by clicking the anchor:
+    - No, it means there is a problem with the id. check whether the id exists in the document;
+    - Yes, it may be that the scrolling container is not set correctly to ensure that the content of the document is wrapped in the scrolling container. The default scrolling container is window. If your container is a div of .my-container, you should set the scrolling container to this div.
+
+<Framework only="react">
+
+```text
+import React from 'react';
+import { Anchor } from '@fibrae/semi-ui-react';
+
+function App() {
+    const getContainer = () => {
+        return document.querySelector('.my-container');
+    };
+    return (
+        <Anchor
+            /* Other props */
+            getContainer={getContainer}
+        >
+            /* Links */
+        </Anchor>
+    )
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```text
+<script setup lang="ts">
+import { Anchor } from '@fibrae/semi-ui-vue';
+
+// This is the container of the document content, not of Anchor: the current id is computed against it
+const getContainer = () => document.querySelector<HTMLElement>('.my-container');
+</script>
+
+<template>
+    <Anchor :getContainer="getContainer">
+        <!-- Links -->
+    </Anchor>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```text
+import { Anchor } from '@fibrae/semi-ui-solid';
+
+// This is the container of the document content, not of Anchor: the current id is computed against it
+const getContainer = () => document.querySelector<HTMLElement>('.my-container');
+
+function App() {
+    return (
+        <Anchor getContainer={getContainer}>
+            {/* Links */}
+        </Anchor>
+    );
+}
+```
+
+</Framework>

@@ -1,0 +1,38 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                                                                         | Type                                             | Default                                          |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
+| modelValue     | Input content, used with v-model.                                                                                                                                                   | `string`                                         | `undefined`                                      |
+| modelModifiers | The v-model modifiers, passed by Vue for v-model.trim and the like; declaring them keeps the modifiers off the root element.                                                        | `ModelModifiers`                                 | `undefined`                                      |
+| defaultValue   | Initial content when uncontrolled.                                                                                                                                                  | `string`                                         | `semiGlobalDefault("PinCode", "defaultValue")`   |
+| count          | Number of digits.                                                                                                                                                                   | `number`                                         | `semiDefault("PinCode", "count", 6)`             |
+| format         | Format limit for a single character: number allows digits only, mixed allows digits and letters, and a regular expression or function judges each character.                        | `PinCodeFormat`                                  | `undefined`                                      |
+| autofocus      | Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it. | `boolean`                                        | `semiDefault("PinCode", "autofocus", false)`     |
+| disabled       | Whether the input is disabled.                                                                                                                                                      | `boolean`                                        | `semiGlobalDefault("PinCode", "disabled")`       |
+| size           | Input size: large, default or small.                                                                                                                                                | `Size`                                           | `semiGlobalDefault("PinCode", "size")`           |
+| validateStatus | Validation status, passed to every input; error shows the error style.                                                                                                              | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("PinCode", "validateStatus")` |
+
+**Events**
+
+| Event             | Description                                                                                  | Callback parameters   |
+| ----------------- | -------------------------------------------------------------------------------------------- | --------------------- |
+| update:modelValue | Emitted when the content changes, for v-model to write back.                                 | `[value: string]`     |
+| change            | Emitted when the content changes, with the current content.                                  | `[value: string]`     |
+| complete          | Emitted once all digits are entered, with the current content.                               | `[value: string]`     |
+| focus             | Emitted when focus enters the code from outside; moving between the inputs does not emit it. | `[event: FocusEvent]` |
+| blur              | Emitted when focus leaves the whole code.                                                    | `[event: FocusEvent]` |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name  | Description                                                                                                   | Type                                                       |
+| ----- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| focus | Focuses the input at index, counted from 0 and ignored when out of range, with the caret after its character. | <ApiType detail={"(index: number) => void"}>Type</ApiType> |
+| blur  | Blurs the input at index, counted from 0 and ignored when out of range.                                       | <ApiType detail={"(index: number) => void"}>Type</ApiType> |

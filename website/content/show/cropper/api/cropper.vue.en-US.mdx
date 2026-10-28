@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| src | Address of the image to crop. | `string` | `semiGlobalDefault("Cropper", "src")` |
+| imgProps | Attributes passed to the img element being cropped. src and the layout style belong to the component; class and style are merged with its own, and onLoad is called after the component has handled it. alt defaults to an empty string and crossorigin to anonymous; both can be overridden. | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
+| shape | Shape of the crop box. | `CropperShape` | `semiDefault("Cropper", "shape", "rect")` |
+| aspectRatio | Fixed aspect ratio of the crop box. When it changes after loading, the box is laid out again at the new ratio. | `number` | `semiGlobalDefault("Cropper", "aspectRatio")` |
+| defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `semiDefault("Cropper", "defaultAspectRatio", 1)` |
+| zoom | Controlled zoom, applied on top of the initial scaling that fits the image into the cropper. | `number` | `semiGlobalDefault("Cropper", "zoom")` |
+| rotate | Image rotation angle. It is one-way: the component never changes it. | `number` | `semiGlobalDefault("Cropper", "rotate")` |
+| showResizeBox | Whether to show the resize handles on the corners of the crop box. | `boolean` | `semiDefault("Cropper", "showResizeBox", true)` |
+| cropperBoxStyle | Style of the crop box. | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
+| cropperBoxCls | Class name of the crop box. | `string` | `semiGlobalDefault("Cropper", "cropperBoxCls")` |
+| fill | Fill color of the parts of the result that are not the image. | `string` | `semiDefault("Cropper", "fill", "rgba(0, 0, 0, 0)")` |
+| maxZoom | Maximum zoom factor. | `number` | `semiDefault("Cropper", "maxZoom", 3)` |
+| minZoom | Minimum zoom factor. | `number` | `semiDefault("Cropper", "minZoom", 0.1)` |
+| zoomStep | Zoom change per wheel step. | `number` | `semiDefault("Cropper", "zoomStep", 0.1)` |
+| preview | Function returning the DOM element that mirrors the cropped area live. It may return null while the element is not mounted yet. | <ApiType detail={"(() => HTMLElement \u007c null \u007c undefined)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event       | Description                                                     | Callback parameters |
+| ----------- | --------------------------------------------------------------- | ------------------- |
+| update:zoom | Emitted by wheel zooming, for v-model:zoom.                     | `[zoom: number]`    |
+| zoomChange  | Emitted by wheel zooming, with the same payload as update:zoom. | `[zoom: number]`    |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name             | Description                                                                                                                                           | Type                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| getCropperCanvas | Draws the area inside the crop box at the image's own resolution onto a new canvas and returns it. It throws when called before the image has loaded. | <ApiType detail={"() => HTMLCanvasElement"}>Type</ApiType> |

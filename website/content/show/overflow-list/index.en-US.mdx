@@ -1,0 +1,121 @@
+---
+order: 77
+title: OverflowList
+icon: doc-overflowList
+brief: OverflowList is a behavior component used to take list of items and display as many items as can fit inside itself. Overflowed items that do not fit are collected and rendered by callback function. The visible items will be recomputed when a resize is detected.
+---
+
+import OverflowListReactApi from './api/overflow-list.react.en-US.mdx';
+import OverflowListVueApi from './api/overflow-list.vue.en-US.mdx';
+import OverflowListSolidApi from './api/overflow-list.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { OverflowList } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { OverflowList } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Collapse Mode - Simple
+
+You could use `renderMode="collapse"` (default) to render items.
+
+<Framework only="vue">
+
+`items` holds data only, never nodes. Render each visible item with the `#item="{ item, index }"` slot and the overflowing items with the `#overflow="{ items, position }"` slot; in collapse mode it is called once, and `items` are the items that do not fit.
+
+</Framework>
+
+<Framework only="solid">
+
+`items` holds data only, never nodes. Each visible item is rendered by the element `visibleItemRenderer` returns; overflowing items are rendered by `overflowRenderer`, and collapse mode renders one overflow node whose argument is the items that do not fit.
+
+</Framework>
+
+<Demo id="collapse" />
+
+### Collapse Mode - Direction
+
+`collapse` mode supports two `collapseFrom` directions: `start` and `end` (default).
+
+<Demo id="collapse-from" />
+
+### Collapse Mode - Visible
+
+`collapse` mode supports to set up minimum visible items that will not be collected.
+
+<Demo id="min-visible-items" />
+
+### Scroll Mode
+
+You could use `renderMode="scroll"` for a scrollable list.  
+If you need certain element in the list to scrollIntoView, use ``document.querySelector(`.item-cls[data-scrollkey="${key}"]`` to select to corresponding DOM.
+
+<Framework only="vue">
+
+In scroll mode `#overflow` is called once per side, with `position` set to `start` or `end` and `items` being the items scrolled out on that side.
+
+</Framework>
+
+<Framework only="solid">
+
+In scroll mode `overflowRenderer` receives `[start, end]`, the items scrolled out before and after the visible ones, and returns one node for each side.
+
+</Framework>
+
+<Demo id="scroll" />
+
+## API Reference
+
+<Framework only="react">
+
+<OverflowListReactApi />
+
+Other native attributes such as `aria-*`, `id`, `data-*` and `onClick` land on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<OverflowListVueApi />
+
+`class`, `style` and native attributes such as `aria-*` land on the root element through attrs; pass the scroll wrapper's class, style and other attributes with `wrapperClassName`, `wrapperStyle` and `wrapperProps`.
+
+</Framework>
+
+<Framework only="solid">
+
+<OverflowListSolidApi />
+
+`class`, `style`, `ref` and native attributes such as `aria-*` land on the root element; pass the scroll wrapper's class, style and other attributes with `wrapperClassName`, `wrapperStyle` and `wrapperProps`.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- When `aria-label` or `aria-labelledby` is passed, the root element gets `role="group"` so the group of items has a readable name; without them the root has no role

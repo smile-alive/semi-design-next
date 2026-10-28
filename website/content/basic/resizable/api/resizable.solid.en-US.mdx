@@ -1,0 +1,31 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| boundElement | Element that bounds the size: 'parent', 'window' or an HTMLElement. | `'parent' \| 'window' \| HTMLElement` | - |
+| boundsByDirection | Whether bounds are computed by drag direction. When true, dragging from a left or top handle limits the size by the distance from the side that stays put to the opposite edge of the bound element. | `boolean` | - |
+| defaultSize | Initial width and height, as a number or a string (px/vw/vh/%). | `Size` | - |
+| enable | Directions that can be resized. A direction not set to false is enabled; false renders no handles. | `Enable \| false` | <ApiType detail={"{\n top: true,\n right: true,\n bottom: true,\n left: true,\n topRight: true,\n bottomRight: true,\n bottomLeft: true,\n topLeft: true,\n }"}>Type</ApiType> |
+| grid | Increment that resizing snaps to. | `[number, number]` | `[1, 1]` |
+| handleClass | Class names of the handle in each direction. | `HandleClassName` | - |
+| handleStyle | Styles of the handle in each direction, as objects or strings. | `HandleStyle` | - |
+| handleWrapperClass | Class name of the element that wraps all handles. | `string` | - |
+| handleWrapperStyle | Style of the element that wraps all handles. | `JSX.CSSProperties \| string` | - |
+| lockAspectRatio | Locks the aspect ratio: true keeps the initial one, a number is the width to height ratio. | `boolean \| number` | `false` |
+| lockAspectRatioExtraHeight | Extra height in pixels (such as padding) left out of the ratio when the aspect ratio is locked. | `number` | `0` |
+| lockAspectRatioExtraWidth | Extra width in pixels (such as padding) left out of the ratio when the aspect ratio is locked. | `number` | `0` |
+| maxHeight | Maximum height. | `string \| number` | - |
+| maxWidth | Maximum width. | `string \| number` | - |
+| minHeight | Minimum height. | `string \| number` | - |
+| minWidth | Minimum width. | `string \| number` | - |
+| onChange | Called when a drag or arrow key changes the size, with the new size, the event and the direction. | `ResizeCallback` | - |
+| onResizeEnd | Called when resizing ends, with the final size, the event and the direction. | `ResizeCallback` | - |
+| onResizeStart | Called when resizing starts. Return false to cancel the resize. | `ResizeStartCallback` | - |
+| ratio | Ratio of pointer movement to size change; pass [width, height] for per-axis ratios. Arrow keys always change the size by 10px, regardless of ratio and scale. | `number \| [number, number]` | `1` |
+| renderHandle | Content of the handle in each enabled direction, in place of the default grip icon. It is called once per enabled direction, with that handle's direction. | <ApiType detail={"(direction: Direction) => JSX.Element"}>Type</ApiType> | - |
+| scale | Scale applied to the element from outside, used to correct the pointer movement. | `number` | `1` |
+| size | Controlled size, applied per axis: an axis left unset follows the drag. Write the new size back in onChange while dragging. | `Size` | - |
+| snap | Absolute pixel values that resizing snaps to. Both x and y are optional. | `{ x?: number[]; y?: number[]; }` | - |
+| snapGap | Minimum gap required to move to the next snap target. | `number` | `0` |

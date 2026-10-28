@@ -1,0 +1,616 @@
+---
+title: TreeSelect
+order: 52
+icon: doc-treeselect
+brief: TreeSelector is used for structured display & selection of multi-level tree data, such as displaying a list of folders and files, displaying a list of organizational structure members, and so on.
+---
+
+import TreeSelectReactApi from './api/tree-select.react.en-US.mdx';
+import TreeSelectVueApi from './api/tree-select.vue.en-US.mdx';
+import TreeSelectSolidApi from './api/tree-select.solid.en-US.mdx';
+
+## When to Use
+
+When the options to select is in tree structure, you could use TreeSelect, e.g. department hierarchy, subject system, category directory and etc.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { TreeSelect } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { TreeSelect } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { TreeSelect } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+By default, TreeSelect is in single select mode and each item is selectable.
+
+<Demo id="basic" />
+
+### Multi-choice
+
+You could use `multiple` to set mode to multi-choice. When all child items are selected, the parent item will be selected.
+
+<Framework only="react">
+
+Use `leafOnly` if you prefer to render leaf nodes only and the corresponding params for onChange will also be leaf nodes values.
+
+</Framework>
+
+<Framework only="vue">
+
+In multiple mode `v-model` and `defaultValue` are arrays. Use `leafOnly` if you prefer to render leaf nodes only, and the value of `v-model` and of the `change` event will also hold leaf node values only.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `leafOnly` if you prefer to render leaf nodes only and the corresponding params for onChange will also be leaf nodes values.
+
+</Framework>
+
+<Demo id="multiple" />
+
+### Limit Tags Number
+
+In the multi-selection scenario, `maxTagCount` can be used to limit the number of tags displayed, and the excess part will be displayed in the form of +N.  
+Use `showRestTagsPopover` (>= v2.22.0) to set whether hover +N displays Popover after exceeding `maxTagCount`, the default is `false`. Also, popovers can be configured in the `restTagsPopoverProps` property.
+
+<Demo id="max-tag-count" />
+
+### Searchable
+
+Use `filterTreeNode` to support search input. By default it searches the `label` property of the data. You can use `treeNodeFilterProp` to set another property to search or pass in a function to `filterTreeNode` to customize search behavior.
+
+You could also use `showFilteredOnly` if you prefer to display filtered results only.
+
+<Framework only="react">
+
+If you want to get specific information about the search results, you can use the `onSearch` callback function. See the API list for the specific parameters of the function.
+
+</Framework>
+
+<Framework only="vue">
+
+If you want to get specific information about the search results, listen to the `search` event. See the API list for its parameters.
+
+</Framework>
+
+<Framework only="solid">
+
+If you want to get specific information about the search results, you can use the `onSearch` callback function. See the API list for the specific parameters of the function.
+
+</Framework>
+
+<Demo id="searchable" />
+
+### Remote Search
+
+<Framework only="react">
+
+By setting the `remote` property, you can enable remote search. When enabled, local filtering is skipped on input, only the `onSearch` callback is triggered, allowing users to handle remote data fetching and update `treeData`.
+
+</Framework>
+
+<Framework only="vue">
+
+By setting the `remote` property, you can enable remote search. When enabled, local filtering is skipped on input and only the `search` event is emitted, allowing users to handle remote data fetching and update `treeData` (only a new array updates it).
+
+</Framework>
+
+<Framework only="solid">
+
+By setting the `remote` property, you can enable remote search. When enabled, local filtering is skipped on input, only the `onSearch` callback is triggered, allowing users to handle remote data fetching and update `treeData`.
+
+</Framework>
+
+<Demo id="remote-search" />
+
+### Search Box Position
+
+You can use `searchPosition` to set the position of the search box, optional: `dropdown` (default), `trigger`.
+
+When the input box is at trigger:
+
+1. The placeholder of the search box is controlled by `placeholder`;
+2. When `showClear=true`, click the clear button of the input box, the inputValue and value will be cleared at the same time.
+
+<Demo id="search-position" />
+
+### Wrap tags in trigger (triggerTagWrap)
+
+In **multiple + searchable + searchPosition="trigger"** mode, if there are many selected items or the input is long, the trigger may prefer to keep a single-line layout by default.
+
+Turn on `triggerTagWrap` to allow selected tags to wrap into multiple lines within the trigger.
+
+<Demo id="trigger-tag-wrap" />
+
+### Size
+
+You can set the size by `size`, one of: 'small'、'default'、'large'
+
+<Demo id="size" />
+
+### Default Expand All
+
+Both `defaultExpandAll` and `expandAll` can set the default expanded/collapsed state of `TreeSelect`. The difference between the two is that `defaultExpandAll` only takes effect during initialization, while `expandAll` will take effect not only during initialization, but also when the data (`treeData`) is dynamically updated.
+
+In the demo below, after `TreeData` is updated, `defaultExpandAll` becomes invalid, and `expandAll` still takes effect.
+
+<Demo id="expand-all" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Disable Strictly
+
+You can use `disableStrictly` to enable strict disabling. After enabling strict disabling, when the node is disabled, the selected state cannot be changed through the relationship between the child or the parent.
+
+Take the following demo as an example, the node "China" is strictly disabled. Therefore, when we change the selected state of its parent node "Asia", it will not affect the selected state of the node "China".
+
+<Demo id="disable-strictly" />
+
+### Controlled Component
+
+<Framework only="react">
+
+You can use `value` along with `onChange` property if you want to use TreeSelect as a controlled component.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the selected value with `v-model` to use TreeSelect as a controlled component; changes are written back through `update:modelValue`. You can also pass `modelValue` and listen to the `change` event.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `value` along with `onChange` property if you want to use TreeSelect as a controlled component.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Checked RelationShip
+
+Version: >= 2.5.0
+
+In multiple, `checkRelation` can be used to set the type of node selection relationship, optional: 'related' (default), 'unRelated'. When the selection relationship is 'unRelated', it means that selections between nodes do not affect each other.
+
+<Demo id="check-relation" />
+
+### Controlled Expansion with Search
+
+<Framework only="react">
+
+When `expandedKeys` is passed in, it is a controlled expansion component, which can be used with `onExpand`. When the expansion is controlled, if the `filterTreeNode` is turned on and the search is performed, the node will no longer be automatically expanded. At this time, the expansion of the node is completely controlled by the `expandedKeys`. You can use the parameter `filteredExpandedKeys` (version: >= 2.6.0) of `onSearch` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Framework only="vue">
+
+Bind the expanded nodes with `v-model:expandedKeys` to make the expansion controlled; you can also pass `expandedKeys` and listen to the `expand` event. When the expansion is controlled, if the `filterTreeNode` is turned on and the search is performed, the node will no longer be automatically expanded. At this time, the expansion of the node is completely controlled by the `expandedKeys`. You can use the parameter `filteredExpandedKeys` of the `search` event to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Framework only="solid">
+
+When `expandedKeys` is passed in, it is a controlled expansion component, which can be used with `onExpand`. When the expansion is controlled, if the `filterTreeNode` is turned on and the search is performed, the node will no longer be automatically expanded. At this time, the expansion of the node is completely controlled by the `expandedKeys`. You can use the parameter `filteredExpandedKeys` of `onSearch` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Demo id="expanded-keys-search" />
+
+### Virtualized TreeSelect
+
+If you need to render large sets of tree structured data, you could use virtualized tree. In virtualized mode, animation / motion is disabled for better performance.
+
+The property `virtualize` is an object consisting of the following values:
+
+- height: Height of the dropDown, If passed in as a string, computed height should not be zero for render purpose, in other words, parent node should have offsetHeight. Pass in a number recommended.
+- width: Width of the dropDown.
+- itemSize: Height for each line of treeNode, required
+
+If tree is searchable, you could also turn on `showFilteredOnly` to reduce time of rendering for results.
+
+<Demo id="virtualize" />
+
+### Dynamic Update of Data
+
+<Demo id="dynamic-data" />
+
+### Load Data Asynchronously
+
+You could use `loadData` to load treeData asynchronously on node expansion. Notice `isLeaf` is required to mark node as leaf in treeData.
+
+<Demo id="load-data" />
+
+### Custom Trigger
+
+<Framework only="react">
+
+If the default trigger style cannot meet your needs, you can use `triggerRender` to customize the display of the select box.
+
+The triggerRender input is as follows:
+
+</Framework>
+
+<Framework only="vue">
+
+If the default trigger style cannot meet your needs, you can use the `#trigger` slot to customize the display of the select box.
+
+The slot parameters are as follows, typed as `TreeSelectTriggerSlotProps`:
+
+```typescript
+interface TreeSelectTriggerSlotProps {
+    componentProps: TreeSelectProps; // TreeSelect props
+    disabled: boolean; // disabled status
+    value: TreeNodeData[]; // data of the selected node
+    inputValue: string; // value of the input box
+    placeholder?: string; // placeholder
+    // Clears the value; pass the click event when bound to a control inside
+    // the trigger, so that the click does not also open the dropdown
+    onClear: (event?: MouseEvent) => void;
+    // Called when deleting a single item, with the key of the item
+    onRemove: (key: string) => void;
+    // Starts the search when the value of your own Input is updated;
+    // filterTreeNode must be non-false and searchPosition must be 'trigger'
+    onSearch: (inputValue: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="react">
+
+```typescript
+interface triggerRenderProps {
+    componentProps: TreeSelectProps;// TreeSelect props
+    disabled: boolean;              // disabled status
+    value: TreeNodeData[];              // data of the selected node
+    inputValue: string;             // value of the input box
+    onClear: e => void;             // onClear function
+    placeholder: string;            // placeholder
+    /* The function called when deleting a single item,
+     *   with the key of the item as an input parameter,
+     *  supported from version v2.32.0
+     */
+    onRemove: key => void;
+    /* It is used to start the search when the value of the Input box is updated.
+     * When you update the value of the Input component customized by triggerRender,
+     * you should call this function to synchronize the state with the TreeSelect
+     * internally. you need to set the filterTreeNode parameter to non-false when use it,
+     * and set searchPosition to 'trigger'. It is supported from v2.32.0
+     */
+    onSearch: inputValue => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+If the default trigger style cannot meet your needs, you can use `triggerRender` to customize the display of the select box. The input is a live object: read its fields in the returned JSX instead of destructuring it.
+
+The triggerRender input is as follows:
+
+```typescript
+interface TriggerRenderProps {
+    componentProps: Omit<TreeSelectProps, 'ref'>; // all props passed to TreeSelect
+    disabled: boolean; // disabled status
+    value: TreeNodeData[]; // data of the selected node
+    inputValue: string; // value of the input box
+    placeholder?: string; // placeholder
+    // Clears the value; pass the click event when bound to a control inside
+    // the trigger, so that the click does not also open the dropdown
+    onClear: (e?: MouseEvent) => void;
+    // Called when deleting a single item, with the key of the item
+    onRemove: (key: string) => void;
+    // Starts the search when the value of your own Input is updated;
+    // filterTreeNode must be non-false and searchPosition must be 'trigger'
+    onSearch: (inputValue: string) => void;
+}
+```
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+### Custom Rendering Selected Item
+
+<Framework only="react">
+
+You can use renderSelectedItem to customize the rendering structure of the selected item in the selection box.
+
+- In not multiple mode: `renderSelectedItem(treeNode: TreeNodeData) => content: ReactNode`
+- In multiple mode: `renderSelectedItem(treeNode: TreeNodeData, { index:number, onClose:function }) => { isRenderInTag: bool, content: ReactNode }`
+    - When isRenderInTag is true, content wraps are automatically rendered in the Tag (with background color and close button)
+    - When isRenderInTag is false, the returned content will be rendered directly
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#selectedItem` and `#tag` slots to customize the rendering structure of the selected items in the selection box. Both take the same parameters, typed as `TreeSelectSelectedItemSlotProps`: `item` (the node data), `index`, `disabled` and `onClose` (removes the tag, or clears the selection in single mode).
+
+- In single mode the content of `#selectedItem` is what the select box shows; empty content shows the `placeholder`
+- In multiple mode the content of `#selectedItem` is rendered inside the built-in Tag (with background color and close button); `#tag` replaces the whole Tag and takes precedence over `#selectedItem`, so bind `onClose` to your own Tag when it needs a close button
+- In multiple mode, empty content from either slot leaves the tag out
+
+</Framework>
+
+<Framework only="solid">
+
+You can use renderSelectedItem to customize the rendering structure of the selected item in the selection box.
+
+- In not multiple mode: `renderSelectedItem(treeNode: TreeNodeData) => content: JSX.Element`
+- In multiple mode: `renderSelectedItem(treeNode: TreeNodeData, { index: number | string, onClose: (tagContent, e?) => void }) => { isRenderInTag: boolean, content: JSX.Element }`
+    - When isRenderInTag is true, content wraps are automatically rendered in the Tag (with background color and close button)
+    - When isRenderInTag is false, the returned content will be rendered directly
+
+</Framework>
+
+<Demo id="render-selected-item" />
+
+## API Reference
+
+### TreeSelect
+
+<Framework only="react">
+
+<TreeSelectReactApi />
+
+`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox: the trigger when it is not searchable, or the search input when the search box is in the trigger. Other native attributes (such as `id`, `data-*` and `onClick`) land on the trigger element.
+
+</Framework>
+
+<Framework only="vue">
+
+<TreeSelectVueApi />
+
+The Vue TreeSelect has no `className` property: undeclared attributes such as `class`, `style` and `data-*` land on the root element, while `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox (see [ARIA](#aria)). `focus`, `blur`, `change`, `select` and `keydown` are events of the component and shadow the native events of the same name on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<TreeSelectSolidApi />
+
+`class`, `style` and native attributes such as `id` and `data-*` land on the root element (the trigger). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox: the root element when the TreeSelect is not searchable, or the search input when it is in the trigger. `onFocus`, `onBlur`, `onChange` and `onSelect` are the component's own callbacks and are not bound to the root element as native events.
+
+</Framework>
+
+### TreeNodeData
+
+<Framework only="react">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required. In this case, the value property in `onChange`, `value`, `defaultValue` and `onChangeWithObject` will point to key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+</Framework>
+
+<Framework only="vue">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required. In this case, the value property in `v-model`, `defaultValue`, the `change` event and `changeWithObject` will point to key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+</Framework>
+
+<Framework only="react">
+
+| Properties | Instructions                                | type              | Default |
+| ---------- | ------------------------------------------- | ----------------- | ------- |
+| value      | Value                                       | string\|number    | -       |
+| label      | Displayed label                             | string\|ReactNode | -       |
+| icon       | Icon                                        | ReactNode         | -       |
+| disabled   | Disabled, supported in multiple select mode | boolean           | false   |
+| key        | Required and must be unique                 | string            | -       |
+| isLeaf     | Whether it is a leaf node                   | boolean           | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties | Instructions                                              | type           | Default |
+| ---------- | --------------------------------------------------------- | -------------- | ------- |
+| value      | Value                                                     | string\|number | -       |
+| label      | Displayed label; use the `#label` slot for custom content | string\|number | -       |
+| disabled   | Disabled, supported in multiple select mode               | boolean        | false   |
+| key        | Required and must be unique                               | string         | -       |
+| isLeaf     | Whether it is a leaf node                                 | boolean        | -       |
+| children   | Child nodes                                               | TreeNodeData[] | -       |
+
+The icon of a node comes from the `#icon` slot and is not declared in the data.
+
+</Framework>
+
+<Framework only="solid">
+
+> **The key of each `TreeNodeData` is required and must be unique.** `label` may repeat. `value` is optional. In that case the value read by onChange, value, defaultValue and onChangeWithObject becomes the key. To keep the behavior predictable, either leave every `value` in treeData unset, or set every one of them and keep them unique; mixing the two is not recommended.
+
+| Properties | Instructions                                         | type           | Default |
+| ---------- | ---------------------------------------------------- | -------------- | ------- |
+| value      | Value of the node                                    | string\|number | -       |
+| label      | Text displayed; use `renderLabel` for custom content | string\|number | -       |
+| disabled   | Whether the node is disabled, in multi-choice        | boolean        | false   |
+| key        | required and must be unique                          | string         | -       |
+| isLeaf     | Whether the node is a leaf node                      | boolean        | -       |
+| children   | Child nodes                                          | TreeNodeData[] | -       |
+
+The icon of a node comes from the TreeSelect `icon` prop and is not declared in the data: an element gives every node the same icon, and a function is called once per row with the row's props (including its node data).
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+Some internal methods provided by TreeSelect can be accessed through ref. Their descriptions are in the TreeSelect API reference.
+
+</Framework>
+
+<Framework only="vue">
+
+TreeSelect exposes the `search(value)` and `close()` methods through a template ref, typed as `TreeSelectHandle`. `search` searches as if the value were typed, opening the dropdown first, and filterTreeNode must be set; `close` closes the dropdown. If you need to customize the search box externally, call `search` when the value of the custom search box changes to change the filtering results.
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { TreeSelect } from '@fibrae/semi-ui-vue';
+    import type { TreeSelectHandle } from '@fibrae/semi-ui-vue';
+
+    const treeSelect = useTemplateRef<TreeSelectHandle>('treeSelect');
+    const search = (value: string) => treeSelect.value?.search(value);
+</script>
+
+<template>
+    <TreeSelect ref="treeSelect" filterTreeNode :treeData="treeData" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The `ref` of TreeSelect gets the root element (the trigger), which carries the methods. Its type is `TreeSelectElement` (that is, `HTMLDivElement & TreeSelectHandle`).
+
+| Name                  | Description                                                                                                                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| search(value: string) | To customize the search box outside, call this method whenever its value changes to update the filtered result. It searches as if the value were typed and opens the dropdown first; it needs `filterTreeNode` |
+| close()               | Closes the dropdown                                                                                                                                                                                            |
+
+```tsx
+import { TreeSelect, type TreeSelectElement } from '@fibrae/semi-ui-solid';
+
+function App() {
+    let treeSelect: TreeSelectElement | undefined;
+    return (
+        <>
+            <TreeSelect ref={treeSelect} filterTreeNode />
+            <button onClick={() => treeSelect?.close()}>Close</button>
+        </>
+    );
+}
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Following the ARIA 1.2 combobox pattern, exactly one element is the combobox. Its name comes from, in order of priority: `aria-labelledby`, `aria-label`, the rendered insetLabel (`#insetLabel` in Vue; without `insetLabelId` the component generates the id; with a prefix the insetLabel is not rendered and does not name it), and otherwise the name in the locale:
+    - Without search, or with `searchPosition="dropdown"`, the trigger is a select-only combobox. The search input in the dropdown stays a text box with `aria-controls`, `aria-autocomplete` and `aria-activedescendant`
+    - With `searchPosition="trigger"`, the search input is the combobox and the only Tab stop, with `aria-autocomplete="list"`; the trigger has no role. In single mode the input is empty until the user types, so the selected text is linked to it as its description (`aria-describedby`). Clicking anywhere on the trigger moves focus to the input;
+- TreeSelect allows users to set `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-labelledby`, `aria-required`, in addition, Form will automatically set these properties for Form.TreeSelect;
+- The `role="tree"` list in the dropdown uses the same name source as the combobox: the same `aria-labelledby` ids, the same `aria-label` or the same insetLabel; with none of them it takes the name in the locale, like the combobox;
+
+<Framework only="react">
+
+- The nodes in the dropdown are the same as in [Tree](/en-US/react/navigation/tree#accessibility): `role="treeitem"` with `aria-level`, `aria-setsize`, `aria-posinset` and `aria-disabled`, and `aria-expanded` on nodes that can expand; a single-choice TreeSelect uses `aria-selected`, a multi-choice one uses `aria-checked` (`mixed` when half checked);
+
+</Framework>
+
+<Framework only="vue">
+
+- `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox: the root element without search, the native `input` of the search box in a single-choice trigger search, and the tag input in a multi-choice trigger search. With `aria-labelledby` set, the combobox no longer adds the default `aria-label`; with only `#insetLabel`, the combobox's `aria-labelledby` points at it;
+- The nodes in the dropdown are the same as in [Tree](/en-US/react/navigation/tree#accessibility): `role="treeitem"` with `aria-level`, `aria-setsize`, `aria-posinset` and `aria-disabled`, and `aria-expanded` on nodes that can expand; a single-choice TreeSelect uses `aria-selected`, a multi-choice one uses `aria-checked` (`mixed` when half checked). The content of `#fullLabel` is wrapped in an `li` carrying the `id`, `role="treeitem"` and these states;
+
+</Framework>
+
+<Framework only="solid">
+
+- Nodes in the dropdown follow the same pattern as [Tree](/en-US/react/navigation/tree#accessibility): `role="treeitem"`, with `aria-level`, `aria-setsize`, `aria-posinset` and `aria-disabled`; expandable nodes carry `aria-expanded`. Single-choice uses `aria-selected`, multi-choice uses `aria-checked` (`mixed` when partially checked).
+
+</Framework>
+
+- The expand arrow and the checkbox in front of a node only picture its state: they are hidden from screen readers and take no focus.
+
+### Keyboard Interaction
+
+TreeSelect follows the [WAI-ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) pattern with a tree popup: focus always stays on the trigger or the search input, `aria-activedescendant` points at the current node, and the current node shows the focus ring. There is no current node when the dropdown opens.
+
+- While the dropdown is closed: `ArrowDown`, `ArrowUp`, `Enter` and `Space` open it; `Home` and `End` open it and move to the first or last visible node
+- `ArrowDown`, `ArrowUp`: move to the next or previous visible node; the first `ArrowDown` moves to the first node; `Home`, `End`: move to the first or last visible node
+- `ArrowRight`: expand a collapsed node; on an expanded node, move to its first child (swapped with `ArrowLeft` in RTL)
+- `ArrowLeft`: collapse an expanded node; otherwise move to the parent
+- `Enter`, `Space`: select the current node, or check and uncheck it in a multi-choice TreeSelect; disabled nodes do not respond
+- Typing characters: while the dropdown is open, move to the next visible node after the current one whose label starts with the typed text; characters typed in quick succession form one search string. A closed dropdown ignores them
+- `Esc`: close the dropdown
+
+While focus is in a search input, only `ArrowDown`, `ArrowUp` and `Enter` move and select; the other keys (including characters, `Space`, `Home`, `End`, `ArrowLeft` and `ArrowRight`) edit the text.
+
+<Framework only="react">
+
+The props passed to a custom `searchRender` include these ARIA attributes (`aria-activedescendant`, `aria-controls`, `aria-autocomplete` and the name; on the trigger, the whole set of combobox attributes including `role` and `aria-expanded`); spread them onto the input, or screen readers do not announce the current node. Put the `ref` on the input too (a Semi `Input`, a native input or a textarea); it lets a click on the selected text inside the trigger move focus to it.
+
+</Framework>
+
+<Framework only="vue">
+
+The parameters of the `#search` slot include these ARIA attributes (`aria-activedescendant`, `aria-controls`, `aria-autocomplete` and the name; on the trigger, the whole set of combobox attributes including `role` and `aria-expanded`); bind the whole parameter object onto the input (a Semi `Input`) with `v-bind`, or screen readers do not announce the current node. `inputRef` must be bound to the input too; it lets a click on the selected text inside the trigger move focus to it.
+
+</Framework>
+
+With `showClear`, a selected value or search text, and no `disabled`, the trigger renders a clear button. It is a native `button` named "Clear TreeSelect value" from the locale, shown on hover, while the dropdown is open, or while focus is inside the TreeSelect. From the trigger or the search input, `Tab` moves to the clear button; `Enter` or `Space` clears, as a mouse click does, and the focus goes back to the trigger or the search input. In multiple mode `Backspace` in the search input also removes tags.
+
+<Framework only="solid">
+
+The input of a custom `searchRender` is a live object that includes these ARIA attributes (`aria-activedescendant`, `aria-controls`, `aria-autocomplete` and the name; on the trigger, the whole set of combobox attributes including `role` and `aria-expanded`). Spread them onto the input, otherwise screen readers will not announce the current node. Its `ref` is a callback that must also go on the input (a Solid `Input`, a native input or a textarea), so that a click on a selected item inside the trigger can hand focus to it.
+
+</Framework>
+
+Demo:
+
+<Framework only="react">
+
+```typescript
+    <TreeSelect
+        /* other attributes */
+        aria-label='example treeSelect'
+    />
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<TreeSelect aria-label="example treeSelect" :treeData="treeData" />
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<TreeSelect aria-label="example treeSelect" treeData={treeData} />
+```
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

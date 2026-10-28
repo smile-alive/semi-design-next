@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| buttonSize | Button size when type is button: small, middle or large. | `RadioGroupButtonSize` | `"middle"` |
+| defaultValue | The value selected by default when uncontrolled. | `string \| number \| boolean` | - |
+| direction | Layout direction of the radios: horizontal or vertical. Not supported when type is button. | `'horizontal' \| 'vertical'` | `"horizontal"` |
+| disabled | Whether the whole group is disabled. | `boolean` | `false` |
+| mode | When set to advanced, a checked radio can be unchecked by clicking it or pressing Space. | `RadioMode` | `""` |
+| name | The name of every native input in the group. A unique value is generated per group when omitted. | `string` | - |
+| onChange | Called when the selected value changes. event.target is `{ checked, value, name, disabled }`. | <ApiType detail={"(event: RadioChangeEvent) => void"}>Type</ApiType> | - |
+| options | Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClassName, extraId }`, where label and extra hold only a string or number; other content goes through renderLabel and renderExtra. Children are ignored when set. | `Options` | - |
+| prefixCls | CSS class name prefix. | `string` | - |
+| renderExtra | Renders the extra text of an options item, given the item and its index. A button radio has no extra text and never calls it. | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
+| renderLabel | Renders the label of an options item, given the item and its index. | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
+| type | Style type of every Radio in the group: default, button, card or pureCard. | `RadioType` | `"default"` |
+| value | The selected value, for controlled use. | `string \| number \| boolean` | - |

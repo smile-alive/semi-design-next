@@ -1,0 +1,39 @@
+{
+    "lottie": {
+        "source": "packages/semi-ui-react/src/lottie/index.tsx",
+        "props": {
+            "className": {
+                "zh-CN": "容器 `div` 的类名，与组件自身的类名合并。",
+                "en-US": "Class name of the container `div`, merged with the component's own class name."
+            },
+            "getAnimationInstance": {
+                "zh-CN": "每创建一次动画（包括每次重新加载）调用一次，参数为当前动画的 AnimationItem。",
+                "en-US": "Called once per animation created, including every reload, with the AnimationItem of the animation."
+            },
+            "getLottie": {
+                "zh-CN": "lottie-web 加载完成后，每次挂载调用一次，参数为全局 lottie。",
+                "en-US": "Called once per mount after lottie-web has loaded, with the global lottie."
+            },
+            "height": {
+                "zh-CN": "容器高度，需带单位，如 300px。",
+                "en-US": "Container height, with a unit such as 300px."
+            },
+            "params": {
+                "zh-CN": "传给 lottie-web `lottie.loadAnimation` 的参数。内容与上次加载时深比较不同才会重新加载，每次渲染传入内容相同的新对象不会重新加载；原地修改对象不会触发。未设置的 `renderer` 为 `svg`，`loop` 为 `true`，系统开启减少动效时 `autoplay` 为 `false`。",
+                "en-US": "Options passed to lottie-web's `lottie.loadAnimation`. It reloads only when the content differs from the last load, compared deeply: passing a new object with the same content on each render does not reload, and mutating the object in place does not either. Unset `renderer` is `svg`, `loop` is `true`, and `autoplay` is `false` when the system asks for reduced motion."
+            },
+            "ref": {
+                "zh-CN": "容器 `div` 的引用；设置了 `params.container` 时组件不渲染任何内容，引用为 `null`。",
+                "en-US": "Reference to the container `div`; `null` when `params.container` is set, because nothing is rendered then."
+            },
+            "style": {
+                "zh-CN": "容器 `div` 的样式。`width` 与 `height` 属性写在其上，同名样式以 `style` 为准。",
+                "en-US": "Style of the container `div`. The `width` and `height` props are applied on it, and `style` takes precedence for the same property."
+            },
+            "width": {
+                "zh-CN": "容器宽度，需带单位，如 300px。",
+                "en-US": "Container width, with a unit such as 300px."
+            }
+        }
+    }
+}

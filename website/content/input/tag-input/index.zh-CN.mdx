@@ -1,0 +1,291 @@
+---
+title: 标签输入框
+order: 49
+icon: doc-tagInput
+brief: 标签输入框能够将输入的内容生成标签。
+---
+
+import TagInputReactApi from './api/tag-input.react.zh-CN.mdx';
+import TagInputVueApi from './api/tag-input.vue.zh-CN.mdx';
+import TagInputSolidApi from './api/tag-input.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { TagInput } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { TagInput } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本演示
+
+敲击回车键后，输入内容将成为标签。标签内容如果为空串或者纯空格时，则会被过滤。
+
+<Demo id="basic" />
+
+### 批量添加
+
+可以使用 `separator` 设置分隔符，来实现批量输入，它的默认值为英文逗号。支持多个分隔符以 string[] 格式传入。
+
+<Demo id="separator" />
+
+### 批量删除
+
+可使用 `showClear` 设置是否支持一键删除所有标签和输入框内容。
+
+<Demo id="show-clear" />
+
+### 禁用
+
+<Demo id="disabled" />
+
+### 尺寸大小
+
+通过 `size` 控制标签输入框的大小尺寸，可选: `small` 、 `default` 、 `large`。
+
+<Demo id="size" />
+
+### 不同校验状态样式
+
+可以使用 `validateStatus` 设置不同校验状态的样式，它仅影响背景颜色等样式表现，可选值: `default` 、 `warning` 、 `error`。
+
+<Demo id="validate-status" />
+
+### 前缀 / 后缀
+
+<Framework only="react">
+
+可以通过 `prefix` 传入输入框前缀，通过 `suffix` 传入输入框后缀，可以为文本或者 ReactNode。  
+当 `prefix`、`suffix` 传入的内容为 string 或者 Icon 时，会自动带上左右间隔；若为自定义 ReactNode，则左右间隔为 0，如需可以在你传入的 ReactNode中自行设置。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#prefix` 插槽传入输入框前缀，通过 `#suffix` 插槽传入输入框后缀，可以为文本或者图标等节点。  
+当插槽内容为纯文本或者 Icon 时，会自动带上左右间隔；若为自定义节点，则左右间隔为 0，如需可以在你传入的节点中自行设置。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `prefix` 传入输入框前缀，通过 `suffix` 传入输入框后缀，可以为文本或者 JSX 元素。  
+当 `prefix`、`suffix` 传入的内容为文本或者 Icon 时，会自动带上左右间隔；若为自定义 JSX 元素，则左右间隔为 0，如需可以在你传入的元素中自行设置。
+
+</Framework>
+
+<Demo id="prefix-suffix" />
+
+### 失焦后自动创建标签
+
+可使用 `addOnBlur`，设置是否在 blur 事件触发时，将当前 input 的值自动创建成 tag。
+
+<Demo id="add-on-blur" />
+
+### 过滤重复标签
+
+可使用 `allowDuplicates`，设置是否允许创建相同 tag，默认为 true。
+
+<Demo id="allow-duplicates" />
+
+### 输入限制
+
+<Framework only="react">
+
+可使用 `max` 限制标签数量，添加后超出的部分不会成为标签，并且触发 `onExceed()` 回调。
+
+可使用 `maxLength` 限制单个标签的最大长度，超出后将不允许再输入，并且触发 `onInputExceed()` 回调。
+
+</Framework>
+
+<Framework only="vue">
+
+可使用 `max` 限制标签数量，添加后超出的部分不会成为标签，并且触发 `exceed` 事件。
+
+可使用 `maxLength` 限制单个标签的最大长度，超出后将不允许再输入，并且触发 `inputExceed` 事件。
+
+</Framework>
+
+<Framework only="solid">
+
+可使用 `max` 限制标签数量，添加后超出的部分不会成为标签，并且触发 `onExceed()` 回调。
+
+可使用 `maxLength` 限制单个标签的最大长度，超出后将不允许再输入，并且触发 `onInputExceed()` 回调。
+
+</Framework>
+
+<Demo id="limits" />
+
+### 限制标签展示数量
+
+利用 `maxTagCount` 可以限制展示的标签数量，超出部分将以 +N 的方式展示。使用 `showRestTagsPopover` 可以设置在超出 `maxTagCount` 后，hover +N 是否显示 `Popover`，并且可以在 `restTagsPopoverProps` 属性中配置 `Popover`。
+
+<Demo id="max-tag-count" />
+
+### 标签受控
+
+<Framework only="react">
+
+可使用 `value` 设置标签内容，并配合 `onChange` 实现标签内容受控。
+
+</Framework>
+
+<Framework only="vue">
+
+可使用 `v-model` 绑定标签内容（`modelValue` 加 `update:modelValue`）实现标签内容受控。
+
+</Framework>
+
+<Framework only="solid">
+
+可使用 `value` 设置标签内容，并配合 `onChange` 实现标签内容受控。
+
+</Framework>
+
+<Demo id="controlled-tag" />
+
+### 输入受控
+
+<Framework only="react">
+
+可使用 `inputValue` 设置输入框内容，并配合 `onInputChange` 实现输入内容受控。
+
+</Framework>
+
+<Framework only="vue">
+
+可使用 `v-model:inputValue` 绑定输入框内容实现输入内容受控。
+
+</Framework>
+
+<Framework only="solid">
+
+可使用 `inputValue` 设置输入框内容，并配合 `onInputChange` 实现输入内容受控。
+
+</Framework>
+
+<Demo id="controlled-input" />
+
+### 回调
+
+<Demo id="callbacks" />
+
+### 焦点管理
+
+<Framework only="react">
+
+可以使用 `blur()` 和 `focus()` 方法对焦点进行管理。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过组件 ref 调用 `blur()` 和 `focus()` 方法对焦点进行管理。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过组件的 `ref` 拿到根元素，调用其 `focus()` 和 `blur()` 方法对焦点进行管理。`focus()` 会聚焦输入框并激活组件，`blur()` 使组件内持有焦点的元素失去焦点。
+
+</Framework>
+
+<Demo id="focus" />
+
+### 自定义标签渲染
+
+<Framework only="react">
+
+可以使用 `renderTagItem` 自定义标签渲染。 `renderTagItem(value: string, index: number, onClose: function ) => React.ReactNode` 组件会为每项加上 `key`。
+
+</Framework>
+
+<Framework only="vue">
+
+可以使用 `#tag` 作用域插槽整体替换单个标签，作用域参数为 `{ value, index, onClose }`。插槽内容为空时不渲染该标签。`onClose` 收到事件时会调用其 `preventDefault`，把它直接绑到按钮的 `@click` 即可。
+
+</Framework>
+
+<Framework only="solid">
+
+可以使用 `renderTagItem` 自定义标签渲染。`renderTagItem(value: string, index: number, onClose: () => void) => JSX.Element`，第三个参数 `onClose` 用于关闭该标签，可直接作为按钮的 `onClick`。
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### 拖拽排序
+
+将 `draggable`设为 true，开启拖拽排序功能。拖拽功能开启后，聚焦 TagInput（点击或 Tab）后 Tag 可拖拽，焦点离开 TagInput 后 Tag 不可拖拽。拖拽句柄位于标签旁边，可用键盘操作，见下文「键盘和焦点」。值相同的标签也能分别拖拽排序。
+
+<Demo id="draggable" />
+
+## API 参考
+
+<Framework only="react">
+
+<TagInputReactApi />
+
+原生属性中，`id`、`name`、`role`、`tabIndex` 与描述输入框的 `aria-*`（`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-invalid`、`aria-required`、`aria-controls`、`aria-expanded`、`aria-haspopup`、`aria-autocomplete`、`aria-activedescendant`、`aria-errormessage`）落在内部输入框上；其余原生属性（如 `data-*`、`title`、`onClick`、`onMouseDown`）落在根元素上，根元素上的 `onClick` 与组件内部的激活处理都会执行。
+
+</Framework>
+
+<Framework only="vue">
+
+<TagInputVueApi />
+
+未声明的属性中，`id`、`name`、`role` 与 `aria-*` 里描述输入框的部分（`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-invalid`、`aria-required`、`aria-controls`、`aria-expanded`、`aria-haspopup`、`aria-autocomplete`、`aria-activedescendant`、`aria-errormessage`）落在内部输入框上；`class`、`style`、`data-*`、`title` 等其余属性落在根元素上，根元素上的 `@click` 与组件内部的激活处理都会执行。`focus`、`blur` 事件的对象是根元素上的 focusin、focusout，声明为组件事件后，`@change`、`@focus`、`@blur`、`@keydown` 只收到组件事件，不再收到冒泡上来的原生事件。
+
+</Framework>
+
+<Framework only="solid">
+
+<TagInputSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在根元素上，但 `id`、`name`、`role`、`tabIndex` 以及描述输入框的 `aria-*`（`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-invalid`、`aria-required`、`aria-controls`、`aria-expanded`、`aria-haspopup`、`aria-autocomplete`、`aria-activedescendant`、`aria-errormessage`）落在内部输入框上。`onClick`、`onMouseDown`、`onFocusIn`、`onFocusOut` 在组件自己的处理之外也会调用你传入的函数。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- TagInput 支持传入 `aria-label` 来表示该 TagInput 作用，它落在输入框上，根节点不带；
+- 根节点的角色是 `group`，把输入框、标签和清除按钮作为一个整体；禁用时根节点带 `aria-disabled="true"`，未禁用时不带；
+- 禁用时输入框是原生 `disabled`，标签是静态文本，不带 `aria-label`；`validateStatus` 为 `error` 时输入框带 `aria-invalid`，显式传入的 `aria-invalid` 优先；
+- `showClear` 开启、有标签或输入内容且未禁用时，渲染清除按钮。它是原生 `button`，名称为语言包中的「清空标签输入」，在 hover 或焦点位于 TagInput 内时显示。从输入框按 `Tab` 移到清除按钮，`Enter` 或 `Space` 清空，效果与鼠标点击相同，清空后焦点回到输入框；也可在空输入框中按 `Backspace` 删除最后一个标签。
+
+### 键盘和焦点
+
+- 输入框中按 `Enter` 把输入内容添加为标签，空输入时不做任何事。`Enter` 一律阻止默认行为，TagInput 位于表单内时不会提交表单。
+- 输入框为空时按 `Backspace` 删除最后一个标签。
+- 可关闭的标签是 `role="button"` 的 Tab 停靠点，位于输入框之前；聚焦标签后按 `Backspace` 或 `Delete` 关闭它，标签被移除后焦点回到输入框。禁用时标签是静态文本，不可聚焦。
+- 开启 `showClear` 且有内容时，清除按钮在输入框之后：`Tab` 到达，`Enter` 或 `Space` 清空，焦点回到输入框。
+- 激活状态跟随焦点：焦点从组件外进入（点击、`Tab` 或 `focus()`）即激活，焦点离开整个组件即退出。焦点在输入框、标签与清除按钮之间移动不算离开组件，不触发 `focus`、`blur`，也不会触发 `addOnBlur`。激活时，被 `maxTagCount` 折叠的标签会展开（`expandRestTagsOnClick` 为 `false` 时不展开）。
+- 开启 `draggable` 并激活后，每个标签前出现拖拽句柄，句柄是独立的 Tab 停靠点，位于它所属的标签之前。聚焦句柄后按 `Space` 拿起，方向键移动，`Space` 放下，读屏会播报拿起、移动与放下。
+
+## 设计变量
+
+<DesignToken />

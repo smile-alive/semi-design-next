@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoPlay | 是否自动播放。 | `boolean` | `false` |
+| captionsSrc | 字幕资源地址，传入后默认显示字幕。 | `string` | - |
+| clickToPlay | 点击视频画面时是否切换播放与暂停。 | `boolean` | `true` |
+| controlsList | 控制栏展示的控件，默认展示全部。控件还要满足依赖的属性已提供才会显示。 | `VideoControl[]` | <ApiType detail={"[\"play\", \"next\", \"time\", \"volume\", \"playbackRate\", \"quality\", \"route\", \"mirror\", \"fullscreen\", \"pictureInPicture\"]"}>Type</ApiType> |
+| crossOrigin | video 元素的 CORS 设置，允许的值为 anonymous 与 use-credentials，空串等同 anonymous。 | `'' \| 'anonymous' \| 'use-credentials'` | - |
+| defaultPlaybackRate | 初始播放倍率，仅在挂载时读取。 | `number` | `1` |
+| defaultQuality | 初始清晰度，仅在挂载时读取。 | `string` | - |
+| defaultRoute | 初始线路，仅在挂载时读取。 | `string` | - |
+| height | 播放器高度，数字按像素处理，字符串原样使用。 | `number \| string` | - |
+| loop | 是否循环播放。 | `boolean` | `false` |
+| markers | 章节标记，每项含起始时间 start（秒）与标题 title。 | `VideoPlayerMarker[]` | - |
+| muted | 是否静音播放，仅在挂载时读取。 | `boolean` | `false` |
+| onNext | 点击下一个按钮时调用，不带参数。设置后且 controlsList 包含 next 时才显示该按钮。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onPause | 暂停时调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onPlay | 开始播放时调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onQualityChange | 切换清晰度时调用，参数为所选清晰度的值。 | <ApiType detail={"(quality: string) => void"}>Type</ApiType> | - |
+| onRateChange | 切换倍速时调用，参数为所选倍率。 | <ApiType detail={"(rate: number) => void"}>Type</ApiType> | - |
+| onRouteChange | 切换线路时调用，参数为所选线路的值。 | <ApiType detail={"(route: string) => void"}>Type</ApiType> | - |
+| onVolumeChange | 用户拖动音量滑块或切换静音时调用，参数为变化后的音量，静音时为 0；初始化不调用。 | <ApiType detail={"(volume: number) => void"}>Type</ApiType> | - |
+| playbackRateList | 倍速选项列表，默认为 2.0、1.5、1.25、1.0、0.75 五档。 | <ApiType detail={"VideoPlayerOption\u003cnumber>[]"}>Type</ApiType> | - |
+| poster | 封面图地址。 | `string` | - |
+| qualityList | 清晰度选项列表，非空时才显示清晰度控件。 | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | - |
+| ref | 接收原生 video 元素，用于更灵活的控制。传入函数时以该元素调用。 | <ApiType detail={"HTMLVideoElement \u007c ((element: HTMLVideoElement) => void)"}>Type</ApiType> | - |
+| routeList | 线路选项列表，非空时才显示线路控件。 | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | - |
+| seekTime | 快进快退一次的秒数。 | `number` | `10` |
+| src | 视频地址。未设置时显示资源缺失提示；移除后 video 元素保留上一个地址。 | `string` | - |
+| style | 根元素的内联样式，写在 width、height 之后，同名属性以它为准。 | `JSX.CSSProperties \| string` | - |
+| theme | 主题，仅影响背景色，可选 dark 或 light。 | `VideoPlayerTheme` | `"dark"` |
+| volume | 初始音量，取值 0 到 100，仅在挂载时读取。 | `number` | `100` |
+| width | 播放器宽度，数字按像素处理，字符串原样使用。 | `number \| string` | - |

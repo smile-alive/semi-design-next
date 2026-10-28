@@ -1,0 +1,37 @@
+---
+frameworks: [react]
+title: Frequently Asked Questions
+icon: doc-faq
+order: 12
+---
+
+#### Semi's default theme style does not match the positioning of our system. Can i configure another theme?
+
+- Yes. Semi exposes its styles as `--semi-*` CSS variables; override them to customize the theme. See [Design Token](/en-US/react/basic/tokens).
+
+#### In what situations recommend using Design Tokens to customize styles, and in what situations recommend using CSS overrides to customize styles?
+
+- Design Token is mainly suitable for scenarios that require branding and style customization, done by overriding the `--semi-*` CSS variables. The scope of effect of Design Token is global. For example, if the component-level tokens of Button and Table are adjusted, it will take effect for all Semi Buttons and Semi Tables in the app, and cannot be adjusted only for a specific submodule
+- If you only need to adjust the style of a certain component under a specific module, it is not recommended to use Design Token, and it is recommended to directly use CSS selectors to override styles
+
+#### Why is defaultValue, default XXX not working?
+
+Property like `defaultValue`, `defaultXXX` will only be consumed once when the component mount. If your `defaultXXX` property is updated asynchronously later, the component will not reconsume the value. If necessary, you should use controlled `value`, controlled `XXX`. Or force React to remount the component by passing in a different `key`.
+
+#### Does Semi support i18n?
+
+Semi supports 57 languages. See [Semi·LocaleProvider](/en-US/react/other/locale) for details.
+
+#### Is the style of Semi based on Scss or Less? Why not use CSS Module?
+
+Our style is based on Scss, and we also use CSS Variable as the color wheel variable. Color variables and common variables are mounted under `:root`. CSS Module is not used because we want to have a fixed className and retain the ability to modify / override Semi style for our users(although it is not recommended, it is really needed sometime).
+
+#### Why do some forms of content not wrap when the content in Tooltip is very long?
+
+The Tooltip popup sets <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap" target="_blank" rel="noopener noreferrer">overflow-wrap</a> to break-word, so an overlong word breaks onto the next line. Different language content (e.g. English, Chinese, combination of English and Chinese) needs different line breaking; if the default does not fit, adjust the line break related CSS properties through the style/className API.
+
+#### How do I customize the scrollbar style?
+
+Semi components share one scrollbar style: a thin scrollbar with a transparent track. The thumb shows when a default scrollbar would: with overlay scrollbars, only while scrolling. The theme variable `$color-scrollbar-thumb` sets the thumb color.
+
+To give your own elements the same style, add the `.semi-scrollbar` class (`.<prefixCls>-scrollbar` with a custom `prefixCls`) to the outermost DOM element; it applies to that element and everything inside it. In SCSS you can also `@include scrollbar` from `@fibrae/semi-foundation/base/mixin.scss`. The style uses the standard `scrollbar-width` and `scrollbar-color` properties, and once they are set Chrome no longer applies `::-webkit-scrollbar` customizations.

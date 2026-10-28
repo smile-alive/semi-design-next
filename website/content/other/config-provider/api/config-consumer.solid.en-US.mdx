@@ -1,0 +1,7 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Function child receiving the effective configuration (ContextValue). Inside a ConfigProvider it also holds `screens` and `onBreakpoint`; without a ConfigProvider it is an empty object. The function runs once, so read fields in JSX as `config.xxx` instead of destructuring them. | <ApiType detail={"(config: ContextValue) => JSX.Element"}>Type</ApiType> | - |

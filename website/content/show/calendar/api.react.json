@@ -1,0 +1,87 @@
+{
+    "calendar": {
+        "source": "packages/semi-ui-react/src/calendar/index.tsx",
+        "props": {
+            "allDayEventsRender": {
+                "zh-CN": "自定义日、多日、周视图顶部的全天事件区域，参数 `events` 为传入的全部事件，需自行筛选。",
+                "en-US": "Custom area for events at the top of the day, range and week views. `events` is the whole array that was passed in, so the function filters it itself."
+            },
+            "dateGridRender": {
+                "zh-CN": "自定义单元格或列的内容，参数为 `dateString`（`date.toString()` 得到的字符串）和日期，需要绝对定位。",
+                "en-US": "Custom content of a date cell or column, with the `dateString` (`date.toString()`) and the date. Use absolute positioning for elements."
+            },
+            "displayValue": {
+                "zh-CN": "展示日期，未传时为当前日期并在午夜更新。",
+                "en-US": "Display date. When omitted it is the current date and updates at midnight."
+            },
+            "events": {
+                "zh-CN": "渲染的事件，格式见 Event Object。",
+                "en-US": "Events to render, see Event Object."
+            },
+            "header": {
+                "zh-CN": "自定义头部内容。",
+                "en-US": "Custom header content."
+            },
+            "height": {
+                "zh-CN": "日历高度，数字按像素处理。",
+                "en-US": "Height of the calendar; a number is in pixels."
+            },
+            "markWeekend": {
+                "zh-CN": "以灰色区分周末列和工作日。",
+                "en-US": "Shows weekend columns in grey to tell them from weekdays."
+            },
+            "minEventHeight": {
+                "zh-CN": "日视图、多日视图以及周视图下事件的最小高度，单位为像素；未设置时不限制最小高度。",
+                "en-US": "Minimum height in pixels of events in the day, range and week views. Without it the height has no minimum."
+            },
+            "mode": {
+                "zh-CN": "视图模式，可选 `day`、`week`、`month`、`range`，变化后立即切换视图。",
+                "en-US": "View mode: `day`, `week`, `month` or `range`. The view switches as soon as it changes."
+            },
+            "onClick": {
+                "zh-CN": "单击日期格时调用，参数为事件和该格的日期；日、周、多日视图以半小时为单位，月视图以日为单位。",
+                "en-US": "Called when a date cell is clicked, with the event and the date of the cell. The unit is half an hour in the day, week and range views and one day in the month view."
+            },
+            "onClose": {
+                "zh-CN": "月视图下展示全部事件的卡片关闭时调用；关闭按钮或再次点击「还有 N 项」传点击事件，Esc 传键盘事件，点击外部时传 `null`。",
+                "en-US": "Called when the card showing all events of a day closes in the month view: the click event for the close button or a second click on \"N more\", the keyboard event for Esc, and `null` for a click outside."
+            },
+            "onMoreClick": {
+                "zh-CN": "月视图下点击「还有 N 项」打开卡片时调用，参数为事件、日期和被折叠的事件数；再次点击收起卡片时不调用。",
+                "en-US": "Called when a click on \"N more\" opens the card in the month view, with the event, the date and the number of collapsed events. It is not called when a second click closes the card."
+            },
+            "range": {
+                "zh-CN": "`range` 模式下展示的日期范围，左闭右开；`range` 模式必传。",
+                "en-US": "Date range shown in `range` mode, left-closed and right-open. Required in `range` mode."
+            },
+            "ref": {
+                "zh-CN": "当前视图根元素（`div`）的引用，切换 `mode` 后指向新视图的根元素。",
+                "en-US": "Reference to the root `div` of the current view. It points to the new view's root after `mode` changes."
+            },
+            "renderDateDisplay": {
+                "zh-CN": "自定义日期文案（周、多日视图的列标题与月视图的每个日期格），日视图不使用。",
+                "en-US": "Custom date text: the column titles of the week and range views and every cell of the month view. The day view does not use it."
+            },
+            "renderTimeDisplay": {
+                "zh-CN": "自定义日、周、多日视图下的时间文案，参数 `time` 为小时数。",
+                "en-US": "Custom time text in the day, week and range views; `time` is the hour."
+            },
+            "scrollTop": {
+                "zh-CN": "日、周、多日视图下展示内容的默认滚动高度。",
+                "en-US": "Default scroll offset of the content in the day, week and range views."
+            },
+            "showCurrTime": {
+                "zh-CN": "日、周、多日视图下显示当前时间的红线。",
+                "en-US": "Shows the red line of the current time in the day, week and range views."
+            },
+            "weekStartsOn": {
+                "zh-CN": "以周几作为每周第一天，`0` 代表周日，`1` 代表周一，以此类推；对月视图、周视图生效。",
+                "en-US": "Day of the week that starts the week, `0` for Sunday, `1` for Monday and so on. Applies to the month and week views."
+            },
+            "width": {
+                "zh-CN": "日历宽度，数字按像素处理。",
+                "en-US": "Width of the calendar; a number is in pixels."
+            }
+        }
+    }
+}

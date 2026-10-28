@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                              | Type                                                                                                         | Default |
+| ----------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------- |
+| annotation  | List of references; each item may have title, logo, url and detail. Required.            | `AnnotationItemProps[] \| Annotation[]`                                                                      | -       |
+| description | Text after the source logos; the number of references is shown when it is not set.       | `string`                                                                                                     | -       |
+| maxCount    | Maximum number of source logos shown; the rest are shown as +N. Required.                | `number`                                                                                                     | -       |
+| onClick     | Called on click or on activation with Enter or Space, with the event and the references. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent, item: AnnotationItemProps[]) => void"}>Type</ApiType> | -       |

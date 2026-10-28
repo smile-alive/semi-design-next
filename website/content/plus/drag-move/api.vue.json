@@ -1,0 +1,53 @@
+{
+    "drag-move": {
+        "source": "packages/semi-ui-vue/src/drag-move/drag-move.vue",
+        "props": {
+            "handler": {
+                "zh-CN": "返回触发拖动的元素，返回 null 时回退为被拖动元素本身。",
+                "en-US": "Returns the element that starts a drag. Falls back to the dragged element itself when it returns null."
+            },
+            "constrainer": {
+                "zh-CN": "限制拖动范围的元素：'parent' 或返回该元素的函数，该元素需要为 relative 定位。",
+                "en-US": "Element that bounds the movement: 'parent' or a function returning it. The element needs relative positioning."
+            },
+            "allowInputDrag": {
+                "zh-CN": "在原生 input、textarea 上按下时是否允许拖动。",
+                "en-US": "Whether pressing on a native input or textarea starts a drag."
+            },
+            "allowMove": {
+                "zh-CN": "按下时判断是否允许拖动的函数，返回 false 则不拖动。",
+                "en-US": "Called when a pointer goes down. Return false to not drag."
+            },
+            "customMove": {
+                "zh-CN": "自定义拖动后的位置处理；设置后组件只回传计算出的位置，不再改写元素的 top 与 left。",
+                "en-US": "Takes the new position instead of the element's top and left; the component only reports the computed position."
+            },
+            "positionStrategy": {
+                "zh-CN": "定位策略，relative 保留元素原有的布局位置。",
+                "en-US": "Positioning strategy. relative keeps the element's place in the layout."
+            }
+        },
+        "events": {
+            "mouseDown": {
+                "zh-CN": "鼠标或触控笔按下时触发。",
+                "en-US": "Emitted when a mouse or pen pointer is pressed."
+            },
+            "mouseMove": { "zh-CN": "鼠标或触控笔移动时触发。", "en-US": "Emitted when a mouse or pen pointer moves." },
+            "mouseUp": {
+                "zh-CN": "鼠标或触控笔抬起时触发。",
+                "en-US": "Emitted when a mouse or pen pointer is released."
+            },
+            "touchStart": { "zh-CN": "触摸开始时触发。", "en-US": "Emitted when a touch pointer is pressed." },
+            "touchMove": { "zh-CN": "触摸移动时触发。", "en-US": "Emitted when a touch pointer moves." },
+            "touchEnd": { "zh-CN": "触摸结束时触发。", "en-US": "Emitted when a touch pointer is released." },
+            "touchCancel": { "zh-CN": "触摸取消时触发。", "en-US": "Emitted when a touch pointer is cancelled." }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "被拖动的内容，其中每个顶层元素或单根组件各自可拖动。",
+                "en-US": "Content to drag. Each top-level element, or single-root component, is dragged on its own."
+            }
+        },
+        "exposed": {}
+    }
+}

@@ -1,0 +1,78 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 当前值，供 v-model 使用。输入的中间态或非法文本为字符串，清空时为 ''；显式传 undefined 时按非受控处理。 | `string \| number` | `undefined` |
+| defaultValue | 非受控时的初始值。 | `string \| number` | `semiGlobalDefault("InputNumber", "defaultValue")` |
+| currency | 货币种类，可选值有 CNY、EUR、USD 等。设为 true 时使用 defaultCurrency，未设置时为语言包对应的货币；裸写 currency 等同于 true。 | `string \| boolean` | `semiGlobalDefault("InputNumber", "currency")` |
+| currencyDisplay | 货币展示方式，可选 symbol、code、name。 | `"symbol" \| "name" \| "code"` | `semiGlobalDefault("InputNumber", "currencyDisplay")` |
+| defaultCurrency | currency 为 true 时使用的货币种类，优先级为自身属性、全局默认值、语言包。 | `string` | `semiGlobalDefault("InputNumber", "defaultCurrency")` |
+| localeCode | 货币模式下用于格式化的语言地区代码，如 zh-CN、en-US、de-DE。优先级为自身属性、全局默认值、LocaleProvider 或 ConfigProvider 的语言包。 | `string` | `semiGlobalDefault("InputNumber", "localeCode")` |
+| minimumFractionDigits | 显示的最小小数位数，传给 Intl.NumberFormat。 | `number` | `semiGlobalDefault("InputNumber", "minimumFractionDigits")` |
+| maximumFractionDigits | 显示的最大小数位数，传给 Intl.NumberFormat。 | `number` | `semiGlobalDefault("InputNumber", "maximumFractionDigits")` |
+| precision | 数值精度，即保留的小数位数。 | `number` | `semiGlobalDefault("InputNumber", "precision")` |
+| scientificNotation | 启用科学计数法显示：失焦时显示科学计数法，聚焦时显示完整数字。可传入 `{ threshold }` 配置阈值，默认 15 位有效数字。不支持货币模式。 | `boolean \| ScientificNotationConfig` | `semiGlobalDefault("InputNumber", "scientificNotation")` |
+| showCurrencySymbol | 是否显示货币符号、代码或名称，仅货币模式下生效。 | `boolean` | `semiDefault("InputNumber", "showCurrencySymbol", true)` |
+| formatter | 指定输入框展示值的格式，一般与 parser 同时设置。优先级为自身属性、全局默认值。 | <ApiType detail={"((value: string \u007c number) => string)"}>Type</ApiType> | `undefined` |
+| parser | 指定从 formatter 转换回数字串的方式，与 formatter 搭配使用。优先级为自身属性、全局默认值。 | <ApiType detail={"((value: string) => string)"}>Type</ApiType> | `undefined` |
+| min | 限定最小值。 | `number` | `semiDefault("InputNumber", "min", -Infinity)` |
+| max | 限定最大值。 | `number` | `semiDefault("InputNumber", "max", Infinity)` |
+| step | 每次改变的步长，可以为小数。 | `number` | `semiDefault("InputNumber", "step", numbers.DEFAULT_STEP)` |
+| shiftStep | 按住 Shift 时每次改变的步长，可以为小数。 | `number` | `semiDefault("InputNumber", "shiftStep", numbers.DEFAULT_SHIFT_STEP)` |
+| pressInterval | 长按步进按钮时，连续触发的间隔，单位毫秒。 | `number` | <ApiType detail={"semiDefault(\"InputNumber\", \"pressInterval\", numbers.DEFAULT_PRESS_TIMEOUT)"}>Type</ApiType> |
+| pressTimeout | 长按步进按钮时，开始连续触发前的延迟，单位毫秒。 | `number` | <ApiType detail={"semiDefault(\"InputNumber\", \"pressTimeout\", numbers.DEFAULT_PRESS_TIMEOUT)"}>Type</ApiType> |
+| keepFocus | 点击步进按钮时保持输入框聚焦。 | `boolean` | `semiDefault("InputNumber", "keepFocus", false)` |
+| innerButtons | 将步进按钮放在输入框内部，悬停或聚焦时显示，并临时替换 suffix 插槽。 | `boolean` | `semiDefault("InputNumber", "innerButtons", false)` |
+| hideButtons | 隐藏步进按钮；与 innerButtons 同时为 true 时也不显示内置按钮。 | `boolean` | `semiDefault("InputNumber", "hideButtons", false)` |
+| size | 输入框大小，可选 default、small、large。 | `Size` | `semiDefault("InputNumber", "size", "default")` |
+| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("InputNumber", "disabled")` |
+| readonly | 是否只读。 | `boolean` | `semiGlobalDefault("InputNumber", "readonly")` |
+| borderless | 无边框模式。 | `boolean` | `semiGlobalDefault("InputNumber", "borderless")` |
+| showClear | 是否显示清除按钮。 | `boolean` | `semiGlobalDefault("InputNumber", "showClear")` |
+| hideSuffix | 清除按钮显示时隐藏后缀，默认两者并列。 | `boolean` | `semiGlobalDefault("InputNumber", "hideSuffix")` |
+| composition | 是否启用输入法组合模式，开启后组合输入期间不触发 change，组合结束后触发一次。 | `boolean` | `semiGlobalDefault("InputNumber", "composition")` |
+| preventScroll | 聚焦时是否阻止浏览器滚动文档以显示输入框，作用于组件内的 focus 调用。 | `boolean` | `semiGlobalDefault("InputNumber", "preventScroll")` |
+| autofocus | 挂载后自动聚焦输入框。 | `boolean` | `semiGlobalDefault("InputNumber", "autofocus")` |
+| maxlength | 输入框文本的最大长度。 | `number` | `semiGlobalDefault("InputNumber", "maxlength")` |
+| minlength | 输入框文本的最小长度。 | `number` | `semiGlobalDefault("InputNumber", "minlength")` |
+| placeholder | 占位文本。 | `string \| number` | `semiGlobalDefault("InputNumber", "placeholder")` |
+| validateStatus | 校验状态，可选 default、error、warning、success。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("InputNumber", "validateStatus")` |
+| inputStyle | 原生 input 的样式。 | `StyleValue` | `semiGlobalDefault("InputNumber", "inputStyle")` |
+| insetLabelId | 内嵌标签的 id。 | `string` | `undefined` |
+
+**Events**
+
+| 事件              | 说明                                                                                                                                                                       | 回调参数                                                   |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| update:modelValue | 值变化时触发，供 v-model 回写，与 change 同时发出。                                                                                                                        | `[value: string \| number]`                                |
+| change            | 值变化时触发。第二个参数是触发变化的事件：输入、步进按钮 pointerdown、方向键或 Home/End 键、失焦。挂载和 modelValue 变化不触发，越界值按原样显示，用户操作时才校正并通知。 | `[value: string \| number, event: InputNumberChangeEvent]` |
+| numberChange      | 数字变化时触发，事件参数同 change。                                                                                                                                        | `[value: number, event: InputNumberChangeEvent]`           |
+| upClick           | 按下增大按钮步进时触发，长按连续步进时每步触发一次；参数为步进后的值与 pointerdown 事件。                                                                                  | `[value: string, event: PointerEvent]`                     |
+| downClick         | 按下减小按钮步进时触发，长按连续步进时每步触发一次；参数为步进后的值与 pointerdown 事件。                                                                                  | `[value: string, event: PointerEvent]`                     |
+| focus             | 焦点进入输入框时触发；焦点在输入框与清除按钮之间移动不触发。事件为 Input 外层元素的 focusin。                                                                              | `[event: FocusEvent]`                                      |
+| blur              | 焦点离开输入框与清除按钮时触发。事件为 Input 外层元素的 focusout。                                                                                                         | `[event: FocusEvent]`                                      |
+| keydown           | 在输入框中按下按键时触发。                                                                                                                                                 | `[event: KeyboardEvent]`                                   |
+
+**Slots**
+
+| 插槽        | 说明                                             | 作用域参数 |
+| ----------- | ------------------------------------------------ | ---------- |
+| prefix      | 前缀内容。                                       | `any`      |
+| suffix      | 后缀内容；innerButtons 的按钮显示期间被替换。    | `any`      |
+| insetLabel  | 内嵌标签。                                       | `any`      |
+| clearIcon   | 自定义清除按钮的图标，showClear 为 true 时有效。 | `any`      |
+| addonBefore | 前置标签。                                       | `any`      |
+| addonAfter  | 后置标签。                                       | `any`      |
+
+**Exposes**
+
+| 名称              | 说明                                                                   | 类型                                                                                                                                                                          |
+| ----------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| focus             | 聚焦输入框；未传 options.preventScroll 时使用 preventScroll 属性的值。 | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
+| blur              | 移出焦点。                                                             | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| select            | 选中输入框中的全部文本。                                               | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| setSelectionRange | 设置选区，参数同原生 setSelectionRange。                               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"none\" \u007c \"forward\" \u007c \"backward\" \u007c undefined) => void"}>Type</ApiType> |
+| input             | 原生 input 元素，卸载后为 null。                                       | `HTMLInputElement \| null`                                                                                                                                                    |
+| nativeElement     | 组件根元素，卸载后为 null。                                            | `HTMLElement \| null`                                                                                                                                                         |

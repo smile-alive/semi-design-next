@@ -1,0 +1,47 @@
+{
+    "spin": {
+        "source": "packages/semi-ui-react/src/spin/index.tsx",
+        "props": {
+            "childStyle": {
+                "zh-CN": "内部子元素的内联样式。",
+                "en-US": "Inline style of the inner children element."
+            },
+            "children": {
+                "zh-CN": "被包裹的内容。有内容时 Spin 作为包裹元素，加载中内容带 `inert`，不能聚焦和操作。",
+                "en-US": "Content to wrap. With content, Spin acts as a wrapper; while loading, the content is `inert` and cannot be focused or operated."
+            },
+            "delay": {
+                "zh-CN": "延迟显示加载效果的时间，单位毫秒。",
+                "en-US": "Delay in milliseconds before the loading effect is shown."
+            },
+            "indicator": {
+                "zh-CN": "自定义加载指示符，传入 ReactNode。未设置时显示内置加载图标，全局配置的 indicator 可覆盖该图标。",
+                "en-US": "Custom loading indicator, a ReactNode. When not set, the built-in loading icon is shown, which the global indicator config can override."
+            },
+            "ref": {
+                "zh-CN": "根元素（`div`）的引用。",
+                "en-US": "Reference to the root `div` element."
+            },
+            "size": {
+                "zh-CN": "组件大小，可选 `small`、`middle` 或 `large`。",
+                "en-US": "Component size: `small`, `middle` or `large`."
+            },
+            "spinning": {
+                "zh-CN": "是否处于加载中的状态，受控属性。",
+                "en-US": "Whether it is loading. This is a controlled property."
+            },
+            "style": {
+                "zh-CN": "根元素的内联样式。",
+                "en-US": "Inline style of the root element."
+            },
+            "tip": {
+                "zh-CN": "加载中显示在指示符下方的描述文字，常在 Spin 作为包裹元素时使用，传入 ReactNode。",
+                "en-US": "Description text shown below the indicator while loading, often used when Spin wraps content. A ReactNode."
+            },
+            "wrapperClassName": {
+                "zh-CN": "根元素的额外类名，与 `className` 一并添加到根元素上。",
+                "en-US": "Extra class name added to the root element, together with `className`."
+            }
+        }
+    }
+}

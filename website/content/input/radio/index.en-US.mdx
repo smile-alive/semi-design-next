@@ -1,0 +1,246 @@
+---
+title: Radio
+order: 44
+icon: doc-radio
+brief: Radio component allows the user to select one option from a relative small set.
+---
+
+import RadioReactApi from './api/radio.react.en-US.mdx';
+import RadioGroupReactApi from './api/radio-group.react.en-US.mdx';
+import RadioVueApi from './api/radio.vue.en-US.mdx';
+import RadioGroupVueApi from './api/radio-group.vue.en-US.mdx';
+import RadioSolidApi from './api/radio.solid.en-US.mdx';
+import RadioGroupSolidApi from './api/radio-group.solid.en-US.mdx';
+
+## When to use
+
+- Used to select a single state among multiple options.
+- The difference from Select is that all available options in Radio are visible by default, making it easier for users to choose in comparison, so there should not be too many options.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Radio, RadioGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Radio, RadioGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Extra Info
+
+<Framework only="react">
+
+You can use `extra` to add extra information, which can be any type of ReactNode.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#extra` slot to add extra information, which can hold any content.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `extra` to add extra information, which can be any JSX.
+
+</Framework>
+
+<Demo id="extra" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Advanced Mode
+
+You can set `mode='advanced'` to allow options be able to unchecked when clicked again.
+
+<Demo id="advanced" />
+
+### Mutually Exclusive Set
+
+You can use `RadioGroup` to create a set of mutually exclusive options.
+
+<Demo id="group" />
+
+### vertical arrangement
+
+The radio elements in the group can be arranged horizontally or vertically by setting the `direction` property to the RadioGroup
+
+<Demo id="vertical" />
+
+### Button Style
+
+You can use `type='button'` to set the button style type radio, and the button type radio supports three sizes.
+
+It should be noted that the button type radio selector does not support auxiliary text (`extra`) and vertical arrangement (`direction='vertical'`).
+
+<Demo id="button" />
+
+### Card Style
+
+You can set `type='card'` to `RadioGroup` to achieve card style with background.
+
+<Demo id="card" />
+
+### Pure Card Style
+
+You can set `type='pureCard'` to `RadioGroup` to achieve a pure card style with background and no radio.
+
+<Demo id="pure-card" />
+
+### Options Configuration
+
+You can pass an array of options to `RadioGroup` using `options` property to create a set.
+
+<Demo id="options" />
+
+## API Reference
+
+### Radio
+
+<Framework only="react">
+
+<RadioReactApi />
+
+`id`, `name`, `tabIndex`, `autoFocus`, `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid` and `aria-errormessage` land on the inner native input; other native attributes and events (such as `onMouseEnter`, `onMouseLeave`, `onFocus` and `onBlur`) land on the root label element. `onClick` is also bound on the root label, but fires only for clicks on the inner input, so a click on the label text triggers it once. A single Radio does not support `aria-required`; it is ignored.
+
+</Framework>
+
+<Framework only="vue">
+
+<RadioVueApi />
+
+`class` and `style` land on the root label element. `id`, `name`, `tabindex`, `autofocus`, `aria-*` and focus and blur listeners passed as attrs land on the inner native input; other native attributes and listeners (such as `@mouseenter` and `@mouseleave`) land on the root element. When both are set, the Radio's own `name` wins over the RadioGroup's. The `extra` slot is not rendered for the button type.
+
+</Framework>
+
+<Framework only="solid">
+
+<RadioSolidApi />
+
+`class`, `style` and `ref` land on the root label element. `id`, `name`, `tabindex`, `autofocus`, `aria-*`, `onFocus` and `onBlur` land on the inner native input; other native attributes and events (such as `onMouseEnter` and `onMouseLeave`) land on the root element. `extra` is not rendered for the button type.
+
+</Framework>
+
+### RadioGroup
+
+<Framework only="react">
+
+<RadioGroupReactApi />
+
+`aria-label`, `aria-required`, `aria-invalid`, `aria-errormessage` and other native attributes, including `onBlur`, land on the root div with `role="radiogroup"`. `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabIndex` injected by Tooltip are not rendered.
+
+</Framework>
+
+<Framework only="vue">
+
+<RadioGroupVueApi />
+
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style`, `addonId`, `addonStyle`, `addonClass` and `extraId`, and no `onChange`. Use the `#label` and `#extra` scoped slots for custom content. `class`, `style` and native attributes passed as attrs land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; the `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered.
+
+</Framework>
+
+<Framework only="solid">
+
+<RadioGroupSolidApi />
+
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style`, `addonId`, `addonStyle`, `addonClassName` and `extraId`, and no `onChange`. Use `renderLabel(option, index)` and `renderExtra(option, index)` for custom content; a button radio never calls `renderExtra`. `class`, `style`, `ref`, `onBlur` and native attributes land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered.
+
+</Framework>
+
+## Methods
+
+### Radio
+
+<Framework only="react">
+
+`ref` receives a handle (`RadioHandle`) providing `focus()` and `blur()`, which act on the inner native input. Whether `focus()` scrolls is decided by the `preventScroll` prop; see the API reference above for the members.
+
+</Framework>
+
+<Framework only="vue">
+
+Call them through a template `ref` to the component instance; see Exposes above.
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` receives the root label element; its `focus()` and `blur()` are forwarded to the inner native input, and `preventScroll` applies to `focus()`.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- `aria-label`: used to explain the role of Radio or RadioGroup
+- `aria-labelledby` points to the addon node, used to explain the content of Radio
+- `aria-describedby` points to the extra node, which is used to explain the content of Radio
+
+<Framework only="react">
+
+- `aria-required`, `aria-invalid` and `aria-errormessage` apply to RadioGroup only and are set on the `role="radiogroup"` element (the required and validation state of `Form.RadioGroup` land there too). ARIA does not support them on a single Radio; when `Form.Radio` fails validation, its error message is linked to the input through `aria-describedby`
+
+</Framework>
+
+<Framework only="vue">
+
+- `aria-required`, `aria-invalid` and `aria-errormessage` apply to RadioGroup only and are set on the `role="radiogroup"` element. ARIA does not support them on a single Radio; when both `aria-invalid` and `aria-errormessage` are passed to it, the error message is linked to the input through `aria-describedby`
+
+</Framework>
+
+<Framework only="solid">
+
+- `aria-required`, `aria-invalid` and `aria-errormessage` apply to RadioGroup only and are set on the `role="radiogroup"` element. ARIA does not support them on a single Radio; when both `aria-invalid` and `aria-errormessage` are passed to it, the error message is linked to the input through `aria-describedby`
+
+</Framework>
+
+### Keyboard and focus
+
+WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/radiobutton/
+
+- RadioGroup can be focused, the initial focus acquisition rules are as follows：
+    - When there is no selected item in the RadioGroup, the initial focus is on the first Radio item;
+    - When there are selected items in the RadioGroup, the initial focus is on the selected Radio item.
+- For radios belonging to the same radiogroup:
+    - You can use `Right arrow` or `Down arrow` to move the focus to the next Radio item, uncheck the previously focused Radio item, and select the currently focused Radio item;
+    - You can Use `Left Arrow` or `Up Arrow` to move the focus to the previous Radio item, at the same time uncheck the previously focused Radio item, and select the currently focused Radio item.
+- If there is no item selected in the RadioGroup, you can use the `Space` key to select the initial focus.
+- `mode="advanced"` is still a radio: arrow keys move the selection as usual, and clicking the selected item or pressing `Space` on it unchecks it.
+
+## Content Guidelines
+
+- Capitalize the first letter
+- No punctuation
+
+## Design Tokens
+
+<DesignToken />

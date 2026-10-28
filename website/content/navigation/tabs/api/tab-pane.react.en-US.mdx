@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                            | Type                                                              | Default |
+| --------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| children  | Panel content.                                                         | `React.ReactNode`                                                 | -       |
+| className | Class name of the panel root element (`role="tabpanel"`).              | `string`                                                          | -       |
+| closable  | Whether the tab can be closed; closing calls `onTabClose` of the Tabs. | `boolean`                                                         | -       |
+| disabled  | Whether the tab is disabled.                                           | `boolean`                                                         | -       |
+| icon      | Icon of the tab in the tab bar, rendered by the Tabs.                  | `ReactNode`                                                       | -       |
+| itemKey   | Unique key of the tab, matched against the `activeKey` of the Tabs.    | `string`                                                          | -       |
+| ref       | Reference to the panel root element (`role="tabpanel"`).               | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| style     | Style of the panel root element.                                       | `CSSProperties`                                                   | -       |
+| tab       | Content of the tab in the tab bar, rendered by the Tabs.               | `ReactNode`                                                       | -       |
+| tabIndex  | `tabIndex` of the panel, `0` when omitted.                             | `number`                                                          | -       |

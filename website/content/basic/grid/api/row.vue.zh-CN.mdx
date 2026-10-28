@@ -1,0 +1,27 @@
+**Props**
+
+| 属性      | 说明                                                                                       | 类型                                                                | 默认值                                               |
+| --------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | ---------------------------------------------------- |
+| type      | 布局模式，可选 flex。                                                                      | `"flex"`                                                            | `semiGlobalDefault("Row", "type")`                   |
+| align     | flex 布局下的垂直对齐方式，可选 top、middle、bottom。                                      | `"top" \| "bottom" \| "middle"`                                     | `semiGlobalDefault("Row", "align")`                  |
+| justify   | flex 布局下的水平排列方式，可选 start、end、center、space-around、space-between。          | `"start" \| "end" \| "center" \| "space-around" \| "space-between"` | `semiGlobalDefault("Row", "justify")`                |
+| gutter    | 栅格间隔，可以是像素值、响应式对象 `{ xs, sm, md, lg, xl, xxl }`，或 `[水平, 垂直]` 数组。 | `Gutter \| [Gutter, Gutter]`                                        | `semiDefault("Row", "gutter", 0)`                    |
+| prefixCls | CSS 类名前缀。                                                                             | `string`                                                            | `semiDefault("Row", "prefixCls", cssClasses.PREFIX)` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明         | 作用域参数 |
+| ------- | ------------ | ---------- |
+| default | 行内的 Col。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

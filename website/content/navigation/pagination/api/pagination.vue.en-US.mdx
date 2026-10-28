@@ -1,0 +1,43 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| total | Total number of items. | `number` | `semiDefault("Pagination", "total", 1)` |
+| showTotal | Whether to show the total number of pages; not shown when size is small. | `boolean` | `semiDefault("Pagination", "showTotal", false)` |
+| pageSize | Number of items per page; falls back to the first item of pageSizeOpts. Not strictly controlled: the choice made in the size changer is kept inside, and only a change of this prop to a value other than the current one overrides it and goes back to page 1 (to currentPage when controlled). Writing the changer's result back with v-model:pageSize does not reset the page. | `number` | `semiGlobalDefault("Pagination", "pageSize")` |
+| pageSizeOpts | Options of the size changer; the current page size is inserted in order when it is not among them. | `number[]` | <ApiType detail={"semiDefault(\"Pagination\", \"pageSizeOpts\", [...numbers.PAGE_SIZE_OPTION])"}>Type</ApiType> |
+| size | Size: default or small. | `"small" \| "default"` | `semiDefault("Pagination", "size", "default")` |
+| currentPage | Current page, bound with v-model:currentPage. Once set the pagination is controlled; when undefined the component manages the page itself. | `number` | `semiGlobalDefault("Pagination", "currentPage")` |
+| defaultCurrentPage | Initial page when not controlled. | `number` | `semiDefault("Pagination", "defaultCurrentPage", 1)` |
+| showSizeChanger | Whether to show the size changer; has no effect when size is small. When it is shown, hideOnSinglePage no longer takes effect. | `boolean` | `semiDefault("Pagination", "showSizeChanger", false)` |
+| showQuickJumper | Whether to show the quick jump input; disabled when there are fewer than 2 pages. | `boolean` | `semiDefault("Pagination", "showQuickJumper", false)` |
+| popoverPosition | Position of the omitted pages popover and the size changer dropdown. When omitted the size changer dropdown uses bottomLeft (bottomRight in RTL) and the omitted pages popover uses the Popover default bottom; not used by the small size. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Pagination", "popoverPosition")` |
+| hideOnSinglePage | Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown. | `boolean` | `semiDefault("Pagination", "hideOnSinglePage", false)` |
+| hoverShowPageSelect | Only for size small: the page list opens when the page text is hovered or focused. | `boolean` | `semiGlobalDefault("Pagination", "hoverShowPageSelect")` |
+| disabled | Whether disabled. | `boolean` | `semiDefault("Pagination", "disabled", false)` |
+| preventPageChangeOnPageSizeChange | Keeps the current page when the page size changes; the consumer picks the page in pageSizeChange. | `boolean` | `semiDefault("Pagination", "preventPageChangeOnPageSizeChange", false)` |
+
+**Events**
+
+| Event              | Description                                               | Callback parameters                       |
+| ------------------ | --------------------------------------------------------- | ----------------------------------------- |
+| update:currentPage | Emitted when the page changes, for v-model:currentPage.   | `[currentPage: number]`                   |
+| update:pageSize    | Emitted when the page size changes, for v-model:pageSize. | `[pageSize: number]`                      |
+| pageChange         | Emitted when the page changes.                            | `[currentPage: number]`                   |
+| pageSizeChange     | Emitted when the page size changes.                       | `[pageSize: number]`                      |
+| change             | Emitted when the page or the page size changes.           | `[currentPage: number, pageSize: number]` |
+
+**Slots**
+
+| Slot     | Description                                                                                                                                                                                  | Scope parameters |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| prevText | Replaces the previous page icon. A plain text names the button, and any other content (an icon, an element) keeps the locale name; an empty slot keeps the default icon and the locale name. | `any`            |
+| nextText | Replaces the next page icon, named the same way as prevText.                                                                                                                                 | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                             | Type                                                                                        | Default     |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ----------- |
+| addonId        | Id of the addon node, which aria-labelledby points to. Generated when omitted.                                          | `string`                                                                                    | -           |
+| checked        | Whether the checkbox is checked. Passing it makes the checkbox controlled. Ignored inside a CheckboxGroup.              | `boolean`                                                                                   | -           |
+| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup.                        | `boolean`                                                                                   | `false`     |
+| disabled       | Whether the checkbox is disabled.                                                                                       | `boolean`                                                                                   | -           |
+| extra          | Supplementary text, any JSX, which aria-describedby points to.                                                          | `JSX.Element`                                                                               | -           |
+| extraId        | Id of the extra node, which aria-describedby points to. Generated when omitted.                                         | `string`                                                                                    | -           |
+| indeterminate  | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean`                                                                                   | `false`     |
+| name           | The name of the native input. Inside a CheckboxGroup the group's name applies.                                          | `string`                                                                                    | -           |
+| onBlur         | Called when the native input loses focus.                                                                               | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
+| onChange       | Called when the checked state changes. The event's `target` is `{ checked, value, name, disabled }`.                    | <ApiType detail={"(event: CheckboxEvent) => any"}>Type</ApiType>                            | -           |
+| onFocus        | Called when the native input gains focus.                                                                               | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
+| prefixCls      | CSS class name prefix.                                                                                                  | `string`                                                                                    | -           |
+| preventScroll  | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method.                | `boolean`                                                                                   | -           |
+| type           | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies.                                 | `CheckboxType`                                                                              | `"default"` |
+| value          | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group.                | `CheckboxValue`                                                                             | -           |

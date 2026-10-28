@@ -1,0 +1,35 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bodyStyle | Custom style of the navigation item list. | `JSX.CSSProperties \| string` | - |
+| defaultIsCollapsed | Whether the navigation starts collapsed. Applies only when `mode` is `vertical`. | `boolean` | - |
+| defaultOpenKeys | `itemKey`s of the sub navigations open initially. Applies only when `mode` is `vertical` and the sidebar is expanded. | `ItemKey[]` | - |
+| defaultSelectedKeys | `itemKey`s of the items selected initially. | `ItemKey[]` | - |
+| expandIcon | Expand arrow of the sub navigations generated from `items`. `renderItemExpandIcon`, when given, replaces it. | `JSX.Element` | - |
+| footer | Footer: a configuration object, JSX or a string. The configuration object holds data only: `collapseButton` is `true` for the built-in button, or a render function returning one to use instead; it also takes `collapseText` and attributes such as `class` and `style`. A Nav.Footer child also works. | `JSX.Element \| NavFooterConfig` | - |
+| header | Header: a configuration object, JSX or a string. The configuration object holds data only: `text` is a string or number, and `logo` is a render function returning the logo, called only when shown; it also takes `link`, `linkOptions` and attributes such as `class` and `style`. A Nav.Header child also works. | `JSX.Element \| NavHeaderConfig` | - |
+| isCollapsed | Controlled collapsed state, which applies only when `mode` is `vertical`. Use it with `onCollapseChange`. | `boolean` | - |
+| items | Navigation item data. An entry with `items` renders as a sub navigation. A string entry is both the `text` and the `itemKey`. Entries hold data only: icons, the shown text and the arrows come from `renderItemIcon`, `renderItemText`, `renderItemToggleIcon` and `renderItemExpandIcon`. Only the data props declared by Nav.Item and Nav.Sub, `class`, `style`, event callbacks, and `data-*` and `aria-*` reach the item; other fields such as `path` are ignored. | `NavItems` | - |
+| limitIndent | Whether to limit indentation. When `false`, nested items indent by `level`. Applies only when `mode` is `vertical`; horizontal mode always limits indentation. | `boolean` | `true` |
+| mode | Orientation of the navigation: `vertical` or `horizontal`. | `Mode` | `"vertical"` |
+| onClick | Called when any navigation item is clicked. The data holds `itemKey` and `text`; clicking a sub navigation title also holds `openKeys` and `isOpen`. `domEvent` is the native event. | <ApiType detail={"(data: OnClickData) => void"}>Type</ApiType> | - |
+| onCollapseChange | Called when the collapsed state changes, with the new collapsed state. | <ApiType detail={"(isCollapse: boolean) => void"}>Type</ApiType> | - |
+| onOpenChange | Called when a sub navigation opens or closes. The data holds `itemKey`, `openKeys` and `isOpen`; `domEvent` is the native event and is absent when the popup opens on hover. | <ApiType detail={"(data: OnOpenChangeData) => void"}>Type</ApiType> | - |
+| onSelect | Called when a selectable navigation item is selected. The data holds `itemKey`, `selectedKeys` and `selectedItems`; `domEvent` is the native event. | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
+| openKeys | Controlled `itemKey`s of the open sub navigations. Use it with `onOpenChange`. Applies only when `mode` is `vertical` and the sidebar is expanded. | `ItemKey[]` | - |
+| renderItemExpandIcon | Expand arrow of each sub navigation generated from `items`. It receives `{ item, level }` and is called only while the arrow is shown. When given, it replaces `expandIcon`. | <ApiType detail={"(props: NavItemRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderItemIcon | Icon of each entry of `items`. It receives `{ item, level }` (`level` is the nesting depth, 0 at the top) and is called only while the entry is shown. | <ApiType detail={"(props: NavItemRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderItemText | Text shown for each entry of `items`. It receives `{ item, level }`. Without it the entry's `text` shows. | <ApiType detail={"(props: NavItemRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderItemToggleIcon | Toggle icon of each item generated from `items`. It receives `{ item, level }`. | <ApiType detail={"(props: NavItemRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderWrapper | Renders the wrapper around each navigation item. It receives `{ itemElement, isSubNav, isInSubNav, props }` and its return value goes into the list. Render `itemElement` exactly once. | <ApiType detail={"(data: RenderWrapperData) => JSX.Element"}>Type</ApiType> | - |
+| selectedKeys | Controlled `itemKey`s of the selected items. Use it with `onSelect`. | `ItemKey[]` | - |
+| subDropdownProps | Dropdown props of the sub navigations generated from `items`, used in horizontal mode or when collapsed. A sub navigation's own `dropdownProps` or `subDropdownProps` takes precedence. | `DropdownProps` | - |
+| subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or in horizontal mode. | `number` | `100` |
+| subNavMotion | Whether sub navigations animate when they expand and collapse. | `boolean` | `true` |
+| subNavOpenDelay | Delay in milliseconds before a sub navigation popup opens. Applies when collapsed or in horizontal mode. | `number` | `0` |
+| toggleIconPosition | Position of the arrow of an item with sub navigation: `left` or `right`. | `'left' \| 'right'` | `"right"` |
+| tooltipHideDelay | Delay in milliseconds before the Tooltip hides when collapsed. | `number` | `100` |
+| tooltipShowDelay | Delay in milliseconds before the Tooltip shows when collapsed. | `number` | `0` |

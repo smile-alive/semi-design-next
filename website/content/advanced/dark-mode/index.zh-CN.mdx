@@ -1,0 +1,107 @@
+---
+title: 暗色模式
+icon: doc-darkmode
+order: 6
+---
+
+import Compare from './figures/compare.react.tsx';
+
+## 能力介绍
+
+大多数情况下，深色模式是浅色模式的补充。默认选用值，更多取决于用户的审美选择或业务场景，用户可以根据自己的需要选择使用哪一个模式。
+
+🤩 Semi 的全部颜色变量都有亮色与暗色两套取值，可以方便地进行切换。  
+🌒 Semi 也支持在页面的局部范围使用亮/暗色模式。
+
+<Compare
+    dark="/assets/dsm/dark.png"
+    light="/assets/dsm/light.png
+"
+    client:only="react"
+></Compare>
+
+## 推荐设置
+
+Semi 会自动在根元素（`:root`）上挂载全局色盘，我们内置了一些常用的 CSS Token，详细的 Token 详情可查阅 [设计变量](/zh-CN/react/basic/tokens)  
+我们推荐你在 body 上配置 `color`、`background-color`, 你的业务组件可从 body 自动继承获得默认的背景色、文本颜色，自适应亮/暗色切换
+
+```css
+// css
+body {
+    color: var(--semi-color-text-0);
+    background-color: var(--semi-color-bg-0);
+}
+```
+
+## 如何切换
+
+Semi 暗色模式的切换是通过给 `body` 添加属性 `[theme-mode='dark']` 来实现的（亮色色盘声明在 `:root` 上，暗色色盘在带该属性的元素上重新声明）。属性加在任意祖先元素上都可以生效。暗色值只在带属性的元素及其后代上，读取 `--semi-*` 变量时请在 `body` 或其后代上读取。你可以使用任何你喜欢的方式来进行切换。比如：
+
+```js
+const body = document.body;
+if (body.hasAttribute('theme-mode')) {
+    body.removeAttribute('theme-mode');
+} else {
+    body.setAttribute('theme-mode', 'dark');
+}
+```
+
+这里也有一个🌰：
+
+<Demo id="switch-mode" />
+
+## 定制两种模式的颜色
+
+在应用的样式中覆写 `--semi-*` 颜色变量即可，亮色值写在 `:root` 上，暗色值写在 `[theme-mode='dark']` 上。Semi 的样式位于 `@layer semi` 中，应用中不分层的规则总是优先，不需要 `!important`：
+
+```css
+:root {
+    --semi-color-primary: var(--semi-violet-5);
+}
+
+[theme-mode='dark'] {
+    --semi-color-primary: var(--semi-violet-4);
+}
+```
+
+使用局部亮/暗色模式时，`.semi-always-light`、`.semi-always-dark` 元素会重新声明颜色变量；希望覆写也作用到这些区域时，把这两个类名分别加进上面的选择器。
+
+## 和系统主题保持一致
+
+如果你希望页面的亮色/暗色模式能自动和系统主题保持一致，可以参考 [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) 属性。
+
+macOS 下的系统主题可以通过 `系统偏好设置 -> 通用 -> 外观` 来配置。
+
+你可以通过 JS 的方式监听该属性的变化，这里也有一个🌰：
+
+```js
+const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+function matchMode(e) {
+    const body = document.body;
+    if (e.matches) {
+        if (!body.hasAttribute('theme-mode')) {
+            body.setAttribute('theme-mode', 'dark');
+        }
+    } else {
+        if (body.hasAttribute('theme-mode')) {
+            body.removeAttribute('theme-mode');
+        }
+    }
+}
+
+matchMode(mql);
+mql.addEventListener('change', matchMode);
+```
+
+## 局部暗色/亮色模式
+
+Semi 2.0 原生支持局部暗色/亮色模式。使用时，在顶级元素上添加 `.semi-always-dark` 或 `.semi-always-light` 类，这个类下的组件会使用对应模式的颜色变量。
+
+<Notice>
+
+注意：弹出层渲染在 body 中，不在挂载 `.semi-always-dark` 或 `.semi-always-light` 类名的元素内部。Tooltip、Popover、Dropdown 以及 Select 等组件的下拉层打开时，会带上包含触发元素的最内层 `.semi-always-dark` 或 `.semi-always-light` 类名，与触发元素所在区域使用同一模式。Modal、SideSheet、Toast、Notification 不跟随触发位置，默认渲染在 body 中，按页面主题显示。
+
+</Notice>
+
+<Demo id="partial-mode" />

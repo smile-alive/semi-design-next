@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aria-label | Accessible name of the button. Without it and without children, the locale's 'Back to top' is used. | `string` | - |
+| badge | Badge props, same as FloatButton. | `BadgeProps` | - |
+| children | Static content of the button, shown in place of `icon` when passed. It must not contain interactive elements such as links, buttons or inputs; a warning is logged in development when it does. | `JSX.Element` | - |
+| colorful | Colorful button, same as FloatButton. | `boolean` | - |
+| duration | Milliseconds the scroll to the top takes. The click event is throttled by this interval. | `number` | `450` |
+| icon | Button icon, passed as an element. Defaults to IconBackTop. | `JSX.Element` | - |
+| onClick | Called on click with the native click event. Throttled by duration, and called once the scroll has started. | <ApiType detail={"JSX.EventHandlerUnion\u003cFloatButtonElement, MouseEvent>"}>Type</ApiType> | - |
+| ref | Points to the `<button>`, which exists only while the button is visible. | <ApiType detail={"FloatButtonElement \u007c ((element: FloatButtonElement) => void)"}>Type</ApiType> | - |
+| shape | Shape: round or square. Falls back to the FloatButton default when unset. | `FloatButtonShape` | - |
+| size | Size: default, small or large. Falls back to the FloatButton default when unset. | `FloatButtonSize` | - |
+| target | Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called once after mount, when the ref of a parent container is already readable, and afterwards only when the function itself changes. A stable function that returns the element only after mount needs BackTop remounted. | <ApiType detail={"() => Target \u007c null"}>Type</ApiType> | - |
+| visibilityHeight | Scroll distance after which the BackTop appears. | `number` | `400` |

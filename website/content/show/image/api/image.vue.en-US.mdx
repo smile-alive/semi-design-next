@@ -1,0 +1,41 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property        | Description                                                                                                              | Type                                                         | Default                                     |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------- |
+| src             | Image source URL.                                                                                                        | `string`                                                     | `semiGlobalDefault("Image", "src")`         |
+| width           | Display width of the image; a number is in px.                                                                           | `string \| number`                                           | `semiGlobalDefault("Image", "width")`       |
+| height          | Display height of the image; a number is in px.                                                                          | `string \| number`                                           | `semiGlobalDefault("Image", "height")`      |
+| alt             | Image description, also the accessible name of a previewable thumbnail.                                                  | `string`                                                     | `semiGlobalDefault("Image", "alt")`         |
+| crossOrigin     | The crossorigin attribute passed to the native img element.                                                              | `"anonymous" \| "use-credentials"`                           | `semiGlobalDefault("Image", "crossOrigin")` |
+| fallback        | Fallback image URL shown when loading fails; use the fallback slot for custom content, which takes precedence.           | `string`                                                     | `semiGlobalDefault("Image", "fallback")`    |
+| preview         | Preview options; false disables preview. The object carries data and callbacks only; use Image slots for custom content. | `boolean \| ImagePreviewProps`                               | `semiDefault("Image", "preview", true)`     |
+| imgStyle        | Custom style passed to the img element.                                                                                  | `StyleValue`                                                 | `semiGlobalDefault("Image", "imgStyle")`    |
+| imgCls          | Custom class name passed to the img element.                                                                             | `string`                                                     | `semiGlobalDefault("Image", "imgCls")`      |
+| setDownloadName | Sets the download file name of the image.                                                                                | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined`                                 |
+
+**Events**
+
+| Event | Description                           | Callback parameters |
+| ----- | ------------------------------------- | ------------------- |
+| load  | Emitted when the image has loaded.    | `[event: Event]`    |
+| error | Emitted when the image fails to load. | `[event: Event]`    |
+
+**Slots**
+
+| Slot        | Description                                                                                                                                                                                                                         | Scope parameters             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| placeholder | Placeholder content shown until the image has loaded.                                                                                                                                                                               | `any`                        |
+| fallback    | Custom content shown when loading fails; it takes precedence over the fallback prop.                                                                                                                                                | `any`                        |
+| title       | Replaces the content of the title section at the top of the preview; when there is a title, the dialog is named by the text the slot renders. It applies to this Image's own preview only and has no effect inside an ImagePreview. | `ImagePreviewTitleSlotProps` |
+| previewMenu | Custom bottom menu of the preview. It applies to this Image's own preview only and has no effect inside an ImagePreview.                                                                                                            | `MenuProps`                  |
+| leftIcon    | Custom previous icon. It applies to this Image's own preview only and has no effect inside an ImagePreview.                                                                                                                         | `ImagePreviewIconSlotProps`  |
+| rightIcon   | Custom next icon. It applies to this Image's own preview only and has no effect inside an ImagePreview.                                                                                                                             | `ImagePreviewIconSlotProps`  |
+| closeIcon   | Custom close icon. It applies to this Image's own preview only and has no effect inside an ImagePreview.                                                                                                                            | `any`                        |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

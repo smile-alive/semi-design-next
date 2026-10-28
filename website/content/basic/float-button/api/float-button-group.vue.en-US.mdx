@@ -1,0 +1,26 @@
+**Props**
+
+| Property | Description          | Type                     | Default                                              |
+| -------- | -------------------- | ------------------------ | ---------------------------------------------------- |
+| disabled | Disables every item. | `boolean`                | `semiDefault("FloatButtonGroup", "disabled", false)` |
+| items    | List of items.       | `FloatButtonGroupItem[]` | `undefined`                                          |
+
+**Events**
+
+| Event | Description                                                                                                                                        | Callback parameters                               |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| click | Emitted when an enabled item is clicked, with the item's value (undefined if unset) and the native click event. The item's own onClick runs first. | `[value: string \| undefined, event: MouseEvent]` |
+
+**Slots**
+
+| Slot       | Description                                                                    | Scope parameters                |
+| ---------- | ------------------------------------------------------------------------------ | ------------------------------- |
+| badgeCount | Custom badge content of an item, receiving item and index.                     | `FloatButtonGroupItemSlotProps` |
+| content    | Custom content of an item, receiving item and index. Defaults to item.content. | `FloatButtonGroupItemSlotProps` |
+| icon       | Icon of an item, receiving item and index.                                     | `FloatButtonGroupItemSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

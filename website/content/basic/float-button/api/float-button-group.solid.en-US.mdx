@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description                                                                                                                                                 | Type                                                                                           | Default |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------- |
+| disabled | Disables every item.                                                                                                                                        | `boolean`                                                                                      | -       |
+| items    | List of items, typed as `FloatButtonGroupItem` below.                                                                                                       | `FloatButtonGroupItem[]`                                                                       | -       |
+| onClick  | Called when an enabled item is clicked, with that item's `value` (`undefined` when unset) and the native `MouseEvent`. The item's own `onClick` runs first. | <ApiType detail={"(value: string \u007c undefined, event: MouseEvent) => void"}>Type</ApiType> | -       |

@@ -1,0 +1,63 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bodyStyle | Style of the dialog body. | `StyleValue` | `semiGlobalDefault("Modal", "bodyStyle")` |
+| cancelButtonProps | Props of the cancel button. autoFocus focuses it on open; class and style land on the button; onClick runs before the built-in cancel handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Modal", "cancelButtonProps")` |
+| cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off. | `boolean` | `semiGlobalDefault("Modal", "cancelLoading")` |
+| cancelText | Cancel button text. Defaults to the locale entry Modal.cancel. | `string` | `semiGlobalDefault("Modal", "cancelText")` |
+| centered | Whether the dialog is vertically centered. | `boolean` | `semiDefault("Modal", "centered", false)` |
+| closable | Whether the close button in the corner is shown. | `boolean` | `semiDefault("Modal", "closable", true)` |
+| closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `semiDefault("Modal", "closeOnEsc", true)` |
+| confirmLoading | Whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off. | `boolean` | `semiGlobalDefault("Modal", "confirmLoading")` |
+| footerFill | Whether the two buttons of the default footer fill the row. | `boolean` | `semiGlobalDefault("Modal", "footerFill")` |
+| fullScreen | Whether the dialog fills the screen. width and height are ignored. | `boolean` | `semiDefault("Modal", "fullScreen", false)` |
+| getPopupContainer | Parent element the dialog is rendered into. A custom container needs position: relative; this changes where the dialog sits in the DOM, not where it is shown. | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined` |
+| hasCancel | Whether the default footer shows the cancel button. | `boolean` | `semiDefault("Modal", "hasCancel", true)` |
+| height | Height of the dialog. A number is in pixels; a string is any valid CSS length. | `string \| number` | `semiGlobalDefault("Modal", "height")` |
+| keepDOM | Whether the dialog content stays mounted while closed. | `boolean` | `semiDefault("Modal", "keepDOM", false)` |
+| lazyRender | Used with keepDOM. When true, the dialog is not rendered until it is first shown. | `boolean` | `semiDefault("Modal", "lazyRender", true)` |
+| mask | Whether the mask is shown. | `boolean` | `semiDefault("Modal", "mask", true)` |
+| maskClosable | Whether a click on the mask cancels the dialog. | `boolean` | `semiDefault("Modal", "maskClosable", true)` |
+| maskFixed | Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock). | `boolean` | `semiDefault("Modal", "maskFixed", false)` |
+| maskStyle | Style of the mask. | `StyleValue` | `semiGlobalDefault("Modal", "maskStyle")` |
+| modalContentClass | Class name of the dialog content element. | `string` | `semiGlobalDefault("Modal", "modalContentClass")` |
+| motion | Whether the enter and leave animations run. | `boolean` | `semiDefault("Modal", "motion", true)` |
+| okButtonProps | Props of the ok button. autoFocus focuses it on open; class and style land on the button; onClick runs before the built-in ok handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Modal", "okButtonProps")` |
+| okText | Ok button text. Defaults to the locale entry Modal.confirm. | `string` | `semiGlobalDefault("Modal", "okText")` |
+| okType | Type of the ok button. | `OKType` | `semiDefault("Modal", "okType", "primary")` |
+| preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | `semiGlobalDefault("Modal", "preventScroll")` |
+| size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `semiDefault("Modal", "size", "small")` |
+| title | Plain-text title, which also names the dialog. The #title slot wins when both are given. It is a declared prop, so it never lands on an element as the native title attribute. | `string` | `semiGlobalDefault("Modal", "title")` |
+| visible | Whether the dialog is visible, used with v-model:visible. | `boolean` | `semiDefault("Modal", "visible", false)` |
+| width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, size decides. | `string \| number` | `semiGlobalDefault("Modal", "width")` |
+| zIndex | z-index of the outer layer. | `number` | `semiDefault("Modal", "zIndex", 1000)` |
+| onCancel | Called by the cancel button, the close button, the mask and Esc; the argument is a native KeyboardEvent for Esc. A returned Promise keeps the cancel button loading; v-model:visible updates once it fulfills, and a rejection keeps the dialog open. The parent's visible is still true while the callback runs. It remains a function prop so its result can be read, bound with @cancel as usual. | <ApiType detail={"((event: MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false. It remains a function prop so its result can be read, bound with @ok as usual. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                           | Callback parameters  |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| update:visible | Emitted with false once a cancel path (cancel button, close button, mask, Esc) completes, for v-model:visible to write back. Ok only calls onOk and never emits this. | `[visible: boolean]` |
+| afterClose     | Emitted after the dialog has fully closed. It is also emitted once when the dialog is unmounted while shown.                                                          | `[]`                 |
+
+**Slots**
+
+| Slot      | Description                                                                                                                                          | Scope parameters                                                                                                  |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| default   | Body of the dialog.                                                                                                                                  | `any`                                                                                                             |
+| title     | Title. It wins over the title prop and names the dialog.                                                                                             | `any`                                                                                                             |
+| header    | Replaces the whole default header (icon, title and close button). An empty slot hides the header area.                                               | `any`                                                                                                             |
+| footer    | Replaces the default footer buttons. An empty slot hides the footer area.                                                                            | `any`                                                                                                             |
+| icon      | Icon before the title.                                                                                                                               | `any`                                                                                                             |
+| closeIcon | Icon inside the close button. An empty slot falls back to the default icon.                                                                          | `any`                                                                                                             |
+| modal     | Custom rendering of the dialog itself. The scope parameter modal is the VNode of the role=dialog element; place it with `<component :is="modal" />`. | <ApiType detail={"{ modal: VNode\u003cRendererNode, RendererElement, { [key: string]: any; }>; }"}>Type</ApiType> |
+
+**Exposes**
+
+| Name | Description                                                                 | Type                     |
+| ---- | --------------------------------------------------------------------------- | ------------------------ |
+| root | The outermost element inside the portal, or null while nothing is rendered. | `HTMLDivElement \| null` |

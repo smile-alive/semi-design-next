@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| children | 组件不渲染 children，传入的内容会被忽略。 | `ReactNode` | - |
+| className | 自定义类名。popup 模式下落在气泡卡片上，modal 模式下落在弹窗的外层元素上。 | `string` | - |
+| current | 当前步骤的索引，从 0 开始。设置后由外部控制，配合 onChange 回写；不设置时从第 0 步开始，由组件自己保存步骤。 | `number` | - |
+| finishText | 最后一步完成按钮的文本；未设置时使用语言包中的文案。 | `string` | - |
+| getPopupContainer | modal 模式下弹窗渲染至该 DOM 中；popup 模式下指向 body 以外的元素时不锁定 body 滚动。气泡卡片位于 top layer，不受此属性影响。 | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| mask | 是否显示蒙层，可被步骤的 mask 覆盖。 | `boolean` | `true` |
+| mode | 引导模式：popup 为气泡卡片，modal 为弹窗。 | `'popup' \| 'modal'` | `"popup"` |
+| nextButtonProps | 下一步按钮的属性，可含 className、style 与 onClick；onClick 先于内置处理调用。按钮文本使用 children，最后一步的文本由 finishText 决定。 | `ButtonProps` | `{}` |
+| onChange | 上一步或下一步改变步骤时的回调，参数为新的索引；点击完成或跳过时不调用。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| onFinish | 点击最后一步的完成按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onNext | 点击下一步按钮时的回调，参数为新的索引；最后一步不触发，由 onFinish 处理。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| onPrev | 点击上一步按钮时的回调，参数为新的索引。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| onSkip | 点击跳过按钮或按 Esc 时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| position | 气泡卡片相对于目标元素的位置，可被步骤的 position 覆盖。可选值：`top`、`topLeft`、`topRight`、`left`、`leftTop`、`leftBottom`、`right`、`rightTop`、`rightBottom`、`bottom`、`bottomLeft`、`bottomRight`、`leftTopOver`、`rightTopOver`、`leftBottomOver`、`rightBottomOver`。 | `Position` | `"bottom"` |
+| prevButtonProps | 上一步按钮的属性，可含 className、style 与 onClick；onClick 先于内置处理调用。按钮文本使用 children。 | `ButtonProps` | `{}` |
+| showPrevButton | 是否显示上一步按钮，第一步不显示。 | `boolean` | `true` |
+| showSkipButton | 是否显示跳过按钮，最后一步不显示。 | `boolean` | `true` |
+| spotlightPadding | 高亮区域的外扩距离，单位为像素，可被步骤的 spotlightPadding 覆盖；都未设置时为 5。 | `number` | - |
+| steps | 引导步骤的数据，必填。每一步的 title、description 与 cover 可以是 ReactNode。 | `StepItem[]` | - |
+| style | 自定义样式。popup 模式下落在气泡卡片上，modal 模式下落在 .semi-modal 上。 | `React.CSSProperties` | - |
+| theme | popup 模式的主题，可被步骤的 theme 覆盖。 | `'default' \| 'primary'` | `"default"` |
+| visible | 是否显示引导。 | `boolean` | `false` |
+| zIndex | popup 模式下遮罩的层级，modal 模式下弹窗的层级。气泡卡片位于 top layer，始终在遮罩之上。 | `number` | `1030` |

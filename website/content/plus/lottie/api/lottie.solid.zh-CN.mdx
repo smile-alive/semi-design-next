@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                 | 说明                                                                                                                                     | 类型                                                                                             | 默认值 |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------ |
+| getAnimationInstance | 每创建一次动画（包括每次重新加载）调用一次，参数为当前动画的 AnimationItem。                                                             | <ApiType detail={"(animation: AnimationItem) => void"}>Type</ApiType>                            | -      |
+| getLottie            | lottie-web 加载完成后，每次挂载调用一次，参数为全局 lottie。                                                                             | <ApiType detail={"(lottiePKG: typeof lottie) => void"}>Type</ApiType>                            | -      |
+| height               | 容器高度，需带单位，如 300px。                                                                                                           | `string`                                                                                         | -      |
+| params               | 传给 lottie-web loadAnimation 的参数。内容与上次加载时不同才会重新加载，每次渲染传入内容相同的新对象不会重新加载；原地修改对象不会触发。 | <ApiType detail={"Partial\u003cParameters\u003ctypeof lottie.loadAnimation>[0]>"}>Type</ApiType> | -      |
+| width                | 容器宽度，需带单位，如 300px。                                                                                                           | `string`                                                                                         | -      |

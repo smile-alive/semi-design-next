@@ -1,0 +1,42 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | The alignment of the cell content: `left`, `right` or `center`. Swapped in RTL. `left` when not set. | `Align` | - |
+| children | Child columns of a merged header. | <ApiType detail={"Array\u003cColumnProps\u003cRecordType>>"}>Type</ApiType> | - |
+| className | Class name of the column. | `string` | - |
+| colSpan | The number of columns the header cell spans; `0` hides the header cell. | `number` | - |
+| dataIndex | The field of a record that the column shows. A unique `dataIndex` is required when `sorter` or `onFilter` is used. | `string` | - |
+| defaultFilteredValue | The default filter values, an array of the filtered values, used as the initial filter state when `filteredValue` is not given. | `any[]` | - |
+| defaultSortOrder | The default sort order: `ascend`, `descend` or `false`, used as the initial sort state when `sortOrder` is not given. | `SortOrder` | - |
+| ellipsis | Truncates text that overflows the cell; the table layout then switches to `fixed`. With an object, `showTitle` set to `false` hides the native HTML title hint, and `render` can give a custom tip. | `BaseEllipsis` | - |
+| filterChildrenRecord | Whether filtering also filters the child records of a tree table. When on, a parent record is kept when one of its children matches, even if the parent does not. | `boolean` | - |
+| filterConfirmMode | The filter confirm mode. `immediate` applies a filter option as soon as it is clicked; `confirm` applies the options after the confirm button is clicked, and the dropdown then shows confirm and reset buttons. Defaults to `immediate`. | `FilterConfirmMode` | - |
+| filterDropdown | An element that replaces the default filter menu; the interactions inside it are written by the caller. | `ColumnFilterProps['filterDropdown']` | - |
+| filterDropdownProps | Props passed to Dropdown, see [Dropdown API](/en-US/react/show/dropdown#Dropdown). | `ColumnFilterProps['filterDropdownProps']` | - |
+| filterDropdownVisible | Controls the `visible` of the filter Dropdown, see [Dropdown API](/en-US/react/show/dropdown#Dropdown). | `boolean` | - |
+| filteredValue | The controlled filter values, an array of the filtered values. When given, the filter state is controlled by the caller. | `any[]` | - |
+| filterIcon | The filter icon: an element, or a function that receives `filtered` and returns a node. | `FilterIcon` | - |
+| filterMultiple | Whether several filter options can be chosen; multiple selection is allowed when not set. | `boolean` | - |
+| filters | The filter menu options of the header. Not required with `renderFilterDropdown`. | `Filter[]` | - |
+| fixed | Whether the column is fixed: `true` (same as `left`), `left` or `right`. Swapped in RTL. | `Fixed` | - |
+| key | Identifies the column for selection, sorting, filtering and width; it can be omitted when a unique `dataIndex` is set. | `string \| number` | - |
+| onCell | Sets the attributes and events of the data cells. It receives the record and the row index, and the returned object is merged into the `td`. | <ApiType detail={"OnCell\u003cRecordType>"}>Type</ApiType> | - |
+| onFilter | The local filter function. It receives the filter value and a record, and keeps the record when it returns `true`. A unique `dataIndex` is required with it. | <ApiType detail={"OnFilter\u003cRecordType>"}>Type</ApiType> | - |
+| onFilterDropdownVisibleChange | Called when the visibility of the filter dropdown changes. | `OnFilterDropdownVisibleChange` | - |
+| onHeaderCell | Sets the attributes and events of the header cell. It receives the column, the column index and the header row index, and the returned object is merged into the `th`. | <ApiType detail={"OnHeaderCell\u003cRecordType>"}>Type</ApiType> | - |
+| render | Renders the cell content from `(text, record, index, options)`. Returns a node, or an object `{ children, props }` whose props are merged into the cell (a cell with `colSpan` 0 is not rendered). `options` holds `expandIcon`, `selection`, `indentText` and `isHovering`. | <ApiType detail={"ColumnRender\u003cRecordType>"}>Type</ApiType> | - |
+| renderFilterDropdown | Renders the content of the filter dropdown. The argument holds the temporary filter values, their setter, and the `confirm`, `clear`, `close` and `reset` methods, see [Custom Filter Rendering](#Custom-Filter-Rendering). | `ColumnFilterProps['renderFilterDropdown']` | - |
+| renderFilterDropdownItem | Renders each item of the filter menu. The argument holds `text`, `value`, `checked`, `onChange`, `level`, `filteredValue` and `filterMultiple`. | `RenderFilterDropdownItem` | - |
+| resize | With `resizable` on the table, `false` leaves the column without a resize handle. | `boolean` | - |
+| shouldCellUpdate | Decides whether a cell needs an update; the cell renders when it returns `true`. By default the cell props are deep compared. Set it when the record is complex, to take over this decision. | <ApiType detail={"(props: TableCellProps, prevProps: TableCellProps) => boolean"}>Type</ApiType> | - |
+| showSortTip | Whether to show the sort tip; not shown when not set. Has no effect when `sortOrder` is given. | `boolean` | - |
+| sortChildrenRecord | Whether sorting also sorts the child records of a tree table. | `boolean` | - |
+| sorter | The sort function. It receives two records and the current sort order, and returns a negative number, zero or a positive number, as the compare function of `Array.sort` does. Set `true` for sorting on the server. A local sorter needs a unique `dataIndex`, and a unique `key` on every record. | <ApiType detail={"Sorter\u003cRecordType>"}>Type</ApiType> | - |
+| sortIcon | Renders the sort button from `sortOrder`. The returned node replaces the whole sort button, ascending and descending included, and must highlight the current `sortOrder`. | `SortIcon` | - |
+| sortOrder | The controlled sort order: `ascend`, `descend` or `false`. When given, the sort state is controlled by the caller. | `SortOrder` | - |
+| title | The header content: a node, or a function that receives `{ filter, sorter, selection }`. Without `useFullRender` the function is called with an empty object and its result is combined with the sort and filter buttons; with it, the result of the function is the whole header. | `ColumnTitle` | - |
+| useFullRender | Whether the column renders in full, which lets `title` and `render` read the `sorter`, `filter`, `selection` and `expandIcon` nodes. It costs some performance. | `boolean` | - |
+| width | The column width; a number is in pixels. Required with `resizable`. | `string \| number` | - |

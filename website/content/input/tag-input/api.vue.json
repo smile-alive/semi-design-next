@@ -1,0 +1,160 @@
+{
+    "tag-input": {
+        "source": "packages/semi-ui-vue/src/tag-input/tag-input.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "当前标签，配合 v-model 使用；undefined 时按非受控处理，null 表示受控且没有标签；从数组变回 undefined 时清空标签。",
+                "en-US": "Current tags, for v-model. undefined makes it uncontrolled; null means controlled with no tags; going back from an array to undefined clears the tags."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始标签。", "en-US": "Initial tags when uncontrolled." },
+            "inputValue": {
+                "zh-CN": "当前输入框内容，配合 v-model:inputValue 使用。",
+                "en-US": "Current input text, for v-model:inputValue."
+            },
+            "inputValueModifiers": {
+                "zh-CN": "v-model:inputValue 的修饰符 trim 与 number，由 Vue 在使用 v-model:inputValue.trim 时传入。",
+                "en-US": "The trim and number modifiers of v-model:inputValue, passed by Vue for v-model:inputValue.trim."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the component is disabled." },
+            "maxLength": { "zh-CN": "单个标签的最大长度。", "en-US": "Maximum length of one tag." },
+            "max": { "zh-CN": "允许的标签最大数量。", "en-US": "Maximum number of tags." },
+            "maxTagCount": {
+                "zh-CN": "标签的最大展示数量，超出后以 +N 形式展示。",
+                "en-US": "Maximum number of tags shown; the rest are shown as +N."
+            },
+            "showRestTagsPopover": {
+                "zh-CN": "超过 maxTagCount 后，hover 到 +N 时是否通过 Popover 显示剩余标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded."
+            },
+            "restTagsPopoverProps": {
+                "zh-CN": "+N 浮层的 Popover 属性，不含 content。",
+                "en-US": "Popover props of the +N popover, without content."
+            },
+            "showContentTooltip": {
+                "zh-CN": "标签文字被截断时，hover 标签是否通过浮层显示全部内容；传对象时可指定浮层类型与透传给浮层的属性。",
+                "en-US": "Whether hovering a truncated tag shows its full text in an overlay; an object picks the overlay type and the props passed to it."
+            },
+            "allowDuplicates": {
+                "zh-CN": "是否允许添加相同的标签。",
+                "en-US": "Whether the same tag can be added more than once."
+            },
+            "addOnBlur": {
+                "zh-CN": "焦点离开组件时，是否将输入框内容自动创建为标签。",
+                "en-US": "Whether the input text becomes a tag when the focus leaves the component."
+            },
+            "draggable": { "zh-CN": "是否开启拖拽排序。", "en-US": "Whether tags can be reordered by dragging." },
+            "expandRestTagsOnClick": {
+                "zh-CN": "不可拖拽时，焦点进入组件（点击、Tab 或 focus 方法）后是否展开被折叠的标签。",
+                "en-US": "When not draggable, whether the collapsed tags expand once focus enters the component (click, Tab or the focus method)."
+            },
+            "placeholder": {
+                "zh-CN": "没有标签时输入框的占位文字。",
+                "en-US": "Placeholder of the input while there are no tags."
+            },
+            "insetLabelId": {
+                "zh-CN": "内嵌标签容器的 id，供 aria-labelledby 引用。",
+                "en-US": "id of the inset label container, for aria-labelledby."
+            },
+            "separator": {
+                "zh-CN": "批量输入时的分隔符，可传多个；传 null 不拆分。",
+                "en-US": "Separator(s) for adding several tags at once; null disables splitting."
+            },
+            "showClear": {
+                "zh-CN": "是否显示一键清除所有标签和输入内容的按钮。",
+                "en-US": "Whether to show the button that clears all tags and the input text."
+            },
+            "size": { "zh-CN": "尺寸，可选 small、default、large。", "en-US": "Size: small, default or large." },
+            "split": {
+                "zh-CN": "自定义分隔符处理函数，返回拆分后的字符串数组。",
+                "en-US": "Custom split function that returns the split strings."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，仅影响样式；error 时输入框带 aria-invalid。",
+                "en-US": "Validation status, which only affects styling; error also sets aria-invalid on the input."
+            },
+            "autofocus": {
+                "zh-CN": "挂载时是否自动聚焦输入框并激活组件，禁用时不生效。",
+                "en-US": "Whether the input is focused and the component activated on mount; ignored when disabled."
+            },
+            "preventScroll": {
+                "zh-CN": "组件内 focus 方法是否阻止浏览器滚动到新聚焦的元素。",
+                "en-US": "Whether the focus calls inside the component stop the browser from scrolling the focused element into view."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "标签变化时触发，供 v-model 使用。",
+                "en-US": "Emitted when the tags change, for v-model."
+            },
+            "change": { "zh-CN": "标签变化时触发。", "en-US": "Emitted when the tags change." },
+            "update:inputValue": {
+                "zh-CN": "输入框内容变化时触发，供 v-model:inputValue 使用。",
+                "en-US": "Emitted when the input text changes, for v-model:inputValue."
+            },
+            "inputChange": {
+                "zh-CN": "输入框内容变化时触发；事件对象可能是 input、keydown、focusout、click 或 composition 事件，读取专有字段前先按 event.type 收窄。",
+                "en-US": "Emitted when the input text changes. The event may be an input, keydown, focusout, click or composition event; narrow it by event.type before reading its own fields."
+            },
+            "add": {
+                "zh-CN": "添加标签时触发，参数为新增的标签。",
+                "en-US": "Emitted when tags are added, with the added tags."
+            },
+            "remove": {
+                "zh-CN": "移除标签时触发，参数为被移除的标签及其序号。",
+                "en-US": "Emitted when a tag is removed, with the removed tag and its index."
+            },
+            "exceed": {
+                "zh-CN": "添加后超过 max 时触发，参数为截断前的完整列表。",
+                "en-US": "Emitted when adding would exceed max, with the whole list before it is cut."
+            },
+            "inputExceed": {
+                "zh-CN": "输入内容超过 maxLength 时触发，参数为被拒绝的输入内容。",
+                "en-US": "Emitted when the input text exceeds maxLength, with the rejected input text."
+            },
+            "focus": {
+                "zh-CN": "焦点从组件外进入时触发一次；焦点在输入框、标签、清除按钮之间移动不触发。",
+                "en-US": "Emitted once when the focus enters from outside; moving between the input, tags and clear button does not emit it."
+            },
+            "blur": {
+                "zh-CN": "焦点离开整个组件时触发一次；焦点在组件内部移动不触发。",
+                "en-US": "Emitted once when the focus leaves the whole component; moving inside it does not emit it."
+            },
+            "keydown": {
+                "zh-CN": "输入框按键时在组件处理之后触发；其中调用 preventDefault 不会阻止 Enter 添加标签。",
+                "en-US": "Emitted on keydown in the input after the component handled it; calling preventDefault there does not stop Enter from adding a tag."
+            }
+        },
+        "slots": {
+            "prefix": {
+                "zh-CN": "输入框前缀，文字或图标会自动带上左右间隔。",
+                "en-US": "Prefix of the input; text or an icon gets side spacing automatically."
+            },
+            "suffix": {
+                "zh-CN": "输入框后缀，文字或图标会自动带上左右间隔。",
+                "en-US": "Suffix of the input; text or an icon gets side spacing automatically."
+            },
+            "insetLabel": {
+                "zh-CN": "内嵌标签，显示在输入框前；同时提供 prefix 插槽时只显示 prefix。显示时，没有 aria-label、aria-labelledby 的输入框以它命名。",
+                "en-US": "Inset label shown before the input; when the prefix slot is also given, only prefix is shown. When shown, it names an input that has no aria-label or aria-labelledby."
+            },
+            "clearIcon": {
+                "zh-CN": "替换清除按钮中的图标；内容为空时使用默认图标。",
+                "en-US": "Replaces the icon in the clear button; empty content keeps the default icon."
+            },
+            "tag": {
+                "zh-CN": "整体替换单个标签，作用域参数为 value、index 和关闭函数 onClose；内容为空时不渲染该标签。",
+                "en-US": "Replaces each tag as a whole, with the scoped props value, index and the close function onClose; empty content renders no tag."
+            }
+        },
+        "exposed": {
+            "focus": {
+                "zh-CN": "使输入框获得焦点并激活组件。",
+                "en-US": "Focuses the input and activates the component."
+            },
+            "blur": {
+                "zh-CN": "使组件内任意持有焦点的元素（输入框、标签、清除按钮）失去焦点。",
+                "en-US": "Removes focus from whichever element inside the component holds it (input, tag or clear button)."
+            }
+        }
+    }
+}

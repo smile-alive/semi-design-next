@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                  | Type                                                              | Default    |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------- |
+| align     | Alignment: `start`, `center`, `end` or `baseline`.                                                                           | `Align`                                                           | `"center"` |
+| children  | Child nodes, rendered directly inside the root `div` without an extra wrapper.                                               | `ReactNode`                                                       | -          |
+| className | Class name of the root element.                                                                                              | `string`                                                          | -          |
+| ref       | Reference to the root `div` element.                                                                                         | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -          |
+| spacing   | Spacing size: `loose`, `medium`, `tight` or a number of pixels. Pass a `[horizontal, vertical]` array to set each direction. | `Spacing \| [Spacing, Spacing]`                                   | `"tight"`  |
+| style     | Inline style of the root element. `columnGap` and `rowGap` take precedence over numeric values in `spacing`.                 | `CSSProperties`                                                   | -          |
+| vertical  | Whether the spacing is vertical.                                                                                             | `boolean`                                                         | `false`    |
+| wrap      | Whether to wrap automatically. Only applies to horizontal spacing.                                                           | `boolean`                                                         | `false`    |

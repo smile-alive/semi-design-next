@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| avatarShape | 组内头像标签的头像形状，可选 `square` 和 `circle`。 | `AvatarShape` | `"square"` |
+| className | 根元素的类名。 | `string` | `""` |
+| maxTagCount | 最多显示的标签数，超出的部分显示为 +N。 | `number` | - |
+| mode | 传 `custom` 时，`tagList` 的每一项按原样渲染，不再包装为 Tag。 | `'custom'` | - |
+| onPlusNMouseEnter | 指针移入 +N 标签时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onTagClose | 组内标签被关闭时的回调，参数为标签内容、事件与该标签的 `tagKey`；需在回调中更新 `tagList`。 | <ApiType detail={"(tagChildren: React.ReactNode, event: React.MouseEvent\u003cHTMLElement> \u007c React.KeyboardEvent\u003cHTMLElement>, tagKey: string \u007c number) => void"}>Type</ApiType> | - |
+| popoverProps | 传给 Popover 的属性，可设置 `position`、`trigger` 等，参见 [Popover](/zh-CN/react/show/popover#API_参考)。 | `PopoverProps` | - |
+| ref | 根元素的引用。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| restCount | +N 中显示的数量，缺省为超出 `maxTagCount` 的标签数。 | `number` | - |
+| showPopover | 悬停在 +N 上时，是否通过 Popover 显示剩余标签。 | `boolean` | - |
+| size | 组内标签的尺寸，可选 `default`、`small` 或 `large`。 | `TagSize` | `"default"` |
+| style | 根元素的样式。 | `React.CSSProperties` | `{}` |
+| tagList | 标签配置数组，每项为 Tag 的属性，`children` 为标签内容；`mode` 为 `custom` 时为 ReactNode 数组。 | `React.ReactNode[] \| TagProps[]` | - |

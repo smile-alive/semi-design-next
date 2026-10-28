@@ -1,0 +1,31 @@
+**Props**
+
+| 属性     | 说明                                                                                                     | 类型                              | 默认值                                          |
+| -------- | -------------------------------------------------------------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
+| badge    | 徽章参数，同 Badge 的 props；class、style 以及 onClick、onMouseenter、onMouseleave 落在 Badge 根元素上。 | `FloatButtonBadge`                | `semiGlobalDefault("FloatButton", "badge")`     |
+| colorful | 多彩悬浮按钮。                                                                                           | `boolean`                         | `semiDefault("FloatButton", "colorful", false)` |
+| disabled | 禁用状态。                                                                                               | `boolean`                         | `semiDefault("FloatButton", "disabled", false)` |
+| href     | 链接地址，设置后渲染为 a；禁用时去掉 href。                                                              | `string`                          | `semiGlobalDefault("FloatButton", "href")`      |
+| rel      | 与链接目标的关系，仅在设置 href 时生效。                                                                 | `string`                          | `semiGlobalDefault("FloatButton", "rel")`       |
+| shape    | 形状，可选 round、square。                                                                               | `"square" \| "round"`             | `semiDefault("FloatButton", "shape", "round")`  |
+| size     | 尺寸，可选 default、small、large。                                                                       | `"small" \| "default" \| "large"` | `semiDefault("FloatButton", "size", "default")` |
+| target   | 指定在何处显示链接的 URL，仅在设置 href 时生效。                                                         | `string`                          | `semiGlobalDefault("FloatButton", "target")`    |
+
+**Events**
+
+| 事件  | 说明                                              | 回调参数              |
+| ----- | ------------------------------------------------- | --------------------- |
+| click | 点击时触发，载荷为原生 click 事件；禁用时不触发。 | `[event: MouseEvent]` |
+
+**Slots**
+
+| 插槽       | 说明                               | 作用域参数 |
+| ---------- | ---------------------------------- | ---------- |
+| badgeCount | 自定义徽章内容，代替 badge.count。 | `any`      |
+| icon       | 按钮图标。                         | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

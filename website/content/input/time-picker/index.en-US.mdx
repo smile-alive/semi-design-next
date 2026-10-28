@@ -1,0 +1,201 @@
+---
+title: TimePicker
+order: 50
+icon: doc-timepicker
+brief: Users can easily select a compliant, formatted point of time using the time selector.
+---
+
+import TimePickerReactApi from './api/time-picker.react.en-US.mdx';
+import TimePickerVueApi from './api/time-picker.vue.en-US.mdx';
+import TimePickerSolidApi from './api/time-picker.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { TimePicker } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { TimePicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { TimePicker } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Click TimePicker, and then you can select or enter a time in the floating layer.
+
+<Demo id="basic" />
+
+### Infinite Scroll
+
+Starting from version V2.22.0, we changed the default mode of ScrollItem in TimePicker from `wheel` to `normal`. If you want to apply the effect of infinite scrolling back, please refer to the following example.
+
+<Demo id="infinite-scroll" />
+
+### Controlled Component
+
+<Framework only="react">
+
+When using `value` And not. `defaultValue` When used as a controlled component.`value` and `onChange` It needs to be used in conjunction.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `v-model` as a controlled component, and `defaultValue` for the initial value. `null` is a controlled empty value and `undefined` means uncontrolled; when a controlled value goes back to `undefined` the input is cleared and the picker becomes uncontrolled. After clearing, `v-model` receives `undefined` (single) or an empty array (range).
+
+</Framework>
+
+<Framework only="solid">
+
+When using `value` instead of `defaultValue`, it works as a controlled component. `value` and `onChange` must be used together. Pass `null` for a controlled empty value.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Different Format
+
+The columns in the TimePicker float will follow `format` Change, when omitted `format` At some point, the corresponding column in the floating layer will also disappear.
+
+NOTE: `format` Follow the date-fns v4 `format` Format. https://date-fns.org/docs/format
+
+<Demo id="format" />
+
+### Set Panel Header and Footer
+
+<Demo id="panel-header-footer" />
+
+### Disable Time Selection
+
+<Demo id="disabled" />
+
+### Set Step Length
+
+Available `Hour Step`, `Minute Step`, `Second Step` Show the optional minutes and seconds by step.
+
+<Demo id="step" />
+
+### 12-hour System
+
+12-hour time selector, default `format` for `a h:mm:ss`, an incoming `format` The format must be in [dateFns date format](https://date-fns.org/docs/format)Within range.
+
+> For example, the default 12-hour format string is:`a h:mm:ss`, if passed in `A h:mm:ss` This will result in an inability to format correctly.
+
+<Demo id="use-12-hours" />
+
+### Time Range
+
+Pass type = "timeRange" to enable time range selection.
+
+<Demo id="time-range" />
+
+### Disable left/right panels in Range mode (disabledTime)
+
+When `type="timeRange"`, you can use `disabledTime(value, panelType)` to apply different disabled rules for the left/right panel.
+
+- `value`: the currently selected times, the unpicked side `undefined` (e.g. `[date, undefined]`); an empty array when there is no value, and length 1 when `value`, `defaultValue` or the input holds a single time
+- `panelType`: `'left' | 'right'`, representing start/end panel
+
+In the following demo, after selecting a start time, the right (end) panel will disable options earlier than the start time.
+
+<Demo id="disabled-time" />
+
+### Custom Trigger
+
+<Framework only="react">
+
+By default we use the `Input` component as the trigger for the `TimePicker` component. You can customize this trigger by passing the `triggerRender` method.
+
+</Framework>
+
+<Framework only="vue">
+
+By default we use the `Input` component as the trigger for the `TimePicker` component. You can customize this trigger with the `#trigger` scoped slot, whose parameters are `{ value, inputValue, placeholder, disabled, componentProps, onChange }`. The unpicked side of `value` is `undefined`, and `onChange` updates the input text as typing would.
+
+</Framework>
+
+<Framework only="solid">
+
+By default we use the `Input` component as the trigger for the `TimePicker` component. You can customize this trigger by passing a `triggerRender` function. `triggerRender` is called only once and its fields are live: read them in the returned JSX (such as `props.placeholder`) to update them.
+
+</Framework>
+
+<Demo id="custom-trigger" />
+
+## TimeZone Config
+
+Semi All configuration about time zone is converged in [ConfigProvider](/en-US/react/other/config-provider)
+
+<Demo id="time-zone" />
+
+## API Reference
+
+<Framework only="react">
+
+<TimePickerReactApi />
+
+Undeclared native attributes, such as `title`, `data-*`, `aria-label` and `onKeyDown`, land on the inner input, and `prefix` is shown as the input's prefix content; with a `triggerRender` custom trigger none of these land on any element, and they are available through `componentProps`.
+
+With a custom trigger, `focus()` and `blur()` act on the first `input` inside the trigger, and do nothing when there is none.
+
+</Framework>
+
+<Framework only="vue">
+
+<TimePickerVueApi />
+
+Among undeclared attributes, `class` and `style` land on the root element, and the rest (`id`, `title`, `aria-*`, `data-*`, event listeners and so on) land on the inner input; with a custom `#trigger` all of them land on the root element, whose role is `group` when `aria-label` or `aria-labelledby` is passed. `focus` and `blur` are declared component events, so `@focus` and `@blur` receive only the component events, not the native events bubbling up.
+
+`focus()` and `blur()` are available through a ref and do nothing with a custom trigger.
+
+</Framework>
+
+<Framework only="solid">
+
+<TimePickerSolidApi />
+
+`class`, `style` and `ref` land on the root element, and the other undeclared attributes (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with `triggerRender` those attributes land on no element. `ref` points to the root element, and its `focus()` and `blur()` act on the input; they do nothing with a custom trigger.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The input has the role `combobox` with `aria-haspopup="dialog"`, an `aria-expanded` that follows the panel, and `aria-controls` pointing at the panel
+- The hour, minute, second and AM/PM columns are `listbox` lists named "Hour", "Minute", "Second" and "AM/PM"
+
+### Keyboard and Focus
+
+- Focusing the input opens the panel; once it is open, `Down Arrow` moves focus into the first column
+- Each column is one Tab stop: `Up Arrow`, `Down Arrow`, `Home`, `End` and typed characters select its value
+- `Esc` closes the panel; focus inside the panel returns to the input
+
+## Content Guidelines
+
+- The time selector includes at least hours and minutes, such as: 11:30, which can be adapted to 12-hour or 24-hour format during localization
+- When 12-hour clock is selected, it needs to be used together with AM/PM
+
+## Design Tokens
+
+<DesignToken />

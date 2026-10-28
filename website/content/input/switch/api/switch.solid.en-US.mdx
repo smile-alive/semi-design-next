@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| checked | Checked state. When not `undefined` it is controlled: the value decides what is shown, and a click only calls onChange, so update the value in the callback. Setting it back to `undefined` unchecks the switch and makes it uncontrolled. | `boolean` | - |
+| checkedText | Content shown when checked. Not shown when size is small. | `JSX.Element` | - |
+| defaultChecked | Initial checked state when uncontrolled. Read only once, on the first render. | `boolean` | - |
+| disabled | Whether the switch is disabled. | `boolean` | `false` |
+| loading | Whether the switch is loading. While loading, the input stays focusable with `aria-disabled`; toggles are ignored and onChange is not called. | `boolean` | `false` |
+| name | Name of the native input, used when the form is submitted. | `string` | - |
+| onBlur | Called when the native input loses focus. Focus events do not bubble, so it is attached to the input. | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | - |
+| onChange | Called when the user toggles the switch, with the new checked state and the native change event. Not called while loading. | <ApiType detail={"(checked: boolean, event: Event & { currentTarget: HTMLInputElement; target: HTMLInputElement }) => void"}>Type</ApiType> | - |
+| onFocus | Called when the native input gets focus. Focus events do not bubble, so it is attached to the input. | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | - |
+| size | Switch size: large, default or small. | `Size` | `"default"` |
+| uncheckedText | Content shown when unchecked. Not shown when size is small. | `JSX.Element` | - |

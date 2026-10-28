@@ -1,0 +1,221 @@
+---
+title: Slider
+order: 47
+icon: doc-slider
+brief: Selector to quickly select a number or range of values using drag interaction, more intuitive than InputNumber
+---
+
+import SliderReactApi from './api/slider.react.en-US.mdx';
+import SliderVueApi from './api/slider.vue.en-US.mdx';
+import SliderSolidApi from './api/slider.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Slider } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Slider } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Basic slider. When `range` is `true`, both ends can be dragged. When `disabled` is `true`, the slider is unavailable.
+
+<Demo id="basic" />
+
+### With Input
+
+Synchronize slider with input value.
+
+<Demo id="with-input" />
+
+### Tooltip
+
+Use `tipFormatter` to format the Tooltip content, or pass `null` to hide the Tooltip. `getAriaValueText` gives the current value a user-friendly name, which matters to screen reader users.
+
+<Framework only="vue">
+
+Use the `#tip` slot when the tooltip needs node content; its scoped `value` is the result of `tipFormatter`.
+
+</Framework>
+
+<Demo id="tooltip" />
+
+### With Tag
+
+<Framework only="react">
+
+Use `marks` to label measures on sliders, and `value` / `defaultValue` to set the handle position.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `marks` to label measures on sliders, and `modelValue` / `defaultValue` to set the handle position. Use the `#mark` slot when a mark label needs node content.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `marks` to label measures on sliders, and `value` / `defaultValue` to set the handle position. Mark labels accept only strings or numbers; custom nodes go through `renderMark(value, label)`, which is called once for the label and once for the tooltip when `tooltipOnMark` is on.
+
+</Framework>
+
+<Demo id="marks" />
+
+### Segmented Background
+
+<Framework only="react">
+
+To create a slider with segmented background, you could use CSS property `linear-gradient` for `railStyle` along with `onChange` to change background dynamically.
+
+</Framework>
+
+<Framework only="vue">
+
+To create a slider with segmented background, you could use CSS property `linear-gradient` for `railStyle` along with `@change` to change background dynamically.
+
+</Framework>
+
+<Framework only="solid">
+
+To create a slider with segmented background, you could use CSS property `linear-gradient` for `railStyle` along with `onChange` to change background dynamically.
+
+</Framework>
+
+<Demo id="segmented-background" />
+
+### Controlled Component
+
+<Framework only="react">
+
+You can use `value` along with `onChange` property if you want to use Slider as a controlled component.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `modelValue` with `v-model` if you want to use Slider as a controlled component. With only `:modelValue` and no write-back, dragging, clicking and arrow keys only emit `change` and the handle does not move.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `value` along with `onChange` property if you want to use Slider as a controlled component. With only `value` and no write-back in `onChange`, dragging, clicking and arrow keys only fire `onChange` and the handle does not move.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Vertical
+
+<Demo id="vertical" />
+
+### Handle with dot
+
+<Demo id="handle-dot" />
+
+## API Reference
+
+<Framework only="react">
+
+<SliderReactApi />
+
+Other native attributes (such as `data-*`) land on `.semi-slider-wrapper`. `aria-describedby`, `aria-invalid`, `aria-errormessage` and `onKeyDown` land on each handle's native input, and `autoFocus` applies to the first handle's input. `onBlur` is attached to `.semi-slider-wrapper` and does not fire when focus moves between the two handles. `tabIndex` and `aria-required` are not rendered.
+
+</Framework>
+
+<Framework only="vue">
+
+<SliderVueApi />
+
+`class`, `style` and other native attributes land on `.semi-slider-wrapper` through attrs. `aria-describedby`, `aria-invalid`, `aria-errormessage`, `name` and `@keydown` land on each handle's native input; `tabindex` and `aria-required` are not rendered. In `range` mode both inputs share `name` and submit two values in order.
+
+The `$el` of a component template ref is the outer `.semi-slider` element in horizontal mode and `.semi-slider-wrapper` in vertical mode.
+
+</Framework>
+
+<Framework only="solid">
+
+<SliderSolidApi />
+
+`class`, `style`, `ref` and other native attributes (such as `data-*`) land on `.semi-slider-wrapper`, which also receives `onFocus`, `onBlur`, `onMouseEnter` and `onMouseLeave`. `id` (on the first handle only), `name`, `aria-describedby`, `aria-invalid`, `aria-errormessage` and `onKeyDown` land on each handle's native input. In `range` mode both inputs share `name` and submit two values in order. `tabIndex` and `aria-required` are not rendered.
+
+</Framework>
+
+## RTL/LTR
+
+- Slider supports RTL for horizontal direction. You can enable it by setting `direction="rtl"` via [ConfigProvider](/en-US/react/other/config-provider).
+- In RTL mode, the minimum value of the horizontal slider is on the right side and the maximum value is on the left side. The drag direction is reversed compared to LTR.
+- Vertical direction (`vertical`) is not affected by RTL.
+- In RTL mode, keyboard arrow keys behavior is mirrored: `Left Arrow` increases the value, `Right Arrow` decreases the value.
+
+## Accessibility
+
+### ARIA
+
+- Each handle holds a visually hidden native `<input type="range">`, which is the real focus and form control (implicit role `slider`); the visible handle only draws the thumb and takes the drag. Query the control with `getByRole('slider')` or `input[type="range"]`, not `.semi-slider-handle`.
+- The input's `value`, `min` and `max` give assistive technology the current, minimum and maximum values. In `range` mode both inputs span the whole slider, and a handle stops where the other one is.
+- If the slider is vertically oriented, the input has `aria-orientation="vertical"` and a `writing-mode: vertical-lr` layout.
+- If the value is not user-friendly, e.g., the day of the week is represented by a number, support setting API `aria-valuetext` property to a string that makes the slider value understandable, e.g., "Monday". And you can use API `getAriaValueText(value, index)` to specify `aria-valuetext`.
+- Supporting API `aria-label` `aria-labelledby` to specify Slider label, or a `<label for>` pointing at `id`: the `id` lands on the first handle's input, and clicking the label focuses that handle.
+- When `disabled`, the locale text no longer overrides the handle's name: the native `disabled` expresses the state, and the name given by `aria-label`, `aria-labelledby` or `<label for>` stays. With no naming at all, a disabled handle has no name, just like an enabled one.
+- In `range` mode each handle has its own name: the locale's "Start" or "End" is appended to `aria-label` (e.g. `Price Start`, `Price End`); with `aria-labelledby`, each handle is named by that label followed by "Start" or "End"; with neither, the name is just "Start" or "End". The wrapper has no role and carries no `aria-label`.
+- Inside Form, the injected `id`, `aria-labelledby`, `aria-describedby`, `aria-invalid` and `aria-errormessage` land on the input; `aria-required` is not rendered because the slider role does not support it.
+- With a `name`, Slider submits with a native `<form>`: a single value submits one entry, and in `range` mode both inputs share the `name` and submit two entries in order (`FormData.getAll(name)` gives `[min, max]`). Like other native controls, a disabled Slider is not submitted.
+
+### Keyboard and Focus
+
+- The slider handles arrow keys itself, consistently across browsers; the native range input handles `Home`, `End`, `Page Up` and `Page Down`. A handle can get the focus; keyboard focus draws the focus outline on the visible handle and shows the prompt information of the current handle. Pressing a handle with a pointer also moves focus to it, without the focus outline.
+- `onKeyDown` (`onKeydown` in Vue) is bound on the handle's input and is called for every key before the slider handles it. Value keys (arrow keys, `Home`, `End`, `Page Up`, `Page Down`) do not bubble to ancestors by default; calling `preventDefault` in the callback intercepts the key and the slider no longer handles it.
+- When the user uses the `range` API, you can use `Tab` and `Shift` + `Tab` to switch the focus of the left and right sliders.
+- Arrow keys follow the direction the handle moves on screen: horizontally `Right Arrow` and `Up Arrow` increase the value, `Left Arrow` and `Down Arrow` decrease it (left and right mirrored in RTL); a vertical slider grows from top to bottom, so `Down Arrow` increases and `Up Arrow` decreases; with `verticalReverse` it grows from bottom to top, so `Up Arrow` increases and `Down Arrow` decreases; on a vertical slider `Right Arrow` always increases and `Left Arrow` always decreases.
+- If you want the slider to change more than the step size, `Page Up` and `Page Down` change the value by 10% of the range, rounded to the step:
+    - Windows users： `Page Up` for increasing, `Page Down` for decreasing;
+    - Mac users：`Fn` + `Up Arrow` for increasing, `Fn` + `Down Arrow` for decreasing;
+    - When the user uses the `range` property, the Page Up key of the previous slider is only supported until it meets the next slider, and then using the Page Up key on the previous slider will not respond. The same is true for the latter slider. After encountering, there is no response to the Page Down key.
+- To move the slider to the minimum value of the slider:
+    - Windows users: `Home`;
+    - Mac users: `Fn` + `left arrow`;
+    - When the user uses the `range` property, the `Home`(`Fn` + `left arrow`) button of the latter slider only supports until it meets the previous slider, and the `Home`(`Fn` + `left arrow`) button is unresponsive after the overlap.
+- To move the slider to the maximum value of the slider:
+    - Windows users: `End`;
+    - Mac users: `Fn` + `right arrow`;
+    - When the user uses the `range` property, the `End`(`Fn` + `right arrow`) key of the previous slider is only supported until it meets the next slider, and the `End`(`Fn` + `right arrow`) key is unresponsive after the overlap.
+
+## Design Tokens
+
+### Focus Style Variables
+
+The Slider component has two focus-related design tokens, each corresponding to different interaction scenarios:
+
+| Token Name                   | CSS Variable                        | Trigger Scenario                | Description                                                                                                                                        |
+| ---------------------------- | ----------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Handle outline - focus       | `--semi-color-primary-light-active` | Keyboard navigation (Tab focus) | Drawn on the visible handle while its input matches `:focus-visible` (`.semi-slider-handle:has(> input:focus-visible)`), so only on keyboard focus |
+| Handle border color - active | `--semi-color-focus-border`         | Mouse click/drag                | Uses `.semi-slider-handle-clicked` class, displays border during mouse interaction                                                                 |
+
+If you want to modify the focus style of the handle in theme configuration, please note that these two variables correspond to different interaction scenarios.
+
+<DesignToken />

@@ -1,0 +1,42 @@
+{
+    "pin-code": {
+        "source": "packages/semi-ui-solid/src/pincode/pincode.tsx",
+        "props": {
+            "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
+            "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when uncontrolled." },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the input is disabled." },
+            "format": {
+                "zh-CN": "单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。",
+                "en-US": "Format limit for a single character: number allows digits only, mixed allows digits and letters, and a regular expression or function judges each character."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开整个验证码时调用，参数为原生 `FocusEvent`。",
+                "en-US": "Called when focus leaves the whole code, with the native `FocusEvent`."
+            },
+            "onChange": {
+                "zh-CN": "内容变化时调用，参数为当前内容。",
+                "en-US": "Called when the content changes, with the current content."
+            },
+            "onComplete": {
+                "zh-CN": "所有位数输入完毕时调用，参数为当前内容。",
+                "en-US": "Called once all digits are entered, with the current content."
+            },
+            "onFocus": {
+                "zh-CN": "焦点进入整个验证码时调用，参数为原生 `FocusEvent`；在输入框之间移动不调用。",
+                "en-US": "Called when focus enters the code from outside, with the native `FocusEvent`; moving between the inputs does not call it."
+            },
+            "size": {
+                "zh-CN": "输入框大小，可选 large、default、small。",
+                "en-US": "Input size: large, default or small."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，传给每个输入框；error 时显示错误样式。",
+                "en-US": "Validation status, passed to every input; error shows the error style."
+            },
+            "value": {
+                "zh-CN": "输入框内容。传入即为受控，需配合 onChange 更新。",
+                "en-US": "Input content. Passing it makes the component controlled, so update it in onChange."
+            }
+        }
+    }
+}

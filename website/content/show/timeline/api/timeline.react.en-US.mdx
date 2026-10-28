@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property   | Description                                                                                                                                                        | Type                                                                | Default  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------- |
+| children   | Timeline items, usually `Timeline.Item`. Ignored when dataSource is not empty.                                                                                     | `React.ReactNode`                                                   | -        |
+| className  | Class name of the root `ul` element.                                                                                                                               | `string`                                                            | -        |
+| dataSource | Data array. When it is not empty, the items are rendered from it and children are ignored. Each item takes the Timeline.Item props, with `content` as its content. | `Data[]`                                                            | -        |
+| mode       | Position of the timeline relative to the content: `left`, `right`, `center` or `alternate`.                                                                        | `'left' \| 'right' \| 'center' \| 'alternate'`                      | `"left"` |
+| ref        | Reference to the root `ul` element.                                                                                                                                | <ApiType detail={"React.Ref\u003cHTMLUListElement>"}>Type</ApiType> | -        |
+| style      | Style of the root `ul` element.                                                                                                                                    | `React.CSSProperties`                                               | -        |

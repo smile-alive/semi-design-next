@@ -1,0 +1,89 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| allowCreate | 是否允许创建下拉列表中不存在的条目，需配合 filter 使用。创建时触发 onCreate，条目的渲染可用 renderCreateItem 定制。 | `boolean` | `false` |
+| aria-label | combobox 的可访问名称：搜索框在选择框内时是搜索框，否则是触发器。优先级低于 aria-labelledby，高于 insetLabel。 | `string` | - |
+| arrowIcon | 自定义右侧下拉箭头图标，传 null 不显示图标。showClear 开启且有已选值时，hover 优先显示清除图标。 | `JSX.Element` | - |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autoClearSearchValue | 多选并开启搜索时，选中选项后是否自动清空搜索关键字。 | `boolean` | `true` |
+| autofocus | 挂载后是否自动聚焦。 | `boolean` | - |
+| borderless | 是否使用无边框样式。 | `boolean` | `false` |
+| children | 选项，直接子元素必须是 `Select.Option` 或 `Select.OptGroup`。`optionList` 非空时优先于 children；分组只能用 `Select.OptGroup` 声明。 | `JSX.Element` | - |
+| clearIcon | 自定义清除按钮的图标，showClear 为 true 时有效。 | `JSX.Element` | - |
+| clickToHide | 下拉列表已展开时，点击选择框是否收起它。 | `boolean` | - |
+| defaultActiveFirstOption | 没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。 | `boolean` | `true` |
+| defaultOpen | 是否默认展开下拉列表。 | `boolean` | `false` |
+| defaultValue | 初始选中的值，只在挂载时读取；多选时为数组。设置 onChangeWithObject 时为选项对象，须含 value 与 label。 | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
+| disabled | 是否禁用。未设置时使用所在 InputGroup 的值。 | `boolean` | - |
+| dropdownClassName | 下拉弹出层的类名。 | `string` | - |
+| dropdownMatchSelectWidth | 下拉弹出层的最小宽度是否等于选择框。 | `boolean` | `true` |
+| dropdownStyle | 下拉弹出层的样式，例如设置 width。根元素上的 `style` 不会传给弹出层。 | `JSX.CSSProperties \| string` | - |
+| ellipsisTrigger | 多选并设置 maxTagCount 时，宽度不足是否截断最后一个标签的内容。开启后有一定性能损耗，不建议在大表单中使用。 | `boolean` | `false` |
+| emptyContent | 没有选项可显示时的内容，传 null 则不显示下拉列表的空状态。 | `JSX.Element` | - |
+| expandRestTagsOnClick | 多选并设置 maxTagCount 时，下拉列表展开期间是否显示全部标签。 | `boolean` | `false` |
+| filter | 是否可搜索。传入 true 时开启搜索，默认策略为选项 label（含所在分组的标题）包含输入值；传入函数时接收输入值与选项，返回 true 表示命中。 | <ApiType detail={"boolean \u007c ((inputValue: string, option: OptionProps) => boolean)"}>Type</ApiType> | `false` |
+| id | 触发器的 id，选项的 id 由它派生。未传时由组件生成。 | `string` | - |
+| innerBottomSlot | 渲染在下拉列表底部、optionList 内部的内容，滚动到底部时展现。 | `JSX.Element` | - |
+| innerTopSlot | 渲染在下拉列表顶部、optionList 内部的内容，滚动到顶部时展现。 | `JSX.Element` | - |
+| inputProps | 开启搜索时，搜索框 Input 的额外属性，`inputRef` 接收其原生 input 元素。类型不含 value、onFocus 与 onChange，它们由 Select 自己处理。 | `SelectInputProps` | - |
+| insetLabel | 选择框内的内嵌标签，同时作为 combobox 与下拉列表的名称来源。有 prefix 时不渲染，也不作名称。 | `JSX.Element` | - |
+| insetLabelId | insetLabel 元素的 id，combobox 的 aria-labelledby 指向它。未传时由组件生成。 | `string` | - |
+| loading | 下拉列表是否显示加载动画。 | `boolean` | - |
+| max | 最多可选几项，仅多选时生效；超出后无法继续选中并触发 onExceed。 | `number` | - |
+| maxHeight | 下拉列表的最大高度，数字按像素处理，字符串原样使用。虚拟列表的 height 大于默认值时，需同时设置为相同的值，避免出现双滚动条。 | `string \| number` | `270` |
+| maxTagCount | 多选时最多显示的标签数，超出的部分以 +N 显示。 | `number` | - |
+| motion | 弹出层是否使用动画。 | `boolean` | `true` |
+| multiple | 是否多选。它决定 onChange 的参数类型：多选为数组，单选为单个值或 undefined。 | `Multiple` | `false` |
+| onBlur | 焦点离开 Select 时的回调；点击外部关闭下拉列表时参数为该次 mousedown 的原生事件。 | <ApiType detail={"(e: FocusEvent \u007c MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | 选中值变化时的回调，单选时参数为 T 或 undefined，多选时为 T[]。 | <ApiType detail={"(value: SelectChangeValue\u003cT, Multiple>) => void"}>Type</ApiType> | - |
+| onChangeWithObject | 是否将选项对象作为值：设为 true 时，onChange 的参数以及 value、defaultValue 使用选项对象 `{ value, label, ...rest }`，对象须含 value 与 label。 | `boolean` | `false` |
+| onClear | 点击清除按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onCreate | allowCreate 为 true，创建条目时的回调。 | <ApiType detail={"(option: OptionProps) => void"}>Type</ApiType> | - |
+| onDeselect | 取消选中时的回调，仅多选时有效，value 总是选项的原始 value。 | <ApiType detail={"(value: OptionProps['value'], option: OptionProps) => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | 下拉列表展开或收起时的回调。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onExceed | 试图选择的数量超出 max 时的回调，仅多选时生效。 | <ApiType detail={"(option: OptionProps) => void"}>Type</ApiType> | - |
+| onFocus | 焦点从外部进入 Select 时的回调。 | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | - |
+| onListScroll | 候选项列表滚动时的回调，虚拟列表的滚动同样触发。 | <ApiType detail={"(e: Event) => void"}>Type</ApiType> | - |
+| onSearch | 搜索关键字变化时的回调。第二个参数是引起变化的事件；点击外部关闭后清空搜索时是原生 MouseEvent，通过 ref 的 search 调用时按传入的事件，从 triggerRender 调用 onSearch 时没有事件。 | <ApiType detail={"(value: string, event?: InputChangeEvent \u007c KeyboardEvent \u007c MouseEvent) => void"}>Type</ApiType> | - |
+| onSelect | 选项被选中时的回调，value 总是选项的原始 value（设置 onChangeWithObject 时也是）。 | <ApiType detail={"(value: OptionProps['value'], option: OptionProps) => void"}>Type</ApiType> | - |
+| optionList | 以数组形式传入选项，每项须带 value 与 label，其余字段随选项一起回传。数组非空时优先于 children；不支持分组。 | `OptionProps[]` | - |
+| outerBottomSlot | 渲染在下拉列表底部、与 optionList 平级的内容，始终展现。 | `JSX.Element` | - |
+| outerTopSlot | 渲染在下拉列表顶部、与 optionList 平级的内容，始终展现。 | `JSX.Element` | - |
+| placeholder | 选择框中没有选中值时显示的占位内容。 | `JSX.Element` | `""` |
+| position | 弹出层展开的位置，可选值同 Tooltip 的 position。 | `Position` | - |
+| prefix | 选择框的前缀。文本或图标会自动带上左右间隔，自定义元素的左右间隔为 0。 | `JSX.Element` | - |
+| preventScroll | 聚焦时是否阻止浏览器滚动到该元素，作用于组件内部的 focus 调用。 | `boolean` | - |
+| ref | 接收触发器元素，元素上带有下方 Methods 中的方法；它的 `focus()` 聚焦 combobox（搜索框在选择框内时是搜索框），不展开下拉列表。 | <ApiType detail={"Ref\u003cSelectElement>"}>Type</ApiType> | - |
+| remote | 是否开启远程搜索。开启后输入内容变化时不再在本地筛选，由使用方根据 onSearch 更新 optionList。 | `boolean` | `false` |
+| renderCreateItem | allowCreate 为 true 时自定义创建条目的渲染，参数为输入值、是否聚焦和行样式。与虚拟化结合使用时必须把 style 用在自定义元素上。不设置时显示语言包中的「创建」加输入内容。 | <ApiType detail={"(inputValue: OptionProps['value'], focus: boolean, style?: JSX.CSSProperties) => JSX.Element"}>Type</ApiType> | - |
+| renderOptionItem | 完全自定义下拉列表中候选项的渲染，参数含 id、label、value、selected、focused、disabled、inputValue、class、style、onClick、onMouseEnter。id 需与 role、aria-selected 一起写在最外层元素上，class、style、onMouseEnter 也需在最外层元素上使用。 | <ApiType detail={"(props: OptionRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSelectedItem | 自定义选择框中已选项的渲染。单选时返回内容；多选时第二个参数含 index、disabled 与 onClose，返回 `{ isRenderInTag, content }`，isRenderInTag 为 true 时内容会包在 Tag 中。 | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
+| restTagsPopoverProps | 显示剩余标签的 Popover 的配置，可设置 position、trigger 等。 | `PopoverProps` | - |
+| searchPlaceholder | 搜索框在下拉列表中（searchPosition 为 dropdown）时，搜索框的占位文字。 | `string` | - |
+| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `'trigger' \| 'dropdown'` | `"trigger"` |
+| showArrow | 是否显示右侧下拉箭头。 | `boolean` | `true` |
+| showClear | 是否显示清除按钮。有已选值或搜索文本且未禁用时，清除按钮出现在选择框内。 | `boolean` | `false` |
+| showRestTagsPopover | 超出 maxTagCount 后，hover 到 +N 时是否用 Popover 显示剩余的标签。 | `boolean` | `false` |
+| size | 大小，可选 small、default、large。所在 InputGroup 的 size 优先于它。 | `SelectSize` | - |
+| spacing | 弹出层与选择框的距离，单位为像素。 | `number \| { x: number; y: number }` | - |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
+| suffix | 选择框的后缀。文本或图标会自动带上左右间隔，自定义元素的左右间隔为 0。 | `JSX.Element` | - |
+| triggerRender | 自定义触发器的渲染。参数含 value、inputValue、onSearch、onClear、onRemove、disabled、placeholder 与 componentProps。 | <ApiType detail={"(props: TriggerRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| validateStatus | 校验状态，可选 default、warning、error，只影响背景色等样式。 | `ValidateStatus` | - |
+| value | 当前选中的值，多选时为数组。传入后即为受控组件，配合 onChange 使用。设置 onChangeWithObject 时为选项对象，须含 value 与 label。 | <ApiType detail={"SelectValue\u003cT>"}>Type</ApiType> | - |
+| virtualize | 开启列表虚拟化，用于选项很多时优化性能。itemSize 为每行高度，必传；height 默认 270，width 默认 100%。 | `VirtualizeProps` | - |
+
+**Methods**
+
+| 方法 | 说明 | 类型 |
+| --- | --- | --- |
+| clearInput | 清空搜索框的值。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| close | 关闭下拉列表。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| deselectAll | 清空所有已选项。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| open | 展开下拉列表。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition | 按触发器当前位置立即重新计算下拉层位置。下拉层已随滚动、窗口尺寸变化、触发器移动以及触发器或列表的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| search | 按输入了该值来搜索，该值会被置给搜索框；不传事件时 onSearch 的第二个参数为 undefined。 | <ApiType detail={"(value: string, event?: InputChangeEvent \u007c KeyboardEvent \u007c MouseEvent) => void"}>Type</ApiType> |
+| selectAll | 选中所有可见且未禁用的选项，仅多选时有效。 | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,370 @@
+---
+order: 73
+title: 图片
+icon: doc-image
+brief: 用于展示和预览图片。
+---
+
+import ImageReactApi from './api/image.react.zh-CN.mdx';
+import ImagePreviewReactApi from './api/image-preview.react.zh-CN.mdx';
+import ImageVueApi from './api/image.vue.zh-CN.mdx';
+import ImagePreviewVueApi from './api/image-preview.vue.zh-CN.mdx';
+import ImageSolidApi from './api/image.solid.zh-CN.mdx';
+import ImagePreviewSolidApi from './api/image-preview.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Image, ImagePreview } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Image, ImagePreview } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+通过 `src` 指定图片路径即可获取一个具有预览功能的图片，通过 `width`，`height` 指定图片的宽高
+
+<Demo id="basic" />
+
+### 加载失败的占位图
+
+<Framework only="react">
+
+可通过 `fallback` 自定义加载失败的占位图，该参数类型支持 string 和 ReactNode
+
+</Framework>
+
+<Framework only="vue">
+
+`fallback` 接收加载失败时显示的图片地址（string）；需要自定义内容时使用 `#fallback` 插槽，两者同时提供时插槽优先
+
+</Framework>
+
+<Framework only="solid">
+
+`fallback` 接收字符串或 JSX 元素：字符串是加载失败时显示的图片地址，JSX 元素原样显示；未设置时显示默认的加载失败图标
+
+</Framework>
+
+<Demo id="fallback" />
+
+### 渐进加载
+
+<Framework only="react">
+
+大图可通过`placeholder`实现渐进加载
+
+</Framework>
+
+<Framework only="vue">
+
+大图可通过 `#placeholder` 插槽实现渐进加载
+
+</Framework>
+
+<Framework only="solid">
+
+大图可通过 `placeholder` 实现渐进加载，传入的 JSX 元素在图片加载成功前显示
+
+</Framework>
+
+<Demo id="progressive" />
+
+### 自定义预览图片
+
+可以通过设置 Image 组件的 `src` 和 `preview` 参数中的 `src` 不同来自定义预览图片
+
+<Demo id="custom-preview" />
+
+### 多图预览
+
+使用 ImagePreview 包裹 Image 即可实现多图片预览
+
+<Demo id="multiple" />
+
+### 单独使用预览组件
+
+<Framework only="react">
+
+预览组件 ImagePreview 可以单独使用，通过 `visible` 和 `onVisibleChange` 控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle` 设置预览顶部的标题
+
+</Framework>
+
+<Framework only="vue">
+
+预览组件 ImagePreview 可以单独使用，通过 `v-model:visible`（或 `visible` 加 `@visibleChange`）控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle`（string）设置预览顶部的标题
+
+</Framework>
+
+<Framework only="solid">
+
+预览组件 ImagePreview 可以单独使用，通过 `visible` 和 `onVisibleChange` 控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle`（JSX 元素）设置预览顶部的标题
+
+</Framework>
+
+<Demo id="standalone-preview" />
+
+### 渲染在指定容器
+
+可以通过 `getPopupContainer` 指定预览组件的父级 DOM（需要指定 `position: relative`)，图片预览将会渲染至该 DOM 中。这会改变浮层 DOM 树位置，但不会改变视图渲染位置。
+
+容器不是 `document.body` 时（包括只在 ConfigProvider 上设置 `getPopupContainer`），预览为非模态：不输出 `aria-modal`，不锁定 Tab，也不锁定页面滚动。`getPopupContainer` 返回 `document.body` 与不传相同。
+
+<Demo id="container" />
+
+### 自定义预览底部操作区
+
+<Framework only="react">
+
+可以使用 `renderPreviewMenu` 自定义预览底部操作区域
+
+</Framework>
+
+<Framework only="vue">
+
+可以使用 `#previewMenu` 插槽自定义预览底部操作区域，插槽参数为 MenuProps。ImagePreview 包裹的 Image 使用 ImagePreview 的插槽，单独使用的 Image 使用自己的同名插槽
+
+</Framework>
+
+<Framework only="solid">
+
+可以使用 `renderPreviewMenu` 自定义预览底部操作区域，它接收下方 MenuProps 的值并返回 JSX 元素。ImagePreview 包裹的 Image 使用 ImagePreview 的 `renderPreviewMenu`；单独使用的 Image 通过 `preview` 对象传入同名属性
+
+</Framework>
+
+<Demo id="render-preview-menu" />
+
+<Framework only="react">
+
+如果想基于默认底部操作区域自定义预览底部操作区域， 可以通过 renderPreviewMenu 的 menuItems 获取默认的 ReactNode, menuItems 是一个 ReactNode 数组，顺序和默认底部操作栏功能区域内容顺序一致
+
+</Framework>
+
+<Framework only="vue">
+
+如果想基于默认底部操作区域自定义预览底部操作区域，可以通过插槽参数 menuItems 获取默认各项的 VNode 数组，顺序依次为上一张、页码、下一张、缩小、缩放滑块、放大、原始尺寸 / 适应页面、旋转、下载，可用 `<component :is>` 渲染
+
+</Framework>
+
+<Framework only="solid">
+
+如果想基于默认底部操作区域自定义预览底部操作区域，可以通过 renderPreviewMenu 的 menuItems 参数获取默认各项的 JSX 元素数组，顺序依次为上一张、页码、下一张、缩小、缩放滑块、放大、原始尺寸 / 适应页面、旋转、下载，可按任意位置渲染。
+
+</Framework>
+
+<Demo id="menu-items" />
+
+### 自定义预览顶部展示区
+
+<Framework only="react">
+
+通过 `renderHeader` 可以自定义预览顶部展示区
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#title="{ title, index }"` 插槽替换预览顶部标题区的内容。有标题时预览对话框经 `aria-labelledby` 以标题区命名，名称即插槽渲染出的文字；没有标题时名称为语言包的「预览」。顶部的关闭按钮可用 `#closeIcon` 替换图标，切换箭头可用 `#leftIcon="{ index }"`、`#rightIcon="{ index }"` 替换图标
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `renderHeader` 可以自定义预览顶部展示区，它接收当前标题（JSX 元素）并返回新的 JSX 元素
+
+</Framework>
+
+<Demo id="render-header" />
+
+## API 参考
+
+### Image
+
+<Framework only="react">
+
+<ImageReactApi />
+
+`onLoad`、`onError` 分别在图片加载成功、失败时调用，参数为 `SyntheticEvent<HTMLImageElement>`；其他原生属性（如 `data-*`、`aria-*`）透传至底层的 img 节点。
+
+单个 Image 的 `preview` 对象接受下表 ImagePreview 的属性，但不含 `lazyLoad`、`lazyLoadMargin`、`children`、`className`、`style`（预览样式请用 `previewCls`、`previewStyle`）。`preview.src` 为数组时，切换图片后回到「适应页面」。
+
+</Framework>
+
+<Framework only="vue">
+
+<ImageVueApi />
+
+`width`、`height` 的数值按 px 处理。`class`、`style` 落在根元素上，其余未声明的原生属性与监听落在内部的 img 上。`preview` 对象接受 ImagePreview 的 props 与回调（`onVisibleChange`、`onChange`、`onClose`、`onZoomIn`、`onZoomOut`、`onPrev`、`onNext`、`onRatioChange`、`onRotateLeft`、`onDownload`、`onDownloadError`），但不含 `lazyLoad`、`lazyLoadMargin`、`class`、`style`（预览样式请用 `previewCls`、`previewStyle`）；自定义节点不放在 `preview` 里，使用 Image 的插槽。`preview.src` 为数组时，切换图片后回到「适应页面」。处于 ImagePreview 内的 Image 不使用 `#title`、`#previewMenu`、`#leftIcon`、`#rightIcon`、`#closeIcon`，以 ImagePreview 的插槽为准。
+
+</Framework>
+
+<Framework only="solid">
+
+<ImageSolidApi />
+
+`class`、`style` 落在缩略图的根元素上；`ref`、`id`、`aria-*` 与原生事件（如 `onClick`）落在内部的 img 上。
+
+</Framework>
+
+### ImagePreview
+
+<Framework only="react">
+
+<ImagePreviewReactApi />
+
+其他原生属性（如 `aria-label`、`aria-labelledby`）落在分组的根 div 上；传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时根元素带 `role="group"`。预览对话框渲染到 `getPopupContainer`（默认 `document.body`）中，名称来自 `previewTitle`，没有标题时来自语言包。
+
+</Framework>
+
+<Framework only="vue">
+
+<ImagePreviewVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素（分组 div）上，传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时根元素带 `role="group"`。预览对话框渲染到 `getPopupContainer`（默认 `document.body`）中，名称来自 `previewTitle`，没有标题时来自语言包。
+
+</Framework>
+
+<Framework only="solid">
+
+<ImagePreviewSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `aria-label`、`aria-labelledby`）落在分组的根 div 上；传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时根元素带 `role="group"`。预览对话框渲染到 `getPopupContainer`（默认 `document.body`）中，名称来自 `previewTitle`，没有标题时来自语言包。
+
+</Framework>
+
+### MenuProps
+
+`min`、`max`、`step`、`zoom` 是百分比数值（如 `min` 为 `10` 表示 10%，`step` 为 `10` 表示每次 10%），与 ImagePreview 的 `minZoom`、`maxZoom`、`zoomStep`、`initialZoom`（倍数，如 `0.1`、`5`）单位不同。
+
+<Framework only="react">
+
+| 属性            | 说明                                        | 类型                       |
+| --------------- | ------------------------------------------- | -------------------------- |
+| curPage         | 当前图片页下标                              | number                     |
+| disabledPrev    | 是否禁用向左切换按钮                        | boolean                    |
+| disabledNext    | 是否禁用向右切换按钮                        | boolean                    |
+| disabledZoomIn  | 是否已放大到最大比例（放大按钮禁用）        | boolean                    |
+| disabledZoomOut | 是否已缩小到最小比例（缩小按钮禁用）        | boolean                    |
+| disableDownload | 是否禁用下载按钮                            | boolean                    |
+| max             | 图片缩放最大比例（百分比）                  | number                     |
+| min             | 图片缩放最小比例（百分比）                  | number                     |
+| onDownload      | 图片下载的调用函数                          | () => void                 |
+| onZoomIn        | 图片放大时的调用函数                        | () => void                 |
+| onZoomOut       | 图片缩小时的调用函数                        | () => void                 |
+| onRatioClick    | 切换原始尺寸与适应页面的调用函数            | () => void                 |
+| onPrev          | 向前切换图片的调用函数                      | () => void                 |
+| onNext          | 向后切换图片的调用函数                      | () => void                 |
+| onRotateLeft    | 逆时针旋转图片的调用函数                    | () => void                 |
+| onRotateRight   | 顺时针旋转图片的调用函数                    | () => void                 |
+| ratio           | 原始尺寸或适应页面按钮状态                  | "adaptation" \| "realSize" |
+| step            | 缩放的比例步长（百分比）                    | number                     |
+| totalNum        | 可预览的总图片数                            | number                     |
+| zoom            | 当前图片缩放比例（百分比）                  | number                     |
+| menuItems       | 默认底部预览操作区域功能按钮 ReactNode 数组 | ReactNode[]                |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性            | 说明                                              | 类型                       |
+| --------------- | ------------------------------------------------- | -------------------------- |
+| curPage         | 当前图片页下标                                    | number                     |
+| disabledPrev    | 是否禁用向左切换按钮                              | boolean                    |
+| disabledNext    | 是否禁用向右切换按钮                              | boolean                    |
+| disabledZoomIn  | 是否已放大到最大比例（放大按钮禁用）              | boolean                    |
+| disabledZoomOut | 是否已缩小到最小比例（缩小按钮禁用）              | boolean                    |
+| disableDownload | 是否禁用下载按钮                                  | boolean                    |
+| max             | 图片缩放最大比例（百分比）                        | number                     |
+| min             | 图片缩放最小比例（百分比）                        | number                     |
+| onDownload      | 图片下载的调用函数                                | () => void                 |
+| onZoomIn        | 图片放大时的调用函数                              | () => void                 |
+| onZoomOut       | 图片缩小时的调用函数                              | () => void                 |
+| onRatioClick    | 切换原始尺寸与适应页面的调用函数                  | () => void                 |
+| onPrev          | 向前切换图片的调用函数                            | () => void                 |
+| onNext          | 向后切换图片的调用函数                            | () => void                 |
+| onRotateLeft    | 逆时针旋转图片的调用函数                          | () => void                 |
+| onRotateRight   | 顺时针旋转图片的调用函数                          | () => void                 |
+| ratio           | 原始尺寸或适应页面按钮状态                        | "adaptation" \| "realSize" |
+| step            | 缩放的比例步长（百分比）                          | number                     |
+| totalNum        | 可预览的总图片数                                  | number                     |
+| zoom            | 当前图片缩放比例（百分比）                        | number                     |
+| menuItems       | 默认底部预览操作区域各项的 VNode 数组，可原样渲染 | VNode[]                    |
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性            | 说明                                                | 类型                         |
+| --------------- | --------------------------------------------------- | ---------------------------- |
+| curPage         | 当前图片页下标                                      | number                       |
+| disabledPrev    | 是否禁用向左切换按钮                                | boolean                      |
+| disabledNext    | 是否禁用向右切换按钮                                | boolean                      |
+| disabledZoomIn  | 是否已放大到最大比例（放大按钮禁用）                | boolean                      |
+| disabledZoomOut | 是否已缩小到最小比例（缩小按钮禁用）                | boolean                      |
+| disableDownload | 是否禁用下载按钮                                    | boolean                      |
+| max             | 图片缩放最大比例（百分比）                          | number                       |
+| min             | 图片缩放最小比例（百分比）                          | number                       |
+| onDownload      | 图片下载的调用函数                                  | () => void                   |
+| onZoomIn        | 图片放大时的调用函数                                | () => void                   |
+| onZoomOut       | 图片缩小时的调用函数                                | () => void                   |
+| onRatioClick    | 切换原始尺寸与适应页面的调用函数                    | () => void                   |
+| onPrev          | 向前切换图片的调用函数                              | () => void                   |
+| onNext          | 向后切换图片的调用函数                              | () => void                   |
+| onRotateLeft    | 逆时针旋转图片的调用函数                            | () => void                   |
+| onRotateRight   | 顺时针旋转图片的调用函数                            | () => void                   |
+| ratio           | 原始尺寸或适应页面按钮状态                          | `"adaptation" \| "realSize"` |
+| step            | 缩放的比例步长（百分比）                            | number                       |
+| totalNum        | 可预览的总图片数                                    | number                       |
+| zoom            | 当前图片缩放比例（百分比）                          | number                       |
+| menuItems       | 默认底部预览操作区域各项的 JSX 元素数组，可原样渲染 | JSX.Element[]                |
+
+字段实时读取：在 JSX 表达式里直接读取 `menu.disabledPrev` 等字段，不要解构 `menu` 参数。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 预览渲染在 `document.body`（默认）时是 `role="dialog"`、`aria-modal="true"` 的模态对话框；渲染到自定义容器（`getPopupContainer` 返回其他元素，含 ConfigProvider 设置的容器）时是非模态对话框，不输出 `aria-modal`。有标题（`previewTitle`，或组内图片的 `preview.previewTitle`）时由标题命名，否则以语言包的「预览」作为名称
+- 关闭、左右切换箭头，以及底部的上一张、下一张、缩小、放大、原始尺寸 / 适应页面、旋转、下载都是原生 `button`，读屏名称取自对应的 `prevTip`、`nextTip` 等属性，未设置时取自语言包；缩放滑块的名称是语言包的「缩放」，`aria-valuetext` 为当前百分比
+- 到达首张、末张或缩放上下限时，底部对应按钮带 `aria-disabled="true"`，仍可聚焦，焦点不会丢失。没有当前图片（`src` 为空列表）时下载按钮同样禁用
+- 底部页码带 `aria-live="polite"`，切换图片时读屏会读出新的位置
+- 开启预览且图片加载成功后，Image 缩略图的根元素是 `role="button"`、`tabindex="0"`、`aria-haspopup="dialog"` 的可聚焦按钮，名称取自图片的 `alt`；`preview` 为 false 或图片未加载成功时不可聚焦。关闭预览后焦点回到缩略图。ImagePreview 分组内的缩略图鼠标可点开，键盘同样可以：加载中或加载失败时也带按钮角色、可聚焦，Enter 或空格打开分组预览
+- 预览图的 `alt` 取自对应缩略图的 `alt`（`ImagePreview` 的 `src` 数组没有 alt，为空字符串）
+
+### 键盘交互
+
+- 焦点在缩略图上时，Enter 或空格打开预览
+- 打开预览后焦点移入预览层。模态预览中 Tab 与 Shift + Tab 在预览层内的控件间循环，关闭后焦点回到打开前聚焦的元素；渲染到自定义容器的非模态预览不锁定 Tab，关闭时只有焦点仍在预览内或落在 body 上才回到打开前聚焦的元素，焦点已移到页面其他位置时保持不变
+- Enter 或空格触发聚焦的按钮
+- ← 与 → 切换上一张、下一张，RTL（ConfigProvider `direction="rtl"`）下左右互换。到首张或末张时与按钮一致：`infinite` 为 true 时循环，否则不切换
+- 焦点在输入框、文本域、下拉框或可编辑元素中（例如自定义页脚里的输入框），或同时按下 Alt、Ctrl、Meta、Shift 时，← 与 → 不切换图片；缩放滑块聚焦时 ← 与 → 调整缩放比例
+- Esc 关闭预览（`closeOnEsc` 为 false 时不关闭）
+- 操作区因 `viewerVisibleDelay` 隐藏后，按键或焦点移到操作区上会重新显示；焦点停在操作区时不再自动隐藏
+
+## 设计变量
+
+<DesignToken />

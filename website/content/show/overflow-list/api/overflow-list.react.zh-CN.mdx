@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 根元素的类名。 | `string` | - |
+| collapseFrom | collapse 模式的折叠方向，可选 `start` 或 `end`。 | `'start' \| 'end'` | `"end"` |
+| itemKey | 每项 key 的字段名，或取 key 的函数；默认读取 key 字段，没有时取该项在 items 中的位置。 | <ApiType detail={"string \u007c number \u007c ((item: T) => string \u007c number)"}>Type</ApiType> | - |
+| items | 渲染项目，只放数据，不放节点，节点由 visibleItemRenderer 渲染；scroll 模式要求每项含 key 字段（或由 itemKey 指定的字段）。 | <ApiType detail={"Array\u003cT>"}>Type</ApiType> | `[]` |
+| minVisibleItems | collapse 模式下最少展示的项数，这些项即使放不下也不会折叠。 | `number` | `0` |
+| onIntersect | scroll 模式下各项的相交状态变化时调用，参数以 key 为索引，值为对应项的 `IntersectionObserverEntry`。 | <ApiType detail={"(res: { [key: string]: IntersectionObserverEntry }) => void"}>Type</ApiType> | - |
+| onOverflow | collapse 模式下溢出项变化时调用，全部放得下时以空数组调用。 | <ApiType detail={"(overflowItems: Array\u003cT>) => void"}>Type</ApiType> | <ApiType detail={"() => null"}>Type</ApiType> |
+| onVisibleStateChange | scroll 模式下各项的显示或隐藏状态变化时调用，参数为以 key 为索引的 `Map`。 | <ApiType detail={"(visibleState: Map\u003cstring, boolean>) => void"}>Type</ApiType> | - |
+| overflowRenderDirection | scroll 模式下两侧溢出节点的位置，可选 `both`、`start` 或 `end`；供 Tabs 使用，不面向使用方。 | `'both' \| 'start' \| 'end'` | `"both"` |
+| overflowRenderer | 渲染溢出项。collapse 模式下参数为放不下的项，返回一个溢出节点；scroll 模式下参数为 `[start, end]` 两组项，返回两侧各一个节点。 | <ApiType detail={"((overflowItems: Array\u003cT>) => ReactNode) \u007c ((overflowItems: [Array\u003cT>, Array\u003cT>]) => [ReactNode, ReactNode])"}>Type</ApiType> | <ApiType detail={"(): ReactElement => null"}>Type</ApiType> |
+| ref | 根元素的引用。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| renderMode | 渲染模式，可选 `collapse` 或 `scroll`。 | `'collapse' \| 'scroll'` | `"collapse"` |
+| style | 根元素的样式。 | `CSSProperties` | - |
+| threshold | scroll 模式下触发相交回调的可见比例阈值。 | `number` | `0.75` |
+| visibleItemRenderer | 渲染单个可见项并返回该项的 React 元素，参数 index 为该项在 items 中的位置。scroll 模式下该元素会被观察，并写入 `data-scrollkey`。 | <ApiType detail={"(item: T, index: number) => ReactElement"}>Type</ApiType> | <ApiType detail={"(): ReactElement => null"}>Type</ApiType> |
+| wrapperClassName | scroll 模式下滚动 wrapper 的类名。 | `string` | - |
+| wrapperProps | scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role；其中的 className 与 style 会被 wrapperClassName、wrapperStyle 覆盖。 | <ApiType detail={"HTMLAttributes\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| wrapperStyle | scroll 模式下滚动 wrapper 的样式，传入样式对象。 | `CSSProperties` | - |

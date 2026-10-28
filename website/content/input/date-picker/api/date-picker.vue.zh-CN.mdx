@@ -1,0 +1,94 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 绑定值，可以是 Date、时间戳或符合 format 的字符串，范围与多选为数组。null 表示受控的空值，undefined 为非受控。 | `ValueType \| null` | `undefined` |
+| defaultValue | 非受控时的初始值。 | `ValueType` | `semiGlobalDefault("DatePicker", "defaultValue")` |
+| open | 面板显示或隐藏的受控属性，配合 v-model:open 使用。 | `boolean` | `undefined` |
+| defaultOpen | 面板默认显示或隐藏。 | `boolean` | `semiDefault("DatePicker", "defaultOpen", false)` |
+| type | 类型，可选 date、dateRange、dateTime、dateTimeRange、month、monthRange、year。 | `Type` | `semiDefault("DatePicker", "type", "date")` |
+| format | 输入框内展示的日期串格式，默认值与 type 对应。不含时间 token 时，dateTime 按 date、dateTimeRange 按 dateRange 处理。 | `string` | `semiGlobalDefault("DatePicker", "format")` |
+| defaultPickerValue | 没有值时面板显示的日期，dateTime 类型下也是底部时间的默认值。按内容比较，内容变化时面板回到该日期；每次渲染都传 `new Date()` 会被视为变化。 | `ValueType` | `semiGlobalDefault("DatePicker", "defaultPickerValue")` |
+| multiple | 是否可以选择多个日期，仅 type 为 date 时有效。 | `boolean` | `semiDefault("DatePicker", "multiple", false)` |
+| max | multiple 为 true 时可选的日期个数，不传则不限制。 | `number` | `semiGlobalDefault("DatePicker", "max")` |
+| needConfirm | 是否需要点击确认才写入值，仅 dateTime 与 dateTimeRange 类型有效。 | `boolean` | `semiDefault("DatePicker", "needConfirm", false)` |
+| disabled | 是否禁用。 | `boolean` | `semiDefault("DatePicker", "disabled", false)` |
+| disabledDate | 日期禁止判断方法，返回 true 时禁止该日期。第二个参数提供 rangeStart、rangeEnd 和 rangeInputFocus。type 为 year 时以每年的 1 月 1 日调用，返回 true 时禁止该年。 | `DisabledDateType` | `undefined` |
+| disabledTime | 时间禁止配置，返回 disabledHours、disabledMinutes、disabledSeconds，参数为当前日期和面板位置。 | `DisabledTimeType` | `undefined` |
+| disabledTimePicker | 是否禁止时间选择，仅 dateTime 与 dateTimeRange 类型有效。 | `boolean` | `semiDefault("DatePicker", "disabledTimePicker", false)` |
+| hideDisabledOptions | 隐藏被禁止选择的时间。 | `boolean` | `semiDefault("DatePicker", "hideDisabledOptions", false)` |
+| startDateOffset | type 为 dateRange 时，单击选择范围的开始日期。 | `DateOffsetType` | `undefined` |
+| endDateOffset | type 为 dateRange 时，单击选择范围的结束日期。 | `DateOffsetType` | `undefined` |
+| placeholder | 输入框提示文字，范围类型传数组。默认取语言包中 type 对应的文案。 | `string \| string[]` | `semiGlobalDefault("DatePicker", "placeholder")` |
+| rangeSeparator | 范围类型输入框中的日期分隔符，同时用于解析输入。只改变展示时用 rangeSeparator 插槽。 | `string` | <ApiType detail={"semiDefault(\"DatePicker\", \"rangeSeparator\", strings.DEFAULT_SEPARATOR_RANGE)"}>Type</ApiType> |
+| size | 输入框尺寸，可选 small、default、large。 | `Size` | `semiDefault("DatePicker", "size", "default")` |
+| density | 面板的尺寸，可选 default 或 compact。 | `DensityType` | `semiDefault("DatePicker", "density", "default")` |
+| borderless | 无边框模式。 | `boolean` | `semiDefault("DatePicker", "borderless", false)` |
+| showClear | 是否显示清除按钮。 | `boolean` | `semiDefault("DatePicker", "showClear", true)` |
+| inputReadOnly | 输入框是否只读。 | `boolean` | `semiDefault("DatePicker", "inputReadOnly", false)` |
+| inputStyle | 输入框根元素的样式。 | `StyleValue` | `semiGlobalDefault("DatePicker", "inputStyle")` |
+| insetInput | 把输入框嵌入面板，可传对象设置各输入框的占位文字。 | `boolean \| InsetInputProps` | `semiDefault("DatePicker", "insetInput", false)` |
+| insetLabelId | 内嵌标签元素的 id。 | `string` | `undefined` |
+| validateStatus | 校验状态，可选 default、error、warning，仅影响样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("DatePicker", "validateStatus")` |
+| autofocus | 挂载时聚焦输入框，同时打开面板。 | `boolean` | `semiDefault("DatePicker", "autofocus", false)` |
+| preventScroll | 聚焦时是否阻止浏览器滚动到输入框。 | `boolean` | `semiGlobalDefault("DatePicker", "preventScroll")` |
+| weekStartsOn | 每周的第一天，0 为周日，1 为周一，以此类推。 | `WeekStartNumber` | `semiDefault("DatePicker", "weekStartsOn", numbers.WEEK_START_ON)` |
+| startYear | 年份滚轮的开始年，默认为当前年前 100 年。 | `number` | `semiGlobalDefault("DatePicker", "startYear")` |
+| endYear | 年份滚轮的结束年，需要大于开始年，默认为当前年后 100 年。 | `number` | `semiGlobalDefault("DatePicker", "endYear")` |
+| autoSwitchDate | 通过面板上方左右按钮、下拉菜单更改年月时，自动切换日期。仅对 date 类型生效。 | `boolean` | `semiDefault("DatePicker", "autoSwitchDate", true)` |
+| syncSwitchMonth | 范围选择时，同步切换双面板的月份。 | `boolean` | `semiDefault("DatePicker", "syncSwitchMonth", false)` |
+| presets | 日期时间快捷方式。数组项以及 start、end 可以是函数，在面板渲染和点击时调用。 | `PresetsType` | `semiGlobalDefault("DatePicker", "presets")` |
+| presetPosition | 快捷方式面板的位置，可选 left、right、top、bottom。 | `"top" \| "bottom" \| "left" \| "right"` | `semiDefault("DatePicker", "presetPosition", "bottom")` |
+| timePickerOpts | 传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps。格式、值和禁用时间由面板设置。 | <ApiType detail={"Partial\u003cPick\u003cComboboxProps, \"use12Hours\" \u007c \"hourStep\" \u007c \"minuteStep\" \u007c \"secondStep\" \u007c \"scrollItemProps\" \u007c \"defaultIsAM\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "timePickerOpts")` |
+| yearAndMonthOpts | 传给年月滚动列的参数：cycled、mode、motion、transform。列表和选中项由面板设置。 | <ApiType detail={"Partial\u003cPick\u003cScrollItemProps\u003cItem>, \"motion\" \u007c \"mode\" \u007c \"cycled\" \u007c \"transform\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "yearAndMonthOpts")` |
+| timeZone | 时区，数字为 UTC 偏移的小时数。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | `undefined` |
+| motion | 是否开启面板展开的动画。 | `boolean` | `semiDefault("DatePicker", "motion", true)` |
+| autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("DatePicker", "autoAdjustOverflow", true)` |
+| position | 浮层位置。默认 bottomLeft（RTL 下为 bottomRight），开启 insetInput 时为 leftTopOver。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("DatePicker", "position")` |
+| spacing | 浮层与触发器的距离。开启 insetInput 且面板覆盖触发器时为 1，否则为 Popover 的默认间距。 | `number` | `semiGlobalDefault("DatePicker", "spacing")` |
+| stopPropagation | 是否阻止浮层上的点击事件冒泡。 | `string \| boolean` | `semiDefault("DatePicker", "stopPropagation", true)` |
+| dropdownClassName | 浮层的类名。 | `string` | `semiGlobalDefault("DatePicker", "dropdownClassName")` |
+| dropdownStyle | 浮层的内联样式。 | `StyleValue` | `semiGlobalDefault("DatePicker", "dropdownStyle")` |
+
+**Events**
+
+| 事件              | 说明                                                                                                                                               | 回调参数                                                                                                                               |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| update:modelValue | 值变化时触发，用于 v-model。清空时单选为 undefined，范围与多选为 []。                                                                              | `[value: Date \| Date[] \| undefined]`                                                                                                 |
+| change            | 值变化时触发，参数为日期和日期字符串，范围与多选时两者都是数组。范围类型在起止日期都选好后才触发。遮住根元素上冒泡的原生 change。                  | `[date: Date \| Date[] \| undefined, dateString: string \| string[]]`                                                                  |
+| update:open       | 面板打开或关闭时触发，用于 v-model:open。                                                                                                          | `[open: boolean]`                                                                                                                      |
+| openChange        | 面板打开或关闭时触发，与 update:open 同时发出。                                                                                                    | `[open: boolean]`                                                                                                                      |
+| focus             | 输入框获得焦点，或点击、按键使范围起始输入框获得焦点时触发；rangeType 只在范围输入框聚焦时有值，范围内两个输入框之间移动不再触发。遮住原生 focus。 | <ApiType detail={"[event: MouseEvent \u007c FocusEvent \u007c KeyboardEvent, rangeType?: RangeInput \u007c undefined]"}>Type</ApiType> |
+| blur              | 面板关闭时触发。点击外部关闭时参数为那次 mousedown，确认、选中日期、Esc 等其他关闭方式不带参数。遮住原生 blur。                                    | `[event?: MouseEvent \| undefined]`                                                                                                    |
+| clear             | 点击清除按钮时触发。                                                                                                                               | `[event: MouseEvent]`                                                                                                                  |
+| cancel            | 取消选择时触发，参数为上次确认的值，仅 needConfirm 时有效。                                                                                        | `[date: Date \| Date[], dateString: string \| string[]]`                                                                               |
+| confirm           | 确认选择时触发，参数为当前选择的值，仅 needConfirm 时有效。                                                                                        | `[date: Date \| Date[], dateString: string \| string[]]`                                                                               |
+| panelChange       | 面板的年份或月份切换时触发。                                                                                                                       | `[date: Date \| Date[], dateString: string \| string[]]`                                                                               |
+| presetClick       | 点击快捷方式按钮时触发，第二个参数是原生 MouseEvent。                                                                                              | `[item: PresetType, event: MouseEvent]`                                                                                                |
+| clickOutSide      | 面板打开时点击浮层和触发器之外的区域触发，参数为原生 mousedown 事件。                                                                              | `[event: MouseEvent]`                                                                                                                  |
+
+**Slots**
+
+| 插槽           | 说明                                                                                                                                                                                                                                                       | 作用域参数                    |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| trigger        | 完全自定义触发器，参数含 value、inputValue、placeholder、disabled、size、inputReadOnly、rangeInputFocus、type、format、multiple、autofocus、componentProps，以及 onChange（更新输入文本）、onEnterPress（提交输入文本）、onClear。默认的清除按钮不再生效。 | `DatePickerTriggerSlotProps`  |
+| date           | 自定义日期格子的内容，参数为 dayNumber 和 fullDate（yyyy-MM-dd）。                                                                                                                                                                                         | `DatePickerDateSlotProps`     |
+| fullDate       | 自定义整个日期格子，参数为 dayNumber、fullDate 和 dayStatus。日期格只保留基础类名和 active 类名。                                                                                                                                                          | `DatePickerFullDateSlotProps` |
+| topSlot        | 面板顶部的额外区域。                                                                                                                                                                                                                                       | `any`                         |
+| bottomSlot     | 面板底部的额外区域。                                                                                                                                                                                                                                       | `any`                         |
+| leftSlot       | 面板左侧的额外区域。                                                                                                                                                                                                                                       | `any`                         |
+| rightSlot      | 面板右侧的额外区域。                                                                                                                                                                                                                                       | `any`                         |
+| prefix         | 输入框的前缀内容。                                                                                                                                                                                                                                         | `any`                         |
+| insetLabel     | 输入框的内嵌标签。                                                                                                                                                                                                                                         | `any`                         |
+| clearIcon      | 自定义清除图标，showClear 为 true 时有效。                                                                                                                                                                                                                 | `any`                         |
+| rangeSeparator | 自定义范围输入框分隔符的展示，不影响解析。                                                                                                                                                                                                                 | `any`                         |
+
+**Exposes**
+
+| 名称  | 说明                                                                                               | 类型                                                                                 |
+| ----- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| close | 关闭面板；受控的 open 优先。                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                                        |
+| focus | 聚焦输入框，范围类型默认聚焦开始框，传 rangeEnd 聚焦结束框。开启 insetInput 时聚焦面板内的输入框。 | <ApiType detail={"(focusType?: RangeInput \u007c undefined) => void"}>Type</ApiType> |
+| blur  | 输入框失焦。                                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                                        |

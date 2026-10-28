@@ -1,0 +1,67 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | - |
+| className | Class name of the root element. | `string` | - |
+| clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns from false to true. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
+| defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `TiptapContent` | - |
+| dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `true` |
+| extensions | Custom tiptap extensions. Read once, when the editor is created; later changes have no effect. | `Extensions` | - |
+| generating | Whether a response is being generated. While true, the send button becomes the stop button. | `boolean` | `false` |
+| immediatelyRender | Passed to the tiptap editor as its immediatelyRender option. When false, the editor is created after mount, which works with server rendering; when true, it is created during the first render, for client-only rendering. | `boolean` | `false` |
+| keepSkillAfterSend | Whether the selected skill is kept after a message is sent. | `boolean` | `false` |
+| onBlur | Called when focus leaves the editor area, with the focus event. | <ApiType detail={"(event: React.FocusEvent) => void"}>Type</ApiType> | - |
+| onConfigureChange | Called when a configure value changes. changedValue is undefined when an item is removed. | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onContentChange | Called when the input content changes, with the current content. | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
+| onFocus | Called when the editor area gains focus, with the focus event. | <ApiType detail={"(event: React.FocusEvent) => void"}>Type</ApiType> | - |
+| onMessageSend | Called when a message is sent, by the send button or the send shortcut, with the references, uploaded files, input content and configure values. | <ApiType detail={"(props: MessageContent) => void"}>Type</ApiType> | - |
+| onPaste | Called when content is pasted into the editor. It does not prevent the default paste; read the content from event.clipboardData. | <ApiType detail={"(event: ReactClipboardEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onReferenceClick | Called when a reference is clicked, with that reference. | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onReferenceDelete | Called when a reference is deleted, with the deleted reference. The caller owns the references list and removes it in the callback. | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onSkillChange | Called when the skill changes; the argument is undefined when the skill is removed. | <ApiType detail={"(skill?: Skill) => void"}>Type</ApiType> | - |
+| onStopGenerate | Called when the stop button is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onUploadChange | Called when the uploaded file list changes. | <ApiType detail={"(props: OnChangeProps) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the input: a string, or a function that returns a string for a node. | `PlaceholderProps` | - |
+| popoverProps | Props of the dropdown layer. The className is merged with the internal class names and the style with the panel width. | `PopoverProps` | - |
+| ref | Reference to the imperative methods, typed as AIChatInputHandle. It does not point to the root element. | <ApiType detail={"React.Ref\u003cAIChatInputHandle>"}>Type</ApiType> | - |
+| references | References shown with the input. | `Reference[]` | - |
+| renderActionArea | Customizes the action area at the bottom. menuItem lists, in order, the upload node (a hidden Upload when showUploadButton is false, which must still render for paste upload) and the send or stop button; className is the class name of the area. | <ApiType detail={"(props: ActionAreaProps) => ReactNode"}>Type</ApiType> | - |
+| renderConfigureArea | Customizes the configure area at the bottom; returns the configure items. | <ApiType detail={"() => ReactNode"}>Type</ApiType> | - |
+| renderReference | Customizes how a single reference is rendered. | <ApiType detail={"(reference: Reference) => ReactNode"}>Type</ApiType> | - |
+| renderSkillItem | Customizes one item of the skill list. The id, role, aria-selected, className, onClick and onMouseEnter of the argument must be spread onto the root element. | <ApiType detail={"(props: RenderSkillItemProps) => ReactNode"}>Type</ApiType> | - |
+| renderSuggestionItem | Customizes one item of the suggestion list. The id, role, aria-selected, className, onClick and onMouseEnter of the argument must be spread onto the root element. | <ApiType detail={"(props: RenderSuggestionItemProps) => ReactNode"}>Type</ApiType> | - |
+| renderTemplate | Customizes the template panel. It receives the current skill (undefined when only the template button is shown without a selected skill) and the template click callback, whose content replaces the input content. | <ApiType detail={"(skill: Skill \u007c undefined, onTemplateClick: (content: string) => void) => ReactNode"}>Type</ApiType> | - |
+| renderTopSlot | Customizes the top area; it is called on each render. The argument carries references, uploaded files, the input content and the delete callbacks. | <ApiType detail={"(props: RenderTopSlotProps) => ReactNode"}>Type</ApiType> | - |
+| renderUploadButton | Customizes the upload button UI of the footer action area; the upload and paste upload stay inside the component. | <ApiType detail={"(props: RenderUploadButtonProps) => ReactNode"}>Type</ApiType> | - |
+| round | Whether the buttons of the footer configure and action areas are fully rounded. | `boolean` | `true` |
+| sendHotKey | Keyboard shortcut that sends the input. `enter` sends on Enter alone, and Shift with Enter only starts a new line; `shift+enter` does the opposite. | `'enter' \| 'shift+enter'` | `"enter"` |
+| showPlaceholderWhenSkillOnly | Whether the placeholder shows when only a skill is selected, after the skill. Off by default. Read once, when the editor is created. | `boolean` | - |
+| showReference | Whether the reference area is shown; use it together with renderTopSlot. | `boolean` | `true` |
+| showTemplateButton | When true, the template button is always shown. When unset or false, the hasTemplate of the selected skill decides. | `boolean` | - |
+| showUploadButton | Whether the upload button on the right is shown. When false, paste upload still works. | `boolean` | `true` |
+| showUploadFile | Whether the uploaded file area is shown; use it together with renderTopSlot. | `boolean` | `true` |
+| skillHotKey | Key that opens the skill panel when the input is empty; it needs skills as well. | `string` | - |
+| skills | Skill list. The icon of each skill is a ReactNode. | `Skill[]` | - |
+| style | Style of the root element. | `React.CSSProperties` | - |
+| suggestions | Suggestion list. The suggestion panel shows when the list changes to a non-empty one and hides when it is empty. | `Suggestion[]` | - |
+| templatesCls | Class name of the template panel. | `string` | - |
+| templatesStyle | Style of the template panel, merged over its default max height. | `React.CSSProperties` | - |
+| topSlotPosition | Position of the top area relative to the reference area and the uploaded file area: `top`, `middle` or `bottom`. | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| transformer | Conversion rules of custom extensions, so that the node data received by onContentChange matches what is expected. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
+| uploadProps | Upload settings, the Upload props without fileList and listType. | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |
+| uploadTipProps | Tip of the upload button, with the Tooltip props. It wraps the upload button node, including the node given by renderUploadButton or uploadProps.children. | `TooltipProps` | - |
+
+**Methods**
+
+| Method                  | Description                                                                 | Type                                                                |
+| ----------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| changeTemplateVisible   | Shows or hides the template panel.                                          | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>       |
+| deleteContent           | Removes one item from the editor, matched by the uniqueKey of the content.  | <ApiType detail={"(content: Content) => void"}>Type</ApiType>       |
+| deleteUploadFile        | Removes one uploaded file.                                                  | <ApiType detail={"(item: Attachment) => void"}>Type</ApiType>       |
+| focusEditor             | Focuses the editor. It focuses the end by default, or pass a FocusPosition. | <ApiType detail={"(pos?: FocusPosition) => void"}>Type</ApiType>    |
+| getEditor               | Returns the tiptap Editor instance, or null before the editor is created.   | <ApiType detail={"() => Editor \u007c null"}>Type</ApiType>         |
+| setContent              | Sets the input content.                                                     | <ApiType detail={"(content: TiptapContent) => void"}>Type</ApiType> |
+| setContentWhileSaveTool | Sets the input content while keeping the selected skill.                    | <ApiType detail={"(content: string) => void"}>Type</ApiType>        |

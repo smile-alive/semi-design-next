@@ -1,0 +1,21 @@
+{
+    "audio-player": {
+        "source": "packages/semi-ui-react/src/audio-player/index.tsx",
+        "props": {
+            "audioUrl": {
+                "zh-CN": "音频地址，可以是字符串、`AudioInfo` 对象，或由它们组成的数组；传入数组时显示上一首、下一首按钮。",
+                "en-US": "Audio address: a string, an `AudioInfo` object, or an array of them. An array shows the previous and next track buttons."
+            },
+            "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "ref": { "zh-CN": "根元素 `div` 的引用。", "en-US": "Reference to the root `div` element." },
+            "showToolbar": {
+                "zh-CN": "是否显示工具栏，即音量、后退、前进、倍速与重新加载按钮。",
+                "en-US": "Whether to show the toolbar: the volume, backward, forward, playback rate and refresh buttons."
+            },
+            "skipDuration": { "zh-CN": "后退、前进按钮每次跳转的秒数。", "en-US": "Seconds skipped by each backward or forward button press." },
+            "style": { "zh-CN": "根元素的内联样式。", "en-US": "Inline style of the root element." },
+            "theme": { "zh-CN": "播放器主题，可选 `dark` 或 `light`。", "en-US": "Player theme: `dark` or `light`." }
+        }
+    }
+}

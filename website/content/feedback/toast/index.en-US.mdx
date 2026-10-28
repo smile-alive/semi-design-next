@@ -1,0 +1,281 @@
+---
+title: Toast
+order: 94
+icon: doc-toast
+brief: Toast component is used to give timely feedback to user's operations. It could be the result feedback of the operation, such as success, failure, error, warning, etc.
+---
+
+import TicketToast from './figures/ticket-toast.react.tsx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Toast } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Toast } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+The static methods render outside the component tree. Optionally call `app.use(Toast)`: static toasts then render with that app's context, so they can read the values from `app.provide()` and globally registered components. The static methods of Toast, Notification and Modal share this record, so installing any one of them covers all three; with several apps installed, the last one wins.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Calling Toast's related methods to show timely feedback to user's operations. It is recommended to set the `stack` property to apply the stacking style to multiple Toasts on the same screen, and expand them by hovering, which can effectively prevent multiple parallel Toasts at one time.
+
+<Demo id="basic" />
+
+### Other Types
+
+Use different methods to show different Toast including success, warning, error and info.
+
+<Demo id="types" />
+
+### Colored Background
+
+You could use `theme` for a colored background style. Default is `normal`.
+
+<Demo id="theme" />
+
+### Stacking styles
+
+With `stack`, the Toasts on screen stack once there are more than the threshold, and expand on hover. `true` sets the threshold to 3, and a number sets a custom one; a stack shows its front 3 layers only.
+
+<Demo id="stack" />
+
+### Custom Children with Link
+
+Informational feedback
+
+<Framework only="vue">
+
+`content` and `icon` accept a `string`, a VNode or a function returning VNodeChild; the Typography texts below are built as VNodes with `h()`.
+
+</Framework>
+
+<Demo id="link" />
+
+### Delay
+
+Use `duration` to set up time delay. By default it closes after 3 seconds.
+
+<Demo id="duration" />
+
+### Manual Close
+
+Set `duration` to 0 if you do not want the Toast to close by itself. In this case, it could only be closed manually.
+
+<Demo id="manual-close" />
+
+### Update Toast Content
+
+Use unique Toast `id` to update toast content.
+
+<Demo id="update" />
+
+### Destroy all
+
+Globally Destroy:
+
+- `Toast.destroyAll()`
+
+### Consume Context
+
+<Framework only="react">
+
+You could use `Toast.useToast` to create a `contextHolder` that could access context. Created toast will be inserted to where contextHolder is placed.
+
+`Toast.useToast()` returns the tuple `[toast, contextHolder]`: `info`, `success`, `warning`, `error` and `open` of the toast object take the Options without `type`, `id`, `zIndex` and `getPopupContainer` and return the `toastId`; `close(toastId)` closes one manually.
+
+</Framework>
+
+<Framework only="vue">
+
+You could use `Toast.useToast()` to create a `Holder` that could access context. Created toast will be inserted to where `<Holder />` is placed and inherits the provides, ConfigProvider and locale there.
+
+`Toast.useToast()` returns the tuple `[toast, Holder]`: `info`, `success`, `warning`, `error` and `open` of the toast object take the Options without `type` and `id` and return the `toastId`; `close(toastId)` closes one manually. A function passed as `content` or `icon` is rendered as a functional component inside the toast, so it can `inject`. Positioning options such as `top`, `zIndex` and `getPopupContainer` have no effect in the hook. ConfigProvider and LocaleProvider provide at component level, which the static `Toast` cannot read; use `useToast()` when you need them.
+
+</Framework>
+
+<Framework only="solid">
+
+You could use `Toast.useToast()` to create a `contextHolder` that could access context. Created toast will be inserted to where `contextHolder` is placed and inherits the context, ConfigProvider and locale there. The holder is created under the owner that calls `useToast()`; place it only once.
+
+`Toast.useToast()` returns the tuple `[toast, contextHolder]`: `info`, `success`, `warning`, `error` and `open` of the toast object take the Options without `type`, `id`, `zIndex` and `getPopupContainer` and return the `toastId`; `close(toastId)` closes one manually. An element passed as `content` or `icon` is created inside an event handler, which has no owner and cannot read context; pass a function instead, which is called where the toast renders. The values of ConfigProvider and LocaleProvider cannot be read by the static `Toast`; use `useToast()` when you need them.
+
+</Framework>
+
+<Demo id="context" />
+
+### Create Toast with different configurations
+
+<Notice>Commonly used to override global configuration</Notice>
+
+- `ToastFactory.create(config) => Toast`  
+  If you need Toast with different configs in your application, you can use ToastFactory.create(config)to create a new Toast:
+
+<Demo id="factory" />
+
+## API Reference
+
+The static methods provided are as follows: Display: You can pass in `options` object or string directly. Methods return the value of `toastId`: `const toastId = Toast.info({ /*...options*/ })`
+
+**The global configuration is set before any method call, and takes effect only once**
+
+- `Toast.config(config)`
+- `Toast.resetConfig()` restores the global configuration to its defaults; only toasts shown afterwards are affected. An instance created by `ToastFactory.create(config)` is restored to the `config` it was created with
+
+**Show Toast Directly**
+
+- `Toast.info(options || string)`
+- `Toast.error(options || string)`
+- `Toast.warning(options || string)`
+- `Toast.success(options || string)`
+
+**`info` `error` `warning` `success` return the `toastId`, can be used for manually closing**
+
+- `Toast.close(toastId)` Close Manually
+
+## Options
+
+**Toast Options supports the following APIs as well as the APIs in Config**
+
+<Framework only="react">
+
+| Properties   | Instructions                                                                                        | type                | Default |
+| ------------ | --------------------------------------------------------------------------------------------------- | ------------------- | ------- |
+| content      | Toast content                                                                                       | string \| ReactNode | ''      |
+| icon         | Custom icons                                                                                        | ReactNode           |         |
+| showClose    | Toggle Whether show close button                                                                    | boolean             | true    |
+| textMaxWidth | Maximum width of content                                                                            | number \| string    | 450     |
+| onClose      | Callback function when closing toast                                                                | () => void          |         |
+| stack        | Stack the Toasts on screen once there are more than this many; `true` means 3, `false` never stacks | boolean \| number   | false   |
+| id           | Custom ToastId                                                                                      | string              |         |
+| motion       | Whether to animate entering and leaving                                                             | boolean             | true    |
+| className    | Class name                                                                                          | string              |         |
+| style        | Inline style                                                                                        | CSSProperties       |         |
+
+`className`, `style` and undeclared options such as `data-*` land on `.semi-toast`, in stack mode too.
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties   | Instructions                                                                                        | type                                  | Default |
+| ------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------- | ------- |
+| content      | Toast content; a function is rendered as a functional component inside the toast and can `inject`   | string \| VNode \| (() => VNodeChild) | ''      |
+| icon         | Custom icons                                                                                        | string \| VNode \| (() => VNodeChild) |         |
+| showClose    | Toggle Whether show close button                                                                    | boolean                               | true    |
+| textMaxWidth | Maximum width of content                                                                            | number \| string                      | 450     |
+| onClose      | Callback function when closing toast                                                                | () => void                            |         |
+| stack        | Stack the Toasts on screen once there are more than this many; `true` means 3, `false` never stacks | boolean \| number                     | false   |
+| id           | Custom ToastId                                                                                      | string                                |         |
+| motion       | Whether to animate entering and leaving                                                             | boolean                               | true    |
+| class        | Class name                                                                                          | string \| object \| array             |         |
+| style        | Inline style                                                                                        | StyleValue                            |         |
+
+Undeclared options such as `data-*` land on `.semi-toast`, in stack mode too.
+
+</Framework>
+
+<Framework only="solid">
+
+| Property     | Description                                                                                                                                                                 | Type                                 | Default |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------- |
+| content      | Toast content, an element or a function returning one; the function is called where the toast renders, so with `Toast.useToast()` it can read the context around the holder | `JSX.Element \| (() => JSX.Element)` | `''`    |
+| icon         | Custom icon, an element or a function returning one, replacing the icon of `type`; a Semi icon without a size of its own is sized large                                     | `JSX.Element \| (() => JSX.Element)` | -       |
+| showClose    | Whether to show the close button                                                                                                                                            | `boolean`                            | `true`  |
+| textMaxWidth | Maximum width of the content; a number is in px                                                                                                                             | `number \| string`                   | `450`   |
+| onClose      | Callback function when the toast closes                                                                                                                                     | `() => void`                         | -       |
+| stack        | Stack the toasts on screen once there are more than this many; `true` means 3, `false` never stacks                                                                         | `boolean \| number`                  | `false` |
+| id           | Custom ToastId; a toast with the same id is updated                                                                                                                         | `string`                             | -       |
+| motion       | Whether to animate entering and leaving                                                                                                                                     | `boolean`                            | `true`  |
+| class        | Class name                                                                                                                                                                  | `string`                             | -       |
+| style        | Inline style                                                                                                                                                                | `JSX.CSSProperties \| string`        | -       |
+
+`class`, `style` and undeclared options (such as `data-*` and `aria-*`) land on `.semi-toast`, in stack mode too.
+
+</Framework>
+
+## Config
+
+**The following API supports global configuration to change the default configuration of the current Toast**
+
+| Properties        | Instructions                                                                                                                                                                                                                            | type              | Default             |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------- |
+| bottom            | Pop-up position bottom                                                                                                                                                                                                                  | number \| string  | -                   |
+| left              | Pop-up position left                                                                                                                                                                                                                    | number \| string  | -                   |
+| right             | Pop-up position right                                                                                                                                                                                                                   | number \| string  | -                   |
+| top               | Pop-up position top                                                                                                                                                                                                                     | number \| string  | -                   |
+| zIndex            | Z-index value                                                                                                                                                                                                                           | number            | 1010                |
+| theme             | Style of background fill, one of `light`, `normal`                                                                                                                                                                                      | string            | `normal`            |
+| duration          | Automatic close delay, no auto-close when set to 0                                                                                                                                                                                      | number            | 3                   |
+| getPopupContainer | Specifies the parent DOM, and the bullet layer will be rendered to the DOM, you need to set container and inner .semi-toast-wrapper 'position: relative` This will change the DOM tree position, but not the view's rendering position. | () => HTMLElement | () => document.body |
+
+## Accessibility
+
+### ARIA
+
+- The role of Toast depends on its type: `alert` for `warning` and `error`, `status` for `info`, `success` and a Toast without `type`
+- `status` Toasts are read by a persistent `aria-live="polite"` region owned by the list; the Toast itself is `aria-live="off"`, and only the text of `content` is announced. `warning` and `error` still announce themselves as `alert`
+
+### Keyboard and Focus
+
+- The close button is a native `button`: focus it with `Tab`, and activate it with `Enter` or `Space`
+- A Toast does not take focus when it appears
+- When the pointer or keyboard focus enters a Toast, its auto-close timer pauses and a stack expands; both resume when it leaves
+
+## Content Guidelines
+
+<div
+    style={{
+        border: '1px solid var(--semi-color-border)',
+        padding: 10,
+        marginBottom: 24,
+        justifyContent: 'center',
+        display: 'flex',
+    }}
+>
+    <TicketToast type="success" content="Ticket transferred" />
+</div>
+
+- Keep it simple
+- Do not use periods at the end of sentences
+- Explain using the noun + verb format
+
+| ✅ Recommended usage   | ❌ Deprecated usage                      |
+| ---------------------- | ---------------------------------------- |
+| Language added         | New language has been added successfully |
+| Ticket transfer failed | Can't transfer ticket                    |
+
+- Provide prompt message for action
+    - only provide one action
+    - Don't use actions like "read" like OK, Got it, Dismiss, Cancel
+
+| ✅ Recommended usage                                                         | ❌ Deprecated usage                                                            |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| <TicketToast type='error' content='Ticket transfer failed' action='Retry' /> | <TicketToast type='error' content='Ticket transfer failed' action='Dismiss' /> |
+
+## Design Tokens
+
+<DesignToken />

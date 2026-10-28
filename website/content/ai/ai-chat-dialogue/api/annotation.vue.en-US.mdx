@@ -1,0 +1,25 @@
+**Props**
+
+| Property    | Description                                                                        | Type                                    | Default     |
+| ----------- | ---------------------------------------------------------------------------------- | --------------------------------------- | ----------- |
+| maxCount    | Maximum number of source logos shown; the rest are shown as +N.                    | `number`                                | `undefined` |
+| annotation  | List of references; each item may have title, logo, url and detail.                | `AnnotationItemProps[] \| Annotation[]` | `undefined` |
+| description | Text after the source logos; the number of references is shown when it is not set. | `string`                                | `undefined` |
+
+**Events**
+
+| Event | Description                                                                                      | Callback parameters                                                  |
+| ----- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| click | Emitted on click or on activation with Enter or Space, with the native event and the references. | `[event: MouseEvent \| KeyboardEvent, items: AnnotationItemProps[]]` |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

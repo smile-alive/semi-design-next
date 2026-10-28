@@ -1,0 +1,370 @@
+---
+order: 73
+title: Image
+icon: doc-image
+brief: Used to display and preview images.
+---
+
+import ImageReactApi from './api/image.react.en-US.mdx';
+import ImagePreviewReactApi from './api/image-preview.react.en-US.mdx';
+import ImageVueApi from './api/image.vue.en-US.mdx';
+import ImagePreviewVueApi from './api/image-preview.vue.en-US.mdx';
+import ImageSolidApi from './api/image.solid.en-US.mdx';
+import ImagePreviewSolidApi from './api/image-preview.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Image, ImagePreview } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Image, ImagePreview } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+You can get an image with preview function by specifying the image path through `src`, and specify the width and height of the image through `width`, `height`
+
+<Demo id="basic" />
+
+### Loading failed placeholder
+
+<Framework only="react">
+
+You can customize the placeholder for failed loading through `fallback`, which supports string and ReactNode
+
+</Framework>
+
+<Framework only="vue">
+
+`fallback` takes the URL of the image shown when loading fails (a string). For custom content use the `#fallback` slot, which takes precedence when both are given
+
+</Framework>
+
+<Framework only="solid">
+
+`fallback` takes a string or a JSX element: a string is the URL of the image shown when loading fails, and a JSX element is shown as it is; without it, the default failure icon is shown
+
+</Framework>
+
+<Demo id="fallback" />
+
+### Progressive loading
+
+<Framework only="react">
+
+Large images can be progressively loaded through `placeholder`
+
+</Framework>
+
+<Framework only="vue">
+
+Large images can be progressively loaded through the `#placeholder` slot
+
+</Framework>
+
+<Framework only="solid">
+
+Large images can be progressively loaded through `placeholder`: the JSX element passed in is shown until the image has loaded
+
+</Framework>
+
+<Demo id="progressive" />
+
+### Customize the preview image
+
+You can customize the preview image by setting the `src` of the Image component to be different from the `src` in the `preview` parameter
+
+<Demo id="custom-preview" />
+
+### Multi-image preview
+
+Use ImagePreview to wrap Image to achieve multi-image preview
+
+<Demo id="multiple" />
+
+### Use the preview component alone
+
+<Framework only="react">
+
+The preview component ImagePreview can be used alone, through `visible` and `onVisibleChange` to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` to set the title at the top of the preview
+
+</Framework>
+
+<Framework only="vue">
+
+The preview component ImagePreview can be used alone, through `v-model:visible` (or `visible` with `@visibleChange`) to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` (a string) to set the title at the top of the preview
+
+</Framework>
+
+<Framework only="solid">
+
+The preview component ImagePreview can be used alone, through `visible` and `onVisibleChange` to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` (a JSX element) to set the title at the top of the preview
+
+</Framework>
+
+<Demo id="standalone-preview" />
+
+### Render in the specified container
+
+You can specify the parent DOM of the preview component through `getPopupContainer` (you need to specify `position: relative`), and the image preview will be rendered into this DOM. This will change the DOM tree position, but not the view's rendering position.
+
+When the container is not `document.body` (including a `getPopupContainer` set only on ConfigProvider), the preview is non-modal: it does not output `aria-modal`, does not trap Tab and does not lock page scrolling. Returning `document.body` from `getPopupContainer` is the same as not passing it.
+
+<Demo id="container" />
+
+### Customize the bottom operation area of the preview
+
+<Framework only="react">
+
+The bottom action area of the preview can be customized using `renderPreviewMenu`
+
+</Framework>
+
+<Framework only="vue">
+
+The bottom action area of the preview can be customized with the `#previewMenu` slot, which receives MenuProps. Images wrapped by ImagePreview use the slot of ImagePreview; a standalone Image uses its own slot of the same name
+
+</Framework>
+
+<Framework only="solid">
+
+`renderPreviewMenu` customizes the bottom action area of the preview; it receives the MenuProps values listed below and returns a JSX element. An Image wrapped by ImagePreview uses the `renderPreviewMenu` of ImagePreview; a standalone Image passes the same-named property through its `preview` object
+
+</Framework>
+
+<Demo id="render-preview-menu" />
+
+<Framework only="react">
+
+If you want to customize the preview bottom operation area based on the default bottom operation area, you can get the default ReactNodes through the menuItems of renderPreviewMenu. menuItems is an array of ReactNodes, and the order is consistent with the content order of the default bottom operation bar area.
+
+</Framework>
+
+<Framework only="vue">
+
+If you want to customize the bottom operation area based on the default one, use the `menuItems` slot parameter: an array of the default items as VNodes, in the order previous, page counter, next, zoom out, zoom slider, zoom in, original size / fit to page, rotate and download. Render them with `<component :is>`
+
+</Framework>
+
+<Framework only="solid">
+
+To customize the bottom action area based on the default one, get the default JSX elements through the `menuItems` argument of `renderPreviewMenu`: an array in the order previous, page counter, next, zoom out, zoom slider, zoom in, original size / fit to page, rotate and download, which can be rendered in any position.
+
+</Framework>
+
+<Demo id="menu-items" />
+
+### Customize the preview top display area
+
+<Framework only="react">
+
+You can customize the preview top display area through `renderHeader`
+
+</Framework>
+
+<Framework only="vue">
+
+The `#title="{ title, index }"` slot replaces the content of the title section at the top of the preview. When there is a title, the preview dialog is named by that section through `aria-labelledby`, so its name is the text the slot renders; without a title the name is "Preview" from the locale. Use `#closeIcon` to replace the close icon, and `#leftIcon="{ index }"` and `#rightIcon="{ index }"` to replace the arrow icons
+
+</Framework>
+
+<Framework only="solid">
+
+`renderHeader` customizes the top area of the preview; it receives the current title (a JSX element) and returns a new JSX element
+
+</Framework>
+
+<Demo id="render-header" />
+
+## API reference
+
+### Image
+
+<Framework only="react">
+
+<ImageReactApi />
+
+`onLoad` and `onError` are called when the image loads successfully or fails, with a `SyntheticEvent<HTMLImageElement>`; other native attributes (such as `data-*` and `aria-*`) pass through to the inner img node.
+
+The `preview` object of a single Image accepts the ImagePreview props below, except `lazyLoad`, `lazyLoadMargin`, `children`, `className` and `style` (use `previewCls` and `previewStyle` to style the preview). When `preview.src` is an array, switching images returns to "fit to page".
+
+</Framework>
+
+<Framework only="vue">
+
+<ImageVueApi />
+
+A number for `width` or `height` is in px. `class` and `style` land on the root element; other undeclared native attributes and listeners land on the inner img. The `preview` object accepts the props and callbacks of ImagePreview (`onVisibleChange`, `onChange`, `onClose`, `onZoomIn`, `onZoomOut`, `onPrev`, `onNext`, `onRatioChange`, `onRotateLeft`, `onDownload`, `onDownloadError`), except `lazyLoad`, `lazyLoadMargin`, `class` and `style` (use `previewCls` and `previewStyle` to style the preview). Custom nodes do not go in `preview`; use the slots of Image. When `preview.src` is an array, switching images returns to "fit to page". An Image inside an ImagePreview ignores `#title`, `#previewMenu`, `#leftIcon`, `#rightIcon` and `#closeIcon`; the slots of the ImagePreview apply.
+
+</Framework>
+
+<Framework only="solid">
+
+<ImageSolidApi />
+
+`class` and `style` land on the thumbnail root element; `ref`, `id`, `aria-*` and native events (such as `onClick`) land on the inner img.
+
+</Framework>
+
+### ImagePreview
+
+<Framework only="react">
+
+<ImagePreviewReactApi />
+
+Other native attributes (such as `aria-label` and `aria-labelledby`) land on the group root div; with `aria-label` or `aria-labelledby` and no `role`, the root gets `role="group"`. The preview dialog is rendered into `getPopupContainer` (`document.body` by default) and is named by `previewTitle`, or by the locale when there is no title.
+
+</Framework>
+
+<Framework only="vue">
+
+<ImagePreviewVueApi />
+
+`class`, `style` and native attributes land on the root element (the group div) through attrs; with `aria-label` or `aria-labelledby` and no `role`, the root gets `role="group"`. The preview dialog is rendered into `getPopupContainer` (`document.body` by default) and is named by `previewTitle`, or by the locale when there is no title.
+
+</Framework>
+
+<Framework only="solid">
+
+<ImagePreviewSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `aria-label` and `aria-labelledby`) land on the group root div; with `aria-label` or `aria-labelledby` and no `role`, the root gets `role="group"`. The preview dialog is rendered into `getPopupContainer` (`document.body` by default) and is named by `previewTitle`, or by the locale when there is no title.
+
+</Framework>
+
+### MenuProps
+
+`min`, `max`, `step` and `zoom` are percentages (a `min` of `10` means 10%, a `step` of `10` means 10% per step), unlike `minZoom`, `maxZoom`, `zoomStep` and `initialZoom` of ImagePreview, which are factors (such as `0.1` and `5`).
+
+<Framework only="react">
+
+| Properties      | Instructions                                                          | Type                       |
+| --------------- | --------------------------------------------------------------------- | -------------------------- |
+| curPage         | Current image page subscript                                          | number                     |
+| disabledPrev    | Whether to disable the left toggle button                             | boolean                    |
+| disabledNext    | Whether to disable the right toggle button                            | boolean                    |
+| disabledZoomIn  | Whether the zoom is at its maximum (the zoom-in button is disabled)   | boolean                    |
+| disabledZoomOut | Whether the zoom is at its minimum (the zoom-out button is disabled)  | boolean                    |
+| disableDownload | Whether to disable the download button                                | boolean                    |
+| max             | The maximum zoom of the image (percentage)                            | number                     |
+| min             | The minimum zoom of the image (percentage)                            | number                     |
+| onDownload      | Call function when the image is downloaded                            | () => void                 |
+| onZoomIn        | Call function when the image is zoomed in                             | () => void                 |
+| onZoomOut       | Call function when the image is zoomed out                            | () => void                 |
+| onRatioClick    | Call function to switch between the original size and fit to page     | () => void                 |
+| onPrev          | Call function to switch the picture forward                           | () => void                 |
+| onNext          | Call function to switch the picture backward                          | () => void                 |
+| onRotateLeft    | Call function to rotate the image counterclockwise                    | () => void                 |
+| onRotateRight   | Call function to rotate the image clockwise                           | () => void                 |
+| ratio           | Original size or Fit to page button state                             | "adaptation" \| "realSize" |
+| step            | Step size of zooming (percentage)                                     | number                     |
+| totalNum        | The total number of images that can be previewed                      | number                     |
+| zoom            | Current zoom of the image (percentage)                                | number                     |
+| menuItems       | Default bottom preview operation area function button ReactNode array | ReactNode[]                |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties      | Instructions                                                                                | Type                       |
+| --------------- | ------------------------------------------------------------------------------------------- | -------------------------- |
+| curPage         | Current image page subscript                                                                | number                     |
+| disabledPrev    | Whether to disable the left toggle button                                                   | boolean                    |
+| disabledNext    | Whether to disable the right toggle button                                                  | boolean                    |
+| disabledZoomIn  | Whether the zoom is at its maximum (the zoom-in button is disabled)                         | boolean                    |
+| disabledZoomOut | Whether the zoom is at its minimum (the zoom-out button is disabled)                        | boolean                    |
+| disableDownload | Whether to disable the download button                                                      | boolean                    |
+| max             | The maximum zoom of the image (percentage)                                                  | number                     |
+| min             | The minimum zoom of the image (percentage)                                                  | number                     |
+| onDownload      | Call function when the image is downloaded                                                  | () => void                 |
+| onZoomIn        | Call function when the image is zoomed in                                                   | () => void                 |
+| onZoomOut       | Call function when the image is zoomed out                                                  | () => void                 |
+| onRatioClick    | Call function to switch between the original size and fit to page                           | () => void                 |
+| onPrev          | Call function to switch the picture forward                                                 | () => void                 |
+| onNext          | Call function to switch the picture backward                                                | () => void                 |
+| onRotateLeft    | Call function to rotate the image counterclockwise                                          | () => void                 |
+| onRotateRight   | Call function to rotate the image clockwise                                                 | () => void                 |
+| ratio           | Original size or Fit to page button state                                                   | "adaptation" \| "realSize" |
+| step            | Step size of zooming (percentage)                                                           | number                     |
+| totalNum        | The total number of images that can be previewed                                            | number                     |
+| zoom            | Current zoom of the image (percentage)                                                      | number                     |
+| menuItems       | The default bottom operation area items as a VNode array, which can be rendered as they are | VNode[]                    |
+
+</Framework>
+
+<Framework only="solid">
+
+| Properties      | Instructions                                                                                      | Type                         |
+| --------------- | ------------------------------------------------------------------------------------------------- | ---------------------------- |
+| curPage         | Current image page subscript                                                                      | number                       |
+| disabledPrev    | Whether to disable the left toggle button                                                         | boolean                      |
+| disabledNext    | Whether to disable the right toggle button                                                        | boolean                      |
+| disabledZoomIn  | Whether the zoom is at its maximum (the zoom-in button is disabled)                               | boolean                      |
+| disabledZoomOut | Whether the zoom is at its minimum (the zoom-out button is disabled)                              | boolean                      |
+| disableDownload | Whether to disable the download button                                                            | boolean                      |
+| max             | The maximum zoom of the image (percentage)                                                        | number                       |
+| min             | The minimum zoom of the image (percentage)                                                        | number                       |
+| onDownload      | Call function when the image is downloaded                                                        | () => void                   |
+| onZoomIn        | Call function when the image is zoomed in                                                         | () => void                   |
+| onZoomOut       | Call function when the image is zoomed out                                                        | () => void                   |
+| onRatioClick    | Call function to switch between the original size and fit to page                                 | () => void                   |
+| onPrev          | Call function to switch the picture forward                                                       | () => void                   |
+| onNext          | Call function to switch the picture backward                                                      | () => void                   |
+| onRotateLeft    | Call function to rotate the image counterclockwise                                                | () => void                   |
+| onRotateRight   | Call function to rotate the image clockwise                                                       | () => void                   |
+| ratio           | Original size or Fit to page button state                                                         | `"adaptation" \| "realSize"` |
+| step            | Step size of zooming (percentage)                                                                 | number                       |
+| totalNum        | The total number of images that can be previewed                                                  | number                       |
+| zoom            | Current zoom of the image (percentage)                                                            | number                       |
+| menuItems       | The default bottom operation area items as a JSX element array, which can be rendered as they are | JSX.Element[]                |
+
+The fields are read live: read `menu.disabledPrev` and the other fields directly in JSX expressions instead of destructuring the `menu` argument.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- When rendered into `document.body` (the default), the preview is a modal dialog with `role="dialog"` and `aria-modal="true"`; rendered into a custom container (`getPopupContainer` returns another element, including a container set on ConfigProvider) it is a non-modal dialog and does not output `aria-modal`. It is named by its title (`previewTitle`, or `preview.previewTitle` of an image in a group) when there is one, otherwise by "Preview" from the locale
+- Close, the left and right arrows, and the footer's previous, next, zoom out, zoom in, original size / adapt to the page, rotate and download controls are native `button` elements. Their accessible names come from the matching `prevTip`, `nextTip` and other tip props, or from the locale when those are not set. The zoom slider is named "Zoom" from the locale, with the current percentage as its `aria-valuetext`
+- At the first or last image, or at a zoom limit, the matching footer button gets `aria-disabled="true"` and stays focusable, so focus is not lost. The download button is also disabled when there is no current image (an empty `src` list)
+- The footer page counter has `aria-live="polite"`, so screen readers announce the new position when the image changes
+- With the preview enabled and the image loaded, the root of an Image thumbnail is a focusable button (`role="button"`, `tabindex="0"`, `aria-haspopup="dialog"`) named by the `alt` of the image; with `preview` set to false, or before the image has loaded, it is not focusable. Closing the preview returns focus to the thumbnail. A thumbnail inside an ImagePreview group that opens with the mouse also opens with the keyboard: while loading or after a load error it still has the button role and is focusable, and Enter or Space opens the group preview
+- The `alt` of the preview image is the `alt` of the thumbnail it shows (an `ImagePreview` `src` array has no alt, so it is an empty string)
+
+### Keyboard interaction
+
+- With focus on a thumbnail, Enter or Space opens the preview
+- Opening the preview moves focus into it. In a modal preview, Tab and Shift + Tab cycle through its controls and closing it returns focus to the element focused before; a non-modal preview rendered into a custom container does not trap Tab, and on close focus returns to the element focused before only if it is still inside the preview or on body, and stays where it is when it has moved elsewhere on the page
+- Enter or Space presses the focused button
+- ← and → switch to the previous and next image, swapped in RTL (ConfigProvider `direction="rtl"`). At the first or last image they behave like the buttons: they wrap around when `infinite` is true and do nothing otherwise
+- ← and → do not switch images while focus is in an input, textarea, select or editable element (such as an input in a custom footer), or while Alt, Ctrl, Meta or Shift is held; on the focused zoom slider they change the zoom
+- Esc closes the preview (unless `closeOnEsc` is false)
+- After the controls hide because of `viewerVisibleDelay`, a key press or focus on a control shows them again; they stay shown while focus is on one of them
+
+## Design Token
+
+<DesignToken />

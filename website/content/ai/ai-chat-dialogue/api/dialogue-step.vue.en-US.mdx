@@ -1,0 +1,23 @@
+**Props**
+
+| Property | Description                                                                                                                                                                                                                                 | Type             | Default     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ----------- |
+| steps    | List of steps. Each step has summary, status and actions; completed shows the done icon, any other status shows loading. actions hold data only (summary, description and so on), and a step expands or collapses on click, Enter or Space. | `DialogueStep[]` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot       | Description                                                                                                         | Scope parameters                        |
+| ---------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| actionIcon | Icon shown before each action's description, with the action item, its index, the step it belongs to and stepIndex. | `DialogueStepWidgetActionIconSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

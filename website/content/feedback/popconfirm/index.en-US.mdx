@@ -1,0 +1,158 @@
+---
+title: Popconfirm
+order: 90
+icon: doc-popconfirm
+brief: Used when the operation of the target element requires further confirmation from the user. Compared with Popover, it has a built-in series of configurable action buttons. Compared with Modal, it does not force full-screen centering, and the interaction is lighter.
+---
+
+import PopconfirmReactApi from './api/popconfirm.react.en-US.mdx';
+import PopconfirmVueApi from './api/popconfirm.vue.en-US.mdx';
+import PopconfirmSolidApi from './api/popconfirm.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Popconfirm } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Popconfirm } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Popconfirm, Radio, RadioGroup, Space, Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+`Popconfirm` is based on the `Tooltip` component. Children support the same type as `Tooltip`. For details, please refer to [Tooltip Cautions](/en-US/react/show/tooltip#Cautions)
+
+<Demo id="basic" />
+
+### Type collocation
+
+<Framework only="react">
+
+Developers can use scenario-based `OK Type`/`Cancel Type`/`icon` Equal parameters are matched with different styles of bubble confirmation boxes.
+
+</Framework>
+
+<Framework only="vue">
+
+Developers can use scenario-based `okType`/`cancelType` and the `#icon` slot to match different styles of bubble confirmation boxes. Without an `#icon` slot the default warning icon is shown; an empty `#icon` slot renders no icon.
+
+</Framework>
+
+<Framework only="solid">
+
+Developers can use scenario-based `okType`, `cancelType` and `icon` to match different styles of bubble confirmation boxes. `icon` takes a JSX element; `null` or `false` renders no icon.
+
+</Framework>
+
+<Demo id="types" />
+
+### Delay hide
+
+`onConfirm` and `onCancel` can be closed after click through return Promise.  
+When onCancel and onConfirm are triggered, the corresponding Button will automatically switch to `loading: true`  
+promise solve will close the bubble confirmation box, the bubble will remain when promise reject, and button loading will automatically switch to false
+
+<Demo id="delay" />
+
+### Initialize the Focus Position of Popup Layer
+
+`okButtonProps` and `cancelButtonProps` support passing in the `autoFocus` parameter, which will automatically focus at this position when the panel is opened.
+
+<Framework only="react">
+
+`content` supports function, and its parameter is an object, which binds `initialFocusRef` to the focusable DOM or component, and it will automatically focus at this position when the panel is opened.
+
+</Framework>
+
+<Framework only="vue">
+
+The `#content` slot receives `{ initialFocusRef }` as its scope. Bind it to the focusable DOM or component with `:ref`, and it will automatically focus at this position when the panel is opened. When a button `autoFocus` and `initialFocusRef` are both given, the button wins.
+
+</Framework>
+
+<Framework only="solid">
+
+`content` accepts a function whose `{ initialFocusRef }` argument carries `initialFocusRef`, a ref callback: bind it with `ref={initialFocusRef}` to the focusable DOM or component, and it will automatically focus at this position when the panel is opened. When a button `autoFocus` and `initialFocusRef` are both given, the button wins.
+
+</Framework>
+
+<Demo id="initial-focus" />
+
+### Use with Tooltip or Popover
+
+Please refer to [Use with Tooltip/Popover](/en-US/react/show/tooltip#Use%20with%20Popver%20or%20Popconfirm)
+
+## API Reference
+
+<Framework only="react">
+
+<PopconfirmReactApi />
+
+`className` and `style` land on the confirmation card, and the `className`, `style` and other props in `okButtonProps` and `cancelButtonProps` land on their buttons (except `autoFocus`). `aria-label` and `aria-labelledby` land on the `role="dialog"` popup element, and with both a title and content it also carries `aria-describedby` pointing at the content. Other undeclared attributes are discarded.
+
+</Framework>
+
+<Framework only="vue">
+
+<PopconfirmVueApi />
+
+`class` and `style` land on the confirmation card, and the `class` and `style` in `okButtonProps` and `cancelButtonProps` land on the buttons; other undeclared attributes are discarded. `aria-label`, `aria-labelledby` and `aria-describedby` are declared props and land on the `role="dialog"` element. When the subtree is cached by `<KeepAlive>` (deactivated), the popup is treated as closed and `update:visible` and `visibleChange` are emitted with `false`; a popup whose `visible` is one-way bound to `true` is hidden with the cached subtree and shows again once reactivated.
+
+When `visible` is controlled, clicking or hovering the trigger emits `update:visible` and `visibleChange` for the caller to write back with `v-model:visible`; changes the parent makes to `visible` itself emit neither, and `returnFocusOnClose` works as usual. With a one-way `:visible` and no write-back, confirming or cancelling does not return focus to the trigger at once; focus goes back when the card has really closed.
+
+</Framework>
+
+<Framework only="solid">
+
+<PopconfirmSolidApi />
+
+`class` and `style` land on the confirmation card, and the props in `okButtonProps` and `cancelButtonProps` land on their buttons (except `autoFocus`); `ref` receives the `focusTrigger` handle. Popconfirm has no root DOM element, so other undeclared native attributes and events are dropped.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Whatever the trigger, `hover` and `focus` included, the Popconfirm popup has role `dialog`, named by `title` (by `content` when there is no `title`); the `role` prop overrides it
+- For the rest, please refer to [Popover](/en-US/react/show/popover#ARIA)
+
+### Keyboard and focus
+
+- Popconfirm must have trigger, trigger can be focused, use `Enter` key to open Popconfirm
+- After Popconfirm is activated, press the arrow key ⬇️ to move the focus to Popconfirm. The initial focus of Popconfirm should follow several principles:
+    - If the Popconfirm contains the last step of an irreversible process, such as: deleting data, etc., then this initial focus is preferably on the least destructive interactable element, such as: the cancel button (by passing the `autoFocus` to the object `cancelButtonProps`)
+    - If you only read text in Popconfirm, it is recommended to set the initial focus on the most likely interactive elements, such as: confirm button (implemented by passing `autoFocus` to the object `okButtonProps` )
+- Keyboard users can dismiss Popconfirm by pressing `Esc` and focus should return to the trigger. After the user closes the Pop through the interactive element within the Popconfirm, the focus should also return to the trigger (except when trigger is `custom`)
+- When it is opened, after the user clicks `Esc` in the blank space in Popconfirm, the focus will also return to the trigger (except when trigger is `custom`)
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Why does the Popconfirm floating layer lose its width and wrap unexpectedly when the width is not enough near the screen border?**
+
+    After Chromium 104, the wrapping rendering strategy when the width of the screen border text is not enough has changed. For details, see [issue #1022](https://github.com/DouyinFE/semi-design/issues/1022), the semi-side has been This problem was fixed in v2.17.0.

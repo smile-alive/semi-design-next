@@ -1,0 +1,34 @@
+**Props**
+
+| Property  | Description                                                                                   | Type                | Default                                              |
+| --------- | --------------------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------------- |
+| span      | Number of columns the cell spans. 0 behaves like display: none.                               | `number`            | `semiGlobalDefault("Col", "span")`                   |
+| order     | Column order. Takes effect in flex layout.                                                    | `number`            | `semiGlobalDefault("Col", "order")`                  |
+| offset    | Number of columns to offset from the start side. No column can sit inside the offset.         | `number`            | `semiGlobalDefault("Col", "offset")`                 |
+| push      | Number of columns to move toward the end side.                                                | `number`            | `semiGlobalDefault("Col", "push")`                   |
+| pull      | Number of columns to move toward the start side.                                              | `number`            | `semiGlobalDefault("Col", "pull")`                   |
+| prefixCls | CSS class name prefix.                                                                        | `string`            | `semiDefault("Col", "prefixCls", cssClasses.PREFIX)` |
+| xs        | Base-layer responsive grid. It applies at every screen width, as a column count or an object. | `number \| ColSize` | `semiGlobalDefault("Col", "xs")`                     |
+| sm        | Responsive grid for screens ≥576px, as a column count or an object.                           | `number \| ColSize` | `semiGlobalDefault("Col", "sm")`                     |
+| md        | Responsive grid for screens ≥768px, as a column count or an object.                           | `number \| ColSize` | `semiGlobalDefault("Col", "md")`                     |
+| lg        | Responsive grid for screens ≥992px, as a column count or an object.                           | `number \| ColSize` | `semiGlobalDefault("Col", "lg")`                     |
+| xl        | Responsive grid for screens ≥1200px, as a column count or an object.                          | `number \| ColSize` | `semiGlobalDefault("Col", "xl")`                     |
+| xxl       | Responsive grid for screens ≥1600px, as a column count or an object.                          | `number \| ColSize` | `semiGlobalDefault("Col", "xxl")`                    |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description            | Scope parameters |
+| ------- | ---------------------- | ---------------- |
+| default | Content of the column. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

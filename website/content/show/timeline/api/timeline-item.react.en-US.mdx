@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                         | Type                                                             | Default     |
+| --------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| children  | Content of the item.                                                                | `React.ReactNode`                                                | -           |
+| className | Class name of the root `li` element.                                                | `string`                                                         | -           |
+| color     | Background color of the dot, overriding the color of type.                          | `string`                                                         | -           |
+| dot       | Custom dot content, replacing the default dot.                                      | `React.ReactNode`                                                | -           |
+| extra     | Extra content, not rendered when empty. Clicks in this area do not trigger onClick. | `React.ReactNode`                                                | -           |
+| position  | Overrides the mode of the Timeline for this item: `left` or `right`.                | `'left' \| 'right'`                                              | -           |
+| ref       | Reference to the root `li` element.                                                 | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType> | -           |
+| style     | Style of the root `li` element.                                                     | `React.CSSProperties`                                            | -           |
+| time      | Time text, not rendered when empty.                                                 | `React.ReactNode`                                                | `""`        |
+| type      | Dot type: `default`, `ongoing`, `success`, `warning` or `error`.                    | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'`    | `"default"` |

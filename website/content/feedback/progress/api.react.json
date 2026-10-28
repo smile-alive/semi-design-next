@@ -1,0 +1,51 @@
+{
+    "progress": {
+        "source": "packages/semi-ui-react/src/progress/index.tsx",
+        "props": {
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "direction": { "zh-CN": "条状进度条的方向，可选 `horizontal` 或 `vertical`。", "en-US": "Direction of the line progress bar: `horizontal` or `vertical`." },
+            "format": {
+                "zh-CN": "格式化函数，入参为当前显示的百分比（截断到 0 到 100，动画过程中为中间值），返回值渲染在环形进度条中心或条状进度条右侧。每次渲染都会调用，即使 `showInfo` 为 `false`。",
+                "en-US": "Formatting function. It receives the shown percentage, clamped to 0-100 and animated during transitions, and its return value is rendered in the center of a circle or on the right of a line. It runs on every render, even when `showInfo` is `false`."
+            },
+            "indeterminate": {
+                "zh-CN": "是否为不确定状态。开启后 `percent` 不再控制进度长度，不显示文字，且不设置 `aria-valuenow`。",
+                "en-US": "Whether the progress is indeterminate. When on, `percent` no longer controls the length, the text is hidden and `aria-valuenow` is omitted."
+            },
+            "motion": {
+                "zh-CN": "文字中的数字是否以动画过渡到新的 `percent`；关闭后直接跳到目标值。",
+                "en-US": "Whether the number in the text animates to the new `percent`. When off, it jumps to the target."
+            },
+            "orbitStroke": { "zh-CN": "进度条轨道的填充色；未设置时由样式决定。", "en-US": "Fill color of the track. When not set, the stylesheet decides it." },
+            "percent": { "zh-CN": "进度百分比；超出 0 到 100 的值会被截断。", "en-US": "Progress percentage. Values outside 0-100 are clamped." },
+            "ref": { "zh-CN": "根元素（`role=\"progressbar\"`）的引用。", "en-US": "Reference to the root element (`role=\"progressbar\"`)." },
+            "showInfo": {
+                "zh-CN": "是否显示文字：环形显示在中间，条状显示在右侧。`size` 为 `small` 的环形进度条不显示文字。",
+                "en-US": "Whether to show the text: in the center of a circle, or on the right of a line. A circle with `size` `small` never shows the text."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 `default`、`small`（仅环形生效）或 `large`（仅条状生效）。",
+                "en-US": "Size: `default`, `small` (circle only) or `large` (line only)."
+            },
+            "stroke": {
+                "zh-CN": "填充色。数组形式为 `{ percent, color }` 的区间列表，`color` 可为任意 CSS 颜色或 Semi 色板名，如 `blue`、`orange-9`，未写色阶时取 5。",
+                "en-US": "Fill color. An array is a list of `{ percent, color }` intervals, where `color` is any CSS color or a Semi palette name such as `blue` or `orange-9` (shade 5 when no shade is given)."
+            },
+            "strokeGradient": {
+                "zh-CN": "是否在相邻颜色区间之间生成渐变色补齐颜色，仅在 `stroke` 为区间数组时生效。",
+                "en-US": "Whether to generate gradient colors between the intervals. Takes effect only when `stroke` is an array of intervals."
+            },
+            "strokeLinecap": {
+                "zh-CN": "环形进度条端点形状，可选 `round` 或 `square`；条状进度条不生效。",
+                "en-US": "Line cap of the circle progress bar: `round` or `square`. Has no effect on a line progress bar."
+            },
+            "strokeWidth": { "zh-CN": "环形进度条的线宽。", "en-US": "Stroke width of the circle progress bar." },
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "type": { "zh-CN": "类型，可选 `line` 或 `circle`。", "en-US": "Type: `line` or `circle`." },
+            "width": {
+                "zh-CN": "环形进度条的直径，仅 `type` 为 `circle` 时生效；未设置时，`size` 为 `small` 取 24，否则取 72。",
+                "en-US": "Diameter of the circle progress bar, effective only when `type` is `circle`. When not set, it is 24 for size `small` and 72 otherwise."
+            }
+        }
+    }
+}

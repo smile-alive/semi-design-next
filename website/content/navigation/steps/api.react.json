@@ -1,0 +1,76 @@
+{
+    "steps": {
+        "source": "packages/semi-ui-react/src/steps/index.tsx",
+        "props": {
+            "aria-label": {
+                "zh-CN": "步骤条的可访问名称，传入后根元素带 `role=\"group\"`。",
+                "en-US": "Accessible name of the steps; the root element gets `role=\"group\"` when it is set."
+            },
+            "children": {
+                "zh-CN": "步骤，通常为 `Steps.Step`。每个 React 元素占一个步骤位置，文本与空值不计入；原生元素原样渲染，不接收步骤属性。",
+                "en-US": "Steps, usually `Steps.Step`. Each React element takes one step position; text and empty values are not counted. Native elements render as they are and receive no step props."
+            },
+            "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
+            "current": {
+                "zh-CN": "当前步骤，从 0 开始计数，未设置时为 `0`。子 Step 可用 `status` 覆盖自己的状态。",
+                "en-US": "Current step, counting from 0; defaults to `0`. A child Step can override its own state with `status`."
+            },
+            "direction": {
+                "zh-CN": "步骤条方向，可选 `horizontal` 或 `vertical`，未设置时为 `horizontal`。用于 `fill` 与 `basic` 类型，`nav` 类型忽略。",
+                "en-US": "Direction of the steps: `horizontal` or `vertical`, defaults to `horizontal`. Applies to the `fill` and `basic` types; ignored by `nav`."
+            },
+            "hasLine": {
+                "zh-CN": "是否显示步骤间的连接线，未设置时为 `true`。仅用于 `basic` 类型。",
+                "en-US": "Whether to show the line between steps, defaults to `true`. Applies to the `basic` type only."
+            },
+            "initial": {
+                "zh-CN": "起始序号，从 0 开始计数，未设置时为 `0`。步骤的序号等于 `initial` 加其在子元素中的索引。",
+                "en-US": "Starting index, counting from 0; defaults to `0`. A step's number equals `initial` plus its index among the children."
+            },
+            "onChange": {
+                "zh-CN": "选择步骤时调用，参数为该步骤的序号（`initial` 加索引）；点击当前步骤不调用。传入后所有步骤变为可点击。",
+                "en-US": "Called when a step is selected, with its number (`initial` plus index); not called for the current step. Passing it makes every step clickable."
+            },
+            "prefixCls": { "zh-CN": "类名前缀，内部用于生成样式类名。", "en-US": "Class name prefix, used internally to generate style class names." },
+            "ref": { "zh-CN": "根元素（`div`）的引用。", "en-US": "Reference to the root element (`div`)." },
+            "size": {
+                "zh-CN": "尺寸，可选 `small` 或 `default`，未设置时为 `default`。用于 `basic` 与 `nav` 类型。",
+                "en-US": "Size: `small` or `default`, defaults to `default`. Applies to the `basic` and `nav` types."
+            },
+            "status": {
+                "zh-CN": "当前步骤的状态，可选 `wait`、`process`、`finish`、`error` 或 `warning`，未设置时为 `process`。用于 `fill` 与 `basic` 类型。",
+                "en-US": "Status of the current step: `wait`, `process`, `finish`, `error` or `warning`, defaults to `process`. Applies to the `fill` and `basic` types."
+            },
+            "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },
+            "type": {
+                "zh-CN": "步骤条类型，可选 `fill`、`basic` 或 `nav`。",
+                "en-US": "Steps type: `fill`, `basic` or `nav`."
+            }
+        }
+    },
+    "step": {
+        "source": "packages/semi-ui-react/src/steps/step.tsx",
+        "props": {
+            "className": { "zh-CN": "步骤项（根元素）的类名。", "en-US": "Class name of the step item (root element)." },
+            "description": {
+                "zh-CN": "步骤的详情描述。`nav` 类型不渲染。",
+                "en-US": "Description of the step. Not rendered by the `nav` type."
+            },
+            "icon": {
+                "zh-CN": "自定义图标，替换状态图标；内容为空时不显示图标。`nav` 类型不渲染。",
+                "en-US": "Custom icon that replaces the status icon; an empty value shows no icon. Not rendered by the `nav` type."
+            },
+            "onClick": {
+                "zh-CN": "点击步骤项时调用，包括点击其中的控件时。传入后步骤可点击，`role` 默认为 `button`；先于 Steps 的 `onChange` 调用。",
+                "en-US": "Called when the step item is clicked, including clicks on controls inside it. Passing it makes the step clickable with `role` defaulting to `button`; it runs before the `onChange` of Steps."
+            },
+            "ref": { "zh-CN": "步骤项（根元素，`div`）的引用。", "en-US": "Reference to the step item (root element, `div`)." },
+            "status": {
+                "zh-CN": "该步骤自己的状态，可选 `wait`、`process`、`finish`、`error` 或 `warning`。未设置时随 Steps 的 `current` 与 `status` 决定。`nav` 类型不生效。",
+                "en-US": "Own status of the step: `wait`, `process`, `finish`, `error` or `warning`. When omitted it follows `current` and `status` of Steps. Not applied by the `nav` type."
+            },
+            "style": { "zh-CN": "步骤项（根元素）的样式。", "en-US": "Style of the step item (root element)." },
+            "title": { "zh-CN": "步骤标题。", "en-US": "Step title." }
+        }
+    }
+}

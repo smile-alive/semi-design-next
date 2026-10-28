@@ -1,0 +1,67 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Content of the input, for v-model. | `string \| number` | `undefined` |
+| modelModifiers | The trim, number and lazy v-model modifiers, passed by Vue for the matching v-model modifier. With lazy, typing does not update the bound value; update:modelValue is emitted on the native change (blur or Enter). The change event still fires on every input. | `InputModelModifiers` | `undefined` |
+| defaultValue | Initial content when the input is uncontrolled. | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
+| size | Input size: large, default or small. | `Size` | `semiDefault("Input", "size", "default")` |
+| type | The type of the native input. | `string` | `semiDefault("Input", "type", "text")` |
+| mode | Input mode; password shows a button that reveals or hides the text. | `"password"` | `semiGlobalDefault("Input", "mode")` |
+| disabled | Whether the input is disabled. | `boolean` | `semiGlobalDefault("Input", "disabled")` |
+| readonly | Whether the input is read-only. | `boolean` | `semiDefault("Input", "readonly", false)` |
+| borderless | Borderless mode. | `boolean` | `semiDefault("Input", "borderless", false)` |
+| showClear | Shows a clear button when the input has content and the pointer or focus is inside the component. | `boolean` | `semiDefault("Input", "showClear", false)` |
+| hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | `semiDefault("Input", "hideSuffix", false)` |
+| showClearIgnoreDisabled | Internal property used by DatePicker: the clear button stays available while disabled. | `boolean` | `semiGlobalDefault("Input", "showClearIgnoreDisabled")` |
+| composition | Whether to enable IME mode; change does not fire during a composition and fires once after it ends. | `boolean` | `semiDefault("Input", "composition", false)` |
+| preventScroll | Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component. | `boolean` | `semiGlobalDefault("Input", "preventScroll")` |
+| autofocus | Focuses the input on mount, using preventScroll; a disabled input is not focused. | `boolean` | `semiGlobalDefault("Input", "autofocus")` |
+| maxlength | Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies. | `number` | `undefined` |
+| minlength | Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies. | `number` | `undefined` |
+| placeholder | Hint text shown while the input is empty. | `string \| number` | `semiGlobalDefault("Input", "placeholder")` |
+| validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("Input", "validateStatus", "default")` |
+| inputStyle | Style of the native input element; numbers need a unit. | `StyleValue` | `semiGlobalDefault("Input", "inputStyle")` |
+| insetLabelId | The id of the element around the insetLabel slot, for aria-labelledby to point at. | `string` | `undefined` |
+| getValueLength | Custom string length calculation, used with maxlength and minlength. | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event             | Description                                                                                                                                        | Callback parameters                        |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| input             | The native input event.                                                                                                                            | `[event: Event]`                           |
+| update:modelValue | Emitted when the content changes, for v-model to write back.                                                                                       | `[value: string]`                          |
+| change            | Emitted when the content changes, with the new value and the event; in IME mode it fires once after the composition ends.                          | `[value: string, event: InputChangeEvent]` |
+| clear             | Emitted when the clear button is activated.                                                                                                        | `[event: MouseEvent]`                      |
+| focus             | Emitted when focus enters the component; moving focus between the input and its buttons does not fire it. The event is the focusin of the wrapper. | `[event: FocusEvent]`                      |
+| blur              | Emitted when focus leaves the component. The event is the focusout of the wrapper.                                                                 | `[event: FocusEvent]`                      |
+| keydown           | The native keydown event.                                                                                                                          | `[event: KeyboardEvent]`                   |
+| keyup             | The native keyup event.                                                                                                                            | `[event: KeyboardEvent]`                   |
+| enterPress        | Emitted when Enter is pressed (keydown); the Enter that commits an IME composition does not fire it.                                               | `[event: KeyboardEvent]`                   |
+| compositionstart  | Emitted when an IME composition starts.                                                                                                            | `[event: CompositionEvent]`                |
+| compositionupdate | Emitted when an IME composition updates.                                                                                                           | `[event: CompositionEvent]`                |
+| compositionend    | Emitted when an IME composition ends.                                                                                                              | `[event: CompositionEvent]`                |
+
+**Slots**
+
+| Slot        | Description                                                                              | Scope parameters |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------- |
+| prefix      | Prefix. Text or a Semi icon alone gets horizontal spacing automatically.                 | `any`            |
+| suffix      | Suffix. Text or a Semi icon alone gets horizontal spacing automatically.                 | `any`            |
+| addonBefore | Addon before the input. Text or a Semi icon alone gets horizontal spacing automatically. | `any`            |
+| addonAfter  | Addon after the input. Text or a Semi icon alone gets horizontal spacing automatically.  | `any`            |
+| insetLabel  | Label inside the input.                                                                  | `any`            |
+| clearIcon   | Custom icon of the clear button, effective when showClear is true.                       | `any`            |
+
+**Exposes**
+
+| Name              | Description                                                                            | Type                                                                                                                                                                          |
+| ----------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| focus             | Focuses the native input; the preventScroll prop applies when the option is not given. | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
+| blur              | Removes focus.                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| select            | Selects all the text in the input.                                                     | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"none\" \u007c \"forward\" \u007c \"backward\" \u007c undefined) => void"}>Type</ApiType> |
+| input             | The native input element, or null while it is not rendered.                            | `HTMLInputElement \| null`                                                                                                                                                    |
+| nativeElement     | The root element of the component, or null while it is not rendered.                   | `HTMLElement \| null`                                                                                                                                                         |

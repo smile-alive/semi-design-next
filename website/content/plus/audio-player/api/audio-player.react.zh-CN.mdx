@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                             | 类型                                                              | 默认值   |
+| ------------ | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- | -------- |
+| audioUrl     | 音频地址，可以是字符串、`AudioInfo` 对象，或由它们组成的数组；传入数组时显示上一首、下一首按钮。 | `AudioUrl`                                                        | -        |
+| autoPlay     | 是否自动播放。                                                                                   | `boolean`                                                         | `false`  |
+| className    | 根元素的类名。                                                                                   | `string`                                                          | -        |
+| ref          | 根元素 `div` 的引用。                                                                            | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
+| showToolbar  | 是否显示工具栏，即音量、后退、前进、倍速与重新加载按钮。                                         | `boolean`                                                         | `true`   |
+| skipDuration | 后退、前进按钮每次跳转的秒数。                                                                   | `number`                                                          | `10`     |
+| style        | 根元素的内联样式。                                                                               | `React.CSSProperties`                                             | -        |
+| theme        | 播放器主题，可选 `dark` 或 `light`。                                                             | `AudioPlayerTheme`                                                | `"dark"` |

@@ -1,0 +1,291 @@
+---
+order: 78
+title: Popover
+icon: doc-popover
+brief: Click / mouse to move into the element and pop up the bubble card floating layer.
+---
+
+import PopoverReactApi from './api/popover.react.en-US.mdx';
+import PopoverVueApi from './api/popover.vue.en-US.mdx';
+import PopoverSolidApi from './api/popover.solid.en-US.mdx';
+
+## When to Use
+
+When the target element has further description and related operations, it can be included in the card and displayed according to the user's operational behavior.
+
+The difference with Tooltip is that users can operate on elements on the floating layer, so it can carry more complex content, such as links or buttons.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Popover } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Popover } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Popover } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Cautions
+
+<Framework only="react">
+
+Tooltip needs to apply DOM event listeners to children. If the child element is a custom component, you need to ensure that it can pass properties to the underlying DOM element
+
+At the same time, in order to calculate the positioning of the popup layer, it is necessary to obtain the real DOM elements of the children, so Popover supports the following types of children
+
+1. Class Component, it is not mandatory to bind ref, but you need to ensure that props can be transparently transmitted to the real DOM node
+2. Use a functional component that passes props and `ref` (a plain prop in React 19) to the real DOM node in children
+3. Real DOM nodes, such as span, div, p...
+
+</Framework>
+
+<Framework only="vue">
+
+Popover applies the trigger attributes and event listeners to the trigger element in the default slot, and uses the real DOM element of the trigger to calculate the position of the popup layer, so the default slot supports the following types:
+
+1. A single real DOM element, such as span, div, p...
+2. A single component, whose undeclared attributes must land on its root DOM element (the default attrs fallthrough is enough); for a component with several root nodes, its first element is the anchor
+3. Text or several nodes, which Popover wraps in a span as the trigger element
+
+</Framework>
+
+<Framework only="solid">
+
+Popover applies the trigger attributes and event listeners to the trigger element, and uses the real DOM element of the trigger to calculate the position of the popup layer, so `children` supports the following types:
+
+1. A function: its parameter `trigger` is `getTriggerProps`. Spread `trigger()` onto the element that receives focus, either a real DOM element such as span, div, p..., or a component that passes its props through to its root DOM element (such as `<Button {...trigger()} />`)
+2. Any other content (text, a component, several nodes), which Popover wraps in a span as the trigger element
+
+</Framework>
+
+<Demo id="children" />
+
+### Basic Usage
+
+<Framework only="react">
+
+Wrap the trigger with Popover as `children` (the trigger is a Tag in the example below) and pass the popup content through `content`.  
+The cautions are the same as [Tooltip](/en-US/react/show/tooltip#Cautions)
+
+</Framework>
+
+<Framework only="vue">
+
+Put the trigger in the default slot of Popover (the trigger is a Tag in the example below) and pass the popup content through the `#content` slot.  
+The cautions are the same as [Tooltip](/en-US/react/show/tooltip#Cautions)
+
+</Framework>
+
+<Framework only="solid">
+
+Wrap the trigger with Popover as `children` (the trigger is a Tag in the example below) and pass the popup content through `content`.  
+The cautions are the same as [Tooltip](/en-US/react/show/tooltip#Cautions)
+
+</Framework>
+
+<Demo id="basic" />
+
+### Pop-up Position
+
+Support twelve directions.
+
+<Demo id="position" />
+
+### Controlled Display
+
+<Framework only="react">
+
+In this scenario, Popover's display is completely at the control of parameter `visible`.
+
+</Framework>
+
+<Framework only="vue">
+
+In this scenario, Popover's display is completely at the control of parameter `visible`, which can be used with `v-model:visible`.
+
+</Framework>
+
+<Framework only="solid">
+
+Set `trigger="custom"`. In this scenario, Popover's display is completely at the control of parameter `visible`.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Conditional trigger (condition)
+
+<Framework only="react">
+
+When `condition={false}`, Popover will not respond to hover/click/focus triggers (does not affect `trigger='custom'`); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Framework only="vue">
+
+When `:condition="false"`, Popover will not respond to hover/click/focus triggers (with `trigger="custom"`, `visible` still decides); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only emits `update:visible` and `visibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Framework only="solid">
+
+When `condition={false}`, Popover will not respond to hover/click/focus triggers (does not affect `trigger="custom"`); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Demo id="condition" />
+
+### Show Small Triangle
+
+Popover also supports the display of a small triangle.
+
+> The floating layer in this mode has a default style that you can overwrite by passing the style parameters.
+
+<Demo id="show-arrow" />
+
+### Arrow Point at Center
+
+Under the condition of **showArrow=true**, you can pass in `arrowPointAtCenter=true` so that the small triangle always points to the center of the element.
+
+<Demo id="arrow-point-at-center" />
+
+### Set Floating Layer Background Color
+
+If you need to customize the background color or border color of the floating layer, please **Be sure to set `backgroundColor` and `borderColor` properties in `style` separately.** This enables the "small triangle" to apply the same background color and border color.
+
+<Demo id="background-color" />
+
+### Initialize the Focus Position of Popup Layer
+
+<Framework only="react">
+
+Popover `content` also supports functions. Its input parameter is an object, which binds `initialFocusRef` to the focusable DOM or component. When the panel is opened, it will automatically focus at that position.
+
+</Framework>
+
+<Framework only="vue">
+
+The `#content` slot receives `{ initialFocusRef }` as its scope. Bind it to the focusable DOM or component with `:ref`, and it will automatically focus at this position when the panel is opened.
+
+</Framework>
+
+<Framework only="solid">
+
+Popover `content` also supports functions. Its input parameter is an object, which binds `initialFocusRef` as the `ref` of the focusable DOM or component. When the panel is opened, it will automatically focus at that position.
+
+</Framework>
+
+<Demo id="initial-focus" />
+
+### Use with Tooltip or Popconfirm
+
+Please refer to [Use with Tooltip/Popconfirm](/en-US/react/show/tooltip#%E6%90%AD%E9%85%8D%20Popover%20%E6%88%96%20Popconfirm%20%E4%BD%BF%E7%94%A8)
+
+## API Reference
+
+<Framework only="react">
+
+<PopoverReactApi />
+
+Other undeclared attributes are dropped (Popover has no root DOM element); `className` and `style` land on the popup, and the trigger attributes are only added to the trigger element.
+
+Methods are bound to the Popover instance and can be called through ref for special interactions.
+
+</Framework>
+
+<Framework only="vue">
+
+<PopoverVueApi />
+
+`class` and `style` land on the popup layer, and other undeclared attributes are dropped; the trigger attributes are only added to the trigger element. When the subtree is cached by `<KeepAlive>` (deactivated), the popup is treated as closed and `update:visible` and `visibleChange` are emitted with `false`; a popup whose `visible` is one-way bound to `true` is hidden with the cached subtree and shows again once reactivated.
+
+</Framework>
+
+<Framework only="solid">
+
+<PopoverSolidApi />
+
+`class` and `style` land on the popup layer, and other undeclared attributes are dropped (Popover has no root DOM element); the trigger attributes are only added to the trigger element. `ref` receives the instance methods, not a DOM element.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- About role
+    - If the trigger is set to `click`, `contextMenu` or `custom`, the PopoverContent element has role set to `dialog`.
+    - If the trigger is set to `hover` or `focus`, it has role set to `tooltip`.
+    - The `role` prop overrides the default. A `dialog` needs a name: pass `aria-label`, or point `aria-labelledby` at a heading in the content; an unnamed dialog logs a warning in development
+- Popover's content
+    - The content wrapper will be automatically added with the id attribute
+- Popover's children (for a `tooltip` they only get `aria-describedby`; for other roles, such as `presentation`, nothing is added)
+    - Will be automatically added [aria-expanded](https://www.w3.org/TR/wai-aria-1.1/#aria-expanded) attribute, when Popover is visible, the attribute value is `true`, when invisible Is `false`
+    - Will be automatically added [aria-haspopup](https://www.w3.org/TR/wai-aria-1.1/#aria-haspopup) attribute, which is `dialog`
+    - Will be automatically added [aria-controls](https://www.w3.org/TR/wai-aria-1.1/#aria-controls) attribute, which is the id of the content wrapper
+
+### Keyboard and Focus
+
+- When the Popover trigger method is set to `hover`: Open the Popover when the mouse is hovered or focused
+- When the Popover trigger method is set to `click`: Click the trigger or focus and use the Enter key to open the Popover
+- After the Popover is activated, press the `arrow key` ⬇️ to move the focus to the Popover. At this time, the focus is on the first interactive element in the Popover by default, and the user can also customize the focus position (if there is no interactive element in the Popover, it will appear as No response)
+- Use the `Tab` key when the focus is in the Popover, the focus will cycle in the Popover, and use `Shift + Tab` to move the focus in the opposite direction
+- Keyboard users can close the Popover by pressing `Esc`, after closing the focus returns to the trigger (when the trigger is click)
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Why the position of the popover overlay card and the relative position of the overlay trigger are not as expected?**  
+  Popover relies on Tooltip at the bottom. In order to calculate positioning, Tooltip needs to obtain the real DOM elements of children. Therefore, the Popover type currently supports the following types of children:
+
+      <Framework only="react">
+    1. The Jsx type of the real dom node, such as span, div, p...
+    2. Use a FunctionComponent that passes props and `ref` (a plain prop in React 19) to the real dom node
+
+    When Semi Input with prefix is used as children, even if the same width of Input and Popover content are set, the position of the floating card is still positioned relative to the input box that does not contain the prefix part. At this time, just put another div on the outer layer of the children to solve the problem.
+
+      </Framework>
+
+      <Framework only="vue">
+    1. A single real DOM element, such as span, div, p...
+    2. A single component, whose undeclared attributes must land on its root DOM element; for a component with several root nodes, its first element is the anchor
+    3. Text or several nodes, which Popover wraps in a span
+
+    When Semi Input with prefix is used as the trigger, even if the same width of Input and Popover content are set, the position of the floating card is still positioned relative to the input box that does not contain the prefix part. At this time, just put another div on the outer layer of the trigger to solve the problem.
+
+      </Framework>
+
+      <Framework only="solid">
+    1. A function: spread `trigger()` onto a real DOM element, or onto a component that passes its props through to its root DOM element
+    2. Any other content (text, a component, several nodes), which Popover wraps in a span
+
+    When Semi Input with prefix is used as the trigger, even if the same width of Input and Popover content are set, the position of the floating card is still positioned relative to the input box that does not contain the prefix part. At this time, just put another div on the outer layer of the trigger to solve the problem.
+
+      </Framework>
+
+- **Why does the popover layer card lose its width and wrap unexpectedly when the width is not enough near the screen border?**
+
+    After Chromium 104, the wrapping rendering strategy when the width of the screen border text is not enough has changed. For details, see [issue #1022](https://github.com/DouyinFE/semi-design/issues/1022), the semi-side has been This problem was fixed in v2.17.0.

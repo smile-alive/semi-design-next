@@ -1,0 +1,48 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| initValues | Initial values of the form, copied once when the Form is created. | `Values` | `undefined` |
+| layout | Direction in which the fields are arranged: vertical or horizontal. | `"horizontal" \| "vertical"` | `semiDefault("Form", "layout", "vertical")` |
+| labelPosition | Label position of every field. inset is supported by some fields only; the others are laid out as top. The same property on a field takes precedence. | `"top" \| "left" \| "inset"` | `semiDefault("Form", "labelPosition", "top")` |
+| labelWidth | Label width of every field. A number is in px. | `string \| number` | `semiGlobalDefault("Form", "labelWidth")` |
+| labelAlign | Text alignment of the label of every field. The same property on a field takes precedence. | `"left" \| "right"` | `semiGlobalDefault("Form", "labelAlign")` |
+| labelCol | Grid layout of the label of every field, with the properties of Col such as span and offset. Set it together with wrapperCol. | `ColProps` | `semiGlobalDefault("Form", "labelCol")` |
+| wrapperCol | Grid layout of the control of every field, with the properties of Col such as span and offset. Set it together with labelCol. | `ColProps` | `semiGlobalDefault("Form", "wrapperCol")` |
+| extraTextPosition | Position of the extra text of every field: middle puts it between the label and the control, bottom after the control. The same property on a field takes precedence. | `"middle" \| "bottom"` | `semiGlobalDefault("Form", "extraTextPosition")` |
+| allowEmpty | Whether a field whose value becomes empty keeps its key in values. The same property on a field takes precedence. | `boolean` | `semiDefault("Form", "allowEmpty", false)` |
+| autoScrollToError | Whether to scroll to the first invalid field when submit or formApi.validate fails. An object is passed to scroll-into-view-if-needed as its options. | `boolean \| Options` | `semiDefault("Form", "autoScrollToError", false)` |
+| showValidateIcon | Whether the validation message is preceded by an icon of its status. | `boolean` | `semiDefault("Form", "showValidateIcon", true)` |
+| disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | `semiGlobalDefault("Form", "disabled")` |
+| stopValidateWithError | Whether validation by rules stops at the first failing rule. The same property on a field takes precedence. | `boolean` | `semiGlobalDefault("Form", "stopValidateWithError")` |
+| trigger | When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence. | `FieldValidateTriggerType` | `semiGlobalDefault("Form", "trigger")` |
+| stopPropagation | Whether to stop the submit and reset events from bubbling, so that a nested Form does not trigger the events of the outer one. | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `semiGlobalDefault("Form", "stopPropagation")` |
+| validator | Form-level validation, called on submit and formApi.validate and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an object keyed by field name. | <ApiType detail={"((values: Values) => FormValidateResult\u003cValues> \u007c Promise\u003cFormValidateResult\u003cValues>>)"}>Type</ApiType> | `undefined` |
+| form | The formApi returned by useForm, used to control the form from outside. | <ApiType detail={"(FormApi\u003cValues> & FormApiProxyInternals\u003cValues>)"}>Type</ApiType> | `undefined` |
+| id | The id of the form element, also written to x-form-id. Generated when omitted. | `string` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| submit | Emitted when a submit button is clicked or formApi.submitForm is called and validation passes. Receives values and the submit event. It has the name of the native submit event and hides it. | `[values: Values, e?: SubmitEvent \| undefined]` |
+| submitFail | Emitted when a submit button is clicked or formApi.submitForm is called and validation fails. Receives errors, values and the submit event. | <ApiType detail={"[errors: FormValidateResult\u003cValues>, values: Partial\u003cValues>, e?: SubmitEvent \u007c undefined]"}>Type</ApiType> |
+| reset | Emitted when a reset button is clicked or formApi.reset is called. It has the name of the native reset event and hides it. | `[]` |
+| change | Emitted when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState. It has the name of the native change event and hides it. | <ApiType detail={"[formState: FormState\u003cValues>]"}>Type</ApiType> |
+| valueChange | Emitted when a field value changes. Receives all values and the values that changed. | <ApiType detail={"[values: Values, changedValues: Partial\u003cValues>]"}>Type</ApiType> |
+| errorChange | Emitted when validation state changes. Receives all errors and the errors that changed. Batch operations such as validate, submit and reset emit once; silent validation does not emit. | <ApiType detail={"[errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues, 5>, FieldError>> \u007c undefined]"}>Type</ApiType> |
+| getFormApi | Emitted after the Form mounts. Receives formApi. | <ApiType detail={"[formApi: FormApi\u003cValues>]"}>Type</ApiType> |
+
+**Slots**
+
+| Slot    | Description                                                                                                         | Scope parameters                                                     |
+| ------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| default | Form content. The scope provides formState, formApi and values; read them only and change the form through formApi. | <ApiType detail={"FormDefaultSlotProps\u003cValues>"}>Type</ApiType> |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

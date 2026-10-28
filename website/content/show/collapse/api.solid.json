@@ -1,0 +1,76 @@
+{
+    "collapse": {
+        "source": "packages/semi-ui-solid/src/collapse/collapse.tsx",
+        "props": {
+            "activeKey": {
+                "zh-CN": "受控属性，当前展开面板的 key；null 与空字符串表示全部收起。",
+                "en-US": "Controlled property, key of the currently expanded panel; null and the empty string mean all panels are collapsed."
+            },
+            "defaultActiveKey": {
+                "zh-CN": "初始展开面板的 key。",
+                "en-US": "Key of the panel expanded initially."
+            },
+            "accordion": { "zh-CN": "手风琴模式。", "en-US": "Accordion mode." },
+            "clickHeaderToExpand": {
+                "zh-CN": "点击面板头整行展开收起；为 false 时只响应切换按钮和箭头。",
+                "en-US": "Clicking anywhere in the header row toggles the panel; when false only the toggle button and the arrow respond."
+            },
+            "expandIconPosition": {
+                "zh-CN": "展开图标位置，可选 left、right。",
+                "en-US": "Position of the expand icon: left or right."
+            },
+            "keepDOM": {
+                "zh-CN": "是否保留隐藏面板的 DOM 树，默认销毁；未传时依次读 Collapse、Collapsible 的全局默认值。",
+                "en-US": "Whether to keep the DOM tree of hidden panels; destroyed by default. When omitted it reads the global default of Collapse, then that of Collapsible."
+            },
+            "motion": {
+                "zh-CN": "是否开启动画，默认开启；未传时依次读 Collapse、Collapsible 的全局默认值。",
+                "en-US": "Whether to enable the animation; enabled by default. When omitted it reads the global default of Collapse, then that of Collapsible."
+            },
+            "lazyRender": {
+                "zh-CN": "配合 keepDOM 使用，为 true 时面板展开前不渲染内容。",
+                "en-US": "Used with keepDOM; when true, panel content is not rendered until the panel is first expanded."
+            },
+            "expandIcon": {
+                "zh-CN": "面板收起时显示的图标，可传元素；未传时为 IconChevronDown，传入 `null` 不显示图标。",
+                "en-US": "Icon shown while a panel is collapsed, given as an element; IconChevronDown when omitted, and `null` shows no icon."
+            },
+            "collapseIcon": {
+                "zh-CN": "面板展开时显示的图标，可传元素；未传时为 IconChevronUp，传入 `null` 不显示图标。",
+                "en-US": "Icon shown while a panel is expanded, given as an element; IconChevronUp when omitted, and `null` shows no icon."
+            },
+            "onChange": {
+                "zh-CN": "切换面板时调用，参数为展开面板的 key 数组与原生 MouseEvent（键盘操作经原生按钮同样是 click）。",
+                "en-US": "Called when a panel is toggled, with the array of expanded keys and the native MouseEvent (keyboard use also produces a click through the native button)."
+            },
+            "children": {
+                "zh-CN": "Collapse.Panel 面板。",
+                "en-US": "Collapse.Panel panels."
+            }
+        }
+    },
+    "collapse-panel": {
+        "source": "packages/semi-ui-solid/src/collapse/panel.tsx",
+        "props": {
+            "itemKey": {
+                "zh-CN": "必填且唯一，用于匹配 activeKey 与 defaultActiveKey。",
+                "en-US": "Required and unique, matched against activeKey and defaultActiveKey."
+            },
+            "showArrow": { "zh-CN": "是否展示箭头。", "en-US": "Whether to show the arrow icon." },
+            "disabled": { "zh-CN": "面板是否被禁用。", "en-US": "Whether the panel is disabled." },
+            "header": {
+                "zh-CN": "面板头内容，渲染在切换按钮内，不能包含交互元素。",
+                "en-US": "Panel header content, rendered inside the toggle button; must not contain interactive elements."
+            },
+            "extra": {
+                "zh-CN": "面板头右侧的辅助内容，位于切换按钮之外，可以放控件。",
+                "en-US": "Auxiliary content on the right of the panel header, outside the toggle button; may hold controls."
+            },
+            "onMotionEnd": {
+                "zh-CN": "展开或收起动画结束时调用。",
+                "en-US": "Called when the expand or collapse animation ends."
+            },
+            "children": { "zh-CN": "面板内容。", "en-US": "Panel content." }
+        }
+    }
+}

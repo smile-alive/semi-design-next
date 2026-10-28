@@ -1,0 +1,31 @@
+**Props**
+
+| Property | Description                                                                                                    | Type                              | Default                                         |
+| -------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
+| badge    | Badge props, same as Badge. class, style, onClick, onMouseenter and onMouseleave reach the Badge root element. | `FloatButtonBadge`                | `semiGlobalDefault("FloatButton", "badge")`     |
+| colorful | Colorful float button.                                                                                         | `boolean`                         | `semiDefault("FloatButton", "colorful", false)` |
+| disabled | Disabled state.                                                                                                | `boolean`                         | `semiDefault("FloatButton", "disabled", false)` |
+| href     | Link address. Renders an a element when set; a disabled link drops it.                                         | `string`                          | `semiGlobalDefault("FloatButton", "href")`      |
+| rel      | Relationship to the link target. Only takes effect with href.                                                  | `string`                          | `semiGlobalDefault("FloatButton", "rel")`       |
+| shape    | Shape: round or square.                                                                                        | `"square" \| "round"`             | `semiDefault("FloatButton", "shape", "round")`  |
+| size     | Size: default, small or large.                                                                                 | `"small" \| "default" \| "large"` | `semiDefault("FloatButton", "size", "default")` |
+| target   | Where to display the linked URL. Only takes effect with href.                                                  | `string`                          | `semiGlobalDefault("FloatButton", "target")`    |
+
+**Events**
+
+| Event | Description                                                               | Callback parameters   |
+| ----- | ------------------------------------------------------------------------- | --------------------- |
+| click | Emitted on click with the native click event. Not emitted while disabled. | `[event: MouseEvent]` |
+
+**Slots**
+
+| Slot       | Description                                    | Scope parameters |
+| ---------- | ---------------------------------------------- | ---------------- |
+| badgeCount | Custom badge content, in place of badge.count. | `any`            |
+| icon       | Button icon.                                   | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

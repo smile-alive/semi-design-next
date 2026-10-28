@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property   | Description                                                                                                                 | Type                                                                | Default |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------- |
+| active     | Whether the item is active: bolder text and a deeper color, plus a tick on its leading side when the Dropdown has showTick. | `boolean`                                                           | -       |
+| disabled   | Whether the item is disabled. A disabled item does not respond to clicks or mouse events.                                   | `boolean`                                                           | -       |
+| forwardRef | Called with the root `li` element before ref, for a component that wraps Dropdown.Item and needs the element.               | <ApiType detail={"(element: HTMLLIElement) => void"}>Type</ApiType> | -       |
+| icon       | Icon of the item, given as an element and rendered before the content.                                                      | `JSX.Element`                                                       | -       |
+| showTick   | Takes effect only outside a Dropdown. Inside one, the showTick of the Dropdown applies.                                     | `boolean`                                                           | -       |
+| type       | Text color type: primary, secondary, tertiary, warning or danger.                                                           | `Type`                                                              | -       |

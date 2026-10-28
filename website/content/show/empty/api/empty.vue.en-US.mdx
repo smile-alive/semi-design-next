@@ -1,0 +1,31 @@
+**Props**
+
+| Property      | Description                                                                                                                                   | Type                         | Default                                       |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- |
+| layout        | Layout mode: vertical or horizontal.                                                                                                          | `"vertical" \| "horizontal"` | `semiDefault("Empty", "layout", "vertical")`  |
+| imageStyle    | Style of the placeholder image.                                                                                                               | `CSSProperties`              | `semiGlobalDefault("Empty", "imageStyle")`    |
+| title         | Plain-text title. The title slot wins when both are given.                                                                                    | `string`                     | `semiGlobalDefault("Empty", "title")`         |
+| image         | Placeholder image URL, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image. Use the image slot for other content. | `string \| EmptySvgNode`     | `semiGlobalDefault("Empty", "image")`         |
+| darkModeImage | Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image.                          | `string \| EmptySvgNode`     | `semiGlobalDefault("Empty", "darkModeImage")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot          | Description                                                                   | Scope parameters |
+| ------------- | ----------------------------------------------------------------------------- | ---------------- |
+| default       | Actions below the description.                                                | `any`            |
+| title         | Custom title, preferred over the title prop.                                  | `any`            |
+| description   | Description content.                                                          | `any`            |
+| image         | Custom placeholder image, preferred over the image prop.                      | `any`            |
+| darkModeImage | Custom placeholder image in dark mode, preferred over the darkModeImage prop. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

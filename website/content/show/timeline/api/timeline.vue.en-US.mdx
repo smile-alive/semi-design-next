@@ -1,0 +1,28 @@
+**Props**
+
+| Property   | Description                                                                                                                 | Type             | Default                                       |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------- | --------------------------------------------- |
+| mode       | Position of the timeline relative to the content: left, right, center or alternate.                                         | `TimelineMode`   | `semiDefault("Timeline", "mode", "left")`     |
+| dataSource | Data array. When it is not empty the items are rendered from it and the default slot is ignored. See the item fields below. | `TimelineData[]` | `semiGlobalDefault("Timeline", "dataSource")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                    | Scope parameters    |
+| ------- | -------------------------------------------------------------- | ------------------- |
+| default | Timeline.Item children, used when dataSource is empty.         | `any`               |
+| content | Content of each dataSource item. Defaults to item.content.     | `TimelineSlotProps` |
+| dot     | Custom dot of each dataSource item.                            | `TimelineSlotProps` |
+| time    | Time of each dataSource item. Defaults to item.time.           | `TimelineSlotProps` |
+| extra   | Extra content of each dataSource item. Defaults to item.extra. | `TimelineSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

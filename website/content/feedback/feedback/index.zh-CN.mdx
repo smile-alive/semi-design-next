@@ -1,0 +1,159 @@
+---
+title: 反馈
+order: 89
+icon: doc-feedback
+brief: 快速定义各类型反馈
+showNew: true
+---
+
+import FeedbackReactApi from './api/feedback.react.zh-CN.mdx';
+import FeedbackVueApi from './api/feedback.vue.zh-CN.mdx';
+import FeedbackSolidApi from './api/feedback.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Feedback } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Feedback } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Feedback } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+<Framework only="react">
+
+通过 `visible` 设置是否显示。默认反馈展示内容是 emoji 形式。 可通过 `onValueChange` 获取当前选择的内容。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `v-model:visible` 设置是否显示，取消、关闭和 Esc 会把它写回 `false`，提交按钮只触发 `@ok`，由使用方关闭。默认反馈展示内容是 emoji 形式。 可通过 `@valueChange` 获取当前选择的内容。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `visible` 设置是否显示。组件不会自行关闭，取消与提交都由使用方在 `onCancel`、`onOk` 中把 `visible` 设为 `false`。默认反馈展示内容是 emoji 形式。 可通过 `onValueChange` 获取当前选择的内容。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 文字类型
+
+设置 `type` 为 `text` 可获得多行输入框形式的 feedback，可通过 `textAreaProps` 设置多行输入框的参数。
+
+<Demo id="text" />
+
+### 单选反馈
+
+设置 `type` 为 `radio` 可获得单选形式的 feedback，可通过 `radioGroupProps` 设置单选的参数。选项组默认没有可访问名称，可通过 `radioGroupProps` 的 `aria-label` 命名。
+
+<Demo id="radio" />
+
+### 多选反馈
+
+设置 `type` 为 `checkbox` 可获得多选形式的 feedback，可通过 `checkboxGroupProps` 设置多选的参数。选项组默认没有可访问名称，可通过 `checkboxGroupProps` 的 `aria-label` 命名。
+
+<Demo id="checkbox" />
+
+### 自定义反馈内容
+
+<Framework only="react">
+
+设置 `type` 为 `custom` 可获得自定义内容的 feedback，可通过 `renderContent` 设置反馈的内容。使用自定义反馈时候，需自行控制提交按钮的禁用与否状态，用户可通过 `okButtonProps` 设置。
+
+</Framework>
+
+<Framework only="vue">
+
+设置 `type` 为 `custom` 可获得自定义内容的 feedback，反馈的内容写在默认插槽中。使用自定义反馈时候，需自行控制提交按钮的禁用与否状态，用户可通过 `okButtonProps` 设置。
+
+</Framework>
+
+<Framework only="solid">
+
+设置 `type` 为 `custom` 可获得自定义内容的 feedback，反馈的内容写在子节点中，`renderContent` 可包裹反馈内容。使用自定义反馈时候，需自行控制提交按钮的禁用与否状态，用户可通过 `okButtonProps` 设置。
+
+</Framework>
+
+<Demo id="custom" />
+
+### 模态对话框形式
+
+可通过 `mode` 反馈的形式，默认是 `popup`, 设置为 `modal` 可获得模态对话框形式的展示。
+
+<Demo id="modal" />
+
+### 反馈完成提示
+
+反馈完成后，可以切换展示信息提示用户本次反馈已经完成。
+
+<Demo id="completion" />
+
+## API 参考
+
+### FeedbackProps
+
+除去下面参数列表所列参数外，当 `mode` 为 `modal` 时, FeedbackProps 还支持 [ModalProps](/zh-CN/react/show/modal#Modal) 中的参数，当 `mode` 为 `popup` 时, FeedbackProps 还支持 [SideSheetProps](/zh-CN/react/show/side-sheet#API%20%E5%8F%82%E8%80%83) 中的参数
+
+<Framework only="react">
+
+<FeedbackReactApi />
+
+未声明的属性按 `mode` 透传给 Modal 或 SideSheet，落点与它们相同：`aria-*` 属性落在 `role="dialog"` 元素上，其余未声明的属性和原生事件监听落在 portal 内最外层元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<FeedbackVueApi />
+
+未声明的属性按 `mode` 透传给 Modal 或 SideSheet，落点与它们相同：全部 `aria-*` 属性落在 `role="dialog"` 元素上；`style` 在 `modal` 模式落在 `.semi-modal` 对话框盒子上，在 `popup` 模式落在 `role="dialog"` 元素上；`class` 与其余未声明的属性、原生事件监听落在 portal 内最外层元素上（`modal` 模式的 `role` 同样落在 `role="dialog"` 元素上）。`textAreaProps`、`radioGroupProps`、`checkboxGroupProps` 的受控值键是 `modelValue`，监听键是 `onChange`。
+
+</Framework>
+
+<Framework only="solid">
+
+<FeedbackSolidApi />
+
+`class`、`ref` 与原生属性落在根元素上（`popup` 模式为 `.semi-sidesheet`，`modal` 模式为带有 `.semi-feedback` 的 Modal 最外层元素），`aria-*` 属性落在 `role="dialog"` 元素上，`style` 落在内容盒子上（`popup` 模式为 `.semi-sidesheet-inner`，`modal` 模式为 `.semi-modal`）。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- emoji 类型的表情是 `role="radiogroup"`（名称来自语言包 `Feedback.rating`）中的原生 `input type="radio"`（名称来自 `Feedback.bad`、`Feedback.normal`、`Feedback.good`），选中状态由原生 `checked` 表达，遵循 [APG Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+- 单选、多选类型的选项组默认没有可访问名称，可通过 `radioGroupProps`、`checkboxGroupProps` 的 `aria-label` 命名
+- `modal` 模式遵循 [APG Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)，细节同 [Modal](/zh-CN/react/show/modal#Accessibility)；`popup` 模式是不带遮罩的 SideSheet，按非模态对话框处理，不设置 `aria-modal`
+
+### 键盘和焦点
+
+- emoji 类型的表情组只有一个 Tab 停靠点，方向键切换选中的表情，键盘聚焦时表情显示主题焦点环。单选、多选类型的键盘操作沿用 [RadioGroup](/zh-CN/react/input/radio) 与 [CheckboxGroup](/zh-CN/react/input/checkbox)
+- `popup` 模式打开时焦点移入反馈面板，但不限制 Tab，页面其余部分保持可用；按 Esc 触发取消。关闭时只在焦点仍在面板内或已落到 body 时归还给打开前的元素，用户已移到页面其他位置的焦点不动
+- `modal` 模式打开时焦点移入对话框，Tab 在对话框内循环，背后的页面不可交互；关闭后焦点回到打开前的元素，按 Esc 触发取消

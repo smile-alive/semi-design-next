@@ -1,0 +1,185 @@
+---
+order: 26
+title: 图标
+icon: doc-icons
+brief: 语义化的矢量图形。
+---
+
+import IconList from './figures/icon-list.react.tsx';
+import IconReactApi from './api/icon.react.zh-CN.mdx';
+import IconVueApi from './api/icon.vue.zh-CN.mdx';
+import IconSolidApi from './api/icon.solid.zh-CN.mdx';
+
+## 图标列表
+
+默认图标集包含面性、线性、AI 三套图标，React 使用 `@fibrae/semi-icons-react`，Vue 使用 `@fibrae/semi-icons-vue`。面性图标、线性图标，以及 AI 图标中的单色图标默认不带颜色，可通过 CSS `color` 属性更改颜色。AI 图标中的双色、多色图标有默认颜色，可以通过 `fill` 更改颜色。
+
+彩色图标集从对应图标包的 `/lab` 入口导入，随图标包一起提供，无需单独安装，不可改色。
+
+<div style={{display: "none"}}>
+@fibrae/semi-icons-react icon list:
+
+IconAbsoluteStroked IconActivity IconAlarm IconAlarmStroked IconAlertCircle IconAlertTriangle IconAlignBottom IconAlignCenter IconAlignCenterVertical IconAlignHCenterStroked IconAlignHLeftStroked IconAlignHRightStroked IconAlignJustify IconAlignLeft IconAlignRight IconAlignTop IconAlignVBotStroked IconAlignVBottomStroked IconAlignVCenterStroked IconAlignVTopStroked IconApartment IconAppCenter IconApps IconArchive IconArrowDown IconArrowDownLeft IconArrowDownRight IconArrowLeft IconArrowRight IconArrowUp IconArrowUpLeft IconArrowUpRight IconArticle IconAscend IconAt IconBackTop IconBackward IconBarChartHStroked IconBarChartVStroked IconBeaker IconBell IconBellStroked IconBold IconBolt IconBook IconBookH5Stroked IconBookOpenStroked IconBookStroked IconBookmark IconBookmarkAddStroked IconBookmarkDeleteStroked IconBottomCenterStroked IconBottomLeftStroked IconBottomRightStroked IconBox IconBrackets IconBranch IconBriefStroked IconBriefcase IconBriefcaseStroked IconBulb IconButtonStroked IconBytedanceLogo IconCalendar IconCalendarClock IconCalendarClockStroked IconCalendarStroked IconCamera IconCameraStroked IconCandlestickChartStroked IconCaretdown IconCaretup IconCarouselStroked IconCart IconCartStroked IconCaseSensitive IconCenterLeftStroked IconCenterRightStroked IconChainStroked IconCheckChoiceStroked IconCheckCircleStroked IconCheckList IconCheckboxIndeterminate IconCheckboxTick IconChecklistStroked IconChevronDown IconChevronDownStroked IconChevronLeft IconChevronRight IconChevronRightStroked IconChevronUp IconChevronUpDown IconClear IconClock IconClockStroked IconClose IconCloud IconCloudStroked IconCloudUploadStroked IconCode IconCodeStroked IconCoinMoney IconCoinMoneyStroked IconColorPalette IconColumnsStroked IconCommand IconComment IconCommentStroked IconComponent IconComponentPlaceholderStroked IconComponentStroked IconConfigStroked IconConnectionPoint1 IconConnectionPoint2 IconContrast IconCopy IconCopyAdd IconCopyStroked IconCornerRadiusStroked IconCreditCard IconCreditCardStroked IconCrop IconCrossCircleStroked IconCrossStroked IconCrown IconCrownStroked IconCustomerSupport IconCustomerSupportStroked IconCustomize IconDelete IconDeleteStroked IconDescend IconDescend2 IconDesktop IconDisc IconDislikeThumb IconDivide IconDongchediLogo IconDoubleChevronLeft IconDoubleChevronRight IconDownCircle IconDownCircleStroked IconDownload IconDownloadStroked IconDuration IconEdit IconEdit2 IconEdit2Stroked IconEditStroked IconElementStroked IconEmoji IconExit IconExpand IconExport IconExternalOpen IconExternalOpenStroked IconEyeClosed IconEyeClosedSolid IconEyeClosedSolidStroked IconEyeClosedStroked IconEyeOpened IconEyeOpenedStroked IconEyedropper IconFacebook IconFaceuLogo IconFastForward IconFastFoward IconFavoriteList IconFeishuLogo IconFemale IconFigma IconFile IconFillStroked IconFilledArrowDown IconFilledArrowUp IconFilpVertical IconFilter IconFilterStroked IconFingerLeftStroked IconFixedStroked IconFlag IconFlagStroked IconFlipHorizontal IconFlowChartStroked IconFolder IconFolderOpen IconFolderOpenStroked IconFolderStroked IconFollowStroked IconFont IconFontColor IconForward IconForwardStroked IconFullScreenStroked IconGallery IconGift IconGiftStroked IconGit IconGithubLogo IconGitlabLogo IconGlobe IconGlobeStroke IconGlobeStrokeStroked IconGlobeStroked IconGridRectangle IconGridSquare IconGridStroked IconGridView IconGridView1 IconH1 IconH2 IconH3 IconH4 IconH5 IconH6 IconH7 IconH8 IconH9 IconHandle IconHash IconHeartStroked IconHelm IconHelpCircle IconHelpCircleStroked IconHistogram IconHistory IconHn IconHome IconHomeStroked IconHorn IconHornStroked IconHourglass IconHourglassStroked IconIdCard IconIdCardStroked IconIdentity IconImage IconImageStroked IconImport IconInbox IconIndenpentCornersStroked IconIndentLeft IconIndentRight IconIndependentCornersStroked IconInfoCircle IconInherit IconInheritStroked IconInnerSectionStroked IconInstagram IconInteractiveStroked IconInviteStroked IconIssueStroked IconItalic IconJianying IconKanban IconKey IconKeyStroked IconLanguage IconLayers IconLeftCircle IconLeftCircleStroked IconLightningStroked IconLikeHeart IconLikeThumb IconLineChartStroked IconLineHeight IconLink IconList IconListView IconLive IconLoading IconLock IconLockStroked IconLoopTextStroked IconMail IconMailStroked IconMailStroked1 IconMale IconMapPin IconMapPinStroked IconMarginLeftStroked IconMarginStroked IconMark IconMaximize IconMaximize2 IconMaximize2Stroked IconMember IconMenu IconMicrophone IconMicrophoneOff IconMicrophoneOffStroked IconMicrophoneStroked IconMiniPlayer IconMinimize IconMinus IconMinusCircle IconMinusCircleStroked IconMinusStroked IconModalStroked IconMoneyExchangeStroked IconMonitorStroked IconMoon IconMoonStroked IconMore IconMoreStroked IconMusic IconMusicNoteStroked IconMute IconMuteStroked IconNineGridStroked IconNoteMoney IconNoteMoneyStroked IconOption IconOrderedList IconOrderedListStroked IconPaperclip IconPaperclipStroked IconPause IconPercentage IconPhone IconPhoneStroke IconPhoneStroked IconPieChart2Stroked IconPieChartStroked IconPiechartH5Stroked IconPipixiaLogo IconPlay IconPlayCircle IconPlus IconPlusCircle IconPlusCircleStroked IconPlusStroked IconPriceTag IconPrint IconPrize IconPrizeStroked IconPulse IconPuzzle IconQingyan IconQrCode IconQuit IconQuote IconRadio IconRankingCardStroked IconRealSize IconRealSizeStroked IconRedo IconRedoStroked IconRefresh IconRefresh2 IconRegExp IconReply IconReplyStroked IconResso IconRestart IconRestore IconRestoreStroked IconRingChartStroked IconRotate IconRotationStroked IconRoute IconRowsStroked IconSafe IconSafeStroked IconSave IconSaveStroked IconScan IconScissors IconScissorsStroked IconSearch IconSearchStroked IconSectionStroked IconSemiLogo IconSend IconSendMsgStroked IconSendStroked IconServer IconServerStroked IconSetting IconSettingStroked IconShare IconShareMoneyStroked IconShareStroked IconShield IconShieldStroked IconShift IconShoppingBag IconShoppingBagStroked IconShrink IconShrinkScreenStroked IconSidebar IconSignal IconSimilarity IconSmallTriangleDown IconSmallTriangleLeft IconSmallTriangleRight IconSmallTriangleTop IconSmartphoneCheckStroked IconSmartphoneStroked IconSong IconSonicStroked IconSort IconSortStroked IconSourceControl IconSpin IconStackBarChartStroked IconStar IconStarStroked IconStop IconStopwatchStroked IconStoryStroked IconStrikeThrough IconSun IconSunStroked IconSync IconTabArrowStroked IconTabsStroked IconTaskMoneyStroked IconTemplate IconTemplateStroked IconTerminal IconTestScore IconTestScoreStroked IconText IconTextRectangle IconTextStroked IconThumbUpStroked IconTick IconTickCircle IconTicketCode IconTicketCodeExchangeStroked IconTicketCodeStroked IconTiktokLogo IconTop IconTopCenterStroked IconTopLeftStroked IconTopRightStroked IconTopbuzzLogo IconToutiaoLogo IconTransparentStroked IconTreeTriangleDown IconTreeTriangleRight IconTriangleArrow IconTriangleArrowVertical IconTriangleDown IconTriangleUp IconTrueFalseStroked IconTvCheckedStroked IconTwitter IconTypograph IconUnChainStroked IconUnderline IconUndo IconUnlink IconUnlock IconUnlockStroked IconUpload IconUploadError IconUser IconUserAdd IconUserCardPhone IconUserCardVideo IconUserCardVideoStroked IconUserCircle IconUserCircleStroked IconUserGroup IconUserList IconUserListStroked IconUserSetting IconUserStroked IconVennChartStroked IconVerify IconVersionStroked IconVideo IconVideoDouyinStroked IconVideoListStroked IconVideoStroked IconVideoUrlStroked IconVigoLogo IconVolume1 IconVolume1Stroked IconVolume2 IconVolume2Stroked IconVolumnSilent IconVolumeSilentStroked IconVoteStroked IconVoteVideoStroked IconWeibo IconWholeWord IconWifi IconWindowAdaptionStroked IconWrench IconWrenchStroked IconXiguaLogo IconYoutube IconAIBellLevel1 IconAIBellLevel2 IconAIBellLevel3 IconAIEditLevel1 IconAIEditLevel2 IconAIEditLevel3 IconAIFileLevel1 IconAIFileLevel2 IconAIFileLevel3 IconAIFiledLevel1 IconAIFiledLevel2 IconAIFiledLevel3 IconAIImageLevel1 IconAIImageLevel2 IconAIImageLevel3 IconAISearchLevel1 IconAISearchLevel2 IconAISearchLevel3 IconAIStrokeLevel1 IconAIStrokeLevel2 IconAIStrokeLevel3 IconAIWandLevel1 IconAIWandLevel2 IconAIWandLevel3 IconAILoading
+
+@fibrae/semi-icons-react/lab icon list:
+
+IconAccessibility IconAnchor IconAutocomplete IconAvatar IconBackTop IconBadge IconBadgeStar IconBanner IconBreadcrumb IconButton IconCalendar IconCard IconCarousel IconCascader IconChangelog IconChart IconChat IconCheckbox IconCodeHighlight IconCollapse IconCollapsible IconColorPlatte IconColorPlatteNew IconConfig IconDarkMode IconDatePicker IconDescriptions IconDivider IconDropdown IconEmpty IconFaq IconForm IconGettingStarted IconGrid IconHeart IconHighlight IconImage IconInput IconInputNumber IconIntro IconJsonViewer IconLayout IconList IconLocaleProvider IconLottie IconMarkdown IconModal IconNavigation IconNotification IconOverflow IconPagination IconPincode IconPopconfirm IconPopover IconProgress IconRadio IconRating IconScrollList IconSelect IconSideSheet IconSkeleton IconSlider IconSpace IconSpin IconSteps IconSwitch IconTable IconTabs IconTag IconTagInput IconTimePicker IconTimeline IconToast IconToken IconTooltip IconTransfer IconTree IconTreeSelect IconTypography IconUpload IconVersionOne IconVersionTwo IconWebcomponents IconWheelChair
+
+</div>
+
+<IconList client:only="react" locale="zh-CN" />
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import Icon, { IconHome } from '@fibrae/semi-icons-react';
+import { IconAvatar, IconCard } from '@fibrae/semi-icons-react/lab';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import Icon, { IconHome } from '@fibrae/semi-icons-vue';
+    import { IconAvatar, IconCard } from '@fibrae/semi-icons-vue/lab';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import Icon, { IconHome } from '@fibrae/semi-icons-solid';
+import { IconAvatar, IconCard } from '@fibrae/semi-icons-solid/lab';
+```
+
+</Framework>
+
+### 基础使用
+
+从对应框架的图标包中引入图标。
+
+<Demo id="basic" />
+
+### 旋转
+
+图标自带尺寸、旋转、spin 功能。
+
+<Demo id="rotate" />
+
+### 尺寸
+
+> 可以改变`font-size`来更改图标大小
+
+Icon组件封装了size属性，可以更方便地定义图标尺寸，支持 `extra-small` (8x8)，`small` (12x12)， `default` (16x16)， `large` (20x20)， `extra-large` (24x24)，当size指定为`inherit`时，图标大小继承当前上下文字体大小
+
+<Demo id="size" />
+
+### 颜色
+
+单色图标会自动继承外部容器 CSS 的 `color` 属性，也可以通过 Icon 的 `style` 修改颜色。
+
+<Demo id="color" />
+
+### 双色图标
+
+双色图标可以通过 `fill` 属性设置颜色，支持 string 以及 string[]。
+
+<Demo id="bicolor" />
+
+### 多色图标
+
+多色图标最多可传入四个颜色。可以通过 `fill` 属性设置颜色，支持 string 以及 string[]。
+
+<Demo id="multicolor" />
+
+### 自定义图标
+
+可以使用自定义图标传入Icon组件。Icon组件支持 size、rotate、spin 等属性。
+
+<Framework only="react">
+
+React 使用 `svg` 属性传入自定义 SVG。
+
+</Framework>
+
+<Framework only="vue">
+
+Vue 使用默认插槽传入自定义 SVG。`class`、`style`、`aria-*` 和原生事件监听器透传到外层 span；组件没有公开实例方法。
+
+</Framework>
+
+<Framework only="solid">
+
+`svg` 属性接收组件而不是元素，Icon 会把 `fill` 传给该组件。
+
+</Framework>
+
+<Demo id="custom" />
+
+<Framework only="react">
+
+### 使用svgr将svg文件转成ReactComponent
+
+如果 Semi 提供的图标不足以满足业务需求，你也可以通过@svgr/webpack引入自定义图标，并以React组件形式使用
+
+```
+// webpack.config.js
+{
+  test: /\.svg$/,
+  use: ['@svgr/webpack'],
+}
+
+import { Icon } from '@fibrae/semi-ui-react';
+import StarIcon from './star.svg';
+
+<Icon svg={<StarIcon />} />
+```
+
+</Framework>
+
+## API参考
+
+### Icon
+
+<Framework only="react">
+
+<IconReactApi />
+
+`className`、`style`、`onClick`、`aria-*` 等其他原生属性落在外层 span 上。`style` 与 `rotate` 生成的 `transform` 合并，同名时以 `style` 为准。
+
+</Framework>
+
+<Framework only="vue">
+
+<IconVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<IconSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `aria-*`、`onClick`）落在外层 span 上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Icon 默认是装饰性的，带 `aria-hidden="true"`，读屏不会读到它。图标旁边已有文字，或图标在一个有名称的按钮里时，保持默认即可
+- 图标本身传达信息时，传入 `aria-label`（或 `aria-labelledby`），此时 Icon 的 role 为 img
+- 只有图标的按钮、链接，名称写在按钮或链接的 `aria-label` 上，不写在图标上
+- 图标可聚焦时（例如直接作为 Tooltip 的触发元素）不会被隐藏，请为它传入 `aria-label`，Tooltip 的内容作为描述
+
+<Demo id="aria" />
+
+- 内置图标的 SVG 是装饰元素，带 `aria-hidden="true"`。自定义 SVG 也应设置该属性，由外层 Icon 提供名称。

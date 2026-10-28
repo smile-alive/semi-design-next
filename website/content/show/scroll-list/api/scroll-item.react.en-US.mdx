@@ -1,0 +1,23 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| className | Class name of the root element. | `string` | - |
+| cycled | Whether the column cycles. In wheel mode the list scrolls without end; in both modes the arrow keys wrap around at both ends. | `boolean` | `false` |
+| list | Items of the column. | `T[]` | `[]` |
+| mode | Mode: `normal` or `wheel`. | `string` | `"wheel"` |
+| motion | Whether to animate scrolling. | `Motion` | `true` |
+| onSelect | Called when an item is selected, with the item's data plus the column's `type` and the item's `index` in list. The component keeps no selection state, so update selectedIndex in this callback. | <ApiType detail={"(data: T & { type?: string \u007c number; index: number }) => void"}>Type</ApiType> | - |
+| ref | Receives the `ScrollItemHandle`, whose `scrollToIndex` method is listed under Methods below. | <ApiType detail={"React.Ref\u003cScrollItemHandle>"}>Type</ApiType> | - |
+| selectedIndex | Index of the selected item. There is no uncontrolled mode; update it in onSelect. | `number` | `0` |
+| style | Style of the root element. | `React.CSSProperties` | - |
+| transform | Formats the text of the selected item; the return value is displayed. When omitted, text is shown, or value when there is no text. An item's own transform takes precedence. | <ApiType detail={"(value: any, text?: string) => string"}>Type</ApiType> | - |
+| type | Identifies the column to components such as TimePicker and DatePicker, not meant for end users. | `string \| number` | - |
+
+**Methods**
+
+| Method        | Description                                                                                                                                                                                                 | Type                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| scrollToIndex | Scrolls the list to the current selected item. `selectedIndex` has no effect yet and the target is always the item last selected. `duration` is the scroll animation duration in milliseconds, default 120. | <ApiType detail={"(selectedIndex?: number, duration?: number) => void"}>Type</ApiType> |

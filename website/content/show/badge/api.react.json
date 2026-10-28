@@ -1,0 +1,67 @@
+{
+    "badge": {
+        "source": "packages/semi-ui-react/src/badge/index.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "徽章所附着的元素，徽章相对它定位；不传时徽章作为独立元素显示。",
+                "en-US": "The element the badge is attached to; the badge is positioned relative to it. Without children, the badge is shown as a standalone element."
+            },
+            "className": {
+                "zh-CN": "根元素（`span`）的类名。",
+                "en-US": "Class name of the root `span` element."
+            },
+            "count": {
+                "zh-CN": "徽章内容，数字和字符串按文字显示；其他 ReactNode 直接渲染，此时不带 `type` 与 `theme` 对应的样式类。",
+                "en-US": "Badge content. Numbers and strings are shown as text; other nodes are rendered as is, without the `type` and `theme` classes."
+            },
+            "countClassName": {
+                "zh-CN": "内容区域的类名。",
+                "en-US": "Class name of the count element."
+            },
+            "countStyle": {
+                "zh-CN": "内容区域的样式，仅在未设置 `style` 时生效。",
+                "en-US": "Style of the count element, used only when `style` is not set."
+            },
+            "dot": {
+                "zh-CN": "显示为小圆点，不展示 `count`。",
+                "en-US": "Shows a small dot instead of `count`."
+            },
+            "onClick": {
+                "zh-CN": "点击根元素时调用。",
+                "en-US": "Called when the root element is clicked."
+            },
+            "onMouseEnter": {
+                "zh-CN": "鼠标移入根元素时调用。",
+                "en-US": "Called when the pointer enters the root element."
+            },
+            "onMouseLeave": {
+                "zh-CN": "鼠标移出根元素时调用。",
+                "en-US": "Called when the pointer leaves the root element."
+            },
+            "overflowCount": {
+                "zh-CN": "数字 `count` 的最大展示值，超出后显示为 `${overflowCount}+`；只对数字生效，`0` 视为未设置。",
+                "en-US": "Maximum number shown; a larger numeric `count` is displayed as `${overflowCount}+`. Applies to numbers only, and `0` is treated as unset."
+            },
+            "position": {
+                "zh-CN": "徽章相对被包裹元素的位置，可选 `leftTop`、`leftBottom`、`rightTop`、`rightBottom`；未设置时在 RTL 的 ConfigProvider 下为 `leftTop`，否则为 `rightTop`。",
+                "en-US": "Badge position relative to the wrapped element: `leftTop`, `leftBottom`, `rightTop` or `rightBottom`. When unset, it is `leftTop` under an RTL ConfigProvider and `rightTop` otherwise."
+            },
+            "ref": {
+                "zh-CN": "根元素（`span`）的引用。",
+                "en-US": "Reference to the root `span` element."
+            },
+            "style": {
+                "zh-CN": "内容区域的样式，设置后替代 `countStyle` 而不是与其合并；不作用于根元素。",
+                "en-US": "Style of the count element. When set, it replaces `countStyle` rather than merging with it; it is not applied to the root element."
+            },
+            "theme": {
+                "zh-CN": "徽章主题，可选 `solid`、`light`、`inverted`。",
+                "en-US": "Badge theme: `solid`, `light` or `inverted`."
+            },
+            "type": {
+                "zh-CN": "徽章类型，可选 `primary`、`secondary`、`tertiary`、`danger`、`warning`、`success`。",
+                "en-US": "Badge type: `primary`, `secondary`, `tertiary`, `danger`, `warning` or `success`."
+            }
+        }
+    }
+}

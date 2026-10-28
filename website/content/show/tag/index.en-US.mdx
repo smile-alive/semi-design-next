@@ -1,0 +1,270 @@
+---
+order: 82
+title: Tag
+icon: doc-tag
+brief: Tag component is used to display a collection of concise information for rapid identification and grouping.
+---
+
+import TagReactApi from './api/tag.react.en-US.mdx';
+import TagGroupReactApi from './api/tag-group.react.en-US.mdx';
+import SplitTagGroupReactApi from './api/split-tag-group.react.en-US.mdx';
+import TagVueApi from './api/tag.vue.en-US.mdx';
+import TagGroupVueApi from './api/tag-group.vue.en-US.mdx';
+import SplitTagGroupVueApi from './api/split-tag-group.vue.en-US.mdx';
+import TagSolidApi from './api/tag.solid.en-US.mdx';
+import TagGroupSolidApi from './api/tag-group.solid.en-US.mdx';
+import SplitTagGroupSolidApi from './api/split-tag-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+To use this tag, just wrap the content with the `<Tag>` tag.  
+It can be turned into a closable label by adding the `closable` property.
+
+<Framework only="react">
+
+At this time, clicking x to close will trigger the onClose event, and blocking the default event in onClose can make it still show and not hide after clicking
+
+</Framework>
+
+<Framework only="vue">
+
+At this time, clicking x to close will emit the `close` event, and calling `preventDefault` on the event in the `@close` handler keeps the tag shown after clicking
+
+</Framework>
+
+<Framework only="solid">
+
+At this time, clicking x to close will trigger the `onClose` event, and calling `preventDefault` on the event in `onClose` keeps the tag shown after clicking
+
+</Framework>
+
+<Demo id="basic" />
+
+### Size
+
+Supports two sizes: `large` and `small` (default).
+
+<Demo id="size" />
+
+### Shape
+
+Supports two Shape: `square`（default）、`circle`。
+
+<Demo id="shape" />
+
+### Icon
+
+<Framework only="react">
+
+Use `prefixIcon` and `suffixIcon` to add icons before or after the children content.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#prefixIcon` and `#suffixIcon` slots to add icons before or after the content.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass JSX elements through the `prefixIcon` and `suffixIcon` props to add icons before or after the content.
+
+</Framework>
+
+<Demo id="icon" />
+
+### Color
+
+Tag supports 16 colors including whites from Semi's palette: `amber`, `blue`, `cyan`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `violet`, `yellow`, `white`. You can also customize color through `style`.
+
+<Demo id="color" />
+
+### AI style - colorful labels
+
+Set `colorful` to `true` to get colorful labels.
+
+<Demo id="colorful" />
+
+### Type
+
+Tag supports three different types, including: `light`(default), `ghost`, `solid`.
+
+<Demo id="type" />
+
+### Avatar Tag
+
+You can get a avatar tag with `avatarSrc` property. `avatarShape` can change the shape of avatar tag including `square`(default) and `circle`.
+
+<Demo id="avatar" />
+
+### Invisible
+
+You can use `visible` property to control whether the tag is visible.
+
+<Demo id="visible" />
+
+### TagGroup
+
+You can pass in configs for tags through `tagList` to create a TagGroup. The `maxTagCount` can be used to cap the number of list and will be displayed as `+N` when the limit is exceeded.  
+Set the `showPopover` property to control whether the remaining content is displayed by Popover when hover to + N Tag
+
+<Demo id="tag-group" />
+
+<Framework only="react">
+
+If the tags in the TagGroup can be deleted, the user needs to process the `tagList` passed to the TagGroup in `onTagClose`. Provide a `tagKey` for every item when tags are removed from the list; otherwise removing the earlier of two tags with the same text shifts the later one onto its instance.
+
+</Framework>
+
+<Framework only="vue">
+
+If the tags in the TagGroup can be deleted, the user needs to process the `tagList` passed to the TagGroup in the `@tagClose` handler. Provide a `tagKey` for every item when tags are removed from the list; otherwise removing the earlier of two tags with the same text shifts the later one onto its instance. Items of `tagList` take `string | number` as `children`; use the `#tag="{ tag, index }"` slot to render a fully custom node for each tag.
+
+</Framework>
+
+<Framework only="solid">
+
+If the tags in the TagGroup can be deleted, the user needs to update the `tagList` passed to the TagGroup in `onTagClose`. Provide a `tagKey` for every item when tags are removed from the list; otherwise removing the earlier of two tags with the same text shifts the later one onto its instance. Items of `tagList` take `string | number` as `children`; use `renderTag={(tag, index) => ...}` to render a fully custom node for each tag.
+
+</Framework>
+
+<Demo id="tag-group-closable" />
+
+### SplitTagGroup
+
+Use `SplitTagGroup` to combine multiple tags into a single connected group. The first and last tags keep their rounded corners while the middle tags are rendered with a square edge, producing a continuous visual unit.
+
+<Demo id="split-tag-group" />
+
+## API Reference
+
+### Tag
+
+<Framework only="react">
+
+<TagReactApi />
+
+`aria-label`, `onClick` and other native attributes are spread onto the root element (`div`). Declaring `onClick` or `closable` turns the root element into a focusable button (`role="button"`).
+
+</Framework>
+
+<Framework only="vue">
+
+<TagVueApi />
+
+`class`, `style` and native attributes passed as attrs land on the root element. A `@click` listener makes the tag interactive.
+
+</Framework>
+
+<Framework only="solid">
+
+<TagSolidApi />
+
+`class`, `style`, `ref` and native attributes are spread onto the root element (`div`). An `onClick` listener makes the tag interactive.
+
+</Framework>
+
+### TagGroup
+
+<Framework only="react">
+
+<TagGroupReactApi />
+
+Other native attributes are spread onto the TagGroup root element (`div`).
+
+</Framework>
+
+<Framework only="vue">
+
+<TagGroupVueApi />
+
+`class`, `style` and native attributes passed as attrs land on the root element of the TagGroup.
+
+</Framework>
+
+<Framework only="solid">
+
+<TagGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes are spread onto the TagGroup root element (`div`).
+
+</Framework>
+
+### SplitTagGroup
+
+<Framework only="react">
+
+<SplitTagGroupReactApi />
+
+`className`, `style`, `children`, `aria-label` and other native attributes are spread onto the root element (`div`). The root `role` is fixed to `group`.
+
+</Framework>
+
+<Framework only="vue">
+
+<SplitTagGroupVueApi />
+
+`class`, `style`, `aria-label` and other native attributes passed as attrs land on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<SplitTagGroupSolidApi />
+
+`class`, `style`, `aria-label` and other native attributes are spread onto the root element (`div`).
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- `aria-label` is used to indicate the role of `Tag`, for deletable or clickable `Tag`, we recommend using this attribute
+
+### Keyboard and Focus
+
+- If the current `Tag` is interactive, then this `Tag` can be focused. Such as:
+    - When the `onClick` attribute (`@click` in Vue) is used, the keyboard user can activate this `Tag` with the `Enter` or `Space` key
+    - When the `closable` property is `true`, keyboard users can delete this `Tag` by pressing the `Delete` or `Backspace` key, and focus moves to the adjacent focusable `Tag`
+
+## Content Guidelines
+
+- Due to limited space, label text should be as short as possible
+- avoid line breaks
+- use sentence case
+
+## Design Tokens
+
+<DesignToken />

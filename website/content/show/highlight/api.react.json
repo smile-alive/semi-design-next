@@ -1,0 +1,26 @@
+{
+    "highlight": {
+        "source": "packages/semi-ui-react/src/highlight/index.tsx",
+        "props": {
+            "autoEscape": {
+                "zh-CN": "是否自动转义 `searchWords` 中的正则特殊字符。关闭后 `searchWords` 按正则表达式匹配。",
+                "en-US": "Whether to escape regular expression characters in `searchWords`. When off, each search word is matched as a regular expression."
+            },
+            "caseSensitive": { "zh-CN": "是否区分大小写。", "en-US": "Whether matching is case sensitive." },
+            "component": { "zh-CN": "渲染高亮文本的标签名，如 `span`。", "en-US": "Tag name of the element that wraps highlighted text, such as `span`." },
+            "highlightClassName": {
+                "zh-CN": "高亮标签的类名，与对象项的 `className` 一起添加到标签上。",
+                "en-US": "Class name of the highlight tags. It is added together with the `className` of an object item in `searchWords`."
+            },
+            "highlightStyle": {
+                "zh-CN": "高亮标签的内联样式，键使用驼峰写法（如 `borderRadius`），长度数值按 React 规则补 `px`。与对象项的 `style` 合并，对象项的同名属性优先。",
+                "en-US": "Inline style of the highlight tags. Keys are camelCase such as `borderRadius`, and numeric lengths get `px` as in React. Merged with the `style` of an object item in `searchWords`, where the item wins on conflicts."
+            },
+            "searchWords": {
+                "zh-CN": "需要高亮的文本，可以是字符串、字符串数组，或带 `text`、`className`、`style` 的对象数组。未设置时为空数组，不高亮任何文本。",
+                "en-US": "Text to highlight: a string, an array of strings, or an array of objects with `text`, `className` and `style`. Defaults to an empty array, which highlights nothing."
+            },
+            "sourceString": { "zh-CN": "源文本。", "en-US": "Source text to search in." }
+        }
+    }
+}

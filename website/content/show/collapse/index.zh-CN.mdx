@@ -1,0 +1,283 @@
+---
+order: 67
+title: 折叠面板
+icon: doc-accordion
+brief: 可以展开或折叠展示内容区域。
+---
+
+import CollapseReactApi from './api/collapse.react.zh-CN.mdx';
+import CollapsePanelReactApi from './api/collapse-panel.react.zh-CN.mdx';
+import CollapseVueApi from './api/collapse.vue.zh-CN.mdx';
+import CollapsePanelVueApi from './api/collapse-panel.vue.zh-CN.mdx';
+import CollapseSolidApi from './api/collapse.solid.zh-CN.mdx';
+import CollapsePanelSolidApi from './api/collapse-panel.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Collapse } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Collapse } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Collapse.Panel` 也可以按名导入：`CollapsePanel`。Panel 的 `header`、`extra` 是插槽（`#header`、`#extra`）。Panel 只能在 Collapse 内使用，否则抛出说明性错误。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Collapse, Tag } from '@fibrae/semi-ui-solid';
+```
+
+`Collapse.Panel` 只能在 Collapse 内使用，否则抛出说明性错误。
+
+</Framework>
+
+### 基本用法
+
+可以同时展开多个面板，可以通过 `defaultActiveKey` 设置默认展开的面板。
+
+<Demo id="basic" />
+
+### 手风琴效果
+
+可以通过设置 `accordion` 使每次只允许展开一个面板。
+
+<Demo id="accordion" />
+
+### 禁用面板
+
+可以通过设置 `disabled` 禁用面板。
+
+<Demo id="disabled" />
+
+### 隐藏面板展开/收起图标
+
+可以通过设置 `showArrow` 隐藏面板展开/收起图标。
+
+<Demo id="hide-arrow" />
+
+### 自定义展开图标
+
+<Framework only="react">
+
+可以通过 `expandIcon` 设置展开图标，`collapseIcon` 设置折叠图标。传入 `null` 表示不显示图标。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 Collapse 的 `#expandIcon` 插槽设置展开图标，`#collapseIcon` 插槽设置折叠图标。插槽存在但内容为空表示不显示图标。已知限制：使用方用 `v-if` 整体增删这两个插槽时，面板可能停在旧图标。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `expandIcon` 设置展开图标，`collapseIcon` 设置折叠图标，传入元素（如 `<IconPlus />`）。传入 `null` 表示不显示图标。
+
+</Framework>
+
+展开图标在面板收起时显示（表示可以展开），折叠图标在面板展开时显示。
+
+<Demo id="custom-icon" />
+
+### 自定义右上角辅助区域内容
+
+<Framework only="react">
+
+通过 `extra` 设置右上角辅助区域内容。
+
+`header` 渲染在面板的切换按钮内，只能放文字、图标等非交互内容；`extra` 位于同一行、按钮之外，可以放按钮、输入框等控件，`header` 为 string 或 ReactNode 时都生效。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#extra` 插槽设置右上角辅助区域内容。
+
+`#header` 渲染在面板的切换按钮内，只能放文字、图标等非交互内容；`#extra` 位于同一行、按钮之外，可以放按钮、输入框等控件。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `extra` 设置右上角辅助区域内容。
+
+`header` 渲染在面板的切换按钮内，只能放文字、图标等非交互内容；`extra` 位于同一行、按钮之外，可以放按钮、输入框等控件，`header` 为字符串或 JSX 元素时都生效。
+
+</Framework>
+
+<Demo id="extra" />
+
+## API 参考
+
+### Collapse
+
+<Framework only="react">
+
+<CollapseReactApi />
+
+其他原生属性（如 `id`、`aria-*`）落在根元素（`.semi-collapse`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<CollapseVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在 Collapse 根元素上。`update:activeKey` 与 `change` 的 `activeKey` 总是 `string[]`：`v-model:activeKey` 的初值为字符串时，第一次变更后变为数组。
+
+</Framework>
+
+<Framework only="solid">
+
+<CollapseSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`）落在 Collapse 根元素（`.semi-collapse`）上。`onChange` 的第一个参数总是 `string[]`，即使 `activeKey` 或 `defaultActiveKey` 传入的是字符串。
+
+</Framework>
+
+### Collapse.Panel
+
+<Framework only="react">
+
+<CollapsePanelReactApi />
+
+其他原生属性（如 `id`、`aria-*`）落在根元素（`.semi-collapse-item`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<CollapsePanelVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在 Panel 根元素（`.semi-collapse-item`）上。Panel 不读全局默认值。
+
+</Framework>
+
+<Framework only="solid">
+
+<CollapsePanelSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在 Panel 根元素（`.semi-collapse-item`）上。Panel 不读全局默认值。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 面板头遵循 WAI-ARIA Accordion 模式：原生 `button` 外包 `role="heading"`、`aria-level="3"` 的元素，按钮的可访问名称是 `header` 内容。
+- 按钮带 `aria-expanded`；面板内容仍在 DOM 中时一律带指向它的 `aria-controls`：展开时总在；收起时内容在 DOM 中的情况包括 `keepDOM` 生效（含只在 Collapsible 的全局默认值里设置 `keepDOM`）且内容已经渲染过，例如 `keepDOM` 加 `lazyRender` 下展开过一次再收起；`lazyRender` 尚未渲染的收起面板没有内容，不带 `aria-controls`。
+- 面板内容是 `role="region"`，通过 `aria-labelledby` 以按钮为名称；`keepDOM` 保留的收起内容设置 `inert`。
+- 展开图标是装饰，设置 `aria-hidden="true"`；`extra` 位于按钮之外。
+- `disabled` 面板使用按钮的原生 `disabled` 属性。
+
+### 键盘和焦点
+
+- 每个面板头按钮是一个 Tab 停靠点，禁用面板被跳过。
+- 焦点在按钮上时按 `Enter` 或 `Space` 展开或收起面板，`clickHeaderToExpand` 为 `false` 时同样有效。
+- `extra` 中的控件是各自的 Tab 停靠点。
+
+## 文案规范
+
+折叠面板本质是卡片容器增加了收起和展开的功能，所以折叠面板的文案规范需要和 [卡片文案规范](/zh-CN/react/show/card#%E6%96%87%E6%A1%88%E8%A7%84%E8%8C%83) 保持一致
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- ##### Collapse 内嵌表单收起后表单数据会清空 ?
+
+    Collapse 收起之后，默认会销毁相应的 DOM 。所以相应的 field 被卸载了，数据也被清空。可以将 Collapse 的 `keepDOM` 设为 true，保留对应的 DOM 节点。
+
+- ##### 面板头整行是折叠、展开的点击热区，在这一行放置控件（例如 Input）后，点击它会导致 Collapse 收起/展开。如何避免？
+    控件放在 `extra` 而不是 `header` 中：`header` 位于切换按钮内，不能包含控件。设置 `clickHeaderToExpand` 为 `false` 时只有切换按钮和箭头响应点击；否则在控件的点击回调中阻止事件冒泡至面板头即可，若控件未提供 event 对象，在外层包裹元素的点击回调中阻止冒泡亦可，见下方示例。
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Collapse, Input } from '@fibrae/semi-ui-react';
+
+() => (
+    <Collapse>
+        <Collapse.Panel
+            header="Panel header"
+            extra={
+                <span onClick={(e) => e.stopPropagation()}>
+                    <Input aria-label="面板备注" />
+                </span>
+            }
+            itemKey="1"
+        >
+            <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+        </Collapse.Panel>
+    </Collapse>
+);
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Collapse, Input } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <Collapse>
+        <Collapse.Panel itemKey="1">
+            <template #header>Panel header</template>
+            <template #extra>
+                <span @click.stop>
+                    <Input aria-label="面板备注" />
+                </span>
+            </template>
+            <p>Hi, bytedance dance dance. This is the docsite of Semi UI.</p>
+        </Collapse.Panel>
+    </Collapse>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Collapse, Input } from '@fibrae/semi-ui-solid';
+
+() => (
+    <Collapse>
+        <Collapse.Panel
+            header="Panel header"
+            extra={
+                <span onClick={(e) => e.stopPropagation()}>
+                    <Input aria-label="面板备注" />
+                </span>
+            }
+            itemKey="1"
+        >
+            <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+        </Collapse.Panel>
+    </Collapse>
+);
+```
+
+</Framework>
