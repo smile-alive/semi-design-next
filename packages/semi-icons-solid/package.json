@@ -1,0 +1,57 @@
+{
+    "name": "@fibrae/semi-icons-solid",
+    "version": "0.1.0",
+    "description": "Semi icons as Solid components",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-icons-solid"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "solid": "./dist/index.jsx",
+            "default": "./dist/index.js"
+        },
+        "./lab": {
+            "types": "./dist/lab/index.d.ts",
+            "solid": "./dist/lab/index.jsx",
+            "default": "./dist/lab/index.js"
+        },
+        "./package.json": "./package.json",
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "solid": "./dist/*.jsx",
+            "default": "./dist/*.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "scripts": {
+        "build:icon": "node scripts/build-icon.ts",
+        "build": "vp pack"
+    },
+    "dependencies": {
+        "@fibrae/semi-icons-core": "workspace:*",
+        "clsx": "catalog:"
+    },
+    "devDependencies": {
+        "solid-js": "catalog:",
+        "typescript": "catalog:",
+        "unplugin-solid": "catalog:"
+    },
+    "peerDependencies": {
+        "solid-js": "catalog:peer"
+    }
+}

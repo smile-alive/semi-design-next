@@ -1,0 +1,16 @@
+{
+    "extends": "./tsconfig.solid.json",
+    "compilerOptions": { "types": ["node", "vite/client", "@vitest/browser-playwright"] },
+    "include": [
+        "../browser.setup.ts",
+        "solid.setup.ts",
+        "hydration-context.ts",
+        "*.hydration.browser.test.tsx",
+        "../utils/browser.ts",
+        "../../packages/semi-*-solid/**/__tests__/**/*.browser.test.ts",
+        "../../packages/semi-*-solid/**/__tests__/**/*.browser.test.tsx",
+        "../../packages/semi-ai-solid/src/semi-global.ts",
+        "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
+    ],
+    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist"]
+}
