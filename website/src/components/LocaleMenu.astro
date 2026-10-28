@@ -1,0 +1,85 @@
+---
+import { IconLanguage, IconTick } from '@fibrae/semi-icons-react';
+import { languageLabels, translate } from '#/i18n';
+import { locales, type Locale } from '#/lib/docs';
+
+interface Props {
+    locale: Locale;
+    hrefs: Record<Locale, string>;
+}
+
+const { locale, hrefs } = Astro.props;
+const t = translate(locale);
+---
+
+<button type="button" class="site-icon-button" popovertarget="locale-menu" aria-label={t('nav_language')}>
+    <IconLanguage size="extra-large" />
+</button>
+<div class="locale-menu" id="locale-menu" popover>
+    {
+        locales.map((l) => (
+            <a class="locale-menu-item" href={hrefs[l]} hreflang={l} lang={l} aria-current={l === locale ? 'page' : undefined}>
+                <IconTick className="locale-menu-tick" />
+                {languageLabels[l]}
+            </a>
+        ))
+    }
+</div>
+
+<script>
+    // The header is replaced on every navigation, so clicks delegate to document
+    document.addEventListener('click', (event) => {
+        if ((event.target as Element).closest('#locale-menu a')) {
+            document.getElementById('locale-menu')?.hidePopover();
+        }
+    });
+    // The client router handles clicks in the bubble phase and skips preventDefault'ed ones, so intercept in capture
+    document.addEventListener(
+        'click',
+        (event) => {
+            if ((event.target as Element).closest('#locale-menu a[aria-current="page"]')) event.preventDefault();
+        },
+        true
+    );
+</script>
+
+<style>
+    /* Mirrors Semi Dropdown; the header is fixed with the button at the far right, so position by viewport */
+    .locale-menu {
+        inset: 46px 24px auto auto;
+        padding: 4px 0;
+        margin: 0;
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-3);
+        border: 0;
+        border-radius: var(--semi-border-radius-medium);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    .locale-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px 8px 12px;
+        color: var(--semi-color-text-0);
+        text-decoration: none;
+    }
+
+    .locale-menu-item:is(:hover, :focus-visible) {
+        outline: none;
+        background-color: var(--semi-color-fill-0);
+    }
+
+    .locale-menu-item[aria-current='page'] {
+        font-weight: 600;
+    }
+
+    /* The check icon comes from a React component, so it has no scope marker */
+    .locale-menu-item :global(.locale-menu-tick) {
+        margin-right: 9px;
+        font-size: 12px;
+    }
+
+    .locale-menu-item:not([aria-current='page']) :global(.locale-menu-tick) {
+        color: transparent;
+    }
+</style>

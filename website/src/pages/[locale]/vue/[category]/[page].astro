@@ -1,0 +1,25 @@
+---
+import vueDocs from 'virtual:semi-vue-docs';
+// Vue MDX stays in this route so its demo styles cannot enter the React page bundles.
+import ApiType from '#/components/ApiType.astro';
+import Demo from '#/components/Demo.astro';
+import DesignToken from '#/components/DesignToken.astro';
+import DocLink from '#/components/DocLink.astro';
+import Notice from '#/components/Notice.astro';
+import DocLayout from '#/layouts/DocLayout.astro';
+import { docFrameworks, getDocs, parseDocId } from '#/lib/docs';
+
+export async function getStaticPaths() {
+    const docs = await getDocs();
+    return docs.filter((doc) => docFrameworks(doc).includes('vue')).map((doc) => {
+        const { category, page, locale } = parseDocId(doc.id);
+        return { params: { locale, category, page }, props: { doc } };
+    });
+}
+const { doc } = Astro.props;
+const { Content, getHeadings } = await vueDocs[doc.id]();
+---
+
+<DocLayout doc={doc} headings={getHeadings()} framework="vue">
+    <Content framework="vue" components={{ a: DocLink, ApiType, Demo, DesignToken, Notice }} />
+</DocLayout>

@@ -1,0 +1,11 @@
+---
+import { frameworks, locales } from '#/lib/docs';
+
+export function getStaticPaths() {
+    return locales.flatMap((locale) => frameworks.map((framework) => ({ params: { locale, framework } })));
+}
+
+const { locale, framework } = Astro.params;
+// In static output a 302 becomes a 2 s meta refresh page; a 301 redirects immediately
+return Astro.redirect(`/${locale}/${framework}/start/introduction`, 301);
+---

@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.json",
+    "include": ["content/**/*.vue"],
+    "exclude": ["dist"],
+    "compilerOptions": {
+        "jsx": "preserve",
+        "jsxImportSource": "vue",
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "strict": true,
+        "strictNullChecks": true
+    },
+    "vueCompilerOptions": { "checkUnknownComponents": true, "strictVModel": true }
+}

@@ -1,0 +1,148 @@
+---
+import type { ShikiTransformer } from 'shiki';
+import { Code } from 'astro:components';
+import { translate } from '#/i18n';
+import { asLocale } from '#/lib/docs';
+import { shikiThemes } from '#/lib/shiki';
+import { frameworkDemo, type Framework } from '#/lib/frameworks';
+
+interface Props {
+    id: string;
+    framework: Framework;
+    source: string;
+}
+
+const { id, source, framework } = Astro.props;
+if (source == null || !Astro.slots.has('default')) {
+    throw new Error(`Demo "${id}" is missing its ${framework} source or slot`);
+}
+const t = translate(asLocale(Astro.currentLocale));
+
+// The scrollable source panel holds no focusable element, so it must be focusable itself for keyboard scrolling
+const focusablePre: ShikiTransformer = {
+    pre(node) {
+        node.properties.tabindex = 0;
+    },
+};
+---
+
+<section class="demo" id={`demo-${id}`}>
+    <div class="demo-preview"><slot /></div>
+    <details class="demo-code" open>
+        <summary>{t('demo_code')}</summary>
+        <button
+            type="button"
+            class="demo-copy"
+            aria-live="polite"
+            data-label={t('demo_copy')}
+            data-copied={t('demo_copied')}
+            data-failed={t('demo_copy_failed')}>{t('demo_copy')}</button
+        >
+        <Code
+            code={source.trimEnd()}
+            lang={frameworkDemo[framework].language}
+            themes={shikiThemes}
+            defaultColor={false}
+            transformers={[focusablePre]}
+        />
+    </details>
+</section>
+
+<script>
+    // Runs once; demos are new nodes after client-side navigation, so delegate to document
+    const resetTimers = new WeakMap<HTMLButtonElement, number>();
+    document.addEventListener('click', async (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>('.demo-copy');
+        const pre = button?.parentElement?.querySelector('pre');
+        if (!button || !pre) {
+            return;
+        }
+        const { label = '', copied = '', failed = '' } = button.dataset;
+        try {
+            await navigator.clipboard.writeText(pre.textContent ?? '');
+            button.textContent = copied;
+        } catch {
+            button.textContent = failed;
+        }
+        clearTimeout(resetTimers.get(button));
+        resetTimers.set(
+            button,
+            window.setTimeout(() => {
+                button.textContent = label;
+            }, 2000)
+        );
+    });
+</script>
+
+<style>
+    .demo {
+        margin: 24px 0;
+        overflow: hidden;
+        border: 1px solid var(--semi-color-border);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .demo-preview {
+        /* Absolutely positioned demo elements (DragMove) stay inside the preview */
+        position: relative;
+        min-height: 32px;
+        padding: 20px;
+
+        /* Components are designed for 14px / 20px, not the prose 16px / 28px */
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .demo-code {
+        position: relative;
+        background: #f9f9f9;
+    }
+
+    :global(body[theme-mode='dark']) .demo-code {
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .demo-code summary {
+        padding: 8px 26px;
+        color: var(--semi-color-text-2);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .demo-copy {
+        position: absolute;
+        top: 4px;
+        right: 16px;
+        padding: 4px 8px;
+        font: inherit;
+        font-size: 12px;
+        color: var(--semi-color-text-2);
+        cursor: pointer;
+        background: none;
+        border: 0;
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .demo-copy:hover {
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-fill-0);
+    }
+
+    /* Dozens of expanded panels per page: off-screen ones skip layout and paint; `auto` remembers real heights */
+    .demo-code :global(pre.astro-code) {
+        max-height: 400px;
+        contain-intrinsic-size: auto 400px;
+        padding: 4px 26px 20px;
+        margin: 0;
+        content-visibility: auto;
+        overflow: auto;
+        font-family: var(--site-mono);
+        font-size: 12px;
+        line-height: 18px;
+        background-color: transparent;
+    }
+
+    .demo-code :global(pre.astro-code:focus-visible) {
+        outline-offset: -2px;
+    }
+</style>

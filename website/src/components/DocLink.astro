@@ -1,0 +1,20 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { docFrameworks, getDocs, parseDocId } from '#/lib/docs';
+import type { Framework } from '#/lib/frameworks';
+import { frameworkHref } from '#/lib/framework-links';
+
+type Props = HTMLAttributes<'a'>;
+const { href, ...attrs } = Astro.props;
+const framework = Astro.url.pathname.split('/')[2] as Framework;
+// Link components render concurrently; share the pending lookup only within this page.
+Astro.locals.docLinkTargets ??= getDocs().then((docs) => docs
+    .filter((doc) => docFrameworks(doc).includes(framework))
+    .map((doc) => {
+        const { category, page, locale } = parseDocId(doc.id);
+        return `/${locale}/${framework}/${category}/${page}`;
+    }));
+const targets = await Astro.locals.docLinkTargets;
+---
+
+<a {...attrs} href={typeof href === 'string' ? frameworkHref(href, framework, targets) : href}><slot /></a>

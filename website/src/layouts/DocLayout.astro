@@ -1,0 +1,149 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { ClientRouter } from 'astro:transitions';
+import '#/styles/reset.css';
+import '@fibrae/semi-foundation/base/tokens.scss';
+import '#/styles/docDemo.scss';
+import '#/styles/site.css';
+import PrevNext from '#/components/PrevNext.astro';
+import SideNav from '#/components/SideNav.astro';
+import SiteHeader from '#/components/SiteHeader.astro';
+import Toc from '#/components/Toc.astro';
+import { translate } from '#/i18n';
+import {
+    categoryLabel,
+    docIconUrl,
+    docUrl,
+    docFrameworks,
+    getSidebar,
+    locales,
+    parseDocId,
+    type Doc,
+    type Framework,
+    type Locale,
+} from '#/lib/docs';
+
+interface Props {
+    doc: Doc;
+    headings: MarkdownHeading[];
+    framework: Framework;
+}
+
+const { doc, headings, framework } = Astro.props;
+const { category, page, locale } = parseDocId(doc.id);
+const t = translate(locale);
+const localeHrefs = Object.fromEntries(locales.map((l) => [l, docUrl(l, framework, category, page)])) as Record<Locale, string>;
+const frameworkHrefs = Object.fromEntries(docFrameworks(doc).map((f) => [f, docUrl(locale, f, category, page)]));
+
+const hrefOf = (d: Doc) => {
+    const target = parseDocId(d.id);
+    return docUrl(locale, framework, target.category, target.page);
+};
+
+const sidebar = (await getSidebar(locale, framework)).filter((group) => group.items.length > 0);
+const navGroups = sidebar.map((group) => ({
+    key: group.key,
+    label: group.label,
+    items: group.items.map((item) => ({
+        href: hrefOf(item),
+        title: item.data.title,
+        icon: docIconUrl(item.data.icon),
+        showNew: item.data.showNew,
+    })),
+}));
+const flat = sidebar.flatMap((group) => group.items);
+const index = flat.findIndex((d) => d.id === doc.id);
+const linkOf = (d: Doc | undefined) =>
+    d && {
+        href: hrefOf(d),
+        path: `${categoryLabel(locale, parseDocId(d.id).category)} / ${d.data.title}`,
+        title: d.data.title,
+        icon: docIconUrl(d.data.icon),
+    };
+
+const { title } = doc.data;
+const breadcrumb = locale === 'zh-CN' ? categoryLabel(locale, category) : `${categoryLabel(locale, category)} · ${title}`;
+---
+
+<!doctype html>
+<html lang={locale} transition:animate="none">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ClientRouter />
+        <title>{title} - Semi Design Next</title>
+        {doc.data.brief && <meta name="description" content={doc.data.brief} />}
+        {locales.map((l) => <link rel="alternate" hreflang={l} href={localeHrefs[l]} />)}
+        <link rel="alternate" hreflang="x-default" href={localeHrefs['zh-CN']} />
+    </head>
+    <body>
+        <a class="skip-link" href="#main">{t('nav_skip')}</a>
+        <script is:inline>
+            // Before first paint to avoid a dark flash; system default if unset; reads throw with storage disabled
+            let stored = null;
+            try {
+                stored = localStorage.getItem('semi-theme');
+            } catch {}
+            if (stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.setAttribute('theme-mode', 'dark');
+            }
+        </script>
+        <SiteHeader locale={locale} framework={framework} localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} />
+        <SideNav locale={locale} framework={framework} groups={navGroups} current={hrefOf(doc)} />
+        <main class="site-main" id="main">
+            <div class="article-wrapper">
+                <header class="doc-header">
+                    <div class="doc-breadcrumb">{breadcrumb}</div>
+                    <h1>{title}</h1>
+                    {doc.data.brief && <p class="doc-brief">{doc.data.brief}</p>}
+                </header>
+                <article class="doc">
+                    <slot />
+                </article>
+                <PrevNext label={t('nav_prev_next')} prev={linkOf(flat[index - 1])} next={linkOf(flat[index + 1])} />
+            </div>
+        </main>
+        <Toc locale={locale} headings={headings} />
+        <script>
+            import '#/lib/code-highlight';
+        </script>
+        <script>
+            // Toast and Notification containers are body singletons; left in the old body they would never show
+            let carried: Element[] = [];
+            document.addEventListener('astro:before-swap', () => {
+                carried = [...document.querySelectorAll('body > .semi-toast-wrapper, body > .semi-notification-wrapper')];
+            });
+            document.addEventListener('astro:after-swap', () => {
+                document.body.append(...carried);
+            });
+        </script>
+        <script>
+            // On a reload the router restores the old pixel offset, but the client:only demos keep committing for
+            // seconds afterwards and resize the content, so no pixel offset holds. Pin the heading or demo at the top of
+            // the view to its old position instead, again on every resize until the reader takes over; scroll anchoring
+            // alone fails when the pinned demo itself is still growing. Storage throws when disabled
+            const key = 'site-scroll-anchor';
+            addEventListener('pagehide', () => {
+                const line = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop);
+                const anchor = [...document.querySelectorAll('.doc :is(h2, h3, .demo)[id]')].findLast((el) => el.getBoundingClientRect().top <= line);
+                try {
+                    sessionStorage.setItem(key, JSON.stringify(anchor && { href: location.href, id: anchor.id, top: anchor.getBoundingClientRect().top }));
+                } catch {}
+            });
+            let saved: { href: string; id: string; top: number } | undefined;
+            try {
+                saved = JSON.parse(sessionStorage.getItem(key) ?? 'null') ?? undefined;
+                sessionStorage.removeItem(key);
+            } catch {}
+            const { type } = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+            const anchor = saved?.href === location.href && type !== 'navigate' ? document.getElementById(saved.id) : null;
+            if (anchor && saved) {
+                const pin = () => scrollBy({ top: anchor.getBoundingClientRect().top - saved.top, behavior: 'instant' });
+                const observer = new ResizeObserver(pin);
+                observer.observe(document.querySelector('.doc')!);
+                const release = () => observer.disconnect();
+                for (const type of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(type, release, { once: true, passive: true });
+            }
+        </script>
+    </body>
+</html>

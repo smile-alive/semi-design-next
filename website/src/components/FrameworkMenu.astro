@@ -1,0 +1,128 @@
+---
+import { IconTick } from '@fibrae/semi-icons-react';
+import { translate } from '#/i18n';
+import type { Locale } from '#/lib/docs';
+import { frameworks, type Framework } from '#/lib/frameworks';
+
+interface Props {
+    locale: Locale;
+    framework: Framework;
+    hrefs: Partial<Record<Framework, string>>;
+}
+const { locale, framework, hrefs } = Astro.props;
+const t = translate(locale);
+const labels: Record<Framework, string> = { react: 'React', vue: 'Vue', solid: 'Solid' };
+---
+
+<button class="site-icon-button" type="button" popovertarget="framework-menu" aria-label={`${t('nav_framework')}: ${labels[framework]}`}>
+    {/* Semi has no framework logos; single-colour marks follow the header's icon colour (the Solid mark is Simple Icons', CC0) */}
+    {
+        framework === 'react' ? (
+            <svg class="framework-logo" viewBox="-11.5 -10.23 23 20.46" aria-hidden="true">
+                <circle r="2.05" fill="currentColor" />
+                <g fill="none" stroke="currentColor" stroke-width="1.2">
+                    <ellipse rx="11" ry="4.2" />
+                    <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+                    <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+                </g>
+            </svg>
+        ) : framework === 'vue' ? (
+            <svg class="framework-logo" viewBox="0 0 261.76 226.69" aria-hidden="true">
+                <path d="M161.1 0l-30.23 52.35L100.65 0H0l130.87 226.69L261.76 0z" fill="currentColor" opacity="0.5" />
+                <path d="M161.1 0l-30.23 52.35L100.65 0H52.35l78.52 136.01L209.4 0z" fill="currentColor" />
+            </svg>
+        ) : (
+            <svg class="framework-logo" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M11.558.788A9.082 9.082 0 0 0 9.776.99l-.453.15c-.906.303-1.656.755-2.1 1.348l-.301.452-2.035 3.528c.426-.387.974-.698 1.643-.894h.001l.613-.154h.001a8.82 8.82 0 0 1 1.777-.206c2.916-.053 6.033 1.148 8.423 2.36 2.317 1.175 3.888 2.32 3.987 2.39L24 5.518c-.082-.06-1.66-1.21-3.991-2.386-2.393-1.206-5.521-2.396-8.45-2.343zM8.924 5.366a8.634 8.634 0 0 0-1.745.203l-.606.151c-1.278.376-2.095 1.16-2.43 2.108-.334.948-.188 2.065.487 3.116.33.43.747.813 1.216 1.147L12.328 10h.001a6.943 6.943 0 0 1 6.013 1.013l2.844-.963c-.17-.124-1.663-1.2-3.91-2.34-2.379-1.206-5.479-2.396-8.352-2.344zm5.435 4.497a6.791 6.791 0 0 0-1.984.283L2.94 13.189 0 18.334l9.276-2.992a6.945 6.945 0 0 1 7.408 2.314v.001c.695.903.89 1.906.66 2.808l2.572-4.63c.595-1.041.45-2.225-.302-3.429a6.792 6.792 0 0 0-5.255-2.543zm-3.031 5.341a6.787 6.787 0 0 0-2.006.283L.008 18.492c.175.131 2.02 1.498 4.687 2.768 2.797 1.332 6.37 2.467 9.468 1.712l.454-.152h.002c1.278-.376 2.134-1.162 2.487-2.09.353-.93.207-2.004-.541-2.978a6.791 6.791 0 0 0-5.237-2.548z"
+                    fill="currentColor"
+                />
+            </svg>
+        )
+    }
+</button>
+<div class="framework-menu" id="framework-menu" popover>
+    {
+        frameworks.map((item) =>
+            hrefs[item] ? (
+                <a class="framework-menu-item" href={hrefs[item]} aria-current={item === framework ? 'page' : undefined}>
+                    <IconTick className="framework-menu-tick" />
+                    {labels[item]}
+                </a>
+            ) : (
+                <span class="framework-menu-item" aria-disabled="true">
+                    <IconTick className="framework-menu-tick" />
+                    {labels[item]}
+                </span>
+            )
+        )
+    }
+</div>
+
+<script>
+    // The header is replaced on every navigation, so clicks delegate to document
+    document.addEventListener('click', (event) => {
+        if ((event.target as Element).closest('#framework-menu a')) {
+            document.getElementById('framework-menu')?.hidePopover();
+        }
+    });
+    // The client router handles clicks in the bubble phase and skips preventDefault'ed ones, so intercept in capture
+    document.addEventListener(
+        'click',
+        (event) => {
+            if ((event.target as Element).closest('#framework-menu a[aria-current="page"]')) event.preventDefault();
+        },
+        true
+    );
+</script>
+
+<style>
+    .framework-logo {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Mirrors LocaleMenu; the header is fixed, so position by viewport */
+    .framework-menu {
+        inset-block: 46px auto;
+        inset-inline: auto 108px;
+        padding: 4px 0;
+        margin: 0;
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-3);
+        border: 0;
+        border-radius: var(--semi-border-radius-medium);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    .framework-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px 8px 12px;
+        color: var(--semi-color-text-0);
+        text-decoration: none;
+    }
+
+    .framework-menu-item:not([aria-disabled='true']):is(:hover, :focus-visible) {
+        outline: none;
+        background-color: var(--semi-color-fill-0);
+    }
+
+    .framework-menu-item[aria-current='page'] {
+        font-weight: 600;
+    }
+
+    .framework-menu-item[aria-disabled='true'] {
+        color: var(--semi-color-disabled-text);
+    }
+
+    /* The check icon comes from a React component, so it has no scope marker */
+    .framework-menu-item :global(.framework-menu-tick) {
+        margin-inline-end: 9px;
+        font-size: 12px;
+    }
+
+    .framework-menu-item:not([aria-current='page']) :global(.framework-menu-tick) {
+        color: transparent;
+    }
+</style>
