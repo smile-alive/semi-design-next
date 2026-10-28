@@ -1,0 +1,15 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": true,
+        "types": ["node"],
+        "rootDir": "src",
+        "noImplicitAny": false,
+        "declaration": true,
+        "strict": true,
+        "erasableSyntaxOnly": true
+    },
+    "include": ["src/**/*.tsx", "src/**/*.ts"],
+    "exclude": ["src/**/__tests__/**"]
+}
