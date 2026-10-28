@@ -1,0 +1,33 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "types": ["node", "vite/client"],
+        "strict": true,
+        "strictNullChecks": true,
+        "noEmit": true,
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        "paths": {
+            "@test/*": ["../*"],
+            "@fibrae/semi-ui-solid": ["../../packages/semi-ui-solid/src/index.ts"],
+            "@fibrae/semi-ui-solid/*": ["../../packages/semi-ui-solid/src/*"],
+            "@fibrae/semi-ai-solid": ["../../packages/semi-ai-solid/src/index.ts"],
+            "@fibrae/semi-ai-solid/*": ["../../packages/semi-ai-solid/src/*"],
+            "@fibrae/semi-icons-solid": ["../../packages/semi-icons-solid/src/index.ts"],
+            "@fibrae/semi-icons-solid/*": ["../../packages/semi-icons-solid/src/*"],
+            "@fibrae/semi-illustrations-solid": ["../../packages/semi-illustrations-solid/src/index.ts"],
+            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/dist/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"]
+        }
+    },
+    "include": [
+        "solid.setup.ts",
+        "hydration.server.solid.tsx",
+        "../../packages/semi-*-solid/**/__tests__/**/*.ts",
+        "../../packages/semi-*-solid/**/__tests__/**/*.tsx",
+        "../../packages/semi-ai-solid/src/semi-global.ts",
+        "../../packages/semi-foundation/src/dom.d.ts",
+        "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
+    ],
+    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*"]
+}
