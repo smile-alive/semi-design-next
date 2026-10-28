@@ -24,8 +24,8 @@ jobs:
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             - run: pnpm site:build
-            - uses: cloudflare/wrangler-action@v3
-              with:
-                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-                  command: pages deploy website/dist --project-name=semi-design-next --branch=main
+            # wrangler-action installs wrangler with `pnpm add` at the workspace root, which pnpm refuses
+            - run: pnpm dlx wrangler@4.153.0 pages deploy website/dist --project-name=semi-design-next --branch=main
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

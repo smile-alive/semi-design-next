@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-ai-solid",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Semi AI components for Solid: AIChatInput, AIChatDialogue, Chat and Sidebar.",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",

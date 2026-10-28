@@ -51,11 +51,15 @@ const hover = async (target: Element) => {
     hovered = target;
     await userEvent.hover(target);
 };
+// The ellipsis measurement that enables the tooltip settles asynchronously; on a loaded CI runner it outlasts waitFor's 1s default
 const hoverUntil = (target: Element, popupSelector: string) =>
-    waitFor(async () => {
-        await hover(target);
-        expect(document.querySelector(popupSelector)).not.toBeNull();
-    });
+    waitFor(
+        async () => {
+            await hover(target);
+            expect(document.querySelector(popupSelector)).not.toBeNull();
+        },
+        { timeout: 5000 }
+    );
 const mouseDown = (el: Element) => dispatch(el, new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
 
 const renderWithHandle = (props: Record<string, unknown> = {}) => {

@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-animation",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Semi presets for Motion (easings and springs) and View Transition Classes",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",

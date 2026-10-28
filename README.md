@@ -19,21 +19,21 @@ Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的�
 | --- | --- |
 | [`packages/semi-ui-react`](packages/semi-ui-react/README.md) | React 组件库 `@fibrae/semi-ui-react` |
 | [`packages/semi-ui-vue`](packages/semi-ui-vue/README.md) | Vue 组件库 `@fibrae/semi-ui-vue` |
-| `packages/semi-ui-solid` | Solid 组件库 `@fibrae/semi-ui-solid` |
+| [`packages/semi-ui-solid`](packages/semi-ui-solid/README.md) | Solid 组件库 `@fibrae/semi-ui-solid` |
 | [`packages/semi-foundation`](packages/semi-foundation/README.md) | 与框架无关的组件逻辑和 SCSS；唯一的主题（全局 token、色板、mixin）在 `src/theme/` |
 | [`packages/semi-ai-react`](packages/semi-ai-react/README.md) | AI 组件 `@fibrae/semi-ai-react`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-react |
 | [`packages/semi-ai-vue`](packages/semi-ai-vue/README.md) | Vue 版 AI 组件 `@fibrae/semi-ai-vue`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-vue |
-| `packages/semi-ai-solid` | Solid 版 AI 组件 `@fibrae/semi-ai-solid`，基于 semi-ui-solid |
+| [`packages/semi-ai-solid`](packages/semi-ai-solid/README.md) | Solid 版 AI 组件 `@fibrae/semi-ai-solid`，基于 semi-ui-solid |
 | [`packages/semi-ai-foundation`](packages/semi-ai-foundation/README.md) | AI 组件与框架无关的逻辑、SCSS 和编辑器插件，基于 semi-foundation |
 | [`packages/semi-icons-core`](packages/semi-icons-core/README.md) | 图标的唯一源 `svgs/icons`（保留原色的彩色图标在 `svgs/lab`，插画在 `svgs/illustrations`）与由它生成的框架无关图标与插画数据 `@fibrae/semi-icons-core` |
 | [`packages/semi-icons-react`](packages/semi-icons-react/README.md) | React 图标组件 `@fibrae/semi-icons-react`，每个图标由 core 的数据经 `createIcon` 生成；彩色图标在子路径 `@fibrae/semi-icons-react/lab` |
 | [`packages/semi-icons-vue`](packages/semi-icons-vue/README.md) | Vue 图标组件 `@fibrae/semi-icons-vue`，与 React 共享 core 数据与样式；彩色图标在子路径 `/lab` |
-| `packages/semi-icons-solid` | Solid 图标组件 `@fibrae/semi-icons-solid`，读同一份 core 数据 |
+| [`packages/semi-icons-solid`](packages/semi-icons-solid/README.md) | Solid 图标组件 `@fibrae/semi-icons-solid`，读同一份 core 数据 |
 | [`packages/semi-animation`](packages/semi-animation/README.md) | 给 Motion 用的 Semi 预设（缓动、弹簧）与 View Transition 预设类 `@fibrae/semi-animation` |
 | [`packages/semi-polyfill`](packages/semi-polyfill/README.md) | 可选 polyfill `@fibrae/semi-polyfill`（`AbortSignal.any`、`Element.prototype.checkVisibility`），供 Safari 17.2 与 17.3 在入口最先导入 |
 | [`packages/semi-illustrations-react`](packages/semi-illustrations-react/README.md) | React 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
 | [`packages/semi-illustrations-vue`](packages/semi-illustrations-vue/README.md) | Vue 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
-| `packages/semi-illustrations-solid` | Solid 插画组件，由同一份插画数据生成 |
+| [`packages/semi-illustrations-solid`](packages/semi-illustrations-solid/README.md) | Solid 插画组件，由同一份插画数据生成 |
 | [`packages/semi-json-viewer-core`](packages/semi-json-viewer-core/README.md) | JsonViewer 的编辑器内核 |
 | [`packages/semi-scss-compile`](packages/semi-scss-compile/README.md) | 把 Semi SCSS 编译为 CSS 的工具 |
 | [`packages/semi-theme-shared`](packages/semi-theme-shared/README.md) | 插件与 `semi-scss-compile` 共用的 `semi:` Sass importer 与编译管线，不发布 |
