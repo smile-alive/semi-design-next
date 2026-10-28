@@ -1,0 +1,73 @@
+{
+    "name": "@fibrae/semi-ui-react",
+    "version": "0.1.0",
+    "description": "Semi Design Next components for React.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ui-react"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./styles.css": "./dist/styles.css",
+        "./tailwind.css": "./dist/tailwind.css",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "@dnd-kit/react": "catalog:",
+        "@fibrae/semi-foundation": "workspace:*",
+        "@fibrae/semi-icons-react": "workspace:*",
+        "@fibrae/semi-illustrations-react": "workspace:*",
+        "@tanstack/react-virtual": "catalog:",
+        "async-validator": "catalog:",
+        "clsx": "catalog:",
+        "date-fns": "catalog:",
+        "es-toolkit": "catalog:",
+        "scroll-into-view-if-needed": "catalog:"
+    },
+    "peerDependencies": {
+        "react": "catalog:peer",
+        "react-dom": "catalog:peer"
+    },
+    "sideEffects": [
+        "*.scss",
+        "*.css",
+        "./dist/tokens.js",
+        "./src/tokens.ts"
+    ],
+    "keywords": [
+        "semi design next to any design",
+        "a11y react component library",
+        "design to code",
+        "code to design",
+        "3000+ design token",
+        "dark mode",
+        "semi design next",
+        "semi",
+        "design ops",
+        "modern design system",
+        "figma ui kit"
+    ],
+    "devDependencies": {
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "react": "catalog:",
+        "react-dom": "catalog:",
+        "shiki": "catalog:",
+        "typescript": "catalog:"
+    }
+}

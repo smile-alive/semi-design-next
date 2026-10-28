@@ -1,0 +1,41 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        // vite/client types import.meta.glob, which the demo-rendering tests use
+        "types": ["node", "vite/client"],
+        "noEmit": true,
+        // semi-ui-react's own options: the tests compile the package source they import
+        "strict": true,
+        "noImplicitAny": false,
+        // Tests import the package they test by name; it resolves to source as at runtime (semiSourceAliases), since
+        // mixing built declarations with source would make classes with `#` members two incompatible types.
+        // The Lottie and JsonViewer tests mock or import dependencies only semi-foundation declares.
+        "paths": {
+            "@test/*": ["../*"],
+            "@fibrae/semi-ui-react": ["../../packages/semi-ui-react/src/index.ts"],
+            "@fibrae/semi-ui-react/*": ["../../packages/semi-ui-react/src/*"],
+            "@fibrae/semi-ai-react": ["../../packages/semi-ai-react/src/index.ts"],
+            "@fibrae/semi-ai-react/*": ["../../packages/semi-ai-react/src/*"],
+            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/src/*"],
+            "@fibrae/semi-ai-foundation/*": ["../../packages/semi-ai-foundation/src/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"],
+            "lottie-web": ["../../packages/semi-foundation/node_modules/lottie-web"]
+        }
+    },
+    "include": [
+        "react.setup.ts",
+        "../vitest.setup.ts",
+        "../utils/react.ts",
+        "../utils/dom/react.ts",
+        "../utils/table/react.tsx",
+        "../../packages/semi-*-react/**/__tests__/**/*.ts",
+        "../../packages/semi-*-react/**/__tests__/**/*.tsx",
+        "../../packages/semi-ui-react/src/styles.d.ts",
+        "../../packages/semi-ai-react/src/styles.d.ts",
+        "../../packages/semi-ai-react/src/semi-global.ts",
+        "../../packages/semi-icons-react/src/styles.d.ts",
+        "../../packages/semi-foundation/src/dom.d.ts"
+    ],
+    // Browser tests: their matcher types replace jest-dom's, so tsconfig.react.browser.json checks them.
+    "exclude": ["../../packages/**/*.browser.test.*", "../../packages/*/node_modules", "../../packages/*/dist"]
+}
