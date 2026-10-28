@@ -22,4 +22,7 @@ jobs:
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             - run: pnpm typecheck
-            - run: pnpm check
+            # `pnpm check` also runs the browser projects; those run in browser.yml, so this job runs the jsdom and node ones
+            - run: pnpm lint
+            - run: pnpm format:check
+            - run: pnpm test
