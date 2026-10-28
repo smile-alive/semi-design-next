@@ -1,0 +1,443 @@
+---
+title: ConfigProvider
+order: 95
+icon: doc-configprovider
+brief: Provide a unified global configuration for components.
+---
+
+import ConfigProviderReactApi from './api/config-provider.react.en-US.mdx';
+import ConfigProviderVueApi from './api/config-provider.vue.en-US.mdx';
+import ConfigConsumerVueApi from './api/config-consumer.vue.en-US.mdx';
+import ConfigProviderSolidApi from './api/config-provider.solid.en-US.mdx';
+import ConfigConsumerSolidApi from './api/config-consumer.solid.en-US.mdx';
+
+## Scenes to be used
+
+Coverage configuration is divided into two scenarios
+
+- When you need to override the public Props configuration of multiple components (such as `timezone`, `rtl`), use ConfigProvider
+- When the ConfigProvider props are not enough and you want to modify a certain type of Props of a certain component globally (for example, set the `theme` of all `Button`s to `solid`, or the `position` of all `Popover`s), use semiGlobal
+
+## ConfigProvider
+
+<Framework only="react">
+
+ConfigProvider is built on React Context, so it affects the child components in the React node tree.
+
+</Framework>
+
+<Framework only="vue">
+
+ConfigProvider is built on provide / inject, so it affects the child components in the component tree. ConfigProvider and ConfigConsumer discard undeclared attributes: `class`, `style` and the like do not land on the DOM.
+
+</Framework>
+
+<Framework only="solid">
+
+ConfigProvider is built on context, so it affects the child components in the JSX tree. ConfigProvider and ConfigConsumer render no element of their own (a `div` carrying `dir` is added only when the direction changes), and undeclared attributes (`class`, `style`, `ref` and native attributes) are discarded, so they never reach the DOM.
+
+</Framework>
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { ConfigProvider } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ConfigProvider, ConfigConsumer, useConfig } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { ConfigProvider, ConfigConsumer, useConfig } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+By passing in the timeZone parameter, users can configure the time zone for the time components:
+
+<Demo id="time-zone" />
+
+### Manually obtain values
+
+Usually, the value of ConfigProvider is automatically obtained and consumed within the component, so you don't need to worry about it. However, in some special scenarios, you may need to manually obtain the value to perform other operations.
+
+<Framework only="react">
+
+Use ConfigConsumer to obtain the value of ConfigProvider
+
+</Framework>
+
+<Framework only="vue">
+
+Use the default scoped slot of ConfigConsumer to obtain the value of ConfigProvider; in the `<script setup>` of a child component you can also call `useConfig()`, which returns `ComputedRef<ContextValue>` and is an empty object without a ConfigProvider.
+
+</Framework>
+
+<Framework only="solid">
+
+Use the children function of ConfigConsumer to obtain the value of ConfigProvider. The function runs only once, so read fields as `config.xxx` instead of destructuring them. In a child component you can also call `useConfig()`, which returns `Accessor<ContextValue>`; call the accessor (`config()`) to read the current value, and it is an empty object without a ConfigProvider.
+
+</Framework>
+
+<Demo id="consumer" />
+
+### Responsive breakpoints
+
+ConfigProvider supports responsive breakpoint configuration and subscriptions to breakpoint changes.
+
+<Notice title={"Notes"}>
+
+- For performance reasons, `responsiveObserve` is `false` by default. When disabled, ConfigProvider will not register any `matchMedia` listeners.
+- `onBreakpoint` / `screens` are not ConfigProvider props. Please access them via `ConfigConsumer` (in Vue, `useConfig()` works too).
+- Each subscription **fires the callback once immediately** with the current breakpoint matches, so you don't need to call `window.matchMedia` yourself on mount.
+- `responsiveMap` is compared by content: an inline object whose content does not change does not re-register listeners when re-rendered.
+
+</Notice>
+
+#### Enable observing & custom breakpoints
+
+- Use `responsiveObserve` to enable breakpoint observing (recommended only when you really need subscriptions)
+- Use `responsiveMap` to customize breakpoints (falls back to default map when not provided)
+
+<Framework only="react">
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import { ConfigProvider, ConfigConsumer, Typography } from '@fibrae/semi-ui-react';
+
+function BreakpointSubscriber({ onBreakpoint, screens }) {
+    const [subscribedScreens, setSubscribedScreens] = useState(screens);
+
+    useEffect(() => {
+        if (!onBreakpoint) {
+            return;
+        }
+        const unsubscribe = onBreakpoint((next) => {
+            setSubscribedScreens(next);
+        });
+        return unsubscribe;
+    }, [onBreakpoint]);
+
+    return <Typography.Text>{JSON.stringify(subscribedScreens || screens)}</Typography.Text>;
+}
+
+function Demo() {
+    return (
+        <ConfigProvider
+            responsiveObserve
+            responsiveMap={{
+                xs: '(max-width: 575px)',
+                sm: '(min-width: 576px)',
+                md: '(min-width: 768px)',
+                lg: '(min-width: 992px)',
+                xl: '(min-width: 1200px)',
+                xxl: '(min-width: 1600px)',
+            }}
+        >
+            <ConfigConsumer>{({ onBreakpoint, screens }) => <BreakpointSubscriber onBreakpoint={onBreakpoint} screens={screens} />}</ConfigConsumer>
+        </ConfigProvider>
+    );
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<!-- breakpoint-subscriber.vue -->
+<script setup lang="ts">
+    import { onBeforeUnmount, onMounted, ref } from 'vue';
+    import { TypographyText, useConfig } from '@fibrae/semi-ui-vue';
+
+    const config = useConfig();
+    const screens = ref(config.value.screens);
+    let unsubscribe: (() => void) | undefined;
+
+    onMounted(() => {
+        unsubscribe = config.value.onBreakpoint?.((next) => {
+            screens.value = next;
+        });
+    });
+    onBeforeUnmount(() => unsubscribe?.());
+</script>
+
+<template>
+    <TypographyText>{{ JSON.stringify(screens) }}</TypographyText>
+</template>
+```
+
+```vue
+<script setup lang="ts">
+    import { ConfigProvider } from '@fibrae/semi-ui-vue';
+    import BreakpointSubscriber from './breakpoint-subscriber.vue';
+
+    const responsiveMap = {
+        xs: '(max-width: 575px)',
+        sm: '(min-width: 576px)',
+        md: '(min-width: 768px)',
+        lg: '(min-width: 992px)',
+        xl: '(min-width: 1200px)',
+        xxl: '(min-width: 1600px)',
+    };
+</script>
+
+<template>
+    <ConfigProvider responsiveObserve :responsiveMap="responsiveMap">
+        <BreakpointSubscriber />
+    </ConfigProvider>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { createSignal, onCleanup, onMount } from 'solid-js';
+import { ConfigProvider, ConfigConsumer, Typography } from '@fibrae/semi-ui-solid';
+
+function BreakpointSubscriber(props) {
+    const [screens, setScreens] = createSignal(props.screens);
+
+    onMount(() => {
+        const unsubscribe = props.onBreakpoint?.((next) => setScreens(next));
+        onCleanup(() => unsubscribe?.());
+    });
+
+    return <Typography.Text>{JSON.stringify(screens())}</Typography.Text>;
+}
+
+function Demo() {
+    return (
+        <ConfigProvider
+            responsiveObserve
+            responsiveMap={{
+                xs: '(max-width: 575px)',
+                sm: '(min-width: 576px)',
+                md: '(min-width: 768px)',
+                lg: '(min-width: 992px)',
+                xl: '(min-width: 1200px)',
+                xxl: '(min-width: 1600px)',
+            }}
+        >
+            <ConfigConsumer>{(config) => <BreakpointSubscriber onBreakpoint={config.onBreakpoint} screens={config.screens} />}</ConfigConsumer>
+        </ConfigProvider>
+    );
+}
+```
+
+</Framework>
+
+#### Subscription API
+
+`onBreakpoint` supports two overloads (both return an unsubscribe function):
+
+- `onBreakpoint((screens) => void)`: callback receives the full screens map
+- `onBreakpoint(['md', 'lg'], (screen, match) => void)`: listen to specific breakpoints only
+
+### RTL/LTR
+
+Global configuration `direction` can change the text direction of components. `rtl` means right to left (similar to Hebrew or Arabic), `ltr` means left to right (similar to most languages such as English). When an explicitly passed `direction` differs from the outer one, including at the outermost level, ConfigProvider wraps its content in a `div` carrying the `dir` attribute. The RTL styles of components match `:dir(rtl)` and follow the nearest ancestor `dir` attribute; popup roots carry a `dir` from the ConfigProvider `direction`. When the page sets `dir="rtl"` itself, for example on `<html>`, components in the page look RTL, but their logic such as arrow-key direction and popup placement only reads the ConfigProvider `direction`, and popups and Table inside a ConfigProvider follow its `direction` (`ltr` by default), so set `direction="rtl"` as well.
+
+Special components:
+
+- Command call of Modal, Notification and Toast needs to be passed to 'direction' through prop.
+- If you want to internationalize the directional icon, you need to handle it on your own. We think RTL for icon will make it difficult to understand and maintain. Semi has adapted the icons in other components.
+- The tree data of Table does not support RTL ([Chrome, Safari have different behave with Firefox](https://codesandbox.io/s/table-rtl-treedata-uy7gzl?file=/src/App.jsx)), and fixed column supports RTL.
+
+<Framework only="vue">
+
+In Vue, command calls cannot read ConfigProvider (it is a component-level provide). To follow the direction, pass `direction` in the options, or use `Modal.useModal()`, `Toast.useToast()` and `Notification.useNotification()`, which inherit the ConfigProvider wherever their returned Holder component is rendered.
+
+</Framework>
+
+<Framework only="solid">
+
+Imperative calls (`Modal.success()`, `Toast.info()` and the like) render outside the ConfigProvider and cannot read its direction. To follow the direction, pass `direction` in the options, or use `Modal.useModal()`, `Toast.useToast()` and `Notification.useNotification()`, which inherit the ConfigProvider wherever their returned Holder component is rendered.
+
+</Framework>
+
+<Demo id="rtl" />
+
+### Nesting
+
+`ConfigProvider` can be nested. The inner one overrides only the props it is given; props it does not pass (`direction`, `locale`, `timeZone`, `getPopupContainer`, `responsiveObserve`, `responsiveMap`) are inherited from the outer one. A prop set to `undefined` counts as not passed; `locale={null}` is explicit, so it clears the outer `locale` and leaves it to the `LocaleProvider` inside, or the default language.
+
+An inner `direction="ltr"` switches a subtree inside an `rtl` ConfigProvider back to left to right, for both the logic and the styles of its components.
+
+<Demo id="nested" />
+
+## API Reference
+
+### ConfigProvider
+
+<Framework only="react">
+
+<ConfigProviderReactApi />
+
+`ConfigProvider.defaultResponsiveMap` and the named export `defaultResponsiveMap` are the default breakpoint map. `locale` works like the `locale` parameter of `LocaleProvider`, see its [usage](/en-US/react/other/locale). ConfigProvider renders no element of its own (a `div` carrying `dir` is added only when the direction changes), and undeclared attributes are discarded, so they never reach the DOM.
+
+</Framework>
+
+<Framework only="vue">
+
+<ConfigProviderVueApi />
+
+`ConfigProvider.defaultResponsiveMap` and the named export `defaultResponsiveMap` are the default breakpoint map. `locale` works like the `locale` parameter of `LocaleProvider`, see its [usage](/en-US/react/other/locale).
+
+### ConfigConsumer
+
+<ConfigConsumerVueApi />
+
+### useConfig
+
+`useConfig(): ComputedRef<ContextValue>` returns the effective configuration, and an empty object without a ConfigProvider. `ContextValue` holds `direction`, `timeZone`, `locale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above).
+
+</Framework>
+
+<Framework only="solid">
+
+<ConfigProviderSolidApi />
+
+`ConfigProvider.defaultResponsiveMap` and the named export `defaultResponsiveMap` are the default breakpoint map. `locale` works like the `locale` parameter of `LocaleProvider`, see its [usage](/en-US/react/other/locale). ConfigProvider does not accept `class`, `style`, `ref` or native attributes, and they do not land on the DOM.
+
+### ConfigConsumer
+
+<ConfigConsumerSolidApi />
+
+ConfigConsumer renders no element either, so undeclared attributes are discarded.
+
+### useConfig
+
+`useConfig(): Accessor<ContextValue>` returns an accessor of the effective configuration; call it to read the value, and it is an empty object without a ConfigProvider. `ContextValue` holds `direction`, `timeZone`, `locale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above).
+
+</Framework>
+
+### Time Zone Identifier
+
+- Numbers, such as `1`,`-9.5`, represent the time offset from UTC, the unit is hour, and it can be negative or decimal;
+- A string, such as `"GMT-09:30"`,`"GMT+08:00"`, which is a characterization offset string starting with `"GMT"`, or [IANA](https://time.is/time_zones), such as `"Asia/Shanghai"`,`"America/Los_Angeles"`, etc.
+
+A number or a string like `GMT-09:30` is a fixed offset all year round and never shifts for daylight saving time. For example, `-3.5` and `GMT-03:30` are UTC-03:30 in every season, and the time zone name (`z`) in a format shows `GMT-03:30`.
+
+To follow the daylight saving time of a region, use an IANA identifier. Here you can check the [IANA list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), and whether the time zone has daylight saving time.
+
+### FAQ
+
+- The ConfigProvider does not provide the function of global custom prefix classname. How to achieve similar requirements (for example, Semi is used in the SDK, and it is expected that the packaged dom style does not have the .semi-xx prefix, so as not to be affected by the host's global CSS)?
+    - Since prefixCls needs to be consumed by the js/css of the component layer at the same time, Semi put this switch in the configuration item of webpack plugin, rather than as a configuration item of ConfigProvider.
+    - If you use webpack, please configure it in the parameters of `SemiWebpackPlugin`
+
+```diff
+# webpack config example: webpack.config.js
+const SemiWebpackPlugin = require('@fibrae/semi-webpack-plugin').default;
+module.exports = {
++    plugins: [new SemiWebpackPlugin({ prefixCls: 'imes' })],
+}
+```
+
+## semiGlobal
+
+You can override the default Props of global components.
+
+<Framework only="react">
+
+In `semiGlobal.config.overrideDefaultProps` you can configure the component default Props. The configuration is read each time a component renders, and an already rendered component only picks it up on its next render, so put it at the entrance of the entire site.
+
+</Framework>
+
+<Framework only="vue">
+
+In `semiGlobal.config.overrideDefaultProps` you can configure the component default Props. A default of a non-function type is read and cached the first time an instance omits the prop; a default of a function type (such as `getPopupContainer`) is read by each component when it needs it, at a time that varies by component. The global configuration is not reactive, so changing it does not update instances that already exist. Set it before the app is created, at the entrance of the entire site. To give one app its own configuration, use `app.provide(semiGlobalKey, { config: { overrideDefaultProps } })`; `semiGlobalKey` is also exported from `@fibrae/semi-ui-vue`.
+
+</Framework>
+
+<Framework only="solid">
+
+In `semiGlobal.config.overrideDefaultProps` you can configure the component default Props. A component reads the global configuration once when it is created, so changes made afterwards do not update components that already exist. Set it before the application mounts, at the entrance of the entire site. A DOM node in the defaults is discarded with a warning, because one node can only be attached in one place and every instance would move it into itself; strings and icon components take effect as usual.
+
+</Framework>
+
+Properties that are unique to each instance, such as `id`, `insetLabelId`, `wrapperId`, `addonId` and `extraId`, cannot be set through the global defaults: the types have no such keys, and they are ignored at runtime.
+
+<Notice title={'Notes'}>semiGlobal is a singleton mode that affects the entire site. If you only want to cover certain components in certain places, it is recommended not to use semiGlobal. Instead, encapsulate the corresponding components that need to be covered and pass in the modified default props.</Notice>
+
+For example, the configuration below sets all Buttons to warning by default, and filter of Select to enabled by default, etc.
+
+<Framework only="react">
+
+```js
+import { semiGlobal } from '@fibrae/semi-ui-react';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import { semiGlobal } from '@fibrae/semi-ui-vue';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import { semiGlobal } from '@fibrae/semi-ui-solid';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>

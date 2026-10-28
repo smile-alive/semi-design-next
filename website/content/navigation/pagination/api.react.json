@@ -1,0 +1,80 @@
+{
+    "pagination": {
+        "source": "packages/semi-ui-react/src/pagination/index.tsx",
+        "props": {
+            "className": { "zh-CN": "根元素 `ul` 的类名。", "en-US": "Class name of the root `ul` element." },
+            "style": { "zh-CN": "根元素 `ul` 的内联样式。", "en-US": "Inline style of the root `ul` element." },
+            "ref": { "zh-CN": "根元素 `ul` 的 ref，两种尺寸一致。", "en-US": "Ref of the root `ul` element, in both sizes." },
+            "total": {
+                "zh-CN": "总条数。总条数变化时，非受控的分页器回到第 1 页；受控时页码以 `currentPage` 为准。",
+                "en-US": "Total number of items. When it changes, an uncontrolled pagination goes back to page 1; when controlled, the page follows `currentPage`."
+            },
+            "showTotal": {
+                "zh-CN": "是否显示总页数，`size` 为 `small` 时不显示。",
+                "en-US": "Whether to show the total number of pages; not shown when `size` is `small`."
+            },
+            "pageSize": {
+                "zh-CN": "每页条数，未传时取 `pageSizeOpts` 的第一项。非严格受控：每页条数选择器的选择保留在组件内部，只有该属性变为与当前不同的值时才会覆盖它，并回到第 1 页（受控时回到 `currentPage`）；在 `onChange` 中回写该属性不会重置页码。",
+                "en-US": "Number of items per page; falls back to the first item of `pageSizeOpts`. Not strictly controlled: the choice made in the size changer is kept inside, and only a change of this prop to a value other than the current one overrides it and goes back to page 1 (to `currentPage` when controlled). Writing it back from `onChange` does not reset the page."
+            },
+            "pageSizeOpts": {
+                "zh-CN": "每页条数选择器的可选值；当前每页条数不在其中时按大小插入选项。",
+                "en-US": "Options of the size changer; the current page size is inserted in order when it is not among them."
+            },
+            "size": { "zh-CN": "尺寸，可选 `default` 或 `small`。", "en-US": "Size: `default` or `small`." },
+            "currentPage": {
+                "zh-CN": "当前页码。传入后分页器受控，页码完全由该属性决定；不传（undefined）时由组件自己管理。",
+                "en-US": "Current page. Once set the pagination is controlled and the page is entirely determined by this prop; when undefined the component manages the page itself."
+            },
+            "defaultCurrentPage": { "zh-CN": "非受控时的初始页码。", "en-US": "Initial page when not controlled." },
+            "showSizeChanger": {
+                "zh-CN": "是否显示每页条数选择器，`size` 为 `small` 时不生效。开启后 `hideOnSinglePage` 不再生效。",
+                "en-US": "Whether to show the size changer; has no effect when `size` is `small`. When it is shown, `hideOnSinglePage` no longer takes effect."
+            },
+            "showQuickJumper": {
+                "zh-CN": "是否显示快速跳转输入框，总页数小于 2 时禁用。",
+                "en-US": "Whether to show the quick jump input; disabled when there are fewer than 2 pages."
+            },
+            "popoverPosition": {
+                "zh-CN": "省略页码浮层与每页条数下拉的位置。未传时每页条数下拉为 `bottomLeft`（RTL 下 `bottomRight`），省略页码浮层使用 Popover 的默认位置 `bottom`；`size` 为 `small` 时不使用。",
+                "en-US": "Position of the omitted pages popover and the size changer dropdown. When omitted the size changer dropdown uses `bottomLeft` (`bottomRight` in RTL) and the omitted pages popover uses the Popover default `bottom`; not used when `size` is `small`."
+            },
+            "hideOnSinglePage": {
+                "zh-CN": "总页数小于 2 时是否隐藏分页器；每页条数选择器显示时不生效。",
+                "en-US": "Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown."
+            },
+            "hoverShowPageSelect": {
+                "zh-CN": "仅 `size` 为 `small` 时生效：悬停或聚焦页码文字时打开页码列表。",
+                "en-US": "Only when `size` is `small`: the page list opens when the page text is hovered or focused."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。禁用时翻页按钮、页码、每页条数选择器与快速跳转均不可用。",
+                "en-US": "Whether disabled. When disabled, the navigation buttons, the page numbers, the size changer and the quick jumper are all unavailable."
+            },
+            "preventPageChangeOnPageSizeChange": {
+                "zh-CN": "切换每页条数时保持当前页码不变且不触发 `onPageChange`，新的页码由使用方在 `onPageSizeChange` 中决定。",
+                "en-US": "Keeps the current page when the page size changes without calling `onPageChange`; the consumer picks the new page in `onPageSizeChange`."
+            },
+            "prevText": {
+                "zh-CN": "替换上一页按钮的内容。纯文本时按钮以该文字命名，其他内容（图标、元素）仍使用语言包的名称；为空时保留默认图标与语言包名称。",
+                "en-US": "Replaces the content of the previous page button. A plain text names the button, and any other content (an icon, an element) keeps the locale name; empty content keeps the default icon and the locale name."
+            },
+            "nextText": {
+                "zh-CN": "替换下一页按钮的内容，命名规则同 `prevText`。",
+                "en-US": "Replaces the content of the next page button, named the same way as `prevText`."
+            },
+            "onPageChange": {
+                "zh-CN": "页码变化时的回调，参数为新的页码。",
+                "en-US": "Called when the page changes, with the new page."
+            },
+            "onPageSizeChange": {
+                "zh-CN": "每页条数变化时的回调，参数为新的每页条数。",
+                "en-US": "Called when the page size changes, with the new page size."
+            },
+            "onChange": {
+                "zh-CN": "页码或每页条数变化时的回调，参数为页码与每页条数。",
+                "en-US": "Called when the page or the page size changes, with the page and the page size."
+            }
+        }
+    }
+}

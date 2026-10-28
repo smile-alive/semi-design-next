@@ -1,0 +1,90 @@
+---
+title: 分割线
+order: 25
+icon: doc-divider
+brief: 分割线是一个呈线状的轻量化组件，用于有逻辑的组织元素内容和页面结构或区域。
+---
+
+import DividerReactApi from './api/divider.react.zh-CN.mdx';
+import DividerVueApi from './api/divider.vue.zh-CN.mdx';
+import DividerSolidApi from './api/divider.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Divider } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Divider } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Divider } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 包含内容
+
+<Framework only="vue">
+
+水平分割线的内容通过默认插槽传入；垂直分割线不显示内容。
+
+</Framework>
+
+<Framework only="solid">
+
+水平分割线的内容通过 `children` 传入；垂直分割线不显示内容。
+
+</Framework>
+
+<Demo id="with-children" />
+
+## API参考
+
+<Framework only="react">
+
+<DividerReactApi />
+
+`id`、`onClick`、`role`、`aria-*` 等其他原生属性落在根元素上。默认 `role` 为 `separator`，带内容时不设置，传入的 `role` 会覆盖默认值。
+
+</Framework>
+
+<Framework only="vue">
+
+<DividerVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上，可通过 `role` 覆盖默认的 `separator`。
+
+</Framework>
+
+<Framework only="solid">
+
+<DividerSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `role`、`aria-*`）落在根元素上。默认 `role` 为 `separator`，带内容时不设置，传入的 `role` 会覆盖默认值。
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

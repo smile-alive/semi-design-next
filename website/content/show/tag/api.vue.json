@@ -1,0 +1,117 @@
+{
+    "tag": {
+        "source": "packages/semi-ui-vue/src/tag/tag.vue",
+        "props": {
+            "tabindex": {
+                "zh-CN": "标签的 tabindex；可交互的标签缺省为 0。",
+                "en-US": "tabindex of the tag. An interactive tag defaults to 0."
+            },
+            "tagKey": {
+                "zh-CN": "标签的唯一标识，作为 close 事件的第二个参数。",
+                "en-US": "Unique identifier of the tag, passed as the second argument of close."
+            },
+            "size": {
+                "zh-CN": "标签尺寸，可选 small、default 或 large。",
+                "en-US": "Tag size: small, default or large."
+            },
+            "color": {
+                "zh-CN": "标签颜色，可选色板中的 16 种颜色和 white。",
+                "en-US": "Tag color: one of the 16 palette colors or white."
+            },
+            "type": {
+                "zh-CN": "样式类型，可选 light、ghost 或 solid。",
+                "en-US": "Style type: light, ghost or solid."
+            },
+            "closable": { "zh-CN": "标签是否可以关闭。", "en-US": "Whether the tag can be closed." },
+            "visible": {
+                "zh-CN": "标签是否可见，配合 v-model:visible 使用；传入后由该值决定显示。",
+                "en-US": "Whether the tag is visible, used with v-model:visible. When given, this value decides."
+            },
+            "avatarSrc": {
+                "zh-CN": "头像资源地址，设置后生成头像标签。",
+                "en-US": "Avatar image URL. Setting it makes an avatar tag."
+            },
+            "colorful": { "zh-CN": "是否为多彩标签。", "en-US": "Whether the tag is colorful." },
+            "gradient": {
+                "zh-CN": "多彩标签是否为渐变色，需 colorful 为 true。",
+                "en-US": "Whether a colorful tag uses a gradient. Requires colorful."
+            },
+            "avatarShape": {
+                "zh-CN": "头像标签中头像的形状，可选 square 或 circle。",
+                "en-US": "Shape of the avatar in an avatar tag: square or circle."
+            },
+            "shape": { "zh-CN": "标签形状，可选 square 或 circle。", "en-US": "Tag shape: square or circle." }
+        },
+        "events": {
+            "close": {
+                "zh-CN": "关闭标签时触发；点击关闭图标时为 click 事件，按 Backspace 或 Delete 关闭时为 keydown 事件。对事件调用 preventDefault 可保持标签显示。",
+                "en-US": "Emitted when the tag is closed: a click event for the close icon, a keydown event for Backspace or Delete. Call preventDefault on the event to keep the tag visible."
+            },
+            "update:visible": {
+                "zh-CN": "标签关闭使可见状态变化时触发，供 v-model:visible 回写。",
+                "en-US": "Emitted when closing the tag changes its visibility, for v-model:visible to write back."
+            },
+            "keydown": { "zh-CN": "标签上按下按键时触发。", "en-US": "Emitted when a key is pressed on the tag." }
+        },
+        "slots": {
+            "default": { "zh-CN": "标签内容。", "en-US": "Tag content." },
+            "prefixIcon": { "zh-CN": "内容前的图标。", "en-US": "Icon before the content." },
+            "suffixIcon": { "zh-CN": "内容后的图标。", "en-US": "Icon after the content." }
+        },
+        "exposed": {}
+    },
+    "tag-group": {
+        "source": "packages/semi-ui-vue/src/tag/group.vue",
+        "props": {
+            "tagList": {
+                "zh-CN": "标签配置数组，每项为 Tag 的属性，children 为 string 或 number 的标签文字。",
+                "en-US": "Tag configurations. Each item holds the props of a Tag, with children as the string or number label."
+            },
+            "maxTagCount": {
+                "zh-CN": "最多显示的标签数，超出的部分显示为 +N。",
+                "en-US": "Maximum number of visible tags. The rest is shown as +N."
+            },
+            "restCount": {
+                "zh-CN": "+N 中显示的数量，缺省为超出 maxTagCount 的标签数。",
+                "en-US": "The number shown in +N. Defaults to the number of tags beyond maxTagCount."
+            },
+            "size": { "zh-CN": "组内标签的尺寸。", "en-US": "Size of the tags in the group." },
+            "showPopover": {
+                "zh-CN": "悬停在 +N 上时，是否通过 Popover 显示剩余标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover."
+            },
+            "popoverProps": {
+                "zh-CN": "传给 Popover 的属性，可设置 position、trigger 等。",
+                "en-US": "Props passed to the Popover, such as position and trigger."
+            },
+            "avatarShape": {
+                "zh-CN": "组内头像标签的头像形状。",
+                "en-US": "Avatar shape of the avatar tags in the group."
+            }
+        },
+        "events": {
+            "tagClose": {
+                "zh-CN": "组内标签被关闭时触发，参数为关闭事件与该标签的 tagKey；需在回调中更新 tagList。",
+                "en-US": "Emitted when a tag in the group is closed, with the close event and the tagKey of the tag. Update tagList in the handler."
+            },
+            "plusNMouseEnter": {
+                "zh-CN": "指针移入 +N 标签时触发。",
+                "en-US": "Emitted when the pointer enters the +N tag."
+            }
+        },
+        "slots": {
+            "tag": {
+                "zh-CN": "自定义每个标签的渲染，作用域参数为标签配置 tag 与序号 index。",
+                "en-US": "Custom rendering of each tag, receiving the tag configuration tag and its index."
+            }
+        },
+        "exposed": {}
+    },
+    "split-tag-group": {
+        "source": "packages/semi-ui-vue/src/tag/split-tag-group.vue",
+        "props": {},
+        "events": {},
+        "slots": { "default": { "zh-CN": "组合在一起的 Tag。", "en-US": "The Tag components combined into one." } },
+        "exposed": {}
+    }
+}

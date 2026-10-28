@@ -1,0 +1,99 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| accept | 接受上传的文件类型，写法同 input 的 accept：文件后缀（如 `.jpg`）或 MIME type，用逗号分隔。 | `string` | `semiGlobalDefault("Upload", "accept")` |
+| action | 文件上传地址，必填。 | `string` | `undefined` |
+| addOnPasting | 粘贴（paste 事件）时是否把剪贴板中的文件加入文件列表，无需额外授权。 | `boolean` | `semiDefault("Upload", "addOnPasting", false)` |
+| afterUpload | 上传完成且没有出错后的钩子，根据返回的对象更新文件状态、校验信息、名称和预览地址；不支持异步返回。 | <ApiType detail={"((object: AfterUploadProps) => AfterUploadResult)"}>Type</ApiType> | `undefined` |
+| beforeClear | 清空文件前的回调，返回 false、resolve(false) 或 reject 会阻止清空。 | <ApiType detail={"((fileList: FileItem[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
+| beforeCrop | 图片裁切前的回调，只用第一张选中的图片调用一次，结果决定整批是否裁切。返回 false 跳过裁切直接上传，支持异步返回。 | <ApiType detail={"((file: File, fileList: File[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
+| beforeRemove | 移除文件前的回调，返回 false、resolve(false) 或 reject 会阻止移除。 | <ApiType detail={"((file: FileItem, fileList: FileItem[]) => boolean \u007c Promise\u003cboolean>)"}>Type</ApiType> | `undefined` |
+| beforeUpload | 上传文件前的钩子，根据返回的对象更新文件状态并控制是否上传；返回 boolean 表示通过或失败，返回 Promise 时 resolve 为通过、reject 为失败。 | <ApiType detail={"((object: BeforeUploadProps) => boolean \u007c BeforeUploadObjectResult \u007c Promise\u003cBeforeUploadObjectResult>)"}>Type</ApiType> | `undefined` |
+| capture | 媒体拍摄的方式，可选 user、environment；传 true 输出空值属性，传 false 不输出该属性。 | `boolean \| "user" \| "environment"` | `semiGlobalDefault("Upload", "capture")` |
+| crop | 启用图片裁切。传 true 使用默认配置，传对象自定义裁切参数；点击选择、拖拽、粘贴、替换都会裁切。 | `boolean \| UploadCropProps` | `semiDefault("Upload", "crop", false)` |
+| cropModalProps | 裁切弹窗 Modal 的属性；visible、title、okText、cancelText、onOk、onCancel 由组件内置，width 缺省为 600。 | `UploadCropModalProps` | `semiGlobalDefault("Upload", "cropModalProps")` |
+| customRequest | 替换内置 XMLHttpRequest 的自定义请求方法，需自行调用入参的 onProgress、onError、onSuccess 更新状态。 | <ApiType detail={"((object: UploadCustomRequestArgs) => void)"}>Type</ApiType> | `undefined` |
+| data | 上传时附带的额外参数，或根据文件返回额外参数的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, unknown>)"}>Type</ApiType> | `undefined` |
+| defaultFileList | 初始的已上传文件列表，非受控。每项的 uid 必填且不能重复。 | `FileItem[]` | `semiDefault("Upload", "defaultFileList", [])` |
+| directory | 是否上传文件夹。 | `boolean` | `semiDefault("Upload", "directory", false)` |
+| disabled | 是否禁用。禁用后不再显示移除、重试、替换和清空操作。 | `boolean` | `semiDefault("Upload", "disabled", false)` |
+| draggable | 是否支持拖拽上传。 | `boolean` | `semiDefault("Upload", "draggable", false)` |
+| fileList | 受控的文件列表，配合 v-model:fileList 使用。每项的 uid 必填且不能重复。 | `FileItem[]` | `semiGlobalDefault("Upload", "fileList")` |
+| fileName | 作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。 | `string` | `semiGlobalDefault("Upload", "fileName")` |
+| headers | 上传时附带的 headers，或根据文件返回 headers 的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | `undefined` |
+| hotSpotLocation | 照片墙添加按钮的位置，可选 start 或 end。 | `"start" \| "end"` | `semiDefault("Upload", "hotSpotLocation", "end")` |
+| itemStyle | 文件卡片的内联样式。 | `StyleValue` | `semiGlobalDefault("Upload", "itemStyle")` |
+| limit | 最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 exceed。 | `number` | `semiGlobalDefault("Upload", "limit")` |
+| listType | 文件列表的展示类型，可选 list、picture、none；none 不渲染文件列表，只保留触发区。 | `"list" \| "picture" \| "none"` | `semiDefault("Upload", "listType", "list")` |
+| maxSize | 文件体积上限，单位 KB。 | `number` | `semiGlobalDefault("Upload", "maxSize")` |
+| minSize | 文件体积下限，单位 KB。 | `number` | `semiGlobalDefault("Upload", "minSize")` |
+| multiple | 是否允许一次选择多个文件。 | `boolean` | `semiDefault("Upload", "multiple", false)` |
+| name | 上传时使用的文件字段名。 | `string` | `semiGlobalDefault("Upload", "name")` |
+| onPreviewClick | 监听方式为 @previewClick。传入后文件卡片可点击，并显示预览按钮；是否传入会改变渲染，因此保留为函数 prop。 | <ApiType detail={"((fileItem: FileItem) => void)"}>Type</ApiType> | `undefined` |
+| picHeight | 照片墙模式下图片的展示高度。 | `string \| number` | `semiGlobalDefault("Upload", "picHeight")` |
+| picWidth | 照片墙模式下图片的展示宽度。 | `string \| number` | `semiGlobalDefault("Upload", "picWidth")` |
+| promptPosition | 提示文本的位置，可选 left、right、bottom。list 模式相对触发区，picture 模式相对图片列表。 | `"bottom" \| "left" \| "right"` | `semiDefault("Upload", "promptPosition", "right")` |
+| showClear | list 模式下，limit 不为 1 且至少有一个文件时，是否展示清空按钮。 | `boolean` | `semiDefault("Upload", "showClear", true)` |
+| showPicInfo | 是否显示图片信息，只在照片墙模式下有效。 | `boolean` | `semiDefault("Upload", "showPicInfo", false)` |
+| showReplace | 上传成功后，文件卡片内是否展示替换按钮。 | `boolean` | `semiDefault("Upload", "showReplace", false)` |
+| showRetry | 上传失败时，文件卡片内是否展示重试按钮。 | `boolean` | `semiDefault("Upload", "showRetry", true)` |
+| showTooltip | 文件名过长时是否展示提示，或配置提示的类型（tooltip 或 popover）和透传属性；自定义弹出内容使用 ellipsisTooltip 插槽。 | `boolean \| ShowTooltip` | `semiDefault("Upload", "showTooltip", true)` |
+| showUploadList | 是否显示文件列表。 | `boolean` | `semiDefault("Upload", "showUploadList", true)` |
+| transformFile | 选中文件后、上传前的转换函数，返回要上传的 File。 | <ApiType detail={"((file: File) => File)"}>Type</ApiType> | `undefined` |
+| uploadTrigger | 触发上传的时机，auto 选中后自动上传，custom 需调用 upload 方法。 | `"auto" \| "custom"` | `semiDefault("Upload", "uploadTrigger", "auto")` |
+| validateStatus | 校验状态，影响根元素的样式，可选 default、error、warning、success。 | `"error" \| "success" \| "default" \| "warning"` | `semiGlobalDefault("Upload", "validateStatus")` |
+| withCredentials | 上传请求是否携带 Cookie。 | `boolean` | `semiDefault("Upload", "withCredentials", false)` |
+
+**Events**
+
+| 事件            | 说明                                                                                                                              | 回调参数                                                                                                                                                            |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| update:fileList | 文件列表变化时触发，用于 v-model:fileList。                                                                                       | `[fileList: FileItem[]]`                                                                                                                                            |
+| acceptInvalid   | 接收到的文件不符合 accept 时触发，参数为不符合的文件。                                                                            | `[files: File[]]`                                                                                                                                                   |
+| change          | 文件状态变化时触发，包括上传中、成功、失败。currentFile 在 insert 后为 null，清空时不带。会遮住隐藏 input 冒泡出来的原生 change。 | `[object: UploadOnChangeProps]`                                                                                                                                     |
+| clear           | 点击清空后触发。                                                                                                                  | `[]`                                                                                                                                                                |
+| cropError       | 图片裁切失败时触发。                                                                                                              | `[error: Error]`                                                                                                                                                    |
+| drop            | 拖拽的元素在拖拽区上释放时触发，参数为原生 drop 事件、拖入的文件和当前文件列表。会遮住根元素上的原生 drop。                       | `[e: DragEvent, files: File[], fileList: FileItem[]]`                                                                                                               |
+| error           | 上传出错时触发。使用 customRequest 时，xhr 是使用方传给 onError 的对象。                                                          | <ApiType detail={"[e: UploadCustomError, file: CustomFile, fileList: FileItem[], xhr: XMLHttpRequest \u007c { status?: number \u007c undefined; }]"}>Type</ApiType> |
+| exceed          | 文件总数超出 limit 时触发，参数为截断前本次选中的原始文件。                                                                       | `[fileList: File[]]`                                                                                                                                                |
+| fileChange      | 选中文件后触发。                                                                                                                  | `[files: File[]]`                                                                                                                                                   |
+| openFileDialog  | 打开系统文件选择窗口时触发。                                                                                                      | `[]`                                                                                                                                                                |
+| pastingError    | addOnPasting 为 true 且读取剪贴板中的文件失败时触发。                                                                             | `[error: Error]`                                                                                                                                                    |
+| progress        | 上传过程中触发，参数为百分比、文件和当前文件列表。                                                                                | `[percent: number, file: CustomFile, fileList: FileItem[]]`                                                                                                         |
+| remove          | 移除文件后触发。来自 defaultFileList 且没有 File 对象的项，currentFile 为 undefined。                                             | <ApiType detail={"[currentFile: CustomFile \u007c undefined, fileList: FileItem[], currentFileItem: FileItem]"}>Type</ApiType>                                      |
+| retry           | 点击重试时触发。                                                                                                                  | `[fileItem: FileItem]`                                                                                                                                              |
+| sizeError       | 文件体积不符合 maxSize 或 minSize 时触发。                                                                                        | `[file: CustomFile, fileList: FileItem[]]`                                                                                                                          |
+| success         | 上传成功后触发，参数为服务端响应、文件和当前文件列表。                                                                            | `[responseBody: any, file: CustomFile, fileList: FileItem[]]`                                                                                                       |
+
+**Slots**
+
+| 插槽                | 说明                                                                                 | 作用域参数                       |
+| ------------------- | ------------------------------------------------------------------------------------ | -------------------------------- |
+| default             | 触发区内容。拖拽模式下替换整个默认拖拽区内容。                                       | `any`                            |
+| dragIcon            | 拖拽区的图标，渲染为空时显示默认图标。                                               | `any`                            |
+| dragMainText        | 拖拽区的主文本，渲染为空时显示语言包文案。                                           | `any`                            |
+| dragSubText         | 拖拽区的帮助文本。                                                                   | `any`                            |
+| prompt              | 提示文本。与写在默认插槽中不同，点击它不会触发上传。                                 | `any`                            |
+| validateMessage     | Upload 整体的校验信息。                                                              | `any`                            |
+| fileListTitle       | 只替换文件列表的标题文字，保留清空按钮。                                             | `any`                            |
+| fileListHeader      | 替换整个标题区（含清空按钮），参数为 fileList、onClear、clearText。                  | `UploadFileListHeaderSlotProps`  |
+| fileItem            | 替换每张文件卡片，参数为 UploadFileItemSlotProps；对某个文件渲染为空时不显示该文件。 | `UploadFileItemSlotProps`        |
+| previewFile         | 自定义预览逻辑，替换原缩略图，只在 list 模式下有效；渲染为空时不回落默认缩略图。     | `UploadFileItemSlotProps`        |
+| thumbnail           | 自定义照片墙缩略图，只在照片墙模式下有效。                                           | `UploadFileItemSlotProps`        |
+| picInfo             | 自定义照片墙信息，只在照片墙模式且 showPicInfo 为 true 时有效。                      | `UploadFileItemSlotProps`        |
+| picPreviewIcon      | 自定义照片墙悬停时的预览图标，只在照片墙模式下有效。                                 | `UploadFileItemSlotProps`        |
+| picClose            | 自定义照片墙的关闭按钮，参数为 class 和 onRemove，只在照片墙模式下有效。             | `UploadPicCloseSlotProps`        |
+| fileOperation       | 自定义列表项的操作区。                                                               | `UploadFileItemSlotProps`        |
+| fileValidateMessage | 自定义文件卡片的校验信息，渲染为空时回落到文件自身的 validateMessage 字符串。        | `UploadFileItemSlotProps`        |
+| ellipsisTooltip     | 自定义文件名过长时的弹出内容，参数为 content 和 trigger。                            | `TypographyEllipsisTooltipProps` |
+
+**Exposes**
+
+| 名称           | 说明                                                      | 类型                                                                                              |
+| -------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| insert         | 在 index 位置插入文件，不传 index 则插入到末尾。          | <ApiType detail={"(files: CustomFile[], index?: number \u007c undefined) => void"}>Type</ApiType> |
+| upload         | 开始上传等待中的文件，配合 uploadTrigger 为 custom 使用。 | <ApiType detail={"() => void"}>Type</ApiType>                                                     |
+| openFileDialog | 打开文件选择窗口。                                        | <ApiType detail={"() => void"}>Type</ApiType>                                                     |

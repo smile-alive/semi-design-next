@@ -1,0 +1,63 @@
+{
+    "back-top": {
+        "source": "packages/semi-ui-react/src/backtop/index.tsx",
+        "props": {
+            "aria-label": {
+                "zh-CN": "按钮的可访问名称；未传且没有 children 时取语言包中的「回到顶部」。",
+                "en-US": "Accessible name of the button. Without it and without children, the locale's 'Back to top' is used."
+            },
+            "badge": {
+                "zh-CN": "徽章参数，同 FloatButton。",
+                "en-US": "Badge props, same as FloatButton."
+            },
+            "children": {
+                "zh-CN": "按钮内的静态内容，传入时代替 `icon` 显示。不能包含链接、按钮、输入框等可交互元素，开发环境下检测到会警告。",
+                "en-US": "Static content of the button, shown in place of `icon` when passed. It must not contain interactive elements such as links, buttons or inputs; a warning is logged in development when it does."
+            },
+            "className": {
+                "zh-CN": "类名，与组件自身的类名合并后落在 `<button>` 上。",
+                "en-US": "Class name, merged with the component's own class name on the `<button>`."
+            },
+            "colorful": {
+                "zh-CN": "多彩按钮，同 FloatButton；未设置时为 `false`。",
+                "en-US": "Colorful button, same as FloatButton; `false` when unset."
+            },
+            "duration": {
+                "zh-CN": "滚动到顶部所需的毫秒数；点击事件按此间隔节流。",
+                "en-US": "Milliseconds the scroll to the top takes. The click event is throttled by this interval."
+            },
+            "icon": {
+                "zh-CN": "按钮图标，传入元素；未设置时为 IconBackTop。",
+                "en-US": "Button icon, passed as an element. Defaults to IconBackTop."
+            },
+            "onClick": {
+                "zh-CN": "点击时调用，参数为原生 click 事件；按 duration 节流，调用时滚动已开始。",
+                "en-US": "Called on click with the native click event. Throttled by duration, and called once the scroll has started."
+            },
+            "ref": {
+                "zh-CN": "指向按钮 `<button>`，只在按钮显示时存在。",
+                "en-US": "Points to the `<button>`, which exists only while the button is visible."
+            },
+            "shape": {
+                "zh-CN": "形状，可选 `round`、`square`；未设置时为 FloatButton 的默认值 `round`。",
+                "en-US": "Shape: `round` or `square`. Falls back to the FloatButton default `round` when unset."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 `default`、`small`、`large`；未设置时为 FloatButton 的默认值 `default`。",
+                "en-US": "Size: `default`, `small` or `large`. Falls back to the FloatButton default `default` when unset."
+            },
+            "style": {
+                "zh-CN": "按钮的内联样式，可用于覆盖默认的位置等样式。",
+                "en-US": "Inline style of the button, used to override its default position and other styles."
+            },
+            "target": {
+                "zh-CN": "返回被监听滚动元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载后调用一次，此时父容器的 ref 已可读取；之后只在函数本身变化时重新调用。稳定的函数晚于挂载才返回元素时，需要重新挂载 BackTop。",
+                "en-US": "Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called once after mount, when the ref of a parent container is already readable, and afterwards only when the function itself changes. A stable function that returns the element only after mount needs BackTop remounted."
+            },
+            "visibilityHeight": {
+                "zh-CN": "出现 BackTop 需要达到的滚动高度。",
+                "en-US": "Scroll distance after which the BackTop appears."
+            }
+        }
+    }
+}

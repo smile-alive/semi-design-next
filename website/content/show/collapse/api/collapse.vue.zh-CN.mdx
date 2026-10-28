@@ -1,0 +1,33 @@
+**Props**
+
+| 属性                | 说明                                                                                   | 类型                         | 默认值                                                   |
+| ------------------- | -------------------------------------------------------------------------------------- | ---------------------------- | -------------------------------------------------------- |
+| activeKey           | 受控属性，当前展开面板的 key；null 与空字符串表示全部收起。                            | `string \| string[] \| null` | `undefined`                                              |
+| defaultActiveKey    | 初始展开面板的 key。                                                                   | `string \| string[]`         | `semiDefault("Collapse", "defaultActiveKey", "")`        |
+| accordion           | 手风琴模式。                                                                           | `boolean`                    | `semiGlobalDefault("Collapse", "accordion")`             |
+| clickHeaderToExpand | 点击面板头整行展开收起；为 false 时只响应切换按钮和箭头。                              | `boolean`                    | `semiDefault("Collapse", "clickHeaderToExpand", true)`   |
+| expandIconPosition  | 展开图标位置，可选 left、right。                                                       | `"left" \| "right"`          | `semiDefault("Collapse", "expandIconPosition", "right")` |
+| keepDOM             | 是否保留隐藏面板的 DOM 树，默认销毁；未传时依次读 Collapse、Collapsible 的全局默认值。 | `boolean`                    | `semiGlobalDefault("Collapse", "keepDOM")`               |
+| motion              | 是否开启动画，默认开启；未传时依次读 Collapse、Collapsible 的全局默认值。              | `boolean`                    | `semiGlobalDefault("Collapse", "motion")`                |
+| lazyRender          | 配合 keepDOM 使用，为 true 时面板展开前不渲染内容。                                    | `boolean`                    | `semiDefault("Collapse", "lazyRender", false)`           |
+
+**Events**
+
+| 事件             | 说明                                                                                           | 回调参数                                   |
+| ---------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| update:activeKey | 展开面板变化时触发，参数总是 string[]，配合 v-model:activeKey 使用。                           | `[activeKey: string[]]`                    |
+| change           | 切换面板时触发，参数为展开面板的 key 数组与原生 MouseEvent（键盘操作经原生按钮同样是 click）。 | `[activeKey: string[], event: MouseEvent]` |
+
+**Slots**
+
+| 插槽         | 说明                                                                   | 作用域参数 |
+| ------------ | ---------------------------------------------------------------------- | ---------- |
+| default      | Collapse.Panel 面板。                                                  | `any`      |
+| expandIcon   | 面板收起时显示的图标，默认 IconChevronDown；插槽内容为空则不显示图标。 | `any`      |
+| collapseIcon | 面板展开时显示的图标，默认 IconChevronUp；插槽内容为空则不显示图标。   | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

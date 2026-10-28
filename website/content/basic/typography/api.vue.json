@@ -1,0 +1,264 @@
+{
+    "typography-text": {
+        "source": "packages/semi-ui-vue/src/typography/text.vue",
+        "props": {
+            "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 span。",
+                "en-US": "Element to render: a tag name or a Vue component. Defaults to span."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "ellipsis": {
+                "zh-CN": "设置自动溢出省略；传对象时见 Ellipsis Config。",
+                "en-US": "Truncates overflowing text; pass an object for the Ellipsis Config."
+            },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "size": {
+                "zh-CN": "文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。",
+                "en-US": "Text size; inherit takes the size of the enclosing Text or Paragraph."
+            },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "type": { "zh-CN": "文本类型。", "en-US": "Text type." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." },
+            "weight": { "zh-CN": "字重，数字。", "en-US": "Font weight as a number." }
+        },
+        "events": {
+            "copy": {
+                "zh-CN": "复制后触发，参数为点击事件、复制的内容和是否写入成功；写入被拒绝时为 false，此时不进入已复制状态。",
+                "en-US": "Emitted after copying, with the click event, the copied content and whether the write succeeded. When the write is rejected it is false and the copied state is not entered."
+            },
+            "expand": {
+                "zh-CN": "点击展开或收起控件时触发，参数为操作之后的展开状态和点击事件。",
+                "en-US": "Emitted when the expand or collapse control is clicked, with the expanded state after the action and the click event."
+            }
+        },
+        "slots": {
+            "default": { "zh-CN": "文本内容。", "en-US": "Text content." },
+            "icon": {
+                "zh-CN": "前缀图标；Semi 图标按 size 自动设为 small 或 default。",
+                "en-US": "Prefix icon; a Semi icon is set to small or default according to size."
+            },
+            "copyIcon": {
+                "zh-CN": "复制按钮的内容；内容为单个节点且带 aria-label 时以它作为按钮的可访问名称，否则用语言包的「复制」。",
+                "en-US": "Content of the copy button; a single node with an aria-label names the button, otherwise the locale's \"Copy\" does."
+            },
+            "copyTip": { "zh-CN": "复制图标的提示内容。", "en-US": "Tooltip content of the copy button." },
+            "copySuccessTip": { "zh-CN": "复制成功后的展示内容。", "en-US": "Content shown after a successful copy." },
+            "copyAction": {
+                "zh-CN": "完全自定义复制节点，参数为 copied、copy 和解析后的 config。",
+                "en-US": "Replaces the whole copy node; receives copied, copy and the resolved config."
+            },
+            "ellipsisContent": {
+                "zh-CN": "截断时浮层中的内容，默认是全文。",
+                "en-US": "Content of the floating layer when truncated; defaults to the full text."
+            },
+            "ellipsisTooltip": {
+                "zh-CN": "自定义浮层，仅在文本溢出时渲染；参数 content 是全文，trigger 是文字元素，用 `<component :is=\"trigger\" />` 放入自己的浮层。",
+                "en-US": "Custom floating layer, rendered only when the text overflows; content is the full text and trigger is the text element, to be placed in your own layer with `<component :is=\"trigger\" />`."
+            }
+        },
+        "exposed": {}
+    },
+    "typography-title": {
+        "source": "packages/semi-ui-vue/src/typography/title.vue",
+        "props": {
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认由 heading 决定（h1 到 h6）。",
+                "en-US": "Element to render: a tag name or a Vue component. Defaults to h1 to h6 by heading."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "ellipsis": {
+                "zh-CN": "设置自动溢出省略；传对象时见 Ellipsis Config。",
+                "en-US": "Truncates overflowing text; pass an object for the Ellipsis Config."
+            },
+            "heading": { "zh-CN": "标题级别，对应 h1 到 h6。", "en-US": "Heading level, matching h1 to h6." },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "type": { "zh-CN": "文本类型。", "en-US": "Text type." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." },
+            "weight": {
+                "zh-CN": "字重，可选 light、regular、medium、semibold、bold、default，或数字。",
+                "en-US": "Font weight: light, regular, medium, semibold, bold, default, or a number."
+            }
+        },
+        "events": {
+            "copy": {
+                "zh-CN": "复制后触发，参数为点击事件、复制的内容和是否写入成功；写入被拒绝时为 false，此时不进入已复制状态。",
+                "en-US": "Emitted after copying, with the click event, the copied content and whether the write succeeded. When the write is rejected it is false and the copied state is not entered."
+            },
+            "expand": {
+                "zh-CN": "点击展开或收起控件时触发，参数为操作之后的展开状态和点击事件。",
+                "en-US": "Emitted when the expand or collapse control is clicked, with the expanded state after the action and the click event."
+            }
+        },
+        "slots": {
+            "default": { "zh-CN": "标题内容。", "en-US": "Title content." },
+            "copyIcon": {
+                "zh-CN": "复制按钮的内容；内容为单个节点且带 aria-label 时以它作为按钮的可访问名称，否则用语言包的「复制」。",
+                "en-US": "Content of the copy button; a single node with an aria-label names the button, otherwise the locale's \"Copy\" does."
+            },
+            "copyTip": { "zh-CN": "复制图标的提示内容。", "en-US": "Tooltip content of the copy button." },
+            "copySuccessTip": { "zh-CN": "复制成功后的展示内容。", "en-US": "Content shown after a successful copy." },
+            "copyAction": {
+                "zh-CN": "完全自定义复制节点，参数为 copied、copy 和解析后的 config。",
+                "en-US": "Replaces the whole copy node; receives copied, copy and the resolved config."
+            },
+            "ellipsisContent": {
+                "zh-CN": "截断时浮层中的内容，默认是全文。",
+                "en-US": "Content of the floating layer when truncated; defaults to the full text."
+            },
+            "ellipsisTooltip": {
+                "zh-CN": "自定义浮层，仅在文本溢出时渲染；参数 content 是全文，trigger 是文字元素，用 `<component :is=\"trigger\" />` 放入自己的浮层。",
+                "en-US": "Custom floating layer, rendered only when the text overflows; content is the full text and trigger is the text element, to be placed in your own layer with `<component :is=\"trigger\" />`."
+            }
+        },
+        "exposed": {}
+    },
+    "typography-paragraph": {
+        "source": "packages/semi-ui-vue/src/typography/paragraph.vue",
+        "props": {
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 p。",
+                "en-US": "Element to render: a tag name or a Vue component. Defaults to p."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "ellipsis": {
+                "zh-CN": "设置自动溢出省略；传对象时见 Ellipsis Config。",
+                "en-US": "Truncates overflowing text; pass an object for the Ellipsis Config."
+            },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "size": {
+                "zh-CN": "文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。",
+                "en-US": "Text size; inherit takes the size of the enclosing Text or Paragraph."
+            },
+            "spacing": { "zh-CN": "行距，extended 为更宽松的行距。", "en-US": "Line spacing; extended is looser." },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "type": { "zh-CN": "文本类型。", "en-US": "Text type." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." }
+        },
+        "events": {
+            "copy": {
+                "zh-CN": "复制后触发，参数为点击事件、复制的内容和是否写入成功；写入被拒绝时为 false，此时不进入已复制状态。",
+                "en-US": "Emitted after copying, with the click event, the copied content and whether the write succeeded. When the write is rejected it is false and the copied state is not entered."
+            },
+            "expand": {
+                "zh-CN": "点击展开或收起控件时触发，参数为操作之后的展开状态和点击事件。",
+                "en-US": "Emitted when the expand or collapse control is clicked, with the expanded state after the action and the click event."
+            }
+        },
+        "slots": {
+            "default": { "zh-CN": "段落内容。", "en-US": "Paragraph content." },
+            "copyIcon": {
+                "zh-CN": "复制按钮的内容；内容为单个节点且带 aria-label 时以它作为按钮的可访问名称，否则用语言包的「复制」。",
+                "en-US": "Content of the copy button; a single node with an aria-label names the button, otherwise the locale's \"Copy\" does."
+            },
+            "copyTip": { "zh-CN": "复制图标的提示内容。", "en-US": "Tooltip content of the copy button." },
+            "copySuccessTip": { "zh-CN": "复制成功后的展示内容。", "en-US": "Content shown after a successful copy." },
+            "copyAction": {
+                "zh-CN": "完全自定义复制节点，参数为 copied、copy 和解析后的 config。",
+                "en-US": "Replaces the whole copy node; receives copied, copy and the resolved config."
+            },
+            "ellipsisContent": {
+                "zh-CN": "截断时浮层中的内容，默认是全文。",
+                "en-US": "Content of the floating layer when truncated; defaults to the full text."
+            },
+            "ellipsisTooltip": {
+                "zh-CN": "自定义浮层，仅在文本溢出时渲染；参数 content 是全文，trigger 是文字元素，用 `<component :is=\"trigger\" />` 放入自己的浮层。",
+                "en-US": "Custom floating layer, rendered only when the text overflows; content is the full text and trigger is the text element, to be placed in your own layer with `<component :is=\"trigger\" />`."
+            }
+        },
+        "exposed": {}
+    },
+    "typography-numeral": {
+        "source": "packages/semi-ui-vue/src/typography/numeral.vue",
+        "props": {
+            "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
+            "component": {
+                "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 span；内容含 p 等块级元素时使用 div。",
+                "en-US": "Element to render: a tag name or a Vue component. Defaults to span; use div when the content has block elements such as p."
+            },
+            "copyable": {
+                "zh-CN": "是否可复制；传对象时见 Copyable Config。",
+                "en-US": "Whether the text can be copied; pass an object for the Copyable Config."
+            },
+            "delete": { "zh-CN": "添加删除线样式。", "en-US": "Adds a strikethrough." },
+            "disabled": { "zh-CN": "禁用文本。", "en-US": "Disables the text." },
+            "link": {
+                "zh-CN": "是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。",
+                "en-US": "Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element."
+            },
+            "mark": { "zh-CN": "添加标记样式。", "en-US": "Adds a highlight." },
+            "parser": { "zh-CN": "自定义数值解析函数。", "en-US": "Custom number parser." },
+            "precision": { "zh-CN": "小数点后保留的位数。", "en-US": "Number of decimal places to keep." },
+            "rule": {
+                "zh-CN": "解析规则：text 仅取整，numbers 过滤非数字字符，bytes-decimal、bytes-binary 换算字节单位，percentages 转百分比，exponential 转科学计数法。",
+                "en-US": "Parsing rule: text only rounds, numbers filters out non-numeric characters, bytes-decimal and bytes-binary convert byte units, percentages converts to percent, exponential converts to scientific notation."
+            },
+            "size": {
+                "zh-CN": "文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。",
+                "en-US": "Text size; inherit takes the size of the enclosing Text or Paragraph."
+            },
+            "strong": { "zh-CN": "是否加粗。", "en-US": "Whether the text is bold." },
+            "truncate": {
+                "zh-CN": "小数点后保留位的取整方式，对应 Math.round、Math.ceil、Math.floor。",
+                "en-US": "How the kept decimals are rounded, matching Math.round, Math.ceil and Math.floor."
+            },
+            "type": { "zh-CN": "文本类型。", "en-US": "Text type." },
+            "underline": { "zh-CN": "添加下划线样式。", "en-US": "Adds an underline." }
+        },
+        "events": {
+            "copy": {
+                "zh-CN": "复制后触发，参数为点击事件、复制的内容和是否写入成功；写入被拒绝时为 false，此时不进入已复制状态。",
+                "en-US": "Emitted after copying, with the click event, the copied content and whether the write succeeded. When the write is rejected it is false and the copied state is not entered."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "要格式化的内容；递归处理其中的文本与元素，不处理组件内部的文字。",
+                "en-US": "Content to format; text and elements are processed recursively, text inside components is not."
+            },
+            "icon": {
+                "zh-CN": "前缀图标；Semi 图标按 size 自动设为 small 或 default。",
+                "en-US": "Prefix icon; a Semi icon is set to small or default according to size."
+            },
+            "copyIcon": {
+                "zh-CN": "复制按钮的内容；内容为单个节点且带 aria-label 时以它作为按钮的可访问名称，否则用语言包的「复制」。",
+                "en-US": "Content of the copy button; a single node with an aria-label names the button, otherwise the locale's \"Copy\" does."
+            },
+            "copyTip": { "zh-CN": "复制图标的提示内容。", "en-US": "Tooltip content of the copy button." },
+            "copySuccessTip": { "zh-CN": "复制成功后的展示内容。", "en-US": "Content shown after a successful copy." },
+            "copyAction": {
+                "zh-CN": "完全自定义复制节点，参数为 copied、copy 和解析后的 config。",
+                "en-US": "Replaces the whole copy node; receives copied, copy and the resolved config."
+            }
+        },
+        "exposed": {}
+    }
+}

@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                              | 类型                                                                | 默认值 |
+| ---------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------ |
+| active     | 当前项是否处于激活态，激活态时字体加粗、颜色加深；Dropdown 的 showTick 为 true 时左侧还会展示 √。 | `boolean`                                                           | -      |
+| disabled   | 是否禁用该项，禁用项不响应点击与鼠标事件。                                                        | `boolean`                                                           | -      |
+| forwardRef | 组件收到根 `li` 元素时调用，早于 ref，供包装 Dropdown.Item 的组件获取元素。                       | <ApiType detail={"(element: HTMLLIElement) => void"}>Type</ApiType> | -      |
+| icon       | 菜单项的图标，传入元素，渲染在内容之前。                                                          | `JSX.Element`                                                       | -      |
+| showTick   | 仅在 Dropdown 之外使用时生效；在 Dropdown 内以 Dropdown 的 showTick 为准。                        | `boolean`                                                           | -      |
+| type       | 文本颜色类型，可选 primary、secondary、tertiary、warning、danger。                                | `Type`                                                              | -      |

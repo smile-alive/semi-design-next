@@ -1,0 +1,101 @@
+.semi-icons-container {
+    background-color: var(--semi-color-bg-0);
+}
+
+.semi-icons-category {
+    margin-top: 24px;
+}
+
+.semi-icons-category .semi-icons-title {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform;
+    transition-duration: 0.5s;
+}
+
+.semi-icons-category .semi-icons-content {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 12px;
+    padding: 0;
+    margin-top: 24px;
+}
+
+.semi-icons-category .semi-icons-title-closed {
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+.icon-ai .semi-icons-item:hover svg stop:nth-child(1) {
+    stop-color: rgba(194, 53, 219);
+}
+
+.icon-ai .semi-icons-item:hover svg stop:nth-child(2) {
+    stop-color: rgba(134, 54, 219);
+}
+
+.icon-ai .semi-icons-item:hover svg stop:nth-child(3) {
+    stop-color: rgba(88, 77, 219);
+}
+
+.icon-ai .semi-icons-item:hover svg stop:nth-child(4) {
+    stop-color: rgba(33, 114, 219);
+}
+
+.semi-icons-item {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 150px;
+    height: 96px;
+    padding-top: 30px;
+    cursor: pointer;
+    list-style: none;
+    fill: currentColor;
+}
+
+.semi-icons-item:hover {
+    color: var(--semi-color-primary);
+}
+
+.semi-icons-item .semi-icons-item-content {
+    display: flex;
+    justify-content: center;
+}
+
+.semi-icons-item .semi-icons-item-content .semi-icon {
+    font-size: 24px;
+}
+
+.semi-icons-item .semi-icons-item-name {
+    padding: 8px 16px 0;
+    text-align: center;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.semi-icons-item.semi-icons-item-copied::before {
+    position: absolute;
+    top: 33px;
+    right: 0;
+    left: 24px;
+    width: 100px;
+    height: 96px;
+    color: var(--semi-color-success);
+    text-align: center;
+    content: 'copied';
+    opacity: 1;
+}
+
+.semi-icons-item.semi-icons-item-copied .semi-icons-item-content {
+    color: var(--semi-color-success);
+    opacity: 0.28;
+}
+
+.semi-icons-item.semi-icons-item-copied .semi-icons-item-name {
+    opacity: 0.28;
+}

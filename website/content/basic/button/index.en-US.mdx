@@ -1,0 +1,316 @@
+---
+title: Button
+order: 22
+icon: doc-button
+brief: Users use buttons to trigger an operation or jump.
+---
+
+import NoAccess from './figures/no-access.react.tsx';
+import ButtonReactApi from './api/button.react.en-US.mdx';
+import ButtonGroupReactApi from './api/button-group.react.en-US.mdx';
+import SplitButtonGroupReactApi from './api/split-button-group.react.en-US.mdx';
+import ButtonVueApi from './api/button.vue.en-US.mdx';
+import ButtonGroupVueApi from './api/button-group.vue.en-US.mdx';
+import SplitButtonGroupVueApi from './api/split-button-group.vue.en-US.mdx';
+import ButtonSolidApi from './api/button.solid.en-US.mdx';
+import ButtonGroupSolidApi from './api/button-group.solid.en-US.mdx';
+import SplitButtonGroupSolidApi from './api/split-button-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Button, SplitButtonGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Button Type
+
+Buttons support the following types:
+
+- Primary button ("primary", default)
+- Secondary button ("secondary")
+- Tertiary button ("tertiary")
+- Warning button ("warning")
+- Danger button ("danger")
+
+<Demo id="types" />
+
+#### About the Font Color
+
+[CSS Variables](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties) are used with the button:
+
+- `var(--semi-color-primary)`: main
+- `var(--semi-color-secondary)`: secondary
+- `var(--semi-color-tertiary)`: third
+- `var(--semi-color-warning)`: warning
+- `var(--semi-color-danger)`: danger
+
+You can define your elements directly using these theme colors.
+
+<Demo id="type-colors" />
+
+### Button Theme
+
+The themes currently available are:
+
+- `light`: light background
+- `solid`: dark background
+- `borderless`: no background
+- `outline`: border mode
+
+The default theme is `light`
+
+#### Light Background
+
+<Demo id="theme-light" />
+
+#### Dark Background
+
+<Demo id="theme-solid" />
+
+#### No Background
+
+<Demo id="theme-borderless" />
+
+#### Border Mode
+
+<Demo id="theme-outline" />
+
+### Size
+
+Three sizes are defined by default:
+
+- Big: "Large"
+- Default: "default."
+- Small: "Small"
+
+<Demo id="size" />
+
+### Block Button
+
+The block button has a predefined width, and its width is independent of the width of the contents of the button.
+
+<Demo id="block" />
+
+### Icon Button
+
+An icon that defines a button.
+
+<Framework only="vue">
+
+Put the icon in the `#icon` slot; `iconPosition` decides where it goes.
+
+</Framework>
+
+<Demo id="icon" />
+
+### Link Button
+
+We recommend using Typography to achieve link text button. Refer to [Typography](/en-US/react/basic/typography) for more information.
+
+<Demo id="link" />
+
+### Prohibited Status
+
+<Demo id="disabled" />
+
+### Loading State
+
+The button supports the Loading state, by setting the loading parameter value to true, note: the disabled state takes precedence over the loading state.
+
+<Demo id="loading" />
+
+### AI style - Colorful buttons
+
+Set `colorful` to get colorful buttons. Colorful buttons support all `theme`, and `type` only supports `primary` and `tertiary`.
+
+<Framework only="solid">
+
+The gradient fill only reaches an icon passed as a component (`icon={IconAIFilledLevel1}`); an element (`icon={<IconAIFilledLevel1 />}`) is already rendered, so the button cannot fill it.
+
+</Framework>
+
+<Demo id="colorful" />
+
+### Button Combination
+
+You can put multiple buttons in a `ButtonGroup` container and set `size`, `disabled`, `type`, `theme` and `colorful` on it to give the buttons a shared size, disabled state, type, theme and colorful style. These props are only defaults: a value set on a button itself wins. Other props such as `data-*`, `id`, `aria-*` and event handlers go to the group's root element (`role="group"`).
+
+#### Combined Dimensions
+
+<Demo id="group-size" />
+
+#### Combined Disabled
+
+<Demo id="group-disabled" />
+
+#### Combined Type
+
+<Demo id="group-type" />
+
+### Split Button Group
+
+In the scene where `Button` and `Dropdown` are combined, split buttons can be used. The split buttons add the space between the buttons and change the rounded corners of the buttons.
+
+#### Basic Usage
+
+<Demo id="split-basic" />
+
+## API Reference
+
+### Button
+
+<Framework only="react">
+
+<ButtonReactApi />
+
+Other native attributes (such as `data-*` and `onFocus`) land on the native `<button>`.
+
+</Framework>
+
+<Framework only="vue">
+
+<ButtonVueApi />
+
+`class`, `style` and native attributes (such as `id` and `aria-*`) land on the native `<button>` through attrs. Native events such as `click`, `mousedown`, `mouseenter` and `mouseleave` are listened to with `@click` and so on, and receive the native `MouseEvent`. `click` does not fire while `loading`.
+
+</Framework>
+
+<Framework only="solid">
+
+<ButtonSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*`, `onClick` and `onMouseDown`) land on the native `<button>`. `onClick` does not fire while `loading`.
+
+</Framework>
+
+### ButtonGroup
+
+<Framework only="react">
+
+<ButtonGroupReactApi />
+
+Other native attributes (such as `aria-label` and `data-*`) land on the group's root element (`role="group"`).
+
+</Framework>
+
+<Framework only="vue">
+
+<ButtonGroupVueApi />
+
+`class`, `style` and native attributes (such as `data-*` and `aria-*`) land on the group's root element (`role="group"`) through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<ButtonGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the group's root element (`role="group"`).
+
+</Framework>
+
+### SplitButtonGroup
+
+<Framework only="react">
+
+<SplitButtonGroupReactApi />
+
+Other native attributes land on the split button group's root element (`role="group"`).
+
+</Framework>
+
+<Framework only="vue">
+
+<SplitButtonGroupVueApi />
+
+`class`, `style` and native attributes (such as `aria-*`) land on the split button group's root element (`role="group"`) through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<SplitButtonGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `aria-*`) land on the split button group's root element (`role="group"`).
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- `aria-label` is used to indicate the function of the button. For icon buttons, we recommend using this attribute
+- `aria-disabled` is true when the button is disabled or loading, indicating that the button cannot be operated
+
+### Keyboard and Focus
+
+- `Button`'s focus management is consistent with native `button`, keyboard users can use `Tab` and `Shift + Tab` to switch focus
+- The trigger of `Button` is the same as the native `button`, when the `button` is focused, it can be activated by `Enter` or `Space` key
+- The buttons in the `ButtonGroup` are managed in the same way as the focus of a single `button`, and can be switched by `Tab` and `Shift + Tab`
+
+## Content Guidelines
+
+- Buttons need to be clear and predictable, users should be able to predict what will happen when they click the button
+- Buttons should always start with a strong verb that encourages action
+- To give the user enough context, use \{verb\}+\{noun\} content formulas on buttons; in addition to common actions like "Done", "Close", "Cancel" or "OK"
+
+| ✅ Recommended usage                   | ❌ Deprecated usage         |
+| -------------------------------------- | --------------------------- |
+| <NoAccess action="Apply permission" /> | <NoAccess action="Apply" /> |
+
+- When the button is combined with other components, the button can only display \{verb\}, such as "Add", "Create", if the other components (such as Modal and Sidesheet) already provide enough context for the information
+
+| ✅ Recommended usage                                                             | ❌ Deprecated usage                                                             |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| <img src='/assets/content_guide/button-good-2.png' style={{ width: '350px' }} /> | <img src='/assets/content_guide/button-bad-2.png' style={{ width: '350px' }} /> |
+
+- Always write in Sentence case
+
+| ✅ Recommended usage | ❌ Deprecated usage           |
+| -------------------- | ----------------------------- |
+| Create project       | Create <br/> Create a project |
+| Edit profile         | Edit                          |
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+<Framework only="react">
+
+- #### Why does the icon prop of Button not work?
+    Please check the import path of Button. The correct import path is `import { Button } from '@fibrae/semi-ui-react;'`. If you mistakenly import from @fibrae/semi-ui-react/button/button, you get the basic Button component without icon support.
+
+</Framework>
+
+<Framework only="vue">
+
+- #### Why is the icon of Button not shown?
+    The icon is passed through the `#icon` slot, not an `icon` prop: `<Button><template #icon><IconCamera /></template></Button>`.
+
+</Framework>

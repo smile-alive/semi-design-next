@@ -1,0 +1,935 @@
+---
+order: 61
+title: Tree
+icon: doc-tree
+brief: A tree view component presents a hierarchical list.
+---
+
+import TreeReactApi from './api/tree.react.en-US.mdx';
+import TreeVueApi from './api/tree.vue.en-US.mdx';
+import TreeSolidApi from './api/tree.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Tree } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tree } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tree } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+By default, tree is in single select mode and each item is selectable.
+
+<Demo id="basic" />
+
+### Multi-choice
+
+You could use `multiple` to set mode to multi-choice. When all child items are selected, the parent item will be selected.
+
+<Demo id="multiple" />
+
+### Searchable
+
+Use `filterTreeNode` to support search input. By default it searches the `label` property of the data. You can use `treeNodeFilterProp` to set another property to search or pass in a function to `filterTreeNode` to customize search behavior.
+
+You could also use `showFilteredOnly` if you prefer to display filtered results only.
+
+<Demo id="searchable" />
+
+<Framework only="react">
+
+After setting the `filterTreeNode` property to enable search, you can customize the rendering method of the search box by setting `searchRender`. When set to `false`, the search box can be hidden.
+
+</Framework>
+
+<Framework only="vue">
+
+After setting the `filterTreeNode` property to enable search, you can customize the search box with the `#search` slot, whose parameters are `class`, `modelValue`, `placeholder`, `showClear` and `onChange`. An empty slot (`<template #search />`) hides the search box.
+
+</Framework>
+
+<Framework only="solid">
+
+After setting the `filterTreeNode` property to enable search, you can customize the rendering method of the search box by setting `searchRender`. When set to `false`, the search box can be hidden. The parameter of `searchRender` is a live object, read it in the returned JSX and do not destructure it.
+
+</Framework>
+
+<Demo id="search-render" />
+
+### Trigger search manually
+
+<Framework only="react">
+
+Use ref to get tree instance，you can call `search` method of tree to trigger search manually. Note that you need to set `filterTreeNode` to enable search at the same time.If the search box is outside the tree, you can hide the search box inside the tree by setting `searchRender=false`.
+
+</Framework>
+
+<Framework only="vue">
+
+Use a template ref to get the Tree instance, and call its `search` method to trigger search manually. Note that you need to set `filterTreeNode` to enable search at the same time. If the search box is outside the Tree, you can hide the search box inside it with an empty `#search` slot.
+
+</Framework>
+
+<Framework only="solid">
+
+Use the `ref` of Tree to get its root element, and call its `search` method to trigger search manually. Note that you need to set `filterTreeNode` to enable search at the same time. If the search box is outside the Tree, you can hide the search box inside it by setting `searchRender={false}`.
+
+</Framework>
+
+<Demo id="manual-search" />
+
+### JSON TreeData
+
+You could use `treeDataSimpleJson` to pass in `treeNodes` data in JSON format. In this case, key will be used as `key` and `label`, and value will be used as `value` correspondingly. Return value includes JSON data in selected nodes.
+
+<Demo id="simple-json" />
+
+### BlockNode
+
+You could use `blockNode` to set node to display as a row. In this case, styles for hovering and selected state take effects on the entire row. By default, it is set to `true`. When it is set to `false`, only label will be highlighted.
+
+<Demo id="block-node" />
+
+### Custom TreeNode Label
+
+<Framework only="react">
+
+You could pass in ReactNode for `label` in `TreeNodeData` to customize label. Pay attention that by default `filterTreeNode` searches data by label. When label is a ReactNode, it is advised to pass in customized search function for a searchable tree.
+
+In **v>=1.6.0**, you can also use `renderLabel` to pass in a custom render function. The search value is still the corresponding `label` property in treeData.
+
+Node content is best kept for display. Buttons and links in a node can be reached with Tab (see [Accessibility](#accessibility)), but screen readers read them as part of the node's name and arrow-key browsing skips them. Put actions on a node outside the tree, for example in a menu opened by `onContextMenu` or in a toolbar next to the tree.
+
+</Framework>
+
+<Framework only="vue">
+
+The `label` of `TreeNodeData` accepts only a string or a number. Custom node content comes from the `#label` slot, whose parameters are `item` (the node data), `label` and `searchWord` (the current search word). Search by `filterTreeNode` still matches the `label` text in `treeData`.
+
+Node content is best kept for display. Buttons and links in a node can be reached with Tab (see [Accessibility](#accessibility)), but screen readers read them as part of the node's name and arrow-key browsing skips them. Put actions on a node outside the tree, for example in a menu opened by `@contextMenu` or in a toolbar next to the tree.
+
+</Framework>
+
+<Framework only="solid">
+
+The `label` of `TreeNodeData` accepts only a string or a number; custom node content comes from `renderLabel`. `renderLabel` receives the label, the node data and the search word, and returns the node content; it is called again when one of them changes. Search still matches the `label` text in treeData.
+
+Node content is best kept for display. Buttons and links in a node can be reached with Tab (see [Accessibility](#accessibility)), but screen readers read them as part of the node's name and arrow-key browsing skips them. Put actions on a node outside the tree, for example in a menu opened by `onContextMenu` or in a toolbar next to the tree.
+
+</Framework>
+
+<Demo id="custom-label" />
+
+<Framework only="react">
+
+Ellipsis for long labels. In **v>=1.6.0**, you can use `renderLabel` to truncate overlong text with an ellipsis.
+
+</Framework>
+
+<Framework only="vue">
+
+Ellipsis for long labels. Truncate overlong text with an ellipsis inside the `#label` slot.
+
+</Framework>
+
+<Framework only="solid">
+
+Ellipsis for long labels. Return a `Typography.Text` with the `ellipsis` property from `renderLabel` to truncate overlong text with an ellipsis.
+
+</Framework>
+
+<Demo id="ellipsis-label" />
+
+### Custom Icon
+
+<Framework only="react">
+
+You could use `icon` to add customized icon.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#icon` slot to add a customized icon. Its parameters are `item`, `level`, `expanded`, `isLeaf`, `loading`, `selected`, `checked` and `halfChecked`, so the icon can differ by node. `TreeNodeData` has no `icon` field.
+
+</Framework>
+
+<Framework only="solid">
+
+You could use `icon` to add customized icon. It accepts an element, or a function that is called once per row with the row's props (including its node data) and returns that row's icon; use the function to give nodes different icons. `TreeNodeData` has no `icon` field.
+
+</Framework>
+
+<Demo id="custom-icon" />
+
+### Directory
+
+You could use `directory` to display tree as a directory with default icons. Also, the icon could be overwritten by custom Icon.
+
+<Demo id="directory" />
+
+### Disabled
+
+You can use `disableStrictly` to set whether to enable strict disabling. After enabling strict disabling, when the node is disabled, the selected state cannot be changed through the relationship between the child or the parent.
+
+<Demo id="disabled" />
+
+### Checked RelationShip
+
+Version: >= 2.5.0
+
+When multiple selections are made, `checkRelation` can be used to set the type of node selection relationship, optional: 'related' (default), 'unRelated'. When the selection relationship is 'unRelated', it means that selections between nodes do not affect each other.
+
+<Demo id="checked-relation" />
+
+### Default Expand All
+
+Both `defaultExpandAll` and `expandAll` can set the default expanded/collapsed state of `Tree`. The difference between the two is that `defaultExpandAll` only takes effect at initialization, while `expandAll` will not only take effect at initialization, but also when the data (`treeData`/`treeDataSimpleJson`) is dynamically updated, `expandAll` will still take effect.
+
+Among them, `expandAll` is supported starting from 1.30.0.
+
+In the demo below, after clicking the button to update `TreeData`, `defaultExpandAll` becomes invalid, and `expandAll` still takes effect.
+
+<Demo id="default-expand" />
+
+### Controlled Expansion with Search
+
+<Framework only="react">
+
+When `expandedKeys` is passed in, it is the expanded controlled component, which can be used with `onExpand`. When the expansion is controlled, if you enable `filterTreeNode` and search, the node will not be automatically expanded. At this time, the expansion of the node is completely controlled by `expandedKeys`. You can use the input parameter `filteredExpandedKeys` (version: >= 2.38.0) of `onSearch` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Framework only="vue">
+
+When `expandedKeys` is passed in, it is the expanded controlled component, which can be bound with `v-model:expandedKeys` or used with `@expand`. When the expansion is controlled, if you enable `filterTreeNode` and search, the node will not be automatically expanded. At this time, the expansion of the node is completely controlled by `expandedKeys`. You can use the second parameter `filteredExpandedKeys` of `@search` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Framework only="solid">
+
+When `expandedKeys` is passed in, it is the expanded controlled component, which can be used with `onExpand`. When the expansion is controlled, if you enable `filterTreeNode` and search, the node will not be automatically expanded. At this time, the expansion of the node is completely controlled by `expandedKeys`. You can use the second argument `filteredExpandedKeys` of `onSearch` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Demo id="controlled-expand-search" />
+
+### Controlled Component
+
+<Framework only="react">
+
+You can use `value` along with `onChange` property if you want to use Tree as a controlled component.
+
+</Framework>
+
+<Framework only="vue">
+
+When `modelValue` is passed in, Tree is a controlled component. Bind it with `v-model`, or use it along with `@change`.
+
+</Framework>
+
+<Framework only="solid">
+
+When `value` is passed in, Tree is a controlled component. You can use it along with `onChange`.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Auto Expand Parent
+
+In the case of controlled expansion, when `autoExpandParent` is turned on, if you want to collapse the parent element, you need to collapse all its child elements. By default, `autoExpandParent` is false, that is, the collapse of the parent element is not affected by the child element.
+
+<Demo id="auto-expand-parent" />
+
+### Custom expansion icon
+
+<Framework only="react">
+
+The expansion Icon can be customized through `expandIcon`. Supports passing in ReactNode or functions. `expandIcon` is supported since 2.75.0.
+
+```ts
+expandIcon: ReactNode | ((props: {
+    onClick: (e: MouseEvent) => void;
+    className: string;
+    expanded: boolean;
+}))
+```
+
+Examples are as follows:
+
+</Framework>
+
+<Framework only="vue">
+
+The expansion Icon can be customized through the `#expandIcon` slot, whose parameters are `onClick`, `class` and `expanded`. When the slot returns a single element, that element automatically gets the `class` and the click that expands; the parameters can also be bound by hand.
+
+```vue
+<Tree :treeData="treeData">
+    <template #expandIcon="{ expanded, onClick, class: className }">
+        <IconMinus v-if="expanded" :class="className" @click="onClick" />
+        <IconPlus v-else :class="className" @click="onClick" />
+    </template>
+</Tree>
+```
+
+Examples are as follows:
+
+</Framework>
+
+<Framework only="solid">
+
+The expansion Icon can be customized through `expandIcon`, which accepts a JSX element or a function. An element automatically gets the `class` and the click that expands; a function receives `onClick`, `class` and `expanded`, and returns the whole icon. `expanded` is a live property: read it in the returned JSX and do not destructure it.
+
+```ts
+expandIcon: JSX.Element | ((props: { onClick: (e: MouseEvent) => void; class: string; expanded: boolean }) => JSX.Element);
+```
+
+Examples are as follows:
+
+</Framework>
+
+<Demo id="custom-expand-icon" />
+
+### Tree with line
+
+Set the line between nodes through `showLine`, the default is false, supported starting from 2.50.0
+
+<Demo id="line" />
+
+### Virtualized Tree
+
+If you need to render large sets of tree structured data, you could use virtualized tree. In virtualized mode, animation / motion is disabled for better performance.
+
+The property `virtualize` is an object consisting of the following values:
+
+- height: Height of the tree, If passed in as a string, computed height should not be zero for render purpose, in other words, parent node should have offsetHeight
+- width: Width of the tree.
+- itemSize: Height for each line of treeNode, required
+
+If tree is searchable, you could also turn on `showFilteredOnly` to reduce time of rendering for results.
+
+<Demo id="virtualize" />
+
+### Dynamic Update of Data
+
+<Framework only="vue">
+
+`treeData` is replaced as a whole: only a new array updates the tree, while changes made in place to the array or a node are not seen.
+
+</Framework>
+
+<Framework only="solid">
+
+`treeData` is replaced as a whole: only a new array updates the tree, while changes made in place to the array or a node are not seen.
+
+</Framework>
+
+<Demo id="dynamic-update" />
+
+### Load Data Asynchronously
+
+You could use `loadData` to load treeData asynchronously on node expansion. Notice `isLeaf` is required to mark node as leaf in treeData.
+
+<Demo id="load-data" />
+
+### Draggable Tree
+
+<Framework only="react">
+
+You could use `draggable` along with `onDrop` to achieve a draggable Tree.
+
+</Framework>
+
+<Framework only="vue">
+
+You could use `draggable` along with `@drop` to achieve a draggable Tree.
+
+</Framework>
+
+<Framework only="solid">
+
+You could use `draggable` along with `onDrop` to achieve a draggable Tree.
+
+</Framework>
+
+<Notice title="Notice">Drag and drop is available since v 1.8.0. Simultaneous use with virtualization is currently not supported</Notice>
+
+<Framework only="react">
+
+The callback input parameters of the drag event are as follows:
+
+```
+- onDragEnd: function({ event, node: DragTreeNode })
+- onDragEnter:function({ event, node: DragTreeNode, expandedKeys: string[] })
+- onDragLeave:function({ event, node: DragTreeNode })
+- onDragOver:function({ event, node: DragTreeNode })
+- onDragStart: function({ event, node: DragTreeNode })
+- onDrop:function({ event, node: DragTreeNode, dragNode: DragTreeNode, dragNodesKeys: string[], dropPosition: number, dropToGap: Boolean })
+```
+
+The data type DragTreeNode, in addition to all the attributes of TreeNodeData, also includes expanded and pos attributes,
+
+```
+DragTreeNode {
+    expanded: Boolean,
+    pos: string
+    value?: string | number;
+    label?: React.ReactNode;
+    disabled?: boolean;
+    isLeaf?: boolean;
+    [key: string]: any;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+The payload of each drag event is one object with the following fields:
+
+```
+- @dragEnd: { event, node: TreeDragNode }
+- @dragEnter: { event, node: TreeDragNode, expandedKeys?: string[] }
+- @dragLeave: { event, node: TreeDragNode }
+- @dragOver: { event, node: TreeDragNode }
+- @dragStart: { event, node: TreeDragNode }
+- @drop: { event, node: TreeDragNode, dragNode: TreeDragNode, dragNodesKeys: string[], dropPosition: number, dropToGap: boolean }
+```
+
+The data type TreeDragNode, in addition to all the attributes of TreeNodeData, also includes expanded and pos attributes,
+
+```
+TreeDragNode {
+    expanded: boolean,
+    pos: string
+    value?: string | number;
+    label?: string | number;
+    disabled?: boolean;
+    isLeaf?: boolean;
+    [key: string]: any;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The callback arguments of the drag events are objects with the following fields:
+
+```
+- onDragEnd: ({ event, node: TreeDragNode }) => void
+- onDragEnter: ({ event, node: TreeDragNode, expandedKeys?: string[] }) => void
+- onDragLeave: ({ event, node: TreeDragNode }) => void
+- onDragOver: ({ event, node: TreeDragNode }) => void
+- onDragStart: ({ event, node: TreeDragNode }) => void
+- onDrop: ({ event, node: TreeDragNode, dragNode: TreeDragNode, dragNodesKeys: string[], dropPosition: number, dropToGap: boolean }) => void
+```
+
+The data type TreeDragNode, in addition to all the attributes of `TreeNodeData`, also includes `expanded` and `pos` attributes:
+
+```ts
+interface TreeDragNode extends TreeNodeData {
+    expanded: boolean;
+    pos: string;
+}
+```
+
+</Framework>
+
+- `pos` refers to the positional relationship of the current node in the entire treeData, such as the 0th node of the 2nd node of the 1st node of the 0th layer: '0-1-2-0'
+- `dropPosition` refers to the position where the dragged node is dropped in the current hierarchy. If it is inserted before the 0th node of the same level, it will be -1, and after the 0th node, it will be 1, and it will fall on it. is 0, and so on. With dropToGap, a more complete judgment can be obtained.
+- `dropToGap` refers to whether the dragged node is dropped between nodes, if false, it is dropped above a node
+
+<Demo id="draggable" />
+
+### Advanced FullRender
+
+**v>=1.7.0**
+
+<Framework only="react">
+
+You could use `renderFullLabel` for advanced rendering to render the entire option on you own.
+
+The parameter types of renderFullLabel are as follows:
+
+```ts
+type RenderFullLabelProps = {
+    /* The original data of the row */
+    data: BasicTreeNodeData;
+    /* The level of the line can be used to customize the indentation value */
+    level: number;
+    /* The style required for virtualization, if virtualization is used, the style must be assigned to the DOM element */
+    style: any;
+    /* Class name, including built-in styles such as indentation, expand button, filter, disable, select, etc. */
+    className: string;
+    /* icon of Expand button */
+    expandIcon: any;
+    /* Selected state */
+    checkStatus: {
+        /* Whether to select in the multi-select state */
+        checked: boolean;
+        /* Whether to half-select in the multi-select state */
+        halfChecked: boolean;
+    };
+    /* Expand status */
+    expandStatus: {
+        /* Has it been expanded */
+        expanded: boolean;
+        /* Is it unfolding */
+        loading: boolean;
+    };
+    /* Whether the node meets the search conditions */
+    filtered: boolean | undefined;
+    /* Current search box input */
+    searchWord: string | undefined;
+    /* Click the callback of the entire row to control the expansion behavior and selection */
+    onClick: (e: MouseEvent) => void;
+    /* Multi-select click callback */
+    onCheck: (e: MouseEvent) => void;
+    /* Right-click the callback for the entire row */
+    onContextMenu: (e: MouseEvent) => void;
+    /* Double-click the entire line of callback */
+    onDoubleClick: (e: MouseEvent) => void;
+    /* expand callback */
+    onExpand: (e: MouseEvent) => void;
+};
+```
+
+<Notice type="primary" title="Important">
+
+If virtualized is set to true, be sure to apply `style` to targeted ReactNode to correctly render virtualized list.
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+You could use the `#fullLabel` slot for advanced rendering to render the content of the entire row on your own.
+
+The row element (`li`) carrying the `id`, `role="treeitem"` and the row state is provided by Tree itself, and so is the positioning style of a virtualized tree; the slot holds only what is inside the row. Bind the `class` parameter to the content element and it gets the same indentation, selection and focus styles and the same inline padding as a built-in row.
+
+The slot parameter types are as follows:
+
+```ts
+type TreeFullLabelSlotProps = {
+    /* The original data of the row */
+    data: TreeNodeData;
+    /* The level of the line can be used to customize the indentation value */
+    level: number;
+    /* Class name, including built-in styles such as indentation, selection, focus and drag state */
+    class: string;
+    /* The built-in expand button */
+    expandIcon: VNode;
+    /* Selected state */
+    checkStatus: {
+        /* Whether to select in the multi-select state */
+        checked: boolean;
+        /* Whether to half-select in the multi-select state */
+        halfChecked: boolean;
+    };
+    /* Expand status */
+    expandStatus: {
+        /* Has it been expanded */
+        expanded: boolean;
+        /* Is it unfolding */
+        loading: boolean;
+    };
+    /* Whether the node meets the search conditions */
+    filtered: boolean;
+    /* Current search box input */
+    searchWord: string;
+    /* Click the callback of the entire row: selects it, or checks it in a multiple tree */
+    onClick: (event: MouseEvent) => void;
+    /* Multi-select click callback */
+    onCheck: (event: MouseEvent) => void;
+    /* expand callback */
+    onExpand: (event: MouseEvent) => void;
+    /* Right-click the callback for the entire row */
+    onContextmenu: (event: MouseEvent) => void;
+    /* Double-click the entire line of callback */
+    onDblclick: (event: MouseEvent) => void;
+};
+```
+
+```vue
+<Tree :treeData="treeData">
+    <template #fullLabel="{ data, class: className, onClick }">
+        <div :class="className" @click="onClick">{{ data.label }}</div>
+    </template>
+</Tree>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Tree's API covers most rendering needs. For a very special customization, use `renderFullLabel` to take over the rendering of the whole row. It is called once per row with a live object: read its fields in the returned JSX and do not destructure it.
+
+The parameter types of `renderFullLabel` are as follows:
+
+```ts
+type RenderFullLabelProps = {
+    /* The original data of the row */
+    data: TreeNodeData;
+    /* The level of the line can be used to customize the indentation value */
+    level: number;
+    /* Class name, including built-in styles such as indentation, selection, focus and drag state */
+    class: string;
+    /* Creates the built-in expand button; every call creates a new element, so call it where the button goes */
+    expandIcon: () => JSX.Element;
+    /* Selected state */
+    checkStatus: {
+        /* Whether to select in the multi-select state */
+        checked: boolean;
+        /* Whether to half-select in the multi-select state */
+        halfChecked: boolean;
+    };
+    /* Expand status */
+    expandStatus: {
+        /* Has it been expanded */
+        expanded: boolean;
+        /* Is it unfolding */
+        loading: boolean;
+    };
+    /* Whether the node meets the search conditions */
+    filtered: boolean;
+    /* Current search box input */
+    searchWord: string;
+    /* Click the callback of the entire row: selects it, or checks it in a multiple tree */
+    onClick: (e: MouseEvent) => void;
+    /* Multi-select click callback */
+    onCheck: (e: MouseEvent) => void;
+    /* Expand callback */
+    onExpand: (e: MouseEvent) => void;
+    /* Right-click the callback for the entire row */
+    onContextMenu: (e: MouseEvent) => void;
+    /* Double-click the entire row callback */
+    onDoubleClick: (e: MouseEvent) => void;
+};
+```
+
+Tree provides the row element (`li`) carrying the `id`, `role="treeitem"` and the row state, and the content is placed inside it; the positioning style of a virtualized tree is on that element too. Bind the `class` parameter to the content element and it gets the same indentation, selection and focus styles and the same inline padding as a built-in row.
+
+```tsx
+<Tree treeData={treeData} renderFullLabel={(row) => <div class={row.class}>{row.data.label}</div>} />
+```
+
+</Framework>
+
+Here are some demos.
+
+<Framework only="react">
+
+First is to render Parent node as separator and only allow leaf nodes to be selected.  
+renderFullLabel only takes care of the UI rendering and won't affect inside data logic. But you could choose info to your needs and use it with controlled mode for advanced usage.
+
+</Framework>
+
+<Framework only="vue">
+
+First is to render Parent node as separator and only allow leaf nodes to be selected.  
+`#fullLabel` only takes care of the UI rendering and won't affect inside data logic. But you could choose info to your needs and use it with controlled mode for advanced usage.
+
+</Framework>
+
+<Framework only="solid">
+
+- You only need to render the Checkbox in front of leaf nodes, clicking a parent node does not select it, and clicking a leaf node does.
+- Turning on leafOnly also makes the arguments of `onChange` leaf nodes only.  
+  Note: `renderFullLabel` only takes care of the UI rendering and won't affect inside data logic. But you could choose info to your needs and use it with controlled mode for advanced usage.
+
+</Framework>
+
+<Demo id="full-label-checkbox" />
+
+The second is for the scenario of "I hope that only leaf nodes can be single-selected, and the parent node only plays a role in grouping".
+
+- You only need to click on the parent node without triggering the selection, click on the leaf node to trigger.
+
+<Demo id="full-label-leaf-select" />
+
+Third is for the scenario when selecting Parent node also highlighting child node.
+
+<Demo id="full-label-highlight" />
+
+### Advanced FullRender with Draggable
+
+<Framework only="react">
+
+Starting from version 1.27.0, we support the simultaneous use of draggable (`draggable`) and advanced customization (`renderFullLabel`). Before this version, the simultaneous use of both was not supported.
+
+</Framework>
+
+<Framework only="vue">
+
+Draggable (`draggable`) and advanced customization (`#fullLabel`) can be used at the same time.
+
+</Framework>
+
+<Framework only="solid">
+
+Draggable (`draggable`) and advanced customization (`renderFullLabel`) can be used at the same time.
+
+</Framework>
+
+<Demo id="draggable-full-label" />
+
+## API Reference
+
+### Tree
+
+<Framework only="react">
+
+<TreeReactApi />
+
+`aria-label`, `aria-labelledby`, `aria-describedby` and `tabIndex` land on the element with `role="tree"`; the empty state has no such element, so they are dropped there. Other native attributes, such as `id` and `data-*`, land on the root element `.semi-tree-wrapper`.
+
+</Framework>
+
+<Framework only="vue">
+
+<TreeVueApi />
+
+The Vue Tree has no `className` property: undeclared attributes such as `class`, `style` and `data-*` land on the root element `.semi-tree-wrapper`, and `aria-*` attributes land on the `role="tree"` element. The empty state has no `role="tree"` element, so `aria-*` attributes are dropped there.
+
+</Framework>
+
+<Framework only="solid">
+
+<TreeSolidApi />
+
+`class`, `style` and `ref`, as well as undeclared native attributes such as `data-*`, land on the root element `.semi-tree-wrapper`; `aria-*` attributes and `tabIndex` land on the element with `role="tree"`. The empty state has no `role="tree"` element, so `aria-*` attributes and `tabIndex` are dropped there.
+
+</Framework>
+
+### TreeNodeData
+
+<Framework only="react">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required. In this case, the value property in `onChange`, `value`, `defaultValue` and `onChangeWithObject` will point to key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+</Framework>
+
+<Framework only="vue">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required; without it, the value property in the `change` event, `modelValue`, `defaultValue` and `changeWithObject` points to the key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+</Framework>
+
+<Framework only="react">
+
+| Properties | Instructions                                                                                                             | Type              | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------- | ------- |
+| value      | Value                                                                                                                    | string\|number    | -       |
+| label      | Displayed label                                                                                                          | string\|ReactNode | -       |
+| icon       | Icon                                                                                                                     | ReactNode         | -       |
+| disabled   | Disabled. When the Tree's `disabled` is true the whole tree is disabled, and a node's `disabled: false` does not lift it | boolean           | false   |
+| key        | Required and must be unique                                                                                              | string            | -       |
+| isLeaf     | Toggle whether node is leaf node, only takes effect in async load data with `loadData`                                   | boolean           | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties | Instructions                                                                                                             | Type           | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ | -------------- | ------- |
+| value      | Value                                                                                                                    | string\|number | -       |
+| label      | Displayed label; custom content comes from the `#label` slot                                                             | string\|number | -       |
+| disabled   | Disabled. When the Tree's `disabled` is true the whole tree is disabled, and a node's `disabled: false` does not lift it | boolean        | false   |
+| key        | Required and must be unique                                                                                              | string         | -       |
+| isLeaf     | Toggle whether node is leaf node, only takes effect in async load data with `loadData`                                   | boolean        | -       |
+
+</Framework>
+
+<Framework only="solid">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required; without it, the value property in `onChange`, `value`, `defaultValue` and `onChangeWithObject` points to the key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+| Properties | Instructions                                                                                                             | Type               | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------ | ------- |
+| value      | Value                                                                                                                    | `string \| number` | -       |
+| label      | Displayed label; custom content comes from `renderLabel`                                                                 | `string \| number` | -       |
+| disabled   | Disabled. When the Tree's `disabled` is true the whole tree is disabled, and a node's `disabled: false` does not lift it | `boolean`          | `false` |
+| key        | Required and must be unique                                                                                              | `string`           | -       |
+| isLeaf     | Toggle whether node is leaf node, only takes effect in async load data with `loadData`                                   | `boolean`          | -       |
+
+</Framework>
+
+### Virtualize Object
+
+> `itemSize` is required to render virtualized tree。
+
+| Properties | Instructions                                                                                                                            | Type           | Default |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------- |
+| height     | Height. If passed as a string, computed height should not be 0 for render purpose, in other words, parent node should have offsetHeight | number\|string | '100%'  |
+| itemSize   | Height for each line of treeNode, required                                                                                              | number         | -       |
+| width      | Width                                                                                                                                   | number\|string | '100%'  |
+
+## Methods
+
+<Framework only="react">
+
+Some internal methods provided by Tree can be accessed through ref. The method descriptions are in the Tree table above.
+
+```tsx
+import { useRef } from 'react';
+import { Tree, type TreeHandle } from '@fibrae/semi-ui-react';
+
+const tree = useRef<TreeHandle>(null);
+const search = (value: string) => tree.current?.search(value);
+
+<Tree ref={tree} filterTreeNode treeData={treeData} />;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Tree exposes `search` and `scrollTo` through a template ref, typed as `TreeHandle`; see the Exposes part of the Tree table above.
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Tree } from '@fibrae/semi-ui-vue';
+    import type { TreeHandle } from '@fibrae/semi-ui-vue';
+
+    const tree = useTemplateRef<TreeHandle>('tree');
+    const search = (value: string) => tree.value?.search(value);
+</script>
+
+<template>
+    <Tree ref="tree" filterTreeNode :treeData="treeData" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The `ref` of Tree points at the root element, which carries the `search` and `scrollTo` methods, typed as `TreeElement`; see the Tree table above for their descriptions.
+
+```tsx
+import { Tree, type TreeElement } from '@fibrae/semi-ui-solid';
+
+let tree: TreeElement | undefined;
+const search = (value: string) => tree?.search(value);
+
+<Tree ref={(element) => (tree = element)} filterTreeNode treeData={treeData} />;
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Tree supports passing in `aria-label`, `aria-labelledby` and `aria-describedby` to name and describe the Tree; they are all set on the `role="tree"` element;
+- Tree sets `aria-level`, `aria-setsize`, `aria-posinset` and `aria-disabled` on each node, and `aria-expanded` on nodes that can expand; a single-choice tree marks the selected node with `aria-selected`, a multi-choice tree marks checked nodes with `aria-checked` (`mixed` when half checked);
+- Tree will set `role` to `tree` and `treeitem` for corresponding parts.
+
+<Framework only="react">
+
+- The element returned by `renderFullLabel` also gets `role="treeitem"` and the states above; content that cannot carry them, such as text, an array or a Fragment, is wrapped in an `li` that carries them.
+
+</Framework>
+
+<Framework only="vue">
+
+- The content of `#fullLabel` is wrapped in Tree's own `li`, which carries the `id`, `role="treeitem"` and the states above.
+
+</Framework>
+
+<Framework only="solid">
+
+- The content returned by `renderFullLabel` is wrapped in Tree's own `li`, which carries the `id`, `role="treeitem"` and the states above.
+
+</Framework>
+
+- The expand arrow and the checkbox in front of a node only picture its state: they are hidden from screen readers and take no focus.
+
+### Keyboard Interaction
+
+Tree follows the [WAI-ARIA Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/) pattern: the whole tree is one Tab stop, focus stays on the tree, `aria-activedescendant` points at the current node, and the current node shows the focus ring.
+
+- `ArrowDown`, `ArrowUp`: move to the next or previous visible node; `Home`, `End`: move to the first or last visible node
+- `ArrowRight`: expand a collapsed node; on an expanded node, move to its first child (swapped with `ArrowLeft` in RTL)
+- `ArrowLeft`: collapse an expanded node; otherwise move to the parent
+- `Enter`, `Space`: select the current node, or check and uncheck it in a multi-choice tree; disabled nodes do not respond
+- Typing characters: move to the next node whose text starts with them
+
+A node that is selected, checked, expanded, right-clicked or double-clicked with the pointer becomes the current node of the keyboard, and the arrow keys continue from it.
+
+The keyboard does not trigger `expandAction`; the arrow keys expand and collapse.
+
+<Framework only="react">
+
+Buttons and links inside a node (for example the control returned by `renderLabel`) can be reached with Tab. While one of them has focus, keys are handled by that control and the tree does not respond.
+
+Demo:
+
+```typescript
+    <Tree
+        /* other attributes */
+        aria-label='example tree'
+    />
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Buttons and links inside a node (for example a control in the `#label` slot) can be reached with Tab. While one of them has focus, keys are handled by that control and the tree does not respond.
+
+Demo:
+
+```vue
+<Tree aria-label="example tree" :treeData="treeData" />
+```
+
+</Framework>
+
+<Framework only="solid">
+
+Buttons and links inside a node (for example a control in the `renderLabel` or `renderFullLabel` output) can be reached with Tab. While one of them has focus, keys are handled by that control and the tree does not respond.
+
+Demo:
+
+```tsx
+<Tree aria-label="example tree" treeData={treeData} />
+```
+
+</Framework>
+
+## Content Guidelines
+
+- Try to use phrases, capitalize the first letter
+- Keep the same form of terminology between levels, such as all place names or country names
+
+## Design Tokens
+
+<DesignToken />

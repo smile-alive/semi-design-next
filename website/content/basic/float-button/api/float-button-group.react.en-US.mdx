@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                                              | Type                                                                                             | Default |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- |
+| className | Class name of the root element.                                                                                                                          | `string`                                                                                         | -       |
+| disabled  | Disables every item.                                                                                                                                     | `boolean`                                                                                        | -       |
+| items     | List of items, typed as `FloatButtonGroupItem` below.                                                                                                    | `FloatButtonGroupItem[]`                                                                         | -       |
+| onClick   | Called when an enabled item is clicked, with that item's `value` (`undefined` when unset) and a `React.MouseEvent`. The item's own `onClick` runs first. | <ApiType detail={"(value: string \u007c undefined, e: React.MouseEvent) => void"}>Type</ApiType> | -       |
+| ref       | Reference to the root element (`role="group"`).                                                                                                          | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                | -       |
+| style     | Style of the root element.                                                                                                                               | `React.CSSProperties`                                                                            | -       |

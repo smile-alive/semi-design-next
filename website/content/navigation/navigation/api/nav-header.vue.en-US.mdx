@@ -1,0 +1,27 @@
+**Props**
+
+| Property    | Description                                                                 | Type             | Default     |
+| ----------- | --------------------------------------------------------------------------- | ---------------- | ----------- |
+| link        | href of the header. When given the header content sits inside an a element. | `string`         | `undefined` |
+| linkOptions | Attributes passed to the a element.                                         | `NavLinkOptions` | `undefined` |
+| text        | Logo text. It is hidden when collapsed, and then names the header link.     | `string`         | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                  | Scope parameters |
+| ------- | ---------------------------- | ---------------- |
+| default | Other content of the header. | `any`            |
+| logo    | Logo.                        | `any`            |
+| text    | Replaces the logo text.      | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

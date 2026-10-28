@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| mode | Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode. | `FeedbackMode` | `semiDefault("Feedback", "mode", "popup")` |
+| type | Type of the feedback content. For custom, the content goes in the default slot. | `FeedbackType` | `semiDefault("Feedback", "type", "emoji")` |
+| visible | Whether the feedback is shown. Use it with v-model:visible. | `boolean` | `semiDefault("Feedback", "visible", false)` |
+| title | Plain-text title that also names the dialog. The title slot wins when both are given. | `string` | `semiGlobalDefault("Feedback", "title")` |
+| textAreaProps | Props of the multi-line input for the text and emoji types. The controlled key is modelValue and the listener key is onChange; a modelValue you pass wins over the internal value of Feedback. | `FeedbackTextAreaProps` | `semiGlobalDefault("Feedback", "textAreaProps")` |
+| radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | `FeedbackRadioGroupProps` | `semiGlobalDefault("Feedback", "radioGroupProps")` |
+| checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | `FeedbackCheckboxGroupProps` | `semiGlobalDefault("Feedback", "checkboxGroupProps")` |
+| okButtonProps | Props of the submit button. Without disabled, it is disabled while the value is empty; a disabled you give wins, which is how the custom type controls submission. It is loading when either the built-in pending state or your loading says so. onClick runs before the built-in handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Feedback", "okButtonProps")` |
+| cancelButtonProps | Props of the cancel button. It is loading when either the built-in pending state or your loading says so. onClick runs before the built-in handling, which still runs. | `ModalButtonProps` | `semiGlobalDefault("Feedback", "cancelButtonProps")` |
+| onOk | Called when the submit button is clicked; the filled-in value is cleared once it returns. A returned Promise keeps the button loading and the value is cleared only once it fulfills, and kept when it rejects. The component never closes itself on submit; the caller sets visible to false. It remains a function prop so its result can be read, bound with @ok as usual. | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| onCancel | Called by the cancel button, the close button, Esc and, in modal mode, a click on the mask; the argument is a native KeyboardEvent for Esc. Once it returns, the filled-in value is cleared and v-model:visible updates. A returned Promise keeps the cancel button loading; both happen only once it fulfills, and a rejection keeps the feedback open. It remains a function prop so its result can be read, bound with @cancel as usual. | <ApiType detail={"((event: MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| update:visible | Emitted with false once a cancel path (cancel button, close button, Esc, and the mask in modal mode) completes, for v-model:visible to write back. The submit button only calls onOk and never emits this. | `[visible: boolean]` |
+| valueChange | Emitted when the feedback content changes. The payload is the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox. | `[value: FeedbackValue]` |
+| afterClose | Emitted after the panel has fully closed, in both modes. | `[]` |
+| afterVisibleChange | Emitted once the shown state has changed and the animation has ended. Only popup mode emits it. | `[visible: boolean]` |
+
+**Slots**
+
+| Slot          | Description                                                                                                                                                           | Scope parameters               |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| default       | Feedback content for type custom.                                                                                                                                     | `any`                          |
+| content       | Wraps or replaces the built-in content for any type. The scope parameter content is the VNode of the built-in content; place it with `<component :is="content" />`.   | `FeedbackContentSlotProps`     |
+| title         | Title. It wins over the title prop.                                                                                                                                   | `any`                          |
+| footer        | Replaces the default cancel and submit buttons. An empty slot renders no footer area.                                                                                 | `any`                          |
+| closeIcon     | Icon inside the close button.                                                                                                                                         | `any`                          |
+| header        | Modal mode only: replaces the whole default header.                                                                                                                   | `any`                          |
+| icon          | Modal mode only: icon before the title.                                                                                                                               | `any`                          |
+| modal         | Modal mode only: custom rendering of the dialog itself. The scope parameter modal is the VNode of the role=dialog element; place it with `<component :is="modal" />`. | `FeedbackModalSlotProps`       |
+| radioLabel    | Custom label of each item in radioGroupProps.options, with the option and index scope parameters.                                                                     | `RadioGroupOptionSlotProps`    |
+| radioExtra    | Custom extra text of each item in radioGroupProps.options, with the option and index scope parameters.                                                                | `RadioGroupOptionSlotProps`    |
+| checkboxLabel | Custom label of each item in checkboxGroupProps.options, with the option and index scope parameters.                                                                  | `CheckboxGroupOptionSlotProps` |
+| checkboxExtra | Custom extra text of each item in checkboxGroupProps.options, with the option and index scope parameters.                                                             | `CheckboxGroupOptionSlotProps` |
+
+**Exposes**
+
+| Name | Description                                                                                           | Type                     |
+| ---- | ----------------------------------------------------------------------------------------------------- | ------------------------ |
+| root | The outermost element of the Modal or SideSheet inside the portal, or null while nothing is rendered. | `HTMLDivElement \| null` |

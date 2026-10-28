@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property          | Description                                                                                                                                    | Type                                                       | Default |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------- |
+| disabled          | The disabled state applied to the fields in the group. Falls back to the Form's disabled when not set.                                         | `boolean`                                                  | -       |
+| extraText         | Extra text of the group, positioned by extraTextPosition.                                                                                      | `JSX.Element`                                              | -       |
+| extraTextPosition | Position of the extra text: middle puts it between the label and the group, bottom after the group. Defaults to bottom.                        | `'bottom' \| 'middle'`                                     | -       |
+| label             | Label of the whole group: an object is the label configuration, whose id becomes the id of the label, and any other content is the label text. | `LabelProps \| JSX.Element`                                | -       |
+| labelPosition     | Label position. Defaults to the Form's, and can be top or left.                                                                                | `'left' \| 'top'`                                          | -       |
+| onBlur            | Called as focus leaves any control in the group, also for a move to another control in it.                                                     | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | -       |
+| onFocus           | Called as any control in the group takes focus, also for a move from another control in it.                                                    | <ApiType detail={"(e: FocusEvent) => void"}>Type</ApiType> | -       |
+| size              | Size of every control in the group: small, default or large.                                                                                   | `InputSize`                                                | -       |

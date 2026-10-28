@@ -1,0 +1,173 @@
+---
+order: 79
+title: 滚动列表
+icon: doc-scrolllist
+brief: 滚动列表。
+---
+
+import ScrollListReactApi from './api/scroll-list.react.zh-CN.mdx';
+import ScrollItemReactApi from './api/scroll-item.react.zh-CN.mdx';
+import ScrollListVueApi from './api/scroll-list.vue.zh-CN.mdx';
+import ScrollItemVueApi from './api/scroll-item.vue.zh-CN.mdx';
+import ScrollListSolidApi from './api/scroll-list.solid.zh-CN.mdx';
+import ScrollItemSolidApi from './api/scroll-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { ScrollList, ScrollItem } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ScrollList, ScrollItem } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+滚动列表提供了一个类似于 iOS 操作系统的滚动选择模式，同时支持滚动至指定窗口位置选择与点击选择。
+
+<Framework only="vue">
+
+选中项用 `v-model:selectedIndex` 绑定，没有非受控模式；`header`、`footer` 是字符串 prop，需要自定义内容时使用同名插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+选中项用 `selectedIndex` 与 `onSelect` 绑定，没有非受控模式；`header`、`footer` 是 JSX 元素，直接传入即可。
+
+</Framework>
+
+<Demo id="basic" />
+
+## API 参考
+
+### ScrollList
+
+<Framework only="react">
+
+<ScrollListReactApi />
+
+`aria-*` 等其他属性落在根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ScrollListVueApi />
+
+`class`、`style` 与 `aria-*` 等原生属性经 attrs 落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<ScrollListSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `aria-*`）落在根元素上。
+
+</Framework>
+
+### ScrollItem
+
+<Framework only="react">
+
+<ScrollItemReactApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby` 落在列表（`role="listbox"`）上，其余属性落在根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ScrollItemVueApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby` 落在列表（`role="listbox"`）上，`class`、`style` 等其余属性落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<ScrollItemSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`）落在根元素上；`aria-label`、`aria-labelledby` 和 `aria-describedby` 落在列表（`role="listbox"`）上。
+
+</Framework>
+
+#### ItemData
+
+| 属性      | 说明                                                                                                                                                                  | 类型                                              | 默认值 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- | ------ |
+| disabled  | 该项是否被禁止选择                                                                                                                                                    | boolean                                           |        |
+| text      | 每一项的文案                                                                                                                                                          | string                                            |        |
+| transform | 该项处于选中状态时的变换，返回值会作为文案进行显示，ScrollItem 组件如果同时传入会优先选择 ItemData 中的 transform 方法；未传时显示 `text`，没有 `text` 时显示 `value` | (value: any, text: string \| undefined) => string |        |
+| value     | 每一项的值                                                                                                                                                            | any                                               |        |
+
+#### Methods
+
+<Framework only="react">
+
+通过 ScrollItem 的 `ref` 调用，用于在容器尺寸变化等场景下重新对齐选中项
+
+</Framework>
+
+<Framework only="vue">
+
+通过 ScrollItem 的模板 ref 调用，用于在容器尺寸变化等场景下重新对齐选中项
+
+</Framework>
+
+<Framework only="solid">
+
+通过 ScrollItem 的 `ref` 调用，用于在容器尺寸变化等场景下重新对齐选中项
+
+</Framework>
+
+<Framework only="vue">
+
+| 名称                                                     | 说明                                                                                                                        |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| scrollToIndex(selectedIndex?: number, duration?: number) | 将列表滚动到当前选中项。`selectedIndex` 暂不生效，目标始终是最近一次选中的项；`duration` 为滚动动画时长，单位毫秒，默认 120 |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 传入 `aria-label` 或 `aria-labelledby` 时，`ScrollList` 的根元素带 `role="group"`
+- `ScrollItem` 是 `role="listbox"`，支持传入 `aria-label`, 指定该列标签
+- `ScrollItem` 使用 `aria-disabled` 表示该项目是否被禁用
+- `ScrollItem` 使用 `aria-selected` 表示该项目是否被选中
+- `cycled` 的 wheel 列里用来填满滚轮的副本带 `aria-hidden="true"`，读屏只读到本体选项
+
+### 键盘和焦点
+
+- 每列是一个 `listbox`，用 `Tab` 聚焦，焦点留在列表上，选中项通过 `aria-activedescendant` 指示；选中跟随焦点，每次选中都会触发选中回调
+- `上箭头` 选中上一项，`下箭头` 选中下一项，被禁用的项会被跳过；`Home` 选中第一项，`End` 选中最后一项
+- 设置 `cycled` 后，两种模式下方向键都在首尾循环；未设置时到首尾即停
+- 输入字符按文案开头匹配并选中对应项，连续输入同一字符时依次选中下一个匹配项
+
+## 设计变量
+
+<DesignToken />

@@ -1,0 +1,51 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown, or when a subtree holding it is hidden by `Activity`. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| bodyStyle | Style of the dialog body. | `CSSProperties` | - |
+| cancelButtonProps | Props of the cancel button, the same as Button. It is focused on open unless `autoFocus` is `false`. `onClick` runs before the built-in cancel handling, which still runs. | `ButtonProps` | - |
+| cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by `onCancel`; pass `false` to turn that off. | `boolean` | - |
+| cancelText | Cancel button text. Defaults to the locale entry `Modal.cancel`. | `string` | - |
+| centered | Whether the dialog is vertically centered. | `boolean` | `false` |
+| children | Body of the dialog. | `React.ReactNode` | - |
+| className | Class name of the outermost element inside the portal. | `string` | - |
+| closable | Whether the close button in the corner is shown. | `boolean` | `true` |
+| closeIcon | Icon of the close button. `null` falls back to the default icon; to hide the close button, use `closable={false}`. | `ReactNode` | - |
+| closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |
+| confirmLoading | Whether the ok button is loading. When omitted it follows the Promise returned by `onOk`; pass `false` to turn that off. | `boolean` | - |
+| content | The component does not render it; write the dialog content as `children`. It is used only by the options of the imperative methods such as `Modal.info`. | `ReactNode` | - |
+| direction | Text direction, overriding the ConfigProvider. Without it, the ConfigProvider at the position decides. | `'ltr' \| 'rtl'` | - |
+| footer | Replaces the default footer buttons. `null` hides the footer area. | `ReactNode` | - |
+| footerFill | Whether the two buttons of the default footer fill the row. Defaults to `false`. | `boolean` | - |
+| fullScreen | Whether the dialog fills the screen. `width` and `height` are ignored. | `boolean` | `false` |
+| getPopupContainer | Parent element the dialog is rendered into. Without it, the `getPopupContainer` of the ConfigProvider is used, and `document.body` when that is absent too. A custom container needs `position: relative`; it changes where the dialog sits in the DOM, not where it is shown. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| hasCancel | Whether the default footer shows the cancel button. | `boolean` | `true` |
+| header | Replaces the whole default header: icon, title and close button. `null` hides the header area. | `ReactNode` | - |
+| height | Height of the dialog. A number is in pixels; a string is any valid CSS length. | `string \| number` | - |
+| icon | Icon before the title. | `ReactNode` | - |
+| keepDOM | Whether the dialog content stays mounted while closed. | `boolean` | `false` |
+| lazyRender | Used with `keepDOM`. When `true`, the dialog is not rendered until it is first shown. | `boolean` | `true` |
+| mask | Whether the mask is shown. | `boolean` | `true` |
+| maskClosable | Whether a click on the mask cancels the dialog. | `boolean` | `true` |
+| maskFixed | Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock). | `boolean` | `false` |
+| maskStyle | Style of the mask. | `CSSProperties` | - |
+| modalContentClass | Class name of the dialog content element. | `string` | - |
+| modalRender | Custom rendering of the dialog itself. The argument is the `role="dialog"` element, which the returned node must contain, for example wrapped in `DragMove`. | <ApiType detail={"(node: ReactNode) => ReactNode"}>Type</ApiType> | - |
+| motion | Whether the enter and leave animations run. | `boolean` | `true` |
+| okButtonProps | Props of the ok button, the same as Button. `autoFocus` focuses it on open. `onClick` runs before the built-in ok handling, which still runs. | `ButtonProps` | - |
+| okText | Ok button text. Defaults to the locale entry `Modal.confirm`. | `string` | - |
+| okType | Type of the ok button, the same as the `type` of Button. | `OKType` | `"primary"` |
+| onCancel | Called by the cancel button, the close button, the mask and Esc; the argument is a native `KeyboardEvent` for Esc. A returned Promise keeps the cancel button loading until it settles. The dialog never closes itself; the caller sets `visible` to `false`. | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
+| onOk | Called when the ok button is clicked, with the click event. A returned Promise keeps the ok button loading until it settles. The dialog never closes itself; the caller sets `visible` to `false`. | <ApiType detail={"(e: React.MouseEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
+| preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. Without it, the focused element is scrolled into view. | `boolean` | - |
+| ref | Reference to the outermost `div` element inside the portal; `null` while nothing is rendered. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| role | `role` of the dialog element, `dialog` by default. The imperative methods use `alertdialog`. | `'dialog' \| 'alertdialog'` | - |
+| size | Width preset of the dialog: `small` is 448px, `medium` 684px, `large` 920px, `full-width` `100vw - 64px`. | `Size` | `"small"` |
+| style | Style of the `.semi-modal` dialog box. | `CSSProperties` | - |
+| title | Title of the dialog. Without `aria-label` or a custom `header`, the title names the dialog. | `ReactNode` | - |
+| visible | Whether the dialog is visible, controlled by the caller. | `boolean` | `false` |
+| width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, `size` decides. | `string \| number` | - |
+| zIndex | z-index of the outer layer. | `number` | `1000` |

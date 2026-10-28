@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| alt | Alternative text for the avatar image or text. | `string` | - |
+| border | Additional border: `true` or `{ color, motion }`; `motion: true` enables the border animation. | `{ color?: string; motion?: boolean; } \| boolean` | - |
+| bottomSlot | Bottom badge configuration: `shape`, `text`, `bgColor`, `textColor`, `class` and `style`; `text` is text or a function returning custom content, called only when the badge shows; a `render` function replaces the whole badge. | <ApiType detail={"{ render?: () => JSX.Element; shape?: AvatarShape; text: AvatarSlotText; bgColor?: string; textColor?: string; class?: string; style?: JSX.CSSProperties \u007c string; }"}>Type</ApiType> | - |
+| children | Text or custom content inside the avatar. | `JSX.Element` | - |
+| color | Preset background color of the avatar. | `AvatarColor` | `"grey"` |
+| contentMotion | Enables animation in the avatar content area. | `boolean` | - |
+| gap | Space in pixels between the text and either side of the avatar. | `number` | `3` |
+| hoverMask | Overlay content shown on hover; the overlay has no default style. | `JSX.Element` | - |
+| imgAttr | Native attributes applied to the inner `img` element. | <ApiType detail={"ElementProps\u003c'img'>"}>Type</ApiType> | - |
+| onError | Called when the image fails to load, without an event argument. Returning `false` keeps the broken image instead of switching to the text fallback. | <ApiType detail={"() => boolean \u007c void"}>Type</ApiType> | - |
+| shape | Avatar shape: `circle` or `square`. | `AvatarShape` | `"circle"` |
+| size | Avatar size, as a preset name or a valid CSS size. | `string` | `"medium"` |
+| src | Image source URL. | `string` | - |
+| srcSet | Responsive image sources. | `string` | - |
+| topSlot | Top badge configuration: `text`, `gradientStart`, `gradientEnd`, `textColor`, `class` and `style`; `text` is text or a function returning custom content, called only when the badge shows; a `render` function replaces the whole badge. | <ApiType detail={"{ render?: () => JSX.Element; gradientStart?: string; gradientEnd?: string; text: AvatarSlotText; textColor?: string; class?: string; style?: JSX.CSSProperties \u007c string; }"}>Type</ApiType> | - |

@@ -1,0 +1,53 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| mode | Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by the detailContent slot. | `string` | `semiDefault("Sidebar", "mode", strings.MODE.MAIN)` |
+| activeKey | Key of the selected option in the main view; bind it with v-model:activeKey. | `string` | `semiGlobalDefault("Sidebar", "activeKey")` |
+| options | Option buttons at the top of the main view, each with a name and a key; icons use the optionIcon slot. | `SideBarOption[]` | `semiGlobalDefault("Sidebar", "options")` |
+| detailContent | The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable and imgUploadProps have no effect, as fileEditable and imgUploadProps decide them. | `SideBarDetailContent` | `semiGlobalDefault("Sidebar", "detailContent")` |
+| fileEditable | Whether the rich text in file mode is editable. | `boolean` | `semiDefault("Sidebar", "fileEditable", true)` |
+| imgUploadProps | Image upload options of file mode, read when the editor is created; later changes have no effect. | `ImageUploadNodeOptions` | `semiGlobalDefault("Sidebar", "imgUploadProps")` |
+| visible | Whether it is shown; bind it with v-model:visible. | `boolean` | `semiGlobalDefault("Sidebar", "visible")` |
+| title | Plain-text title of the main view; the title slot takes precedence. Detail views use the detail header. | `string` | `semiGlobalDefault("Sidebar", "title")` |
+| motion | Whether showing and hiding use the expand animation. | `boolean` | `semiGlobalDefault("Sidebar", "motion")` |
+| resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | `semiGlobalDefault("Sidebar", "resizable")` |
+| minWidth | Minimum width when resizing; applies only when resizable is true. | `string \| number` | `semiGlobalDefault("Sidebar", "minWidth")` |
+| maxWidth | Maximum width when resizing; applies only when resizable is true. | `string \| number` | `semiGlobalDefault("Sidebar", "maxWidth")` |
+| defaultSize | Initial width and height; applies only when resizable is true. | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Sidebar", "defaultSize")` |
+| showClose | Whether the header shows the close button. | `boolean` | `semiGlobalDefault("Sidebar", "showClose")` |
+| closeOnEsc | Whether pressing Esc emits cancel. | `boolean` | `semiGlobalDefault("Sidebar", "closeOnEsc")` |
+
+**Events**
+
+| Event              | Description                                                                                                 | Callback parameters                                      |
+| ------------------ | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| update:activeKey   | Emitted before activeOptionChange when an option is clicked, so v-model:activeKey follows.                  | `[activeKey: string]`                                    |
+| activeOptionChange | Emitted when an option is clicked, with the event and the option's key.                                     | `[event: MouseEvent, activeKey: string]`                 |
+| backWard           | Emitted when the back button of the detail header is clicked, with the event and main.                      | `[event: MouseEvent, mode: string]`                      |
+| detailContentCopy  | Emitted after the copy button wrote to the clipboard, with the event, the content and whether it succeeded. | `[event: MouseEvent, content: string, success: boolean]` |
+| fileContentChange  | Emitted after an edit in file mode, with the content as HTML.                                               | `[content: string]`                                      |
+| update:visible     | Emitted before cancel when the close button or Esc cancels, with false, so v-model:visible closes it.       | `[visible: false]`                                       |
+| cancel             | Emitted when the close button is clicked, or when Esc is pressed while closeOnEsc is true.                  | `[event: MouseEvent \| KeyboardEvent]`                   |
+| afterVisibleChange | Emitted after the show or hide animation ends, with whether it is visible.                                  | `[visible: boolean]`                                     |
+
+**Slots**
+
+| Slot          | Description                                                                                                                    | Scope parameters                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
+| title         | Title of the main view; it takes precedence over the title prop.                                                               | `any`                             |
+| optionIcon    | Icon of the built-in option button, with item and index.                                                                       | `SideBarOptionSlotProps`          |
+| optionItem    | Replaces the whole option button, with item, index, active and onClick (which selects the option).                             | `SideBarOptionItemSlotProps`      |
+| mainContent   | Content below the options in the main view, with activeKey.                                                                    | `SideBarMainContentSlotProps`     |
+| detailHeader  | Header in detail modes, with mode and detailContent; empty content falls back to the built-in header.                          | `SideBarDetailHeaderSlotProps`    |
+| detailContent | Content in detail modes, with mode; empty content falls back to the built-in code or file detail.                              | `SideBarDetailContentSlotProps`   |
+| customRender  | Forwarded to the customRender slot of the JsonViewer in the built-in code detail, for the content matched by customRenderRule. | `JsonViewerCustomRenderSlotProps` |
+| searchButton  | Forwarded to the searchButton slot of the JsonViewer in the built-in code detail, replacing its search button.                 | `JsonViewerSearchButtonSlotProps` |
+
+**Exposes**
+
+| Name | Description                                                  | Type                     |
+| ---- | ------------------------------------------------------------ | ------------------------ |
+| root | The .semi-sidebar-container root element; null while hidden. | `HTMLDivElement \| null` |

@@ -1,0 +1,313 @@
+{
+    "date-picker": {
+        "source": "packages/semi-ui-solid/src/date-picker/date-picker.tsx",
+        "props": {
+            "autoAdjustOverflow": {
+                "zh-CN": "浮层被遮挡时是否自动调整方向。",
+                "en-US": "Whether the popup flips its direction automatically when it is covered."
+            },
+            "autofocus": {
+                "zh-CN": "挂载后是否自动聚焦输入框。",
+                "en-US": "Whether the input is focused on mount."
+            },
+            "autoSwitchDate": {
+                "zh-CN": "通过面板上方的年月切换按钮或下拉菜单更改年月时，自动切换日期。仅对 date 类型生效。",
+                "en-US": "When the year or month is changed with the navigation buttons or dropdowns at the top of the panel, the date switches automatically. Only applies to the date type."
+            },
+            "borderless": {
+                "zh-CN": "无边框模式。",
+                "en-US": "Borderless mode."
+            },
+            "bottomSlot": {
+                "zh-CN": "渲染底部额外区域，传入 JSX 元素。",
+                "en-US": "Renders an extra area at the bottom. Takes a JSX element."
+            },
+            "class": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "clearIcon": {
+                "zh-CN": "自定义清除按钮的图标，showClear 为 true 时有效。传入 JSX 元素。",
+                "en-US": "Custom icon of the clear button, effective when showClear is true. Takes a JSX element."
+            },
+            "defaultOpen": {
+                "zh-CN": "面板默认显示或隐藏。",
+                "en-US": "Whether the panel is open by default."
+            },
+            "defaultPickerValue": {
+                "zh-CN": "默认面板日期。按内容比较，内容变化时面板回到该日期；每次渲染都传 `new Date()` 会被视为变化。",
+                "en-US": "Default panel date. Compared by content: when the content changes the panel moves back to it, so passing `new Date()` on every render counts as a change."
+            },
+            "defaultValue": {
+                "zh-CN": "默认值。",
+                "en-US": "Default value."
+            },
+            "density": {
+                "zh-CN": "面板的尺寸，可选值：`default`、`compact`。",
+                "en-US": "Density of the picker panel, one of `default` and `compact`."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。",
+                "en-US": "Whether the picker is disabled."
+            },
+            "disabledDate": {
+                "zh-CN": "日期禁止判断方法，返回 true 时禁止该日期。options 含范围选择已选的 rangeStart、rangeEnd 与当前聚焦的输入框 rangeInputFocus；type 为 year 时以每年的 1 月 1 日调用，返回 true 时禁止该年。",
+                "en-US": "Decides whether a date is disabled; returning true disables it. options carries the selected rangeStart and rangeEnd of a range and the focused input as rangeInputFocus. When type is year it is called with January 1 of each year, and returning true disables that year."
+            },
+            "disabledTime": {
+                "zh-CN": "时间禁止配置，返回值会透传给 TimePicker 组件。",
+                "en-US": "Time restriction configuration. Its return value is passed through to the TimePicker."
+            },
+            "disabledTimePicker": {
+                "zh-CN": "是否禁止时间选择。",
+                "en-US": "Whether time selection is disabled."
+            },
+            "dropdownClassName": {
+                "zh-CN": "下拉面板的类名。",
+                "en-US": "Class name of the dropdown panel."
+            },
+            "dropdownStyle": {
+                "zh-CN": "下拉面板的内联样式，可传对象（键为 kebab-case）或字符串。",
+                "en-US": "Inline style of the dropdown panel, as an object with kebab-case keys or as a string."
+            },
+            "endDateOffset": {
+                "zh-CN": "type 为 dateRange 时，设置单击选择范围的结束日期。",
+                "en-US": "When type is dateRange, sets the end date of a one-click range selection."
+            },
+            "endYear": {
+                "zh-CN": "年份滚轮的结束年，需大于 startYear。默认为当前年后 100 年。",
+                "en-US": "Last year of the year scroll panel, which must be greater than startYear. Defaults to 100 years after the current year."
+            },
+            "format": {
+                "zh-CN": "输入框中展示的日期字符串格式，默认值随 type 变化，见下方「日期时间格式」。",
+                "en-US": "Date string format shown in the input. The default depends on type; see Date and Time Format below."
+            },
+            "hideDisabledOptions": {
+                "zh-CN": "隐藏禁止选择的时间选项。",
+                "en-US": "Hides the disabled time options."
+            },
+            "inputReadOnly": {
+                "zh-CN": "文本框是否为只读（readonly）。",
+                "en-US": "Whether the input is readonly."
+            },
+            "inputStyle": {
+                "zh-CN": "输入框的样式，可传对象（键为 kebab-case）或字符串。",
+                "en-US": "Style of the input, as an object with kebab-case keys or as a string."
+            },
+            "insetInput": {
+                "zh-CN": "面板中是否嵌入输入框。可传布尔值，或传入 InsetInputProps 对象配置内嵌输入框的 placeholder。",
+                "en-US": "Whether the panel embeds input boxes. Takes a boolean, or an InsetInputProps object that sets the placeholders of the inset inputs."
+            },
+            "insetLabel": {
+                "zh-CN": "输入框内的标签，由 Form 字段注入；直接使用 DatePicker 时也会显示在输入框中。",
+                "en-US": "Label shown in the input. The Form field injects it; used directly, DatePicker shows it in the input as well."
+            },
+            "insetLabelId": {
+                "zh-CN": "输入框内标签的元素 id，由 Form 字段注入，用于为输入框提供可访问名称。",
+                "en-US": "id of the label element inside the input. The Form field injects it to name the input."
+            },
+            "leftSlot": {
+                "zh-CN": "渲染左侧额外区域，传入 JSX 元素。",
+                "en-US": "Renders an extra area on the left. Takes a JSX element."
+            },
+            "max": {
+                "zh-CN": "multiple 为 true 时最多可选的日期数量，不传或为 null、undefined 时不限制。",
+                "en-US": "Maximum number of dates that can be selected when multiple is true. Unlimited when it is not set, or is null or undefined."
+            },
+            "motion": {
+                "zh-CN": "是否开启面板展开的动画。",
+                "en-US": "Whether the panel animates when it opens."
+            },
+            "multiple": {
+                "zh-CN": "是否可以多选，仅支持 type 为 date。",
+                "en-US": "Whether multiple dates can be selected. Only supports the date type."
+            },
+            "needConfirm": {
+                "zh-CN": "是否需要“确认选择”，仅 type 为 dateTime 或 dateTimeRange 时有效。",
+                "en-US": "Whether a confirm step is needed. Only effective for the dateTime and dateTimeRange types."
+            },
+            "onBlur": {
+                "zh-CN": "面板关闭时的回调，范围选择时不推荐使用。只有点击外部关闭时 e 为原生 mousedown 事件，确认、选中日期、Esc 等其他关闭方式不传。",
+                "en-US": "Called when the panel closes; not recommended for range selection. e is the native mousedown event only when a click outside closes the panel; confirming, selecting a date, Esc and the other ways pass none."
+            },
+            "onCancel": {
+                "zh-CN": "取消选择时的回调，入参为上次确认的值，仅 type 为 dateTime 或 dateTimeRange 且 needConfirm 为 true 时有效。",
+                "en-US": "Called when the selection is cancelled, with the value of the last confirmed selection. Only effective for the dateTime and dateTimeRange types with needConfirm on."
+            },
+            "onChange": {
+                "zh-CN": "值变化时的回调。范围与多选时两个参数都是数组。",
+                "en-US": "Called when the value changes. Both arguments are arrays for range and multiple selection."
+            },
+            "onClear": {
+                "zh-CN": "点击清除按钮时的回调。",
+                "en-US": "Called when the clear button is clicked."
+            },
+            "onClickOutSide": {
+                "zh-CN": "弹出层展示时，在弹出层与触发器之外按下鼠标时的回调，参数为原生 mousedown 事件。",
+                "en-US": "Called when a mousedown lands outside the popup and the trigger while the popup is open. It receives the native mousedown event."
+            },
+            "onConfirm": {
+                "zh-CN": "确认选择时的回调，入参为当前选择的值，仅 type 为 dateTime 或 dateTimeRange 且 needConfirm 为 true 时有效。",
+                "en-US": "Called when the selection is confirmed, with the current value. Only effective for the dateTime and dateTimeRange types with needConfirm on."
+            },
+            "onFocus": {
+                "zh-CN": "获得焦点时的回调，范围选择时不推荐使用。e 为输入框的 focus 事件，或聚焦范围起始的触发器点击、按键事件；rangeType 只在范围输入框聚焦时有值。",
+                "en-US": "Called when the picker gets focus; not recommended for range selection. e is the focus event of an input, or the click or key press on the trigger that focused the range start; rangeType is set only when a range input gets focus."
+            },
+            "onOpenChange": {
+                "zh-CN": "面板显示或隐藏状态切换时的回调，入参为面板是否展开。",
+                "en-US": "Called when the panel opens or closes, with whether it is now open."
+            },
+            "onPanelChange": {
+                "zh-CN": "面板的年份或日期切换时的回调。",
+                "en-US": "Called when the year or date shown in the panel changes."
+            },
+            "onPresetClick": {
+                "zh-CN": "点击快捷选择按钮时的回调。",
+                "en-US": "Called when a preset button is clicked."
+            },
+            "open": {
+                "zh-CN": "面板显示或隐藏的受控属性，配合 onOpenChange 使用。",
+                "en-US": "Controlled open state of the panel, used together with onOpenChange."
+            },
+            "placeholder": {
+                "zh-CN": "输入框的提示文字，范围类型可传数组。",
+                "en-US": "Placeholder of the input. A range type takes an array."
+            },
+            "position": {
+                "zh-CN": "浮层位置，可选值与 Popover 的 position 相同。",
+                "en-US": "Popup position, with the same values as the position of Popover."
+            },
+            "prefix": {
+                "zh-CN": "输入框的前缀内容，传入 JSX 元素。",
+                "en-US": "Prefix content of the input. Takes a JSX element."
+            },
+            "prefixCls": {
+                "zh-CN": "根元素与面板的类名前缀，一般无需修改。",
+                "en-US": "Class name prefix of the root element and the panel, usually left unchanged."
+            },
+            "presetPosition": {
+                "zh-CN": "快捷选择面板的位置，可选值：left、right、top、bottom。",
+                "en-US": "Position of the preset panel, one of left, right, top and bottom."
+            },
+            "presets": {
+                "zh-CN": "日期时间快捷选择。start 与 end 可以是函数，函数每次打开面板时求值。",
+                "en-US": "Preset shortcuts. start and end can be functions, which are evaluated each time the panel opens."
+            },
+            "preventScroll": {
+                "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。",
+                "en-US": "Whether the browser scrolls the document to show a newly focused element. Applies to the focus method inside the component."
+            },
+            "rangeSeparator": {
+                "zh-CN": "范围类型输入框的日期分隔符，字符串解析同样使用它。",
+                "en-US": "Separator between the two dates in a range input. String parsing uses it as well."
+            },
+            "rangeSeparatorNode": {
+                "zh-CN": "范围类型输入框分隔符的渲染节点，仅影响界面展示，字符串解析仍使用 rangeSeparator。",
+                "en-US": "Node rendered as the range separator. It only affects the display; string parsing still uses rangeSeparator."
+            },
+            "ref": {
+                "zh-CN": "根元素，携带 open、close、focus、blur 方法。",
+                "en-US": "The root element, which carries the open, close, focus and blur methods."
+            },
+            "renderDate": {
+                "zh-CN": "自定义日期的显示内容，入参为日（数字）与完整日期字符串，返回 JSX 元素。",
+                "en-US": "Customizes the content of a date. It receives the day number and the full date string, and returns a JSX element."
+            },
+            "renderFullDate": {
+                "zh-CN": "自定义整个日期格子的渲染内容，入参为日（数字）、完整日期字符串与日期状态。",
+                "en-US": "Customizes the whole date cell. It receives the day number, the full date string and the day status."
+            },
+            "rightSlot": {
+                "zh-CN": "渲染右侧额外区域，传入 JSX 元素。",
+                "en-US": "Renders an extra area on the right. Takes a JSX element."
+            },
+            "showClear": {
+                "zh-CN": "是否显示清除按钮。",
+                "en-US": "Whether the clear button is shown."
+            },
+            "size": {
+                "zh-CN": "输入框的尺寸，可选值：small、default、large。",
+                "en-US": "Size of the input, one of small, default and large."
+            },
+            "spacing": {
+                "zh-CN": "浮层与触发器之间的距离。",
+                "en-US": "Distance between the popup and the trigger."
+            },
+            "startDateOffset": {
+                "zh-CN": "type 为 dateRange 时，设置单击选择范围的开始日期。",
+                "en-US": "When type is dateRange, sets the start date of a one-click range selection."
+            },
+            "startYear": {
+                "zh-CN": "年份滚轮的开始年，默认为当前年前 100 年。",
+                "en-US": "First year of the year scroll panel. Defaults to 100 years before the current year."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的点击事件冒泡。",
+                "en-US": "Whether clicks on the popup stop propagating."
+            },
+            "style": {
+                "zh-CN": "根元素的样式，可传对象（键为 kebab-case）或字符串。",
+                "en-US": "Style of the root element, as an object with kebab-case keys or as a string."
+            },
+            "syncSwitchMonth": {
+                "zh-CN": "范围选择时，两个面板是否同步切换月份。",
+                "en-US": "In range selection, whether the two panels switch months together."
+            },
+            "timePickerOpts": {
+                "zh-CN": "传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps，含义见 TimePicker 的 API。格式、值和 onChange 由面板设置。",
+                "en-US": "Options for the time panel: use12Hours, hourStep, minuteStep, secondStep, defaultIsAM and scrollItemProps, as described in the TimePicker API. The panel sets the format, the value and onChange."
+            },
+            "timeZone": {
+                "zh-CN": "时区，值与面板日期按该时区解释和展示。字符串为 IANA 时区名，如 Asia/Shanghai；数字会原样传给 date-fns-tz 的 utcToZonedTime。",
+                "en-US": "Time zone in which the value and panel dates are read and shown. A string is an IANA time zone name such as Asia/Shanghai; a number is passed as is to utcToZonedTime of date-fns-tz."
+            },
+            "topSlot": {
+                "zh-CN": "渲染顶部额外区域，传入 JSX 元素。",
+                "en-US": "Renders an extra area at the top. Takes a JSX element."
+            },
+            "triggerRender": {
+                "zh-CN": "自定义触发器的渲染函数，只调用一次。入参为触发器属性，其中每个键都是响应式的，需在返回的 JSX 中读取。",
+                "en-US": "Renders a custom trigger. It is called once. The props it receives are reactive, so read them inside the returned JSX."
+            },
+            "type": {
+                "zh-CN": "类型，可选值：date、dateRange、dateTime、dateTimeRange、month、monthRange、year。",
+                "en-US": "Type, one of date, dateRange, dateTime, dateTimeRange, month, monthRange and year."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，仅影响展示样式，success 与 default 样式相同。",
+                "en-US": "Validation status, which only affects the display style. success looks the same as default."
+            },
+            "value": {
+                "zh-CN": "受控的值。",
+                "en-US": "Controlled value."
+            },
+            "weekStartsOn": {
+                "zh-CN": "以周几作为每周第一天，0 代表周日，1 代表周一，以此类推。",
+                "en-US": "Day of the week that starts each week: 0 is Sunday, 1 is Monday, and so on."
+            },
+            "yearAndMonthOpts": {
+                "zh-CN": "透传给年月选择器的其他参数。list、onSelect、selectedIndex 与 type 由面板设置，不接受传入。",
+                "en-US": "Other options passed to the year and month picker. list, onSelect, selectedIndex and type are set by the panel and are not accepted."
+            }
+        },
+        "methods": {
+            "open": {
+                "zh-CN": "展开面板。受控的 open 优先，受控时 open 不改变面板的可见性。",
+                "en-US": "Opens the panel. A controlled open takes precedence; when it is controlled, open does not change the visibility."
+            },
+            "close": {
+                "zh-CN": "关闭面板。受控的 open 优先，受控时 close 不改变面板的可见性。",
+                "en-US": "Closes the panel. A controlled open takes precedence; when it is controlled, close does not change the visibility."
+            },
+            "focus": {
+                "zh-CN": "聚焦输入框。范围类型默认聚焦开始框，传入 `'rangeEnd'` 时聚焦结束框；开启 insetInput 且面板打开时聚焦面板内的输入框。",
+                "en-US": "Focuses the input. A range type focuses the start input by default, or the end input with `'rangeEnd'`. With insetInput and the panel open, it focuses the input inside the panel."
+            },
+            "blur": {
+                "zh-CN": "使输入框失焦。",
+                "en-US": "Blurs the input."
+            }
+        }
+    }
+}

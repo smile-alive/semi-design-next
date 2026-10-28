@@ -1,0 +1,614 @@
+---
+title: 树选择器
+order: 52
+icon: doc-treeselect
+brief: 树选择器用于多层级树形数据的结构化展示 & 选取，例如显示文件夹与文件的列表、显示组织架构成员列表等等。
+---
+
+import TreeSelectReactApi from './api/tree-select.react.zh-CN.mdx';
+import TreeSelectVueApi from './api/tree-select.vue.zh-CN.mdx';
+import TreeSelectSolidApi from './api/tree-select.solid.zh-CN.mdx';
+
+## 使用场景
+
+当需要选择的选项为树形结构时，可以使用树选择器，例如部门层级、学科体系、分类目录等。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { TreeSelect } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { TreeSelect } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { TreeSelect } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+最简单的用法，默认为单选模式，每一级菜单项均可选择。
+
+<Demo id="basic" />
+
+### 多选
+
+设置 `multiple`，可以进行多选。多选情况下所有子项都被选择时，自动勾选显示其父项。
+
+<Framework only="react">
+
+通过 `leafOnly` 属性，可以设置只展示叶子节点，同时 onChange 的回调入参也会只有叶子节点的值。
+
+</Framework>
+
+<Framework only="vue">
+
+多选时 `v-model` 与 `defaultValue` 都是数组。通过 `leafOnly` 属性，可以设置只展示叶子节点，同时 `v-model` 的值与 `change` 事件的值也只有叶子节点的值。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `leafOnly` 属性，可以设置只展示叶子节点，同时 onChange 的回调入参也会只有叶子节点的值。
+
+</Framework>
+
+<Demo id="multiple" />
+
+### 限制标签展示数量
+
+在多选的场景中，利用 `maxTagCount` 可以限制展示的标签数量，超出部分将以 +N 的方式展示。  
+使用 `showRestTagsPopover` (>= v2.22.0) 可以设置在超出 `maxTagCount` 后，hover +N 是否显示 Popover，默认为 `false`。并且，还可以在 `restTagsPopoverProps` 属性中配置 Popover。
+
+<Demo id="max-tag-count" />
+
+### 可搜索的
+
+通过设置 `filterTreeNode` 属性可支持搜索功能。默认对 `label` 值进行搜索，可通过 `treeNodeFilterProp` 更改。
+
+如果只希望展示过滤后的结果，可以设置 `showFilteredOnly` 。
+
+<Framework only="react">
+
+如果想要获取搜索结果的具体信息，可使用 `onSearch` 回调函数，函数具体参数见 API 列表。
+
+</Framework>
+
+<Framework only="vue">
+
+如果想要获取搜索结果的具体信息，可监听 `search` 事件，事件参数见 API 列表。
+
+</Framework>
+
+<Framework only="solid">
+
+如果想要获取搜索结果的具体信息，可使用 `onSearch` 回调函数，函数具体参数见 API 列表。
+
+</Framework>
+
+<Demo id="searchable" />
+
+### 远程搜索
+
+<Framework only="react">
+
+通过设置 `remote` 属性可启用远程搜索。开启后，输入时不会执行本地过滤，而是仅触发 `onSearch` 回调，用户可自行处理远程数据获取并更新 `treeData`。
+
+</Framework>
+
+<Framework only="vue">
+
+通过设置 `remote` 属性可启用远程搜索。开启后，输入时不会执行本地过滤，而是仅触发 `search` 事件，用户可自行处理远程数据获取并更新 `treeData`（传入新数组才会更新）。
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 `remote` 属性可启用远程搜索。开启后，输入时不会执行本地过滤，而是仅触发 `onSearch` 回调，用户可自行处理远程数据获取并更新 `treeData`。
+
+</Framework>
+
+<Demo id="remote-search" />
+
+### 搜索框位置
+
+可以使用 `searchPosition` 来设置搜索框的位置，可选: `dropdown`(默认)、`trigger`。
+
+当输入框位于 trigger 时:
+
+1. 搜索框占位符由 `placeholder` 控制；
+2. `showClear=true` 时，点击输入框的清空按钮，将同时清空 inputValue 和 value。
+
+<Demo id="search-position" />
+
+### Trigger 内多行换行（triggerTagWrap）
+
+当你在 **多选 + 搜索框位于 trigger** 的场景下，选择了较多项或输入较长文本时，默认 trigger 可能会更倾向于保持单行展示。
+
+开启 `triggerTagWrap` 后，可以让 trigger 内的已选标签支持自动换行（多行展示）。
+
+<Demo id="trigger-tag-wrap" />
+
+### 尺寸大小
+
+可以通过 `size` 设置尺寸大小，可选: 'small'、'default'、'large'
+
+<Demo id="size" />
+
+### 默认展开
+
+`defaultExpandAll` 和 `expandAll` 均可以设置 `TreeSelect` 的默认展开/收起状态。二者的区别是，`defaultExpandAll` 只在初始化时生效，而 `expandAll` 不仅会在初始化时生效，当数据(`treeData`)发生动态更新时，`expandAll` 也仍然生效。
+
+在下面的 demo 中，`TreeData` 更新后，`defaultExpandAll` 失效，`expandAll` 仍然生效。
+
+<Demo id="expand-all" />
+
+### 禁用
+
+<Demo id="disabled" />
+
+### 严格禁用
+
+可以使用 `disableStrictly` 来开启严格禁用。开启严格禁用后，当节点是 disabled 的时候，则不能通过子级或者父级的关系改变选中状态。
+
+以下面的 demo 为例，节点"中国"开启了严格禁用，因此，当我们改变其父节点"亚洲"的选中状态时，也不会影响到节点"中国"的选中状态。
+
+<Demo id="disable-strictly" />
+
+### 受控
+
+<Framework only="react">
+
+传入 `value` 时即为受控组件，可以配合 `onChange` 使用。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model` 绑定选中值即为受控组件，选中值变化时通过 `update:modelValue` 回写；也可以传入 `modelValue` 并监听 `change` 事件。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `value` 时即为受控组件，可以配合 `onChange` 使用。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 节点选中关系
+
+版本：>= 2.5.0
+
+多选时，可以使用 `checkRelation` 来设置节点之间选中关系的类型，可选：'related'（默认）、'unRelated'。当选中关系为 'unRelated' 时，意味着节点之间的选中互不影响。
+
+<Demo id="check-relation" />
+
+### 开启搜索的展开受控
+
+<Framework only="react">
+
+传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys`（version: >= 2.6.0） 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model:expandedKeys` 绑定展开的节点即为展开受控组件，也可以传入 `expandedKeys` 并监听 `expand` 事件。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `search` 事件的参数 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Demo id="expanded-keys-search" />
+
+### 虚拟化
+
+列表虚拟化，用于大量树节点的情况。开启后，动画效果将被关闭。
+
+`virtualize` 是一个包含下列值的对象：
+
+- height: 高度值，如果为 string 必须有计算高度才能被渲染出来，即其父节点有 offsetHeight。建议传入数值。
+- width: 宽度值，默认 100%
+- itemSize: 每行的treeNode的高度，必传
+
+如果带搜索框，建议开启 `showFilteredOnly` 减少多余节点的渲染。
+
+<Demo id="virtualize" />
+
+### 动态更新数据
+
+<Demo id="dynamic-data" />
+
+### 异步加载数据
+
+通过设置 `loadData` 可以动态加载数据，此时需要在数据中传入 `isLeaf` 标明叶子节点。
+
+<Demo id="load-data" />
+
+### 自定义 Trigger
+
+<Framework only="react">
+
+如果默认的触发器样式满足不了你的需求，可以用 `triggerRender` 自定义选择框的展示。
+
+triggerRender 入参如下:
+
+</Framework>
+
+<Framework only="vue">
+
+如果默认的触发器样式满足不了你的需求，可以用 `#trigger` 插槽自定义选择框的展示。
+
+`#trigger` 的插槽参数如下，类型为 `TreeSelectTriggerSlotProps`:
+
+```typescript
+interface TreeSelectTriggerSlotProps {
+    componentProps: TreeSelectProps; // 所有用户传给 TreeSelect 的 props
+    disabled: boolean; // 是否禁用 TreeSelect
+    value: TreeNodeData[]; // 已选中的 node 的数据
+    inputValue: string; // 当前 input 框的输入值
+    placeholder?: string; // placeholder
+    // 用于清空值的函数；绑定在触发器内的控件上时传入点击事件，避免这次点击同时打开下拉
+    onClear: (event?: MouseEvent) => void;
+    // 删除单个 item 时调用的函数，以 item 的 key 作为入参
+    onRemove: (key: string) => void;
+    // 用于在 Input 框值更新时启动搜索，需要设置 filterTreeNode 非 false，
+    // searchPosition 为 'trigger'
+    onSearch: (inputValue: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="react">
+
+```typescript
+interface TriggerRenderProps {
+    componentProps: TreeSelectProps;// 所有用户传给 TreeSelect 的 props
+    disabled: boolean;              // 是否禁用 TreeSelect
+    value: TreeNodeData[];              // 已选中的 node 的数据
+    inputValue: string;             // 当前 input 框的输入值
+    onClear: e => void;             // 用于清空值的函数
+    placeholder: string;            // placeholder
+    /* 删除单个 item 时调用的函数，以 item 的 key 作为入参，
+     * 从 v2.32.0 版本开始支持
+    */
+    onRemove: key => void;
+    /**
+     * 用于在 Input 框值更新时候启动搜索，当你在 triggerRender 自定义的
+     * Input 组件值更新时，你应该调用该函数，用于向 TreeSelect 内部
+     * 同步状态, 使用同时需要设置 filterTreeNode 参数非 false,
+     * searchPosition 为 'trigger'
+     * 从 v2.32.0 版本开始支持
+    */
+    onSearch: inputValue => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+如果默认的触发器样式满足不了你的需求，可以用 `triggerRender` 自定义选择框的展示。入参是活对象，在返回的 JSX 中读取它的字段，不要解构。
+
+triggerRender 入参如下:
+
+```typescript
+interface TriggerRenderProps {
+    componentProps: Omit<TreeSelectProps, 'ref'>; // 所有用户传给 TreeSelect 的 props
+    disabled: boolean; // 是否禁用 TreeSelect
+    value: TreeNodeData[]; // 已选中的 node 的数据
+    inputValue: string; // 当前 input 框的输入值
+    placeholder?: string; // placeholder
+    // 用于清空值的函数；绑定在触发器内的控件上时传入点击事件，避免这次点击同时打开下拉
+    onClear: (e?: MouseEvent) => void;
+    // 删除单个 item 时调用的函数，以 item 的 key 作为入参
+    onRemove: (key: string) => void;
+    // 用于在 Input 框值更新时启动搜索，需要设置 filterTreeNode 非 false，
+    // searchPosition 为 'trigger'
+    onSearch: (inputValue: string) => void;
+}
+```
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+### 自定义渲染已选项
+
+<Framework only="react">
+
+你可以通过 renderSelectedItem 自定义选择框中已选项标签的渲染结构。
+
+- 单选时 `renderSelectedItem(treeNode: TreeNodeData) => content:ReactNode`
+- 多选时 `renderSelectedItem(treeNode: TreeNodeData, { index:number, onClose:function }) => { isRenderInTag:bool, content:ReactNode }`
+    - isRenderInTag 为 true 时，会自动将 content 包裹在 Tag 中渲染（带有背景色以及关闭按钮）
+    - isRenderInTag 为 false 时，将直接渲染返回的 content
+
+</Framework>
+
+<Framework only="vue">
+
+你可以通过 `#selectedItem` 和 `#tag` 插槽自定义选择框中已选项的渲染结构，两个插槽的参数相同，类型为 `TreeSelectSelectedItemSlotProps`：`item`（节点数据）、`index`、`disabled` 和 `onClose`（移除该标签，单选时清除选中值）。
+
+- 单选时 `#selectedItem` 的内容就是选择框中显示的内容；内容为空时显示 `placeholder`
+- 多选时 `#selectedItem` 的内容会放进内置的 Tag 中渲染（带有背景色以及关闭按钮）；`#tag` 替换整个 Tag，优先于 `#selectedItem`，需要关闭按钮时把 `onClose` 绑定到自己的 Tag 上
+- 多选时两个插槽的内容为空，都不渲染该标签
+
+</Framework>
+
+<Framework only="solid">
+
+你可以通过 renderSelectedItem 自定义选择框中已选项标签的渲染结构。
+
+- 单选时 `renderSelectedItem(treeNode: TreeNodeData) => content: JSX.Element`
+- 多选时 `renderSelectedItem(treeNode: TreeNodeData, { index: number | string, onClose: (tagContent, e?) => void }) => { isRenderInTag: boolean, content: JSX.Element }`
+    - isRenderInTag 为 true 时，会自动将 content 包裹在 Tag 中渲染（带有背景色以及关闭按钮）
+    - isRenderInTag 为 false 时，将直接渲染返回的 content
+
+</Framework>
+
+<Demo id="render-selected-item" />
+
+## API参考
+
+### TreeSelect
+
+<Framework only="react">
+
+<TreeSelectReactApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 与 `aria-required` 落在当前的 combobox 上：不可搜索时是触发器，搜索框在触发器内时是搜索框的输入框。其他原生属性（如 `id`、`data-*`、`onClick`）落在触发器元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TreeSelectVueApi />
+
+Vue 版的 TreeSelect 没有 `className` 属性：`class`、`style` 和 `data-*` 等未声明的属性落在根元素上，`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上（见 [ARIA](#aria)）。`focus`、`blur`、`change`、`select`、`keydown` 是组件的事件，会遮住根元素上同名的原生事件。
+
+</Framework>
+
+<Framework only="solid">
+
+<TreeSelectSolidApi />
+
+`class`、`style` 与原生属性（如 `id`、`data-*`）落在根元素（触发器）上。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 与 `aria-required` 落在当前的 combobox 上：不可搜索时是根元素，搜索框在触发器内时是搜索框的 `input`。`onFocus`、`onBlur`、`onChange` 与 `onSelect` 是组件自己的回调，不会作为原生事件绑定到根元素。
+
+</Framework>
+
+### TreeNodeData
+
+<Framework only="react">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填。此时 onChange, value, defaultValue 及 onChangeWithObject 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+</Framework>
+
+<Framework only="vue">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填。此时 `v-model`、`defaultValue`、`change` 事件及 `changeWithObject` 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+</Framework>
+
+<Framework only="react">
+
+| 属性     | 说明                     | 类型              | 默认值 |
+| -------- | ------------------------ | ----------------- | ------ |
+| value    | 属性值                   | string\|number    | -      |
+| label    | 展示的文本               | string\|ReactNode | -      |
+| icon     | 自定义图标               | ReactNode         | -      |
+| disabled | 是否禁用，多选状态下支持 | boolean           | false  |
+| key      | required且要求唯一       | string            | -      |
+| isLeaf   | 是否为叶子节点           | boolean           | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性     | 说明                                     | 类型           | 默认值 |
+| -------- | ---------------------------------------- | -------------- | ------ |
+| value    | 属性值                                   | string\|number | -      |
+| label    | 展示的文本，自定义内容使用 `#label` 插槽 | string\|number | -      |
+| disabled | 是否禁用，多选状态下支持                 | boolean        | false  |
+| key      | required且要求唯一                       | string         | -      |
+| isLeaf   | 是否为叶子节点                           | boolean        | -      |
+| children | 子节点                                   | TreeNodeData[] | -      |
+
+节点图标使用 `#icon` 插槽提供，不在数据中声明。
+
+</Framework>
+
+<Framework only="solid">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填。此时 onChange, value, defaultValue 及 onChangeWithObject 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+| 属性     | 说明                                     | 类型           | 默认值 |
+| -------- | ---------------------------------------- | -------------- | ------ |
+| value    | 属性值                                   | string\|number | -      |
+| label    | 展示的文本，自定义内容使用 `renderLabel` | string\|number | -      |
+| disabled | 是否禁用，多选状态下支持                 | boolean        | false  |
+| key      | required且要求唯一                       | string         | -      |
+| isLeaf   | 是否为叶子节点                           | boolean        | -      |
+| children | 子节点                                   | TreeNodeData[] | -      |
+
+节点图标使用 TreeSelect 的 `icon` 属性提供，不在数据中声明：传入元素时所有节点使用同一图标，传入函数时每行调用一次，参数为该行的属性（含节点数据）。
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+绑定在组件实例上的方法，可以通过 ref 调用实现某些特殊交互，方法的说明见 TreeSelect 的 API 参考。
+
+</Framework>
+
+<Framework only="vue">
+
+TreeSelect 通过模板 ref 暴露 `search(value)` 和 `close()` 两个方法，类型为 `TreeSelectHandle`。`search` 按输入了该值来搜索，先打开下拉面板，需要同时设置 filterTreeNode；`close` 关闭下拉面板。如果需要在外部自定义搜索框，可以在自定义搜索框值变更时主动调用 `search`，改变筛选结果。
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { TreeSelect } from '@fibrae/semi-ui-vue';
+    import type { TreeSelectHandle } from '@fibrae/semi-ui-vue';
+
+    const treeSelect = useTemplateRef<TreeSelectHandle>('treeSelect');
+    const search = (value: string) => treeSelect.value?.search(value);
+</script>
+
+<template>
+    <TreeSelect ref="treeSelect" filterTreeNode :treeData="treeData" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+TreeSelect 的 `ref` 得到根元素（触发器），方法挂在这个元素上，类型为 `TreeSelectElement`（即 `HTMLDivElement & TreeSelectHandle`）。
+
+| 方法                  | 说明                                                                                                                                                |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| search(value: string) | 如果需要在外部自定义搜索框，可以在自定义搜索框值变更时主动调用该方法，改变筛选结果。按输入了该值来搜索，先打开下拉面板，需要同时设置 filterTreeNode |
+| close()               | 关闭下拉面板                                                                                                                                        |
+
+```tsx
+import { TreeSelect, type TreeSelectElement } from '@fibrae/semi-ui-solid';
+
+function App() {
+    let treeSelect: TreeSelectElement | undefined;
+    return (
+        <>
+            <TreeSelect ref={treeSelect} filterTreeNode />
+            <button onClick={() => treeSelect?.close()}>关闭</button>
+        </>
+    );
+}
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 按 ARIA 1.2 的 combobox 写法，任一时刻只有一个元素是 combobox。它的名称按优先级取：`aria-labelledby`、`aria-label`、实际渲染出的 insetLabel（Vue 为 `#insetLabel`，未传 `insetLabelId` 时组件生成 id；有 prefix 时 insetLabel 不渲染，也不作名称来源），都没有时取语言包中的名称:
+    - 不可搜索或 `searchPosition="dropdown"` 时，触发器是 select-only combobox；下拉内的搜索框保持文本框角色，带 `aria-controls`、`aria-autocomplete`、`aria-activedescendant`
+    - `searchPosition="trigger"` 时，搜索框是 combobox 和唯一的 Tab 停靠点，带 `aria-autocomplete="list"`，触发器不再有角色。单选时搜索框在输入前为空，已选文本以 `aria-describedby` 关联为它的描述。点击触发器任意位置会把焦点交给搜索框;
+- TreeSelect 允许用户设置 `aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-labelledby`、`aria-required`，另外，Form 会为 Form.TreeSelect 自动设置这些属性;
+- 下拉中 `role="tree"` 的列表与 combobox 使用同一个名称来源：同一组 `aria-labelledby`、同一个 `aria-label` 或同一个 insetLabel；都没有时与 combobox 一样取语言包中的名称;
+
+<Framework only="react">
+
+- 下拉中的节点与 [Tree](/zh-CN/react/navigation/tree#accessibility) 相同：`role="treeitem"`，带 `aria-level`、`aria-setsize`、`aria-posinset`、`aria-disabled`，可展开的节点带 `aria-expanded`；单选时用 `aria-selected`，多选时用 `aria-checked`（半选为 `mixed`）;
+
+</Framework>
+
+<Framework only="vue">
+
+- `aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上：不可搜索时是根元素，单选且搜索框在触发器内时是搜索框的 `input`，多选且搜索框在触发器内时是标签输入框。设置了 `aria-labelledby` 时，combobox 不再补默认的 `aria-label`；只有 `#insetLabel` 时 combobox 的 `aria-labelledby` 指向它;
+- 下拉中的节点与 [Tree](/zh-CN/react/navigation/tree#accessibility) 相同：`role="treeitem"`，带 `aria-level`、`aria-setsize`、`aria-posinset`、`aria-disabled`，可展开的节点带 `aria-expanded`；单选时用 `aria-selected`，多选时用 `aria-checked`（半选为 `mixed`）。`#fullLabel` 的内容由带 `id`、`role="treeitem"` 和这些状态的 `li` 包住;
+
+</Framework>
+
+<Framework only="solid">
+
+- 下拉中的节点与 [Tree](/zh-CN/react/navigation/tree#accessibility) 相同：`role="treeitem"`，带 `aria-level`、`aria-setsize`、`aria-posinset`、`aria-disabled`，可展开的节点带 `aria-expanded`；单选时用 `aria-selected`，多选时用 `aria-checked`（半选为 `mixed`）。
+
+</Framework>
+
+- 节点前的展开箭头和多选复选框只是状态的图示，对读屏软件隐藏，也不接收焦点。
+
+### 键盘交互
+
+TreeSelect 按 [WAI-ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) 处理键盘，弹出层是一棵树：焦点始终留在触发器或搜索框上，`aria-activedescendant` 指向当前节点，当前节点显示焦点环。下拉刚打开时没有当前节点。
+
+- 下拉关闭时：`ArrowDown`、`ArrowUp`、`Enter`、`Space` 打开下拉；`Home`、`End` 打开下拉并移到第一个、最后一个可见节点
+- `ArrowDown`、`ArrowUp`：移到下一个、上一个可见节点，第一次按 `ArrowDown` 移到第一个节点；`Home`、`End`：移到第一个、最后一个可见节点
+- `ArrowRight`：展开收起的节点；节点已展开时移到它的第一个子节点（RTL 下与 `ArrowLeft` 互换）
+- `ArrowLeft`：收起展开的节点；否则移到父节点
+- `Enter`、`Space`：选中当前节点，多选时勾选或取消勾选；禁用节点不响应
+- 输入字符：下拉打开时，从当前节点往后，移到第一个以输入内容开头的可见节点；快速连续输入的字符合成一个搜索词。下拉关闭时不响应
+- `Esc`：关闭下拉
+
+焦点在搜索框里时，只有 `ArrowDown`、`ArrowUp`、`Enter` 用于移动和选择，其余按键（含字符、`Space`、`Home`、`End`、`ArrowLeft`、`ArrowRight`）用于编辑文字。
+
+<Framework only="react">
+
+自定义 `searchRender` 的参数里带有这组 ARIA 属性（`aria-activedescendant`、`aria-controls`、`aria-autocomplete`、名称；在触发器内时为整组 combobox 属性，含 `role`、`aria-expanded`），请把它们写在输入框上，否则读屏软件不会读出当前节点。参数里的 `ref` 也要写到输入框（Semi `Input`、原生 input 或 textarea）上，点击触发器内的已选文本时才能把焦点交给它。
+
+</Framework>
+
+<Framework only="vue">
+
+`#search` 插槽的参数里带有这组 ARIA 属性（`aria-activedescendant`、`aria-controls`、`aria-autocomplete`、名称；在触发器内时为整组 combobox 属性，含 `role`、`aria-expanded`），请用 `v-bind` 把整个参数对象绑定到输入框（Semi `Input`）上，否则读屏软件不会读出当前节点。参数里的 `inputRef` 也必须绑定到输入框上，点击触发器内的已选文本时才能把焦点交给它。
+
+</Framework>
+
+`showClear` 开启、有已选值或搜索文本且未禁用时，触发器内渲染清除按钮。它是原生 `button`，名称为语言包中的「清空已选值」，在 hover、下拉打开或焦点位于 TreeSelect 内时显示。从触发器或搜索框按 `Tab` 移到清除按钮，`Enter` 或 `Space` 清空，效果与鼠标点击相同，清空后焦点回到触发器或搜索框。多选时也可在搜索框中用 `Backspace` 删除标签。
+
+<Framework only="solid">
+
+自定义 `searchRender` 的入参是活对象，其中带有这组 ARIA 属性（`aria-activedescendant`、`aria-controls`、`aria-autocomplete`、名称；在触发器内时为整组 combobox 属性，含 `role`、`aria-expanded`），请把它们展开到输入框上，否则读屏软件不会读出当前节点。入参里的 `ref` 是回调，同样要写到输入框（Solid `Input`、原生 input 或 textarea）上，点击触发器内的已选文本时才能把焦点交给它。
+
+</Framework>
+
+示例:
+
+<Framework only="react">
+
+```typescript
+    <TreeSelect
+        /* 其他属性 */
+        aria-label='example treeSelect'
+    />
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<TreeSelect aria-label="example treeSelect" :treeData="treeData" />
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<TreeSelect aria-label="example treeSelect" treeData={treeData} />
+```
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

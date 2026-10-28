@@ -1,0 +1,43 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                            | Type                                                                                                                                  | Default                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| visible     | Whether it is shown; bind it with v-model:visible.                                                     | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "visible")`     |
+| title       | Plain-text title, the locale's references text by default; the title slot takes precedence.            | `string`                                                                                                                              | `semiGlobalDefault("Annotation", "title")`       |
+| motion      | Whether showing and hiding use the expand animation.                                                   | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "motion")`      |
+| resizable   | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "resizable")`   |
+| minWidth    | Minimum width when resizing; applies only when resizable is true.                                      | `string \| number`                                                                                                                    | `semiGlobalDefault("Annotation", "minWidth")`    |
+| maxWidth    | Maximum width when resizing; applies only when resizable is true.                                      | `string \| number`                                                                                                                    | `semiGlobalDefault("Annotation", "maxWidth")`    |
+| defaultSize | Initial width and height; applies only when resizable is true.                                         | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Annotation", "defaultSize")` |
+| showClose   | Whether the header shows the close button.                                                             | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "showClose")`   |
+| closeOnEsc  | Whether pressing Esc emits cancel.                                                                     | `boolean`                                                                                                                             | `semiGlobalDefault("Annotation", "closeOnEsc")`  |
+| activeKey   | Keys of the expanded groups; bind it with v-model:activeKey.                                           | `string \| string[]`                                                                                                                  | `semiGlobalDefault("Annotation", "activeKey")`   |
+| info        | Groups of references; each has a header, a key and its annotations.                                    | `AnnotationInfo[]`                                                                                                                    | `semiGlobalDefault("Annotation", "info")`        |
+
+**Events**
+
+| Event              | Description                                                                                                                   | Callback parameters                         |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| update:visible     | Emitted before cancel when the close button or Esc cancels, with false, so v-model:visible closes it.                         | `[visible: false]`                          |
+| cancel             | Emitted when the close button is clicked, or when Esc is pressed while closeOnEsc is true.                                    | `[event: MouseEvent \| KeyboardEvent]`      |
+| afterVisibleChange | Emitted after the show or hide animation ends, with whether it is visible.                                                    | `[visible: boolean]`                        |
+| update:activeKey   | Emitted before change when a group opens or closes, so v-model:activeKey follows.                                             | `[activeKey: string[]]`                     |
+| change             | Emitted when a group opens or closes, with the expanded keys.                                                                 | `[activeKey: string \| string[]]`           |
+| click              | Emitted when a reference is clicked, with the event and its item; the native click of the root is not reported apart from it. | `[event: MouseEvent, item: AnnotationItem]` |
+
+**Slots**
+
+| Slot       | Description                                                                                           | Scope parameters            |
+| ---------- | ----------------------------------------------------------------------------------------------------- | --------------------------- |
+| title      | Header title; it takes precedence over the title prop.                                                | `any`                       |
+| header     | Replaces the whole container header; empty content falls back to the built-in header.                 | `any`                       |
+| infoHeader | Content of a group header after its icon, with item and index; the header field is shown when absent. | `AnnotationHeaderSlotProps` |
+| item       | Replaces the built-in reference item, with item and index (its position in the group).                | `AnnotationItemSlotProps`   |
+
+**Exposes**
+
+| Name | Description                                                  | Type                     |
+| ---- | ------------------------------------------------------------ | ------------------------ |
+| root | The .semi-sidebar-container root element; null while hidden. | `HTMLDivElement \| null` |

@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| className | Class name of the root element. | `string` | - |
+| closable | Whether to show the close button. | `boolean` | - |
+| deleteTabItem | Handler for the close button, called with the itemKey and the event. Inside Tabs it defaults to the handler of the Tabs, so it is usually not set. | <ApiType detail={"(tabKey: string, event: MouseEvent) => void"}>Type</ApiType> | - |
+| disabled | Whether the tab is disabled; clicks and the close button have no effect, while the close button is still shown. | `boolean` | - |
+| handleKeyDown | Keyboard handler, called with the event, the itemKey and closable. Inside Tabs it defaults to the keyboard handler of the Tabs, so it is usually not set. | <ApiType detail={"(event: React.KeyboardEvent, itemKey: string, closable: boolean) => void"}>Type</ApiType> | - |
+| icon | Tab icon; no icon is rendered without content. | `ReactNode` | - |
+| itemKey | Unique key of the tab, matched against the `activeKey` of the Tabs. | `string` | - |
+| onClick | Called when the tab is clicked, with the itemKey and the event; not called while disabled. TabItem does not select the tab itself: update the `activeKey` of the Tabs in the callback. | <ApiType detail={"(itemKey: string, e: MouseEvent) => void"}>Type</ApiType> | - |
+| ref | Reference to the tab root element (`role="tab"`). | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| selected | Whether the tab is selected, which affects its style and `aria-selected`. | `boolean` | - |
+| size | Size; `small` and `medium` add the matching class name. | `TabSize` | - |
+| tab | Tab content. | `ReactNode` | - |
+| tabPosition | Position; defaults to the `tabPosition` of the enclosing Tabs. | `TabPosition` | - |
+| type | Style; defaults to the `type` of the enclosing Tabs. | `TabType` | - |

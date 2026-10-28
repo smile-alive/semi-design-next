@@ -1,0 +1,217 @@
+{
+    "input-number": {
+        "source": "packages/semi-ui-react/src/input-number/index.tsx",
+        "props": {
+            "addonAfter": { "zh-CN": "后置标签，显示在输入框外部的右侧。", "en-US": "Trailing addon, shown outside the input on the right." },
+            "addonBefore": { "zh-CN": "前置标签，显示在输入框外部的左侧。", "en-US": "Leading addon, shown outside the input on the left." },
+            "aria-describedby": { "zh-CN": "引用描述元素的 id，作为输入框的描述。", "en-US": "Id of the element describing the input." },
+            "aria-errormessage": { "zh-CN": "引用错误信息元素的 id。", "en-US": "Id of the element with the error message." },
+            "aria-invalid": {
+                "zh-CN": "是否校验失败。`validateStatus` 为 `error` 时固定为 `true`。",
+                "en-US": "Whether validation failed. Fixed to `true` when `validateStatus` is `error`."
+            },
+            "aria-label": { "zh-CN": "输入框的可访问名称。", "en-US": "Accessible name of the input." },
+            "aria-labelledby": {
+                "zh-CN": "引用标签元素的 id，作为输入框的可访问名称。未设置且有内嵌标签（`insetLabel`）时指向该标签。",
+                "en-US": "Id of the element labelling the input, used as its accessible name. When not set and there is an inset label (`insetLabel`), it points to that label."
+            },
+            "aria-required": { "zh-CN": "是否必填。", "en-US": "Whether a value is required." },
+            "autofocus": {
+                "zh-CN": "原生 `autofocus` 属性，落在原生 `input` 上。",
+                "en-US": "The native `autofocus` attribute, set on the native `input`."
+            },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "className": { "zh-CN": "根元素（`.semi-input-number`）的类名。", "en-US": "Class name of the root element (`.semi-input-number`)." },
+            "clearIcon": {
+                "zh-CN": "清除按钮的图标，可传 ReactNode。仅 `showClear` 为 `true` 时有效。",
+                "en-US": "Icon of the clear button, as a ReactNode. Takes effect only when `showClear` is `true`."
+            },
+            "composition": {
+                "zh-CN": "是否启用输入法组合模式。开启后组合输入期间不触发 `onChange`，组合结束后触发一次。",
+                "en-US": "Whether to enable composition mode. When enabled, `onChange` is not called during IME composition and is called once after it ends."
+            },
+            "currency": {
+                "zh-CN": "货币种类，可选值有 CNY、EUR、USD 等。设为 `true` 时使用 `defaultCurrency`，未设置时为语言包对应的货币。",
+                "en-US": "Currency, such as CNY, EUR or USD. When `true`, uses `defaultCurrency`, or the currency of the locale pack when that is not set."
+            },
+            "currencyDisplay": {
+                "zh-CN": "货币展示方式，可选 `symbol`、`code`、`name`。",
+                "en-US": "How the currency is shown: `symbol`, `code` or `name`."
+            },
+            "defaultCurrency": {
+                "zh-CN": "`currency` 为 `true` 时使用的货币种类，优先级为自身属性、全局默认值、语言包。",
+                "en-US": "Currency used when `currency` is `true`. Priority: own prop, global default, locale pack."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始值。", "en-US": "Initial value when uncontrolled." },
+            "disabled": {
+                "zh-CN": "是否禁用。未设置时使用所在 `InputGroup` 的值。",
+                "en-US": "Whether disabled. Falls back to the value of the enclosing `InputGroup` when not set."
+            },
+            "formatter": {
+                "zh-CN": "指定输入框展示值的格式，一般与 `parser` 同时设置。",
+                "en-US": "Format of the displayed value, usually set together with `parser`."
+            },
+            "getValueLength": {
+                "zh-CN": "计算文本长度的函数。设置后由它校验 `maxLength` 与 `minLength`，原生 `maxlength` 属性不再生效。",
+                "en-US": "Function that measures the text length. When set, it enforces `maxLength` and `minLength` instead of the native `maxlength` attribute."
+            },
+            "hideButtons": {
+                "zh-CN": "隐藏步进按钮；与 `innerButtons` 同时为 `true` 时也不显示内置按钮。",
+                "en-US": "Hides the step buttons; with `innerButtons` also `true`, no built-in button is shown either."
+            },
+            "hideSuffix": {
+                "zh-CN": "清除按钮显示时隐藏后缀，默认两者并列。",
+                "en-US": "Hides the suffix while the clear button is shown; by default the two sit side by side."
+            },
+            "innerButtons": {
+                "zh-CN": "将步进按钮放在输入框内部，悬停或聚焦时显示，并临时替换 `suffix`。",
+                "en-US": "Puts the step buttons inside the input, shown on hover or focus and temporarily replacing `suffix`."
+            },
+            "insetLabel": { "zh-CN": "内嵌标签，显示在输入框内部。", "en-US": "Inset label, shown inside the input." },
+            "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." },
+            "inputStyle": {
+                "zh-CN": "原生 `input` 的样式，类型为 `CSSProperties`。",
+                "en-US": "Style of the native `input`, typed as `CSSProperties`."
+            },
+            "keepFocus": { "zh-CN": "点击步进按钮时保持输入框聚焦。", "en-US": "Keeps the input focused when a step button is clicked." },
+            "localeCode": {
+                "zh-CN": "货币模式下用于格式化的语言地区代码，如 zh-CN、en-US、de-DE。优先级为自身属性、全局默认值、LocaleProvider 或 ConfigProvider 的语言包。",
+                "en-US": "Locale code used for formatting in currency mode, such as zh-CN, en-US or de-DE. Priority: own prop, global default, locale pack of LocaleProvider or ConfigProvider."
+            },
+            "max": { "zh-CN": "限定最大值。", "en-US": "Maximum value." },
+            "maximumFractionDigits": {
+                "zh-CN": "显示的最大小数位数，传给 `Intl.NumberFormat`。",
+                "en-US": "Maximum number of fraction digits shown, passed to `Intl.NumberFormat`."
+            },
+            "min": { "zh-CN": "限定最小值。", "en-US": "Minimum value." },
+            "minimumFractionDigits": {
+                "zh-CN": "显示的最小小数位数，传给 `Intl.NumberFormat`。",
+                "en-US": "Minimum number of fraction digits shown, passed to `Intl.NumberFormat`."
+            },
+            "mode": {
+                "zh-CN": "输入框模式，可选 `password`，此时显示切换可见性的按钮。",
+                "en-US": "Input mode, `password`, which shows a button to toggle visibility."
+            },
+            "onBlur": {
+                "zh-CN": "失去焦点时的回调，事件为输入框外层的 `focusout`。",
+                "en-US": "Called when focus leaves the input; the event is the `focusout` of the wrapper."
+            },
+            "onChange": {
+                "zh-CN": "值变化时的回调，第一个参数为展示值（`number` 或 `string`），第二个参数 `e` 为触发变化的输入、步进按钮的 `pointerdown`、方向键或 Home/End 键、失焦事件。挂载和 `value` 变化不触发，越界值按原样显示，用户操作时才校正并通知。",
+                "en-US": "Called when the value changes, with the displayed value (`number` or `string`) and `e`, which is the typing, the `pointerdown` of a step button, the arrow or Home/End keydown, or the blur that caused it. Mounting and `value` changes do not call it; an out-of-range value is shown as given and is corrected and reported only after a user action."
+            },
+            "onClear": { "zh-CN": "点击清除按钮时的回调。", "en-US": "Called when the clear button is clicked." },
+            "onDownClick": {
+                "zh-CN": "点击减小按钮时的回调，参数为步进后的值与 `pointerdown` 事件。长按连续步进时每步都触发，事件为按下时的那一个。",
+                "en-US": "Called when the decrease button is clicked, with the stepped value and the `pointerdown` event. While held, it is called on every step with the event that began the press."
+            },
+            "onEnterPress": { "zh-CN": "按下 Enter 键时的回调。", "en-US": "Called when the Enter key is pressed." },
+            "onFocus": {
+                "zh-CN": "获得焦点时的回调，事件为输入框外层的 `focusin`。",
+                "en-US": "Called when focus enters the input; the event is the `focusin` of the wrapper."
+            },
+            "onInput": { "zh-CN": "原生 `input` 的 `input` 事件回调，经透传交给输入框。", "en-US": "Called on the native `input` event of the input, passed through to it." },
+            "onKeyDown": { "zh-CN": "按下键盘按键时的回调，事件为输入框上的 `keydown`。", "en-US": "Called when a key is pressed in the input; the event is its `keydown`." },
+            "onKeyUp": { "zh-CN": "松开键盘按键时的回调，事件为输入框上的 `keyup`。", "en-US": "Called when a key is released in the input; the event is its `keyup`." },
+            "onNumberChange": {
+                "zh-CN": "数字变化时的回调，第一个参数为数字，第二个参数的含义同 `onChange`。",
+                "en-US": "Called when the number changes; the first argument is the number, and the second is as in `onChange`."
+            },
+            "onUpClick": {
+                "zh-CN": "点击增大按钮时的回调，参数为步进后的值与 `pointerdown` 事件。长按连续步进时每步都触发，事件为按下时的那一个。",
+                "en-US": "Called when the increase button is clicked, with the stepped value and the `pointerdown` event. While held, it is called on every step with the event that began the press."
+            },
+            "parser": {
+                "zh-CN": "指定从 `formatter` 的展示文本转换回数字串的方式，与 `formatter` 搭配使用。",
+                "en-US": "Converts the text from `formatter` back to a number string; used together with `formatter`."
+            },
+            "placeholder": { "zh-CN": "占位文本。", "en-US": "Placeholder text." },
+            "precision": { "zh-CN": "数值精度，即保留的小数位数。", "en-US": "Numerical precision, the number of fraction digits kept." },
+            "prefix": { "zh-CN": "前缀内容，显示在输入框内部的左侧。", "en-US": "Prefix content, shown inside the input on the left." },
+            "prefixCls": {
+                "zh-CN": "组件样式类名的前缀，根元素类名为前缀加 `-number`，默认前缀为 `semi-input`，根元素类名即 `semi-input-number`。",
+                "en-US": "Class name prefix of the component; the root class is the prefix plus `-number`. The default prefix is `semi-input`, so the root class is `semi-input-number`."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动文档以显示输入框，作用于组件内的聚焦，包括句柄 `focus()` 未传 `preventScroll` 时的默认值。",
+                "en-US": "Whether focusing stops the browser from scrolling the document to the input; applies to focusing inside the component, including the default of the handle's `focus()`."
+            },
+            "pressInterval": {
+                "zh-CN": "长按步进按钮时，连续触发的间隔，单位毫秒。",
+                "en-US": "Interval in milliseconds between repeats while a step button is held."
+            },
+            "pressTimeout": {
+                "zh-CN": "长按步进按钮时，开始连续触发前的延迟，单位毫秒。",
+                "en-US": "Delay in milliseconds before repeating starts while a step button is held."
+            },
+            "readonly": {
+                "zh-CN": "是否只读。锁定输入并隐藏清除按钮，原生 `readOnly` 只锁定输入。",
+                "en-US": "Whether read-only. Locks typing and hides the clear button; the native `readOnly` locks typing only."
+            },
+            "ref": {
+                "zh-CN": "组件的命令式句柄，类型为 `InputNumberHandle`，不是原生 DOM 节点。成员见下方 Methods。",
+                "en-US": "Imperative handle of the component, typed `InputNumberHandle`, not a native DOM node. Its members are listed in Methods below."
+            },
+            "scientificNotation": {
+                "zh-CN": "启用科学计数法显示：失焦时显示科学计数法，聚焦时显示完整数字。可传入 `{ threshold }` 配置阈值，默认 15 位有效数字。不支持货币模式。",
+                "en-US": "Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode."
+            },
+            "shiftStep": {
+                "zh-CN": "按住 Shift 时每次改变的步长，可以为小数。",
+                "en-US": "Step of each change while Shift is held; may be a decimal."
+            },
+            "showClear": { "zh-CN": "是否显示清除按钮。", "en-US": "Whether to show the clear button." },
+            "showClearIgnoreDisabled": {
+                "zh-CN": "内部属性，由 DatePicker 设置，使用方一般不需要传入。",
+                "en-US": "Internal prop set by DatePicker; callers normally do not pass it."
+            },
+            "showCurrencySymbol": {
+                "zh-CN": "是否显示货币符号、代码或名称，仅货币模式下生效。",
+                "en-US": "Whether to show the currency symbol, code or name; only in currency mode."
+            },
+            "size": {
+                "zh-CN": "输入框大小，可选 `default`、`small`、`large`。所在 `InputGroup` 设置了 `size` 时以其为准。",
+                "en-US": "Input size: `default`, `small` or `large`. The `size` of the enclosing `InputGroup` takes precedence when it is set."
+            },
+            "step": { "zh-CN": "每次改变的步长，可以为小数。", "en-US": "Step of each change; may be a decimal." },
+            "style": { "zh-CN": "根元素（`.semi-input-number`）的样式。", "en-US": "Style of the root element (`.semi-input-number`)." },
+            "suffix": { "zh-CN": "后缀内容，显示在输入框内部的右侧。", "en-US": "Suffix content, shown inside the input on the right." },
+            "type": {
+                "zh-CN": "原生 `input` 的 `type` 属性，默认为 `text`。",
+                "en-US": "The `type` attribute of the native `input`, `text` by default."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 `default`、`error`、`warning`、`success`。",
+                "en-US": "Validation status: `default`, `error`, `warning` or `success`."
+            },
+            "value": {
+                "zh-CN": "当前值，传入即为受控，需要配合 `onChange` 更新。传 `undefined` 时按非受控处理。",
+                "en-US": "Current value; passing it makes the component controlled, so update it in `onChange`. An explicit `undefined` is treated as uncontrolled."
+            },
+            "onlyBorder": {
+                "zh-CN": "内部属性，指定外框的边框宽度（像素），由其他组件设置，使用方一般不需要传入。",
+                "en-US": "Internal prop giving the border width of the wrapper in pixels, set by other components; callers normally do not pass it."
+            }
+        },
+        "methods": {
+            "focus": {
+                "zh-CN": "获取输入框焦点。`options.preventScroll` 未传时使用 `preventScroll` 属性的值。",
+                "en-US": "Focuses the input. When `options.preventScroll` is not passed, the value of the `preventScroll` prop is used."
+            },
+            "blur": { "zh-CN": "移出输入框焦点。", "en-US": "Removes focus from the input." },
+            "select": { "zh-CN": "选中输入框中的全部文本。", "en-US": "Selects all the text in the input." },
+            "setSelectionRange": {
+                "zh-CN": "设置输入框的选区，参数同原生 `setSelectionRange`。",
+                "en-US": "Sets the selection of the input; the arguments are those of the native `setSelectionRange`."
+            },
+            "input": {
+                "zh-CN": "原生 `input` 元素，卸载后为 `null`。",
+                "en-US": "The native `input` element, `null` after unmounting."
+            },
+            "nativeElement": {
+                "zh-CN": "组件根元素（`.semi-input-number`），卸载后为 `null`。",
+                "en-US": "The root element (`.semi-input-number`), `null` after unmounting."
+            }
+        }
+    }
+}

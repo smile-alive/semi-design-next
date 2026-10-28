@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                             | Type            | Default                                            |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------- | -------------------------------------------------- |
+| modelValue     | Whether the checkbox is checked, controlled with v-model. Ignored inside a CheckboxGroup.                               | `boolean`       | `undefined`                                        |
+| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup.                        | `boolean`       | `semiDefault("Checkbox", "defaultChecked", false)` |
+| value          | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group.                | `CheckboxValue` | `undefined`                                        |
+| disabled       | Whether the checkbox is disabled.                                                                                       | `boolean`       | `semiGlobalDefault("Checkbox", "disabled")`        |
+| indeterminate  | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean`       | `semiDefault("Checkbox", "indeterminate", false)`  |
+| type           | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies.                                 | `CheckboxType`  | `semiDefault("Checkbox", "type", "default")`       |
+| addonId        | Id of the addon node, which aria-labelledby points to. Generated when omitted.                                          | `string`        | `undefined`                                        |
+| extraId        | Id of the extra node, which aria-describedby points to. Generated when omitted.                                         | `string`        | `undefined`                                        |
+| prefixCls      | CSS class name prefix.                                                                                                  | `string`        | `semiGlobalDefault("Checkbox", "prefixCls")`       |
+| preventScroll  | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method.                | `boolean`       | `semiGlobalDefault("Checkbox", "preventScroll")`   |
+
+**Events**
+
+| Event             | Description                                                                                         | Callback parameters      |
+| ----------------- | --------------------------------------------------------------------------------------------------- | ------------------------ |
+| update:modelValue | Emitted when the checked state changes; drives v-model.                                             | `[checked: boolean]`     |
+| change            | Emitted when the checked state changes. The event's target is `{ checked, value, name, disabled }`. | `[event: CheckboxEvent]` |
+
+**Slots**
+
+| Slot    | Description                                                                      | Scope parameters |
+| ------- | -------------------------------------------------------------------------------- | ---------------- |
+| default | Label content of the checkbox, which is also the native input's accessible name. | `any`            |
+| extra   | Supplementary text, which aria-describedby points to.                            | `any`            |
+
+**Exposes**
+
+| Name  | Description                          | Type                                          |
+| ----- | ------------------------------------ | --------------------------------------------- |
+| focus | Focuses the native input.            | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | Removes focus from the native input. | <ApiType detail={"() => void"}>Type</ApiType> |

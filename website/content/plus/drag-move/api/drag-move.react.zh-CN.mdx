@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                                                              | 类型                                                                                   | 默认值       |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------ |
+| allowInputDrag   | 在原生 input、textarea 上按下时是否允许拖动。                                                                                     | `boolean`                                                                              | `false`      |
+| allowMove        | 按下时判断是否允许拖动的函数，返回 false 则不拖动。参数为指针事件与被拖动的元素。                                                 | <ApiType detail={"(e: PointerEvent, element: HTMLElement) => boolean"}>Type</ApiType>  | -            |
+| children         | 被拖动的内容。每个顶层 DOM 元素各自可拖动，自定义组件渲染出的顶层元素同样生效；文本节点无法拖动，需要包在元素中。                 | `ReactNode`                                                                            | -            |
+| constrainer      | 限制拖动范围的元素：`'parent'` 表示被拖动元素的父元素，或返回该元素的函数；返回 null 时不限制范围。该元素需要为 relative 定位。   | <ApiType detail={"'parent' \u007c (() => HTMLElement \u007c null)"}>Type</ApiType>     | -            |
+| customMove       | 自定义拖动后的位置处理，参数为元素、新的 top 与 left。设置后组件不再改写元素的 top 与 left，位置在 requestAnimationFrame 中回传。 | <ApiType detail={"(e: HTMLElement, top: number, left: number) => void"}>Type</ApiType> | -            |
+| handler          | 返回触发拖动的元素，只有在该元素内按下才会开始拖动；返回 null 时回退为被拖动元素本身。                                            | <ApiType detail={"() => HTMLElement \u007c null"}>Type</ApiType>                       | -            |
+| onMouseDown      | 鼠标或触控笔按下时触发，鼠标只响应主键；不受 allowMove 的结果影响。                                                               | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| onMouseMove      | 拖动过程中鼠标或触控笔移动时触发。                                                                                                | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| onMouseUp        | 拖动开始后，鼠标或触控笔抬起时触发。                                                                                              | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| onTouchCancel    | 拖动过程中指针被系统取消（pointercancel）时触发。                                                                                 | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| onTouchEnd       | 拖动开始后，触摸抬起时触发。                                                                                                      | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| onTouchMove      | 拖动过程中触摸移动时触发。                                                                                                        | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| onTouchStart     | 触摸按下时触发，不受 allowMove 的结果影响。                                                                                       | <ApiType detail={"(e: PointerEvent) => void"}>Type</ApiType>                           | -            |
+| positionStrategy | 定位策略，`relative` 保留元素原有的布局位置。                                                                                     | `'absolute' \| 'relative'`                                                             | `"absolute"` |

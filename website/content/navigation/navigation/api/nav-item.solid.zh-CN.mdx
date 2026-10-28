@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                                                  | 类型                                                                                | 默认值 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------ |
+| disabled         | 是否禁用。禁用项仍可聚焦，但激活无效。                                                                                | `boolean`                                                                           | -      |
+| forwardRef       | 接收导航项 `li` 元素的回调，与 `ref` 同时生效。                                                                       | <ApiType detail={"(ele: HTMLLIElement) => void"}>Type</ApiType>                     | -      |
+| icon             | 导航项图标。未设置尺寸的 Semi 图标按导航项的尺寸显示。                                                                | `JSX.Element`                                                                       | -      |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。                                                                      | `boolean \| number`                                                                 | -      |
+| isCollapsed      | 为 `true` 时该项按收起状态显示，文案改由 Tooltip 提供。与导航的收起状态取或。                                         | `boolean`                                                                           | -      |
+| itemKey          | 导航项唯一标识。                                                                                                      | `ItemKey`                                                                           | -      |
+| level            | 当前项所在嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 Nav.Item 需要自己传入。 | `number`                                                                            | -      |
+| link             | 导航项的 `href`，传入时整个导航项渲染为链接。                                                                         | `string`                                                                            | -      |
+| linkOptions      | 透传给链接的属性，如 `target`、`rel` 和 `onClick`。                                                                   | <ApiType detail={"JSX.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -      |
+| onClick          | 点击导航项时触发。数据含 `itemKey`、`text`，`domEvent` 为原生事件。                                                   | <ApiType detail={"(clickItems: SelectedData) => void"}>Type</ApiType>               | -      |
+| tabIndex         | 获得焦点的链接或按钮的 `tabindex`。                                                                                   | `number`                                                                            | -      |
+| text             | 导航项文案，可以是字符串或 JSX。                                                                                      | `JSX.Element`                                                                       | -      |
+| toggleIcon       | 展开收起图标位置上的图标，位置由 Nav 的 `toggleIconPosition` 决定。                                                   | `JSX.Element`                                                                       | -      |
+| tooltipHideDelay | 此导航项 Tooltip 隐藏的延迟，优先于 Nav 的同名属性，收起状态下有效，单位为毫秒。                                      | `number`                                                                            | -      |
+| tooltipShowDelay | 此导航项 Tooltip 显示的延迟，优先于 Nav 的同名属性，收起状态下有效，单位为毫秒。                                      | `number`                                                                            | -      |

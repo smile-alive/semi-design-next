@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                             | 类型                                                              | 默认值         |
+| --------- | ---------------------------------------------------------------- | ----------------------------------------------------------------- | -------------- |
+| align     | 带内容时内容的对齐方式，可选 `left`、`center` 或 `right`。       | `'left' \| 'right' \| 'center'`                                   | `"center"`     |
+| children  | 分割线中的内容，仅水平方向显示；垂直方向不显示内容。             | `ReactNode`                                                       | -              |
+| className | 根元素的类名。                                                   | `string`                                                          | -              |
+| dashed    | 是否为虚线。                                                     | `boolean`                                                         | -              |
+| layout    | 分割线方向，可选 `horizontal` 或 `vertical`。                    | `'horizontal' \| 'vertical'`                                      | `"horizontal"` |
+| margin    | 分割线上下的 margin，垂直方向时为左右的 margin；数字按像素处理。 | `number \| string`                                                | -              |
+| ref       | 根元素（`div`）的引用。                                          | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -              |
+| style     | 根元素的样式。                                                   | `CSSProperties`                                                   | -              |

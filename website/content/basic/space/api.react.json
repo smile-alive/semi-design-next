@@ -1,0 +1,39 @@
+{
+    "space": {
+        "source": "packages/semi-ui-react/src/space/index.tsx",
+        "props": {
+            "align": {
+                "zh-CN": "对齐方式，可选 `start`、`center`、`end`、`baseline`。",
+                "en-US": "Alignment: `start`, `center`, `end` or `baseline`."
+            },
+            "children": {
+                "zh-CN": "子节点，直接渲染在根 `div` 内，不额外包裹元素。",
+                "en-US": "Child nodes, rendered directly inside the root `div` without an extra wrapper."
+            },
+            "className": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "ref": {
+                "zh-CN": "根 `div` 元素的引用。",
+                "en-US": "Reference to the root `div` element."
+            },
+            "spacing": {
+                "zh-CN": "间距尺寸，可选 `loose`、`medium`、`tight` 或数字（像素）；传入 `[水平, 垂直]` 数组分别设置两个方向。",
+                "en-US": "Spacing size: `loose`, `medium`, `tight` or a number of pixels. Pass a `[horizontal, vertical]` array to set each direction."
+            },
+            "style": {
+                "zh-CN": "根元素的内联样式，其中 `columnGap`、`rowGap` 优先于 `spacing` 中的数字间距。",
+                "en-US": "Inline style of the root element. `columnGap` and `rowGap` take precedence over numeric values in `spacing`."
+            },
+            "vertical": {
+                "zh-CN": "是否为垂直间距。",
+                "en-US": "Whether the spacing is vertical."
+            },
+            "wrap": {
+                "zh-CN": "是否自动换行，仅水平方向生效。",
+                "en-US": "Whether to wrap automatically. Only applies to horizontal spacing."
+            }
+        }
+    }
+}

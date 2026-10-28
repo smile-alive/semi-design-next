@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                              | Type                                                              | Default  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- | -------- |
+| bordered    | Whether to show a border. Only takes effect in non-full mode, and no border is shown by default.                         | `boolean`                                                         | -        |
+| children    | Custom content rendered in the extra area below the banner.                                                              | `React.ReactNode`                                                 | -        |
+| className   | Class name of the root element.                                                                                          | `string`                                                          | -        |
+| closeIcon   | Replaces the icon in the close button. Pass `null` to hide the close button; the default close icon is shown when unset. | `React.ReactNode`                                                 | -        |
+| description | Description content.                                                                                                     | `React.ReactNode`                                                 | -        |
+| fullMode    | Whether the banner is in full mode. Set it to false for the non-full style.                                              | `boolean`                                                         | `true`   |
+| icon        | Replaces the icon of `type`. Pass `null` to hide the icon; the icon of `type` is shown when unset.                       | `React.ReactNode`                                                 | -        |
+| onClose     | Called when the close button is clicked, with its native click event. The banner hides after the callback returns.       | <ApiType detail={"(e: React.MouseEvent) => void"}>Type</ApiType>  | -        |
+| ref         | Reference to the root `div` element (`role="alert"`).                                                                    | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
+| style       | Style of the root element.                                                                                               | `React.CSSProperties`                                             | -        |
+| title       | Title content.                                                                                                           | `React.ReactNode`                                                 | -        |
+| type        | Type: `info`, `success`, `danger` or `warning`.                                                                          | `Type`                                                            | `"info"` |

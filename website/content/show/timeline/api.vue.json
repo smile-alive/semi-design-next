@@ -1,0 +1,58 @@
+{
+    "timeline": {
+        "source": "packages/semi-ui-vue/src/timeline/timeline.vue",
+        "props": {
+            "mode": {
+                "zh-CN": "时间轴与内容的相对位置，可选 left、right、center、alternate。",
+                "en-US": "Position of the timeline relative to the content: left, right, center or alternate."
+            },
+            "dataSource": {
+                "zh-CN": "数据数组；非空时按数据渲染，忽略默认插槽。项的字段见下表。",
+                "en-US": "Data array. When it is not empty the items are rendered from it and the default slot is ignored. See the item fields below."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "Timeline.Item 子项，dataSource 为空时使用。",
+                "en-US": "Timeline.Item children, used when dataSource is empty."
+            },
+            "content": {
+                "zh-CN": "dataSource 每一项的内容，缺省渲染 item.content。",
+                "en-US": "Content of each dataSource item. Defaults to item.content."
+            },
+            "dot": { "zh-CN": "dataSource 每一项的自定义节点图标。", "en-US": "Custom dot of each dataSource item." },
+            "time": {
+                "zh-CN": "dataSource 每一项的时间，缺省渲染 item.time。",
+                "en-US": "Time of each dataSource item. Defaults to item.time."
+            },
+            "extra": {
+                "zh-CN": "dataSource 每一项的辅助说明，缺省渲染 item.extra。",
+                "en-US": "Extra content of each dataSource item. Defaults to item.extra."
+            }
+        },
+        "exposed": {}
+    },
+    "timeline-item": {
+        "source": "packages/semi-ui-vue/src/timeline/timeline-item.vue",
+        "props": {
+            "color": { "zh-CN": "节点的颜色。", "en-US": "Color of the dot." },
+            "type": {
+                "zh-CN": "节点类型，可选 default、ongoing、success、warning、error。",
+                "en-US": "Dot type: default, ongoing, success, warning or error."
+            },
+            "position": {
+                "zh-CN": "覆盖 Timeline 的 mode，指定该项所在的一侧。",
+                "en-US": "Overrides the mode of the Timeline for this item."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "节点内容。", "en-US": "Item content." },
+            "dot": { "zh-CN": "自定义节点图标。", "en-US": "Custom dot content." },
+            "time": { "zh-CN": "时间。", "en-US": "Time." },
+            "extra": { "zh-CN": "辅助说明。", "en-US": "Extra content." }
+        },
+        "exposed": {}
+    }
+}

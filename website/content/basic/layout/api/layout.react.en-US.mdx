@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Content of the layout: `Layout.Header`, `Layout.Sider`, `Layout.Content`, `Layout.Footer` or a nested `Layout`. | `React.ReactNode` | - |
+| className | Class name of the root element. | `string` | - |
+| hasSider | Indicates that a Sider is inside; usually not needed. A direct child Sider is detected during render; a Sider nested deeper registers after mount, so pass true during SSR to avoid a style flash. Passing false cannot remove the has-sider class that a Sider adds. | `boolean` | - |
+| prefixCls | Class name prefix. | `string` | `"semi-layout"` |
+| ref | Reference to the root element, whose tag is set by `tagName`. | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
+| style | Style of the root element. | `CSSProperties` | - |
+| tagName | Tag name of the root element. | `keyof HTMLElementTagNameMap` | `"section"` |

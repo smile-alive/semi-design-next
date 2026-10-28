@@ -1,0 +1,25 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                                               | 类型                                                              | 默认值  |
+| ------------------ | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| actions            | 卡片操作区，数组中的每个元素是一个操作，位于内容区底部，操作之间以 12px 的水平间距排列。           | `ReactNode[]`                                                     | -       |
+| aria-label         | 卡片的可访问名称，传入后根元素的 `role` 为 `group`。                                               | `string`                                                          | -       |
+| bodyStyle          | 卡片内容区的内联样式。                                                                             | `CSSProperties`                                                   | -       |
+| bordered           | 是否显示卡片的外边框。                                                                             | `boolean`                                                         | `true`  |
+| children           | 卡片内容区的内容，加载中时显示占位。                                                               | `React.ReactNode`                                                 | -       |
+| className          | 根元素的类名。                                                                                     | `string`                                                          | -       |
+| cover              | 卡片封面，位于标题区之下。                                                                         | `ReactNode`                                                       | -       |
+| footer             | 自定义页脚，位于卡片底部。                                                                         | `ReactNode`                                                       | -       |
+| footerLine         | 页脚区与内容区之间是否有边线。                                                                     | `boolean`                                                         | `false` |
+| footerStyle        | 页脚区的内联样式。                                                                                 | `CSSProperties`                                                   | -       |
+| header             | 自定义整个标题区，传入后取代 `title` 与 `headerExtraContent`。                                     | `ReactNode`                                                       | -       |
+| headerExtraContent | 标题右侧的额外内容。                                                                               | `ReactNode`                                                       | -       |
+| headerLine         | 标题区与内容区之间是否有边线。                                                                     | `boolean`                                                         | `true`  |
+| headerStyle        | 标题区的内联样式。                                                                                 | `CSSProperties`                                                   | -       |
+| loading            | 是否在内容区显示加载占位，开启时根元素的 `aria-busy` 为 `true`。                                   | `boolean`                                                         | `false` |
+| ref                | 根元素（`div`）的引用。                                                                            | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| shadows            | 显示阴影的时机，可选 `hover` 或 `always`；不设置则没有阴影。                                       | `Shadows`                                                         | -       |
+| style              | 根元素的内联样式。                                                                                 | `CSSProperties`                                                   | -       |
+| title              | 卡片标题。字符串按 6 级标题的样式渲染为 `div`，超长时省略并显示提示；传入 `ReactNode` 时原样渲染。 | `ReactNode`                                                       | -       |

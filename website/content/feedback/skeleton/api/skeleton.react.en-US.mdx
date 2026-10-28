@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                | Type                                                              | Default |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| active      | Whether to show the animated loading effect.                                                                               | `boolean`                                                         | -       |
+| children    | Content shown once `loading` is `false`, rendered as is without a wrapper element.                                         | `ReactNode`                                                       | -       |
+| className   | Class name of the placeholder root element. It has no effect once `loading` is `false`, since no root element is rendered. | `string`                                                          | -       |
+| loading     | When `true`, `placeholder` is shown. Otherwise the children are shown.                                                     | `boolean`                                                         | `true`  |
+| placeholder | Elements shown while loading.                                                                                              | `ReactNode`                                                       | -       |
+| ref         | Reference to the placeholder root `div`. It is not attached once `loading` is `false`.                                     | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| style       | Style of the placeholder root element. It has no effect once `loading` is `false`.                                         | `CSSProperties`                                                   | -       |

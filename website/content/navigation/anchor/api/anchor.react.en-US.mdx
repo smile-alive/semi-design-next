@@ -1,0 +1,26 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aria-label | Accessible name of the root navigation element. The locale text is used when it is not set. | `React.AriaAttributes['aria-label']` | - |
+| autoCollapse | Whether child links are shown dynamically: only the branch that holds the highlighted link is expanded. | `boolean` | `false` |
+| children | `Anchor.Link` elements. Nested `Anchor.Link` elements form the next level of links. | `React.ReactNode` | - |
+| className | Class name of the root navigation element. | `string` | `""` |
+| defaultAnchor | Link highlighted and scrolled to after mounting. It does not call onChange or onClick. | `string` | `""` |
+| getContainer | Returns the scrolling container. Returning null falls back to window. | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
+| maxHeight | max-height of the component, with a scrollbar when exceeded. This prop overrides max-height in style. | `string \| number` | `"750px"` |
+| maxWidth | max-width of the component, truncating when exceeded. This prop overrides max-width in style. | `string \| number` | `"200px"` |
+| offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `0` |
+| onChange | Called when the highlighted link changes, with the current and the previous link. | <ApiType detail={"(currentLink: string, previousLink: string) => void"}>Type</ApiType> | - |
+| onClick | Called when a link is clicked or activated with Enter, with the native MouseEvent or KeyboardEvent and the current link. | <ApiType detail={"(e: React.MouseEvent\u003cHTMLElement> \u007c React.KeyboardEvent\u003cHTMLElement>, currentLink: string) => void"}>Type</ApiType> | - |
+| position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | `Position` | - |
+| railTheme | Theme of the rail: `primary`, `tertiary` or `muted`. | `'primary' \| 'tertiary' \| 'muted'` | `"primary"` |
+| ref | Reference to the root navigation element (`role="navigation"`). | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. Without block the value is `start`; the horizontal position changes only when inline is passed. | `ScrollIntoViewOptions` | - |
+| scrollMotion | Whether scrolling after a click is animated (behavior is smooth). | `boolean` | `false` |
+| showTooltip | Whether a popup shows when the text is truncated, with its options: type is the popup component, `tooltip` (default) or `popover`, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
+| size | Size of the anchor: `small` or `default`. | `'small' \| 'default'` | `"default"` |
+| style | Style of the root navigation element. | `React.CSSProperties` | - |
+| targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |

@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                               | 类型                                                              | 默认值 |
+| --------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
+| align     | 子项的交叉轴对齐方式，透传给 `Space`，可选 `start`、`center`、`end` 或 `baseline`，默认 `center`。 | `Align`                                                           | -      |
+| children  | 组内的卡片。                                                                                       | `React.ReactNode`                                                 | -      |
+| className | 根元素的类名。                                                                                     | `string`                                                          | -      |
+| ref       | 根元素（`div`）的引用。                                                                            | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| spacing   | 卡片间距，数值或 `[水平间距, 垂直间距]`；`type` 为 `grid` 时不生效。                               | `number \| [number, number]`                                      | `16`   |
+| style     | 根元素的内联样式。                                                                                 | `React.CSSProperties`                                             | -      |
+| type      | 设为 `grid` 时呈现为网格型，覆盖 `spacing`。                                                       | `CardGroupType`                                                   | -      |
+| vertical  | 是否纵向排列，透传给 `Space`，默认 `false`。                                                       | `boolean`                                                         | -      |
+| wrap      | 是否换行，透传给 `Space`；纵向排列时不生效，默认 `true`。                                          | `boolean`                                                         | -      |

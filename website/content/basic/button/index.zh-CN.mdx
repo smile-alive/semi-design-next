@@ -1,0 +1,316 @@
+---
+title: 按钮
+order: 22
+icon: doc-button
+brief: 用户使用按钮来触发一个操作或者进行跳转。
+---
+
+import NoAccess from './figures/no-access.react.tsx';
+import ButtonReactApi from './api/button.react.zh-CN.mdx';
+import ButtonGroupReactApi from './api/button-group.react.zh-CN.mdx';
+import SplitButtonGroupReactApi from './api/split-button-group.react.zh-CN.mdx';
+import ButtonVueApi from './api/button.vue.zh-CN.mdx';
+import ButtonGroupVueApi from './api/button-group.vue.zh-CN.mdx';
+import SplitButtonGroupVueApi from './api/split-button-group.vue.zh-CN.mdx';
+import ButtonSolidApi from './api/button.solid.zh-CN.mdx';
+import ButtonGroupSolidApi from './api/button-group.solid.zh-CN.mdx';
+import SplitButtonGroupSolidApi from './api/split-button-group.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Button, SplitButtonGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 按钮类型
+
+按钮支持以下类型：
+
+- 主按钮（"primary"，默认）
+- 次要按钮（"secondary"）
+- 第三按钮（"tertiary"）
+- 警告按钮（"warning"）
+- 危险按钮（"danger"）
+
+<Demo id="types" />
+
+#### 关于类型字体色值
+
+按钮的字体色值使用的都是 [CSS Variables](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties)，分别为：
+
+- `var(--semi-color-primary)`：主要
+- `var(--semi-color-secondary)`：次要
+- `var(--semi-color-tertiary)`：第三
+- `var(--semi-color-warning)`：警告
+- `var(--semi-color-danger)`：危险
+
+你可以直接使用这些主题色定义你的元素。
+
+<Demo id="type-colors" />
+
+### 按钮主题
+
+目前可用的主题（theme）为：
+
+- `light`：浅色背景
+- `solid`：深色背景
+- `borderless`：无背景
+- `outline`: 边框模式
+
+默认的主题为 `light`
+
+#### 浅色背景
+
+<Demo id="theme-light" />
+
+#### 深色背景
+
+<Demo id="theme-solid" />
+
+#### 无背景
+
+<Demo id="theme-borderless" />
+
+#### 边框模式
+
+<Demo id="theme-outline" />
+
+### 尺寸
+
+默认定义了三种尺寸：
+
+- 大："large"
+- 默认："default"
+- 小："small"
+
+<Demo id="size" />
+
+### 块级按钮
+
+块级按钮具有预先定义好的宽度，它的宽度与按钮里面内容的宽度无关。
+
+<Demo id="block" />
+
+### 图标按钮
+
+可定义按钮的图标。
+
+<Framework only="vue">
+
+图标写在 `#icon` 插槽中，位置由 `iconPosition` 决定。
+
+</Framework>
+
+<Demo id="icon" />
+
+### 链接按钮
+
+我们推荐使用 Typography 的 link 属性来实现链接型的文字按钮，具体用法详见[Typography](/zh-CN/react/basic/typography)
+
+<Demo id="link" />
+
+### 禁用状态
+
+<Demo id="disabled" />
+
+### 加载状态
+
+按钮支持加载状态，通过设置 loading 参数值为 true 即可，注意：disabled 状态优先级高于 loading 状态。
+
+<Demo id="loading" />
+
+### AI 风格 - 多彩按钮
+
+设置 `colorful` 即可获得多彩按钮，多彩按钮支持所有的 `theme` ， `type` 仅支持 `primary` 及 `tertiary`。
+
+<Framework only="solid">
+
+渐变填充只作用于以组件形式传入的图标（`icon={IconAIFilledLevel1}`）；传入元素（`icon={<IconAIFilledLevel1 />}`）时元素已经渲染，按钮无法再给它加填充。
+
+</Framework>
+
+<Demo id="colorful" />
+
+### 按钮组合
+
+可以将多个按钮放入`ButtonGroup`的容器中，通过设置`size`，`disabled`，`type`，`theme`，`colorful`可统一设置按钮组合中的按钮尺寸、是否禁用、类型、主题和多彩样式。这些属性只是默认值，按钮自己设置的值优先。`data-*`、`id`、`aria-*` 和事件等其余属性会落在按钮组的根元素（`role="group"`）上。
+
+#### 组合尺寸
+
+<Demo id="group-size" />
+
+#### 组合禁用
+
+<Demo id="group-disabled" />
+
+#### 组合类型
+
+<Demo id="group-type" />
+
+### 分裂按钮组合
+
+在`Button`和`Dropdown`结合的场景下，可以使用分裂按钮，分裂按钮添加了按钮之间的间隔，并改变了按钮的边框圆角
+
+#### 基础使用
+
+<Demo id="split-basic" />
+
+## API 参考
+
+### Button
+
+<Framework only="react">
+
+<ButtonReactApi />
+
+其他原生属性（如 `data-*`、`onFocus`）落在原生 `<button>` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ButtonVueApi />
+
+`class`、`style` 与原生属性（如 `id`、`aria-*`）经 attrs 落在原生 `<button>` 上；`click`、`mousedown`、`mouseenter`、`mouseleave` 等原生事件用 `@click` 等监听，载荷为原生 `MouseEvent`。`loading` 时 `click` 不会触发。
+
+</Framework>
+
+<Framework only="solid">
+
+<ButtonSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`、`onMouseDown`）落在原生 `<button>` 上。`loading` 时 `onClick` 不会触发。
+
+</Framework>
+
+### ButtonGroup
+
+<Framework only="react">
+
+<ButtonGroupReactApi />
+
+其他原生属性（如 `aria-label`、`data-*`）落在按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ButtonGroupVueApi />
+
+`class`、`style` 与原生属性（如 `data-*`、`aria-*`）经 attrs 落在按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+<Framework only="solid">
+
+<ButtonGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`、`aria-*`）落在按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+### SplitButtonGroup
+
+<Framework only="react">
+
+<SplitButtonGroupReactApi />
+
+其他原生属性落在分裂按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SplitButtonGroupVueApi />
+
+`class`、`style` 与原生属性（如 `aria-*`）经 attrs 落在分裂按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SplitButtonGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `aria-*`）落在分裂按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- `aria-label` 用于表示按钮的作用，对于图标按钮，我们推荐使用此属性
+- `aria-disabled` 在按钮 disabled 或 loading 时为 true，表示按钮不可操作
+
+### 键盘和焦点
+
+- Button 的焦点管理与原生 button 一致，键盘用户可以使用 Tab 及 Shift + Tab 切换焦点
+- Button 的触发与原生 button 一致，当按钮聚焦时，可以通过 Enter 或 Space 键激活
+- ButtonGroup 中的按钮与单个按钮的焦点管理方式一致，可以通过 Tab 以及 Shift + Tab 进行切换
+
+## 文案规范
+
+- 按钮需要清晰可预测，用户应该能够预测他们点击按钮时会发生什么
+- 按钮应该总是以鼓励行动的强动词开头
+- 为了给用户提供足够的上下文，在按钮上使用 \{动词\}+\{名词\} 内容公式；除了常见的动作，如“Done”、“Close”、“Cancel”或“OK”
+
+| ✅ 推荐用法                            | ❌ 不推荐用法               |
+| -------------------------------------- | --------------------------- |
+| <NoAccess action="Apply permission" /> | <NoAccess action="Apply" /> |
+
+- 当按钮和其他组件一起时候，如果其他组件（比如 Modal 和Sidesheet）已经提供了足够信息的上下文的话，按钮可以只展示 \{动词\}，如“Add”、“Create”；
+
+| ✅ 推荐用法                                                                      | ❌ 不推荐用法                                                                   |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| <img src='/assets/content_guide/button-good-2.png' style={{ width: '350px' }} /> | <img src='/assets/content_guide/button-bad-2.png' style={{ width: '350px' }} /> |
+
+- 始终按句子大小写（Sentence case）原则书写
+
+| ✅ 推荐用法    | ❌ 不推荐用法                 |
+| -------------- | ----------------------------- |
+| Create project | Create <br/> Create a project |
+| Edit profile   | Edit                          |
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+<Framework only="react">
+
+- #### 为什么Button中的icon属性不起作用？
+    请检查你的Button import路径，正确的import路径应该为`import { Button } from '@fibrae/semi-ui-react;'`，如果你错误地从 @fibrae/semi-ui-react/button/button中import的话，获取到的是不带icon功能的基础Button组件
+
+</Framework>
+
+<Framework only="vue">
+
+- #### 为什么 Button 的图标不显示？
+    图标通过 `#icon` 插槽传入，不是 `icon` 属性：`<Button><template #icon><IconCamera /></template></Button>`。
+
+</Framework>

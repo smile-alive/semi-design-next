@@ -1,0 +1,71 @@
+{
+    "steps": {
+        "source": "packages/semi-ui-vue/src/steps/steps.vue",
+        "props": {
+            "type": {
+                "zh-CN": "步骤条类型，可选 fill、basic、nav。",
+                "en-US": "Steps type: fill, basic or nav."
+            },
+            "current": {
+                "zh-CN": "当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。",
+                "en-US": "Current step, counting from 0; a child Step can override the state with status."
+            },
+            "initial": { "zh-CN": "起始序号，从 0 开始计数。", "en-US": "Starting index, counting from 0." },
+            "direction": {
+                "zh-CN": "步骤条方向，可选 horizontal、vertical。",
+                "en-US": "Direction: horizontal or vertical."
+            },
+            "status": {
+                "zh-CN": "当前步骤的状态，可选 wait、process、finish、error、warning。",
+                "en-US": "State of the current step: wait, process, finish, error or warning."
+            },
+            "size": {
+                "zh-CN": "basic 与 nav 类型的尺寸，可选 default、small。",
+                "en-US": "Size of the basic and nav types: default or small."
+            },
+            "hasLine": {
+                "zh-CN": "basic 类型是否显示连接线。",
+                "en-US": "Whether the basic type shows connecting lines."
+            },
+            "prefixCls": { "zh-CN": "根元素的类名前缀。", "en-US": "Class name prefix of the root element." },
+            "onChange": {
+                "zh-CN": "点击或键盘选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。是函数 prop，使用方照常写 @change；传入后所有 Step 变为可点击。",
+                "en-US": "Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. It is a function prop, bound with @change as usual; passing it makes every Step clickable."
+            },
+            "onUpdate:current": {
+                "zh-CN": "v-model:current 绑定的更新函数，行为与 onChange 一致。",
+                "en-US": "Update function bound by v-model:current, behaving like onChange."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "Steps.Step 子节点；每个元素或组件按顺序占一个步骤位置，空白和文本除外，包装 Step 的组件同样编号。",
+                "en-US": "Steps.Step children; every element or component takes one step position in order, whitespace and text excepted, and a component that wraps Step is numbered too."
+            }
+        },
+        "exposed": {}
+    },
+    "step": {
+        "source": "packages/semi-ui-vue/src/steps/step.vue",
+        "props": {
+            "status": {
+                "zh-CN": "该步骤自己的状态；缺省时随 Steps 的 current 与 status 自动决定。",
+                "en-US": "Own status of the step; when omitted it follows current and status of Steps."
+            }
+        },
+        "events": {},
+        "slots": {
+            "title": { "zh-CN": "标题。", "en-US": "Title." },
+            "description": {
+                "zh-CN": "详情描述；nav 类型不渲染。",
+                "en-US": "Description; not rendered by the nav type."
+            },
+            "icon": {
+                "zh-CN": "自定义图标，提供后替换状态图标，内容为空则不显示图标；nav 类型不渲染。",
+                "en-US": "Custom icon that replaces the status icon; empty content shows no icon. Not rendered by the nav type."
+            }
+        },
+        "exposed": {}
+    }
+}

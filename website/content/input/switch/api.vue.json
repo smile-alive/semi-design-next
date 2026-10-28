@@ -1,0 +1,42 @@
+{
+    "switch": {
+        "source": "packages/semi-ui-vue/src/switch/switch.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "是否选中，配合 v-model 使用；传入后由该值决定显示，只传不回写时点击仅触发通知。",
+                "en-US": "Whether the switch is on, used with v-model. When given, this value decides; without a write-back, a click only notifies."
+            },
+            "defaultChecked": { "zh-CN": "非受控时的初始选中状态。", "en-US": "Initial state when uncontrolled." },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the switch is disabled." },
+            "loading": {
+                "zh-CN": "是否处于加载中；加载中 input 仍可聚焦并带 aria-disabled，切换被忽略且不发出事件。",
+                "en-US": "Whether the switch is loading. While loading, the input stays focusable with aria-disabled, and toggles are ignored without emitting events."
+            },
+            "size": {
+                "zh-CN": "开关尺寸，可选 large、default 或 small。",
+                "en-US": "Switch size: large, default or small."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "用户切换状态时触发，供 v-model 回写。",
+                "en-US": "Emitted when the user toggles the switch, for v-model to write back."
+            },
+            "change": {
+                "zh-CN": "用户切换状态时触发，参数为新的选中状态与原生事件。",
+                "en-US": "Emitted when the user toggles the switch, with the new state and the native event."
+            }
+        },
+        "slots": {
+            "checkedText": {
+                "zh-CN": "选中时展示的内容，size 为 small 时不显示。",
+                "en-US": "Content shown when on. Not shown when size is small."
+            },
+            "uncheckedText": {
+                "zh-CN": "未选中时展示的内容，size 为 small 时不显示。",
+                "en-US": "Content shown when off. Not shown when size is small."
+            }
+        },
+        "exposed": {}
+    }
+}

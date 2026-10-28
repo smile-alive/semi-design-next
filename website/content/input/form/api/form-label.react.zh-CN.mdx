@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                       | 类型                                                                | 默认值   |
+| --------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------- |
+| align     | Label 文本的对齐方式，可选 `left` 或 `right`。                             | `string`                                                            | `"left"` |
+| children  | Label 的内容，`text` 未设置时使用。                                        | `React.ReactNode`                                                   | -        |
+| className | label 元素的类名。                                                         | `string`                                                            | `""`     |
+| disabled  | 是否为禁用样式。                                                           | `boolean`                                                           | -        |
+| extra     | 跟随在 label 文本后的内容。                                                | `React.ReactNode`                                                   | -        |
+| id        | label 元素的 id。                                                          | `string`                                                            | -        |
+| name      | 所标注控件的 id，写入 label 的 `for` 属性；不传时使用原生的 `htmlFor`。    | `string`                                                            | -        |
+| optional  | 是否在文本后追加语言包中的可选标识。为 `true` 时不再显示 required 的 `*`。 | `boolean`                                                           | `false`  |
+| ref       | label 元素的引用。                                                         | <ApiType detail={"React.Ref\u003cHTMLLabelElement>"}>Type</ApiType> | -        |
+| required  | 是否显示必填的 `*` 号，`optional` 为 `true` 时不显示。                     | `boolean`                                                           | `false`  |
+| style     | label 元素的内联样式。                                                     | `React.CSSProperties`                                               | -        |
+| text      | Label 文本；不传时使用 children。                                          | `React.ReactNode`                                                   | -        |
+| width     | Label 宽度，数字单位为 px。                                                | `number \| string`                                                  | -        |

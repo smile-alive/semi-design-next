@@ -1,0 +1,461 @@
+---
+order: 60
+title: 标签栏
+icon: doc-tabs
+brief: 当内容需要分组并在不同模块页面中展示，可使用 Tabs 标签栏目对不同的组/页之间进行切换
+---
+
+import TabsReactApi from './api/tabs.react.zh-CN.mdx';
+import TabPaneReactApi from './api/tab-pane.react.zh-CN.mdx';
+import TabItemReactApi from './api/tab-item.react.zh-CN.mdx';
+import TabsVueApi from './api/tabs.vue.zh-CN.mdx';
+import TabPaneVueApi from './api/tab-pane.vue.zh-CN.mdx';
+import TabItemVueApi from './api/tab-item.vue.zh-CN.mdx';
+import TabsSolidApi from './api/tabs.solid.zh-CN.mdx';
+import TabPaneSolidApi from './api/tab-pane.solid.zh-CN.mdx';
+import TabItemSolidApi from './api/tab-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Tabs, TabPane } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tabs, TabPane } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tabs, TabPane } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+标签栏支持四种样式的显示：线条式，按钮式，卡片式，斜线式。默认选中第一个启用的标签页。  
+标签页支持两种传入方式，两者渲染流程上有所区别：
+
+- 通过 `tabList` 传入标签页对象的数组，当使用 `tabList` 时每次只渲染当前传入的节点
+- 或使用 `<TabPane>` 逐项显式传入，使用 `<TabPane>` 时默认会渲染所有面板，可以通过将 `keepDOM` 设为 `false` 只渲染当前面板，此时不会有动画效果。
+
+<Notice title='注意事项'>
+
+1. tabList 与 TabPane Children 同时使用时，会优先渲染通过 tabList 传入的数据。不建议同时配置
+2. 使用 TabPane Children 时，TabPane 必须为 Tabs 的直接子元素，否则 Tabs 将无法正确收集子组件如 itemKey 等相关属性
+
+</Notice>
+
+<Framework only="vue">
+
+Vue 中标签页的文字写在 `<TabPane>` 的 `#tab` 插槽，图标写在 `#icon` 插槽。`tabList` 的数据项只放数据（`itemKey`、`tab`、`disabled`、`closable`），需要节点时使用 Tabs 的 `#tab`、`#icon` 作用域插槽，参数为 `{ item, index }`，不提供插槽时显示该项的 `tab` 文本。只要传了数组（含空数组），默认插槽就是当前标签页的内容，不再读作 TabPane。
+
+</Framework>
+
+<Framework only="solid">
+
+`tabList` 的数据项只放数据（`itemKey`、`tab`、`disabled`、`closable`），需要节点时使用 Tabs 的 `renderTab`、`renderIcon`，参数为该项与其下标，不传 `renderTab` 时显示该项的 `tab` 文本。渲染函数在页签、「更多」菜单项与面板名称等每个显示位置各调用一次，该项的数据或下标变化时才重新调用。
+
+</Framework>
+
+<Demo id="line" />
+
+<Demo id="button" />
+
+<Demo id="card" />
+
+<Demo id="slash" />
+
+### 带图标的
+
+有图标的标签栏。
+
+<Demo id="icon" />
+
+### 更多选项收入 More 展示
+
+支持将多余 Tab 合并为「更多」下拉菜单，`more` 传入数字即可，数字表示收入下拉菜单的 Tab 数量。
+
+<Demo id="more" />
+
+<Framework only="react">
+
+也支持高级配置，向 `more` 传入对象，内可传入
+
+- `count`: 表示收入下拉菜单的 Tab 数量
+- `render`: 自定义 Trigger 的渲染函数，返回的 ReactNode 会被渲染为下拉菜单的 Trigger
+- `dropdownProps`: 传入 DropDown Props，会被透传到下拉菜单，如果需要自定义下拉菜单，使用 dropdownProps 中的 render 方法
+
+</Framework>
+
+<Framework only="vue">
+
+也支持高级配置，向 `more` 传入对象，内可传入
+
+- `count`: 表示收入下拉菜单的 Tab 数量
+- `dropdownProps`: 传入 Dropdown Props，会被透传到下拉菜单
+
+「更多」触发器使用 `#more` 插槽自定义，下拉菜单的内容使用 `#moreContent="{ items }"` 作用域插槽自定义，`items` 是收入菜单的标签页。
+
+</Framework>
+
+<Framework only="solid">
+
+也支持高级配置，向 `more` 传入对象，内可传入
+
+- `count`: 表示收入下拉菜单的 Tab 数量
+- `render`: 自定义触发器的渲染函数，返回的 JSX 会被渲染为下拉菜单的触发器
+- `dropdownProps`: 传入 Dropdown 属性，会被透传到下拉菜单
+
+</Framework>
+
+<Demo id="more-advanced" />
+
+### 垂直的标签栏
+
+`type` 为 `line`, `card`, `button` 支持水平和垂直两种模式，`tabPosition='left|top'`， 默认为 `top`。`type` 为 `slash` 仅支持水平模式，无需设置。
+
+<Demo id="vertical" />
+
+### 滚动折叠
+
+通过设置 `collapsible` 可以支持滚动折叠，目前只支持 horizontal 模式。
+
+<Demo id="collapsible" />
+
+**自定义滚动箭头渲染**
+
+<Framework only="react">
+
+通过 renderArrow 修改滚动折叠模式下，左右切换箭头的渲染，入参为溢出的 items 和 位置, 点击处理函数，以及 defaultNode。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#arrow` 作用域插槽修改滚动折叠模式下，左右切换箭头的渲染，参数为溢出的 `items`、位置 `position`、点击处理函数 `onClick`，以及默认箭头 `defaultNode`（可用 `<component :is="defaultNode" />` 渲染）。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `renderArrow` 修改滚动折叠模式下，左右切换箭头的渲染，入参依次为溢出的 `items`、位置 `pos`、点击处理函数 `handleArrowClick`，以及创建默认箭头的函数 `defaultNode`，在插入处调用 `defaultNode()`。`items` 是普通数据；TabPane 写法下不带 `tab`，需要标签文本时用 `tabList`。
+
+</Framework>
+
+<Demo id="render-arrow" />
+
+**修改切换箭头的渲染位置**
+
+通过 `arrowPosition` 来修改溢出指示器的位置，可选 `start` `both` `end`
+
+<Demo id="arrow-position" />
+
+### 自动溢出检测
+
+通过设置 `collapsible="auto"` 可以启用自动溢出检测功能。组件会自动检测 Tab 是否溢出容器：
+
+- 当 Tab 超出容器宽度或发生换行时，自动启用折叠模式（显示左右箭头）
+- 当容器宽度增加或 Tab 数量减少后，所有 Tab 可以完整显示时，自动退出折叠模式
+
+这个功能避免了开发者需要手动判断是否需要折叠的问题，特别适用于响应式布局场景。
+
+<Demo id="auto-collapsible" />
+
+### 禁用
+
+禁用标签栏中的某一个标签页。
+
+<Demo id="disabled" />
+
+### 标签栏内容扩展
+
+<Framework only="react">
+
+传入 `tabBarExtraContent` 属性可以在标签栏右侧添加附加操作。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `#tabBarExtraContent` 插槽可以在标签栏右侧添加附加操作。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `tabBarExtraContent` 属性可以在标签栏右侧添加附加操作。
+
+</Framework>
+
+<Demo id="extra-content" />
+
+### 标签栏二次封装
+
+<Framework only="react">
+
+传入 `renderTabBar` 函数可对标签栏进行二次封装。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `#tabBar="{ tabBarProps, tabBar }"` 作用域插槽可对标签栏进行二次封装。`tabBarProps` 只含数据（见下方 TabBarProps），`tabBar` 是默认标签栏节点，用 `<component :is="tabBar" />` 渲染。
+
+用 `#tabBar` 完全替换标签栏时，Tabs 的 `aria-label`、`aria-labelledby` 不会落到你自己的元素上：可访问名称写在自定义的 `role="tablist"` 元素上。TabPane 的 `#tab` 为纯文本时，`tabBarProps.list` 的对应项才带 `tab` 文本。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `renderTabBar` 函数可对标签栏进行二次封装，同一个函数只调用一次。`tabBarProps` 是活的标签栏属性，字段需要在返回的 JSX 中读取；`DefaultTabBar` 是默认标签栏组件，用 `<DefaultTabBar {...tabBarProps} />` 渲染。
+
+用 `renderTabBar` 完全替换标签栏时，Tabs 的 `aria-label`、`aria-labelledby` 在 `tabBarProps` 中，不会自动落到你自己的元素上：可访问名称写在自定义的 `role="tablist"` 元素上。TabPane 写法下，`tabBarProps.list` 的各项是普通数据，不带 `tab`；需要标签文本时用 `tabList`。
+
+</Framework>
+
+<Demo id="render-tab-bar" />
+
+### 拖拽排序
+
+<Framework only="react">
+
+通过 `renderTabBar` API 结合第三方拖拽库（如 [@dnd-kit](https://docs.dndkit.com/)）可以实现标签栏的拖拽排序功能。
+
+<Notice title='使用前提'>
+
+需要先安装 dnd-kit 相关依赖：
+
+```bash
+npm install @dnd-kit/react @dnd-kit/dom @dnd-kit/helpers
+```
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#tabBar` 插槽，在自己的 `role="tablist"` 元素里用 `TabItem` 渲染各个标签，即可结合拖拽实现标签栏的排序。`TabItem` 在 Tabs 内点击时会自行选中所在的标签页，`draggable`、拖放事件等原生属性与监听落在它的根元素上。示例使用浏览器原生拖放，只支持指针操作；需要键盘排序时可以改用 `@dnd-kit/dom` 等支持键盘的拖拽库。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `renderTabBar` 结合第三方拖拽库（如 [@dnd-kit](https://docs.dndkit.com/)）可以实现标签栏的拖拽排序功能：在自己的 `role="tablist"` 元素里用 `Tabs.TabItem` 渲染各个标签。`TabItem` 不会自行选中所在的标签页，需要在 `onClick` 中更新 `activeKey`。
+
+<Notice title='使用前提'>
+
+需要先安装 dnd-kit 相关依赖：
+
+```bash
+npm install @dnd-kit/solid @dnd-kit/dom @dnd-kit/helpers
+```
+
+</Notice>
+
+</Framework>
+
+<Demo id="drag-sort" />
+
+### 动态更新
+
+通过绑定事件，可以使标签栏动态更新。
+
+<Demo id="dynamic" />
+
+### 关闭
+
+关闭标签栏中的某一个标签页。  
+四种样式的页签都支持关闭选项，在对应的标签页上设置 `closable` 来开启。禁用的标签页不能关闭。标签页的移除由使用方在关闭回调中完成。
+
+<Demo id="closable" />
+
+## API 参考
+
+### Tab
+
+<Framework only="react">
+
+<TabsReactApi />
+
+其他原生属性（如 `id`、`data-*`、`onFocus`）落在根元素 `div` 上；`aria-label` 与 `aria-labelledby` 由 Tabs 转给标签栏，落在 `role="tablist"` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TabsVueApi />
+
+`activeKey` 配合 `v-model:activeKey`；`aria-label`、`aria-labelledby` 落在 `role="tablist"` 元素上，`class`、`style` 与其他原生属性落在根元素上。
+
+**PlainTab**
+
+`tabList` 的数据项，只含数据。
+
+| 属性     | 说明                                   | 类型             | 默认值 |
+| -------- | -------------------------------------- | ---------------- | ------ |
+| itemKey  | 标签页的唯一标识，对应 `activeKey`     | string           | 无     |
+| tab      | 标签页文字；有 `#tab` 插槽时以插槽为准 | string \| number | 无     |
+| disabled | 是否禁用                               | boolean          | 无     |
+| closable | 是否允许关闭                           | boolean          | 无     |
+
+**TabsMore**
+
+`more` 传对象时的形状。
+
+| 属性          | 说明                           | 类型                  | 默认值 |
+| ------------- | ------------------------------ | --------------------- | ------ |
+| count         | 收入下拉菜单的 Tab 数量        | number                | 无     |
+| dropdownProps | 透传给下拉菜单的 Dropdown 属性 | TabsDropdownItemProps | 无     |
+
+`TabsDropdownItemProps` 是 Dropdown 的属性，外加 `class`、`style` 与 `onVisibleChange`。`dropdownProps` 的 `start`、`end` 也使用该类型。
+
+**TabBarProps**
+
+`#tabBar` 插槽的 `tabBarProps`，是默认标签栏的数据。
+
+| 属性               | 说明                                               | 类型                                    |
+| ------------------ | -------------------------------------------------- | --------------------------------------- |
+| activeKey          | 当前激活的 itemKey，受控的空值为 null              | string \| null                          |
+| list               | 标签页数据；TabPane 的 `#tab` 为纯文本时才带 `tab` | PlainTab[]                              |
+| type               | 标签栏样式                                         | 'line' \| 'card' \| 'button' \| 'slash' |
+| size               | 尺寸                                               | 'small' \| 'medium' \| 'large'          |
+| tabPosition        | 位置                                               | 'top' \| 'left'                         |
+| collapsible        | 是否折叠                                           | boolean \| 'auto'                       |
+| showRestInDropdown | 折叠模式下，收起的标签是否展示在下拉菜单中         | boolean                                 |
+| more               | 收入「更多」菜单的配置                             | number \| TabsMore                      |
+| arrowPosition      | 折叠模式下箭头的位置                               | 'both' \| 'start' \| 'end'              |
+| visibleTabsStyle   | 折叠模式下整体滚动区域的样式                       | StyleValue                              |
+| dropdownProps      | 折叠模式下箭头下拉菜单的 Dropdown 属性             | TabsDropdownProps                       |
+| class              | tabBarClassName                                    | string                                  |
+| style              | tabBarStyle                                        | StyleValue                              |
+
+</Framework>
+
+<Framework only="solid">
+
+<TabsSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性和事件落在根元素上；`aria-label`、`aria-labelledby` 落在 `role="tablist"` 元素上。
+
+</Framework>
+
+### TabPane
+
+<Framework only="react">
+
+<TabPaneReactApi />
+
+其他原生属性（如 `data-*`、`onFocus`）落在面板根元素（`role="tabpanel"`）上；`id`、`role`、`aria-hidden` 与 `aria-labelledby` 由组件生成，不会被覆盖。
+
+### TabItem
+
+自定义标签栏（`renderTabBar`）中单个标签的组件，通过 `Tabs.TabItem` 使用。在 Tabs 内，它使用 Tabs 的键盘与关闭处理，但点击时不会自行选中标签页，需要在 `onClick` 中更新 `activeKey`。
+
+<TabItemReactApi />
+
+其他原生属性落在根元素（`role="tab"`）上；`role`、`aria-selected`、`aria-disabled` 与 `tabIndex` 由组件管理，在 Tabs 内 `id` 与 `aria-controls` 也由组件管理，均不会被覆盖。
+
+</Framework>
+
+<Framework only="vue">
+
+<TabPaneVueApi />
+
+`class`、`style` 与原生属性（包括 `id`、`role`、`aria-*`、`tabindex`）落在面板根元素上；`id`、`role="tabpanel"`、`aria-hidden` 与同标签页配对的 `aria-labelledby` 由组件生成，不会被覆盖，`tabindex` 默认为 0，可以覆盖。
+
+### TabItem
+
+自定义标签栏（`#tabBar` 插槽）中单个标签的组件。在 Tabs 内点击会自行选中所在的标签页，并触发 Tabs 的 `change` 与 `tabClick`。
+
+<TabItemVueApi />
+
+`class`、`style` 与原生属性落在根元素上；`role`、`id`、`aria-selected`、`aria-disabled`、`aria-controls` 与 `tabindex` 由组件管理，不会被覆盖。
+
+</Framework>
+
+<Framework only="solid">
+
+<TabPaneSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（包括 `id`、`role`、`aria-*`、`tabIndex`）落在 `role="tabpanel"` 的面板元素上；`id`、`role`、`aria-hidden` 与同标签页配对的 `aria-labelledby` 由组件生成，不会被覆盖，`tabIndex` 默认为 0，可以覆盖。
+
+### TabItem
+
+自定义标签栏（`renderTabBar`）中单个标签的组件，通过 `Tabs.TabItem` 使用。在 Tabs 内，它使用 Tabs 的键盘与关闭处理，但点击时不会自行选中标签页，需要在 `onClick` 中更新 `activeKey`。
+
+<TabItemSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在根元素上；`role`、`id`、`aria-selected`、`aria-disabled`、`aria-controls` 与 `tabIndex` 由组件管理，不会被覆盖。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 关于 role
+    - TabBar 中只包含 Tab 的元素对应的 role 为 `tablist`，切换箭头、「更多」和 `tabBarExtraContent` 在它之外
+    - TabBar 中的 Tab 对应的 role 为 `tab`
+    - TabPane 对应的 role 为 `tabpanel`
+- aria-label、aria-labelledby: 传给 Tabs 时落在 `role="tablist"` 的元素上，用于给标签栏命名
+- aria-orientation: 表明 TabBar 的方向，有 `vertical` 和 `horizontal` 两种。当传入 tabPosition 为 left 时, aria-orientation 会被设置为 `vertical`，tabPosition 为 top 时，设置为 `horizontal`
+- aria-disabled: 当 TabPane 设置为 disabled 时，对应 Tab 的 aria-disabled 会被设置为 true
+- aria-selected: 表明 Tab 是否被选中
+- aria-controls: 指向 Tab 标签所控制的 TabPane；文档中只有当前选中项的面板时（使用 `tabList`，或 `keepDOM` 为 false），只有选中的 Tab 带有此属性
+- aria-labelledby: 指向设置 TabPane 标签的元素
+
+### 键盘和焦点
+
+WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/
+
+- 选项卡可以被获取到焦点，但禁用的选项卡除外
+- 键盘用户可以使用 `Tab` 键，将焦点移动到已被选择的选项卡元素的选项卡面板上
+- 当焦点位于水平选项卡列表中的选项卡元素上时，使用 `左右箭头` 来切换选项（RTL 页面中左右箭头方向对调）
+- 当焦点位于垂直选项卡列表中的选项卡元素上时，使用 `上下箭头` 来切换选项
+- 当焦点位于选项卡列表中的未被激活的选项卡元素上时，可以使用 `Space` 或 `Enter` 键来激活该选项卡
+- 当键盘用户想要直接将焦点聚焦到选项卡列表中的最后一个选项卡元素时：
+    - Mac 用户：`fn` + `右箭头`
+    - Windows 用户：`End`
+- 当键盘用户想要直接将焦点聚焦到选项卡列表中的第一个选项卡元素时：
+    - Mac 用户：`fn` + `左箭头`
+    - Windows 用户：`Home`
+- 使用 `more` 时，默认的「更多」触发器是原生 `button`，可以用 `Tab` 键聚焦，`Enter` 或 `Space` 打开下拉菜单，并带有 `aria-haspopup="menu"` 与 `aria-expanded`
+- 当选项卡允许被删除时：
+    - 用户可以使用 `Delete` 或 `Backspace` 键删除选项卡，禁用的选项卡除外
+    - 删除后，焦点转移到被删除选项卡元素的后一个元素上；若被删除元素无后一个元素则转移到前一个元素上
+
+## 设计变量
+
+<DesignToken />
+
+## 文案规范
+
+- 标签文案需要准确清晰地解释标签内容
+- 用简短的，易区分的标签
+- 尽量保持在一个词以内
+
+## FAQ
+
+- **为什么在 Tabs 中使用 Typography 的省略 ellipsis 失效？**
+
+    因为 Tabs 渲染 TabPane 时，默认是全部渲染 display: none。此时这些组件无法获取到正确的宽度或高度值。建议开启 lazyRender，或者关闭 keepDOM。
+
+- **为什么在 Tabs 中使用 Collapse/Collapsible/Resizable Table 等组件的高度或宽度值不对？**
+
+    原因同上，另外如果 collapse 不需要动画，也可以把它的 `motion` 设为 false 来关闭动画效果。此时无需获取组件的高度。

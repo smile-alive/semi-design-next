@@ -1,0 +1,67 @@
+---
+import { IconMoon, IconSun } from '@fibrae/semi-icons-react';
+import { translate } from '#/i18n';
+import type { Locale } from '#/lib/docs';
+
+interface Props {
+    locale: Locale;
+}
+
+const t = translate(Astro.props.locale);
+---
+
+<button type="button" class="site-icon-button theme-toggle" id="theme-toggle" aria-label={t('nav_theme')} aria-pressed="false">
+    <IconMoon className="theme-toggle-light" size="extra-large" />
+    <IconSun className="theme-toggle-dark" size="extra-large" />
+</button>
+
+<script>
+    // body[theme-mode] is the single source: the button and dark-mode demos only change it; sync the button and persist
+    const syncThemeToggle = () => {
+        const dark = document.body.getAttribute('theme-mode') === 'dark';
+        document.getElementById('theme-toggle')?.setAttribute('aria-pressed', String(dark));
+        return dark;
+    };
+    const themeObserver = new MutationObserver(() => {
+        const dark = syncThemeToggle();
+        try {
+            localStorage.setItem('semi-theme', dark ? 'dark' : 'light');
+        } catch {
+            // With storage disabled the choice lasts for this page only
+        }
+    });
+
+    // The header is replaced on every navigation, so clicks delegate to document
+    document.addEventListener('click', (event) => {
+        if (!(event.target as Element).closest('#theme-toggle')) return;
+        if (document.body.getAttribute('theme-mode') === 'dark') {
+            document.body.removeAttribute('theme-mode');
+        } else {
+            document.body.setAttribute('theme-mode', 'dark');
+        }
+    });
+
+    // body is swapped wholesale; carry dark mode over before paint (DocLayout's inline theme script will not rerun)
+    document.addEventListener('astro:before-swap', (event) => {
+        const mode = document.body.getAttribute('theme-mode');
+        if (mode) event.newDocument.body.setAttribute('theme-mode', mode);
+    });
+
+    document.addEventListener('astro:page-load', () => {
+        syncThemeToggle();
+        themeObserver.disconnect();
+        themeObserver.observe(document.body, { attributeFilter: ['theme-mode'] });
+    });
+</script>
+
+<style>
+    /* Icons come from React components, so they have no scope marker */
+    .theme-toggle :global(.theme-toggle-dark),
+    :global([theme-mode='dark']) .theme-toggle :global(.theme-toggle-light) {
+        display: none;
+    }
+
+    :global([theme-mode='dark']) .theme-toggle :global(.theme-toggle-dark) {
+        display: inline-block;
+    }
+</style>

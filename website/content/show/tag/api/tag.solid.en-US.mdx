@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| avatarShape | Shape of the avatar in an avatar tag: `square` or `circle`. | `AvatarShape` | `"square"` |
+| avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | - |
+| closable | Whether the tag can be closed. | `boolean` | `false` |
+| color | Tag color: one of the 16 palette colors or `white`. | `TagColor` | `"grey"` |
+| colorful | Whether the tag is colorful. | `boolean` | `false` |
+| gradient | Whether a colorful tag uses a gradient. Requires `colorful` to be `true`. | `boolean` | `false` |
+| onClose | Callback when the tag is closed, with the tag content, the event and `tagKey`. `event` is the click on the close icon, or the keydown for Backspace or Delete. Call `preventDefault` on the event to keep the tag visible. | <ApiType detail={"(tagChildren: JSX.Element, event: TagCloseEvent, tagKey?: string \u007c number) => void"}>Type</ApiType> | - |
+| prefixIcon | Icon before the content, as a JSX element. | `JSX.Element` | - |
+| shape | Tag shape: `square` or `circle`. | `TagShape` | `"square"` |
+| size | Tag size: `default`, `small` or `large`. | `TagSize` | `"default"` |
+| suffixIcon | Icon after the content, as a JSX element. | `JSX.Element` | - |
+| tagKey | Unique identifier of the tag, passed as the third argument of `onClose`. | `string \| number` | - |
+| type | Style type: `light`, `ghost` or `solid`. | `TagType` | `"light"` |
+| visible | Whether the tag is visible. When omitted, closing the tag hides it; when given, this value decides. | `boolean` | - |

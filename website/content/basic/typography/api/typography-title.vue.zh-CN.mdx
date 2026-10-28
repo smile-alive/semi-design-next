@@ -1,0 +1,43 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                      | 类型                                                                                                                                                                  | 默认值      |
+| --------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ellipsis  | 设置自动溢出省略；传对象时见 Ellipsis Config。                                            | `boolean \| Ellipsis`                                                                                                                                                 | `false`     |
+| heading   | 标题级别，对应 h1 到 h6。                                                                 | `1 \| 2 \| 3 \| 4 \| 5 \| 6`                                                                                                                                          | `1`         |
+| weight    | 字重，可选 light、regular、medium、semibold、bold、default，或数字。                      | <ApiType detail={"number \u007c \"bold\" \u007c \"default\" \u007c \"medium\" \u007c \"light\" \u007c \"regular\" \u007c \"semibold\""}>Type</ApiType>                | `undefined` |
+| component | 自定义渲染元素，可以是标签名或 Vue 组件，默认由 heading 决定（h1 到 h6）。                | `string \| Component`                                                                                                                                                 | `undefined` |
+| copyable  | 是否可复制；传对象时见 Copyable Config。                                                  | `boolean \| TypographyCopyableConfig`                                                                                                                                 | `false`     |
+| delete    | 添加删除线样式。                                                                          | `boolean`                                                                                                                                                             | `false`     |
+| disabled  | 禁用文本。                                                                                | `boolean`                                                                                                                                                             | `false`     |
+| link      | 是否为链接；传对象时，其中的属性（href、target、class、style、onClick 等）挂在 a 元素上。 | `LinkType`                                                                                                                                                            | `false`     |
+| mark      | 添加标记样式。                                                                            | `boolean`                                                                                                                                                             | `false`     |
+| strong    | 是否加粗。                                                                                | `boolean`                                                                                                                                                             | `false`     |
+| type      | 文本类型。                                                                                | <ApiType detail={"\"primary\" \u007c \"secondary\" \u007c \"danger\" \u007c \"warning\" \u007c \"success\" \u007c \"tertiary\" \u007c \"quaternary\""}>Type</ApiType> | `"primary"` |
+| underline | 添加下划线样式。                                                                          | `boolean`                                                                                                                                                             | `false`     |
+
+**Events**
+
+| 事件   | 说明                                                                                               | 回调参数                                         |
+| ------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| expand | 点击展开或收起控件时触发，参数为操作之后的展开状态和点击事件。                                     | `[expanded: boolean, e: MouseEvent]`             |
+| copy   | 复制后触发，参数为点击事件、复制的内容和是否写入成功；写入被拒绝时为 false，此时不进入已复制状态。 | `[e: MouseEvent, content: string, res: boolean]` |
+
+**Slots**
+
+| 插槽            | 说明                                                                                                                       | 作用域参数                       |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| default         | 标题内容。                                                                                                                 | `any`                            |
+| copyIcon        | 复制按钮的内容；内容为单个节点且带 aria-label 时以它作为按钮的可访问名称，否则用语言包的「复制」。                         | `any`                            |
+| copyTip         | 复制图标的提示内容。                                                                                                       | `any`                            |
+| copySuccessTip  | 复制成功后的展示内容。                                                                                                     | `any`                            |
+| copyAction      | 完全自定义复制节点，参数为 copied、copy 和解析后的 config。                                                                | `TypographyCopyActionProps`      |
+| ellipsisContent | 截断时浮层中的内容，默认是全文。                                                                                           | `any`                            |
+| ellipsisTooltip | 自定义浮层，仅在文本溢出时渲染；参数 content 是全文，trigger 是文字元素，用 `<component :is="trigger" />` 放入自己的浮层。 | `TypographyEllipsisTooltipProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

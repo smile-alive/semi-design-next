@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| current | Index of the current step, for v-model:current. Without it the component keeps the index itself, starting at 0. | `number` | `semiGlobalDefault("UserGuide", "current")` |
+| finishText | Text of the finish button on the last step. When empty, the text from the locale pack is used. | `string` | `semiGlobalDefault("UserGuide", "finishText")` |
+| getPopupContainer | In modal mode the dialog is rendered into this DOM node. In popup mode body scrolling is not locked when it points to an element other than body. The popover card sits in the top layer and is not affected. | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined` |
+| mask | Whether to show the mask. A step's own mask overrides it. | `boolean` | `semiDefault("UserGuide", "mask", true)` |
+| mode | Guide mode: popup for a bubble card, modal for a dialog. | `"popup" \| "modal"` | `semiDefault("UserGuide", "mode", "popup")` |
+| nextButtonProps | Props of the next button, which may include class, style and onClick. onClick is called before the built-in handling; use the nextText slot for the button text. | `UserGuideButtonProps` | `semiGlobalDefault("UserGuide", "nextButtonProps")` |
+| position | Position of the bubble card relative to the target element. A step's own position overrides it. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiDefault("UserGuide", "position", "bottom")` |
+| prevButtonProps | Props of the previous button, which may include class, style and onClick. onClick is called before the built-in handling; use the prevText slot for the button text. | `UserGuideButtonProps` | `semiGlobalDefault("UserGuide", "prevButtonProps")` |
+| showPrevButton | Whether to show the previous button. It is never shown on the first step. | `boolean` | `semiDefault("UserGuide", "showPrevButton", true)` |
+| showSkipButton | Whether to show the skip button. It is never shown on the last step. | `boolean` | `semiDefault("UserGuide", "showSkipButton", true)` |
+| spotlightPadding | Extra space in pixels around the highlighted area. A step's own spotlightPadding overrides it; 5 when neither is set. | `number` | `semiGlobalDefault("UserGuide", "spotlightPadding")` |
+| steps | Data of the guide steps. Use the title, description and cover slots for custom content. | `UserGuideStepItem[]` | `semiDefault("UserGuide", "steps", [])` |
+| theme | Theme of the popup mode. A step's own theme overrides it. | `"default" \| "primary"` | `semiDefault("UserGuide", "theme", "default")` |
+| visible | Whether the guide is shown, for v-model:visible. | `boolean` | `semiDefault("UserGuide", "visible", false)` |
+| zIndex | The z-index of the mask in popup mode and of the dialog in modal mode. The popover card sits in the top layer, always above the mask. | `number` | `semiDefault("UserGuide", "zIndex", numbers.DEFAULT_Z_INDEX)` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                   | Callback parameters |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| update:current | Emitted with the new index when the step changes, for v-model:current to write back. It comes before change.                                                  | `[current: number]` |
+| update:visible | Emitted with false when the guide is skipped, Escape is pressed or the guide is finished, for v-model:visible to write back. It comes before skip and finish. | `[visible: false]`  |
+| change         | Emitted with the new index when the step changes.                                                                                                             | `[current: number]` |
+| next           | Emitted with the new index when the next button is clicked. The last step emits finish instead.                                                               | `[current: number]` |
+| prev           | Emitted with the new index when the previous button is clicked.                                                                                               | `[current: number]` |
+| skip           | Emitted when the skip button is clicked or Escape is pressed.                                                                                                 | `[]`                |
+| finish         | Emitted when the finish button on the last step is clicked.                                                                                                   | `[]`                |
+
+**Slots**
+
+| Slot        | Description                                                                                                | Scope parameters         |
+| ----------- | ---------------------------------------------------------------------------------------------------------- | ------------------------ |
+| title       | Step title, with scope `{ item, index }`. When it renders nothing, item.title is used.                     | `UserGuideStepSlotProps` |
+| description | Step description, with scope `{ item, index }`. When it renders nothing, item.description is used.         | `UserGuideStepSlotProps` |
+| cover       | Step cover, with scope `{ item, index }`. Without it the step has no cover area.                           | `UserGuideStepSlotProps` |
+| nextText    | Text of the next button; the last step shows finishText. Without it the text from the locale pack is used. | `any`                    |
+| prevText    | Text of the previous button. Without it the text from the locale pack is used.                             | `any`                    |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

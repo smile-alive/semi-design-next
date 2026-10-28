@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                                                               | 类型                                                               | 默认值 |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------ |
+| children  | 文本内容；`copyable` 为 `true` 时复制的就是它，`ellipsis` 只能截断纯文本。                                                                         | `React.ReactNode`                                                  | -      |
+| code      | 是否被 `code` 元素包裹。                                                                                                                           | `boolean`                                                          | -      |
+| component | 根元素渲染的标签名或组件，默认 `span`。                                                                                                            | `React.ElementType`                                                | -      |
+| copyable  | 是否可复制；传对象时可配置 Copyable Config。                                                                                                       | `CopyableConfig \| boolean`                                        | -      |
+| delete    | 添加删除线样式。                                                                                                                                   | `boolean`                                                          | -      |
+| disabled  | 禁用文本；链接渲染为 `span`，只保留样式。                                                                                                          | `boolean`                                                          | -      |
+| ellipsis  | 设置自动溢出省略；传对象时可配置 Ellipsis Config。                                                                                                 | `Ellipsis \| boolean`                                              | -      |
+| icon      | 前缀图标，可传节点；Semi 图标会按文字大小设置尺寸。                                                                                                | `React.ReactNode \| string`                                        | -      |
+| link      | 是否为链接；传对象时，其中的属性（`href`、`target`、`className`、`style`、`onClick` 等）挂在内层 `a` 元素上。禁用时只保留 `className` 与 `style`。 | `LinkType`                                                         | -      |
+| mark      | 添加标记样式。                                                                                                                                     | `boolean`                                                          | -      |
+| ref       | 根元素的引用。                                                                                                                                     | <ApiType detail={"React.Ref\u003cHTMLSpanElement>"}>Type</ApiType> | -      |
+| size      | 文本大小，可选 `normal`、`small` 或 `inherit`；`inherit` 继承外层 Typography 组件的尺寸，默认 `normal`。                                           | `TypographyBaseSize`                                               | -      |
+| strong    | 是否加粗。                                                                                                                                         | `boolean`                                                          | -      |
+| type      | 文本类型，可选 `primary`、`secondary`、`danger`、`warning`、`success`、`tertiary` 或 `quaternary`，默认 `primary`。                                | `TypographyBaseType`                                               | -      |
+| underline | 添加下划线样式；链接文本只在 hover 与 active 时显示下划线。                                                                                        | `boolean`                                                          | -      |
+| weight    | 字重，数字。                                                                                                                                       | `number`                                                           | -      |

@@ -1,0 +1,107 @@
+{
+    "user-guide": {
+        "source": "packages/semi-ui-solid/src/user-guide/user-guide.tsx",
+        "props": {
+            "class": {
+                "zh-CN": "自定义类名。popup 模式下落在气泡卡片上，modal 模式下落在弹窗的外层元素上。",
+                "en-US": "Custom class name. In popup mode it lands on the popover card; in modal mode it lands on the outer element of the dialog."
+            },
+            "current": {
+                "zh-CN": "当前步骤的索引，从 0 开始。设置后由外部控制，配合 onChange 回写；不设置时组件自己保存步骤。",
+                "en-US": "Index of the current step, starting at 0. When set, the parent controls the step and writes it back with onChange; when not set, the component keeps the step itself."
+            },
+            "finishText": {
+                "zh-CN": "最后一步完成按钮的文本；为空时使用语言包中的文案。",
+                "en-US": "Text of the finish button on the last step. When empty, the text from the locale pack is used."
+            },
+            "getPopupContainer": {
+                "zh-CN": "modal 模式下弹窗渲染至该 DOM 中；popup 模式下指向 body 以外的元素时不锁定 body 滚动。气泡卡片位于 top layer，不受此属性影响。",
+                "en-US": "In modal mode the dialog is rendered into this DOM node. In popup mode body scrolling is not locked when it points to an element other than body. The popover card sits in the top layer and is not affected."
+            },
+            "mask": {
+                "zh-CN": "是否显示蒙层，可被步骤的 mask 覆盖。",
+                "en-US": "Whether to show the mask. A step's own mask overrides it."
+            },
+            "mode": {
+                "zh-CN": "引导模式：popup 为气泡卡片，modal 为弹窗。",
+                "en-US": "Guide mode: popup for a bubble card, modal for a dialog."
+            },
+            "nextButtonProps": {
+                "zh-CN": "下一步按钮的属性，可含 class、style 与 onClick；onClick 先于内置处理调用。按钮文本使用 children，最后一步的文本由 finishText 决定。",
+                "en-US": "Props of the next button, which may include class, style and onClick. onClick runs before the built-in handling. The button text is children; the text of the last step comes from finishText."
+            },
+            "onChange": {
+                "zh-CN": "步骤改变时的回调，参数为新的索引。",
+                "en-US": "Callback when the step changes, with the new index."
+            },
+            "onFinish": {
+                "zh-CN": "点击最后一步的完成按钮时的回调。",
+                "en-US": "Callback when the finish button on the last step is clicked."
+            },
+            "onNext": {
+                "zh-CN": "点击下一步按钮时的回调，参数为新的索引；最后一步不触发，由 onFinish 处理。",
+                "en-US": "Callback when the next button is clicked, with the new index. It is not called on the last step, where onFinish handles the click instead."
+            },
+            "onPrev": {
+                "zh-CN": "点击上一步按钮时的回调，参数为新的索引。",
+                "en-US": "Callback when the previous button is clicked, with the new index."
+            },
+            "onSkip": {
+                "zh-CN": "点击跳过按钮或按 Esc 时的回调。",
+                "en-US": "Callback when the skip button is clicked or Escape is pressed."
+            },
+            "position": {
+                "zh-CN": "气泡卡片相对于目标元素的位置，可被步骤的 position 覆盖。",
+                "en-US": "Position of the bubble card relative to the target element. A step's own position overrides it."
+            },
+            "prevButtonProps": {
+                "zh-CN": "上一步按钮的属性，可含 class、style 与 onClick；onClick 先于内置处理调用。按钮文本使用 children。",
+                "en-US": "Props of the previous button, which may include class, style and onClick. onClick runs before the built-in handling. The button text is children."
+            },
+            "renderCover": {
+                "zh-CN": "渲染当前步骤的封面，参数为 `{ item, index }`；渲染为空时该步骤没有封面区域。",
+                "en-US": "Renders the cover of the current step, with `{ item, index }`. A step it renders nothing for has no cover area."
+            },
+            "renderDescription": {
+                "zh-CN": "渲染当前步骤的描述，参数为 `{ item, index }`；渲染为空时回落到步骤的 description。",
+                "en-US": "Renders the description of the current step, with `{ item, index }`. Empty content falls back to the description of the step."
+            },
+            "renderTitle": {
+                "zh-CN": "渲染当前步骤的标题，参数为 `{ item, index }`；渲染为空时回落到步骤的 title。",
+                "en-US": "Renders the title of the current step, with `{ item, index }`. Empty content falls back to the title of the step."
+            },
+            "showPrevButton": {
+                "zh-CN": "是否显示上一步按钮，第一步不显示。",
+                "en-US": "Whether to show the previous button. It is never shown on the first step."
+            },
+            "showSkipButton": {
+                "zh-CN": "是否显示跳过按钮，最后一步不显示。",
+                "en-US": "Whether to show the skip button. It is never shown on the last step."
+            },
+            "spotlightPadding": {
+                "zh-CN": "高亮区域的外扩距离，单位为像素，可被步骤的 spotlightPadding 覆盖；都未设置时为 5。",
+                "en-US": "Extra space in pixels around the highlighted area. A step's own spotlightPadding overrides it; 5 when neither is set."
+            },
+            "steps": {
+                "zh-CN": "引导步骤的数据，只放数据；自定义内容由 renderTitle、renderDescription、renderCover 渲染。",
+                "en-US": "Data of the guide steps, data only. Custom content is rendered by renderTitle, renderDescription and renderCover."
+            },
+            "style": {
+                "zh-CN": "自定义样式。popup 模式下落在气泡卡片上，modal 模式下落在 .semi-modal 上。",
+                "en-US": "Custom style. In popup mode it lands on the popover card; in modal mode it lands on .semi-modal."
+            },
+            "theme": {
+                "zh-CN": "popup 模式的主题，可被步骤的 theme 覆盖。",
+                "en-US": "Theme of the popup mode. A step's own theme overrides it."
+            },
+            "visible": {
+                "zh-CN": "是否显示引导。",
+                "en-US": "Whether the guide is shown."
+            },
+            "zIndex": {
+                "zh-CN": "popup 模式下遮罩的层级，modal 模式下弹窗的层级。气泡卡片位于 top layer，始终在遮罩之上。",
+                "en-US": "The z-index of the mask in popup mode and of the dialog in modal mode. The popover card sits in the top layer, always above the mask."
+            }
+        }
+    }
+}

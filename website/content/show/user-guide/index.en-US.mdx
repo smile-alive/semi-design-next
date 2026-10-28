@@ -1,0 +1,214 @@
+---
+order: 85
+title: UserGuide
+icon: doc-userGuide
+brief: Used to guide new users through pages
+---
+
+import UserGuideReactApi from './api/user-guide.react.en-US.mdx';
+import UserGuideVueApi from './api/user-guide.vue.en-US.mdx';
+import UserGuideSolidApi from './api/user-guide.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { UserGuide } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { UserGuide } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { UserGuide } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Theme
+
+`popup` bubble card mode provides two themes `default` and `primary`, set by the `theme` property.
+
+<Demo id="theme" />
+
+### Popup position
+
+`popup` bubble card mode provides 16 positions, optional values are `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`, `leftTopOver`, `rightTopOver`, `leftBottomOver`, `rightBottomOver`, and can be set by the `showArrow` property to display the arrow.
+
+<Demo id="position" />
+
+### Set the size of the highlight area
+
+Set by the `spotlightPadding` property.
+
+<Demo id="spotlight-padding" />
+
+### Customize the button
+
+Set by the `nextButtonProps` and `prevButtonProps` properties.
+
+<Framework only="vue">
+
+Use the `nextText` and `prevText` slots for the button text. The text of the button on the last step is set by `finishText`.
+
+</Framework>
+
+<Framework only="solid">
+
+Set the button text with `children` in `nextButtonProps` and `prevButtonProps`. The text of the button on the last step is set by `finishText`.
+
+</Framework>
+
+<Demo id="custom-button" />
+
+### Controlled
+
+Set by the `current` property.
+
+<Framework only="vue">
+
+Bind the current step with `v-model:current` and the visibility with `v-model:visible`.
+
+</Framework>
+
+<Framework only="solid">
+
+Bind the current step with `current` and write it back in `onChange`; bind the visibility with `visible` and close the guide in `onSkip` and `onFinish`.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Modal guide
+
+Set by the `mode` property.
+
+<Framework only="vue">
+
+Use the `cover` slot for the cover and the `description` slot for rich-text descriptions.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `renderCover` for the cover and `renderDescription` for rich-text descriptions; they are called for the current step only.
+
+</Framework>
+
+<Demo id="modal" />
+
+### No mask
+
+Set by the `mask` property.
+
+<Demo id="no-mask" />
+
+## API Reference
+
+---
+
+<Framework only="react">
+
+<UserGuideReactApi />
+
+UserGuide has no root element. In popup mode `className` and `style` land on the popover card; in modal mode `className` and `style` are handed to Modal and land where Modal puts them. Undeclared attributes such as `aria-*` and native events are dropped. The dialog's accessible name comes only from the `title` of the current step.
+
+</Framework>
+
+<Framework only="vue">
+
+<UserGuideVueApi />
+
+UserGuide has no root element. In popup mode `class` and `style` land on the popover card; in modal mode they follow Modal, with `class` on the outermost element inside the portal and `style` on `.semi-modal`. Other undeclared attributes such as `aria-*` are dropped. The dialog's accessible name comes only from the title of the current step (the `title` slot or `item.title`).
+
+</Framework>
+
+<Framework only="solid">
+
+<UserGuideSolidApi />
+
+UserGuide has no root element. In popup mode `class` and `style` land on the popover card; in modal mode they are handed to Modal and land where Modal puts them. Undeclared attributes such as `ref`, `aria-*` and native events are dropped. The dialog's accessible name comes only from the `title` of the current step.
+
+</Framework>
+
+### StepItem
+
+<Framework only="react">
+
+| Properties       | Instructions                                                                                    | Type                                                    | Default |
+| ---------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------- |
+| className        | Custom class name                                                                               | string                                                  | -       |
+| cover            | The cover image of the step                                                                     | ReactNode                                               | -       |
+| target           | The target element, the highlight area will focus on this element                               | (() => Element \| null \| undefined) \| Element \| null | -       |
+| title            | Step title                                                                                      | string \| ReactNode                                     | -       |
+| description      | Step description                                                                                | ReactNode                                               | -       |
+| mask             | Whether to display the mask of this step, it will override the global configuration             | boolean                                                 | -       |
+| showArrow        | Whether to display the arrow (only valid when mode=`popup`)                                     | boolean                                                 | true    |
+| spotlightPadding | The inner padding of the highlight area of this step, it will override the global configuration | number                                                  | -       |
+| theme            | The theme of this step, it will override the global configuration                               | `default` \| `primary`                                  | -       |
+| position         | The position of the pop-up layer of this step, it will override the global configuration        | Position                                                | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+Each item of `steps` (type `UserGuideStepItem`) holds data only. Custom content goes through the `title`, `description` and `cover` slots, rendered with `{ item, index }`.
+
+| Properties       | Instructions                                                                                                                                                                             | Type                                            | Default |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------- |
+| class            | Custom class name of the step                                                                                                                                                            | string \| object \| array                       | -       |
+| target           | The target element, the highlight area will focus on this element. The function form is called when the step is measured and may return `null` or `undefined` while the target is absent | Element \| (() => Element \| null \| undefined) | -       |
+| title            | Text of the step title; the `title` slot wins when it renders content                                                                                                                    | string                                          | -       |
+| description      | Text of the step description; the `description` slot wins when it renders content                                                                                                        | string                                          | -       |
+| mask             | Whether to display the mask of this step, it will override the global configuration                                                                                                      | boolean                                         | -       |
+| showArrow        | Whether to display the arrow (only valid when mode=`popup`)                                                                                                                              | boolean                                         | true    |
+| spotlightPadding | The inner padding of the highlight area of this step, it will override the global configuration                                                                                          | number                                          | -       |
+| theme            | The theme of this step, it will override the global configuration                                                                                                                        | `default` \| `primary`                          | -       |
+| position         | The position of the pop-up layer of this step, it will override the global configuration                                                                                                 | Position                                        | -       |
+
+</Framework>
+
+<Framework only="solid">
+
+Each item of `steps` (type `UserGuideStepItem`) holds data only. Custom content goes through `renderTitle`, `renderDescription` and `renderCover`, called with `{ item, index }` (type `UserGuideStepRenderProps`).
+
+| Property         | Description                                                                                                                                                                              | Type                                                    | Default |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------- |
+| class            | Custom class name of the step                                                                                                                                                            | string                                                  | -       |
+| target           | The target element, the highlight area will focus on this element. The function form is called when the step is measured and may return `null` or `undefined` while the target is absent | Element \| null \| (() => Element \| null \| undefined) | -       |
+| title            | Text of the title; `renderTitle` wins when it renders content                                                                                                                            | string                                                  | -       |
+| description      | Text of the description; `renderDescription` wins when it renders content                                                                                                                | string                                                  | -       |
+| mask             | Whether to display the mask of this step, it will override the global configuration                                                                                                      | boolean                                                 | -       |
+| showArrow        | Whether to display the arrow (only valid when mode=`popup`)                                                                                                                              | boolean                                                 | true    |
+| spotlightPadding | The inner padding of the highlight area of this step, it will override the global configuration                                                                                          | number                                                  | -       |
+| theme            | The theme of this step, it will override the global configuration                                                                                                                        | `default` \| `primary`                                  | -       |
+| position         | The position of the pop-up layer of this step, it will override the global configuration                                                                                                 | Position                                                | -       |
+
+</Framework>
+
+## Accessibility
+
+- Each step is a dialog named by the step `title`; Escape works like clicking Skip.
+- In both modes, focus moves to the primary button (Next or Finish) when each step appears. In popup mode Tab cycles inside the card, and focus returns to the element focused before the guide when it closes; in modal mode, Modal manages the focus cycle and its return.
+
+## Design Tokens
+
+<DesignToken />

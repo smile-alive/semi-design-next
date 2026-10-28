@@ -1,0 +1,2150 @@
+---
+title: Table
+order: 81
+icon: doc-table
+brief: Tables are used to present structured data content, usually accompanied by the ability to manipulate the data (sort, search, paginate...).
+---
+
+import StickyHeaderTable from './figures/sticky-header-table.react.tsx';
+import TableReactApi from './api/table.react.en-US.mdx';
+import ColumnReactApi from './api/column.react.en-US.mdx';
+import TableVueApi from './api/table.vue.en-US.mdx';
+import TableSolidApi from './api/table.solid.en-US.mdx';
+import ColumnSolidApi from './api/column.solid.en-US.mdx';
+
+## How to Use
+
+Into the header. `columns` And data. `DataSource` To render.
+
+> Please provide a "key" for each data item in the dataSource that is different from the value of the other data items, or use the row Key parameter to specify an attribute name as the primary key, alternative row operation functions such as row selection and expansion of the table.
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+function App() {
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Size',
+            dataIndex: 'size',
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'owner',
+        },
+        {
+            title: 'Update',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design design draft.fig',
+            nameIconSrc: '/assets/placeholder/app.svg',
+            size: '2M',
+            owner: 'Jiang Pengzhi',
+            updateTime: '2020-02-02 05:13',
+            avatarBg: 'grey',
+        },
+        {
+            key: '2',
+            name: 'Semi Design share docs',
+            nameIconSrc: '/assets/docs-icon.png',
+            size: '2M',
+            owner: 'Hao Xuan',
+            updateTime: '2020-01-17 05:31',
+            avatarBg: 'red',
+        },
+        {
+            key: '3',
+            name: 'Design docs',
+            nameIconSrc: '/assets/docs-icon.png',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+            avatarBg: 'light-blue',
+        },
+    ];
+
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Size',
+            dataIndex: 'size',
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'owner',
+        },
+        {
+            title: 'Update',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design design draft.fig',
+            size: '2M',
+            owner: 'Jiang Pengzhi',
+            updateTime: '2020-02-02 05:13',
+        },
+        {
+            key: '2',
+            name: 'Semi Design share docs',
+            size: '2M',
+            owner: 'Hao Xuan',
+            updateTime: '2020-01-17 05:31',
+        },
+        {
+            key: '3',
+            name: 'Design docs',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+        },
+    ];
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="data" :pagination="false" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Table } from '@fibrae/semi-ui-solid';
+
+function App() {
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Size',
+            dataIndex: 'size',
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'owner',
+        },
+        {
+            title: 'Updated At',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design Mockup.fig',
+            size: '2M',
+            owner: 'Jiang Pengzhi',
+            updateTime: '2020-02-02 05:13',
+        },
+        {
+            key: '2',
+            name: 'Semi Design Presentation',
+            size: '2M',
+            owner: 'Hao Xuan',
+            updateTime: '2020-01-17 05:31',
+        },
+        {
+            key: '3',
+            name: 'Design Document',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+        },
+    ];
+
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+}
+```
+
+</Framework>
+
+## Demos
+
+### Basic Table
+
+For tables, the two most basic parameters are `dataSource` and `columns`, the former is the data item, the latter is the configuration of each column, both are array types.
+
+<Demo id="basic" />
+
+<Framework only="react">
+
+### JSX Writing
+
+You can also use JSX syntax definitions `columns`, note that Table only supports `columns` JSX syntax definition. You cannot use any component package `Table.Column`.
+
+> Note: JSX-written tables are not supported the parameter `Resizable`.
+
+<Notice type="primary" title="Notice">
+    <div>When columns are written in JSX, please do not use it at the same time as the configuration method; if used at the same time, only the configuration method will take effect, and no aggregation operation will be performed.</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+### Table.Column Writing
+
+You can also define columns by writing `Table.Column` as children of Table: the column data goes on its props, and the custom content of cells and titles goes in its `#cell`, `#title` and other slots. Table only reads direct children, so you cannot wrap `Table.Column` in any other component; direct children produced by `v-if` and `v-for` are fine.
+
+<Notice type="primary" title="Notice">
+    <div>1. Tables written with Table.Column do not support the resizable feature yet: the child columns render as usual without drag handles, and a warning is printed in development;</div>
+    <div>2. Please do not pass `columns` and `Table.Column` at the same time; if both are used, only `columns` takes effect (including an empty array), and no aggregation is performed.</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+### JSX Writing
+
+You can also use JSX syntax definitions `columns`, note that Table only supports `columns` JSX syntax definition. You cannot use any component to wrap `Table.Column`.
+
+<Notice type="primary" title="Notice">
+    <div>1. Tables written in JSX do not support the resizable feature yet: the child columns render as usual without drag handles, and a warning is printed;</div>
+    <div>2. Please do not use JSX writing together with the configuration method; if used at the same time, only the configuration method will take effect, and no aggregation operation will be performed.</div>
+</Notice>
+
+</Framework>
+
+<Demo id="jsx" />
+
+### Row Selection Operation
+
+This feature can be turned on by passing in `rowSelection`.
+
+- Click the selection box in the header, and all rows in the `dataSource` that are not in the state of `disabled` will be selected. The callback function for selecting all rows is `onSelectAll`;
+- Clicking on the row selection box will select the current row. Its callback function is `onSelect`;
+
+<Framework only="react">
+
+<Notice title='Notice'>
+
+1. Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+2. If you encounter the problem of returning to the first page after clicking a row selection on the second page, please check whether component rendering triggers "dataSource" update (shallow equal). After the "dataSource" is updated, the uncontrolled page turner will return to the first page. Please put "dataSource" inside state.
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice title='Notice'>
+
+1. Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+2. If you encounter the problem of returning to the first page after clicking a row selection on the second page, please check whether every render generates new data items (for example an array of object literals in the template). After the data items of `dataSource` change, the uncontrolled pager returns to the first page; a new array holding the same records does not count as a change, while adding or removing records in place (`push`, `splice`) does. Please keep `dataSource` in a `ref`, a `shallowRef` or a top-level constant of `<script setup>`.
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice title='Notice'>
+
+Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+
+</Notice>
+
+</Framework>
+
+<Demo id="row-selection" />
+
+### Custom Rendering
+
+<Framework only="solid">
+
+Users can use Column.render to customize the rendering of a column of cells, which is suitable for rendering more complex cell content. `render` is called again whenever the row data or index changes; read the fields of `options` in the returned JSX to follow the row state, with no extra subscription needed.
+
+The fourth parameter `options` of the `render` function is an object containing the following properties:
+
+- `expandIcon`: Render function of the expand icon (when using tree data or expandable rows); call it where it is inserted, e.g. `{options.expandIcon?.()}`
+- `selection`: Render function of the selection checkbox (when row selection is enabled)
+- `indentText`: Render function of the indent content (when using tree data)
+- `isHovering`: Whether the current row is in hover state
+
+With the `isHovering` parameter, you can implement interaction effects such as displaying action buttons on mouse hover.
+
+</Framework>
+
+<Framework only="react">
+
+Users can use Column.render to customize the rendering of a column of cells, which is suitable for rendering more complex cell content.
+
+The fourth parameter `options` of the `render` function is an object containing the following properties:
+
+- `expandIcon`: Expand icon (when using tree data or expandable rows)
+- `selection`: Selection checkbox (when row selection is enabled)
+- `indentText`: Indent content (when using tree data)
+- `isHovering`: Whether the current row is in hover state
+
+With the `isHovering` parameter, you can implement interaction effects such as displaying action buttons on mouse hover.
+
+</Framework>
+
+<Framework only="vue">
+
+Users can use the `#cell` scoped slot to customize the rendering of cells, which is suitable for rendering more complex cell content. The `#cell` slot on Table is called for every data column; tell the columns apart with `column.dataIndex` or `column.key`. When the slot outputs nothing, the raw value is shown. To customize one column only, put `#cell` on that column's `Table.Column` instead, which takes precedence over the slot on Table.
+
+The parameter of `#cell` is an object containing the following properties:
+
+- `text`: the value at `column.dataIndex`, or the data item itself for a column without `dataIndex`
+- `record`: the data item of the current row
+- `index`: the index of the data item among its siblings
+- `column`: the configuration of the current column
+- `expandIcon`: Expand icon (when using tree data or expandable rows)
+- `isHovering`: Whether the current row is in hover state
+- `selection`, `indentText`: the selection checkbox and the indent content, provided only when the column enables `useFullRender`, see [Fully custom rendering](#fully-custom-rendering)
+
+With the `isHovering` parameter, you can implement interaction effects such as displaying action buttons on mouse hover.
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### Table With Pagination
+
+Table paging currently supports two modes: controlled and uncontrolled.
+
+- In controlled mode, the paging state is passed entirely externally, depending on whether the pagination .currentPage field is passed. In general, the controlled mode is suitable for remotely pulling data and rendering.
+- In uncontrolled mode, Table passes the incoming dataSource length as total to the Pagination component by default, and of course you can also pass a total field to overwrite the value of the Table component, but we do not recommend users to pass this field in uncontrolled paging mode.
+
+> Note: The custom `pagination.total` field passed in uncontrolled conditions is supported.
+
+<Demo id="pagination" />
+
+### Pull Remote Data
+
+Under normal circumstances, the data is often not obtained at one time. We will retrieve the data from the interface when clicking on the page number, filter or sort button. In this case, please use **Controlled mode** To handle pagination. The user needs to pass in the `pagination.currentPage` field, where the rendering of the pagination component depends entirely on the incoming pagination object.
+
+<Framework only="react">
+
+<Notice type="primary" title="Notice">
+    <div>1. When pagination is an object type, literal is not recommended because it causes the table to render to its original state (it looks like the pager is not working). Please try to define reference type parameters outside the render method. If hooks are used, please use useMemo or useState for storage.</div>
+    <div>2. In the controlled mode, Table will not paginate dataSource, please pass in current page data to dataSource</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="Notice">
+    <div>
+        1. When pagination is an object type, writing an object literal in the template is not recommended: every render creates a new object, Table reads its settings again, and the paging state may be overwritten (it looks like the pager is not working). Please define reference type parameters at the top level of
+        script setup, or keep them in a ref or computed.
+    </div>
+    <div>2. In the controlled mode, Table will not paginate dataSource, please pass in current page data to dataSource</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="Notice">
+    <div>In the controlled mode, Table will not paginate dataSource. Pass the current page data to dataSource, and update `pagination.currentPage` in `onChange` or `pagination.onPageChange`</div>
+</Notice>
+
+</Framework>
+
+<Demo id="remote-data" />
+
+### Fixed Column or Head
+
+You can fix the column by setting the Fixed attribute of the column and scroll.x, and fix the header by setting scroll.y.
+
+> - It is recommended to specify scroll.x as a **fixed value** or percentage greater than the width of the table. If it is a fixed value, set it to >= the sum of all fixed column widths + the sum of all table column widths.
+> - Make sure that all elements inside the table do not affect the height of the cells after rendering (e.g. containing unloaded pictures, etc.). In this case, give the stator element a definite height to ensure that the left and right Fixed columns of cells are not deranged.
+> - If the column header is not aligned with the content or there is a column duplication or when the fixed column fails, specify the width width of the fixed column, if still not effective, try to recommend leaving a column with no width to accommodate the elastic layout, or check for ultra-long continuous fields to destroy the layout.
+
+<Demo id="fixed" />
+
+The header can be fixed to the top of the page with the `sticky` property. When passing `top`, you can control the distance from the scroll container.
+
+After turning on sticky, Table will automatically turn on the fixed layout, and the column width will be determined by `column.width`. Columns without a given width are automatically assigned by the browser.
+
+<Framework only="react">
+
+<StickyHeaderTable client:only="react" />
+
+```jsx
+import React, { useState, useMemo } from 'react';
+import { Table, Avatar } from '@fibrae/semi-ui-react';
+import { IconMore } from '@fibrae/semi-icons-react';
+import * as dateFns from 'date-fns';
+
+const DAY = 24 * 60 * 60 * 1000;
+const figmaIconUrl = '/assets/placeholder/app.svg';
+
+const columns = [
+    {
+        title: '标题',
+        dataIndex: 'name',
+        fixed: true,
+        width: 250,
+        render: (text, record, index) => {
+            return (
+                <div>
+                    <Avatar size="small" shape="square" src={figmaIconUrl} style={{ marginRight: 12 }}></Avatar>
+                    {text}
+                </div>
+            );
+        },
+        filters: [
+            {
+                text: 'Semi Design 设计稿',
+                value: 'Semi Design 设计稿',
+            },
+            {
+                text: 'Semi D2C 设计稿',
+                value: 'Semi D2C 设计稿',
+            },
+        ],
+        onFilter: (value, record) => record.name.includes(value),
+    },
+    {
+        title: '大小',
+        dataIndex: 'size',
+        width: 200,
+        sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
+        render: (text) => `${text} KB`,
+    },
+    {
+        title: '所有者',
+        dataIndex: 'owner',
+        width: 200,
+        render: (text, record, index) => {
+            return (
+                <div>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                        {typeof text === 'string' && text.slice(0, 1)}
+                    </Avatar>
+                    {text}
+                </div>
+            );
+        },
+    },
+    {
+        title: '更新日期',
+        dataIndex: 'updateTime',
+        width: 200,
+        sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
+        render: (value) => {
+            return dateFns.format(new Date(value), 'yyyy-MM-dd');
+        },
+    },
+    {
+        title: '',
+        dataIndex: 'operate',
+        fixed: 'right',
+        align: 'center',
+        width: 100,
+        render: () => {
+            return <IconMore />;
+        },
+    },
+];
+
+function App() {
+    const [dataSource, setData] = useState([]);
+
+    const scroll = useMemo(() => ({ y: 300, x: 1200 }), []);
+    const rowSelection = useMemo(
+        () => ({
+            onChange: (selectedRowKeys, selectedRows) => {
+                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            },
+            getCheckboxProps: (record) => ({
+                disabled: record.name === 'Michael James', // Column configuration not to be checked
+                name: record.name,
+            }),
+            fixed: true,
+        }),
+        []
+    );
+
+    const getData = () => {
+        const data = [];
+        for (let i = 0; i < 46; i++) {
+            const isSemiDesign = i % 2 === 0;
+            const randomNumber = (i * 1000) % 199;
+            data.push({
+                key: '' + i,
+                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+                owner: isSemiDesign ? '姜鹏志' : '郝宣',
+                size: randomNumber,
+                updateTime: new Date().valueOf() + randomNumber * DAY,
+                avatarBg: isSemiDesign ? 'grey' : 'red',
+            });
+        }
+        return data;
+    };
+
+    useEffect(() => {
+        const data = getData();
+        setData(data);
+    }, []);
+
+    return <Table sticky={{ top: 60 }} columns={columns} dataSource={dataSource} rowSelection={rowSelection} scroll={scroll} />;
+}
+
+render(App);
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { onMounted, shallowRef } from 'vue';
+    import * as dateFns from 'date-fns';
+    import { IconMore } from '@fibrae/semi-icons-vue';
+    import { Avatar, Table } from '@fibrae/semi-ui-vue';
+    import type { ColumnProps, RowSelectionProps } from '@fibrae/semi-ui-vue';
+
+    interface Row {
+        key: string;
+        name: string;
+        owner: string;
+        size: number;
+        updateTime: number;
+        avatarBg: 'grey' | 'red';
+    }
+
+    const DAY = 24 * 60 * 60 * 1000;
+    const figmaIconUrl = '/assets/placeholder/app.svg';
+
+    const columns: ColumnProps<Row>[] = [
+        {
+            title: 'Title',
+            dataIndex: 'name',
+            fixed: true,
+            width: 250,
+            filters: [
+                {
+                    text: 'Semi Design draft',
+                    value: 'Semi Design',
+                },
+                {
+                    text: 'Semi D2C draft',
+                    value: 'Semi D2C',
+                },
+            ],
+            onFilter: (value, record) => record.name.includes(value),
+        },
+        {
+            title: 'Size',
+            dataIndex: 'size',
+            width: 200,
+            sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'owner',
+            width: 200,
+        },
+        {
+            title: 'Update',
+            dataIndex: 'updateTime',
+            width: 200,
+            sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
+        },
+        {
+            title: '',
+            dataIndex: 'operate',
+            fixed: 'right',
+            align: 'center',
+            width: 100,
+        },
+    ];
+
+    const dataSource = shallowRef<Row[]>([]);
+    const scroll = { y: 300, x: 1200 };
+    const sticky = { top: 60 };
+    const rowSelection: RowSelectionProps<Row> = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        getCheckboxProps: (record) => ({
+            disabled: record.name === 'Michael James', // This row cannot be checked
+            name: record.name,
+        }),
+        fixed: true,
+    };
+
+    onMounted(() => {
+        const data: Row[] = [];
+        for (let i = 0; i < 46; i++) {
+            const isSemiDesign = i % 2 === 0;
+            const randomNumber = (i * 1000) % 199;
+            data.push({
+                key: '' + i,
+                name: isSemiDesign ? `Semi Design draft ${i}.fig` : `Semi D2C draft ${i}.fig`,
+                owner: isSemiDesign ? 'Jiang Pengzhi' : 'Hao Xuan',
+                size: randomNumber,
+                updateTime: new Date().valueOf() + randomNumber * DAY,
+                avatarBg: isSemiDesign ? 'grey' : 'red',
+            });
+        }
+        dataSource.value = data;
+    });
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="dataSource" :rowSelection="rowSelection" :scroll="scroll" :sticky="sticky">
+        <template #cell="{ column, record, text }">
+            <div v-if="column.dataIndex === 'name'">
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
+                {{ text }}
+            </div>
+            <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
+            <div v-else-if="column.dataIndex === 'owner'">
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                    {{ typeof text === 'string' && text.slice(0, 1) }}
+                </Avatar>
+                {{ text }}
+            </div>
+            <template v-else-if="column.dataIndex === 'updateTime'">
+                {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
+            </template>
+            <IconMore v-else-if="column.dataIndex === 'operate'" />
+        </template>
+    </Table>
+</template>
+```
+
+</Framework>
+
+### Table Header With Sorting and Filtering Function
+
+Filters and sorting controls are integrated inside the table, and users can pass in the sorter display of the sorter open header by passing filters in Column and the filter control display of the onFilter open header.
+
+> Note: Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+
+> Note: Sorting and filtering columns must set independent "dataIndex"
+
+<Demo id="sort-filter" />
+
+When sorter is a function type, the sortOrder status can be obtained through the third parameter of the function. The function type is `(a?: RecordType, b?: RecordType, sortOrder?: 'ascend' | 'descend') => number`.
+
+You can control whether to display the sorting tip through the `showSortTip` attribute, which defaults to `false`. When the tip is turned on, when there is only sorting function, the sorting prompt will be displayed when the mouse is moved to the table header; in other cases, the sorting prompt will be displayed only when the mouse is moved to the sorting icon.
+
+**Note**: When using the `sortOrder` attribute for controlled sorting, since the next sort order cannot be predicted, `showSortTip` does not take effect and the prompt will not be displayed.
+
+<Demo id="sort-tip" />
+
+### Custom Header Filtering
+
+<Framework only="react">
+
+If you need to display the filter input box in the table header, you can pass ReactNode in the `title` and use it with `filteredValue`.
+
+</Framework>
+
+<Framework only="vue">
+
+If you need to display the filter input box in the table header, render the column title with the `#headerCell` slot (or the `#title` slot of `Table.Column`) and use it with `filteredValue`. The `title` of a column stays plain text and is shown when the slot outputs nothing.
+
+</Framework>
+
+<Framework only="solid">
+
+To display a filter input box in the header, pass a function returning JSX to `title` and use it together with `filteredValue`. `filteredValue` can be read from a signal; when it changes, the header and the data update together.
+
+</Framework>
+
+<Demo id="custom-filter-dropdown" />
+
+### Custom Filter Rendering
+
+<Framework only="react">
+
+Use `renderFilterDropdown` to customize the render filter panel.
+
+You can call `setTempFilteredValue` to store the filter value when the user enters the filter value, and call `confirm` to trigger the actual filtering after the filter value is entered. You can also filter directly through `confirm({ filteredValue })`.
+
+The reason for setting `tempFilteredValue` is that in scenarios where temporary filtered values need to be stored, there is no need to declare a state to save this temporary filtered value.
+
+```typescript
+type RenderFilterDropdown = (props: RenderFilterDropdownProps) => React.ReactNode;
+interface RenderFilterDropdownProps {
+    /** Temporary filter value, the initial value is `filteredValue` or `defaultFilteredValue` */
+    tempFilteredValue: any[];
+    /** Set temporary filter value */
+    setTempFilteredValue: (tempFilteredValue: any[]) => void;
+    /** `confirm` will assign `tempFilteredValue` to `filteredValue` by default and trigger the `onChange` event. You can also set the filter value directly by passing in `filteredValue` */
+    confirm: (props?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** Clear filter values and temporary filter values */
+    clear: (props?: { closeDropdown?: boolean }) => void;
+    /** Close dropdown */
+    close: () => void;
+    /** Restore the temporary filter value to the applied filter value */
+    reset: () => void;
+    /** Filter configuration items, do not pass if not required */
+    filters?: RenderDropdownProps['filters'];
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Set `filterDropdown` of the column to `true`, then customize the filter panel with the `#filterDropdown` slot. The slot can be written on Table (called for every column whose `filterDropdown` is `true`, tell the columns apart with `column`) or on `Table.Column`; when the slot outputs nothing, the filter menu is shown.
+
+You can call `onTempFilteredValueChange` to store the filter value when the user enters the filter value, and call `onConfirm` to trigger the actual filtering after the filter value is entered. You can also filter directly through `onConfirm({ filteredValue })`.
+
+The reason for providing `tempFilteredValue` is that in scenarios where temporary filtered values need to be stored, there is no need to declare a ref to save this temporary filtered value.
+
+```typescript
+interface TableFilterDropdownSlotProps {
+    /** The configuration of the current column */
+    column: ColumnProps;
+    /** Filter configuration items, `undefined` when the column has no `filters` */
+    filters: TableFilter[] | undefined;
+    /** Temporary filter value, the applied filter value when nothing is stored */
+    tempFilteredValue: any[] | undefined;
+    /** Set temporary filter value */
+    onTempFilteredValueChange: (value: any[] | undefined) => void;
+    /** `onConfirm` will assign `tempFilteredValue` to `filteredValue` by default and emit the `change` event. You can also set the filter value directly by passing in `filteredValue` */
+    onConfirm: (options?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** Clear filter values and temporary filter values */
+    onClear: (options?: { closeDropdown?: boolean }) => void;
+    /** Close dropdown */
+    onClose: () => void;
+    /** Restore the temporary filter value to the applied filter value */
+    onReset: () => void;
+}
+```
+
+The `onVisibleChange` in `filterDropdownProps` does not take effect; get the visibility of the filter panel through `onFilterDropdownVisibleChange` of the column.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `renderFilterDropdown` to customize the filter dropdown panel. The fields of the argument are live; read them in the returned JSX.
+
+You can call `setTempFilteredValue` to store the filter value while the user types it, and call `confirm` after the input is complete to apply the filter. You can also filter directly with `confirm({ filteredValue })`.
+
+```typescript
+type RenderFilterDropdown = (props: RenderFilterDropdownProps) => JSX.Element;
+interface RenderFilterDropdownProps {
+    /** Temporary filter value, initially `filteredValue` or `defaultFilteredValue`  */
+    tempFilteredValue: any[];
+    /** Set the temporary filter value  */
+    setTempFilteredValue: (tempFilteredValue: any[]) => void;
+    /** `confirm` assigns `tempFilteredValue` to `filteredValue` by default and triggers the `onChange` event. You can also pass `filteredValue` to set the filter value directly  */
+    confirm: (props?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** Clear the filter value and the temporary filter value  */
+    clear: (props?: { closeDropdown?: boolean }) => void;
+    /** Close the dropdown  */
+    close: () => void;
+    /** Restore the temporary filter value to the applied filter value  */
+    reset: () => void;
+    /** Filter options, may be omitted if not needed  */
+    filters?: RenderDropdownProps['filters'];
+}
+```
+
+</Framework>
+
+<Demo id="custom-filter" />
+
+### Filter Confirm Mode
+
+By setting `filterConfirmMode='confirm'`, the filter dropdown panel can support confirm mode. In this mode:
+
+- Clicking filter items will not take effect immediately, but will be temporarily stored
+- The bottom of the dropdown panel will show "Confirm" and "Reset" buttons
+- Clicking the "Confirm" button will apply the filter conditions and close the dropdown panel
+- Clicking the "Reset" button will restore to the initial state when the dropdown was opened (will not close the panel)
+
+This feature is suitable for scenarios where multiple filter conditions need to be selected before applying them at once, avoiding triggering filtering on every click.
+
+<Demo id="filter-confirm" />
+
+### Custom Filter Item Rendering
+
+<Framework only="react">
+
+It is supported to pass in `renderFilterDropdownItem` to customize the rendering method of each filter item.
+
+This method accepts an `Object` input parameter, and the meaning of each attribute is as follows:
+
+- `onChange: e => void` current filter item selection/reverse selection event;
+- `text: ReactNode` copy of the current screening item;
+- `value: any` the value of the current filter item;
+- `checked: boolean` whether the current filter item has been selected;
+- `filteredValue: any[]` all currently filtered values;
+- `level: number` is the level of the current filter item, if it is a nested filter item, the value will be >= 1;
+- `filterMultiple: boolean` whether the current filter item is multi-select.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#filterDropdownItem` slot to customize the rendering of each filter item. The slot can be written on Table or on `Table.Column` (which takes precedence); when the slot outputs nothing, the default filter item is shown. The parameters are:
+
+- `column: ColumnProps` the configuration of the current column;
+- `text: string | undefined` the text of the current filter item;
+- `value: any` the value of the current filter item;
+- `checked: boolean` whether the current filter item has been selected;
+- `filteredValue: any[]` the filter values the menu currently shows; in confirm mode these are the temporary values that have not been applied;
+- `level: number` the level of the menu the current filter item is in, `0` for the top level menu;
+- `filterMultiple: boolean` whether the current filter item is multi-select;
+- `onChange: (event: MouseEvent) => void` toggles the selection of the current filter item, bind it to the `click` of the item.
+
+</Framework>
+
+<Framework only="solid">
+
+Pass `renderFilterDropdownItem` in the column to customize how each filter item is rendered. The parameters are:
+
+- `text: string` The text of the current filter item;
+- `value: any` The value of the current filter item;
+- `checked: boolean` Whether the current filter item is checked;
+- `filteredValue: any[]` All current filter values;
+- `level: number` The level of the current filter item; for nested filter items, this value is >= 1;
+- `filterMultiple: boolean` Whether the current filter item supports multiple selection.
+
+</Framework>
+
+<Demo id="filter-item-render" />
+
+### A Table That Can Be Expanded
+
+<Notice type="primary" title="Note">
+
+1. The unfold button will be rendered in the same cell as the first column, and you can open a separate column of rendering by passing in `hideExpandedColumn = {false}`.
+2. Be sure to provide a "key" for each row of data that is different from the other row values, or use the rowKey parameter to specify an attribute name as the primary key.
+
+</Notice>
+
+#### A Common Table That Can Be Expanded
+
+<Framework only="react">
+
+If you need to render a table that can be expanded, in addition to the need to pass `expandedRowRender` In addition to this method, you must specify `rowKey`(by default `key`), Table will be based on `rowKey` Gets a row unique identifier.
+
+</Framework>
+
+<Framework only="vue">
+
+If you need to render a table that can be expanded, in addition to the `#expandedRow` slot of Table (parameters `record`, `index` and `expanded`; a row whose output is empty renders no expanded content), you must specify `rowKey`(by default `key`), Table will be based on `rowKey` Gets a row unique identifier. The expanded rows can be controlled with `v-model:expandedRowKeys`.
+
+</Framework>
+
+<Framework only="solid">
+
+To render an expandable table, besides passing the `expandedRowRender` method to Table, you must also specify `rowKey` (defaults to `key`). Table uses `rowKey` to obtain the unique identifier of each row. Expanded rows can be controlled through `expandedRowKeys` and `onExpandedRowsChange`.
+
+</Framework>
+
+- If `rowKey` is a Function, the result of `rowKey(record)` is taken as the row unique ID
+- If `rowKey` is a string type, you take `record[rowKey]` as the row unique ID
+
+<Demo id="expand" />
+
+#### The Unfold Button Is Rendered In a Separated Column
+
+By default, the expansion button will be rendered in the same cell as the first copy, and you can set `hideExpandedColumn` to `false` to render as a separate column:
+
+<Demo id="expand-column" />
+
+#### Turn Off Rendering of Expandable Button of a Row
+
+You can pass the row Expandable method, enter the reference as record, and determine whether the return value is false to close the rendering of the expandable button on a row.
+
+<Demo id="expand-row-disabled" />
+
+### Tree Data Display
+
+The table supports the display of tree data and is automatically displayed as a tree table when there are children fields in the data. If you do not need or use other fields, you can configure it with the childrenRecordName. In addition, you can control the indent width of each layer by setting indent Size.
+
+> Note: Be sure to provide a "key" for each row of data that is different from the other row values, or use the `rowKey` parameter to specify a property name as the primary key.
+
+#### Simple example of tree data
+
+<Demo id="tree-data" />
+
+#### Rows of Interchangeable Tree Data
+
+You can do row switching by changing the order of the dataSource elements.
+
+<Demo id="tree-drag" />
+
+#### Tree Selection
+
+By default, the row selection of the table is independent. You can simulate a tree selection by defining selectedRowKeys.
+
+<Demo id="tree-selection" />
+
+#### Tree Selection Association (checkRelation)
+
+By setting `rowSelection.checkRelation` to `'related'`, you can enable parent-child node selection association. Selecting a parent node automatically selects all child nodes, and selecting a child node affects the parent node's state (checked/half-checked/unchecked).
+
+<Demo id="check-relation" />
+
+### Custom Row or Cell Events and Properties
+
+- The incoming `onRow` / `onHeaderRow` can define the native event or property of a table or table header line.
+- The incoming `Column.onCell` / `Column.onHeaderCell` can define a table or header cell native event or property.
+
+<Framework only="react">
+
+In principle, the properties or events supported on tr / td / th can be defined. For example:
+
+- The tr at the head of the watch defines onMouseEnter / onMouseLeave
+- The tr of the table defines className
+- The third line of the table defines onClick.
+
+</Framework>
+
+<Framework only="vue">
+
+In principle, the properties or events supported on tr / td / th can be defined, and the returned object uses Vue naming: `class`, `style`, `data-*` and listeners such as `onClick`, `onMouseenter`, `onDblclick` and `onContextmenu`. A misspelled key is a type error. For example:
+
+- The tr at the head of the table defines `onMouseenter` / `onMouseleave`
+- The tr of the table defines `class`
+- The third line of the table defines `onClick`.
+
+</Framework>
+
+<Framework only="solid">
+
+In principle, any attribute or event supported on tr/td/th can be defined. Returned objects use JSX attribute names: `class`, `style`, `data-*`, and events such as `onClick`, `onMouseEnter`, `onMouseLeave`, `onDblClick` and `onContextMenu`. For example:
+
+- The tr of the header defines `onMouseEnter`/`onMouseLeave`
+- The tr of the table defines `class`
+- The third row of the table defines `onClick`
+
+</Framework>
+
+<Demo id="row-cell-events" />
+
+### Zebra Pattern Table
+
+Use `OnRow` to set a background color for each row to create a zebra stripped table.
+
+<Demo id="zebra" />
+
+### Custom Header Style
+
+<Framework only="react">
+
+Return a specific style or className through Column.onHeaderCell to customize the header style.  
+In the example below, the header background color is changed by passing backgroundColor.
+
+</Framework>
+
+<Framework only="vue">
+
+Return a specific style or class through Column.onHeaderCell to customize the header style.  
+In the example below, the header background color is changed by passing backgroundColor.
+
+</Framework>
+
+<Framework only="solid">
+
+You can return a specific style or class from Column.onHeaderCell to customize the header style.  
+The example below changes the header background color by passing in `background-color`.
+
+</Framework>
+
+<Demo id="header-style" />
+
+### Custom Cell Hover Style
+
+Table applies the hover style to the whole row by default. To change it, override the styles with CSS.  
+In the example below, CSS overrides change the hover background from row highlight to cell highlight.
+
+```css
+.component-table-demo-cell-hover-custom {
+    .semi-table-tbody {
+        // Remove the original row hover style
+    .semi-table-row:hover {
+            .semi-table-row-cell {
+                background-color: transparent;
+                background-image: none;
+                &.semi-table-cell-fixed-left::before {
+                    background-color: transparent;
+                }
+            }
+            // Add a style to a single cell
+      .semi-table-row-cell:hover {
+                background-color: var(--semi-light-green-1);
+            }
+        }
+    }
+}
+```
+
+<Demo id="cell-hover" />
+
+### Column Ellipsis
+
+Use `ellipsis` to make cells automatically clipped.
+
+<Demo id="ellipsis" />
+
+<Framework only="react">
+
+Set `ellipsis.showTitle` to false to hide the default native HTML title. With `column.render` you can customize the content prompt.
+
+</Framework>
+
+<Framework only="vue">
+
+Set `ellipsis.showTitle` to false to hide the default native HTML title. With the `#cell` slot you can customize the content prompt.
+
+</Framework>
+
+<Framework only="solid">
+
+Set `ellipsis.showTitle` to false to hide the default native HTML title. Use `render` together with it to customize the content tooltip.
+
+</Framework>
+
+<Demo id="ellipsis-custom-tip" />
+
+### Resizable Column
+
+#### Basic Resizable Column
+
+For some columns with more content, you can choose to turn on the telescopic column function and pull and pull at the head to realize the real-time change of column width.
+
+But you need to pay attention to some parameters:
+
+- `resizable` is set to `true` or an `object`
+- Any column in `columns` that requires a telescopic function should specify the `width`field (if not passed, the column does not have a telescopic function and its column width will be automatically adjusted by the browser)
+- `column.resize` can take effect after resizable is enabled. After setting to false, the column no longer supports scaling.
+- A column that has been dragged keeps its dragged width, while columns that have not been dragged follow the `width` in `columns`
+
+> When used with fixed columns, you need to specify a column without setting the width
+
+> It is not recommended to use it with `scroll.x` at the same time. scroll.x specifies that the table has a width range, and stretching columns will expand the column width, which may cause the table to be misaligned
+
+<Demo id="resizable" />
+
+#### Advanced Telescopic Columns
+
+`resizable` can also be an `object`, including three event methods:
+
+- onResize
+- onResizeStart
+- onResizeStop
+
+These three callback will be triggered on `changing column width`, `start changing column width` and `stop changing column width` respectively. Developers can choose to modify the column at this time, such as adding a vertical line effect when dragging, as shown below.
+
+<Demo id="resizable-advanced" />
+
+The CSS style definition used in this example:
+
+```css
+#components-table-demo-resizable-column .my-resizing {
+    border-right: 2px solid red;
+}
+
+#components-table-demo-resizable-column .semi-table-resize-handle:hover {
+    background-color: red;
+}
+
+#components-table-demo-resizable-column .my-resizing:hover .semi-table-resize-handle {
+    background-color: inherit;
+}
+```
+
+### Drag Sorting
+
+<Framework only="react">
+
+Use [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) with the [`components`](https://github.com/DouyinFE/semi-design/blob/340c93e4e1612a879be869c43ad7a9a85ab5a302/packages/semi-ui-react/table/interface.ts#L200) API to easily implement drag-and-drop sorting.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `@dnd-kit/vue` from [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) with the `components` prop to easily implement drag-and-drop sorting: pass a Vue component as `components.body.row`, it receives the attributes and listeners of every data row (including `data-row-key`), and calls `useSortable` inside.
+
+</Framework>
+
+<Framework only="solid">
+
+Use [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) with `@dnd-kit/solid` and the `components` property to implement drag sorting easily: `components.body.row` takes a Solid component that receives the properties of each data row (including `data-row-key`) and the `index` returned by `onRow`. Call `useSortable` inside it. Wrap the Table with `DragDropProvider`, and in `onDragEnd` adjust `dataSource` according to `source.initialIndex` and `source.index`.
+
+</Framework>
+
+<Demo id="drag-sort" />
+
+### Table Grouping
+
+<Framework only="react">
+
+For some tables whose data needs to be displayed in groups, you can pass in `groupBy` to define the grouping rules, and use `renderGroupSection` to define the rendering of the grouping table header.
+
+</Framework>
+
+<Framework only="vue">
+
+For some tables whose data needs to be displayed in groups, you can pass in `groupBy` to define the grouping rules, and use the `#groupSection` slot (parameters `groupKey` and `group`) to define the rendering of the grouping table header; the column configuration of the only column of a group row is returned by `groupSectionColumn`.
+
+</Framework>
+
+<Framework only="solid">
+
+For tables whose data needs to be displayed in groups, pass `groupBy` to define the grouping rule and use `renderGroupSection(groupKey)` to define how the group header is rendered.
+
+</Framework>
+
+> Note: Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+
+<Demo id="grouping" />
+
+### Virtualized Table
+
+Virtualization can be used for scenes that need to render large-scale data. You can enable this feature by configuring the `virtualized` parameter. have to be aware of is:
+
+<Framework only="react">
+
+- Must pass `scroll.y` (number) and `style.width` (number);
+
+</Framework>
+
+<Framework only="vue">
+
+- Must pass `scroll.y` (number); the table width comes from `style.width`, or from `scroll.x` when it is not set. `style` is a style passed through to the root element, so write `width` as a string with a unit, such as `'750px'`;
+
+</Framework>
+
+- Need to pass the height of each line `virtualized.itemSize` (when not passed, the default row height follows `size`: `53` for `default`, `45` for `middle` and `37` for `small`, and a group header row is as high as a normal row), can be of the following types:
+    - `number`
+    - `(index, { sectionRow?: boolean, expandedRow?: boolean }) => number`
+- Table grouping virtualization is supported.
+- The `virtualized` object also takes `overscanCount`: the number of rows rendered above and below the visible area, 2 by default
+
+<Framework only="react">
+
+Use `getVirtualizedListRef` to get the ref of the virtual list. `ref.current` provides `scrollTo(offset)` and `scrollToItem(index, align)`, where align is `auto` (default), `smart`, `center`, `start` or `end`.
+
+</Framework>
+
+<Framework only="vue">
+
+Call `scrollTo(offset)` and `scrollToItem(index, align)` through the component ref of Table, where align is `auto` (default), `smart`, `center`, `start` or `end`; calling them on a table without virtualization prints a warning in development.
+
+</Framework>
+
+<Framework only="solid">
+
+- Must pass `scroll.y` (number); the table width comes from `style.width`, or from `scroll.x` when it is not set. `style` lands on the root element, so write `width` as a string with a unit, such as `'750px'`;
+
+Use `getVirtualizedListRef` to obtain the instance of the virtual list. The instance provides `scrollTo(offset)` and `scrollToItem(index, align)`, where align is `auto` (default), `smart`, `center`, `start`, or `end`.
+
+</Framework>
+
+The following is an example of rendering 1000 pieces of data.
+
+<Demo id="virtualized" />
+
+### Infinite Scroll
+
+<Framework only="react">
+
+Based on the virtualization feature, we can achieve infinite scroll loading data by passing in `virtualized.onScroll`.
+
+</Framework>
+
+<Framework only="vue">
+
+Based on the virtualization feature, we can achieve infinite scroll loading data by listening to the `@scroll` event. Its parameter holds `scrollDirection`, `scrollOffset` and `scrollUpdateWasRequested`, and it fires only when the vertical scroll offset changes.
+
+</Framework>
+
+<Framework only="solid">
+
+Based on the virtualization feature, you can implement infinite scroll loading by passing `virtualized.onScroll`.
+
+</Framework>
+
+<Demo id="infinite-scroll" />
+
+### Controlled Dynamic Tables
+
+<Demo id="dynamic" />
+
+### Fully custom rendering
+
+<Framework only="vue">
+
+Generally, the `#cell` slot is enough, but you can also pass `Column.useFullRender = true` to enable full custom rendering mode. At this time the output of the slot replaces the whole cell, and the checkbox, expand button and indent nodes are passed to the `#headerCell` slot (or `#title` of `Table.Column`) and the `#cell` slot, so you can further define the rendering of the header and cell content.
+
+The parameter of `#headerCell` is:
+
+```text
+{
+    column: ColumnProps,
+    title: string | undefined, // column title
+    filter: VNode | null, // Filter button
+    sorter: VNode | null, // Sort button
+    selection: VNode | null, // Select button
+}
+```
+
+The parts of the `#cell` parameter that relate to full custom rendering are:
+
+```text
+{
+    expandIcon: VNode | null, // Expand button
+    selection: VNode | null, // Select button
+    indentText: VNode | null, // Indentation
+}
+```
+
+Render these nodes with `<component :is="selection" />`.
+
+</Framework>
+
+<Framework only="react">
+
+Generally, you can use `Column.render`, but you can also pass`Column.useFullRender = true` to enable full custom rendering mode. At this time, the components such as checkbox button, expand button, indent will be Pass through to the `Column.title` and`Column.render` methods, you can further define the rendering method of the header and cell content.
+
+The input parameters accepted by `Column.title` are:
+
+```tsx
+{
+    filter: ReactNode, // Filter button
+    sorter: ReactNode, // Sort button
+    selection: ReactNode, // Select button
+}
+```
+
+`Column.render` The fourth input parameter is:
+
+```tsx
+{
+    expandIcon: ReactNode, // Expand button
+    selection: ReactNode, // Select button
+    indentTex: ReactNode, // Indentation
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+In general, `Column.render` is enough, but you can also pass `Column.useFullRender=true` to enable fully custom rendering. The checkbox, expand button, indentation and other nodes are then passed to `Column.title` and `Column.render`, where you can further define how the header and cell content are rendered.
+
+The argument `Column.title` receives when it is a function is:
+
+```text
+{
+    filter?: () => JSX.Element, // Render function of the filter button; missing when the column has no filter
+    sorter?: () => JSX.Element, // Render function of the sort button; missing when the column has no sorter
+    selection?: () => JSX.Element, // Render function of the selection button
+}
+```
+
+The fourth argument of `Column.render` is an object with the following structure:
+
+```text
+{
+    expandIcon?: () => JSX.Element, // Render function of the expand button
+    selection?: () => JSX.Element, // Render function of the selection button
+    indentText?: () => JSX.Element, // Render function of the indentation
+}
+```
+
+These nodes are render functions: each call creates the node, so call one only where it is shown (for example `{parts.sorter?.()}`), and a node that is never called is never created. With `useFullRender`, the `title` function is called only once, and the fields of its argument are live: reading them in the returned JSX makes them follow the state.
+
+</Framework>
+
+> The example below renders the checkbox and content into the same cell and header.
+
+<Demo id="full-render" />
+
+### Header Merge
+
+<Framework only="react">
+
+Users can use the header merge function to group the header. The header merge can be combined with fixed column, virtualization, data grouping, column scaling and other functions. It also supports JSX or configurable writing.
+
+#### Combined Header Configuration Writing
+
+<Demo id="header-merge" />
+
+#### Merge Header JSX Writing
+
+<Demo id="header-merge-jsx" />
+
+</Framework>
+
+<Framework only="vue">
+
+Users can use the header merge function to group the header. The header merge can be combined with fixed column, virtualization, data grouping, column scaling and other functions. It also supports `Table.Column` or configurable writing.
+
+#### Combined Header Configuration Writing
+
+<Demo id="header-merge" />
+
+#### Merge Header Table.Column Writing
+
+<Demo id="header-merge-jsx" />
+
+</Framework>
+
+<Framework only="solid">
+
+Users can merge table headers to group them. Header merging can be combined with fixed columns, virtualization, data grouping, column resizing and other features, and supports both JSX and configuration-based writing.
+
+#### Merged Header Configuration Writing
+
+<Demo id="header-merge" />
+
+#### Merged Header JSX Writing
+
+<Demo id="header-merge-jsx" />
+
+</Framework>
+
+### colSpan and rowSpan
+
+<Framework only="vue">
+
+- In addition to merging the headers by writing children, you can merge the headers by setting column.colSpan.
+- Table supports row/column merging. `column.onCell` returns the cell attributes `colSpan` or `rowSpan`; when set to 0, the cell will not be rendered.
+
+```text
+type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
+
+// TableCellAttrs: the attributes and listeners a td supports, plus colSpan and rowSpan
+```
+
+</Framework>
+
+<Framework only="react">
+
+- In addition to merging the headers by writing children, you can merge the headers by setting column.colSpan.
+- Table supports row/column merging. When the cell attribute colSpan or rowSpan in render is set to 0, the set table will not be rendered.
+
+```tsx
+type Render = (
+    text: string,
+    record: Object,
+    index: number,
+    options?: RenderOptions
+) => {
+    children: React.ReactNode;
+    // merged into the td props; colSpan or rowSpan 0 skips the cell
+    props: React.TdHTMLAttributes<HTMLElement>;
+};
+
+interface RenderOptions {
+    expandIcon?: React.ReactNode;
+    isHovering?: boolean;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+- Besides merging through `children`, a header can merge columns by setting `column.colSpan`.
+- Tables support row/column merging. `column.onCell` returns the cell attributes `colSpan` or `rowSpan`; when set to 0, the cell is not rendered and `render` is not called for it.
+
+```text
+type OnCell = (record: RecordType, rowIndex: number) => JSX.TdHTMLAttributes<HTMLElement>;
+```
+
+</Framework>
+
+<Demo id="span" />
+
+## API Reference
+
+## Table
+
+<Framework only="react">
+
+<TableReactApi />
+
+`aria-label`, `aria-labelledby` and `aria-describedby` are placed on the element with `role="table"`; other native attributes, such as `data-*` and `onClick`, are placed on the outermost `div`.
+
+Fields of `virtualized` when it is an object:
+
+| Field         | Instructions                                                                                                                                               | Type                                                                                                                         | Default |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------- |
+| itemSize      | Row height. When not passed, the default follows `size`: 53 for default, 45 for middle and 37 for small, and a group header row is as high as a normal row | `number \| ((index: number, row: { sectionRow?: boolean, expandedRow?: boolean }) => number)`                                | `53`    |
+| onScroll      | Virtualization scroll callback method, called only when the vertical scroll offset changes                                                                 | `(object: { scrollDirection?: 'forward' \| 'backward', scrollOffset?: number, scrollUpdateWasRequested?: boolean }) => void` | -       |
+| overscanCount | Rows rendered above and below the visible area                                                                                                             | `number`                                                                                                                     | `2`     |
+
+</Framework>
+
+<Framework only="vue">
+
+<TableVueApi />
+
+Native attributes such as `class`, `style`, `id` and `data-*` land on the outermost element through attrs; `aria-label`, `aria-labelledby` and `aria-describedby` land on the element with `role="table"` (the shared container of the header and the body when they are separated or virtualized, otherwise the `table` of the body). When the table has a title and the caller passes no name, the table points to the title through `aria-labelledby`.
+
+`TableProps`, `TableEmits`, `TableSlots`, `TableHandle` and the data types can all be imported from `@fibrae/semi-ui-vue`. `RecordType` is their generic parameter `R`, `Record<string, any>` by default.
+
+The fields of `virtualized` when it is an object (`TableVirtualizedProps`):
+
+| Field         | Instructions                                                                                                                                               | Type                                                                                          | Default |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------- |
+| itemSize      | Row height. When not passed, the default follows `size`: 53 for default, 45 for middle and 37 for small, and a group header row is as high as a normal row | `number \| ((index: number, row: { sectionRow?: boolean, expandedRow?: boolean }) => number)` | `53`    |
+| overscanCount | Rows rendered above and below the visible area                                                                                                             | `number`                                                                                      | `2`     |
+
+The values of `components` are tag names or Vue components. A component receives the attributes and listeners of the replaced element, and its default slot is the content of the element. The positions that can be replaced (`TableComponents`):
+
+| Position                                              | Instructions                                  |
+| ----------------------------------------------------- | --------------------------------------------- |
+| header.outer, header.wrapper, header.row, header.cell | `table`, `thead`, `tr` and `th` of the header |
+| body.outer, body.wrapper, body.row, body.cell         | `table`, `tbody`, `tr` and `td` of the body   |
+| body.colgroup.wrapper, body.colgroup.col              | `colgroup` and `col`                          |
+
+</Framework>
+
+<Framework only="solid">
+
+<TableSolidApi />
+
+Native attributes such as `class`, `style`, `id` and `data-*` land on the outermost element. `aria-label`, `aria-labelledby` and `aria-describedby` land on the element with `role="table"`. The instance obtained through `ref` provides methods such as `getCurrentPageData`, see "Methods" below.
+
+</Framework>
+
+### headerStyle Example
+
+`headerStyle` will be applied to all header `<th>` elements, including fixed columns.
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+    import type { ColumnProps } from '@fibrae/semi-ui-vue';
+
+    const columns: ColumnProps[] = [
+        { title: 'Name', dataIndex: 'name', width: 180, fixed: 'left' },
+        { title: 'Age', dataIndex: 'age', width: 120 },
+        { title: 'Address', dataIndex: 'address', width: 280 },
+        { title: 'Company', dataIndex: 'company', width: 280 },
+    ];
+
+    const dataSource = Array.from({ length: 6 }).map((_, i) => ({
+        key: i,
+        name: `Edward ${i}`,
+        age: 20 + i,
+        address: 'No. 1, Lake Park',
+        company: 'Semi Design',
+    }));
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :headerStyle="{ backgroundColor: '#F5F6F7', fontWeight: 600 }" />
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+const columns = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        width: 180,
+        fixed: 'left',
+    },
+    {
+        title: 'Age',
+        dataIndex: 'age',
+        width: 120,
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        width: 280,
+    },
+    {
+        title: 'Company',
+        dataIndex: 'company',
+        width: 280,
+    },
+];
+
+const dataSource = Array.from({ length: 6 }).map((_, i) => ({
+    key: i,
+    name: `Edward ${i}`,
+    age: 20 + i,
+    address: 'No. 1, Lake Park',
+    company: 'Semi Design',
+}));
+
+export default function Demo() {
+    return <Table columns={columns} dataSource={dataSource} scroll={{ x: 900 }} headerStyle={{ backgroundColor: '#F5F6F7', fontWeight: 600 }} />;
+}
+```
+
+Some of the type definitions used above:
+
+```typescript
+// PaginationProps is the props supported by the Pagination component
+interface TablePaginationProps extends PaginationProps {
+    position?: PaginationPosition;
+    formatPageText?: FormatPageText;
+}
+
+type VirtualizedItemSizeFn = (index?: number, row?: { sectionRow?: boolean; expandedRow?: boolean }) => number;
+type VirtualizedOnScrollArgs = {
+    scrollDirection?: 'forward' | 'backward';
+    scrollOffset?: number;
+    scrollUpdateWasRequested?: boolean;
+};
+type VirtualizedOnScroll = (object: VirtualizedOnScrollArgs) => void;
+
+type Virtualized =
+    | boolean
+    | {
+          itemSize?: number | VirtualizedItemSizeFn;
+          onScroll?: VirtualizedOnScroll;
+      };
+```
+
+RecordType is a generic parameter of Table and Column, and the default is object type. You can use RecordType like this:
+
+```typescript
+import { ColumnProps } from 'table/interface';
+
+interface Record {
+    title?: string;
+    dataIndex?: string;
+    width?: number;
+    render?: Function;
+    key?: string;
+    name?: string;
+    age?: number;
+    address?: string;
+}
+
+const columns: ColumnProps<Record>[] = [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        width: 200,
+    },
+    // ...
+];
+
+const data: Record[] = [
+    {
+        key: '1',
+        name: 'John Brown',
+        age: 32,
+        address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
+    },
+    // ...
+];
+
+function App() {
+    return <Table<Record> columns={columns} dataSource={data} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Some of the type definitions used above, all importable from `@fibrae/semi-ui-vue`:
+
+```typescript
+// PaginationProps is the props supported by the Pagination component
+interface TablePaginationProps extends PaginationProps {
+    position?: 'top' | 'bottom' | 'both';
+    formatPageText?: boolean | ((pageInfo: { currentStart: number; currentEnd: number; total: number }) => string);
+    onChange?: (currentPage: number, pageSize: number) => void;
+    onPageChange?: (currentPage: number) => void;
+    onPageSizeChange?: (pageSize: number) => void;
+}
+```
+
+RecordType is the generic parameter `R` of Table and Column, `Record<string, any>` by default. You can use it like this:
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+    import type { ColumnProps } from '@fibrae/semi-ui-vue';
+
+    interface Row {
+        key: string;
+        name: string;
+        age: number;
+        address: string;
+    }
+
+    const columns: ColumnProps<Row>[] = [
+        { title: 'Name', dataIndex: 'name', width: 200 },
+        // ...
+    ];
+
+    const data: Row[] = [
+        { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
+        // ...
+    ];
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="data" />
+</template>
+```
+
+</Framework>
+
+## onRow/onHeaderRow Usage
+
+> Also in `column.onCell` `column.onHeaderCell` Properties or events supported by td / th can also be returned.
+
+The third parameter `rowStatus` of `onRow` can get the current row's status information, including `disabled` and `selected` properties. This is useful when you need to execute different logic based on the row's selected or disabled state, for example, determining whether to allow selection when clicking a row.
+
+<Framework only="vue">
+
+The listeners in the returned object use Vue's `onXxx` naming (`onClick`, `onMouseenter`, `onMouseleave`), and the style class is `class`.
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+
+    const onRow = (record, index, rowStatus) => ({
+        onClick: () => {
+            // rowStatus.disabled indicates whether the current row is disabled
+            // rowStatus.selected indicates whether the current row is selected
+            if (rowStatus.disabled) {
+                return;
+            }
+            console.log('Clicked row', index, rowStatus);
+        },
+        onMouseenter: () => {},
+        onMouseleave: () => {},
+        class: '',
+        // Other attributes or events that can be applied to tr
+    });
+
+    const onHeaderRow = (columns, index) => ({
+        onClick: () => {},
+        class: '',
+        // Other attributes or events that can be applied to tr
+    });
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="dataSource" :onRow="onRow" :onHeaderRow="onHeaderRow" />
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+() => (
+    <Table
+        onRow={(record, index, rowStatus) => {
+            return {
+                onClick: (event) => {
+                    // rowStatus.disabled indicates whether the current row is disabled
+                    // rowStatus.selected indicates whether the current row is selected
+                    if (rowStatus?.disabled) {
+                        console.log('This row is disabled');
+                        return;
+                    }
+                    console.log('Clicked row', index, rowStatus);
+                },
+                onMouseEnter: (event) => {},
+                onMouseLeave: (event) => {},
+                className: '',
+                // ...
+                // Other attributes or events that can be applied to tr
+            };
+        }}
+        onHeaderRow={(columns, index) => {
+            return {
+                onClick: (event) => {},
+                onMouseEnter: (event) => {},
+                onMouseLeave: (event) => {},
+                className: '',
+                // ...
+                // Other attributes or events that can be applied to th
+            };
+        }}
+    />
+);
+```
+
+</Framework>
+
+## Column
+
+A column accepts only the properties below, and a misspelled property name is a type error. To carry custom fields on a column, extend the type with an intersection, such as `ColumnProps<RecordType> & { tooltip: string }`.
+
+<Framework only="vue">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| align | Setting the alignment of columns, switched automatically in RTL | 'left' \| 'right' \| 'center' | 'left' |
+| children | Settings for sub-columns when the header is merged | Column[] |  |
+| class | Column style name | string \| object \| array |  |
+| colSpan | When header columns merge, set to 0, do not render | number |  |
+| dataIndex | The key corresponding to the column data in the data item. It is required when using sorter or filter. | string |  |
+| defaultFilteredValue | Default value of the filter, the filter state of the external control column with a value of the screened value array | any[] |  |
+| defaultSortOrder | The default value of sortOrder, one of 'ascend'\|'descend'\|false | boolean \| string | false |
+| ellipsis | Ellipsis Text, table-layout will automatically switch to fixed after it is turned on | boolean \| \{ showTitle: boolean \} | false |
+| filterChildrenRecord | Whether the child data needs to be filtered locally. If this function is enabled, if the child meets the filtering criteria, the parent will retain it even if it does not meet the criteria. | boolean |  |
+| filterDropdown | Shows the filter button when true; the content of the panel is given by the `#filterDropdown` slot of Table, which needs to write a variety of interactions | boolean |  |
+| filterDropdownProps | Props and event listeners (keys starting with `on`) passed to Dropdown; the trigger is always click, see more in [Dropdown API](/en-US/react/show/dropdown#Dropdown) | object |  |
+| filterDropdownVisible | Visible of Dropdown, see more in [Dropdown API](/en-US/react/show/dropdown#Dropdown) | boolean |  |
+| filterMultiple | Whether to choose more | boolean | true |
+| filterConfirmMode | Filter confirm mode. `immediate` means filter immediately when clicking option; `confirm` means filter after clicking confirm button, and the dropdown panel will show confirm and reset buttons at the bottom | 'immediate' \| 'confirm' | 'immediate' |
+| filteredValue | Controlled property of the filter, the filter state of the external control column with a value of the screened value array | any[] |  |
+| filters | Filter menu items for the header | Filter[] |  |
+| fixed | Whether the column is fixed, optional true (equivalent to left) 'left' 'right', switched automatically in RTL | boolean \| string | false |
+| key | Identifies the column for selection, sorting, filtering and widths; can be omitted when a unique dataIndex is set | string \| number |  |
+| resize | Whether to enable resize mode, this property will take effect only after Table resizable is enabled | boolean |  |
+| showSortTip | Whether to display sorting tips, If sortOrder is set and sorting is controlled, this parameter will not take effect | boolean | false |
+| sortChildrenRecord | Whether to sort child data locally | boolean |  |
+| sortOrder | The controlled property of the sorting, the sorting of this control column can be set to 'ascend'\|'descend'\|false | boolean \| string | false |
+| sorter | Sorting function, local sorting uses a function (refer to the compareFunction of Array.sort), requiring a server-side sorting can be set to true. **An independent dataIndex must be set for the sort column, and an independent key must be set for each data item in the dataSource** | boolean \| (r1: RecordType, r2: RecordType, sortOrder: 'ascend' \| 'descend') => number | true |
+| title | Plain text shown in the column header, also the content of the ellipsis Tooltip and the name of the sort button. Use the `#headerCell` slot for custom content | string |  |
+| useFullRender | Whether to completely customize the rendering, see [Fully custom rendering](#fully-custom-rendering) for usage details, enabling this feature will cause a certain performance loss | boolean | false |
+| width | Column width | string \| number |  |
+| onCell | Set cell properties | (record: RecordType, rowIndex: number) => object |  |
+| onFilter | Determine the running function of the filter in local mode. **An independent dataIndex must be set for the filter column, and an independent key must be set for each data item in the dataSource** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilterDropdownVisibleChange | A callback when a custom filter menu is visible | (visible: boolean) => void |  |
+| onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+
+Customize cells, headers, sort and filter icons and filter items with the slots of Table: `#cell`, `#headerCell`, `#sortIcon`, `#filterIcon`, `#filterDropdown` and `#filterDropdownItem`; see the Slots of Table above for their parameters. With `Table.Column`, these slots can also be written on the column (with `#title` in place of `#headerCell`), and they take precedence over the slots of the same name on Table; a column with a `#filterDropdown` slot counts as having `filterDropdown: true`, and nested `Table.Column` children go in the default slot as grouped child columns. There are no `render`, `renderFilterDropdown`, `renderFilterDropdownItem` or `shouldCellUpdate`.
+
+Some of the type definitions used above:
+
+```typescript
+type Filter = {
+    value: any;
+    text: string;
+    children?: Filter[];
+};
+```
+
+</Framework>
+
+<Framework only="react">
+
+<ColumnReactApi />
+
+Some of the type definitions used above:
+
+```typescript
+// RecordType is a generic parameter of Table and Column, the default is object type
+
+type Filter = {
+    value: any;
+    text: React.ReactNode;
+    children?: Filter[];
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+<ColumnSolidApi />
+
+`Column` is a child declaration of Table and renders nothing by itself. Table reads its props as the column configuration.
+
+</Framework>
+
+## rowSelection
+
+<Framework only="vue">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| class | Style name listed | string \| object \| array |  |
+| checkRelation | Parent-child node selection association mode. When set to `'related'`, selecting a parent node automatically selects all child nodes, and selecting a child node affects the parent node's state (checked/half-checked/unchecked). Default is `'unRelated'`, meaning parent and child node selections are independent. | 'related' \| 'unRelated' | 'unRelated' |
+| clickRow | Whether to enable click row to select. When enabled, clicking anywhere on the row will trigger selection/deselection, including fixed columns. Disabled rows (via getCheckboxProps) cannot be selected by clicking; when `disabled` is true, clicking a row does not select it either. | boolean | false |
+| defaultSelectedRowKeys | The keys of the rows selected initially; read only on mount and ignored when selectedRowKeys is set | (string \| number)[] |  |
+| disabled | Disabled `Checkbox` in `Table` header or not; when true, `clickRow` selection does not take effect either | boolean | false |
+| fixed | Secure the selection box column to the left. | boolean | false |
+| getCheckboxProps | Default property configuration for the selection box | (record: RecordType) => object |  |
+| hidden | Hide selection column or not | boolean | false |
+| selectedRowKeys | Specifies the key array of the selected item, which needs to work with onChange | (string \| number)[] |  |
+| width | Custom list selection box width | string \| number |  |
+| onChange | A callback in the event of a change in the selected item. The first parameter will save the row keys selected last time, even if you do paging control or update the dataSource [FAQ](#faq) | (selectedRowKeys: (string \| number)[], selectedRows: RecordType[]) => void |  |
+| onCell | Set the attributes of the data cells of the selection column | (record: RecordType, rowIndex: number) => object |  |
+| onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+| onSelect | Callback when the user manually selects a row. `event` is the selection box's change event, or the mouse event when `clickRow` selects on a row click | (record: RecordType, selected: boolean, selectedRows: RecordType[], event: Event) => void |  |
+| onSelectAll | The user manually clicks the callback of the header selection box, and all selectable rows in the current filter result (disabled rows excluded) will be selected/unselected. `changedRows` contains only the rows whose selection state changed | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], event: Event) => void |  |
+
+Customize the selection box with the `#selectionCell` slot of Table; there are no `renderCell` or `shouldCellUpdate`.
+
+</Framework>
+
+<Framework only="react">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| className | Style name listed | string |  |
+| checkRelation | Parent-child node selection association mode. When set to `'related'`, selecting a parent node automatically selects all child nodes, and selecting a child node affects the parent node's state (checked/half-checked/unchecked). Default is `'unRelated'`, meaning parent and child node selections are independent. | 'related' \| 'unRelated' | 'unRelated' |
+| clickRow | Whether to enable click row to select. When enabled, clicking anywhere on the row will trigger selection/deselection, including fixed columns. Disabled rows (via getCheckboxProps) cannot be selected by clicking; when `disabled` is true, clicking a row does not select it either. | boolean | false |
+| defaultSelectedRowKeys | The keys of the rows selected initially; read only on mount and ignored when selectedRowKeys is set | (string \| number)[] |  |
+| disabled | Disabled `Checkbox` in `Table` header or not; when true, `clickRow` selection does not take effect either | boolean | false |
+| fixed | Secure the selection box column to the left. | boolean | false |
+| getCheckboxProps | Default property configuration for the selection box | (record: RecordType) => object |  |
+| hidden | Hide selection column or not | boolean | false |
+| selectedRowKeys | Specifies the key array of the selected item, which needs to work with onChange | string [] |  |
+| shouldCellUpdate | Self control whether cell should be updated | (props: TableCellProps, prevProps: TableCellProps) => boolean |  |
+| renderCell | Custom rendering checkbox | (\{ selected: boolean, record: RecordType, originNode: JSX.Element, inHeader: boolean, disabled: boolean, indeterminate: boolean, index?: number, selectRow?: (selected: boolean, e: Event) => void, selectAll?: (selected: boolean, e: Event) => void \}) => ReactNode |  |
+| width | Custom list selection box width | string \| number |  |
+| onChange | A callback in the event of a change in the selected item. The first parameter will save the row keys selected last time, even if you do paging control or update the dataSource [FAQ](#faq) | (selectedRowKeys: number[]\|string[], selectedRows: RecordType[]) => void |  |
+| onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+| onSelect | Callback when the user manually selects a row. `nativeEvent` is the selection box's change event, the mouse event when `clickRow` selects on a row click, or the event passed to `renderCell`'s `selectRow` | (record: RecordType, selected: boolean, selectedRows: RecordType[], nativeEvent: CheckboxEvent \| React.MouseEvent \| Event) => void |  |
+| onSelectAll | The user manually clicks the callback of the header selection box, and all selectable rows in the current filter result (disabled rows excluded) will be selected/unselected. `changedRows` contains only the rows whose selection state changed. `e` is the selection box's change event, or the event passed to `renderCell`'s `selectAll` | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], e: CheckboxEvent \| Event) => void |  |
+
+</Framework>
+
+## scroll
+
+| Parameters               | Instructions                                                                                                                                                                                                                                     | Type           | Default |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- | ------- |
+| scrollToFirstRowOnChange | Whether to automatically scroll to the top of the table after paging, sorting, and filtering changes. When `scroll.y` is set, it scrolls the table body to the top; when `scroll.y` is not set, it scrolls the page to the table header position | boolean        | false   |
+| x                        | Set the width of the horizontal scroll area, which can be pixel value, percentage, or 'max-content'                                                                                                                                              | string\|number |         |
+| y                        | Set the height of the vertical scroll area, which can be a pixel value                                                                                                                                                                           | number         |         |
+
+## pagination
+
+Page-turning component configuration. Pagination suggests not to use literal value.
+
+Note: After pagination.onChange is set, Table onChange no longer responds to pagination changes.
+
+<Framework only="react">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| currentPage | Current page number | number | - |
+| defaultCurrentPage | Default current page number | number | 1 |
+| formatPageText | Page-turning area copywriting custom formatting, pass false to close copywriting display; This item affects the copy display on the left of the page turning area of the form. It is different from the `showTotal` parameter of the`Pagination` component. | boolean\| (\{ currentStart: number, currentEnd: number, total: number \}) => string\|ReactNode | true |
+| pageSize | Number of entries per page | number | 10 |
+| position | Location | 'bottom '\|'top '\|'both' | 'bottom' |
+| total | Total number of entries | number | 0 |
+| preventPageChangeOnPageSizeChange | Whether to prevent automatic adjustment of currentPage when pageSize changes. By default, when pageSize changes, the component automatically calculates the new currentPage to maintain the current data position. When set to true, the user controls the page change | boolean | false |
+
+</Framework>
+
+<Framework only="vue">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| currentPage | Current page number | number | - |
+| defaultCurrentPage | Default current page number | number | 1 |
+| formatPageText | Page-turning area copywriting custom formatting, pass false to close copywriting display; This item affects the copy display on the left of the page turning area of the form. It is different from the `showTotal` parameter of the`Pagination` component. | boolean \| (\{ currentStart: number, currentEnd: number, total: number \}) => string | true |
+| pageSize | Number of entries per page | number | 10 |
+| position | Location | 'bottom' \| 'top' \| 'both' | 'bottom' |
+| total | Total number of entries | number | 0 |
+| preventPageChangeOnPageSizeChange | Whether to prevent automatic adjustment of currentPage when pageSize changes. By default, when pageSize changes, the component automatically calculates the new currentPage to maintain the current data position. When set to true, the user controls the page change | boolean | false |
+| onChange | Called when the page number or the page size changes; once set, the `change` event of Table no longer responds to pagination changes | (currentPage: number, pageSize: number) => void |  |
+| onPageChange | Called when the page number changes | (currentPage: number) => void |  |
+| onPageSizeChange | Called when the page size changes | (pageSize: number) => void |  |
+
+</Framework>
+
+For other configurations, see [Pagination](/en-US/react/navigation/pagination#API-Reference)
+
+## Resizable
+
+The parameters of the resizable object type, which mainly include event methods when the table column is scaled. These event methods can return an object that merges with the final column.
+
+| Parameters       | Instructions                                                 | Type                                                     | Default    |
+| ---------------- | ------------------------------------------------------------ | -------------------------------------------------------- | ---------- |
+| handlerClassName | The class name added to the column while it is being resized | string                                                   | 'resizing' |
+| onResize         | Triggers when the table column changes its width             | (column: [Column](#Column)) => [Column](#Column) \| void |            |
+| onResizeStart    | Triggers when the table column starts to change the width.   | (column: [Column](#Column)) => [Column](#Column) \| void |            |
+| onResizeStop     | Triggers when the table column stops changing the width      | (column: [Column](#Column)) => [Column](#Column) \| void |            |
+
+## Methods
+
+<Framework only="react">
+
+Some internal methods provided by Table can be accessed through ref:
+
+```jsx
+import React, { useRef, useEffect } from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+function Demo() {
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current.getCurrentPageData(); // => { dataSource: [/*...*/], groups: /*...*/ }
+    }, []);
+
+    return <Table columns={[/*...*/]} dataSource={[/*...*/]} ref={ref} />;
+}
+```
+
+The methods on the handle are listed in the Methods table of the Table API above.
+
+</Framework>
+
+<Framework only="vue">
+
+The methods exposed by Table can be accessed through the component ref, typed as `TableHandle`:
+
+```vue
+<script setup lang="ts">
+    import { onMounted, useTemplateRef } from 'vue';
+    import { Table } from '@fibrae/semi-ui-vue';
+    import type { TableHandle } from '@fibrae/semi-ui-vue';
+
+    const table = useTemplateRef<TableHandle>('table');
+
+    onMounted(() => {
+        table.value?.getCurrentPageData(); // => { dataSource: [/*...*/], groups: /*...*/ }
+    });
+</script>
+
+<template>
+    <Table ref="table" :columns="columns" :dataSource="dataSource" />
+</template>
+```
+
+| Parameters                  | Instructions                                                                                                                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| getCurrentPageData()        | Returns the data object of the current page: \{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}, keyed by group key with the set of row keys in that group |
+| scrollTo(offset)            | Scrolls a virtualized table to the given pixel offset                                                                                                                                            |
+| scrollToItem(index, align?) | Scrolls a virtualized table to the given row, `align` is 'auto' \| 'smart' \| 'center' \| 'start' \| 'end'                                                                                       |
+
+</Framework>
+
+<Framework only="solid">
+
+Access the internal methods Table provides through ref:
+
+| Name                 | Description                                                                                                                                                                                                                          |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| getCurrentPageData() | Returns the data object of the current page: \{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}, where the keys of groups are group keys and the values are the sets of row keys in that group |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+Table follows the [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/) pattern: it is a static table, arrow keys do not move between cells, and every interactive part (sort, filter, expand, select) is a native control reachable with Tab.
+
+- The table's role is table, rows are row, header cells are columnheader and cells are cell. A tree table is a table too and does not expose row levels
+- The sort button is a native `button` in the header cell, named by the column title. The sort direction is `aria-sort` on the header cell (`ascending` or `descending`); unsorted columns do not carry it. The `showSortTip` tip shows when the button is focused
+- The expand button is a native `button` named "Expand this row", with `aria-expanded` telling whether the row is expanded
+- The row selection checkboxes have accessible names such as "Select this row" and "Select all rows"
+- With a fixed header (`scroll.y`, `sticky`) or virtualization, the header and the body render as two table elements; their common container has the table role and the inner tables have role none, so cells stay associated with their column headers
+- In a virtualized table `aria-rowcount` is the header row count plus the total data row count, and data rows' `aria-rowindex` continues after the header rows, so screen readers announce rows that are not in the DOM
+
+<Framework only="react">
+
+- The default column filter icon is a native `button`: Tab focuses it, Enter, Space or Down Arrow opens the filter menu, and it carries `aria-haspopup="menu"` and `aria-expanded`. With a custom `filterIcon`, keeping it focusable is up to you
+
+</Framework>
+
+<Framework only="vue">
+
+- The column filter button is a native `button`: Tab focuses it, Enter, Space or Down Arrow opens the filter menu, and it carries `aria-haspopup="menu"` and `aria-expanded`. Its name is "Filter data with this column", or "Filter this column, filter active" when a filter value is set. The `#filterIcon` slot only replaces the icon inside the button, and the name and keyboard behavior of the button stay the same
+
+</Framework>
+
+Known limitations:
+
+- In a sortable column the `title` renders inside the sort button, so do not put buttons, links or other interactive content in it
+
+<Framework only="solid">
+
+- The default column filter icon is a native `button`. It can be focused with Tab, and Enter, Space or the down arrow opens the filter menu. It carries `aria-haspopup="menu"` and `aria-expanded`. When you customize `filterIcon`, the caller must make sure it is focusable.
+
+</Framework>
+
+## RTL/LTR
+
+- RTL default value of Table is controlled by [ConfigProvider](/zh-CN/react/other/config-provider)
+- The align and fixed properties of the Table column will be automatically switched in RTL, left \<-> right.
+- Table tree data does not support RTL ([Chrome and Safari browsers behave differently from Firefox](https://codesandbox.io/s/table-rtl-treedata-uy7gzl?file=/src/App.jsx))
+
+## Content Guidelines
+
+- Table title
+    - The title of the table should clearly make the user perceive the purpose of the table;
+    - Add descriptions to complex tables to provide users with more contextual information about the table;
+    - use sentence case;
+- Column headers
+    - Keep column headings concise, it is recommended to use 1-2 words as column headings;
+    - When the column header is long, it is recommended to display it in 2 lines, and the remaining text is abbreviated and displayed completely in the Tooltip;
+    - Adopt the capitalization rules of Sentence case;
+    - Use sentence case for column headings;
+- Table operation area
+    - You can follow [Button's content Guidelines](/en-US/react/basic/button)
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Clicking the row selection button on the second page will jump to the first page?**
+
+    After the Table's dataSource is updated, the page number will be reset to the initial state. Please check if the data source changed when the component was rendered.
+
+      <Framework only="vue">
+
+    The Table of Vue compares the old and new `dataSource` item by item: it is not reset when every item is still the original record, and it is reset when records are added or removed. Do not write a literal in the template, and do not regenerate the record objects on every render.
+
+    ```vue
+    <script setup lang="ts">
+        import { shallowRef } from 'vue';
+
+        const dataSource = shallowRef<Record<string, any>[]>([]);
+
+        // replace the whole array only when needed
+        const load = async () => {
+            dataSource.value = await fetchData();
+        };
+    </script>
+
+    <template>
+        <!-- Wrong: every render creates new record objects -->
+        <Table :dataSource="list.map((item) => ({ ...item }))" :columns="columns" />
+    </template>
+    ```
+
+      </Framework>
+
+      <Framework only="react">
+
+    ```typescript
+    function App() {
+        const [dataSource, setDataSource] = useState([]);
+
+        useEffect(() => {
+            // ✅ Correct
+            const getData = () => {
+                // fetch data
+                const newData = fetch(/**/);
+                // set data
+                setDataSource(dataSource);
+            };
+
+            getData();
+        }, []);
+
+        // ❌ Error
+        const data = [];
+
+        return <Table dataSource={data} columns={[/*...*/]} />;
+    }
+    ```
+
+      </Framework>
+
+      <Framework only="solid">
+
+    A component runs only once, so `dataSource` should be kept in a signal and read in JSX (for example `dataSource={data()}`). Replacing the whole array triggers an update; modifying the array in place (for example with `push`) does not, so generate a new array and call `setData` instead.
+
+      </Framework>
+
+- **The number of filtered data is wrong?**
+
+    Please check that your filter columns and data sources are configured correctly.
+
+    The filter column needs to set an independent `dataIndex`, and the dataSource needs to set an independent `key`. Please refer to the `dataSource` API. Otherwise the filtering function will not work properly.
+
+- **Why is the table data not updated?**
+
+      <Framework only="react">
+
+    At present, all parameters of the table component are shallow comparison. That is to say, if the parameter value type is an array or object, you need to manually change its reference to trigger the update. Similarly, if you don't want to trigger additional updates, try not to use literal values when passing parameters directly or define reference parameter values in the render process:
+
+    ```text
+    // ...render() {
+        <Table dataSource={[/*...*/]} columns={[/*...*/]} />
+    // }
+    ```
+
+    The above writing method will trigger the update of data in the table every time render (the current selected row will be cleared and the row key array will be expanded, etc.). In order to improve performance and avoid some exceptions, **please define some reference type parameters outside the render method as far as possible (if hooks are used, please use useMemo or useState for storage).**
+
+      </Framework>
+
+      <Framework only="vue">
+
+    Vue tracks changes reactively: keep `dataSource` in a `ref` or `shallowRef`, and replacing the whole array or calling `push`, `splice` and similar methods triggers an update; with a `shallowRef`, changing a field of a record directly does not, so replace the whole array. The same goes for `columns`: use `computed` when it depends on reactive data, otherwise define it at the top level of `script setup`, and avoid literals written in the template.
+
+      </Framework>
+
+      <Framework only="solid">
+
+    Table updates by where props are read. Reading signals such as `columns` and `dataSource` in JSX makes them follow changes. A `columns` array defined inside the component is created only once, so column configuration that depends on signals should use getters or be read inside `render`.
+
+      </Framework>
+
+- **Why can't my form line be selected and expanded?**
+
+    Please specify a rowKey or set a different "key" attribute for each item of the dataSource. **All rows related operations in the table need to be used.**
+
+- **How to implement custom sorting or pass parameters to the server for sorting when clicking the sort button?**
+
+    The input parameters of the onChange method include pagination, filters, and sorter. Users can customize the sorting of the dataSource according to the sorter.
+
+- **How to add className to a row?**
+
+    Use onRow or onHeaderRow.
+
+- **How to style the table cell?**
+
+    It can be controlled by column.onHeaderCell and column.onCell.
+
+- **Why cache the previously selected keys for the first parameter of `rowSelection` `onChange`?**
+
+    This is for the scenario where the selected row keys are lost when data is selected on the first page during paging, and then the data is selected on the second page. If you don't want to use the cached keys, you can filter it from the current dataSource or use the second parameter of `rowSelection` `onChange`.
+
+- **Does it support single row selection?**
+
+    Table currently does not support single-row selection function, and users can implement single selection in a custom way.

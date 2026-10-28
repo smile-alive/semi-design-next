@@ -1,0 +1,125 @@
+{
+    "checkbox": {
+        "source": "packages/semi-ui-vue/src/checkbox/checkbox.vue",
+        "props": {
+            "addonId": {
+                "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
+                "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
+            },
+            "defaultChecked": {
+                "zh-CN": "初始是否选中，非受控使用；在 CheckboxGroup 中使用时无效。",
+                "en-US": "Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the checkbox is disabled." },
+            "extraId": {
+                "zh-CN": "extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。",
+                "en-US": "Id of the extra node, which aria-describedby points to. Generated when omitted."
+            },
+            "indeterminate": {
+                "zh-CN": "半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。",
+                "en-US": "Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value."
+            },
+            "modelValue": {
+                "zh-CN": "是否选中，配合 v-model 受控使用；在 CheckboxGroup 中使用时无效。",
+                "en-US": "Whether the checkbox is checked, controlled with v-model. Ignored inside a CheckboxGroup."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
+                "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "type": {
+                "zh-CN": "样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。",
+                "en-US": "Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies."
+            },
+            "value": {
+                "zh-CN": "该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。",
+                "en-US": "The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "选中状态变化时触发，用于 v-model。",
+                "en-US": "Emitted when the checked state changes; drives v-model."
+            },
+            "change": {
+                "zh-CN": "选中状态变化时触发，参数的 target 为 `{ checked, value, name, disabled }`。",
+                "en-US": "Emitted when the checked state changes. The event's target is `{ checked, value, name, disabled }`."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "Checkbox 的文本内容，同时是原生 input 的可访问名称。",
+                "en-US": "Label content of the checkbox, which is also the native input's accessible name."
+            },
+            "extra": {
+                "zh-CN": "辅助文本，aria-describedby 指向它。",
+                "en-US": "Supplementary text, which aria-describedby points to."
+            }
+        },
+        "exposed": {
+            "focus": { "zh-CN": "使原生 input 获得焦点。", "en-US": "Focuses the native input." },
+            "blur": { "zh-CN": "使原生 input 失去焦点。", "en-US": "Removes focus from the native input." }
+        }
+    },
+    "checkbox-group": {
+        "source": "packages/semi-ui-vue/src/checkbox/checkbox-group.vue",
+        "props": {
+            "defaultValue": {
+                "zh-CN": "非受控时组内默认选中的值，与 Checkbox 的 value 匹配。",
+                "en-US": "Values selected by default when uncontrolled, matched against each Checkbox's value."
+            },
+            "direction": {
+                "zh-CN": "组内布局方向，可选 horizontal 或 vertical。",
+                "en-US": "Layout direction inside the group: horizontal or vertical."
+            },
+            "disabled": { "zh-CN": "是否禁用整组。", "en-US": "Whether the whole group is disabled." },
+            "modelValue": {
+                "zh-CN": "选中的值，配合 v-model 受控使用。",
+                "en-US": "Selected values, controlled with v-model."
+            },
+            "name": {
+                "zh-CN": "组内所有原生 input 的 name；未设置时每组生成唯一值。",
+                "en-US": "The name of every native input in the group. A unique value is generated per group when omitted."
+            },
+            "options": {
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style }`."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "type": {
+                "zh-CN": "组内所有 Checkbox 的样式类型，可选 default、card、pureCard。",
+                "en-US": "Style type of every Checkbox in the group: default, card or pureCard."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "选中的值变化时触发，用于 v-model。",
+                "en-US": "Emitted when the selected values change; drives v-model."
+            },
+            "change": {
+                "zh-CN": "选中的值变化时触发，参数为新的选中值数组。",
+                "en-US": "Emitted when the selected values change, with the new array of values."
+            },
+            "blur": {
+                "zh-CN": "焦点离开整个分组时触发，在组内 Checkbox 之间移动焦点不触发。",
+                "en-US": "Emitted when focus leaves the whole group; moving focus between its checkboxes does not emit it."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "组内的 Checkbox；设置 options 时忽略。",
+                "en-US": "Checkbox components in the group. Ignored when options is set."
+            },
+            "label": {
+                "zh-CN": "自定义 options 中每一项的文本，作用域参数为 option 与 index。",
+                "en-US": "Custom label of each item in options, with the option and index scope parameters."
+            },
+            "extra": {
+                "zh-CN": "自定义 options 中每一项的辅助文本，作用域参数为 option 与 index。",
+                "en-US": "Custom extra text of each item in options, with the option and index scope parameters."
+            }
+        },
+        "exposed": {}
+    }
+}

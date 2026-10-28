@@ -1,0 +1,41 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| align | 列内容的对齐方式。 | `Align` | - |
+| children | 嵌套的 `Table.Column` 子项，用于表头分组。 | `JSX.Element` | - |
+| class | 列的类名，加在该列的 `col` 元素上。 | `string` | - |
+| colSpan | 表头单元格的 `colSpan`。 | `number` | - |
+| dataIndex | 列数据在数据项中对应的字段，使用 `sorter` 或 `onFilter` 时必须同时提供唯一的 `dataIndex`。 | `string` | - |
+| defaultFilteredValue | 默认的筛选值，非受控时作为初始筛选状态。 | `any[]` | - |
+| defaultSortOrder | 默认的排序方向，非受控时作为初始排序状态。 | `SortOrder` | - |
+| ellipsis | 文本超出单元格时省略显示；传对象时可配置 `showTitle`（原生 title 提示）与 `showTooltip`（Tooltip 提示）。 | `BaseEllipsis` | - |
+| filterChildrenRecord | 树形表格中筛选时是否同时筛选子数据。 | `boolean` | - |
+| filterConfirmMode | 筛选确认模式：`immediate` 选中即筛选，`confirm` 点击确认按钮后再筛选。 | `FilterConfirmMode` | - |
+| filterDropdown | 渲染替换筛选触发器与菜单的内容。 | <ApiType detail={"() => JSX.Element"}>Type</ApiType> | - |
+| filterDropdownProps | 筛选下拉菜单的属性，与 Dropdown 相同，但不含 `render` 与 `onVisibleChange`。 | `FilterDropdownProps` | - |
+| filterDropdownVisible | 筛选下拉菜单是否可见。 | `boolean` | - |
+| filteredValue | 筛选的受控值，传入后筛选状态由使用方控制。 | `any[]` | - |
+| filterIcon | 筛选图标，接收 `filtered` 返回元素的函数，筛选状态变化时重新调用。 | `FilterIcon` | - |
+| filterMultiple | 筛选菜单是否可以多选。 | `boolean` | - |
+| filters | 表头的筛选菜单配置，使用 `renderFilterDropdown` 时可以不传。选项的 `text` 是文本，带标记的选项用 `renderFilterDropdownItem`。 | `Filter[]` | - |
+| fixed | 列固定的位置，`left` 或 `right`，`true` 等同于 `left`。 | `Fixed` | - |
+| key | 列的标识，未传入时由 `dataIndex` 或列的位置生成。 | `string \| number` | - |
+| onCell | 设置数据单元格的属性与事件，参数为数据项与行索引，返回的对象会合并到 `td` 上；`colSpan` 或 `rowSpan` 为 0 时不渲染该单元格，也不调用 `render`。 | <ApiType detail={"OnCell\u003cRecordType>"}>Type</ApiType> | - |
+| onFilter | 筛选函数，接收筛选值与数据项，返回 `true` 时保留该数据项。 | <ApiType detail={"OnFilter\u003cRecordType>"}>Type</ApiType> | - |
+| onFilterDropdownVisibleChange | 筛选下拉菜单显示状态变化时的回调。 | `OnFilterDropdownVisibleChange` | - |
+| onHeaderCell | 设置表头单元格的属性与事件，参数为列、列索引与行索引，返回的对象会合并到 `th` 上。 | <ApiType detail={"OnHeaderCell\u003cRecordType>"}>Type</ApiType> | - |
+| render | 自定义单元格内容，参数为 `(text, record, index, options)`，返回元素；单元格属性与合并用 `onCell`。`options` 的字段是实时的，在返回的 JSX 中读取；`expandIcon`、`selection`、`indentText` 是渲染函数，在要显示的位置调用。 | <ApiType detail={"ColumnRender\u003cRecordType>"}>Type</ApiType> | - |
+| renderFilterDropdown | 自定义筛选下拉菜单的内容，接收的参数包含临时筛选值、设置方法与确认、清除、关闭方法，参数的字段是实时的，在返回的 JSX 中读取。 | <ApiType detail={"(props: RenderFilterDropdownProps) => JSX.Element"}>Type</ApiType> | - |
+| renderFilterDropdownItem | 自定义筛选菜单的每一项，接收该项的文本、选中状态与 `onChange`。 | `RenderFilterDropdownItem` | - |
+| resize | 列开启 `resizable` 时，传 `false` 让该列没有伸缩手柄。 | `boolean` | - |
+| showSortTip | 排序时是否显示排序提示。 | `boolean` | - |
+| sortChildrenRecord | 树形表格中排序时是否同时排序子数据。 | `boolean` | - |
+| sorter | 排序函数，接收两个数据项（以及当前排序方向），返回负数、0 或正数。启用排序时必须同时提供 `dataIndex`。 | <ApiType detail={"Sorter\u003cRecordType>"}>Type</ApiType> | - |
+| sortIcon | 排序图标，接收 `sortOrder` 并返回元素。`sortOrder` 是实时的，在返回的 JSX 中读取。 | `SortIcon` | - |
+| sortOrder | 排序的受控方向，传入后排序状态由使用方控制。 | `SortOrder` | - |
+| title | 表头内容。可以是文本，或接收 `sorter`、`filter`、`selection` 渲染函数并返回元素的函数，在要显示的位置调用它们；使用 `useFullRender` 时这些字段是实时的。 | `ColumnTitle` | - |
+| useFullRender | 是否由列接管表头与单元格的完整渲染，开启后可以在 `title` 与 `render` 中调用 `sorter`、`filter`、`selection`、`expandIcon` 等节点的渲染函数。 | `boolean` | - |
+| width | 列宽，数字为像素。使用 `resizable` 时需要提供。 | `string \| number` | - |

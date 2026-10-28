@@ -1,0 +1,45 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性            | 说明                                                                                                  | 类型                                            | 默认值      |
+| --------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------- |
+| file            | 要展示的文件，必填。                                                                                  | `FileItem`                                      | `undefined` |
+| index           | 文件在列表中的位置。                                                                                  | `number`                                        | `undefined` |
+| listType        | 卡片的展示类型，可选 list、picture、none；none 不渲染卡片。                                           | `"list" \| "picture" \| "none"`                 | `"list"`    |
+| disabled        | 是否禁用，禁用后不显示移除、重试和替换按钮。                                                          | `boolean`                                       | `undefined` |
+| showRetry       | 上传失败时是否展示重试按钮，文件自身的 showRetry 优先。                                               | `boolean`                                       | `undefined` |
+| showReplace     | 上传成功后是否展示替换按钮，文件自身的 showReplace 优先。                                             | `boolean`                                       | `undefined` |
+| showPicInfo     | 是否显示图片信息，只在照片墙模式下有效。                                                              | `boolean`                                       | `undefined` |
+| showTooltip     | 文件名过长时是否展示提示，或配置提示的类型和透传属性。                                                | `boolean \| ShowTooltip`                        | `true`      |
+| picWidth        | 照片墙模式下图片的宽度。                                                                              | `string \| number`                              | `undefined` |
+| picHeight       | 照片墙模式下图片的高度。                                                                              | `string \| number`                              | `undefined` |
+| validateMessage | 校验信息，优先于文件自身的 validateMessage。                                                          | `string`                                        | `undefined` |
+| onPreviewClick  | 监听方式为 @previewClick。传入后卡片可点击，并显示预览按钮；是否传入会改变渲染，因此保留为函数 prop。 | <ApiType detail={"(() => void)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件    | 说明             | 回调参数 |
+| ------- | ---------------- | -------- |
+| remove  | 点击移除时触发。 | `[]`     |
+| retry   | 点击重试时触发。 | `[]`     |
+| replace | 点击替换时触发。 | `[]`     |
+
+**Slots**
+
+| 插槽            | 说明                                                                                       | 作用域参数                       |
+| --------------- | ------------------------------------------------------------------------------------------ | -------------------------------- |
+| previewFile     | 自定义预览逻辑，替换原缩略图，只在 list 模式下有效。                                       | `UploadFileItemSlotProps`        |
+| thumbnail       | 自定义照片墙缩略图，只在照片墙模式下有效。                                                 | `UploadFileItemSlotProps`        |
+| picInfo         | 自定义照片墙信息，只在照片墙模式且 showPicInfo 为 true 时有效。                            | `UploadFileItemSlotProps`        |
+| picPreviewIcon  | 自定义照片墙悬停时的预览图标，只在照片墙模式下有效。                                       | `UploadFileItemSlotProps`        |
+| picClose        | 自定义照片墙的关闭按钮，参数为 class 和 onRemove，只在照片墙模式下有效。                   | `UploadPicCloseSlotProps`        |
+| fileOperation   | 自定义列表项的操作区。                                                                     | `UploadFileItemSlotProps`        |
+| validateMessage | 自定义校验信息，渲染为空时回落到字符串。插槽为该文件渲染出内容时，图片墙同样显示校验图标。 | `UploadFileItemSlotProps`        |
+| ellipsisTooltip | 自定义文件名过长时的弹出内容，参数为 content 和 trigger。                                  | `TypographyEllipsisTooltipProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,160 @@
+{
+    "skeleton": {
+        "source": "packages/semi-ui-react/src/skeleton/index.tsx",
+        "props": {
+            "active": {
+                "zh-CN": "是否展示动画效果。",
+                "en-US": "Whether to show the animated loading effect."
+            },
+            "children": {
+                "zh-CN": "加载结束后显示的内容，`loading` 为 `false` 时原样渲染，不包外层元素。",
+                "en-US": "Content shown once `loading` is `false`, rendered as is without a wrapper element."
+            },
+            "className": {
+                "zh-CN": "占位根元素的类名，`loading` 为 `false` 时不渲染占位根元素，因此不生效。",
+                "en-US": "Class name of the placeholder root element. It has no effect once `loading` is `false`, since no root element is rendered."
+            },
+            "loading": {
+                "zh-CN": "为 `true` 时显示 `placeholder`，反之显示子内容。",
+                "en-US": "When `true`, `placeholder` is shown. Otherwise the children are shown."
+            },
+            "placeholder": {
+                "zh-CN": "加载等待时的占位元素。",
+                "en-US": "Elements shown while loading."
+            },
+            "ref": {
+                "zh-CN": "占位根 `div` 的引用，`loading` 为 `false` 时不挂载。",
+                "en-US": "Reference to the placeholder root `div`. It is not attached once `loading` is `false`."
+            },
+            "style": {
+                "zh-CN": "占位根元素的样式，`loading` 为 `false` 时不生效。",
+                "en-US": "Style of the placeholder root element. It has no effect once `loading` is `false`."
+            }
+        }
+    },
+    "skeleton-avatar": {
+        "source": "packages/semi-ui-react/src/skeleton/item.tsx#Avatar",
+        "props": {
+            "className": {
+                "zh-CN": "占位头像的类名。",
+                "en-US": "Class name of the avatar placeholder."
+            },
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
+                "en-US": "Class name prefix, `semi-skeleton` by default."
+            },
+            "ref": {
+                "zh-CN": "占位头像的引用。",
+                "en-US": "Reference to the avatar placeholder."
+            },
+            "shape": {
+                "zh-CN": "占位头像的形状，可选 `circle` 或 `square`，未设置时为 `circle`。",
+                "en-US": "Shape of the avatar placeholder: `circle` or `square`. Defaults to `circle`."
+            },
+            "size": {
+                "zh-CN": "占位头像的大小，可选 `extra-extra-small`、`extra-small`、`small`、`medium`、`large` 或 `extra-large`，未设置时为 `medium`。",
+                "en-US": "Size of the avatar placeholder: `extra-extra-small`, `extra-small`, `small`, `medium`, `large` or `extra-large`. Defaults to `medium`."
+            },
+            "style": {
+                "zh-CN": "占位头像的样式。",
+                "en-US": "Style of the avatar placeholder."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名；不为 `avatar` 时 `size`、`shape` 不生效。",
+                "en-US": "Replaces the type of the block, which also names its class. Unless it is `avatar`, `size` and `shape` have no effect."
+            }
+        }
+    },
+    "skeleton-image": {
+        "source": "packages/semi-ui-react/src/skeleton/item.tsx#Image",
+        "props": {
+            "className": {
+                "zh-CN": "占位图像的类名。",
+                "en-US": "Class name of the image placeholder."
+            },
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
+                "en-US": "Class name prefix, `semi-skeleton` by default."
+            },
+            "ref": {
+                "zh-CN": "占位图像的引用。",
+                "en-US": "Reference to the image placeholder."
+            },
+            "style": {
+                "zh-CN": "占位图像的样式。",
+                "en-US": "Style of the image placeholder."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
+                "en-US": "Replaces the type of the block, which also names its class."
+            }
+        }
+    },
+    "skeleton-title": {
+        "source": "packages/semi-ui-react/src/skeleton/item.tsx#Title",
+        "props": {
+            "className": {
+                "zh-CN": "占位标题的类名。",
+                "en-US": "Class name of the title placeholder."
+            },
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
+                "en-US": "Class name prefix, `semi-skeleton` by default."
+            },
+            "ref": {
+                "zh-CN": "占位标题的引用。",
+                "en-US": "Reference to the title placeholder."
+            },
+            "style": {
+                "zh-CN": "占位标题的样式。",
+                "en-US": "Style of the title placeholder."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
+                "en-US": "Replaces the type of the block, which also names its class."
+            }
+        }
+    },
+    "skeleton-button": {
+        "source": "packages/semi-ui-react/src/skeleton/item.tsx#Button",
+        "props": {
+            "className": {
+                "zh-CN": "占位按钮的类名。",
+                "en-US": "Class name of the button placeholder."
+            },
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
+                "en-US": "Class name prefix, `semi-skeleton` by default."
+            },
+            "ref": {
+                "zh-CN": "占位按钮的引用。",
+                "en-US": "Reference to the button placeholder."
+            },
+            "style": {
+                "zh-CN": "占位按钮的样式。",
+                "en-US": "Style of the button placeholder."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
+                "en-US": "Replaces the type of the block, which also names its class."
+            }
+        }
+    },
+    "skeleton-paragraph": {
+        "source": "packages/semi-ui-react/src/skeleton/item.tsx#Paragraph",
+        "props": {
+            "prefixCls": {
+                "zh-CN": "类名前缀。",
+                "en-US": "Class name prefix."
+            },
+            "ref": {
+                "zh-CN": "占位段落根元素 `ul` 的引用。",
+                "en-US": "Reference to the root `ul` element of the paragraph placeholder."
+            },
+            "rows": {
+                "zh-CN": "占位段落的行数，每行渲染为一个 `li`。",
+                "en-US": "Number of rows in the placeholder paragraph, each rendered as an `li`."
+            }
+        }
+    }
+}

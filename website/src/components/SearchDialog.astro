@@ -1,0 +1,275 @@
+---
+import { IconClear, IconSearch } from '@fibrae/semi-icons-react';
+import { translate } from '#/i18n';
+import type { Framework, Locale } from '#/lib/docs';
+
+interface Props {
+    locale: Locale;
+    framework: Framework;
+}
+
+const { locale, framework } = Astro.props;
+const t = translate(locale);
+---
+
+<button type="button" class="site-search" id="search-toggle" aria-haspopup="dialog" aria-label={t('search_open')} aria-keyshortcuts="Control+K Meta+K">
+    <IconSearch />
+    <span class="site-search-text">{t('search_button')}</span>
+    <kbd class="site-search-kbd" aria-hidden="true"></kbd>
+</button>
+{/* APG combobox: focus stays in the input, arrow keys move the selection via aria-activedescendant */}
+<dialog class="search-dialog" id="search-dialog" closedby="any" aria-label={t('search_open')} data-locale={locale} data-framework={framework}>
+    <div class="search-field">
+        <input
+            id="search-input"
+            role="combobox"
+            aria-label={t('search_open')}
+            aria-controls="search-results"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            placeholder={t('search_open')}
+            autocomplete="off"
+            spellcheck="false"
+        />
+        <button type="button" class="search-clear" id="search-clear" aria-label={t('search_clear')} hidden>
+            <IconClear />
+        </button>
+    </div>
+    <div class="search-group">
+        <div class="search-group-label" id="search-group-label">{t('nav_components')}</div>
+        <ul class="search-results" id="search-results" role="listbox" aria-labelledby="search-group-label"></ul>
+    </div>
+    <p class="search-empty" id="search-empty" role="status" hidden>{t('search_empty')}</p>
+</dialog>
+
+<script>
+    import '#/lib/search-dialog';
+</script>
+
+<style>
+    /* Script-built options and React-rendered icons have no scope marker, hence :global */
+    .site-search {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        height: 40px;
+        padding: 10px 13px;
+        font: inherit;
+        color: var(--semi-color-text-2);
+        cursor: pointer;
+        background: var(--semi-color-fill-0);
+        border: 0;
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .site-search-text {
+        font-weight: 600;
+    }
+
+    .site-search-kbd {
+        margin-left: 4px;
+        font-family: inherit;
+    }
+
+    .search-dialog {
+        flex-direction: column;
+        gap: 16px;
+        width: min(684px, 100% - 32px);
+        max-height: calc(100% - 160px);
+        padding: 24px;
+        margin: 80px auto auto;
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-2);
+        border: 1px solid var(--semi-color-border);
+        border-radius: var(--semi-border-radius-large);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    .search-dialog[open] {
+        display: flex;
+    }
+
+    .search-dialog::backdrop {
+        background: var(--semi-color-overlay-bg);
+    }
+
+    .search-field {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        height: 32px;
+        background: var(--semi-color-fill-0);
+        border: 1px solid transparent;
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .search-field:hover {
+        background: var(--semi-color-fill-1);
+    }
+
+    .search-field:focus-within {
+        background: var(--semi-color-fill-0);
+        border-color: var(--semi-color-focus-border);
+    }
+
+    /* The input drops its outline because the field's focus-within border shows focus, as in Semi Input */
+    .search-field input {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        padding: 0 12px;
+        font: inherit;
+        color: inherit;
+        outline: none;
+        background: none;
+        border: 0;
+    }
+
+    .search-field input::placeholder {
+        color: var(--semi-color-text-2);
+    }
+
+    .search-clear {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 100%;
+        padding: 0;
+        color: var(--semi-color-text-2);
+        cursor: pointer;
+        background: none;
+        border: 0;
+    }
+
+    .search-clear[hidden] {
+        display: none;
+    }
+
+    .search-clear:hover {
+        color: var(--semi-color-text-1);
+    }
+
+    .search-group {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .search-group:has(.search-results:empty) {
+        display: none;
+    }
+
+    .search-group-label {
+        margin-bottom: 4px;
+        color: var(--semi-color-text-2);
+    }
+
+    .search-results {
+        max-height: 60vh;
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        list-style: none;
+    }
+
+    .search-results :global(.search-option) {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        min-height: 40px;
+        padding: 8px 8px 8px 7px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .search-results :global(.search-option:hover),
+    .search-results :global(.search-option[aria-selected='true']) {
+        background: var(--semi-color-fill-0);
+    }
+
+    .search-results :global(.search-option:active) {
+        background: var(--semi-color-fill-2);
+    }
+
+    .search-results :global(img) {
+        width: 24px;
+        height: 24px;
+    }
+
+    .search-results :global(em) {
+        font-style: normal;
+        color: var(--semi-color-primary);
+    }
+
+    .search-empty {
+        padding: 8px 0;
+        margin: 0;
+        color: var(--semi-color-text-2);
+        text-align: center;
+    }
+
+    @media (max-width: 820px) {
+        .site-search {
+            padding: 0;
+            background: none;
+        }
+
+        .site-search:hover {
+            color: var(--semi-color-text-0);
+        }
+
+        .site-search-text,
+        .site-search-kbd {
+            display: none;
+        }
+
+        .site-search :global(.semi-icon) {
+            font-size: 24px;
+        }
+    }
+
+    /* Discrete display and overlay transitions let the close animation finish before leaving the top layer */
+    @media (prefers-reduced-motion: no-preference) {
+        .search-dialog {
+            opacity: 0;
+            transform: scale(0.7);
+            transition:
+                opacity 120ms cubic-bezier(0.215, 0.61, 0.355, 1),
+                transform 120ms cubic-bezier(0.215, 0.61, 0.355, 1),
+                overlay 120ms allow-discrete,
+                display 120ms allow-discrete;
+        }
+
+        .search-dialog[open] {
+            opacity: 1;
+            transform: none;
+        }
+
+        @starting-style {
+            .search-dialog[open] {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+        }
+
+        .search-dialog::backdrop {
+            opacity: 0;
+            transition:
+                opacity 90ms cubic-bezier(0.215, 0.61, 0.355, 1),
+                overlay 90ms allow-discrete,
+                display 90ms allow-discrete;
+        }
+
+        .search-dialog[open]::backdrop {
+            opacity: 1;
+        }
+
+        @starting-style {
+            .search-dialog[open]::backdrop {
+                opacity: 0;
+            }
+        }
+    }
+</style>

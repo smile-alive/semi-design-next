@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                   | 类型                                                              | 默认值 |
+| ------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
+| children      | 项的内容。                                                                             | `React.ReactNode`                                                 | -      |
+| className     | 根元素的类名。                                                                         | `string`                                                          | -      |
+| defaultSize   | 初始尺寸。字符串支持 `%`、`px`、`vw`、`vh`；纯数字或数字字符串表示按比例分配剩余空间。 | `string \| number`                                                | -      |
+| max           | 最大尺寸（`%`、`px`、`vw` 或 `vh`）。                                                  | `string`                                                          | -      |
+| min           | 最小尺寸（`%`、`px`、`vw` 或 `vh`）。                                                  | `string`                                                          | -      |
+| onChange      | 拖动或方向键改变尺寸时调用，参数为新尺寸、事件与方向。                                 | `ResizeCallback`                                                  | -      |
+| onResizeEnd   | 结束伸缩时调用，参数为最终尺寸、事件与方向。                                           | `ResizeCallback`                                                  | -      |
+| onResizeStart | 开始伸缩时调用，手柄任一侧的项返回 `false` 即取消本次伸缩。                            | `ResizeStartCallback`                                             | -      |
+| ref           | 根元素的引用。                                                                         | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| style         | 根元素的样式。                                                                         | `React.CSSProperties`                                             | -      |

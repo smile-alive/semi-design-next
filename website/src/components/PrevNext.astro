@@ -1,0 +1,112 @@
+---
+import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-react';
+
+interface Link {
+    href: string;
+    path: string;
+    title: string;
+    icon?: string;
+}
+
+interface Props {
+    label: string;
+    prev?: Link;
+    next?: Link;
+}
+
+const { label, prev, next } = Astro.props;
+---
+
+<nav class="prev-next" aria-label={label}>
+    {
+        prev ? (
+            <a href={prev.href} rel="prev">
+                <IconChevronLeft className="prev-next-arrow" />
+                <span class="prev-next-text prev-next-text-end">
+                    <span class="prev-next-path">{prev.path}</span>
+                    <span class="prev-next-name">{prev.title}</span>
+                </span>
+                {prev.icon && <img src={prev.icon} alt="" width="40" height="40" />}
+            </a>
+        ) : (
+            <span />
+        )
+    }
+    {
+        next && (
+            <a href={next.href} rel="next">
+                {next.icon && <img src={next.icon} alt="" width="40" height="40" />}
+                <span class="prev-next-text">
+                    <span class="prev-next-path">{next.path}</span>
+                    <span class="prev-next-name">{next.title}</span>
+                </span>
+                <IconChevronRight className="prev-next-arrow" />
+            </a>
+        )
+    }
+</nav>
+
+<style>
+    .prev-next {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        margin: 50px 0;
+    }
+
+    .prev-next a {
+        display: flex;
+        gap: 26px;
+        align-items: center;
+        padding: 14px 23px;
+        color: var(--semi-color-link);
+        text-decoration: none;
+        border: 1px solid var(--semi-color-border);
+        border-radius: 6px;
+    }
+
+    .prev-next [rel='prev'] {
+        justify-content: flex-end;
+    }
+
+    /* The arrow comes from a React component, so it has no scope marker */
+    .prev-next :global(.prev-next-arrow) {
+        color: var(--semi-color-text-2);
+    }
+
+    .prev-next [rel='prev'] :global(.prev-next-arrow) {
+        margin-right: auto;
+    }
+
+    .prev-next [rel='next'] :global(.prev-next-arrow) {
+        margin-left: auto;
+    }
+
+    .prev-next-text {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+    }
+
+    .prev-next-text > span {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .prev-next-text-end {
+        align-items: flex-end;
+    }
+
+    .prev-next-path {
+        color: var(--semi-color-text-2);
+    }
+
+    .prev-next-name {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--semi-color-text-0);
+    }
+</style>

@@ -1,0 +1,208 @@
+{
+    "ai-chat-dialogue": {
+        "source": "packages/semi-ai-solid/src/ai-chat-dialogue/ai-chat-dialogue.tsx",
+        "props": {
+            "align": {
+                "zh-CN": "对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。",
+                "en-US": "Conversation layout: leftRight or leftAlign."
+            },
+            "chats": {
+                "zh-CN": "受控对话消息列表，配合 onChatsChange 使用。",
+                "en-US": "Controlled list of conversation messages; use it together with onChatsChange."
+            },
+            "dialogueRenderConfig": {
+                "zh-CN": "自定义各区块的渲染，可替换头像、标题、内容、操作栏或整条对话。",
+                "en-US": "Custom rendering of the dialogue parts: avatar, title, content, action bar or the whole dialogue."
+            },
+            "disabledFileItemClick": {
+                "zh-CN": "是否禁用文件卡片的点击。",
+                "en-US": "Whether clicking a file card is disabled."
+            },
+            "escapeHtml": {
+                "zh-CN": "是否转义用户消息中的 HTML 标签，避免被 Markdown 解析器当作 HTML 处理而丢失内容。",
+                "en-US": "Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content."
+            },
+            "hintCls": {
+                "zh-CN": "提示区最外层的类名。",
+                "en-US": "Class name of the outermost hint area element."
+            },
+            "hints": {
+                "zh-CN": "提示信息。点击某条提示后，它成为新的用户消息，并触发 onHintClick。",
+                "en-US": "Hint texts. Clicking a hint turns it into a new user message and calls onHintClick."
+            },
+            "hintStyle": {
+                "zh-CN": "提示区最外层的样式。",
+                "en-US": "Style of the outermost hint area element."
+            },
+            "markdownRenderProps": {
+                "zh-CN": "透传给每条消息所用 MarkdownRender 的属性，raw 由消息决定，不可传入；components 与内置组件合并，同名的（如 code）覆盖内置组件。",
+                "en-US": "Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one."
+            },
+            "messageEditRender": {
+                "zh-CN": "用户消息处于编辑状态时显示的编辑器，参数为消息转换得到的输入内容。",
+                "en-US": "The editor shown while a user message is being edited; its parameter is the input content converted from the message."
+            },
+            "mode": {
+                "zh-CN": "对话模式，可选 bubble、noBubble 或 userBubble。",
+                "en-US": "Conversation mode: bubble, noBubble or userBubble."
+            },
+            "onAnnotationClick": {
+                "zh-CN": "点击参考来源时调用，参数为被点击消息块的注释数组。",
+                "en-US": "Called when the references of a message block are clicked, with that block's annotations."
+            },
+            "onChatsChange": {
+                "zh-CN": "消息列表变化时调用，参数为新的消息数组。",
+                "en-US": "Called when the message list changes, with the new message array."
+            },
+            "onFileClick": {
+                "zh-CN": "点击文件卡片时调用，参数为该文件。",
+                "en-US": "Called when a file card is clicked, with the file."
+            },
+            "onHintClick": {
+                "zh-CN": "点击提示词时调用，参数为该提示文本。",
+                "en-US": "Called when a hint is clicked, with the hint text."
+            },
+            "onImageClick": {
+                "zh-CN": "点击图片时调用，参数为该图片。",
+                "en-US": "Called when an image is clicked, with the image."
+            },
+            "onMessageBadFeedback": {
+                "zh-CN": "对消息点踩时调用，参数为该消息。",
+                "en-US": "Called when a message is disliked, with the message."
+            },
+            "onMessageCopy": {
+                "zh-CN": "复制消息时调用：文本写入剪贴板成功后才调用，复制的文本不含推理内容；没有可复制的文本时既不写入也不调用。",
+                "en-US": "Called when a message is copied, after the text has been written to the clipboard successfully. The copied text excludes reasoning; a message without text is neither written nor reported."
+            },
+            "onMessageDelete": {
+                "zh-CN": "删除消息时调用，参数为该消息。",
+                "en-US": "Called when a message is deleted, with the message."
+            },
+            "onMessageEdit": {
+                "zh-CN": "编辑消息时调用，参数为该消息。",
+                "en-US": "Called when a message is edited, with the message."
+            },
+            "onMessageGoodFeedback": {
+                "zh-CN": "对消息点赞时调用，参数为该消息。",
+                "en-US": "Called when a message is liked, with the message."
+            },
+            "onMessageReset": {
+                "zh-CN": "重置消息时调用，参数为该消息。",
+                "en-US": "Called when a message is reset, with the message."
+            },
+            "onMessageShare": {
+                "zh-CN": "分享消息时调用，参数为该消息。",
+                "en-US": "Called when a message is shared, with the message."
+            },
+            "onReferenceClick": {
+                "zh-CN": "引用按钮点击时调用。参数没有 id，加入 AIChatInput 的 references 前由使用方补上；文件项没有 type。",
+                "en-US": "Called when a reference button is clicked. The argument has no id, which the caller adds before putting it into the references of AIChatInput; a file item has no type."
+            },
+            "onSelect": {
+                "zh-CN": "选中的消息变化时调用，参数为选中消息的 id 数组。",
+                "en-US": "Called when the selected messages change, with the ids of the selected messages."
+            },
+            "ref": {
+                "zh-CN": "接收根元素 div，其上带有下方 Methods 表中的方法。",
+                "en-US": "Receives the root div element, which carries the methods listed in the Methods table."
+            },
+            "renderDialogueContentItem": {
+                "zh-CN": "按内容项类型返回渲染内容的映射。嵌套的工具调用按名称索引，纯文本消息使用键 default。",
+                "en-US": "Renderers keyed by content item type. A tool call is indexed by its name inside its type, and a plain-text message uses the key default."
+            },
+            "renderHintBox": {
+                "zh-CN": "自定义提示项的渲染，参数含提示文本 `content`、序号 `index` 与点击回调 `onHintClick`。",
+                "en-US": "Custom rendering of each hint item, with the hint text `content`, its `index` and the click callback `onHintClick`."
+            },
+            "roleConfig": {
+                "zh-CN": "各角色（user、assistant、system 等）的名称、头像与头像颜色，必填，不读取全局默认值。",
+                "en-US": "Name, avatar and avatar color of each role (user, assistant, system and so on). Required, and not read from the global defaults."
+            },
+            "selecting": {
+                "zh-CN": "是否开启多选模式。",
+                "en-US": "Whether multi-select mode is on."
+            },
+            "showReset": {
+                "zh-CN": "是否展示重置操作。",
+                "en-US": "Whether to show the reset action."
+            },
+            "showReference": {
+                "zh-CN": "是否在文字或文件消息中展示可被引用的图标，仅对用户消息生效。",
+                "en-US": "Whether to show the reference icon on text or file messages. Only user messages are affected."
+            }
+        },
+        "methods": {
+            "selectAll": {
+                "zh-CN": "全选所有消息。",
+                "en-US": "Selects all messages."
+            },
+            "deselectAll": {
+                "zh-CN": "取消全选所有消息。",
+                "en-US": "Deselects all messages."
+            },
+            "scrollToBottom": {
+                "zh-CN": "滚动到最底部，参数为 true 时带动画。",
+                "en-US": "Scrolls to the bottom, animated when the argument is true."
+            },
+            "scrollToTop": {
+                "zh-CN": "滚动到最顶部，参数为 true 时带动画。",
+                "en-US": "Scrolls to the top, animated when the argument is true."
+            }
+        }
+    },
+    "reasoning": {
+        "source": "packages/semi-ai-solid/src/ai-chat-dialogue/widgets/content-item/reasoning.tsx#ReasoningWidget",
+        "props": {
+            "customRenderer": {
+                "zh-CN": "替换推理正文的渲染。参数为推理组件的全部属性，返回的内容放在正文区域中。",
+                "en-US": "Replaces the rendering of the reasoning text. It receives all props of the component, and its result goes into the content area."
+            },
+            "markdownRenderProps": {
+                "zh-CN": "透传给推理正文所用 MarkdownRender 的属性，raw 由推理正文决定。",
+                "en-US": "Props passed to the MarkdownRender of the reasoning text; raw comes from the reasoning text."
+            },
+            "status": {
+                "zh-CN": "推理状态。为 completed 时标题显示已完成，且初次渲染时折叠；其他值显示思考中并展开。",
+                "en-US": "Reasoning status. completed shows the finished title and starts collapsed; any other value shows the thinking title and starts expanded."
+            },
+            "summary": {
+                "zh-CN": "推理摘要，非空时按换行拼接其中的文本作为推理正文。",
+                "en-US": "Reasoning summary. When it is not empty, its texts joined by line breaks form the reasoning text."
+            },
+            "content": {
+                "zh-CN": "推理内容，summary 为空时按换行拼接其中的文本作为推理正文。",
+                "en-US": "Reasoning content. When summary is empty, its texts joined by line breaks form the reasoning text."
+            }
+        }
+    },
+    "dialogue-step": {
+        "source": "packages/semi-ai-solid/src/ai-chat-dialogue/widgets/content-item/dialogue-step.tsx#DialogueStepWidget",
+        "props": {
+            "steps": {
+                "zh-CN": "步骤列表，必填。每个步骤含 summary、status 与 actions，status 为 completed 时显示完成图标，否则显示加载中；actions 每项含 summary、description 与 icon，步骤有操作时可点击或用 Enter、空格展开收起。",
+                "en-US": "List of steps, required. Each step has summary, status and actions; completed shows the done icon, any other status shows loading. Each action has summary, description and icon, and a step with actions expands or collapses on click, Enter or Space."
+            }
+        }
+    },
+    "annotation": {
+        "source": "packages/semi-ai-solid/src/ai-chat-dialogue/widgets/content-item/annotation.tsx#AnnotationWidget",
+        "props": {
+            "annotation": {
+                "zh-CN": "参考来源列表，每项可含 title、logo、url、detail。必填。",
+                "en-US": "List of references; each item may have title, logo, url and detail. Required."
+            },
+            "description": {
+                "zh-CN": "来源图标后的描述文字，不传时显示来源数量。",
+                "en-US": "Text after the source logos; the number of references is shown when it is not set."
+            },
+            "maxCount": {
+                "zh-CN": "最多显示的来源图标数，超出部分显示为 +N。必填。",
+                "en-US": "Maximum number of source logos shown; the rest are shown as +N. Required."
+            },
+            "onClick": {
+                "zh-CN": "点击或用 Enter、空格激活时调用，参数为事件与参考来源列表。",
+                "en-US": "Called on click or on activation with Enter or Space, with the event and the references."
+            }
+        }
+    }
+}

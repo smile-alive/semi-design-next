@@ -1,0 +1,235 @@
+---
+title: Layout
+order: 19
+icon: doc-layout
+brief: Used to quickly divide the overall layout of the page
+---
+
+import LayoutReactApi from './api/layout.react.en-US.mdx';
+import LayoutSiderReactApi from './api/layout-sider.react.en-US.mdx';
+import LayoutVueApi from './api/layout.vue.en-US.mdx';
+import LayoutHeaderVueApi from './api/layout-header.vue.en-US.mdx';
+import LayoutFooterVueApi from './api/layout-footer.vue.en-US.mdx';
+import LayoutContentVueApi from './api/layout-content.vue.en-US.mdx';
+import LayoutSiderVueApi from './api/layout-sider.vue.en-US.mdx';
+import LayoutSolidApi from './api/layout.solid.en-US.mdx';
+import LayoutHeaderSolidApi from './api/layout-header.solid.en-US.mdx';
+import LayoutFooterSolidApi from './api/layout-footer.solid.en-US.mdx';
+import LayoutContentSolidApi from './api/layout-content.solid.en-US.mdx';
+import LayoutSiderSolidApi from './api/layout-sider.solid.en-US.mdx';
+
+## Overview
+
+- `Layout`: Layout containers. You can nest `Header` `Sider` `Content` `Footer` or `Layout` itself inside.
+- `Header`: Head component, can only be used inside `Layout`.
+- `Sider`: Sidebar, can only be used inside `Layout`.
+- `Content`: Content component, can only be used inside `Layout`.
+- `Footer`: Footer component, can only be used inside `Layout`.
+
+<Notice title="Notice">
+    1、Layout components are implemented with Flex layout. Browser compatibility may need to be considered. <br />
+    2、The Layout component will only help you implement the layout, but will not include styles such as background color, text color, width and height. You can pass in style according to your actual needs or write a separate css implementation given a specific class name
+</Notice>
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Layout } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Layout } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+Use the subcomponents as `Layout.Header`, `Layout.Sider`, `Layout.Content` and `Layout.Footer`, or import `LayoutHeader`, `LayoutSider`, `LayoutContent` and `LayoutFooter` by name.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Layout } from '@fibrae/semi-ui-solid';
+```
+
+Use the subcomponents as `Layout.Header`, `Layout.Sider`, `Layout.Content` and `Layout.Footer`.
+
+</Framework>
+
+### Three-section Layout
+
+<Demo id="three-rows" />
+
+### Left-sidebar Layout
+
+<Demo id="left-sider" />
+
+### Right-sidebar Layout
+
+<Demo id="right-sider" />
+
+### Sidebar Layout
+
+<Demo id="sider" />
+
+### Responsive Layout
+
+Six response sizes are preset in the sidebar: `xs`,`sm`,`md`,`lg`,`xl`,`xxl`. You can use `breakpoint` to set breakpoints.
+
+<Framework only="react">
+
+Use `onBreakpoint` to call callback functions.
+
+</Framework>
+
+<Framework only="vue">
+
+Listen to `@breakpoint` for changes in whether a breakpoint matches.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `onBreakpoint` to call callback functions.
+
+</Framework>
+
+<Demo id="responsive" />
+
+## Layout Examples
+
+### Top-nav Layout
+
+<Demo id="top-nav" />
+
+### Top-Nav SideBar Layout
+
+<Demo id="top-nav-sider" />
+
+### SideBar Navigation
+
+<Demo id="sider-nav" />
+
+## API Reference
+
+### Layout
+
+<Framework only="vue">
+
+<LayoutVueApi />
+
+`class`, `style` and native attributes (including `role` and `aria-*`) fall through to the root element.
+
+### Layout.Header, Layout.Footer, Layout.Content
+
+The three share the same API. Their default tags are `header`, `footer` and `main`.
+
+#### Layout.Header
+
+<LayoutHeaderVueApi />
+
+#### Layout.Footer
+
+<LayoutFooterVueApi />
+
+#### Layout.Content
+
+<LayoutContentVueApi />
+
+`class`, `style` and native attributes (including `role` and `aria-*`) fall through to each root element.
+
+### Layout.Sider
+
+<LayoutSiderVueApi />
+
+`class`, `style` and native attributes (including `role` and `aria-*`) fall through to the root `aside` element.
+
+</Framework>
+
+<Framework only="solid">
+
+<LayoutSolidApi />
+
+`class`, `style`, `ref` and native attributes (including `role` and `aria-*`) fall through to the root element.
+
+### Layout.Header, Layout.Footer, Layout.Content
+
+The three share the same API. Their default tags are `header`, `footer` and `main`.
+
+#### Layout.Header
+
+<LayoutHeaderSolidApi />
+
+#### Layout.Footer
+
+<LayoutFooterSolidApi />
+
+#### Layout.Content
+
+<LayoutContentSolidApi />
+
+`class`, `style`, `ref` and native attributes (including `role` and `aria-*`) fall through to each root element.
+
+### Layout.Sider
+
+<LayoutSiderSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (including `role`, `aria-*` and `onClick`) fall through to the root `aside` element.
+
+</Framework>
+
+<Framework only="react">
+
+<LayoutReactApi />
+
+Native attributes not listed above (including `role` and `aria-*`) fall through to the root element.
+
+> `Layout.Header`, `Layout.Footer`, `Layout.Content` use same API as `Layout`, except that they have no `hasSider` and have an extra `type` for internal use
+
+| Property  | Description                     | Type                          | Default                                                      |
+| --------- | ------------------------------- | ----------------------------- | ------------------------------------------------------------ |
+| className | Class name of the root element. | `string`                      | -                                                            |
+| prefixCls | Class name prefix.              | `string`                      | `semi-layout`                                                |
+| style     | Style of the root element.      | `CSSProperties`               | -                                                            |
+| tagName   | Tag name of the root element.   | `keyof HTMLElementTagNameMap` | `header`, `footer` and `main` for Header, Footer and Content |
+
+`ref` and native attributes not listed above (including `role` and `aria-*`) fall through to each root element.
+
+### Layout.Sider
+
+<LayoutSiderReactApi />
+
+Native attributes not listed above (including `aria-*` and `onClick`) fall through to the root `aside` element.
+
+</Framework>
+
+### responsive map
+
+```text
+{
+  xs: '(max-width: 575px)',
+  sm: '(min-width: 576px)',
+  md: '(min-width: 768px)',
+  lg: '(min-width: 992px)',
+  xl: '(min-width: 1200px)',
+  xxl: '(min-width: 1600px)',
+}
+```
+
+## Accessibility
+
+### ARIA
+
+- Sider renders an `aside`; pass `aria-label` to describe what this Sider is for.
+- Header and Footer render `header` and `footer` by default. Inside the `section` of a Layout they are not banner or contentinfo landmarks; pass `role="banner"` or `role="contentinfo"` when they are the header or footer of the whole page.
+- Content renders `main` by default, and a page should have only one `main`; when nesting, use `tagName` to switch to another tag.
+- Header, Content and Footer accept `role` and `aria-label` to describe the corresponding element.

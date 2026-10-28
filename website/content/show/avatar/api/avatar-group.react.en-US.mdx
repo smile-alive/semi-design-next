@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                                     | Type                                                                                                         | Default    |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------- |
+| children    | Avatars in the group.                                                                                                                           | `React.ReactNode`                                                                                            | -          |
+| maxCount    | Maximum number of visible avatars; overflow is shown as a `+N` label.                                                                           | `number`                                                                                                     | -          |
+| overlapFrom | Avatar overlap direction, `start` or `end`: with `start` the left avatar covers the right one, with `end` the right avatar covers the left one. | `AvatarGroupOverlapFrom`                                                                                     | `"start"`  |
+| ref         | Reference to the root element (`role="list"`).                                                                                                  | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                            | -          |
+| renderMore  | Custom overflow label. It receives the remaining count and the hidden avatar nodes, and its result replaces the default `+N`.                   | <ApiType detail={"(restNumber?: number, restAvatars?: React.ReactNode[]) => React.ReactNode"}>Type</ApiType> | -          |
+| shape       | Shape of the avatars in the group: `circle` or `square`.                                                                                        | `AvatarGroupShape`                                                                                           | `"circle"` |
+| size        | Size of the avatars in the group, with the same values as the Avatar `size`.                                                                    | `string`                                                                                                     | `"medium"` |

@@ -1,0 +1,34 @@
+{
+    "markdown-render": {
+        "source": "packages/semi-ui-vue/src/markdown-render/markdown-render.vue",
+        "props": {
+            "components": {
+                "zh-CN": "用于覆盖 Markdown 元素，也可添加 MDX 中引用的自定义组件；值为 Vue 组件或 HTML 标签名，元素键（如 h1）只接受组件或自身的标签名。与 MarkdownRender.defaultComponents 合并，变化时只重新渲染，不重新编译。",
+                "en-US": "Overrides Markdown elements and adds the custom components MDX sources refer to. Values are Vue components or HTML tag names; an element key such as h1 takes a component or its own tag name. Merged over MarkdownRender.defaultComponents; a change only renders again, it does not compile again."
+            },
+            "format": {
+                "zh-CN": "raw 的格式，md 为纯 Markdown，mdx 允许内嵌 JSX。变化时重新编译。",
+                "en-US": "Format of raw: md is plain Markdown, mdx allows embedded JSX. Compiles again on change."
+            },
+            "raw": {
+                "zh-CN": "Markdown 或 MDX 的纯文本。变化时重新编译。",
+                "en-US": "Markdown or MDX source text. Compiles again on change."
+            },
+            "rehypePlugins": {
+                "zh-CN": "自定义 Rehype 插件，数组元素变化时重新编译。",
+                "en-US": "Custom Rehype plugins. Compiles again when an entry changes."
+            },
+            "remarkGfm": {
+                "zh-CN": "是否开启 GitHub GFM 语法。变化时重新编译。",
+                "en-US": "Whether to enable GitHub GFM syntax. Compiles again on change."
+            },
+            "remarkPlugins": {
+                "zh-CN": "自定义 Remark 插件，数组元素变化时重新编译。",
+                "en-US": "Custom Remark plugins. Compiles again when an entry changes."
+            }
+        },
+        "events": {},
+        "slots": {},
+        "exposed": {}
+    }
+}

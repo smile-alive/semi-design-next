@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description                                                                     | Type                                                                                                 | Default     |
+| -------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------- |
+| badge    | Badge props, same as Badge. Applied to the Badge that wraps the button content. | `BadgeProps`                                                                                         | -           |
+| colorful | Colorful float button.                                                          | `boolean`                                                                                            | `false`     |
+| disabled | Disabled state.                                                                 | `boolean`                                                                                            | -           |
+| href     | Link address. Renders an `a` element when set; a disabled link drops it.        | `string`                                                                                             | -           |
+| icon     | Button icon, passed as a JSX element.                                           | `JSX.Element`                                                                                        | -           |
+| onClick  | Click callback with the native `MouseEvent`. Not called while disabled.         | <ApiType detail={"JSX.EventHandlerUnion\u003cFloatButtonElement, MouseEvent>"}>Type</ApiType>        | -           |
+| ref      | Points to the root element: an `a` when `href` is set, otherwise a `button`.    | <ApiType detail={"FloatButtonElement \u007c ((element: FloatButtonElement) => void)"}>Type</ApiType> | -           |
+| rel      | Relationship to the link target. Only takes effect with `href`.                 | `string`                                                                                             | -           |
+| shape    | Shape: `round` or `square`.                                                     | `FloatButtonShape`                                                                                   | `"round"`   |
+| size     | Size: `default`, `small` or `large`.                                            | `FloatButtonSize`                                                                                    | `"default"` |
+| target   | Where to display the linked URL. Only takes effect with `href`.                 | `string`                                                                                             | -           |

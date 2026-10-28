@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                                | 类型                                                                          | 默认值       |
+| ----------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------ |
+| align       | 对齐方式，可选 center、justify、left、plain；row 为 true 时无效。                                   | `DescriptionsAlign`                                                           | `"center"`   |
+| column      | 横向布局下每行的总列数。                                                                            | `number`                                                                      | `3`          |
+| data        | 列表显示的数据；为空时使用 Descriptions.Item 子节点。                                               | `Data[]`                                                                      | -            |
+| layout      | 布局模式，可选 vertical、horizontal。                                                               | `DescriptionsLayout`                                                          | `"vertical"` |
+| renderKey   | 渲染 data 每一项的键，参数为 (item, index)，index 包含隐藏项；隐藏项不调用。不传时显示 item.key。   | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -            |
+| renderValue | 渲染 data 每一项的值，参数为 (item, index)，index 包含隐藏项；隐藏项不调用。不传时显示 item.value。 | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -            |
+| row         | 是否双行显示。                                                                                      | `boolean`                                                                     | `false`      |
+| size        | 双行显示时的尺寸，可选 small、medium、large。                                                       | `DescriptionsSize`                                                            | `"medium"`   |

@@ -1,0 +1,46 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Index of the slide being shown, used with v-model:activeIndex. Passing undefined hands control back, continuing from the last controlled index. | `number` | `semiGlobalDefault("Carousel", "activeIndex")` |
+| animation | Transition animation: slide or fade. | `"fade" \| "slide"` | `semiDefault("Carousel", "animation", "slide")` |
+| arrowProps | Data for the previous and next arrow buttons: attributes only. onClick and class are merged with the built-in handler and classes. Use the leftArrow and rightArrow slots for the icons. | `ArrowProps` | `semiGlobalDefault("Carousel", "arrowProps")` |
+| arrowType | When the arrows are shown: always or hover. | `"always" \| "hover"` | `semiDefault("Carousel", "arrowType", "always")` |
+| autoPlay | Whether to play automatically, or an object with interval (milliseconds between slides, default 2000) and hoverToPause (pause while hovered, default true). | `CarouselAutoPlay` | `semiDefault("Carousel", "autoPlay", true)` |
+| defaultActiveIndex | Index of the slide shown initially, used when uncontrolled. | `number` | <ApiType detail={"semiDefault(\"Carousel\", \"defaultActiveIndex\", numbers.DEFAULT_ACTIVE_INDEX)"}>Type</ApiType> |
+| indicatorPosition | Indicator position: left, center or right. | `"left" \| "right" \| "center"` | `semiDefault("Carousel", "indicatorPosition", "center")` |
+| indicatorSize | Indicator size: small or medium. | `"small" \| "medium"` | `semiDefault("Carousel", "indicatorSize", "small")` |
+| indicatorType | Indicator type: dot, line or columnar. | `"dot" \| "line" \| "columnar"` | `semiDefault("Carousel", "indicatorType", "dot")` |
+| showArrow | Whether to show the arrows. | `boolean` | `semiDefault("Carousel", "showArrow", true)` |
+| showIndicator | Whether to show the indicator. | `boolean` | `semiDefault("Carousel", "showIndicator", true)` |
+| slideDirection | Slide direction when the animation is slide: left or right. | `"left" \| "right"` | `semiDefault("Carousel", "slideDirection", "left")` |
+| speed | Transition duration in milliseconds. | `number` | `semiDefault("Carousel", "speed", numbers.DEFAULT_SPEED)` |
+| theme | Theme of the indicator and arrows: primary, light or dark. | `"dark" \| "primary" \| "light"` | `semiDefault("Carousel", "theme", "light")` |
+| trigger | How the indicator switches slides: click or hover. | `"hover" \| "click"` | `semiDefault("Carousel", "trigger", "click")` |
+
+**Events**
+
+| Event              | Description                                                                      | Callback parameters                 |
+| ------------------ | -------------------------------------------------------------------------------- | ----------------------------------- |
+| update:activeIndex | Emitted when the shown slide changes, backing v-model:activeIndex.               | `[index: number]`                   |
+| change             | Emitted when the shown slide changes, with the new index and the previous index. | `[index: number, preIndex: number]` |
+
+**Slots**
+
+| Slot       | Description                                                                                           | Scope parameters |
+| ---------- | ----------------------------------------------------------------------------------------------------- | ---------------- |
+| default    | The slides, one per direct child. A slide must pass id, role, inert, class and style down to its DOM. | `any`            |
+| leftArrow  | Content of the previous arrow button. An empty slot leaves the button empty.                          | `any`            |
+| rightArrow | Content of the next arrow button. An empty slot leaves the button empty.                              | `any`            |
+
+**Exposes**
+
+| Name | Description                                                  | Type                                                             |
+| ---- | ------------------------------------------------------------ | ---------------------------------------------------------------- |
+| next | Goes to the next slide.                                      | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| prev | Goes to the previous slide.                                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| goTo | Goes to the given index; an out-of-range index wraps around. | <ApiType detail={"(targetIndex: number) => void"}>Type</ApiType> |
+| play | Starts autoplay, even when autoPlay is off.                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| stop | Stops autoplay.                                              | <ApiType detail={"() => void"}>Type</ApiType>                    |

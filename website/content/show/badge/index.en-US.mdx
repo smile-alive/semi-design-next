@@ -1,0 +1,126 @@
+---
+order: 63
+title: Badge
+icon: doc-badge
+brief: Badge generates a small badge to give users tips.
+---
+
+import BadgeReactApi from './api/badge.react.en-US.mdx';
+import BadgeVueApi from './api/badge.vue.en-US.mdx';
+import BadgeSolidApi from './api/badge.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Badge } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Badge } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Badge } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+The basic type of Badge is `count`. The `dot` property changes a badge into a small dot. The two are mutually exclusive, giving priority to rendering `dot`.
+
+<Framework only="react">
+
+When `count` is a node, the node will be rendered directly.
+
+</Framework>
+
+<Framework only="vue">
+
+`count` accepts a number or a string. Put a node in the `#count` slot instead, which is rendered directly and wins when both are given. Bind numbers with `:count="5"`: `count="5"` is a string and is never cut off by `overflowCount`.
+
+</Framework>
+
+<Framework only="solid">
+
+`count` accepts a number, a string or a JSX element. A number or string is shown as text; `count="5"` is a string and is likewise never cut off by `overflowCount`. A JSX element is rendered as is, and the `type` and `theme` classes are removed.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Maximum Value
+
+You can use the `overflowCount` property to cap the number value of the badge content. When the actual value exceeds that value, it will be formatted into `${overflowCount}+`.
+
+<Demo id="overflow-count" />
+
+### Position
+
+You can use the `position` property to set the position of the badge to its children. The prop uses one of: `leftTop`, `leftBottom`, `rightTop`(default), `rightBottom`. Under an RTL ConfigProvider the default is `leftTop`.
+
+<Demo id="position" />
+
+### Theming
+
+You can use the `theme` and `type` prop to customize the styling. `theme` supports the following values: `solid`(default), `light`, `inverted`.
+
+<Demo id="theme" />
+
+`type` support the following values: `primary`(default),`secondary`,`tertiary`,`warning` and `danger`.
+
+<Demo id="type" />
+
+### Independent Usage
+
+Badge can be used alone when it is a stand-alone element.
+
+<Demo id="standalone" />
+
+## API Reference
+
+<Framework only="react">
+
+<BadgeReactApi />
+
+Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `span` element.
+
+</Framework>
+
+<Framework only="vue">
+
+<BadgeVueApi />
+
+`class`, `style`, native attributes and native events such as `@click` and `@mouseenter` land on the root element through attrs. The count element only takes `countClassName` and `countStyle`. The default slot runs once per render.
+
+</Framework>
+
+<Framework only="solid">
+
+<BadgeSolidApi />
+
+`class`, `style`, `ref`, native attributes and native events such as `id`, `aria-*`, `onClick` and `onMouseEnter` land on the root `<span>` element. `countClassName` and `countStyle` only apply to the count element.
+
+</Framework>
+
+## Content Guidelines
+
+- Capitalize the first letter
+
+## Design Tokens
+
+<DesignToken />

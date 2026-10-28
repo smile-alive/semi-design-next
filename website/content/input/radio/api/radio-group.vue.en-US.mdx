@@ -1,0 +1,36 @@
+**Props**
+
+| Property     | Description                                                                                                                                         | Type                            | Default                                                |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------ |
+| modelValue   | The selected value, controlled with v-model.                                                                                                        | `RadioValue`                    | `undefined`                                            |
+| defaultValue | The value selected by default when uncontrolled.                                                                                                    | `RadioValue`                    | `semiGlobalDefault("RadioGroup", "defaultValue")`      |
+| disabled     | Whether the whole group is disabled.                                                                                                                | `boolean`                       | `semiDefault("RadioGroup", "disabled", false)`         |
+| name         | The name of every native input in the group. A unique value is generated per group when omitted.                                                    | `string`                        | `semiGlobalDefault("RadioGroup", "name")`              |
+| options      | Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClass, extraId }`. | `(string \| RadioOptionItem)[]` | `semiGlobalDefault("RadioGroup", "options")`           |
+| direction    | Layout direction of the radios: horizontal or vertical. Not supported when type is button.                                                          | `RadioDirection`                | `semiDefault("RadioGroup", "direction", "horizontal")` |
+| mode         | When set to advanced, a checked radio can be unchecked by clicking it or pressing Space, and the selected value becomes undefined.                  | `RadioMode`                     | `semiDefault("RadioGroup", "mode", "")`                |
+| type         | Style type of every Radio in the group: default, button, card or pureCard.                                                                          | `RadioType`                     | `semiDefault("RadioGroup", "type", "default")`         |
+| buttonSize   | Button size when type is button: small, middle or large.                                                                                            | `RadioGroupButtonSize`          | `semiDefault("RadioGroup", "buttonSize", "middle")`    |
+| prefixCls    | CSS class name prefix.                                                                                                                              | `string`                        | `semiGlobalDefault("RadioGroup", "prefixCls")`         |
+
+**Events**
+
+| Event             | Description                                                                                                            | Callback parameters                |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| update:modelValue | Emitted when the selected value changes; drives v-model. The value is undefined when advanced mode unchecks the radio. | `[value: RadioValue \| undefined]` |
+| change            | Emitted when the selected value changes. The event's target is `{ checked, value, name, disabled }`.                   | `[event: RadioChangeEvent]`        |
+| blur              | Emitted when focus leaves the whole group; moving focus between its radios does not emit it.                           | `[event: FocusEvent]`              |
+
+**Slots**
+
+| Slot    | Description                                                                            | Scope parameters            |
+| ------- | -------------------------------------------------------------------------------------- | --------------------------- |
+| default | Radio components in the group. Ignored when options is set.                            | `any`                       |
+| label   | Custom label of each item in options, with the option and index scope parameters.      | `RadioGroupOptionSlotProps` |
+| extra   | Custom extra text of each item in options, with the option and index scope parameters. | `RadioGroupOptionSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

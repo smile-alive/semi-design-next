@@ -1,0 +1,27 @@
+**Props**
+
+| Property | Description                                                                            | Type                         | Default                                       |
+| -------- | -------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------- |
+| spacing  | Spacing between cards, a number or [horizontal, vertical]; ignored when type is grid.  | `number \| [number, number]` | `semiDefault("CardGroup", "spacing", 16)`     |
+| type     | Set to grid for a grid layout, which overrides spacing.                                | `"grid"`                     | `semiGlobalDefault("CardGroup", "type")`      |
+| wrap     | Whether to wrap, passed to Space; ignored when vertical.                               | `boolean`                    | `semiDefault("CardGroup", "wrap", true)`      |
+| align    | Cross-axis alignment of the children, passed to Space: start, center, end or baseline. | `Align`                      | `semiGlobalDefault("CardGroup", "align")`     |
+| vertical | Whether to lay out vertically, passed to Space.                                        | `boolean`                    | `semiDefault("CardGroup", "vertical", false)` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description           | Scope parameters |
+| ------- | --------------------- | ---------------- |
+| default | The cards to arrange. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

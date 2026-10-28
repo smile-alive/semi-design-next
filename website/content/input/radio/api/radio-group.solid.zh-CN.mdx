@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| buttonSize | type 为 button 时按钮的尺寸，可选 small、middle、large。 | `RadioGroupButtonSize` | `"middle"` |
+| defaultValue | 非受控时默认选中的值。 | `string \| number \| boolean` | - |
+| direction | 组内 Radio 的排列方向，可选 horizontal 或 vertical；type 为 button 时不支持。 | `'horizontal' \| 'vertical'` | `"horizontal"` |
+| disabled | 是否禁用整组。 | `boolean` | `false` |
+| mode | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中。 | `RadioMode` | `""` |
+| name | 组内所有原生 input 的 name；未设置时每组生成唯一值。 | `string` | - |
+| onChange | 选中的值变化时的回调，event.target 为 `{ checked, value, name, disabled }`。 | <ApiType detail={"(event: RadioChangeEvent) => void"}>Type</ApiType> | - |
+| options | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, addonId, addonStyle, addonClassName, extraId }`，label、extra 只放字符串或数字，其他内容用 renderLabel、renderExtra；设置后忽略 children。 | `Options` | - |
+| prefixCls | CSS 类名前缀。 | `string` | - |
+| renderExtra | 渲染 options 中一项的副文本，参数为该项与序号；按钮型没有副文本，不会调用。 | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
+| renderLabel | 渲染 options 中一项的标签，参数为该项与序号。 | <ApiType detail={"(option: OptionItem, index: number) => JSX.Element"}>Type</ApiType> | - |
+| type | 组内所有 Radio 的样式类型，可选 default、button、card、pureCard。 | `RadioType` | `"default"` |
+| value | 选中的值，受控使用。 | `string \| number \| boolean` | - |

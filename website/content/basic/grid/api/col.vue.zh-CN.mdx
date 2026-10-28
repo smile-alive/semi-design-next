@@ -1,0 +1,34 @@
+**Props**
+
+| 属性      | 说明                                                               | 类型                | 默认值                                               |
+| --------- | ------------------------------------------------------------------ | ------------------- | ---------------------------------------------------- |
+| span      | 栅格占位格数，为 0 时相当于 display: none。                        | `number`            | `semiGlobalDefault("Col", "span")`                   |
+| order     | 栅格顺序，flex 布局模式下有效。                                    | `number`            | `semiGlobalDefault("Col", "order")`                  |
+| offset    | 栅格起始侧（从左到右排版时为左侧）的间隔格数，间隔内不可以有栅格。 | `number`            | `semiGlobalDefault("Col", "offset")`                 |
+| push      | 栅格向末尾侧（从左到右排版时为右侧）移动的格数。                   | `number`            | `semiGlobalDefault("Col", "push")`                   |
+| pull      | 栅格向起始侧（从左到右排版时为左侧）移动的格数。                   | `number`            | `semiGlobalDefault("Col", "pull")`                   |
+| prefixCls | CSS 类名前缀。                                                     | `string`            | `semiDefault("Col", "prefixCls", cssClasses.PREFIX)` |
+| xs        | 基础层响应式栅格，所有屏幕宽度都生效，可为栅格数或对象配置。       | `number \| ColSize` | `semiGlobalDefault("Col", "xs")`                     |
+| sm        | 屏幕宽度 ≥576px 时生效的响应式栅格，可为栅格数或对象配置。         | `number \| ColSize` | `semiGlobalDefault("Col", "sm")`                     |
+| md        | 屏幕宽度 ≥768px 时生效的响应式栅格，可为栅格数或对象配置。         | `number \| ColSize` | `semiGlobalDefault("Col", "md")`                     |
+| lg        | 屏幕宽度 ≥992px 时生效的响应式栅格，可为栅格数或对象配置。         | `number \| ColSize` | `semiGlobalDefault("Col", "lg")`                     |
+| xl        | 屏幕宽度 ≥1200px 时生效的响应式栅格，可为栅格数或对象配置。        | `number \| ColSize` | `semiGlobalDefault("Col", "xl")`                     |
+| xxl       | 屏幕宽度 ≥1600px 时生效的响应式栅格，可为栅格数或对象配置。        | `number \| ColSize` | `semiGlobalDefault("Col", "xxl")`                    |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明           | 作用域参数 |
+| ------- | -------------- | ---------- |
+| default | 栅格内的内容。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

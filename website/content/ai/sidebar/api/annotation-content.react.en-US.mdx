@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property   | Description                                                         | Type                                                                                   | Default |
+| ---------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------- |
+| activeKey  | Keys of the expanded groups, one or several.                        | `string \| string[]`                                                                   | -       |
+| className  | Class name of the Collapse root element.                            | `string`                                                                               | -       |
+| info       | Groups of references; each has a header, a key and its annotations. | `AnnotationInfo[]`                                                                     | `[]`    |
+| onChange   | Called when the expanded groups change, with the expanded keys.     | <ApiType detail={"(key: string \u007c string[]) => void"}>Type</ApiType>               | -       |
+| onClick    | Called when a reference is clicked, with the event and the item.    | <ApiType detail={"(e: React.MouseEvent, item: AnnotationItem) => void"}>Type</ApiType> | -       |
+| renderItem | Renders a reference item, called with the item.                     | <ApiType detail={"(annotation: AnnotationItem) => ReactNode"}>Type</ApiType>           | -       |
+| style      | Inline style of the Collapse root element.                          | `React.CSSProperties`                                                                  | -       |

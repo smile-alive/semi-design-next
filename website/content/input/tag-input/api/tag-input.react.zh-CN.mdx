@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| addOnBlur | 焦点离开整个组件时，是否将输入框内容自动创建为标签。 | `boolean` | `false` |
+| allowDuplicates | 是否允许添加相同的标签。 | `boolean` | `true` |
+| aria-label | 输入框的可访问名称，落在输入框上，根节点不带。 | `string` | - |
+| autoFocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `false` |
+| className | 根元素的类名。 | `string` | - |
+| clearIcon | 替换清除按钮中的图标，未设置时使用默认图标。 | `React.ReactNode` | - |
+| defaultValue | 非受控时的初始标签。 | `string[]` | - |
+| disabled | 是否禁用；禁用时输入框为原生 `disabled`，标签为静态文本。 | `boolean` | - |
+| draggable | 是否开启拖拽排序。 | `boolean` | `false` |
+| expandRestTagsOnClick | 焦点进入组件（点击、Tab 或 `focus()`）后是否展开被 `maxTagCount` 折叠的标签；为 `false` 时始终保持折叠。 | `boolean` | `true` |
+| inputValue | 当前输入框内容，配合 `onInputChange` 实现受控。 | `string` | - |
+| insetLabel | 内嵌标签，显示在输入框前；同时提供 `prefix` 时不显示它。显示时，没有 `aria-label`、`aria-labelledby` 的输入框以它命名。 | `React.ReactNode` | - |
+| insetLabelId | 内嵌标签容器的 `id`，供 `aria-labelledby` 引用；显示内嵌标签且未设置时，组件自动生成。 | `string` | - |
+| max | 允许的标签最大数量，超出的部分不会成为标签，并触发 `onExceed`。 | `number` | - |
+| maxLength | 单个标签的最大长度，超出后不再接受输入，并触发 `onInputExceed`。 | `number` | - |
+| maxTagCount | 标签的最大展示数量，超出部分以 +N 形式展示；组件激活后展开，除非 `expandRestTagsOnClick` 为 `false`。 | `number` | - |
+| onAdd | 添加标签时触发，参数为实际新增的标签，超出 `max` 的部分不计入。 | <ApiType detail={"(addedValue: string[]) => void"}>Type</ApiType> | - |
+| onBlur | 焦点离开整个组件时触发一次；焦点在组件内部移动不触发。 | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onChange | 标签变化时触发，参数为完整的标签数组。 | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onExceed | 添加后超过 `max` 时触发，参数为截断前的完整列表。 | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onFocus | 焦点从组件外进入时触发一次；焦点在输入框、标签、清除按钮之间移动不触发。 | <ApiType detail={"(e: React.FocusEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| onInputChange | 输入框内容变化时触发，参数为新的输入文字与触发它的事件。事件可能是输入事件、KeyboardEvent（回车添加）、FocusEvent（`addOnBlur`）、MouseEvent（清除）或 CompositionEvent（输入法截断），读取专有字段前先按 `event.type` 收窄。 | <ApiType detail={"(value: string, e: React.SyntheticEvent) => void"}>Type</ApiType> | - |
+| onInputExceed | 输入内容超过 `maxLength` 时触发，参数为被拒绝的输入内容。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onKeyDown | 输入框按键时在组件处理之后触发；在其中调用 `preventDefault` 不会阻止回车添加标签。 | <ApiType detail={"(e: React.KeyboardEvent\u003cHTMLInputElement>) => void"}>Type</ApiType> | - |
+| onRemove | 移除标签时触发，参数为被移除的标签及其序号。 | <ApiType detail={"(removedValue: string, idx: number) => void"}>Type</ApiType> | - |
+| placeholder | 没有标签时输入框的占位文字。 | `string` | - |
+| prefix | 输入框前缀，文字或图标会自动带上左右间隔；自定义节点的左右间隔为 0，可在节点中自行设置。 | `React.ReactNode` | - |
+| preventScroll | 组件内 `focus()` 调用是否阻止浏览器滚动到新聚焦的元素。 | `boolean` | - |
+| ref | 句柄，暴露 `focus()` 与 `blur()` 方法，不是根元素。 | <ApiType detail={"React.Ref\u003cTagInputHandle>"}>Type</ApiType> | - |
+| renderTagItem | 自定义标签渲染，返回的节点替换默认标签，组件会为每项加上 `key`。第三个参数 `onClose` 关闭该标签，可直接作为按钮的 `onClick`。 | <ApiType detail={"(value: string, index: number, onClose: () => void) => React.ReactNode"}>Type</ApiType> | - |
+| restTagsPopoverProps | +N 浮层的 Popover 属性，如 `position`、`trigger`，默认分别为 `top` 与 `hover`，具体见 [Popover·API 参考](/zh-CN/react/show/popover#API_参考)；不要传 `content`，它会替换剩余标签的列表。 | `RestTagsPopoverProps` | - |
+| separator | 批量输入时的分隔符，可传多个；传 `null` 不拆分。 | `string \| string[] \| null` | `","` |
+| showClear | 是否显示一键清除所有标签和输入内容的按钮。 | `boolean` | `false` |
+| showContentTooltip | 标签文字被截断时，hover 标签是否通过浮层显示全部内容；传对象时用 `type` 指定浮层类型（`tooltip` 或 `popover`），用 `opts` 透传给浮层的属性。 | `boolean \| ShowTooltip` | `true` |
+| showRestTagsPopover | 超过 `maxTagCount` 后，hover `+N` 时是否通过 Popover 显示剩余标签。 | `boolean` | `true` |
+| size | 尺寸，可选 `small`、`default`、`large`。 | `Size` | `"default"` |
+| split | 自定义分隔符处理函数，参数为原始字符串与 `separator`，返回拆分后的字符串数组。 | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
+| style | 根元素的样式。 | `React.CSSProperties` | - |
+| suffix | 输入框后缀，文字或图标会自动带上左右间隔；自定义节点的左右间隔为 0，可在节点中自行设置。 | `React.ReactNode` | - |
+| validateStatus | 校验状态，仅影响样式；为 `error` 时输入框带 `aria-invalid`。 | `ValidateStatus` | `"default"` |
+| value | 当前标签，配合 `onChange` 实现受控；`undefined` 时按非受控处理，`null` 表示受控且没有标签。 | `string[] \| null` | - |
+
+**Methods**
+
+| 方法  | 说明                                                       | 类型                                          |
+| ----- | ---------------------------------------------------------- | --------------------------------------------- |
+| blur  | 移出焦点：使组件内持有焦点的元素失去焦点，并退出激活状态。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 聚焦输入框并激活组件；禁用时不激活。                       | <ApiType detail={"() => void"}>Type</ApiType> |

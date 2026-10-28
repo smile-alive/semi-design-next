@@ -1,0 +1,86 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| bordered | 是否展示外边框和列边框。 | `boolean` | `undefined` |
+| childrenRecordName | 树形表格中，数据项里表示子级数据的字段名。 | `string` | `undefined` |
+| clickGroupedRowToExpand | 点击分组行时展开或收起该组。 | `boolean` | `undefined` |
+| columns | 列配置，详见 Column。传入时（包括空数组）优先于 Table.Column 子项。 | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | `undefined` |
+| components | 覆盖 Table 的组成元素，如 table、body、row、td、th，值为标签名或 Vue 组件，组件会收到被替换元素的属性与监听器。 | `TableComponents` | `undefined` |
+| dataSource | 数据。请为每一条数据分配一个独立的 key，或使用 rowKey 指定一个作为主键的属性名。原地增删元素（push、splice）会重新排序和筛选；只修改记录字段时，单元格显示新值，但不重新排序和筛选。 | `R[]` | `undefined` |
+| defaultExpandAllGroupRows | 默认是否展开所有分组行，动态加载数据时不生效。 | `boolean` | `undefined` |
+| defaultExpandAllRows | 默认是否展开所有行，动态加载数据时不生效。 | `boolean` | `undefined` |
+| defaultExpandedRowKeys | 默认展开的行 key 数组，动态加载数据时不生效。 | `(string \| number)[]` | `undefined` |
+| direction | 文字方向，默认值取 ConfigProvider 的 direction，可在此单独配置。 | `"ltr" \| "rtl"` | `semiGlobalDefault("Table", "direction")` |
+| expandAllGroupRows | 是否展开所有分组行。 | `boolean` | `undefined` |
+| expandAllRows | 是否展开所有行。 | `boolean` | `undefined` |
+| expandCellFixed | 展开按钮所在列是否固定，取值与 Column 的 fixed 相同。 | `boolean \| "left" \| "right"` | `undefined` |
+| expandIcon | 只接受 false，隐藏展开按钮。自定义展开图标使用 expandIcon 插槽。 | `boolean` | `undefined` |
+| expandedRowKeys | 展开的行 key 数组，传入后行展开受控，配合 v-model:expandedRowKeys 使用。 | `(string \| number)[]` | `undefined` |
+| expandRowByClick | 点击行时是否展开可展开行。 | `boolean` | `undefined` |
+| footer | 纯文本表格尾部，footer 插槽优先。 | `string` | `undefined` |
+| groupBy | 分组依据，可以是数据项中的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | `undefined` |
+| groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"((groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, \"title\" \u007c \"children\" \u007c \"dataIndex\">)"}>Type</ApiType> | `undefined` |
+| headerStyle | 所有表头单元格（包括固定表头）的内联样式。 | `CSSProperties` | `undefined` |
+| hideExpandedColumn | 表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。 | `boolean` | `undefined` |
+| indentSize | 树形数据每一层的缩进宽度，单位为像素。 | `number` | `undefined` |
+| keepDOM | 折叠行时是否保留被折叠的 DOM。 | `boolean` | `undefined` |
+| loading | 是否显示加载状态。 | `boolean` | `undefined` |
+| pagination | 分页配置，传 false 关闭分页。 | `boolean \| TablePaginationProps` | `undefined` |
+| prefixCls | 样式名前缀。 | `string` | `undefined` |
+| resizable | 是否开启列宽伸缩，需要伸缩的列必须提供 width。传入对象时可配置 onResize、onResizeStart、onResizeStop 与 handlerClassName。 | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | `undefined` |
+| rowExpandable | 判断某一行是否可展开，返回 false 时不渲染该行的展开按钮。 | <ApiType detail={"TableRowExpandable\u003cR>"}>Type</ApiType> | `undefined` |
+| rowKey | 行 key 的取值：数据项的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `undefined` |
+| rowSelection | 行选择配置，传 true 使用默认配置，详见 rowSelection。 | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | `undefined` |
+| rowSpanHover | 悬停在带 rowSpan 的单元格上时，高亮它跨越的所有行。 | `boolean` | `undefined` |
+| scroll | 滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。 | `TableScroll` | `undefined` |
+| showHeader | 是否显示表头。 | `boolean` | `undefined` |
+| size | 表格尺寸，影响单元格的内边距。 | `"small" \| "default" \| "middle"` | `undefined` |
+| sticky | 将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。 | `TableSticky` | `undefined` |
+| title | 纯文本表格标题，title 插槽优先。 | `string` | `undefined` |
+| virtualized | 开启虚拟化，需同时传 scroll.y（数字）。对象形式可配置行高 itemSize 与额外渲染的行数 overscanCount。 | `TableVirtualized` | `undefined` |
+| onGroupedRow | 类似 onRow，单独用于分组行，返回值是 tr 的属性与监听器。index 在未开启 virtualized 时是分组序号，开启后是该行在虚拟列表中的位置。 | <ApiType detail={"((record: { groupKey: string \u007c number; records: R[]; }, index: number) => TableRowAttrs)"}>Type</ApiType> | `undefined` |
+| onHeaderRow | 设置表头行的属性与监听器，返回值会合并到表头行（不含 style）。 | <ApiType detail={"((columns: ColumnProps\u003cR>[], index: number) => Omit\u003cTableRowAttrs, \"style\">)"}>Type</ApiType> | `undefined` |
+| onRow | 设置数据行的属性与监听器，第三个参数为行状态。返回的监听器在行自身的处理和 rowXxx 事件之后调用。 | <ApiType detail={"((record: R, index: number, rowState: { disabled: boolean; selected: boolean; }) => TableRowAttrs)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件                   | 说明                                                                                              | 回调参数                                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| scroll                 | 虚拟化表体的纵向偏移变化时触发，横向滚动不触发。                                                  | `[args: VirtualListScrollArgs]`                                                                                    |
+| change                 | 分页、排序、筛选变化时触发，参数含 pagination、filters、sorter 与 extra.changeType。              | <ApiType detail={"[changeInfo: TableChangeInfo\u003cR>]"}>Type</ApiType>                                           |
+| expand                 | 点击展开按钮时触发，参数为展开状态、行数据（分组行为 groupKey 对象）和鼠标事件。                  | <ApiType detail={"[expanded: boolean, record: TableIncludeGroupRecord\u003cR>, event: MouseEvent]"}>Type</ApiType> |
+| expandedRowsChange     | 展开的行变化时触发，参数为展开的行数据数组。                                                      | <ApiType detail={"[expandedRows: TableIncludeGroupRecord\u003cR>[]]"}>Type</ApiType>                               |
+| update:expandedRowKeys | 展开的行变化时触发，参数为展开的行 key 数组，包含已展开的分组 key，用于 v-model:expandedRowKeys。 | `[expandedRowKeys: (string \| number)[]]`                                                                          |
+| rowMouseEnter          | 鼠标进入数据行时触发，先于 onRow 返回的 onMouseenter 调用。                                       | `[record: R, event: MouseEvent]`                                                                                   |
+| rowMouseLeave          | 鼠标离开数据行时触发，先于 onRow 返回的 onMouseleave 调用。                                       | `[record: R, event: MouseEvent]`                                                                                   |
+| rowDoubleClick         | 双击数据行时触发，先于 onRow 返回的 onDblclick 调用。                                             | `[record: R, event: MouseEvent]`                                                                                   |
+| rowContextMenu         | 数据行触发右键菜单时触发，先于 onRow 返回的 onContextmenu 调用。                                  | `[record: R, event: MouseEvent]`                                                                                   |
+
+**Slots**
+
+| 插槽               | 说明                                                                                                                                    | 作用域参数                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| default            | Table.Column 子项，传入 columns 时被忽略。                                                                                              | `any`                                                                       |
+| cell               | 数据单元格的内容，对所有数据列调用，用 column.dataIndex 或 column.key 区分列；输出为空时显示原始值。Table.Column 自己的 cell 插槽优先。 | <ApiType detail={"TableCellSlotProps\u003cR>"}>Type</ApiType>               |
+| headerCell         | 列标题的内容；输出为空时显示 column.title。Table.Column 的 title 插槽优先。                                                             | <ApiType detail={"TableHeaderCellSlotProps\u003cR>"}>Type</ApiType>         |
+| title              | 表格标题，参数 pageData 为当前页数据。                                                                                                  | <ApiType detail={"TableTitleSlotProps\u003cR>"}>Type</ApiType>              |
+| footer             | 表格尾部，参数 pageData 为当前页数据。                                                                                                  | <ApiType detail={"TableTitleSlotProps\u003cR>"}>Type</ApiType>              |
+| empty              | 无数据时展示的内容，不提供时显示语言包的空文案，提供空插槽时不显示任何内容。                                                            | `any`                                                                       |
+| expandedRow        | 展开行的内容，参数含 record、index、expanded；输出为空时该行不渲染。                                                                    | <ApiType detail={"TableExpandedRowSlotProps\u003cR>"}>Type</ApiType>        |
+| groupSection       | 分组行的内容，参数含 groupKey 与 group（该组的行 key）。                                                                                | `TableGroupSectionSlotProps`                                                |
+| sortIcon           | 排序图标，参数含 sortOrder 与 column；输出为空时显示默认箭头。Table.Column 自己的 sortIcon 插槽优先。                                   | <ApiType detail={"TableSortIconSlotProps\u003cR>"}>Type</ApiType>           |
+| filterIcon         | 筛选按钮的内容，参数含 filtered 与 column；输出为空时显示默认图标。Table.Column 自己的 filterIcon 插槽优先。                            | <ApiType detail={"TableFilterIconSlotProps\u003cR>"}>Type</ApiType>         |
+| filterDropdown     | 筛选面板，用于 filterDropdown 为 true 的列，参数含临时筛选值与 onConfirm、onClear、onClose、onReset；输出为空时显示筛选菜单。           | <ApiType detail={"TableFilterDropdownSlotProps\u003cR>"}>Type</ApiType>     |
+| filterDropdownItem | 筛选菜单中的一项，参数含 text、value、checked、level、onChange 等；输出为空时显示默认项。                                               | <ApiType detail={"TableFilterDropdownItemSlotProps\u003cR>"}>Type</ApiType> |
+| selectionCell      | 选择列的单元格，表头与数据行都调用，参数含 selected、inHeader、originNode 等；输出为空时显示默认复选框。                                | <ApiType detail={"TableSelectionCellSlotProps\u003cR>"}>Type</ApiType>      |
+| expandIcon         | 展开按钮的图标，参数 expanded；输出为空时显示默认图标。自定义图标不带旋转动画。                                                         | `TableExpandIconSlotProps`                                                  |
+| pagination         | 替换分页信息与分页器，参数 pagination 可直接 v-bind 给 Pagination；输出为空时显示默认分页。                                             | `TablePaginationSlotProps`                                                  |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,50 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                      | 类型                                                                                                                                  | 默认值                                               |
+| ------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| visible       | 是否显示，配合 v-model:visible 使用。                                     | `boolean`                                                                                                                             | `semiGlobalDefault("MCPConfigure", "visible")`       |
+| title         | 纯文本标题，默认使用语言包中的 MCP 配置；传入 title 插槽时以插槽为准。    | `string`                                                                                                                              | `semiGlobalDefault("MCPConfigure", "title")`         |
+| motion        | 显示与隐藏时是否使用展开动画。                                            | `boolean`                                                                                                                             | `semiGlobalDefault("MCPConfigure", "motion")`        |
+| resizable     | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。   | `boolean`                                                                                                                             | `semiGlobalDefault("MCPConfigure", "resizable")`     |
+| minWidth      | 可调整的最小宽度，仅在 resizable 为 true 时生效。                         | `string \| number`                                                                                                                    | `semiGlobalDefault("MCPConfigure", "minWidth")`      |
+| maxWidth      | 可调整的最大宽度，仅在 resizable 为 true 时生效。                         | `string \| number`                                                                                                                    | `semiGlobalDefault("MCPConfigure", "maxWidth")`      |
+| defaultSize   | 初始宽高，仅在 resizable 为 true 时生效。                                 | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("MCPConfigure", "defaultSize")`   |
+| showClose     | 是否显示头部的关闭按钮。                                                  | `boolean`                                                                                                                             | `semiGlobalDefault("MCPConfigure", "showClose")`     |
+| closeOnEsc    | 按下 Esc 键时是否触发 cancel。                                            | `boolean`                                                                                                                             | `semiGlobalDefault("MCPConfigure", "closeOnEsc")`    |
+| options       | 内置 MCP 工具列表，配合 v-model:options 使用；每项的 value 必填且唯一。   | `MCPConfigureOption[]`                                                                                                                | `semiGlobalDefault("MCPConfigure", "options")`       |
+| customOptions | 自定义 MCP 工具列表，配合 v-model:customOptions 使用。                    | `MCPConfigureOption[]`                                                                                                                | `semiGlobalDefault("MCPConfigure", "customOptions")` |
+| filter        | 自定义搜索过滤，参数为转为小写的输入值和选项；默认按 label 与 desc 匹配。 | <ApiType detail={"((inputValue: string, option: MCPConfigureOption) => boolean)"}>Type</ApiType>                                      | `undefined`                                          |
+| placeholder   | 搜索框的占位文字，默认使用语言包文案。                                    | `string`                                                                                                                              | `semiGlobalDefault("MCPConfigure", "placeholder")`   |
+
+**Events**
+
+| 事件                 | 说明                                                                              | 回调参数                                           |
+| -------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------- |
+| update:visible       | 关闭按钮或 Esc 触发取消时先于 cancel 触发，值为 false，供 v-model:visible 回写。  | `[visible: false]`                                 |
+| cancel               | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。                           | `[event: MouseEvent \| KeyboardEvent]`             |
+| afterVisibleChange   | 显示或隐藏动画结束后触发，参数为当前是否可见。                                    | `[visible: boolean]`                               |
+| update:options       | 切换内置工具的启用状态时先于 statusChange 触发，供 v-model:options 回写。         | `[options: MCPConfigureOption[]]`                  |
+| update:customOptions | 切换自定义工具的启用状态时先于 statusChange 触发，供 v-model:customOptions 回写。 | `[options: MCPConfigureOption[]]`                  |
+| statusChange         | 切换启用状态后触发，参数为 active 已更新的列表，以及它是否为自定义列表。          | `[options: MCPConfigureOption[], custom: boolean]` |
+| search               | 搜索输入变化时触发，参数为输入值，以及当前是否为自定义列表。                      | `[inputValue: string, custom: boolean]`            |
+| addClick             | 点击自定义页的新增按钮时触发。                                                    | `[event: MouseEvent]`                              |
+| configureClick       | 点击内置工具的配置按钮时触发，参数为点击事件和对应选项。                          | `[event: MouseEvent, option: MCPConfigureOption]`  |
+| editClick            | 点击自定义工具的编辑按钮时触发，参数为点击事件和对应选项。                        | `[event: MouseEvent, option: MCPConfigureOption]`  |
+
+**Slots**
+
+| 插槽   | 说明                                                                                                        | 作用域参数                  |
+| ------ | ----------------------------------------------------------------------------------------------------------- | --------------------------- |
+| title  | 头部标题，优先于 title 属性。                                                                               | `any`                       |
+| header | 替换整个头部；内容为空时回退到内置头部。                                                                    | `any`                       |
+| icon   | 选项的图标，作用域参数为 item、index 和 custom；提供后所有选项都使用它，icon 字段只在未提供时作为图片地址。 | `MCPConfigureItemSlotProps` |
+| desc   | 选项的描述，作用域参数为 item、index 和 custom；未提供时显示 desc 字段。                                    | `MCPConfigureItemSlotProps` |
+| item   | 替换整行内置选项，作用域参数为 item、index 和 custom。                                                      | `MCPConfigureItemSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明                                                | 类型                     |
+| ---- | --------------------------------------------------- | ------------------------ |
+| root | 容器根元素 .semi-sidebar-container；隐藏时为 null。 | `HTMLDivElement \| null` |

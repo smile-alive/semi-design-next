@@ -1,0 +1,34 @@
+**Props**
+
+| Property     | Description                                                                                                                                                                                                             | Type               | Default                    |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | -------------------------- |
+| value        | The value of the option, which identifies it; every option should declare one.                                                                                                                                          | `string \| number` | `undefined`                |
+| label        | The text of the option, a string or number. Display and matching take label first, then the plain text of the default slot, then value; content with markup goes in the default slot and is displayed instead of label. | `string \| number` | `undefined`                |
+| disabled     | Whether the option is disabled.                                                                                                                                                                                         | `boolean`          | `undefined`                |
+| showTick     | Whether a tick icon is shown when the option is selected.                                                                                                                                                               | `boolean`          | `undefined`                |
+| empty        | Used by Select internally to render the empty-state row; callers do not set it.                                                                                                                                         | `boolean`          | `undefined`                |
+| selected     | Used by Select internally to mark the option as selected; callers do not set it.                                                                                                                                        | `boolean`          | `undefined`                |
+| focused      | Used by Select internally to mark the option as highlighted by keyboard or pointer; callers do not set it.                                                                                                              | `boolean`          | `undefined`                |
+| current      | Used by Select and AutoComplete internally to mark the row that aria-activedescendant points at; callers do not set it.                                                                                                 | `boolean`          | `undefined`                |
+| inputValue   | Used by Select internally as the search keyword highlighted in a plain-text label; callers do not set it.                                                                                                               | `string`           | `undefined`                |
+| semiOptionId | Used by Select internally as the id of the option row; callers do not set it.                                                                                                                                           | `string`           | `undefined`                |
+| prefixCls    | Used by Select and AutoComplete internally as the CSS class prefix of the option row; callers do not set it.                                                                                                            | `string`           | `cssClasses.PREFIX_OPTION` |
+
+**Events**
+
+| Event      | Description                                                                                                                                                         | Callback parameters                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| select     | Used by Select internally; emitted when an enabled option row is clicked, with the option record and the click event. Listen to the select event of Select instead. | `[option: SelectOptionProps, event: MouseEvent]` |
+| mouseenter | Used by Select internally; emitted when the pointer enters the row, to move the highlight.                                                                          | `[event: MouseEvent]`                            |
+
+**Slots**
+
+| Slot    | Description                                                                                                                                                                                                                        | Scope parameters |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| default | The content of the option. Plain text takes part in search highlighting; markup is rendered as is in the option row and filled back into the select box as is once selected, while search matches label, or value without a label. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

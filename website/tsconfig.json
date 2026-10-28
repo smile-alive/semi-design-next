@@ -1,0 +1,15 @@
+{
+    "extends": "astro/tsconfigs/strict",
+    "include": [".astro/types.d.ts", "**/*"],
+    "exclude": ["dist", "content/**/*.vue", "**/*.solid.tsx"],
+    "compilerOptions": {
+        "paths": {
+            "#/*": ["./src/*"],
+            "#packages/*": ["../packages/*"]
+        },
+        "jsx": "react-jsx",
+        "jsxImportSource": "react",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    }
+}

@@ -1,0 +1,309 @@
+---
+title: 复选框
+order: 37
+icon: doc-checkbox
+brief: 复选框允许用户选中多个选项
+---
+
+import { CheckboxGroup } from '@fibrae/semi-ui-react';
+import CheckboxReactApi from './api/checkbox.react.zh-CN.mdx';
+import CheckboxGroupReactApi from './api/checkbox-group.react.zh-CN.mdx';
+import CheckboxVueApi from './api/checkbox.vue.zh-CN.mdx';
+import CheckboxGroupVueApi from './api/checkbox-group.vue.zh-CN.mdx';
+import CheckboxSolidApi from './api/checkbox.solid.zh-CN.mdx';
+import CheckboxGroupSolidApi from './api/checkbox-group.solid.zh-CN.mdx';
+
+## 使用场景
+
+- 勾选框可以让用户在两种相反的状态、行为或取值之间选择;
+- 适用于在列表中选择单个或多个选项，开启或关闭某个选项
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Checkbox, CheckboxGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Checkbox, CheckboxGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+Checkbox单个使用，可以通过`defaultChecked`、`checked`属性控制是否勾选。  
+当传入`checked`时，为受控使用。
+
+</Framework>
+
+<Framework only="vue">
+
+Checkbox单个使用，可以通过`defaultChecked`、`modelValue`（`v-model`）控制是否勾选。  
+当传入`modelValue`时，为受控使用。
+
+</Framework>
+
+<Framework only="solid">
+
+Checkbox单个使用，可以通过`defaultChecked`、`checked`属性控制是否勾选。  
+当传入`checked`时，为受控使用。
+
+</Framework>
+
+<Demo id="basic" />
+
+<Demo id="default-checked" />
+
+<Framework only="react">
+
+带辅助文本的checkbox。通过`extra`传入辅助文本。辅助文本会更长一些，甚至还可能换行。
+
+</Framework>
+
+<Framework only="vue">
+
+带辅助文本的checkbox。通过`#extra`插槽传入辅助文本。辅助文本会更长一些，甚至还可能换行。
+
+</Framework>
+
+<Framework only="solid">
+
+带辅助文本的checkbox。通过`extra`传入辅助文本。辅助文本会更长一些，甚至还可能换行。
+
+</Framework>
+
+<Demo id="extra" />
+
+### 禁用
+
+通过设置 `disabled` 属性，禁用 Checkbox
+
+<Demo id="disabled" />
+
+### JSX方式声明Checkbox组
+
+<Framework only="react">
+
+通过在CheckboxGroup内部放置 Checkbox元素，可以声明Checkbox组  
+使用Checkbox组，你可以更便捷地通过CheckboxGroup的`defaultValue`、`value`属性去控制一组Checkbox的选中与否此时Checkbox不需要再声明`defaultChecked`、`checked`属性
+
+</Framework>
+
+<Framework only="vue">
+
+通过在CheckboxGroup内部放置 Checkbox元素，可以声明Checkbox组  
+使用Checkbox组，你可以更便捷地通过CheckboxGroup的`defaultValue`、`modelValue`（`v-model`）去控制一组Checkbox的选中与否，此时Checkbox不需要再声明`defaultChecked`、`modelValue`
+
+</Framework>
+
+<Framework only="solid">
+
+通过在CheckboxGroup内部放置 Checkbox元素，可以声明Checkbox组  
+使用Checkbox组，你可以更便捷地通过CheckboxGroup的`defaultValue`、`value`属性去控制一组Checkbox的选中与否，此时Checkbox不需要再声明`defaultChecked`、`checked`属性
+
+</Framework>
+
+<Demo id="group-jsx" />
+
+### 数组方式声明 Checkbox 组
+
+也可以将数组通过 `options` 属性直接传入 CheckboxGroup，直接生成 Checkbox 组
+
+<Demo id="group-options" />
+
+### 水平排列
+
+通过设置 `direction` 为 `horizontal` 或者 `vertical` 可以调整 CheckboxGroup 内的布局
+
+<Demo id="direction" />
+
+### 受控
+
+联动 checkbox。
+
+<Demo id="controlled" />
+
+### 全选
+
+在实现全选效果时，你可能会用到 `indeterminate` 属性。
+
+<Demo id="check-all" />
+
+### 卡片样式
+
+可以给 CheckboxGroup 设置 `type='card'`，实现带有背景的卡片样式。
+
+<Demo id="card" />
+
+### 无 checkbox 的纯卡片样式
+
+可以给 CheckboxGroup 设置 `type='pureCard'`，实现带有背景且无 checkbox 的纯卡片样式。
+
+<Demo id="pure-card" />
+
+### 配合grid布局
+
+CheckboxGroup 内嵌 Checkbox 并与 Grid 组件一起使用，可以实现灵活的布局。
+
+<Demo id="grid" />
+
+## API参考
+
+### Checkbox
+
+<Framework only="react">
+
+<CheckboxReactApi />
+
+`className`、`style` 落在根元素 `span` 上；`id`、`name`、`tabIndex`、`autoFocus` 与 `aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在内部的原生 input 上，其余原生属性与事件（如 `role`、`onFocus`、`onBlur`、`onClick`、`data-*`）落在根元素 `span` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<CheckboxVueApi />
+
+`class`、`style` 落在根元素上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 focus、blur 监听经 attrs 落在内部的原生 input 上，其余原生属性与事件监听（如 `@mouseenter`）落在根元素上。`name` 在 CheckboxGroup 中以组的 `name` 为准。
+
+</Framework>
+
+<Framework only="solid">
+
+<CheckboxSolidApi />
+
+`class`、`style`、`ref` 落在根元素 `<span>` 上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 `onFocus`、`onBlur` 落在内部的原生 input 上，其余原生属性与事件（如 `onMouseEnter`、`onClick`）落在根元素上。`name` 在 CheckboxGroup 中以组的 `name` 为准。
+
+</Framework>
+
+### Checkbox Group
+
+<Framework only="react">
+
+<CheckboxGroupReactApi />
+
+其他原生属性（如 `aria-label`、`data-*`）落在根元素 `div`（`role="group"`）上；`onBlur` 在焦点离开整个分组时触发，在组内 Checkbox 之间移动焦点不触发。`aria-invalid` 与 `aria-errormessage` 传给组内每个 Checkbox 的原生 input，`aria-required`、`tabIndex` 以及 Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 不输出。
+
+</Framework>
+
+<Framework only="vue">
+
+<CheckboxGroupVueApi />
+
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`，没有 `onChange`；需要自定义内容时使用 `#label`、`#extra` 作用域插槽。`class`、`style` 与原生属性经 attrs 落在根元素上；`aria-invalid`、`aria-errormessage` 传给组内每个 Checkbox 的原生 input，`aria-required`、`tabindex` 以及 Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 不输出。
+
+</Framework>
+
+<Framework only="solid">
+
+<CheckboxGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在根元素 `<div>` 上；`onBlur` 在焦点离开整个分组时触发，在组内 Checkbox 之间移动焦点不触发。`aria-invalid`、`aria-errormessage` 传给组内每个 Checkbox 的原生 input，`aria-required`、`tabindex` 以及 Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 不输出。
+
+</Framework>
+
+## 方法
+
+<Framework only="react">
+
+Checkbox 提供的一些内部方法可以通过 ref 访问：
+
+</Framework>
+
+### Checkbox
+
+<Framework only="react">
+
+通过 ref 取得 Checkbox 的句柄后调用，说明见上方 API 参考。
+
+</Framework>
+
+<Framework only="vue">
+
+通过模板 `ref` 取得组件实例后调用，说明见上方 Exposes。
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` 取得的是根元素 `<span>`，其上的 `focus()`、`blur()` 作用于内部的原生 input。`focus()` 会带上 `preventScroll`。
+
+| 名称    | 描述     |
+| ------- | -------- |
+| blur()  | 移除焦点 |
+| focus() | 获取焦点 |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Checkbox 的 role 为 `checkbox`，CheckboxGroup 的 role 为 `group`，它的子元素没有额外的 role
+- `aria-label`：单独使用 Checkbox 时，如果 Children 没有文本，建议传入 `aria-label` prop，用一句话描述 Checkbox 的作用，这会让屏幕阅读器读出这个标签的内容
+- 原生 input 的 `aria-labelledby` 指向 `addon` 节点，用于解释当前 Checkbox 的作用；传入的 `aria-labelledby` 也落在 input 上，排在 `addon` id 之前
+- `aria-describedby` 指向 `extra` 节点，用于补充解释当前 Checkbox 的作用
+- 选中与禁用状态由原生 input 的 `checked`、`disabled` 表达，不输出 `aria-checked`、`aria-disabled`
+
+<Framework only="react">
+
+- 使用 Form.Checkbox 时，可以使用 Form 提供的 label 而无需传入 `aria-label`；Form 注入的 label 同样落在 input 的 `aria-labelledby` 上，排在 `addon` id 之前
+
+</Framework>
+
+### 键盘和焦点
+
+- Checkbox 可被获取焦点，键盘用户可以使用 Tab 及 Shift + Tab 切换焦点。
+- 当前获取的焦点为 Checkbox 时，可以通过 Space 切换选中和未选状态。
+- Checkbox 的点击区域大于框本身，包含了框后的文案；带辅助文本的 checkbox，辅助文本也包含在点击区域内。
+- 禁用的 Checkbox 不可获取焦点。
+
+## 文案规范
+
+<div style={{ border: '1px solid var(--semi-color-border)', padding: '10px', marginBottom: '24px' }}>
+    <p style={{ fontWeight: 600, fontSize: '16px' }}>Checkbox Content Demo</p>
+    <CheckboxGroup
+        options={[
+            { label: 'Call', value: 'abc' },
+            { label: 'IM', value: 'c' },
+            { label: 'Ticket', value: 'd' },
+            { label: 'Offline', value: 'e' },
+            { label: 'Buzz', value: 'f' },
+        ]}
+        direction="horizontal"
+        aria-label="CheckboxGroup 示例"
+        style={{ marginTop: 10 }}
+    />
+</div>
+
+- 首字母大写
+- 不使用标点符号
+
+| ✅ 推荐用法 | ❌ 不推荐用法 |
+| ----------- | ------------- |
+| Call        | call          |
+| Call        | Call;         |
+
+## 设计变量
+
+<DesignToken />

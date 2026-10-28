@@ -1,0 +1,76 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| src | Image URLs to preview. When wrapping Image components, it is merged with the preview images they register, with the src entries first. | `string \| string[]` | `semiDefault("ImagePreview", "src", [])` |
+| visible | Controlled visibility of the preview. | `boolean` | `semiGlobalDefault("ImagePreview", "visible")` |
+| defaultVisible | Whether the preview is open initially. | `boolean` | `semiGlobalDefault("ImagePreview", "defaultVisible")` |
+| currentIndex | Controlled index of the current image. | `number` | `semiGlobalDefault("ImagePreview", "currentIndex")` |
+| defaultCurrentIndex | Index of the image shown initially. | `number` | `semiGlobalDefault("ImagePreview", "defaultCurrentIndex")` |
+| previewTitle | Title at the top of the preview and the accessible name of the dialog; preview.previewTitle of a grouped image takes precedence. | `string` | `semiGlobalDefault("ImagePreview", "previewTitle")` |
+| lazyLoad | Whether to lazy-load the images of the group. | `boolean` | `semiDefault("ImagePreview", "lazyLoad", true)` |
+| lazyLoadMargin | The rootMargin of the lazy-load observer, relative to the viewport; scrolling ancestors still clip. | `string` | `semiDefault("ImagePreview", "lazyLoadMargin", "0px 100px 100px 0px")` |
+| maskClosable | Whether clicking the mask closes the preview. | `boolean` | <ApiType detail={"semiDefault(\"ImagePreview\", \"maskClosable\", previewDefaults.maskClosable)"}>Type</ApiType> |
+| closable | Whether to show the close button. | `boolean` | `semiDefault("ImagePreview", "closable", previewDefaults.closable)` |
+| closeOnEsc | Whether Esc closes the preview. | `boolean` | `semiDefault("ImagePreview", "closeOnEsc", previewDefaults.closeOnEsc)` |
+| infinite | Whether switching loops around. | `boolean` | `semiDefault("ImagePreview", "infinite", previewDefaults.infinite)` |
+| showTooltip | Whether to show tooltips on the bottom controls. | `boolean` | <ApiType detail={"semiDefault(\"ImagePreview\", \"showTooltip\", previewDefaults.showTooltip)"}>Type</ApiType> |
+| preLoad | Whether to preload neighboring images. | `boolean` | `semiDefault("ImagePreview", "preLoad", previewDefaults.preLoad)` |
+| preLoadGap | How many images ahead and behind to preload. | `number` | `semiDefault("ImagePreview", "preLoadGap", previewDefaults.preLoadGap)` |
+| viewerVisibleDelay | Idle time in milliseconds before the preview controls hide. | `number` | <ApiType detail={"semiDefault(\"ImagePreview\", \"viewerVisibleDelay\", previewDefaults.viewerVisibleDelay)"}>Type</ApiType> |
+| zoomStep | Zoom change per step. | `number` | `semiDefault("ImagePreview", "zoomStep", previewDefaults.zoomStep)` |
+| maxZoom | Maximum zoom factor. | `number` | `semiDefault("ImagePreview", "maxZoom", previewDefaults.maxZoom)` |
+| minZoom | Minimum zoom factor. | `number` | `semiDefault("ImagePreview", "minZoom", previewDefaults.minZoom)` |
+| zIndex | z-index of the preview layer. | `number` | `semiDefault("ImagePreview", "zIndex", previewDefaults.zIndex)` |
+| disableDownload | Whether to disable download. | `boolean` | <ApiType detail={"semiDefault(\"ImagePreview\", \"disableDownload\", previewDefaults.disableDownload)"}>Type</ApiType> |
+| initialZoom | Initial zoom factor of an image, applied once when it first opens or is switched to, clamped by minZoom and maxZoom. | `number` | `semiGlobalDefault("ImagePreview", "initialZoom")` |
+| crossOrigin | The crossorigin attribute passed to the preview img element. | `"anonymous" \| "use-credentials"` | `semiGlobalDefault("ImagePreview", "crossOrigin")` |
+| previewCls | Custom class name of the preview. | `string` | `semiGlobalDefault("ImagePreview", "previewCls")` |
+| previewStyle | Custom style of the preview. | `StyleValue` | `semiGlobalDefault("ImagePreview", "previewStyle")` |
+| prevTip | Tip of the previous button. | `string` | `semiGlobalDefault("ImagePreview", "prevTip")` |
+| nextTip | Tip of the next button. | `string` | `semiGlobalDefault("ImagePreview", "nextTip")` |
+| zoomInTip | Tip of the zoom-in button. | `string` | `semiGlobalDefault("ImagePreview", "zoomInTip")` |
+| zoomOutTip | Tip of the zoom-out button. | `string` | `semiGlobalDefault("ImagePreview", "zoomOutTip")` |
+| rotateTip | Tip of the rotate button. | `string` | `semiGlobalDefault("ImagePreview", "rotateTip")` |
+| downloadTip | Tip of the download button. | `string` | `semiGlobalDefault("ImagePreview", "downloadTip")` |
+| adaptiveTip | Tip of the fit-to-page button. | `string` | `semiGlobalDefault("ImagePreview", "adaptiveTip")` |
+| originTip | Tip of the original-size button. | `string` | `semiGlobalDefault("ImagePreview", "originTip")` |
+| getPopupContainer | Parent DOM the preview renders into. A container other than document.body makes the preview non-modal; a custom container needs position: relative. | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined` |
+| setDownloadName | Sets the download file name of an image. | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event               | Description                                                                                        | Callback parameters            |
+| ------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------ |
+| update:visible      | Emitted when visibility changes, for v-model:visible.                                              | `[visible: boolean]`           |
+| visibleChange       | Emitted when visibility changes.                                                                   | `[visible: boolean]`           |
+| update:currentIndex | Emitted when the current index changes, for v-model:currentIndex.                                  | `[index: number]`              |
+| change              | Emitted when the image switches.                                                                   | `[index: number]`              |
+| close               | Emitted when closed with the close button or Esc; closing by the mask triggers visibleChange only. | `[]`                           |
+| zoomIn              | Emitted when the image zooms in.                                                                   | `[zoom: number]`               |
+| zoomOut             | Emitted when the image zooms out.                                                                  | `[zoom: number]`               |
+| prev                | Emitted when switching to the previous image.                                                      | `[index: number]`              |
+| next                | Emitted when switching to the next image.                                                          | `[index: number]`              |
+| ratioChange         | Emitted when switching between original size and fit-to-page.                                      | `[type: RatioType]`            |
+| rotateLeft          | Emitted when the image rotates counterclockwise.                                                   | `[angle: number]`              |
+| download            | Emitted when an image is downloaded.                                                               | `[src: string, index: number]` |
+| downloadError       | Emitted when a download fails.                                                                     | `[src: string]`                |
+
+**Slots**
+
+| Slot        | Description                                                                                                                                                                                                                                        | Scope parameters             |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| default     | The Image components to preview.                                                                                                                                                                                                                   | `any`                        |
+| title       | Replaces the content of the title section at the top of the preview. When there is a title, the dialog is named by that section through aria-labelledby, so its name is the text the slot renders; without a title the name comes from the locale. | `ImagePreviewTitleSlotProps` |
+| previewMenu | Custom bottom menu, receiving MenuProps; menuItems is the array of default item VNodes.                                                                                                                                                            | `MenuProps`                  |
+| leftIcon    | Custom previous icon.                                                                                                                                                                                                                              | `ImagePreviewIconSlotProps`  |
+| rightIcon   | Custom next icon.                                                                                                                                                                                                                                  | `ImagePreviewIconSlotProps`  |
+| closeIcon   | Custom close icon.                                                                                                                                                                                                                                 | `any`                        |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

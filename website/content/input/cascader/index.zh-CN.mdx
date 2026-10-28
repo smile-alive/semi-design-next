@@ -1,0 +1,755 @@
+---
+title: 级联选择
+order: 36
+icon: doc-cascader
+brief: 用于选择多级分类下的某个选项。
+---
+
+import CascaderReactApi from './api/cascader.react.zh-CN.mdx';
+import CascaderVueApi from './api/cascader.vue.zh-CN.mdx';
+import CascaderSolidApi from './api/cascader.solid.zh-CN.mdx';
+
+## 使用场景
+
+与 TreeSelect 组件的区别:
+
+- TreeSelect: 核心价值在于**目标节点**，层级结构是为了方便用户快速筛选出目标选项，最终的节点才是用户想要的内容，常见于文件/文件夹选择、组织架构、权限分配等场景。
+- Cascader: 核心价值在于**路径**，用户选择的不是一个孤立的点，而是一条从根到叶的完整路径，常用于地理位置，商品分类等场景。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Cascader } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Cascader } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Cascader } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+最简单的用法，默认只可以选叶子节点。
+
+<Demo id="basic" />
+
+### 多选
+
+设置 `multiple`，可以进行多选。
+
+<Demo id="multiple" />
+
+### 可搜索的
+
+通过设置 `filterTreeNode` 属性可支持搜索功能。
+
+<Framework only="react">
+
+默认对 `label` 值进行搜索（使用字符串的 includes 方法进行匹配，不区分大小写），可通过 `treeNodeFilterProp` 指定其他属性值进行搜索。如 `label` 为 ReactNode，可在 treeData 中使用其他字段存储纯文本，并通过 `treeNodeFilterProp` 指定该字段进行搜索。
+
+</Framework>
+
+<Framework only="vue">
+
+默认对 `label` 值进行搜索（使用字符串的 includes 方法进行匹配，不区分大小写），可通过 `treeNodeFilterProp` 指定其他属性值进行搜索。`label` 只接受文本，节点内容用 `#label` 插槽定制时，搜索仍匹配 `label` 文本；需要匹配其他文本时，可在 treeData 中使用其他字段存储，并通过 `treeNodeFilterProp` 指定该字段进行搜索。
+
+</Framework>
+
+<Framework only="solid">
+
+默认对 `label` 值进行搜索（使用字符串的 includes 方法进行匹配，不区分大小写），可通过 `treeNodeFilterProp` 指定其他属性值进行搜索。`label` 只接受文本，节点内容用 `renderLabel` 定制时，搜索仍匹配 `label` 文本；需要匹配其他文本时，可在 treeData 中使用其他字段存储，并通过 `treeNodeFilterProp` 指定该字段进行搜索。
+
+</Framework>
+
+默认搜索结果只会展示叶子结点的路径，想要显示更多的结果，可以设置 `filterLeafOnly` 为 `false`。
+
+<Demo id="searchable" />
+
+### 可搜索的多选
+
+支持多选和搜索同时使用，在这种场景下，可以通过按下 BackSpace 键来删除对应的已选项目。
+
+<Demo id="searchable-multiple" />
+
+可以使用 `filterSorter` 对筛选后的数据进行排序。
+
+<Demo id="filter-sorter" />
+
+<Framework only="react">
+
+如果想要自定义渲染搜索后的选项，可以使用 `filterRender` 实现整行的自定义渲染，函数参数如下：
+
+```tsx
+interface FilterRenderProps {
+    className: string;
+    inputValue: string; // 搜索栏搜索内容
+    disabled: boolean; // 是否禁用
+    data: CascaderData[]; // 搜索结果数据
+    selected: boolean; // 单选时的选中状态
+    checkStatus: {
+        // 多选时的选中状态
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onClick: (e: React.MouseEvent) => void; // 单选点击选中回调
+    onCheck: (e: CheckboxEvent) => void; // 多选点击选中回调，Checkbox 的 onChange 签名
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+如果想要自定义渲染搜索后的选项，可以使用 `#filterItem` 插槽实现整行的自定义渲染，插槽参数的类型为 `CascaderFilterItemSlotProps`：
+
+```tsx
+interface CascaderFilterItemSlotProps {
+    class: ClassValue; // 选项的 class，需要绑定到插槽的根元素上
+    inputValue: string; // 搜索栏搜索内容
+    disabled: boolean; // 是否禁用
+    data: CascaderData[]; // 搜索结果数据，即这条路径上的各级节点
+    selected: boolean; // 单选时的选中状态
+    checkStatus: {
+        // 多选时的选中状态
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onClick: (event: MouseEvent) => void; // 单选点击选中
+    onCheck: (event: CheckboxEvent) => void; // 多选点击选中，绑定到 Checkbox 的 change 事件
+}
+```
+
+插槽只渲染一个元素根时，该元素会自动获得选项的 `id`、`role="option"` 和选中状态，开启 `virtualizeInSearch` 时还会合并行的定位样式；渲染文本或多个节点时，组件会包一层 `li`。插槽根应该是普通元素。
+
+</Framework>
+
+<Framework only="solid">
+
+如果想要自定义渲染搜索后的选项，可以使用 `filterRender` 实现整行的自定义渲染，函数参数如下：
+
+```tsx
+interface CascaderFilterRenderProps {
+    class: string; // 选项的 class，需要绑定到返回的根元素上
+    inputValue: string; // 搜索栏搜索内容
+    disabled: boolean; // 是否禁用
+    data: CascaderData[]; // 搜索结果数据，即这条路径上的各级节点
+    selected: boolean; // 单选时的选中状态
+    checkStatus: {
+        // 多选时的选中状态
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onClick: (e: MouseEvent) => void; // 单选点击选中回调
+    onCheck: (e: CheckboxEvent) => void; // 多选点击选中回调，Checkbox 的 onChange 签名
+}
+```
+
+返回单个元素时，该元素获得选项的 `id`、`role="option"` 和选中状态；返回文本或多个节点时，组件包一层 `li`。
+
+</Framework>
+
+使用示例如下
+
+<Demo id="filter-render" />
+
+如果搜索结果中存在大量 Option，可以通过设置 virtualizeInSearch 开启搜索结果面板的虚拟化来优化性能，virtualizeInSearch 是一个包含下列值的对象：
+
+- height: Option 列表高度值（number，单位 px），缺省 180，与下拉框高度一致
+- width: Option 列表宽度值
+- itemSize: 每行 Option 的高度
+
+<Demo id="virtualize-in-search" />
+
+### 限制标签展示数量
+
+在多选的场景中，利用 maxTagCount 可以限制展示的标签数量，超出部分将以 +N 的方式展示。
+
+使用 showRestTagsPopover 可以设置在超出 maxTagCount 后，hover +N 是否显示 Popover，默认为 false。并且，还可以在 restTagsPopoverProps 属性中配置 Popover。
+
+<Demo id="max-tag-count" />
+
+### 限制选中数量
+
+<Framework only="react">
+
+在多选的场景中，利用 max 可以限制多选选中的数量。超出 max 后将触发 onExceed 回调。
+
+</Framework>
+
+<Framework only="vue">
+
+在多选的场景中，利用 max 可以限制多选选中的数量。超出 max 后将触发 `exceed` 事件。
+
+</Framework>
+
+<Framework only="solid">
+
+在多选的场景中，利用 `max` 可以限制多选选中的数量。超出 `max` 后将触发 `onExceed` 回调。
+
+</Framework>
+
+<Demo id="max" />
+
+### 选择即改变
+
+在单选的情况下，还可以通过设置 `changeOnSelect`，允许选中父级选项。
+
+<Demo id="change-on-select" />
+
+### 自定义显示
+
+可以通过 `displayProp` 设置回填选项显示的属性值，默认为 `label`。
+
+<Demo id="display-prop" />
+
+<Framework only="react">
+
+可以通过设置 `displayRender` 可以设定返回格式。
+
+单选 (`multiple=false`) 时, `displayRender((labelPath: ReactNode[]) => ReactNode)`, 其中 labelPath 是由 label 构成的 path 数组。
+
+多选 (`multiple=true`) 时, `displayRender((item: Entity, index: number) => ReactNode)`, 其中 item 为节点的相关数据，Entity 如下：
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过设置 `displayRender` 设定回填格式。
+
+单选 (`multiple=false`) 时, `displayRender((labelPath: Array<string | number>) => JSX.Element)`, 其中 labelPath 是由 label 构成的 path 数组。
+
+多选 (`multiple=true`) 时, `displayRender((item: Entity, index: number) => JSX.Element)`, 其中 item 为节点的相关数据，类型见下方的 Entity。
+
+</Framework>
+
+<Framework only="vue">
+
+`displayRender` 拆成两个插槽。
+
+单选 (`multiple` 为 false) 时，用 `#display="{ labels, path }"` 设定回填内容，其中 `labels` 是路径上各级节点的 `displayProp` 值，`path` 是路径上的节点数据（值不在 treeData 中时为原始值，与开启 `changeWithObject` 时 `change` 的载荷相同）；插槽内容为空时显示 `placeholder`。
+
+多选 (`multiple` 为 true) 时，用 `#tag="{ entity, index, disabled, onClose }"` 整体替换每个标签，其中 `entity` 为节点的相关数据，`onClose` 取消该节点的选中，需要关闭按钮时把它绑定到自己的 Tag 上。可搜索的多选同样生效。`entity` 的类型为 `CascaderEntity`，如下：
+
+</Framework>
+
+```typescript
+interface Entity {
+    children?: Entity[]; // 子节点列表
+    data: CascaderData; // treedata
+    ind: number; // index
+    key: string; // key
+    level: number; // 节点层级
+    parent?: Entity; // 父节点数据
+    parentKey?: string; // 父节点 key
+    path: string[]; // key 路径
+    pos: string; // 节点在 treeData 中的层级位置，如 '0-0-1'
+    valuePath: string[]; // value 路径
+}
+```
+
+<Framework only="vue">
+
+数据项的 `label` 只接受文本。要在列视图的选项里渲染自定义内容，使用 `#label="{ item }"` 插槽，`item` 为该节点的数据；搜索结果、回填和标签仍显示节点的文本。
+
+</Framework>
+
+<Demo id="display-render" />
+
+### 自定义分隔符
+
+可以使用 `separator` 设置分隔符, 包括：搜索时显示在下拉框的内容以及单选时回显到 Trigger 的内容的分隔符。
+
+<Demo id="separator" />
+
+### 禁用
+
+<Demo id="disabled" />
+
+### 严格禁用
+
+可以使用 disableStrictly 来开启严格禁用。开启严格禁用后，当节点是 disabled 的时候，则不能通过子级或者父级的关系改变选中状态。
+
+以下面的 demo 为例，节点"宁波"开启了严格禁用，因此，当我们改变其父节点"浙江省"的选中状态时，也不会影响到节点"宁波"的选中状态。
+
+<Demo id="disable-strictly" />
+
+### 展示子菜单的时机
+
+可以使用 `showNext` 设置展开 Dropdown 子菜单的触发时机，可选: `click`（默认）、`hover`。
+
+<Demo id="show-next" />
+
+### 点击选中
+
+在多选模式下，默认情况下点击非叶子节点不会触发选中。你可以通过 `clickToSelect` 开启点击任意节点即选中的功能。
+
+这个 API 在配合 `showNext="hover"` 使用时特别有用：鼠标悬浮展开子菜单，点击则选中当前节点。
+
+<Demo id="click-to-select" />
+
+### 在顶部/底部渲染附加项
+
+<Framework only="react">
+
+我们在级联选择器的顶部、底部分别预留了插槽，你可以通过 `topSlot` 或 `bottomSlot` 来设置。
+
+</Framework>
+
+<Framework only="vue">
+
+我们在级联选择器的顶部、底部分别预留了插槽，你可以通过 `#topSlot` 或 `#bottomSlot` 插槽来设置。
+
+</Framework>
+
+<Framework only="solid">
+
+我们在级联选择器的顶部、底部分别预留了插槽，你可以通过 `topSlot` 或 `bottomSlot` 来设置。
+
+</Framework>
+
+<Demo id="slot" />
+
+### 受控
+
+<Framework only="react">
+
+传入 `value` 时即为受控组件，可以配合 `onChange` 使用。
+
+</Framework>
+
+<Framework only="vue">
+
+用 `v-model` 绑定 `modelValue` 即为受控组件，`change` 事件同样会触发。`modelValue` 需要整体替换，就地修改受控数组不会被识别；传入 `undefined` 时回到非受控，并清空选中项。
+
+</Framework>
+
+<Framework only="solid">
+
+传入 `value` 时即为受控组件，可以配合 `onChange` 使用。就地修改受控数组不会被识别，更新选中项时需要传入新的数组。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 自动合并 value
+
+在多选（multiple=true）场景中，当我们选中祖先节点时，如果希望 value 不包含它对应的子孙节点，则可以通过 `autoMergeValue` 来设置，默认为 true。当 autoMergeValue 和 leafOnly 同时开启时，后者优先级更高。
+
+<Demo id="auto-merge-value" />
+
+### 仅叶子节点
+
+<Framework only="react">
+
+在多选时，可以通过开启 leafOnly 来设置 value 只包含叶子节点，即显示的 Tag 和 onChange 的参数 value 只包含 value。
+
+</Framework>
+
+<Framework only="vue">
+
+在多选时，可以通过开启 leafOnly 来设置 value 只包含叶子节点，即显示的 Tag 和 `v-model`、`change` 事件的值只包含叶子节点。
+
+</Framework>
+
+<Framework only="solid">
+
+多选时，可以通过开启 leafOnly 来设置 value 只包含叶子节点，即显示的 Tag 和 `onChange` 的参数 value 只包含叶子节点。
+
+</Framework>
+
+<Demo id="leaf-only" />
+
+### 节点选中关系
+
+多选时，可以使用 `checkRelation` 来设置节点之间选中关系的类型，可选：'related'（默认）、'unRelated'。当选中关系为 'unRelated' 时，意味着节点之间的选中互不影响。
+
+<Demo id="check-relation" />
+
+### 动态更新数据
+
+<Framework only="vue">
+
+`treeData` 可以整体替换，也可以就地修改响应式数据（如 `push`、给 `children` 赋值），都会被识别并重新计算；内容相同的新数组不会重置展开和选中状态。
+
+</Framework>
+
+<Framework only="solid">
+
+`treeData` 整体替换即可更新数据；内容相同的新数组不会重置展开和选中状态。
+
+</Framework>
+
+<Demo id="dynamic-data" />
+
+### 异步加载数据
+
+可以使用 loadData 实现异步加载数据
+
+**不能与搜索同时使用**
+
+<Demo id="load-data" />
+
+### 远程搜索
+
+<Framework only="react">
+
+Cascader 支持远程搜索。设置 `remote` 后，搜索输入不再走本地匹配，而是仅触发 `onSearch` 回调，由你根据输入异步拉取 `treeData`。这与 Select 的 `remote` 行为一致。
+
+</Framework>
+
+<Framework only="vue">
+
+**v>=2.97.0** 起 Cascader 支持远程搜索。设置 `remote` 后，搜索输入不再走本地匹配，而是仅触发 `search` 事件，由你根据输入异步拉取 `treeData`。这与 Select 的 `remote` 行为一致。
+
+</Framework>
+
+<Framework only="solid">
+
+设置 `remote` 后，搜索输入不再走本地匹配，而是仅触发 `onSearch` 回调，由你根据输入异步拉取 `treeData`。这与 Select 的 `remote` 行为一致。
+
+</Framework>
+
+<Notice title='使用说明'>
+
+搜索时建议自行处理以下几点：
+
+- **防抖（debounce）**：避免每次按键都打请求，常见做法是用 `es-toolkit` 的 `debounce` 包裹搜索逻辑（如 200~300ms）。
+- **竞态保护**：用一个递增 token 或 `AbortController` 丢弃过期请求结果，避免后发先到时旧响应覆盖新响应。
+- **loading 提示**：在请求期间通过外层 `Spin` 或简单的提示元素告知用户「加载中」，否则用户会看到「暂无数据」误以为无结果。
+- **初始 / 空输入处理**：输入被清空时把 `treeData` 还原为初始数据，避免空查询拉数据。
+
+</Notice>
+
+<Demo id="remote-search" />
+
+### 超长列表
+
+当你的数据结构层级特别深时，Cascader下拉菜单可能会超出屏幕，此时我们建议为下拉菜单设置 overflow-x: auto 以及一个合适的 width 宽度（ 建议以N+0.5列的宽度为准，最右侧显示半列，以给用户一种右侧尚有待展开项，可以水平方向滚动的视觉暗示）
+
+<Demo id="long-list" />
+
+```css
+.components-cascader-demo {
+    .semi-cascader-option-lists {
+        max-width: 510px;
+        overflow-x: auto;
+    }
+}
+```
+
+### 自定义 Trigger
+
+<Framework only="react">
+
+如果默认的触发器样式满足不了你的需求，可以用`triggerRender`自定义选择框的展示
+
+triggerRender 入参如下
+
+```typescript
+interface TriggerRenderProps {
+    /* Cascader 的 props */
+    componentProps: CascaderProps;
+    /* 是否禁用 Cascader */
+    disabled: boolean;
+    /**
+     * 已选中的 node 在 treeData 中的层级位置，如下例子，
+     * 当选中浙江省-杭州市-萧山区时，此处 value 为 '0-0-1'
+     */
+    value?: string | Set<string>;
+    /* 展开时为搜索词；可搜索的单选收起时为已选路径的展示文本，设置 displayRender 时为其返回值 */
+    inputValue: ReactNode;
+    /**
+     * 用于更新 input 框值的函数，当你在 triggerRender 自定义的
+     * Input 组件值更新时，你应该调用该函数，用于向 Cascader 内部
+     * 同步状态, 使用时需要设置 filterTreeNode 参数非 false
+     */
+    onSearch: (inputValue: string) => void;
+    /* 用于清空值的函数，入参为点击事件 */
+    onClear: (e: React.MouseEvent) => void;
+    /* Placeholder */
+    placeholder?: string;
+    /* 用于删除单个 item，入参为该节点在 treeData 中的层级位置（与 value 的格式相同） */
+    onRemove: (pos: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+如果默认的触发器样式满足不了你的需求，可以用 `#trigger` 插槽自定义选择框的展示
+
+`#trigger` 的插槽参数如下，类型为 `CascaderTriggerSlotProps`
+
+```typescript
+interface CascaderTriggerSlotProps {
+    /* Cascader 的 props */
+    componentProps: CascaderProps;
+    /* 是否禁用 Cascader */
+    disabled: boolean;
+    /**
+     * 已选中的 node 在 treeData 中的层级位置，如下例子，
+     * 当选中浙江省-杭州市-萧山区时，此处 value 为 '0-0-1'；多选时为 Set<string>
+     */
+    value: string | undefined | Set<string>;
+    /* 展开时为搜索词；可搜索的单选收起时为已选路径的展示文本（各级文本用 separator 连接） */
+    inputValue: string;
+    /**
+     * 用于更新 input 框值的函数，当你在 #trigger 自定义的
+     * Input 组件值更新时，你应该调用该函数，用于向 Cascader 内部
+     * 同步状态, 使用时需要设置 filterTreeNode 参数非 false
+     */
+    onSearch: (inputValue: string) => void;
+    /* 用于清空值的函数；绑定在触发器内的控件上时传入点击事件，避免这次点击同时打开下拉 */
+    onClear: (event?: MouseEvent) => void;
+    /* Placeholder */
+    placeholder?: string;
+    /* 用于删除单个 item，入参为该节点在 treeData 中的层级位置（与 value 的格式相同） */
+    onRemove: (pos: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+如果默认的触发器样式满足不了你的需求，可以用 `triggerRender` 自定义选择框的展示。
+
+`triggerRender` 的入参类型为 `CascaderTriggerRenderProps`，如下：
+
+```tsx
+interface CascaderTriggerRenderProps {
+    /* Cascader 的 props，不含 ref */
+    componentProps: CascaderProps;
+    /* 是否禁用 Cascader */
+    disabled: boolean;
+    /**
+     * 已选中的 node 在 treeData 中的层级位置，如下例子，
+     * 当选中浙江省-杭州市-萧山区时，此处 value 为 '0-0-1'；多选时为 Set<string>
+     */
+    value: string | undefined | Set<string>;
+    /* 展开时为搜索词，收起时为已选路径的展示文本 */
+    inputValue: JSX.Element;
+    /**
+     * 用于更新 input 框值的函数，当你在 triggerRender 自定义的
+     * Input 组件值更新时，你应该调用该函数，用于向 Cascader 内部
+     * 同步状态, 使用时需要设置 filterTreeNode 参数非 false
+     */
+    onSearch: (inputValue: string) => void;
+    /* 用于清空值的函数；绑定在触发器内的控件上时传入点击事件，避免这次点击同时打开下拉 */
+    onClear: (event?: MouseEvent) => void;
+    /* Placeholder */
+    placeholder?: string;
+    /* 用于删除单个 item，入参为该节点在 treeData 中的层级位置（与 value 的格式相同） */
+    onRemove: (pos: string) => void;
+}
+```
+
+读取入参时保持 `props.value` 这样的访问形式，不要解构，否则会丢失响应。
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+## API 参考
+
+### Cascader
+
+<Framework only="react">
+
+<CascaderReactApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上（见 [ARIA](#aria)），其余未声明的原生属性（如 `data-*`、`onClick`）落在根元素（触发器）上。`onFocus`、`onBlur` 在打开、关闭下拉时触发，不是 DOM 焦点事件。
+
+</Framework>
+
+<Framework only="vue">
+
+<CascaderVueApi />
+
+Vue 版的 Cascader 没有 `className` 属性：`class`、`style` 和 `data-*` 等未声明的属性落在根元素（触发器）上，`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上（见 [ARIA](#aria)）。`change`、`select`、`focus`、`blur`、`keydown` 是组件的事件，会遮住根元素上同名的原生事件；`focus`、`blur` 在打开、关闭下拉时触发，不是 DOM 焦点事件。
+
+</Framework>
+
+<Framework only="solid">
+
+<CascaderSolidApi />
+
+Cascader 把 `class`、`style`、`ref` 与未声明的原生属性落在根元素（触发器）上，`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上（见 [ARIA](#aria)）。`onFocus`、`onBlur` 在打开、关闭下拉时触发，不是 DOM 焦点事件。
+
+</Framework>
+
+### CascaderData
+
+<Framework only="react">
+
+| 属性     | 说明               | 类型           | 默认值 |
+| -------- | ------------------ | -------------- | ------ |
+| children | 子节点             | CascaderData[] | -      |
+| disabled | 不可选状态         | boolean        | -      |
+| isLeaf   | 叶子节点           | boolean        | -      |
+| label    | 展示的文本（必填） | ReactNode      | -      |
+| loading  | 正在加载           | boolean        | -      |
+| value    | 属性值（必填）     | string\|number | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性     | 说明                                             | 类型           | 默认值 |
+| -------- | ------------------------------------------------ | -------------- | ------ |
+| children | 子节点                                           | CascaderData[] | -      |
+| disabled | 不可选状态                                       | boolean        | -      |
+| isLeaf   | 叶子节点                                         | boolean        | -      |
+| label    | 展示的文本（必填），自定义内容使用 `#label` 插槽 | string\|number | -      |
+| loading  | 正在加载                                         | boolean        | -      |
+| value    | 属性值（必填）                                   | string\|number | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性     | 说明                                           | 类型           | 默认值 |
+| -------- | ---------------------------------------------- | -------------- | ------ |
+| children | 子节点                                         | CascaderData[] | -      |
+| disabled | 不可选状态                                     | boolean        | -      |
+| isLeaf   | 叶子节点                                       | boolean        | -      |
+| label    | 展示的文本（必填），自定义内容用 `renderLabel` | string\|number | -      |
+| loading  | 正在加载                                       | boolean        | -      |
+| value    | 属性值（必填）                                 | string\|number | -      |
+
+</Framework>
+
+## Methods
+
+<Framework only="solid">
+
+Cascader 的 `ref` 指向触发器元素，该元素上挂有 `open()`、`close()`、`focus()`、`blur()` 和 `search(value)` 方法，类型为 `CascaderElement`。`search` 按输入了该值来搜索，需同时设置 `filterTreeNode` 开启搜索，`searchPosition` 为 `custom` 时自定义展示搜索框。
+
+```tsx
+import { Cascader, type CascaderElement } from '@fibrae/semi-ui-solid';
+
+let cascader: CascaderElement | undefined;
+const open = () => cascader?.open();
+
+<Cascader ref={(node) => (cascader = node)} treeData={treeData} />;
+```
+
+</Framework>
+
+<Framework only="react">
+
+通过 ref 拿到的 `CascaderHandle` 上挂有 open、close、focus、blur 与 search 方法，可以用来实现某些特殊交互，各方法的参数与说明见上方 API 参考。
+
+</Framework>
+
+<Framework only="vue">
+
+Cascader 通过模板 ref 暴露 `open()`、`close()`、`focus()`、`blur()` 和 `search(value)`，类型为 `CascaderHandle`。`search` 按输入了该值来搜索，需同时设置 `filterTreeNode` 开启搜索，`searchPosition` 为 `custom` 时自定义展示搜索框。
+
+```vue
+<script setup lang="ts">
+    import { useTemplateRef } from 'vue';
+    import { Cascader } from '@fibrae/semi-ui-vue';
+    import type { CascaderHandle } from '@fibrae/semi-ui-vue';
+
+    const cascader = useTemplateRef<CascaderHandle>('cascader');
+    const open = () => cascader.value?.open();
+</script>
+
+<template>
+    <Cascader ref="cascader" :treeData="treeData" />
+</template>
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Cascader 支持传入 `aria-label`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-labelledby`、`aria-required` 来表示该 Cascader 的相关信息;
+
+<Framework only="vue">
+
+- 这些 `aria-*` 属性落在当前的 combobox 上：不可搜索时是根元素（触发器），可搜索时是搜索框，多选且搜索框在触发器内时是标签输入框;
+
+</Framework>
+
+<Framework only="solid">
+
+- 这些 `aria-*` 属性落在当前的 combobox 上：不可搜索时是根元素（触发器），可搜索时是搜索框，多选且搜索框在触发器内时是标签输入框;
+
+</Framework>
+
+- combobox 的名称按优先级取：`aria-labelledby`、`aria-label`、实际渲染出来的 insetLabel（combobox 的 `aria-labelledby` 指向它，未传 `insetLabelId` 时组件生成 id；有 prefix 时 insetLabel 不渲染，也不作名称），都没有时为语言包中的「级联选择」。下拉中的 tree 或搜索结果 listbox 使用同一个名称来源;
+- 按 ARIA 1.2 的 combobox 写法，任一时刻只有一个元素是 combobox，`aria-controls` 指向下拉中的列表，下拉与 combobox 同名。不可搜索时触发器是 select-only combobox，已选路径是它的值；可搜索时搜索框本身是 combobox，带 `aria-autocomplete="list"`，触发器不再有角色和 Tab 停靠点。单选的搜索框只在搜索时出现，未搜索时触发器仍是 combobox；搜索框在输入前为空，已选路径以 `aria-describedby` 关联为它的描述；搜索中选中结果后焦点回到触发器;
+- 各列合起来是一棵 `role="tree"`：选项为 `treeitem`，带 `aria-level`（所在列）、`aria-setsize`、`aria-posinset`、`aria-disabled`，可展开的选项带 `aria-expanded`；单选时用 `aria-selected`，多选时用 `aria-checked`（半选为 `mixed`）;
+
+<Framework only="react">
+
+- 搜索结果是 `role="listbox"`，选项为 `option`，用 `aria-selected` 表示选中，多选时表示勾选。`filterRender` 返回的元素会被加上 `id`、`role="option"` 和上述状态;
+
+</Framework>
+
+<Framework only="vue">
+
+- 搜索结果是 `role="listbox"`，选项为 `option`，用 `aria-selected` 表示选中，多选时表示勾选。`#filterItem` 只渲染一个元素根时，该元素会被加上 `id`、`role="option"` 和上述状态，否则组件包一层带这些属性的 `li`;
+
+</Framework>
+
+<Framework only="solid">
+
+- 搜索结果是 `role="listbox"`，选项为 `option`，用 `aria-selected` 表示选中，多选时表示勾选。`filterRender` 返回单个元素时，该元素会被加上 `id`、`role="option"` 和上述状态，否则组件包一层带这些属性的 `li`;
+
+</Framework>
+
+- 选项前的勾选图标和多选复选框只是状态的图示，对读屏软件隐藏，也不接收焦点。
+
+### 键盘交互
+
+Cascader 按 [WAI-ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) 处理键盘：焦点始终留在触发器或搜索框上，`aria-activedescendant` 指向当前选项，当前选项显示焦点环。下拉刚打开时没有当前选项。
+
+- 下拉关闭时：`ArrowDown`、`ArrowUp`、`Enter` 打开下拉；不可搜索时，`Space` 也打开下拉，`Home`、`End` 打开下拉并移到第一列的第一个、最后一个选项。可搜索时，`Space`、`Home`、`End` 用于编辑文字
+- `Enter`：有当前选项时等同点击它，多选时勾选或取消勾选；禁用选项不响应
+- `ArrowDown`、`ArrowUp`：在当前选项所在的列（或搜索结果）中移到下一个、上一个选项，第一次按 `ArrowDown` 移到第一列的第一个选项；`Home`、`End`：移到这一列的第一个、最后一个选项
+- `ArrowRight`：展开当前选项，显示它的下一列；已展开时移到下一列的第一个选项（RTL 下与 `ArrowLeft` 互换）
+- `ArrowLeft`：收起展开的当前选项；否则移到上一列的父选项
+- `Space`：有当前选项时与 `Enter` 相同（焦点在搜索框里时用于输入）
+- 输入字符：下拉打开时，从当前选项往后，移到已显示的各列中第一个以输入内容开头的选项，各列保持不变；快速连续输入的字符合成一个搜索词。焦点在搜索框里时字符用于输入；下拉关闭时不响应
+- `Esc`：关闭下拉
+
+焦点在搜索框里且已输入文字时，只有 `ArrowDown`、`ArrowUp`、`Enter` 用于移动和选择，其余按键用于编辑文字。方向键只移动当前选项，不像悬停那样自动展开下一列，也不触发 `loadData`；`ArrowRight` 展开时才加载。
+
+`showClear` 开启、有已选值或搜索文本且未禁用时，触发器内渲染清除按钮。它是原生 `button`，名称为语言包中的「清空已选值」，在 hover、下拉打开或焦点位于 Cascader 内时显示。从触发器或搜索框按 `Tab` 移到清除按钮，`Enter` 或 `Space` 清空，效果与鼠标点击相同，清空后焦点回到触发器或搜索框。多选时也可在搜索框中用 `Backspace` 删除标签。
+
+## 文案规范
+
+- 选择器选项
+    - 如果没有默认选项，就使用 "Select" 做占位文案
+    - 选项要按首字母顺序或者其他有逻辑的排列顺序，使用户更好地找到选项
+    - 使用语句书写规范（首字母大写，其余小写），避免在句尾使用逗号和分号
+    - 清晰表达出选项所表示的选择目的
+
+## 设计变量
+
+<DesignToken />

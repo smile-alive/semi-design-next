@@ -1,0 +1,26 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allDayEventsRender | Custom area for events at the top of the day, range and week views. `events` is the whole array that was passed in, so the function filters it itself. | <ApiType detail={"(events: EventObject[]) => React.ReactNode"}>Type</ApiType> | - |
+| dateGridRender | Custom content of a date cell or column, with the `dateString` (`date.toString()`) and the date. Use absolute positioning for elements. | <ApiType detail={"(dateString?: string, date?: Date) => React.ReactNode"}>Type</ApiType> | - |
+| displayValue | Display date. When omitted it is the current date and updates at midnight. | `Date` | - |
+| events | Events to render, see Event Object. | `EventObject[]` | `[]` |
+| header | Custom header content. | `React.ReactNode` | - |
+| height | Height of the calendar; a number is in pixels. | `number \| string` | `600` |
+| markWeekend | Shows weekend columns in grey to tell them from weekdays. | `boolean` | `false` |
+| minEventHeight | Minimum height in pixels of events in the day, range and week views. Without it the height has no minimum. | `number` | - |
+| mode | View mode: `day`, `week`, `month` or `range`. The view switches as soon as it changes. | `'day' \| 'week' \| 'month' \| 'range'` | `"week"` |
+| onClick | Called when a date cell is clicked, with the event and the date of the cell. The unit is half an hour in the day, week and range views and one day in the month view. | <ApiType detail={"(e: React.MouseEvent, value: Date) => void"}>Type</ApiType> | - |
+| onClose | Called when the card showing all events of a day closes in the month view: the click event for the close button or a second click on "N more", the keyboard event for Esc, and `null` for a click outside. | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent \u007c null) => void"}>Type</ApiType> | - |
+| onMoreClick | Called when a click on "N more" opens the card in the month view, with the event, the date and the number of collapsed events. It is not called when a second click closes the card. | <ApiType detail={"(e: React.MouseEvent, date: Date, remaining: number) => void"}>Type</ApiType> | - |
+| range | Date range shown in `range` mode, left-closed and right-open. Required in `range` mode. | `Date[]` | - |
+| ref | Reference to the root `div` of the current view. It points to the new view's root after `mode` changes. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| renderDateDisplay | Custom date text: the column titles of the week and range views and every cell of the month view. The day view does not use it. | <ApiType detail={"(date: Date) => React.ReactNode"}>Type</ApiType> | - |
+| renderTimeDisplay | Custom time text in the day, week and range views; `time` is the hour. | <ApiType detail={"(time: number) => React.ReactNode"}>Type</ApiType> | - |
+| scrollTop | Default scroll offset of the content in the day, week and range views. | `number` | `400` |
+| showCurrTime | Shows the red line of the current time in the day, week and range views. | `boolean` | `true` |
+| weekStartsOn | Day of the week that starts the week, `0` for Sunday, `1` for Monday and so on. Applies to the month and week views. | `weekStartsOnEnum` | `0` |
+| width | Width of the calendar; a number is in pixels. | `number \| string` | - |

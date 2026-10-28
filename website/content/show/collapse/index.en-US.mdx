@@ -1,0 +1,283 @@
+---
+order: 67
+title: Collapse
+icon: doc-accordion
+brief: Display content areas can be expanded or folded.
+---
+
+import CollapseReactApi from './api/collapse.react.en-US.mdx';
+import CollapsePanelReactApi from './api/collapse-panel.react.en-US.mdx';
+import CollapseVueApi from './api/collapse.vue.en-US.mdx';
+import CollapsePanelVueApi from './api/collapse-panel.vue.en-US.mdx';
+import CollapseSolidApi from './api/collapse.solid.en-US.mdx';
+import CollapsePanelSolidApi from './api/collapse-panel.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Collapse } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Collapse } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Collapse.Panel` can also be imported by name as `CollapsePanel`. The `header` and `extra` of a Panel are slots (`#header`, `#extra`). A Panel can only be used inside Collapse, otherwise it throws a descriptive error.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Collapse, Tag } from '@fibrae/semi-ui-solid';
+```
+
+`Collapse.Panel` can only be used inside Collapse, otherwise it throws a descriptive error.
+
+</Framework>
+
+### Basic Usage
+
+You can expand multiple panels at the same time, and use `defaultActiveKey` to set the panel to expand by default.
+
+<Demo id="basic" />
+
+### Accordion
+
+Use `accordion` to restrict one panel only to be expanded at one time.
+
+<Demo id="accordion" />
+
+### Disable Panel
+
+Use `disabled` to disabled panel.
+
+<Demo id="disabled" />
+
+### Hide The Panel Icon
+
+Use `showArrow` to hide the panel icon.
+
+<Demo id="hide-arrow" />
+
+### Custom Icon
+
+<Framework only="react">
+
+You can use `expandIcon` to set the expanding icon and `collapseIcon` for folded icon. Pass `null` to show no icon.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#expandIcon` slot of Collapse to set the expanding icon and the `#collapseIcon` slot for the folded icon. A slot that is present but empty shows no icon. Known limitation: when the caller adds or removes a whole one of these slots with `v-if`, a panel may keep the old icon.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `expandIcon` to set the expanding icon and `collapseIcon` for folded icon, given as elements such as `<IconPlus />`. Pass `null` to show no icon.
+
+</Framework>
+
+The expanding icon is shown while a panel is collapsed (it can be expanded), the folded icon while it is expanded.
+
+<Demo id="custom-icon" />
+
+### Custom Extra Content on the Right-upper Corner
+
+<Framework only="react">
+
+You can use `extra` to set extra content on the right-upper corner.
+
+`header` is rendered inside the panel's toggle button, so it may only hold text, icons and other non-interactive content. `extra` sits beside the button in the same row and may hold controls such as buttons or inputs, whether `header` is a string or a ReactNode.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#extra` slot to set extra content on the right-upper corner.
+
+`#header` is rendered inside the panel's toggle button, so it may only hold text, icons and other non-interactive content. `#extra` sits beside the button in the same row and may hold controls such as buttons or inputs.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `extra` to set extra content on the right-upper corner.
+
+`header` is rendered inside the panel's toggle button, so it may only hold text, icons and other non-interactive content. `extra` sits beside the button in the same row and may hold controls such as buttons or inputs, whether `header` is a string or a JSX element.
+
+</Framework>
+
+<Demo id="extra" />
+
+## API reference
+
+### Collapse
+
+<Framework only="react">
+
+<CollapseReactApi />
+
+Other native attributes (such as `id` and `aria-*`) land on the root element (`.semi-collapse`).
+
+</Framework>
+
+<Framework only="vue">
+
+<CollapseVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the root element of Collapse. The `activeKey` of `update:activeKey` and `change` is always a `string[]`: when the initial value of `v-model:activeKey` is a string, it becomes an array after the first change.
+
+</Framework>
+
+<Framework only="solid">
+
+<CollapseSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `id` and `aria-*`) land on the root element of Collapse (`.semi-collapse`). The first argument of `onChange` is always a `string[]`, even when `activeKey` or `defaultActiveKey` is passed as a string.
+
+</Framework>
+
+### Collapse.Panel
+
+<Framework only="react">
+
+<CollapsePanelReactApi />
+
+Other native attributes (such as `id` and `aria-*`) land on the root element (`.semi-collapse-item`).
+
+</Framework>
+
+<Framework only="vue">
+
+<CollapsePanelVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the root element of the Panel (`.semi-collapse-item`). Panel does not read global defaults.
+
+</Framework>
+
+<Framework only="solid">
+
+<CollapsePanelSolidApi />
+
+`class`, `style`, `ref` and native attributes and events land on the root element of the Panel (`.semi-collapse-item`). Panel does not read global defaults.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Each panel header follows the WAI-ARIA Accordion pattern: a native `button` wrapped in an element with `role="heading"` and `aria-level="3"`. The button's accessible name is the `header` content.
+- The button carries `aria-expanded`, and `aria-controls` pointing at the panel content whenever that content is still in the DOM: always when open, and when closed once `keepDOM` is in effect (including when `keepDOM` is only set in the global defaults of Collapsible) and the content has been rendered, for example a panel opened once and closed again with `keepDOM` and `lazyRender`. A closed panel that `lazyRender` has not rendered yet has no content and no `aria-controls`.
+- The panel content has `role="region"` and is labelled by the button through `aria-labelledby`; closed content kept by `keepDOM` is `inert`.
+- The expand icon is decorative and has `aria-hidden="true"`; `extra` is outside the button.
+- A `disabled` panel uses the button's native `disabled` attribute.
+
+### Keyboard and Focus
+
+- Each panel header button is one Tab stop; disabled panels are skipped.
+- `Enter` or `Space` on the focused button expands or collapses the panel, also when `clickHeaderToExpand` is `false`.
+- Controls inside `extra` are Tab stops of their own.
+
+## Content Guidelines
+
+The essence of the folding panel is that the card container adds the function of folding and unfolding, so the copywriting specification of the folding panel needs to be the same as the [Card copywriting specification](/en-US/react/show/card#content-guidelines)
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- ##### Why is the data in Form cleared when using Collapse?
+
+    When Collapse is collapsed, the related DOM is destroyed and so are the fields data stored in Form. You could set `keepDOM` of Collapse to true to keep the DOM from being destroyed.
+
+- ##### The whole header row is a click hot zone for folding and expanding. If a control (such as Input) is placed in the row, clicking it collapses/expands the panel. How to avoid it?
+    Put the control in `extra`, not in `header`: `header` is inside the toggle button and must not contain controls. With `clickHeaderToExpand` set to false only the toggle button and the icon respond to clicks; otherwise stop the click from bubbling to the header row in the control's click handler, or in a wrapping element's click handler if the control does not provide the event object, as in the example below.
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Collapse, Input } from '@fibrae/semi-ui-react';
+
+() => (
+    <Collapse>
+        <Collapse.Panel
+            header="Panel header"
+            extra={
+                <span onClick={(e) => e.stopPropagation()}>
+                    <Input aria-label="Panel note" />
+                </span>
+            }
+            itemKey="1"
+        >
+            <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+        </Collapse.Panel>
+    </Collapse>
+);
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Collapse, Input } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <Collapse>
+        <Collapse.Panel itemKey="1">
+            <template #header>Panel header</template>
+            <template #extra>
+                <span @click.stop>
+                    <Input aria-label="Panel note" />
+                </span>
+            </template>
+            <p>Hi, bytedance dance dance. This is the docsite of Semi UI.</p>
+        </Collapse.Panel>
+    </Collapse>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Collapse, Input } from '@fibrae/semi-ui-solid';
+
+() => (
+    <Collapse>
+        <Collapse.Panel
+            header="Panel header"
+            extra={
+                <span onClick={(e) => e.stopPropagation()}>
+                    <Input aria-label="Panel note" />
+                </span>
+            }
+            itemKey="1"
+        >
+            <p>Hi, bytedance dance dance. This is the docsite of Semi UI. </p>
+        </Collapse.Panel>
+    </Collapse>
+);
+```
+
+</Framework>

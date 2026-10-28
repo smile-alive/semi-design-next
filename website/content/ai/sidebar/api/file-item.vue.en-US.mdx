@@ -1,0 +1,27 @@
+**Props**
+
+| Property       | Description                                                                                                                                     | Type                     | Default     |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------- |
+| name           | File name, used as the accessible name of the editing area; later changes are synced to the editor.                                             | `string`                 | `undefined` |
+| content        | Rich text as HTML. Later changes are synced to the editor; content equal to the editor's is not reset, and syncing does not emit contentChange. | `string`                 | `undefined` |
+| editable       | Whether it is editable; later changes are synced to the editor.                                                                                 | `boolean`                | `true`      |
+| extensions     | tiptap extensions appended to the built-in ones, read when the editor is created; later changes have no effect.                                 | `Extensions`             | `[]`        |
+| imgUploadProps | Image upload options, read when the editor is created; later changes have no effect.                                                            | `ImageUploadNodeOptions` | `undefined` |
+
+**Events**
+
+| Event         | Description                                      | Callback parameters |
+| ------------- | ------------------------------------------------ | ------------------- |
+| contentChange | Emitted after an edit, with the content as HTML. | `[content: string]` |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,78 @@
+{
+    "pagination": {
+        "source": "packages/semi-ui-vue/src/pagination/pagination.vue",
+        "props": {
+            "total": { "zh-CN": "总条数。", "en-US": "Total number of items." },
+            "showTotal": {
+                "zh-CN": "是否显示总页数，size 为 small 时不显示。",
+                "en-US": "Whether to show the total number of pages; not shown when size is small."
+            },
+            "pageSize": {
+                "zh-CN": "每页条数，未传时取 pageSizeOpts 的第一项。非严格受控：每页条数选择器的选择保留在组件内部，只有该属性变为与当前不同的值时才会覆盖它，并回到第 1 页（受控时回到 currentPage）；用 v-model:pageSize 回写选择器的结果不会重置页码。",
+                "en-US": "Number of items per page; falls back to the first item of pageSizeOpts. Not strictly controlled: the choice made in the size changer is kept inside, and only a change of this prop to a value other than the current one overrides it and goes back to page 1 (to currentPage when controlled). Writing the changer's result back with v-model:pageSize does not reset the page."
+            },
+            "pageSizeOpts": {
+                "zh-CN": "每页条数选择器的可选值；当前每页条数不在其中时按大小插入选项。",
+                "en-US": "Options of the size changer; the current page size is inserted in order when it is not among them."
+            },
+            "size": { "zh-CN": "尺寸，可选 default 或 small。", "en-US": "Size: default or small." },
+            "currentPage": {
+                "zh-CN": "当前页码，对应 v-model:currentPage；传入后分页器受控，不传（undefined）时由组件自己管理。",
+                "en-US": "Current page, bound with v-model:currentPage. Once set the pagination is controlled; when undefined the component manages the page itself."
+            },
+            "defaultCurrentPage": { "zh-CN": "非受控时的初始页码。", "en-US": "Initial page when not controlled." },
+            "showSizeChanger": {
+                "zh-CN": "是否显示每页条数选择器，size 为 small 时不生效。开启后 hideOnSinglePage 不再生效。",
+                "en-US": "Whether to show the size changer; has no effect when size is small. When it is shown, hideOnSinglePage no longer takes effect."
+            },
+            "showQuickJumper": {
+                "zh-CN": "是否显示快速跳转输入框，总页数小于 2 时禁用。",
+                "en-US": "Whether to show the quick jump input; disabled when there are fewer than 2 pages."
+            },
+            "popoverPosition": {
+                "zh-CN": "省略页码浮层与每页条数下拉的位置。未传时每页条数下拉为 bottomLeft（RTL 下 bottomRight），省略页码浮层使用 Popover 的默认位置 bottom；size 为 small 时不使用。",
+                "en-US": "Position of the omitted pages popover and the size changer dropdown. When omitted the size changer dropdown uses bottomLeft (bottomRight in RTL) and the omitted pages popover uses the Popover default bottom; not used by the small size."
+            },
+            "hideOnSinglePage": {
+                "zh-CN": "总页数小于 2 时是否隐藏分页器；每页条数选择器显示时不生效。",
+                "en-US": "Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown."
+            },
+            "hoverShowPageSelect": {
+                "zh-CN": "仅 size 为 small 时生效：悬停或聚焦页码文字时打开页码列表。",
+                "en-US": "Only for size small: the page list opens when the page text is hovered or focused."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether disabled." },
+            "preventPageChangeOnPageSizeChange": {
+                "zh-CN": "切换每页条数时保持当前页码，新页码由使用方在 pageSizeChange 中决定。",
+                "en-US": "Keeps the current page when the page size changes; the consumer picks the page in pageSizeChange."
+            }
+        },
+        "events": {
+            "update:currentPage": {
+                "zh-CN": "页码变化时触发，用于 v-model:currentPage。",
+                "en-US": "Emitted when the page changes, for v-model:currentPage."
+            },
+            "update:pageSize": {
+                "zh-CN": "每页条数变化时触发，用于 v-model:pageSize。",
+                "en-US": "Emitted when the page size changes, for v-model:pageSize."
+            },
+            "pageChange": { "zh-CN": "页码变化时触发。", "en-US": "Emitted when the page changes." },
+            "pageSizeChange": { "zh-CN": "每页条数变化时触发。", "en-US": "Emitted when the page size changes." },
+            "change": {
+                "zh-CN": "页码或每页条数变化时触发。",
+                "en-US": "Emitted when the page or the page size changes."
+            }
+        },
+        "slots": {
+            "prevText": {
+                "zh-CN": "替换上一页按钮的图标。纯文本时按钮以该文字命名，其他内容（图标、元素）仍使用语言包的名称；插槽为空时保留默认图标与语言包名称。",
+                "en-US": "Replaces the previous page icon. A plain text names the button, and any other content (an icon, an element) keeps the locale name; an empty slot keeps the default icon and the locale name."
+            },
+            "nextText": {
+                "zh-CN": "替换下一页按钮的图标，命名规则同 prevText。",
+                "en-US": "Replaces the next page icon, named the same way as prevText."
+            }
+        },
+        "exposed": {}
+    }
+}

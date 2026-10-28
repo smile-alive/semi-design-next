@@ -1,0 +1,98 @@
+---
+title: Dark Mode
+icon: doc-darkmode
+order: 6
+---
+
+import Compare from './figures/compare.react.tsx';
+
+## Dark mode
+
+🤩 Every Semi color variable has a light and a dark value, which can be easily switched.  
+🌒 Semi also supports the use of dark mode in a partial area of the page.
+
+<Compare
+    dark="/assets/dsm/dark.png"
+    light="/assets/dsm/light.png
+"
+    client:only="react"
+></Compare>
+
+## Recommended settings
+
+Semi will automatically mount the global color palette on the root element (`:root`). We have built in some commonly used CSS Tokens. For detailed Token details, please refer to [Design Variables](/en-US/react/basic/tokens) We recommend that you configure `color` and `background-color` on the body, your business components can automatically inherit the default background color and text color from the body, and adaptive light/dark color switching
+
+```css
+// css
+body {
+    color: var(--semi-color-text-0);
+    background-color: var(--semi-color-bg-0);
+}
+```
+
+## How to switch
+
+To use Dark Mode, you could simply add `[theme-mode='dark']` to `body` in any way you prefer. The attribute works on any ancestor element. The variables are declared on `:root` and declared again on the element carrying `theme-mode='dark'`, so read them on `body` or a descendant to get the dark values. Here is a quick idea:
+
+```js
+const body = document.body;
+if (body.hasAttribute('theme-mode')) {
+    body.removeAttribute('theme-mode');
+} else {
+    body.setAttribute('theme-mode', 'dark');
+}
+```
+
+For instance:
+
+<Demo id="switch-mode" />
+
+## Customize the colors of both modes
+
+Override the `--semi-*` color variables in your own stylesheet: light values on `:root`, dark values on `[theme-mode='dark']`. Semi's styles sit in `@layer semi`, so your unlayered rules always win without `!important`:
+
+```css
+:root {
+    --semi-color-primary: var(--semi-violet-5);
+}
+
+[theme-mode='dark'] {
+    --semi-color-primary: var(--semi-violet-4);
+}
+```
+
+With partial light/dark mode, the `.semi-always-light` and `.semi-always-dark` elements declare the color variables again; to make an override reach those areas too, add the two classes to the selectors above.
+
+## Keep Consistency with System Theme
+
+If you want the mode of the site to change with the system setting, you may find this property [Prefers-color-scheme ](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) helpful. To change system setting in macOS, go to System Preferences -> General -> Appearance
+
+You could add a listener for this property using js. Here is another example:
+
+```js
+const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+function matchMode(e) {
+    const body = document.body;
+    if (e.matches) {
+        if (!body.hasAttribute('theme-mode')) {
+            body.setAttribute('theme-mode', 'dark');
+        }
+    } else {
+        if (body.hasAttribute('theme-mode')) {
+            body.removeAttribute('theme-mode');
+        }
+    }
+}
+
+matchMode(mql);
+mql.addEventListener('change', matchMode);
+```
+
+## Block Dark/Light Mode
+
+Semi 2.0 natively supports block dark/bright color mode, and you can add `.semi-always-dark` or `.semi-always-light` to areas that require block dark or bright colors as needed.
+
+> Note: pop-up layers render in body, outside the element carrying `.semi-always-dark` or `.semi-always-light`. When the pop-up layer of Tooltip, Popover, Dropdown, or the dropdown of Select and similar components opens, it takes the class of the innermost `.semi-always-dark` or `.semi-always-light` element around its trigger, so it uses the same mode as the area of the trigger. Modal, SideSheet, Toast and Notification do not follow a trigger; they render in body by default and use the page theme.
+
+<Demo id="partial-mode" />

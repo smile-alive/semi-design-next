@@ -1,0 +1,53 @@
+---
+interface Props {
+    detail: string;
+}
+
+// Type strings escape with backslashes
+const detail = Astro.props.detail.replaceAll('\\', '');
+// The frontmatter runs once per instance, so the count lives on the per-page locals
+const id = `api-type-${(Astro.locals.apiTypeCount = (Astro.locals.apiTypeCount ?? 0) + 1)}`;
+---
+
+<span class="api-type" tabindex="0" aria-describedby={id}><code><slot /></code><span class="api-type-detail" id={id} role="tooltip">{detail}</span></span>
+
+<style>
+    .api-type {
+        position: relative;
+        cursor: help;
+    }
+
+    .api-type code {
+        color: var(--semi-color-warning);
+        text-decoration: underline dotted;
+        background: var(--semi-color-warning-light-default);
+    }
+
+    .api-type-detail {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        z-index: 20;
+        width: max-content;
+        max-width: 650px;
+        padding: 8px 12px;
+        font-family: var(--site-mono);
+        font-size: 13px;
+        color: var(--semi-color-text-0);
+        word-break: break-word;
+        white-space: pre-wrap;
+        background: var(--semi-color-bg-3);
+        border-radius: var(--semi-border-radius-medium);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    /* Visually hidden; screen readers still get the full type through aria-describedby */
+    .api-type:not(:hover, :focus) .api-type-detail {
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+</style>

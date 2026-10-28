@@ -1,0 +1,180 @@
+---
+order: 68
+title: 折叠
+icon: doc-collapsible
+brief: 行为组件，是一个用于展开或折叠内容的容器。
+---
+
+import CollapsibleReactApi from './api/collapsible.react.zh-CN.mdx';
+import CollapsibleVueApi from './api/collapsible.vue.zh-CN.mdx';
+import CollapsibleSolidApi from './api/collapsible.solid.zh-CN.mdx';
+
+## 使用场景
+
+- `Collapsible` 是一个行为组件，默认开启动画效果。它被用于 Semi 的各种组件中，如：`Navigation`， `Collapse`, `Tree`， `TreeSelect`，以及 `Typography` 中。
+- 当上述组件不能满足需求或者需要自定义一些折叠行为时，可以使用 `Collapsible` 来包裹需要展开或者折叠的内容。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Collapsible } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Collapsible } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Collapsible } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+通过 `isOpen` 来控制内容的展开或者折叠。
+
+<Demo id="basic" />
+
+### 自定义动画时间
+
+通过 `duration` 设置动画展开或者折叠的时间，也可以通过 `motion` 来关闭动画。
+
+<Demo id="duration" />
+
+### 嵌套使用
+
+<Demo id="nested" />
+
+### 自定义折叠高度
+
+可以使用 collapseHeight 自定义收起的高度
+
+<Demo id="collapse-height" />
+
+## API 参考
+
+<Framework only="react">
+
+<CollapsibleReactApi />
+
+其他原生属性（如 `aria-*`、`data-*`、`onMouseEnter`）落在外层 wrapper 上；`onTransitionEnd` 与组件自身的处理同时触发。
+
+</Framework>
+
+<Framework only="vue">
+
+<CollapsibleVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在外层 wrapper 上；`id` 是组件声明的 prop，落在内层内容元素上，且不读全局默认值（全局设置 id 会让每个实例重复同一个 id）。使用方的 `@transitionend` 与组件自身的处理同时触发。
+
+</Framework>
+
+<Framework only="solid">
+
+<CollapsibleSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性和事件落在外层 wrapper 上；`id` 是组件声明的 prop，落在内层内容元素上。使用方的 `onTransitionEnd` 与组件自身的处理同时触发。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Collapsible 具有 `id` props，传入的值会被设置为内层内容元素的 id（不是外层 wrapper），触发按钮用 `aria-controls` 指向它，并用 `aria-expanded` 表示当前是否展开，见下方使用示例。
+
+<Framework only="react">
+
+```jsx
+import { useState } from 'react';
+import { Button, Collapsible } from '@fibrae/semi-ui-react';
+
+() => {
+    const collapseId = 'myCollapsible';
+    const [visible, setVisible] = useState(false);
+    return (
+        <>
+            <Button onClick={() => setVisible(!visible)} aria-expanded={visible} aria-controls={collapseId}>
+                {visible ? 'hide' : 'show'}
+            </Button>
+            <Collapsible isOpen={visible} id={collapseId}>
+                <div>hide content</div>
+            </Collapsible>
+        </>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ref } from 'vue';
+    import { Button, Collapsible } from '@fibrae/semi-ui-vue';
+
+    const collapseId = 'myCollapsible';
+    const visible = ref(false);
+</script>
+
+<template>
+    <Button :aria-expanded="visible" :aria-controls="collapseId" @click="visible = !visible">
+        {{ visible ? 'hide' : 'show' }}
+    </Button>
+    <Collapsible :isOpen="visible" :id="collapseId">
+        <div>hide content</div>
+    </Collapsible>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { createSignal } from 'solid-js';
+import { Button, Collapsible } from '@fibrae/semi-ui-solid';
+
+() => {
+    const collapseId = 'myCollapsible';
+    const [visible, setVisible] = createSignal(false);
+    return (
+        <>
+            <Button onClick={() => setVisible(!visible())} aria-expanded={visible()} aria-controls={collapseId}>
+                {visible() ? 'hide' : 'show'}
+            </Button>
+            <Collapsible isOpen={visible()} id={collapseId}>
+                <div>hide content</div>
+            </Collapsible>
+        </>
+    );
+};
+```
+
+</Framework>
+
+### 焦点
+
+- `collapseHeight` 为 0 时，收起的内容设为 `inert`，读屏读不到，Tab 也到不了。
+- `collapseHeight` 大于 0 时，收起后露出的预览区与被裁掉的部分是同一个元素，不能只隐藏被裁掉的部分，所以整段内容保持可读、可聚焦，读屏用户能读到全文。被裁掉的部分里不要放链接、按钮等可聚焦元素，否则键盘焦点会落在看不见的位置。
+
+## FAQ
+
+- 为什么使用 Collapsible 没有正常展开?  
+   Collapsible 的展开高度由 CSS 计算，不依赖测量节点高度，父级为 `display: none` 时切换 `isOpen` 也能得到正确的展开高度。请先检查 `isOpen` 是否随状态更新；`collapseHeight` 大于 0 时，收起状态本来就会露出一部分内容。

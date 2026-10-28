@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                            | 类型                                                                          | 默认值   |
+| ------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | -------- |
+| dataSource    | 数据数组；非空时按数据渲染，忽略子节点。项的字段见下表。                        | `Data[]`                                                                      | -        |
+| mode          | 时间轴与内容的相对位置，可选 left、right、center、alternate。                   | `TimelineMode`                                                                | `"left"` |
+| renderContent | 渲染 dataSource 每一项的内容，参数为 (item, index)；不传时显示 item.content。   | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |
+| renderDot     | 渲染 dataSource 每一项的自定义节点图标，参数为 (item, index)。                  | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |
+| renderExtra   | 渲染 dataSource 每一项的辅助内容，参数为 (item, index)；不传时显示 item.extra。 | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |
+| renderTime    | 渲染 dataSource 每一项的时间，参数为 (item, index)；不传时显示 item.time。      | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |

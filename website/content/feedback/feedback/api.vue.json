@@ -1,0 +1,125 @@
+{
+    "feedback": {
+        "source": "packages/semi-ui-vue/src/feedback/feedback.vue",
+        "props": {
+            "mode": {
+                "zh-CN": "展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。",
+                "en-US": "Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode."
+            },
+            "type": {
+                "zh-CN": "反馈内容的类型。custom 时内容写在默认插槽中。",
+                "en-US": "Type of the feedback content. For custom, the content goes in the default slot."
+            },
+            "visible": {
+                "zh-CN": "是否显示，配合 v-model:visible 使用。",
+                "en-US": "Whether the feedback is shown. Use it with v-model:visible."
+            },
+            "title": {
+                "zh-CN": "纯文本标题，同时作为对话框的可访问名称；同时给出 title 插槽时以插槽为准。",
+                "en-US": "Plain-text title that also names the dialog. The title slot wins when both are given."
+            },
+            "textAreaProps": {
+                "zh-CN": "type 为 text 与 emoji 时多行输入框的属性。受控值键为 modelValue，监听键为 onChange；传入的 modelValue 优先于 Feedback 的内部值。",
+                "en-US": "Props of the multi-line input for the text and emoji types. The controlled key is modelValue and the listener key is onChange; a modelValue you pass wins over the internal value of Feedback."
+            },
+            "radioGroupProps": {
+                "zh-CN": "type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",
+                "en-US": "Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label."
+            },
+            "checkboxGroupProps": {
+                "zh-CN": "type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",
+                "en-US": "Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label."
+            },
+            "okButtonProps": {
+                "zh-CN": "提交按钮的属性。未给 disabled 时按值禁用（值为空时禁用），给出后以使用方的值为准，type 为 custom 时用它控制提交；loading 取内置的挂起态与使用方的 loading 任一为真；onClick 先于内置处理调用，不会替换内置处理。",
+                "en-US": "Props of the submit button. Without disabled, it is disabled while the value is empty; a disabled you give wins, which is how the custom type controls submission. It is loading when either the built-in pending state or your loading says so. onClick runs before the built-in handling, which still runs."
+            },
+            "cancelButtonProps": {
+                "zh-CN": "取消按钮的属性。loading 取内置的挂起态与使用方的 loading 任一为真；onClick 先于内置处理调用，不会替换内置处理。",
+                "en-US": "Props of the cancel button. It is loading when either the built-in pending state or your loading says so. onClick runs before the built-in handling, which still runs."
+            },
+            "onOk": {
+                "zh-CN": "点击提交按钮时调用，返回后清空已填写的值；返回 Promise 时按钮保持加载，fulfill 后才清空，reject 时保留。组件不会自行关闭，由使用方把 visible 设为 false。保留为函数 prop 以读取返回值，使用方照常写 @ok。",
+                "en-US": "Called when the submit button is clicked; the filled-in value is cleared once it returns. A returned Promise keeps the button loading and the value is cleared only once it fulfills, and kept when it rejects. The component never closes itself on submit; the caller sets visible to false. It remains a function prop so its result can be read, bound with @ok as usual."
+            },
+            "onCancel": {
+                "zh-CN": "取消按钮、关闭按钮、Esc（modal 模式另有点击遮罩）触发；按 Esc 时参数为原生 KeyboardEvent。返回后清空已填写的值并更新 v-model:visible；返回 Promise 时取消按钮保持加载，fulfill 后才清空并更新，reject 时保持打开。保留为函数 prop 以读取返回值，使用方照常写 @cancel。",
+                "en-US": "Called by the cancel button, the close button, Esc and, in modal mode, a click on the mask; the argument is a native KeyboardEvent for Esc. Once it returns, the filled-in value is cleared and v-model:visible updates. A returned Promise keeps the cancel button loading; both happen only once it fulfills, and a rejection keeps the feedback open. It remains a function prop so its result can be read, bound with @cancel as usual."
+            }
+        },
+        "events": {
+            "update:visible": {
+                "zh-CN": "取消路径（取消按钮、关闭按钮、Esc，modal 模式另有遮罩）完成后触发，值为 false，供 v-model:visible 回写。提交按钮只调用 onOk，不触发该事件。",
+                "en-US": "Emitted with false once a cancel path (cancel button, close button, Esc, and the mask in modal mode) completes, for v-model:visible to write back. The submit button only calls onOk and never emits this."
+            },
+            "valueChange": {
+                "zh-CN": "反馈内容变化时触发，载荷为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。",
+                "en-US": "Emitted when the feedback content changes. The payload is the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox."
+            },
+            "afterClose": {
+                "zh-CN": "弹层完全关闭后触发，两种模式都会触发。",
+                "en-US": "Emitted after the panel has fully closed, in both modes."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "显示状态变化且动画结束后触发，仅 popup 模式发出。",
+                "en-US": "Emitted once the shown state has changed and the animation has ended. Only popup mode emits it."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "type 为 custom 时的反馈内容。",
+                "en-US": "Feedback content for type custom."
+            },
+            "content": {
+                "zh-CN": "包裹或替换内置内容，任何 type 都可用，参数 content 是内置内容的 VNode，用 `<component :is=\"content\" />` 放置。",
+                "en-US": "Wraps or replaces the built-in content for any type. The scope parameter content is the VNode of the built-in content; place it with `<component :is=\"content\" />`."
+            },
+            "title": {
+                "zh-CN": "标题，优先于 title 属性。",
+                "en-US": "Title. It wins over the title prop."
+            },
+            "footer": {
+                "zh-CN": "替换默认的取消、提交按钮。传入空插槽时不渲染页脚区域。",
+                "en-US": "Replaces the default cancel and submit buttons. An empty slot renders no footer area."
+            },
+            "closeIcon": {
+                "zh-CN": "关闭按钮中的图标。",
+                "en-US": "Icon inside the close button."
+            },
+            "header": {
+                "zh-CN": "仅 modal 模式：完全替换默认头部。",
+                "en-US": "Modal mode only: replaces the whole default header."
+            },
+            "icon": {
+                "zh-CN": "仅 modal 模式：标题前的图标。",
+                "en-US": "Modal mode only: icon before the title."
+            },
+            "modal": {
+                "zh-CN": "仅 modal 模式：自定义渲染对话框本身，参数 modal 是 role=dialog 元素的 VNode，用 `<component :is=\"modal\" />` 放置。",
+                "en-US": "Modal mode only: custom rendering of the dialog itself. The scope parameter modal is the VNode of the role=dialog element; place it with `<component :is=\"modal\" />`."
+            },
+            "radioLabel": {
+                "zh-CN": "自定义 radioGroupProps.options 中每一项的文本，作用域参数为 option 与 index。",
+                "en-US": "Custom label of each item in radioGroupProps.options, with the option and index scope parameters."
+            },
+            "radioExtra": {
+                "zh-CN": "自定义 radioGroupProps.options 中每一项的辅助文本，作用域参数为 option 与 index。",
+                "en-US": "Custom extra text of each item in radioGroupProps.options, with the option and index scope parameters."
+            },
+            "checkboxLabel": {
+                "zh-CN": "自定义 checkboxGroupProps.options 中每一项的文本，作用域参数为 option 与 index。",
+                "en-US": "Custom label of each item in checkboxGroupProps.options, with the option and index scope parameters."
+            },
+            "checkboxExtra": {
+                "zh-CN": "自定义 checkboxGroupProps.options 中每一项的辅助文本，作用域参数为 option 与 index。",
+                "en-US": "Custom extra text of each item in checkboxGroupProps.options, with the option and index scope parameters."
+            }
+        },
+        "exposed": {
+            "root": {
+                "zh-CN": "Portal 内 Modal 或 SideSheet 的最外层元素，未渲染时为 null。",
+                "en-US": "The outermost element of the Modal or SideSheet inside the portal, or null while nothing is rendered."
+            }
+        }
+    }
+}

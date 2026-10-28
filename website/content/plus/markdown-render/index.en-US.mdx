@@ -1,0 +1,302 @@
+---
+order: 30
+title: Markdown Render
+icon: doc-markdown
+brief: Instantly render Markdown and MDX in web pages
+---
+
+import MarkdownRenderReactApi from './api/markdown-render.react.en-US.mdx';
+import MarkdownRenderVueApi from './api/markdown-render.vue.en-US.mdx';
+import MarkdownRenderSolidApi from './api/markdown-render.solid.en-US.mdx';
+
+## When to use
+
+Markdown is a document markup language that can implement basic common rich text functions such as titles, pictures, tables, links, bolding, etc. through simple tags. MDX is based on Markdown and allows the introduction of JSX to achieve more complex and customized document writing and display requirements.
+
+The `MarkdownRender` component provided by Semi supports rendering Markdown and MDX. No special configuration is required. By passing in plain text, rich text content that conforms to Semi style specifications can be rendered. Code blocks are highlighted by [CodeHighlight](/en-US/react/plus/code-highlight); register the languages they use with `CodeHighlight.register` first, an unregistered language is shown as plain text.
+
+Usually used in the following scenarios:
+
+- Document site writing and rendering
+- Front-end rendering when the server dynamically generates rich text content
+- A light interactive website that focuses on content display
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+After importing MarkdownRender, just pass in Markdown or MDX plain text directly.
+
+Note that symbols such as `<` and `{` are valid JSX syntax and are treated as code, so they cannot be rendered directly and must be escaped with `\`. If you only need to render pure Markdown, see the Simple Markdown section below.
+
+<Demo id="basic" />
+
+### Modify element style
+
+<Framework only="react">
+
+You can arbitrarily replace the display effect of document elements in Markdown or MDX documents. Just pass your rendering component override to the `components` props.
+
+</Framework>
+
+<Framework only="vue">
+
+You can arbitrarily replace the display effect of document elements in Markdown or MDX documents. Just pass your Vue component override to the `components` prop. An element's attributes (such as `class` and `colspan`) reach the component under their HTML names and are read from attrs; its content arrives in the default slot.
+
+</Framework>
+
+<Framework only="solid">
+
+You can arbitrarily replace the display effect of document elements in Markdown or MDX documents. Just pass your Solid component override to the `components` prop. An element's attributes (such as `class` and `colspan`) reach the component as props, and its content arrives as `props.children`.
+
+</Framework>
+
+For example, now you need to set the color of all level 2 headings to the main color
+
+<Demo id="element-style" />
+
+Any element tag that Markdown generates can be overridden; the common ones are `a blockquote br code del em h1 h2 h3 h4 h5 h6 hr img li ol p pre strong ul table`
+
+### Simple Markdown
+
+When the Markdown you render is just pure markdown without any JSX code, you can pass `format="md"` to enable Markdown-only mode. In this mode, you don't need to escape special characters.
+
+<Demo id="markdown-only" />
+
+<Framework only="react">
+
+`format="md"` renders through a [unified](https://unifiedjs.com/) pipeline: remark-parse parses the source, remark-gfm (when `remarkGfm` is true) and `remarkPlugins` run in order, remark-rehype turns it into an HTML syntax tree, `rehypePlugins` run, and hast-util-to-jsx-runtime creates the React elements with `components` applied. No code is generated or evaluated, so it renders under a CSP without `unsafe-eval`, and the MDX compiler is never loaded.
+
+</Framework>
+
+<Framework only="vue">
+
+`format="md"` renders through a [unified](https://unifiedjs.com/) pipeline: remark-parse parses the source, remark-gfm (when `remarkGfm` is true) and `remarkPlugins` run in order, remark-rehype turns it into an HTML syntax tree, `rehypePlugins` run, and hast-util-to-jsx-runtime creates the Vue virtual nodes with `components` applied. No code is generated or evaluated, so it renders under a CSP without `unsafe-eval`, and the MDX compiler is never loaded.
+
+</Framework>
+
+<Framework only="solid">
+
+`format="md"` renders through a [unified](https://unifiedjs.com/) pipeline: remark-parse parses the source, remark-gfm (when `remarkGfm` is true) and `remarkPlugins` run in order, remark-rehype turns it into an HTML syntax tree, `rehypePlugins` run, and hast-util-to-jsx-runtime creates the Solid elements with `components` applied. No code is generated or evaluated, so it renders under a CSP without `unsafe-eval`, and the MDX compiler is never loaded.
+
+</Framework>
+
+`format="mdx"` compiles the source to code with @mdx-js/mdx and evaluates it at runtime, so the CSP has to allow `unsafe-eval`; @mdx-js/mdx is loaded on demand the first time MDX is rendered.
+
+<Notice type="primary" title="HTML tags handling in format='md' mode">
+
+In `format="md"` mode, raw HTML embedded in Markdown (such as `<div>`, `<span style="color:red">`, etc.) is handed to `rehypePlugins` as raw nodes; whatever is still a raw node after the plugins is removed and will not be rendered on the page.
+
+If you need to preserve HTML tag rendering in `format="md"` mode, you can pass the rehype-raw plugin via rehypePlugins:
+
+</Notice>
+
+<Framework only="react">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-react';
+import rehypeRaw from 'rehype-raw';
+
+function Demo() {
+    return <MarkdownRender format="md" raw={`<span style="color:red">Red text</span>`} rehypePlugins={[rehypeRaw]} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-vue';
+    import rehypeRaw from 'rehype-raw';
+
+    const rehypePlugins = [rehypeRaw];
+</script>
+
+<template>
+    <MarkdownRender format="md" raw='<span style="color:red">Red text</span>' :rehypePlugins="rehypePlugins" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-solid';
+import rehypeRaw from 'rehype-raw';
+
+function Demo() {
+    return <MarkdownRender format="md" raw={`<span style="color:red">Red text</span>`} rehypePlugins={[rehypeRaw]} />;
+}
+```
+
+</Framework>
+
+### Add custom components
+
+<Framework only="react">
+
+By passing in custom components to `components` Props, you can write JSX directly in Markdown, and the component will be rendered to the final page, supporting JS events. The default Markdown components can be obtained from `MarkdownRender.defaultComponents` and can be used for secondary packaging.
+
+</Framework>
+
+<Framework only="vue">
+
+By passing in custom components to the `components` prop, you can write JSX directly in Markdown, and the component will be rendered to the final page, supporting JS events. The default Markdown components can be obtained from `MarkdownRender.defaultComponents` and can be used for secondary packaging.
+
+JSX attributes in MDX reach the component by Vue's rules: `className` joins `class`, and `style` can be a string. Listeners are passed as `onClick`, `onChange`, `onInput`, `onFocus` and `onBlur`, which the component receives through `emit` or attrs; other events use Vue's names, such as `onMouseenter`, `onKeydown` and `onDblclick`.
+
+</Framework>
+
+<Framework only="solid">
+
+By passing in custom components to the `components` prop, you can write JSX directly in Markdown, and the component will be rendered to the final page, supporting JS events. The default Markdown components can be obtained from `MarkdownRender.defaultComponents` and can be used for secondary packaging.
+
+JSX attributes in MDX reach the component as props: `className` joins `class`; event attributes such as `onClick` arrive as functions, and the component binds them, for example with `onClick={props.onClick}`. Children arrive through `props.children`.
+
+</Framework>
+
+<Notice type="primary" title="Note">
+    <div>Try to ensure that the JSX code in the rendered Markdown is trustworthy to prevent XSS. </div>
+</Notice>
+
+<Demo id="custom-component" />
+
+<Framework only="vue">
+
+When you replace the built-in `code` component, the source of a fenced block arrives as text nodes in the default slot; pass the nodes the default slot returns to `codeText` to get the source as is, with the trailing newline and without trimming. The built-in components can also be imported on their own from deep paths:
+
+```ts
+import { codeText } from '@fibrae/semi-ui-vue/markdown-render/index';
+import { code, pre } from '@fibrae/semi-ui-vue/markdown-render/components/index';
+```
+
+</Framework>
+
+### Add plugins
+
+Remark and Rehype plugins of the unified ecosystem are supported through `remarkPlugins` `rehypePlugins`, please refer to [MDXJS](https://mdxjs.com/docs/extending-mdx/) and [unified](https://unifiedjs.com/explore/) for details
+
+<Framework only="react">
+
+The source compiles again when `raw`, `format`, `remarkGfm` or an entry of a plugin array changes; a `components` change only re-renders. Plugin arrays are compared entry by entry, so an array literal created on every render does not compile again while its entries stay the same. The options object of a `[plugin, options]` entry is compared by reference too: written as a literal it compiles again on every render, so keep it stable with `useMemo`:
+
+```jsx
+import { useMemo } from 'react';
+import { MarkdownRender } from '@fibrae/semi-ui-react';
+import remarkToc from 'remark-toc';
+
+function Demo({ raw }) {
+    const remarkPlugins = useMemo(() => [[remarkToc, { heading: 'Contents' }]], []);
+    return <MarkdownRender format="md" raw={raw} remarkPlugins={remarkPlugins} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+The source compiles again when `raw`, `format`, `remarkGfm` or an entry of a plugin array changes; a `components` change only renders again. Plugin arrays are compared entry by entry, so an array literal in the template does not compile again while its entries stay the same. The options object of a `[plugin, options]` entry is compared by reference too: written as a template literal it compiles again on every render, so define it in `script setup` to keep it stable:
+
+```vue
+<script setup lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-vue';
+    import type { MarkdownRenderProps } from '@fibrae/semi-ui-vue';
+    import remarkToc from 'remark-toc';
+
+    defineProps<{ raw: string }>();
+
+    const remarkPlugins: MarkdownRenderProps['remarkPlugins'] = [[remarkToc, { heading: 'Contents' }]];
+</script>
+
+<template>
+    <MarkdownRender format="md" :raw="raw" :remarkPlugins="remarkPlugins" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+The source compiles again when `raw`, `format`, `remarkGfm` or an entry of a plugin array changes; a `components` change only renders again. Plugin arrays are compared entry by entry. The options object of a `[plugin, options]` entry is compared by reference too: a literal that is created anew each time the source is evaluated compiles again, so define it outside the component to keep it stable:
+
+```tsx
+import { MarkdownRender, type MarkdownRenderProps } from '@fibrae/semi-ui-solid';
+import remarkToc from 'remark-toc';
+
+const remarkPlugins: MarkdownRenderProps['remarkPlugins'] = [[remarkToc, { heading: 'Contents' }]];
+
+function Demo(props: { raw: string }) {
+    return <MarkdownRender format="md" raw={props.raw} remarkPlugins={remarkPlugins} />;
+}
+```
+
+</Framework>
+
+### Compile errors
+
+When the MDX has a syntax error or a plugin throws, the last successfully rendered content stays on the page and the error is logged with `console.error` in development; no unhandled Promise rejection is left behind.
+
+### Accessibility
+
+With `aria-label` or `aria-labelledby` and no `role`, the root element gets `role="group"`; a `role` you pass takes precedence. An image inside a link cannot be previewed, so the link is the only interactive element; the caption under an image is hidden from assistive technology and the image's name comes from `alt` alone.
+
+### API
+
+<Framework only="react">
+
+<MarkdownRenderReactApi />
+
+Other native attributes, such as `id`, `data-*`, `aria-*` and event attributes like `onClick`, land on the root `div`.
+
+</Framework>
+
+<Framework only="vue">
+
+MarkdownRender has no default slot and no events; `class`, `style`, `id`, `data-*` and listeners land on the root `div`.
+
+<MarkdownRenderVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<MarkdownRenderSolidApi />
+
+`class`, `style`, `ref`, and native attributes and events (such as `id`, `data-*` and `onClick`) land on the root `div`.
+
+</Framework>
+
+## Design Token
+
+<DesignToken />

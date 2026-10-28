@@ -1,0 +1,253 @@
+---
+order: 83
+title: 时间轴
+icon: doc-timeline
+brief: 时间轴是用于对一系列信息进行时间排序时，垂直展示的组件。
+---
+
+import TimelineReactApi from './api/timeline.react.zh-CN.mdx';
+import TimelineItemReactApi from './api/timeline-item.react.zh-CN.mdx';
+import TimelineVueApi from './api/timeline.vue.zh-CN.mdx';
+import TimelineItemVueApi from './api/timeline-item.vue.zh-CN.mdx';
+import TimelineSolidApi from './api/timeline.solid.zh-CN.mdx';
+import TimelineItemSolidApi from './api/timeline-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Timeline } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Timeline } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Timeline.Item` 也可以按名导入：`TimelineItem`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Timeline } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 节点类型
+
+通过 type 可以设置节点类型，对应原点会变成相应的颜色，可选：`default`，`ongoing`， `success`， `warning`， `error`。
+
+<Demo id="type" />
+
+### 自定义节点
+
+<Framework only="react">
+
+可以通过 `dot` 自定义图标，`color` 自定义圆点色值。通过设置 `children` 的样式可以自定义节点样式。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#dot` 插槽自定义图标，`color` 自定义圆点色值。通过设置默认插槽内容的样式可以自定义节点样式。时间与辅助内容使用 `#time`、`#extra` 插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `dot` 自定义图标，`color` 自定义圆点色值。通过设置 `children` 的样式可以自定义节点样式。
+
+</Framework>
+
+<Demo id="custom-node" />
+
+### 时间轴位置
+
+通过 `mode` 属性可以设置时间的位置，共有 4 种模式可选：`left`， `center`， `alternate`， `right`。
+
+#### 时间轴在左侧（默认）
+
+<Demo id="mode-left" />
+
+#### 时间节点在左侧
+
+<Demo id="mode-center" />
+
+#### 交替展现
+
+交替只按实际渲染的子项计算，条件为假而没有渲染的子节点不占位。
+
+<Demo id="mode-alternate" />
+
+#### 时间轴在右侧
+
+<Demo id="mode-right" />
+
+### 使用 dataSource
+
+<Framework only="vue">
+
+`dataSource` 项的 `content`、`time`、`extra` 只接受字符串或数字；自定义内容使用作用域插槽 `#content`、`#dot`、`#time`、`#extra`，参数为 `{ item, index }`。
+
+</Framework>
+
+<Framework only="solid">
+
+`dataSource` 项的 `content`、`time`、`extra` 只接受字符串或数字。需要自定义渲染时，传入 `renderContent`、`renderDot`、`renderTime`、`renderExtra`，参数为 `(item, index)`。
+
+</Framework>
+
+<Demo id="data-source" />
+
+## API 参考
+
+### TimeLine
+
+<Framework only="react">
+
+<TimelineReactApi />
+
+其他原生属性（如 `id`、`aria-label`）落在根元素 `ul` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TimelineVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入根元素 `ul`。
+
+`dataSource` 项的字段：
+
+| 字段     | 说明                                         | 类型                                                          | 默认值    |
+| -------- | -------------------------------------------- | ------------------------------------------------------------- | --------- |
+| content  | 节点内容，自定义内容使用 `#content` 插槽     | `string \| number`                                            | -         |
+| time     | 时间文本，自定义内容使用 `#time` 插槽        | `string \| number`                                            | -         |
+| extra    | 辅助内容，自定义内容使用 `#extra` 插槽       | `string \| number`                                            | -         |
+| color    | 自定义的圆圈色值                             | `string`                                                      | -         |
+| type     | 当前圆圈的模式                               | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | `default` |
+| position | 自定义节点位置，可以覆盖 TimeLine 的模式选项 | `'left' \| 'right'`                                           | -         |
+| class    | 类名                                         | `string`                                                      | -         |
+| style    | 样式                                         | `StyleValue`                                                  | -         |
+| onClick  | 鼠标点击事件的回调                           | `(event: MouseEvent) => void`                                 | -         |
+
+</Framework>
+
+<Framework only="solid">
+
+<TimelineSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在根元素 `ul` 上。
+
+`dataSource` 项的字段：
+
+| 字段     | 说明                                         | 类型                                                          | 默认值    |
+| -------- | -------------------------------------------- | ------------------------------------------------------------- | --------- |
+| content  | 节点内容，自定义渲染使用 `renderContent`     | `string \| number`                                            | -         |
+| time     | 时间文本，自定义渲染使用 `renderTime`        | `string \| number`                                            | -         |
+| extra    | 辅助内容，自定义渲染使用 `renderExtra`       | `string \| number`                                            | -         |
+| color    | 自定义的圆圈色值                             | `string`                                                      | -         |
+| type     | 当前圆圈的模式                               | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | `default` |
+| position | 自定义节点位置，可以覆盖 TimeLine 的模式选项 | `'left' \| 'right'`                                           | -         |
+| class    | 类名                                         | `string`                                                      | -         |
+| style    | 样式                                         | `JSX.CSSProperties \| string`                                 | -         |
+| onClick  | 鼠标点击事件的回调                           | `JSX.EventHandlerUnion<HTMLLIElement, MouseEvent>`            | -         |
+
+</Framework>
+
+### TimeLine.Item
+
+<Framework only="react">
+
+<TimelineItemReactApi />
+
+其他原生属性（如 `id`）落在根元素 `li` 上。`onClick` 为 `li` 的点击事件，回调参数为 `MouseEvent`。有 `onClick` 时，内容区域带 `role="button"` 与 `tabIndex` 为 `0`，支持 `Enter` 和 `Space`。
+
+</Framework>
+
+<Framework only="vue">
+
+<TimelineItemVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入 `li`。点击事件写作 `@click`，点击 `extra` 区域不会触发。有 `@click` 时，内容区域带 `role="button"` 与 `tabindex="0"`，支持 `Enter` 和 `Space`。`#dot`、`#time`、`#extra` 插槽内容为空时不渲染对应容器。
+
+</Framework>
+
+<Framework only="solid">
+
+<TimelineItemSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在 `li` 上。点击事件写作 `onClick`，点击 `extra` 区域不会触发。有 `onClick` 时，内容区域带 `role="button"` 与 `tabindex="0"`，支持 `Enter` 和 `Space`。`time`、`extra` 为空时不渲染对应容器。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 组件中时间点的连线以及时间点本身被设置了 `aria-hidden`，不会响应 Accessibility API
+- 可以通过传入 `aria-label` 设置 TimeLine 组件的标签
+
+<Framework only="react">
+
+```text
+<Timeline aria-label="xx事故处理过程时间线">
+    <Timeline.Item time="2015-09-01">创建服务现场</Timeline.Item>
+    <Timeline.Item time="2015-09-02">初步排除网络异常</Timeline.Item>
+    <Timeline.Item time="2015-09-03">技术测试异常</Timeline.Item>
+    <Timeline.Item time="2015-09-05">网络异常正在修复</Timeline.Item>
+</Timeline>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <Timeline aria-label="xx事故处理过程时间线">
+        <Timeline.Item>
+            <template #time>2015-09-01</template>
+            创建服务现场
+        </Timeline.Item>
+        <Timeline.Item>
+            <template #time>2015-09-02</template>
+            初步排除网络异常
+        </Timeline.Item>
+    </Timeline>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+<Timeline aria-label="xx事故处理过程时间线">
+    <Timeline.Item time="2015-09-01">创建服务现场</Timeline.Item>
+    <Timeline.Item time="2015-09-02">初步排除网络异常</Timeline.Item>
+    <Timeline.Item time="2015-09-03">技术测试异常</Timeline.Item>
+    <Timeline.Item time="2015-09-05">网络异常正在修复</Timeline.Item>
+</Timeline>
+```
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

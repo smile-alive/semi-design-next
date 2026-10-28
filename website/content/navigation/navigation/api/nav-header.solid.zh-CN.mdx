@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                                  | 类型                                                                                | 默认值 |
+| ----------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------ |
+| link        | 头部的 `href`，传入时头部内容包裹在链接中。                                                           | `string`                                                                            | -      |
+| linkOptions | 透传给链接的属性。                                                                                    | <ApiType detail={"JSX.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -      |
+| logo        | Logo 节点，如图片或图标。                                                                             | `JSX.Element`                                                                       | -      |
+| text        | Logo 文案，只接受字符串或数字，其他内容放在 children 中。收起后文案隐藏，并作为头部链接的可访问名称。 | `string \| number`                                                                  | -      |

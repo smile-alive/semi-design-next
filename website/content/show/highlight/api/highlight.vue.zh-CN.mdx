@@ -1,0 +1,29 @@
+**Props**
+
+| 属性               | 说明                                                                     | 类型                    | 默认值                                                 |
+| ------------------ | ------------------------------------------------------------------------ | ----------------------- | ------------------------------------------------------ |
+| autoEscape         | 是否自动转义 searchWords 中的正则特殊字符。                              | `boolean`               | `semiDefault("Highlight", "autoEscape", true)`         |
+| caseSensitive      | 是否区分大小写。                                                         | `boolean`               | `semiDefault("Highlight", "caseSensitive", false)`     |
+| sourceString       | 源文本。                                                                 | `string`                | `semiDefault("Highlight", "sourceString", "")`         |
+| searchWords        | 需要高亮的文本：字符串、字符串数组，或带 text、class、style 的对象数组。 | `string \| SearchWords` | `semiDefault("Highlight", "searchWords", [])`          |
+| highlightStyle     | 高亮标签的内联样式；Vue 不会给数值补 px，长度要写成字符串。              | `CSSProperties`         | `semiGlobalDefault("Highlight", "highlightStyle")`     |
+| highlightClassName | 高亮标签的类名。                                                         | `string`                | `semiGlobalDefault("Highlight", "highlightClassName")` |
+| component          | 高亮标签名。                                                             | `string`                | `semiDefault("Highlight", "component", "mark")`        |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

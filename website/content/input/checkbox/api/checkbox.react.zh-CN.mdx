@@ -1,0 +1,35 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                     | 类型                                                              | 默认值      |
+| -------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------- |
+| addonId        | 文案节点的 id，`aria-labelledby` 指向它；未设置时随机生成。                                              | `string`                                                          | -           |
+| autoFocus      | 挂载时是否自动获取焦点，作用于原生 input。                                                               | `boolean`                                                         | -           |
+| checked        | 是否选中，传入时为受控使用；在设置了 `value` 的 CheckboxGroup 中无效。                                   | `boolean`                                                         | -           |
+| children       | 复选框的文案，可传入任意 `ReactNode`。                                                                   | `React.ReactNode`                                                 | -           |
+| className      | 根元素的类名。                                                                                           | `string`                                                          | -           |
+| defaultChecked | 初始是否选中，非受控使用；在设置了 `value` 的 CheckboxGroup 中无效。                                     | `boolean`                                                         | `false`     |
+| disabled       | 是否禁用；在设置了 `value` 的 CheckboxGroup 中，组禁用时该项同样禁用。                                   | `boolean`                                                         | -           |
+| extra          | 辅助文本，可传入任意 `ReactNode`，`aria-describedby` 指向它。                                            | `React.ReactNode`                                                 | -           |
+| extraId        | 辅助文本节点的 id，`aria-describedby` 指向它；未设置时随机生成。                                         | `string`                                                          | -           |
+| id             | 原生 input 的 id。                                                                                       | `string`                                                          | -           |
+| indeterminate  | 半选状态，只影响外观与原生 input 的 `indeterminate`，不改变选中值。                                      | `boolean`                                                         | `false`     |
+| name           | 原生 input 的 `name`；在设置了 `value` 的 CheckboxGroup 中以组的 `name` 为准。                           | `string`                                                          | -           |
+| onChange       | 选中状态变化时调用，`e.target` 为组件的属性加上 `checked`，`checked` 为变化后的选中状态。                | <ApiType detail={"(e: CheckboxEvent) => any"}>Type</ApiType>      | -           |
+| onMouseEnter   | 鼠标移入时调用。                                                                                         | <ApiType detail={"(e: any) => void"}>Type</ApiType>               | -           |
+| onMouseLeave   | 鼠标移出时调用。                                                                                         | <ApiType detail={"(e: any) => void"}>Type</ApiType>               | -           |
+| prefixCls      | CSS 类名前缀。                                                                                           | `string`                                                          | -           |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 `focus()` 方法。                                                | `boolean`                                                         | -           |
+| ref            | 句柄，提供 `focus()` 与 `blur()` 方法。                                                                  | <ApiType detail={"React.Ref\u003cCheckboxHandle>"}>Type</ApiType> | -           |
+| style          | 根元素 `span` 的样式。                                                                                   | `React.CSSProperties`                                             | -           |
+| tabIndex       | 原生 input 的 `tabIndex`，即焦点所在的元素。                                                             | `number`                                                          | -           |
+| type           | 样式类型，可选 `default`、`card` 或 `pureCard`；在设置了 `value` 的 CheckboxGroup 中以组的 `type` 为准。 | `CheckboxType`                                                    | `"default"` |
+| value          | 该复选框在 CheckboxGroup 中代表的值；未设置时不属于任何分组。                                            | `any`                                                             | -           |
+
+**Methods**
+
+| 方法  | 说明                             | 类型                                          |
+| ----- | -------------------------------- | --------------------------------------------- |
+| blur  | 移除焦点。                       | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 获取焦点，遵循 `preventScroll`。 | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,87 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | Whether the popup flips its direction automatically when it is covered. | `boolean` | `true` |
+| autoFocus | Whether the input is focused on mount. A range type focuses the start input when the panel is open. | `boolean` | - |
+| autoSwitchDate | When the year or month is changed with the navigation buttons or dropdowns at the top of the panel, the date switches automatically. Only applies to the date type. | `boolean` | `true` |
+| borderless | Borderless mode. | `boolean` | `false` |
+| bottomSlot | Renders an extra area at the bottom. Takes a ReactNode. | `React.ReactNode` | - |
+| className | Class name of the root element. | `string` | - |
+| clearIcon | Custom icon of the clear button, effective when showClear is true. | `React.ReactNode` | - |
+| defaultOpen | Whether the panel is open by default. | `boolean` | `false` |
+| defaultPickerValue | Default panel date. Compared by content: when the content changes the panel moves back to it, so passing `new Date()` on every render counts as a change. | `ValueType` | - |
+| defaultValue | Default value. | `ValueType` | - |
+| density | Density of the picker panel, one of `default` and `compact`. | `DensityType` | `"default"` |
+| disabled | Whether the picker is disabled. | `boolean` | - |
+| disabledDate | Decides whether a date is disabled; returning true disables it. options carries the selected rangeStart and rangeEnd of a range and the focused input as rangeInputFocus. When type is year it is called with January 1 of each year, and returning true disables that year. | `DisabledDateType` | <ApiType detail={"() => false"}>Type</ApiType> |
+| disabledTime | Time restriction configuration. Its return value is passed through to the TimePicker. | `DisabledTimeType` | <ApiType detail={"() => ({})"}>Type</ApiType> |
+| disabledTimePicker | Whether time selection is disabled. | `MonthsGridFoundationProps['disabledTimePicker']` | - |
+| dropdownClassName | Class name of the dropdown panel. | `string` | - |
+| dropdownStyle | Inline style of the dropdown panel. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+| endDateOffset | When type is dateRange, sets the end date of a one-click range selection. | `DateOffsetType` | - |
+| endYear | Last year of the year scroll panel, which must be greater than startYear. Defaults to 100 years after the current year. | `number` | - |
+| format | Date string format shown in the input. When not set it depends on type; see Date and Time Format below. | `string` | - |
+| hideDisabledOptions | Hides the disabled time options. | `MonthsGridFoundationProps['hideDisabledOptions']` | `false` |
+| inputReadOnly | Whether the input is readonly. | `boolean` | `false` |
+| inputStyle | Inline style of the input. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+| insetInput | Whether the panel embeds input boxes. Takes a boolean, or an InsetInputProps object that sets the placeholders of the inset inputs. | `DateInputFoundationProps['insetInput']` | `false` |
+| insetLabel | Label shown in the input. The Form field injects it; used directly, DatePicker shows it in the input as well. | `React.ReactNode` | - |
+| insetLabelId | id of the label element inside the input. The Form field injects it to name the input. | `string` | - |
+| leftSlot | Renders an extra area on the left. Takes a ReactNode. | `React.ReactNode` | - |
+| max | Maximum number of dates that can be selected when multiple is true. Unlimited when it is not set, or is null or undefined. | `number` | - |
+| motion | Whether the panel animates when it opens. | `boolean` | `true` |
+| multiple | Whether multiple dates can be selected. Only supports the date type. | `boolean` | `false` |
+| needConfirm | Whether a confirm step is needed. Only effective for the dateTime and dateTimeRange types. | `boolean` | - |
+| onBlur | Called when the panel closes; not recommended for range selection. e is the native mousedown event only when a click outside closes the panel; confirming, selecting a date, Esc and the other ways pass none. | <ApiType detail={"(e?: MouseEvent) => void"}>Type</ApiType> | - |
+| onCancel | Called when the selection is cancelled, with the value of the last confirmed selection. Only effective for the dateTime and dateTimeRange types with needConfirm on. | `OnCancelType` | - |
+| onChange | Called when the value changes. Both arguments are arrays for range and multiple selection. | <ApiType detail={"(date: Date \u007c Date[], dateString: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onClear | Called when the clear button is clicked, with the click event of the button. | <ApiType detail={"React.MouseEventHandler\u003cHTMLButtonElement>"}>Type</ApiType> | - |
+| onClickOutSide | Called when a mousedown lands outside the popup and the trigger while the popup is open. It receives the native mousedown event. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onConfirm | Called when the selection is confirmed, with the current value. Only effective for the dateTime and dateTimeRange types with needConfirm on. | `OnConfirmType` | - |
+| onFocus | Called when the picker gets focus; not recommended for range selection. e is the focus event of an input, or the click or key press on the trigger that focused the range start; rangeType is set only when a range input gets focus. | <ApiType detail={"(e: React.FocusEvent \u007c React.MouseEvent \u007c React.KeyboardEvent, rangeType?: RangeInput \u007c false) => void"}>Type</ApiType> | - |
+| onOpenChange | Called when the panel opens or closes, with whether it is now open. | <ApiType detail={"(status: boolean) => void"}>Type</ApiType> | - |
+| onPanelChange | Called when the year or date shown in the panel changes. | `OnPanelChangeType` | - |
+| onPresetClick | Called when a preset button is clicked, with the preset item and the click event. | <ApiType detail={"(item: PresetType, e: React.MouseEvent\u003cHTMLDivElement>) => void"}>Type</ApiType> | - |
+| open | Controlled open state of the panel, used together with onOpenChange. | `boolean` | - |
+| placeholder | Placeholder of the input. A range type takes an array. When not set, the text comes from the locale package by type. | `string \| string[]` | - |
+| position | Popup position, with the same values as the position of Popover. When not set it is `bottomLeft`, or `bottomRight` in RTL; with insetInput and no position, the inline position is used. | `Position` | - |
+| prefix | Prefix content of the input. | `React.ReactNode` | - |
+| prefixCls | Class name prefix of the root element and the panel, usually left unchanged. | `string` | `"semi-datepicker"` |
+| presetPosition | Position of the preset panel, one of `left`, `right`, `top` and `bottom`. | `PresetPosition` | `"bottom"` |
+| presets | Preset shortcuts. start and end can be functions, which are evaluated when the preset is clicked. | `PresetsType` | - |
+| preventScroll | Whether the browser scrolls the document to show a newly focused element. Applies to the focus method inside the component. | `boolean` | - |
+| rangeSeparator | Separator between the two dates in a range input. String parsing uses it as well. | `string` | `" ~ "` |
+| rangeSeparatorNode | Node rendered as the range separator. It only affects the display; string parsing still uses rangeSeparator. | `React.ReactNode` | - |
+| ref | Handle object, not the root element. It carries the open, close, focus and blur methods, see Methods below. | <ApiType detail={"React.Ref\u003cDatePickerHandle>"}>Type</ApiType> | - |
+| renderDate | Customizes the content of a date. It receives the day number and the full date string, and returns a ReactNode. | <ApiType detail={"(dayNumber?: number, fullDate?: string) => React.ReactNode"}>Type</ApiType> | - |
+| renderFullDate | Customizes the whole date cell. It receives the day number, the full date string and the day status, and returns a ReactNode. | <ApiType detail={"(dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => React.ReactNode"}>Type</ApiType> | - |
+| rightSlot | Renders an extra area on the right. Takes a ReactNode. | `React.ReactNode` | - |
+| showClear | Whether the clear button is shown. Shown when not set. | `boolean` | - |
+| size | Size of the input, one of `small`, `default` and `large`. | `InputSize` | `"default"` |
+| spacing | Distance between the popup and the trigger. When not set it is 4, or 1 with insetInput and a position containing Over. | `number` | - |
+| startDateOffset | When type is dateRange, sets the start date of a one-click range selection. | `DateOffsetType` | - |
+| startYear | First year of the year scroll panel. Defaults to 100 years before the current year. | `number` | - |
+| stopPropagation | Whether clicks on the popup stop propagating. | `boolean \| string` | `true` |
+| style | Inline style of the root element. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+| syncSwitchMonth | In range selection, whether the two panels switch months together. | `boolean` | `false` |
+| timePickerOpts | Options for the time panel: `use12Hours`, `hourStep`, `minuteStep`, `secondStep`, `defaultIsAM` and `scrollItemProps`, see [TimePicker API Reference](/en-US/react/input/time-picker#API%20Reference); the panel sets the format, the value and onChange. | `DatePickerTimePickerOpts` | - |
+| timeZone | Time zone in which the value and panel dates are read and shown. A string is an IANA time zone name such as `Asia/Shanghai`; a number is passed as is to utcToZonedTime of date-fns-tz. When not set, the time zone of ConfigProvider is used. | `string \| number` | - |
+| topSlot | Renders an extra area at the top. Takes a ReactNode. | `React.ReactNode` | - |
+| triggerRender | Renders a custom trigger. It receives the trigger props (see the type definitions below) and returns a ReactNode. | <ApiType detail={"(props: TriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
+| type | Type, one of `date`, `dateRange`, `dateTime`, `dateTimeRange`, `month`, `monthRange` and `year`. | `Type` | `"date"` |
+| validateStatus | Validation status, which only affects the display style. `success` looks the same as `default`. | `ValidateStatus` | - |
+| value | Controlled value. | `ValueType \| null` | - |
+| weekStartsOn | Day of the week that starts each week: 0 is Sunday, 1 is Monday, and so on. | `WeekStartNumber` | `0` |
+| yearAndMonthOpts | Other options passed to the year and month picker. `list`, `onSelect`, `selectedIndex` and `type` are set by the panel and are not accepted. | `YearAndMonthOpts` | - |
+
+**Methods**
+
+| Method | Description                                                                                                                                                                        | Type                                                                |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| blur   | Blurs the input.                                                                                                                                                                   | <ApiType detail={"() => void"}>Type</ApiType>                       |
+| close  | Closes the panel. A controlled open takes precedence; when it is controlled, close does not change the visibility.                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                       |
+| focus  | Focuses the input. A range type focuses the start input by default, or the end input with `'rangeEnd'`. With insetInput and the panel open, it focuses the input inside the panel. | <ApiType detail={"(focusType?: RangeInput) => void"}>Type</ApiType> |
+| open   | Opens the panel. A controlled open takes precedence; when it is controlled, open does not change the visibility.                                                                   | <ApiType detail={"() => void"}>Type</ApiType>                       |

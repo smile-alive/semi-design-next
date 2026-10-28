@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                                                                                               | Type                                                              | Default |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| children      | The content of the slot.                                                                                                                                                  | `React.ReactNode`                                                 | -       |
+| className     | Class name of the slot.                                                                                                                                                   | `string`                                                          | -       |
+| error         | The error, rendered after the content: an object is the props of ErrorMessage and any other content is the error. Nothing shows when omitted.                             | `ErrorMessageProps \| React.ReactNode`                            | -       |
+| label         | Label configuration: an object is the props of Form.Label, with `text`, `extra`, `align`, `width`, `required`, `optional` and so on; any other content is the label text. | `LabelProps \| React.ReactNode`                                   | -       |
+| labelPosition | Label position of the slot. Defaults to the Form's, and can be `top` or `left`.                                                                                           | `'top' \| 'left'`                                                 | -       |
+| noLabel       | Whether to render no label. When the Form sets both labelCol and wrapperCol, the label column is still kept.                                                              | `boolean`                                                         | -       |
+| ref           | Reference to the root div element.                                                                                                                                        | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| style         | Inline style of the slot.                                                                                                                                                 | `React.CSSProperties`                                             | -       |

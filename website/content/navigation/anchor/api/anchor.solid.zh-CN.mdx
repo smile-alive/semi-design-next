@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoCollapse | 是否动态展示下一级锚点：只展开当前高亮链接所在的分支。 | `boolean` | `false` |
+| defaultAnchor | 挂载时默认高亮的锚点，不触发 onChange 与 onClick。 | `string` | `""` |
+| getContainer | 指定滚动的容器，缺省为 window；返回 null 时同样回落到 window。 | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
+| maxHeight | 组件的 max-height，超出时显示滚动条。该属性覆盖 style 中的 max-height。 | `string \| number` | `"750px"` |
+| maxWidth | 组件的 max-width，超出时显示省略。该属性覆盖 style 中的 max-width。 | `string \| number` | `"200px"` |
+| offsetTop | 滚动内容距离容器顶部达到指定偏移量时触发当前链接切换。 | `number` | `0` |
+| onChange | 高亮的锚点改变时调用，参数为当前锚点与上一个锚点。 | <ApiType detail={"(currentLink: string, previousLink: string) => void"}>Type</ApiType> | - |
+| onClick | 点击锚点或在锚点上按 Enter 时调用，参数为原生 MouseEvent 或 KeyboardEvent 与当前锚点。 | <ApiType detail={"(e: AnchorClickEvent, currentLink: string) => void"}>Type</ApiType> | - |
+| position | showTooltip 开启时 Tooltip 的显示位置，可选值同 Tooltip 的 position。 | `Position` | - |
+| railTheme | 滑轨主题，可选 primary、tertiary、muted。 | `'primary' \| 'tertiary' \| 'muted'` | `"primary"` |
+| scrollIntoViewOptions | 点击锚点滚动时传给 scroll-into-view-if-needed 的选项，与 scrollMotion、targetOffset 合并使用；未传 block 时为 `start`，仅传入 inline 时才同时调整横向位置。 | `AnchorBaseProps['scrollIntoViewOptions']` | - |
+| scrollMotion | 点击锚点滚动时是否带动画（behavior 为 smooth）。 | `boolean` | `false` |
+| showTooltip | 文字缩略时是否显示 Tooltip 及相关配置：type 为浮层组件，支持 tooltip（默认）和 popover，opts 为传给浮层组件的属性。 | `boolean \| ShowTooltip` | `false` |
+| size | 锚点尺寸，可选 small、default。 | `'small' \| 'default'` | `"default"` |
+| targetOffset | 锚点滚动结束时，目标距离容器顶部的偏移量。 | `number` | `0` |

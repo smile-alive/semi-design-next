@@ -1,0 +1,31 @@
+{
+    "empty": {
+        "source": "packages/semi-ui-solid/src/empty/empty.tsx",
+        "props": {
+            "darkModeImage": {
+                "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 属性变化；取值同 image。",
+                "en-US": "Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image."
+            },
+            "description": {
+                "zh-CN": "描述内容，显示在标题下方。",
+                "en-US": "Description content, shown below the title."
+            },
+            "image": {
+                "zh-CN": "占位图，可以是 JSX 元素（如插画组件）、图片地址字符串，或 `{ id }` 形式的页面内 SVG sprite 符号；空字符串视为没有图片。",
+                "en-US": "Placeholder image: a JSX element such as an illustration component, an image URL string, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image."
+            },
+            "imageStyle": {
+                "zh-CN": "占位图的样式，可以是样式对象（键用 kebab-case）或字符串。",
+                "en-US": "Style of the placeholder image, as a style object with kebab-case keys or a string."
+            },
+            "layout": {
+                "zh-CN": "布局模式，可选 vertical、horizontal。",
+                "en-US": "Layout mode: vertical or horizontal."
+            },
+            "title": {
+                "zh-CN": "标题，按标题样式渲染，可以是任意 JSX 内容。",
+                "en-US": "Title, rendered in the title style. Accepts any JSX content."
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.json",
+    "include": ["content/**/*.solid.tsx"],
+    "exclude": ["dist"],
+    "compilerOptions": {
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "strict": true,
+        "strictNullChecks": true
+    }
+}

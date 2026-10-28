@@ -1,0 +1,391 @@
+---
+order: 70
+title: Dropdown
+icon: doc-dropdown
+brief: A menu that pops down.
+---
+
+import MenuExample from './figures/menu-example.react.tsx';
+import DropdownReactApi from './api/dropdown.react.en-US.mdx';
+import DropdownMenuReactApi from './api/dropdown-menu.react.en-US.mdx';
+import DropdownItemReactApi from './api/dropdown-item.react.en-US.mdx';
+import DropdownTitleReactApi from './api/dropdown-title.react.en-US.mdx';
+import DropdownVueApi from './api/dropdown.vue.en-US.mdx';
+import DropdownMenuVueApi from './api/dropdown-menu.vue.en-US.mdx';
+import DropdownItemVueApi from './api/dropdown-item.vue.en-US.mdx';
+import DropdownTitleVueApi from './api/dropdown-title.vue.en-US.mdx';
+import DropdownSolidApi from './api/dropdown.solid.en-US.mdx';
+import DropdownMenuSolidApi from './api/dropdown-menu.solid.en-US.mdx';
+import DropdownItemSolidApi from './api/dropdown-item.solid.en-US.mdx';
+import DropdownTitleSolidApi from './api/dropdown-title.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Dropdown } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Dropdown } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Dropdown.Menu`, `Dropdown.Item`, `Dropdown.Title` and `Dropdown.Divider` can also be imported by name: `DropdownMenu`, `DropdownItem`, `DropdownTitle` and `DropdownDivider`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Framework only="react">
+
+- For the Trigger of the Dropdown within its children: By default, it is displayed on hover. You can modify it to values like `click`, `custom`, `contextMenu`, etc. through the `props.trigger` to specify different triggering methods.
+- Use `render` to specify the specific content of the dropdown box: Use `Dropdown.Menu` as the parent container, and use `Dropdown.Item`, `Dropdown.Divider`, and `Dropdown.Title` in combination. Of course, in simple scenarios, you can also just combine `Dropdown.Menu` with `Dropdown.Item`, and the other elements are not mandatory.
+- `Dropdown.Item` can disable a certain option by setting `disabled`. By configuring `type`, text in different colors can be displayed. By setting `icon`, icons can be quickly configured. For more complex custom structures, you can pass in `ReactNode` through `children` for custom rendering.
+
+</Framework>
+
+<Framework only="vue">
+
+- Put the Trigger of the Dropdown in the default slot: By default, it is displayed on hover. You can modify it to values like `click`, `custom`, `contextMenu`, etc. through `trigger` to specify different triggering methods.
+- Use the `#content` slot to specify the specific content of the dropdown box: Use `Dropdown.Menu` as the parent container, and use `Dropdown.Item`, `Dropdown.Divider`, and `Dropdown.Title` in combination. Of course, in simple scenarios, you can also just combine `Dropdown.Menu` with `Dropdown.Item`, and the other elements are not mandatory.
+- `Dropdown.Item` can disable a certain option by setting `disabled`. By configuring `type`, text in different colors can be displayed. The `#icon` slot configures an icon quickly. For more complex custom structures, write them directly in the default slot of `Dropdown.Item`.
+
+</Framework>
+
+<Framework only="solid">
+
+- The Trigger is passed as a function child: the function receives `getTriggerProps`, and its result is spread onto an element that takes focus, such as `Button`. By default it is displayed on hover. You can modify it to values like `click`, `focus`, `custom`, `contextMenu`, etc. through `trigger` to specify different triggering methods. Other children are wrapped in a `span`.
+- Use `render` to specify the specific content of the dropdown box: Use `Dropdown.Menu` as the parent container, and use `Dropdown.Item`, `Dropdown.Divider`, and `Dropdown.Title` in combination. Of course, in simple scenarios, you can also just combine `Dropdown.Menu` with `Dropdown.Item`, and the other elements are not mandatory.
+- `Dropdown.Item` can disable a certain option by setting `disabled`. By configuring `type`, text in different colors can be displayed. Pass an icon element through `icon` to configure an icon quickly. For more complex custom structures, write them directly in the children of `Dropdown.Item`.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Nested Usage
+
+<Framework only="react">
+
+Users can nested `Dropdown`, which is suitable for situations with multiple sublevel options. From the keyboard, `Right Arrow` opens a submenu and `Left Arrow` returns to the parent item, and `Enter` or `Space` calls the `onClick` of an item at any level (see [Accessibility](#accessibility)).
+
+</Framework>
+
+<Framework only="vue">
+
+Users can nested `Dropdown`, which is suitable for situations with multiple sublevel options. From the keyboard, `Right Arrow` opens a submenu and `Left Arrow` returns to the parent item, and `Enter` or `Space` calls the `@click` of an item at any level (see [Accessibility](#accessibility)). A nested submenu defaults to a `spacing` of 2. `showTick`, `selectionMode` and `trigger` are not inherited from the outer menu: the submenu Dropdown's own settings apply.
+
+</Framework>
+
+<Framework only="solid">
+
+Users can nested `Dropdown`, which is suitable for situations with multiple sublevel options. The trigger of a parent item is also a function child, which spreads `getTriggerProps` onto the `Dropdown.Item`. From the keyboard, `Right Arrow` opens a submenu and `Left Arrow` returns to the parent item, and `Enter` or `Space` calls the `onClick` of an item at any level (see [Accessibility](#accessibility)).
+
+</Framework>
+
+<Demo id="nested" />
+
+### Popup Position
+
+The position of support is the same. [Tooltip](/en-US/react/show/tooltip#Position), commonly used are: "bottom", "bottomLeft", "bottomRight".
+
+<Demo id="position" />
+
+### Trigger Mode
+
+The default is the move-in Trigger, which can be expanded by getting focus, clicking, right-clicking (`contextMenu`), or customizing the event trigger menu. After a right click opens the menu, focus moves to the first enabled item.
+
+<Demo id="trigger" />
+
+### Trigger Event
+
+<Framework only="react">
+
+Click on the menu item to trigger different mouse events, support `onClick`, `onMouseEnter`, `onMouseLeave` and `onContextMenu`.
+
+</Framework>
+
+<Framework only="vue">
+
+Click on the menu item to trigger different mouse events, support `@click`, `@mouseenter`, `@mouseleave` and `@contextmenu`. The `@click` of a top-level menu fires on click, that of a submenu fires on the left button press, and `Enter` and `Space` on the keyboard fire it as well.
+
+</Framework>
+
+<Framework only="solid">
+
+Click on the menu item to trigger different mouse events, support `onClick`, `onMouseEnter`, `onMouseLeave` and `onContextMenu`. The `onClick` of a top-level menu fires on click, that of a submenu fires on the left button press, and `Enter` and `Space` on the keyboard fire it as well.
+
+</Framework>
+
+<Demo id="events" />
+
+### Json Usage
+
+<Framework only="react">
+
+Can use the menu attribute to configure the Dropdown content menu
+
+</Framework>
+
+<Framework only="vue">
+
+Can use the `menu` attribute to configure the Dropdown content menu. Listeners in an entry use Vue key names such as `onClick` and `onMouseenter`, and are handed to the matching `Dropdown.Item`. Use the `#menuIcon="{ item, index }"` slot to customize the icon of each entry. The `#content` slot wins when it is provided.
+
+</Framework>
+
+<Framework only="solid">
+
+Can use the `menu` attribute, given an array, to configure the Dropdown content menu. Callbacks in an entry use camelCase names such as `onClick`, the same as the props of `Dropdown.Item`.
+
+</Framework>
+
+<Demo id="json" />
+
+## API Reference
+
+### Dropdown
+
+<Framework only="react">
+
+<DropdownReactApi />
+
+Dropdown has no root element of its own: `className` lands on the outer `.semi-dropdown-wrapper` of the popup, `style` and `contentClassName` on the menu container `.semi-dropdown`, `ref` receives the `DropdownHandle`, and other undeclared attributes are dropped.
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownVueApi />
+
+Dropdown has no root element of its own: `class` lands on the outer `.semi-dropdown-wrapper` of the popup, `style` on `.semi-dropdown`, and other undeclared attributes are dropped.
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownSolidApi />
+
+Dropdown has no root element of its own: `class` lands on the outer `.semi-dropdown-wrapper` of the popup, `style` and `contentClassName` on the menu container `.semi-dropdown`, `ref` receives the `DropdownHandle`, and other undeclared attributes are dropped.
+
+</Framework>
+
+### Dropdown.Menu
+
+<Framework only="react">
+
+<DropdownMenuReactApi />
+
+Other native attributes (such as `id` and `aria-*`) land on the `ul` of the menu. `role` and `aria-orientation` can be overridden, and `onKeyDown` runs before the built-in keyboard handling.
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownMenuVueApi />
+
+`class`, `style` and native attributes land on the `ul` of the menu through attrs. `role` and `aria-orientation` can be overridden, and a `@keydown` bound on the menu runs before the built-in keyboard handling.
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownMenuSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the `ul` of the menu. `role` and `aria-orientation` can be overridden, and `onKeyDown` runs before the built-in keyboard handling.
+
+</Framework>
+
+### Dropdown.Item
+
+<Framework only="react">
+
+<DropdownItemReactApi />
+
+Other native attributes (such as `id` and `data-*`) land on the root `li`. `role`, `aria-checked` and `aria-disabled` are set by Dropdown and cannot be overridden.
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownItemVueApi />
+
+Listen for click, pointer enter and leave, and right click with `@click`, `@mouseenter`, `@mouseleave` and `@contextmenu`; the parameter of `@click` is the native `MouseEvent`. `class`, `style` and other native attributes land on the `li` through attrs. A disabled Item does not respond to `@click`, `@mouseenter`, `@mouseleave` or `@contextmenu`.
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownItemSolidApi />
+
+`class`, `style`, `ref` and other native attributes land on the `li`. A disabled Item does not respond to `onClick`, `onMouseEnter`, `onMouseLeave` or `onContextMenu`.
+
+</Framework>
+
+### Dropdown.Title
+
+<Framework only="react">
+
+<DropdownTitleReactApi />
+
+Other native attributes (such as `id` and `data-*`) land on the root `li`, and `role` can be overridden.
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownTitleVueApi />
+
+`class`, `style` and native attributes land on the `li` through attrs. The divider `Dropdown.Divider` has no props or slots and also receives `class` and `style` through attrs.
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownTitleSolidApi />
+
+`class`, `style`, `ref` and native attributes land on the `li`.
+
+</Framework>
+
+### DropdownMenuItem
+
+<Framework only="react">
+
+| Properties                                     | Instructions                        | Type   |
+| ---------------------------------------------- | ----------------------------------- | ------ |
+| node                                           | menu type: `title`,`item`,`divider` | string |
+| name                                           | menu content                        | string |
+| Other Properties refer to Title、Item、Divider |                                     |        |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties                                         | Instructions                                                                                                     | Type                             | Default |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------- | ------- |
+| node                                               | Entry type: `title`, `item` or `divider`                                                                         | `'title' \| 'item' \| 'divider'` | -       |
+| name                                               | Menu text, only on `title` and `item`                                                                            | `string \| number`               | -       |
+| active, disabled, showTick, type                   | Correspond to the props of Dropdown.Item of the same name, only on `item`                                        | -                                | -       |
+| class, style, `data-*`, `aria-*`                   | Handed to the matching Title, Item or Divider through attrs; `style` is a string or a style object, not an array | -                                | -       |
+| onClick, onMouseenter, onMouseleave, onContextmenu | Listeners of Dropdown.Item under Vue key names, only on `item`                                                   | `(event: MouseEvent) => void`    | -       |
+
+</Framework>
+
+An entry does not accept `children`; the label comes from `name` alone.
+
+<Framework only="solid">
+
+| Properties                                       | Instructions                                                                                                                         | Type                             | Default |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ------- |
+| node                                             | Entry type: `title`, `item` or `divider`                                                                                             | `'title' \| 'item' \| 'divider'` | -       |
+| name                                             | Menu text, only on `title` and `item`                                                                                                | `string`                         | -       |
+| active, disabled, showTick, type                 | Correspond to the props of Dropdown.Item of the same name, only on `item`                                                            | -                                | -       |
+| Other props, such as `class`, `style`, `onClick` | Handed to the matching Dropdown.Title, Dropdown.Item or Dropdown.Divider by `node`; callbacks such as `onClick` only apply to `item` | -                                | -       |
+
+</Framework>
+
+### Methods
+
+<Framework only="react">
+
+`ref` receives the `DropdownHandle` once, when the component is mounted. Call its `focusTrigger()` and `rePosition()` methods; see the Methods table of Dropdown above.
+
+</Framework>
+
+<Framework only="vue">
+
+Call `focusTrigger()` and `rePosition()` through a template ref, see the Exposes of Dropdown above.
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` receives the `DropdownHandle` once, when the component is created. Call its `focusTrigger()` and `rePosition()` methods; see the Methods table of Dropdown above.
+
+</Framework>
+
+## Accessibility
+
+Dropdown follows the WAI-ARIA APG [Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) and [Menu and Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) patterns.
+
+### ARIA
+
+- The trigger has `aria-haspopup="menu"` and `aria-expanded`, which is `true` while the menu is shown and `false` otherwise
+- Dropdown.Menu has `role="menu"` and `aria-orientation="vertical"`
+- Dropdown.Item has `role="menuitem"`; with the Dropdown's `selectionMode` set to `single` it has `role="menuitemradio"`, with `multiple` or with `showTick` it has `role="menuitemcheckbox"`, and in these three cases it exposes `active` as `aria-checked`; the tick icon is left out of the item name; a disabled item has `aria-disabled="true"`
+- A Dropdown.Item that triggers a nested Dropdown (a parent item) also has `aria-haspopup="menu"` and `aria-expanded`
+- Dropdown.Divider renders an `li` with `role="separator"`, and Dropdown.Title an `li` with `role="presentation"`
+- The popup container around the menu has `role="presentation"`, not `tooltip`
+
+### Keyboard and Focus
+
+With focus on the trigger:
+
+| Key              | Behavior                                                                                                                                                                                                    |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Enter`, `Space` | With `trigger="click"`, opens the menu and moves focus to the first enabled item                                                                                                                            |
+| `Down Arrow`     | While the menu is open, moves focus to the first enabled item; on a button trigger (`button`, a link with `href`, Semi Button, ...) with the menu closed, opens the menu and focuses the first enabled item |
+| `Up Arrow`       | While the menu is open, moves focus to the last enabled item; on a button trigger with the menu closed, opens the menu and focuses the last enabled item                                                    |
+| `Tab`            | While the menu is open, closes it and moves focus in the browser's default order                                                                                                                            |
+
+When `render` (the `#content` slot in Vue) holds no menu items, `Down Arrow` and `Up Arrow` on the open popup's trigger focus its first and last focusable element.
+
+When the trigger is text or several nodes, Dropdown wraps them in a `span`, and the keys above work on that `span` as well.
+
+With `trigger` set to `hover` or `focus`, focusing the trigger from the keyboard opens the menu (turn this off with `disableFocusListener`), and moving focus away closes it.
+
+With `trigger` set to `contextMenu`, focus moves to the first enabled item after a right click opens the menu.
+
+With focus on a menu item:
+
+| Key                      | Behavior                                                                                                                                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Down Arrow`, `Up Arrow` | Moves to the next or previous item of the current menu, skipping disabled items and wrapping at either end                                                                                                                      |
+| `Home`, `End`            | Moves to the first or last item of the current menu                                                                                                                                                                             |
+| `Enter`, `Space`         | On a parent item, opens the submenu and moves focus to its first item; on any other item, calls `onClick` (`@click` in Vue), then closes the menu with `clickToHide`                                                            |
+| `Right Arrow`            | On a parent item, opens the submenu and moves focus to its first item; no effect on other items                                                                                                                                 |
+| `Left Arrow`             | In a submenu, closes it and returns focus to the parent item, regardless of `closeOnEsc`                                                                                                                                        |
+| `Tab`                    | Closes every menu (submenus included) and moves focus in the browser's default order, not back to the trigger                                                                                                                   |
+| `Esc`                    | Closes the menu that contains focus and returns focus to the element that opened it (the parent item or the trigger); on a parent item whose submenu is open, closes the submenu first; does nothing when `closeOnEsc` is false |
+| Printable characters     | Moves to the next item of the current menu that starts with the character                                                                                                                                                       |
+
+- In RTL (ConfigProvider `direction="rtl"`), `Left Arrow` and `Right Arrow` are swapped.
+- Calling `e.preventDefault()` in an item's `onKeyDown` (`@keydown` in Vue) keeps `Enter` and `Space` from calling `onClick` (`@click` in Vue).
+- When an item of a nested Dropdown is activated from the keyboard, its `onClick` (`@click` in Vue) receives a `click` event; with the mouse it still fires on the left button press.
+
+## Content Guidelines
+
+- The content of the options in the drop-down box needs to be expressed accurately and contain information to make it easier for users to choose among the options when browsing
+- Use statement-like capitalization and write options concisely and clearly
+- In the case of an action option, use a verb or verb phrase to describe the action that will occur when the user selects the option. For example, "Move", "Log time", or "Hide labels"
+- do not use prepositions
+
+| ✅ Recommended usage | ❌ Deprecated usage |
+| --- | --- |
+| <MenuExample client:only="react" menu={[{ node: 'item', name: 'Add text' },{ node: 'item', name: 'Add link' },{ node: 'item', name: 'Add image' },{ node: 'item', name: 'Add video' }]} /> | <MenuExample client:only="react" menu={[{ node: 'item', name: 'Add a text' },{ node: 'item', name: 'Add a link' },{ node: 'item', name: 'Add a image' },{ node: 'item', name: 'Add a video' }]} /> |
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Why does the Dropdown layer accidentally wrap when the width is not enough near the screen border?**
+
+    After Chromium 104, the wrapping rendering strategy when the width of the screen border text is not enough has changed. For details, see [issue #1022](https://github.com/DouyinFE/semi-design/issues/1022), the semi-side has been This problem was fixed in v2.17.0.

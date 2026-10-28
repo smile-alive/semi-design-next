@@ -1,0 +1,18 @@
+**Props**
+
+| Property           | Description                                                                                                                             | Type                          | Default |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------- |
+| actions            | Actions at the bottom of the content area; each element is one action, spaced 12px apart horizontally.                                  | `JSX.Element[]`               | -       |
+| bodyStyle          | Inline style of the content area, with CSS property names in kebab-case.                                                                | `JSX.CSSProperties \| string` | -       |
+| bordered           | Whether the card has an outer border.                                                                                                   | `boolean`                     | `true`  |
+| cover              | Card cover, below the header.                                                                                                           | `JSX.Element`                 | -       |
+| footer             | Custom footer at the bottom of the card.                                                                                                | `JSX.Element`                 | -       |
+| footerLine         | Whether there is a border between the footer and the content area.                                                                      | `boolean`                     | `false` |
+| footerStyle        | Inline style of the footer area, with CSS property names in kebab-case.                                                                 | `JSX.CSSProperties \| string` | -       |
+| header             | Custom header that replaces title and headerExtraContent.                                                                               | `JSX.Element`                 | -       |
+| headerExtraContent | Extra content to the right of the title.                                                                                                | `JSX.Element`                 | -       |
+| headerLine         | Whether there is a border between the header and the content area.                                                                      | `boolean`                     | `true`  |
+| headerStyle        | Inline style of the header area, with CSS property names in kebab-case.                                                                 | `JSX.CSSProperties \| string` | -       |
+| loading            | Whether the content area shows a loading placeholder; the root element's aria-busy is true while on.                                    | `boolean`                     | `false` |
+| shadows            | When to show the shadow: hover or always. No shadow when unset.                                                                         | `Shadows`                     | -       |
+| title              | Title. A string renders as a div styled like a level-6 heading and truncated with a tooltip when too long; a JSX element renders as is. | `JSX.Element`                 | -       |

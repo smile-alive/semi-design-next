@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | UserGuide does not render children; anything passed is ignored. | `ReactNode` | - |
+| className | Custom class name. In popup mode it lands on the popover card; in modal mode it lands on the outer element of the dialog. | `string` | - |
+| current | Index of the current step, starting at 0. When set, the parent controls the step and writes it back with onChange; when not set, the guide starts at step 0 and the component keeps the step itself. | `number` | - |
+| finishText | Text of the finish button on the last step. When not set, the text from the locale pack is used. | `string` | - |
+| getPopupContainer | In modal mode the dialog is rendered into this DOM node. In popup mode body scrolling is not locked when it points to an element other than body. The popover card sits in the top layer and is not affected. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| mask | Whether to show the mask. A step's own mask overrides it. | `boolean` | `true` |
+| mode | Guide mode: popup for a bubble card, modal for a dialog. | `'popup' \| 'modal'` | `"popup"` |
+| nextButtonProps | Props of the next button, which may include className, style and onClick. onClick runs before the built-in handling. The button text is children; the text of the last step comes from finishText. | `ButtonProps` | `{}` |
+| onChange | Callback when the step changes through the previous or next button, with the new index. It is not called on finish or skip. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| onFinish | Callback when the finish button on the last step is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onNext | Callback when the next button is clicked, with the new index. It is not called on the last step, where onFinish handles the click instead. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| onPrev | Callback when the previous button is clicked, with the new index. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| onSkip | Callback when the skip button is clicked or Esc is pressed. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| position | Position of the bubble card relative to the target element. A step's own position overrides it. Options: `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`, `leftTopOver`, `rightTopOver`, `leftBottomOver` and `rightBottomOver`. | `Position` | `"bottom"` |
+| prevButtonProps | Props of the previous button, which may include className, style and onClick. onClick runs before the built-in handling. The button text is children. | `ButtonProps` | `{}` |
+| showPrevButton | Whether to show the previous button. It is never shown on the first step. | `boolean` | `true` |
+| showSkipButton | Whether to show the skip button. It is never shown on the last step. | `boolean` | `true` |
+| spotlightPadding | Extra space in pixels around the highlighted area. A step's own spotlightPadding overrides it; 5 when neither is set. | `number` | - |
+| steps | Data of the guide steps, required. The title, description and cover of each step can be ReactNode. | `StepItem[]` | - |
+| style | Custom style. In popup mode it lands on the popover card; in modal mode it lands on .semi-modal. | `React.CSSProperties` | - |
+| theme | Theme of the popup mode. A step's own theme overrides it. | `'default' \| 'primary'` | `"default"` |
+| visible | Whether the guide is shown. | `boolean` | `false` |
+| zIndex | The z-index of the mask in popup mode and of the dialog in modal mode. The popover card sits in the top layer, always above the mask. | `number` | `1030` |

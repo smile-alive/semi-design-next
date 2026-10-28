@@ -1,0 +1,214 @@
+---
+order: 85
+title: 用户引导
+icon: doc-userGuide
+brief: 用于页面对新用户进行功能引导
+---
+
+import UserGuideReactApi from './api/user-guide.react.zh-CN.mdx';
+import UserGuideVueApi from './api/user-guide.vue.zh-CN.mdx';
+import UserGuideSolidApi from './api/user-guide.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { UserGuide } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { UserGuide } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { UserGuide } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 主题
+
+`popup` 气泡卡片模式下提供两种主题 `default` 和 `primary`，通过 `theme` 属性设置。
+
+<Demo id="theme" />
+
+### 气泡卡片弹出位置
+
+`popup` 气泡卡片模式下提供 16 种弹出位置，可选值有 `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`, `leftTopOver`, `rightTopOver`, `leftBottomOver`, `rightBottomOver`，还可以通过 `showArrow` 属性设置是否显示箭头。
+
+<Demo id="position" />
+
+### 设置高亮区域大小
+
+通过 `spotlightPadding` 属性设置。
+
+<Demo id="spotlight-padding" />
+
+### 定制按钮
+
+通过 `nextButtonProps` 和 `prevButtonProps` 属性设置按钮的样式。
+
+<Framework only="vue">
+
+按钮文本使用 `nextText`、`prevText` 插槽；最后一步的按钮文本由 `finishText` 决定。
+
+</Framework>
+
+<Framework only="solid">
+
+按钮文本通过 `nextButtonProps` 与 `prevButtonProps` 的 `children` 设置；最后一步的按钮文本由 `finishText` 决定。
+
+</Framework>
+
+<Demo id="custom-button" />
+
+### 受控
+
+通过 `current` 属性设置当前引导步骤。
+
+<Framework only="vue">
+
+用 `v-model:current` 绑定当前步骤，`v-model:visible` 绑定显示状态。
+
+</Framework>
+
+<Framework only="solid">
+
+用 `current` 绑定当前步骤，并在 `onChange` 中回写；用 `visible` 绑定显示状态，在 `onSkip`、`onFinish` 中关闭引导。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 弹窗式引导
+
+通过 `mode` 属性设置为 `modal` 开启弹窗式引导。
+
+<Framework only="vue">
+
+封面使用 `cover` 插槽，富文本描述使用 `description` 插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+封面使用 `renderCover`，富文本描述使用 `renderDescription`，它们只为当前步骤调用。
+
+</Framework>
+
+<Demo id="modal" />
+
+### 无遮罩
+
+通过 `mask` 属性设置为 `false` 开启无遮罩引导。
+
+<Demo id="no-mask" />
+
+## API 参考
+
+---
+
+<Framework only="react">
+
+<UserGuideReactApi />
+
+UserGuide 没有根元素：popup 模式下 `className`、`style` 落在气泡卡片上；modal 模式下 `className`、`style` 交给 Modal，落点与 Modal 一致。未声明的属性（包括 `aria-*` 与原生事件）会被丢弃。对话框的可访问名称只来自当前步骤的 `title`。
+
+</Framework>
+
+<Framework only="vue">
+
+<UserGuideVueApi />
+
+UserGuide 没有根元素：popup 模式下 `class`、`style` 落在气泡卡片上；modal 模式下按 Modal 的落点，`class` 落在 portal 内最外层元素上，`style` 落在 `.semi-modal` 上。`aria-*` 等其余未声明的属性会被丢弃。对话框的可访问名称只来自当前步骤的标题（`title` 插槽或 `item.title`）。
+
+</Framework>
+
+<Framework only="solid">
+
+<UserGuideSolidApi />
+
+UserGuide 没有根元素：popup 模式下 `class`、`style` 落在气泡卡片上；modal 模式下 `class`、`style` 交给 Modal，落点与 Modal 一致。未声明的属性（包括 `ref`、`aria-*` 与原生事件）会被丢弃。对话框的可访问名称只来自当前步骤的 `title`。
+
+</Framework>
+
+### StepItem
+
+<Framework only="react">
+
+| 属性             | 说明                                     | 类型                                                    | 默认值 |
+| ---------------- | ---------------------------------------- | ------------------------------------------------------- | ------ |
+| className        | 步骤的自定义类名                         | string                                                  | -      |
+| cover            | 步骤的封面图                             | ReactNode                                               | -      |
+| target           | 目标元素，高亮区域会聚焦到这个元素上     | (() => Element \| null \| undefined) \| Element \| null | -      |
+| title            | 步骤标题                                 | string \| ReactNode                                     | -      |
+| description      | 步骤描述                                 | ReactNode                                               | -      |
+| mask             | 是否显示此步骤的蒙层，会覆盖全局配置     | boolean                                                 | -      |
+| showArrow        | 是否显示箭头（仅在 mode=`popup` 时有效） | boolean                                                 | true   |
+| spotlightPadding | 此步骤高亮区域的内边距，会覆盖全局配置   | number                                                  | -      |
+| theme            | 此步骤的主题，会覆盖全局配置             | `default` \| `primary`                                  | -      |
+| position         | 此步骤弹出层的位置，会覆盖全局配置       | Position                                                | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+`steps` 的每一项（类型 `UserGuideStepItem`）只放数据，自定义内容通过 `title`、`description`、`cover` 插槽按 `{ item, index }` 渲染。
+
+| 属性             | 说明                                                                                                       | 类型                                            | 默认值 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------ |
+| class            | 步骤的自定义类名                                                                                           | string \| object \| array                       | -      |
+| target           | 目标元素，高亮区域会聚焦到这个元素上；函数形式在测量步骤时调用，目标尚未出现时可返回 `null` 或 `undefined` | Element \| (() => Element \| null \| undefined) | -      |
+| title            | 步骤标题的文本；`title` 插槽渲染出内容时以插槽为准                                                         | string                                          | -      |
+| description      | 步骤描述的文本；`description` 插槽渲染出内容时以插槽为准                                                   | string                                          | -      |
+| mask             | 是否显示此步骤的蒙层，会覆盖全局配置                                                                       | boolean                                         | -      |
+| showArrow        | 是否显示箭头（仅在 mode=`popup` 时有效）                                                                   | boolean                                         | true   |
+| spotlightPadding | 此步骤高亮区域的内边距，会覆盖全局配置                                                                     | number                                          | -      |
+| theme            | 此步骤的主题，会覆盖全局配置                                                                               | `default` \| `primary`                          | -      |
+| position         | 此步骤弹出层的位置，会覆盖全局配置                                                                         | Position                                        | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+`steps` 的每一项（类型 `UserGuideStepItem`）只放数据，自定义内容通过 `renderTitle`、`renderDescription`、`renderCover` 按 `{ item, index }`（类型 `UserGuideStepRenderProps`）渲染。
+
+| 属性             | 说明                                                                                                       | 类型                                                    | 默认值 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------ |
+| class            | 步骤的自定义类名                                                                                           | string                                                  | -      |
+| target           | 目标元素，高亮区域会聚焦到这个元素上；函数形式在测量步骤时调用，目标尚未出现时可返回 `null` 或 `undefined` | Element \| null \| (() => Element \| null \| undefined) | -      |
+| title            | 步骤标题的文本；`renderTitle` 渲染出内容时以它为准                                                         | string                                                  | -      |
+| description      | 步骤描述的文本；`renderDescription` 渲染出内容时以它为准                                                   | string                                                  | -      |
+| mask             | 是否显示此步骤的蒙层，会覆盖全局配置                                                                       | boolean                                                 | -      |
+| showArrow        | 是否显示箭头（仅在 mode=`popup` 时有效）                                                                   | boolean                                                 | true   |
+| spotlightPadding | 此步骤高亮区域的内边距，会覆盖全局配置                                                                     | number                                                  | -      |
+| theme            | 此步骤的主题，会覆盖全局配置                                                                               | `default` \| `primary`                                  | -      |
+| position         | 此步骤弹出层的位置，会覆盖全局配置                                                                         | Position                                                | -      |
+
+</Framework>
+
+## Accessibility
+
+- 每一步是以步骤 `title` 命名的对话框，按 Esc 等同点击「跳过」。
+- 两种模式下每一步出现时，焦点都移到主按钮（「下一步」或「完成」）上。popup 模式下 Tab 在卡片内循环，引导关闭时焦点回到打开前的元素；modal 模式的焦点循环与归还由 Modal 管理。
+
+## 设计变量
+
+<DesignToken />

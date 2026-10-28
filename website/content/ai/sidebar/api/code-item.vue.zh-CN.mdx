@@ -1,0 +1,31 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                                                                                                                                      | 类型                                                                                | 默认值      |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------- |
+| name               | 代码项名称，由 CodeContent 的面板头部和 Sidebar 的详情头部显示，CodeItem 自身不渲染。                                                                                                     | `string`                                                                            | `undefined` |
+| language           | 编程语言名称，同 CodeHighlight 的 language，需先通过 CodeHighlight.register 注册，未注册时显示纯文本。                                                                                    | `string`                                                                            | `undefined` |
+| content            | 代码或 JSON 字符串。                                                                                                                                                                      | `string`                                                                            | `undefined` |
+| isJson             | 为 true 时用 JsonViewer 展示，否则用 CodeHighlight。                                                                                                                                      | `boolean`                                                                           | `false`     |
+| jsonViewerProps    | 传给 JsonViewer 的其他属性，以及追加的 class 与 style。modelValue（content）、width 与 height（100%）、options（只读、自动换行）、showSearch（false）已有默认值，同名属性整体覆盖默认值。 | <ApiType detail={"(Partial\u003cJsonViewerProps> & ElementLook)"}>Type</ApiType>    | `undefined` |
+| codeHighlightProps | 传给 CodeHighlight 的其他属性，以及追加的 class 与 style。                                                                                                                                | <ApiType detail={"(Partial\u003cCodeHighlightProps> & ElementLook)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽         | 说明                                                                                            | 作用域参数                        |
+| ------------ | ----------------------------------------------------------------------------------------------- | --------------------------------- |
+| customRender | JsonViewer 的 customRender 插槽，用于渲染 jsonViewerProps.options.customRenderRule 匹配的内容。 | `JsonViewerCustomRenderSlotProps` |
+| searchButton | JsonViewer 的 searchButton 插槽，替换其搜索按钮。                                               | `JsonViewerSearchButtonSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

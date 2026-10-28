@@ -1,0 +1,43 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                               | 类型                             | 默认值                                                  |
+| ------------- | -------------------------------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------- |
+| modelValue    | 当前值，配合 v-model 使用；传入后由该值决定显示，变回 undefined 时回到 defaultValue 并转为非受控。 | `number`                         | `undefined`                                             |
+| defaultValue  | 非受控时的初始值。                                                                                 | `number`                         | `semiDefault("Rating", "defaultValue", 0)`              |
+| count         | 星的总数。                                                                                         | `number`                         | `semiDefault("Rating", "count", 5)`                     |
+| allowHalf     | 是否允许半选。                                                                                     | `boolean`                        | `semiDefault("Rating", "allowHalf", false)`             |
+| allowClear    | 是否允许再次点击后清除。                                                                           | `boolean`                        | `semiDefault("Rating", "allowClear", true)`             |
+| disabled      | 只读，无法进行交互，也无法获得焦点。                                                               | `boolean`                        | `semiDefault("Rating", "disabled", false)`              |
+| size          | 尺寸，可选 default、small，也可传入 number 自定义尺寸。                                            | `number \| "small" \| "default"` | `semiDefault("Rating", "size", "default")`              |
+| tooltips      | 每一项的提示信息。                                                                                 | `string[]`                       | `semiGlobalDefault("Rating", "tooltips")`               |
+| prefixCls     | 组件的样式类名前缀。                                                                               | `string`                         | `semiDefault("Rating", "prefixCls", cssClasses.PREFIX)` |
+| autofocus     | 挂载时自动获取焦点。                                                                               | `boolean`                        | `semiGlobalDefault("Rating", "autofocus")`              |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。                                   | `boolean`                        | `semiGlobalDefault("Rating", "preventScroll")`          |
+| ariaLabel     | radiogroup 的可访问名称；缺省时名称概括当前取值。                                                  | `string`                         | `semiGlobalDefault("Rating", "ariaLabel")`              |
+
+**Events**
+
+| 事件              | 说明                                                                                        | 回调参数                                              |
+| ----------------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| update:modelValue | 选择变化时触发，供 v-model 回写。                                                           | `[value: number]`                                     |
+| change            | 选择变化时触发，参数为新的值。                                                              | `[value: number]`                                     |
+| hoverChange       | 指针经过时数值变化；指针移出或点击清除时收到 undefined。                                    | `[value: number \| undefined]`                        |
+| click             | 点击星或按 Enter、Space 选中时触发，参数为事件与星的序号；会遮住根元素上的原生 click 监听。 | `[event: MouseEvent \| KeyboardEvent, index: number]` |
+| focus             | 焦点进入整个评分组件时触发，在星之间移动不触发。                                            | `[event: FocusEvent]`                                 |
+| blur              | 焦点离开整个评分组件时触发。                                                                | `[event: FocusEvent]`                                 |
+| keydown           | 仅在方向键使值移动时触发。                                                                  | `[event: KeyboardEvent]`                              |
+
+**Slots**
+
+| 插槽      | 说明                                                                                           | 作用域参数 |
+| --------- | ---------------------------------------------------------------------------------------------- | ---------- |
+| character | 每颗星中绘制的字符；只含文本时，该文本作为各星可访问名称与整组摘要的单位，否则用语言包的单位。 | `any`      |
+
+**Exposes**
+
+| 名称  | 说明                                                                  | 类型                                          |
+| ----- | --------------------------------------------------------------------- | --------------------------------------------- |
+| focus | 聚焦 Tab 会到达的 radio，与 autofocus 的落点相同；disabled 时无效果。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| blur  | 让评分内获得焦点的元素失焦；焦点不在评分内或 disabled 时无效果。      | <ApiType detail={"() => void"}>Type</ApiType> |

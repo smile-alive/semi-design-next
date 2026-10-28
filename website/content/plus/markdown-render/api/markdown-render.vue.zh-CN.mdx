@@ -1,0 +1,28 @@
+**Props**
+
+| 属性          | 说明                                                                                                                                                                                                    | 类型                       | 默认值                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------ |
+| raw           | Markdown 或 MDX 的纯文本。变化时重新编译。                                                                                                                                                              | `string`                   | `undefined`                                            |
+| components    | 用于覆盖 Markdown 元素，也可添加 MDX 中引用的自定义组件；值为 Vue 组件或 HTML 标签名，元素键（如 h1）只接受组件或自身的标签名。与 MarkdownRender.defaultComponents 合并，变化时只重新渲染，不重新编译。 | `MarkdownRenderComponents` | `semiGlobalDefault("MarkdownRender", "components")`    |
+| format        | raw 的格式，md 为纯 Markdown，mdx 允许内嵌 JSX。变化时重新编译。                                                                                                                                        | `"md" \| "mdx"`            | `semiDefault("MarkdownRender", "format", "mdx")`       |
+| remarkPlugins | 自定义 Remark 插件，数组元素变化时重新编译。                                                                                                                                                            | `PluggableList`            | `semiGlobalDefault("MarkdownRender", "remarkPlugins")` |
+| rehypePlugins | 自定义 Rehype 插件，数组元素变化时重新编译。                                                                                                                                                            | `PluggableList`            | `semiGlobalDefault("MarkdownRender", "rehypePlugins")` |
+| remarkGfm     | 是否开启 GitHub GFM 语法。变化时重新编译。                                                                                                                                                              | `boolean`                  | `semiDefault("MarkdownRender", "remarkGfm", true)`     |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

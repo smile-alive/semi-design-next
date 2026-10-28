@@ -1,0 +1,30 @@
+**Props**
+
+| Property | Description                                                   | Type         | Default                                    |
+| -------- | ------------------------------------------------------------- | ------------ | ------------------------------------------ |
+| bordered | Whether to show a border. Only takes effect in non-full mode. | `boolean`    | `semiDefault("Banner", "bordered", false)` |
+| fullMode | Whether the banner is in full mode.                           | `boolean`    | `semiDefault("Banner", "fullMode", true)`  |
+| title    | Plain-text title. The title slot wins when both are given.    | `string`     | `undefined`                                |
+| type     | Type: info, success, danger or warning.                       | `BannerType` | `semiDefault("Banner", "type", "info")`    |
+
+**Events**
+
+| Event | Description                                                                                                        | Callback parameters   |
+| ----- | ------------------------------------------------------------------------------------------------------------------ | --------------------- |
+| close | Emitted when the close button is clicked, with its native click event. The banner hides once the listeners return. | `[event: MouseEvent]` |
+
+**Slots**
+
+| Slot        | Description                                                              | Scope parameters |
+| ----------- | ------------------------------------------------------------------------ | ---------------- |
+| default     | Custom content below the message.                                        | `any`            |
+| description | Description content.                                                     | `any`            |
+| icon        | Replaces the icon of the type. An empty slot hides the icon.             | `any`            |
+| closeIcon   | Replaces the icon in the close button. An empty slot removes the button. | `any`            |
+| title       | Title content.                                                           | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

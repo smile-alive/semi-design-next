@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                               | 类型                                                              | 默认值  |
+| ----------- | ------------------------------------------------------------------ | ----------------------------------------------------------------- | ------- |
+| children    | 面板内容。                                                         | `React.ReactNode`                                                 | -       |
+| className   | 根元素的类名。                                                     | `string`                                                          | -       |
+| disabled    | 面板是否被禁用。                                                   | `boolean`                                                         | `false` |
+| extra       | 面板头右侧的辅助内容，位于切换按钮之外，可以放按钮、输入框等控件。 | `React.ReactNode`                                                 | -       |
+| header      | 面板头内容，渲染在切换按钮内，不能包含交互元素。                   | `React.ReactNode`                                                 | -       |
+| itemKey     | 必填且唯一，用于匹配 `activeKey` 与 `defaultActiveKey`。           | `string`                                                          | -       |
+| onMotionEnd | 展开或收起动画结束时调用。                                         | <ApiType detail={"() => void"}>Type</ApiType>                     | -       |
+| ref         | 根元素（`.semi-collapse-item`）的引用。                            | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| showArrow   | 是否展示箭头。                                                     | `boolean`                                                         | `true`  |
+| style       | 根元素（`.semi-collapse-item`）的样式。                            | `React.CSSProperties`                                             | -       |

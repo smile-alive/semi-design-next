@@ -1,0 +1,693 @@
+---
+order: 57
+title: 导航
+icon: doc-navigation
+brief: 为页面和功能提供导航的菜单列表。
+---
+
+import NavReactApi from './api/nav.react.zh-CN.mdx';
+import NavItemReactApi from './api/nav-item.react.zh-CN.mdx';
+import SubNavReactApi from './api/sub-nav.react.zh-CN.mdx';
+import NavHeaderReactApi from './api/nav-header.react.zh-CN.mdx';
+import NavFooterReactApi from './api/nav-footer.react.zh-CN.mdx';
+import NavVueApi from './api/nav.vue.zh-CN.mdx';
+import NavItemVueApi from './api/nav-item.vue.zh-CN.mdx';
+import SubNavVueApi from './api/sub-nav.vue.zh-CN.mdx';
+import NavHeaderVueApi from './api/nav-header.vue.zh-CN.mdx';
+import NavFooterVueApi from './api/nav-footer.vue.zh-CN.mdx';
+import NavSolidApi from './api/nav.solid.zh-CN.mdx';
+import NavItemSolidApi from './api/nav-item.solid.zh-CN.mdx';
+import SubNavSolidApi from './api/sub-nav.solid.zh-CN.mdx';
+import NavHeaderSolidApi from './api/nav-header.solid.zh-CN.mdx';
+import NavFooterSolidApi from './api/nav-footer.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Nav } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Nav } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Nav } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+通过传递 `items` 参数，你能够快速得到一个导航栏。
+
+<Framework only="react">
+
+每个导航项目包括：
+
+- `itemKey`：导航项目的唯一标识（必须）
+- `text`：导航文案
+- `icon`：导航图标，你可以从 `@fibrae/semi-icons-react`、`@fibrae/semi-icons-react/lab` 中自由选择你喜欢的图标，详情可查阅 [Icon 组件文档](/zh-CN/react/basic/icon)
+
+</Framework>
+
+<Framework only="vue">
+
+每个导航项目包括：
+
+- `itemKey`：导航项目的唯一标识（必须）
+- `text`：导航文案
+
+`items` 只放数据。导航图标通过 Nav 的 `#icon="{ item, level }"` 作用域插槽提供，你可以从 `@fibrae/semi-icons-vue`、`@fibrae/semi-icons-vue/lab` 中自由选择你喜欢的图标，详情可查阅 [Icon 组件文档](/zh-CN/react/basic/icon)。
+
+</Framework>
+
+<Framework only="solid">
+
+每个导航项目包括：
+
+- `itemKey`：导航项目的唯一标识（必须）
+- `text`：导航文案
+
+`items` 只放数据。导航图标通过 Nav 的 `renderItemIcon({ item, level })` 提供，你可以从 `@fibrae/semi-icons-solid`、`@fibrae/semi-icons-solid/lab` 中自由选择你喜欢的图标，详情可查阅 [Icon 组件文档](/zh-CN/react/basic/icon)。显示的文案、展开收起箭头同样分别由 `renderItemText`、`renderItemToggleIcon`、`renderItemExpandIcon` 提供，只在导航项显示时调用。
+
+</Framework>
+
+参数含义详见 [Nav.Item](#Nav.Item) 或 [Nav.Sub](#Nav.Sub)
+
+开发者可能会经常定义 Logo 区域和收起按钮区域，Navigation 则提供了这样的容器方便开发者快速定义导航头部和底部，你仅需按要求传入 `header` 或 `footer` 即可。
+
+对于 `footer`，semi-ui 额外封装了一个收起功能按钮，开发者可以通过传递 `collapseButton = true` 开启此功能，不过该参数仅在 `mode = "vertical"` （垂直导航）生效。
+
+<Framework only="vue">
+
+`header`、`footer` 只接收数据配置，Logo 等节点通过 `<Nav.Header>` 的 `#logo` 插槽、Nav 的 `#header`、`#footer` 插槽提供。
+
+</Framework>
+
+<Framework only="solid">
+
+`header`、`footer` 的配置对象只放数据：`logo` 是返回 Logo 的渲染函数，如 `logo: () => <IconSemiLogo />`，只在显示时调用；`text` 为字符串或数字。需要放入其他节点时，可以直接传 JSX，或使用 Nav.Header、Nav.Footer 子元素。
+
+</Framework>
+
+参数详见 [Nav.Header](#Nav.Header) 和 [Nav.Footer](#Nav.Footer)。
+
+<Demo id="basic" />
+
+### 纯文字导航
+
+> 导航缩进目前仅对一级导航有效。
+
+<Framework only="react">
+
+如果导航项没有传入 `icon` 字段，文案会自动向左填充。
+
+</Framework>
+
+<Framework only="vue">
+
+如果没有提供 `#icon` 插槽，文案会自动向左填充。
+
+</Framework>
+
+<Framework only="solid">
+
+如果没有提供 `renderItemIcon`，或它对某项返回空内容，文案会自动向左填充。
+
+</Framework>
+
+<Demo id="text-only" />
+
+### 定义头部和底部
+
+<Framework only="react">
+
+通过 `header` 和 `footer` 快速定义导航头部和底部。`footer` 中的 `collapseButton` 仅在 `mode = "vertical"`（垂直导航）下生效。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `<Nav.Header>` 和 `header` 快速定义导航头部，通过 `footer` 快速定义导航底部。`footer` 中的 `collapseButton` 仅在 `mode = "vertical"`（垂直导航）下生效。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `header` 和 `footer` 快速定义导航头部和底部。`footer` 中的 `collapseButton` 仅在 `mode = "vertical"`（垂直导航）下生效。
+
+</Framework>
+
+<Demo id="header-footer" />
+
+### 导航样式定义
+
+<Framework only="react">
+
+Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 用于定义导航组件最外层的样式，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style` 参数）。
+
+</Framework>
+
+<Framework only="vue">
+
+Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 作为 attrs 落在导航组件最外层，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style`）。
+
+</Framework>
+
+<Framework only="solid">
+
+Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 用于定义导航组件最外层的样式，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style` 参数）。
+
+</Framework>
+
+例如你需要一个中间列表可以滚动，导航头部和底部固定的导航组件，可以这么使用：
+
+<Demo id="style" />
+
+<Framework only="react">
+
+### JSX 写法
+
+可以使用 JSX 写法定义导航头部、导航项以及导航底部。使用 JSX写法时，在 Nav 的 children 层级，你除了可以使用 Nav.Header、Nav.Item、Nav.Sub、Nav.Footer外，你也可以置入其他自定义的 ReactNode 元素。Nav 从子元素中收集带 `itemKey` 的项（递归其 children），用于默认选中项的祖先展开与顶层选中；自行封装的导航项把 `itemKey` 等属性透传给 Nav.Item 或 Nav.Sub 即可参与，不需要声明静态属性
+
+</Framework>
+
+<Framework only="vue">
+
+### 模板写法
+
+可以使用模板写法定义导航头部、导航项以及导航底部。在 Nav 的默认插槽里，你除了可以使用 Nav.Header、Nav.Item、Nav.Sub、Nav.Footer 外，也可以置入其他自定义的元素。图标、Logo 等节点通过各子组件的 `#icon`、`#logo` 等插槽提供。
+
+</Framework>
+
+<Framework only="solid">
+
+### JSX 写法
+
+可以使用 JSX 写法定义导航头部、导航项以及导航底部。在 Nav 的子元素中，除了 Nav.Header、Nav.Item、Nav.Sub、Nav.Footer 外，也可以置入其他自定义的 JSX 元素，它们会被包进列表中的一个 `li`。Nav 通过 Nav.Item 与 Nav.Sub 收集带 `itemKey` 的项，用于默认选中项的祖先展开与顶层选中；自行封装的导航项返回 Nav.Item 或 Nav.Sub 即可参与，不需要声明静态属性。
+
+</Framework>
+
+<Demo id="jsx" />
+
+### 配合路由组件
+
+<Framework only="react">
+
+为了在使用 react-router 等路由组件时，能将 NavItem 包裹在路由组件提供的 Link 或者 NavLink 中来让用户点击 NavItem 时候触发路由组件的点击事件， 我们需要自定义渲染。
+
+使用 renderWrapper 在每个导航项外包裹自定义导航组件 [查看此 CodeSandBox](https://codesandbox.io/s/semi-navigation-with-react-router-9kk9dm?file=/src/App.js)
+
+```jsx
+import { Link } from 'react-router-dom';
+import React from 'react';
+import { Nav } from '@fibrae/semi-ui-react';
+
+() => {
+    return (
+        <Nav
+            renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
+                const routerMap = {
+                    Home: '/',
+                    About: '/about',
+                    Dashboard: '/dashboard',
+                    'Nothing Here': '/nothing-here',
+                };
+                return (
+                    <Link style={{ textDecoration: 'none' }} to={routerMap[props.itemKey]}>
+                        {itemElement}
+                    </Link>
+                );
+            }}
+            items={[
+                { itemKey: 'Home', text: 'Home' },
+                { itemKey: 'About', text: 'About' },
+                {
+                    text: 'Sub',
+                    itemKey: 'Sub',
+                    items: ['Dashboard', 'Nothing Here'],
+                },
+            ]}
+        ></Nav>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+为了在使用 vue-router 等路由组件时，能将 Nav.Item 包裹在路由组件提供的 RouterLink 中来让用户点击导航项时触发路由跳转，我们需要自定义渲染。
+
+使用 `#wrapper="{ itemElement, isSubNav, isInSubNav, props }"` 作用域插槽在每个导航项外包裹自定义导航组件，用 `<component :is="itemElement" />` 挂载导航项的 `li`。
+
+```vue
+<script setup lang="ts">
+    import { RouterLink } from 'vue-router';
+    import { Nav } from '@fibrae/semi-ui-vue';
+
+    const routerMap = {
+        Home: '/',
+        About: '/about',
+        Dashboard: '/dashboard',
+        'Nothing Here': '/nothing-here',
+    };
+    const items = [
+        { itemKey: 'Home', text: 'Home' },
+        { itemKey: 'About', text: 'About' },
+        { itemKey: 'Sub', text: 'Sub', items: ['Dashboard', 'Nothing Here'] },
+    ];
+</script>
+
+<template>
+    <Nav :items="items">
+        <template #wrapper="{ itemElement, props }">
+            <RouterLink :to="routerMap[props.itemKey as keyof typeof routerMap]" style="text-decoration: none">
+                <component :is="itemElement" />
+            </RouterLink>
+        </template>
+    </Nav>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+为了在使用 `@solidjs/router` 等路由组件时，能将导航项包裹在路由组件提供的链接中，让用户点击导航项时触发路由跳转，我们需要自定义渲染。
+
+使用 `renderWrapper` 在每个导航项外包裹自定义组件，`itemElement` 是导航项的 `li`，且只能渲染一次。
+
+```jsx
+import { A } from '@solidjs/router';
+import { Nav } from '@fibrae/semi-ui-solid';
+
+const routerMap = {
+    Home: '/',
+    About: '/about',
+    Dashboard: '/dashboard',
+    'Nothing Here': '/nothing-here',
+};
+
+export default function RouterNav() {
+    return (
+        <Nav
+            renderWrapper={({ itemElement, props }) => (
+                <A href={routerMap[props.itemKey as keyof typeof routerMap]} style={{ 'text-decoration': 'none' }}>
+                    {itemElement}
+                </A>
+            )}
+            items={[
+                { itemKey: 'Home', text: 'Home' },
+                { itemKey: 'About', text: 'About' },
+                { itemKey: 'Sub', text: 'Sub', items: ['Dashboard', 'Nothing Here'] },
+            ]}
+        />
+    );
+}
+```
+
+</Framework>
+
+### 垂直与水平布局
+
+Navigation 目前提供两种方向的导航：
+
+- 垂直布局（默认） `mode = "vertical"`
+- 水平布局 `mode = "horizontal"`
+
+特别注意的是，有一些功能（参数）仅在 `mode = "vertical"` 时有效：
+
+- `isCollapsed` （导航收起到侧边）
+- `defaultOpenKeys` | `openKeys` （指定默认的以及受控的展开子导航项 key 数组，这个参数仅在 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+- `Footer` 组件的 `collapseButton` 收起侧边栏功能按钮
+
+#### 垂直布局
+
+<Demo id="vertical" />
+
+#### 水平布局
+
+<Demo id="horizontal" />
+
+#### 水平加垂直
+
+一般的平台设计会采取水平加垂直导航的模式，这里有一个比较常见的例子。
+
+<Demo id="horizontal-vertical" />
+
+### 展开收起箭头位置
+
+可通过 `toggleIconPosition` 改变 NavSub 展开收起箭头的位置，默认为 'right' 右侧展示，可改为 'left'
+
+<Demo id="toggle-icon-position" />
+
+### 导航缩进
+
+默认导航缩进目前仅对第一级导航有效果。如果你希望对多级导航，按层级缩进，请先将 `limitIndent` 设置为 false (只在竖直方向生效)
+
+<Framework only="react">
+
+- 当以 Jsx 方式用 Nav.Item 传入导航项时，请手动给 Nav.Item 传入 `level` props。
+- 以 items 方式传入导航项时，无需关心 level
+
+</Framework>
+
+<Framework only="vue">
+
+- 当以模板方式用 Nav.Item 传入导航项时，请手动给 Nav.Item 传入 `level` 属性。
+- 以 items 方式传入导航项时，无需关心 level
+
+</Framework>
+
+<Framework only="solid">
+
+- 当以 JSX 方式用 Nav.Item 传入导航项时，请手动给 Nav.Item 传入 `level` 属性。
+- 以 items 方式传入导航项时，无需关心 level
+
+</Framework>
+
+<Demo id="limit-indent" />
+
+### 非受控属性
+
+包括：
+
+- `defaultSelectedKeys`（默认被选中的导航项 `key` 数组）
+- `defaultOpenKeys`（默认展开的导航项 `key` 数组，仅 `mode = "vertical"` 且 `isCollapsed` | `defaultIsCollapsed = false` 的情况下有效）
+- `defaultIsCollapsed`（侧边栏默认是否收起，仅 `mode = "vertical"` 时有效）
+
+<Demo id="uncontrolled" />
+
+### 受控属性
+
+<Framework only="react">
+
+Navigation 组件提供了几个受控属性，配合各种回调，可以很轻松地控制导航。
+
+目前受控的属性为：
+
+- `isCollapsed`（侧边栏是否收起，仅 `mode =" vertical"` 时生效）
+- `selectedKeys`（当前选中的导航项 `key` 数组）
+- `openKeys` （当前展开的导航项数组，仅 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+
+对应的回调为：
+
+- `onCollapseChange(isCollapsed: boolean): void`
+- `onSelect({ itemKey: string, selectedKeys: string[], domEvent: MouseEvent | KeyboardEvent }): void`
+- `onOpenChange({ itemKey: string, openKeys: string[], domEvent?: MouseEvent | KeyboardEvent, isOpen: boolean }): void`
+
+</Framework>
+
+<Framework only="vue">
+
+Navigation 组件提供了几个受控属性，使用 `v-model` 即可轻松地控制导航，也可以配合事件使用。
+
+目前受控的属性为：
+
+- `v-model:isCollapsed`（侧边栏是否收起，仅 `mode = "vertical"` 时生效）
+- `v-model:selectedKeys`（当前选中的导航项 `key` 数组，只含被选中项自身）
+- `v-model:openKeys` （当前展开的导航项数组，仅 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+
+对应的事件为：
+
+- `@collapseChange(isCollapsed: boolean)`
+- `@select({ itemKey: string, selectedKeys: string[], domEvent: MouseEvent | KeyboardEvent })`
+- `@openChange({ itemKey: string, openKeys: string[], domEvent?: MouseEvent | KeyboardEvent, isOpen: boolean })`
+
+水平或收起模式下，悬停打开子菜单同样触发 `update:openKeys`，此时弹层不受 `openKeys` 控制。
+
+</Framework>
+
+<Framework only="solid">
+
+Navigation 组件提供了几个受控属性，配合各种回调，可以很轻松地控制导航。
+
+目前受控的属性为：
+
+- `isCollapsed`（侧边栏是否收起，仅 `mode = "vertical"` 时生效）
+- `selectedKeys`（当前选中的导航项 `key` 数组）
+- `openKeys`（当前展开的导航项数组，仅 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+
+对应的回调为：
+
+- `onCollapseChange(isCollapse: boolean): void`
+- `onSelect({ itemKey, selectedKeys, selectedItems, domEvent }): void`
+- `onOpenChange({ itemKey, openKeys, domEvent, isOpen }): void`
+
+</Framework>
+
+<Demo id="controlled" />
+
+## API 参考
+
+### Nav
+
+<Framework only="react">
+
+<NavReactApi />
+
+其他原生属性（如 `id`、`aria-label`）落在最外层的 `nav` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<NavVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在最外层的 `nav` 上。
+
+#### items 数据项
+
+`items` 是 `(string | NavItemConfig)[]`，字符串项同时作为 `text` 和 `itemKey`。带有非空 `items` 的项渲染为 Nav.Sub，其余渲染为 Nav.Item。数据项只放数据，节点通过 Nav 的 `#icon`、`#text`、`#toggleIcon`、`#expandIcon` 作用域插槽提供，参数为 `{ item, level }`。
+
+| 属性             | 描述                                                       | 类型                        | 默认值 |
+| ---------------- | ---------------------------------------------------------- | --------------------------- | ------ |
+| itemKey          | 导航项目唯一标识                                           | string \| number            |        |
+| text             | 导航项目文案                                               | string \| number            |        |
+| items            | 子导航项，带有非空 `items` 时渲染为 Nav.Sub                | (string \| NavItemConfig)[] |        |
+| disabled         | 是否禁用                                                   | boolean                     |        |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效             | boolean \| number           |        |
+| link             | 导航项 href 链接，仅 Nav.Item 生效                         | string                      |        |
+| linkOptions      | 透传给 a 标签的参数，仅 Nav.Item 生效                      | AnchorHTMLAttributes        |        |
+| tooltipHideDelay | 此导航项 tooltip 隐藏的延迟，仅 Nav.Item 生效              | number                      |        |
+| tooltipShowDelay | 此导航项 tooltip 显示的延迟，仅 Nav.Item 生效              | number                      |        |
+| dropdownProps    | 弹出层 `dropdown` 参数配置，仅 Nav.Sub 生效                | SubDropdownProps            |        |
+| dropdownStyle    | 弹出层的 style，仅 Nav.Sub 生效                            | StyleValue                  |        |
+| class            | 导航项 `li` 的类名                                         | string \| object \| array   |        |
+| style            | 导航项 `li` 的自定义样式                                   | StyleValue                  |        |
+| onMouseenter     | mouse enter 时触发                                         | (event: MouseEvent) => void |        |
+| onMouseleave     | mouse leave 时触发                                         | (event: MouseEvent) => void |        |
+| data-\*、aria-\* | `data-*` 落在 `li` 上，`aria-*` 落在获得焦点的链接或按钮上 | unknown                     |        |
+
+其余字段（如 `path`）会被忽略。
+
+</Framework>
+
+<Framework only="solid">
+
+<NavSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `aria-label`）落在最外层的 `nav` 上。
+
+</Framework>
+
+### Nav.Item
+
+<Framework only="react">
+
+<NavItemReactApi />
+
+`aria-*` 落在获得焦点的链接或按钮上，其余原生属性（如 `id`、`data-*`）落在 `li` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<NavItemVueApi />
+
+`aria-*` 落在获得焦点的链接或按钮上，`class`、`style`、`data-*`、`@mouseenter`、`@mouseleave` 等其余属性落在 `li` 上，传入的 `class` 替代默认的 `semi-navigation-item-normal`。`tabindex` 改用原生写法，落在链接或按钮上。
+
+</Framework>
+
+<Framework only="solid">
+
+<NavItemSolidApi />
+
+`class` 替代默认的 `semi-navigation-item-normal`，`style`、`ref`、`data-*` 与原生事件（如 `onMouseEnter`）落在 `li` 上；`aria-*` 与 `tabIndex` 落在获得焦点的链接或按钮上。
+
+</Framework>
+
+### Nav.Sub
+
+<Framework only="react">
+
+<SubNavReactApi />
+
+`aria-*` 落在获得焦点的标题上，其余原生属性（如 `id`、`data-*`）落在外层 `li` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SubNavVueApi />
+
+`aria-*` 落在获得焦点的标题按钮上，`class`、`style`、`data-*`、`@mouseenter`、`@mouseleave` 等其余属性落在 `li` 上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SubNavSolidApi />
+
+`aria-*` 落在获得焦点的标题按钮上，`class`、`style`、`ref`、`data-*` 与原生事件（如 `onMouseEnter`）落在 `li` 上。
+
+</Framework>
+
+### Nav.Header
+
+<Framework only="react">
+
+<NavHeaderReactApi />
+
+其他原生属性（如 `id`、`aria-label`）落在最外层的 `div` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<NavHeaderVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在最外层元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<NavHeaderSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在最外层的 `div` 上。
+
+</Framework>
+
+### Nav.Footer
+
+<Framework only="react">
+
+<NavFooterReactApi />
+
+其他原生属性（如 `id`、`aria-label`）落在最外层的 `div` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<NavFooterVueApi />
+
+`class`、`style` 与原生属性（含 `@click`）经 attrs 落在最外层元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<NavFooterSolidApi />
+
+`class`、`style`、`ref` 与原生属性（含 `onClick`）落在最外层的 `div` 上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+Navigation 按 WAI-ARIA APG 的 [Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/) 实现，不使用 `menu` 角色。
+
+- 根元素是 `nav`（导航地标）。页面中有多个 Navigation 时，给每个传入不同的 `aria-label`，例如「顶部导航」「侧边导航」
+- 导航项列表是普通的 `ul` / `li` 列表；Header、Footer 不在列表中，其余非导航项的子元素会包进一个不产生盒子的 `li`
+- 传入 `link` 的 Nav.Item 是链接（`a href`），其余 Nav.Item 是原生 `button`；当前选中项带 `aria-current="page"`，禁用项带 `aria-disabled="true"`
+- 竖直展开时，Nav.Sub 的标题是原生 `button`，带 `aria-expanded` 表示子列表是否展开，`aria-controls` 指向子列表
+- 水平模式与收起模式下，Nav.Sub 的标题是菜单按钮，带 `aria-haspopup="menu"` 和反映弹层是否显示的 `aria-expanded`；弹层是 `menu`，其中的导航项是 `menuitem`，当前选中项带 `aria-current="page"`
+- Nav.Item、Nav.Sub 上的 `aria-*` 落在获得焦点的链接或按钮上，其余未声明的属性落在 `li` 上
+- 收起后的 Nav.Header 链接以 `text` 作为可访问名称
+
+### 键盘和焦点
+
+- 每个导航项和展开的子导航标题都是一个 `Tab` 停靠点，使用 `Tab`、`Shift + Tab` 依次切换焦点；收起的子导航中的导航项不在 Tab 序列中
+- 焦点在导航项上时，按 `Enter` 打开链接；没有 `link` 的导航项按 `Enter` 或 `Space` 选中
+- 焦点在竖直展开的子导航标题上时，按 `Enter` 或 `Space` 展开或收起子列表
+- 收起模式下，聚焦一级导航项时，Tooltip 显示其文案并作为该项的描述
+- 水平模式与收起模式下的子导航标题：
+    - 获得焦点时弹层打开（hover 触发），`下箭头`、`上箭头` 将焦点移到菜单的第一项、最后一项
+    - 菜单中使用 `上下箭头`、`Home`、`End` 移动焦点，`Enter` 或 `Space` 选中导航项；`右箭头` 打开嵌套的子菜单，`左箭头` 关闭子菜单并回到父菜单项（RTL 页面中左右对调）
+    - `Esc` 关闭当前菜单，焦点回到触发它的标题；`Tab` 关闭所有菜单并按正常顺序移动焦点
+
+<Framework only="react">
+
+- renderWrapper 的返回值直接放进 `ul`，返回的不是 `li` 时列表结构不合法，请自行保证返回 `li` 或可放进 `ul` 的内容。使用 renderWrapper 把导航项包进路由组件的链接时，链接内仍有导航项自己的按钮，会出现嵌套的可交互元素；需要路由跳转时，优先使用 `link` 与 `linkOptions.onClick`
+
+</Framework>
+
+<Framework only="vue">
+
+- `#wrapper` 插槽的返回值直接放进 `ul`，返回的不是 `li` 时列表结构不合法，请自行保证返回 `li` 或可放进 `ul` 的内容。使用 `#wrapper` 把导航项包进路由组件的链接时，链接内仍有导航项自己的按钮，会出现嵌套的可交互元素；需要路由跳转时，优先使用 `link` 与 `linkOptions.onClick`
+
+</Framework>
+
+<Framework only="solid">
+
+- `renderWrapper` 的返回值直接放进 `ul`，返回的不是 `li` 时列表结构不合法，请自行保证返回 `li` 或可放进 `ul` 的内容。使用 `renderWrapper` 把导航项包进路由组件的链接时，链接内仍有导航项自己的按钮，会出现嵌套的可交互元素；需要路由跳转时，优先使用 `link` 与 `linkOptions.onClick`
+
+</Framework>
+
+## 文案规范
+
+- 导航栏菜单使用句子大小写格式
+- 尽量精简
+
+| ✅ 推荐用法   | ❌ 不推荐用法 |
+| ------------- | ------------- |
+| Appeal center | Appeal Center |
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+<Framework only="react">
+
+- **导航动画丢失？**  
+  在使用函数式组件时，应该用 useState 或者 useMemo 包裹一下 items，原因是 items 直接传一个数组会触发组件重新渲染。
+
+</Framework>
+
+<Framework only="vue">
+
+- **导航动画丢失？**  
+  不要在模板里直接写 `:items="[...]"` 字面量，原因是父组件每次渲染都会生成新数组，触发导航重建，非受控的选中状态也会被重置为 `defaultSelectedKeys`。把 items 定义在 `script setup` 顶层，或放进 `ref`、`computed`。
+
+</Framework>
+
+<Framework only="solid">
+
+- **导航动画丢失？**  
+  `items` 中读取的 signal 变化时，导航会重新创建所有导航项，焦点随之丢失。只让真正变化的数据经过 signal，不要在 `items` 中读取频繁更新的 signal。
+
+</Framework>
+
+- **当子菜单高度超过999px，部分导航消失？** 请查看 [此 issue](https://github.com/DouyinFE/semi-design/issues/563)

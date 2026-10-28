@@ -1,0 +1,33 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| duration | Milliseconds the scroll to the top takes. The click event is throttled by this interval. | `number` | `semiDefault("BackTop", "duration", 450)` |
+| target | Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called on mount and again when the function itself changes. Template refs are assigned before the parent's mounted hook, so they can be read directly. | <ApiType detail={"(() => Window \u007c HTMLElement \u007c null)"}>Type</ApiType> | `undefined` |
+| visibilityHeight | Scroll distance after which the BackTop appears. | `number` | `semiDefault("BackTop", "visibilityHeight", 400)` |
+| badge | Badge props, same as FloatButton. | `FloatButtonBadge` | `semiGlobalDefault("BackTop", "badge")` |
+| colorful | Colorful button, same as FloatButton. Falls back to the FloatButton default when unset. | `boolean` | `semiGlobalDefault("BackTop", "colorful")` |
+| shape | Shape: round or square. Falls back to the FloatButton default when unset. | `"square" \| "round"` | `semiGlobalDefault("BackTop", "shape")` |
+| size | Size: default, small or large. Falls back to the FloatButton default when unset. | `"small" \| "default" \| "large"` | `semiGlobalDefault("BackTop", "size")` |
+
+**Events**
+
+| Event | Description                                                                                                   | Callback parameters   |
+| ----- | ------------------------------------------------------------------------------------------------------------- | --------------------- |
+| click | Emitted on click with the native click event. Throttled by duration, and emitted once the scroll has started. | `[event: MouseEvent]` |
+
+**Slots**
+
+| Slot       | Description                                                                                      | Scope parameters |
+| ---------- | ------------------------------------------------------------------------------------------------ | ---------------- |
+| default    | Static content of the button, shown in place of the icon. Must not contain interactive elements. | `any`            |
+| badgeCount | Custom badge content, in place of badge.count.                                                   | `any`            |
+| icon       | Button icon. Defaults to IconBackTop.                                                            | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

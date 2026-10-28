@@ -1,0 +1,364 @@
+{
+    "upload": {
+        "source": "packages/semi-ui-vue/src/upload/upload.vue",
+        "props": {
+            "accept": {
+                "zh-CN": "接受上传的文件类型，写法同 input 的 accept：文件后缀（如 `.jpg`）或 MIME type，用逗号分隔。",
+                "en-US": "Accepted file types, written like the accept attribute of input: file extensions such as `.jpg` or MIME types, separated by commas."
+            },
+            "action": { "zh-CN": "文件上传地址，必填。", "en-US": "Upload URL. Required." },
+            "addOnPasting": {
+                "zh-CN": "粘贴（paste 事件）时是否把剪贴板中的文件加入文件列表，无需额外授权。",
+                "en-US": "Whether files in the clipboard are added to the file list on paste, without extra permission."
+            },
+            "afterUpload": {
+                "zh-CN": "上传完成且没有出错后的钩子，根据返回的对象更新文件状态、校验信息、名称和预览地址；不支持异步返回。",
+                "en-US": "Hook after an upload completes without error. The returned object updates the file status, validate message, name and preview URL. Async results are not supported."
+            },
+            "beforeClear": {
+                "zh-CN": "清空文件前的回调，返回 false、resolve(false) 或 reject 会阻止清空。",
+                "en-US": "Called before the list is cleared. Returning false, or a Promise that resolves to false or rejects, blocks the clear."
+            },
+            "beforeCrop": {
+                "zh-CN": "图片裁切前的回调，只用第一张选中的图片调用一次，结果决定整批是否裁切。返回 false 跳过裁切直接上传，支持异步返回。",
+                "en-US": "Called before the crop modal opens, once with the first selected image; the result decides cropping for the whole batch. Return false to upload without cropping. May return a Promise."
+            },
+            "beforeRemove": {
+                "zh-CN": "移除文件前的回调，返回 false、resolve(false) 或 reject 会阻止移除。",
+                "en-US": "Called before a file is removed. Returning false, or a Promise that resolves to false or rejects, blocks the removal."
+            },
+            "beforeUpload": {
+                "zh-CN": "上传文件前的钩子，根据返回的对象更新文件状态并控制是否上传；返回 boolean 表示通过或失败，返回 Promise 时 resolve 为通过、reject 为失败。",
+                "en-US": "Hook before a file is uploaded. The returned object updates the file status and decides whether to upload. A boolean means pass or fail; for a Promise, resolve passes and reject fails."
+            },
+            "capture": {
+                "zh-CN": "媒体拍摄的方式，可选 user、environment；传 true 输出空值属性，传 false 不输出该属性。",
+                "en-US": "How media is captured: user or environment. true renders the attribute with an empty value, false omits it."
+            },
+            "crop": {
+                "zh-CN": "启用图片裁切。传 true 使用默认配置，传对象自定义裁切参数；点击选择、拖拽、粘贴、替换都会裁切。",
+                "en-US": "Enables image cropping. true uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop."
+            },
+            "cropModalProps": {
+                "zh-CN": "裁切弹窗 Modal 的属性；visible、title、okText、cancelText、onOk、onCancel 由组件内置，width 缺省为 600。",
+                "en-US": "Props of the crop Modal. visible, title, okText, cancelText, onOk and onCancel belong to Upload; width defaults to 600."
+            },
+            "customRequest": {
+                "zh-CN": "替换内置 XMLHttpRequest 的自定义请求方法，需自行调用入参的 onProgress、onError、onSuccess 更新状态。",
+                "en-US": "Replaces the built-in XMLHttpRequest. It must call the onProgress, onError and onSuccess it receives to update the state."
+            },
+            "data": {
+                "zh-CN": "上传时附带的额外参数，或根据文件返回额外参数的函数。",
+                "en-US": "Extra parameters sent with the upload, or a function that returns them for a file."
+            },
+            "defaultFileList": {
+                "zh-CN": "初始的已上传文件列表，非受控。每项的 uid 必填且不能重复。",
+                "en-US": "Initial list of uploaded files, uncontrolled. The uid of every item is required and must be unique."
+            },
+            "directory": { "zh-CN": "是否上传文件夹。", "en-US": "Whether to upload a folder." },
+            "disabled": {
+                "zh-CN": "是否禁用。禁用后不再显示移除、重试、替换和清空操作。",
+                "en-US": "Whether Upload is disabled. A disabled Upload no longer shows the remove, retry, replace and clear actions."
+            },
+            "draggable": { "zh-CN": "是否支持拖拽上传。", "en-US": "Whether dragging files to upload is supported." },
+            "fileList": {
+                "zh-CN": "受控的文件列表，配合 v-model:fileList 使用。每项的 uid 必填且不能重复。",
+                "en-US": "Controlled file list, used with v-model:fileList. The uid of every item is required and must be unique."
+            },
+            "fileName": {
+                "zh-CN": "作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。",
+                "en-US": "Same as name. Mainly used in Form.Upload to avoid clashing with the name of Field."
+            },
+            "headers": {
+                "zh-CN": "上传时附带的 headers，或根据文件返回 headers 的函数。",
+                "en-US": "Headers sent with the upload, or a function that returns them for a file."
+            },
+            "hotSpotLocation": {
+                "zh-CN": "照片墙添加按钮的位置，可选 start 或 end。",
+                "en-US": "Position of the picture wall add button: start or end."
+            },
+            "itemStyle": { "zh-CN": "文件卡片的内联样式。", "en-US": "Inline style of the file cards." },
+            "limit": {
+                "zh-CN": "最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 exceed。",
+                "en-US": "Maximum number of files. With 1, the newest file always replaces the current one and exceed is not emitted."
+            },
+            "listType": {
+                "zh-CN": "文件列表的展示类型，可选 list、picture、none；none 不渲染文件列表，只保留触发区。",
+                "en-US": "How the file list is displayed: list, picture or none. none renders no file list, only the trigger area."
+            },
+            "maxSize": { "zh-CN": "文件体积上限，单位 KB。", "en-US": "Maximum file size in KB." },
+            "minSize": { "zh-CN": "文件体积下限，单位 KB。", "en-US": "Minimum file size in KB." },
+            "multiple": {
+                "zh-CN": "是否允许一次选择多个文件。",
+                "en-US": "Whether several files can be selected at once."
+            },
+            "name": { "zh-CN": "上传时使用的文件字段名。", "en-US": "Field name used for the file when uploading." },
+            "onPreviewClick": {
+                "zh-CN": "监听方式为 @previewClick。传入后文件卡片可点击，并显示预览按钮；是否传入会改变渲染，因此保留为函数 prop。",
+                "en-US": "Listened to as @previewClick. While present the file cards are clickable and show a preview button; its presence changes the rendering, so it stays a function prop."
+            },
+            "picHeight": {
+                "zh-CN": "照片墙模式下图片的展示高度。",
+                "en-US": "Display height of the pictures in picture mode."
+            },
+            "picWidth": {
+                "zh-CN": "照片墙模式下图片的展示宽度。",
+                "en-US": "Display width of the pictures in picture mode."
+            },
+            "promptPosition": {
+                "zh-CN": "提示文本的位置，可选 left、right、bottom。list 模式相对触发区，picture 模式相对图片列表。",
+                "en-US": "Position of the prompt: left, right or bottom. In list mode it is relative to the trigger, in picture mode to the picture list."
+            },
+            "showClear": {
+                "zh-CN": "list 模式下，limit 不为 1 且至少有一个文件时，是否展示清空按钮。",
+                "en-US": "In list mode, whether to show the clear button when limit is not 1 and there is at least one file."
+            },
+            "showPicInfo": {
+                "zh-CN": "是否显示图片信息，只在照片墙模式下有效。",
+                "en-US": "Whether to show picture information. Only applies in picture mode."
+            },
+            "showReplace": {
+                "zh-CN": "上传成功后，文件卡片内是否展示替换按钮。",
+                "en-US": "Whether the file card shows a replace button after a successful upload."
+            },
+            "showRetry": {
+                "zh-CN": "上传失败时，文件卡片内是否展示重试按钮。",
+                "en-US": "Whether the file card shows a retry button when the upload fails."
+            },
+            "showTooltip": {
+                "zh-CN": "文件名过长时是否展示提示，或配置提示的类型（tooltip 或 popover）和透传属性；自定义弹出内容使用 ellipsisTooltip 插槽。",
+                "en-US": "Whether a truncated file name shows a tooltip, or the tooltip type (tooltip or popover) and the props passed to it. Use the ellipsisTooltip slot for custom popup content."
+            },
+            "showUploadList": { "zh-CN": "是否显示文件列表。", "en-US": "Whether to show the file list." },
+            "transformFile": {
+                "zh-CN": "选中文件后、上传前的转换函数，返回要上传的 File。",
+                "en-US": "Called after a file is selected and before it is uploaded; returns the File to upload."
+            },
+            "uploadTrigger": {
+                "zh-CN": "触发上传的时机，auto 选中后自动上传，custom 需调用 upload 方法。",
+                "en-US": "When uploading starts: auto uploads on selection, custom waits for the upload method."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，影响根元素的样式，可选 default、error、warning、success。",
+                "en-US": "Validation status, which styles the root element: default, error, warning or success."
+            },
+            "withCredentials": {
+                "zh-CN": "上传请求是否携带 Cookie。",
+                "en-US": "Whether the upload request carries cookies."
+            }
+        },
+        "events": {
+            "update:fileList": {
+                "zh-CN": "文件列表变化时触发，用于 v-model:fileList。",
+                "en-US": "Emitted when the file list changes. Backs v-model:fileList."
+            },
+            "acceptInvalid": {
+                "zh-CN": "接收到的文件不符合 accept 时触发，参数为不符合的文件。",
+                "en-US": "Emitted when received files do not match accept, with those files."
+            },
+            "change": {
+                "zh-CN": "文件状态变化时触发，包括上传中、成功、失败。currentFile 在 insert 后为 null，清空时不带。会遮住隐藏 input 冒泡出来的原生 change。",
+                "en-US": "Emitted when a file status changes, including uploading, success and failure. currentFile is null after insert and absent after a clear. Shadows the native change bubbling from the hidden input."
+            },
+            "clear": { "zh-CN": "点击清空后触发。", "en-US": "Emitted after the list is cleared." },
+            "cropError": { "zh-CN": "图片裁切失败时触发。", "en-US": "Emitted when cropping an image fails." },
+            "drop": {
+                "zh-CN": "拖拽的元素在拖拽区上释放时触发，参数为原生 drop 事件、拖入的文件和当前文件列表。会遮住根元素上的原生 drop。",
+                "en-US": "Emitted when a dragged element is released on the drag area, with the native drop event, the dropped files and the current file list. Shadows the native drop on the root element."
+            },
+            "error": {
+                "zh-CN": "上传出错时触发。使用 customRequest 时，xhr 是使用方传给 onError 的对象。",
+                "en-US": "Emitted when an upload fails. With customRequest, xhr is the object passed to its onError."
+            },
+            "exceed": {
+                "zh-CN": "文件总数超出 limit 时触发，参数为截断前本次选中的原始文件。",
+                "en-US": "Emitted when the total number of files exceeds limit, with the originally selected files before truncation."
+            },
+            "fileChange": { "zh-CN": "选中文件后触发。", "en-US": "Emitted after files are selected." },
+            "openFileDialog": {
+                "zh-CN": "打开系统文件选择窗口时触发。",
+                "en-US": "Emitted when the system file dialog opens."
+            },
+            "pastingError": {
+                "zh-CN": "addOnPasting 为 true 且读取剪贴板中的文件失败时触发。",
+                "en-US": "Emitted when addOnPasting is true and a clipboard file cannot be read."
+            },
+            "progress": {
+                "zh-CN": "上传过程中触发，参数为百分比、文件和当前文件列表。",
+                "en-US": "Emitted while uploading, with the percentage, the file and the current file list."
+            },
+            "remove": {
+                "zh-CN": "移除文件后触发。来自 defaultFileList 且没有 File 对象的项，currentFile 为 undefined。",
+                "en-US": "Emitted after a file is removed. currentFile is undefined for an item without a File object, such as one from defaultFileList."
+            },
+            "retry": { "zh-CN": "点击重试时触发。", "en-US": "Emitted when retry is clicked." },
+            "sizeError": {
+                "zh-CN": "文件体积不符合 maxSize 或 minSize 时触发。",
+                "en-US": "Emitted when a file size violates maxSize or minSize."
+            },
+            "success": {
+                "zh-CN": "上传成功后触发，参数为服务端响应、文件和当前文件列表。",
+                "en-US": "Emitted after a successful upload, with the server response, the file and the current file list."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "触发区内容。拖拽模式下替换整个默认拖拽区内容。",
+                "en-US": "Trigger content. In draggable mode it replaces the whole default drag area content."
+            },
+            "dragIcon": {
+                "zh-CN": "拖拽区的图标，渲染为空时显示默认图标。",
+                "en-US": "Icon of the drag area. Falls back to the default icon when empty."
+            },
+            "dragMainText": {
+                "zh-CN": "拖拽区的主文本，渲染为空时显示语言包文案。",
+                "en-US": "Main text of the drag area. Falls back to the locale text when empty."
+            },
+            "dragSubText": { "zh-CN": "拖拽区的帮助文本。", "en-US": "Help text of the drag area." },
+            "prompt": {
+                "zh-CN": "提示文本。与写在默认插槽中不同，点击它不会触发上传。",
+                "en-US": "Prompt text. Unlike content in the default slot, clicking it does not trigger an upload."
+            },
+            "validateMessage": {
+                "zh-CN": "Upload 整体的校验信息。",
+                "en-US": "Validate message of the whole Upload."
+            },
+            "fileListTitle": {
+                "zh-CN": "只替换文件列表的标题文字，保留清空按钮。",
+                "en-US": "Replaces only the title text of the file list; the clear button stays."
+            },
+            "fileListHeader": {
+                "zh-CN": "替换整个标题区（含清空按钮），参数为 fileList、onClear、clearText。",
+                "en-US": "Replaces the whole title area, clear button included, with fileList, onClear and clearText."
+            },
+            "fileItem": {
+                "zh-CN": "替换每张文件卡片，参数为 UploadFileItemSlotProps；对某个文件渲染为空时不显示该文件。",
+                "en-US": "Replaces each file card, with UploadFileItemSlotProps. A file it renders nothing for is not shown."
+            },
+            "previewFile": {
+                "zh-CN": "自定义预览逻辑，替换原缩略图，只在 list 模式下有效；渲染为空时不回落默认缩略图。",
+                "en-US": "Custom preview that replaces the thumbnail. Only applies in list mode. It does not fall back to the default thumbnail when empty."
+            },
+            "thumbnail": {
+                "zh-CN": "自定义照片墙缩略图，只在照片墙模式下有效。",
+                "en-US": "Custom picture wall thumbnail. Only applies in picture mode."
+            },
+            "picInfo": {
+                "zh-CN": "自定义照片墙信息，只在照片墙模式且 showPicInfo 为 true 时有效。",
+                "en-US": "Custom picture wall information. Only applies in picture mode with showPicInfo set to true."
+            },
+            "picPreviewIcon": {
+                "zh-CN": "自定义照片墙悬停时的预览图标，只在照片墙模式下有效。",
+                "en-US": "Custom preview icon shown on hover in the picture wall. Only applies in picture mode."
+            },
+            "picClose": {
+                "zh-CN": "自定义照片墙的关闭按钮，参数为 class 和 onRemove，只在照片墙模式下有效。",
+                "en-US": "Custom close button of the picture wall, with class and onRemove. Only applies in picture mode."
+            },
+            "fileOperation": {
+                "zh-CN": "自定义列表项的操作区。",
+                "en-US": "Custom operation area of a list item."
+            },
+            "fileValidateMessage": {
+                "zh-CN": "自定义文件卡片的校验信息，渲染为空时回落到文件自身的 validateMessage 字符串。",
+                "en-US": "Custom validate message of a file card. Falls back to the validateMessage string of the file when empty."
+            },
+            "ellipsisTooltip": {
+                "zh-CN": "自定义文件名过长时的弹出内容，参数为 content 和 trigger。",
+                "en-US": "Custom popup content for a truncated file name, with content and trigger."
+            }
+        },
+        "exposed": {
+            "insert": {
+                "zh-CN": "在 index 位置插入文件，不传 index 则插入到末尾。",
+                "en-US": "Adds files at index, or at the end without one."
+            },
+            "upload": {
+                "zh-CN": "开始上传等待中的文件，配合 uploadTrigger 为 custom 使用。",
+                "en-US": "Uploads the waiting files. Use it with uploadTrigger set to custom."
+            },
+            "openFileDialog": { "zh-CN": "打开文件选择窗口。", "en-US": "Opens the file dialog." }
+        }
+    },
+    "upload-file-card": {
+        "source": "packages/semi-ui-vue/src/upload/file-card.vue",
+        "props": {
+            "file": { "zh-CN": "要展示的文件，必填。", "en-US": "The file to show. Required." },
+            "index": { "zh-CN": "文件在列表中的位置。", "en-US": "Position of the file in the list." },
+            "listType": {
+                "zh-CN": "卡片的展示类型，可选 list、picture、none；none 不渲染卡片。",
+                "en-US": "Display type of the card: list, picture or none. none renders no card."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用，禁用后不显示移除、重试和替换按钮。",
+                "en-US": "Whether the card is disabled. A disabled card shows no remove, retry or replace button."
+            },
+            "showRetry": {
+                "zh-CN": "上传失败时是否展示重试按钮，文件自身的 showRetry 优先。",
+                "en-US": "Whether to show a retry button on failure. The showRetry of the file wins."
+            },
+            "showReplace": {
+                "zh-CN": "上传成功后是否展示替换按钮，文件自身的 showReplace 优先。",
+                "en-US": "Whether to show a replace button after success. The showReplace of the file wins."
+            },
+            "showPicInfo": {
+                "zh-CN": "是否显示图片信息，只在照片墙模式下有效。",
+                "en-US": "Whether to show picture information. Only applies in picture mode."
+            },
+            "showTooltip": {
+                "zh-CN": "文件名过长时是否展示提示，或配置提示的类型和透传属性。",
+                "en-US": "Whether a truncated file name shows a tooltip, or the tooltip type and the props passed to it."
+            },
+            "picWidth": { "zh-CN": "照片墙模式下图片的宽度。", "en-US": "Width of the picture in picture mode." },
+            "picHeight": { "zh-CN": "照片墙模式下图片的高度。", "en-US": "Height of the picture in picture mode." },
+            "validateMessage": {
+                "zh-CN": "校验信息，优先于文件自身的 validateMessage。",
+                "en-US": "Validate message. Wins over the validateMessage of the file."
+            },
+            "onPreviewClick": {
+                "zh-CN": "监听方式为 @previewClick。传入后卡片可点击，并显示预览按钮；是否传入会改变渲染，因此保留为函数 prop。",
+                "en-US": "Listened to as @previewClick. While present the card is clickable and shows a preview button; its presence changes the rendering, so it stays a function prop."
+            }
+        },
+        "events": {
+            "remove": { "zh-CN": "点击移除时触发。", "en-US": "Emitted when remove is clicked." },
+            "retry": { "zh-CN": "点击重试时触发。", "en-US": "Emitted when retry is clicked." },
+            "replace": { "zh-CN": "点击替换时触发。", "en-US": "Emitted when replace is clicked." }
+        },
+        "slots": {
+            "previewFile": {
+                "zh-CN": "自定义预览逻辑，替换原缩略图，只在 list 模式下有效。",
+                "en-US": "Custom preview that replaces the thumbnail. Only applies in list mode."
+            },
+            "thumbnail": {
+                "zh-CN": "自定义照片墙缩略图，只在照片墙模式下有效。",
+                "en-US": "Custom picture wall thumbnail. Only applies in picture mode."
+            },
+            "picInfo": {
+                "zh-CN": "自定义照片墙信息，只在照片墙模式且 showPicInfo 为 true 时有效。",
+                "en-US": "Custom picture wall information. Only applies in picture mode with showPicInfo set to true."
+            },
+            "picPreviewIcon": {
+                "zh-CN": "自定义照片墙悬停时的预览图标，只在照片墙模式下有效。",
+                "en-US": "Custom preview icon shown on hover in the picture wall. Only applies in picture mode."
+            },
+            "picClose": {
+                "zh-CN": "自定义照片墙的关闭按钮，参数为 class 和 onRemove，只在照片墙模式下有效。",
+                "en-US": "Custom close button of the picture wall, with class and onRemove. Only applies in picture mode."
+            },
+            "fileOperation": {
+                "zh-CN": "自定义列表项的操作区。",
+                "en-US": "Custom operation area of a list item."
+            },
+            "validateMessage": {
+                "zh-CN": "自定义校验信息，渲染为空时回落到字符串。插槽为该文件渲染出内容时，图片墙同样显示校验图标。",
+                "en-US": "Custom validate message. Falls back to the string when empty. When the slot renders content for the file, the picture wall shows the validate icon too."
+            },
+            "ellipsisTooltip": {
+                "zh-CN": "自定义文件名过长时的弹出内容，参数为 content 和 trigger。",
+                "en-US": "Custom popup content for a truncated file name, with content and trigger."
+            }
+        },
+        "exposed": {}
+    }
+}

@@ -1,0 +1,27 @@
+**Props**
+
+| Property | Description                                                        | Type      | Default     |
+| -------- | ------------------------------------------------------------------ | --------- | ----------- |
+| itemKey  | Unique key of the tab, matched against activeKey.                  | `string`  | `undefined` |
+| disabled | Whether the tab is disabled.                                       | `boolean` | `undefined` |
+| closable | Whether the tab can be closed; closing emits tabClose on the Tabs. | `boolean` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                                                          | Scope parameters |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| default | Panel content.                                                                                                                                       | `any`            |
+| tab     | The tab content in the bar, rendered by the Tabs. Only plain text appears as the tab field of the tabBarProps.list entries given to the tabBar slot. | `any`            |
+| icon    | The icon of the tab in the bar, rendered by the Tabs.                                                                                                | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

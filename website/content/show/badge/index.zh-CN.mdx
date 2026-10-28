@@ -1,0 +1,126 @@
+---
+order: 63
+title: 徽章
+icon: doc-badge
+brief: 用徽章来给用户提示。
+---
+
+import BadgeReactApi from './api/badge.react.zh-CN.mdx';
+import BadgeVueApi from './api/badge.vue.zh-CN.mdx';
+import BadgeSolidApi from './api/badge.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Badge } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Badge } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Badge } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，两者互斥，优先渲染小圆点。
+
+<Framework only="react">
+
+当 `count` 是节点类型时，将直接渲染该节点。
+
+</Framework>
+
+<Framework only="vue">
+
+`count` 接收数字或字符串。节点内容放进 `#count` 插槽，将直接渲染该节点，两者同时给出时以插槽为准。数字用 `:count="5"` 绑定：`count="5"` 是字符串，不会被 `overflowCount` 截断。
+
+</Framework>
+
+<Framework only="solid">
+
+`count` 接收数字、字符串或 JSX 元素。数字和字符串按文字显示，`count="5"` 是字符串，同样不会被 `overflowCount` 截断。传入 JSX 元素时直接渲染该元素，并去掉 `type` 与 `theme` 对应的样式类。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 设置显示数字最大值
+
+可以通过设置 `overflowCount` 值设置显示数字的最大值，当实际数值超过该值时将以 `${overflowCount}+` 的格式显示。
+
+<Demo id="overflow-count" />
+
+### 设置徽标位置
+
+可以通过设置 `position` 设置位置，支持：`leftTop`， `leftBottom`， `rightTop`（默认）， `rightBottom`。在 RTL 的 ConfigProvider 下默认值为 `leftTop`。
+
+<Demo id="position" />
+
+### 设置徽标样式
+
+可以通过设置 `theme` 和 `type` 设置徽标的样式。其中 `theme` 支持三种形式：`solid`, `light`, `inverted`。默认形式为 `solid`。
+
+<Demo id="theme" />
+
+`type` 支持如下类型：`primary`，`secondary`，`tertiary`，`warning` 和 `danger`。默认类型为 `primary`。
+
+<Demo id="type" />
+
+### 独立使用
+
+当 Badge 作为独立元素时可以单独使用。
+
+<Demo id="standalone" />
+
+## API参考
+
+<Framework only="react">
+
+<BadgeReactApi />
+
+其他原生属性（如 `id`、`aria-*`、`data-*`）落在根元素 `span` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<BadgeVueApi />
+
+`class`、`style`、原生属性与 `@click`、`@mouseenter` 等原生事件经 attrs 落在根元素上。徽章内容区域只接收 `countClassName` 和 `countStyle`。默认插槽每次渲染只执行一次。
+
+</Framework>
+
+<Framework only="solid">
+
+<BadgeSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`、`onMouseEnter`）落在根元素 `<span>` 上。`countClassName` 与 `countStyle` 只作用于内容区域。
+
+</Framework>
+
+## 文案规范
+
+- Badge内容若为英文时，首字母应大写
+
+## 设计变量
+
+<DesignToken />

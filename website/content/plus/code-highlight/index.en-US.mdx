@@ -1,0 +1,158 @@
+---
+order: 29
+title: CodeHighlight
+icon: doc-codehighlight
+brief: Highlight code blocks in the page according to syntax
+---
+
+import CodeHighlightReactApi from './api/code-highlight.react.en-US.mdx';
+import CodeHighlightVueApi from './api/code-highlight.vue.en-US.mdx';
+import CodeHighlightSolidApi from './api/code-highlight.solid.en-US.mdx';
+
+## When to use
+
+Semi `CodeHighlight` component is built on [Shiki](https://shiki.style), which uses the same TextMate grammars as VS Code. The languages to highlight are registered by the application, so the bundle only contains the grammars it registers; an unregistered language is shown as plain text. Colors default to Shiki's built-in `github-light` and `github-dark` themes, follow Semi's light and dark mode, and can be replaced with other themes.
+
+## Demos
+
+### How to introduce
+
+<Framework only="react">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { CodeHighlight } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Register languages and themes
+
+Grammars and themes come from the `shiki` package, so install `shiki` in the project first. Call `CodeHighlight.register` once at the application entry: every CodeHighlight can then use those languages.
+
+<Framework only="react">
+
+The code blocks of MarkdownRender, Chat, AIChatDialogue and Sidebar use them too.
+
+</Framework>
+
+<Framework only="solid">
+
+The code blocks of MarkdownRender, Chat, AIChatDialogue and Sidebar use them too.
+
+</Framework>
+
+A language passed as `() => import(...)` is fetched when the first code block is highlighted, and then every registered language is fetched, not only the one that block uses. Available languages, their names and aliases are listed in the [Shiki language list](https://shiki.style/languages), and themes in the [Shiki theme list](https://shiki.style/themes). Blocks mounted before the registration highlight again once it happens.
+
+<Framework only="react">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-react';
+
+CodeHighlight.register({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // optional, replaces the default github-light and github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import { CodeHighlight } from '@fibrae/semi-ui-vue';
+
+CodeHighlight.register({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // optional, replaces the default github-light and github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-solid';
+
+CodeHighlight.register({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // optional, replaces the default github-light and github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
+### Basic usage
+
+Pass the code plain text to `code`, and the name or alias of a registered language to `language`.
+
+<Demo id="basic" />
+
+**CSS**
+
+<Demo id="css" />
+
+### Languages for a single block
+
+A language only a few blocks need can be passed to those blocks through `languages` instead of being registered for the whole application; `themes` likewise replaces the themes of one block. Declare both values outside the component, so a new array or object on every render does not trigger another highlight. For example, to highlight the Vala language used to write the front-end UI of GTK programs
+
+<Demo id="other-language" />
+
+### API
+
+<Framework only="react">
+
+<CodeHighlightReactApi />
+
+Other native attributes, such as `id`, `aria-label` and `onClick`, are spread onto the root `div`, which stays the same element before and after highlighting.
+
+</Framework>
+
+<Framework only="vue">
+
+<CodeHighlightVueApi />
+
+`class`, `style` and native attributes land on the root element through attrs. The root element is replaced between the plain-text and the highlighted render (`$el` is not stable), and these attributes are applied again to the new root each time. A `ref` or `reactive` value is fine for `languages` and `themes`: the component passes the raw object to Shiki.
+
+</Framework>
+
+<Framework only="solid">
+
+<CodeHighlightSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `id` and `aria-label`) land on the root `div`, which stays the same element before and after highlighting.
+
+</Framework>
+
+### Static methods
+
+| Method                 | Description                                                                                                                                 | Type                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| CodeHighlight.register | Registers languages for every CodeHighlight and replaces the default themes; can be called repeatedly, languages add up and themes override | (options: \{ languages?: LanguageInput[]; themes?: \{ light?: ThemeInput; dark?: ThemeInput \} \}) => void |
+
+## Accessibility
+
+- With `aria-label` or `aria-labelledby` and no `role` on the root, the root gets `role="group"` (a generic element cannot be named); a `role` you pass wins
+
+## Design Tokens

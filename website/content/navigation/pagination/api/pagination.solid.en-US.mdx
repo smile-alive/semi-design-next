@@ -1,0 +1,25 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| currentPage | Current page. Once set the pagination is controlled and the page is entirely determined by this prop; when undefined the component manages the page itself. | `number` | - |
+| defaultCurrentPage | Initial page when not controlled. | `number` | `1` |
+| disabled | Whether disabled. | `boolean` | `false` |
+| hideOnSinglePage | Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown. | `boolean` | `false` |
+| hoverShowPageSelect | Only for size small: the page list opens when the page text is hovered or focused. | `boolean` | - |
+| nextText | Replaces the content of the next page button, named the same way as `prevText`. | `JSX.Element` | - |
+| onChange | Called when the page or the page size changes, with the page and the page size. | <ApiType detail={"(currentPage: number, pageSize: number) => void"}>Type</ApiType> | - |
+| onPageChange | Called when the page changes, with the new page. | <ApiType detail={"(currentPage: number) => void"}>Type</ApiType> | - |
+| onPageSizeChange | Called when the page size changes, with the new page size. | <ApiType detail={"(newPageSize: number) => void"}>Type</ApiType> | - |
+| pageSize | Number of items per page; falls back to the first item of `pageSizeOpts`. Not strictly controlled: the choice made in the size changer is kept inside, and only a change of this prop to a value other than the current one overrides it and goes back to page 1 (to `currentPage` when controlled). Writing it back from `onChange` does not reset the page. | `number` | - |
+| pageSizeOpts | Options of the size changer; the current page size is inserted in order when it is not among them. | <ApiType detail={"Array\u003cnumber>"}>Type</ApiType> | `[10, 20, 40, 100]` |
+| popoverPosition | Position of the omitted pages popover and the size changer dropdown. When omitted the size changer dropdown uses `bottomLeft` (`bottomRight` in RTL) and the omitted pages popover uses the Popover default `bottom`; not used by the small size. | `PopoverPosition` | - |
+| preventPageChangeOnPageSizeChange | Keeps the current page when the page size changes; the consumer picks the page in `onPageSizeChange`. | `boolean` | `false` |
+| prevText | Replaces the content of the previous page button. A plain text names the button, and any other content (an icon, an element) keeps the locale name; empty content keeps the default icon and the locale name. | `JSX.Element` | - |
+| showQuickJumper | Whether to show the quick jump input; disabled when there are fewer than 2 pages. | `boolean` | `false` |
+| showSizeChanger | Whether to show the size changer; has no effect when size is small. When it is shown, hideOnSinglePage no longer takes effect. | `boolean` | `false` |
+| showTotal | Whether to show the total number of pages; not shown when size is small. | `boolean` | `false` |
+| size | Size: `default` or `small`. | `'small' \| 'default'` | `"default"` |
+| total | Total number of items. | `number` | `1` |

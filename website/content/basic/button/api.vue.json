@@ -1,0 +1,96 @@
+{
+    "button": {
+        "source": "packages/semi-ui-vue/src/button/button.vue",
+        "props": {
+            "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
+            "colorful": {
+                "zh-CN": "多彩按钮，仅支持 primary 与 tertiary 类型。未设置时使用所在 ButtonGroup 的值，最终默认为 false。",
+                "en-US": "Colorful button, supported for the primary and tertiary types only. Falls back to the ButtonGroup it is in, and finally to false."
+            },
+            "contentClassName": {
+                "zh-CN": "内容区域的类名。",
+                "en-US": "Class name of the content area."
+            },
+            "disabled": {
+                "zh-CN": "禁用状态，优先于 loading。未设置时使用所在 ButtonGroup 的值，最终默认为 false。",
+                "en-US": "Disabled state, which takes precedence over loading. Falls back to the ButtonGroup it is in, and finally to false."
+            },
+            "htmlType": {
+                "zh-CN": "原生 button 的 type 值，可选 button、reset 或 submit。",
+                "en-US": "Native type of the button: button, reset or submit."
+            },
+            "iconPosition": {
+                "zh-CN": "图标位置，可选 left 或 right。",
+                "en-US": "Icon position: left or right."
+            },
+            "loading": {
+                "zh-CN": "加载状态。加载中按钮保持可聚焦，点击不触发 click，submit 按钮也不提交表单。",
+                "en-US": "Loading state. A loading button stays focusable, its click is ignored, and a submit button does not submit its form."
+            },
+            "noHorizontalPadding": {
+                "zh-CN": "去掉水平方向的内边距，可选 true、left、right 或二者的数组；只对设置了图标或处于加载状态的按钮有效。",
+                "en-US": "Removes horizontal padding: true, left, right or an array of both. Applies only to a button that shows an icon or the loading spinner."
+            },
+            "size": {
+                "zh-CN": "按钮尺寸，可选 large、default 或 small。未设置时使用所在 ButtonGroup 的值，最终默认为 default。",
+                "en-US": "Button size: large, default or small. Falls back to the ButtonGroup it is in, and finally to default."
+            },
+            "theme": {
+                "zh-CN": "按钮主题，可选 solid、borderless、light 或 outline。未设置时使用所在 ButtonGroup 的值，最终默认为 light。",
+                "en-US": "Button theme: solid, borderless, light or outline. Falls back to the ButtonGroup it is in, and finally to light."
+            },
+            "type": {
+                "zh-CN": "按钮类型，可选 primary、secondary、tertiary、warning 或 danger。未设置时使用所在 ButtonGroup 的值，最终默认为 primary。",
+                "en-US": "Button type: primary, secondary, tertiary, warning or danger. Falls back to the ButtonGroup it is in, and finally to primary."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "按钮的文字内容。", "en-US": "Button text." },
+            "icon": { "zh-CN": "按钮图标，位置由 iconPosition 决定。", "en-US": "Button icon, placed by iconPosition." }
+        },
+        "exposed": {}
+    },
+    "button-group": {
+        "source": "packages/semi-ui-vue/src/button/button-group.vue",
+        "props": {
+            "colorful": {
+                "zh-CN": "多彩样式，作为组内按钮的默认值。",
+                "en-US": "Colorful style, used as the default of the buttons in the group."
+            },
+            "disabled": {
+                "zh-CN": "禁用状态，作为组内按钮的默认值。",
+                "en-US": "Disabled state, used as the default of the buttons in the group."
+            },
+            "size": {
+                "zh-CN": "按钮尺寸，作为组内按钮的默认值。",
+                "en-US": "Button size, used as the default of the buttons in the group."
+            },
+            "theme": {
+                "zh-CN": "按钮主题，作为组内按钮的默认值。",
+                "en-US": "Button theme, used as the default of the buttons in the group."
+            },
+            "type": {
+                "zh-CN": "按钮类型，作为组内按钮的默认值。",
+                "en-US": "Button type, used as the default of the buttons in the group."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "组内的 Button。", "en-US": "Buttons in the group." }
+        },
+        "exposed": {}
+    },
+    "split-button-group": {
+        "source": "packages/semi-ui-vue/src/button/split-button-group.vue",
+        "props": {},
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "分裂按钮：一个 Button 加一个包裹 Button 的 Dropdown。",
+                "en-US": "A Button followed by a Dropdown that wraps a Button."
+            }
+        },
+        "exposed": {}
+    }
+}

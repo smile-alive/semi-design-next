@@ -1,0 +1,12 @@
+**Props**
+
+| Property       | Description                                                                                                                      | Type                          | Default     |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ----------- |
+| count          | Badge content: a number or string is shown as text; a JSX element is rendered as is, and the type and theme classes are removed. | `JSX.Element`                 | -           |
+| countClassName | Class name of the count element.                                                                                                 | `string`                      | -           |
+| countStyle     | Style of the count element, as a CSS object with kebab-case keys or a string.                                                    | `JSX.CSSProperties \| string` | -           |
+| dot            | Shows a small dot instead of the content.                                                                                        | `boolean`                     | `false`     |
+| overflowCount  | Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset.             | `number`                      | -           |
+| position       | Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise.          | `BadgePosition`               | -           |
+| theme          | Badge theme: solid, light or inverted.                                                                                           | `BadgeTheme`                  | `"solid"`   |
+| type           | Badge type: primary, secondary, tertiary, danger, warning or success.                                                            | `BadgeType`                   | `"primary"` |

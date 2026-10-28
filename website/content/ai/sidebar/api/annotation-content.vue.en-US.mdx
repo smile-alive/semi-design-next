@@ -1,0 +1,27 @@
+**Props**
+
+| Property  | Description                                                         | Type                 | Default     |
+| --------- | ------------------------------------------------------------------- | -------------------- | ----------- |
+| activeKey | Keys of the expanded groups; bind it with v-model:activeKey.        | `string \| string[]` | `undefined` |
+| info      | Groups of references; each has a header, a key and its annotations. | `AnnotationInfo[]`   | `[]`        |
+
+**Events**
+
+| Event            | Description                                                                                                                   | Callback parameters                         |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| update:activeKey | Emitted before change when a group opens or closes, so v-model:activeKey follows.                                             | `[activeKey: string[]]`                     |
+| change           | Emitted when a group opens or closes, with the expanded keys.                                                                 | `[activeKey: string \| string[]]`           |
+| click            | Emitted when a reference is clicked, with the event and its item; the native click of the root is not reported apart from it. | `[event: MouseEvent, item: AnnotationItem]` |
+
+**Slots**
+
+| Slot   | Description                                                                                           | Scope parameters            |
+| ------ | ----------------------------------------------------------------------------------------------------- | --------------------------- |
+| header | Content of a group header after its icon, with item and index; the header field is shown when absent. | `AnnotationHeaderSlotProps` |
+| item   | Replaces the built-in reference item, with item and index (its position in the group).                | `AnnotationItemSlotProps`   |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

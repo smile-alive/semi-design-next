@@ -1,0 +1,27 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| alt | Alternative text of the image. On a text avatar it is the accessible name, falling back to the avatar text when unset. | `string` | - |
+| border | Additional border: `true` or `{ color, motion }`; `motion: true` enables the border animation. | `{ color?: string; motion?: boolean; } \| boolean` | - |
+| bottomSlot | Bottom badge configuration: `shape`, `text`, `bgColor`, `textColor`, `className` and `style`; a `render` function replaces the whole badge. Shown only at the preset sizes from `extra-small` to `extra-large`. | <ApiType detail={"{ render?: () => React.ReactNode; shape?: 'circle' \u007c 'square'; text: React.ReactNode; bgColor?: string; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |
+| children | Text or custom content inside the avatar. | `React.ReactNode` | - |
+| className | Class name of the avatar element (`.semi-avatar`); when a border or a top or bottom badge is used, it sits inside the outer wrapper. | `string` | - |
+| color | Preset background color: `amber`, `blue`, `cyan`, `green`, `grey`, `indigo`, `light-blue`, `light-green`, `lime`, `orange`, `pink`, `purple`, `red`, `teal`, `violet` or `yellow`; not used by image avatars. | `AvatarColor` | `"grey"` |
+| contentMotion | Enables animation in the avatar content area. | `boolean` | - |
+| gap | Space in pixels between the text and either side of the avatar. | `number` | `3` |
+| hoverMask | Overlay content shown on hover; the overlay has no default style. | `React.ReactNode` | - |
+| imgAttr | Native attributes applied to the inner `img` element, for image avatars only; its `onError` runs before the component's `onError`. | <ApiType detail={"React.ImgHTMLAttributes\u003cHTMLImageElement>"}>Type</ApiType> | - |
+| onClick | Called when the avatar is clicked, with the React mouse event. Once set, the avatar can be focused, and `Enter` or Space triggers a click. | `React.MouseEventHandler` | - |
+| onError | Called when the image fails to load, without an event argument. Returning `false` keeps the broken image instead of switching to the text fallback. | `React.MouseEventHandler` | - |
+| onMouseEnter | Called when the pointer enters the avatar, with the React mouse event. | `React.MouseEventHandler` | - |
+| onMouseLeave | Called when the pointer leaves the avatar, with the React mouse event. | `React.MouseEventHandler` | - |
+| ref | Reference to the avatar element (`.semi-avatar`); when a border or a top or bottom badge is used, it is not the outer wrapper. | <ApiType detail={"React.Ref\u003cHTMLSpanElement>"}>Type</ApiType> | - |
+| shape | Avatar shape: `circle` or `square`. | `AvatarShape` | `"circle"` |
+| size | Avatar size: `extra-extra-small`, `extra-small`, `small`, `default`, `medium`, `large` or `extra-large`, or a valid CSS size such as `10px`. | `string` | `"medium"` |
+| src | Image source URL. | `string` | - |
+| srcSet | Responsive image sources. | `string` | - |
+| style | Avatar style; when a border or a top or bottom badge is used, the style goes to the outer wrapper. | `CSSProperties` | - |
+| topSlot | Top badge configuration: `text`, `gradientStart`, `gradientEnd`, `textColor`, `className` and `style`; a `render` function replaces the whole badge. Shown only for circle avatars at the preset sizes from `extra-small` to `extra-large`; an unset gradient color uses `var(--semi-color-primary)`. | <ApiType detail={"{ render?: () => React.ReactNode; gradientStart?: string; gradientEnd?: string; text: React.ReactNode; textColor?: string; className?: string; style?: CSSProperties; }"}>Type</ApiType> | - |

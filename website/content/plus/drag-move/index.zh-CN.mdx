@@ -1,0 +1,134 @@
+---
+order: 31
+title: 拖拽移动
+icon: doc-dragmove
+brief: 可通过拖拽改变位置
+---
+
+import DragMoveReactApi from './api/drag-move.react.zh-CN.mdx';
+import DragMoveVueApi from './api/drag-move.vue.zh-CN.mdx';
+import DragMoveSolidApi from './api/drag-move.solid.zh-CN.mdx';
+
+## 使用场景
+
+用于设置元素可被拖动改变位置，支持限制拖拽范围，支持自定义触发拖动的元素。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { DragMove } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { DragMove } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { DragMove } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+被 `DragMove` 包裹的元素将能够通过拖拽改变位置。
+
+</Framework>
+
+<Framework only="vue">
+
+默认插槽中的元素将能够通过拖拽改变位置。
+
+</Framework>
+
+<Framework only="solid">
+
+被 `DragMove` 包裹的元素将能够通过拖拽改变位置。
+
+</Framework>
+
+**_注意_**
+
+- DragMove 默认会将可拖拽的元素设置为 absolute 定位；需要保留元素原有布局位置（例如居中的 Modal）时，可设置 `positionStrategy="relative"`
+
+<Framework only="react">
+
+- DragMove 把监听绑定在内容渲染出的每个顶层真实 DOM 节点上，每个顶层节点各自可拖动。内容可以是 DOM 元素，也可以是自定义组件，自定义组件无需透传 props 或转发 ref
+
+</Framework>
+
+<Framework only="vue">
+
+- DragMove 把监听绑定在默认插槽的每个顶层元素上，每个顶层元素各自可拖动。顶层是组件时绑定在组件的根元素上，因此组件需为单根组件，无需透传 attrs
+
+</Framework>
+
+<Framework only="solid">
+
+- DragMove 把监听绑定在 `children` 渲染出的每个顶层 DOM 元素上，每个顶层元素各自可拖动。文本节点无法拖动，需要包在元素中；自定义组件渲染出的顶层元素同样会被绑定，无需透传 props 或转发 ref
+
+</Framework>
+
+<Demo id="basic" />
+
+### 限制拖动范围
+
+传入 `constrainer`，可以是 `'parent'`，也可以是返回限制可拖拽范围的元素的函数。
+
+**_注意：constrainer 设置的元素需要为 relative 定位_**
+
+<Demo id="constrainer" />
+
+### 自定义触发拖动的元素
+
+可通过 `handler` 自定义触发拖动的元素。如果不设置, 则点击任意位置均可拖动；如果设置，则仅点击 handler 部分可拖动。
+
+<Demo id="handler" />
+
+### 自定义拖动后的位置处理
+
+可通过 `customMove` 自定义拖动后的位置处理，该参数设置后，DragMove 组件内部将仅通过参数返回计算后的位置，不做设置，用户按需自行设置新位置。
+
+<Demo id="custom-move" />
+
+### API
+
+<Framework only="react">
+
+<DragMoveReactApi />
+
+DragMove 没有自己的根元素，未声明的属性会被丢弃。
+
+</Framework>
+
+<Framework only="vue">
+
+<DragMoveVueApi />
+
+DragMove 没有自己的根元素，`class`、`style` 等未声明的 attrs 无处可落，会被丢弃；需要的属性请直接写在被拖动的元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<DragMoveSolidApi />
+
+DragMove 没有自己的根元素，`class`、`style`、`ref` 与原生属性等未声明的属性无处可落，会被丢弃；需要的属性请直接写在被拖动的元素上。
+
+</Framework>

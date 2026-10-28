@@ -1,0 +1,248 @@
+---
+title: 进度条
+order: 91
+icon: doc-progress
+brief: 用于展示用户操作的当前进度和状态，一般在操作耗时较长时使用。也可用来表示任务/对象的完成度
+---
+
+import ProgressReactApi from './api/progress.react.zh-CN.mdx';
+import ProgressVueApi from './api/progress.vue.zh-CN.mdx';
+import ProgressSolidApi from './api/progress.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Progress } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Progress } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Progress } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 标准的进度条
+
+通过`stroke`属性来控制进度条的填充色  
+通过`percent`属性控制已完成的进度  
+通过`size`属性控制进度条尺寸  
+通过`aria-label`说明进度条具体代表含义  
+如果`size`预设的尺寸不满足，可以通过`style`传入 height 自定义进度条高度
+
+<Demo id="basic" />
+
+### 不确定状态的进度条
+
+当任务进度无法计算时，可设置 `indeterminate` 展示不确定状态。该属性支持条状和环形进度条；开启后 `percent` 不再控制进度长度，且不会展示 `showInfo` 文本。
+
+<Demo id="indeterminate" />
+
+### 展示百分比文本
+
+<Framework only="react">
+
+通过`showInfo`控制是否展示百分比数字，可以通过`format`格式化展示文本
+
+</Framework>
+
+<Framework only="vue">
+
+通过`showInfo`控制是否展示百分比数字，可以通过`#format`插槽格式化展示文本
+
+</Framework>
+
+<Framework only="solid">
+
+通过`showInfo`控制是否展示百分比数字，可以通过`format`属性传入函数格式化展示文本，函数返回的 JSX 替换默认文字
+
+</Framework>
+
+<Demo id="show-info" />
+
+### 垂直的进度条
+
+设置`direction='vertical'`，展示垂直进度条，可以通过`style`传入 width 控制进度条宽度
+
+<Demo id="vertical" />
+
+### 环形进度条
+
+将 type 设为`circle`，进度条将会展示成环状。进度条默认尺寸为 72 x 72
+
+<Demo id="circle" />
+
+你可以通过修改`width`来控制环形进度条的大小
+
+<Demo id="circle-width" />
+
+### 小号的环形进度条
+
+小号进度条默认尺寸为 24 x 24
+
+<Demo id="circle-small" />
+
+### 动态改变进度
+
+文字中的数字会以动画过渡到新的 `percent`。动画进行中再次修改 `percent`，新动画从当前显示的数字起算。
+
+<Demo id="dynamic" />
+
+<Demo id="dynamic-circle" />
+
+### 自定义中心文字内容
+
+<Framework only="react">
+
+你可以通过传入 `format` 函数自定义中心文字，`format` 的入参为当前百分比  
+如果不需要中心文本内容，你可以将 `showInfo` 设为 false，或者在 `format` 中直接返回空字符串
+
+</Framework>
+
+<Framework only="vue">
+
+你可以通过 `#format="{ percent }"` 插槽自定义中心文字，`percent` 为当前显示的百分比，只有显示文字时才会执行插槽  
+如果不需要中心文本内容，你可以将 `showInfo` 设为 false，或者让插槽渲染为空
+
+</Framework>
+
+<Framework only="solid">
+
+你可以通过传入 `format` 函数自定义中心文字，`format` 的入参为当前百分比，返回值可以是任意 JSX  
+如果不需要中心文本内容，你可以将 `showInfo` 设为 false，或者在 `format` 中直接返回空字符串
+
+</Framework>
+
+<Demo id="format" />
+
+### 圆角/方角边缘
+
+通过 strokeLinecap 属性，你可以控制环形进度条边缘形状
+
+<Demo id="stroke-linecap" />
+
+### 自定义进度条颜色
+
+可通过设置 `stroke` 属性，自定义具体 `percent` 的颜色
+
+<Demo id="stroke-color" />
+
+### 自动补齐颜色区间
+
+可通过设置 `strokeGradient` 属性，属性为 `true` 时自动补齐颜色区间，生成渐变色
+
+<Demo id="stroke-gradient" />
+
+## API 参考
+
+<Framework only="react">
+
+<ProgressReactApi />
+
+`aria-label`、`aria-labelledby`、`aria-valuetext`、`id` 等原生属性展开到根元素（`role="progressbar"`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ProgressVueApi />
+
+`class`、`style` 与原生属性（`id`、`aria-label`、`aria-labelledby`、`aria-valuetext` 等）经 attrs 传入根元素。
+
+</Framework>
+
+<Framework only="solid">
+
+<ProgressSolidApi />
+
+`class`、`style` 与原生属性（`id`、`aria-label`、`aria-labelledby`、`aria-valuetext` 等）经 props 展开到根元素（`role="progressbar"`）上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Progress 具有 `progressbar` role 来表示它是一个进度条组件。
+- Progress 会自动将 `aria-valuenow` 设置为传递给组件的进度百分比（`percent`），以确保屏幕阅读器可以获取正确的百分比数值。当 `indeterminate=true` 时，由于当前进度未知，不设置 `aria-valuenow`。另外，Progress 支持传入 `aria-valuetext`，当你传入时，根据 W3C 规范，`aria-valuetext` 将优先被屏幕阅读器使用消费，而不是 `aria-valuenow`
+- Progress 支持传入 `aria-label`、`aria-labelledby`
+    - 当 Progress 外部存在关于 Progress 作用的描述元素时，你可以通过 aria-labelledby 显式指定某些元素的 id 是 Progress 的标签
+    - 否则你应当通过 aria-label 说明 Progress 所代表的具体数值含义
+
+<Framework only="react">
+
+```js
+// 推荐用法
+<p id="progressbar-label">Disk Usage</p>
+<Progress aria-labelledby="progressbar-label" percent={80} />
+
+// 推荐用法
+<Progress aria-label='Percent of disk usage' percent={80} />
+<Progress aria-label='Percent of file downloaded' percent={80} />
+
+// 使用 aria-valuetext
+<Progress aria-label='Percent of disk usage' percent={80} aria-valuetext="Step 2: Copying files... "/>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<template>
+    <!-- 推荐用法 -->
+    <p id="progressbar-label">Disk Usage</p>
+    <Progress aria-labelledby="progressbar-label" :percent="80" />
+
+    <!-- 推荐用法 -->
+    <Progress aria-label="Percent of disk usage" :percent="80" />
+    <Progress aria-label="Percent of file downloaded" :percent="80" />
+
+    <!-- 使用 aria-valuetext -->
+    <Progress aria-label="Percent of disk usage" :percent="80" aria-valuetext="Step 2: Copying files... " />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+// 推荐用法
+<p id="progressbar-label">Disk Usage</p>
+<Progress aria-labelledby="progressbar-label" percent={80} />
+
+// 推荐用法
+<Progress aria-label='Percent of disk usage' percent={80} />
+<Progress aria-label='Percent of file downloaded' percent={80} />
+
+// 使用 aria-valuetext
+<Progress aria-label='Percent of disk usage' percent={80} aria-valuetext="Step 2: Copying files... " />
+```
+
+</Framework>
+
+## 文案规范
+
+- 如果进度条过程复杂，或者有很长的等待时间，可以使用帮助文本来做说明。这样可以让用户知道正在发生的进度进展
+
+## 设计变量
+
+<DesignToken />

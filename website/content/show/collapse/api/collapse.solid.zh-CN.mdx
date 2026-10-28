@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                | 说明                                                                                           | 类型                                                                                | 默认值    |
+| ------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------- |
+| accordion           | 手风琴模式。                                                                                   | `boolean`                                                                           | -         |
+| activeKey           | 受控属性，当前展开面板的 key；null 与空字符串表示全部收起。                                    | `string \| string[] \| null`                                                        | -         |
+| children            | Collapse.Panel 面板。                                                                          | `JSX.Element`                                                                       | -         |
+| clickHeaderToExpand | 点击面板头整行展开收起；为 false 时只响应切换按钮和箭头。                                      | `boolean`                                                                           | `true`    |
+| collapseIcon        | 面板展开时显示的图标，可传元素；未传时为 IconChevronUp，传入 `null` 不显示图标。               | `JSX.Element`                                                                       | -         |
+| defaultActiveKey    | 初始展开面板的 key。                                                                           | `string \| string[]`                                                                | `""`      |
+| expandIcon          | 面板收起时显示的图标，可传元素；未传时为 IconChevronDown，传入 `null` 不显示图标。             | `JSX.Element`                                                                       | -         |
+| expandIconPosition  | 展开图标位置，可选 left、right。                                                               | `'left' \| 'right'`                                                                 | `"right"` |
+| keepDOM             | 是否保留隐藏面板的 DOM 树，默认销毁；未传时依次读 Collapse、Collapsible 的全局默认值。         | `boolean`                                                                           | -         |
+| lazyRender          | 配合 keepDOM 使用，为 true 时面板展开前不渲染内容。                                            | `boolean`                                                                           | `false`   |
+| motion              | 是否开启动画，默认开启；未传时依次读 Collapse、Collapsible 的全局默认值。                      | `boolean`                                                                           | -         |
+| onChange            | 切换面板时调用，参数为展开面板的 key 数组与原生 MouseEvent（键盘操作经原生按钮同样是 click）。 | <ApiType detail={"(activeKey: string[], event: MouseEvent) => void"}>Type</ApiType> | -         |

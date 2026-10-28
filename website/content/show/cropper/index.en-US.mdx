@@ -1,0 +1,153 @@
+---
+order: 74
+title: Cropper
+icon: doc-cropper
+brief: Freely crop pictures
+---
+
+import CropperReactApi from './api/cropper.react.en-US.mdx';
+import CropperVueApi from './api/cropper.vue.en-US.mdx';
+import CropperSolidApi from './api/cropper.solid.en-US.mdx';
+
+## When to use
+
+Cropper is used to crop pictures. It supports custom cropping box styles. The positions of the cropping box, cropped image can be adjusted by dragging. It can zoom and rotate the cropped pictures.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Cropper } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Cropper } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Cropper } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+Use `src` to set the cropped image; use `shape` to set the shape of the cropping box, which defaults to square.
+
+<Demo id="basic" />
+
+### Customize crop box ratio
+
+The initial crop box ratio can be passed through `defaultAspectRatio` (default is 1). A fixed crop box ratio can be set via `aspectRatio`.
+
+Setting `defaultAspectRatio` only takes effect on the initial crop box ratio. When dragging, the crop box ratio will change with dragging.
+
+When setting `aspectRatio`, the crop box ratio is fixed, and the crop box will change according to this ratio when dragging. When `aspectRatio` changes after the image has loaded, the crop box is laid out again at the new ratio: its height is kept, its width follows the ratio, it shrinks to fit the container when it would overflow, and its center stays where it is as far as possible. When `aspectRatio` becomes `undefined` the box is not laid out again.
+
+<Demo id="aspect-ratio" />
+
+### Controlled rotation/zooming of images
+
+<Framework only="react">
+
+Control image rotation and zoom through `rotate` and `zoom`, and get the latest `zoom` value through `onZoomChange`
+
+</Framework>
+
+<Framework only="vue">
+
+Control image rotation and zoom through `rotate` and `zoom`. `zoom` can be bound two-way with `v-model:zoom`, or one-way with `:zoom` and `@zoomChange`; wheel zooming emits both `update:zoom` and `zoomChange`. `rotate` is one-way only: the component never changes it.
+
+</Framework>
+
+<Framework only="solid">
+
+Control image rotation and zoom through `rotate` and `zoom`, and get the latest `zoom` value through `onZoomChange`. `rotate` is one-way: the component never changes it. Wheel zooming calls `onZoomChange`; the parent must update `zoom` in that callback, otherwise the zoom is reverted to the controlled value.
+
+</Framework>
+
+<Demo id="rotate-zoom" />
+
+### Crop box settings
+
+The crop box style can be customized through `cropperBoxStyle`, `cropperBoxCls`. You can use `showResizeBox` to set whether to display the adjustment blocks at the corners of the crop box.
+
+<Demo id="cropper-box" />
+
+### Live preview
+
+<Framework only="react">
+
+Use `preview` to specify a container that previews the crop result in real time.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `preview` to specify a container that previews the crop result in real time. `preview` is a function returning the container DOM; it may return `null` while the container is not mounted yet.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `preview` to specify a container that previews the crop result in real time. `preview` is a function returning the container DOM; it may return `null` while the container is not mounted yet.
+
+</Framework>
+
+<Demo id="preview" />
+
+### API
+
+<Framework only="react">
+
+<CropperReactApi />
+
+Native attributes that the component does not declare (such as `id`, `data-*`, `aria-*` and `onKeyDown`) land on the root `<div>`; `role` can be overridden. `ref` gets the component handle, not the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<CropperVueApi />
+
+`class`, `style`, `data-*`, `aria-*` and native listeners (`click`, `keydown` and so on) land on the root element through attrs. The component ref exposes only `getCropperCanvas`, not the root DOM. When a global default is set for `zoom` or `rotate`, every Cropper becomes controlled.
+
+</Framework>
+
+<Framework only="solid">
+
+<CropperSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `id`, `data-*`, `aria-*` and `onKeyDown`) land on the root `<div>`; `ref` gets the root element itself, with the `getCropperCanvas` method attached to it.
+
+</Framework>
+
+## Accessibility
+
+- With `aria-label` or `aria-labelledby` and no `role` on the root, the root gets `role="group"`; a `role` you pass wins
+- The crop box is a focusable named group (`role="group"`, with its name and role description from the locale, and `aria-describedby` pointing to the usage hint). It becomes focusable once the image has loaded. The `img` being cropped is decorative: its `alt` defaults to an empty string and can be overridden through `imgProps`
+- Only a mouse press with the primary button, or a touch or pen contact, starts dragging the crop box, a resize handle or the image; a middle or right mouse press does not
+
+### Keyboard and focus
+
+- The crop box is the only tab stop in the component, and is focusable only after the image has loaded
+- With focus on the crop box, each arrow key moves the box by 10px, and the box stays inside the container
+- Shift + arrow keys move the bottom right corner of the box by 10px to resize it, within the container; when `aspectRatio` is set the ratio is kept (a horizontal change is converted to height). This works only while `showResizeBox` is true (the handles are shown); with false, Shift + arrow keys do nothing
+- Zoom and rotation have no built-in keyboard control; provide a keyboard-operable control for them (such as the Slider in the demos)
+
+## Design Token
+
+<DesignToken />

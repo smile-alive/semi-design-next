@@ -1,0 +1,59 @@
+---
+frameworks: [react, vue, solid]
+title: Introduction
+icon: doc-intro
+order: 1
+brief: Semi Design Next is a community fork of Semi Design that ships React 19, Vue 3.5+ and Solid component libraries on top of a shared, framework-free Foundation.
+---
+
+## What is Semi Design Next
+
+Semi Design Next is a community fork of the upstream [Semi Design](https://github.com/DouyinFE/semi-design). It keeps the design language and component system of Semi and provides a design system and basic components for enterprise applications. Upstream was designed, developed and maintained by the Douyin front-end team and the MED product design team and is released under the MIT license. The design and most of the component logic of Semi Design Next come from upstream, and the copyright belongs to the original authors.
+
+Semi Design Next is an unofficial community project. It is not affiliated with or endorsed by ByteDance, DouyinFE or the official Semi Design team, and the name "Semi Design" belongs to its owners.
+
+This project does not sync with upstream and does not keep backward compatibility. Components, styles and docs evolve according to the decisions of this repository. Breaking and behavior changes relative to upstream are recorded in `docs/release-notes.md` in the repository.
+
+## Differences from upstream
+
+- Two component libraries, React 19 and Vue 3.5+, published as `@fibrae/semi-ui-react` and `@fibrae/semi-ui-vue`, sharing `@fibrae/semi-foundation`.
+- Chrome 120, Firefox 125, Safari 17.2 and later are supported. Newer browsers use native features; older versions are covered by fallbacks inside the components and the optional `@fibrae/semi-polyfill`.
+- The published output is ESM only. There are no UMD or CDN builds.
+- Accessibility follows the recommendations of WAI-ARIA and APG, and accessible names and built-in texts are read from the locale packs.
+- Animation is delegated to Motion. `@fibrae/semi-animation` only provides the easings, springs and View Transition presets for it.
+
+## Design principles
+
+### Constant and variable
+
+Semi decouples modules on top of its defaults and opens up customization: keep a high-quality and stable default (constant), and open up flexibility when needed (variable). Users can trim and customize on top of the defaults to build front-end assets for products of different shapes.
+
+### Style customization: CSS variables and CSS overrides
+
+Global design tokens such as colors, radii, shadows, font sizes, spacing and z-index are provided as `--semi-*` CSS variables. Overriding them in your application styles changes the global look, with no compile plugin required, and they can be switched at runtime. Semi styles live in `@layer semi`, so unlayered CSS rules in your application always win and can override the styles of a specific component directly. See [Design tokens](/en-US/react/basic/tokens) for the list of variables.
+
+### Dark mode
+
+All color variables of Semi come with dark values and can be switched dynamically at runtime. Dark mode can also be enabled for a local area inside the application.
+
+### Internationalization
+
+Components ship with multiple locale packs, date and time components support time zones around the world, and components adapt to RTL layouts.
+
+## Architecture
+
+The JavaScript of every component is split into two parts, Foundation and Adapter. This lets the Foundation be reused across frameworks, and each framework only needs its own integration layer.
+
+### Foundation
+
+The Foundation contains the business logic of component interaction, including the calculations and branching after a UI behavior is triggered. It neither manipulates nor references the DOM. Anything that needs DOM operations or drives rendering updates is delegated to the Adapter. The Foundation is framework-free and does not depend on React, Vue or the UI packages.
+
+### Adapter
+
+The Adapter is an interface with all the methods the Foundation needs to implement its logic. It declares the DOM structure of the component and handles everything related to DOM operations and updates, usually through framework APIs such as setState, getState, addEventListener and removeListener. React integrates through adapters and hooks, Vue through composables.
+
+There are currently two implementations, React and Vue, corresponding to `@fibrae/semi-ui-react` and `@fibrae/semi-ui-vue`. The AI components are in `@fibrae/semi-ai-react` and `@fibrae/semi-ai-vue`.
+
+## Compatibility
+
+Chrome 120, Firefox 125, Safari 17.2 and later are supported; supporting Safari below 17.4 needs `@fibrae/semi-polyfill`. The styles rely on modern CSS features such as CSS variables, `@layer` and `@container`. For the framework, module format, Node.js and build plugin requirements, see [Requirements in Quick Start](/en-US/react/start/getting-started#requirements).

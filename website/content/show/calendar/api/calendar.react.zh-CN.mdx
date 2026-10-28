@@ -1,0 +1,26 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                                                                   | 类型                                                                                              | 默认值   |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------- |
+| allDayEventsRender | 自定义日、多日、周视图顶部的全天事件区域，参数 `events` 为传入的全部事件，需自行筛选。                                 | <ApiType detail={"(events: EventObject[]) => React.ReactNode"}>Type</ApiType>                     | -        |
+| dateGridRender     | 自定义单元格或列的内容，参数为 `dateString`（`date.toString()` 得到的字符串）和日期，需要绝对定位。                    | <ApiType detail={"(dateString?: string, date?: Date) => React.ReactNode"}>Type</ApiType>          | -        |
+| displayValue       | 展示日期，未传时为当前日期并在午夜更新。                                                                               | `Date`                                                                                            | -        |
+| events             | 渲染的事件，格式见 Event Object。                                                                                      | `EventObject[]`                                                                                   | `[]`     |
+| header             | 自定义头部内容。                                                                                                       | `React.ReactNode`                                                                                 | -        |
+| height             | 日历高度，数字按像素处理。                                                                                             | `number \| string`                                                                                | `600`    |
+| markWeekend        | 以灰色区分周末列和工作日。                                                                                             | `boolean`                                                                                         | `false`  |
+| minEventHeight     | 日视图、多日视图以及周视图下事件的最小高度，单位为像素；未设置时不限制最小高度。                                       | `number`                                                                                          | -        |
+| mode               | 视图模式，可选 `day`、`week`、`month`、`range`，变化后立即切换视图。                                                   | `'day' \| 'week' \| 'month' \| 'range'`                                                           | `"week"` |
+| onClick            | 单击日期格时调用，参数为事件和该格的日期；日、周、多日视图以半小时为单位，月视图以日为单位。                           | <ApiType detail={"(e: React.MouseEvent, value: Date) => void"}>Type</ApiType>                     | -        |
+| onClose            | 月视图下展示全部事件的卡片关闭时调用；关闭按钮或再次点击「还有 N 项」传点击事件，Esc 传键盘事件，点击外部时传 `null`。 | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent \u007c null) => void"}>Type</ApiType> | -        |
+| onMoreClick        | 月视图下点击「还有 N 项」打开卡片时调用，参数为事件、日期和被折叠的事件数；再次点击收起卡片时不调用。                  | <ApiType detail={"(e: React.MouseEvent, date: Date, remaining: number) => void"}>Type</ApiType>   | -        |
+| range              | `range` 模式下展示的日期范围，左闭右开；`range` 模式必传。                                                             | `Date[]`                                                                                          | -        |
+| ref                | 当前视图根元素（`div`）的引用，切换 `mode` 后指向新视图的根元素。                                                      | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                 | -        |
+| renderDateDisplay  | 自定义日期文案（周、多日视图的列标题与月视图的每个日期格），日视图不使用。                                             | <ApiType detail={"(date: Date) => React.ReactNode"}>Type</ApiType>                                | -        |
+| renderTimeDisplay  | 自定义日、周、多日视图下的时间文案，参数 `time` 为小时数。                                                             | <ApiType detail={"(time: number) => React.ReactNode"}>Type</ApiType>                              | -        |
+| scrollTop          | 日、周、多日视图下展示内容的默认滚动高度。                                                                             | `number`                                                                                          | `400`    |
+| showCurrTime       | 日、周、多日视图下显示当前时间的红线。                                                                                 | `boolean`                                                                                         | `true`   |
+| weekStartsOn       | 以周几作为每周第一天，`0` 代表周日，`1` 代表周一，以此类推；对月视图、周视图生效。                                     | `weekStartsOnEnum`                                                                                | `0`      |
+| width              | 日历宽度，数字按像素处理。                                                                                             | `number \| string`                                                                                | -        |

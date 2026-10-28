@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                                          | Type                                                                          | Default      |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------ |
+| align       | Alignment: center, justify, left or plain; ignored when row is true.                                                                                 | `DescriptionsAlign`                                                           | `"center"`   |
+| column      | Total number of columns per row in the horizontal layout.                                                                                            | `number`                                                                      | `3`          |
+| data        | Data to display; when empty, the Descriptions.Item children are used.                                                                                | `Data[]`                                                                      | -            |
+| layout      | Layout mode: vertical or horizontal.                                                                                                                 | `DescriptionsLayout`                                                          | `"vertical"` |
+| renderKey   | Renders the key of each data item, called with (item, index) where index counts hidden items; not called for hidden items. Defaults to item.key.     | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -            |
+| renderValue | Renders the value of each data item, called with (item, index) where index counts hidden items; not called for hidden items. Defaults to item.value. | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -            |
+| row         | Whether to display key and value in two rows.                                                                                                        | `boolean`                                                                     | `false`      |
+| size        | Size in two-row mode: small, medium or large.                                                                                                        | `DescriptionsSize`                                                            | `"medium"`   |

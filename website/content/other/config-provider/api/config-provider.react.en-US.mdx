@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Content affected by the configuration. When an explicitly passed `direction` differs from the outer one, including at the outermost level, the content is wrapped in a `div` carrying the `dir` attribute. | `React.ReactNode` | - |
+| direction | Text direction: `ltr` or `rtl`. Inherited from the outer ConfigProvider when omitted, and `ltr` at the outermost level. | `'ltr' \| 'rtl'` | - |
+| getPopupContainer | Function returning the popup container. It only affects Modal, SideSheet and ImagePreview, which still render through a Portal; the container needs `position: relative`. Inherited from the outer ConfigProvider when omitted, and `document.body` at the outermost level. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| locale | Locale configuration, which takes precedence over LocaleProvider. Inherited from the outer ConfigProvider when omitted; when no ConfigProvider sets it, LocaleProvider decides, and `zh_CN` is used without either. Pass `null` to clear the outer locale and leave it to the LocaleProvider inside, or the default language. | `Locale \| null` | - |
+| responsiveMap | Custom responsive breakpoints: keys are `xs`, `sm`, `md`, `lg`, `xl` and `xxl`, values are media query strings. Compared by content, so an inline object does not re-register listeners. Inherited from the outer ConfigProvider when omitted, and `ConfigProvider.defaultResponsiveMap` at the outermost level. | `ResponsiveMap` | - |
+| responsiveObserve | Whether to observe responsive breakpoints. When off, no `matchMedia` listener is registered; when on, listeners are registered on the first subscription and removed when none remain. Inherited from the outer ConfigProvider when omitted, and `false` at the outermost level. | `boolean` | - |
+| timeZone | Time zone for time components: a number (hour offset from UTC), a `GMT±HH:MM` string or an IANA identifier. Numbers and GMT strings are fixed offsets all year. Inherited from the outer ConfigProvider when omitted. | `string \| number` | - |

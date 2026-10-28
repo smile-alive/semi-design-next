@@ -1,0 +1,29 @@
+**Props**
+
+| 属性          | 说明                                                                                           | 类型                             | 默认值      |
+| ------------- | ---------------------------------------------------------------------------------------------- | -------------------------------- | ----------- |
+| label         | Label 的文本，或 text、extra、align、width、required、optional 等 Label 配置；label 插槽优先。 | `string \| number \| FieldLabel` | `undefined` |
+| labelPosition | Label 的位置，默认取自 Form，可选 top 或 left。                                                | `"top" \| "left"`                | `undefined` |
+| noLabel       | 是否不渲染 Label；Form 同时设置了 labelCol 与 wrapperCol 时，Label 列仍保留。                  | `boolean`                        | `undefined` |
+| error         | 错误信息，渲染在内容之后；不传则不显示。                                                       | `FieldError`                     | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽       | 说明                                       | 作用域参数               |
+| ---------- | ------------------------------------------ | ------------------------ |
+| default    | 放置的自定义内容。                         | `any`                    |
+| label      | Label 内容，优先于 label 属性中的文本。    | `any`                    |
+| labelExtra | 跟随在 Label 文本后的内容。                | `any`                    |
+| error      | 自定义错误信息的渲染，作用域参数为 error。 | `{ error: FieldError; }` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

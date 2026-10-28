@@ -1,0 +1,28 @@
+**Props**
+
+| 属性       | 说明                                                          | 类型             | 默认值                                        |
+| ---------- | ------------------------------------------------------------- | ---------------- | --------------------------------------------- |
+| mode       | 时间轴与内容的相对位置，可选 left、right、center、alternate。 | `TimelineMode`   | `semiDefault("Timeline", "mode", "left")`     |
+| dataSource | 数据数组；非空时按数据渲染，忽略默认插槽。项的字段见下表。    | `TimelineData[]` | `semiGlobalDefault("Timeline", "dataSource")` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                                               | 作用域参数          |
+| ------- | -------------------------------------------------- | ------------------- |
+| default | Timeline.Item 子项，dataSource 为空时使用。        | `any`               |
+| content | dataSource 每一项的内容，缺省渲染 item.content。   | `TimelineSlotProps` |
+| dot     | dataSource 每一项的自定义节点图标。                | `TimelineSlotProps` |
+| time    | dataSource 每一项的时间，缺省渲染 item.time。      | `TimelineSlotProps` |
+| extra   | dataSource 每一项的辅助说明，缺省渲染 item.extra。 | `TimelineSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

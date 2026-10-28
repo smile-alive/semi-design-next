@@ -1,0 +1,71 @@
+{
+    "switch": {
+        "source": "packages/semi-ui-react/src/switch/index.tsx",
+        "props": {
+            "checked": {
+                "zh-CN": "选中状态。不为 `undefined` 时为受控：显示由该值决定，点击只触发 onChange，需在回调中更新该值。变回 `undefined` 后取消选中并转为非受控。",
+                "en-US": "Checked state. When not `undefined` it is controlled: the value decides what is shown, and a click only calls onChange, so update the value in the callback. Setting it back to `undefined` unchecks the switch and makes it uncontrolled."
+            },
+            "checkedText": {
+                "zh-CN": "选中时展示的内容，size 为 `small` 时不显示。",
+                "en-US": "Content shown when checked. Not shown when size is `small`."
+            },
+            "className": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "defaultChecked": {
+                "zh-CN": "非受控时的初始选中状态，只在首次渲染时读取。",
+                "en-US": "Initial checked state when uncontrolled. Read only once, on the first render."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。",
+                "en-US": "Whether the switch is disabled."
+            },
+            "id": {
+                "zh-CN": "原生 input 的 id。",
+                "en-US": "Id of the native input."
+            },
+            "loading": {
+                "zh-CN": "是否处于加载中；加载中 input 仍可聚焦并带 `aria-disabled`，切换被忽略且不触发 onChange。",
+                "en-US": "Whether the switch is loading. While loading, the input stays focusable with `aria-disabled`; toggles are ignored and onChange is not called."
+            },
+            "name": {
+                "zh-CN": "原生 input 的 name，用于表单提交。",
+                "en-US": "Name of the native input, used when the form is submitted."
+            },
+            "onChange": {
+                "zh-CN": "切换状态时的回调，参数为新的选中状态与原生 change 事件；加载中不触发。",
+                "en-US": "Called when the user toggles the switch, with the new checked state and the native change event. Not called while loading."
+            },
+            "onMouseEnter": {
+                "zh-CN": "鼠标移入根元素时的回调。",
+                "en-US": "Called when the pointer enters the root element."
+            },
+            "onMouseLeave": {
+                "zh-CN": "鼠标移出根元素时的回调。",
+                "en-US": "Called when the pointer leaves the root element."
+            },
+            "ref": {
+                "zh-CN": "根元素（`div`）的引用。",
+                "en-US": "Reference to the root `div` element."
+            },
+            "size": {
+                "zh-CN": "开关尺寸，可选 `large`、`default` 或 `small`。",
+                "en-US": "Switch size: `large`, `default` or `small`."
+            },
+            "style": {
+                "zh-CN": "根元素的样式。",
+                "en-US": "Style of the root element."
+            },
+            "tabIndex": {
+                "zh-CN": "原生 input 的 tabIndex。",
+                "en-US": "tabIndex of the native input."
+            },
+            "uncheckedText": {
+                "zh-CN": "未选中时展示的内容，size 为 `small` 时不显示。",
+                "en-US": "Content shown when unchecked. Not shown when size is `small`."
+            }
+        }
+    }
+}

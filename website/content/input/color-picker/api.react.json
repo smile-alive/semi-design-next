@@ -1,0 +1,71 @@
+{
+    "color-picker": {
+        "source": "packages/semi-ui-react/src/color-picker/index.tsx",
+        "props": {
+            "alpha": {
+                "zh-CN": "是否开启透明度选择。",
+                "en-US": "Whether to enable transparency selection."
+            },
+            "bottomSlot": {
+                "zh-CN": "底部渲染额外元素。",
+                "en-US": "Renders extra elements at the bottom."
+            },
+            "children": {
+                "zh-CN": "使用 usePopover 时的触发器，默认是一个显示当前颜色的色块按钮；不使用 usePopover 时不渲染。",
+                "en-US": "The trigger when `usePopover`, a swatch of the current color by default; not rendered without `usePopover`."
+            },
+            "className": {
+                "zh-CN": "picker 根元素的类名；使用 usePopover 时位于弹层内。",
+                "en-US": "Class name of the picker root element; it is inside the popover when `usePopover`."
+            },
+            "defaultFormat": {
+                "zh-CN": "手动输入时默认使用的颜色格式，可选 `rgba`、`hex`、`hsva`。",
+                "en-US": "Color format used by default for manual input: `rgba`, `hex` or `hsva`."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控的初始值，是同时包含 hsva、hex、rgba 三种格式的 ColorValue 对象。",
+                "en-US": "Initial value when uncontrolled, a ColorValue holding hsva, hex and rgba."
+            },
+            "eyeDropper": {
+                "zh-CN": "是否开启滴管拾色器，需要 HTTPS 或 localhost 等安全 context，且浏览器为 Chromium 95 以上，否则无效果。",
+                "en-US": "Whether to enable the eyedropper. It needs a secure context such as HTTPS or localhost and Chromium 95 or later; otherwise it has no effect."
+            },
+            "height": {
+                "zh-CN": "高度，单位为像素，未设置时为 280。",
+                "en-US": "Height in pixels; 280 when not set."
+            },
+            "onChange": {
+                "zh-CN": "用户选中颜色时的回调，参数为 ColorValue，包含 hsva、hex、rgba 三种格式。",
+                "en-US": "Called with a ColorValue, holding hsva, hex and rgba, when the user picks a color."
+            },
+            "popoverProps": {
+                "zh-CN": "放入 Popover 时传给 Popover 的属性，如 `trigger`、`aria-label`、`aria-labelledby`。弹层默认以点击触发、role 为 `dialog`，名称默认取语言包；`aria-label` 或 `aria-labelledby` 优先。",
+                "en-US": "Props passed to the Popover when usePopover is on, such as `trigger`, `aria-label` and `aria-labelledby`. The popup opens on click with role `dialog` by default and takes its name from the locale; `aria-label` or `aria-labelledby` takes precedence."
+            },
+            "ref": {
+                "zh-CN": "picker 根元素（`div`）的引用；使用 usePopover 时指向弹层内的 picker 元素。",
+                "en-US": "Reference to the picker root element (`div`); it is the picker inside the popover when `usePopover`."
+            },
+            "style": {
+                "zh-CN": "picker 根元素的样式；使用 usePopover 时位于弹层内。",
+                "en-US": "Style of the picker root element; it is inside the popover when `usePopover`."
+            },
+            "topSlot": {
+                "zh-CN": "顶部渲染额外元素。",
+                "en-US": "Renders extra elements at the top."
+            },
+            "usePopover": {
+                "zh-CN": "是否放入 Popover 渲染，触发器使用 `children`，默认 `false`。",
+                "en-US": "Whether to render inside a Popover; the trigger is `children`. Defaults to `false`."
+            },
+            "value": {
+                "zh-CN": "受控值，形态同 defaultValue。传 `undefined` 视为非受控，从受控变回 `undefined` 时显示回到 defaultValue；传 `null` 是受控的空值，显示 defaultValue 且只报告变化。ColorValue 按不可变值对待，更新时整体替换。",
+                "en-US": "Controlled value, same shape as defaultValue. `undefined` means uncontrolled, and going back to `undefined` from a controlled value shows defaultValue again. `null` is a controlled empty value: it shows defaultValue and only reports changes. Treat ColorValue as immutable and replace it as a whole."
+            },
+            "width": {
+                "zh-CN": "宽度，单位为像素，未设置时为 280。",
+                "en-US": "Width in pixels; 280 when not set."
+            }
+        }
+    }
+}

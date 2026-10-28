@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | The itemKey of the active tab, controlled. null activates no tab and is still controlled; omitted or undefined means uncontrolled. | `string \| null` | - |
+| aria-label | Accessible name of the tab bar, placed on the `role="tablist"` element. | `string` | - |
+| aria-labelledby | The id of the element that names the tab bar, placed on the `role="tablist"` element. | `string` | - |
+| arrowPosition | Position of the scroll arrows in collapsible mode. | `TabBarProps['arrowPosition']` | `"both"` |
+| children | TabPane children, which must be direct children of Tabs; any other node renders as content in its original order. With tabList, TabPane children are ignored and the other nodes are the content of the active tab. | `JSX.Element` | - |
+| collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
+| contentStyle | Style of the outer content area, an object or a string. | `JSX.CSSProperties \| string` | - |
+| defaultActiveKey | The itemKey selected initially when uncontrolled. Defaults to the first enabled tab that has an itemKey. | `string` | - |
+| dropdownProps | In collapsible mode, the Dropdown props passed to the start-side (start) and end-side (end) arrow menus. | `TabsDropdownProps` | - |
+| keepDOM | With TabPane children, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion. | `boolean` | `true` |
+| lazyRender | Lazy rendering: a panel renders its content only after it has been active, and keeps it afterwards. | `boolean` | `false` |
+| more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number, render returns a custom trigger and dropdownProps is passed to the dropdown. | `TabsMore` | - |
+| onChange | Called when the active tab changes, with the itemKey of the new active tab. | <ApiType detail={"(activeKey: string) => void"}>Type</ApiType> | - |
+| onTabClick | Called when a tab is clicked or activated with Enter or Space; the event is a KeyboardEvent for keyboard activation. | <ApiType detail={"(activeKey: string, event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onTabClose | Called when a tab is closed, with the itemKey of the closed tab. The caller removes the tab. | <ApiType detail={"(tabKey: string) => void"}>Type</ApiType> | - |
+| onVisibleTabsChange | In collapsible mode, called when the visibility of the tabs changes, with a Map from itemKey to whether it is visible. | `TabBarProps['onVisibleTabsChange']` | - |
+| preventScroll | Whether focus calls inside the component stop the browser from scrolling the document to the newly focused element. | `boolean` | - |
+| renderArrow | Replaces each scroll arrow in collapsible mode. The arguments are the scrolled-out items, the position pos, the click handler handleArrowClick and defaultNode, which creates the default arrow: call defaultNode() where it is inserted. items are plain data; with TabPane children they have no tab, so use tabList when you need the tab text. | `TabBarProps['renderArrow']` | - |
+| renderIcon | The icon of each tabList item, called with the item and its index. It is called once at each place the tab shows (the tab, a menu item) and again when the item's data or index changes. | `TabRender` | - |
+| renderTab | The content of each tabList tab, called with the item and its index; without it the item's tab shows. It is called once at each place the tab shows (the tab, a menu item, the panel's name) and again when the item's data or index changes. | `TabRender` | - |
+| renderTabBar | Replaces the whole tab bar; the same function is called once. tabBarProps is live, so read its fields inside the returned JSX; DefaultTabBar is the default tab bar component. | <ApiType detail={"(tabBarProps: TabBarProps, DefaultTabBar: Component\u003cTabBarProps>) => JSX.Element"}>Type</ApiType> | - |
+| showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `true` |
+| size | Size of the tab bar; currently only the line type supports it. | `TabSize` | `"large"` |
+| tabBarClassName | Class name of the tab bar. | `string` | - |
+| tabBarExtraContent | Extra content of the tab bar, placed outside the tablist. | `JSX.Element` | - |
+| tabBarStyle | Style of the tab bar, an object or a string. | `JSX.CSSProperties \| string` | - |
+| tabList | An array of tab data. Each item holds data only (itemKey, the tab text, disabled and closable); markup goes to renderTab and renderIcon. Any array, even an empty one, makes children the content of the active tab and takes precedence over TabPane children. | `PlainTab[]` | - |
+| tabPaneMotion | Whether switching panels is animated. | `boolean` | `true` |
+| tabPosition | Position of the tab bar: top is horizontal, left is vertical. | `TabPosition` | `"top"` |
+| type | Style of the tab bar: line, card, button or slash. slash supports horizontal mode only. | `TabType` | `"line"` |
+| visibleTabsStyle | In collapsible mode, the style of the whole scrolling area, an object or a string. | `TabBarProps['visibleTabsStyle']` | - |

@@ -1,0 +1,27 @@
+{
+    "icon": {
+        "source": "packages/semi-icons-vue/src/components/icon.vue",
+        "props": {
+            "type": { "zh-CN": "附加图标类型类名。", "en-US": "Adds an icon type class name." },
+            "size": {
+                "zh-CN": "图标尺寸；inherit 继承上下文字体大小。",
+                "en-US": "Icon size; inherit uses the surrounding font size."
+            },
+            "spin": { "zh-CN": "启用旋转动画。", "en-US": "Enables the spinning animation." },
+            "rotate": { "zh-CN": "旋转角度，使用整数。", "en-US": "Rotation angle in integer degrees." },
+            "prefixCls": {
+                "zh-CN": "CSS 类名前缀，默认 semi，可由构建插件改写。",
+                "en-US": "CSS class prefix, initially semi; build plugins can replace it."
+            },
+            "fill": { "zh-CN": "双色、多色图标的填充颜色。", "en-US": "Fill colors for bicolor and multicolor icons." }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "自定义 SVG 内容，不传入作用域参数。工具推导的参数类型为 any。",
+                "en-US": "Custom SVG content, with no scope parameters. The metadata tool infers the parameter type as any."
+            }
+        },
+        "exposed": {}
+    }
+}

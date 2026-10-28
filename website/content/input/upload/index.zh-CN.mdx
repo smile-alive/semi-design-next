@@ -1,0 +1,1154 @@
+---
+title: 上传
+order: 53
+icon: doc-upload
+brief: 文件选择上传
+---
+
+import UploadReactApi from './api/upload.react.zh-CN.mdx';
+import UploadFileCardReactApi from './api/upload-file-card.react.zh-CN.mdx';
+import UploadVueApi from './api/upload.vue.zh-CN.mdx';
+import UploadFileCardVueApi from './api/upload-file-card.vue.zh-CN.mdx';
+import UploadSolidApi from './api/upload.solid.zh-CN.mdx';
+import UploadFileCardSolidApi from './api/upload-file-card.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Upload } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Upload } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip, Upload } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本
+
+最基本的用法，在触发区内放置一个 Button，点击它激活文件选择框，选择完成后自动开始上传
+
+<Demo id="basic" />
+
+### 文件名超长省略
+
+通过 `showTooltip` 属性，自定义设置文件名弹出提示
+
+当类型为 `boolean` 时，控制是否弹出提示
+
+<Demo id="show-tooltip" />
+
+<Framework only="react">
+
+当类型为 `object` 时，可以自定义弹出样式
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#ellipsisTooltip` 插槽可以自定义弹出层，插槽参数为 `content`（完整文件名）与 `trigger`（文件名元素，用 `<component :is="trigger" />` 放进弹出层）；`showTooltip` 传对象时可配置提示的类型与透传属性
+
+</Framework>
+
+<Framework only="solid">
+
+当类型为 `object` 时，可以通过 `renderTooltip` 自定义弹出层，参数为 `content`（完整文件名）与 `children`（文件名元素）；`type` 与 `opts` 配置提示的类型与透传给浮层的属性
+
+</Framework>
+
+<Demo id="show-tooltip-custom" />
+
+### 添加提示文本
+
+通过 `prompt` 插槽，设置自定义提示文本  
+通过 `promptPosition` 设置插槽位置，可选 `left`、`right`、`bottom`，默认为 `right`
+
+<Demo id="prompt" />
+
+当 listType 为 picture 时，promptPosition 位置的参照对象为图片墙列表整体
+
+<Demo id="prompt-picture" />
+
+### 点击头像触发上传
+
+<Demo id="avatar" />
+
+```css
+.avatar-upload .semi-upload-add {
+    border-radius: 50%; // 确保只有圆是点击热区
+}
+```
+
+### 自定义上传属性
+
+通过设置 `data`、`headers` 可添加自定义上传属性
+
+<Demo id="custom-data" />
+
+### 上传文件类型
+
+通过 `accept` 属性（`input` 的原生 `html` 属性）可以限制上传的文件类型。
+
+`accept` 支持传入以下两种类型字符串：
+
+- 文件后缀名集合（推荐），如 .jpg、.png 等；
+- 文件类型的 MIME types 集合，可参考[MDN 文档](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types)
+
+例如只允许用户上传 PNG 和 PDF 文件，`accept` 可以这样写： `accept = '.pdf,.png'` 或 `accept = 'application/pdf,image/png'`（将 PNG 与 PDF 的 MIME type 通过`,`连接起来即可）。
+
+<Framework only="react">
+
+<Notice type="primary" title="注意事项">
+    <div>Upload 会在内部拦截掉不符合 accept 格式的文件，当拦截到不符合格式要求的文件时，会触发 onAcceptInvalid 方法；</div>
+    <div>accept 使用后缀可以避免因为浏览器或者操作系统的不同导致 file.type 与 MIME 不兼容问题。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="注意事项">
+    <div>Upload 会在内部拦截掉不符合 accept 格式的文件，当拦截到不符合格式要求的文件时，会触发 acceptInvalid 事件；</div>
+    <div>accept 使用后缀可以避免因为浏览器或者操作系统的不同导致 file.type 与 MIME 不兼容问题。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="注意事项">
+    <div>Upload 会在内部拦截掉不符合 accept 格式的文件，当拦截到不符合格式要求的文件时，会触发 onAcceptInvalid 方法；</div>
+    <div>accept 使用后缀可以避免因为浏览器或者操作系统的不同导致 file.type 与 MIME 不兼容问题。</div>
+</Notice>
+
+</Framework>
+
+<Demo id="accept" />
+
+### 上传文件夹
+
+通过传入 `directory` 为 `true`，可以支持上传文件夹下的所有文件
+
+<Demo id="directory" />
+
+### 一次选中多个文件
+
+通过设置 `multiple` 属性可以支持同时选中多个文件上传。
+
+<Demo id="multiple" />
+
+### 限制文件总数量
+
+<Framework only="react">
+
+通过设置 `limit` 属性可以限制最大可上传的文件数  
+当 `limit` 为1时，始终用最新上传的代替当前，并不会触发onExceed回调
+
+</Framework>
+
+<Framework only="vue">
+
+通过设置 `limit` 属性可以限制最大可上传的文件数  
+当 `limit` 为1时，始终用最新上传的代替当前，并不会触发 `exceed` 事件
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 `limit` 属性可以限制最大可上传的文件数  
+当 `limit` 为1时，始终用最新上传的代替当前，并不会触发 `onExceed` 回调
+
+</Framework>
+
+<Demo id="limit" />
+
+达到上限时禁用触发控件而不是 Upload，这样仍能移除已上传的文件。
+
+<Demo id="limit-disabled" />
+
+照片墙模式下，当已上传文件数量等于 limit 时，会自动隐藏上传入口
+
+<Demo id="limit-picture" />
+
+### 限制上传文件大小
+
+<Framework only="react">
+
+通过 `maxSize` 和 `minSize` 属性可以自定义上传文件大小的限制，通过设置 `onSizeError` 可以设置超出限制时的回调。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `maxSize` 和 `minSize` 属性可以自定义上传文件大小的限制，通过监听 `@sizeError` 可以在超出限制时得到通知。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `maxSize` 和 `minSize` 属性可以自定义上传文件大小的限制，通过设置 `onSizeError` 可以设置超出限制时的回调。
+
+</Framework>
+
+<Demo id="size-limit" />
+
+### 自定义列表操作区
+
+<Framework only="react">
+
+`listType` 为 `list` 时，可以通过传入 `renderFileOperation` 来自定义列表操作区
+
+</Framework>
+
+<Framework only="vue">
+
+`listType` 为 `list` 时，可以通过 `#fileOperation` 插槽自定义列表操作区，参数为 `UploadFileItemSlotProps`
+
+</Framework>
+
+<Framework only="solid">
+
+`listType` 为 `list` 时，可以通过传入 `renderFileOperation` 来自定义列表操作区
+
+</Framework>
+
+<Demo id="render-file-operation" />
+
+### 自定义文件列表标题
+
+<Framework only="react">
+
+`listType` 为 `list` 时，可以通过 `fileListTitle` 自定义文件列表顶部的标题区域。支持两种形式：
+
+#### 字符串或 ReactNode 形式
+
+当传入字符串或 ReactNode 时，仅替换标题文字，清空按钮保持默认样式：
+
+<Demo id="file-list-title" />
+
+#### 函数形式
+
+当传入函数时，可以完全自定义标题区域，包括清空按钮。函数会接收以下参数：
+
+- `fileList`: 当前文件列表
+- `onClear`: 清空文件的回调函数
+- `clearText`: 清空按钮的默认文案（根据当前语言环境）
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
+<Framework only="vue">
+
+`listType` 为 `list` 时，可以自定义文件列表顶部的标题区域，分为两个插槽：
+
+#### 只替换标题文字
+
+`#fileListTitle` 仅替换标题文字，清空按钮保持默认样式：
+
+<Demo id="file-list-title" />
+
+#### 替换整个标题区
+
+`#fileListHeader` 替换整个标题区域，包括清空按钮。提供该插槽后，即使它渲染为空也不回落到默认标题。插槽参数如下：
+
+- `fileList`: 当前文件列表
+- `onClear`: 清空文件的函数
+- `clearText`: 清空按钮的默认文案（根据当前语言环境）
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
+<Framework only="solid">
+
+`listType` 为 `list` 时，可以通过 `fileListTitle` 自定义文件列表顶部的标题区域。支持两种形式：
+
+#### 传入 JSX 形式
+
+当传入 JSX 元素时，仅替换标题文字，清空按钮保持默认样式：
+
+<Demo id="file-list-title" />
+
+#### 函数形式
+
+当传入函数时，可以完全自定义标题区域，包括清空按钮。函数会接收以下参数：
+
+- `fileList`: 当前文件列表
+- `onClear`: 清空文件的回调函数
+- `clearText`: 清空按钮的默认文案（根据当前语言环境）
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
+### 自定义预览逻辑
+
+<Framework only="react">
+
+`listType` 为 `list` 时，可以通过传入 `previewFile` 自定义预览逻辑  
+例如你不需要对图片类型进行缩略图预览时，可以在 `previewFile` 中恒定返回一个`<IconFile />`  
+假如你希望点击图片时放大预览，则可以在 `previewFile`中使用 Image 组件  
+或者你希望使用额外的操作区来实现点击放大预览，你也可以结合 `renderFileOperation` 放置一些自定义元素例如 Icon 图标实现点击放大
+
+</Framework>
+
+<Framework only="vue">
+
+`listType` 为 `list` 时，可以通过 `#previewFile` 插槽自定义预览逻辑，插槽内容会替换原缩略图，渲染为空时也不回落到默认缩略图  
+例如你不需要对图片类型进行缩略图预览时，可以在 `#previewFile` 中恒定渲染一个 `<IconFile />`  
+假如你希望点击图片时放大预览，则可以在 `#previewFile` 中使用 Image 组件  
+或者你希望使用额外的操作区来实现点击放大预览，你也可以结合 `#fileOperation` 放置一些自定义元素例如 Icon 图标实现点击放大
+
+</Framework>
+
+<Framework only="solid">
+
+`listType` 为 `list` 时，可以通过传入 `previewFile` 自定义预览逻辑  
+例如你不需要对图片类型进行缩略图预览时，可以在 `previewFile` 中恒定返回一个 `<IconFile />`  
+假如你希望点击图片时放大预览，则可以在 `previewFile` 中使用 Image 组件  
+或者你希望使用额外的操作区来实现点击放大预览，你也可以结合 `renderFileOperation` 放置一些自定义元素例如 Icon 图标实现点击放大
+
+</Framework>
+
+<Demo id="preview-file" />
+
+<Framework only="react">
+
+结合 renderFileOperation 与 ImagePreview 的示例，以下示例点击右侧第一个 Icon 可放大图片预览
+
+</Framework>
+
+<Framework only="vue">
+
+结合 `#fileOperation` 与 ImagePreview 的示例，以下示例点击右侧第一个 Icon 可放大图片预览
+
+</Framework>
+
+<Framework only="solid">
+
+结合 `renderFileOperation` 与 ImagePreview 的示例，以下示例点击右侧第一个 Icon 可放大图片预览
+
+</Framework>
+
+<Demo id="preview-file-image-preview" />
+
+### 默认文件列表
+
+通过 `defaultFileList` 可以展示已上传的文件。当需要预览默认文件的缩略图时，你可以将 `defaultFileList` 内对应 `item` 的 `preview` 属性设为 `true`
+
+<Notice title="注意事项">defaultFileList中 uid 必须唯一，不可重复</Notice>
+
+<Demo id="default-file-list" />
+
+### 受控组件
+
+<Framework only="react">
+
+当传入`fileList`时，作为受控组件使用。需要监听 onChange 回调，并且将 fileList 回传给 Upload（注意需传入一个新的数组对象）
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model:fileList` 绑定文件列表，Upload 在列表变化时通过 `update:fileList` 事件回写。只用单向绑定 `:fileList` 而不回写时，列表保持传入的值。`@change` 事件仍会收到 `{ fileList, currentFile }`，其中 `currentFile` 在通过 `insert` 方法插入文件后为 `null`。
+
+</Framework>
+
+<Framework only="solid">
+
+当传入`fileList`时，作为受控组件使用。需要监听 onChange 回调，并且将 fileList 回传给 Upload（注意需传入一个新的数组对象）
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 图片墙
+
+设置 `listType = 'picture'`，用户可以上传图片并在列表中显示缩略图  
+如果通过 defaultFileList 或 fileList 设置已上传的文件列表时，会自动读取对象数组中的 url 属性用于展示图片
+
+<Demo id="picture-wall" />
+
+设置 `showPicInfo`，可以查看图片基础信息
+
+<Demo id="pic-info" />
+
+### 图片墙放大预览
+
+<Framework only="react">
+
+配合 Image 组件，通过 renderThumbnail API ，可以实现点击图片放大预览
+
+</Framework>
+
+<Framework only="vue">
+
+配合 Image 组件，通过 `#thumbnail` 插槽，可以实现点击图片放大预览
+
+</Framework>
+
+<Framework only="solid">
+
+配合 Image 组件，通过 `renderThumbnail` 属性，可以实现点击图片放大预览
+
+</Framework>
+
+<Demo id="render-thumbnail" />
+
+<Framework only="react">
+
+可以通过 `renderPicPreviewIcon`，`onPreviewClick` 来自定义预览图标，当显示替换图标 `showReplace` 时，不会再显示预览图标<br /> 当需要自定义预览/替换功能时，需要关闭替换功能，使用 `renderPicPreviewIcon` 监听图标点击事件即可。<br /> `onPreviewClick` 监听的是单张图片容器的点击事件
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#picPreviewIcon` 插槽，`@previewClick` 事件来自定义预览图标，当显示替换图标 `showReplace` 时，不会再显示预览图标<br /> 当需要自定义预览/替换功能时，需要关闭替换功能，使用 `#picPreviewIcon` 监听图标点击事件即可。<br /> `@previewClick` 监听的是单张图片容器的点击事件。监听它会同时让文件卡片可点击，并显示预览按钮
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `renderPicPreviewIcon`、`onPreviewClick` 来自定义预览图标，当显示替换图标 `showReplace` 时，不会再显示预览图标<br /> 当需要自定义预览/替换功能时，需要关闭替换功能，使用 `renderPicPreviewIcon` 监听图标点击事件即可。<br /> `onPreviewClick` 监听的是单张图片容器的点击事件
+
+</Framework>
+
+<Demo id="preview-icon" />
+
+### 图片墙设置宽高
+
+<Framework only="react">
+
+通过设置 picHeight, picWidth，可以统一设置图片墙元素的宽高。如果同时使用 `renderThumbnail` return Image 组件来实现点击放大预览，你需要同时指定 Image 组件的 width 和 height
+
+</Framework>
+
+<Framework only="vue">
+
+通过设置 picHeight, picWidth，可以统一设置图片墙元素的宽高。如果同时使用 `#thumbnail` 插槽渲染 Image 组件来实现点击放大预览，你需要同时指定 Image 组件的 width 和 height
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 picHeight, picWidth，可以统一设置图片墙元素的宽高。如果同时使用 `renderThumbnail` 返回 Image 组件来实现点击放大预览，你需要同时指定 Image 组件的 width 和 height
+
+</Framework>
+
+<Demo id="pic-size" />
+
+设置 `hotSpotLocation` 自定义点击热区的顺序，默认在照片墙列表结尾
+
+<Demo id="hot-spot-location" />
+
+### 禁用
+
+<Demo id="disabled" />
+
+### 手动触发上传
+
+<Framework only="react">
+
+`uploadTrigger='custom'`，选中文件后将不会自动触发上传。需要手动调用 `ref` 上的 `upload` 方法触发
+
+</Framework>
+
+<Framework only="vue">
+
+`uploadTrigger="custom"`，选中文件后将不会自动触发上传。需要通过模板引用调用暴露的 `upload` 方法触发
+
+</Framework>
+
+<Framework only="solid">
+
+`uploadTrigger='custom'`，选中文件后将不会自动触发上传。需要通过 `ref` 拿到上传组件，调用其上的 `upload` 方法触发
+
+</Framework>
+
+<Demo id="manual-upload" />
+
+### 拖拽上传
+
+`draggable='true'`，可以使用拖拽功能
+
+<Notice type="primary" title="注意事项">
+    <div>在directory为true的情况下，因为浏览器自动做了限制，所以点击上传时不允许选单个文件，拖拽时我们认为同时允许文件夹、文件都能拖动更合理，所以不做另外的拦截处理。</div>
+</Notice>
+
+<Demo id="draggable" />
+
+<Framework only="react">
+
+可以通过 `dragIcon`、`dragMainText`、`dragSubText` 快捷设置拖拽区内容
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#dragIcon`、`#dragMainText`、`#dragSubText` 插槽快捷设置拖拽区内容。`#dragIcon`、`#dragMainText` 渲染为空时显示默认图标和文案
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `dragIcon`、`dragMainText`、`dragSubText` 快捷设置拖拽区内容
+
+</Framework>
+
+<Demo id="drag-text" />
+
+<Framework only="react">
+
+还可以通过 `children` 传入 ReactNode，完全自定义拖拽区的显示
+
+</Framework>
+
+<Framework only="vue">
+
+还可以通过默认插槽传入内容，完全自定义拖拽区的显示
+
+</Framework>
+
+<Framework only="solid">
+
+还可以通过 `children` 传入 JSX 元素，完全自定义拖拽区的显示
+
+</Framework>
+
+<Demo id="drag-children" />
+
+Scss 样式如下
+
+```scss
+.components-upload-demo-drag-area {
+    border-radius: var(--semi-border-radius-small);
+    border: 2px dashed var(--semi-color-border);
+    width: 100%;
+    padding: 12px;
+    background-color: var(--semi-color-tertiary-light-default);
+    display: flex;
+    cursor: pointer;
+    flex-wrap: wrap;
+    justify-content: center;
+    &:hover {
+        background-color: var(--semi-color-primary-light-default);
+        border-color: var(--semi-color-primary);
+    }
+}
+```
+
+### 粘贴上传
+
+<Framework only="react">
+
+设置 `addOnPasting` 后，在页面任意位置粘贴（`paste` 事件）的文件会加入文件列表，不需要剪贴板授权。读取粘贴的文件失败时触发 `onPastingError`。
+
+</Framework>
+
+<Framework only="vue">
+
+设置 `addOnPasting` 后，在页面任意位置粘贴（`paste` 事件）的文件会加入文件列表，不需要剪贴板授权。读取粘贴的文件失败时触发 `pastingError` 事件。被 KeepAlive 失活的 Upload 不响应粘贴。
+
+</Framework>
+
+<Framework only="solid">
+
+设置 `addOnPasting` 后，在页面任意位置粘贴（`paste` 事件）的文件会加入文件列表，不需要剪贴板授权。读取粘贴的文件失败时触发 `onPastingError`。
+
+</Framework>
+
+<Demo id="paste" />
+
+### 上传前自定义校验
+
+可通过 `beforeUpload` 钩子，对文件状态进行更新，这是在网络上传前，选择文件后进行校验，`({ file: FileItem, fileList: Array<FileItem> }) => beforeUploadResult | Promise | boolean` 同步校验时需返回 boolean（true 为校验通过，false 为校验失败，校验失败会阻止文件网络上传）或者一个 Object 对象，具体结构如下
+
+<Framework only="react">
+
+```ts
+// beforeUploadResult:
+{
+    fileInstance?: File,
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait',
+    validateMessage?: React.ReactNode | string, // 文件的校验信息
+    shouldUpload: boolean, // 是否需要上传。默认为true，如果为false，该fileItem只会被展示在列表中，不会触发上传操作
+    autoRemove: boolean, // 是否从fileList中移除该文件，默认为false
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+// beforeUploadResult:
+{
+    fileInstance?: File,
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait',
+    validateMessage?: string, // 文件的校验信息，需要节点时使用 #fileValidateMessage 插槽
+    shouldUpload: boolean, // 是否需要上传。默认为true，如果为false，该fileItem只会被展示在列表中，不会触发上传操作
+    autoRemove: boolean, // 是否从fileList中移除该文件，默认为false
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+// beforeUploadResult:
+{
+    fileInstance?: File,
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait',
+    validateMessage?: string, // 文件的校验信息，需要节点时使用 renderValidateMessage
+    shouldUpload: boolean, // 是否需要上传。默认为true，如果为false，该fileItem只会被展示在列表中，不会触发上传操作
+    autoRemove: boolean, // 是否从fileList中移除该文件，默认为false
+}
+```
+
+</Framework>
+
+<Demo id="before-upload" />
+
+异步校验时，需返回 Promise，Promise resolve 代表检验通过，reject 代表校验失败，不会触发上传。  
+resolve/reject 时可以传入 object（结构同上 beforeUploadResult）
+
+<Demo id="before-upload-async" />
+
+### 上传后更新文件信息
+
+可以通过 `afterUpload` 钩子，对文件状态，校验信息，文件名进行更新。  
+`({ response: any, file: FileItem, fileList: Array<FileItem> }) => afterUploadResult`  
+`afterUpload` 在上传完成后(`xhr.onload`)且没有发生错误的情况下触发，需返回一个 Object 对象（不支持异步返回），具体结构如下
+
+<Framework only="react">
+
+```ts
+// afterUploadResult:
+{
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    // 文件的校验信息
+    validateMessage?: React.ReactNode | string;
+    // 是否从fileList中移除该文件，默认为false
+    autoRemove?: boolean;
+    // 文件的名称
+    name?: string;
+    // 预览文件的url，一般为当次上传请求中 Server 接收到文件后返回的存储地址
+    url?: string
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+// afterUploadResult:
+{
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    // 文件的校验信息，需要节点时使用 #fileValidateMessage 插槽
+    validateMessage?: string;
+    // 是否从fileList中移除该文件，默认为false
+    autoRemove?: boolean;
+    // 文件的名称
+    name?: string;
+    // 预览文件的url，一般为当次上传请求中 Server 接收到文件后返回的存储地址
+    url?: string
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+// afterUploadResult:
+{
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    // 文件的校验信息，需要节点时使用 renderValidateMessage
+    validateMessage?: string;
+    // 是否从fileList中移除该文件，默认为false
+    autoRemove?: boolean;
+    // 文件的名称
+    name?: string;
+    // 预览文件的url，一般为当次上传请求中 Server 接收到文件后返回的存储地址
+    url?: string
+}
+```
+
+</Framework>
+
+<Demo id="after-upload" />
+
+### 自定义请求
+
+当传入 customRequest 时, 相当于使用的自定义的请求方法替换了 upload 内置的 xhr 请求，用户需要自行接管上传行为。  
+可在入参中获取到当前操作的 file 对象，用户自行实现上传过程，并且在适当的时候调用 customRequest 入参中的 onProgress、onError、onSuccess 以更新 Upload 组件内部状态进而驱动 UI 更新  
+customRequest 包含以下入参
+
+```ts
+{
+    // 当前文件名称
+    fileName: string,
+    // 用户设置的props.data
+    data: object,
+    // FileItem，具体结构参考下面的文档
+    file: FileItem,
+    // original File Object which extends Blob, 浏览器实际获取到的文件对象(https://developer.mozilla.org/zh-CN/docs/Web/API/File)
+    fileInstance: File,
+    // 上传过程中应调用的函数，event需要包含 total、loaded属性
+    onProgress: (event: { total: number, loaded: number }) => any,
+    // 上传出错时应调用的函数
+    onError: (userXhr: { status?: number }, e?: Event) => any,
+    // 上传成功后应调用的函数, response为上传成功后的请求结果
+    onSuccess: (response: any, e?: Event) => any,
+    // 用户设置的props.withCredentials
+    withCredentials: boolean,
+    // 用户设置的props.action
+    action: string,
+}
+```
+
+<Demo id="custom-request" />
+
+### 图片裁切
+
+通过 `crop` 属性启用图片裁切功能。支持点击选择、拖拽、粘贴、替换文件时进行裁切。
+
+#### 基本用法
+
+<Framework only="react">
+
+设置 `crop={true}` 启用默认裁切配置。
+
+</Framework>
+
+<Framework only="vue">
+
+设置 `crop` 启用默认裁切配置（`:crop="true"` 或布尔简写 `crop`）。
+
+</Framework>
+
+裁切前会先按 `accept` 与 `limit` 过滤，被拒绝或超出数量的图片不会进入裁切。浏览器只能编码 PNG、JPEG、WebP，其他格式（GIF、BMP、SVG）的裁切结果为 PNG，文件的 `type` 与扩展名随之变为 `image/png` 与 `.png`。
+
+<Framework only="solid">
+
+设置 `crop={true}` 启用默认裁切配置。
+
+</Framework>
+
+<Demo id="crop" />
+
+#### 自定义裁切配置
+
+通过对象形式配置裁切参数，包括宽高比、形状、质量等。
+
+<Demo id="crop-custom" />
+
+#### 圆形裁切
+
+适用于头像上传场景，设置 `shape: 'round'` 启用圆形裁切。
+
+<Demo id="crop-round" />
+
+#### 裁切前确认
+
+通过 `beforeCrop` 回调，在裁切前进行确认或其他处理。返回 `false` 可跳过裁切直接上传。
+
+<Demo id="before-crop" />
+
+#### 拖拽上传裁切
+
+拖拽上传时也会触发裁切功能。
+
+<Demo id="crop-draggable" />
+
+#### 自定义裁切弹窗样式
+
+通过 `cropModalProps` 自定义裁切弹窗的样式和属性。弹窗的 `width` 缺省为 600，传入的值优先。
+
+`cropModalProps` 的类型为 `UploadCropModalProps`，不含 `visible`、`title`、`okText`、`cancelText`、`onOk`、`onCancel`：标题和按钮文字用 `crop` 的 `modalTitle`、`modalOkText`、`modalCancelText` 配置，其余由组件内置。
+
+<Demo id="crop-modal-props" />
+
+## API 参考
+
+---
+
+### Upload
+
+<Framework only="vue">
+
+<UploadVueApi />
+
+`class`、`style`、`aria-*` 等未声明的 attrs 落在根元素上，根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`。
+
+### Upload.FileCard
+
+`Upload.FileCard` 是默认的文件卡片，用于在 `#fileItem` 等插槽中保留默认外观：`<Upload.FileCard v-bind="props" />`。`class`、`style`、`data-*`、`aria-*` 落在根元素上。
+
+<UploadFileCardVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<UploadSolidApi />
+
+`class`、`style`、`aria-*` 等未声明的属性和事件落在根元素上，`ref` 取得根元素；根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`。
+
+### Upload.FileCard
+
+`Upload.FileCard` 是默认的文件卡片，用于在 `renderFileItem` 中保留默认外观：`<Upload.FileCard {...props} />`。`data-*`、`aria-*` 落在根元素上。
+
+<UploadFileCardSolidApi />
+
+</Framework>
+
+<Framework only="react">
+
+<UploadReactApi />
+
+未声明的原生属性（如 `aria-label`、`id`、`onClick`）落在根元素上；根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`。
+
+### Upload.FileCard
+
+`Upload.FileCard` 是默认的文件卡片，用于在 `renderFileItem` 中保留默认外观：`<Upload.FileCard {...props} />`。`data-*`、`aria-*` 落在根元素上。
+
+<UploadFileCardReactApi />
+
+</Framework>
+
+## Interfaces
+
+### FileItem Interface
+
+<Notice title="注意">uid为文件唯一标识符，Upload的更新、删除等逻辑对该值强依赖。 如果当前文件是通过upload选中添加的，会自动生成uid。 如果是props.defaultFileList或者props.fileList传入的, 必传，且需要自行保证不会重复</Notice>
+
+<Framework only="react">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr 事件
+    fileInstance?: File; // 浏览器实际获取到的文件对象，继承自 Blob（https://developer.mozilla.org/zh-CN/docs/Web/API/File）
+    name: string;
+    percent?: number; // 上传进度百分比
+    preview?: boolean; // 是否根据url进行预览
+    response?: any; // xhr的response, 请求成功时为respoonse body，请求失败时为对应 error
+    shouldUpload?: boolean; // 是否应该继续上传
+    showReplace?: boolean; // 单独控制该file是否展示替换按钮
+    showRetry?: boolean; // 单独控制该file是否展示重试按钮
+    size: string; // 文件大小，单位kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // 文件唯一标识符，如果当前文件是通过upload选中添加的，会自动生成uid。如果是defaultFileList, 需要自行保证不会重复
+    url?: string;
+    validateMessage?: ReactNode | string;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr 事件
+    fileInstance?: File; // 浏览器实际获取到的文件对象，继承自 Blob（https://developer.mozilla.org/zh-CN/docs/Web/API/File）
+    name: string;
+    percent?: number; // 上传进度百分比
+    preview?: boolean; // 是否根据url进行预览
+    response?: any; // xhr的response, 请求成功时为respoonse body，请求失败时为对应 error
+    shouldUpload?: boolean; // 是否应该继续上传
+    showReplace?: boolean; // 单独控制该file是否展示替换按钮
+    showRetry?: boolean; // 单独控制该file是否展示重试按钮
+    size: string; // 文件大小，单位kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // 文件唯一标识符，如果当前文件是通过upload选中添加的，会自动生成uid。如果是defaultFileList, 需要自行保证不会重复
+    url?: string;
+    validateMessage?: string; // 需要节点时使用 #fileValidateMessage 插槽
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr 事件
+    fileInstance?: File; // 浏览器实际获取到的文件对象，继承自 Blob（https://developer.mozilla.org/zh-CN/docs/Web/API/File）
+    name: string;
+    percent?: number; // 上传进度百分比
+    preview?: boolean; // 是否根据url进行预览
+    response?: any; // xhr的response, 请求成功时为response body，请求失败时为对应 error
+    shouldUpload?: boolean; // 是否应该继续上传
+    showReplace?: boolean; // 单独控制该file是否展示替换按钮
+    showRetry?: boolean; // 单独控制该file是否展示重试按钮
+    size: string; // 文件大小，单位kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // 文件唯一标识符，如果当前文件是通过upload选中添加的，会自动生成uid。如果是defaultFileList, 需要自行保证不会重复
+    url?: string;
+    validateMessage?: string; // 校验信息，需要节点时使用 renderValidateMessage
+}
+```
+
+</Framework>
+
+FileItem 只包含上述字段，写入未声明的字段会报类型错误。
+
+<Framework only="react">
+
+### RenderFileItemProps Interface
+
+`renderFileItem`、`renderThumbnail`、`renderPicInfo`、`renderPicPreviewIcon`、`renderFileOperation`、`previewFile` 收到的参数，在 FileItem 之上增加文件卡片的属性。`renderFileItem` 另外收到 `key: string`，渲染列表项时作为 React key 使用。
+
+```ts
+interface RenderFileItemProps extends FileItem {
+    index?: number; // 文件在列表中的位置
+    listType?: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    style?: CSSProperties; // 来自 itemStyle
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    onRemove?: () => void; // 移除该文件
+    onRetry?: () => void; // 重新上传该文件
+    onReplace?: () => void; // 替换该文件
+    onPreviewClick?: () => void; // 未设置 Upload 的 onPreviewClick 时为 undefined
+    previewFile?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderPicInfo?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderPicPreviewIcon?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderPicClose?: (renderPicCloseProps: { className: string; remove: (e: MouseEvent) => void }) => ReactNode;
+    renderThumbnail?: (renderProps: RenderFileItemProps) => ReactNode;
+    renderFileOperation?: (renderProps: RenderFileItemProps) => ReactNode;
+}
+```
+
+### RenderFileListTitleProps Interface
+
+`fileListTitle` 传入函数时的参数类型：
+
+```ts
+interface RenderFileListTitleProps {
+    fileList: Array<FileItem>; // 当前文件列表
+    onClear: () => void; // 清空文件的回调函数
+    clearText: string; // 清空按钮的默认文案（根据当前语言环境）
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+### RenderFileItemProps Interface
+
+`renderFileItem`、`renderThumbnail`、`renderPicInfo`、`renderPicPreviewIcon`、`renderFileOperation`、`renderValidateMessage`、`previewFile` 收到的参数，在 FileItem 之上增加文件卡片的属性。
+
+```ts
+interface RenderFileItemProps extends FileItem {
+    index?: number; // 文件在列表中的位置
+    listType?: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    style?: JSX.CSSProperties; // 来自 itemStyle
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    onRemove?: () => void; // 移除该文件
+    onRetry?: () => void; // 重新上传该文件
+    onReplace?: () => void; // 替换该文件
+    onPreviewClick?: () => void; // 点击文件卡片时的回调
+    previewFile?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderPicInfo?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderPicPreviewIcon?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderPicClose?: (renderPicCloseProps: { class: string; remove: (e: MouseEvent) => void }) => JSX.Element;
+    renderThumbnail?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderFileOperation?: (renderProps: RenderFileItemProps) => JSX.Element;
+    renderValidateMessage?: (renderProps: RenderFileItemProps) => JSX.Element; // 渲染为空时回落到 validateMessage
+}
+```
+
+### RenderFileListTitleProps Interface
+
+`fileListTitle` 传入函数时的参数类型：
+
+```ts
+interface RenderFileListTitleProps {
+    fileList: Array<FileItem>; // 当前文件列表
+    onClear: () => void; // 清空文件的回调函数
+    clearText: string; // 清空按钮的默认文案（根据当前语言环境）
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+### UploadFileItemSlotProps Interface
+
+`#fileItem`、`#thumbnail`、`#picInfo`、`#picPreviewIcon`、`#fileOperation`、`#previewFile`、`#fileValidateMessage` 收到的参数。文件数据放在 `file` 字段中，另有文件卡片的属性。参数不含 `key`，可以直接写 `<Upload.FileCard v-bind="props" />` 渲染默认卡片。
+
+```ts
+interface UploadFileItemSlotProps {
+    file: FileItem;
+    index?: number; // 文件在列表中的位置
+    listType: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    validateMessage?: string;
+    style?: StyleValue; // 来自 itemStyle
+    onRemove: () => void; // 移除该文件
+    onRetry: () => void; // 重新上传该文件
+    onReplace: () => void; // 替换该文件
+    onPreviewClick?: () => void; // 仅在监听了 Upload 的 previewClick 时存在
+}
+```
+
+### UploadPicCloseSlotProps Interface
+
+`#picClose` 收到的参数：
+
+```ts
+interface UploadPicCloseSlotProps {
+    class: string;
+    onRemove: (e: MouseEvent) => void;
+}
+```
+
+### UploadFileListHeaderSlotProps Interface
+
+`#fileListHeader` 收到的参数：
+
+```ts
+interface UploadFileListHeaderSlotProps {
+    fileList: FileItem[]; // 当前文件列表
+    onClear: () => void; // 清空文件的函数
+    clearText: string; // 清空按钮的默认文案（根据当前语言环境）
+}
+```
+
+</Framework>
+
+### CropProps Interface
+
+`crop` 属性传入对象时的配置项：
+
+<Framework only="vue">
+
+Vue 中该类型的导出名为 `UploadCropProps`。
+
+</Framework>
+
+```ts
+interface CropProps {
+    aspectRatio?: number; // 裁切框宽高比，例如 16/9, 1, 4/3
+    shape?: 'rect' | 'round' | 'roundRect'; // 裁切框形状，默认 'rect'
+    minZoom?: number; // 最小缩放比例
+    maxZoom?: number; // 最大缩放比例
+    zoomStep?: number; // 缩放步长
+    quality?: number; // 输出图片质量 0-1，默认 0.92
+    fill?: string; // 填充颜色，默认透明 'rgba(0, 0, 0, 0)'
+    modalTitle?: string; // 裁切弹窗标题
+    modalOkText?: string; // 确认按钮文字
+    modalCancelText?: string; // 取消按钮文字
+}
+```
+
+## Methods
+
+<Framework only="react">
+
+绑定在组件实例上的方法，可以通过 ref 调用实现某些特殊交互
+
+方法见上方 Upload 的 **Methods** 表。
+
+</Framework>
+
+<Framework only="vue">
+
+Upload 通过 `defineExpose` 暴露 `insert`、`upload`、`openFileDialog`，可以用模板引用调用，类型为 `UploadHandle`，说明见上方 Upload 的 Exposes 表。
+
+</Framework>
+
+<Framework only="solid">
+
+绑定在组件根元素上的方法，可以通过 ref 调用实现某些特殊交互
+
+| 名称           | 描述                                                        | 类型                                           |
+| -------------- | ----------------------------------------------------------- | ---------------------------------------------- |
+| insert         | 上传文件，当index传入时，会插入到指定位置，不传则插入到最后 | (files: Array\<File\>, index?: number) => void |
+| upload         | 手动开始上传，配合uploadTrigger="custom"使用                | () => void                                     |
+| openFileDialog | 打开文件选择窗口                                            | () => void                                     |
+
+</Framework>
+
+## Accessibility
+
+Upload组件是一个可交互的控件，在点击或拖拽时触发文件选择，文件选中后会在文件列表内展示状态。
+
+### ARIA
+
+- 触发区是 `role="button"`，Enter 与 Space 可激活。触发区内容自带控件（如 Button）时，触发区不加角色，由该控件充当按钮，点击它打开文件选择。该控件被禁用（原生 `disabled` 或 `aria-disabled="true"`）时仍算使用方自己的控件，触发区不会变成按钮，Enter 与 Space 也不会打开文件选择
+- 禁用 Upload 时请同时给该控件传 `disabled`。达到 `limit` 时只禁用该控件、不禁用 Upload，用户仍可移除已上传的文件
+- 根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`，使用方显式传了 `role` 时以使用方为准
+- 文件列表添加 `role="list"`，并用 `aria-label` 描述；照片墙的添加按钮在列表之外
+- 列表模式下的替换按钮直接作为 Tooltip 的触发器，Tab 键只停靠一次
+
+## 文案规范
+
+- 上传按钮
+    - 关于表单按钮的文案规范，参考[按钮Button组件的文案规范](/zh-CN/react/basic/button#%E6%96%87%E6%A1%88%E8%A7%84%E8%8C%83)
+- 帮助文本
+    - 帮助文本使用语句书写规范，首字母大写，可以不需要句号
+- 用户出错提示
+    - 清晰地告诉用户为什么文件无法被上传，并且告知用户如何操作能够成功上传
+    - 帮助文本使用语句书写规范，首字母大写
+    - 简洁的用语让用户能够一眼读懂，比如 `File size must be less than 20MB`, `File type must be .gif, .jpg, .png or .svg`
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- 什么时候会展示重试按钮？
+    - 当 `showRetry` 为 true，且当前文件是由于网络原因错误导致的上传失败时，会展示重试按钮。其他如校验失败，上传成功等状态是不会展示重试按钮的。
+- 什么时候会展示替换按钮？
+    - 当 `showReplace` 为true，且当前文件状态为已上传时，会展示替换按钮。
+- Semi Upload把图片存到哪里了？
+    - Semi Upload不负责图片的保存，当你使用 Upload 组件时需要自定义 action。你可以选择把 action 设置为自己的服务器地址或者图片服务地址。
+- Form.Upload props.name无效？
+    - Form.Field 中有 props.name，Upload也有 props.name，同名 props 会冲突。使用 Form.Upload 时，可以转为使用 props.fileName，避免冲突
+- 上传图片后没有调用 XXX 方法？
+    - 如果你设置了 `accept`，可以尝试把 accept 属性去掉，然后再看是否调用了改方法。去掉后调用了该方法说明，accept 在当前环境下获取的 file type 与设置的 accept 不符，上传行为提前终止。可以打个断点到 upload/foundation.js checkFileFormat 函数，看下获取的 file.type 真实值是否符合预期。
+
+<Notice title={'关于进度条'}>进度条表示上传进度，上传进度分为数据上载和服务器返回两部分，如果数据已经全部发出，但是服务器没有返回响应，进度条会停留在95%提示用户上传并没有完成，此时开发者工具中请求会处于 pending, 这是正常现象。仅当服务器返回响应，上传流程才真正结束，上传进度会达到100%</Notice>

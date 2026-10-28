@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                                                                                        | 类型                                                                                                                          | 默认值     |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| children    | 组内的 Avatar。                                                                                                                                             | `JSX.Element`                                                                                                                 | -          |
+| maxCount    | 显示的最大头像数，超出后显示 `+N`。                                                                                                                         | `number`                                                                                                                      | -          |
+| overlapFrom | 头像重叠方向，可选 `start` 或 `end`。                                                                                                                       | `AvatarGroupOverlapFrom`                                                                                                      | `"start"`  |
+| renderMore  | 自定义溢出标签。调用时传入剩余数量和被隐藏头像的渲染函数数组，返回的内容替代默认的 `+N`。被隐藏的头像在调用渲染函数处才创建，传入的属性覆盖头像自身的属性。 | <ApiType detail={"(restNumber: number, restAvatars: ((props?: AvatarProps) => JSX.Element)[]) => JSX.Element"}>Type</ApiType> | -          |
+| shape       | 组内头像的形状。                                                                                                                                            | `AvatarGroupShape`                                                                                                            | `"circle"` |
+| size        | 组内头像的尺寸。                                                                                                                                            | `string`                                                                                                                      | `"medium"` |

@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                 | 类型                                                                            | 默认值 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------ |
+| closable      | 是否显示关闭按钮。                                                                                                   | `boolean`                                                                       | -      |
+| deleteTabItem | 点击关闭按钮时的处理函数，参数为 itemKey 与事件。在 Tabs 内默认由 Tabs 处理，触发 onTabClose。                       | `TabBarProps['deleteTabItem']`                                                  | -      |
+| disabled      | 是否禁用；禁用时点击与关闭按钮不生效，关闭按钮仍会显示。                                                             | `boolean`                                                                       | -      |
+| handleKeyDown | 键盘处理函数，参数为事件、itemKey 与 closable。在 Tabs 内默认由 Tabs 处理方向键、Home、End、Enter、Space 与 Delete。 | `TabBarProps['handleKeyDown']`                                                  | -      |
+| icon          | 标签图标；没有内容则不渲染图标。                                                                                     | `JSX.Element`                                                                   | -      |
+| itemKey       | 标签的唯一标识。                                                                                                     | `string`                                                                        | -      |
+| onClick       | 点击标签时触发，参数为 itemKey 与事件；禁用时不触发。TabItem 本身不会选中标签页，需在回调中更新 Tabs 的 activeKey。  | <ApiType detail={"(itemKey: string, event: MouseEvent) => void"}>Type</ApiType> | -      |
+| selected      | 是否为选中状态。                                                                                                     | `boolean`                                                                       | -      |
+| size          | 尺寸，small 与 medium 带对应的类名。                                                                                 | `TabSize`                                                                       | -      |
+| tab           | 标签内容。                                                                                                           | `JSX.Element`                                                                   | -      |
+| tabPosition   | 位置，默认取所在 Tabs 的 tabPosition。                                                                               | `TabPosition`                                                                   | -      |
+| type          | 样式，默认取所在 Tabs 的 type。                                                                                      | `TabType`                                                                       | -      |

@@ -1,0 +1,26 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                                      | 类型                                                                                                         | 默认值     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------- |
+| autoFocus      | 挂载时是否聚焦第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。              | `boolean`                                                                                                    | `false`    |
+| className      | 根元素（`role="group"`）的类名。                                                                                          | `string`                                                                                                     | -          |
+| count          | 验证码位数，即输入框的个数。                                                                                              | `number`                                                                                                     | `6`        |
+| defaultValue   | 非受控时的初始内容。                                                                                                      | `string`                                                                                                     | -          |
+| disabled       | 是否禁用所有输入框。                                                                                                      | `boolean`                                                                                                    | -          |
+| format         | 单个字符的格式限制：`number` 只允许数字，`mixed` 允许数字和字母，正则或函数按字符判定，函数返回 `true` 时允许该字符输入。 | <ApiType detail={"'number' \u007c 'mixed' \u007c RegExp \u007c ((value: string) => boolean)"}>Type</ApiType> | `"number"` |
+| onChange       | 内容变化时调用，参数为当前内容的字符串。                                                                                  | <ApiType detail={"(value: string) => void"}>Type</ApiType>                                                   | -          |
+| onComplete     | 所有位数输入完毕时调用，参数为当前内容的字符串。                                                                          | <ApiType detail={"(value: string) => void"}>Type</ApiType>                                                   | -          |
+| ref            | 句柄的引用，通过它调用下方 Methods 中的方法。                                                                             | <ApiType detail={"React.Ref\u003cPinCodeHandle>"}>Type</ApiType>                                             | -          |
+| size           | 输入框大小，可选 `large`、`default` 或 `small`。未设置时使用 Input 的默认尺寸。                                           | `InputProps['size']`                                                                                         | -          |
+| style          | 根元素的样式。                                                                                                            | `React.CSSProperties`                                                                                        | -          |
+| validateStatus | 校验状态，传给每个输入框；`error` 时显示错误样式。`Form.PinCode` 会自动注入。                                             | `InputProps['validateStatus']`                                                                               | -          |
+| value          | 输入框内容。传入即为受控，需配合 onChange 更新。                                                                          | `string`                                                                                                     | -          |
+
+**Methods**
+
+| 方法  | 说明                                                                           | 类型                                                       |
+| ----- | ------------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| blur  | 移出第 `index` 位输入框的焦点；序号从 0 开始，超出范围时忽略。                 | <ApiType detail={"(index: number) => void"}>Type</ApiType> |
+| focus | 聚焦第 `index` 位输入框，光标放在该位字符之后；序号从 0 开始，超出范围时忽略。 | <ApiType detail={"(index: number) => void"}>Type</ApiType> |

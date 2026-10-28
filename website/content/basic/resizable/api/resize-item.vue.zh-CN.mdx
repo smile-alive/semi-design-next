@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                               | 类型                  | 默认值                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------- | ------------------------------------------------ |
+| min           | 最小尺寸（%、px、vw 或 vh）。                                                                                      | `string`              | `semiGlobalDefault("ResizeItem", "min")`         |
+| max           | 最大尺寸（%、px、vw 或 vh）。                                                                                      | `string`              | `semiGlobalDefault("ResizeItem", "max")`         |
+| defaultSize   | 初始尺寸。字符串支持 %、px、vw、vh；纯数字或数字字符串表示按比例分配剩余空间。                                     | `string \| number`    | `semiGlobalDefault("ResizeItem", "defaultSize")` |
+| onResizeStart | 开始伸缩时调用，手柄任一侧的项返回 false 即取消本次伸缩；保留为函数 prop 以读取返回值，使用方照常写 @resizeStart。 | `ResizeStartCallback` | `undefined`                                      |
+
+**Events**
+
+| 事件      | 说明                                                   | 回调参数                                                                                                        |
+| --------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| change    | 拖动或方向键改变尺寸时触发，参数为新尺寸、事件与方向。 | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+| resizeEnd | 结束伸缩时触发，参数为最终尺寸、事件与方向。           | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+
+**Slots**
+
+| 插槽    | 说明         | 作用域参数 |
+| ------- | ------------ | ---------- |
+| default | 子项的内容。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

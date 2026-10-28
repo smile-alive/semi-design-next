@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性     | 说明                                                      | 类型                                                                                                 | 默认值      |
+| -------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ----------- |
+| badge    | 徽章参数，同 Badge 的 props，作用于包裹按钮内容的 Badge。 | `BadgeProps`                                                                                         | -           |
+| colorful | 多彩悬浮按钮。                                            | `boolean`                                                                                            | `false`     |
+| disabled | 禁用状态。                                                | `boolean`                                                                                            | -           |
+| href     | 链接地址，设置后渲染为 `a` 元素；禁用时去掉 `href`。      | `string`                                                                                             | -           |
+| icon     | 按钮图标，传入 JSX 元素。                                 | `JSX.Element`                                                                                        | -           |
+| onClick  | 点击回调，参数为原生 `MouseEvent`；禁用时不触发。         | <ApiType detail={"JSX.EventHandlerUnion\u003cFloatButtonElement, MouseEvent>"}>Type</ApiType>        | -           |
+| ref      | 指向根元素：设置 `href` 时为 `a`，否则为 `button`。       | <ApiType detail={"FloatButtonElement \u007c ((element: FloatButtonElement) => void)"}>Type</ApiType> | -           |
+| rel      | 与链接目标的关系，仅在设置 `href` 时生效。                | `string`                                                                                             | -           |
+| shape    | 形状，可选 `round`、`square`。                            | `FloatButtonShape`                                                                                   | `"round"`   |
+| size     | 尺寸，可选 `default`、`small`、`large`。                  | `FloatButtonSize`                                                                                    | `"default"` |
+| target   | 指定在何处显示链接的 URL，仅在设置 `href` 时生效。        | `string`                                                                                             | -           |

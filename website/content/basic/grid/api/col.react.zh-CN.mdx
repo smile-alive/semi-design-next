@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                            | 类型                                                              | 默认值   |
+| --------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | -------- |
+| children  | 栅格内的内容。                                                                                  | `React.ReactNode`                                                 | -        |
+| className | 根元素的类名。                                                                                  | `string`                                                          | -        |
+| lg        | 屏幕宽度 ≥992px 时生效的响应式栅格，可为栅格数或 `{ span, offset, order, push, pull }` 对象。   | `number \| ColSize`                                               | -        |
+| md        | 屏幕宽度 ≥768px 时生效的响应式栅格，可为栅格数或 `{ span, offset, order, push, pull }` 对象。   | `number \| ColSize`                                               | -        |
+| offset    | 栅格起始侧（从左到右排版时为左侧）的间隔格数，间隔内不可以有栅格，未设置时为 `0`。              | `number`                                                          | -        |
+| order     | 栅格顺序，flex 布局模式下有效，未设置时为 `0`。                                                 | `number`                                                          | -        |
+| prefixCls | CSS 类名前缀。                                                                                  | `string`                                                          | `"semi"` |
+| pull      | 栅格向起始侧（从左到右排版时为左侧）移动的格数，未设置时为 `0`。                                | `number`                                                          | -        |
+| push      | 栅格向末尾侧（从左到右排版时为右侧）移动的格数，未设置时为 `0`。                                | `number`                                                          | -        |
+| ref       | 根元素（`div`）的引用。                                                                         | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
+| sm        | 屏幕宽度 ≥576px 时生效的响应式栅格，可为栅格数或 `{ span, offset, order, push, pull }` 对象。   | `number \| ColSize`                                               | -        |
+| span      | 栅格占位格数，为 0 时相当于 `display: none`。                                                   | `number`                                                          | -        |
+| style     | 根元素的样式。                                                                                  | `React.CSSProperties`                                             | -        |
+| xl        | 屏幕宽度 ≥1200px 时生效的响应式栅格，可为栅格数或 `{ span, offset, order, push, pull }` 对象。  | `number \| ColSize`                                               | -        |
+| xs        | 基础层响应式栅格，所有屏幕宽度都生效，可为栅格数或 `{ span, offset, order, push, pull }` 对象。 | `number \| ColSize`                                               | -        |
+| xxl       | 屏幕宽度 ≥1600px 时生效的响应式栅格，可为栅格数或 `{ span, offset, order, push, pull }` 对象。  | `number \| ColSize`                                               | -        |

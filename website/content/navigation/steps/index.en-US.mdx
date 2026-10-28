@@ -1,0 +1,231 @@
+---
+order: 59
+title: Steps
+icon: doc-steps
+brief: Decompose complex tasks or tasks with prior relationships, use step components to guide users to operate according to the prescribed process, and let them know their current progress
+---
+
+import StepsReactApi from './api/steps.react.en-US.mdx';
+import StepReactApi from './api/step.react.en-US.mdx';
+import StepsVueApi from './api/steps.vue.en-US.mdx';
+import StepVueApi from './api/step.vue.en-US.mdx';
+import StepsSolidApi from './api/steps.solid.en-US.mdx';
+import StepSolidApi from './api/step.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Steps } from '@fibrae/semi-ui-react';
+const Step = Steps.Step;
+```
+
+Steps treats every child element as one step position in order (text is skipped), and fill columns count them all. A component that wraps Step only needs to pass its props on to Steps.Step to be numbered; a native element takes a position and renders as is.
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Steps } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Steps.Step` can also be imported by name as `Step`. The `title`, `description` and `icon` of a Step are slots (`#title`, `#description`, `#icon`). Steps only recognizes Steps.Step elements that are its direct children; any other child is not rendered, takes no step number, and logs a warning in development. A Step renders nothing outside Steps.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Steps } from '@fibrae/semi-ui-solid';
+```
+
+Only Steps.Step takes a step position: other children, including native elements and text, are not rendered and take no number, and a development warning is logged. A Step renders nothing outside Steps.
+
+</Framework>
+
+### Default step bar(Deprecated)
+
+It is recommended to use the simple version of steps, which will be gradually deprecated later
+
+<Demo id="default" />
+
+### Basic Steps(Recommended)
+
+Set type=`"basic"` to display a simple style step bar
+
+<Demo id="basic" />
+
+### Nav Steps
+
+You can use type="nav" to set the navigation style step bar. The navigation style step bar has the following characteristics:
+
+1. The step bar supports interaction as well: when Steps listens for step changes or a Step has a click handler, steps are focusable and clickable, the same as the other types.
+
+2. It is suitable when the steps are not related to each other, the content does not affect each other, and the visual elements of the page need to be highlighted.
+
+3. The width of the step bar is opened according to the content.
+
+4. Steps.Step only renders the title; `description`, `icon` and `status` have no effect. The other attributes and events (`aria-label`, `role`, click and keyboard handlers, class name and style, etc.) work as in the other types.
+
+<Demo id="nav" />
+
+### Mini size step bar
+
+Display the mini size step bar by setting size=`"small"`
+
+<Demo id="small" />
+
+<Demo id="small-nav" />
+
+### Processing progress
+
+Use with content and buttons to represent the processing progress of a process
+
+<Demo id="progress" />
+
+### Steps bar in vertical direction
+
+Show steps in vertical direction by setting direction
+
+<Demo id="vertical" />
+
+<Demo id="vertical-basic" />
+
+### Specify step status
+
+Using Steps `status` Property to specify the state of the current step.
+
+<Demo id="status" />
+
+### Custom icons
+
+<Framework only="react">
+
+By setting Steps.Step's `icon` Properties, you can use custom icons.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#icon` slot of Steps.Step to show a custom icon; when the slot is present but its content is empty, no icon is shown.
+
+</Framework>
+
+<Framework only="solid">
+
+By setting Steps.Step's `icon` property, you can use custom icons; when the content is empty, no icon is shown.
+
+</Framework>
+
+By setting Steps.Step's `status` property, you can customize the status of each step.
+
+<Demo id="custom-icon" />
+
+### onChange CallBack
+
+<Framework only="react">
+
+onChange can be used to realize the processing progress. onChange receives a parameter of type number, equal to initial plus the index of the selected step; it is not called when the current step is clicked.
+
+</Framework>
+
+<Framework only="vue">
+
+Listen for step changes with `@change` (`onChange` of Steps is a function prop, and whether it is bound decides if the steps are clickable). The callback receives a number, equal to initial plus the index of the selected step; it is not called when the current step is clicked. `current` also supports `v-model:current`, and binding it makes every step clickable as well.
+
+</Framework>
+
+<Framework only="solid">
+
+Listen for step changes with `onChange`. The callback receives a number, equal to initial plus the index of the selected step; it is not called when the current step is clicked. Passing `onChange` makes every step clickable.
+
+</Framework>
+
+<Demo id="on-change" />
+
+## Accessibility
+
+### ARIA
+
+- Steps and Step components support `aria-label` or `aria-labelledby`. The Steps root and a Step that is not clickable have no semantic role of their own, so when a name is passed they get `role="group"` and the name reaches the accessible name; without a name no `role` is added. The fill, basic and nav types behave the same
+- The current step has `aria-current="step"`; other steps do not
+- When Steps listens for step changes or a Step has a click handler, steps are focusable with Tab and their `role` defaults to `button` (taking precedence over `group`; an explicit `role` wins over both). `Enter` or Space on a focused step acts like a mouse click and runs both the Step's click handler and the change callback of Steps; steps that are not clickable are not focusable
+- A click that comes from another focusable element inside the step (`input`, `button`, a link, and so on) runs only the Step's click handler, not the change callback of Steps. A clickable step is itself `role="button"`, so a focusable control in the title or description is a nested interactive element; do not make such a step clickable
+
+## API reference
+
+### Steps
+
+The whole step bar.
+
+<Framework only="react">
+
+<StepsReactApi />
+
+`aria-labelledby`, `id` and other native attributes land on the root element (`div`) of Steps.
+
+</Framework>
+
+<Framework only="vue">
+
+<StepsVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the root element of Steps.
+
+</Framework>
+
+<Framework only="solid">
+
+<StepsSolidApi />
+
+`class`, `style`, `ref` and other native attributes land on the root element of Steps.
+
+</Framework>
+
+### Steps.Step
+
+Step in the step bar.
+
+<Framework only="react">
+
+<StepReactApi />
+
+`aria-label`, `role`, `onKeyDown` and other native attributes land on the step item (the root element). `role` defaults to `button` when the step is clickable, and a passed `role` takes precedence; `onKeyDown` is called for every key. When the step is clickable, `Enter` or Space on a focused step item acts like a click.
+
+</Framework>
+
+<Framework only="vue">
+
+<StepVueApi />
+
+`class`, `style`, `aria-*`, `role`, `tabindex` and native attributes and events such as `@click` and `@keydown` are passed through attrs and land on the root element of the Step. A `@click` from the caller makes that Step clickable; `onChange` of Steps runs before the Step's own `@click`. `tabindex` can be overridden by the caller.
+
+</Framework>
+
+<Framework only="solid">
+
+<StepSolidApi />
+
+`class`, `style`, `aria-*` and native events such as `onClick` and `onKeyDown` land on the root element of the Step (the step item). `role` follows whether the step is clickable, and a passed `role` takes precedence; `tabindex` also follows whether the step is clickable and cannot be overridden.
+
+</Framework>
+
+## Content Guidelines
+
+- Step title
+    - title should be kept concise, avoiding truncation and line breaks
+    - use sentence capitalization
+    - do not include punctuation
+- Step description
+    - supplementary contextual information for the title
+    - don't end with punctuation
+
+## Design Tokens
+
+<DesignToken />

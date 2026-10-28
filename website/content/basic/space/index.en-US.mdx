@@ -1,0 +1,98 @@
+---
+title: Space
+order: 27
+icon: doc-space
+brief: Set the spacing between components.
+---
+
+import SpaceReactApi from './api/space.react.en-US.mdx';
+import SpaceVueApi from './api/space.vue.en-US.mdx';
+import SpaceSolidApi from './api/space.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Space } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Space } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Space } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Alignment
+
+You can use `align` to set the alignment, optional: `start`, `center` (default), `end`, `baseline`.
+
+<Demo id="align" />
+
+### Spacing
+
+You can use `spacing` to set the spacing size, optional: `tight` (8px, default), `medium` (16px), `loose` (24px), and allow to pass in number to customize the spacing size, and also support to pass in array to set the horizontal and vertical spacing at the same time.
+
+<Demo id="spacing" />
+
+### Direction
+
+You can use `vertical` to set whether the spacing is vertical, the default is false.
+
+<Demo id="vertical" />
+
+### Wrap
+
+When the spacing is horizontal, you can use `wrap` to set whether to wrap automatically, the default is false.
+
+<Demo id="wrap" />
+
+## API Reference
+
+<Framework only="vue">
+
+Space renders its default slot directly without wrapping the children. `class`, `style` and other undeclared attributes fall through to the root element. A numeric `spacing` is output in pixels, and `columnGap` or `rowGap` in `style` take precedence over it.
+
+<SpaceVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<SpaceSolidApi />
+
+Space renders its children directly without wrapping them. `class`, `style`, `ref` and other native attributes and events fall through to the root `div`. A numeric `spacing` is output in pixels, and `column-gap` or `row-gap` in `style` take precedence over it.
+
+</Framework>
+
+<Framework only="react">
+
+<SpaceReactApi />
+
+Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall through to the root `div`.
+
+</Framework>
+
+## Design Tokens
+
+<DesignToken />

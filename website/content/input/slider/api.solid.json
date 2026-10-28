@@ -1,0 +1,135 @@
+{
+    "slider": {
+        "source": "packages/semi-ui-solid/src/slider/slider.tsx",
+        "props": {
+            "aria-label": {
+                "zh-CN": "滑块的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。",
+                "en-US": "Accessible name of the handle. In range mode, the locale's start and end texts are appended for the two handles."
+            },
+            "aria-labelledby": {
+                "zh-CN": "引用标签元素的 id，作为手柄的可访问名称；range 模式下每个手柄再加上起点或终点。",
+                "en-US": "The id of the labelling element, used as the handle's accessible name. In range mode each handle adds its start or end text."
+            },
+            "aria-valuetext": {
+                "zh-CN": "为当前值提供用户友好的名称。",
+                "en-US": "A user-friendly name for the current value."
+            },
+            "autofocus": {
+                "zh-CN": "挂载后自动聚焦第一个滑块。",
+                "en-US": "Focuses the first handle on mount."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控时的初始取值，未设置时为 `min`。",
+                "en-US": "Initial value when uncontrolled. Defaults to `min`."
+            },
+            "disabled": {
+                "zh-CN": "滑块是否禁用。",
+                "en-US": "Whether the slider is disabled."
+            },
+            "getAriaValueText": {
+                "zh-CN": "为滑块的当前值提供用户友好的名称，参数为该滑块的值与顺序。",
+                "en-US": "Provides a user-friendly name for the current value, called with the handle's value and its index."
+            },
+            "handleDot": {
+                "zh-CN": "滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。",
+                "en-US": "Dot on the handle: one object for a single handle, an array with one per handle for a range."
+            },
+            "included": {
+                "zh-CN": "marks 不为空对象时有效，true 表示刻度为包含关系，false 表示并列。",
+                "en-US": "Takes effect when marks is not empty. true makes the marks nested, false makes them independent."
+            },
+            "marks": {
+                "zh-CN": "刻度，key 为 number 且取值在闭区间 [min, max] 内，值为字符串或数字；自定义节点使用 renderMark。",
+                "en-US": "Marks. Keys are numbers in the closed range [min, max], values are strings or numbers; custom nodes go through renderMark."
+            },
+            "renderMark": {
+                "zh-CN": "渲染刻度标签，参数为 (value, label)；开启 tooltipOnMark 时标签与气泡各调用一次。不传时显示 label。",
+                "en-US": "Renders a mark label, called with (value, label); with tooltipOnMark it is called once for the label and once for the tooltip. Defaults to the label."
+            },
+            "max": {
+                "zh-CN": "最大值。",
+                "en-US": "Maximum value."
+            },
+            "min": {
+                "zh-CN": "最小值。",
+                "en-US": "Minimum value."
+            },
+            "name": {
+                "zh-CN": "原生表单提交时的字段名，落在每个手柄的 input 上；range 模式下两个 input 同名，依次提交两个值。",
+                "en-US": "Field name submitted with a native form, set on each handle's input. In range mode both inputs share it and submit two values in order."
+            },
+            "onAfterChange": {
+                "zh-CN": "值变化完成后触发，参数为当前取值；受控值被改回 `undefined` 时不触发。",
+                "en-US": "Fires after a change is complete, with the current value. Not fired when a controlled value goes back to `undefined`."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开两个手柄时触发，挂在 `.semi-slider-wrapper` 上；在两个手柄之间移动焦点不触发。",
+                "en-US": "Fires when focus leaves both handles, attached to `.semi-slider-wrapper`. Moving focus between the two handles does not fire it."
+            },
+            "onChange": {
+                "zh-CN": "值变化时触发，参数为当前取值。",
+                "en-US": "Fires when the value changes, with the current value."
+            },
+            "onFocus": {
+                "zh-CN": "任一手柄获得焦点时触发，挂在 `.semi-slider-wrapper` 上。",
+                "en-US": "Fires when either handle gets focus, attached to `.semi-slider-wrapper`."
+            },
+            "onKeyDown": {
+                "zh-CN": "手柄 input 上的按键回调，先于滑块处理；在回调中调用 `preventDefault` 可拦截取值键。",
+                "en-US": "Key handler on the handle's input, called before the slider handles the key. Calling `preventDefault` in it stops the slider from handling a value key."
+            },
+            "onMouseUp": {
+                "zh-CN": "拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。",
+                "en-US": "Fires when the pointer (mouse, touch or pen) that dragged the handle is released or cancelled, and when a value key is released."
+            },
+            "railStyle": {
+                "zh-CN": "滑块轨道的样式，可传对象（键为 CSS 属性名）或字符串。",
+                "en-US": "Style of the slider rail, an object keyed by CSS property names or a string."
+            },
+            "range": {
+                "zh-CN": "是否支持两端同时可滑动。",
+                "en-US": "Whether both ends can be dragged."
+            },
+            "showArrow": {
+                "zh-CN": "提示是否带箭头。",
+                "en-US": "Whether the tooltip has an arrow."
+            },
+            "showBoundary": {
+                "zh-CN": "是否在悬停时展示最大值与最小值。",
+                "en-US": "Whether to show the maximum and minimum on hover."
+            },
+            "showMarkLabel": {
+                "zh-CN": "是否显示刻度标签。",
+                "en-US": "Whether to show the mark labels."
+            },
+            "step": {
+                "zh-CN": "步长，从 `min` 起计算。",
+                "en-US": "Step, counted from `min`."
+            },
+            "tipFormatter": {
+                "zh-CN": "设置提示的展示格式，每个手柄单独调用，参数为该手柄的值；默认显示当前取值，`null` 隐藏提示。",
+                "en-US": "Format of the tooltip, called once per handle with that handle's value. Shows the current value by default; `null` hides the tooltip."
+            },
+            "tooltipOnMark": {
+                "zh-CN": "刻度上是否带有提示。",
+                "en-US": "Whether the marks on the rail have a tooltip."
+            },
+            "tooltipVisible": {
+                "zh-CN": "是否始终显示提示。",
+                "en-US": "Whether the tooltip is always visible."
+            },
+            "value": {
+                "zh-CN": "当前取值，受控使用；只传 value 而不在 onChange 中回写时，拖动、点击与方向键仅触发 onChange，滑块不移动。变回 `undefined` 时回到 defaultValue，没有则回到 min，且不触发 onAfterChange。",
+                "en-US": "Current value, for controlled use. With value but no write-back in onChange, dragging, clicking and arrow keys only fire onChange and the handle does not move. Back to `undefined` it returns to defaultValue, or min without one, and onAfterChange does not fire."
+            },
+            "vertical": {
+                "zh-CN": "是否为垂直方向。",
+                "en-US": "Whether the slider is vertical."
+            },
+            "verticalReverse": {
+                "zh-CN": "反转垂直方向，即上大下小。",
+                "en-US": "Reverses the vertical direction, so the larger value is on top."
+            }
+        }
+    }
+}

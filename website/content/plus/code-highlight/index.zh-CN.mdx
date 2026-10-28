@@ -1,0 +1,159 @@
+---
+order: 29
+title: 代码高亮
+icon: doc-codehighlight
+brief: 根据语法高亮页面中的代码块
+---
+
+import CodeHighlightReactApi from './api/code-highlight.react.zh-CN.mdx';
+import CodeHighlightVueApi from './api/code-highlight.vue.zh-CN.mdx';
+import CodeHighlightSolidApi from './api/code-highlight.solid.zh-CN.mdx';
+
+## 使用场景
+
+Semi 代码高亮组件基于 [Shiki](https://shiki.style) 封装，使用与 VS Code 相同的 TextMate 语法。要高亮的语言由使用方注册，产物中只包含注册过的语法；未注册的语言按纯文本显示。高亮配色默认使用 Shiki 内置的 `github-light` 与 `github-dark` 主题，并随 Semi 的亮色、暗色模式自动切换，也可以换成其他主题。  
+需要展示代码片段时推荐使用 CodeHighlight 组件
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { CodeHighlight } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 注册语言与主题
+
+语法与主题文件来自 `shiki` 包，使用前先在项目中安装 `shiki`。在应用入口调用一次 `CodeHighlight.register`，注册之后所有 CodeHighlight 都能使用这些语言。
+
+<Framework only="react">
+
+MarkdownRender、Chat、AIChatDialogue、Sidebar 中的代码块同样生效。
+
+</Framework>
+
+<Framework only="solid">
+
+MarkdownRender、Chat、AIChatDialogue、Sidebar 中的代码块同样生效。
+
+</Framework>
+
+语言以 `() => import(...)` 的形式传入时，语法文件在首次高亮任一代码块时加载，且会加载全部已注册的语言，而不只是该代码块用到的那一种。可用的语言及其名称、别名见 [Shiki 语言列表](https://shiki.style/languages)，主题见 [Shiki 主题列表](https://shiki.style/themes)。注册晚于代码块挂载时，已挂载的代码块会重新高亮
+
+<Framework only="react">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-react';
+
+CodeHighlight.register({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // 可选，替换默认的 github-light 与 github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import { CodeHighlight } from '@fibrae/semi-ui-vue';
+
+CodeHighlight.register({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // 可选，替换默认的 github-light 与 github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { CodeHighlight } from '@fibrae/semi-ui-solid';
+
+CodeHighlight.register({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // 可选，替换默认的 github-light 与 github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
+### 基本用法
+
+向 `code` props 传入代码纯文本，并在 `language` 传入已注册语言的名称或别名
+
+<Demo id="basic" />
+
+**CSS**
+
+<Demo id="css" />
+
+### 单个代码块使用的语言
+
+只有个别代码块用到的语言，可以通过 `languages` 传给该代码块，不必全局注册；`themes` 同样可以只替换该代码块的主题。这两个值请写在组件外部，避免每次渲染都换成新的数组或对象而重新高亮。例如高亮用于编写 GTK 程序前端 UI 的 Vala 语言
+
+<Demo id="other-language" />
+
+### API
+
+<Framework only="react">
+
+<CodeHighlightReactApi />
+
+除上表外，`id`、`aria-label`、`onClick` 等原生属性都展开到根元素（`div`）上，高亮前后根元素保持不变。
+
+</Framework>
+
+<Framework only="vue">
+
+<CodeHighlightVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上。高亮完成前后根元素会被替换（`$el` 不稳定），这些属性每次都会重新应用到新的根元素上。`languages`、`themes` 传入 `ref` 或 `reactive` 的值也可以，组件传给 Shiki 的是原始对象。
+
+</Framework>
+
+<Framework only="solid">
+
+<CodeHighlightSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `id`、`aria-label`）落在根元素（`div`）上，高亮前后根元素保持不变。
+
+</Framework>
+
+### 静态方法
+
+| 方法                   | 说明                                                                              | 类型                                                                                                       |
+| ---------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| CodeHighlight.register | 注册所有 CodeHighlight 可用的语言，并替换默认主题；可多次调用，语言累加、主题覆盖 | (options: \{ languages?: LanguageInput[]; themes?: \{ light?: ThemeInput; dark?: ThemeInput \} \}) => void |
+
+## Accessibility
+
+- 根元素传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，自动带 `role="group"`（通用元素不能被命名）；传入的 `role` 优先
+
+## 设计变量

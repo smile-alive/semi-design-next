@@ -1,0 +1,28 @@
+/* Sub-layer of semi so Semi styles beat the reset in any load order; unlayered element rules would win */
+@import 'modern-normalize' layer(semi.reset);
+
+@layer semi.reset {
+    /* Demos assume paragraphs without margin; body paragraphs get spacing from .doc > p */
+    p {
+        margin: 0;
+    }
+
+    /* Site elements reuse Semi's scrollbar and focus ring (base/mixin.scss); thumb visibility is left to the OS */
+    * {
+        scrollbar-color: var(--semi-color-fill-2) transparent;
+        scrollbar-width: thin;
+    }
+
+    /* Semi tokens live on body, unreadable at the root, so --semi-color-fill-2 is spelled out for light and dark */
+    :root {
+        scrollbar-color: rgba(46, 50, 56, 0.13) transparent;
+    }
+
+    :root:has(> [theme-mode='dark']) {
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--semi-color-primary-light-active);
+    }
+}

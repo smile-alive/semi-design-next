@@ -1,0 +1,31 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aspectRatio | Fixed aspect ratio of the crop box, kept while dragging. When it changes after loading, the box is laid out again at the new ratio. | `number` | - |
+| className | Class name of the root element. | `string` | - |
+| cropperBoxCls | Class name of the crop box. | `string` | - |
+| cropperBoxStyle | Style of the crop box, merged with the size and offset the component computes; the size and offset win. | `React.CSSProperties` | - |
+| defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `1` |
+| fill | Fill color of the parts of the result that are not the image. | `string` | `"rgba(0, 0, 0, 0)"` |
+| imgProps | Attributes passed to the `img` element being cropped. `src` comes from the `src` prop; `className` is merged with the component's own class name; `style` sits under the component's layout, so the size and offset win; `onLoad` is called after the component has handled the load; `alt` defaults to an empty string and `crossOrigin` to `anonymous`, and both can be overridden. | <ApiType detail={"React.ImgHTMLAttributes\u003cHTMLImageElement>"}>Type</ApiType> | - |
+| maxZoom | Maximum zoom factor. | `number` | `3` |
+| minZoom | Minimum zoom factor. | `number` | `0.1` |
+| onZoomChange | Called with the new zoom when the wheel changes it. | <ApiType detail={"(zoom: number) => void"}>Type</ApiType> | - |
+| preview | Function returning the DOM element of the preview container; the crop result is mirrored into it in real time. It may return `null` while the container is not mounted yet. | <ApiType detail={"() => HTMLElement \u007c null"}>Type</ApiType> | - |
+| ref | Handle exposing the `getCropperCanvas` method for reading the crop result; it is not the root element. | <ApiType detail={"React.Ref\u003cCropperHandle>"}>Type</ApiType> | - |
+| rotate | Image rotation angle in degrees. It is one-way: the component never changes it. | `number` | - |
+| shape | Shape of the crop box: `rect`, `round` or `roundRect`. | `'rect' \| 'round' \| 'roundRect'` | `"rect"` |
+| showResizeBox | Whether to show the resize handles on the corners of the crop box. | `boolean` | `true` |
+| src | Address of the image to crop. | `string` | - |
+| style | Style of the root element. | `React.CSSProperties` | - |
+| zoom | Controlled zoom, applied on top of the initial scaling that fits the image into the cropper. | `number` | - |
+| zoomStep | Zoom change per wheel step. | `number` | `0.1` |
+
+**Methods**
+
+| Method           | Description                                                                           | Type                                                       |
+| ---------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| getCropperCanvas | Draws the area inside the crop box, at the image's own resolution, onto a new canvas. | <ApiType detail={"() => HTMLCanvasElement"}>Type</ApiType> |

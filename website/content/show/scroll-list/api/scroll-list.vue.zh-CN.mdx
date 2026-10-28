@@ -1,0 +1,27 @@
+**Props**
+
+| 属性       | 说明                                     | 类型               | 默认值                                          |
+| ---------- | ---------------------------------------- | ------------------ | ----------------------------------------------- |
+| bodyHeight | 列表主体的高度。                         | `string \| number` | `semiGlobalDefault("ScrollList", "bodyHeight")` |
+| footer     | 底部内容；传入 footer 插槽时以插槽为准。 | `string`           | `semiGlobalDefault("ScrollList", "footer")`     |
+| header     | 头部内容；传入 header 插槽时以插槽为准。 | `string`           | `semiGlobalDefault("ScrollList", "header")`     |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                  | 作用域参数 |
+| ------- | --------------------- | ---------- |
+| default | 列表中的 ScrollItem。 | `any`      |
+| footer  | 自定义底部内容。      | `any`      |
+| header  | 自定义头部内容。      | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

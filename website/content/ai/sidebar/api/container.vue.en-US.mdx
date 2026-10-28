@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                            | Type                                                                                                                                  | Default     |
+| ----------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| visible     | Whether the container is shown; bind it with v-model:visible.                                          | `boolean`                                                                                                                             | `false`     |
+| title       | Plain-text title; the title slot takes precedence.                                                     | `string`                                                                                                                              | `undefined` |
+| motion      | Whether showing and hiding use the expand animation.                                                   | `boolean`                                                                                                                             | `true`      |
+| resizable   | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean`                                                                                                                             | `true`      |
+| minWidth    | Minimum width when resizing; applies only when resizable is true.                                      | `string \| number`                                                                                                                    | `150`       |
+| maxWidth    | Maximum width when resizing; applies only when resizable is true.                                      | `string \| number`                                                                                                                    | `undefined` |
+| defaultSize | Initial width and height; applies only when resizable is true.                                         | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `undefined` |
+| showClose   | Whether the header shows the close button.                                                             | `boolean`                                                                                                                             | `true`      |
+| closeOnEsc  | Whether pressing Esc emits cancel.                                                                     | `boolean`                                                                                                                             | `false`     |
+
+**Events**
+
+| Event              | Description                                                                                                      | Callback parameters                    |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| update:visible     | Emitted before cancel when the close button or Esc cancels, with false, so v-model:visible closes the container. | `[visible: false]`                     |
+| cancel             | Emitted when the close button is clicked, or when Esc is pressed while closeOnEsc is true.                       | `[event: MouseEvent \| KeyboardEvent]` |
+| afterVisibleChange | Emitted after the show or hide animation ends, with whether the container is visible.                            | `[visible: boolean]`                   |
+
+**Slots**
+
+| Slot    | Description                                                                 | Scope parameters |
+| ------- | --------------------------------------------------------------------------- | ---------------- |
+| default | The content area of the container.                                          | `any`            |
+| title   | Header title; it takes precedence over the title prop.                      | `any`            |
+| header  | Replaces the whole header; empty content falls back to the built-in header. | `any`            |
+
+**Exposes**
+
+| Name | Description                                                  | Type                     |
+| ---- | ------------------------------------------------------------ | ------------------------ |
+| root | The .semi-sidebar-container root element; null while hidden. | `HTMLDivElement \| null` |

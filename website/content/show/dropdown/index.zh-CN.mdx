@@ -1,0 +1,394 @@
+---
+order: 70
+title: 下拉框
+icon: doc-dropdown
+brief: 向下弹出的菜单。
+---
+
+import MenuExample from './figures/menu-example.react.tsx';
+import DropdownReactApi from './api/dropdown.react.zh-CN.mdx';
+import DropdownMenuReactApi from './api/dropdown-menu.react.zh-CN.mdx';
+import DropdownItemReactApi from './api/dropdown-item.react.zh-CN.mdx';
+import DropdownTitleReactApi from './api/dropdown-title.react.zh-CN.mdx';
+import DropdownVueApi from './api/dropdown.vue.zh-CN.mdx';
+import DropdownMenuVueApi from './api/dropdown-menu.vue.zh-CN.mdx';
+import DropdownItemVueApi from './api/dropdown-item.vue.zh-CN.mdx';
+import DropdownTitleVueApi from './api/dropdown-title.vue.zh-CN.mdx';
+import DropdownSolidApi from './api/dropdown.solid.zh-CN.mdx';
+import DropdownMenuSolidApi from './api/dropdown-menu.solid.zh-CN.mdx';
+import DropdownItemSolidApi from './api/dropdown-item.solid.zh-CN.mdx';
+import DropdownTitleSolidApi from './api/dropdown-title.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Dropdown } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Dropdown } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Dropdown.Menu`、`Dropdown.Item`、`Dropdown.Title`、`Dropdown.Divider` 也可以按名导入：`DropdownMenu`、`DropdownItem`、`DropdownTitle`、`DropdownDivider`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+- 在 Dropdown 的 children 中为它的 Trigger 触发器：默认为 hover 展示，可通过 props.trigger 修改为 `click`、`custom`、`contextMenu`等值指定不同触发方式
+- 通过 render 指定下拉框的具体内容：使用 `Dropdown.Menu` 作为父容器，组合使用 `Dropdown.Item`、`Dropdown.Divider`、`Dropdown.Title` 。  
+  当然简单场景你也可以仅搭配 `Dropdown.Menu` 与 `Dropdown.Item`，其他元素不是必须的。
+- `Dropdown.Item` 通过设置 `disabled` 可以禁用某个选项，配置 `type`，可以展示不同颜色的文本，上设置 `icon` 可以快速配置图标。更复杂的自定义结构，你可以通过 children 传入 ReactNode自定义渲染
+
+</Framework>
+
+<Framework only="vue">
+
+- 默认插槽放 Dropdown 的 Trigger 触发器：默认为 hover 展示，可通过 `trigger` 修改为 `click`、`custom`、`contextMenu` 等值指定不同触发方式
+- 通过 `#content` 插槽指定下拉框的具体内容：使用 `Dropdown.Menu` 作为父容器，组合使用 `Dropdown.Item`、`Dropdown.Divider`、`Dropdown.Title` 。  
+  当然简单场景你也可以仅搭配 `Dropdown.Menu` 与 `Dropdown.Item`，其他元素不是必须的。
+- `Dropdown.Item` 通过设置 `disabled` 可以禁用某个选项，配置 `type`，可以展示不同颜色的文本，用 `#icon` 插槽可以快速配置图标。更复杂的自定义结构，直接写在 `Dropdown.Item` 的默认插槽里。
+
+</Framework>
+
+<Framework only="solid">
+
+- 触发器作为函数 children 传入：函数接收 `getTriggerProps`，把它的返回值展开到 `Button` 等可聚焦元素上；默认为 hover 展示，可通过 `trigger` 修改为 `click`、`focus`、`custom`、`contextMenu` 等值指定不同触发方式。其他 children 会被 span 包裹。
+- 通过 `render` 指定下拉框的具体内容：使用 `Dropdown.Menu` 作为父容器，组合使用 `Dropdown.Item`、`Dropdown.Divider`、`Dropdown.Title` 。  
+  当然简单场景你也可以仅搭配 `Dropdown.Menu` 与 `Dropdown.Item`，其他元素不是必须的。
+- `Dropdown.Item` 通过设置 `disabled` 可以禁用某个选项，配置 `type`，可以展示不同颜色的文本，通过 `icon` 传入图标元素可以快速配置图标。更复杂的自定义结构，直接写在 `Dropdown.Item` 的 children 中。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 嵌套使用
+
+<Framework only="react">
+
+用户可以对 `Dropdown` 进行嵌套使用，此类情况适合具有多个子级选项的情况。键盘上 `右箭头` 打开子菜单、`左箭头` 回到父项，`Enter` 或 `Space` 触发任意层菜单项的 `onClick`（详见 [Accessibility](#accessibility)）。
+
+</Framework>
+
+<Framework only="vue">
+
+用户可以对 `Dropdown` 进行嵌套使用，此类情况适合具有多个子级选项的情况。键盘上 `右箭头` 打开子菜单、`左箭头` 回到父项，`Enter` 或 `Space` 触发任意层菜单项的 `@click`（详见 [Accessibility](#accessibility)）。嵌套的子菜单默认 `spacing` 为 2；`showTick`、`selectionMode` 与 `trigger` 不从外层继承，按子菜单 Dropdown 自身的设置生效。
+
+</Framework>
+
+<Framework only="solid">
+
+用户可以对 `Dropdown` 进行嵌套使用，此类情况适合具有多个子级选项的情况。作为父项的触发元素同样使用函数 children，把 `getTriggerProps` 展开到 `Dropdown.Item` 上。键盘上 `右箭头` 打开子菜单、`左箭头` 回到父项，`Enter` 或 `Space` 触发任意层菜单项的 `onClick`（详见 [Accessibility](#accessibility)）。
+
+</Framework>
+
+<Demo id="nested" />
+
+### 弹出位置
+
+支持的位置同 [Tooltip](/zh-CN/react/show/tooltip#%E4%BD%8D%E7%BD%AE)，常用的是："bottom", "bottomLeft", "bottomRight" 这三种。
+
+<Demo id="position" />
+
+### 触发方式
+
+默认是移入触发，可通过获取焦点(focus)，点击(click)或自定义事件触发菜单展开。  
+contextMenu 方式右键打开菜单后焦点会移到第一个可用项。
+
+<Demo id="trigger" />
+
+### 触发事件
+
+<Framework only="react">
+
+点击菜单项后可触发不同鼠标事件，支持 `onClick`，`onMouseEnter`， `onMouseLeave` 和 `onContextMenu`。
+
+</Framework>
+
+<Framework only="vue">
+
+点击菜单项后可触发不同鼠标事件，支持 `@click`，`@mouseenter`，`@mouseleave` 和 `@contextmenu`。顶层菜单的 `@click` 在点击时触发，子菜单的在鼠标左键按下时触发，键盘的 `Enter` 和 `Space` 同样触发。
+
+</Framework>
+
+<Framework only="solid">
+
+点击菜单项后可触发不同鼠标事件，支持 `onClick`，`onMouseEnter`，`onMouseLeave` 和 `onContextMenu`。顶层菜单的 `onClick` 在点击时触发，子菜单的在鼠标左键按下时触发，键盘的 `Enter` 和 `Space` 同样触发。
+
+</Framework>
+
+<Demo id="events" />
+
+### Json 用法
+
+<Framework only="react">
+
+可以通过 menu 属性，传入 JSON Array 快速配置出下拉框菜单
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `menu` 属性，传入 JSON Array 快速配置出下拉框菜单。数据项里的监听使用 Vue 的键名，如 `onClick`、`onMouseenter`，会交给对应的 `Dropdown.Item`；需要为每一项自定义图标时使用 `#menuIcon="{ item, index }"` 插槽。提供 `#content` 插槽时以插槽为准。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `menu` 属性，传入数组快速配置出下拉框菜单。数据项的回调使用驼峰名称，如 `onClick`，与 `Dropdown.Item` 的属性相同。
+
+</Framework>
+
+<Demo id="json" />
+
+## API 参考
+
+### Dropdown
+
+<Framework only="react">
+
+<DropdownReactApi />
+
+Dropdown 没有自己的根元素：`className` 落在弹层外层 `.semi-dropdown-wrapper` 上，`style` 与 `contentClassName` 落在菜单容器 `.semi-dropdown` 上，`ref` 收到 `DropdownHandle`，其余未声明的属性被丢弃。
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownVueApi />
+
+Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-wrapper` 上，`style` 落在 `.semi-dropdown` 上，其余未声明的属性被丢弃。
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownSolidApi />
+
+Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-wrapper` 上，`style` 与 `contentClassName` 落在菜单容器 `.semi-dropdown` 上，`ref` 收到 `DropdownHandle`，其余未声明的属性被丢弃。
+
+</Framework>
+
+### Dropdown.Menu
+
+<Framework only="react">
+
+<DropdownMenuReactApi />
+
+其他原生属性（如 `id`、`aria-*`）落在菜单的 `ul` 上；`role` 与 `aria-orientation` 可以被覆盖，`onKeyDown` 先于内置的键盘处理执行。
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownMenuVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在菜单的 `ul` 上；`role` 与 `aria-orientation` 可以被覆盖，绑定在菜单上的 `@keydown` 先于内置的键盘处理执行。
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownMenuSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在菜单的 `ul` 上；`role` 与 `aria-orientation` 可以被覆盖，`onKeyDown` 先于内置的键盘处理执行。
+
+</Framework>
+
+### Dropdown.Item
+
+<Framework only="react">
+
+<DropdownItemReactApi />
+
+其他原生属性（如 `id`、`data-*`）落在根 `li` 上；`role`、`aria-checked` 与 `aria-disabled` 由 Dropdown 决定，不能被覆盖。
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownItemVueApi />
+
+点击、鼠标移入移出与右键使用 `@click`、`@mouseenter`、`@mouseleave`、`@contextmenu` 监听；`@click` 的参数是原生 `MouseEvent`。`class`、`style` 与其他原生属性经 attrs 落在 `li` 上。禁用的 Item 不响应 `@click`、`@mouseenter`、`@mouseleave`、`@contextmenu`。
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownItemSolidApi />
+
+`class`、`style`、`ref` 与其他原生属性落在 `li` 上。禁用的 Item 不响应 `onClick`、`onMouseEnter`、`onMouseLeave`、`onContextMenu`。
+
+</Framework>
+
+### Dropdown.Title
+
+<Framework only="react">
+
+<DropdownTitleReactApi />
+
+其他原生属性（如 `id`、`data-*`）落在根 `li` 上，`role` 可以被覆盖。
+
+</Framework>
+
+<Framework only="vue">
+
+<DropdownTitleVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 `li` 上。分隔线 `Dropdown.Divider` 没有属性与插槽，同样经 attrs 接收 `class`、`style`。
+
+</Framework>
+
+<Framework only="solid">
+
+<DropdownTitleSolidApi />
+
+`class`、`style`、`ref` 与原生属性落在 `li` 上。
+
+</Framework>
+
+### DropdownMenuItem
+
+<Framework only="react">
+
+| 属性                                     | 说明                                       | 类型   | 默认值 |
+| ---------------------------------------- | ------------------------------------------ | ------ | ------ |
+| node                                     | 按钮类型，可选：`title`，`item`，`divider` | string |        |
+| name                                     | 菜单文本，标题或 Item 的内容               | string |        |
+| 其他属性与 Title、Item、Divider 属性对应 |                                            |        |        |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性                                               | 说明                                                                             | 类型                             | 默认值 |
+| -------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------- | ------ |
+| node                                               | 数据项类型，可选：`title`，`item`，`divider`                                     | `'title' \| 'item' \| 'divider'` | -      |
+| name                                               | 菜单文本，仅 `title` 与 `item` 有                                                | `string \| number`               | -      |
+| active、disabled、showTick、type                   | 与 Dropdown.Item 的同名属性对应，仅 `item` 有                                    | -                                | -      |
+| class、style、`data-*`、`aria-*`                   | 经 attrs 交给对应的 Title、Item、Divider；`style` 为字符串或样式对象，不接受数组 | -                                | -      |
+| onClick、onMouseenter、onMouseleave、onContextmenu | Dropdown.Item 的监听，使用 Vue 键名，仅 `item` 有                                | `(event: MouseEvent) => void`    | -      |
+
+</Framework>
+
+数据项不接受 `children`，标签只由 `name` 提供。
+
+<Framework only="solid">
+
+| 属性                                       | 说明                                                                                                   | 类型                             | 默认值 |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------ | -------------------------------- | ------ |
+| node                                       | 数据项类型，可选：`title`，`item`，`divider`                                                           | `'title' \| 'item' \| 'divider'` | -      |
+| name                                       | 菜单文本，仅 `title` 与 `item` 有                                                                      | `string`                         | -      |
+| active、disabled、showTick、type           | 与 Dropdown.Item 的同名属性对应，仅 `item` 有                                                          | -                                | -      |
+| 其他属性（如 `class`、`style`、`onClick`） | 按 `node` 交给对应的 Dropdown.Title、Dropdown.Item 或 Dropdown.Divider；`onClick` 等回调仅 `item` 有效 | -                                | -      |
+
+</Framework>
+
+### Methods
+
+<Framework only="react">
+
+通过 `ref` 接收 `DropdownHandle`，挂载时收到一次，之后调用其中的 `focusTrigger()` 与 `rePosition()`，方法说明见上方 Dropdown 的 Methods 表。
+
+</Framework>
+
+<Framework only="vue">
+
+通过模板 ref 调用 `focusTrigger()` 与 `rePosition()`，见上方 Dropdown 的 Exposes。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `ref` 接收 `DropdownHandle`，组件创建时调用一次，之后调用其中的 `focusTrigger()` 与 `rePosition()`，方法说明见上方 Dropdown 的 Methods 表。
+
+</Framework>
+
+## Accessibility
+
+Dropdown 按 WAI-ARIA APG 的 [Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) 与 [Menu and Menubar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) 模式实现。
+
+### ARIA
+
+- 触发元素带 `aria-haspopup="menu"` 与 `aria-expanded`，菜单显示时 `aria-expanded` 为 `true`，否则为 `false`
+- Dropdown.Menu 的 `role` 为 `menu`，`aria-orientation` 为 `vertical`
+- Dropdown.Item 的 `role` 为 `menuitem`；Dropdown 的 `selectionMode` 为 `single` 时为 `menuitemradio`，为 `multiple` 或开启 `showTick` 时为 `menuitemcheckbox`，这三种情况都以 `aria-checked` 暴露 `active`；√ 图标不计入菜单项名称；禁用项带 `aria-disabled="true"`
+- 作为嵌套 Dropdown 触发元素的 Dropdown.Item（父项）同样带 `aria-haspopup="menu"` 与 `aria-expanded`
+- Dropdown.Divider 渲染为 `role="separator"` 的 `li`，Dropdown.Title 渲染为 `role="presentation"` 的 `li`
+- 包裹菜单的弹层容器 `role` 为 `presentation`，不是 `tooltip`
+
+### 键盘和焦点
+
+焦点在触发元素上时：
+
+| 按键             | 行为                                                                                                                                     |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `Enter`、`Space` | trigger 为 `click` 时打开菜单，焦点移到第一个可用项                                                                                      |
+| `下箭头`         | 菜单已打开时，焦点移到第一个可用项；触发元素是按钮（`button`、带 `href` 的链接、Semi Button 等）且菜单关闭时，打开菜单并聚焦第一个可用项 |
+| `上箭头`         | 菜单已打开时，焦点移到最后一个可用项；触发元素是按钮且菜单关闭时，打开菜单并聚焦最后一个可用项                                           |
+| `Tab`            | 菜单已打开时关闭菜单，焦点按浏览器默认顺序移动                                                                                           |
+
+`render`（Vue 中为 `#content` 插槽）中没有菜单项时，弹层打开后按 `下箭头`、`上箭头` 分别聚焦弹层中第一个、最后一个可聚焦元素。
+
+触发元素是文本或多个节点时，Dropdown 用一个 `span` 包裹它们，上表按键对这个 `span` 同样生效。
+
+trigger 为 `hover` 或 `focus` 时，键盘聚焦触发元素即打开菜单（`disableFocusListener` 可关闭），失焦后关闭。
+
+trigger 为 `contextMenu` 时，右键打开菜单后焦点移到第一个可用项。
+
+焦点在菜单项上时：
+
+| 按键               | 行为                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `下箭头`、`上箭头` | 移到当前层的下一项、上一项，跳过禁用项，到首尾后循环                                                                                       |
+| `Home`、`End`      | 移到当前层的第一项、最后一项                                                                                                               |
+| `Enter`、`Space`   | 父项：打开子菜单并把焦点移到子菜单第一项；其他项：触发 `onClick`（Vue 中为 `@click`），开启 `clickToHide` 时随后关闭菜单                   |
+| `右箭头`           | 父项：打开子菜单并把焦点移到子菜单第一项；其他项无效果                                                                                     |
+| `左箭头`           | 在子菜单中：关闭子菜单，焦点回到父项，与 `closeOnEsc` 无关                                                                                 |
+| `Tab`              | 关闭全部菜单（含子菜单），焦点按浏览器默认顺序移动，不回到触发元素                                                                         |
+| `Esc`              | 关闭焦点所在的那一层菜单，焦点回到打开它的元素（父项或触发元素）；焦点在父项且其子菜单已打开时先关闭子菜单；`closeOnEsc` 为 false 时不关闭 |
+| 字母键             | 移到当前层下一个以该字符开头的项                                                                                                           |
+
+- RTL（ConfigProvider `direction="rtl"`）下 `左箭头` 与 `右箭头` 的行为互换。
+- 菜单项的 `onKeyDown`（Vue 中为 `@keydown`）中调用 `e.preventDefault()` 可以阻止 `Enter`、`Space` 触发 `onClick`（Vue 中为 `@click`）。
+- 嵌套 Dropdown 的子菜单项由键盘激活时 `onClick`（Vue 中为 `@click`）收到的是 `click` 事件；鼠标操作时仍在左键按下时触发。
+
+## 文案规范
+
+- 下拉框内选项内容需要表述准确且包含信息，使用户在浏览时更加容易在选项中选择
+- 使用语句式的大小写，并且简洁明了地书写选项
+- 如果是动作选项，使用动词或者动词短语来描述用户选择该选项后会发生的动作。举个例子，"Move", "Log time", or "Hide labels"
+- 不使用介词
+
+| ✅ 推荐用法 | ❌ 不推荐用法 |
+| --- | --- |
+| <MenuExample client:only="react" menu={[{ node: 'item', name: 'Add text' },{ node: 'item', name: 'Add link' },{ node: 'item', name: 'Add image' },{ node: 'item', name: 'Add video' }]} /> | <MenuExample client:only="react" menu={[{ node: 'item', name: 'Add a text' },{ node: 'item', name: 'Add a link' },{ node: 'item', name: 'Add a image' },{ node: 'item', name: 'Add a video' }]} /> |
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- **为什么 Dropdown 浮层在靠近屏幕边界宽度不够时，丢失宽度意外换行?**  
+  在 chromium 104 后 对于屏幕边界文本宽度不够时的换行渲染策略发生变化，详细原因可查看 [issue #1022](https://github.com/DouyinFE/semi-design/issues/1022)，semi 侧已经在 v2.17.0 版本修复了这个问题。

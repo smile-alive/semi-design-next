@@ -1,0 +1,59 @@
+---
+frameworks: [react, vue, solid]
+title: 介绍
+icon: doc-intro
+order: 1
+brief: Semi Design Next 是 Semi Design 的社区 fork，提供 React 19、Vue 3.5+ 与 Solid 三套组件库，共用与框架无关的 Foundation。
+---
+
+## 什么是 Semi Design Next
+
+Semi Design Next 是上游 [Semi Design](https://github.com/DouyinFE/semi-design) 的社区 fork，保留 Semi 的设计语言与组件体系，面向中后台场景提供一套设计系统和基础组件。上游由抖音前端团队与 MED 产品设计团队设计、开发并维护，以 MIT 许可开源，Semi Design Next 的设计与大部分组件逻辑来自上游，版权归原作者所有。
+
+Semi Design Next 是非官方的社区项目，与字节跳动、DouyinFE 及 Semi Design 官方团队没有关联，也未获得其认可。「Semi Design」名称归其权利人所有。
+
+本项目不与上游同步，也不保留向后兼容。组件、样式与文档按本仓库的决策独立演进，相对上游的破坏性变化与行为变化记录在仓库的 `docs/release-notes.md` 中。
+
+## 与上游的差异
+
+- React 19 与 Vue 3.5+ 两套组件库，分别是 `@fibrae/semi-ui-react` 与 `@fibrae/semi-ui-vue`，共用 `@fibrae/semi-foundation`。
+- 支持 Chrome 120、Firefox 125、Safari 17.2 及以上。新浏览器走原生能力，旧版本由组件内的兼容写法和可选的 `@fibrae/semi-polyfill` 补齐。
+- 发布物只有 ESM，不提供 UMD 与 CDN 构建。
+- 无障碍按 WAI-ARIA 与 APG 的推荐做法实现，可访问名称与内置文案从语言包读取。
+- 动画交给 Motion，`@fibrae/semi-animation` 只提供给 Motion 使用的缓动、弹簧与 View Transition 预设。
+
+## 设计原则
+
+### 不变与多变
+
+Semi 在默认基础上充分进行模块化解耦，并开放自定义能力：坚守优质且稳定的默认样式(不变)，需要时开放自定义的灵活度(多变)。用户可以在默认基础上二次裁剪与定制，搭建适用于不同形态产品的前端资产。
+
+### 样式定制：CSS 变量与 CSS 覆盖
+
+颜色、圆角、阴影、字号、间距、z-index 等全局设计变量都以 `--semi-*` CSS 变量提供，在应用的样式中覆写即可改变全局风格，不需要编译插件，也能在运行时切换。Semi 的样式位于 `@layer semi` 中，应用中不分层的 CSS 规则总是优先，可以直接覆盖某个组件的具体样式。变量清单见[设计变量](/zh-CN/react/basic/tokens)。
+
+### 深色模式
+
+Semi 的全部颜色变量都自带深色取值，并能在应用运行时动态切换，也支持在应用内局部区域开启深色模式。
+
+### 国际化
+
+组件内置多语言包，日期时间组件提供全球时区支持，组件可适配 RTL 布局。
+
+## 架构
+
+每个组件的 JavaScript 拆分为 Foundation 和 Adapter 两部分，这使得 Foundation 可以在不同框架间复用，只需为每个框架实现各自的接入层。
+
+### Foundation
+
+Foundation 包含组件交互的业务逻辑，包括 UI 行为触发后的各种计算、分支判断等，不直接操作或引用 DOM，需要 DOM 操作、驱动组件渲染更新的部分委派给 Adapter 执行。Foundation 与框架无关，不依赖 React、Vue 和 UI 包。
+
+### Adapter
+
+Adapter 是一个接口，包含 Foundation 实现业务逻辑所需的全部方法，负责组件 DOM 结构声明以及与 DOM 操作、更新相关的逻辑，通常使用框架 API 完成 setState、getState、addEventListener、removeListener 等操作。React 通过 adapter 与 hook 接入，Vue 通过 composable 接入。
+
+目前有 React 与 Vue 两套实现，分别对应 `@fibrae/semi-ui-react` 与 `@fibrae/semi-ui-vue`，AI 组件在 `@fibrae/semi-ai-react` 与 `@fibrae/semi-ai-vue` 中。
+
+## 兼容性
+
+支持 Chrome 120、Firefox 125、Safari 17.2 及以上；支持 Safari 17.4 以下时需要导入 `@fibrae/semi-polyfill`。样式依赖 CSS 变量、`@layer` 与 `@container` 等现代 CSS 能力。框架、模块格式、Node.js 与构建插件的版本要求见[快速开始的环境要求](/zh-CN/react/start/getting-started#环境要求)。

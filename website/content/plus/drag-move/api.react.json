@@ -1,0 +1,63 @@
+{
+    "drag-move": {
+        "source": "packages/semi-ui-react/src/drag-move/index.tsx",
+        "props": {
+            "allowInputDrag": {
+                "zh-CN": "在原生 input、textarea 上按下时是否允许拖动。",
+                "en-US": "Whether dragging is allowed when pressing on a native input or textarea."
+            },
+            "allowMove": {
+                "zh-CN": "按下时判断是否允许拖动的函数，返回 false 则不拖动。参数为指针事件与被拖动的元素。",
+                "en-US": "Function that decides whether a drag may start on pointer down; returning false prevents it. It receives the pointer event and the dragged element."
+            },
+            "children": {
+                "zh-CN": "被拖动的内容。每个顶层 DOM 元素各自可拖动，自定义组件渲染出的顶层元素同样生效；文本节点无法拖动，需要包在元素中。",
+                "en-US": "The content to drag. Each top-level DOM element is dragged on its own, including the top-level elements of a custom component. Text nodes cannot be dragged and need to be wrapped in an element."
+            },
+            "constrainer": {
+                "zh-CN": "限制拖动范围的元素：`'parent'` 表示被拖动元素的父元素，或返回该元素的函数；返回 null 时不限制范围。该元素需要为 relative 定位。",
+                "en-US": "The element that limits the draggable range: `'parent'` for the parent of the dragged element, or a function that returns it. When it returns null, the range is not limited. It needs to be positioned relatively."
+            },
+            "customMove": {
+                "zh-CN": "自定义拖动后的位置处理，参数为元素、新的 top 与 left。设置后组件不再改写元素的 top 与 left，位置在 requestAnimationFrame 中回传。",
+                "en-US": "Custom position handling that receives the element, the new top and the new left. When set, the component no longer writes the element's top and left, and passes the position back in requestAnimationFrame."
+            },
+            "handler": {
+                "zh-CN": "返回触发拖动的元素，只有在该元素内按下才会开始拖动；返回 null 时回退为被拖动元素本身。",
+                "en-US": "Returns the element that triggers dragging; a drag starts only when pressed inside it. Falls back to the dragged element itself when it returns null."
+            },
+            "onMouseDown": {
+                "zh-CN": "鼠标或触控笔按下时触发，鼠标只响应主键；不受 allowMove 的结果影响。",
+                "en-US": "Called when a mouse or pen pointer is pressed, and only for the primary button of a mouse. Not affected by the result of allowMove."
+            },
+            "onMouseMove": {
+                "zh-CN": "拖动过程中鼠标或触控笔移动时触发。",
+                "en-US": "Called when a mouse or pen pointer moves during a drag."
+            },
+            "onMouseUp": {
+                "zh-CN": "拖动开始后，鼠标或触控笔抬起时触发。",
+                "en-US": "Called when a mouse or pen pointer is released after a drag has started."
+            },
+            "onTouchCancel": {
+                "zh-CN": "拖动过程中指针被系统取消（pointercancel）时触发。",
+                "en-US": "Called when the pointer is cancelled by the system (pointercancel) during a drag."
+            },
+            "onTouchEnd": {
+                "zh-CN": "拖动开始后，触摸抬起时触发。",
+                "en-US": "Called when a touch pointer is released after a drag has started."
+            },
+            "onTouchMove": {
+                "zh-CN": "拖动过程中触摸移动时触发。",
+                "en-US": "Called when a touch pointer moves during a drag."
+            },
+            "onTouchStart": {
+                "zh-CN": "触摸按下时触发，不受 allowMove 的结果影响。",
+                "en-US": "Called when a touch pointer is pressed, whether or not allowMove allows the drag."
+            },
+            "positionStrategy": {
+                "zh-CN": "定位策略，`relative` 保留元素原有的布局位置。",
+                "en-US": "Positioning strategy. `relative` keeps the element's original layout position."
+            }
+        }
+    }
+}

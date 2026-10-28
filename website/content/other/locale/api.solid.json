@@ -1,0 +1,28 @@
+{
+    "locale-provider": {
+        "source": "packages/semi-ui-solid/src/locale/locale-provider.tsx",
+        "props": {
+            "locale": {
+                "zh-CN": "语言包。不传、传 undefined 或 null 时继承外层 LocaleProvider 的语言，最外层都没有时组件回退 zh_CN；ConfigProvider 的 locale 优先于它。",
+                "en-US": "Locale pack. When omitted, undefined or null, the language of the outer LocaleProvider is inherited; without any outer provider, components fall back to zh_CN. The locale of ConfigProvider takes precedence over it."
+            },
+            "children": {
+                "zh-CN": "使用该语言包的子树。",
+                "en-US": "Subtree that uses the locale pack."
+            }
+        }
+    },
+    "locale-consumer": {
+        "source": "packages/semi-ui-solid/src/locale/locale-consumer.tsx",
+        "props": {
+            "componentName": {
+                "zh-CN": "要读取的语言包命名空间，如 TimePicker；只接受 Locale 中声明的组件名，自定义命名空间通过 declaration merging 扩展 Locale。",
+                "en-US": "Namespace of the locale pack to read, such as TimePicker. Only component names declared in Locale are accepted; extend Locale by declaration merging for custom namespaces."
+            },
+            "children": {
+                "zh-CN": "函数子节点，参数依次为 componentName 对应的文案片段 locale、localeCode、dateFnsLocale 与 currency。",
+                "en-US": "Function child receiving the text of componentName (locale), localeCode, dateFnsLocale and currency, in that order."
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                                                                                                 | Type | Default     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ----------- |
+| componentName | Namespace of the locale pack to read, such as TimePicker. Only component names declared in Locale are accepted; extend Locale by declaration merging for custom namespaces. | `K`  | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                       | Scope parameters                                                |
+| ------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| default | Scoped slot receiving locale (the text of componentName), localeCode, dateFnsLocale and currency. | <ApiType detail={"LocaleResult\u003cLocale[K]>"}>Type</ApiType> |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| size | 受控尺寸，按轴生效：未设置的轴仍跟随拖拽，配合 v-model:size 使用。 | `Size` | `semiGlobalDefault("Resizable", "size")` |
+| defaultSize | 初始宽高，支持数字和字符串（px/vw/vh/%）。 | `Size` | `semiGlobalDefault("Resizable", "defaultSize")` |
+| enable | 可伸缩的方向，未设置为 false 的方向均可拖动；传入 false 则不渲染任何手柄。 | `false \| Enable` | <ApiType detail={"semiDefault(\"Resizable\", \"enable\", {\n top: true,\n right: true,\n bottom: true,\n left: true,\n topRight: true,\n bottomRight: true,\n bottomLeft: true,\n topLeft: true,\n})"}>Type</ApiType> |
+| grid | 调整大小时对齐的增量。 | `[number, number]` | `semiDefault("Resizable", "grid", [1, 1])` |
+| snap | 调整大小时对齐的绝对像素值，x 与 y 均可省略。 | `{ x?: number[] \| undefined; y?: number[] \| undefined; }` | `semiGlobalDefault("Resizable", "snap")` |
+| snapGap | 移动到下一个对齐目标所需的最小间隙。 | `number` | `semiDefault("Resizable", "snapGap", 0)` |
+| boundElement | 限制宽高的元素：'parent'、'window' 或一个 HTMLElement。 | `HTMLElement \| "parent" \| "window"` | `semiGlobalDefault("Resizable", "boundElement")` |
+| boundsByDirection | 是否按拖动方向计算边界：为 true 时，从左侧或上侧手柄拖动，最大尺寸按元素固定的那一侧到限制元素对侧边缘的距离计算。 | `boolean` | `semiGlobalDefault("Resizable", "boundsByDirection")` |
+| minWidth | 最小宽度。 | `string \| number` | `semiGlobalDefault("Resizable", "minWidth")` |
+| minHeight | 最小高度。 | `string \| number` | `semiGlobalDefault("Resizable", "minHeight")` |
+| maxWidth | 最大宽度。 | `string \| number` | `semiGlobalDefault("Resizable", "maxWidth")` |
+| maxHeight | 最大高度。 | `string \| number` | `semiGlobalDefault("Resizable", "maxHeight")` |
+| lockAspectRatio | 锁定横纵比：true 按初始宽高锁定，数字为宽高比。 | `number \| boolean` | `semiDefault("Resizable", "lockAspectRatio", false)` |
+| lockAspectRatioExtraWidth | 锁定横纵比时，不参与比例计算的额外宽度（如内边距），单位为像素。 | `number` | `semiDefault("Resizable", "lockAspectRatioExtraWidth", 0)` |
+| lockAspectRatioExtraHeight | 锁定横纵比时，不参与比例计算的额外高度（如内边距），单位为像素。 | `number` | `semiDefault("Resizable", "lockAspectRatioExtraHeight", 0)` |
+| scale | 元素被外部缩放的比例，用于校正指针位移。 | `number` | `semiDefault("Resizable", "scale", 1)` |
+| ratio | 拖动距离与实际尺寸变化的比例，可传 [宽, 高]。方向键每次固定改变 10px，不受 ratio 与 scale 影响。 | `number \| [number, number]` | `semiDefault("Resizable", "ratio", 1)` |
+| handleStyle | 各方向手柄的样式。 | <ApiType detail={"Partial\u003cRecord\u003cDirection, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Resizable", "handleStyle")` |
+| handleClass | 各方向手柄的类名。 | `HandleClassName` | `semiGlobalDefault("Resizable", "handleClass")` |
+| handleWrapperStyle | 包裹所有手柄的容器样式。 | `StyleValue` | `semiGlobalDefault("Resizable", "handleWrapperStyle")` |
+| handleWrapperClass | 包裹所有手柄的容器类名。 | `string` | `semiGlobalDefault("Resizable", "handleWrapperClass")` |
+| onResizeStart | 开始伸缩时调用，返回 false 取消本次伸缩；保留为函数 prop 以读取返回值，使用方照常写 @resizeStart。 | `ResizeStartCallback` | `undefined` |
+
+**Events**
+
+| 事件        | 说明                                                   | 回调参数                                                                                                        |
+| ----------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| update:size | 拖动或方向键改变尺寸时触发，供 v-model:size 回写。     | `[size: Size]`                                                                                                  |
+| change      | 拖动或方向键改变尺寸时触发，参数为新尺寸、事件与方向。 | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+| resizeEnd   | 结束伸缩时触发，参数为最终尺寸、事件与方向。           | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+
+**Slots**
+
+| 插槽    | 说明                                                                                | 作用域参数                 |
+| ------- | ----------------------------------------------------------------------------------- | -------------------------- |
+| default | 伸缩框的内容。                                                                      | `any`                      |
+| handle  | 各启用方向手柄的内容，每个启用的方向调用一次，作用域参数 direction 为该手柄的方向。 | `ResizableHandleSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,250 @@
+---
+title: 单选框
+order: 44
+icon: doc-radio
+brief: 用户使用单选框来从少量的选项集合中选择单个选项
+---
+
+import RadioReactApi from './api/radio.react.zh-CN.mdx';
+import RadioGroupReactApi from './api/radio-group.react.zh-CN.mdx';
+import RadioVueApi from './api/radio.vue.zh-CN.mdx';
+import RadioGroupVueApi from './api/radio-group.vue.zh-CN.mdx';
+import RadioSolidApi from './api/radio.solid.zh-CN.mdx';
+import RadioGroupSolidApi from './api/radio-group.solid.zh-CN.mdx';
+
+## 使用场景
+
+单选框(Radio)也叫单选按钮，它允许用户在一组选项中选择其中一个。  
+当选项很多时，单选下拉菜单（Select）可能比较适合，因为它所占用的画面空间比单选按钮来得要少。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Radio, RadioGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Radio, RadioGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 带辅助文本
+
+<Framework only="react">
+
+通过`extra`设置辅助文本，可以是任意类型的 ReactNode
+
+</Framework>
+
+<Framework only="vue">
+
+通过`#extra`插槽设置辅助文本，可以放入任意内容
+
+</Framework>
+
+<Framework only="solid">
+
+通过`extra`设置辅助文本，可以是任意 JSX
+
+</Framework>
+
+<Demo id="extra" />
+
+### 禁用
+
+Radio 不可用
+
+<Demo id="disabled" />
+
+### 高级模式
+
+高级模式（mode='advanced'）checked 可以通过点击转换为 unchecked。
+
+<Demo id="advanced" />
+
+### 单选组合
+
+一组互斥的 Radio 配合使用
+
+<Demo id="group" />
+
+### 垂直排列
+
+可通过给 RadioGroup 设置 `direction`属性来决定 组内的 radio 元素水平排列或者垂直排列
+
+<Demo id="vertical" />
+
+### 按钮样式
+
+可以利用 `type='button'` 来设置 button 样式类型的单选器，并且，button 类型单选器支持三种尺寸大小。
+
+需要注意的是: button 类型的单选器暂不支持辅助文本（`extra`）和垂直排列（`direction='vertical'`）。
+
+<Demo id="button" />
+
+### 卡片样式
+
+可以给 `RadioGroup` 设置 `type='card'` 实现带有背景的卡片样式。
+
+<Demo id="card" />
+
+### 无 radio 的纯卡片样式
+
+可以给 `RadioGroup` 设置 `type='pureCard'` 实现带有背景且无 radio 的纯卡片样式。
+
+<Demo id="pure-card" />
+
+### 配置 options
+
+通过配置 options 参数来渲染单选框
+
+<Demo id="options" />
+
+## API 参考
+
+### Radio
+
+<Framework only="react">
+
+<RadioReactApi />
+
+`id`、`name`、`tabIndex`、`autoFocus`、`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-invalid` 与 `aria-errormessage` 落在内部的原生 input 上，其余原生属性与事件（如 `onMouseEnter`、`onMouseLeave`、`onFocus`、`onBlur`）落在根 label 上。`onClick` 也在根 label 上，但只在点击内部 input 时触发，点击文字时只触发一次。单个 Radio 不支持 `aria-required`，传入后会被忽略。
+
+</Framework>
+
+<Framework only="vue">
+
+<RadioVueApi />
+
+`class`、`style` 落在根元素 label 上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 focus、blur 监听经 attrs 落在内部的原生 input 上，其余原生属性与事件监听（如 `@mouseenter`、`@mouseleave`）落在根元素上。同时设置时，Radio 自己的 `name` 优先于 RadioGroup 的。`extra` 插槽在 button 类型下不渲染。
+
+</Framework>
+
+<Framework only="solid">
+
+<RadioSolidApi />
+
+`class`、`style`、`ref` 落在根元素 label 上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 `onFocus`、`onBlur` 落在内部的原生 input 上，其余原生属性与事件（如 `onMouseEnter`、`onMouseLeave`）落在根元素上。`extra` 在 button 类型下不渲染。
+
+</Framework>
+
+### RadioGroup
+
+单选框组合，用于包裹一组 `Radio`。
+
+<Framework only="react">
+
+<RadioGroupReactApi />
+
+`aria-label`、`aria-required`、`aria-invalid`、`aria-errormessage` 与 `onBlur` 等原生属性落在 `role="radiogroup"` 的根 div 上，`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabIndex` 不输出。
+
+</Framework>
+
+<Framework only="vue">
+
+<RadioGroupVueApi />
+
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`、`addonId`、`addonStyle`、`addonClass`、`extraId`，没有 `onChange`；需要自定义内容时使用 `#label`、`#extra` 作用域插槽。`class`、`style` 与原生属性经 attrs 落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。
+
+</Framework>
+
+<Framework only="solid">
+
+<RadioGroupSolidApi />
+
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`、`addonId`、`addonStyle`、`addonClassName`、`extraId`，没有 `onChange`；需要自定义内容时使用 `renderLabel(option, index)`、`renderExtra(option, index)`，按钮型不调用 `renderExtra`。`class`、`style`、`ref`、`onBlur` 与原生属性落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。
+
+</Framework>
+
+## Methods
+
+### Radio
+
+<Framework only="react">
+
+`ref` 取得的句柄（`RadioHandle`）提供 `focus()` 与 `blur()`，作用于内部的原生 input；`focus()` 是否滚动由 `preventScroll` 属性决定，成员见上方 API 参考。
+
+</Framework>
+
+<Framework only="vue">
+
+通过模板 `ref` 取得组件实例后调用，说明见上方 Exposes。
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` 取得根元素 label，其上的 `focus()`、`blur()` 转发给内部的原生 input；`preventScroll` 作用于 `focus()`。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- `aria-label`：用于解释 Radio 或 RadioGroup 的作用
+- `aria-labelledby` 默认指向 addon 节点，用于解释 Radio 的内容
+- `aria-describedby` 默认指向 extra 节点，用于补充解释 Radio 的内容
+
+<Framework only="react">
+
+- `aria-required`、`aria-invalid`、`aria-errormessage` 只对 RadioGroup 生效，设置在 `role="radiogroup"` 的元素上（`Form.RadioGroup` 的必填与校验状态同样落在它上面）；单个 Radio 的 ARIA 不支持这些属性，`Form.Radio` 校验失败时，错误信息通过 `aria-describedby` 关联到 input
+
+</Framework>
+
+<Framework only="vue">
+
+- `aria-required`、`aria-invalid`、`aria-errormessage` 只对 RadioGroup 生效，设置在 `role="radiogroup"` 的元素上；单个 Radio 的 ARIA 不支持这些属性，同时传入 `aria-invalid` 与 `aria-errormessage` 时，错误信息通过 `aria-describedby` 关联到 input
+
+</Framework>
+
+<Framework only="solid">
+
+- `aria-required`、`aria-invalid`、`aria-errormessage` 只对 RadioGroup 生效，设置在 `role="radiogroup"` 的元素上；单个 Radio 的 ARIA 不支持这些属性，同时传入 `aria-invalid` 与 `aria-errormessage` 时，错误信息通过 `aria-describedby` 关联到 input
+
+</Framework>
+
+### 键盘和焦点
+
+WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/radiobutton/
+
+- RadioGroup 可以被获取焦点，初始焦点设置：
+    - 当 RadioGroup 中没有被选择项时，初始焦点为第一个 Radio 项上
+    - 当 RadioGroup 中有选中项时，初始焦点为选中的 Radio 项上
+- 在同一个 radiogroup 内
+    - 可以通过 `右箭头` 或 `下箭头` 将焦点移动到下一个 Radio 项上，同时取消先前的 Radio 项的选中状态，并选中当前聚焦的 Radio 项
+    - 可以通过 `左箭头` 或 `上箭头` 将焦点移动到上一个 Radio 项上，同时取消先前的 Radio 项的选中状态，并选中当前聚焦的 Radio 项
+- 若 RadioGroup 中没有选中项，可以 `Space` 键选中初始焦点
+- `mode="advanced"` 仍然是 radio：方向键照常移动选中项，对已选中的项点击或按 `Space` 可取消选中。
+
+## 文案规范
+
+- 首字母大写
+- 不使用标点符号
+
+## 设计变量
+
+<DesignToken />

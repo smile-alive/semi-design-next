@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                | 类型                                                                                          | 默认值 |
+| --------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
+| activeKey | 当前展开的文件面板 key，支持单个或多个。                                            | `string \| string[]`                                                                          | -      |
+| files     | 文件条目列表，以只读方式渲染，每项为 FileItem 的属性加用于标识面板的 key。          | `FileItemProps[]`                                                                             | -      |
+| onChange  | 展开的面板变化时触发，参数为当前展开的 key。                                        | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>                | -      |
+| onExpand  | 点击面板头部的展开按钮时触发，参数为事件、该文件条目和 file；设置后才显示展开按钮。 | <ApiType detail={"(e: MouseEvent, file: FileItemProps, mode: string) => void"}>Type</ApiType> | -      |

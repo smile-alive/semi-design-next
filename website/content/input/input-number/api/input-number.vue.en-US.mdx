@@ -1,0 +1,78 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Current value, for v-model. A partial or invalid text is a string and a cleared input is ''; an explicit undefined is treated as uncontrolled. | `string \| number` | `undefined` |
+| defaultValue | Initial value when uncontrolled. | `string \| number` | `semiGlobalDefault("InputNumber", "defaultValue")` |
+| currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `string \| boolean` | `semiGlobalDefault("InputNumber", "currency")` |
+| currencyDisplay | How the currency is shown: symbol, code or name. | `"symbol" \| "name" \| "code"` | `semiGlobalDefault("InputNumber", "currencyDisplay")` |
+| defaultCurrency | Currency used when currency is true. Priority: own prop, global default, locale pack. | `string` | `semiGlobalDefault("InputNumber", "defaultCurrency")` |
+| localeCode | Locale code used for formatting in currency mode, such as zh-CN, en-US or de-DE. Priority: own prop, global default, locale pack of LocaleProvider or ConfigProvider. | `string` | `semiGlobalDefault("InputNumber", "localeCode")` |
+| minimumFractionDigits | Minimum number of fraction digits shown, passed to Intl.NumberFormat. | `number` | `semiGlobalDefault("InputNumber", "minimumFractionDigits")` |
+| maximumFractionDigits | Maximum number of fraction digits shown, passed to Intl.NumberFormat. | `number` | `semiGlobalDefault("InputNumber", "maximumFractionDigits")` |
+| precision | Numerical precision, the number of fraction digits kept. | `number` | `semiGlobalDefault("InputNumber", "precision")` |
+| scientificNotation | Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode. | `boolean \| ScientificNotationConfig` | `semiGlobalDefault("InputNumber", "scientificNotation")` |
+| showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `semiDefault("InputNumber", "showCurrencySymbol", true)` |
+| formatter | Format of the displayed value, usually set together with parser. Priority: own prop, global default. | <ApiType detail={"((value: string \u007c number) => string)"}>Type</ApiType> | `undefined` |
+| parser | Converts the text from formatter back to a number string; used together with formatter. Priority: own prop, global default. | <ApiType detail={"((value: string) => string)"}>Type</ApiType> | `undefined` |
+| min | Minimum value. | `number` | `semiDefault("InputNumber", "min", -Infinity)` |
+| max | Maximum value. | `number` | `semiDefault("InputNumber", "max", Infinity)` |
+| step | Step of each change; may be a decimal. | `number` | `semiDefault("InputNumber", "step", numbers.DEFAULT_STEP)` |
+| shiftStep | Step of each change while Shift is held; may be a decimal. | `number` | `semiDefault("InputNumber", "shiftStep", numbers.DEFAULT_SHIFT_STEP)` |
+| pressInterval | Interval in milliseconds between repeats while a step button is held. | `number` | <ApiType detail={"semiDefault(\"InputNumber\", \"pressInterval\", numbers.DEFAULT_PRESS_TIMEOUT)"}>Type</ApiType> |
+| pressTimeout | Delay in milliseconds before repeating starts while a step button is held. | `number` | <ApiType detail={"semiDefault(\"InputNumber\", \"pressTimeout\", numbers.DEFAULT_PRESS_TIMEOUT)"}>Type</ApiType> |
+| keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `semiDefault("InputNumber", "keepFocus", false)` |
+| innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix slot. | `boolean` | `semiDefault("InputNumber", "innerButtons", false)` |
+| hideButtons | Hides the step buttons; with innerButtons also true, no built-in button is shown either. | `boolean` | `semiDefault("InputNumber", "hideButtons", false)` |
+| size | Input size: default, small or large. | `Size` | `semiDefault("InputNumber", "size", "default")` |
+| disabled | Whether disabled. | `boolean` | `semiGlobalDefault("InputNumber", "disabled")` |
+| readonly | Whether read-only. | `boolean` | `semiGlobalDefault("InputNumber", "readonly")` |
+| borderless | Borderless mode. | `boolean` | `semiGlobalDefault("InputNumber", "borderless")` |
+| showClear | Whether to show the clear button. | `boolean` | `semiGlobalDefault("InputNumber", "showClear")` |
+| hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | `semiGlobalDefault("InputNumber", "hideSuffix")` |
+| composition | Whether to enable composition mode. When enabled, change is not emitted during IME composition and is emitted once after it ends. | `boolean` | `semiGlobalDefault("InputNumber", "composition")` |
+| preventScroll | Whether focusing stops the browser from scrolling the document to the input; applies to focus calls inside the component. | `boolean` | `semiGlobalDefault("InputNumber", "preventScroll")` |
+| autofocus | Focuses the input after mount. | `boolean` | `semiGlobalDefault("InputNumber", "autofocus")` |
+| maxlength | Maximum length of the input text. | `number` | `semiGlobalDefault("InputNumber", "maxlength")` |
+| minlength | Minimum length of the input text. | `number` | `semiGlobalDefault("InputNumber", "minlength")` |
+| placeholder | Placeholder text. | `string \| number` | `semiGlobalDefault("InputNumber", "placeholder")` |
+| validateStatus | Validation status: default, error, warning or success. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("InputNumber", "validateStatus")` |
+| inputStyle | Style of the native input. | `StyleValue` | `semiGlobalDefault("InputNumber", "inputStyle")` |
+| insetLabelId | The id of the inset label. | `string` | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| update:modelValue | Emitted when the value changes, for v-model to write back; emitted together with change. | `[value: string \| number]` |
+| change | Emitted when the value changes. The second argument is the event that caused it: typing, a step button pointerdown, an arrow or Home/End keydown, or blur. Mounting and modelValue changes do not emit it; an out-of-range value is shown as given and is corrected and reported only after a user action. | `[value: string \| number, event: InputNumberChangeEvent]` |
+| numberChange | Emitted when the number changes; the event argument is as in change. | `[value: number, event: InputNumberChangeEvent]` |
+| upClick | Emitted when pressing the increase button steps the value, once per step while it is held; the arguments are the stepped value and the pointerdown event. | `[value: string, event: PointerEvent]` |
+| downClick | Emitted when pressing the decrease button steps the value, once per step while it is held; the arguments are the stepped value and the pointerdown event. | `[value: string, event: PointerEvent]` |
+| focus | Emitted when focus enters the input; moving focus between the input and the clear button does not fire it. The event is the focusin of the Input wrapper. | `[event: FocusEvent]` |
+| blur | Emitted when focus leaves the input and the clear button. The event is the focusout of the Input wrapper. | `[event: FocusEvent]` |
+| keydown | Emitted when a key is pressed in the input. | `[event: KeyboardEvent]` |
+
+**Slots**
+
+| Slot        | Description                                                        | Scope parameters |
+| ----------- | ------------------------------------------------------------------ | ---------------- |
+| prefix      | Prefix content.                                                    | `any`            |
+| suffix      | Suffix content; replaced while the innerButtons buttons are shown. | `any`            |
+| insetLabel  | Inset label.                                                       | `any`            |
+| clearIcon   | Custom icon of the clear button; valid when showClear is true.     | `any`            |
+| addonBefore | Leading addon.                                                     | `any`            |
+| addonAfter  | Trailing addon.                                                    | `any`            |
+
+**Exposes**
+
+| Name              | Description                                                                            | Type                                                                                                                                                                          |
+| ----------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| focus             | Focuses the input; preventScroll prop applies when options.preventScroll is not given. | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
+| blur              | Removes focus.                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| select            | Selects all the text in the input.                                                     | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"none\" \u007c \"forward\" \u007c \"backward\" \u007c undefined) => void"}>Type</ApiType> |
+| input             | The native input element; null after unmount.                                          | `HTMLInputElement \| null`                                                                                                                                                    |
+| nativeElement     | The root element of the component; null after unmount.                                 | `HTMLElement \| null`                                                                                                                                                         |

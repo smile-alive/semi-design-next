@@ -1,0 +1,297 @@
+/*
+ * Site tokens, layout and prose; shell components style themselves in their .astro files.
+ * The header is 60px: Table's sticky={{ top: 60 }} in docs and Toc highlighting depend on it.
+ * No font files load: Inter applies only when installed locally.
+ */
+:root {
+    --site-header-height: 60px;
+    --site-sidebar-width: 280px;
+    --site-article-font: -apple-system, system-ui, 'PingFang SC', 'Segoe UI', 'Microsoft YaHei', 'Hiragino Sans GB', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --site-mono: Inconsolata, ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+    /* Popups paint in the top layer above the fixed header; this keeps them out from under it */
+    --semi-tooltip-viewport-inset-top: var(--site-header-height);
+}
+
+/* Anchor jumps would land under the fixed header; Toc.astro highlights from this 84px line */
+html {
+    scroll-padding-top: calc(var(--site-header-height) + 24px);
+}
+
+/* Scrollbars and native controls follow the root color scheme; Semi dark mode is set on body */
+:root:has(> [theme-mode='dark']) {
+    color-scheme: dark;
+}
+
+/* Narrow screens still overflow (654px DatePicker figure, edge popups); clip horizontal scroll */
+body {
+    overflow-x: hidden;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--semi-color-text-0);
+    background: var(--semi-color-bg-0);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Skip link: lets keyboard users bypass ~100 sidebar links; visually hidden until focused */
+.skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 200;
+    padding: 8px 16px;
+    color: var(--semi-color-link);
+    background: var(--semi-color-bg-0);
+    border-radius: var(--semi-border-radius-medium);
+    box-shadow: var(--semi-shadow-elevated);
+}
+
+.skip-link:not(:focus) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+/* Header and prose links only: an unlayered global `a` would beat Semi's @layer semi (Breadcrumb in demos, popups) */
+.doc-header a,
+.doc a:not(.demo-preview *) {
+    color: var(--semi-color-link);
+    text-decoration: none;
+}
+
+/* Shared by SiteHeader, ThemeToggle and LocaleMenu */
+.site-icon-button {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--semi-color-text-2);
+    cursor: pointer;
+    background: none;
+    border: 0;
+}
+
+.site-icon-button:hover {
+    color: var(--semi-color-text-0);
+}
+
+/* Prose takes 80% right of the sidebar, shifted left to make room for the fixed Toc */
+
+.site-main {
+    padding: var(--site-header-height) 0 0 var(--site-sidebar-width);
+}
+
+.article-wrapper {
+    position: relative;
+    left: -50px;
+    width: 80%;
+    padding-top: 24px;
+    margin: 0 auto;
+}
+
+.doc-header {
+    overflow-wrap: break-word;
+    border-bottom: 1px solid var(--semi-color-border);
+}
+
+.doc-breadcrumb {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.doc-header h1 {
+    margin: 16px 0 24px;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 48px;
+}
+
+.doc-brief {
+    margin: 0 0 32px;
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--semi-color-text-2);
+}
+
+/* Only Markdown-generated direct children; demos, Notice and DesignToken style themselves */
+
+.doc {
+    padding-top: 32px;
+}
+
+/* Prose only: inherited into demos it breaks short component text (AudioPlayer time) per character */
+.doc > :is(p, h2, h3, h4, ul, ol, .table-container) {
+    font-family: var(--site-article-font);
+    overflow-wrap: break-word;
+}
+
+.doc > p {
+    margin: 0 0 1.46em;
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--semi-color-text-1);
+}
+
+.doc > :is(h2, h3, h4) {
+    font-weight: 500;
+    color: var(--semi-color-text-0);
+}
+
+.doc > h2 {
+    margin: 64px 0 24px;
+    font-size: 27.648px;
+    line-height: 1.43;
+}
+
+.doc > h2:first-child {
+    margin-top: 16px;
+}
+
+.doc > h3 {
+    margin: 32px 0 24px;
+    font-size: 23.04px;
+    line-height: 1.6;
+}
+
+.doc > h2 + h3 {
+    margin-top: 16px;
+}
+
+.doc > h4 {
+    margin: 16px 0;
+    font-size: 19.2px;
+    font-weight: 700;
+    line-height: 40px;
+}
+
+.doc > :is(ul, ol) {
+    padding: 0;
+    margin: 0 0 24px 6px;
+}
+
+.doc > :is(ul, ol) li {
+    padding-left: 4px;
+    margin-left: 20px;
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--semi-color-text-1);
+}
+
+.doc > :is(ul, ol) li > p {
+    margin: 0;
+}
+
+.doc > hr {
+    margin: 32px 0;
+    border: 0;
+    border-top: 1px solid var(--semi-color-border);
+}
+
+.doc img:not(.demo-preview *) {
+    max-width: 100%;
+}
+
+.doc :not(pre) > code:not(.demo-preview *) {
+    margin: 0 4px;
+    font-family: var(--site-mono);
+    background: var(--semi-color-fill-1);
+}
+
+.doc > .astro-code {
+    padding: 16px;
+    margin: 24px 0;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid var(--semi-color-border);
+    border-radius: 4px;
+}
+
+/* rehype-table-container wraps tables so wide ones scroll inside the prose */
+
+.table-container {
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+.table-container > table {
+    width: 100%;
+    color: var(--semi-color-text-1);
+    border-spacing: 0;
+    border-bottom: 1px solid var(--semi-color-border);
+}
+
+.table-container thead {
+    background: var(--semi-color-fill-0);
+}
+
+.table-container th {
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 21px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.table-container td {
+    padding: 4px 6px;
+    vertical-align: top;
+}
+
+.table-container td:nth-of-type(1) {
+    font-family: var(--site-mono);
+    font-weight: 600;
+}
+
+.table-container td:nth-of-type(3) {
+    font-family: var(--site-mono);
+    color: var(--semi-color-warning);
+}
+
+.table-container td:nth-of-type(4) {
+    font-family: var(--site-mono);
+    color: var(--semi-color-success);
+}
+
+/* Shiki emits only CSS variables (defaultColor: false); pick by color mode here */
+.astro-code {
+    background-color: var(--shiki-light-bg);
+}
+
+.astro-code,
+.astro-code span {
+    color: var(--shiki-light);
+}
+
+[theme-mode='dark'] .astro-code {
+    background-color: var(--shiki-dark-bg);
+}
+
+[theme-mode='dark'] .astro-code,
+[theme-mode='dark'] .astro-code span {
+    color: var(--shiki-dark);
+}
+
+/* Below 1400px the Toc hides (see Toc); below 820px the sidebar becomes a drawer (see SideNav) */
+
+@media (max-width: 1399px) {
+    .article-wrapper {
+        left: 0;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 24px 24px 0;
+    }
+}
+
+@media (max-width: 820px) {
+    .site-main {
+        padding-left: 0;
+    }
+}

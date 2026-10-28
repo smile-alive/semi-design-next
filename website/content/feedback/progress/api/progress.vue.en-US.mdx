@@ -1,0 +1,35 @@
+**Props**
+
+| Property       | Description                                                                                                                             | Type                  | Default                                              |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------- |
+| direction      | Direction of the line progress bar: horizontal or vertical.                                                                             | `ProgressDirection`   | `semiDefault("Progress", "direction", "horizontal")` |
+| indeterminate  | Whether the progress is indeterminate. When on, percent no longer controls the length, the text is hidden and aria-valuenow is omitted. | `boolean`             | `semiDefault("Progress", "indeterminate", false)`    |
+| motion         | Whether the shown number animates to the new percent. When off it jumps to the target.                                                  | `boolean`             | `semiDefault("Progress", "motion", true)`            |
+| orbitStroke    | Fill color of the track.                                                                                                                | `string`              | `semiGlobalDefault("Progress", "orbitStroke")`       |
+| percent        | Progress percentage. Passing NaN throws an error.                                                                                       | `number`              | `semiDefault("Progress", "percent", 0)`              |
+| showInfo       | Whether to show the text: in the center of a circle, or on the right of a bar.                                                          | `boolean`             | `semiDefault("Progress", "showInfo", false)`         |
+| size           | Size: default, small (circle only) or large (line only).                                                                                | `Size`                | `semiDefault("Progress", "size", "default")`         |
+| stroke         | Fill color. An array is a list of `{ percent, color }` intervals, where color is any CSS color or a Semi palette name.                  | `string \| StrokeArr` | `semiGlobalDefault("Progress", "stroke")`            |
+| strokeGradient | Whether to generate gradient colors between intervals. Requires at least one interval in stroke.                                        | `boolean`             | `semiDefault("Progress", "strokeGradient", false)`   |
+| strokeLinecap  | Line cap of the circle progress bar: round or square.                                                                                   | `"round" \| "square"` | `semiDefault("Progress", "strokeLinecap", "round")`  |
+| strokeWidth    | Stroke width of the circle progress bar.                                                                                                | `number`              | `semiDefault("Progress", "strokeWidth", 4)`          |
+| type           | Type: line or circle.                                                                                                                   | `ProgressType`        | `semiDefault("Progress", "type", "line")`            |
+| width          | Diameter of the circle progress bar. Defaults to 24 when size is small and 72 otherwise.                                                | `number`              | `semiGlobalDefault("Progress", "width")`             |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot   | Description                                                                                     | Scope parameters       |
+| ------ | ----------------------------------------------------------------------------------------------- | ---------------------- |
+| format | Custom text. percent is the shown number clamped to 0-100. It runs only when the text is shown. | `{ percent: number; }` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,244 @@
+---
+frameworks: [react, vue, solid]
+order: 18
+title: Tokens
+icon: doc-token
+brief: Semi Design Next Tokens
+---
+
+import JumpToToken from './figures/jump-to-token.react.tsx';
+import FullPalette from './figures/full-palette.react.tsx';
+import ColorConverter from './figures/color-converter.react.tsx';
+import GlobalToken from './figures/global-token.react.tsx';
+
+<JumpToToken client:only="react" />
+
+## Why use variables
+
+Variables actually decouple the basic elements of design from specific styles. For designers, if the style of the product needs to be updated iteratively, for example, the dangerous function color, namely color danger, needs to be updated, they only need to modify its corresponding color default value to complete the UI iteration of the whole product. For R &amp; D, in order to adapt to the iteration of product style update, design token can update the style of all components more quickly without modifying everywhere. This is why we need to pay special attention to using variables instead of fixed default values in the development process. If the style of the product is shared by multiple platforms, it can get twice the result with half the effort. In particular, for platforms with dark mode requirements, Semi Design Next's color variable is needed to achieve the effect of one click switching between light and dark. Therefore, here we will introduce the design token system of Semi Design Next in detail and how to use them.
+
+## Basic color
+
+A palette of 16 hues in gradient steps, 160 colors in total. In general, we use the color in the base color to further define the function color.
+
+<FullPalette client:only="react" />
+
+<Notice title="Attention">The colors of the AI general series are gradient colors implemented using linear-gradient(). They cannot be used as background-color values and need to be used as background-image or background values to be effective.</Notice>
+
+### Color conversion
+
+<ColorConverter client:only="react" />
+
+## Functional color
+
+From the basic color disk reference, including the interface background, text icons, links, stroke and other user interface elements.
+
+### Primary color - primary
+
+User interface main tone and interactive colors, usually used for main operation button, etc
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-primary/} />
+
+### Secondary color - secondary
+
+Secondary color - secondary
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-secondary/} />
+
+### Tertiary color - tertiary
+
+In the user interface, non emphasis color and interactive color are usually used for general and non emphasis function operation buttons
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-tertiary/} />
+
+### Information - info
+
+It is usually used to express objective and neutral information in the context with the above semantics
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-info/} />
+
+### Success - success
+
+It is usually used to express the success, completion and opening status, and is used in scenarios with the above semantics
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-success/} />
+
+### Warning - warning
+
+It is usually used to express warning and unsafe state, and is used in scenarios with the above semantics
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-warning/} />
+
+### Danger - danger
+
+It is usually used to express the dangerous state, and is used in the scene with the above semantics
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-danger/} />
+
+### AI - general
+
+Background and text colors for AI scenarios
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-ai-general/} />
+
+### AI - purple
+
+Background and text colors for secondary AI scenarios
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-ai-purple/} />
+
+### AI - background
+
+Background colors for AI scenarios
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-ai-background/} />
+
+### Text and icon colors - text
+
+Four different levels of text / icon colors represent the most important, secondary, minor and minor contents in the product interface
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-text/} />
+
+### Link color - link
+
+Text used for hyperlinks in products
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-link/} />
+
+### Background color - bg
+
+All levels of background color in the application, including container, menu, navigation bar, etc. In dark mode, we usually use the background color to distinguish the front and back levels
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-bg/} />
+
+### Fill color - fill
+
+For an element, if the background color of its container is not fixed, and the contrast between the filling color of the element and the top background color is small, use the filling color as the background color to ensure that the element will not "melt" into a certain level of background color, such as a form control.
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-fill/} />
+
+### Border color - border
+
+Colors with stroke attributes in the interface
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-border/} />
+
+### Disabled state - disabled
+
+It is used to fill all kinds of forbidden elements in the interface, such as background, text, stroke, fill, etc
+
+<GlobalToken client:only="react" locale="en-US" reg={/color-disabled/} />
+
+### Constant color - static
+
+The interface does not follow the theme and light and dark mode switching color
+
+<GlobalToken client:only="react" locale="en-US" reg={/((--semi-black)|(--semi-white))$/} />
+
+### Simulated shadow color - shadow
+
+Shallow shadow, a flat shadow effect simulated by border, is mainly used in the table component
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-color-shadow$/} />
+
+## Typesetting
+
+Typesetting is used to convey information content, and the interface looks orderly
+
+### Trade name
+
+Determines the size of different levels of text
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-font-size/} />
+
+### Word weight
+
+Determine the thickness of different levels of text
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-font-weight/} />
+
+### Font
+
+In order to reduce the packing volume, the default English font inter needs to be introduced separately
+
+If you want to use it on the business side, you need to add a font face statement in your CSS (it is not included in Semi, because the font is slightly larger, and the default loading may affect the speed of the first screen of the business). It is up to the business to decide whether to use it or not.
+
+```css
+@font-face {
+    font-family: 'Inter';
+    src: url('/assets/fonts/Inter-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Inter-Bold';
+    src: url('/assets/fonts/Inter-Bold.ttf') format('truetype');
+}
+```
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-font-family/} />
+
+## Fillet
+
+Fillet is used to describe the outline of container and interface elements, which determines the visual tonality of product to a certain extent
+
+<GlobalToken client:only="react" locale="en-US" reg={/border-radius/} />
+
+## Shadow
+
+Shadow is usually used to express the level of interface elements. The heavier the shadow, the closer the element is to the user
+
+<GlobalToken client:only="react" locale="en-US" reg={/--semi-shadow/} />
+
+## Dimensions
+
+The size variable is used in various components and internal elements to adjust the size of the control, stroke thickness, etc
+
+### Height
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-height-control/} />
+
+### Stroke size
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-border-thickness/} />
+
+## Spacing
+
+The spacing variable is applied in each component or between components to adjust the density and compactness of the whole product
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-spacing-/} />
+
+## z-index
+
+It is used to describe the sequence of interface elements
+
+<GlobalToken client:only="react" locale="en-US" reg={/^--semi-z-/} />
+
+## Animation
+
+<GlobalToken client:only="react" locale="en-US" isAnimation={true} />
+
+## Variables not yet supported
+
+Currently, Semi does not support global variables in the following categories. If you have related requirements, you can give feedback through issue and describe your expected needs in detail.
+
+**Line height**
+
+**Letter spacing**
+
+**Media query**
+
+## Customization
+
+The `--semi-*` CSS variables on this page are Semi's global customization surface. Override them in your own stylesheet; no build plugin or theme package is needed:
+
+```css
+:root {
+    --semi-color-primary: var(--semi-violet-5);
+    --semi-border-radius-medium: 8px;
+}
+```
+
+- Light values go on `:root`, dark values on `[theme-mode='dark']`; see [Dark Mode](/en-US/react/advanced/dark-mode).
+- Semi's styles sit in `@layer semi`, so your unlayered CSS rules always win and can override a component's own styles without `!important`.
+- With Tailwind, import `@fibrae/semi-ui-react/tailwind.css` (`@fibrae/semi-ui-vue/tailwind.css` for Vue) to map these variables to Tailwind theme values (e.g. `bg-semi-color-primary`).
+- The Design Token tables on the component pages list each component's internal Sass variables, which cannot be overridden.

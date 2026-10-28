@@ -1,0 +1,257 @@
+{
+    "tree": {
+        "source": "packages/semi-ui-vue/src/tree/tree.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "当前选中的节点的 value（没有 value 时为 key），用 v-model 绑定；多选时为数组。传入后即为受控组件。",
+                "en-US": "Value of the selected node (its key when it has no value), bound with v-model; an array when multiple. Passing it makes the tree controlled."
+            },
+            "defaultValue": {
+                "zh-CN": "指定默认选中的条目，只在挂载时读取。",
+                "en-US": "The initially selected items, read once on mount."
+            },
+            "treeData": {
+                "zh-CN": "节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。",
+                "en-US": "Node data; keys are unique across the tree. Only a new array updates the tree, changes made in place are not seen."
+            },
+            "treeDataSimpleJson": {
+                "zh-CN": "简单 JSON 形式的节点数据，返回值为包含选中节点的 JSON 数据。",
+                "en-US": "Node data as a plain JSON object; the value is a JSON object holding the selected nodes."
+            },
+            "keyMaps": {
+                "zh-CN": "自定义节点中 key、label、value 的字段名。映射了 label 且开启搜索时，需把 treeNodeFilterProp 设为 treeData 的键之一，或自定义 filterTreeNode。",
+                "en-US": "Custom field names for key, label and value in a node. When label is mapped and search is on, set treeNodeFilterProp to one of the keys in treeData or provide filterTreeNode."
+            },
+            "expandedKeys": {
+                "zh-CN": "展开的节点，用 v-model:expandedKeys 绑定。传入后展开状态完全受控。",
+                "en-US": "Expanded nodes, bound with v-model:expandedKeys. Passing it makes expansion fully controlled."
+            },
+            "defaultExpandedKeys": {
+                "zh-CN": "默认展开的节点，显示其直接子级。",
+                "en-US": "Nodes expanded initially, showing their direct children."
+            },
+            "defaultExpandAll": {
+                "zh-CN": "初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。",
+                "en-US": "Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that."
+            },
+            "expandAll": {
+                "zh-CN": "展开所有节点，数据变化后仍然生效。",
+                "en-US": "Expands every node, and keeps doing so when the data changes."
+            },
+            "autoExpandParent": {
+                "zh-CN": "expandedKeys 变化时是否自动展开其中节点的父节点；挂载时总会展开。开启后，展开受控时要先收起所有已展开的子节点才能收起父节点。",
+                "en-US": "Whether the parents of the nodes in expandedKeys expand automatically when expandedKeys changes; they always do on mount. When on, a controlled tree collapses a parent only after its expanded children are collapsed."
+            },
+            "autoExpandWhenDragEnter": {
+                "zh-CN": "拖拽到收起的节点上时是否自动展开该节点。",
+                "en-US": "Whether dragging over a collapsed node expands it."
+            },
+            "autoMergeValue": {
+                "zh-CN": "父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。",
+                "en-US": "When a parent is selected the value leaves out its descendants; applies when leafOnly is false."
+            },
+            "blockNode": {
+                "zh-CN": "节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。",
+                "en-US": "Shows each node as a whole row, highlighting the row on hover and selection; when off only the label is highlighted."
+            },
+            "checkRelation": {
+                "zh-CN": "多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。",
+                "en-US": "How the checked states of nodes relate in a multiple tree: related links parents and children, unRelated keeps them independent."
+            },
+            "directory": {
+                "zh-CN": "目录树模式，自带目录图标，可用 icon 插槽覆盖。",
+                "en-US": "Directory mode with built-in folder icons, which the icon slot can replace."
+            },
+            "disabled": {
+                "zh-CN": "禁用整棵树。节点数据中的 disabled: false 不会解除禁用。",
+                "en-US": "Disables the whole tree. A node with disabled: false does not lift it."
+            },
+            "disableStrictly": {
+                "zh-CN": "严格禁用：禁用的节点不能通过父级或子级的选中关系改变状态。",
+                "en-US": "Strict disabling: a disabled node cannot change state through the selection of its parent or children."
+            },
+            "draggable": {
+                "zh-CN": "是否允许拖拽节点，配合 drop 事件使用。不能与 virtualize 同时使用。",
+                "en-US": "Whether nodes can be dragged, used together with the drop event. It cannot be combined with virtualize."
+            },
+            "hideDraggingNode": {
+                "zh-CN": "拖拽时隐藏被拖拽节点的拖拽图像。",
+                "en-US": "Hides the drag image of the node being dragged."
+            },
+            "expandAction": {
+                "zh-CN": "展开逻辑：false 仅点击展开箭头时展开，click 单击节点展开，doubleClick 双击节点展开。键盘不触发该逻辑。",
+                "en-US": "How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it."
+            },
+            "leafOnly": {
+                "zh-CN": "多选时，值和 change 事件的载荷只包含叶子节点。",
+                "en-US": "In a multiple tree, the value and the payload of change hold leaf nodes only."
+            },
+            "loadedKeys": {
+                "zh-CN": "已加载的节点，配合 loadData 使用，用 v-model:loadedKeys 绑定。",
+                "en-US": "Nodes already loaded, used with loadData and bound with v-model:loadedKeys."
+            },
+            "motion": {
+                "zh-CN": "是否开启展开收起的动画；虚拟化时动画关闭。",
+                "en-US": "Whether expanding and collapsing are animated; animation is off for a virtualized tree."
+            },
+            "multiple": {
+                "zh-CN": "是否多选。多选时所有子项都被选择会自动勾选其父项。",
+                "en-US": "Whether several nodes can be selected. A parent is checked automatically once all its children are."
+            },
+            "changeWithObject": {
+                "zh-CN": "布尔属性而不是事件：设为 true 时，change 的载荷由 value 变为包含 value、label 及其他属性的节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。",
+                "en-US": "A boolean attribute, not an event: when true the payload of change is the node object with value, label and other fields instead of the value; a controlled modelValue and defaultValue must then be objects with a value."
+            },
+            "showClear": {
+                "zh-CN": "搜索框是否显示清除按钮。",
+                "en-US": "Whether the search box shows a clear button."
+            },
+            "showFilteredOnly": {
+                "zh-CN": "搜索时只展示过滤后的结果。",
+                "en-US": "Shows only the filtered nodes while searching."
+            },
+            "showLine": {
+                "zh-CN": "显示节点之间的连接线。",
+                "en-US": "Shows connecting lines between nodes."
+            },
+            "treeNodeFilterProp": {
+                "zh-CN": "搜索时用于匹配输入的节点属性，默认 label。",
+                "en-US": "The node field matched against the search input, label by default."
+            },
+            "labelEllipsis": {
+                "zh-CN": "label 超出时是否省略；虚拟化时默认开启。",
+                "en-US": "Whether an overflowing label is truncated; on by default for a virtualized tree."
+            },
+            "virtualize": {
+                "zh-CN": "列表虚拟化，用于大量节点：height、width、itemSize（必传）。开启后动画关闭。",
+                "en-US": "List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled."
+            },
+            "searchClassName": {
+                "zh-CN": "搜索框容器的类名。",
+                "en-US": "Class of the search box container."
+            },
+            "searchPlaceholder": {
+                "zh-CN": "搜索框的占位文字。",
+                "en-US": "Placeholder of the search box."
+            },
+            "searchStyle": {
+                "zh-CN": "搜索框容器的样式。",
+                "en-US": "Style of the search box container."
+            },
+            "filterTreeNode": {
+                "zh-CN": "是否开启搜索。传 true 时按 treeNodeFilterProp 匹配；传函数时自定义匹配，data 为当前节点数据。",
+                "en-US": "Whether search is on. true matches by treeNodeFilterProp; a function customizes the match, with data as the node."
+            },
+            "loadData": {
+                "zh-CN": "异步加载子节点，返回 Promise。需要在数据中用 isLeaf 标明叶子节点；设置后未标明 isLeaf 的节点显示展开箭头。",
+                "en-US": "Loads the children of a node and returns a Promise. Mark leaves with isLeaf in the data; a node without isLeaf shows the expand arrow while this is set."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "选中状态变化时触发，v-model 使用。",
+                "en-US": "Emitted when the selection changes; used by v-model."
+            },
+            "change": {
+                "zh-CN": "选中状态变化时触发，载荷与 update:modelValue 相同。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted when the selection changes, with the same payload as update:modelValue. It shadows the native event of the same name on the root element."
+            },
+            "update:expandedKeys": {
+                "zh-CN": "展开的节点变化时触发，v-model:expandedKeys 使用。",
+                "en-US": "Emitted when the expanded nodes change; used by v-model:expandedKeys."
+            },
+            "expand": {
+                "zh-CN": "展开或收起节点时触发，info 含 expanded 与 node。",
+                "en-US": "Emitted when a node expands or collapses; info holds expanded and node."
+            },
+            "update:loadedKeys": {
+                "zh-CN": "已加载的节点变化时触发，v-model:loadedKeys 使用。",
+                "en-US": "Emitted when the loaded nodes change; used by v-model:loadedKeys."
+            },
+            "load": {
+                "zh-CN": "节点加载完毕时触发，loadedKeys 为已加载节点的集合。",
+                "en-US": "Emitted when a node has loaded; loadedKeys is the set of loaded nodes."
+            },
+            "select": {
+                "zh-CN": "节点被选中或取消选中时触发，载荷为该节点的 key、是否选中和节点数据。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted when a node is selected or deselected, with its key, whether it is selected and its data. It shadows the native event of the same name on the root element."
+            },
+            "search": {
+                "zh-CN": "搜索框的值变化时触发；filteredExpandedKeys 是因搜索或 modelValue、defaultValue 而展开的节点，可在展开受控时用来展开搜索结果。",
+                "en-US": "Emitted when the search input changes; filteredExpandedKeys are the nodes expanded by the search or by modelValue and defaultValue, which controlled expansion can use to show the results."
+            },
+            "contextMenu": {
+                "zh-CN": "在节点上点击右键时触发。",
+                "en-US": "Emitted on a right click on a node."
+            },
+            "doubleClick": {
+                "zh-CN": "双击节点时触发。",
+                "en-US": "Emitted on a double click on a node."
+            },
+            "dragStart": {
+                "zh-CN": "开始拖拽节点时触发。",
+                "en-US": "Emitted when a node starts to be dragged."
+            },
+            "dragEnter": {
+                "zh-CN": "拖拽进入节点时触发；进入收起的节点使其展开时，载荷含 expandedKeys。",
+                "en-US": "Emitted when a drag enters a node; the payload holds expandedKeys when that expanded a collapsed node."
+            },
+            "dragOver": {
+                "zh-CN": "拖拽经过节点时触发。",
+                "en-US": "Emitted while a drag is over a node."
+            },
+            "dragLeave": {
+                "zh-CN": "拖拽离开节点时触发。",
+                "en-US": "Emitted when a drag leaves a node."
+            },
+            "dragEnd": {
+                "zh-CN": "拖拽结束时触发。",
+                "en-US": "Emitted when a drag ends."
+            },
+            "drop": {
+                "zh-CN": "节点被放下时触发，载荷含 dragNode、dragNodesKeys、dropPosition、dropToGap。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted when a node is dropped; the payload holds dragNode, dragNodesKeys, dropPosition and dropToGap. It shadows the native event of the same name on the root element."
+            }
+        },
+        "slots": {
+            "label": {
+                "zh-CN": "自定义节点的 label 内容。开启搜索时仍按 treeData 中的 label 文本匹配。",
+                "en-US": "Content of a node's label. Search still matches the label text in treeData."
+            },
+            "icon": {
+                "zh-CN": "自定义节点图标，按节点数据返回不同内容；内容为空时保留目录模式的内置图标。",
+                "en-US": "A node's icon, which can differ by node data; empty content keeps the directory icon."
+            },
+            "expandIcon": {
+                "zh-CN": "自定义展开图标。返回单个元素时自动获得 class 与展开的点击处理；也可以用参数自行绑定。",
+                "en-US": "The expand icon. A single element gets the class and the click that expands; the parameters can also be bound by hand."
+            },
+            "fullLabel": {
+                "zh-CN": "接管整行的内容。带 id、role 与状态的行元素由 Tree 提供，插槽只写行内内容；虚拟化时定位样式也在行元素上。",
+                "en-US": "Content of the whole row. Tree provides the row element carrying the id, role and state, and virtualized positioning; the slot holds only what is inside."
+            },
+            "search": {
+                "zh-CN": "替换搜索框；插槽内容为空时隐藏搜索框。",
+                "en-US": "Replaces the search box; an empty slot hides it."
+            },
+            "emptyContent": {
+                "zh-CN": "没有节点，或开启 showFilteredOnly 后搜索无结果时的内容；插槽内容为空时隐藏空状态。",
+                "en-US": "Content shown when there are no nodes, or when the search finds none with showFilteredOnly on; an empty slot hides the empty state."
+            },
+            "renderDraggingNode": {
+                "zh-CN": "拖拽时浏览器显示的元素，参数为节点元素 nodeInstance 与节点数据 node；插槽内容在 dragstart 时渲染到游离的容器中作为拖拽图像，只能读到应用级的 provide。",
+                "en-US": "The element the browser shows while a node is dragged, with the node element nodeInstance and the node data node as parameters; on dragstart the slot content is rendered into a detached container and used as the drag image, so only app-level provides reach it."
+            }
+        },
+        "exposed": {
+            "search": {
+                "zh-CN": "手动触发搜索，效果同在搜索框中输入；需要同时设置 filterTreeNode。",
+                "en-US": "Searches as if the value were typed into the search box; filterTreeNode must be set."
+            },
+            "scrollTo": {
+                "zh-CN": "在虚拟化的 Tree 中，把指定的已展开节点滚动到视图内；align 默认 center。",
+                "en-US": "In a virtualized tree, scrolls an expanded node into view; align is center by default."
+            }
+        }
+    }
+}

@@ -1,0 +1,159 @@
+---
+title: Feedback
+order: 89
+icon: doc-feedback
+brief: Quick feedback component
+showNew: true
+---
+
+import FeedbackReactApi from './api/feedback.react.en-US.mdx';
+import FeedbackVueApi from './api/feedback.vue.en-US.mdx';
+import FeedbackSolidApi from './api/feedback.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Feedback } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Feedback } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Feedback } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Framework only="react">
+
+Use `visible` to set whether to display or not. The default feedback display content is in emoji form. The currently selected content can be obtained through `onValueChange`.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `v-model:visible` to set whether to display or not. Cancel, close and Esc write `false` back to it, while the submit button only triggers `@ok` and the caller closes the feedback. The default feedback display content is in emoji form. The currently selected content can be obtained through `@valueChange`.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `visible` to set whether to display or not. The component never closes itself: set `visible` to `false` in `onCancel` and `onOk` yourself. The default feedback display content is in emoji form. The currently selected content can be obtained through `onValueChange`.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Text type
+
+Set `type` to `text` to get feedback in the form of a multi-line input box, and set the parameters of the multi-line input box through `textAreaProps`.
+
+<Demo id="text" />
+
+### Single choice feedback
+
+Set `type` to `radio` to get feedback in the form of a single selection, and set the parameters of the radio selection through `radioGroupProps`. The option group has no accessible name by default; name it with `aria-label` in `radioGroupProps`.
+
+<Demo id="radio" />
+
+### Multiple choice feedback
+
+Set `type` to `checkbox` to obtain feedback in the form of multiple selections, and set the parameters of the multi selection through `checkboxGroupProps`. The option group has no accessible name by default; name it with `aria-label` in `checkboxGroupProps`.
+
+<Demo id="checkbox" />
+
+### Customized feedback content
+
+<Framework only="react">
+
+Set `type` to `custom` to obtain feedback with customized content, and set the feedback content through `renderContent`. When using custom feedback, you need to control whether the submit button is disabled or not. Users can set it through `okButtonProps`.
+
+</Framework>
+
+<Framework only="vue">
+
+Set `type` to `custom` to obtain feedback with customized content, and write the feedback content in the default slot. When using custom feedback, you need to control whether the submit button is disabled or not. Users can set it through `okButtonProps`.
+
+</Framework>
+
+<Framework only="solid">
+
+Set `type` to `custom` to obtain feedback with customized content, and write the feedback content in the children. `renderContent` can wrap the feedback content. When using custom feedback, you need to control whether the submit button is disabled or not. Users can set it through `okButtonProps`.
+
+</Framework>
+
+<Demo id="custom" />
+
+### Modal
+
+The form of feedback can be passed through `mode`, the default is `popup`, set to `modal` to get the display in the form of modal dialog box.
+
+<Demo id="modal" />
+
+### Feedback completion tips
+
+After the feedback is completed, you can switch to display information to remind the user that the feedback has been completed.
+
+<Demo id="completion" />
+
+## API reference
+
+### FeedbackProps
+
+In addition to the parameters listed below, when `mode` is `modal`, FeedbackProps also supports the parameters in [ModalProps](/en-US/react/show/modal#Modal). When `mode` is `popup`, FeedbackProps also supports the parameters in [SideSheetProps](/en-US/react/show/side-sheet#API%20reference)
+
+<Framework only="react">
+
+<FeedbackReactApi />
+
+Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element, and the other undeclared attributes and native event listeners land on the outermost element inside the portal.
+
+</Framework>
+
+<Framework only="vue">
+
+<FeedbackVueApi />
+
+Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element; `style` lands on the `.semi-modal` dialog box in `modal` mode and on the `role="dialog"` element in `popup` mode; `class`, the other undeclared attributes and native event listeners land on the outermost element inside the portal (in `modal` mode, `role` also lands on the `role="dialog"` element). In `textAreaProps`, `radioGroupProps` and `checkboxGroupProps`, the controlled key is `modelValue` and the listener key is `onChange`.
+
+</Framework>
+
+<Framework only="solid">
+
+<FeedbackSolidApi />
+
+`class`, `ref` and native attributes land on the root element (`.semi-sidesheet` in `popup` mode, the outermost element of the Modal, which carries `.semi-feedback`, in `modal` mode), `aria-*` attributes land on the `role="dialog"` element, and `style` lands on the content box (`.semi-sidesheet-inner` in `popup` mode, `.semi-modal` in `modal` mode).
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The faces of the emoji type are native `input type="radio"` elements inside a `role="radiogroup"` (named by the locale entry `Feedback.rating`), each named by `Feedback.bad`, `Feedback.normal` or `Feedback.good`. The selected state is expressed by the native `checked`, following the [APG Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+- The option groups of the radio and checkbox types have no accessible name by default; name them with `aria-label` in `radioGroupProps` or `checkboxGroupProps`
+- `modal` mode follows the [APG Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), see [Modal](/en-US/react/show/modal#Accessibility) for details. `popup` mode is a SideSheet without a mask and is treated as a non-modal dialog, so `aria-modal` is not set
+
+### Keyboard and focus
+
+- The emoji group has a single Tab stop and the arrow keys move the selected face; a face shows the theme focus ring when focused with the keyboard. The radio and checkbox types follow the keyboard behavior of [RadioGroup](/en-US/react/input/radio) and [CheckboxGroup](/en-US/react/input/checkbox)
+- In `popup` mode, focus moves into the panel on open but Tab is not trapped and the rest of the page stays usable; Esc triggers cancel. On close, focus returns to the element focused before opening only if it is still inside the panel or has fallen to the body; focus the user has moved elsewhere on the page is left alone
+- In `modal` mode, focus moves into the dialog on open, Tab cycles within the dialog and the page behind is not interactive; focus returns to the previously focused element on close, and Esc triggers cancel

@@ -1,0 +1,493 @@
+---
+frameworks: [react, vue, solid]
+title: Quick Start
+icon: doc-gettingstarted
+order: 2
+---
+
+<Framework only="react">
+
+`@fibrae/semi-ui-react` is the React component library of Semi Design Next.
+
+</Framework>
+
+<Framework only="vue">
+
+`@fibrae/semi-ui-vue` is the Vue component library of Semi Design Next.
+
+</Framework>
+
+<Framework only="solid">
+
+`@fibrae/semi-ui-solid` is the Solid component library of Semi Design Next; for server-side rendering see [Server-side rendering](#server-side-rendering).
+
+</Framework>
+
+## Requirements
+
+<Framework only="react">
+
+Peer dependencies: `react` and `react-dom` ^19.3.0.
+
+</Framework>
+
+<Framework only="vue">
+
+Peer dependency: `vue` ^3.5.0.
+
+</Framework>
+
+<Framework only="solid">
+
+Peer dependency: `solid-js` ^1.9.0.
+
+</Framework>
+
+| Item               | Requirement                                                                                                                         |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Browser            | Chrome 120, Firefox 125, Safari 17.2 or later. Supporting Safari below 17.4 needs `@fibrae/semi-polyfill`; see Install below        |
+| Modules and syntax | ESM only; syntax and built-ins ship as ESNext, without lowering                                                                     |
+| Node.js            | 24 or later, since server rendering runs component code; 22.17 or later when Node only runs the build plugins and `semi-build-scss` |
+| Build plugins      | Vite 8 or later, webpack 5.77 or later, rspack 2                                                                                    |
+
+## Install
+
+<Framework only="react">
+
+```bash
+pnpm add @fibrae/semi-ui-react @fibrae/semi-icons-react
+```
+
+The icon package `@fibrae/semi-icons-react` and the illustration package `@fibrae/semi-illustrations-react` are dependencies of the component library. When your code imports them directly, declare them in your own `package.json`; pnpm does not allow importing undeclared packages.
+
+</Framework>
+
+<Framework only="vue">
+
+```bash
+pnpm add @fibrae/semi-ui-vue @fibrae/semi-icons-vue
+```
+
+The icon package `@fibrae/semi-icons-vue` is a dependency of the component library; when your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages. The illustration package `@fibrae/semi-illustrations-vue` is not installed with the library; install it when you need it.
+
+</Framework>
+
+<Framework only="solid">
+
+```bash
+pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
+```
+
+The icon package `@fibrae/semi-icons-solid` is a dependency of the component library; when your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages. The illustration package `@fibrae/semi-illustrations-solid` is not installed with the library; install it when you need it.
+
+</Framework>
+
+With npm or yarn, use the equivalent commands.
+
+To support Safari below 17.4, also install `@fibrae/semi-polyfill` and import it on the first line of the app entry, before any Semi component. It only adds `AbortSignal.any` and `Element.prototype.checkVisibility`, and does nothing where the browser has them natively; to add just one of them, import `@fibrae/semi-polyfill/abort-signal-any` or `@fibrae/semi-polyfill/check-visibility`.
+
+```js
+import '@fibrae/semi-polyfill';
+```
+
+## Import the tokens
+
+The components import the theme tokens (the `--semi-*` CSS variables) and the base rules themselves, so pages render correctly without this step. When the first component is lazy loaded, though, the tokens only apply once that component's chunk has loaded. Import the tokens entry first in your app's entry file and the tokens load with the entry's CSS, so your own styles can use the `--semi-*` variables from the first paint.
+
+<Framework only="react">
+
+```ts
+// main.tsx, before any other import
+import '@fibrae/semi-ui-react/tokens';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+// main.ts, before any other import
+import '@fibrae/semi-ui-vue/tokens';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+// index.tsx, before any other import
+import '@fibrae/semi-ui-solid/tokens';
+```
+
+</Framework>
+
+The tokens entry is a JS module that imports the same tokens the components use, so the build output holds one copy, and build plugin options such as `prefixCls` apply to it as well. With `omitCss` it is removed along with the component styles, and the full stylesheet provides the tokens.
+
+## Use components
+
+<Framework only="react">
+
+```jsx
+import { Button, Toast } from '@fibrae/semi-ui-react';
+
+export function App() {
+    return <Button onClick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>;
+}
+```
+
+A single component can also be imported by its directory path, written down to `/index`, such as `import Button from '@fibrae/semi-ui-react/button/index'`.
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Button, Toast } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <Button @click="Toast.warning({ content: 'welcome' })">Hello Semi</Button>
+</template>
+```
+
+A single component can also be imported by its directory path, written down to `/index`, such as `import Button from '@fibrae/semi-ui-vue/button/index'`.
+
+</Framework>
+
+<Framework only="solid">
+
+```tsx
+import { Button, Toast } from '@fibrae/semi-ui-solid';
+
+export function App() {
+    return <Button onClick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>;
+}
+```
+
+A single component can also be imported by its directory path, written down to `/index`, such as `import Button from '@fibrae/semi-ui-solid/button/index'`.
+
+</Framework>
+
+Styles and tokens load on demand with the components, and only the components you use are bundled. Semi ships `box-sizing: border-box` and the scrollbar base styles itself, so a reset stylesheet such as reset.css is not needed; an extra reset changes component sizes.
+
+## Build plugins
+
+webpack and rspack need no build plugin when you keep the default `semi` prefix, layered styles and per-component style imports. The components import precompiled CSS with the `semi` class prefix, wrapped in `@layer semi`: you need a rule for `.css` imports, such as `css-loader` with `style-loader` (or the `mini-css-extract-plugin` loader) in webpack, or `type: 'css'` in rspack. The Vite dev server works without the plugin, but `vite build` needs `@fibrae/semi-vite-plugin`, for the reason given below. For hosts that render on the server, see [Server-side rendering](#server-side-rendering).
+
+For the options below, use the plugin for your build tool: `@fibrae/semi-vite-plugin` for Vite, `@fibrae/semi-webpack-plugin` for webpack 5, and `@fibrae/semi-rspack-plugin` for rspack 2. The plugins apply to the component library, the icon packages and the AI packages.
+
+| Option      | Default  | Description                                                                                                                            |
+| ----------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `prefixCls` | `'semi'` | Class prefix, rewritten both in the component JS and in the compiled styles                                                            |
+| `cssLayer`  | `true`   | Whether the styles are wrapped in `@layer semi`; `false` outputs unlayered styles                                                      |
+| `omitCss`   | `false`  | Drops the style imports inside the Semi packages so the app loads the full stylesheet instead, see [Full stylesheet](#full-stylesheet) |
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+export default defineConfig({
+    plugins: [semi({ prefixCls: 'my' })],
+});
+```
+
+```js
+// webpack.config.mjs
+import SemiWebpackPlugin from '@fibrae/semi-webpack-plugin';
+
+export default {
+    plugins: [new SemiWebpackPlugin({ prefixCls: 'my' })],
+};
+```
+
+```js
+// rspack.config.mjs; the project needs a rule that treats .scss as CSS
+import { SemiRspackPlugin } from '@fibrae/semi-rspack-plugin';
+
+export default {
+    module: { rules: [{ test: /\.s?css$/, type: 'css' }] },
+    plugins: [new SemiRspackPlugin({ prefixCls: 'my' })],
+};
+```
+
+The webpack plugin also takes `extractCssOptions` (for example to use the `mini-css-extract-plugin` loader) and `overrideStylesheetLoaders` (to append your own loaders to the default chain). If class names are still `semi-*` in `vite dev`, the prebundle cache comes from the previous configuration; rebuild it with `vite --force`.
+
+<Framework only="solid">
+
+Solid projects differ as follows:
+
+- Vite: the dev server needs `@fibrae/semi-vite-plugin` too, as `plugins: [solid(), semi()]`. vite-plugin-solid keeps the Solid packages out of the pre-bundle, so foundation's CommonJS dependencies (such as `style-to-js`) reach the browser unconverted and the page stays blank; the plugin adds them to the pre-bundle.
+- webpack 5 and rspack 2: Semi's webpack and rspack plugins do not process the Solid packages, so the plugin options (`prefixCls`, `cssLayer: false` and `omitCss`) have no effect on them; only the default prefix and layered styles are supported, and neither plugin is used. Compile the app's JSX with `babel-loader` and `babel-preset-solid` (needs `@babel/core` 7); the bundler does not recognise the `solid` export condition and takes the `default` condition, `dist/*.js`, which is already compiled for the DOM. Components import their own styles: webpack needs `css-loader` and `style-loader`, rspack needs `type: 'css'`.
+
+</Framework>
+
+The published `.scss` files use `semi:` URLs that plain Sass cannot resolve; compile them through a build plugin or `@fibrae/semi-scss-compile`.
+
+## Full stylesheet
+
+To load every component's styles at once, import the full stylesheet and turn on the build plugin's `omitCss`; otherwise the components' own style imports are bundled again and each component's styles appear twice. The full stylesheet includes the tokens and the icon styles, uses the `semi` class prefix, and is wrapped in `@layer semi`.
+
+<Framework only="react">
+
+```ts
+import '@fibrae/semi-ui-react/styles.css';
+// with the AI components, import theirs after it
+import '@fibrae/semi-ai-react/styles.css';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import '@fibrae/semi-ui-vue/styles.css';
+// with the AI components, import theirs after it
+import '@fibrae/semi-ai-vue/styles.css';
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import '@fibrae/semi-ui-solid/styles.css';
+// with the AI components, import theirs after it
+import '@fibrae/semi-ai-solid/styles.css';
+```
+
+</Framework>
+
+With `omitCss` the plugins no longer compile styles, so `cssLayer` has no effect, and the webpack and rspack plugins throw when both are passed. For a full stylesheet with a custom prefix or without layers, generate one with `@fibrae/semi-scss-compile`: `--prefix` matches the plugin's `prefixCls`, and `--no-layer` outputs unlayered styles. `-f` and `-i` are optional and default to the foundation and icons-core that `@fibrae/semi-scss-compile` itself depends on, so its version must match the component library; when it does not, point `-f` and `-i` to the `dist` of the `@fibrae/semi-foundation` and `@fibrae/semi-icons-core` installed in your app, which pnpm requires as direct dependencies. `--ai` always needs a path, to the `dist` of `@fibrae/semi-ai-foundation`; with pnpm add it as a direct dependency at the same version as the component library.
+
+```bash
+pnpm add -D @fibrae/semi-scss-compile
+pnpm exec semi-build-scss -o src/semi.css --min --prefix my
+# with the AI components, generate a second file and import it after the first (also install @fibrae/semi-ai-foundation)
+pnpm add -D @fibrae/semi-ai-foundation
+pnpm exec semi-build-scss --ai node_modules/@fibrae/semi-ai-foundation/dist -o src/semi-ai.css --min --prefix my
+```
+
+## Customize styles
+
+Customizing styles needs no build plugin: override the `--semi-*` CSS variables in your own stylesheet to change the global colors, radii, font sizes, spacing and so on (see [Design Tokens](/en-US/react/basic/tokens) for the list, and [Dark Mode](/en-US/react/advanced/dark-mode) for dark values). Semi's styles sit in `@layer semi`, so your unlayered CSS rules always win and can override a component's own styles without `!important`.
+
+```css
+:root {
+    --semi-color-primary: var(--semi-violet-5);
+}
+
+.my-toolbar .semi-button {
+    border-radius: 0;
+}
+```
+
+When using Tailwind, see [Tailwind](/en-US/react/ecosystem/tailwind) for the layer order and for using Semi tokens in utility classes.
+
+## Icons and illustrations
+
+<Framework only="react">
+
+```jsx
+import { IconHome } from '@fibrae/semi-icons-react';
+
+export function HomeIcon() {
+    return <IconHome aria-label="Home" />;
+}
+```
+
+Illustrations are imported from `@fibrae/semi-illustrations-react`, such as `IllustrationNoContent`.
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { IconHome } from '@fibrae/semi-icons-vue';
+</script>
+
+<template>
+    <IconHome aria-label="Home" />
+</template>
+```
+
+For a custom SVG, use the default slot of Icon. Illustrations are imported from `@fibrae/semi-illustrations-vue`, such as `IllustrationNoContent`.
+
+</Framework>
+
+<Framework only="solid">
+
+```tsx
+import { IconHome } from '@fibrae/semi-icons-solid';
+
+export function HomeIcon() {
+    return <IconHome aria-label="Home" />;
+}
+```
+
+Illustrations are imported from `@fibrae/semi-illustrations-solid`, such as `IllustrationNoContent`.
+
+</Framework>
+
+Icon styles load with the icon components. See [Icon](/en-US/react/basic/icon) for the icon list and usage.
+
+## AI components
+
+The AI components (AIChatInput, AIChatDialogue, Chat, Sidebar and others) live in a separate AI package built on the component library, and their styles load with the components. When loading full stylesheets, import the AI package's after the component library's. See [AI components](/en-US/react/ai/ai-component) for an overview.
+
+<Framework only="react">
+
+```bash
+pnpm add @fibrae/semi-ai-react
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```bash
+pnpm add @fibrae/semi-ai-vue
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```bash
+pnpm add @fibrae/semi-ai-solid
+```
+
+</Framework>
+
+## Server-side rendering
+
+For server-side rendering and hydration, configure the host as the table below shows; most hosts also need the Semi build plugin. By default styles load per component: the component JS imports its own styles and you do not import `styles.css`. The full stylesheet is an optional route: turn on the build plugin's `omitCss` and import `styles.css` once, see [Full stylesheet](#full-stylesheet). Do not mix the two routes; mixed, the CSS roughly doubles.
+
+<Framework only="react">
+
+| Host                                                              | Install                                                | Host configuration                             | Styles                                                        |
+| ----------------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------------- |
+| Next.js 16 App Router, `--webpack`                                | `@fibrae/semi-ui-react`                                | none                                           | none                                                          |
+| Next.js 16 default Turbopack, Pages Router, or both Routers mixed | also `-D @fibrae/semi-next`                            | `export default semiNext()({ ... })`           | none                                                          |
+| Next.js with a custom prefix                                      | also `-D @fibrae/semi-next @fibrae/semi-scss-compile`  | `semiNext({ prefixCls: 'my', omitCss: true })` | import the stylesheet from `semi-build-scss --prefix my` once |
+| React Router 8 framework mode (including `serverBundles`)         | `@fibrae/semi-ui-react`, `-D @fibrae/semi-vite-plugin` | `plugins: [semi(), reactRouter()]`             | none                                                          |
+
+```js
+// next.config.mjs, Turbopack and Pages Router
+import semiNext from '@fibrae/semi-next';
+
+export default semiNext()({
+    // your Next.js configuration
+});
+```
+
+```ts
+// vite.config.ts, React Router
+import { reactRouter } from '@react-router/dev/vite';
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+export default defineConfig({
+    plugins: [semi(), reactRouter()],
+});
+```
+
+With a custom prefix in Next.js, `prefixCls` must come with `omitCss: true`. Generate the stylesheet with `semi-build-scss` and import it once in the root layout (`pages/_app` for the Pages Router):
+
+```js
+// next.config.mjs
+import semiNext from '@fibrae/semi-next';
+
+export default semiNext({ prefixCls: 'my', omitCss: true })({});
+```
+
+```bash
+pnpm add -D @fibrae/semi-next @fibrae/semi-scss-compile
+pnpm exec semi-build-scss --prefix my -o app/semi-my.css --min
+```
+
+```jsx
+// app/layout.jsx
+import './semi-my.css';
+```
+
+React Router's RSC mode takes the same plugin: `plugins: [semi(), reactRouterRSC(), rsc()]` (`reactRouterRSC` is `unstable_reactRouterRSC` from `@react-router/dev/vite`, `rsc` comes from `@vitejs/plugin-rsc`). In Server Components, Next.js App Router and React Router's RSC mode can import the flat components and a few sub-component named exports directly (such as `TypographyTitle`; the dot syntax `Typography.Title` is `undefined` in a Server Component). `semiGlobal`, Form's HOC and hooks, and the locale passed to `ConfigProvider` can only be used or imported in `'use client'` files.
+
+</Framework>
+
+<Framework only="vue">
+
+| Host   | Install                                       | Host configuration                                                 | Styles |
+| ------ | --------------------------------------------- | ------------------------------------------------------------------ | ------ |
+| Nuxt 4 | `@fibrae/semi-ui-vue`, `-D @fibrae/semi-nuxt` | `modules: ['@fibrae/semi-nuxt']`, options go under `semi: { ... }` | none   |
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+    modules: ['@fibrae/semi-nuxt'],
+});
+```
+
+The module does not auto-import components; import them from `@fibrae/semi-ui-vue` as usual.
+
+When the app has not set `features.inlineStyles`, `@fibrae/semi-nuxt` sets it to `false`, so production SSR pages load styles through `<link>` only. The reason: Nuxt inlines all the CSS in a page's chunk into that page's HTML while the same CSS still loads through `<link>`; when a few common components are imported by a single page, that page's HTML grows from about 5KB to about 210KB. The cost is that your own SFC `<style>` blocks are no longer inlined either. To keep Nuxt's inlining, set it explicitly in `nuxt.config.ts`; the module does not override it:
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+    modules: ['@fibrae/semi-nuxt'],
+    features: { inlineStyles: true },
+});
+```
+
+</Framework>
+
+<Framework only="solid">
+
+| Host         | Install                                                | Host configuration                                          | Styles                                                      |
+| ------------ | ------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| SolidStart 2 | `@fibrae/semi-ui-solid`, `-D @fibrae/semi-vite-plugin` | `plugins: [solidStart(), nitro(), semi({ omitCss: true })]` | import `@fibrae/semi-ui-solid/styles.css` once in `app.tsx` |
+
+```ts
+// vite.config.ts
+import { solidStart } from '@solidjs/start/config';
+import { nitro } from 'nitro/vite';
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+export default defineConfig({
+    plugins: [solidStart(), nitro(), semi({ omitCss: true })],
+});
+```
+
+```tsx
+// src/app.tsx
+import '@fibrae/semi-ui-solid/styles.css';
+```
+
+SolidStart uses the full stylesheet because by default its dev server does not collect the CSS that components inside `node_modules` import: the per-component route works in production, but the first paint in dev has no styles. Passing `css: { filter: { exclude: [/^(?!.*\/node_modules\/@fibrae\/semi-).*\/node_modules\//] } }` to `solidStart()` makes dev collect the component CSS of the Semi packages too, at the cost of one more host option and a dev first paint whose styles are slightly larger than the full stylesheet (about 20% more), split into dozens of `<style>` elements.
+
+</Framework>
+
+Common conventions:
+
+- Import locales from the `locale/source/` subpath of the UI package (such as `locale/source/en_US`); you do not need to install `@fibrae/semi-foundation` directly.
+- Set `semiGlobal` only at app startup; use `ConfigProvider` for configuration that changes per request.
+- Overlays that are open by default appear after hydration.
+- CodeHighlight bundles no languages: install `shiki` directly in your app (pnpm does not allow importing undeclared packages) and pass languages from `shiki/langs/*` through `CodeHighlight.register` or `languages`, see [CodeHighlight](/en-US/react/plus/code-highlight).
+
+<Framework only="vue">
+
+## Multiple Vue apps on one page
+
+Ids inside the components come from Vue's `useId`, which counts per app. When one page mounts several apps (micro frontends, Astro islands and so on), give each app its own `app.config.idPrefix`; otherwise the apps produce the same ids and references such as `aria-labelledby` point into another app.
+
+```ts
+const app = createApp(App);
+app.config.idPrefix = 'checkout';
+app.mount('#checkout');
+```
+
+</Framework>

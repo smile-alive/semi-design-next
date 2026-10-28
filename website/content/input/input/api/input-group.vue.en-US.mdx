@@ -1,0 +1,29 @@
+**Props**
+
+| Property      | Description                                                                                                                                                                 | Type              | Default                                            |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------- |
+| size          | Input size: large, default or small; passed to every child.                                                                                                                 | `Size`            | `semiDefault("InputGroup", "size", "default")`     |
+| disabled      | Whether the group is disabled, passed to the children; a disabled the child sets itself takes precedence.                                                                   | `boolean`         | `semiGlobalDefault("InputGroup", "disabled")`      |
+| label         | Label configuration of the group (Form.Label props, plus id, class and style); text and extra accept only strings or numbers, use the label and labelExtra slots for nodes. | `InputGroupLabel` | `semiGlobalDefault("InputGroup", "label")`         |
+| labelPosition | Label position: top or left.                                                                                                                                                | `string`          | `semiGlobalDefault("InputGroup", "labelPosition")` |
+
+**Events**
+
+| Event | Description                                                                                                                                 | Callback parameters   |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| focus | Emitted when an element in the group gains focus (focusin), including when focus moves between children; it is not passed to the children.  | `[event: FocusEvent]` |
+| blur  | Emitted when an element in the group loses focus (focusout), including when focus moves between children; it is not passed to the children. | `[event: FocusEvent]` |
+
+**Slots**
+
+| Slot       | Description                                                                                                               | Scope parameters |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| default    | The input components in the group, such as Input, InputNumber, Select, AutoComplete, TreeSelect, Cascader and DatePicker. | `any`            |
+| label      | Node content of the label.                                                                                                | `any`            |
+| labelExtra | Extra content of the label.                                                                                               | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

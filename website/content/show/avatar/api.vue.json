@@ -1,0 +1,90 @@
+{
+    "avatar": {
+        "source": "packages/semi-ui-vue/src/avatar/avatar.vue",
+        "props": {
+            "alt": { "zh-CN": "头像图片或文字的替代文本。", "en-US": "Alternative text for the avatar image or text." },
+            "border": {
+                "zh-CN": "显示额外边框，可配置颜色和动画。",
+                "en-US": "Additional border, with optional color and animation."
+            },
+            "bottomSlot": {
+                "zh-CN": "底部标记的形状、背景色、文字颜色、类名和样式；内容使用 bottomSlotText 插槽。",
+                "en-US": "Shape, background color, text color, class and style of the bottom badge; use the bottomSlotText slot for its content."
+            },
+            "color": { "zh-CN": "头像的预设背景颜色。", "en-US": "Preset background color of the avatar." },
+            "contentMotion": {
+                "zh-CN": "启用头像内容区域的动画。",
+                "en-US": "Enables animation in the avatar content area."
+            },
+            "gap": {
+                "zh-CN": "字符内容与头像左右两侧的间距，单位为像素。",
+                "en-US": "Space in pixels between the text and either side of the avatar."
+            },
+            "imgAttr": {
+                "zh-CN": "传给内部 img 元素的原生属性。",
+                "en-US": "Native attributes applied to the inner img element."
+            },
+            "shape": { "zh-CN": "头像形状，可选 circle 或 square。", "en-US": "Avatar shape: circle or square." },
+            "size": {
+                "zh-CN": "头像尺寸，支持预设名称或合法 CSS 尺寸。",
+                "en-US": "Avatar size, as a preset name or a valid CSS size."
+            },
+            "src": { "zh-CN": "图片头像的资源地址。", "en-US": "Image source URL." },
+            "srcSet": { "zh-CN": "图片头像的响应式资源集合。", "en-US": "Responsive image sources." },
+            "topSlot": {
+                "zh-CN": "顶部标记的渐变色、文字颜色、类名和样式；内容使用 topSlotText 插槽。",
+                "en-US": "Gradient, text color, class and style of the top badge; use the topSlotText slot for its content."
+            },
+            "onError": {
+                "zh-CN": "图片加载失败时调用，返回 false 阻止默认回退；保留为函数 prop 以读取返回值。",
+                "en-US": "Called when the image fails to load. Return false to prevent the default fallback; this remains a function prop so its result can be read."
+            }
+        },
+        "events": {
+            "mouseEnter": { "zh-CN": "指针进入头像时触发。", "en-US": "Emitted when the pointer enters the avatar." },
+            "mouseLeave": { "zh-CN": "指针离开头像时触发。", "en-US": "Emitted when the pointer leaves the avatar." }
+        },
+        "slots": {
+            "default": { "zh-CN": "头像的文字或自定义内容。", "en-US": "Avatar text or custom content." },
+            "hoverMask": {
+                "zh-CN": "悬停时显示的覆盖层，自行设置样式。",
+                "en-US": "Overlay shown on hover, with styles supplied by the caller."
+            },
+            "topSlot": { "zh-CN": "完全自定义顶部标记。", "en-US": "Replaces the entire top badge." },
+            "bottomSlot": { "zh-CN": "完全自定义底部标记。", "en-US": "Replaces the entire bottom badge." },
+            "topSlotText": {
+                "zh-CN": "预设顶部标记中的文字或节点。",
+                "en-US": "Text or nodes inside the preset top badge."
+            },
+            "bottomSlotText": {
+                "zh-CN": "预设底部标记中的文字或节点。",
+                "en-US": "Text or nodes inside the preset bottom badge."
+            }
+        },
+        "exposed": {}
+    },
+    "avatar-group": {
+        "source": "packages/semi-ui-vue/src/avatar/avatar-group.vue",
+        "props": {
+            "maxCount": {
+                "zh-CN": "显示的最大头像数，超出后显示 +N。",
+                "en-US": "Maximum number of visible avatars; overflow is shown as +N."
+            },
+            "overlapFrom": {
+                "zh-CN": "头像重叠方向，可选 start 或 end。",
+                "en-US": "Avatar overlap direction: start or end."
+            },
+            "shape": { "zh-CN": "组内头像的形状。", "en-US": "Shape of the avatars in the group." },
+            "size": { "zh-CN": "组内头像的尺寸。", "en-US": "Size of the avatars in the group." }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "组内的 Avatar。", "en-US": "Avatar components in the group." },
+            "more": {
+                "zh-CN": "自定义溢出标签，接收剩余数量 restNumber 与头像 VNode 数组 restAvatars。",
+                "en-US": "Custom overflow label, receiving the remaining count restNumber and the avatar VNode array restAvatars."
+            }
+        },
+        "exposed": {}
+    }
+}

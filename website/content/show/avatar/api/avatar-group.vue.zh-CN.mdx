@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                              | 类型                     | 默认值                                               |
+| ----------- | --------------------------------- | ------------------------ | ---------------------------------------------------- |
+| shape       | 组内头像的形状。                  | `AvatarShape`            | `semiDefault("AvatarGroup", "shape", "circle")`      |
+| size        | 组内头像的尺寸。                  | `string`                 | `semiDefault("AvatarGroup", "size", "medium")`       |
+| overlapFrom | 头像重叠方向，可选 start 或 end。 | `AvatarGroupOverlapFrom` | `semiDefault("AvatarGroup", "overlapFrom", "start")` |
+| maxCount    | 显示的最大头像数，超出后显示 +N。 | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")`       |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽    | 说明                                                                    | 作用域参数                                                                                                                                    |
+| ------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| default | 组内的 Avatar。                                                         | `any`                                                                                                                                         |
+| more    | 自定义溢出标签，接收剩余数量 restNumber 与头像 VNode 数组 restAvatars。 | <ApiType detail={"{ restNumber: number; restAvatars: VNode\u003cRendererNode, RendererElement, { [key: string]: any; }>[]; }"}>Type</ApiType> |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

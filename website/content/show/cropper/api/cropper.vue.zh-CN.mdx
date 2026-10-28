@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| src | 被裁切图片的地址。 | `string` | `semiGlobalDefault("Cropper", "src")` |
+| imgProps | 传给被裁切图片 img 标签的属性。src 与布局样式由组件决定，class、style 与组件自身的合并，onLoad 在组件处理完成后调用；alt 默认为空字符串，crossorigin 默认为 anonymous，均可覆盖。 | `ImgHTMLAttributes` | `semiGlobalDefault("Cropper", "imgProps")` |
+| shape | 裁切框形状。 | `CropperShape` | `semiDefault("Cropper", "shape", "rect")` |
+| aspectRatio | 固定的裁切框宽高比；加载后改变时，裁切框按新比例重排。 | `number` | `semiGlobalDefault("Cropper", "aspectRatio")` |
+| defaultAspectRatio | 裁切框的初始宽高比，拖动时会随之变化。 | `number` | `semiDefault("Cropper", "defaultAspectRatio", 1)` |
+| zoom | 受控的缩放比例，叠加在图片适应裁切区域的初始缩放之上。 | `number` | `semiGlobalDefault("Cropper", "zoom")` |
+| rotate | 图片旋转角度，单向绑定，组件不会改变它。 | `number` | `semiGlobalDefault("Cropper", "rotate")` |
+| showResizeBox | 是否展示裁切框边角的调整块。 | `boolean` | `semiDefault("Cropper", "showResizeBox", true)` |
+| cropperBoxStyle | 裁切框样式。 | `StyleValue` | `semiGlobalDefault("Cropper", "cropperBoxStyle")` |
+| cropperBoxCls | 裁切框类名。 | `string` | `semiGlobalDefault("Cropper", "cropperBoxCls")` |
+| fill | 裁切结果中非图片部分的填充色。 | `string` | `semiDefault("Cropper", "fill", "rgba(0, 0, 0, 0)")` |
+| maxZoom | 最大缩放倍数。 | `number` | `semiDefault("Cropper", "maxZoom", 3)` |
+| minZoom | 最小缩放倍数。 | `number` | `semiDefault("Cropper", "minZoom", 0.1)` |
+| zoomStep | 滚轮缩放的步长。 | `number` | `semiDefault("Cropper", "zoomStep", 0.1)` |
+| preview | 返回预览容器 DOM 的函数，裁切效果会实时镜像到该容器；可返回 null，表示容器尚未挂载。 | <ApiType detail={"(() => HTMLElement \u007c null \u007c undefined)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件        | 说明                                      | 回调参数         |
+| ----------- | ----------------------------------------- | ---------------- |
+| update:zoom | 滚轮缩放时触发，用于 v-model:zoom。       | `[zoom: number]` |
+| zoomChange  | 滚轮缩放时触发，载荷与 update:zoom 相同。 | `[zoom: number]` |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称             | 说明                                                                                   | 类型                                                       |
+| ---------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| getCropperCanvas | 按图片原始分辨率，把裁切框内的区域绘制到新的 canvas 并返回；图片加载前调用会抛出错误。 | <ApiType detail={"() => HTMLCanvasElement"}>Type</ApiType> |

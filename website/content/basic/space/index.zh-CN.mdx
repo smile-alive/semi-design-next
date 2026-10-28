@@ -1,0 +1,98 @@
+---
+title: 间距
+order: 27
+icon: doc-space
+brief: 设置组件之间的间距。
+---
+
+import SpaceReactApi from './api/space.react.zh-CN.mdx';
+import SpaceVueApi from './api/space.vue.zh-CN.mdx';
+import SpaceSolidApi from './api/space.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Space } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Space } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Space } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 对齐方式
+
+可使用 `align` 设置对齐方式，可选值：`start`、`center`（默认）、`end`、`baseline`。
+
+<Demo id="align" />
+
+### 间距尺寸
+
+可使用 `spacing` 设置间距大小，内置可选值：`tight`（8px，默认）、`medium`（16px）、`loose`（24px），并且支持传入 number 来自定义间距大小，也支持传入 array 来同时设置水平和垂直方向的间距。
+
+<Demo id="spacing" />
+
+### 间距方向
+
+可使用 `vertical` 设置间距是否为垂直方向，默认情况下为 false。
+
+<Demo id="vertical" />
+
+### 设置换行
+
+当间距为水平方向时，可使用 `wrap` 设置是否自动换行，默认情况下为 false。
+
+<Demo id="wrap" />
+
+## API参考
+
+<Framework only="vue">
+
+Space 直接渲染默认插槽，不包裹子节点；`class`、`style` 及其余未声明的属性透传到根元素。数字 `spacing` 按像素输出，`style` 中的 `columnGap`、`rowGap` 优先于数字 `spacing`。
+
+<SpaceVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<SpaceSolidApi />
+
+Space 直接渲染子节点，不包裹额外元素；`class`、`style`、`ref` 及其余原生属性和事件都落在根 `div` 上。数字 `spacing` 按像素输出，`style` 中的 `column-gap`、`row-gap` 优先于数字 `spacing`。
+
+</Framework>
+
+<Framework only="react">
+
+<SpaceReactApi />
+
+其他原生属性（如 `id`、`aria-*`、`data-*`、`onClick`）落在根 `div` 上。
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

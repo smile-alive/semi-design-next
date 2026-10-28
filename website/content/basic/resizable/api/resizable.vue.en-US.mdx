@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| size | Controlled size, applied per axis: an axis left unset follows the drag. Used with v-model:size. | `Size` | `semiGlobalDefault("Resizable", "size")` |
+| defaultSize | Initial width and height, as a number or a string (px/vw/vh/%). | `Size` | `semiGlobalDefault("Resizable", "defaultSize")` |
+| enable | Directions that can be resized. A direction not set to false is enabled; false renders no handles. | `false \| Enable` | <ApiType detail={"semiDefault(\"Resizable\", \"enable\", {\n top: true,\n right: true,\n bottom: true,\n left: true,\n topRight: true,\n bottomRight: true,\n bottomLeft: true,\n topLeft: true,\n})"}>Type</ApiType> |
+| grid | Increment that resizing snaps to. | `[number, number]` | `semiDefault("Resizable", "grid", [1, 1])` |
+| snap | Absolute pixel values that resizing snaps to. Both x and y are optional. | `{ x?: number[] \| undefined; y?: number[] \| undefined; }` | `semiGlobalDefault("Resizable", "snap")` |
+| snapGap | Minimum gap required to move to the next snap target. | `number` | `semiDefault("Resizable", "snapGap", 0)` |
+| boundElement | Element that bounds the size: 'parent', 'window' or an HTMLElement. | `HTMLElement \| "parent" \| "window"` | `semiGlobalDefault("Resizable", "boundElement")` |
+| boundsByDirection | Whether bounds are computed by drag direction. When true, dragging from a left or top handle limits the size by the distance from the side that stays put to the opposite edge of the bound element. | `boolean` | `semiGlobalDefault("Resizable", "boundsByDirection")` |
+| minWidth | Minimum width. | `string \| number` | `semiGlobalDefault("Resizable", "minWidth")` |
+| minHeight | Minimum height. | `string \| number` | `semiGlobalDefault("Resizable", "minHeight")` |
+| maxWidth | Maximum width. | `string \| number` | `semiGlobalDefault("Resizable", "maxWidth")` |
+| maxHeight | Maximum height. | `string \| number` | `semiGlobalDefault("Resizable", "maxHeight")` |
+| lockAspectRatio | Locks the aspect ratio: true keeps the initial one, a number is the width to height ratio. | `number \| boolean` | `semiDefault("Resizable", "lockAspectRatio", false)` |
+| lockAspectRatioExtraWidth | Extra width in pixels (such as padding) left out of the ratio when the aspect ratio is locked. | `number` | `semiDefault("Resizable", "lockAspectRatioExtraWidth", 0)` |
+| lockAspectRatioExtraHeight | Extra height in pixels (such as padding) left out of the ratio when the aspect ratio is locked. | `number` | `semiDefault("Resizable", "lockAspectRatioExtraHeight", 0)` |
+| scale | Scale applied to the element from outside, used to correct the pointer movement. | `number` | `semiDefault("Resizable", "scale", 1)` |
+| ratio | Ratio of pointer movement to size change; pass [width, height] for per-axis ratios. Arrow keys always change the size by 10px, regardless of ratio and scale. | `number \| [number, number]` | `semiDefault("Resizable", "ratio", 1)` |
+| handleStyle | Styles of the handle in each direction. | <ApiType detail={"Partial\u003cRecord\u003cDirection, StyleValue>>"}>Type</ApiType> | `semiGlobalDefault("Resizable", "handleStyle")` |
+| handleClass | Class names of the handle in each direction. | `HandleClassName` | `semiGlobalDefault("Resizable", "handleClass")` |
+| handleWrapperStyle | Style of the element that wraps all handles. | `StyleValue` | `semiGlobalDefault("Resizable", "handleWrapperStyle")` |
+| handleWrapperClass | Class name of the element that wraps all handles. | `string` | `semiGlobalDefault("Resizable", "handleWrapperClass")` |
+| onResizeStart | Called when resizing starts. Return false to cancel; it remains a function prop so its result can be read, bound with @resizeStart as usual. | `ResizeStartCallback` | `undefined` |
+
+**Events**
+
+| Event       | Description                                                                                        | Callback parameters                                                                                             |
+| ----------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| update:size | Emitted when a drag or arrow key changes the size, for v-model:size to write back.                 | `[size: Size]`                                                                                                  |
+| change      | Emitted when a drag or arrow key changes the size, with the new size, the event and the direction. | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+| resizeEnd   | Emitted when resizing ends, with the final size, the event and the direction.                      | <ApiType detail={"[size: Size, event: KeyboardEvent \u007c PointerEvent, direction: Direction]"}>Type</ApiType> |
+
+**Slots**
+
+| Slot    | Description                                                                                                                              | Scope parameters           |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| default | Content of the resizable box.                                                                                                            | `any`                      |
+| handle  | Content of the handle in each enabled direction. It is called once per enabled direction, with direction set to that handle's direction. | `ResizableHandleSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

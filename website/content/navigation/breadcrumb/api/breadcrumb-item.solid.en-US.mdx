@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                                                                          | Type                                                                                                   | Default |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------- |
+| href      | Destination of the link, mounted on an a element. The current item does not render as a link.                                                                                        | `string`                                                                                               | -       |
+| icon      | Icon of the item. A Semi icon without size takes small or default from the compact of Breadcrumb.                                                                                    | `JSX.Element`                                                                                          | -       |
+| noLink    | Removes the hover and active styles, and the item stops being operable with the keyboard.                                                                                            | `boolean`                                                                                              | -       |
+| onClick   | Click event, with the same parameters as onClick of Breadcrumb: the route of the item with routes, or `{ name, href }` with children. The second parameter is the native MouseEvent. | <ApiType detail={"(item: BreadcrumbItemInfo \u007c RouteProps, e: MouseEvent) => void"}>Type</ApiType> | -       |
+| separator | Separator after this item, overriding the separator of Breadcrumb. It is text or a JSX element.                                                                                      | `JSX.Element`                                                                                          | -       |

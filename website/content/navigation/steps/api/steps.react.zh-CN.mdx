@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                                                        | 类型                                                              | 默认值      |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------- |
+| aria-label | 步骤条的可访问名称，传入后根元素带 `role="group"`。                                                                         | `string`                                                          | -           |
+| children   | 步骤，通常为 `Steps.Step`。每个 React 元素占一个步骤位置，文本与空值不计入；原生元素原样渲染，不接收步骤属性。              | `React.ReactNode`                                                 | -           |
+| className  | 根元素的类名。                                                                                                              | `string`                                                          | -           |
+| current    | 当前步骤，从 0 开始计数，未设置时为 `0`。子 Step 可用 `status` 覆盖自己的状态。                                             | `number`                                                          | -           |
+| direction  | 步骤条方向，可选 `horizontal` 或 `vertical`，未设置时为 `horizontal`。用于 `fill` 与 `basic` 类型，`nav` 类型忽略。         | `Direction`                                                       | -           |
+| hasLine    | 是否显示步骤间的连接线，未设置时为 `true`。仅用于 `basic` 类型。                                                            | `boolean`                                                         | -           |
+| initial    | 起始序号，从 0 开始计数，未设置时为 `0`。步骤的序号等于 `initial` 加其在子元素中的索引。                                    | `number`                                                          | -           |
+| onChange   | 选择步骤时调用，参数为该步骤的序号（`initial` 加索引）；点击当前步骤不调用。传入后所有步骤变为可点击。                      | <ApiType detail={"(current: number) => void"}>Type</ApiType>      | -           |
+| prefixCls  | 类名前缀，内部用于生成样式类名。                                                                                            | `string`                                                          | -           |
+| ref        | 根元素（`div`）的引用。                                                                                                     | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -           |
+| size       | 尺寸，可选 `small` 或 `default`，未设置时为 `default`。用于 `basic` 与 `nav` 类型。                                         | `Size`                                                            | `"default"` |
+| status     | 当前步骤的状态，可选 `wait`、`process`、`finish`、`error` 或 `warning`，未设置时为 `process`。用于 `fill` 与 `basic` 类型。 | `Status`                                                          | -           |
+| style      | 根元素的样式。                                                                                                              | `React.CSSProperties`                                             | -           |
+| type       | 步骤条类型，可选 `fill`、`basic` 或 `nav`。                                                                                 | `'fill' \| 'basic' \| 'nav'`                                      | `"fill"`    |

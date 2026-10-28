@@ -1,0 +1,27 @@
+**Props**
+
+| 属性      | 说明                                                    | 类型                 | 默认值      |
+| --------- | ------------------------------------------------------- | -------------------- | ----------- |
+| activeKey | 当前展开的分组 key，配合 v-model:activeKey 使用。       | `string \| string[]` | `undefined` |
+| info      | 参考来源分组列表，每组包含 header、key 与 annotations。 | `AnnotationInfo[]`   | `[]`        |
+
+**Events**
+
+| 事件             | 说明                                                                              | 回调参数                                    |
+| ---------------- | --------------------------------------------------------------------------------- | ------------------------------------------- |
+| update:activeKey | 展开或收起分组时先于 change 触发，供 v-model:activeKey 回写。                     | `[activeKey: string[]]`                     |
+| change           | 展开或收起分组时触发，参数为当前展开的 key。                                      | `[activeKey: string \| string[]]`           |
+| click            | 点击某条参考来源时触发，参数为点击事件和对应条目；根元素的原生 click 不单独上报。 | `[event: MouseEvent, item: AnnotationItem]` |
+
+**Slots**
+
+| 插槽   | 说明                                                                           | 作用域参数                  |
+| ------ | ------------------------------------------------------------------------------ | --------------------------- |
+| header | 分组头部图标之后的内容，作用域参数为 item 与 index；未提供时显示 header 字段。 | `AnnotationHeaderSlotProps` |
+| item   | 替换内置的参考来源条目，作用域参数为 item 与 index（在分组内的位置）。         | `AnnotationItemSlotProps`   |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

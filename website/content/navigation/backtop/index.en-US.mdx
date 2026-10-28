@@ -1,0 +1,114 @@
+---
+order: 55
+title: BackTop
+icon: doc-backtop
+---
+
+import BackTopReactApi from './api/back-top.react.en-US.mdx';
+import BackTopVueApi from './api/back-top.vue.en-US.mdx';
+import BackTopSolidApi from './api/back-top.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { BackTop } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { BackTop } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { BackTop } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+BackTop is a [FloatButton](/en-US/react/basic/float-button) that appears once `target` scrolls past `visibilityHeight` and scrolls it back to the top when clicked. It shows a back-to-top icon by default, and its accessible name comes from the locale by default ('Back to top' in English), which `aria-label` can override.
+
+<Demo id="basic" />
+
+### Customized Style
+
+BackTop sits 50px from the bottom and 100px from the right (the left in RTL) by default, which `style` can override.
+
+<Framework only="react">
+
+Its look is customized with the FloatButton props `icon`, `shape`, `size`, `colorful` and `badge`.
+
+</Framework>
+
+<Framework only="vue">
+
+Its look is customized with the `#icon` slot and the FloatButton props `shape`, `size`, `colorful` and `badge`.
+
+</Framework>
+
+<Framework only="solid">
+
+Its look is customized with the FloatButton props `icon`, `shape`, `size`, `colorful` and `badge`.
+
+</Framework>
+
+<Demo id="custom-style" />
+
+## API Reference
+
+<Framework only="react">
+
+<BackTopReactApi />
+
+Other native props (such as `data-*` and `aria-*`) are spread through `...rest` into FloatButton and land on the `<button>`.
+
+</Framework>
+
+<Framework only="vue">
+
+<BackTopVueApi />
+
+`class`, `style` and native attributes (such as `data-*` and `aria-*`) are passed through attrs and land on the button. `click` is a declared event, so it shadows a native click listener on the root and is throttled by `duration`. When `target` reads a template ref, the ref is already assigned before the parent's mounted hook; a stable `target` function that returns the element only after mount is not rebound, so remount BackTop. The `$el` of the component ref is the `<button>` while visible and a placeholder comment node otherwise.
+
+</Framework>
+
+<Framework only="solid">
+
+<BackTopSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the button, and `onClick` is throttled by `duration`.
+
+`target` is called once after mount, when the ref of a parent container is already readable; a stable `target` function that returns the element only after mount needs BackTop remounted.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- BackTop renders a single native `<button type="button">`, which screen readers announce as a button
+- The accessible name comes from `aria-label`; without it, it comes from the button content when content is passed, and otherwise from the locale's default name ('Back to top' in English)
+- `children` (the default slot in Vue) is static content of the button and becomes part of its name; the button must not contain interactive elements
+
+### Keyboard and focus
+
+- Once visible, the button is reached with Tab and Shift + Tab, and Enter or Space scrolls to the top
+- A focus outline is shown on keyboard focus
+
+## Design Tokens
+
+<DesignToken />

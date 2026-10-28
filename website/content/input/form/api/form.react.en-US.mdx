@@ -1,0 +1,44 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allowEmpty | Whether a field whose value becomes empty keeps its key in values. Setting it to `true` on either the Form or the field takes effect. | `boolean` | `false` |
+| aria-label | Accessible name of the form, set on the form element. | `React.AriaAttributes['aria-label']` | - |
+| autoScrollToError | Whether to scroll to the first invalid field when submit or `formApi.validate()` fails. An object is passed to scroll-into-view-if-needed as its options. | `boolean \| ScrollIntoViewOptions` | `false` |
+| children | The content of the form. A function receives `{ formState, values, formApi }` and declares the fields. | <ApiType detail={"React.ReactNode \u007c ((internalProps: FormFCChild\u003cValues>) => React.ReactNode)"}>Type</ApiType> | - |
+| className | Class name of the form element. | `string` | - |
+| component | A component that declares the fields, rendered with `formState`, `values` and `formApi` as its props. Do not use it together with `render` or `children`. | <ApiType detail={"React.ComponentType\u003cany>"}>Type</ApiType> | - |
+| disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
+| extraTextPosition | Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence. | `'middle' \| 'bottom'` | - |
+| form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"ReturnType\u003ctypeof useForm\u003cValues>>[0]"}>Type</ApiType> | - |
+| getFormApi | Called once the Form has mounted, with the formApi. | <ApiType detail={"(formApi: FormApi\u003cValues>) => void"}>Type</ApiType> | - |
+| id | The id of the form element, also written to `x-form-id`. Generated when omitted. | `string` | - |
+| initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |
+| labelAlign | Text alignment of the label of every field: `left` or `right`. Defaults to `left`. The same property on a field takes precedence. | `'left' \| 'right'` | - |
+| labelCol | Grid layout of the label of every field, with the properties of Col such as span and offset. Set it together with wrapperCol. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+| labelPosition | Label position of every field: `top`, `left` or `inset`. `inset` is supported by some fields only; the others are laid out as `top`. The same property on a field takes precedence. | `'top' \| 'left' \| 'inset'` | `"top"` |
+| labelWidth | Label width of every field. A number is in px. | `number \| string` | - |
+| layout | Direction in which the fields are arranged: `vertical` or `horizontal`. | `'horizontal' \| 'vertical'` | `"vertical"` |
+| onChange | Called when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState. | <ApiType detail={"(formState: FormState\u003cValues>) => void"}>Type</ApiType> | - |
+| onErrorChange | Called when validation state changes, with all errors and the errors that changed. Batch operations such as `validate`, `submit` and `reset` call it once; silent validation does not. | <ApiType detail={"(errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues>, FieldError>>) => void"}>Type</ApiType> | - |
+| onReset | Called when a reset button is clicked or `formApi.reset()` is called. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onSubmit | Called when a submit button is clicked or `formApi.submitForm()` is called and validation passes, with values and the submit event. | <ApiType detail={"(values: Values, e?: React.SubmitEvent\u003cHTMLFormElement>) => void"}>Type</ApiType> | - |
+| onSubmitFail | Called when a submit button is clicked or `formApi.submitForm()` is called and validation fails, with errors, values and the submit event. | <ApiType detail={"(errors: BatchValidateResult\u003cValues>, values: Partial\u003cValues>, e?: React.SubmitEvent\u003cHTMLFormElement>) => void"}>Type</ApiType> | - |
+| onValueChange | Called when a field value changes, with all values and the values that changed. | <ApiType detail={"(values: Values, changedValue: Partial\u003cValues>) => void"}>Type</ApiType> | - |
+| ref | Reference to the handle `{ formApi }`, whose formApi controls the form. | <ApiType detail={"React.Ref\u003cFormHandle\u003cValues>>"}>Type</ApiType> | - |
+| render | A function that declares the fields, called with `{ formState, values, formApi }`. Do not use it together with `component` or `children`. | <ApiType detail={"(internalProps: FormFCChild\u003cValues>) => React.ReactNode"}>Type</ApiType> | - |
+| showValidateIcon | Whether the validation message is preceded by an icon of its status. | `boolean` | `true` |
+| stopPropagation | Whether to stop the submit and reset events from bubbling, as `{ submit, reset }`, so that a nested Form does not trigger the events of the outer one. Events bubble when it is not set. | `{ submit?: boolean; reset?: boolean; }` | - |
+| stopValidateWithError | Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence. | `boolean` | - |
+| style | Inline style of the form element. | `React.CSSProperties` | - |
+| trigger | When every field validates: `change`, `blur`, `mount`, `custom`, or an array of them. The same property on a field takes precedence. | `FieldValidateTriggerType` | - |
+| validator | Form-level validation, called on submit and `formApi.validate()`, and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an error object shaped like the values. | <ApiType detail={"(values: Values) => BatchValidateResult\u003cValues> \u007c Promise\u003cBatchValidateResult\u003cValues>>"}>Type</ApiType> | - |
+| wrapperCol | Grid layout of the control of every field, with the properties of Col such as span and offset. Set it together with labelCol. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+
+**Methods**
+
+| Method  | Description                                                                      | Type                                                    |
+| ------- | -------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| formApi | The formApi of the form, used to read and change its state, validate and submit. | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> |

@@ -1,0 +1,18 @@
+**Props**
+
+| Property  | Description                                                                                                                              | Type                        | Default |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ------- |
+| code      | Whether the text is wrapped in a code element.                                                                                           | `boolean`                   | -       |
+| component | Element to render: a tag name or a component. Defaults to span.                                                                          | `ValidComponent`            | -       |
+| copyable  | Whether the text can be copied; pass an object for the Copyable Config.                                                                  | `CopyableConfig \| boolean` | -       |
+| delete    | Adds a strikethrough.                                                                                                                    | `boolean`                   | -       |
+| disabled  | Disables the text.                                                                                                                       | `boolean`                   | -       |
+| ellipsis  | Truncates overflowing text; pass an object for the Ellipsis Config.                                                                      | `Ellipsis \| boolean`       | -       |
+| icon      | Prefix icon, an element or an icon component; an icon component receives the size the text implies.                                      | `TypographyIcon`            | -       |
+| link      | Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element. | `LinkType`                  | -       |
+| mark      | Adds a highlight.                                                                                                                        | `boolean`                   | -       |
+| size      | Text size; inherit takes the size of the enclosing Text or Paragraph. Defaults to normal.                                                | `TypographyBaseSize`        | -       |
+| strong    | Whether the text is bold.                                                                                                                | `boolean`                   | -       |
+| type      | Text type. Defaults to primary.                                                                                                          | `TypographyBaseType`        | -       |
+| underline | Adds an underline.                                                                                                                       | `boolean`                   | -       |
+| weight    | Font weight as a number.                                                                                                                 | `number`                    | -       |

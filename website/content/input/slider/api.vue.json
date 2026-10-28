@@ -1,0 +1,107 @@
+{
+    "slider": {
+        "source": "packages/semi-ui-vue/src/slider/slider.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "当前取值，配合 v-model 使用；只传不回写时拖动、点击与方向键仅触发通知，滑块不移动。变回 undefined 时回到 defaultValue，没有则回到 min，且不触发 afterChange。",
+                "en-US": "Current value, used with v-model. When given without a write-back, dragging, clicking and arrow keys only notify and the handle does not move. Back to undefined it returns to defaultValue, or min without one, and afterChange does not fire."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始取值。", "en-US": "Initial value when uncontrolled." },
+            "disabled": { "zh-CN": "滑块是否禁用。", "en-US": "Whether the slider is disabled." },
+            "included": {
+                "zh-CN": "marks 不为空对象时有效，true 表示刻度为包含关系，false 表示并列。",
+                "en-US": "Takes effect when marks is not empty. true makes the marks nested, false makes them independent."
+            },
+            "marks": {
+                "zh-CN": "刻度，key 为 number 且取值在闭区间 [min, max] 内，值为字符串或数字；节点内容使用 mark 插槽。",
+                "en-US": "Marks. Keys are numbers in the closed range [min, max], values are strings or numbers; use the mark slot for node content."
+            },
+            "max": { "zh-CN": "最大值。", "en-US": "Maximum value." },
+            "min": { "zh-CN": "最小值。", "en-US": "Minimum value." },
+            "range": { "zh-CN": "是否支持两端同时可滑动。", "en-US": "Whether both ends can be dragged." },
+            "step": { "zh-CN": "步长，从 min 起计算。", "en-US": "Step, counted from min." },
+            "tipFormatter": {
+                "zh-CN": "设置提示的展示格式，每个手柄单独调用，参数为该手柄的值；默认显示当前取值，null 隐藏提示。",
+                "en-US": "Format of the tooltip, called once per handle with that handle's value. Shows the current value by default; null hides the tooltip."
+            },
+            "tooltipVisible": { "zh-CN": "是否始终显示提示。", "en-US": "Whether the tooltip is always visible." },
+            "tooltipOnMark": {
+                "zh-CN": "刻度上是否带有提示。",
+                "en-US": "Whether the marks on the rail have a tooltip."
+            },
+            "showMarkLabel": { "zh-CN": "是否显示刻度标签。", "en-US": "Whether to show the mark labels." },
+            "showArrow": { "zh-CN": "提示是否带箭头。", "en-US": "Whether the tooltip has an arrow." },
+            "showBoundary": {
+                "zh-CN": "是否在悬停时展示最大值与最小值。",
+                "en-US": "Whether to show the maximum and minimum on hover."
+            },
+            "vertical": { "zh-CN": "是否为垂直方向。", "en-US": "Whether the slider is vertical." },
+            "verticalReverse": {
+                "zh-CN": "反转垂直方向，即上大下小。",
+                "en-US": "Reverses the vertical direction, so the larger value is on top."
+            },
+            "railStyle": { "zh-CN": "滑块轨道的样式。", "en-US": "Style of the slider rail." },
+            "handleDot": {
+                "zh-CN": "滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。",
+                "en-US": "Dot on the handle: one object for a single handle, an array with one per handle for a range."
+            },
+            "id": {
+                "zh-CN": "落在第一个手柄的 input 上，用于 label for 关联，点击 label 会聚焦该手柄。",
+                "en-US": "Applied to the first handle's input, so a label for focuses that handle."
+            },
+            "ariaLabel": {
+                "zh-CN": "手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。",
+                "en-US": "Accessible name of the handle. In range mode, the locale's start and end texts are appended for the two handles."
+            },
+            "ariaLabelledby": {
+                "zh-CN": "引用标签元素的 id，作为手柄的可访问名称；range 模式下每个手柄再加上起点或终点。",
+                "en-US": "The id of the labelling element, used as the handle's accessible name. In range mode each handle adds its start or end text."
+            },
+            "ariaValuetext": {
+                "zh-CN": "为当前值提供用户友好的名称。",
+                "en-US": "A user-friendly name for the current value."
+            },
+            "getAriaValueText": {
+                "zh-CN": "为当前值提供用户友好的名称，参数为滑块的值与滑块的顺序。",
+                "en-US": "Provides a user-friendly name for the current value, called with the handle's value and its index."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "值变化时触发，供 v-model 回写。",
+                "en-US": "Emitted when the value changes, for v-model to write back."
+            },
+            "change": {
+                "zh-CN": "值变化时触发，参数为当前取值。",
+                "en-US": "Emitted when the value changes, with the current value."
+            },
+            "afterChange": {
+                "zh-CN": "值变化完成后触发，参数为当前取值；受控值被改回 undefined 时不触发。",
+                "en-US": "Emitted after a change is complete, with the current value. Not emitted when a controlled value goes back to undefined."
+            },
+            "mouseUp": {
+                "zh-CN": "拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。",
+                "en-US": "Emitted when the pointer (mouse, touch, pen) dragging a handle is released or cancelled, and when a value key is released."
+            },
+            "focus": {
+                "zh-CN": "任一手柄获得焦点时触发。",
+                "en-US": "Emitted when any handle receives focus."
+            },
+            "blur": {
+                "zh-CN": "焦点离开整个 Slider 时触发，在两个手柄之间切换不触发。",
+                "en-US": "Emitted when focus leaves the whole Slider; moving between the two handles does not emit it."
+            }
+        },
+        "slots": {
+            "mark": {
+                "zh-CN": "自定义刻度标签，也用于 tooltipOnMark 的提示；作用域参数为刻度的 value 与 label。",
+                "en-US": "Custom mark label, also used for the tooltipOnMark tooltip. Scoped with the mark's value and label."
+            },
+            "tip": {
+                "zh-CN": "自定义手柄提示的内容；value 为 tipFormatter 的结果，handle 为 min 或 max。",
+                "en-US": "Custom handle tooltip content. value is the result of tipFormatter and handle is min or max."
+            }
+        },
+        "exposed": {}
+    }
+}

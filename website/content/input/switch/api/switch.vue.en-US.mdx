@@ -1,0 +1,29 @@
+**Props**
+
+| Property       | Description                                                                                                                                  | Type      | Default                                         |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------------------------------------- |
+| modelValue     | Whether the switch is on, used with v-model. When given, this value decides; without a write-back, a click only notifies.                    | `boolean` | `undefined`                                     |
+| defaultChecked | Initial state when uncontrolled.                                                                                                             | `boolean` | `semiGlobalDefault("Switch", "defaultChecked")` |
+| disabled       | Whether the switch is disabled.                                                                                                              | `boolean` | `semiDefault("Switch", "disabled", false)`      |
+| loading        | Whether the switch is loading. While loading, the input stays focusable with aria-disabled, and toggles are ignored without emitting events. | `boolean` | `semiDefault("Switch", "loading", false)`       |
+| size           | Switch size: large, default or small.                                                                                                        | `Size`    | `semiDefault("Switch", "size", "default")`      |
+
+**Events**
+
+| Event             | Description                                                                        | Callback parameters                |
+| ----------------- | ---------------------------------------------------------------------------------- | ---------------------------------- |
+| update:modelValue | Emitted when the user toggles the switch, for v-model to write back.               | `[checked: boolean]`               |
+| change            | Emitted when the user toggles the switch, with the new state and the native event. | `[checked: boolean, event: Event]` |
+
+**Slots**
+
+| Slot          | Description                                           | Scope parameters |
+| ------------- | ----------------------------------------------------- | ---------------- |
+| checkedText   | Content shown when on. Not shown when size is small.  | `any`            |
+| uncheckedText | Content shown when off. Not shown when size is small. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

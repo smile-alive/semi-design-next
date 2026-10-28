@@ -1,0 +1,34 @@
+**Props**
+
+| 属性         | 说明                                                                                   | 类型                               | 默认值                                                  |
+| ------------ | -------------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------- |
+| modelValue   | 选中的值，配合 v-model 受控使用。                                                      | `CheckboxValue[]`                  | `undefined`                                             |
+| defaultValue | 非受控时组内默认选中的值，与 Checkbox 的 value 匹配。                                  | `CheckboxValue[]`                  | `semiDefault("CheckboxGroup", "defaultValue", [])`      |
+| disabled     | 是否禁用整组。                                                                         | `boolean`                          | `semiDefault("CheckboxGroup", "disabled", false)`       |
+| name         | 组内所有原生 input 的 name；未设置时每组生成唯一值。                                   | `string`                           | `semiGlobalDefault("CheckboxGroup", "name")`            |
+| options      | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`。 | `(string \| CheckboxOptionItem)[]` | `semiGlobalDefault("CheckboxGroup", "options")`         |
+| direction    | 组内布局方向，可选 horizontal 或 vertical。                                            | `CheckboxDirection`                | `semiDefault("CheckboxGroup", "direction", "vertical")` |
+| type         | 组内所有 Checkbox 的样式类型，可选 default、card、pureCard。                           | `CheckboxType`                     | `semiDefault("CheckboxGroup", "type", "default")`       |
+| prefixCls    | CSS 类名前缀。                                                                         | `string`                           | `semiGlobalDefault("CheckboxGroup", "prefixCls")`       |
+
+**Events**
+
+| 事件              | 说明                                                         | 回调参数                   |
+| ----------------- | ------------------------------------------------------------ | -------------------------- |
+| update:modelValue | 选中的值变化时触发，用于 v-model。                           | `[value: CheckboxValue[]]` |
+| change            | 选中的值变化时触发，参数为新的选中值数组。                   | `[value: CheckboxValue[]]` |
+| blur              | 焦点离开整个分组时触发，在组内 Checkbox 之间移动焦点不触发。 | `[event: FocusEvent]`      |
+
+**Slots**
+
+| 插槽    | 说明                                                              | 作用域参数                     |
+| ------- | ----------------------------------------------------------------- | ------------------------------ |
+| default | 组内的 Checkbox；设置 options 时忽略。                            | `any`                          |
+| label   | 自定义 options 中每一项的文本，作用域参数为 option 与 index。     | `CheckboxGroupOptionSlotProps` |
+| extra   | 自定义 options 中每一项的辅助文本，作用域参数为 option 与 index。 | `CheckboxGroupOptionSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

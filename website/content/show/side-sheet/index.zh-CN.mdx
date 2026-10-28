@@ -1,0 +1,193 @@
+---
+order: 80
+title: 滑动侧边栏
+icon: doc-sidesheet
+brief: 可从屏幕边沿滑出的浮层面板，通常用于承载二级操作页面
+---
+
+import SideSheetReactApi from './api/side-sheet.react.zh-CN.mdx';
+import SideSheetVueApi from './api/side-sheet.vue.zh-CN.mdx';
+import SideSheetSolidApi from './api/side-sheet.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { SideSheet } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { SideSheet } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Radio, RadioGroup, SideSheet, TextArea, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本
+
+默认侧边栏从右滑出，支持点击遮罩区关闭。
+
+<Framework only="vue">
+
+用 `v-model:visible` 控制显示：关闭按钮、遮罩和 Esc 关闭时先更新 `visible`，再触发 `@cancel`。只写 `:visible` 加 `@cancel` 时不会自行关闭，需要在 `@cancel` 中把 `visible` 设为 `false`。
+
+</Framework>
+
+<Framework only="solid">
+
+用受控的 `visible` 控制显示：关闭按钮、遮罩和 Esc 关闭时先触发 `onCancel`，面板不会自行关闭，需要在 `onCancel` 中把 `visible` 设为 `false`。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 自定义位置
+
+可以通过设置 `placement` 属性设置侧边栏滑出位置，支持 `top`、`bottom`、`left`、`right`。
+
+<Demo id="placement" />
+
+### 自定义尺寸
+
+<Framework only="react">
+
+可以通过设置 `size` 属性设置侧边栏尺寸，支持 `small`(448px)， `medium`(684px), `large`(920px)，仅在 `placement` 为 `left` 或 `right` 时生效。若默认的尺寸不满足你的需求，你还可以通过设置 `width` 属性自行设置宽度，例如 `width={900}` / `width={'800px'}`
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过设置 `size` 属性设置侧边栏尺寸，支持 `small`(448px)、`medium`(684px)、`large`(920px)，仅在 `placement` 为 `left` 或 `right` 时生效。若默认的尺寸不满足你的需求，你还可以通过设置 `width` 属性自行设置宽度，例如 `:width="900"` / `width="800px"`
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过设置 `size` 属性设置侧边栏尺寸，支持 `small`(448px)、`medium`(684px)、`large`(920px)，仅在 `placement` 为 `left` 或 `right` 时生效。若默认的尺寸不满足你的需求，你还可以通过设置 `width` 属性自行设置宽度，例如 `width={900}` / `width="800px"`
+
+</Framework>
+
+<Demo id="size" />
+
+### 可操作的外部区域
+
+<Framework only="react">
+
+当 `mask={false}`时允许对外部区域进行操作。
+
+</Framework>
+
+<Framework only="vue">
+
+当 `:mask="false"` 时允许对外部区域进行操作。
+
+</Framework>
+
+<Notice title="注意">`mask` 为 `false` 时不会锁定 body 的滚动，外部区域可以照常滚动。带遮罩且渲染在 body 中（即不传入 getPopupContainer 参数）的 SideSheet 才会在打开时自动给 body 添加 overflow: hidden 来禁止滚动，可以将 disableScroll 设为 false 允许滚动。</Notice>
+
+<Framework only="solid">
+
+当 `mask={false}` 时允许对外部区域进行操作。
+
+</Framework>
+
+<Demo id="no-mask" />
+
+### 渲染在指定容器
+
+可以通过 `getPopupContainer` 指定父级 DOM，弹层将会渲染至该 DOM 中。
+
+<Notice title='注意'>
+
+容器需要手动设置样式 `overflow: hidden`，否则会导致动画溢出
+
+</Notice>
+
+<Demo id="popup-container" />
+
+### 自定义内容区域
+
+<Framework only="react">
+
+可以通过自定义 `title`，`footer` 等创建出丰富的内容样式。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#title`、`#footer` 等插槽创建出丰富的内容样式。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过自定义 `title`、`footer` 等属性创建出丰富的内容样式，这些属性接受 JSX 元素。
+
+</Framework>
+
+<Demo id="custom-content" />
+
+## API 参考
+
+<Framework only="react">
+
+<SideSheetReactApi />
+
+`aria-*` 与 `style` 落在 `role="dialog"` 的元素（`.semi-sidesheet-inner`）上；`className`、`ref` 与其他原生属性和事件落在 portal 内最外层的 `.semi-sidesheet` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SideSheetVueApi />
+
+`aria-*` 与 `style` 落在 `role="dialog"` 的元素（`.semi-sidesheet-inner`）上，与 React 相同；`class` 与其他原生属性落在 portal 内最外层的 `.semi-sidesheet` 元素上，组件 ref 暴露的 `root` 也是这个元素。
+
+</Framework>
+
+<Framework only="solid">
+
+<SideSheetSolidApi />
+
+`aria-*` 与 `style` 落在 `role="dialog"` 的元素（`.semi-sidesheet-inner`）上；`class`、`ref` 与其他原生属性和事件落在 portal 内最外层的 `.semi-sidesheet` 元素上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- SideSheet 具有 `dialog` role 来表示它是一个弹窗组件。标题元素（`.semi-sidesheet-title`）具有 `heading` role 和 `aria-level="2"`，并通过 `aria-labelledby` 为对话框命名；header 本身没有 role。传入 `aria-label` 时以 `aria-label` 为准，不生成该引用。
+- 全部 `aria-*` 属性与 `style` 落在 `role="dialog"` 的元素上，其他未声明的属性落在外层元素上。
+- `aria-modal` 只在对话框是模态时输出。模态的判定是：有遮罩（`mask`），且渲染在 body 中（以实际容器判断，ConfigProvider 的 `getPopupContainer` 同样计入）。`mask` 为 `false`，或遮罩限定在自定义容器内时不输出。
+
+### 键盘和焦点
+
+- 打开时焦点移入侧边栏。
+- 设置 `closeOnEsc` 后，按 `Esc` 关闭侧边栏（默认关闭该行为）。
+- 模态对话框（带遮罩且渲染在 body 中）：Tab 在侧边栏内循环，页面其余部分不可交互，关闭后焦点回到打开前的元素。带遮罩但渲染在自定义容器内的侧边栏不会让页面不可交互，见下一条。
+- 非模态对话框（`mask` 为 `false`，或遮罩限定在自定义容器内）：Tab 可以离开侧边栏回到页面，容器外的页面保持可用；关闭时焦点仍在侧边栏内或已落到 body 才回到打开前的元素，用户已移到页面其他位置的焦点不动。遮罩限定在自定义容器内时，容器内的其他内容仍可被 Tab 聚焦到。
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ:
+
+- SideSheet 会自动禁止 body 的滚动吗？当带遮罩的 SideSheet 默认渲染在 body 中时（即不传入 getPopupContainer 参数），会在打开时自动给 body 添加 `overflow: hidden` 来禁止滚动。可以将 `disableScroll` 设为 `false` 允许滚动；`mask` 为 `false` 时不锁定滚动。

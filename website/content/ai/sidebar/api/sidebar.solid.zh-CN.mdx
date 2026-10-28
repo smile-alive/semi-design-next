@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| activeKey | 主视图中当前选中的选项 key。 | `string` | - |
+| afterVisibleChange | 可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。 | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| children | 不生效，内容由主视图或详情视图渲染。 | `JSX.Element` | - |
+| closeOnEsc | 按下 Esc 键时是否触发 onCancel。 | `boolean` | - |
+| containerRef | 不生效，需要容器元素时使用 `ref`。 | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| defaultSize | 初始尺寸（宽度与高度），仅在 resizable 为 true 时生效。 | `{ width?: number \| string; height?: number \| string }` | - |
+| detailContent | code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable、imgUploadProps 与 onContentChange 不生效，由 fileEditable、imgUploadProps 与 onFileContentChange 决定。 | `DetailContent` | - |
+| fileEditable | file 模式的富文本是否可编辑。 | `boolean` | `true` |
+| imgUploadProps | file 模式的图片上传配置，编辑器创建时读取，之后变化不生效。 | `ImageUploadNodeOptions` | - |
+| maxWidth | 可调整的最大宽度，仅在 resizable 为 true 时生效。 | `string \| number` | - |
+| minWidth | 可调整的最小宽度，仅在 resizable 为 true 时生效，默认 150。 | `string \| number` | - |
+| mode | 展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 renderDetailContent 自行渲染。 | `string` | `"main"` |
+| motion | 显示与隐藏时是否使用展开动画，默认 true。 | `boolean` | - |
+| onActiveOptionChange | 点击选项按钮时触发，参数为事件和该选项的 key；需自行把 key 写回 activeKey。 | <ApiType detail={"(e: MouseEvent, activeKey: string) => void"}>Type</ApiType> | - |
+| onBackWard | 点击详情头部的返回按钮时触发，参数为事件和 main；需自行把 mode 改回 main，返回值被忽略。 | <ApiType detail={"(e: MouseEvent, mode: string) => void \u007c Promise\u003cunknown>"}>Type</ApiType> | - |
+| onCancel | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。 | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onDetailContentCopy | 点击详情头部的复制按钮后触发，在写入剪贴板完成后异步调用，参数为事件、复制的内容和结果（写入被拒绝时为 false）。 | <ApiType detail={"(e: MouseEvent, content: string, res: boolean) => void"}>Type</ApiType> | - |
+| onFileContentChange | file 模式下编辑富文本后触发，参数为 HTML 字符串。 | <ApiType detail={"(content: string) => void"}>Type</ApiType> | - |
+| options | 主视图顶部的选项按钮，每项包含 name 与 key；图标由 renderOptionIcon 渲染。 | `Option[]` | - |
+| renderDetailContent | 自定义详情内容，参数为当前模式；返回内容为空时，code 与 file 模式回退到内置详情。 | <ApiType detail={"(mode: string) => JSX.Element"}>Type</ApiType> | - |
+| renderDetailHeader | 自定义详情头部，参数为当前模式和 detailContent；返回内容为空时使用内置头部。 | <ApiType detail={"(mode: string, detailContent?: DetailContent) => JSX.Element"}>Type</ApiType> | - |
+| renderHeader | 不生效，主视图使用 title，详情视图使用 renderDetailHeader。 | <ApiType detail={"() => JSX.Element"}>Type</ApiType> | - |
+| renderMainContent | 渲染主视图内容，参数为当前选中的 activeKey。 | <ApiType detail={"(activeKey: string) => JSX.Element"}>Type</ApiType> | - |
+| renderOptionIcon | 渲染内置选项按钮的图标，参数为该选项。 | <ApiType detail={"(option: Option) => JSX.Element"}>Type</ApiType> | - |
+| renderOptionItem | 自定义选项按钮，第二个参数 onChange 用于选中该选项。 | <ApiType detail={"(option: Option, onChange: (e: MouseEvent, activeKey: string) => void) => JSX.Element"}>Type</ApiType> | - |
+| resizable | 宽度是否可拖拽调整，默认 true；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean` | - |
+| showClose | 是否显示头部的关闭按钮，默认 true。 | `boolean` | - |
+| style | 容器元素的内联样式，可传样式对象或样式字符串。 | `JSX.CSSProperties \| string` | - |
+| title | 主视图的标题；详情视图使用内置的详情头部。 | `JSX.Element` | - |
+| visible | 是否显示。 | `boolean` | - |

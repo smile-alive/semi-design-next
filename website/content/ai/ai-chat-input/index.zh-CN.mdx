@@ -1,0 +1,801 @@
+---
+order: 101
+title: 聊天输入框
+icon: doc-aiInput
+brief: 用于 AI 聊天场景下的输入框
+showNew: true
+---
+
+import AIChatInputReactApi from './api/ai-chat-input.react.zh-CN.mdx';
+import McpReactApi from './api/mcp.react.zh-CN.mdx';
+import AIChatInputVueApi from './api/ai-chat-input.vue.zh-CN.mdx';
+import McpVueApi from './api/mcp.vue.zh-CN.mdx';
+import AIChatInputSolidApi from './api/ai-chat-input.solid.zh-CN.mdx';
+import McpSolidApi from './api/mcp.solid.zh-CN.mdx';
+
+## 使用场景
+
+在 AI 聊天场景下，用户可通过 `AIChatInput`实现富文本输入、上传、引用、建议、模版、功能配置、及丰富自定义展示等需求。
+
+`AIChatInput` 的富文本输入是基于 [tiptap](https://tiptap.dev/docs/editor/getting-started/overview) 实现，`tiptap` 是一款现代的富文本编辑器开发框架，支持 React、Vue 前端框架，具备极强的可定制性和扩展性。其组件化能力优秀，性能优良，内置多种常用拓展，并支持用户自定义节点、命令、插件与菜单，使复杂 AI 场景下的富文本输入能力能够灵活适配和扩展。Semi 的 `AIChatInput` 组件对 tiptap 进行了封装，开发者可开箱即用或按需按业务扩展。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { AIChatInput } from '@fibrae/semi-ai-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+支持文本输入以及文件上传，使用时可按需配置以下参数：
+
+<Framework only="react">
+
+- `uploadProps` 配置文件上传相关的参数，详见 [UploadProps](/zh-CN/react/input/upload#API)
+- `onUploadChange` 获取文件上传变化
+- 删除上传文件时，会触发 `uploadProps.onRemove`，并遵循 `uploadProps.beforeRemove`（支持 Promise）
+- `placeholder` 输入框的占位符
+- `defaultContent` 输入框的默认内容
+- `onContentChange` 输入框内容变化时的回调函数，参数为当前输入框的内容
+
+</Framework>
+
+<Framework only="vue">
+
+- `uploadProps` 配置文件上传相关的参数，取值同 [Upload](/zh-CN/react/input/upload#API) 的属性，不含 `fileList` 与 `listType`；Upload 的事件以 `onSuccess`、`onError` 等监听属性传入
+- `@uploadChange` 获取文件上传变化
+- 删除上传文件时，会调用 `uploadProps.onRemove`，并遵循 `uploadProps.beforeRemove`（支持 Promise）
+- `placeholder` 输入框的占位符
+- `defaultContent` 输入框的默认内容
+- `@contentChange` 输入框内容变化时触发，参数为当前输入框的内容
+
+</Framework>
+
+<Framework only="solid">
+
+- `uploadProps` 配置文件上传相关的参数，详见 [UploadProps](/zh-CN/react/input/upload#API)
+- `onUploadChange` 获取文件上传变化
+- 删除上传文件时，会触发 `uploadProps.onRemove`，并遵循 `uploadProps.beforeRemove`（支持 Promise）
+- `placeholder` 输入框的占位符
+- `defaultContent` 输入框的默认内容
+- `onContentChange` 输入框内容变化时的回调函数，参数为当前输入框的内容
+
+</Framework>
+
+<Demo id="basic" />
+
+### 消息发送
+
+<Framework only="react">
+
+当输入框中有内容（包括输入文本、上传内容），将允许发送消息。点击消息发送按钮，会触发 `onMessageSend` 回调函数，参数为当前输入框的内容，包括输入区域的文本，引用内容，上传文件，配置区域内容。引用内容不参与是否可发送的判断，也可通过 `canSend` 直接指定。
+
+用户可在 `onMessageSend` 中根据判断是否设置 `generating` 表示消息正在处理中，如果 `generating` 为 `true`，则 AIChatInput 会在发送按钮位置显示停止生成按钮，并清空输入区的消息，以及上传文件，另外，引用内容需要用户自行清除。
+
+点击停止生成按钮，会触发 `onStopGenerate` 回调函数，用户可在该回调函数中处理停止生成的逻辑， 如将 `generating` 设为 `false`。
+
+</Framework>
+
+<Framework only="vue">
+
+当输入框中有内容（包括输入文本、上传内容），将允许发送消息。点击消息发送按钮，会触发 `@messageSend`，参数为当前输入框的内容，包括输入区域的文本，引用内容，上传文件，配置区域内容。引用内容不参与是否可发送的判断，也可通过 `canSend` 直接指定。
+
+用户可在 `@messageSend` 中根据判断是否设置 `generating` 表示消息正在处理中，如果 `generating` 为 `true`，则 AIChatInput 会在发送按钮位置显示停止生成按钮，并清空输入区的消息，以及上传文件，另外，引用内容需要用户自行清除。
+
+点击停止生成按钮，会触发 `@stopGenerate`，用户可在该事件中处理停止生成的逻辑， 如将 `generating` 设为 `false`。
+
+</Framework>
+
+<Framework only="solid">
+
+当输入框中有内容（包括输入文本、上传内容），将允许发送消息。点击消息发送按钮，会触发 `onMessageSend` 回调函数，参数为当前输入框的内容，包括输入区域的文本，引用内容，上传文件，配置区域内容。引用内容不参与是否可发送的判断，也可通过 `canSend` 直接指定。
+
+用户可在 `onMessageSend` 中根据判断是否设置 `generating` 表示消息正在处理中，如果 `generating` 为 `true`，则 AIChatInput 会在发送按钮位置显示停止生成按钮，并清空输入区的消息，以及上传文件，另外，引用内容需要用户自行清除。
+
+点击停止生成按钮，会触发 `onStopGenerate` 回调函数，用户可在该回调函数中处理停止生成的逻辑， 如将 `generating` 设为 `false`。
+
+</Framework>
+
+<Demo id="send-message" />
+
+### 富文本输入区
+
+AIChatInput 使用 [tiptap](https://tiptap.dev/docs/editor/getting-started/overview) 作为富文本输入框的编辑器，用户可以在输入框中输入文本，使用 AIChatInput 内置的 extensions（包括 `input-slot`，`select-slot`，`skill-slot`）。用户也可以自定义 extensions 来扩展编辑器的功能。
+
+- `input-slot` 支持用户输入文本，并支持 placeholder 占位符。
+- `select-slot` 支持用户进行简单的选择，选项仅支持 string 类型。
+- `skill-slot` 是用于技能展示的块，方便用户理解当前输入框中的技能。
+
+<Framework only="react">
+
+可以通过 ref 方法 `setContent` 来设置输入框的内容，使用 `focusEditor` 方法可以将输入框的焦点设置到编辑器中。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过组件实例（模板 ref）的 `setContent` 方法来设置输入框的内容，使用 `focusEditor` 方法可以将输入框的焦点设置到编辑器中。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 ref 的 `setContent` 方法来设置输入框的内容，使用 `focusEditor` 方法可以将输入框的焦点设置到编辑器中。
+
+</Framework>
+
+<Demo id="rich-text" />
+
+### 引用
+
+用户可以 `references` 传入引用内容，引用内容会展示在输入框的顶部。
+
+<Framework only="react">
+
+- `renderReference` 自定义单个引用内容的渲染。
+- `onReferenceDelete` 处理引用内容的删除。
+- `onReferenceClick` 处理引用内容的点击。
+
+</Framework>
+
+<Framework only="vue">
+
+- `#reference` 插槽自定义单个引用内容的渲染，作用域参数为 `{ item, index }`。
+- `@referenceDelete` 处理引用内容的删除。
+- `@referenceClick` 处理引用内容的点击。
+
+</Framework>
+
+<Framework only="solid">
+
+- `renderReference` 自定义单个引用内容的渲染。
+- `onReferenceDelete` 处理引用内容的删除。
+- `onReferenceClick` 处理引用内容的点击。
+
+</Framework>
+
+<Demo id="reference" />
+
+### 配置区域
+
+用户可以通过配置区域设置使用模型参数、联网搜索、深度思考等配置项，展示或者查看 MCP 工具。
+
+<Framework only="react">
+
+可通过 `renderConfigureArea` API 自定义输入框的操作按钮。
+
+使用 `Configure` 中的 `Select`、`Button`、`Mcp`、`RadioButton` 等组件可以自定义配置项。
+
+`Configure` 将管理配置项的状态，用户可以通过 `onConfigureChange` API 监听配置项的变化。一定要配置 `field` 属性，用于标识配置项的唯一标识。如需设置初始值，可通过 `initValue` 属性设置。
+
+如果用户有其他形式的配置需求，可以通过 `getConfigureItem` 将自定义组件扩展成 `Configure` 类型组件。
+
+</Framework>
+
+<Framework only="vue">
+
+可通过 `#configureArea` 插槽自定义输入框的操作按钮。
+
+使用 `AIChatInput.Configure` 中的 `Select`、`Button`、`Mcp`、`RadioButton` 等组件可以自定义配置项。
+
+AIChatInput 将管理配置项的状态，用户可以通过 `@configureChange` 监听配置项的变化。一定要配置 `field` 属性，用于标识配置项的唯一标识。如需设置初始值，可通过 `initValue` 属性设置。配置项自身的值变化也可通过 `@change` 监听，参数为该项的新值。
+
+如果用户有其他形式的配置需求，可以通过 `getConfigureItem` 将自定义组件扩展成配置项组件。
+
+</Framework>
+
+<Framework only="solid">
+
+可通过 `renderConfigureArea` API 自定义输入框的操作按钮。
+
+使用 `AIChatInput.Configure` 中的 `Select`、`Button`、`Mcp`、`RadioButton` 等组件可以自定义配置项。
+
+`AIChatInput` 将管理配置项的状态，用户可以通过 `onConfigureChange` API 监听配置项的变化。一定要配置 `field` 属性，用于标识配置项的唯一标识。如需设置初始值，可通过 `initValue` 属性设置。
+
+如果用户有其他形式的配置需求，可以通过 `getConfigureItem` 将自定义组件扩展成 `Configure` 类型组件。
+
+</Framework>
+
+<Demo id="configure" />
+
+使用 `getConfigureItem` 扩展自定义组件为 `Configure` 类型组件。
+
+<Framework only="react">
+
+```ts
+function getConfigureItem<P, VK extends keyof P = 'value', CK extends keyof P = 'onChange'>(
+    component: React.ComponentType<P>,
+    opts?: {
+        // 指定需要接管的组件的 value 对应的 key，默认是 value
+        valueKey?: VK;
+        // 指定需要接管的组件的值变化对应的函数名，默认是 onChange
+        onKeyChangeFnName?: CK;
+        // 指定需要接管的组件的值变化函数参数中 value 对应的路径，默认取参数本身
+        valuePath?: string;
+        className?: string;
+        defaultProps?: Partial<P>;
+    }
+): React.ComponentType<
+    Omit<P, VK | CK | 'onChange' | 'className'> & {
+        // 配置项在 Configure 值中的 key，必填
+        field: string;
+        initValue?: P[VK];
+        onChange?: (value: unknown) => void;
+        className?: string;
+    }
+>;
+```
+
+返回的组件按被包装组件的 Props 检查属性，`field` 必填，`initValue` 的类型与 `valueKey` 对应的属性一致。`onChange` 由配置项占用，收到该项的新值，被包装组件自己的 `onChange` 不在可接受的属性中。
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+function getConfigureItem<C extends Component, VK extends keyof PropsOf<C>, CK extends keyof PropsOf<C>>(
+    component: C,
+    opts?: {
+        // 指定需要接管的组件接收值的 prop，默认是 modelValue
+        valueKey?: VK;
+        // 指定需要接管的组件的值变化对应的监听名，默认是 onUpdate:modelValue
+        onKeyChangeFnName?: CK;
+        className?: string;
+        defaultProps?: Partial<PropsOf<C>>;
+    }
+): Component<
+    Omit<PropsOf<C>, VK | CK | 'onChange'> & {
+        // 配置项在 AIChatInput 配置值中的 key，必填
+        field: string;
+        initValue?: PropsOf<C>[VK];
+    }
+>;
+```
+
+返回的组件按被包装组件的 props 检查属性，`field` 必填，`initValue` 的类型与 `valueKey` 对应的属性一致。被包装组件的其余属性、监听和插槽原样传入。值变化监听的第一个参数必须就是新值，该值同时由配置项的 `@change` 事件发出。
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+function getConfigureItem<P extends object, VK extends keyof P, CK extends keyof P>(
+    Item: Component<P>,
+    opts?: {
+        // 指定需要接管的组件接收值的 prop，默认是 value
+        valueKey?: VK;
+        // 指定值变化时调用的回调名，默认是 onChange
+        onKeyChangeFnName?: CK;
+        // 指定值变化回调第一个参数中 value 对应的路径，默认取参数本身
+        valuePath?: string;
+        class?: string;
+        defaultProps?: Partial<P>;
+    }
+): (
+    props: Omit<P, VK | CK | 'onChange' | 'class'> & {
+        // 配置项在 Configure 值中的 key，必填
+        field: string;
+        initValue?: P[VK];
+        onChange?: (value: unknown) => void;
+        class?: string;
+    }
+) => JSX.Element;
+```
+
+返回的组件按被包装组件的 Props 检查属性，`field` 必填，`initValue` 的类型与 `valueKey` 对应的属性一致。`onChange` 由配置项占用，收到该项的新值，被包装组件自己的 `onChange` 不在可接受的属性中。
+
+</Framework>
+
+使用示例如下：
+
+<Demo id="configure-item" />
+
+### 操作区域
+
+<Framework only="react">
+
+输入框右下角为操作区域，用户可以通过 `renderActionArea` API 自定义操作区域，展示自定义的操作按钮。`menuItem` 依次是上传节点（`showUploadButton` 为 `false` 时是隐藏的 Upload，仍需渲染才能粘贴上传）与发送或停止按钮。
+
+```ts
+interface ActionAreaProps {
+    menuItem: ReactNode[];
+    className: string;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+输入框右下角为操作区域，用户可以通过 `#actionArea` 插槽自定义操作区域，展示自定义的操作按钮。`menuItem` 依次是上传节点（`showUploadButton` 为 `false` 时是隐藏的 Upload，仍需渲染才能粘贴上传）与发送或停止按钮，用 `<component :is>` 渲染。
+
+```ts
+interface AIChatInputActionAreaSlotProps {
+    menuItem: VNode[];
+    class: string;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+输入框右下角为操作区域，用户可以通过 `renderActionArea` API 自定义操作区域，展示自定义的操作按钮。`menuItem` 依次是上传节点（`showUploadButton` 为 `false` 时是隐藏的上传节点，仍需渲染才能粘贴上传）与发送或停止按钮。
+
+```ts
+interface ActionAreaProps {
+    menuItem: JSX.Element[];
+    class: string;
+}
+```
+
+</Framework>
+
+使用示例如下：
+
+<Demo id="action-area" />
+
+### 自定义上传按钮
+
+<Framework only="react">
+
+底部操作区左侧默认会渲染上传按钮。你可以通过 `renderUploadButton` **仅自定义按钮 UI**（例如改成图标按钮、加 Tooltip 等）。
+
+注意：这不会影响上传/粘贴上传逻辑（`Upload` 仍由组件内部托管），`openFileDialog` 会触发内部 Upload 的文件选择。
+
+</Framework>
+
+<Framework only="vue">
+
+底部操作区左侧默认会渲染上传按钮。你可以通过 `#uploadButton` 插槽**仅自定义按钮 UI**（例如改成图标按钮、加 Tooltip 等）。
+
+注意：这不会影响上传/粘贴上传逻辑（`Upload` 仍由组件内部托管），`onOpenFileDialog` 会触发内部 Upload 的文件选择。
+
+```ts
+interface AIChatInputUploadButtonSlotProps {
+    defaultNode: VNode;
+    onOpenFileDialog: () => void;
+    disabled: boolean;
+    attachments: Attachment[];
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+底部操作区左侧默认会渲染上传按钮。你可以通过 `renderUploadButton` **仅自定义按钮 UI**（例如改成图标按钮、加 Tooltip 等）。
+
+注意：这不会影响上传/粘贴上传逻辑（`Upload` 仍由组件内部托管），`openFileDialog` 会触发内部 Upload 的文件选择。
+
+```ts
+interface RenderUploadButtonProps {
+    /* 创建默认上传按钮，在要放置按钮的位置调用；自定义节点不调用时，不会创建默认按钮 */
+    defaultNode: () => JSX.Element;
+    openFileDialog: () => void;
+    disabled: boolean;
+    attachments: Attachment[];
+}
+```
+
+</Framework>
+
+<Demo id="custom-upload-button" />
+
+### 底部按钮形状
+
+用户可以通过 `round` API 配置底部按钮的形状，默认是 `true`，是圆角按钮， 可以设置为 `false` 来配置为方形按钮。
+
+<Demo id="round" />
+
+### 建议
+
+用户可通过 `suggestions` API 配置建议列表，功能类似于 AutoComplete 组件，用户可以根据输入的内容实现根据输入的内容动态展示建议列表。
+
+使用键盘上下方向键切换建议列表的选项。按下 `ESC` 或者点击非建议列表，输入框区域，建议列表将关闭。
+
+<Framework only="react">
+
+还可通过 `renderSuggestionItem` API 自定义建议列表的展示，需要把参数里的 `id`、`role`、`aria-selected` 与事件处理展开到根元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+还可通过 `#suggestionItem` 插槽自定义建议列表的展示，需要把作用域参数里除 `suggestion` 之外的 `id`、`class`、`role`、`aria-selected`、`onClick`、`onMouseenter` 用 `v-bind` 绑定到根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+还可通过 `renderSuggestionItem` API 自定义建议列表的展示，需要把参数里的 `id`、`class`、`role`、`aria-selected` 与事件处理展开到根元素上。
+
+</Framework>
+
+<Demo id="suggestion" />
+
+### 技能及模版
+
+用户可以通过 `skills` API 配置技能列表，使用 `skillHotKey` 配置技能的触发键。
+
+`skills` 的格式如下
+
+<Framework only="react">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    icon?: React.ReactNode;
+    // 技能是否有模版，有模版的技能被选中后，将在输入框的底部展示模版按钮
+    hasTemplate?: boolean;
+}
+```
+
+由于模版的展示形式丰富，因此我们不提供默认的展示形式，用户可以通过 `renderTemplate`API 自定义模版的展示。模版面板的展示和关闭可通过点击模版按钮实现。
+
+```ts
+renderTemplate?: (
+    // 未选中技能、仅显示模版按钮时为 undefined
+    skill: Skill | undefined,
+    // 模版点击回调，点击模版后，用模版的内容替换输入框的内容
+    onTemplateClick: (content: string) => void
+) => ReactNode;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    // 技能是否有模版，有模版的技能被选中后，将在输入框的底部展示模版按钮
+    hasTemplate?: boolean;
+}
+```
+
+技能只含数据，技能前的图标通过 `#skillIcon="{ item, index }"` 插槽渲染，整项的展示可通过 `#skillItem` 插槽自定义（绑定方式同建议项）。
+
+由于模版的展示形式丰富，因此我们不提供默认的展示形式，用户可以通过 `#template` 插槽自定义模版的展示。模版面板的展示和关闭可通过点击模版按钮实现。
+
+```ts
+interface AIChatInputTemplateSlotProps {
+    skill: Skill | undefined;
+    // 模版点击回调，点击模版后，用模版的内容替换输入框的内容
+    onTemplateClick: (content: string) => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    // 技能是否有模版，有模版的技能被选中后，将在输入框的底部展示模版按钮
+    hasTemplate?: boolean;
+}
+```
+
+技能只含数据，技能前的图标通过 `renderSkillIcon(skill)` 渲染，整项的展示可通过 `renderSkillItem` 自定义。
+
+由于模版的展示形式丰富，因此我们不提供默认的展示形式，用户可以通过 `renderTemplate` API 自定义模版的展示。模版面板的展示和关闭可通过点击模版按钮实现。
+
+```ts
+renderTemplate?: (
+    // 未选中技能、仅显示模版按钮时为 undefined
+    skill: Skill | undefined,
+    // 模版点击回调，点击模版后，用模版的内容替换输入框的内容
+    onTemplateClick: (content: string) => void
+) => JSX.Element;
+```
+
+</Framework>
+
+使用示例如下：
+
+<Demo id="skill-template" />
+
+### 自定义渲染顶部区域
+
+<Framework only="react">
+
+用户可以通过 `renderTopSlot` API 自定义渲染顶部区域，可自行渲染引用，上传内容以及配置项。可结合 `showReference` 和 `showUploadFile` API 控制是否展示引用和上传文件。另外，可通过 `topSlotPosition` API 配置自定义渲染内容相对于引用区域，上传展示区域的相对位置。
+
+```ts
+interface TopSlotProps {
+    // 引用
+    references: Reference[];
+    // 上传内容
+    attachments: Attachment[];
+    // 输入框消息
+    content: Content[];
+    handleUploadFileDelete: (attachment: Attachment) => void;
+    handleReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+用户可以通过 `#topSlot` 插槽自定义渲染顶部区域，可自行渲染引用，上传内容以及配置项。可结合 `showReference` 和 `showUploadFile` API 控制是否展示引用和上传文件。另外，可通过 `topSlotPosition` API 配置自定义渲染内容相对于引用区域，上传展示区域的相对位置。
+
+```ts
+interface AIChatInputTopSlotProps {
+    // 引用
+    references: Reference[];
+    // 上传内容
+    attachments: Attachment[];
+    // 输入框消息
+    content: Content[];
+    onUploadFileDelete: (attachment: Attachment) => void;
+    // 触发 @referenceDelete，引用由使用方持有，需要在事件中移除
+    onReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+用户可以通过 `renderTopSlot` API 自定义渲染顶部区域，可自行渲染引用，上传内容以及配置项。可结合 `showReference` 和 `showUploadFile` API 控制是否展示引用和上传文件。另外，可通过 `topSlotPosition` API 配置自定义渲染内容相对于引用区域，上传展示区域的相对位置。`renderTopSlot` 只调用一次，参数的 getter 随当前值变化，需要随数据更新的内容放在 JSX 中读取。
+
+```ts
+interface TopSlotProps {
+    // 引用
+    references: Reference[];
+    // 上传内容
+    attachments: Attachment[];
+    // 输入框消息
+    content: Content[];
+    handleUploadFileDelete: (attachment: Attachment) => void;
+    handleReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
+使用用例如下：
+
+<Demo id="custom-top-slot" />
+
+### 自定义扩展
+
+富文本区域可以自定义扩展，自定义扩展的实现可参考 [Tiptap 自定义扩展](https://tiptap.dev/docs/editor/extensions/custom-extensions/create-new)。通过 `extensions` API 可将自定义扩展添加到 `AIChatInput` 组件中。
+
+<Framework only="react">
+
+如果添加了自定义扩展，需要在 `transformer` 中添加对应的转换规则， 以保证在 `onContentChange` 中得到的该节点数据符合用户预期。
+
+</Framework>
+
+<Framework only="vue">
+
+自定义节点的视图用 `@tiptap/vue-3` 的 `VueNodeViewRenderer` 渲染。如果添加了自定义扩展，需要在 `transformer` 中添加对应的转换规则， 以保证在 `@contentChange` 中得到的该节点数据符合用户预期。
+
+</Framework>
+
+<Framework only="solid">
+
+如果添加了自定义扩展，需要在 `transformer` 中添加对应的转换规则， 以保证在 `onContentChange` 中得到的该节点数据符合用户预期。示例中的节点视图直接用 DOM 实现（tiptap 的 `addNodeView`），候选面板用 `solid-js/web` 的 `render` 挂载 Solid 组件。
+
+</Framework>
+
+添加自定义扩展时有以下注意事项：
+
+- 请在自定义扩展中添加 `isCustomSlot` 的属性，该属性和自定义扩展前后的光标高度有关
+- 由于 `AIChatInput` 使用 `Enter` 作为发送热键，如果自定义扩展有使用 `Enter` 作为快捷操作，需要自行设置 `editor.storage` 中的 `SemiAIChatInput.allowHotKeySend` 用于表示热键是否应该被 AIChatInput 用于发送，避免热键冲突。`sendHotKey` 为 `shift+enter` 时，`allowHotKeySend` 为 `false` 期间单独按下的 `Enter` 不再换行，交给自定义扩展处理
+
+自定义扩展定义及注意事项的示例如下：
+
+<Demo id="custom-extension" />
+
+## API 参考
+
+根元素带 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，自动加 `role="group"`。附件卡的缩略图是装饰图（`alt` 为空），文件名由卡片内的可见文字提供。
+
+### AIChatInput
+
+<Framework only="react">
+
+<AIChatInputReactApi />
+
+`className`、`style` 与未声明的原生属性（如 `id`、`aria-label`）落在根元素 `div` 上。`onFocus`、`onBlur`、`onPaste` 是富文本输入区的回调，不落在根元素上。
+
+`Configure.Select`、`Configure.Button`、`Configure.RadioButton` 由 `getConfigureItem` 生成，值由 `Configure` 接管：不接受 `value`，`field` 必填，`initValue` 设置初始值，`onChange` 收到该项的新值。
+
+| 属性      | 说明                                | 类型                      | 默认值 |
+| --------- | ----------------------------------- | ------------------------- | ------ |
+| field     | 配置项在 Configure 值中的 key，必填 | string                    | -      |
+| initValue | 初始值                              | 与被包装组件的 value 一致 | -      |
+| onChange  | 该项的值变化回调                    | (value: unknown) => void  | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+<AIChatInputVueApi />
+
+`class`、`style` 与未声明的属性落在根元素上。`focus`、`blur`、`paste` 事件来自富文本输入框，与原生事件同名，会遮住根元素上的原生同名事件。
+
+数据项类型：
+
+```ts
+type Suggestion = string | { content: string; [key: string]: any };
+
+interface Reference {
+    type?: string;
+    id: string;
+    [key: string]: any;
+}
+
+interface Content {
+    type: string;
+    [key: string]: any;
+}
+
+interface MessageContent {
+    references?: Reference[];
+    attachments?: Attachment[];
+    inputContents?: Content[];
+    setup?: Setup;
+}
+```
+
+`Configure.Select`、`Configure.Button`、`Configure.RadioButton` 由 `getConfigureItem` 生成，值由 AIChatInput 接管：不接受 `modelValue`，`field` 必填，`initValue` 设置初始值，`@change` 收到该项的新值。
+
+| 属性      | 说明                           | 类型                           | 默认值 |
+| --------- | ------------------------------ | ------------------------------ | ------ |
+| field     | 配置项在配置值中的 key，必填   | string                         | -      |
+| initValue | 初始值                         | 与被包装组件的 modelValue 一致 | -      |
+| @change   | 该项的值变化时触发，参数为新值 | (value: unknown) => void       | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+<AIChatInputSolidApi />
+
+`class`、`style`、`ref` 与未声明的原生属性落在根元素 `div` 上。`onFocus`、`onBlur`、`onPaste` 是富文本输入区的回调，不落在根元素上。
+
+数据项类型：
+
+```ts
+type Suggestion = string | { content: string; [key: string]: any };
+
+interface Reference {
+    type?: string;
+    id: string;
+    [key: string]: any;
+}
+
+interface Content {
+    type: string;
+    [key: string]: any;
+}
+
+interface MessageContent {
+    references?: Reference[];
+    attachments?: Attachment[];
+    inputContents?: Content[];
+    setup?: Setup;
+}
+```
+
+`Configure.Select`、`Configure.Button`、`Configure.RadioButton` 由 `getConfigureItem` 生成，值由 `Configure` 接管：不接受 `value`，`field` 必填，`initValue` 设置初始值，`onChange` 收到该项的新值。
+
+| 属性      | 说明                                | 类型                      | 默认值 |
+| --------- | ----------------------------------- | ------------------------- | ------ |
+| field     | 配置项在 Configure 值中的 key，必填 | string                    | -      |
+| initValue | 初始值                              | 与被包装组件的 value 一致 | -      |
+| onChange  | 该项的值变化回调                    | (value: unknown) => void  | -      |
+
+</Framework>
+
+### Configure.Select
+
+其余属性同 [SelectProps](/zh-CN/react/input/select)
+
+### Configure.Button
+
+<Framework only="react">
+
+其余属性同 [ButtonProps](/zh-CN/react/basic/button#Button)；值为 boolean，点击时切换，`onClick` 收到切换后的值 `(value: boolean) => void`
+
+</Framework>
+
+<Framework only="vue">
+
+其余属性同 [ButtonProps](/zh-CN/react/basic/button#Button)，图标使用 `#icon` 插槽；值为 boolean，点击时切换，`@click` 收到切换后的值 `(value: boolean) => void`，并输出 `aria-pressed`
+
+</Framework>
+
+<Framework only="solid">
+
+其余属性同 [ButtonProps](/zh-CN/react/basic/button#Button)；值为 boolean，点击时切换，`onClick` 收到切换后的值 `(value: boolean) => void`
+
+</Framework>
+
+### Configure.RadioButton
+
+其余属性同 [RadioGroupProps](/zh-CN/react/input/radio#RadioGroup)
+
+### Configure.Mcp
+
+<Framework only="react">
+
+<McpReactApi />
+
+`className`、`style` 与未声明的属性透传给内部的 Dropdown，落点同 Dropdown。
+
+</Framework>
+
+<Framework only="vue">
+
+<McpVueApi />
+
+未声明的属性（Dropdown 的属性以及 `class`、`style`）透传给内部的 Dropdown，落点同 Dropdown。
+
+选项只含数据，图标通过 `#optionIcon` 插槽渲染：
+
+```ts
+interface McpOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    [key: string]: unknown;
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+<McpSolidApi />
+
+`class`、`style` 与未声明的属性透传给内部的 Dropdown，落点同 Dropdown。
+
+选项只含数据，图标通过 `renderOptionIcon(option)` 渲染：
+
+```ts
+interface McpOption {
+    value: string;
+    label: string;
+    [key: string]: unknown;
+}
+```
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

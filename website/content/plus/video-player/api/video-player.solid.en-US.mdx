@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoPlay | Whether to play automatically. | `boolean` | `false` |
+| captionsSrc | Captions source URL; the captions are shown by default once set. | `string` | - |
+| clickToPlay | Whether clicking the video toggles playback. | `boolean` | `true` |
+| controlsList | Controls shown in the control bar, all by default. A control also needs the prop it depends on to show. | `VideoControl[]` | <ApiType detail={"[\"play\", \"next\", \"time\", \"volume\", \"playbackRate\", \"quality\", \"route\", \"mirror\", \"fullscreen\", \"pictureInPicture\"]"}>Type</ApiType> |
+| crossOrigin | CORS setting of the video element: anonymous or use-credentials; an empty string means anonymous. | `'' \| 'anonymous' \| 'use-credentials'` | - |
+| defaultPlaybackRate | Initial playback rate, read once when the player mounts. | `number` | `1` |
+| defaultQuality | Initial quality, read once when the player mounts. | `string` | - |
+| defaultRoute | Initial route, read once when the player mounts. | `string` | - |
+| height | Player height; a number is in pixels, a string is used as is. | `number \| string` | - |
+| loop | Whether to loop playback. | `boolean` | `false` |
+| markers | Chapter markers, each with a start time in seconds and a title. | `VideoPlayerMarker[]` | - |
+| muted | Whether to start muted, read once when the player mounts. | `boolean` | `false` |
+| onNext | Called without arguments by the next button, which shows only when this is set and controlsList includes next. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onPause | Called when playback pauses. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onPlay | Called when playback starts. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onQualityChange | Called when the quality changes, with the selected quality value. | <ApiType detail={"(quality: string) => void"}>Type</ApiType> | - |
+| onRateChange | Called when the playback rate changes, with the selected rate. | <ApiType detail={"(rate: number) => void"}>Type</ApiType> | - |
+| onRouteChange | Called when the route changes, with the selected route value. | <ApiType detail={"(route: string) => void"}>Type</ApiType> | - |
+| onVolumeChange | Called when the user drags the volume slider or toggles mute, with the new volume (0 when muted); not called on initialization. | <ApiType detail={"(volume: number) => void"}>Type</ApiType> | - |
+| playbackRateList | Playback rate options, by default 2.0, 1.5, 1.25, 1.0 and 0.75. | <ApiType detail={"VideoPlayerOption\u003cnumber>[]"}>Type</ApiType> | - |
+| poster | Poster image URL. | `string` | - |
+| qualityList | Quality options; the quality control shows only when this is non-empty. | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | - |
+| ref | Receives the native video element, for more flexible control. A function is called with the element. | <ApiType detail={"HTMLVideoElement \u007c ((element: HTMLVideoElement) => void)"}>Type</ApiType> | - |
+| routeList | Route options; the route control shows only when this is non-empty. | <ApiType detail={"VideoPlayerOption\u003cstring>[]"}>Type</ApiType> | - |
+| seekTime | Seconds a fast forward or rewind moves. | `number` | `10` |
+| src | Video URL. Without it a missing-resource message shows; removing it keeps the previous source on the video element. | `string` | - |
+| style | Inline style of the root div, applied after width and height, so it overrides them. | `JSX.CSSProperties \| string` | - |
+| theme | Theme, affecting only the background color: dark or light. | `VideoPlayerTheme` | `"dark"` |
+| volume | Initial volume from 0 to 100, read once when the player mounts. | `number` | `100` |
+| width | Player width; a number is in pixels, a string is used as is. | `number \| string` | - |

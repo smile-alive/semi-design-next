@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                                           | 类型                                                                                     | 默认值 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | ------ |
+| breakpoint   | 触发响应式布局的断点，可选 xs、sm、md、lg、xl、xxl。仅在挂载时读取一次。                                                       | <ApiType detail={"Array\u003ckeyof ResponsiveMap>"}>Type</ApiType>                       | -      |
+| onBreakpoint | 断点命中状态变化时的回调，参数为断点名与是否命中。挂载时对 breakpoint 中的每个断点按当前视口调用一次，之后在命中或离开时调用。 | <ApiType detail={"(screen: keyof ResponsiveMap, match: boolean) => void"}>Type</ApiType> | -      |
+| prefixCls    | 类名前缀，默认为 `semi-layout`。                                                                                               | `string`                                                                                 | -      |

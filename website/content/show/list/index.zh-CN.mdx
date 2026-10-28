@@ -1,0 +1,360 @@
+---
+order: 75
+title: 列表
+icon: doc-list
+brief: 基础列表组件
+---
+
+import ListReactApi from './api/list.react.zh-CN.mdx';
+import ListItemReactApi from './api/list-item.react.zh-CN.mdx';
+import ListVueApi from './api/list.vue.zh-CN.mdx';
+import ListItemVueApi from './api/list-item.vue.zh-CN.mdx';
+import ListSolidApi from './api/list.solid.zh-CN.mdx';
+import ListItemSolidApi from './api/list-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { List } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { List, ListItem } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+模板中 `ListItem` 也可以写成 `List.Item`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, ButtonGroup, Checkbox, CheckboxGroup, Descriptions, Input, List, Pagination, Radio, RadioGroup, Rating, Skeleton, Spin } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+列表的基本用法。可以通过 size 设置尺寸，支持`large`, `default`, `small`。可设置 header 和 footer，来自定义列表头部和尾部。
+
+</Framework>
+
+<Framework only="vue">
+
+列表的基本用法。可以通过 size 设置尺寸，支持`large`, `default`, `small`。通过 `#header` 和 `#footer` 插槽自定义列表头部和尾部，通过 `#item="{ item, index }"` 作用域插槽渲染 `dataSource` 的每一项。
+
+</Framework>
+
+<Framework only="solid">
+
+列表的基本用法。可以通过 size 设置尺寸，支持`large`, `default`, `small`。可设置 header 和 footer，来自定义列表头部和尾部。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 模板用法
+
+<Framework only="react">
+
+列表的 List.Item 内置了简单的结构包含：header，main 和 extra 。其中 header 和 main 的对齐方式可以通过 align 属性设置，支持 `flex-start`（默认）, `flex-end`, `center`, `baseline`, 和 `stretch` 。
+
+</Framework>
+
+<Framework only="vue">
+
+列表的 List.Item 内置了简单的结构，通过 `#header`、`#main` 和 `#extra` 插槽提供。其中 header 和 main 的对齐方式可以通过 align 属性设置，支持 `flex-start`（默认）, `flex-end`, `center`, `baseline`, 和 `stretch` 。
+
+</Framework>
+
+<Framework only="solid">
+
+列表的 List.Item 内置了简单的结构包含：header，main 和 extra 。其中 header 和 main 的对齐方式可以通过 align 属性设置，支持 `flex-start`（默认）, `flex-end`, `center`, `baseline`, 和 `stretch` 。
+
+</Framework>
+
+<Demo id="template" />
+
+### 布局
+
+通过 layout 属性可以设置列表的布局，支持`vertical`（默认）和`horizontal`。
+
+<Demo id="layout" />
+
+### 栅格列表
+
+通过 grid 属性可以实现栅格列表，`span` 可设置每项的占格数，`gutter`可设置栅格间隔。
+
+<Demo id="grid" />
+
+### 响应式的栅格列表
+
+响应式的栅格列表。响应尺寸与 [Grid](/zh-CN/react/basic/grid) 保持一致。
+
+<Demo id="responsive" />
+
+### 加载更多
+
+<Framework only="react">
+
+可通过 loadMore 属性实现加载更多的功能。
+
+</Framework>
+
+<Framework only="vue">
+
+可通过 `#loadMore` 插槽实现加载更多的功能。
+
+</Framework>
+
+<Framework only="solid">
+
+可通过 loadMore 属性实现加载更多的功能。
+
+</Framework>
+
+<Demo id="load-more" />
+
+### 滚动加载
+
+<Framework only="react">
+
+可以通过集成 [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller) 来实现滚动加载的列表。交互建议符合 semi 交互设计规范，这里采用三次滚加载后出现 load more 按钮的形式。
+
+</Framework>
+
+<Framework only="vue">
+
+可以监听滚动容器的 `scroll` 事件，在接近底部时加载下一页。交互建议符合 semi 交互设计规范，这里采用三次滚加载后出现 load more 按钮的形式。
+
+</Framework>
+
+<Framework only="solid">
+
+可以监听滚动容器的 `scroll` 事件，在接近底部时加载下一页。交互建议符合 semi 交互设计规范，这里采用三次滚加载后出现 load more 按钮的形式。
+
+</Framework>
+
+<Demo id="scroll-load" />
+
+### 滚动加载无限长列表
+
+可以通过集成 [TanStack Virtual](https://tanstack.com/virtual) 实现滚动加载无限长列表，带有虚拟化（virtualization）功能，只渲染可见的行，能够提高数据量大时候长列表的性能。
+
+<Demo id="virtualized" />
+
+### 拖拽排序
+
+<Framework only="react">
+
+使用 [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) 可轻松实现拖拽排序。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) 的 Vue 版（`@dnd-kit/vue`）可轻松实现拖拽排序。被拖动的就是 `ListItem` 渲染的 `li`，`#item` 返回的每一项要写 `:key`，拖动重排 DOM 后 Vue 才能把节点对应到正确的数据。
+
+</Framework>
+
+<Framework only="solid">
+
+使用 [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) 的 Solid 版（`@dnd-kit/solid`）可轻松实现拖拽排序。被拖动的就是 `List.Item` 渲染的 `li`。
+
+</Framework>
+
+<Demo id="drag-sort" />
+
+### 带分页器
+
+你可以组合使用 Pagination， 实现一个分页的 List
+
+<Demo id="pagination" />
+
+### 带筛选器
+
+你可以通过组装 Input 使用，实现对 List 列表的筛选
+
+<Demo id="filter" />
+
+### 添加删除项
+
+<Demo id="add-delete" />
+
+### 单选或多选
+
+你可以通过组合使用 Radio 或 Checkbox 将 List 增强为一个列表选择器
+
+<Demo id="selection" />
+
+### 响应键盘事件
+
+你可以自行监听对应按键的键盘事件，实现不同 Item 的选择。如下面这个例子，可以使用上下方向键选择不同Item
+
+<Demo id="keyboard" />
+
+以上书单例子的Demo中涉及到的自定义样式如下
+
+```scss
+.component-list-demo-booklist {
+    .list-item {
+        &:hover {
+            background-color: var(--semi-color-fill-0);
+        }
+        &:active {
+            background-color: var(--semi-color-fill-1);
+        }
+    }
+}
+
+.component-list-demo-booklist-active-item {
+    background-color: var(--semi-color-fill-0);
+}
+```
+
+## 无障碍
+
+List 支持传入 `aria-label` 或 `aria-labelledby` 来表示列表的作用，传入后根元素带 `role="group"`。
+
+<Framework only="react">
+
+设置了 `onClick` 或 `onRightClick`（包括 List 上的）的 List.Item 仍是 `<li>` 列表项，内部渲染一个原生 `<button type="button">` 作为唯一的焦点目标，读屏会读成「按钮」。
+
+- 按钮包住 `header` 和 `main`（没有这两项时包住 `children`），点击区域铺满整行；Tab 聚焦后按 Enter 或空格触发 `onClick`，上下文菜单键触发 `onRightClick`
+- `extra` 渲染在按钮外面且层级更高，其中的按钮、链接可以正常聚焦和点击，点击它们不会触发 Item 的 `onClick`
+- 同时设置 `header` 或 `main` 和 `children` 时，`children` 在按钮外面，会被铺满整行的按钮覆盖，其中的交互内容请放进 `extra`
+- 没有点击回调的 List.Item 不渲染按钮，也不可聚焦
+
+</Framework>
+
+<Framework only="vue">
+
+设置了 `@click` 或 `@rightClick`（包括 List 上的）的 List.Item 仍是 `<li>` 列表项，内部渲染一个原生 `<button type="button">` 作为唯一的焦点目标，读屏会读成「按钮」。
+
+- 按钮包住 `#header` 和 `#main` 的内容（没有这两个插槽时包住默认插槽），点击区域铺满整行；Tab 聚焦后按 Enter 或空格触发 `@click`，上下文菜单键触发 `@rightClick`
+- `#extra` 渲染在按钮外面且层级更高，其中的按钮、链接可以正常聚焦和点击，点击它们不会触发 Item 的 `@click`
+- 同时设置 `#header` 或 `#main` 和默认插槽时，默认插槽在按钮外面，会被铺满整行的按钮覆盖，其中的交互内容请放进 `#extra`
+- 没有点击回调的 List.Item 不渲染按钮，也不可聚焦
+
+</Framework>
+
+<Framework only="solid">
+
+设置了 `onClick` 或 `onRightClick`（包括 List 上的）的 List.Item 仍是 `<li>` 列表项，内部渲染一个原生 `<button type="button">` 作为唯一的焦点目标，读屏会读成「按钮」。
+
+- 按钮包住 `header` 和 `main`（没有这两项时包住 `children`），点击区域铺满整行；Tab 聚焦后按 Enter 或空格触发 `onClick`，上下文菜单键触发 `onRightClick`
+- `extra` 渲染在按钮外面且层级更高，其中的按钮、链接可以正常聚焦和点击，点击它们不会触发 Item 的 `onClick`
+- 同时设置 `header` 或 `main` 和 `children` 时，`children` 在按钮外面，会被铺满整行的按钮覆盖，其中的交互内容请放进 `extra`
+- 没有点击回调的 List.Item 不渲染按钮，也不可聚焦
+
+</Framework>
+
+List.Item 脱离 List 使用时按没有 `grid` 的普通列表项渲染。使用 `grid` 时，承载条目的 Row 带 `role="list"`，包裹每个条目的 Col 带 `role="none"`，读屏把条目读作这个列表的项。
+
+## API 参考
+
+### List
+
+<Framework only="react">
+
+<ListReactApi />
+
+其他原生属性（如 `data-*`、`id`）落在根元素上；传入 `aria-label` 或 `aria-labelledby` 且没有 `role` 时，根元素带 `role="group"`。`onClick`、`onRightClick` 作用于列表项而不是根元素。
+
+</Framework>
+
+<Framework only="vue">
+
+<ListVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素；传入 `aria-label` 或 `aria-labelledby` 且没有 `role` 时，根元素带 `role="group"`。`@click`、`@rightClick` 的载荷为原生 `MouseEvent`，作用于列表项而不是根元素。
+
+</Framework>
+
+<Framework only="solid">
+
+<ListSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`）落在根元素上；传入 `aria-label` 或 `aria-labelledby` 且没有 `role` 时，根元素带 `role="group"`。`onClick`、`onRightClick` 的参数为原生 `MouseEvent`，作用于列表项而不是根元素。
+
+</Framework>
+
+### List grid props
+
+<Framework only="react">
+
+`grid` 只接受 Row 的 `align`、`gutter`、`justify`、`type` 与 Col 的 `span`、`offset`、`order`、`push`、`pull`、响应式断点、`className`、`style`，不接受其他 div 属性。参数含义请参考 [Grid](/zh-CN/react/basic/grid)
+
+</Framework>
+
+<Framework only="vue">
+
+`grid` 只接受 Row 的 `align`、`gutter`、`justify`、`type` 与 Col 的 `span`、`offset`、`order`、`push`、`pull`、响应式断点、`class`、`style`，不接受其他属性；`class` 与 `style` 落在每项外层的 Col 上。参数含义请参考 [Grid](/zh-CN/react/basic/grid)
+
+</Framework>
+
+<Framework only="solid">
+
+`grid` 只接受 Row 的 `align`、`gutter`、`justify`、`type` 与 Col 的 `span`、`offset`、`order`、`push`、`pull`、响应式断点、`class`、`style`，不接受其他属性；`class` 与 `style` 落在每项外层的 Col 上。参数含义请参考 [Grid](/zh-CN/react/basic/grid)
+
+</Framework>
+
+| 属性   | 说明                                                     | 类型           | 默认值 |
+| ------ | -------------------------------------------------------- | -------------- | ------ |
+| span   | 栅格占位格数                                             | number         | -      |
+| gutter | 栅格间隔                                                 | number         | 0      |
+| xs     | `<576px` 响应式栅格，可为栅格数或一个包含其他属性的对象  | number\|object | -      |
+| sm     | `≥576px` 响应式栅格，可为栅格数或一个包含其他属性的对象  | number\|object | -      |
+| md     | `≥768px` 响应式栅格，可为栅格数或一个包含其他属性的对象  | number\|object | -      |
+| lg     | `≥992px` 响应式栅格，可为栅格数或一个包含其他属性的对象  | number\|object | -      |
+| xl     | `≥1200px` 响应式栅格，可为栅格数或一个包含其他属性的对象 | number\|object | -      |
+| xxl    | `≥1600px` 响应式栅格，可为栅格数或一个包含其他属性的对象 | number\|object | -      |
+
+### List.Item
+
+<Framework only="react">
+
+<ListItemReactApi />
+
+其他原生属性（如 `data-*`）落在 `li` 上；可点击时 `aria-*` 与 `tabIndex` 落在内部的按钮上。`onClick` 作用于 `li`，优先于 List 的 `onClick`。
+
+</Framework>
+
+<Framework only="vue">
+
+<ListItemVueApi />
+
+`class`、`style`、`data-*`、`aria-*` 与原生属性经 attrs 落在 `li` 上，不落在 grid 模式下外层的 Col 上。
+
+</Framework>
+
+<Framework only="solid">
+
+<ListItemSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`）落在 `li` 上，不落在 grid 模式下外层的 Col 上；可点击时 `aria-*` 与 `tabIndex` 落在内部的按钮上，`ref.focus()` 转到该按钮。
+
+</Framework>
+
+## 文案规范
+
+- 首字母大写
+- 结尾不跟随标点符号
+- 语法平行：如主动态与被动态、陈述句与祈使句混合使用
+
+## 设计变量
+
+<DesignToken />

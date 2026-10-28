@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| active | Whether the item is the current one. `Breadcrumb` sets it, and callers should not pass it. | `boolean` | - |
+| children | Title content. Numbers and strings are truncated with a Tooltip, and other nodes render as they are. | `ReactNode` | - |
+| className | Class name of the outer span that wraps the item. | `string` | - |
+| href | Destination of the link, mounted on an a element. The current item does not render as a link. | `string` | - |
+| icon | Icon before the title. A Semi icon without `size` takes `small` or `default` from `compact` of Breadcrumb. | `React.ReactNode` | - |
+| noLink | Removes the hover and active styles. An item without `href` is no longer operable with the keyboard. | `boolean` | - |
+| onClick | Called on click, with the same parameters as `onClick` of Breadcrumb: the route object of the item with `routes`, or `{ name, href }` with children. The second parameter is the native MouseEvent. | <ApiType detail={"(item: BreadcrumbItemInfo \u007c RouteProps, e: React.MouseEvent) => void"}>Type</ApiType> | - |
+| ref | Ref of the outer span that wraps the item. | <ApiType detail={"React.Ref\u003cHTMLSpanElement>"}>Type</ApiType> | - |
+| route | The route object of the item when `Breadcrumb` renders it from `routes`, passed to `onClick`. Callers should not pass it. | `RouteProps` | - |
+| separator | Separator after this item. It overrides `separator` of Breadcrumb and can be text or a ReactNode. | `React.ReactNode` | - |
+| shouldRenderSeparator | Whether the separator after this item renders. `Breadcrumb` sets it by position and collapse state, and callers should not pass it. It defaults to true. | `boolean` | - |
+| style | Inline style of the outer span that wraps the item. | `CSSProperties` | - |

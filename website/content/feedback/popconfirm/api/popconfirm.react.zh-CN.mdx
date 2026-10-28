@@ -1,0 +1,61 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| afterClose | 确认框关闭且离场动画结束后调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterOpen | 确认框打开且进场动画结束后调用；没有进场动画时打开后即调用，受控与非受控相同；进场结束前被关闭的打开不调用。 | `TooltipProps['afterOpen']` | - |
+| aria-label | 对话框的 `aria-label`，传入后优先于标题。 | `string` | - |
+| aria-labelledby | 对话框的 `aria-labelledby`，缺省指向标题，没有标题时指向内容。 | `string` | - |
+| arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。 | `boolean` | - |
+| arrowStyle | 箭头的边框色、背景色与边框透明度。 | `ArrowStyle` | - |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向，缺省为 `true`。 | `boolean` | - |
+| cancelButtonProps | 取消按钮的属性。`autoFocus` 为 `true` 时打开后聚焦该按钮，`className`、`style` 与其他属性落在按钮上。 | `ButtonProps` | - |
+| cancelText | 取消按钮文字，缺省取语言包 `Popconfirm.cancel`（zh_CN 为 `取消`，en_US 为 `Cancel`）。 | `string` | - |
+| cancelType | 取消按钮类型。 | `ButtonType` | `"tertiary"` |
+| children | 触发元素。传入元素时由它接收触发事件与 ARIA 属性；文本等非元素内容会被包在 Tooltip 的 span 中。 | `React.ReactNode` | - |
+| className | 确认卡片（`.semi-popconfirm`）的类名，不落在弹出层上。 | `string` | - |
+| clickToHide | 点击弹出层及其内部任一元素时是否关闭。 | `TooltipProps['clickToHide']` | - |
+| closeOnEsc | 弹出层打开期间按 Esc 是否关闭确认框，与焦点位置无关，由最上层的弹出层响应，缺省为 `true`；`trigger` 为 `custom` 时只调用 `onEscKeyDown`；`visible` 受控时另以 `onVisibleChange(false)` 请求关闭，由使用方决定是否关闭。 | `TooltipProps['closeOnEsc']` | - |
+| condition | 是否允许触发显示，缺省为 `true`；只有显式设为 `false` 时，`hover`、`click`、`focus` 等触发行为才不生效。由 `true` 变为 `false` 时立即关闭已显示的确认框；`visible` 受控时只通过 `onVisibleChange` 请求关闭，使用方回写后才关闭。 | `boolean` | - |
+| content | 确认框内容，可以是 ReactNode，也可以是函数。函数的参数是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到打开时需要聚焦的元素上。 | `TooltipProps['content']` | - |
+| contentClassName | 弹出层内的内容容器（`.semi-popover`）的类名，与确认卡片的 `className` 分开设置。 | `string \| any[]` | - |
+| defaultVisible | 非受控时初始是否展示。 | `boolean` | - |
+| disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入确认框，缺省为 `false`。 | `TooltipProps['disableArrowKeyDown']` | - |
+| disabled | 是否禁用；禁用时只渲染触发元素，不弹出确认框。 | `boolean` | `false` |
+| disableFocusListener | `trigger` 为 `hover` 时，是否不响应键盘聚焦打开，缺省为 `false`。 | `boolean` | - |
+| guardFocus | 焦点位于确认框内时，Tab 是否在其中循环，缺省为 `true`。 | `TooltipProps['guardFocus']` | - |
+| icon | 自定义图标，接受 ReactNode；传入 `null` 或 `false` 时不显示图标。 | `React.ReactNode` | <ApiType detail={"\u003cIconAlertTriangle size=\"extra-large\" />"}>Type</ApiType> |
+| keepDOM | 关闭时是否保留内容而不销毁，缺省为 `false`。 | `boolean` | - |
+| motion | 弹出层出现与隐藏时是否有动画，缺省为 `true`。 | `boolean` | - |
+| mouseEnterDelay | 指针移入后延迟显示的毫秒数，缺省为 `50`，仅 `trigger` 为 `hover` 或 `focus` 时生效。 | `number` | - |
+| mouseLeaveDelay | 指针移出后延迟隐藏的毫秒数，缺省为 `50`，仅 `trigger` 为 `hover` 或 `focus` 时生效。 | `number` | - |
+| okButtonProps | 确认按钮的属性。`autoFocus` 为 `true` 时打开后聚焦该按钮，`className`、`style` 与其他属性落在按钮上。 | `ButtonProps` | - |
+| okText | 确认按钮文字，缺省取语言包 `Popconfirm.confirm`（zh_CN 为 `确定`，en_US 为 `Confirm`）。 | `string` | - |
+| okType | 确认按钮类型。 | `ButtonType` | `"primary"` |
+| onCancel | 点击取消按钮或关闭按钮时调用，参数是原生 `MouseEvent`。返回 Promise 时按钮保持加载，落定后才关闭确认框，reject 时保留确认框；返回其他值会被忽略。 | <ApiType detail={"(e: MouseEvent) => Promise\u003cany> \u007c void"}>Type</ApiType> | - |
+| onClickOutSide | 弹出层处于展示状态时，点击非触发元素、非弹层内部的区域时调用，参数是原生 `MouseEvent`。 | `TooltipProps['onClickOutSide']` | - |
+| onConfirm | 点击确认按钮时调用，参数是原生 `MouseEvent`。返回 Promise 时按钮保持加载，落定后才关闭确认框，reject 时保留确认框；返回其他值会被忽略。 | <ApiType detail={"(e: MouseEvent) => Promise\u003cany> \u007c void"}>Type</ApiType> | - |
+| onEscKeyDown | 弹出层打开期间按 Esc 时调用，参数是原生 `KeyboardEvent`。 | `TooltipProps['onEscKeyDown']` | - |
+| onOpen | 确认框显示、进场动画开始时调用，每次打开一次，早于 `afterOpen`，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。 | `TooltipProps['onOpen']` | - |
+| onVisibleChange | 显示状态请求变化时调用，参数是请求的显示状态。`visible` 受控时只报告用户交互发起的请求，使用方自己改变 `visible` 不触发。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| position | 弹出方向，可选 `top`、`topLeft`、`topRight`、`left`、`leftTop`、`leftBottom`、`right`、`rightTop`、`rightBottom`、`bottom`、`bottomLeft`、`bottomRight`，缺省为 `bottomLeft`（RTL 下为 `bottomRight`）。 | `Position` | - |
+| prefixCls | 确认卡片的类名前缀。 | `string` | `"semi-popconfirm"` |
+| ref | 接收句柄的引用，句柄只有 `focusTrigger` 方法。 | <ApiType detail={"React.Ref\u003cPopconfirmHandle>"}>Type</ApiType> | - |
+| returnFocusOnClose | 关闭后焦点是否回到触发元素，缺省为 `true`；`trigger` 为 `custom` 时不生效，受控的 `visible` 照常生效。 | `TooltipProps['returnFocusOnClose']` | - |
+| role | 弹出层的 ARIA role，与 `trigger` 无关。 | `string` | `"dialog"` |
+| showArrow | 是否显示箭头三角形，缺省为 `false`。 | `boolean` | - |
+| showCloseIcon | 是否显示右上角关闭按钮。关闭按钮触发 `onCancel`。 | `boolean` | `true` |
+| spacing | 弹出层与触发元素的距离，单位为像素，缺省为 `4`，开启 `showArrow` 时为 `10`；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number }` | - |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。确认卡片内的点击始终不会传到文档上的监听器。 | `boolean \| string` | `true` |
+| style | 确认卡片的内联样式。 | `CSSProperties` | - |
+| title | 标题，可以是字符串或 ReactNode。有标题时，对话框以标题命名（见 `aria-labelledby`）。 | `React.ReactNode` | - |
+| trigger | 触发展示的时机，可选 `hover`、`focus`、`click`、`contextMenu` 或 `custom`。`visible` 受控时，触发器事件只通过 `onVisibleChange` 请求打开或关闭。 | `Trigger` | `"click"` |
+| visible | 受控的展示状态。传入后由该值决定是否显示；点击触发器、确认、取消、点击外部与 Esc 只通过 `onVisibleChange` 请求变化，由使用方回写 `visible` 后才生效。 | `boolean` | - |
+
+**Methods**
+
+| 方法         | 说明                                                                                                                                     | 类型                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| focusTrigger | 让触发元素获得焦点。仅在 `returnFocusOnClose` 为 `true` 且 `trigger` 不是 `custom` 时生效；`disabled` 时没有触发元素可聚焦，调用无效果。 | <ApiType detail={"() => void"}>Type</ApiType> |

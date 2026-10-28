@@ -1,0 +1,197 @@
+---
+order: 80
+title: SideSheet
+icon: doc-sidesheet
+brief: An overlay panel that slides out from the edge of the screen, typically used to host secondary action pages.
+---
+
+import SideSheetReactApi from './api/side-sheet.react.en-US.mdx';
+import SideSheetVueApi from './api/side-sheet.vue.en-US.mdx';
+import SideSheetSolidApi from './api/side-sheet.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { SideSheet } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { SideSheet } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Radio, RadioGroup, SideSheet, TextArea, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+By default, SideSheet slides from the right side of the screen and could be closed by clicking on the mask.
+
+<Framework only="vue">
+
+Use `v-model:visible` to control visibility: the close button, the mask and Esc update `visible` first, then emit `@cancel`. With `:visible` and `@cancel` only, the sheet does not close by itself; set `visible` to `false` in the `@cancel` handler.
+
+</Framework>
+
+<Framework only="solid">
+
+Control visibility with the controlled `visible` prop: the close button, the mask and Esc trigger `onCancel` first, and the sheet does not close by itself; set `visible` to `false` in the `onCancel` handler.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Placement
+
+You could use `placement` to set the position from which SideSheet comes in, supporting one of `top`, `bottom`, `left`, `right`.
+
+<Demo id="placement" />
+
+### Size
+
+<Framework only="react">
+
+You could use `size` to set the size of SideSheet, supporting one of `small`(448px), `medium`(684px), and `large`(920px). Only takes effects when `placement` is set to `left` or `right`. If the default size does not meet your needs, you can also set the width by setting the `width` property, for example `width={900}` / `width={'800px'}`
+
+</Framework>
+
+<Framework only="vue">
+
+You could use `size` to set the size of SideSheet, supporting one of `small`(448px), `medium`(684px), and `large`(920px). Only takes effects when `placement` is set to `left` or `right`. If the default size does not meet your needs, you can also set the width by setting the `width` property, for example `:width="900"` / `width="800px"`
+
+</Framework>
+
+<Framework only="solid">
+
+You could use `size` to set the size of SideSheet, supporting one of `small`(448px), `medium`(684px), and `large`(920px). Only takes effects when `placement` is set to `left` or `right`. If the default size does not meet your needs, you can also set the width by setting the `width` property, for example `width={900}` / `width="800px"`
+
+</Framework>
+
+<Demo id="size" />
+
+### Non-blocking Workflow
+
+<Framework only="react">
+
+You could set `mask={false}` to continue working on the area outside SideSheet.
+
+</Framework>
+
+<Framework only="vue">
+
+You could set `:mask="false"` to continue working on the area outside SideSheet.
+
+</Framework>
+
+<Notice title='Tips'>
+
+With `mask` set to `false` the body scroll is not locked, so the area outside SideSheet scrolls as usual. Only a SideSheet with a mask that is rendered inside body (when you are not setting `getPopupContainer`) adds `overflow: hidden` to body when opened; set disableScroll to false to keep body scrollable.
+
+</Notice>
+
+<Framework only="solid">
+
+You could set `mask={false}` to continue working on the area outside SideSheet.
+
+</Framework>
+
+<Demo id="no-mask" />
+
+### Rendered Inside Container
+
+You could use `getPopupContainer` to render SideSheet in targeted DOM.
+
+<Notice title='Tips'>
+
+The container must have `overflow: hidden` to avoid animated SideSheet overflows.
+
+</Notice>
+
+<Demo id="popup-container" />
+
+### Customized Content
+
+<Framework only="react">
+
+Use `title`, `footer` and other Semi Components, you could create customized information display layers.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#title` and `#footer` slots and other Semi Components, you could create customized information display layers.
+
+</Framework>
+
+<Framework only="solid">
+
+Use the `title`, `footer` and other props, which take JSX elements, together with Semi Components to create customized information display layers.
+
+</Framework>
+
+<Demo id="custom-content" />
+
+## API Reference
+
+<Framework only="react">
+
+<SideSheetReactApi />
+
+`aria-*` attributes and `style` land on the `role="dialog"` element (`.semi-sidesheet-inner`); `className`, `ref` and other native attributes and events land on the outermost `.semi-sidesheet` element inside the portal.
+
+</Framework>
+
+<Framework only="vue">
+
+<SideSheetVueApi />
+
+`aria-*` attributes and `style` land on the `role="dialog"` element (`.semi-sidesheet-inner`), as in React. `class` and other native attributes land on the outermost `.semi-sidesheet` element inside the portal, which is also the `root` exposed through the component ref.
+
+</Framework>
+
+<Framework only="solid">
+
+<SideSheetSolidApi />
+
+`aria-*` attributes and `style` land on the `role="dialog"` element (`.semi-sidesheet-inner`); `class`, `ref` and other native attributes and events land on the outermost `.semi-sidesheet` element inside the portal.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- SideSheet has a `dialog` role to indicate that it is a pop-up component. The title element (`.semi-sidesheet-title`) has the `heading` role and `aria-level="2"` and names the dialog through `aria-labelledby`; the header itself has no role. When `aria-label` is passed it wins and that reference is not generated.
+- Every `aria-*` attribute and `style` land on the `role="dialog"` element; other undeclared props land on the outer element.
+- `aria-modal` is output only when the dialog is modal. A dialog is modal when it has a mask (`mask`) and is rendered in the body (judged by the actual container, so the `getPopupContainer` of ConfigProvider counts). With `mask` set to `false`, or a mask confined to a custom container, it is not output.
+
+### Keyboard and focus
+
+- Focus moves into the sheet when it opens.
+- With `closeOnEsc` set, pressing `Esc` closes the sheet (off by default).
+- A modal dialog (with a mask, rendered in the body): Tab cycles inside the sheet, the rest of the page is inert, and focus returns to the element focused before it opened when it closes. A sheet with a mask rendered in a custom container does not make the page inert; see the next item.
+- A non-modal dialog (`mask` set to `false`, or a mask confined to a custom container): Tab can leave the sheet for the page and the page outside the container stays usable; focus returns on close only if it is still inside the sheet or has fallen to the body, and focus the user has moved elsewhere on the page stays. With a mask confined to a custom container, other content inside that container can still be reached by Tab.
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- Does SideSheet disable body scrolling automatically? When a SideSheet with a mask is rendered in the body by default (no `getPopupContainer`), it adds `overflow: hidden` to the body on open to block scrolling. Set `disableScroll` to `false` to allow scrolling; scrolling is not locked when `mask` is `false`.

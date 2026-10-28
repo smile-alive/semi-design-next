@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                             | 类型                                                              | 默认值       |
+| --------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------ |
+| align     | 对齐方式，可选 `center`、`justify`、`left` 或 `plain`，`left` 指起始侧；`row` 为 `true` 时无效。 | `DescriptionsAlign`                                               | `"center"`   |
+| children  | `data` 为空时渲染的内容，通常为 `Descriptions.Item`。                                            | `React.ReactNode`                                                 | -            |
+| className | 根元素（`div`）的类名。                                                                          | `string`                                                          | -            |
+| column    | 横向布局下每行的总列数。                                                                         | `number`                                                          | `3`          |
+| data      | 列表显示的数据；为空时渲染 `children`。                                                          | `Data[]`                                                          | `[]`         |
+| layout    | 布局模式，可选 `vertical` 或 `horizontal`。                                                      | `DescriptionLayout`                                               | `"vertical"` |
+| ref       | 根元素（`div`）的引用。                                                                          | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -            |
+| row       | 是否双行显示，为 `true` 时 `align` 无效。                                                        | `boolean`                                                         | `false`      |
+| size      | 双行显示时的尺寸，可选 `small`、`medium` 或 `large`。                                            | `DescriptionsSize`                                                | `"medium"`   |
+| style     | 根元素（`div`）的样式。                                                                          | `React.CSSProperties`                                             | -            |

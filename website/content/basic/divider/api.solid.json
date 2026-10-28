@@ -1,0 +1,20 @@
+{
+    "divider": {
+        "source": "packages/semi-ui-solid/src/divider/divider.tsx",
+        "props": {
+            "align": {
+                "zh-CN": "带内容时内容的对齐方式，可选 left、center、right。",
+                "en-US": "Alignment of the content when the divider has content: left, center or right."
+            },
+            "dashed": { "zh-CN": "是否为虚线。", "en-US": "Whether the line is dashed." },
+            "layout": {
+                "zh-CN": "分割线方向，可选 horizontal 或 vertical。",
+                "en-US": "Direction of the divider: horizontal or vertical."
+            },
+            "margin": {
+                "zh-CN": "分割线上下 margin，垂直方向时为左右 margin；数字按像素处理。",
+                "en-US": "Margin above and below the divider, or left and right when vertical. A number is in pixels."
+            }
+        }
+    }
+}

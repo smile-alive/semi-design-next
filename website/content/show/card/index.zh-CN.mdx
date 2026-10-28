@@ -1,0 +1,288 @@
+---
+order: 65
+title: 卡片
+icon: doc-card
+brief: 常规的卡片容器，可以承载标题、段落、图片、列表等内容。
+---
+
+import CardReactApi from './api/card.react.zh-CN.mdx';
+import CardMetaReactApi from './api/card-meta.react.zh-CN.mdx';
+import CardGroupReactApi from './api/card-group.react.zh-CN.mdx';
+import CardVueApi from './api/card.vue.zh-CN.mdx';
+import CardMetaVueApi from './api/card-meta.vue.zh-CN.mdx';
+import CardGroupVueApi from './api/card-group.vue.zh-CN.mdx';
+import CardSolidApi from './api/card.solid.zh-CN.mdx';
+import CardMetaSolidApi from './api/card-meta.solid.zh-CN.mdx';
+import CardGroupSolidApi from './api/card-group.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Card } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Card, CardGroup, CardMeta } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`CardMeta` 即 `Card.Meta`，两种写法等价。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Card, CardGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基础卡片
+
+基础卡片包含标题、内容等部分。
+
+<Demo id="basic" />
+
+### 简洁卡片
+
+卡片可以只设置内容区域。
+
+<Demo id="simple" />
+
+### 封面
+
+<Framework only="react">
+
+可以使用 `cover` 属性设置封面。
+
+</Framework>
+
+<Framework only="solid">
+
+可以使用 `cover` 属性设置封面。
+
+</Framework>
+
+<Framework only="vue">
+
+可以使用 `#cover` 插槽设置封面。
+
+</Framework>
+
+<Demo id="cover" />
+
+### 边线和外边框
+
+可以使用 `bordered` 设置卡片是否有外边框，默认为 true 。同时，也可以使用 `headerLine` 设置内容区和标题区是否有边线， `footerLine` 设置内容区和页尾区是否有边线。
+
+<Demo id="border" />
+
+### 阴影
+
+可以使用 `shadows` 设置显示阴影的时机，可选值为: `hover`（hover 时显示阴影）、`always`（始终显示阴影），如果不设置该属性则没有阴影。
+
+<Demo id="shadows" />
+
+### 更灵活的内容展示
+
+<Framework only="react">
+
+可以利用 `Card.Meta` 支持更灵活的内容，允许设置 `title`、`avatar`、`description`。
+
+</Framework>
+
+<Framework only="solid">
+
+可以利用 `Card.Meta` 支持更灵活的内容，允许设置 `title`、`avatar`、`description`。
+
+</Framework>
+
+<Framework only="vue">
+
+可以利用 `CardMeta` 支持更灵活的内容，通过 `#title`（或 `title` 属性）、`#avatar`、`#description` 插槽设置。
+
+</Framework>
+
+<Demo id="meta" />
+
+### 内部卡片
+
+卡片内部可以嵌套其他卡片。
+
+<Demo id="inner" />
+
+### 栅格卡片
+
+在系统概览页面常常和栅格进行配合。
+
+<Demo id="column" />
+
+### 内置预加载
+
+可以使用 `Card` 的 `loading` 属性来设置卡片内容区是否显示占位元素，当它为 true 时将显示占位元素，反之则不显示。
+
+<Demo id="loading" />
+
+### 更丰富的预加载效果
+
+`Card` 自带的 `loading` 属性只能设置内容区的预加载效果，如果你想要设置其他部分的预加载，或者自定义更丰富的预加载效果，你可以结合 Skeleton 组件来实现。
+
+<Demo id="skeleton" />
+
+### 带页签的卡片
+
+可以结合 Tabs 组件，实现带页签的卡片。
+
+<Demo id="tabs" />
+
+### 卡片操作区
+
+<Framework only="react">
+
+`actions` 接收 ReactNode 数组，元素间将以 12px 的水平间距展示于内容区底部。
+
+</Framework>
+
+<Framework only="solid">
+
+`actions` 接收 JSX 元素数组，元素间将以 12px 的水平间距展示于内容区底部。
+
+</Framework>
+
+<Framework only="vue">
+
+`#actions` 插槽中的每个直接子节点是一个操作，元素间将以 12px 的水平间距展示于内容区底部。
+
+</Framework>
+
+<Demo id="actions" />
+
+### 卡片组
+
+`CardGroup` 中的卡片将呈现为等间距排列，利用 `spacing` 属性可以设置卡片间距大小。
+
+<Demo id="group" />
+
+### 网格型卡片组
+
+使用 `CardGroup` 的 `type` 属性，可以将卡片组设置为网格型。
+
+<Demo id="grid-group" />
+
+### API 参考
+
+**Card**
+
+<Framework only="vue">
+
+<CardVueApi />
+
+`class`、`style` 及其他未声明的属性落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<CardSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`）落在卡片的根元素（`div`）上。
+
+</Framework>
+
+<Framework only="react">
+
+<CardReactApi />
+
+`id`、`onClick` 等原生属性与事件落在卡片的根元素（`div`）上。
+
+</Framework>
+
+**CardGroup**
+
+<Framework only="vue">
+
+<CardGroupVueApi />
+
+未声明的属性落在内部 `Space` 的根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<CardGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件同样落在内部 `Space` 的根元素上。
+
+</Framework>
+
+<Framework only="react">
+
+<CardGroupReactApi />
+
+`id`、`onClick` 等其他原生属性与事件落在内部 `Space` 的根元素上。
+
+</Framework>
+
+**Card.Meta**
+
+<Framework only="vue">
+
+<CardMetaVueApi />
+
+未声明的属性落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<CardMetaSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在根元素（`div`）上。
+
+</Framework>
+
+<Framework only="react">
+
+<CardMetaReactApi />
+
+`id`、`onClick` 等原生属性与事件落在根元素（`div`）上。
+
+</Framework>
+
+## Accessibility
+
+- Card 支持传入 `aria-label` 或 `aria-labelledby` 来表示该 Card 作用，传入后根元素带 `role="group"`（传入的 `role` 优先）
+- Card loading 时，将开启 `aria-busy`
+- 字符串 `title` 按 h6 的样式渲染，但元素是 `div`，不带标题语义，不会打乱页面的标题层级；需要标题语义时，传入自己的标题元素作为 `title`（Vue 中写在 `#title` 插槽里）
+- Card 为容器型组件，卡片内部的任何元素需要遵循各自的可访问性指南
+
+## 文案规范
+
+- 卡片标题
+    - 卡片标题应具有信息描述性，聚焦最重要的信息
+    - 尽量将标题限制在 1 个短语或句段中
+    - 卡片标题应句子大小写书写
+    - 不要以标点符号结尾（除了问号）
+- 正文
+    - 可操作的：使用祈使句而不是“你可以”来描述正文，可以更好的告诉用户可以做什么
+
+| ✅ 推荐用法                    | ❌ 不推荐用法                          |
+| ------------------------------ | -------------------------------------- |
+| Get order progress for details | You can get order progress for details |
+
+- 总是优先说最重要的信息
+- 使用 “Need to”而不是”must“
+
+## 设计变量
+
+<DesignToken />

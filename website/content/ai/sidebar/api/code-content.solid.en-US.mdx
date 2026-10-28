@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                                     | Type                                                                                          | Default |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------- |
+| activeKey | Keys of the expanded code panels, one or several.                                                                                               | `string \| string[]`                                                                          | -       |
+| codes     | The code entries, each with the CodeItem props and a key identifying its panel.                                                                 | `CodeItemProps[]`                                                                             | -       |
+| onChange  | Called when the expanded panels change, with the expanded keys.                                                                                 | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>                | -       |
+| onExpand  | Called when the expand button in a panel header is clicked, with the event, the code entry and code; the button is shown only when this is set. | <ApiType detail={"(e: MouseEvent, code: CodeItemProps, mode: string) => void"}>Type</ApiType> | -       |

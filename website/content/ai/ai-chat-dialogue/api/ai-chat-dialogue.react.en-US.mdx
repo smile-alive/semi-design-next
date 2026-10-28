@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | Conversation layout: `leftRight` (both sides) or `leftAlign` (left-aligned). | `'leftRight' \| 'leftAlign'` | `"leftRight"` |
+| chats | Controlled list of conversation messages, used together with onChatsChange. | `Message[]` | - |
+| className | Class name of the root element. | `string` | - |
+| dialogueRenderConfig | Custom rendering of the dialogue parts: avatar, title, content, action bar or the whole dialogue. | `DialogueRenderConfig` | - |
+| disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
+| escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
+| hintCls | Class name of the outermost hint area. | `string` | - |
+| hints | Hint texts. Clicking a hint turns it into a new user message and calls onHintClick. | `string[]` | - |
+| hintStyle | Style of the outermost hint area. | `React.CSSProperties` | - |
+| markdownRenderProps | Props passed to the MarkdownRender of each message. `raw` and `ref` are decided by the message and cannot be passed. `components` is merged with the built-in ones, and a component with the same name (such as `code`) replaces the built-in one, and `AIChatDialogue.defaultComponents.code` can be wrapped to keep the default behavior; highlight languages for code blocks must be registered with `CodeHighlight.register` first. | `MarkdownRenderProps` | - |
+| messageEditRender | The editor shown while a user message is being edited; its argument is the input content converted from the message. | <ApiType detail={"(props: MessageContent) => ReactNode"}>Type</ApiType> | - |
+| mode | Conversation mode: `bubble`, `noBubble` or `userBubble`. | `'bubble' \| 'noBubble' \| 'userBubble'` | `"bubble"` |
+| onAnnotationClick | Called when the references of a message block are clicked, with that block's annotations. | <ApiType detail={"(annotations: Annotation[]) => void"}>Type</ApiType> | - |
+| onChatsChange | Called when the message list changes, with the new message array. | <ApiType detail={"(chats: Message[]) => void"}>Type</ApiType> | - |
+| onFileClick | Called when a file card is clicked, with the file. | <ApiType detail={"(file?: InputFile) => void"}>Type</ApiType> | - |
+| onHintClick | Called when a hint is clicked, with the hint text. | <ApiType detail={"(hint: string) => void"}>Type</ApiType> | - |
+| onImageClick | Called when an image is clicked, with the image. | <ApiType detail={"(image?: InputImage) => void"}>Type</ApiType> | - |
+| onMessageBadFeedback | Called when a message is disliked, with the message. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageCopy | Called when a message is copied, after the text has been written to the clipboard successfully. The copied text excludes reasoning; a message without text is neither written nor reported. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageDelete | Called when a message is deleted, with the message. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageEdit | Called when a message is edited, with the message. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageGoodFeedback | Called when a message is liked, with the message. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageReset | Called when a message is reset, with the message. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageShare | Called when a message is shared, with the message. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onReferenceClick | Called when a reference button is clicked. The argument has no `id`, which the caller adds before putting it into the `references` of AIChatInput; a file item has no `type`. | <ApiType detail={"(item: Partial\u003cReference>) => void"}>Type</ApiType> | - |
+| onSelect | Called when the selected messages change, with the ids of the selected messages. | <ApiType detail={"(selectedIds: string[]) => void"}>Type</ApiType> | - |
+| ref | Receives the handle object, which carries the methods listed in the Methods table; it is not a DOM element. | <ApiType detail={"React.Ref\u003cAIChatDialogueHandle>"}>Type</ApiType> | - |
+| renderDialogueContentItem | Renderers keyed by the `type` of a content item. A tool call is indexed by `type` and then by `name` (such as `create_travel_guide` under `function_call`), and a plain-text message uses the key `default`. | `DialogueContentItemRendererMap` | - |
+| renderHintBox | Custom rendering of each hint item, with the hint text `content`, its `index` and the click callback `onHintClick`. | <ApiType detail={"(props: { content: string; index: number; onHintClick: () => void }) => React.ReactNode"}>Type</ApiType> | - |
+| roleConfig | Name, avatar and avatar color of each role (user, assistant, system and so on). Required, and not read from the global defaults. | `RoleConfig` | - |
+| selecting | Whether multi-select mode is on. | `boolean` | `false` |
+| showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `false` |
+| showReset | Whether to show the reset action. | `boolean` | `true` |
+| style | Style of the root element. | `React.CSSProperties` | - |
+
+**Methods**
+
+| Method         | Description                                                  | Type                                                            |
+| -------------- | ------------------------------------------------------------ | --------------------------------------------------------------- |
+| deselectAll    | Deselects all messages.                                      | <ApiType detail={"() => void"}>Type</ApiType>                   |
+| scrollToBottom | Scrolls to the bottom, animated when the argument is `true`. | <ApiType detail={"(animation: boolean) => void"}>Type</ApiType> |
+| scrollToTop    | Scrolls to the top, animated when the argument is `true`.    | <ApiType detail={"(animation: boolean) => void"}>Type</ApiType> |
+| selectAll      | Selects all messages.                                        | <ApiType detail={"() => void"}>Type</ApiType>                   |

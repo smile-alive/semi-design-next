@@ -1,0 +1,26 @@
+**Props**
+
+| Property | Description                                                                                               | Type      | Default     |
+| -------- | --------------------------------------------------------------------------------------------------------- | --------- | ----------- |
+| disabled | Whether the link is disabled and ignores clicks.                                                          | `boolean` | `false`     |
+| href     | Target of the link. A value starting with # is looked up by element id, anything else as a CSS selector.  | `string`  | `"#"`       |
+| title    | Plain-text title, also the native title when showTooltip is off. The title slot wins when it is provided. | `string`  | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                           | Scope parameters |
+| ------- | ----------------------------------------------------- | ---------------- |
+| default | Nested Anchor.Link of the next level.                 | `any`            |
+| title   | Title as nodes. Takes precedence over the title prop. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

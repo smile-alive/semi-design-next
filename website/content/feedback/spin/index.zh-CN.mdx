@@ -1,0 +1,156 @@
+---
+title: 加载器
+order: 93
+icon: doc-spin
+brief: 加载器组件用于告知用户内容正在加载且需要一段不确定的时长。
+---
+
+import SpinReactApi from './api/spin.react.zh-CN.mdx';
+import SpinVueApi from './api/spin.vue.zh-CN.mdx';
+import SpinSolidApi from './api/spin.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Spin } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Spin } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Spin } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Demo id="basic" />
+
+### 尺寸
+
+组件定义了三种尺寸：大、中（默认）、小。
+
+<Demo id="size" />
+
+### 带文字的
+
+<Framework only="react">
+
+通过 `tip` 属性可设置当 Spin 用作包裹元素时的文字。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#tip` 插槽可设置当 Spin 用作包裹元素时的文字，被包裹的内容放在默认插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `tip` 属性可设置当 Spin 用作包裹元素时的文字。
+
+</Framework>
+
+<Demo id="tip" />
+
+### 自定义指示符
+
+<Framework only="react">
+
+可以通过设置 `indicator` 属性自定义 Spin 的指示符样式。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#indicator` 插槽自定义 Spin 的指示符样式。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过设置 `indicator` 属性自定义 Spin 的指示符样式。
+
+</Framework>
+
+<Demo id="indicator" />
+
+### 延迟显示
+
+通过 delay 设置延迟显示 `loading` 的效果  
+组件是否处于 `loading` 状态由传入的 `spinning` 值决定，loading 为受控属性
+
+<Demo id="delay" />
+
+### 受控
+
+通过 `spinning` 控制组件是否处于 `loading` 状态
+
+<Demo id="controlled" />
+
+## API 参考
+
+<Framework only="react">
+
+<SpinReactApi />
+
+其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素 `div` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<SpinVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SpinSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件落在根元素 `div` 上。
+
+</Framework>
+
+Spin 作为包裹元素且处于加载中时，被包裹的内容带 `inert`，不能聚焦和操作，根元素带 `aria-busy`。焦点原在被包裹内容里时会先移到 Spin 根元素，加载结束后回到原来的元素。
+
+## 设计变量
+
+<DesignToken />
+
+## 文案规范
+
+- 准确地说明加载状态，使用比如“Loading”, “Submitting”, “Processing”等词
+- 使用尽量少的词汇去描述状态
+
+## FAQ
+
+- **怎么修改 icon 的颜色？**
+
+    可以通过给 .semi-spin-wrapper 类添加 color 属性覆盖原有的颜色（推荐以更高权重覆盖）
+
+    ```
+    .custom .semi-spin-wrapper {
+      color: red;
+    }
+    ```

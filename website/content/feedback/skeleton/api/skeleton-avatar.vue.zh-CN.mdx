@@ -1,0 +1,28 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                        | 类型                                                                                                                                                       | 默认值      |
+| --------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| size      | 占位头像的大小。                                                            | <ApiType detail={"\"medium\" \u007c \"small\" \u007c \"extra-extra-small\" \u007c \"extra-small\" \u007c \"large\" \u007c \"extra-large\""}>Type</ApiType> | `"medium"`  |
+| shape     | 占位头像的形状，可选 circle 或 square。                                     | `"circle" \| "square"`                                                                                                                                     | `"circle"`  |
+| prefixCls | 类名前缀，默认为 semi-skeleton。                                            | `string`                                                                                                                                                   | `undefined` |
+| type      | 替换占位块自带的类型，同时决定它的类名；不为 avatar 时 size、shape 不生效。 | `string`                                                                                                                                                   | `undefined` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

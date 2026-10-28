@@ -1,0 +1,45 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addOnBlur | Whether the input text becomes a tag when the focus leaves the component. | `boolean` | `false` |
+| allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `true` |
+| aria-label | Accessible name of the input. It is set on the input, not on the root. | `string` | - |
+| autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
+| clearIcon | Replaces the icon in the clear button; empty content keeps the default icon. | `JSX.Element` | - |
+| defaultValue | Initial tags when uncontrolled. | `string[]` | - |
+| disabled | Whether the component is disabled. | `boolean` | - |
+| draggable | Whether tags can be reordered by dragging. | `boolean` | `false` |
+| expandRestTagsOnClick | When not draggable, whether the collapsed tags expand once focus enters the component (click, Tab or the focus method). | `boolean` | `true` |
+| inputValue | Current input text. Pair it with onInputChange for a controlled input. | `string` | - |
+| insetLabel | Inset label shown before the input; when prefix is also given, only prefix is shown. When shown, it names an input that has no aria-label or aria-labelledby. | `JSX.Element` | - |
+| insetLabelId | id of the inset label container, for aria-labelledby; the component generates one when omitted. | `string` | - |
+| max | Maximum number of tags. | `number` | - |
+| maxLength | Maximum length of one tag. | `number` | - |
+| maxTagCount | Maximum number of tags shown; the rest are shown as +N. | `number` | - |
+| name | The name of the text input, for forms. | `string` | - |
+| onAdd | Called when tags are added, with the added tags. | <ApiType detail={"(addedValue: string[]) => void"}>Type</ApiType> | - |
+| onBlur | Called once when the focus leaves the whole component; moving inside it does not call it. | <ApiType detail={"(e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => void"}>Type</ApiType> | - |
+| onChange | Called when the tags change, with the whole list of tags. | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onExceed | Called when adding would exceed max, with the whole list before it is cut. | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onFocus | Called once when the focus enters from outside; moving between the input, tags and clear button does not call it. | <ApiType detail={"(e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => void"}>Type</ApiType> | - |
+| onInputChange | Called when the input text changes. The event may be an input event, a KeyboardEvent (Enter adds), a FocusEvent (addOnBlur), a MouseEvent (clear) or a CompositionEvent (IME truncation); narrow it by `event.type` before reading its own fields. | <ApiType detail={"(value: string, e: Event) => void"}>Type</ApiType> | - |
+| onInputExceed | Called when the input text exceeds maxLength, with the rejected input text. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onKeyDown | Called on keydown in the input after the component handled it; calling `preventDefault` there does not stop Enter from adding a tag. | <ApiType detail={"(e: InputElementEvent\u003cKeyboardEvent>) => void"}>Type</ApiType> | - |
+| onRemove | Called when a tag is removed, with the removed tag and its index. | <ApiType detail={"(removedValue: string, idx: number) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the input while there are no tags. | `string` | - |
+| prefix | Prefix of the input; text or an icon gets side spacing automatically, while a custom element gets none and can set its own. | `JSX.Element` | - |
+| preventScroll | Whether the focus calls inside the component stop the browser from scrolling the focused element into view. | `boolean` | - |
+| renderTagItem | Renders each tag with a custom element in place of the default tag. The third argument, onClose, removes that tag and can be passed directly as a button's `onClick`. | <ApiType detail={"(value: string, index: number, onClose: () => void) => JSX.Element"}>Type</ApiType> | - |
+| restTagsPopoverProps | Popover props of the +N overlay, such as position and trigger. Do not pass `content`: it replaces the list of remaining tags. | `RestTagsPopoverProps` | - |
+| separator | Separator(s) for adding several tags at once; null disables splitting. | `string \| string[] \| null` | `","` |
+| showClear | Whether to show the button that clears all tags and the input text. | `boolean` | `false` |
+| showContentTooltip | Whether hovering a truncated tag shows its full text in an overlay; an object sets the overlay `type` (`tooltip` or `popover`) and passes `opts` to it. | `boolean \| ShowTooltip` | `true` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `true` |
+| size | Size: small, default or large. | `TagInputSize` | `"default"` |
+| split | Custom split function that receives the raw string and the separator, and returns the split strings. | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
+| suffix | Suffix of the input; text or an icon gets side spacing automatically, while a custom element gets none and can set its own. | `JSX.Element` | - |
+| validateStatus | Validation status, which only affects styling; error also sets aria-invalid on the input. | `TagInputValidateStatus` | `"default"` |
+| value | Current tags, pair it with onChange for a controlled list; undefined means uncontrolled, null means controlled with no tags. | `string[] \| null` | - |

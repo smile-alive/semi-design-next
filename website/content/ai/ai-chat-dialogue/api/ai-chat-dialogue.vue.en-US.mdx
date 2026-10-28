@@ -1,0 +1,62 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | Conversation layout: leftRight or leftAlign. | `"leftRight" \| "leftAlign"` | `semiDefault("AIChatDialogue", "align", "leftRight")` |
+| chats | Controlled list of conversation messages; bind it with v-model:chats. | `Message[]` | `semiGlobalDefault("AIChatDialogue", "chats")` |
+| disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `semiDefault("AIChatDialogue", "disabledFileItemClick", false)` |
+| escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `semiDefault("AIChatDialogue", "escapeHtml", true)` |
+| hintCls | Class name of the outermost hint area element. | `string` | `semiGlobalDefault("AIChatDialogue", "hintCls")` |
+| hints | Hint texts. Clicking a hint turns it into a new user message and emits hintClick. | `string[]` | `semiGlobalDefault("AIChatDialogue", "hints")` |
+| hintStyle | Style of the outermost hint area element. | `StyleValue` | `semiGlobalDefault("AIChatDialogue", "hintStyle")` |
+| selecting | Whether multi-select mode is on. | `boolean` | `semiDefault("AIChatDialogue", "selecting", false)` |
+| markdownRenderProps | Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one. | `MarkdownRenderProps` | `semiGlobalDefault("AIChatDialogue", "markdownRenderProps")` |
+| mode | Conversation mode: bubble, noBubble or userBubble. | `"bubble" \| "noBubble" \| "userBubble"` | `semiDefault("AIChatDialogue", "mode", "bubble")` |
+| roleConfig | Name, avatar and avatar color of each role (user, assistant, system and so on). Required, and not read from the global defaults. | `RoleConfig` | `undefined` |
+| showReset | Whether to show the reset action. | `boolean` | `semiDefault("AIChatDialogue", "showReset", true)` |
+| showReference | Whether to show the reference icon on text or file messages. Only user messages are affected. | `boolean` | `semiDefault("AIChatDialogue", "showReference", false)` |
+
+**Events**
+
+| Event               | Description                                                                                                                                                                                  | Callback parameters                                                |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| update:chats        | Emitted when the message list changes; v-model:chats updates from it. It carries the same array as chatsChange.                                                                              | `[chats: Message[]]`                                               |
+| chatsChange         | Emitted when the message list changes, with the new message array.                                                                                                                           | `[chats: Message[]]`                                               |
+| annotationClick     | Emitted when the references of a message block are clicked, with that block's annotations.                                                                                                   | `[annotations: Annotation[]]`                                      |
+| fileClick           | Emitted when a file card is clicked.                                                                                                                                                         | `[file?: InputFile \| undefined]`                                  |
+| hintClick           | Emitted when a hint is clicked.                                                                                                                                                              | `[hint: string]`                                                   |
+| imageClick          | Emitted when an image is clicked.                                                                                                                                                            | `[image?: InputImage \| undefined]`                                |
+| messageBadFeedback  | Emitted when a message is disliked.                                                                                                                                                          | `[message?: Message \| undefined]`                                 |
+| messageCopy         | Emitted when a message is copied, after the text has been written to the clipboard successfully. The copied text excludes reasoning; a message without text is neither written nor reported. | `[message?: Message \| undefined]`                                 |
+| messageDelete       | Emitted when a message is deleted.                                                                                                                                                           | `[message?: Message \| undefined]`                                 |
+| messageEdit         | Emitted when a message is edited.                                                                                                                                                            | `[message?: Message \| undefined]`                                 |
+| messageGoodFeedback | Emitted when a message is liked.                                                                                                                                                             | `[message?: Message \| undefined]`                                 |
+| messageReset        | Emitted when a message is reset.                                                                                                                                                             | `[message?: Message \| undefined]`                                 |
+| messageShare        | Emitted when a message is shared.                                                                                                                                                            | `[message?: Message \| undefined]`                                 |
+| referenceClick      | Emitted when a reference button is clicked. The payload has no id, which the caller adds before putting it into the references of AIChatInput; a file item has no type.                      | <ApiType detail={"[item: Partial\u003cReference>]"}>Type</ApiType> |
+| select              | Emitted when the selected messages change.                                                                                                                                                   | `[selectedIds: string[]]`                                          |
+
+**Slots**
+
+| Slot         | Description                                                                                                                                                                                                                | Scope parameters                      |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| avatar       | Custom avatar, with the default avatar defaultAvatar, the message and the role.                                                                                                                                            | `AIChatDialogueAvatarSlotProps`       |
+| title        | Custom title, with the default title defaultTitle, the message and the role.                                                                                                                                               | `AIChatDialogueTitleSlotProps`        |
+| content      | Custom content area, with the default content defaultContent, the message, the role and class. defaultContent matches the default rendering, including the reference list and the loading indicator.                       | `AIChatDialogueContentSlotProps`      |
+| action       | Custom action bar, with the default buttons defaultActions, the same buttons by name defaultActionsObj, the message and class. A key is missing when its button is not shown, for example while the message is unfinished. | `AIChatDialogueActionSlotProps`       |
+| fullDialogue | Replaces a whole dialogue, with defaultNodes (avatar, title, content, action), the message, the role and class.                                                                                                            | `AIChatDialogueFullDialogueSlotProps` |
+| contentItem  | Custom rendering by content item. Every item passes through it first, with item, type, message, index and parent; empty output leaves the item to the built-in rendering.                                                  | `AIChatDialogueContentItemSlotProps`  |
+| messageText  | Replaces the Markdown rendering of a message whose content is plain text, with the text and the message.                                                                                                                   | `AIChatDialogueMessageTextSlotProps`  |
+| messageEdit  | The editor shown while a user message is being edited; its parameters are the input content converted from the message.                                                                                                    | `MessageContent`                      |
+| hintBox      | Custom hint item, with the hint text content, the index and the click callback onHintClick.                                                                                                                                | `AIChatDialogueHintBoxSlotProps`      |
+
+**Exposes**
+
+| Name           | Description                                                | Type                                                            |
+| -------------- | ---------------------------------------------------------- | --------------------------------------------------------------- |
+| selectAll      | Selects all messages.                                      | <ApiType detail={"() => void"}>Type</ApiType>                   |
+| deselectAll    | Deselects all messages.                                    | <ApiType detail={"() => void"}>Type</ApiType>                   |
+| scrollToBottom | Scrolls to the bottom, animated when the argument is true. | <ApiType detail={"(animation: boolean) => void"}>Type</ApiType> |
+| scrollToTop    | Scrolls to the top, animated when the argument is true.    | <ApiType detail={"(animation: boolean) => void"}>Type</ApiType> |

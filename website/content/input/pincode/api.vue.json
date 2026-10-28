@@ -1,0 +1,64 @@
+{
+    "pin-code": {
+        "source": "packages/semi-ui-vue/src/pincode/pincode.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "输入框内容，配合 v-model 使用。",
+                "en-US": "Input content, used with v-model."
+            },
+            "modelModifiers": {
+                "zh-CN": "v-model 修饰符，由 Vue 在使用 v-model.trim 等修饰符时传入；声明后修饰符不再作为属性落到根元素上。",
+                "en-US": "The v-model modifiers, passed by Vue for v-model.trim and the like; declaring them keeps the modifiers off the root element."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when uncontrolled." },
+            "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
+            "format": {
+                "zh-CN": "单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。",
+                "en-US": "Format limit for a single character: number allows digits only, mixed allows digits and letters, and a regular expression or function judges each character."
+            },
+            "autofocus": {
+                "zh-CN": "挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。",
+                "en-US": "Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the input is disabled." },
+            "size": {
+                "zh-CN": "输入框大小，可选 large、default、small。",
+                "en-US": "Input size: large, default or small."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，传给每个输入框；error 时显示错误样式。",
+                "en-US": "Validation status, passed to every input; error shows the error style."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "内容变化时触发，供 v-model 回写。",
+                "en-US": "Emitted when the content changes, for v-model to write back."
+            },
+            "change": {
+                "zh-CN": "内容变化时触发，参数为当前内容。",
+                "en-US": "Emitted when the content changes, with the current content."
+            },
+            "complete": {
+                "zh-CN": "所有位数输入完毕时触发，参数为当前内容。",
+                "en-US": "Emitted once all digits are entered, with the current content."
+            },
+            "focus": {
+                "zh-CN": "焦点进入整个验证码时触发，在输入框之间移动不触发。",
+                "en-US": "Emitted when focus enters the code from outside; moving between the inputs does not emit it."
+            },
+            "blur": { "zh-CN": "焦点离开整个验证码时触发。", "en-US": "Emitted when focus leaves the whole code." }
+        },
+        "slots": {},
+        "exposed": {
+            "focus": {
+                "zh-CN": "聚焦第 index 个输入框，序号从 0 开始，超出范围时忽略；光标放在该格字符之后。",
+                "en-US": "Focuses the input at index, counted from 0 and ignored when out of range, with the caret after its character."
+            },
+            "blur": {
+                "zh-CN": "让第 index 个输入框失焦，序号从 0 开始，超出范围时忽略。",
+                "en-US": "Blurs the input at index, counted from 0 and ignored when out of range."
+            }
+        }
+    }
+}

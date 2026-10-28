@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                         | 类型                                                                                          | 默认值      |
+| --------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | ----------- |
+| badge     | 徽章参数，同 Badge 的 props，作用于包裹按钮内容的 Badge。    | `BadgeProps`                                                                                  | -           |
+| className | 根元素的类名。                                               | `string`                                                                                      | -           |
+| colorful  | 多彩悬浮按钮。                                               | `boolean`                                                                                     | `false`     |
+| disabled  | 禁用状态。禁用的链接会去掉 `href`，并设置 `role` 为 `link`。 | `boolean`                                                                                     | -           |
+| href      | 链接地址，设置后渲染为 `<a>` 元素；禁用时去掉 `href`。       | `string`                                                                                      | -           |
+| icon      | 按钮图标，渲染在按钮内容区域内。                             | `React.ReactNode`                                                                             | -           |
+| onClick   | 点击回调，参数为 `React.MouseEvent`；禁用时不触发。          | <ApiType detail={"(e: React.MouseEvent) => void"}>Type</ApiType>                              | -           |
+| ref       | 指向根元素：设置 `href` 时为 `<a>`，否则为 `<button>`。      | <ApiType detail={"React.Ref\u003cHTMLButtonElement \u007c HTMLAnchorElement>"}>Type</ApiType> | -           |
+| rel       | 与链接目标的关系，仅在设置 `href` 时生效。                   | `string`                                                                                      | -           |
+| shape     | 形状，可选 `round`、`square`。                               | `'square' \| 'round'`                                                                         | `"round"`   |
+| size      | 尺寸，可选 `default`、`small`、`large`。                     | `'small' \| 'default' \| 'large'`                                                             | `"default"` |
+| style     | 根元素的样式。                                               | `React.CSSProperties`                                                                         | -           |
+| target    | 指定在何处显示链接的 URL，仅在设置 `href` 时生效。           | `string`                                                                                      | -           |

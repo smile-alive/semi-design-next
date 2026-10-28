@@ -1,0 +1,4 @@
+{
+    "compilerOptions": { "strict": true, "types": [], "noEmit": true, "noUnusedLocals": true, "noUnusedParameters": true },
+    "include": ["*.vue"]
+}

@@ -1,0 +1,149 @@
+---
+title: 评分
+order: 45
+icon: doc-rating
+brief: 展示评分的组件
+---
+
+import RatingReactApi from './api/rating.react.zh-CN.mdx';
+import RatingVueApi from './api/rating.vue.zh-CN.mdx';
+import RatingSolidApi from './api/rating.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Rating } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Rating } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Rating } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+最简单的用法，支持两种尺寸 `default`， `small`。
+
+支持传入 number 类型自定义尺寸。具体可以参考[自定义](#自定义)
+
+<Demo id="basic" />
+
+### 半星
+
+通过设置 `allowHalf` 属性可以支持选择半星。 `allowHalf` 属性支持**展示**除0.5以外的小数。
+
+<Demo id="half" />
+
+### 只读
+
+通过设置 `disabled` 属性将无法进行交互。
+
+<Demo id="disabled" />
+
+### 点击清除
+
+通过设置 `allowClear` 属性允许再次点击时清除数值，默认为 `true`。
+
+<Demo id="clear" />
+
+### 文案展现
+
+给评分组件加上文案展示。
+
+<Demo id="tooltips" />
+
+### 自定义
+
+自定义评分字符、个数及尺寸。  
+自定义尺寸需要配合自定义的字符才能生效。
+
+<Framework only="vue">
+
+自定义字符使用 `#character` 插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+自定义字符使用 `character` 属性。
+
+</Framework>
+
+<Demo id="custom" />
+
+## API参考
+
+<Framework only="react">
+
+<RatingReactApi />
+
+`aria-label` 原样作为 radiogroup 的可访问名称，缺省时名称概括当前取值；`aria-labelledby` 引用标签元素的 id 作为名称；`data-*` 等其他原生属性落在 `role="radiogroup"` 的根 `ul` 上。
+
+`ref` 上的 `focus()` 聚焦 Tab 会到达的 radio（与 `autoFocus` 的落点相同），`blur()` 只在焦点位于评分内时生效。不再支持 `tabIndex`：传入的值被丢弃，列表固定为 `tabIndex={-1}`，只有选中的 radio 可以 Tab 到达。
+
+</Framework>
+
+<Framework only="vue">
+
+<RatingVueApi />
+
+`class`、`style` 与原生属性（`id`、`aria-labelledby`、`aria-invalid`、`aria-required`、`data-*` 等）经 attrs 落在 `role="radiogroup"` 的根元素上；`tabindex` 与 `name` 被丢弃，列表固定为 `tabindex="-1"`，只有选中的 radio 可以 Tab 到达。声明了 `click` 事件后，`@click` 不再作为根元素的原生点击监听。
+
+</Framework>
+
+<Framework only="solid">
+
+<RatingSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `id`、`aria-labelledby`、`aria-invalid`、`aria-required`、`data-*` 等）落在 `role="radiogroup"` 的根 `ul` 上；`tabIndex` 与 `name` 被丢弃，列表固定为 `tabIndex={-1}`，只有选中的 radio 可以 Tab 到达。
+
+`ref` 上的 `focus()` 聚焦 Tab 会到达的 radio（与 `autofocus` 的落点相同），`blur()` 只在焦点位于评分内时生效。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Rating 具有 `aria-checked` 表示当前是否选中，`aria-posinset` 表示在列表的位置，`aria-setsize` 表示列表的长度。
+- Semi 支持自定义 Rating 的语义:
+    - `aria-label` 作为 radiogroup 的可访问名称，原样使用；
+    - 自定义字符是纯文本时（React 为 string 类型的 `character`，Vue 为只含文本的 `#character` 插槽），各星项名称以这段文本为单位，否则用语言包默认的单位；
+    - 两者互不影响，可以同时传入。
+
+### 键盘和焦点
+
+- Rating 的初始焦点设置（Tab 停靠点，按 APG radio group）：
+    - 若 Rating 有选择项，初始焦点设置在最后一个选择项上（如：有 3 颗星被点亮，则初始焦点设置在第三颗被点亮的星上）；
+    - 若 Rating 没有选择项（值为 0），初始焦点落在表示 0 星的空星 radio 上；
+    - 当前值不对应任何 radio 时（如未开启 `allowHalf` 时值为 2.5），第一个 radio 是 Tab 停靠点，键盘仍可进入；此时方向键选中与该值相邻的 radio（2.5 时右箭头得 3，左箭头得 2）。
+- 一个 Rating 组上，可以通过 `下箭头` 或 `右箭头` 选中下一个星（值增加，从最后一颗星之后回到 0），`上箭头` 或 `左箭头` 选中上一个星（值减小，从 0 回到最后一颗星）；RTL 下只镜像左右方向键，上下方向键不变；
+    - 用户设置了 `allowHalf` 属性，按方向键只选中或取消选中半颗星；
+- `Space` 选中获得焦点的未选中星；在已选中的星上按 `Space` 不会清除，清除使用 `Enter` 或点击（受 `allowClear` 控制）；
+- 评分列表本身不是 Tab 停靠点，Rating 作为 Tooltip 的触发器时也不会多出一个 Tab 停靠点；
+- 调用实例的 `focus()` 聚焦的是 Tab 会到达的 radio；
+- 配置 `tooltips` 时，键盘聚焦星级会显示该星的提示，并通过 `aria-describedby` 关联；
+- `disabled`的 Rating 无法被获取到焦点。
+
+## 设计变量
+
+<DesignToken />

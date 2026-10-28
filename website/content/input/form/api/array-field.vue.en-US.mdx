@@ -1,0 +1,24 @@
+**Props**
+
+| Property  | Description                                                                                              | Type        | Default                                        |
+| --------- | -------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------- |
+| field     | Required. Path of the array in formState.values. For rows with fields a[0].name and a[1].name pass a.    | `string`    | `undefined`                                    |
+| initValue | Initial value of the array, which must be an array. It takes precedence over the initValues of the Form. | `unknown[]` | `semiGlobalDefault("ArrayField", "initValue")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                             | Scope parameters      |
+| ------- | ----------------------------------------------------------------------- | --------------------- |
+| default | The rows. The scope provides arrayFields, onAdd and onAddWithInitValue. | `ArrayFieldSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

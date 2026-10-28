@@ -1,0 +1,375 @@
+{
+    "select": {
+        "source": "packages/semi-ui-vue/src/select/select.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "当前选中的值，用 v-model 绑定；多选时为数组。传入后即为受控组件，值为 undefined 时按非受控处理并读取 defaultValue。",
+                "en-US": "The selected value, bound with v-model; an array in multiple mode. Passing it makes the Select controlled; undefined is treated as uncontrolled and reads defaultValue."
+            },
+            "defaultValue": {
+                "zh-CN": "初始选中的值，只在挂载时读取；多选时为数组。",
+                "en-US": "The initially selected value, read on mount only; an array in multiple mode."
+            },
+            "multiple": {
+                "zh-CN": "是否多选。它决定 change 与 update:modelValue 的载荷类型：多选为数组，单选为单个值或 undefined。全局默认值不能设置它。",
+                "en-US": "Whether multiple options can be selected. It decides the payload type of change and update:modelValue: an array in multiple mode, a single value or undefined otherwise. The global defaults cannot set it."
+            },
+            "optionList": {
+                "zh-CN": "以数组形式传入选项，每项须带 value 与 label（label 为字符串或数字），其余字段随选项记录一起回传。数组非空时优先于默认插槽；不支持分组。",
+                "en-US": "Options as an array. Each item needs value and label (a string or number); other fields travel with the option record. A non-empty array takes precedence over the default slot; groups are not supported."
+            },
+            "filter": {
+                "zh-CN": "是否可搜索。传入 true 时开启搜索，默认策略为选项 label（含所在分组的标题）包含输入值；传入函数时接收输入值与选项，返回 true 表示命中。",
+                "en-US": "Whether the Select is searchable. true turns search on with the default strategy, which matches options whose label (or group title) contains the input; a function receives the input value and the option and returns true for a match."
+            },
+            "remote": {
+                "zh-CN": "是否开启远程搜索。开启后输入内容变化时不再在本地筛选，由使用方根据 search 事件更新 optionList。",
+                "en-US": "Whether search is remote. When on, typing does not filter locally; update optionList from the search event instead."
+            },
+            "allowCreate": {
+                "zh-CN": "是否允许创建下拉列表中不存在的条目，需配合 filter 使用。创建时触发 create 事件，条目的渲染可用 createItem 插槽定制。",
+                "en-US": "Whether items missing from the list can be created; use it together with filter. The create event fires on creation, and the createItem slot customizes the row."
+            },
+            "autoClearSearchValue": {
+                "zh-CN": "多选并开启搜索时，选中选项后是否自动清空搜索关键字。",
+                "en-US": "In a searchable multiple Select, whether the search keyword is cleared after an option is selected."
+            },
+            "autofocus": {
+                "zh-CN": "挂载后是否自动聚焦。",
+                "en-US": "Whether the Select takes focus after mounting."
+            },
+            "defaultOpen": {
+                "zh-CN": "是否默认展开下拉列表。",
+                "en-US": "Whether the dropdown is open when mounted."
+            },
+            "clickToHide": {
+                "zh-CN": "下拉列表已展开时，点击选择框是否收起它。",
+                "en-US": "Whether clicking the select box closes an open dropdown."
+            },
+            "defaultActiveFirstOption": {
+                "zh-CN": "没有选中值时，打开下拉列表是否默认高亮第一个未禁用的选项（按 Enter 可直接选中）。已有选中值时总是高亮第一个已选的选项。",
+                "en-US": "Whether opening the dropdown highlights the first enabled option when nothing is selected (press Enter to select it). With a selected value, the first selected option is always highlighted."
+            },
+            "changeWithObject": {
+                "zh-CN": "布尔属性而不是事件：设为 true 时，change、update:modelValue 与 modelValue、defaultValue 使用选项对象，对象须含 value 与 label。",
+                "en-US": "A boolean attribute, not an event: when true, change, update:modelValue, modelValue and defaultValue use option objects, which must contain value and label."
+            },
+            "max": {
+                "zh-CN": "最多可选几项，仅多选时生效；超出后无法继续选中并触发 exceed 事件。",
+                "en-US": "The maximum number of selected options, in multiple mode only; beyond it nothing more can be selected and the exceed event fires."
+            },
+            "maxTagCount": {
+                "zh-CN": "多选时最多显示的标签数，超出的部分以 +N 显示。",
+                "en-US": "In multiple mode, the most tags shown; the rest collapse into +N."
+            },
+            "maxHeight": {
+                "zh-CN": "下拉列表的最大高度，数字按像素处理，字符串原样使用。虚拟列表的 height 大于默认值时，需同时设置为相同的值，避免出现双滚动条。",
+                "en-US": "The maximum height of the option list; a number is in pixels, a string is used as is. When the virtual list height exceeds the default, set this to the same value to avoid a double scrollbar."
+            },
+            "showRestTagsPopover": {
+                "zh-CN": "超出 maxTagCount 后，hover 到 +N 时是否用 Popover 显示剩余的标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded."
+            },
+            "restTagsPopoverProps": {
+                "zh-CN": "显示剩余标签的 Popover 的配置，可设置 position、trigger 等。",
+                "en-US": "Configuration of the Popover that shows the remaining tags, such as position and trigger."
+            },
+            "expandRestTagsOnClick": {
+                "zh-CN": "多选并设置 maxTagCount 时，下拉列表展开期间是否显示全部标签。",
+                "en-US": "In multiple mode with maxTagCount, whether all tags are shown while the dropdown is open."
+            },
+            "ellipsisTrigger": {
+                "zh-CN": "多选并设置 maxTagCount 时，宽度不足是否截断最后一个标签的内容。开启后有一定性能损耗，不建议在大表单中使用。",
+                "en-US": "In multiple mode with maxTagCount, whether the last tag is truncated when the width is short. It costs some performance, so avoid it in large forms."
+            },
+            "size": {
+                "zh-CN": "大小，可选 small、default、large。",
+                "en-US": "Size: small, default or large."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the Select is disabled." },
+            "borderless": { "zh-CN": "是否使用无边框样式。", "en-US": "Whether the Select has no border." },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 default、warning、error，只影响背景色等样式。",
+                "en-US": "Validation status: default, warning or error. It only affects styles such as the background color."
+            },
+            "placeholder": {
+                "zh-CN": "选择框中没有选中值时显示的占位文字。",
+                "en-US": "Placeholder text shown while nothing is selected."
+            },
+            "searchPlaceholder": {
+                "zh-CN": "搜索框在下拉列表中（searchPosition 为 dropdown）时，搜索框的占位文字。",
+                "en-US": "Placeholder of the search input when it sits in the dropdown (searchPosition is dropdown)."
+            },
+            "searchPosition": {
+                "zh-CN": "开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。",
+                "en-US": "Where the search input sits when search is on: trigger puts it in the select box, dropdown at the top of the list. With trigger the clear button also clears the search text; with dropdown it clears the selection only."
+            },
+            "loading": {
+                "zh-CN": "下拉列表是否显示加载动画。",
+                "en-US": "Whether the dropdown shows a loading indicator."
+            },
+            "showArrow": { "zh-CN": "是否显示右侧下拉箭头。", "en-US": "Whether the dropdown arrow is shown." },
+            "showClear": {
+                "zh-CN": "是否显示清除按钮。有已选值或搜索文本且未禁用时，清除按钮出现在选择框内。",
+                "en-US": "Whether the clear button is shown. It appears in the select box when there is a selection or search text and the Select is enabled."
+            },
+            "insetLabelId": {
+                "zh-CN": "insetLabel 元素的 id，combobox 的 aria-labelledby 指向它。未传时由组件生成。",
+                "en-US": "The id of the insetLabel element, which the combobox's aria-labelledby points at. The component generates one when omitted."
+            },
+            "inputProps": {
+                "zh-CN": "开启搜索时，搜索框 Input 的额外属性，监听器用 Vue 的写法如 onFocus。不要传 modelValue、defaultValue 与 onChange，否则会覆盖 Select 自身的状态与搜索处理。",
+                "en-US": "Extra props of the search Input when search is on; listeners use Vue keys such as onFocus. Do not pass modelValue, defaultValue or onChange, which would override the Select's own state and search handling."
+            },
+            "dropdownClassName": {
+                "zh-CN": "下拉弹出层的 class。",
+                "en-US": "Class of the dropdown popup."
+            },
+            "dropdownStyle": {
+                "zh-CN": "下拉弹出层的样式，例如设置 width。根元素上的 style 不会传给弹出层。",
+                "en-US": "Style of the dropdown popup, for example width. The style on the root element does not reach the popup."
+            },
+            "dropdownMatchSelectWidth": {
+                "zh-CN": "下拉弹出层的最小宽度是否等于选择框。",
+                "en-US": "Whether the minimum width of the popup equals the select box."
+            },
+            "position": {
+                "zh-CN": "弹出层展开的位置，可选值同 Tooltip 的 position。",
+                "en-US": "Where the popup opens; the values are those of the Tooltip position."
+            },
+            "spacing": {
+                "zh-CN": "弹出层与选择框的距离，单位为像素。",
+                "en-US": "The distance between the popup and the select box, in pixels."
+            },
+            "motion": {
+                "zh-CN": "弹出层是否使用动画。",
+                "en-US": "Whether the popup is animated."
+            },
+            "autoAdjustOverflow": {
+                "zh-CN": "弹出层被遮挡时是否自动调整方向。",
+                "en-US": "Whether the popup flips automatically when it would be clipped."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的点击事件冒泡。",
+                "en-US": "Whether click events inside the popup stop propagating."
+            },
+            "virtualize": {
+                "zh-CN": "开启列表虚拟化，用于选项很多时优化性能。itemSize 为每行高度，必传；height 默认 270，width 默认 100%。",
+                "en-US": "Turns on list virtualization for many options. itemSize is the height of every row and is required; height defaults to 270 and width to 100%."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于组件内部的 focus 调用。",
+                "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the component's own focus calls."
+            },
+            "id": {
+                "zh-CN": "触发器的 id，选项的 id 由它派生。未传时由组件生成，不读取全局默认值。",
+                "en-US": "The id of the trigger, from which the option ids derive. The component generates one when omitted; it does not read the global defaults."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "选中值变化时触发，v-model 使用，载荷与 change 相同，先于 change 触发。",
+                "en-US": "Emitted when the selection changes; used by v-model. The payload equals that of change, and it is emitted before change."
+            },
+            "change": {
+                "zh-CN": "选中值变化时触发。单选时载荷为值或 undefined，多选时为数组；开启 changeWithObject 后为选项对象。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted when the selection changes. The payload is the value or undefined in single mode and an array in multiple mode; with changeWithObject it holds option objects. It shadows the native event of the same name on the root element."
+            },
+            "dropdownVisibleChange": {
+                "zh-CN": "下拉列表展开或收起时触发。组件在 KeepAlive 中停用时会关闭下拉列表并发出 false，不发出 blur。",
+                "en-US": "Emitted when the dropdown opens or closes. Deactivating the component inside KeepAlive closes it and emits false, without a blur."
+            },
+            "search": {
+                "zh-CN": "搜索关键字变化时触发，第二个参数是触发变化的事件：输入时为输入事件，点击外部关闭后清空时为原生 MouseEvent。通过 ref 的 search 或 trigger 插槽的 onSearch 调用时没有事件。",
+                "en-US": "Emitted when the search keyword changes, with the event that changed it: the input event while typing, a native MouseEvent when a click outside closes the list and clears it. There is no event when it comes from the ref's search or the trigger slot's onSearch."
+            },
+            "select": {
+                "zh-CN": "选项被选中时触发，value 总是选项的原始 value，option 为选项记录。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted when an option is selected; value is always the option's original value and option is its record. It shadows the native event of the same name on the root element."
+            },
+            "deselect": {
+                "zh-CN": "取消选中时触发，仅多选时有效，value 同 select。",
+                "en-US": "Emitted when an option is deselected, in multiple mode only; value is as in select."
+            },
+            "exceed": {
+                "zh-CN": "试图选中的数量超出 max 时触发，仅多选时有效，载荷为被拒绝的选项。",
+                "en-US": "Emitted when a selection would exceed max, in multiple mode only, with the rejected option."
+            },
+            "create": {
+                "zh-CN": "allowCreate 开启并创建了新选项时触发，载荷为新选项记录。",
+                "en-US": "Emitted when allowCreate is on and an option is created, with the new option record."
+            },
+            "clear": {
+                "zh-CN": "点击或用键盘触发清除按钮时触发。",
+                "en-US": "Emitted when the clear button is used by click or keyboard."
+            },
+            "focus": {
+                "zh-CN": "焦点进入 Select（含搜索框、清除按钮）时触发一次，焦点在其内部移动不重复触发。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted once when focus enters the Select, including its search input and clear button; moving within it does not emit again. It shadows the native event of the same name on the root element."
+            },
+            "blur": {
+                "zh-CN": "焦点离开 Select 时触发一次；在已展开的下拉列表外按下鼠标时，载荷为该次 mousedown 事件。会遮住根元素上同名的原生事件。",
+                "en-US": "Emitted once when focus leaves the Select; a mouse press outside the open dropdown passes its mousedown event. It shadows the native event of the same name on the root element."
+            },
+            "keydown": {
+                "zh-CN": "按键事件，在 Select 处理完按键之后触发，所以在监听器中调用 preventDefault 不影响 Select 自身的处理。会遮住根元素上同名的原生事件。",
+                "en-US": "A key press, emitted after the Select has handled the key, so calling preventDefault in a listener does not affect the Select's own handling. It shadows the native event of the same name on the root element."
+            },
+            "listScroll": {
+                "zh-CN": "下拉列表滚动时触发。",
+                "en-US": "Emitted when the option list scrolls."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "选项，只接受 Select.Option 与 Select.OptGroup 作为直接子节点，v-for、v-if 与 template 可以展开。optionList 非空时不使用。",
+                "en-US": "The options. Only Select.Option and Select.OptGroup are accepted as direct children; v-for, v-if and template are unfolded. Unused while optionList is not empty."
+            },
+            "prefix": {
+                "zh-CN": "选择框的前缀。文本或图标会自动带上左右间隔，自定义节点则没有。",
+                "en-US": "A prefix in the select box. Text or an icon gets side spacing automatically; a custom node does not."
+            },
+            "suffix": {
+                "zh-CN": "选择框的后缀。文本或图标会自动带上左右间隔，自定义节点则没有。",
+                "en-US": "A suffix in the select box. Text or an icon gets side spacing automatically; a custom node does not."
+            },
+            "insetLabel": {
+                "zh-CN": "选择框内的内嵌标签，同时作为 combobox 与下拉列表的名称来源。有 prefix 时不渲染，也不作名称。",
+                "en-US": "A label inside the select box, which also names the combobox and the dropdown. It is not rendered, and does not name them, when a prefix is present."
+            },
+            "arrowIcon": {
+                "zh-CN": "自定义右侧下拉箭头；插槽内容为空时隐藏箭头。showClear 开启且有值时，hover 优先显示清除按钮。",
+                "en-US": "The dropdown arrow on the right; an empty slot hides it. With showClear and a value, hovering shows the clear button first."
+            },
+            "clearIcon": {
+                "zh-CN": "自定义清除按钮的图标，showClear 为 true 时有效。",
+                "en-US": "The icon of the clear button, used when showClear is true."
+            },
+            "emptyContent": {
+                "zh-CN": "没有可选项或搜索无结果时的内容；插槽内容为空时隐藏空状态，未提供时显示语言包中的文案。",
+                "en-US": "Content shown when there are no options or the search finds none; an empty slot hides the empty state, and without the slot the locale text is shown."
+            },
+            "outerTopSlot": {
+                "zh-CN": "渲染在下拉弹出层顶部、与选项列表平级的内容，不随列表滚动，始终可见。",
+                "en-US": "Content at the top of the popup beside the option list; it does not scroll with the list and is always visible."
+            },
+            "innerTopSlot": {
+                "zh-CN": "渲染在选项列表内部顶部的内容，滚动到列表顶部时可见。",
+                "en-US": "Content at the top inside the option list, visible when the list is scrolled to its top."
+            },
+            "outerBottomSlot": {
+                "zh-CN": "渲染在下拉弹出层底部、与选项列表平级的内容，不随列表滚动，始终可见。",
+                "en-US": "Content at the bottom of the popup beside the option list; it does not scroll with the list and is always visible."
+            },
+            "innerBottomSlot": {
+                "zh-CN": "渲染在选项列表内部底部的内容，滚动到列表底部时可见。",
+                "en-US": "Content at the bottom inside the option list, visible when the list is scrolled to its bottom."
+            },
+            "optionItem": {
+                "zh-CN": "替换整个选项行。参数含 id、value、label、selected、focused、disabled、inputValue、class、style 以及 onClick、onMouseenter；class、style、onMouseenter 须写在行元素上，id 与 role、aria-selected、aria-disabled 写在同一个行元素上。",
+                "en-US": "Replaces a whole option row. The parameters hold id, value, label, selected, focused, disabled, inputValue, class, style, onClick and onMouseenter. Put class, style and onMouseenter on the row element, and id together with role, aria-selected and aria-disabled on that same element."
+            },
+            "createItem": {
+                "zh-CN": "allowCreate 开启时，用关键字创建选项的那一行的内容。参数为 inputValue、focus、style；虚拟列表下须把 style 用在自定义元素上。",
+                "en-US": "Content of the row that creates an option from the keyword when allowCreate is on. The parameters are inputValue, focus and style; with a virtual list, apply style to the custom element."
+            },
+            "selectedItem": {
+                "zh-CN": "自定义已选项：单选时是选择框中显示的内容，多选时是内置标签里的内容。参数为 option、index、disabled、onClose。",
+                "en-US": "A selected item: the content shown in the select box in single mode, or the content of a built-in tag in multiple mode. The parameters are option, index, disabled and onClose."
+            },
+            "tag": {
+                "zh-CN": "多选时替换每个标签，同时提供时优先于 selectedItem。参数同 selectedItem。",
+                "en-US": "Replaces each tag in multiple mode, taking precedence over selectedItem when both are given. The parameters are those of selectedItem."
+            },
+            "trigger": {
+                "zh-CN": "替换触发器的内容。参数含已选选项 value、输入值 inputValue、placeholder、disabled、componentProps 以及 onSearch、onClear、onRemove；onClear 绑在触发器内的控件上时要传入点击事件，避免这次点击重新打开下拉列表。需要保留搜索能力时可同时设置 filter 与 searchPosition 为 dropdown。",
+                "en-US": "Replaces the content of the trigger. The parameters hold the selected options as value, inputValue, placeholder, disabled, componentProps, and the onSearch, onClear and onRemove methods. When onClear is bound to a control inside the trigger, pass the click event so that click does not reopen the dropdown. To keep searching, set filter together with searchPosition as dropdown."
+            }
+        },
+        "exposed": {}
+    },
+    "select-option": {
+        "source": "packages/semi-ui-vue/src/select/option.vue",
+        "props": {
+            "value": {
+                "zh-CN": "选项的值，用来识别选项，每个选项都应声明。",
+                "en-US": "The value of the option, which identifies it; every option should declare one."
+            },
+            "label": {
+                "zh-CN": "选项的文本，为字符串或数字。显示与匹配时优先取 label，没有时取默认插槽中的纯文本，再取 value；带标记的内容写在默认插槽里，显示时优先于 label。",
+                "en-US": "The text of the option, a string or number. Display and matching take label first, then the plain text of the default slot, then value; content with markup goes in the default slot and is displayed instead of label."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the option is disabled." },
+            "showTick": {
+                "zh-CN": "选中时是否显示 √ 图标。",
+                "en-US": "Whether a tick icon is shown when the option is selected."
+            },
+            "empty": {
+                "zh-CN": "供 Select 内部使用，渲染空状态行，使用方不需要设置。",
+                "en-US": "Used by Select internally to render the empty-state row; callers do not set it."
+            },
+            "selected": {
+                "zh-CN": "供 Select 内部使用，表示选项被选中，使用方不需要设置。",
+                "en-US": "Used by Select internally to mark the option as selected; callers do not set it."
+            },
+            "focused": {
+                "zh-CN": "供 Select 内部使用，表示选项被键盘或指针高亮，使用方不需要设置。",
+                "en-US": "Used by Select internally to mark the option as highlighted by keyboard or pointer; callers do not set it."
+            },
+            "current": {
+                "zh-CN": "供 Select 与 AutoComplete 内部使用，表示 aria-activedescendant 指向该行，使用方不需要设置。",
+                "en-US": "Used by Select and AutoComplete internally to mark the row that aria-activedescendant points at; callers do not set it."
+            },
+            "inputValue": {
+                "zh-CN": "供 Select 内部使用，纯文本 label 中需要高亮的搜索关键字，使用方不需要设置。",
+                "en-US": "Used by Select internally as the search keyword highlighted in a plain-text label; callers do not set it."
+            },
+            "semiOptionId": {
+                "zh-CN": "供 Select 内部使用，选项行的 id，使用方不需要设置。",
+                "en-US": "Used by Select internally as the id of the option row; callers do not set it."
+            },
+            "prefixCls": {
+                "zh-CN": "供 Select 与 AutoComplete 内部使用，选项行的 CSS 类名前缀，使用方不需要设置。",
+                "en-US": "Used by Select and AutoComplete internally as the CSS class prefix of the option row; callers do not set it."
+            }
+        },
+        "events": {
+            "select": {
+                "zh-CN": "供 Select 内部使用，点击未禁用的选项行时触发，载荷为选项记录与点击事件。使用方请监听 Select 的 select 事件。",
+                "en-US": "Used by Select internally; emitted when an enabled option row is clicked, with the option record and the click event. Listen to the select event of Select instead."
+            },
+            "mouseenter": {
+                "zh-CN": "供 Select 内部使用，指针进入选项行时触发，用来移动高亮。",
+                "en-US": "Used by Select internally; emitted when the pointer enters the row, to move the highlight."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "选项的内容。纯文本参与搜索高亮；带标记的内容原样渲染在选项行中，选中后也原样回填到选择框，此时搜索按 label 匹配，没有 label 时按 value。",
+                "en-US": "The content of the option. Plain text takes part in search highlighting; markup is rendered as is in the option row and filled back into the select box as is once selected, while search matches label, or value without a label."
+            }
+        },
+        "exposed": {}
+    },
+    "select-opt-group": {
+        "source": "packages/semi-ui-vue/src/select/option-group.vue",
+        "props": {
+            "label": {
+                "zh-CN": "分组标题的文本，为字符串或数字，也参与默认搜索；带标记的标题使用 label 插槽。",
+                "en-US": "The text of the group title, a string or number, also matched by the default search; a title with markup uses the label slot."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "分组内的选项，只接受 Select.Option 作为直接子节点。",
+                "en-US": "The options of the group; only Select.Option is accepted as a direct child."
+            },
+            "label": {
+                "zh-CN": "自定义分组标题，优先于 label 属性。",
+                "en-US": "A custom group title, taking precedence over the label prop."
+            }
+        },
+        "exposed": {}
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "descriptions": {
+        "source": "packages/semi-ui-vue/src/descriptions/descriptions.vue",
+        "props": {
+            "align": {
+                "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",
+                "en-US": "Alignment: center, justify, left or plain; ignored when row is true."
+            },
+            "row": { "zh-CN": "是否双行显示。", "en-US": "Whether to display key and value in two rows." },
+            "size": {
+                "zh-CN": "双行显示时的尺寸，可选 small、medium、large。",
+                "en-US": "Size in two-row mode: small, medium or large."
+            },
+            "data": {
+                "zh-CN": "列表显示的数据；为空时使用默认插槽中的 Descriptions.Item。",
+                "en-US": "Data to display; when empty, the Descriptions.Item elements in the default slot are used."
+            },
+            "layout": {
+                "zh-CN": "布局模式，可选 vertical、horizontal。",
+                "en-US": "Layout mode: vertical or horizontal."
+            },
+            "column": {
+                "zh-CN": "横向布局下每行的总列数。",
+                "en-US": "Total number of columns per row in the horizontal layout."
+            }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "Descriptions.Item 子节点，data 为空时使用；横向布局只识别直接子节点。",
+                "en-US": "Descriptions.Item children, used when data is empty; the horizontal layout only recognizes direct children."
+            },
+            "itemKey": {
+                "zh-CN": "每个数据项的 key，默认渲染 item.key。",
+                "en-US": "Key of each data item, rendering item.key by default."
+            },
+            "value": {
+                "zh-CN": "每个数据项的值，默认渲染 item.value。",
+                "en-US": "Value of each data item, rendering item.value by default."
+            }
+        },
+        "exposed": {}
+    },
+    "descriptions-item": {
+        "source": "packages/semi-ui-vue/src/descriptions/descriptions-item.vue",
+        "props": {
+            "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
+            "span": { "zh-CN": "单元格跨越的列数。", "en-US": "Number of columns the cell spans." },
+            "keyStyle": { "zh-CN": "key 的自定义样式。", "en-US": "Custom style of the key." }
+        },
+        "events": {},
+        "slots": {
+            "default": { "zh-CN": "值。", "en-US": "The value." },
+            "itemKey": { "zh-CN": "键。", "en-US": "The key." }
+        },
+        "exposed": {}
+    }
+}

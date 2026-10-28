@@ -1,0 +1,35 @@
+{
+    "icon": {
+        "source": "packages/semi-icons-react/src/components/Icon.tsx",
+        "props": {
+            "fill": {
+                "zh-CN": "双色、多色图标的填充颜色，支持字符串或字符串数组。设置后 Icon 通过 `cloneElement` 把它传给 `svg` 元素。",
+                "en-US": "Fill colors for bicolor and multicolor icons, as a string or an array of strings. When set, Icon passes it to the `svg` element with `cloneElement`."
+            },
+            "prefixCls": {
+                "zh-CN": "类名前缀，根元素的类名为 `<prefixCls>-icon`。",
+                "en-US": "Class name prefix; the root element's class is `<prefixCls>-icon`."
+            },
+            "rotate": {
+                "zh-CN": "旋转角度，使用整数（单位为度），非整数会被忽略。",
+                "en-US": "Rotation angle in integer degrees. Non-integer values are ignored."
+            },
+            "size": {
+                "zh-CN": "图标尺寸，可选 `extra-small`、`small`、`default`、`large`、`extra-large` 或 `inherit`，`inherit` 继承上下文字体大小。",
+                "en-US": "Icon size: `extra-small`, `small`, `default`, `large`, `extra-large` or `inherit`, which uses the surrounding font size."
+            },
+            "spin": {
+                "zh-CN": "启用旋转动画。",
+                "en-US": "Enables the spinning animation."
+            },
+            "svg": {
+                "zh-CN": "图标内容，传入 React 元素，如 `<StarIcon />`。",
+                "en-US": "Icon content as a React element, such as `<StarIcon />`."
+            },
+            "type": {
+                "zh-CN": "附加图标类型类名，根元素的类名为 `<prefixCls>-icon-<type>`。",
+                "en-US": "Adds an icon type class name, `<prefixCls>-icon-<type>`, to the root element."
+            }
+        }
+    }
+}

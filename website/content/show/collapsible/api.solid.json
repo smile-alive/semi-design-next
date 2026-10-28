@@ -1,0 +1,28 @@
+{
+    "collapsible": {
+        "source": "packages/semi-ui-solid/src/collapsible/collapsible.tsx",
+        "props": {
+            "children": { "zh-CN": "需要展开或收起的内容。", "en-US": "Content to expand or collapse." },
+            "class": { "zh-CN": "外层 wrapper 的类名。", "en-US": "Class name of the outer wrapper." },
+            "collapseHeight": { "zh-CN": "收起时的高度，单位为像素。", "en-US": "Height in pixels when collapsed." },
+            "collapseHeightAdaptive": {
+                "zh-CN": "内容高度小于 collapseHeight 时，收起高度是否取内容高度。",
+                "en-US": "Whether the collapsed height follows the content when it is shorter than collapseHeight."
+            },
+            "duration": { "zh-CN": "动画执行的时间，单位为毫秒。", "en-US": "Animation duration in milliseconds." },
+            "fade": { "zh-CN": "是否开启淡入淡出。", "en-US": "Whether to fade in and out." },
+            "id": {
+                "zh-CN": "内层内容元素的 id，可配合触发器的 aria-controls 使用；不读全局默认值。",
+                "en-US": "id of the inner content element, for the trigger's aria-controls; it does not read the global default."
+            },
+            "isOpen": { "zh-CN": "是否展开内容区域。", "en-US": "Whether the content area is expanded." },
+            "keepDOM": { "zh-CN": "是否保留隐藏的内容 DOM 树，默认销毁。", "en-US": "Whether to keep the DOM tree of the hidden content; it is destroyed by default." },
+            "lazyRender": {
+                "zh-CN": "配合 keepDOM 使用，为 true 时挂载时不渲染内容，首次展开后才渲染。",
+                "en-US": "Used with keepDOM; when true, the content is not rendered on mount but after the first expansion."
+            },
+            "motion": { "zh-CN": "是否开启动画。", "en-US": "Whether to enable the animation." },
+            "onMotionEnd": { "zh-CN": "展开或收起动画结束时的回调。", "en-US": "Called when the expand or collapse animation ends." }
+        }
+    }
+}

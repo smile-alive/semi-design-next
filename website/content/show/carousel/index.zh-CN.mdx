@@ -1,0 +1,178 @@
+---
+order: 66
+title: 轮播图
+icon: doc-carousel
+brief: 轮播图是一种媒体组件，可以在可视化应用中展示多张图片轮流播放的效果。
+---
+
+import CarouselReactApi from './api/carousel.react.zh-CN.mdx';
+import CarouselVueApi from './api/carousel.vue.zh-CN.mdx';
+import CarouselSolidApi from './api/carousel.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Carousel } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Carousel } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+基本用法
+
+<Demo id="basic" />
+
+### 主题切换
+
+默认定义了三种主题： `primary`、`light`、`dark`
+
+<Demo id="theme" />
+
+### 指示器
+
+指示器可以调节类型、位置、尺寸  
+类型： `dot`、`line`、`columnar`  
+位置： `left`、`center`、`right`  
+尺寸： `small`、`medium`
+
+<Demo id="indicator" />
+
+### 箭头
+
+通过 showArrow 属性控制箭头是否可见  
+如果箭头可见，通过 arrowType 属性控制箭头展示的时机
+
+<Demo id="arrow" />
+
+### 定制箭头
+
+<Framework only="react">
+
+通过 arrowProps 属性定制箭头样式和点击事件
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `arrowProps` 定制箭头按钮的属性（`aria-label`、`style`、`onClick` 等）；使用方的 `onClick` 先于内置处理执行，`class` 与内置类名合并。箭头里的图标用 `#leftArrow`、`#rightArrow` 插槽，插槽为空时按钮内容为空。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `leftArrow`、`rightArrow` 属性传入箭头图标，传 `null` 时按钮内容为空；通过 `arrowProps` 的 `leftArrow`、`rightArrow` 传入按钮属性（`props`，如 `aria-label`）。
+
+</Framework>
+
+<Demo id="custom-arrow" />
+
+### 播放参数
+
+通过给 autoPlay 传入参数 interval 控制两张图片之间的时间间隔，传入 hoverToPause 控制鼠标放置在图片上时是否停止播放
+
+挂载时幻灯片不超过 1 张则不播放，之后增加到多张时按 `autoPlay` 的配置开始自动播放。
+
+<Demo id="auto-play" />
+
+### 动画效果与切换速度
+
+通过给 animation 属性控制动画，可选值有 `fade`，`slide`  
+通过给 speed 属性控制两张图片之间的切换时间，单位为ms
+
+<Demo id="animation" />
+
+### 受控的轮播图
+
+<Framework only="vue">
+
+用 `v-model:activeIndex` 绑定当前索引；`@change` 另外给出新索引和上一个索引。
+
+</Framework>
+
+<Framework only="solid">
+
+用 `activeIndex` 绑定当前索引；`onChange(index, preIndex)` 给出新索引和上一个索引。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### API 参考
+
+<Framework only="react">
+
+<CarouselReactApi />
+
+其他原生属性（如 `aria-labelledby`、`data-*`）落在根元素（`role="region"`）上。
+
+**ArrowButton**
+
+| 属性     | 说明                                               | 类型                                                                                          | 默认值 |
+| -------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
+| props    | 箭头 button 上的可传参数，包括style, onClick事件等 | React.DetailedHTMLProps\<React.ButtonHTMLAttributes\<HTMLButtonElement\>, HTMLButtonElement\> | -      |
+| children | 箭头自定义Icon                                     | React.ReactNode                                                                               | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+<CarouselVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素（`role="region"`）上，`aria-label`、`aria-labelledby` 同样。
+
+</Framework>
+
+<Framework only="solid">
+
+<CarouselSolidApi />
+
+`class`、`style`、`ref` 与原生属性（包括 `aria-label`、`aria-labelledby`）落在根元素（`role="region"`）上。
+
+</Framework>
+
+## Accessibility
+
+Carousel 按 [WAI-ARIA Carousel](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/) 实现。
+
+### ARIA
+
+- 根元素是 `role="region"`，`aria-roledescription` 为「轮播」。region 需要名称才会成为地标，请用 `aria-label` 或 `aria-labelledby` 说明这组轮播的内容
+- 显示指示器时，每张幻灯片是对应指示点（`tab`）的 `tabpanel`，二者用 `aria-controls`、`aria-labelledby` 关联；幻灯片上已有的 `id` 会被沿用。不显示指示器时，幻灯片是 `role="group"`，`aria-roledescription` 为「轮播项」，名称为「第 N 项」
+- 非当前的幻灯片带 `inert`，其中的内容不可聚焦，也不会被读屏读到。幻灯片需要是能接收 `inert`、`role`、`id` 等属性并落到 DOM 上的元素或组件（与类名、样式相同）
+- 自动播放时幻灯片容器为 `aria-live="off"`，停止播放后为 `polite`，用户手动切换的幻灯片会被读出，自动切换的不会
+- 箭头按钮默认以语言包命名（「上一项」「下一项」）；自定义的箭头内容里有可读文字（文本或带 `aria-label` 的元素）时以内容为名；`arrowProps.leftArrow.props['aria-label']` 等传入的名称优先于两者
+
+### 键盘和焦点
+
+- 键盘焦点进入轮播（任一箭头、指示点或幻灯片中的可聚焦内容）时暂停自动播放，焦点离开后恢复（APG 建议焦点离开后保持停止，此处与之不同）；在焦点内用键盘切换也不会重新开始播放。鼠标点击箭头不会暂停；
+- 上一项、下一项箭头是原生 `button`，可以用 `Tab` 聚焦，`Enter` 或 `Space` 触发切换；
+- 指示器是 `tablist`，其中只有当前项在 `Tab` 序列里；焦点在指示器上时：
+    - `左箭头` 切换到上一项，`右箭头` 切换到下一项，首尾循环，焦点跟随到新的当前项；在 RTL 下方向相反；
+    - `Home` 切换到第一项，`End` 切换到最后一项。
+
+## 设计变量
+
+<DesignToken />

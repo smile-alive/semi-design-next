@@ -1,0 +1,31 @@
+**Props**
+
+| Property               | Description                                                                                            | Type      | Default                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | --------- | ------------------------------------------------------------- |
+| isOpen                 | Whether the content area is expanded.                                                                  | `boolean` | `semiDefault("Collapsible", "isOpen", false)`                 |
+| duration               | Animation duration in milliseconds.                                                                    | `number`  | `semiDefault("Collapsible", "duration", 250)`                 |
+| motion                 | Whether to enable the animation.                                                                       | `boolean` | `semiDefault("Collapsible", "motion", true)`                  |
+| keepDOM                | Whether to keep the DOM tree of the hidden content; it is destroyed by default.                        | `boolean` | `semiDefault("Collapsible", "keepDOM", false)`                |
+| lazyRender             | Used with keepDOM; when true, the content is not rendered on mount but after the first expansion.      | `boolean` | `semiDefault("Collapsible", "lazyRender", false)`             |
+| collapseHeight         | Height in pixels when collapsed.                                                                       | `number`  | `semiDefault("Collapsible", "collapseHeight", 0)`             |
+| collapseHeightAdaptive | Whether the collapsed height follows the content when it is shorter than collapseHeight.               | `boolean` | `semiDefault("Collapsible", "collapseHeightAdaptive", false)` |
+| fade                   | Whether to fade in and out.                                                                            | `boolean` | `semiDefault("Collapsible", "fade", false)`                   |
+| id                     | id of the inner content element, for the trigger's aria-controls; it does not read the global default. | `string`  | `undefined`                                                   |
+
+**Events**
+
+| Event     | Description                                         | Callback parameters |
+| --------- | --------------------------------------------------- | ------------------- |
+| motionEnd | Emitted when the expand or collapse animation ends. | `[]`                |
+
+**Slots**
+
+| Slot    | Description                    | Scope parameters |
+| ------- | ------------------------------ | ---------------- |
+| default | Content to expand or collapse. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

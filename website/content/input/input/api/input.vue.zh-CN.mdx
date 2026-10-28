@@ -1,0 +1,67 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 输入框内容，用于 v-model。 | `string \| number` | `undefined` |
+| modelModifiers | v-model 修饰符 trim、number 与 lazy，由 Vue 在使用对应修饰符时传入。lazy 时输入过程中不更新绑定值，原生 change（失焦或按 Enter）时才发出 update:modelValue；change 事件仍在每次输入时触发。 | `InputModelModifiers` | `undefined` |
+| defaultValue | 非受控时的初始内容。 | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
+| size | 输入框大小，可选 large、default、small。 | `Size` | `semiDefault("Input", "size", "default")` |
+| type | 原生 input 的 type。 | `string` | `semiDefault("Input", "type", "text")` |
+| mode | 输入框模式，可选 password，显示密码显隐按钮。 | `"password"` | `semiGlobalDefault("Input", "mode")` |
+| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("Input", "disabled")` |
+| readonly | 是否只读。 | `boolean` | `semiDefault("Input", "readonly", false)` |
+| borderless | 无边框模式。 | `boolean` | `semiDefault("Input", "borderless", false)` |
+| showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `semiDefault("Input", "showClear", false)` |
+| hideSuffix | 清除按钮显示时隐藏后缀，默认两者并列。 | `boolean` | `semiDefault("Input", "hideSuffix", false)` |
+| showClearIgnoreDisabled | 内部属性，供 DatePicker 使用：禁用时仍可清除。 | `boolean` | `semiGlobalDefault("Input", "showClearIgnoreDisabled")` |
+| composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `semiDefault("Input", "composition", false)` |
+| preventScroll | 聚焦时是否阻止浏览器滚动文档以显示新聚焦的元素，作用于组件内的聚焦。 | `boolean` | `semiGlobalDefault("Input", "preventScroll")` |
+| autofocus | 挂载时自动获取焦点（使用 preventScroll），禁用时不聚焦。 | `boolean` | `semiGlobalDefault("Input", "autofocus")` |
+| maxlength | 最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。 | `number` | `undefined` |
+| minlength | 最小长度。传入 getValueLength 时按它换算，否则使用原生属性。 | `number` | `undefined` |
+| placeholder | 输入框为空时显示的提示文字。 | `string \| number` | `semiGlobalDefault("Input", "placeholder")` |
+| validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("Input", "validateStatus", "default")` |
+| inputStyle | 原生 input 元素的样式，数字需带单位。 | `StyleValue` | `semiGlobalDefault("Input", "inputStyle")` |
+| insetLabelId | insetLabel 所在元素的 id，供 aria-labelledby 引用。 | `string` | `undefined` |
+| getValueLength | 自定义计算字符串长度，搭配 maxlength、minlength 使用。 | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件              | 说明                                                                                   | 回调参数                                   |
+| ----------------- | -------------------------------------------------------------------------------------- | ------------------------------------------ |
+| input             | 原生 input 事件。                                                                      | `[event: Event]`                           |
+| update:modelValue | 内容变化时触发，供 v-model 回写。                                                      | `[value: string]`                          |
+| change            | 内容变化时触发，参数为新值与事件；输入法模式下组合结束后触发一次。                     | `[value: string, event: InputChangeEvent]` |
+| clear             | 点击清除按钮时触发。                                                                   | `[event: MouseEvent]`                      |
+| focus             | 焦点进入组件时触发；焦点在输入框与组件内按钮之间移动不触发。事件为外层元素的 focusin。 | `[event: FocusEvent]`                      |
+| blur              | 焦点离开组件时触发。事件为外层元素的 focusout。                                        | `[event: FocusEvent]`                      |
+| keydown           | 原生 keydown 事件。                                                                    | `[event: KeyboardEvent]`                   |
+| keyup             | 原生 keyup 事件。                                                                      | `[event: KeyboardEvent]`                   |
+| enterPress        | 按下回车时触发（keydown），输入法组合中的回车不触发。                                  | `[event: KeyboardEvent]`                   |
+| compositionstart  | 输入法组合开始时触发。                                                                 | `[event: CompositionEvent]`                |
+| compositionupdate | 输入法组合更新时触发。                                                                 | `[event: CompositionEvent]`                |
+| compositionend    | 输入法组合结束时触发。                                                                 | `[event: CompositionEvent]`                |
+
+**Slots**
+
+| 插槽        | 说明                                                   | 作用域参数 |
+| ----------- | ------------------------------------------------------ | ---------- |
+| prefix      | 前缀。内容仅为文本或 Semi 图标时自动带上左右间隔。     | `any`      |
+| suffix      | 后缀。内容仅为文本或 Semi 图标时自动带上左右间隔。     | `any`      |
+| addonBefore | 前置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。 | `any`      |
+| addonAfter  | 后置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。 | `any`      |
+| insetLabel  | 输入框内的标签。                                       | `any`      |
+| clearIcon   | 自定义清除按钮的图标，showClear 为 true 时有效。       | `any`      |
+
+**Exposes**
+
+| 名称              | 说明                                                    | 类型                                                                                                                                                                          |
+| ----------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| focus             | 聚焦原生 input；未传 preventScroll 时使用同名属性的值。 | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
+| blur              | 移出焦点。                                              | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| select            | 选中输入框中的全部文本。                                | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
+| setSelectionRange | 设置选区，参数同原生 setSelectionRange。                | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"none\" \u007c \"forward\" \u007c \"backward\" \u007c undefined) => void"}>Type</ApiType> |
+| input             | 原生 input 元素，未渲染时为 null。                      | `HTMLInputElement \| null`                                                                                                                                                    |
+| nativeElement     | 组件根元素，未渲染时为 null。                           | `HTMLElement \| null`                                                                                                                                                         |

@@ -1,0 +1,57 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| afterClose | 菜单关闭且离场动画结束后调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterOpen | 菜单打开且进场动画结束后调用；没有进场动画时打开后即调用；进场结束前被关闭的打开不调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| aria-label | 弹出层 `role` 为 `dialog` 时的 `aria-label`。 | `string` | - |
+| aria-labelledby | 弹出层 `role` 为 `dialog` 时的 `aria-labelledby`。 | `string` | - |
+| arrowPointAtCenter | 箭头是否指向触发元素的中心，只在 `showArrow` 为 `true` 时生效，默认 `true`。 | `boolean` | - |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向，默认 `true`。 | `boolean` | - |
+| children | 触发元素。传入单个元素时由它接收触发事件与 ARIA 属性；文本或多个节点由 `span` 包裹后作为触发元素。 | `React.ReactNode` | - |
+| className | 弹出层外层 `.semi-dropdown-wrapper` 的类名。 | `string` | - |
+| clickToHide | 在弹出层内点击时是否自动关闭弹出层，默认 `false`。 | `boolean` | - |
+| clickTriggerToHide | 点击触发元素时是否关闭已打开的菜单。 | `boolean` | - |
+| closeOnEsc | 在触发元素或弹出层按 Esc 是否关闭菜单。`trigger` 为 `custom` 时只调用 `onEscKeyDown`，由使用方决定是否关闭。 | `TooltipProps['closeOnEsc']` | `true` |
+| condition | 是否允许触发显示，默认 `true`；仅显式设为 `false` 时，hover、click、focus 等触发行为不生效，`trigger` 为 `custom` 时仍按 `visible` 显示。由 `true` 变为 `false` 时立即关闭已显示的菜单。 | `boolean` | - |
+| content | 由 Dropdown 固定为菜单内容，传入的值无效；菜单内容请使用 `render` 或 `menu`。 | `React.ReactNode \| RenderContent` | - |
+| contentClassName | 下拉菜单容器 `.semi-dropdown` 的类名。 | `string \| any[]` | - |
+| disableArrowKeyDown | 由 Dropdown 固定为 `true`，方向键由 Dropdown 自行处理，传入的值无效。 | `boolean` | - |
+| disableFocusListener | `trigger` 为 `hover` 时，是否不响应键盘聚焦打开菜单，默认 `false`。 | `boolean` | - |
+| guardFocus | 焦点位于弹出层内时，Tab 是否在弹出层内循环，默认 `false`。 | `boolean` | - |
+| keepDOM | 关闭时是否保留菜单的 DOM 而不销毁，默认 `false`。 | `boolean` | - |
+| menu | 通过数据快速配置菜单，数据项为 `node` 为 `item`、`title` 或 `divider` 的对象，见下方 DropdownMenuItem；提供 `render` 时以 `render` 为准。 | `DropDownMenuItem[]` | - |
+| motion | 是否展示弹出层的进出场动画。 | `boolean` | `true` |
+| mouseEnterDelay | 指针移入触发元素后延迟显示的毫秒数，默认 `50`，仅 `trigger` 为 `hover` 或 `focus` 时生效。 | `number` | - |
+| mouseLeaveDelay | 指针移出弹出层后延迟隐藏的毫秒数，仅 `trigger` 为 `hover` 或 `focus` 时生效。 | `number` | `100` |
+| onClickOutSide | 按下触发元素与弹出层以外的区域时调用，参数是原生 `MouseEvent`。仅 `trigger` 为 `click`、`contextMenu`、`custom` 或开启 `clickTriggerToHide` 时生效。 | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | - |
+| onEscKeyDown | 菜单打开期间按 Esc 时调用，参数是原生 `KeyboardEvent`。 | `TooltipProps['onEscKeyDown']` | - |
+| onOpen | 菜单显示、进场动画开始时调用，每次打开调用一次，早于 `afterOpen`；悬停打开后指针已离开而撤回的打开不调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onVisibleChange | 菜单显示状态变化时调用，参数为 `visible`。`visible` 受控时只报告用户交互发起的请求，使用方自己改变 `visible` 不调用。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| position | 弹出菜单相对触发元素的位置，常用 `bottom`、`bottomLeft`、`bottomRight`，更多见 Tooltip 的位置。 | `Position` | `"bottom"` |
+| prefixCls | 弹出层类名前缀。 | `string` | `"semi-dropdown"` |
+| preventScroll | 聚焦时是否阻止浏览器滚动到被聚焦元素，默认 `false`。 | `boolean` | - |
+| ref | 挂载时接收 `DropdownHandle`，卸载时为 `null`。 | <ApiType detail={"React.Ref\u003cDropdownHandle>"}>Type</ApiType> | - |
+| render | 弹出层的内容，由 `Dropdown.Menu` 及 `Dropdown.Item`、`Dropdown.Title`、`Dropdown.Divider` 构成。传入时优先于 `menu`。 | `React.ReactNode` | - |
+| returnFocusOnClose | 菜单关闭后焦点是否回到触发元素，默认 `true`。 | `boolean` | - |
+| role | 包裹菜单的弹层容器的 ARIA role，默认 `presentation`；菜单本身的 role 为 `menu`。 | `string` | - |
+| selectionMode | 本层菜单项的选择方式，已选项由 `active` 标记：`single` 时菜单项为带 `aria-checked` 的 `menuitemradio`，`multiple` 时为带 `aria-checked` 的 `menuitemcheckbox`；未设置时 `showTick` 开启则为带 `aria-checked` 的 `menuitemcheckbox`，否则为 `menuitem`。只影响角色与状态，勾的显示仍由 `showTick` 决定；嵌套的子菜单不继承。 | `DropdownSelectionMode` | - |
+| showArrow | 是否显示箭头，默认 `false`。 | `boolean \| React.ReactNode` | - |
+| showTick | 是否在 `active` 的 `Dropdown.Item` 左侧展示表示选中的勾；只作用于本 Dropdown 的菜单，嵌套的子菜单不继承。 | `boolean` | `false` |
+| spacing | 弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 `4`，嵌套的子菜单为 `2`。 | `number \| { x: number; y: number }` | - |
+| stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡，默认 `false`。 | `boolean` | - |
+| style | 下拉菜单容器 `.semi-dropdown` 的内联样式。 | `React.CSSProperties` | - |
+| trigger | 触发菜单显示的行为，可选 `hover`、`focus`、`click`、`custom`、`contextMenu`；`custom` 时显示与否完全由 `visible` 决定。 | `Trigger` | `"hover"` |
+| visible | 菜单是否显示。配合 `trigger` 为 `custom` 使用；传入后由该值决定显示，触发器、点击外部与 Esc 只通过 `onVisibleChange` 请求打开或关闭。 | `boolean` | - |
+| wrapperClassName | 触发元素被 `span` 包裹时，该 `span` 的类名。 | `string` | - |
+| wrapperId | 弹出层节点的 id，触发元素的 ARIA 属性指向它；缺省时自动生成。 | `string` | - |
+| wrapWhenSpecial | 触发元素为禁用或加载中的 Button 等特殊触发器时，是否在外层包裹 `span` 以保证触发行为，默认 `true`。 | `boolean` | - |
+
+**Methods**
+
+| 方法         | 说明                                                                                                                                                                                     | 类型                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| focusTrigger | 让触发元素获得焦点，仅在 `returnFocusOnClose` 为 `true` 且 `trigger` 不是 `custom` 时生效。                                                                                              | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition   | 按触发器当前位置立即重新计算弹出层位置。弹出层已随滚动、窗口尺寸变化、触发器移动以及触发器或弹出层的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用。 | <ApiType detail={"() => void"}>Type</ApiType> |

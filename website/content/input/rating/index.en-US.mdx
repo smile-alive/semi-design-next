@@ -1,0 +1,150 @@
+---
+title: Rating
+order: 45
+icon: doc-rating
+brief: Ratings provide insight regarding others' opinions and experiences with a product.
+---
+
+import RatingReactApi from './api/rating.react.en-US.mdx';
+import RatingVueApi from './api/rating.vue.en-US.mdx';
+import RatingSolidApi from './api/rating.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Rating } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Rating } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Rating } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Support two sizes: `default`, `small`.
+
+Supports customized size if pass in a number. Refer to [Customize](#Customize)
+
+<Demo id="basic" />
+
+### Half Star
+
+Use `allowHalf` to support selection of half stars. Support to **display** decimals ratings other than 0.5.
+
+<Demo id="half" />
+
+### Disabled
+
+Use `disabled` to disabled interaction.
+
+<Demo id="disabled" />
+
+### Click to Clear
+
+`allowClear` Property allows you to clear the value when you click on the component again. By default it is set to `true`.
+
+<Demo id="clear" />
+
+### Text Description
+
+Use `tooltips` to add description to Rating.
+
+<Demo id="tooltips" />
+
+### Customize
+
+You can customize characters, numbers of rating and size.
+
+> Note that customized size could only work with customized characters.
+
+<Framework only="vue">
+
+Use the `#character` slot to customize the character.
+
+</Framework>
+
+<Framework only="solid">
+
+Use the `character` prop to customize the character.
+
+</Framework>
+
+<Demo id="custom" />
+
+## API Reference
+
+<Framework only="react">
+
+<RatingReactApi />
+
+`aria-label` is used as is as the accessible name of the radiogroup, which summarizes the current value when `aria-label` is not set; `aria-labelledby` takes the id of the labelling element as that name; `data-*` and other native attributes land on the `role="radiogroup"` root `ul`.
+
+`focus()` on the `ref` focuses the radio that Tab reaches (the same one `autoFocus` uses), and `blur()` only takes effect when focus is inside the rating. `tabIndex` is no longer supported: a passed value is discarded and the list is fixed at `tabIndex={-1}`, so only the checked radio can be reached with Tab.
+
+</Framework>
+
+<Framework only="vue">
+
+<RatingVueApi />
+
+`class`, `style` and native attributes (`id`, `aria-labelledby`, `aria-invalid`, `aria-required`, `data-*` and so on) land on the `role="radiogroup"` root element through attrs. `tabindex` and `name` are discarded and the list is fixed at `tabindex="-1"`, so only the checked radio can be reached with Tab. Once `click` is declared as an event, `@click` is no longer a native click listener on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<RatingSolidApi />
+
+`class`, `style`, `ref` and native attributes (`id`, `aria-labelledby`, `aria-invalid`, `aria-required`, `data-*` and so on) land on the `role="radiogroup"` root `ul`; `tabIndex` and `name` are discarded and the list is fixed at `tabIndex={-1}`, so only the checked radio can be reached with Tab.
+
+`focus()` on the `ref` focuses the radio that Tab reaches (the same one `autofocus` uses), and `blur()` only takes effect when focus is inside the rating.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Rating has `aria-checked` to indicate whether it is currently selected, `aria-posinset` to indicate the position in the list, and `aria-setsize` to indicate the length of the list.
+- Semi supports custom Rating semantics
+    - `aria-label` is used as is for the accessible name of the radiogroup;
+    - If the custom character is plain text (the `character` prop as a string in React, a text-only `#character` slot in Vue), each star's name uses that text as the unit, otherwise the locale's default unit;
+    - The two are independent and can be passed together.
+
+### Keyboard and Focus
+
+- Initial focus settings for Rating (the Tab stop, following the APG radio group):
+    - If there is a selection item in Rating, the initial focus is set to the last selection item (for example: if 3 stars are lit, the initial focus is set on the third lit star);
+    - If Rating has no selected item (value is 0), the initial focus is on the empty-star radio that stands for 0 stars;
+    - When the value matches no radio (for example 2.5 without `allowHalf`), the first radio is the Tab stop, so the keyboard can still enter; an arrow key then selects the adjacent radio (3 with the right arrow and 2 with the left arrow for 2.5).
+- On a Rating group, use the `down arrow` or `right arrow` to select the next star (the value increases, and wraps to 0 after the last star) and the `up arrow` or `left arrow` to select the previous star (the value decreases, and wraps from 0 to the last star); in RTL only the left and right arrows are mirrored;
+    - The user sets the `allowHalf` property, and presses the arrow keys to select or deselect only half a star;
+- `Space` selects the focused star when it is not selected; pressing `Space` on a selected star does not clear it. Clear with `Enter` or a click (controlled by `allowClear`);
+- The list itself is not a Tab stop, so Rating used as a Tooltip trigger adds no extra Tab stop;
+- Calling `focus()` on the instance focuses the radio that Tab reaches;
+- With `tooltips`, keyboard focus on a star shows that star's tip, linked through `aria-describedby`;
+- A disabled Rating cannot get the focus.
+
+## Design Tokens
+
+<DesignToken />

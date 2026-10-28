@@ -1,0 +1,225 @@
+---
+title: ColorPicker
+order: 38
+icon: doc-colorPlatteNew
+brief: Quickly and easily select colors, and provide a dropper tool to pick colors
+---
+
+import ColorPickerReactApi from './api/color-picker.react.en-US.mdx';
+import ColorPickerVueApi from './api/color-picker.vue.en-US.mdx';
+import ColorPickerSolidApi from './api/color-picker.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { ColorPicker } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ColorPicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Use
+
+#### In portal
+
+<Demo id="popover" />
+
+#### Normal display
+
+<Demo id="inline" />
+
+### Eyedropper Color Picker
+
+<Framework only="react">
+
+The eyedropper is enabled by default and supports picking colors from the browser or external software screen. Pass `eyeDropper={false}` to turn it off.
+
+</Framework>
+
+<Framework only="vue">
+
+The eyedropper is enabled by default and supports picking colors from the browser or external software screen. Pass `:eyeDropper="false"` to turn it off.
+
+</Framework>
+
+<Framework only="solid">
+
+The eyedropper is enabled by default and supports picking colors from the browser or external software screen. Pass `eyeDropper={false}` to turn it off.
+
+</Framework>
+
+<Notice title='Notes'>
+To enable this function, the current web page must be deployed in a secure context such as HTTPS or localhost domain name, otherwise it will have no effect. The user's browser version must be Chromium > 95
+</Notice>
+
+<Demo id="eye-dropper" />
+
+### Default Value
+
+<Framework only="react">
+
+When converting between various color representation formats, there are theoretical errors between some formats, so the value returned to you by onChange is an object containing color values in three formats: hsva, hex, and rgba.
+
+The defaultValue (uncontrolled) and value (controlled) you pass in should also be objects containing the same three formats.
+
+</Framework>
+
+<Framework only="vue">
+
+When converting between various color representation formats, there are theoretical errors between some formats, so the value delivered by the `change` and `update:modelValue` events is an object containing color values in three formats: hsva, hex, and rgba.
+
+The `defaultValue` (uncontrolled) and `modelValue` (controlled) you pass in should also be objects containing the same three formats.
+
+</Framework>
+
+<Framework only="solid">
+
+When converting between various color representation formats, there are theoretical errors between some formats, so the value returned to you by onChange is an object containing color values in three formats: hsva, hex, and rgba.
+
+The defaultValue (uncontrolled) and value (controlled) you pass in should also be objects containing the same three formats.
+
+</Framework>
+
+We provide a static tool function `colorStringToValue` on the component to convert common color strings to this object, supporting direct passing of strings such as rgb(57,197,187) #39c5bb (the short form #3cb is also accepted) and hsv(176,71,77). A string that cannot be parsed throws an error.
+
+<Demo id="default-value" />
+
+### Controlled
+
+<Framework only="react">
+
+Controlled use by passing in value
+
+</Framework>
+
+<Framework only="vue">
+
+Bind `modelValue` with `v-model` for controlled use. Treat the color value as immutable and replace it as a whole when updating; mutating a field such as `hsva.h` in place does not sync the text inputs.
+
+</Framework>
+
+<Framework only="solid">
+
+Controlled use by passing in `value`. Treat the color value as immutable and replace it as a whole when updating; mutating a field such as `hsva.h` in place does not sync the text inputs.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### Rendering additional elements at the top and bottom
+
+<Framework only="react">
+
+Use `topSlot` and `bottomSlot` to render additional elements at the top and bottom
+
+</Framework>
+
+<Framework only="vue">
+
+Use the `#topSlot` and `#bottomSlot` slots to render additional elements at the top and bottom
+
+</Framework>
+
+<Framework only="solid">
+
+Use `topSlot` and `bottomSlot` to render additional elements at the top and bottom
+
+</Framework>
+
+<Demo id="slot" />
+
+### Keyboard and Focus
+
+- With `usePopover`, the default trigger is a named button, and `Enter` or `Space` opens the popup. The popup is a `dialog` that opens on click by default and closes with `Esc`. Its name defaults to the built-in text; an `aria-label` or `aria-labelledby` passed in `popoverProps` (`ariaLabel`, `ariaLabelledby` in Vue) takes precedence.
+- The handles of the color area, the hue slider and the alpha slider can all be operated with the keyboard. The color area has two sliders, saturation and brightness; the hue slider and the alpha slider have one each.
+- Arrow keys step by 1, `PageUp` and `PageDown` step by 10, and `Home` and `End` jump to the ends. In the color area, whichever slider has focus, Left and Right change saturation, while Up, Down, `PageUp` and `PageDown` change brightness; `Home` and `End` act on the focused slider. Keys pressed with `Alt`, `Ctrl` or `Meta` are not handled, so the browser and assistive technology keep them.
+- A focused handle shows the theme focus ring; the color input, the alpha input and the format selector all have accessible names.
+
+### API Table
+
+<Framework only="react">
+
+#### ColorPicker
+
+<ColorPickerReactApi />
+
+#### Attribute placement
+
+`className`, `style`, `ref` and other native attributes and events land on the picker root element; with `usePopover` they land on the picker element inside the popup, not on the trigger or the dialog. When the caller passes `aria-label` or `aria-labelledby` without a `role`, the picker root gets `role="group"`.
+
+#### ColorValue
+
+The `value`, `defaultValue` and `onChange` payload are all the same kind of object:
+
+| Field | Description                                                    | Type                                             |
+| ----- | -------------------------------------------------------------- | ------------------------------------------------ |
+| hsva  | HSV color and opacity; h is 0-360, s and v are 0-100, a is 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba  | RGB color and opacity; r, g and b are 0-255, a is 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex   | Hexadecimal color, `#rrggbb`, or `#rrggbbaa` with opacity      | `string`                                         |
+
+</Framework>
+
+<Framework only="vue">
+
+#### ColorPicker
+
+<ColorPickerVueApi />
+
+#### Attribute placement
+
+`class`, `style` and other undeclared attributes land on the picker root element; with `usePopover` they land on the picker element inside the popup, not on the trigger or the dialog. When the caller passes `aria-label` or `aria-labelledby` without a `role`, the picker root gets `role="group"`.
+
+#### ColorValue
+
+`modelValue`, `defaultValue` and the event payloads are all the same kind of object:
+
+| Field | Description                                                    | Type                                             |
+| ----- | -------------------------------------------------------------- | ------------------------------------------------ |
+| hsva  | HSV color and opacity; h is 0-360, s and v are 0-100, a is 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba  | RGB color and opacity; r, g and b are 0-255, a is 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex   | Hexadecimal color, `#rrggbb`, or `#rrggbbaa` with opacity      | `string`                                         |
+
+</Framework>
+
+<Framework only="solid">
+
+#### ColorPicker
+
+<ColorPickerSolidApi />
+
+#### Attribute placement
+
+`class`, `style`, `ref` and other native attributes and events land on the picker root element; with `usePopover` they land on the picker element inside the popup, not on the trigger or the dialog. When the caller passes `aria-label` or `aria-labelledby` without a `role`, the picker root gets `role="group"`.
+
+#### ColorValue
+
+The `value`, `defaultValue` and `onChange` payload are all the same kind of object:
+
+| Field | Description                                                    | Type                                             |
+| ----- | -------------------------------------------------------------- | ------------------------------------------------ |
+| hsva  | HSV color and opacity; h is 0-360, s and v are 0-100, a is 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba  | RGB color and opacity; r, g and b are 0-255, a is 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex   | Hexadecimal color, `#rrggbb`, or `#rrggbbaa` with opacity      | `string`                                         |
+
+</Framework>

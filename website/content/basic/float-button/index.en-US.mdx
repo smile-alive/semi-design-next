@@ -1,0 +1,204 @@
+---
+title: FloatButton
+order: 23
+icon: doc-floatButton
+brief: A floating button is an actionable button that can float on the page
+showNew: true
+---
+
+import FloatButtonReactApi from './api/float-button.react.en-US.mdx';
+import FloatButtonGroupReactApi from './api/float-button-group.react.en-US.mdx';
+import FloatButtonVueApi from './api/float-button.vue.en-US.mdx';
+import FloatButtonGroupVueApi from './api/float-button-group.vue.en-US.mdx';
+import FloatButtonSolidApi from './api/float-button.solid.en-US.mdx';
+import FloatButtonGroupSolidApi from './api/float-button-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Demo id="basic" />
+
+### Size
+
+Three sizes are supported: default, small, large.
+
+<Demo id="size" />
+
+### Shape
+
+Two shapes are defined by default: round (default) and square.
+
+<Demo id="shape" />
+
+### Click to jump
+
+With `href` set, the button renders as a native `<a>` link: `target` specifies the window or frame in which the linked page opens, and `rel` the relationship to it. Opening in a new tab with the middle button and copying the link address from the context menu are native browser behaviour. Without `href` it renders as a native `<button type="button">`.
+
+<Demo id="href" />
+
+### AI style - Colorful floating buttons
+
+You can set `colorful` to true to display colorful floating buttons.
+
+<Demo id="colorful" />
+
+### Badge
+
+<Demo id="badge" />
+
+### Floating button Group
+
+<Framework only="react">
+
+Subitems can be passed in via `items`. Like a single FloatButton, each item renders as a native button or link and honours its own `href`, `target`, `rel`, `disabled` and `onClick`; clicking an item calls its `onClick(e)` first, then the group's `onClick(value, e)`. The group's `disabled` disables every item.
+
+</Framework>
+
+<Framework only="vue">
+
+Subitems can be passed in via `items`, and their icons come from the `#icon="{ item, index }"` slot. Like a single FloatButton, each item renders as a native button or link and honours its own `href`, `target`, `rel`, `disabled` and `onClick`; clicking an item calls its `onClick(event)` first, then emits the group's `click(value, event)`. The group's `disabled` disables every item.
+
+</Framework>
+
+<Framework only="solid">
+
+Subitems can be passed in via `items`. Like a single FloatButton, each item renders as a native button or link and honours its own `href`, `target`, `rel`, `disabled` and `onClick`; clicking an item calls its `onClick(event)` first, then the group's `onClick(value, event)`. The group's `disabled` disables every item.
+
+</Framework>
+
+<Demo id="group" />
+
+## API Reference
+
+<Framework only="react">
+
+### FloatButton
+
+<FloatButtonReactApi />
+
+Other native attributes (such as `id`, `aria-label` and `title`) are spread onto the root element through `...rest`: an `<a>` when `href` is set, otherwise a `<button type="button">`.
+
+### FloatButtonGroupItem
+
+Add the following parameters based on FloatButtonProps. An item's `href`, `target`, `rel`, `disabled`, `onClick`, `className`, `style` and `ref` mean the same as on FloatButton; `shape`, `size` and `colorful` work as the props of the same name on a standalone FloatButton (the item carries the `semi-floatButton-{shape}`, `semi-floatButton-{size}` and `semi-floatButton-colorful` class names), and an item with `size` has that fixed width and height.
+
+| Properties | Instructions                                                   | Type      | Default |
+| ---------- | -------------------------------------------------------------- | --------- | ------- |
+| aria-label | Accessible name of the item, required when it has only an icon | string    | -       |
+| content    | Text content                                                   | ReactNode | -       |
+| value      | Value of the item, passed as the first argument of `onClick`   | string    | -       |
+
+### FloatButtonGroup
+
+<FloatButtonGroupReactApi />
+
+Other native attributes (such as `id` and `aria-*`) land on the root `div`, whose `role` defaults to `group`.
+
+</Framework>
+
+<Framework only="vue">
+
+### FloatButton
+
+<FloatButtonVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the root element: `<a>` when `href` is set, otherwise `<button>`. `click` is a declared event, so it shadows a native click listener on the root and is not emitted while disabled. The `type="button"` and `aria-disabled` of the button branch cannot be overridden by attrs, and the link branch drops a passed `type`. Numbers in `:style` get no automatic px, so write strings.
+
+### FloatButtonGroupItem
+
+Add the following parameters based on the props of FloatButton. An item's `href`, `target`, `rel`, `disabled`, `class` and `style` mean the same as on FloatButton, and listeners such as `onClick` live in the data; `shape`, `size` and `colorful` work as the props of the same name on a standalone FloatButton, and an item with `size` has that fixed width and height. The item's `ref` is not supported.
+
+| Properties    | Instructions                                                   | Type                        | Default |
+| ------------- | -------------------------------------------------------------- | --------------------------- | ------- |
+| aria-label    | Accessible name of the item, required when it has only an icon | string                      | -       |
+| class         | Class name                                                     | string \| object \| array   | -       |
+| content       | Text content; use the `#content` slot for richer content       | string \| number            | -       |
+| data-\*       | Custom data attributes                                         | string                      | -       |
+| id            | Element id                                                     | string                      | -       |
+| onClick       | Click callback, called before the group's `click`              | (event: MouseEvent) => void | -       |
+| onContextmenu | Context menu callback                                          | (event: MouseEvent) => void | -       |
+| onMouseenter  | Pointer enter callback                                         | (event: MouseEvent) => void | -       |
+| onMouseleave  | Pointer leave callback                                         | (event: MouseEvent) => void | -       |
+| style         | Style                                                          | string \| object \| array   | -       |
+| title         | Native title attribute                                         | string                      | -       |
+| value         | Value of the item, the first payload of the `click` event      | string                      | -       |
+
+### FloatButtonGroup
+
+<FloatButtonGroupVueApi />
+
+`class`, `style` and native attributes (such as `aria-*`) land on the root element (`role="group"`) through attrs. The `icon`, node-typed `content` and node-typed `badge.count` of `items` come from the `#icon`, `#content` and `#badgeCount` scoped slots, which receive `{ item, index }`.
+
+</Framework>
+
+<Framework only="solid">
+
+### FloatButton
+
+<FloatButtonSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*` and `onClick`) land on the root element: an `<a>` when `href` is set, otherwise a `<button>`. `onClick` is not called while disabled.
+
+### FloatButtonGroupItem
+
+Add the following parameters based on FloatButtonProps. An item's `href`, `target`, `rel`, `disabled`, `onClick`, `class`, `style` and `ref` mean the same as on FloatButton; `shape`, `size` and `colorful` work as the props of the same name on a standalone FloatButton, and an item with `size` has that fixed width and height.
+
+| Properties | Instructions                                                   | Type          | Default |
+| ---------- | -------------------------------------------------------------- | ------------- | ------- |
+| aria-label | Accessible name of the item, required when it has only an icon | `string`      | -       |
+| content    | Text content                                                   | `JSX.Element` | -       |
+| value      | Value of the item, passed as the first argument of `onClick`   | `string`      | -       |
+
+### FloatButtonGroup
+
+<FloatButtonGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `id` and `aria-*`) land on the root `div`, which has `role="group"`.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- FloatButton and every FloatButtonGroup item are native elements: a link `<a>` when `href` is set, otherwise a `<button type="button">`, so screen readers announce the matching role
+- The accessible name comes from `aria-label`, or from the visible text (an item's `content`) without it. A FloatButton usually shows only an icon, so always pass an `aria-label` that describes what it does, such as `aria-label="Back to top"`; an icon-only item needs an `aria-label` on the item as well
+- Text shown in the badge (`badge.count`) is part of the button's visible text, and `aria-label` replaces it, so include the badge text in `aria-label`, such as `aria-label="AI edit, VIP"`, so that speech input users can operate the button by the text they see
+- A disabled button uses the native `disabled` attribute together with `aria-disabled="true"`. A link has no native disabled state: a disabled link drops its `href` (it can no longer be clicked, opened with the middle button or the context menu, and leaves the Tab order) and takes `role="link"` with `aria-disabled="true"`, so screen readers still announce an unavailable link
+- The root of FloatButtonGroup has `role="group"`; name the whole group with `aria-label` or `aria-labelledby` (`aria-*` attributes go to the root)
+- FloatButtonGroup has no selected state, so items do not use `aria-pressed`
+
+### Keyboard and focus
+
+- Focus works as with native buttons and links: Tab and Shift + Tab move between them, and disabled items cannot be focused
+- A focused button is activated with Enter or Space, a focused link is followed with Enter
+- A focus outline is shown on keyboard focus

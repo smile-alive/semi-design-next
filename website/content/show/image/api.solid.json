@@ -1,0 +1,276 @@
+{
+    "image": {
+        "source": "packages/semi-ui-solid/src/image/image.tsx",
+        "props": {
+            "alt": {
+                "zh-CN": "图像描述，同时作为可预览缩略图的读屏名称。",
+                "en-US": "Image description, also the accessible name of a previewable thumbnail."
+            },
+            "crossOrigin": {
+                "zh-CN": "透传给原生 img 标签的 crossorigin。",
+                "en-US": "The crossorigin attribute passed to the native img element."
+            },
+            "fallback": {
+                "zh-CN": "加载失败时显示的内容：字符串作为容错图片地址，JSX 元素原样显示；未设置时显示默认的加载失败图标。",
+                "en-US": "Content shown when loading fails: a string is the fallback image URL, and a JSX element is shown as it is. Without it, the default failure icon is shown."
+            },
+            "height": {
+                "zh-CN": "图片显示高度，数值按 px 处理。",
+                "en-US": "Display height of the image; a number is in px."
+            },
+            "imgCls": {
+                "zh-CN": "自定义样式类名，透传给 img 节点。",
+                "en-US": "Custom class name passed to the img element."
+            },
+            "imgStyle": {
+                "zh-CN": "自定义样式，透传给 img 节点，可以是样式对象或字符串。",
+                "en-US": "Custom style passed to the img element, as a style object or a string."
+            },
+            "onError": {
+                "zh-CN": "图片加载失败时触发。",
+                "en-US": "Called when the image fails to load."
+            },
+            "onLoad": {
+                "zh-CN": "图片加载成功时触发。",
+                "en-US": "Called when the image has loaded."
+            },
+            "placeholder": {
+                "zh-CN": "图片未加载成功时的占位内容。",
+                "en-US": "Placeholder content shown until the image has loaded."
+            },
+            "preview": {
+                "zh-CN": "预览配置，为 false 时禁用预览。对象接受 ImagePreview 的属性，但不含 lazyLoad、lazyLoadMargin、children、class 与 style（预览样式请用 previewCls、previewStyle）。",
+                "en-US": "Preview options; false disables preview. The object accepts the ImagePreview props except lazyLoad, lazyLoadMargin, children, class and style (use previewCls and previewStyle to style the preview)."
+            },
+            "setDownloadName": {
+                "zh-CN": "设置图片下载名称。",
+                "en-US": "Sets the download file name of the image."
+            },
+            "src": {
+                "zh-CN": "图片获取地址。",
+                "en-US": "Image source URL."
+            },
+            "style": {
+                "zh-CN": "缩略图根元素的自定义样式，可以是样式对象（键用 kebab-case）或字符串。",
+                "en-US": "Custom style of the thumbnail root element, as a style object (kebab-case keys) or a string."
+            },
+            "width": {
+                "zh-CN": "图片显示宽度，数值按 px 处理。",
+                "en-US": "Display width of the image; a number is in px."
+            }
+        }
+    },
+    "image-preview": {
+        "source": "packages/semi-ui-solid/src/image/preview.tsx",
+        "props": {
+            "adaptiveTip": {
+                "zh-CN": "适应页面操作按钮的提示。",
+                "en-US": "Tip of the fit-to-page button."
+            },
+            "children": {
+                "zh-CN": "要预览的 Image 组件。",
+                "en-US": "The Image components to preview."
+            },
+            "closable": {
+                "zh-CN": "是否显示关闭按钮。",
+                "en-US": "Whether to show the close button."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否关闭预览。",
+                "en-US": "Whether pressing Esc closes the preview."
+            },
+            "crossOrigin": {
+                "zh-CN": "透传给预览图片的原生 img 标签的 crossorigin。",
+                "en-US": "The crossorigin attribute passed to the preview img element."
+            },
+            "currentIndex": {
+                "zh-CN": "受控属性，当前预览图片下标。",
+                "en-US": "Controlled index of the current image."
+            },
+            "defaultCurrentIndex": {
+                "zh-CN": "首次展示图片下标。",
+                "en-US": "Index of the image shown initially."
+            },
+            "defaultVisible": {
+                "zh-CN": "首次是否开启预览。",
+                "en-US": "Whether the preview is open initially."
+            },
+            "disableDownload": {
+                "zh-CN": "禁用下载；没有当前图片（src 为空列表）时下载按钮同样禁用。",
+                "en-US": "Disables downloads; the download button is also disabled when there is no current image (an empty src list)."
+            },
+            "downloadTip": {
+                "zh-CN": "下载操作按钮的提示。",
+                "en-US": "Tip of the download button."
+            },
+            "getPopupContainer": {
+                "zh-CN": "指定预览渲染的父级 DOM，返回 `document.body` 与不传相同。容器不是 `document.body` 时预览为非模态，自定义容器需要设置 `position: relative`。",
+                "en-US": "Parent DOM the preview renders into; returning `document.body` is the same as not passing it. A container other than `document.body` makes the preview non-modal, and a custom container needs `position: relative`."
+            },
+            "infinite": {
+                "zh-CN": "是否无限循环切换。",
+                "en-US": "Whether switching wraps around infinitely."
+            },
+            "initialZoom": {
+                "zh-CN": "预览图片初始缩放倍数，仅在首次打开或切换到该图片时生效一次，会被 minZoom 与 maxZoom 限制。",
+                "en-US": "Initial zoom factor of an image, applied once when it first opens or is switched to, clamped by minZoom and maxZoom."
+            },
+            "lazyLoad": {
+                "zh-CN": "是否开启懒加载，相对视口判断；设了 overflow 的滚动祖先仍会裁剪。",
+                "en-US": "Whether to enable lazy loading, judged against the viewport; a scrolling ancestor with overflow still clips."
+            },
+            "lazyLoadMargin": {
+                "zh-CN": "传给 IntersectionObserver 的 rootMargin，相对视口计算。",
+                "en-US": "The rootMargin passed to IntersectionObserver, computed against the viewport."
+            },
+            "maskClosable": {
+                "zh-CN": "点击遮罩是否可关闭预览。",
+                "en-US": "Whether clicking the mask closes the preview."
+            },
+            "maxZoom": {
+                "zh-CN": "预览图片最大缩放倍数，如 `5` 表示 500%。",
+                "en-US": "Maximum zoom factor of the preview image, such as `5` for 500%."
+            },
+            "minZoom": {
+                "zh-CN": "预览图片最小缩放倍数，如 `0.1` 表示 10%。",
+                "en-US": "Minimum zoom factor of the preview image, such as `0.1` for 10%."
+            },
+            "nextTip": {
+                "zh-CN": "下一张操作按钮的提示，同时作为读屏名称；未设置时取语言包的文案。",
+                "en-US": "Tip of the next-image button, also its accessible name; without it the locale text is used."
+            },
+            "onChange": {
+                "zh-CN": "切换图片时触发，参数为新的图片下标。",
+                "en-US": "Called when the image switches, with the new index."
+            },
+            "onClose": {
+                "zh-CN": "点击关闭按钮或按 Esc 关闭预览时触发；点击遮罩关闭只触发 onVisibleChange。",
+                "en-US": "Called when the preview is closed with the close button or Esc; closing by the mask only calls onVisibleChange."
+            },
+            "onDownload": {
+                "zh-CN": "下载图片时触发，参数为图片地址与下标。",
+                "en-US": "Called when an image is downloaded, with its URL and index."
+            },
+            "onDownloadError": {
+                "zh-CN": "图片下载失败时触发，参数为图片地址。",
+                "en-US": "Called when a download fails, with the image URL."
+            },
+            "onNext": {
+                "zh-CN": "向后切换图片时触发，参数为切换后的下标。",
+                "en-US": "Called when switching to the next image, with the new index."
+            },
+            "onPrev": {
+                "zh-CN": "向前切换图片时触发，参数为切换后的下标。",
+                "en-US": "Called when switching to the previous image, with the new index."
+            },
+            "onRatioChange": {
+                "zh-CN": "切换原始尺寸与适应页面时触发，参数为 `'adaptation'` 或 `'realSize'`。",
+                "en-US": "Called when switching between original size and fit-to-page, with `'adaptation'` or `'realSize'`."
+            },
+            "onRotateLeft": {
+                "zh-CN": "逆时针旋转图片时触发，参数为当前旋转角度。",
+                "en-US": "Called when the image rotates counterclockwise, with the current rotation angle."
+            },
+            "onVisibleChange": {
+                "zh-CN": "可见状态变化时触发，参数为是否可见。",
+                "en-US": "Called when the visibility changes, with whether the preview is visible."
+            },
+            "onZoomIn": {
+                "zh-CN": "图片放大时触发，参数为放大后的缩放倍数。",
+                "en-US": "Called when the image zooms in, with the new zoom factor."
+            },
+            "onZoomOut": {
+                "zh-CN": "图片缩小时触发，参数为缩小后的缩放倍数。",
+                "en-US": "Called when the image zooms out, with the new zoom factor."
+            },
+            "originTip": {
+                "zh-CN": "原始尺寸操作按钮的提示。",
+                "en-US": "Tip of the original-size button."
+            },
+            "preLoad": {
+                "zh-CN": "是否开启预加载。",
+                "en-US": "Whether to enable preloading."
+            },
+            "preLoadGap": {
+                "zh-CN": "预加载的步长。",
+                "en-US": "Step size of preloading."
+            },
+            "previewCls": {
+                "zh-CN": "自定义预览层的类名。",
+                "en-US": "Custom class name of the preview layer."
+            },
+            "previewStyle": {
+                "zh-CN": "自定义预览层的样式，可以是样式对象（键用 kebab-case）或字符串。",
+                "en-US": "Custom style of the preview layer, as a style object (kebab-case keys) or a string."
+            },
+            "previewTitle": {
+                "zh-CN": "预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 preview.previewTitle 优先。",
+                "en-US": "Title at the top of the preview, also the accessible name of the preview dialog; the preview.previewTitle of an image in a group takes precedence."
+            },
+            "prevTip": {
+                "zh-CN": "上一张操作按钮的提示，同时作为读屏名称；未设置时取语言包的文案。",
+                "en-US": "Tip of the previous-image button, also its accessible name; without it the locale text is used."
+            },
+            "renderCloseIcon": {
+                "zh-CN": "自定义关闭图标，可以是 JSX 元素，或返回 JSX 元素的函数。",
+                "en-US": "Custom close icon: a JSX element, or a function that returns one."
+            },
+            "renderHeader": {
+                "zh-CN": "自定义渲染预览顶部信息，接收当前标题，返回 JSX 元素。",
+                "en-US": "Renders the top area of the preview; it receives the current title and returns a JSX element."
+            },
+            "renderLeftIcon": {
+                "zh-CN": "自定义向左切换图标，可以是 JSX 元素，或接收当前下标并返回 JSX 元素的函数。",
+                "en-US": "Custom previous-image icon: a JSX element, or a function that receives the current index and returns one."
+            },
+            "renderPreviewMenu": {
+                "zh-CN": "自定义渲染预览底部操作区，接收 MenuProps，返回 JSX 元素。",
+                "en-US": "Renders the bottom action area of the preview; it receives MenuProps and returns a JSX element."
+            },
+            "renderRightIcon": {
+                "zh-CN": "自定义向右切换图标，可以是 JSX 元素，或接收当前下标并返回 JSX 元素的函数。",
+                "en-US": "Custom next-image icon: a JSX element, or a function that receives the current index and returns one."
+            },
+            "rotateTip": {
+                "zh-CN": "旋转操作按钮的提示。",
+                "en-US": "Tip of the rotate button."
+            },
+            "setDownloadName": {
+                "zh-CN": "设置图片下载文件名，接收图片地址并返回文件名。",
+                "en-US": "Sets the download file name: receives the image URL and returns the file name."
+            },
+            "showTooltip": {
+                "zh-CN": "是否展示底部操作区的提示。",
+                "en-US": "Whether to show tooltips on the bottom action area."
+            },
+            "src": {
+                "zh-CN": "要预览的图片地址列表。包裹 Image 时与各 Image 登记的预览图合并，src 中的图片排在前面。",
+                "en-US": "Image URLs to preview. When wrapping Image components, it is merged with the preview images they register, with the src entries first."
+            },
+            "viewerVisibleDelay": {
+                "zh-CN": "隐藏预览操作按钮前的无操作时长，单位为毫秒。",
+                "en-US": "Idle time in milliseconds before the preview action buttons hide."
+            },
+            "visible": {
+                "zh-CN": "受控属性，是否预览。",
+                "en-US": "Controlled visibility of the preview."
+            },
+            "zIndex": {
+                "zh-CN": "预览层层级。",
+                "en-US": "z-index of the preview layer."
+            },
+            "zoomInTip": {
+                "zh-CN": "放大操作按钮的提示。",
+                "en-US": "Tip of the zoom-in button."
+            },
+            "zoomOutTip": {
+                "zh-CN": "缩小操作按钮的提示。",
+                "en-US": "Tip of the zoom-out button."
+            },
+            "zoomStep": {
+                "zh-CN": "每次缩小或放大的倍数，如 `0.1` 表示每次 10%。",
+                "en-US": "Zoom factor changed per zoom step, such as `0.1` for 10% per step."
+            }
+        }
+    }
+}

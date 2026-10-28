@@ -1,0 +1,288 @@
+---
+order: 65
+title: Card
+icon: doc-card
+brief: Card container can consist of titles, paragraphs, pictures, lists, and other content.
+---
+
+import CardReactApi from './api/card.react.en-US.mdx';
+import CardMetaReactApi from './api/card-meta.react.en-US.mdx';
+import CardGroupReactApi from './api/card-group.react.en-US.mdx';
+import CardVueApi from './api/card.vue.en-US.mdx';
+import CardMetaVueApi from './api/card-meta.vue.en-US.mdx';
+import CardGroupVueApi from './api/card-group.vue.en-US.mdx';
+import CardSolidApi from './api/card.solid.en-US.mdx';
+import CardMetaSolidApi from './api/card-meta.solid.en-US.mdx';
+import CardGroupSolidApi from './api/card-group.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Card } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Card, CardGroup, CardMeta } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`CardMeta` is the same component as `Card.Meta`; either form works.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Card, CardGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic card
+
+The basic card contains the title, content and other parts.
+
+<Demo id="basic" />
+
+### Simple card
+
+The card can only set the content area.
+
+<Demo id="simple" />
+
+### Cover
+
+<Framework only="react">
+
+You can use the `cover` property to set the cover.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use the `cover` property to set the cover.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#cover` slot to set the cover.
+
+</Framework>
+
+<Demo id="cover" />
+
+### Border and line
+
+You can use `bordered` to set whether the card has an outer border, the default is true. At the same time, you can also use `headerLine` to set whether the content area and title area have borders, and `footerLine` to set whether the content area and footer area have borders.
+
+<Demo id="border" />
+
+### Shadows
+
+You can use `shadows` to set the timing of the shadow display. Optional: `hover` (show shadow when hover), `always` (show shadow always), if this property is not set, there will be no shadow.
+
+<Demo id="shadows" />
+
+### Customized content
+
+<Framework only="react">
+
+You can use `Card.Meta` to support more flexible content, allowing you to set `title`, `avatar`, and `description`.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `Card.Meta` to support more flexible content, allowing you to set `title`, `avatar`, and `description`.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use `CardMeta` to support more flexible content, set through the `#title` slot (or the `title` property), `#avatar` and `#description`.
+
+</Framework>
+
+<Demo id="meta" />
+
+### Inner card
+
+Other cards can be nested inside the card.
+
+<Demo id="inner" />
+
+### Card in column
+
+The system overview page is often combined with the grid.
+
+<Demo id="column" />
+
+### loading
+
+You can use the `loading` property of `Card` to set whether to display placeholder elements in the card content area. When it is true, the placeholder elements will be displayed, and vice versa.
+
+<Demo id="loading" />
+
+### With Skeleton
+
+The `loading` property of `Card` can only set the preloading effect of the content area. If you want to set the preloading of other parts, or customize a richer preloading effect, you can combine it with the Skeleton component.
+
+<Demo id="skeleton" />
+
+### With tabs
+
+You can use the `Tabs` component in the card component.
+
+<Demo id="tabs" />
+
+### Actions
+
+<Framework only="react">
+
+`actions` receives the ReactNode array, and the elements will be displayed at the bottom of the content area with a horizontal spacing of 12px.
+
+</Framework>
+
+<Framework only="solid">
+
+`actions` receives an array of JSX elements, and the elements will be displayed at the bottom of the content area with a horizontal spacing of 12px.
+
+</Framework>
+
+<Framework only="vue">
+
+Every direct child in the `#actions` slot is one action, displayed at the bottom of the content area with a horizontal spacing of 12px.
+
+</Framework>
+
+<Demo id="actions" />
+
+### Card group
+
+Use `CardGroup` to present the cards in an evenly spaced arrangement.
+
+<Demo id="group" />
+
+### Grid card
+
+You can use the `type` property of `CardGroup` to set the card group to a grid type.
+
+<Demo id="grid-group" />
+
+### API reference
+
+**Card**
+
+<Framework only="vue">
+
+<CardVueApi />
+
+`class`, `style` and other undeclared attributes land on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<CardSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*`, `onClick`) land on the root element (`div`).
+
+</Framework>
+
+<Framework only="react">
+
+<CardReactApi />
+
+`id`, `onClick` and other native attributes and events land on the root element (`div`).
+
+</Framework>
+
+**CardGroup**
+
+<Framework only="vue">
+
+<CardGroupVueApi />
+
+Undeclared attributes land on the root element of the inner `Space`.
+
+</Framework>
+
+<Framework only="solid">
+
+<CardGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes and events land on the root element of the inner `Space`.
+
+</Framework>
+
+<Framework only="react">
+
+<CardGroupReactApi />
+
+`id`, `onClick` and other native attributes and events land on the root element of the inner `Space`.
+
+</Framework>
+
+**Card.Meta**
+
+<Framework only="vue">
+
+<CardMetaVueApi />
+
+Undeclared attributes land on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<CardMetaSolidApi />
+
+`class`, `style`, `ref` and native attributes and events land on the root element (`div`).
+
+</Framework>
+
+<Framework only="react">
+
+<CardMetaReactApi />
+
+`id`, `onClick` and other native attributes and events land on the root element (`div`).
+
+</Framework>
+
+## Accessibility
+
+- Card supports the input of `aria-label` or `aria-labelledby` to indicate the function of the Card; the root element then gets `role="group"` (an explicit `role` wins)
+- When Card loading, `aria-busy` will be turned on
+- A string `title` is styled as an h6 but rendered as a `div` without heading semantics, so it does not disturb the page's heading levels; pass your own heading element as `title` when you need one (in Vue, put it in the `#title` slot)
+- Card is a container-type component, and any elements inside the card need to follow their respective accessibility guidelines
+
+## Content Guidelines
+
+- Card title
+    - Card titles should be informative and focus on the most important information
+    - try to limit the title to 1 phrase or segment
+    - Card titles should be written in sentence case
+    - do not end with punctuation marks (except question marks)
+- Text
+    - Actionable: Use imperative sentences instead of "you can" to describe the body, which better tells the user what can be done
+
+| ✅ Recommended usage           | ❌ Deprecated usage                    |
+| ------------------------------ | -------------------------------------- |
+| Get order progress for details | You can get order progress for details |
+
+- Always say the most important information first
+- Use "Need to" instead of "must"
+
+## Design Tokens
+
+<DesignToken />

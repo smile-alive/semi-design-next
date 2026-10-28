@@ -1,0 +1,76 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                | 说明                                                                                               | 类型                                                         | 默认值                                                                                                                       |
+| ------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| src                 | 要预览的图片地址列表。包裹 Image 时与各 Image 登记的预览图合并，src 中的图片排在前面。             | `string \| string[]`                                         | `semiDefault("ImagePreview", "src", [])`                                                                                     |
+| visible             | 受控属性，是否预览。                                                                               | `boolean`                                                    | `semiGlobalDefault("ImagePreview", "visible")`                                                                               |
+| defaultVisible      | 首次是否开启预览。                                                                                 | `boolean`                                                    | `semiGlobalDefault("ImagePreview", "defaultVisible")`                                                                        |
+| currentIndex        | 受控属性，当前预览图片下标。                                                                       | `number`                                                     | `semiGlobalDefault("ImagePreview", "currentIndex")`                                                                          |
+| defaultCurrentIndex | 首次展示图片下标。                                                                                 | `number`                                                     | `semiGlobalDefault("ImagePreview", "defaultCurrentIndex")`                                                                   |
+| previewTitle        | 预览顶部标题，同时作为预览对话框的读屏名称；组内图片的 preview.previewTitle 优先。                 | `string`                                                     | `semiGlobalDefault("ImagePreview", "previewTitle")`                                                                          |
+| lazyLoad            | 是否开启懒加载。                                                                                   | `boolean`                                                    | `semiDefault("ImagePreview", "lazyLoad", true)`                                                                              |
+| lazyLoadMargin      | 懒加载的 rootMargin，相对视口计算；滚动祖先仍会裁剪。                                              | `string`                                                     | `semiDefault("ImagePreview", "lazyLoadMargin", "0px 100px 100px 0px")`                                                       |
+| maskClosable        | 点击遮罩是否可关闭。                                                                               | `boolean`                                                    | <ApiType detail={"semiDefault(\"ImagePreview\", \"maskClosable\", previewDefaults.maskClosable)"}>Type</ApiType>             |
+| closable            | 是否显示关闭按钮。                                                                                 | `boolean`                                                    | `semiDefault("ImagePreview", "closable", previewDefaults.closable)`                                                          |
+| closeOnEsc          | 按 Esc 是否关闭预览。                                                                              | `boolean`                                                    | `semiDefault("ImagePreview", "closeOnEsc", previewDefaults.closeOnEsc)`                                                      |
+| infinite            | 是否无限循环。                                                                                     | `boolean`                                                    | `semiDefault("ImagePreview", "infinite", previewDefaults.infinite)`                                                          |
+| showTooltip         | 是否展示底部操作区提示。                                                                           | `boolean`                                                    | <ApiType detail={"semiDefault(\"ImagePreview\", \"showTooltip\", previewDefaults.showTooltip)"}>Type</ApiType>               |
+| preLoad             | 是否开启预加载。                                                                                   | `boolean`                                                    | `semiDefault("ImagePreview", "preLoad", previewDefaults.preLoad)`                                                            |
+| preLoadGap          | 预加载的步长。                                                                                     | `number`                                                     | `semiDefault("ImagePreview", "preLoadGap", previewDefaults.preLoadGap)`                                                      |
+| viewerVisibleDelay  | 隐藏预览操作按钮前的无操作时长，单位毫秒。                                                         | `number`                                                     | <ApiType detail={"semiDefault(\"ImagePreview\", \"viewerVisibleDelay\", previewDefaults.viewerVisibleDelay)"}>Type</ApiType> |
+| zoomStep            | 每次缩小或放大的比例。                                                                             | `number`                                                     | `semiDefault("ImagePreview", "zoomStep", previewDefaults.zoomStep)`                                                          |
+| maxZoom             | 预览图片最大缩放倍数。                                                                             | `number`                                                     | `semiDefault("ImagePreview", "maxZoom", previewDefaults.maxZoom)`                                                            |
+| minZoom             | 预览图片最小缩放倍数。                                                                             | `number`                                                     | `semiDefault("ImagePreview", "minZoom", previewDefaults.minZoom)`                                                            |
+| zIndex              | 预览层层级。                                                                                       | `number`                                                     | `semiDefault("ImagePreview", "zIndex", previewDefaults.zIndex)`                                                              |
+| disableDownload     | 是否禁用下载。                                                                                     | `boolean`                                                    | <ApiType detail={"semiDefault(\"ImagePreview\", \"disableDownload\", previewDefaults.disableDownload)"}>Type</ApiType>       |
+| initialZoom         | 预览图片初始缩放倍数，仅在首次打开或切换到该图片时生效一次，会被 minZoom 与 maxZoom 限制。         | `number`                                                     | `semiGlobalDefault("ImagePreview", "initialZoom")`                                                                           |
+| crossOrigin         | 透传给预览图片的原生 img 标签的 crossorigin。                                                      | `"anonymous" \| "use-credentials"`                           | `semiGlobalDefault("ImagePreview", "crossOrigin")`                                                                           |
+| previewCls          | 自定义预览样式类名。                                                                               | `string`                                                     | `semiGlobalDefault("ImagePreview", "previewCls")`                                                                            |
+| previewStyle        | 自定义预览样式。                                                                                   | `StyleValue`                                                 | `semiGlobalDefault("ImagePreview", "previewStyle")`                                                                          |
+| prevTip             | 上一步操作按钮提示。                                                                               | `string`                                                     | `semiGlobalDefault("ImagePreview", "prevTip")`                                                                               |
+| nextTip             | 下一步操作按钮提示。                                                                               | `string`                                                     | `semiGlobalDefault("ImagePreview", "nextTip")`                                                                               |
+| zoomInTip           | 放大操作按钮提示。                                                                                 | `string`                                                     | `semiGlobalDefault("ImagePreview", "zoomInTip")`                                                                             |
+| zoomOutTip          | 缩小操作按钮提示。                                                                                 | `string`                                                     | `semiGlobalDefault("ImagePreview", "zoomOutTip")`                                                                            |
+| rotateTip           | 旋转操作按钮提示。                                                                                 | `string`                                                     | `semiGlobalDefault("ImagePreview", "rotateTip")`                                                                             |
+| downloadTip         | 下载操作按钮提示。                                                                                 | `string`                                                     | `semiGlobalDefault("ImagePreview", "downloadTip")`                                                                           |
+| adaptiveTip         | 适应页面操作按钮提示。                                                                             | `string`                                                     | `semiGlobalDefault("ImagePreview", "adaptiveTip")`                                                                           |
+| originTip           | 原始尺寸操作按钮提示。                                                                             | `string`                                                     | `semiGlobalDefault("ImagePreview", "originTip")`                                                                             |
+| getPopupContainer   | 指定预览渲染的父级 DOM。容器不是 document.body 时预览为非模态，自定义容器需要 position: relative。 | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType>       | `undefined`                                                                                                                  |
+| setDownloadName     | 设置图片下载名称。                                                                                 | <ApiType detail={"((src: string) => string)"}>Type</ApiType> | `undefined`                                                                                                                  |
+
+**Events**
+
+| 事件                | 说明                                                                | 回调参数                       |
+| ------------------- | ------------------------------------------------------------------- | ------------------------------ |
+| update:visible      | 可见状态变化时触发，用于 v-model:visible。                          | `[visible: boolean]`           |
+| visibleChange       | 可见状态变化时触发。                                                | `[visible: boolean]`           |
+| update:currentIndex | 当前图片下标变化时触发，用于 v-model:currentIndex。                 | `[index: number]`              |
+| change              | 切换图片时触发。                                                    | `[index: number]`              |
+| close               | 点击关闭按钮或按 Esc 关闭时触发；点击遮罩关闭只触发 visibleChange。 | `[]`                           |
+| zoomIn              | 图片放大时触发。                                                    | `[zoom: number]`               |
+| zoomOut             | 图片缩小时触发。                                                    | `[zoom: number]`               |
+| prev                | 向前切换图片时触发。                                                | `[index: number]`              |
+| next                | 向后切换图片时触发。                                                | `[index: number]`              |
+| ratioChange         | 切换原始尺寸与适应页面时触发。                                      | `[type: RatioType]`            |
+| rotateLeft          | 逆时针旋转图片时触发。                                              | `[angle: number]`              |
+| download            | 下载图片时触发。                                                    | `[src: string, index: number]` |
+| downloadError       | 图片下载失败时触发。                                                | `[src: string]`                |
+
+**Slots**
+
+| 插槽        | 说明                                                                                                                        | 作用域参数                   |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| default     | 要预览的 Image 组件。                                                                                                       | `any`                        |
+| title       | 替换预览顶部标题区的内容。有标题时对话框经 aria-labelledby 以标题区命名，名称即插槽渲染出的文字；没有标题时名称来自语言包。 | `ImagePreviewTitleSlotProps` |
+| previewMenu | 自定义预览底部操作区，参数为 MenuProps，menuItems 是默认各项的 VNode 数组。                                                 | `MenuProps`                  |
+| leftIcon    | 自定义向左切换图标。                                                                                                        | `ImagePreviewIconSlotProps`  |
+| rightIcon   | 自定义向右切换图标。                                                                                                        | `ImagePreviewIconSlotProps`  |
+| closeIcon   | 自定义关闭图标。                                                                                                            | `any`                        |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

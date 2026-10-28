@@ -1,0 +1,244 @@
+---
+title: AutoComplete
+order: 35
+icon: doc-autocomplete
+brief: The input box is automatically filled.
+---
+
+import AutoCompleteReactApi from './api/auto-complete.react.en-US.mdx';
+import AutoCompleteVueApi from './api/auto-complete.vue.en-US.mdx';
+import AutoCompleteSolidApi from './api/auto-complete.solid.en-US.mdx';
+
+## When to use
+
+Used to provide input suggestions to the input box and perform automatic completion operations
+
+The difference with the searchable Select component:
+
+- AutoComplete is essentially an enhanced Input component that provides input suggestions, while Select is a selector
+- When you click to expand, Select will clear all the values in the input box, and AutoComplete will keep the last selected value
+
+<Framework only="react">
+
+- Select's selected item rendering (renderSelectedItem) can be more customized and can be any type of ReactNode, while AutoComplete only allows strings
+
+</Framework>
+
+<Framework only="vue">
+
+- Select's selected item rendering (the `#selectedItem` slot) can be any node, while the `renderSelectedItem` of AutoComplete may only return a string
+
+</Framework>
+
+<Framework only="solid">
+
+- Select's selected item rendering (`renderSelectedItem`) can return any JSX element, while AutoComplete's `renderSelectedItem` only returns a string
+
+</Framework>
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { AutoComplete } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AutoComplete } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AutoComplete } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic usage
+
+<Framework only="react">
+
+Monitor user input through onSearch, pass input suggestions through data, and maintain control through onChange. OnChange is triggered when the input box changes/selects an input item
+
+</Framework>
+
+<Framework only="vue">
+
+Monitor user input through `@search`, pass input suggestions through `data`, and maintain control with `v-model`, which updates when the input box changes/selects an input item
+
+</Framework>
+
+<Framework only="solid">
+
+Monitor user input through `onSearch`, pass input suggestions through `data`, and keep it controlled with `value` and `onChange`, which fires when the input box changes or an input item is selected
+
+</Framework>
+
+<Demo id="basic" />
+
+### Custom option rendering
+
+<Framework only="react">
+
+When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object must contain two keys, label and value, value is the value selected by the candidate, and label is the content displayed by the candidate) The rendering of candidates can be customized through renderItem
+
+</Framework>
+
+<Framework only="vue">
+
+When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object contains two keys, label and value; value is the value selected by the candidate, and label is the text displayed by the candidate, which falls back to value when missing)  
+The content of a candidate can be customized through the `#item="{ item, index }"` slot: `item` is the data item as given, so keep only data in the items and write the markup in the slot
+
+</Framework>
+
+<Framework only="solid">
+
+When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object must contain `label` and `value` keys; value is the value picked by the candidate, and label is the text the candidate displays). Render each candidate through `renderItem`, which returns JSX.
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### Remote search
+
+<Framework only="react">
+
+Get user input value from onSearch, update data value dynamically, update loading
+
+</Framework>
+
+<Framework only="vue">
+
+Get user input value from `@search`, update `data` dynamically, update `loading`
+
+</Framework>
+
+<Framework only="solid">
+
+Get the user input value from `onSearch` and update `data` dynamically
+
+</Framework>
+
+<Demo id="remote-search" />
+
+### Size
+
+The size of the input box can be set by setting size, optional `small`, `default` (default), `large`
+
+<Demo id="size" />
+
+### The position of the drop-down menu
+
+The position of the drop-down menu can be set by setting position, and the optional values refer to Tooltip position
+
+<Demo id="position" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Validate status
+
+Different verification states can be set to show different styles
+
+<Demo id="validate-status" />
+
+### Custom empty content
+
+Can set up custom display empty content
+
+<Demo id="empty-content" />
+
+## API reference
+
+<Framework only="react">
+
+<AutoCompleteReactApi />
+
+`className`, `style`, `data-*` and other native attributes and events (for example `onClick`) land on the root div, whose `tabIndex` is fixed to `-1`. `id`, `name`, `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-label`, `aria-labelledby` and `aria-required` land on the input (`role="combobox"`), so a `<label for>` finds it. With `triggerRender` there is no input: `id` lands on the root div, `name` lands nowhere, the `aria-*` attributes listed above reach the focusable element of the custom trigger through its parameters, and other `aria-*` attributes are not passed to the trigger as direct parameters.
+
+</Framework>
+
+<Framework only="vue">
+
+<AutoCompleteVueApi />
+
+`id`, `name`, and `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-label`, `aria-labelledby`, `aria-required` land on the input (`role="combobox"`), so a `<label for>` finds it. `class`, `style`, `data-*` and other undeclared attributes and listeners (for example `@click`) land on the root div, whose `tabindex` is fixed to `-1`. With `#trigger` there is no input: `id` lands on the root div, `name` lands nowhere, and the `aria-*` attributes reach the focusable element of the custom trigger through the `controlAttrs` slot parameter.
+
+Object items of `data`:
+
+| Field    | Description                                                                       | Type                        |
+| -------- | --------------------------------------------------------------------------------- | --------------------------- |
+| value    | The value after picking                                                           | `string \| number`          |
+| label    | The text of the candidate, falling back to value; use the `#item` slot for markup | `string \| number`          |
+| disabled | Whether the candidate is disabled                                                 | `boolean`                   |
+| class    | Class of the candidate row                                                        | `string \| object \| array` |
+| style    | Style of the candidate row                                                        | `StyleValue`                |
+
+Other fields are kept as they are and show up in `item` of the `#item` slot and in the payload of `@select` (when `selectWithObject` is set). Fields starting with `data-` land on the candidate row. A string or number item reaches `renderSelectedItem` as `{ value, label }`.
+
+AutoComplete exposes the following members through a template ref, typed as `AutoCompleteHandle`:
+
+| Member        | Description                                                                             | Type                     |
+| ------------- | --------------------------------------------------------------------------------------- | ------------------------ |
+| nativeElement | Read-only. The root div that wraps the input or the custom trigger, `null` before mount | `HTMLDivElement \| null` |
+
+</Framework>
+
+<Framework only="solid">
+
+<AutoCompleteSolidApi />
+
+`class`, `style`, `ref`, `data-*` and other undeclared attributes and events (for example `onClick`) land on the root div, whose `tabindex` is fixed to `-1`. `id`, `name` and `aria-*` land on the input (`role="combobox"`), so a `<label for>` finds it. With `triggerRender` there is no input: `id` lands on the root div, `name` lands nowhere, and `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` reach the focusable element of the custom trigger through its parameters; other `aria-*` attributes do not reach the trigger.
+
+Object items of `data`:
+
+| Field    | Description                                                      | Type                          |
+| -------- | ---------------------------------------------------------------- | ----------------------------- |
+| value    | The value after picking                                          | `string \| number`            |
+| label    | The row text; must be provided, markup goes through `renderItem` | `string \| number`            |
+| disabled | Whether the candidate is disabled                                | `boolean`                     |
+| class    | Class of the candidate row                                       | `string`                      |
+| style    | Style of the candidate row                                       | `JSX.CSSProperties \| string` |
+
+Other fields are kept as they are and show up in the `renderItem` argument; with `onSelectWithObject` set, the object that `onSelect` receives keeps them too. Fields starting with `data-` land on the candidate row. A string or number item reaches `renderSelectedItem` as `{ value, label }`.
+
+</Framework>
+
+## Accessibility
+
+### Keyboard and Focus
+
+- AutoComplete's input box has `role="combobox"` and is linked to the options panel through `aria-expanded`, `aria-controls`, `aria-autocomplete="list"` and `aria-activedescendant`
+- The combobox takes its name from, in order: `aria-labelledby`, `aria-label`, the rendered insetLabel (the combobox's `aria-labelledby` points at it, with an id the component generates when `insetLabelId` is not given; with a prefix the insetLabel is not rendered and does not name it). The listbox uses the same name source. AutoComplete has no default name: with none of these, name the input with `aria-label` or `aria-labelledby`; a `<label for>` names only the input and leaves the listbox unnamed
+- AutoComplete's input box can be focused, and once focused, keyboard users can use `Up Arrow` or `Down Arrow` to open the options panel; when data is empty the panel shows emptyContent (nothing when it is not provided), and a loading spinner while loading
+- AutoComplete also supports opening and closing panels via `Enter` key
+- If the user sets the defaultActiveFirstOption property to true, the first option is highlighted by default when the options panel is opened
+- If the drop-down menu is open:
+    - Use `Esc` to close the menu
+    - Use `Tab` to close the menu; the focus moves on to the next focusable element as usual
+    - Use `Up Arrow` or `Down Arrow` to toggle options; the highlighted option (the one `aria-activedescendant` points at) has `aria-selected="true"`
+    - The focused option can be selected with the `Enter` key and the panel will be collapsed
+    - After picking an option with the mouse, the focus stays in the input
+- With `showClear` and a value, the clear button is the same as Input's: a native `button` named "Clear input" from the locale; from the input, `Tab` moves to it, and `Enter` or `Space` clears and puts the focus back in the input
+
+## Content Guidelines
+
+- Content needs to be presented clearly so that users can clearly perceive the options available
+- Limit the number of options displayed at one time
+
+## Design Token
+
+<DesignToken />

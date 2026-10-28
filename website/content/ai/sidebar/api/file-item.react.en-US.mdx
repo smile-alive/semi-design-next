@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| className | Class name of the root element. | `string` | - |
+| content | Rich text as an HTML string. A change after mount is synced to the editor, and the editor is not reset when the value equals its current content; the sync does not call `onContentChange`. | `string` | - |
+| editable | Whether the content is editable; a change after mount is synced to the editor. | `boolean` | `true` |
+| extensions | tiptap extensions (Extension, Node or Mark) appended to the built-in ones, read when the editor is created; later changes have no effect. | `Extensions` | `[]` |
+| imgUploadProps | Image upload options, read when the editor is created; later changes have no effect. The toolbar shows the image button only when `action` or `customRequest` is set; `getUploadImageSrc(response)` returns the image address from the upload response, and when it is not provided, a string response is used as the address and otherwise `response.src` is used. | `ImageUploadNodeOptions` | - |
+| key | Identifies the panel for the `activeKey` of FileContent, and decides when a Sidebar detail remounts. | `string` | - |
+| name | Name, shown in the panel header and the Sidebar detail header, and used as the `aria-label` of the editing area. | `string` | - |
+| onContentChange | Called after an edit, with the content as HTML. | <ApiType detail={"(content: string) => void"}>Type</ApiType> | - |
+| style | Inline style of the root element. | `React.CSSProperties` | - |

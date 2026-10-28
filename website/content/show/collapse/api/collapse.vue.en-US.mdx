@@ -1,0 +1,33 @@
+**Props**
+
+| Property            | Description                                                                                                                                          | Type                         | Default                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------------------------------------------- |
+| activeKey           | Controlled property, key of the currently expanded panel; null and the empty string mean all panels are collapsed.                                   | `string \| string[] \| null` | `undefined`                                              |
+| defaultActiveKey    | Key of the panel expanded initially.                                                                                                                 | `string \| string[]`         | `semiDefault("Collapse", "defaultActiveKey", "")`        |
+| accordion           | Accordion mode.                                                                                                                                      | `boolean`                    | `semiGlobalDefault("Collapse", "accordion")`             |
+| clickHeaderToExpand | Clicking anywhere in the header row toggles the panel; when false only the toggle button and the arrow respond.                                      | `boolean`                    | `semiDefault("Collapse", "clickHeaderToExpand", true)`   |
+| expandIconPosition  | Position of the expand icon: left or right.                                                                                                          | `"left" \| "right"`          | `semiDefault("Collapse", "expandIconPosition", "right")` |
+| keepDOM             | Whether to keep the DOM tree of hidden panels; destroyed by default. When omitted it reads the global default of Collapse, then that of Collapsible. | `boolean`                    | `semiGlobalDefault("Collapse", "keepDOM")`               |
+| motion              | Whether to enable the animation; enabled by default. When omitted it reads the global default of Collapse, then that of Collapsible.                 | `boolean`                    | `semiGlobalDefault("Collapse", "motion")`                |
+| lazyRender          | Used with keepDOM; when true, panel content is not rendered until the panel is first expanded.                                                       | `boolean`                    | `semiDefault("Collapse", "lazyRender", false)`           |
+
+**Events**
+
+| Event            | Description                                                                                                                                                | Callback parameters                        |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| update:activeKey | Emitted when the expanded panels change, always with a string[]; used by v-model:activeKey.                                                                | `[activeKey: string[]]`                    |
+| change           | Emitted when a panel is toggled, with the array of expanded keys and the native MouseEvent (keyboard use also produces a click through the native button). | `[activeKey: string[], event: MouseEvent]` |
+
+**Slots**
+
+| Slot         | Description                                                                                     | Scope parameters |
+| ------------ | ----------------------------------------------------------------------------------------------- | ---------------- |
+| default      | Collapse.Panel panels.                                                                          | `any`            |
+| expandIcon   | Icon shown while a panel is collapsed, IconChevronDown by default; empty content shows no icon. | `any`            |
+| collapseIcon | Icon shown while a panel is expanded, IconChevronUp by default; empty content shows no icon.    | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

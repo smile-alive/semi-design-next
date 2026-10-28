@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                                             | 类型                                                                                                   | 默认值 |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------ |
+| href      | 链接的目的地，挂载在 a 标签上；当前项不渲染为链接。                                                                              | `string`                                                                                               | -      |
+| icon      | 标签的显示图标；Semi 图标未设置 size 时按 Breadcrumb 的 compact 取 small 或 default。                                            | `JSX.Element`                                                                                          | -      |
+| noLink    | 移除 hover 和 active 的样式，该项也不再可以用键盘操作。                                                                          | `boolean`                                                                                              | -      |
+| onClick   | 单击事件，参数同 Breadcrumb 的 onClick：routes 写法为该项的路由，children 写法为 `{ name, href }`；第二个参数为原生 MouseEvent。 | <ApiType detail={"(item: BreadcrumbItemInfo \u007c RouteProps, e: MouseEvent) => void"}>Type</ApiType> | -      |
+| separator | 该项之后的分隔符，覆盖 Breadcrumb 的 separator，可以是文字或 JSX 元素。                                                          | `JSX.Element`                                                                                          | -      |

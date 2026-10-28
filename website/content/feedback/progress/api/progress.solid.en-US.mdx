@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| direction | Direction of the line progress bar: horizontal or vertical. | `'horizontal' \| 'vertical'` | `"horizontal"` |
+| format | Formatting function. It receives the shown percentage (clamped to 0-100) and returns JSX rendered in the center of a circle or on the right of a bar. It runs only when the text is shown. | <ApiType detail={"(percent: number) => JSX.Element"}>Type</ApiType> | <ApiType detail={"(percent: number) => `${percent}%`"}>Type</ApiType> |
+| indeterminate | Whether the progress is indeterminate. When on, percent no longer controls the length, the text is hidden and aria-valuenow is omitted. | `boolean` | `false` |
+| motion | Whether the shown number animates to the new percent. When off it jumps to the target. | `boolean` | `true` |
+| orbitStroke | Fill color of the track. | `string` | - |
+| percent | Progress percentage. Values outside 0-100 are clamped. Updating it to NaN throws an error. | `number` | `0` |
+| showInfo | Whether to show the text: in the center of a circle, or on the right of a bar. A small circle (size small) never shows the text. | `boolean` | `false` |
+| size | Size: default, small (circle only) or large (line only). | `Size` | `"default"` |
+| stroke | Fill color. An array is a list of `{ percent, color }` intervals, where color is any CSS color or a Semi palette name. | `string \| StrokeArr` | - |
+| strokeGradient | Whether to generate gradient colors between intervals. Requires at least one interval in stroke. | `boolean` | `false` |
+| strokeLinecap | Line cap of the circle progress bar: round or square. Has no effect on a line progress bar. | `'round' \| 'square'` | `"round"` |
+| strokeWidth | Stroke width of the circle progress bar. | `number` | `4` |
+| type | Type: line or circle. | `'line' \| 'circle'` | `"line"` |
+| width | Diameter of the circle progress bar. Defaults to 24 when size is small and 72 otherwise. | `number` | - |

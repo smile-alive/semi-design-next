@@ -1,0 +1,668 @@
+---
+title: DatePicker
+order: 39
+icon: doc-datepicker
+brief: The date selector is used to help the user select a compliant, formatted date (time) or date (time) range.
+---
+
+import { Image } from '@fibrae/semi-ui-react';
+import DatePickerReactApi from './api/date-picker.react.en-US.mdx';
+import DatePickerVueApi from './api/date-picker.vue.en-US.mdx';
+import DatePickerSolidApi from './api/date-picker.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { DatePicker } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { DatePicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, ButtonGroup, DatePicker, Space, TabPane, Tabs, Tooltip, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Use
+
+<Demo id="basic" />
+
+### Picker Density
+
+The density can be used to control the size of the picker panel. The `compact` is the small size and the `default` is the default size. Support after v1.17.0.
+
+<Demo id="density" />
+
+### Multiple Date Selection
+
+Set `Multiple` to `true`, can choose multiple dates.
+
+<Demo id="multiple" />
+
+### Date and Time Selection
+
+Set `type` to `dateTime`, can choose date and time.  
+Starting from version V2.22.0, we changed the default mode of ScrollItem in TimePicker from wheel to normal. If you want to apply the infinite scrolling effect again, you can enable it by passing in a specific configuration through timePickerOpts.
+
+<Demo id="date-time" />
+
+### Date Range Selection
+
+Set `type` to `dateRange`, can choose the date range.
+
+<Demo id="date-range" />
+
+<Framework only="react">
+
+<Notice type="primary" title="Note">
+    <div>When you use range selection, if only one date is selected, onChange will not be triggered at this time. Only when both the start date and the end date are selected will onChange be triggered.</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="Note">
+    <div>When you use range selection, if only one date is selected, neither change nor update:modelValue is emitted at this time. Only when both the start date and the end date are selected will they be emitted.</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="Note">
+    <div>When you use range selection, if only one date is selected, onChange will not be triggered at this time. Only when both the start date and the end date are selected will onChange be triggered.</div>
+</Notice>
+
+</Framework>
+
+### Date Time Range Selection
+
+Set `type` to `dateTimeRange`, can choose the date range and choose time;
+
+<Demo id="date-time-range" />
+
+### Input in Panel
+
+Use `insetInput` to control whether the date panel is inset with the input box, the default is `false`. Supported since `v2.7.0`. Inset input boxes are suitable for the following scenarios:
+
+- Date and time selection, you can directly input the time through the embedded input box, no need to select the time through the scroll wheel
+- With a custom trigger and range selection, use the inset input box to modify the start and end dates independently
+
+After `insetInput` is turned on, it includes the following functions:
+
+- After clicking the trigger, the panel will pop up in the original position by default. You can customize the popup position by `position`
+- Click the embedded date input box, the panel switches to date selection; click the embedded time input box, the panel switches to time selection
+- Consistent with the external input box, if an illegal date is entered, the date will return to the previous legal date after the panel is closed
+
+<Notice type="primary" title="Notes">
+
+Note that some adjustments and restrictions will be made to the components after opening insetInput:
+
+1. Trigger style: the trigger is read-only when the panel is not open, and the trigger is disabled when it is open
+2. Panel style: when type includes time, hide the toggle button at the bottom
+3. After insetInput is enabled, the `format` API only supports the `dateFormat[ timeFormat]` format. Using other formats will affect the display of the inset input box placeholder and trigger text. When timeFormat is a 12-hour format (such as `hh:mm a`), the inset time input shows and accepts 24-hour time
+
+</Notice>
+
+<Demo id="inset-input" />
+
+### Synchronously switch months
+
+version：>= 1.28.0
+
+In the scenario of range selection, turning on `syncSwitchMonth` means to switch the two panels simultaneously. The default is false.
+
+> Note: Clicking the year button will also switch the two panels synchronously. Switching the year and month from the scroll wheel will not switch the panels synchronously. This ensures the user's ability to select months at non-fixed intervals.
+
+<Demo id="sync-switch-month" />
+
+### Panel Change Callback
+
+version：>=1.28.0
+
+<Framework only="react">
+
+`onPanelChange` will be called when the month or year of the panel is changed.
+
+</Framework>
+
+<Framework only="vue">
+
+The `panelChange` event is emitted when the month or year of the panel is changed.
+
+</Framework>
+
+<Framework only="solid">
+
+`onPanelChange` will be called when the month or year of the panel is changed.
+
+</Framework>
+
+<Demo id="panel-change" />
+
+### Select Week
+
+`daterange` is used with `startDateOffset` and `endDateOffset` to select range with single click, such as weekly selection and biweekly selection. Support after v1.10.0.
+
+<Demo id="week" />
+
+### Selection
+
+**Version:** > = 0.21.0
+
+Set `type` to `month`, can make year-to-month selection.
+
+<Demo id="month" />
+
+### Year and Month Range Selection
+
+**version：** >= 2.32.0
+
+Set `type` to `monthRange` to select the year and month range, small size and quick panel are not supported yet.
+
+<Demo id="month-range" />
+
+### Year Selection
+
+Set `type` to `year` to select a year. The panel has a single year column, the selected value is January 1 of that year, and the default format is `yyyy`. `disabledDate` decides whether a year can be picked from January 1 of that year.
+
+<Demo id="year" />
+
+### Confirm Date and Time Selection
+
+**Version: > = 0.18.0**
+
+For the selection of "datetime" (type = "dateTime") or "datetime range" (type = "dateTimeRange"), you can confirm it before writing the value into the input box. You can pass `NeedConfirm` = true to enable this behavior.
+
+<Framework only="react">
+
+At the same time, the click callbacks of the "onConfirm" and "onCancel" buttons are supported.
+
+The following example binds three callbacks: `onChange`, `onConfirm` and `onCancel`, and you can open the console to see the difference in print information.
+
+</Framework>
+
+<Framework only="vue">
+
+At the same time, the click events of the "confirm" and "cancel" buttons are supported.
+
+The following example listens to three events: `change`, `confirm` and `cancel`, and you can open the console to see the difference in print information.
+
+</Framework>
+
+<Framework only="solid">
+
+At the same time, the click callbacks of the `onConfirm` and `onCancel` buttons are supported.
+
+The following example binds three callbacks: `onChange`, `onConfirm` and `onCancel`, and you can open the console to see the difference in print information.
+
+</Framework>
+
+> Note: When opening `needConfirm`, you need to click the cancel button to close the panel, and clicking the blank area will no longer close the panel (v2.2.0)
+
+<Demo id="need-confirm" />
+
+### Date and Time Selection with Shortcuts
+
+Pass parameter `Presets` to set shortcuts for date selection.
+
+<Demo id="presets" />
+
+### Render TopSlot/BottomSlot
+
+<Framework only="react">
+
+With `topSlot` and `bottomSlot`, you can customize the rendering of the top and bottom extra areas. With `leftSlot` and `rightSlot`, you can customize the rendering of the left and right extra areas (since v2.65.0).
+
+</Framework>
+
+<Framework only="vue">
+
+With the `#topSlot` and `#bottomSlot` slots, you can customize the rendering of the top and bottom extra areas. The `#leftSlot` and `#rightSlot` slots render the left and right extra areas.
+
+</Framework>
+
+<Framework only="solid">
+
+With `topSlot` and `bottomSlot`, you can customize the rendering of the top and bottom extra areas. With `leftSlot` and `rightSlot`, you can customize the rendering of the left and right extra areas.
+
+</Framework>
+
+<Demo id="slot" />
+
+```css
+.components-datepicker-demo-slot {
+    .semi-tabs-content {
+        padding: 0;
+    }
+
+    .semi-tabs-bar-line.semi-tabs-bar-top {
+        border-bottom: none;
+    }
+}
+```
+
+### Disable Date Selection
+
+<Demo id="disabled" />
+
+### Disable Partial Date or Time
+
+Pass in `disabledDate` to disable the specified date, pass in `disabledTime` to disable the specified time, and with `defaultPickerValue` you can specify the year and month when the panel is opened.
+
+`disabledDate` and`disabledTime`, the accepted input parameters are the current date, the former returns a `boolean` value, the latter returns an [object](/en-US/react/input/time-picker#API_Reference) It will be directly passed to the `TimePicker` component.
+
+<Notice type="primary" title="Note">
+    <div>When you use timeZone, the Date of the first parameter is the time under the time zone you choose (similar to the first argument of onChange in React and of the change event in Vue)</div>
+</Notice>
+
+<Demo id="disabled-date" />
+
+When `type` contains `range`, the date can be disabled dynamically according to the rangeStart. The `options` parameter is supported after 1.9.0
+
+<Demo id="disabled-date-range" />
+
+When `type` contains `range`, dates can be disabled based on the focus state. The focus state is passed through the `rangeInputFocus` parameter in `options`.
+
+<Demo id="disabled-date-focus" />
+
+### Custom Display Format
+
+Pass parameter `format` to custom display format.
+
+<Demo id="format" />
+
+### Custom Trigger
+
+**Version:** >=0.34.0
+
+<Framework only="react">
+
+By default we use the `Input` component as the trigger for the `DatePicker` component. You can customize this trigger by passing the `triggerRender` method.
+
+The custom trigger is a complete customization of the trigger, the default clear button will not take effect, if you need clear function, please customize a clear button.
+
+</Framework>
+
+<Framework only="vue">
+
+By default we use the `Input` component as the trigger for the `DatePicker` component. You can customize this trigger with the `#trigger` scoped slot.
+
+The custom trigger is a complete customization of the trigger, the default clear button will not take effect, if you need clear function, please customize a clear button that calls `onClear` from the slot props.
+
+The slot props are `value`, `inputValue`, `placeholder`, `disabled`, `size`, `inputReadOnly`, `rangeInputFocus`, `type`, `format`, `multiple`, `autofocus` and `componentProps`, plus `onChange` (sets the input text, as typing does), `onEnterPress` (commits the input text) and `onClear` (reports a click on the clear button). `inputValue` is `null` until the user types; show the formatted `value` then. The slot props carry no `aria-*` attributes, so name the custom content yourself.
+
+</Framework>
+
+<Framework only="solid">
+
+By default we use the `Input` component as the trigger for the `DatePicker` component. You can customize this trigger by passing the `triggerRender` method.
+
+The custom trigger is a complete customization of the trigger, the default clear button will not take effect, if you need clear function, please customize a clear button.
+
+`triggerRender` is called once. The props it receives are reactive, so read them inside the returned JSX instead of destructuring them.
+
+</Framework>
+
+<Demo id="trigger-render" />
+
+<Notice type="primary" title="Note">
+    <div>When DatePicker is range type, the default date selected after the panel is opened is the start date, and it will switch to the end date selection after selection. The focus is reset when the panel is closed.</div>
+    <div>We recommend providing a clear button, when you pass null value to DatePicker, DatePicker will also reset focus internally. This allows the user to reselect the date range after clearing. (from v2.15)</div>
+</Notice>
+
+<Demo id="trigger-render-range" />
+
+### Custom Render Date Content
+
+**Version：**>=1.4.0
+
+<Framework only="react">
+
+`renderDate: (dayNumber: number, fullDate: string) => ReactNode`
+
+- `dayNumber`: such as `13`.
+- `fullDate`: such as `2020-08-13`.
+
+</Framework>
+
+<Framework only="vue">
+
+The `#date="{ dayNumber, fullDate }"` scoped slot.
+
+- `dayNumber`: such as `13`.
+- `fullDate`: such as `2020-08-13`.
+
+</Framework>
+
+<Framework only="solid">
+
+`renderDate: (dayNumber?: number, fullDate?: string) => JSX.Element`
+
+- `dayNumber`: such as `13`.
+- `fullDate`: such as `2020-08-13`.
+
+</Framework>
+
+<Demo id="render-date" />
+
+### Custom Render Date Box
+
+**Version：**>=1.4.0
+
+<Framework only="react">
+
+`renderFullDate: (dayNumber: number, fullDate: string, dayStatus: object) => ReactNode`
+
+</Framework>
+
+<Framework only="vue">
+
+The `#fullDate="{ dayNumber, fullDate, dayStatus }"` scoped slot replaces the whole date box; the box keeps only its base and active class names.
+
+</Framework>
+
+<Framework only="solid">
+
+`renderFullDate: (dayNumber?: number, fullDate?: string, dayStatus?: DayStatusType) => JSX.Element`
+
+</Framework>
+
+`dayStatus` is this status of current date box. The included keys are as follows.
+
+```md
+type DayStatusType = { isToday?: boolean, isSelected?: boolean, isDisabled?: boolean, isSelectedStart?: boolean, isSelectedEnd?: boolean, isInRange?: boolean, isHover?: boolean, isOffsetRangeStart?: boolean, isOffsetRangeEnd?: boolean, isHoverInOffsetRange?: boolean, }
+```
+
+<Demo id="render-full-date" />
+
+```css
+.components-datepicker-demo-day-inrange,
+.components-datepicker-demo-day-hover {
+    background: var(--semi-color-primary-light-hover);
+}
+
+.components-datepicker-demo-day-selected,
+.components-datepicker-demo-day-selected-start,
+.components-datepicker-demo-day-selected-end {
+    color: var(--semi-color-bg-2);
+    background: var(--semi-color-primary);
+}
+```
+
+## API Reference
+
+<Framework only="react">
+
+<DatePickerReactApi />
+
+Other native attributes (such as `id`, `title`, `data-*`, `aria-label` and `onClick`) land on the root element, except `tabIndex`, which lands on the input. Where `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land:
+
+- A single input: all of them land on the input
+- A range type: the root element is `role="group"` and takes `aria-labelledby`; the other four land on both inputs
+- `triggerRender` content without a focusable element: `aria-labelledby`, `aria-describedby`, `aria-errormessage` and `aria-invalid` land on the wrapper with the role `button`; `aria-required` is not forwarded
+- `triggerRender` content with its own focusable element: none of them is forwarded, so set them on the rendered content
+
+</Framework>
+
+<Framework only="vue">
+
+<DatePickerVueApi />
+
+`modelValue` with `update:modelValue` is `v-model`, and `open` with `update:open` is `v-model:open`. `autofocus` is lowercase; `triggerRender`, `renderDate`, `renderFullDate`, `rangeSeparatorNode` and the other ReactNode props are slots.
+
+Undeclared attributes such as `class`, `style`, `id`, `title`, `data-*` and `aria-label` land on the root element, which is `role="group"` when it has an `aria-label`. Where `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land:
+
+- A single input: all of them land on the input
+- A range type: the root element is `role="group"` and takes `aria-labelledby`; the other four land on both inputs
+- `#trigger` content without a focusable element: `aria-labelledby`, `aria-describedby`, `aria-errormessage` and `aria-invalid` land on the wrapper with the role `button`; `aria-required` is not forwarded
+- `#trigger` content with its own focusable element: none of them is forwarded, so set them on the slot content
+
+`change`, `focus` and `blur` shadow the native events of the same name bubbling from the root. A DatePicker deactivated inside `<KeepAlive>` closes its panel and emits only `update:open` and `openChange`.
+
+</Framework>
+
+<Framework only="solid">
+
+<DatePickerSolidApi />
+
+`class`, `style`, `ref` and undeclared native attributes and events (such as `id`, `title`, `data-*`, `aria-label` and `onClick`) land on the root element. Where `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land:
+
+- A single input: all of them land on the input
+- A range type: the root element is `role="group"` and takes `aria-labelledby`; `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on both inputs
+- `triggerRender` content without a focusable element: `aria-labelledby`, `aria-describedby`, `aria-errormessage` and `aria-invalid` land on the wrapper with the role `button`; `aria-required` is not forwarded
+- `triggerRender` content with its own focusable element: none of them is forwarded, so set them on the rendered content
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+The handle obtained through `ref` carries the `open()`, `close()`, `focus(focusType?)` and `blur()` methods, see the Methods table in the API Reference. `focus` focuses the input; a range type focuses the start input by default, or the end input with `'rangeEnd'`. With `insetInput` and the panel open, it focuses the input inside the panel.
+
+</Framework>
+
+<Framework only="vue">
+
+A template ref exposes `open()`, `close()`, `focus(rangeEnd?)` and `blur()`. `focus` focuses the input; a range focuses its start input unless `rangeEnd` is given, and with insetInput the focus goes to the input in the panel. `blur` blurs the input. A controlled `open` wins: `open()` and `close()` do not change the visibility of the panel then.
+
+</Framework>
+
+<Framework only="solid">
+
+A `ref` on the picker gets the root element, which carries the `open()`, `close()`, `focus(focusType?)` and `blur()` methods; the table is in the API Reference. `focus` focuses the input; a range focuses its start input unless `'rangeEnd'` is given, and with `insetInput` the focus goes to the input in the panel.
+
+</Framework>
+
+<Demo id="methods" />
+
+## Interface Define
+
+<Framework only="react">
+
+```typescript
+type BaseValueType = string | number | Date;
+type ValueType = BaseValueType | BaseValueType[];
+type DateType = Date | Date[];
+type StringType = string | string[];
+type TriggerRenderProps = {
+    value?: ValueType;
+    inputValue?: string | null;
+    placeholder?: string | string[];
+    autoFocus?: boolean;
+    size?: InputSize;
+    disabled?: boolean;
+    inputReadOnly?: boolean;
+    componentProps?: DatePickerProps;
+    [x: string]: any;
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```typescript
+type DatePickerBaseValueType = string | number | Date;
+type DatePickerValueType = DatePickerBaseValueType | DatePickerBaseValueType[];
+type DatePickerType = 'date' | 'dateRange' | 'dateTime' | 'dateTimeRange' | 'month' | 'monthRange' | 'year';
+type DatePickerRangeInput = 'rangeStart' | 'rangeEnd';
+type DatePickerTriggerSlotProps = {
+    value: Date[];
+    inputValue: string | null;
+    placeholder: string | string[];
+    disabled: boolean;
+    size: InputSize;
+    inputReadOnly: boolean;
+    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    type: DatePickerType;
+    format?: string;
+    multiple: boolean;
+    autofocus: boolean;
+    componentProps: DatePickerProps;
+    onChange: (inputValue: string) => void;
+    onEnterPress: (inputValue: string) => void;
+    onClear: (event: MouseEvent) => void;
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```typescript
+type DatePickerBaseValueType = string | number | Date;
+type DatePickerValueType = DatePickerBaseValueType | DatePickerBaseValueType[];
+type DatePickerDayStatusType = {
+    isToday?: boolean;
+    isSelected?: boolean;
+    isDisabled?: boolean;
+    isSelectedStart?: boolean;
+    isSelectedEnd?: boolean;
+    isInRange?: boolean;
+    isHover?: boolean;
+    isOffsetRangeStart?: boolean;
+    isOffsetRangeEnd?: boolean;
+    isHoverInOffsetRange?: boolean;
+};
+type DatePickerDisabledDateOptions = {
+    rangeStart?: string;
+    rangeEnd?: string;
+    rangeInputFocus?: 'rangeStart' | 'rangeEnd' | false;
+};
+type DatePickerDisabledDateType = (date: Date, options?: DatePickerDisabledDateOptions) => boolean;
+type DatePickerPresetType = {
+    start?: DatePickerBaseValueType | null | (() => DatePickerBaseValueType);
+    end?: DatePickerBaseValueType | null | (() => DatePickerBaseValueType);
+    text?: string;
+};
+type DatePickerPresetsType = Array<DatePickerPresetType | (() => DatePickerPresetType)>;
+interface DatePickerTriggerRenderProps extends DateInputProps {
+    componentProps: Omit<DatePickerProps, 'ref'>;
+}
+interface DatePickerHandle {
+    open: () => void;
+    close: () => void;
+    focus: (focusType?: 'rangeStart' | 'rangeEnd') => void;
+    blur: () => void;
+}
+type DatePickerElement = HTMLDivElement & DatePickerHandle;
+```
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The input has the role `combobox` with `aria-haspopup="dialog"`, an `aria-expanded` that follows the panel, and `aria-controls` pointing at the panel; both inputs of a range do
+- A single input is named `Choose date` while no date is selected and `Change date` once one is (an `aria-labelledby` you pass wins)
+- When the content of a custom trigger (`triggerRender` in React, the `#trigger` slot in Vue) has no focusable element, the wrapper is the focus target with the role `button`, named as above
+- The role of the month in the date panel is `grid`, named by the year and month title at the top of the panel; the role of the week is set to `row`, and the date cell is set to `gridcell`
+- The year and month scroll columns are `listbox` lists named "year" and "month"
+- `aria-disabled` is true for the corresponding option when date and time are disabled
+- With multiple or range selection, `aria-multiselectable` of month is true, and `aria-selected` of date grid is true when selected
+- Some decorative icons in the panel, their `aria-hidden` is true
+
+### Keyboard and Focus
+
+- `Down Arrow` in the input opens the panel; once the panel is open, `Down Arrow` moves focus into it
+- The date grid is one Tab stop: the `arrow keys`, `Home`, `End`, `PageUp` and `PageDown` (by year with `Shift`) move the active date, and `Enter` or `Space` picks it
+- The date and time switches at the bottom of a dateTime panel are buttons that `Enter` or `Space` activates
+- With a range value, Tab reaches the clear button after the end input, and `Enter` or `Space` clears the range
+- `Esc` closes the panel; focus inside the panel returns to the input, or to the custom trigger when there is one
+- When the content of a custom trigger has no focusable element, Tab reaches the wrapper, and `Enter`, `Space` or `Down Arrow` opens the panel
+
+## Date and Time Format
+
+Adopted in the semi-ui component library [date-fns v4](https://date-fns.org/docs/Getting-Started) As a date and time engine, formatting token means the following:
+
+- `"y"`: Year
+- `"M"`: month
+- `"d"`: day
+- `"H"`: hours
+- `"h"`: hours (12h)
+- `"m"`: minutes
+- `"s"`: seconds
+
+The following uses `new Date('2023-12-09 08:08:00')` or `[new Date('2023-12-09 08:08:00'), new Date('2023-12-10 10 :08:00')]` as `value` to explain the impact of different types and different `format` values on the displayed value:
+
+| type          | format              | display value                       |
+| ------------- | ------------------- | ----------------------------------- |
+| date          | yyyy-MM-dd          | 2023-12-09                          |
+| dateTime      | yyyy-MM-dd HH:mm:ss | 2023-12-09 08:08:00                 |
+| month         | yyyy-MM             | 2023-12                             |
+| year          | yyyy                | 2023                                |
+| dateRange     | yyyy-MM-dd          | 2023-12-09 ~ 2023-12-10             |
+| dateTimeRange | yyyy-MM-dd HH:mm:ss | 2023-12-09 08:08 ~ 2023-12-10 10:08 |
+
+Multiple dates or times are used by default `","` (English comma) separated.
+
+> More token available [Date-fns official website](https://date-fns.org/docs/Unicode-Tokens)
+
+## Content Guidelines
+
+- Date picker is recommended to be used with tags
+- Use concise labels to indicate what the date selection refers to
+- Please refer to [Date and Time](/en-US/react/experience/content-guidelines#8.%20%E6%97%A5%E6%9C%9F%E4%B8%8E%E6%97%B6%E9%97%B4)
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Date time picker, when you choose time, minute and second, you don't want to scroll infinitely. How to achieve the effect?**  
+  Starting from version V2.22.0, we changed the default mode of ScrollItem in TimePicker from wheel to normal. If you want to apply the infinite scrolling effect again, you can control this behavior through a specific switch in timePickerOpts, that is:
+
+      <Framework only="react">
+
+    timePickerOpts=\{\{ scrollItemProps: \{ mode: "wheel", cycled: true \} \}\}.
+
+      </Framework>
+
+      <Framework only="vue">
+
+    `:timePickerOpts="{ scrollItemProps: { mode: 'wheel', cycled: true } }"`.
+
+      </Framework>
+
+      <Framework only="solid">
+
+    `timePickerOpts={{ scrollItemProps: { mode: 'wheel', cycled: true } }}`.
+
+      </Framework>
+
+- **How to set the default display time when the panel is opened?**  
+  You can use the defaultPickerValue property.
+
+- **Date time selection, range date selection, after inputting some dates, the panel does not echo the date?**
+
+    The input box needs to be entered completely before it is showed to the panel. For example, for `dateTime` type, the full requested date and time have been entered. For `dateRange` type, full requires start and end dates to be entered.
+
+- **What is the displayed time at the bottom of the date time selection panel?**
+
+    When no time is selected, it is the value of the time in `defaultPickerValue`, if not set it is the time when the panel was opened. After selecting a time, it is the selected time.
+
+    Since it has two hidden meanings in design, which may lead to ambiguity, it is recommended to use inline styles and open them through `insetInput`. It is recommended to read the relevant <a href="#input-in-panel">Documentation</a> before use.
+
+    <Image src="https://lf9-static.semi.design/obj/semi-tos/images/a0d68960-bccf-11ed-84ab-fbdf4dc2eb57.png" alt="The time at the bottom of the date time selection panel" width={600} />

@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                       | 类型                                                                                                         | 默认值 |
+| ----------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------ |
+| annotation  | 参考来源列表，每项可含 title、logo、url、detail。必填。    | `AnnotationItemProps[] \| Annotation[]`                                                                      | -      |
+| description | 来源图标后的描述文字，不传时显示来源数量。                 | `string`                                                                                                     | -      |
+| maxCount    | 最多显示的来源图标数，超出部分显示为 +N。必填。            | `number`                                                                                                     | -      |
+| onClick     | 点击或用 Enter、空格激活时调用，参数为事件与参考来源列表。 | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent, item: AnnotationItemProps[]) => void"}>Type</ApiType> | -      |

@@ -1,0 +1,40 @@
+**Props**
+
+| 属性           | 说明                                                                           | 类型               | 默认值                                            |
+| -------------- | ------------------------------------------------------------------------------ | ------------------ | ------------------------------------------------- |
+| displayValue   | 展示日期，未传时为当前日期并在午夜更新。                                       | `Date`             | `semiGlobalDefault("Calendar", "displayValue")`   |
+| range          | range 模式下展示的日期范围，左闭右开；range 模式必传。                         | `Date[]`           | `semiGlobalDefault("Calendar", "range")`          |
+| events         | 渲染的事件，格式见 Event Object。                                              | `EventObject[]`    | `semiDefault("Calendar", "events", [])`           |
+| mode           | 视图模式，可选 day、week、month、range，变化后立即切换视图。                   | `CalendarMode`     | `semiDefault("Calendar", "mode", "week")`         |
+| showCurrTime   | 日、周、多日视图下显示当前时间的红线。                                         | `boolean`          | `semiDefault("Calendar", "showCurrTime", true)`   |
+| weekStartsOn   | 以周几作为每周第一天，0 代表周日，1 代表周一，以此类推；对月视图、周视图生效。 | `WeekStartsOn`     | `semiDefault("Calendar", "weekStartsOn", 0)`      |
+| scrollTop      | 日、周、多日视图下展示内容的默认滚动高度。                                     | `number`           | `semiDefault("Calendar", "scrollTop", 400)`       |
+| markWeekend    | 以灰色区分周末列和工作日。                                                     | `boolean`          | `semiDefault("Calendar", "markWeekend", false)`   |
+| minEventHeight | 日视图、多日视图以及周视图下事件的最小高度，单位为像素。                       | `number`           | `semiGlobalDefault("Calendar", "minEventHeight")` |
+| width          | 日历宽度，数字按像素处理。                                                     | `string \| number` | `semiGlobalDefault("Calendar", "width")`          |
+| height         | 日历高度，数字按像素处理。                                                     | `string \| number` | `semiDefault("Calendar", "height", 600)`          |
+
+**Events**
+
+| 事件      | 说明                                                                                                                                          | 回调参数                                             |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| click     | 单击日期格时触发，参数为事件和该格的日期；日、周、多日视图以半小时为单位，月视图以日为单位。                                                  | `[event: MouseEvent, value: Date]`                   |
+| close     | 月视图下展示全部事件的卡片关闭时触发；关闭按钮或再次点击「还有 N 项」传点击事件，Esc 传键盘事件，点击外部或组件在 KeepAlive 中停用时传 null。 | `[event: MouseEvent \| KeyboardEvent \| null]`       |
+| moreClick | 月视图下点击「还有 N 项」打开卡片时触发，参数为事件、日期和被折叠的事件数；再次点击收起卡片时不触发。                                         | `[event: MouseEvent, date: Date, remaining: number]` |
+
+**Slots**
+
+| 插槽         | 说明                                                                                                              | 作用域参数                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| header       | 自定义头部内容。                                                                                                  | `any`                           |
+| event        | 自定义事件内容，参数 event 为 events 中的原对象，同一事件在多处显示时每处各调用一次；未提供时渲染 children 文本。 | `CalendarEventSlotProps`        |
+| dateDisplay  | 自定义日期文案（周、多日视图的列标题与月视图的每个日期格），日视图不使用。                                        | `CalendarDateDisplaySlotProps`  |
+| dateGrid     | 自定义单元格或列的内容，参数为日期和 date.toString() 得到的 dateString，需要绝对定位。                            | `CalendarDateGridSlotProps`     |
+| timeDisplay  | 自定义日、周、多日视图下的时间文案，参数 time 为小时数。                                                          | `CalendarTimeDisplaySlotProps`  |
+| allDayEvents | 自定义日、多日、周视图顶部的全天事件区域，参数 events 为传入的全部事件，需自行筛选。                              | `CalendarAllDayEventsSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

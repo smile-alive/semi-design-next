@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| avatarShape | Avatar shape of the avatar tags in the group: `square` or `circle`. | `AvatarShape` | `"square"` |
+| maxTagCount | Maximum number of visible tags. The rest is shown as +N. | `number` | - |
+| onPlusNMouseEnter | Callback when the pointer enters the +N tag. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onTagClose | Callback when a tag in the group is closed, with the tag content, the close event and the `tagKey` of the tag. Update `tagList` in the callback. | <ApiType detail={"(tagChildren: JSX.Element, event: TagCloseEvent, tagKey?: string \u007c number) => void"}>Type</ApiType> | - |
+| popoverProps | Props passed to the Popover, such as `position` and `trigger`. | `PopoverProps` | - |
+| renderTag | Custom render of each tag, given the tag configuration and its index in `tagList`; the result replaces the default Tag. Called only for the tags shown: the tags beyond `maxTagCount` render when the Popover opens. | <ApiType detail={"(tag: TagGroupItem, index: number) => JSX.Element"}>Type</ApiType> | - |
+| restCount | The number shown in +N. Defaults to the number of tags beyond `maxTagCount`. | `number` | - |
+| showPopover | Whether hovering +N shows the remaining tags in a Popover. | `boolean` | - |
+| size | Size of the tags in the group: `default`, `small` or `large`. | `TagSize` | `"default"` |
+| tagList | Tag configurations. Each item holds the props of a Tag, with `children` as the string or number text and without `prefixIcon` or `suffixIcon`; render other content with `renderTag`. | `TagGroupItem[]` | - |

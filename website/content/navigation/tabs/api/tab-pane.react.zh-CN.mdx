@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                    | 类型                                                              | 默认值 |
+| --------- | ------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
+| children  | 面板内容。                                              | `React.ReactNode`                                                 | -      |
+| className | 面板根元素（`role="tabpanel"`）的类名。                 | `string`                                                          | -      |
+| closable  | 是否允许关闭该标签页，关闭时触发 Tabs 的 `onTabClose`。 | `boolean`                                                         | -      |
+| disabled  | 是否禁用该标签页。                                      | `boolean`                                                         | -      |
+| icon      | 标签栏中该标签的图标，由 Tabs 渲染。                    | `ReactNode`                                                       | -      |
+| itemKey   | 标签页的唯一标识，对应 Tabs 的 `activeKey`。            | `string`                                                          | -      |
+| ref       | 面板根元素（`role="tabpanel"`）的引用。                 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| style     | 面板根元素的样式对象。                                  | `CSSProperties`                                                   | -      |
+| tab       | 标签栏中该标签的内容，由 Tabs 渲染。                    | `ReactNode`                                                       | -      |
+| tabIndex  | 面板的 `tabIndex`，未设置时为 `0`。                     | `number`                                                          | -      |

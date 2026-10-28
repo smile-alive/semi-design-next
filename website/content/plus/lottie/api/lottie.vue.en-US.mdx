@@ -1,0 +1,28 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| params | Options passed to lottie-web's loadAnimation. It reloads when the content changes, not when the object is mutated in place: replace it as a whole, and hold large animation data in a shallowRef. | <ApiType detail={"Partial\u003cAnimationConfigWithPath\u003cRendererType> \u007c AnimationConfigWithData\u003cRendererType>>"}>Type</ApiType> | `undefined` |
+| width | Container width, with a unit such as 300px. | `string` | `semiGlobalDefault("Lottie", "width")` |
+| height | Container height, with a unit such as 300px. | `string` | `semiGlobalDefault("Lottie", "height")` |
+
+**Events**
+
+| Event                | Description                                                                                          | Callback parameters            |
+| -------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------ |
+| getAnimationInstance | Emitted once per animation created, including every reload, with the AnimationItem of the animation. | `[animation: LottieAnimation]` |
+| getLottie            | Emitted once per mount after lottie-web has loaded, with the global Lottie.                          | `[lottie: LottieModule]`       |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

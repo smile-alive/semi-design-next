@@ -1,0 +1,28 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| params | 传给 lottie-web loadAnimation 的参数。内容变化时重新加载，原地修改不会触发：请整体替换，较大的动画数据用 shallowRef 持有。 | <ApiType detail={"Partial\u003cAnimationConfigWithPath\u003cRendererType> \u007c AnimationConfigWithData\u003cRendererType>>"}>Type</ApiType> | `undefined` |
+| width | 容器宽度，需带单位，如 300px。 | `string` | `semiGlobalDefault("Lottie", "width")` |
+| height | 容器高度，需带单位，如 300px。 | `string` | `semiGlobalDefault("Lottie", "height")` |
+
+**Events**
+
+| 事件                 | 说明                                                                         | 回调参数                       |
+| -------------------- | ---------------------------------------------------------------------------- | ------------------------------ |
+| getAnimationInstance | 每创建一次动画（包括每次重新加载）触发一次，载荷为当前动画的 AnimationItem。 | `[animation: LottieAnimation]` |
+| getLottie            | lottie-web 加载完成后，每次挂载触发一次，载荷为全局 Lottie。                 | `[lottie: LottieModule]`       |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| ---- | ---- | ---------- |
+| 无   |      |            |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

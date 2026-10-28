@@ -1,0 +1,199 @@
+---
+title: Switch
+order: 48
+icon: doc-switch
+brief: Switch is an interactive form used to switch two mutually exclusive states.
+---
+
+import SwitchReactApi from './api/switch.react.en-US.mdx';
+import SwitchVueApi from './api/switch.vue.en-US.mdx';
+import SwitchSolidApi from './api/switch.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Switch } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Switch } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Framework only="react">
+
+You can monitor state changes through `onChange`, and set the selected state through `defaultChecked` or controlled `checked`.  
+Use `aria-label` to describe the specific function of the Switch
+
+</Framework>
+
+<Framework only="vue">
+
+You can monitor state changes through `@change`, and set the selected state through `defaultChecked` or `modelValue` (`v-model`).  
+Use `aria-label` to describe the specific function of the Switch
+
+</Framework>
+
+<Framework only="solid">
+
+You can monitor state changes through `onChange`, and set the selected state through `defaultChecked` or controlled `checked`.  
+Use `aria-label` to describe the specific function of the Switch
+
+</Framework>
+
+<Demo id="basic" />
+
+### Size
+
+<Demo id="size" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### With text
+
+<Framework only="react">
+
+Can pass `checkedText` with `uncheckedText` Text when setting the switch  
+The long text is recommended to be placed directly on the outside.  
+Note: This does not work with the smallest switch (size = 'small')
+
+</Framework>
+
+<Framework only="vue">
+
+Can pass the `#checkedText` and `#uncheckedText` slots to set the text of the switch  
+The long text is recommended to be placed directly on the outside.  
+Note: This does not work with the smallest switch (size = 'small')
+
+</Framework>
+
+<Framework only="solid">
+
+Can pass `checkedText` and `uncheckedText` to set the text of the switch  
+Note: This does not work with the smallest switch (size = 'small')
+
+</Framework>
+
+<Demo id="text" />
+
+Compared to setting the embedded text through checkedText and uncheckedText, we recommend placing the text description outside the Switch
+
+<Demo id="text-outside" />
+
+### Controlled component
+
+<Framework only="react">
+
+Whether the component is selected depends entirely on the incoming checked value, used with `onChange`
+
+</Framework>
+
+<Framework only="vue">
+
+Whether the component is selected depends entirely on the incoming `modelValue`, used with `v-model`. With a one-way `:modelValue` and no write-back, a click only notifies and the passed value decides what is shown.
+
+</Framework>
+
+<Framework only="solid">
+
+Whether the component is selected depends entirely on the incoming `checked` value, used with `onChange`. With a one-way `checked` and no write-back in the callback, a click only notifies and the passed value decides what is shown.
+
+</Framework>
+
+<Demo id="controlled" />
+
+### loading
+
+You can turn on the loading state by setting loading="true".
+
+<Demo id="loading" />
+
+## API reference
+
+<Framework only="react">
+
+<SwitchReactApi />
+
+`className`, `style`, `ref`, `onFocus`, `onBlur` and other native attributes (such as `data-*`) land on the root element; `onFocus` and `onBlur` receive the focus events bubbling up from the inner input. `autoFocus` and `aria-*` land on the inner native input.
+
+</Framework>
+
+<Framework only="vue">
+
+<SwitchVueApi />
+
+`class` and `style` land on the root element. `id`, `name`, `tabindex`, `autofocus`, `aria-*` and focus and blur listeners passed as attrs land on the inner native input; other native attributes and listeners (such as `@mouseenter`) land on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<SwitchSolidApi />
+
+`class`, `style`, `ref` and other native attributes and listeners (such as `onMouseEnter`) land on the root element. `id`, `name`, `tabIndex`, `autofocus`, `aria-*`, and `onFocus` and `onBlur` land on the inner native input.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The inner input of Switch has a `switch` role, and its on or off state is expressed by the native checked state of the input.
+- As a form field, it should have a Label.
+
+<Framework only="react">
+
+- The Label is added automatically when you use Form.Switch. If you use Switch alone, it is recommended to use `aria-label` to describe the current label function.
+
+</Framework>
+
+<Framework only="vue">
+
+- It is recommended to use `aria-label` to describe the current label function, or `aria-labelledby` to point to a visible label on the page.
+
+</Framework>
+
+<Framework only="solid">
+
+- The Label is added automatically when you use `FormSwitch`. If you use Switch alone, it is recommended to use `aria-label` to describe the current label function, or `aria-labelledby` to point to a visible label on the page.
+
+</Framework>
+
+### Keyboard and Focus
+
+- Keyboard users can use `Tab` and `Shift + Tab` to switch focus.
+- When focusing, you can switch on or off by pressing the `Space` key.
+
+## Content Guidelines
+
+- Switch description
+    - First letter is capitalized, no punctuation is required
+    - Indirectly and explicitly state whether the setting is on or off
+    - If needed, explain to the user what the on and off states represent
+
+## Design Tokens
+
+<DesignToken />

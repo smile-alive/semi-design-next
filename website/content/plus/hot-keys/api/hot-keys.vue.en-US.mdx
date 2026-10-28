@@ -1,0 +1,28 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property          | Description                                                                                                                                             | Type                                                                                | Default                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------- |
+| hotKeys           | The key combination: any number of modifiers plus one other key, as KeyboardEvent.key values. An invalid combination throws, including after an update. | `string[]`                                                                          | `undefined`                                       |
+| content           | Key labels to show. Defaults to hotKeys.                                                                                                                | `string[]`                                                                          | `semiGlobalDefault("HotKeys", "content")`         |
+| preventDefault    | Whether the default behavior of the key combination is prevented.                                                                                       | `boolean`                                                                           | `semiDefault("HotKeys", "preventDefault", false)` |
+| getListenerTarget | Returns the element that listens for keydown. When omitted, or when it returns null or undefined, document.body is used.                                | <ApiType detail={"(() => HTMLElement \u007c null \u007c undefined)"}>Type</ApiType> | `undefined`                                       |
+
+**Events**
+
+| Event  | Description                                                                      | Callback parameters      |
+| ------ | -------------------------------------------------------------------------------- | ------------------------ |
+| hotKey | Emitted when the full key combination is pressed, with the native KeyboardEvent. | `[event: KeyboardEvent]` |
+
+**Slots**
+
+| Slot    | Description                                                                        | Scope parameters |
+| ------- | ---------------------------------------------------------------------------------- | ---------------- |
+| default | Replaces the key hint. An empty slot renders nothing and the hot keys stay active. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

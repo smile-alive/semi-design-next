@@ -1,0 +1,27 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                                                    | 类型                                                                                  | 默认值 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------ |
+| className        | 导航项的自定义类名，传入后替代默认的 `semi-navigation-item-normal`。                                                    | `string`                                                                              | -      |
+| disabled         | 是否禁用。禁用项仍可聚焦，但激活无效。默认为 `false`。                                                                  | `boolean`                                                                             | -      |
+| forwardRef       | 接收导航项 `li` 元素的回调，与 `ref` 同时生效。                                                                         | <ApiType detail={"(ele: HTMLLIElement) => void"}>Type</ApiType>                       | -      |
+| icon             | 导航项图标。未设置尺寸的 Semi 图标按导航项的尺寸显示。                                                                  | `React.ReactNode`                                                                     | -      |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效。默认为 `false`。                                                        | `boolean \| number`                                                                   | -      |
+| isCollapsed      | 为 `true` 时该项按收起状态显示，文案改由 Tooltip 提供。与导航的收起状态取或。                                           | `boolean`                                                                             | -      |
+| isSubNav         | 是否为子导航的标题，由 `Nav.Sub` 内部设置，手写的 `Nav.Item` 不需要传入。                                               | `boolean`                                                                             | -      |
+| itemKey          | 导航项唯一标识。                                                                                                        | `ItemKey`                                                                             | -      |
+| level            | 当前项所在嵌套层级，`limitIndent` 为 `false` 时用于确定缩进。`items` 生成的项自动设置，手写的 `Nav.Item` 需要自己传入。 | `number`                                                                              | -      |
+| link             | 导航项的 `href`，传入时整个导航项渲染为链接。                                                                           | `string`                                                                              | -      |
+| linkOptions      | 透传给链接的属性，如 `target`、`rel` 和 `onClick`。                                                                     | <ApiType detail={"React.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -      |
+| onClick          | 点击导航项时触发。数据含 `itemKey`、`text`，`domEvent` 为原生事件。                                                     | <ApiType detail={"(clickItems: SelectedData) => void"}>Type</ApiType>                 | -      |
+| onMouseEnter     | 鼠标移入导航项时调用，事件落在 `li` 上。                                                                                | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType>        | -      |
+| onMouseLeave     | 鼠标移出导航项时调用，事件落在 `li` 上。                                                                                | <ApiType detail={"React.MouseEventHandler\u003cHTMLLIElement>"}>Type</ApiType>        | -      |
+| ref              | 导航项 `li` 元素的引用；收起或水平模式的弹层内指向 `Dropdown.Item` 的 `li`。                                            | <ApiType detail={"React.Ref\u003cHTMLLIElement>"}>Type</ApiType>                      | -      |
+| style            | 导航项 `li` 元素的样式。                                                                                                | `CSSProperties`                                                                       | -      |
+| tabIndex         | 获得焦点的链接或按钮的 `tabindex`。                                                                                     | `number`                                                                              | -      |
+| text             | 导航项文案，可以是字符串或节点。                                                                                        | `React.ReactNode`                                                                     | -      |
+| toggleIcon       | 展开收起图标位置上的图标，位置由 `Nav` 的 `toggleIconPosition` 决定。                                                   | `React.ReactNode`                                                                     | -      |
+| tooltipHideDelay | 此导航项 Tooltip 隐藏的延迟，优先于 `Nav` 的同名属性，收起状态下有效，单位为毫秒。                                      | `number`                                                                              | -      |
+| tooltipShowDelay | 此导航项 Tooltip 显示的延迟，优先于 `Nav` 的同名属性，收起状态下有效，单位为毫秒。                                      | `number`                                                                              | -      |

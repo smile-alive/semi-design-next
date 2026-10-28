@@ -1,0 +1,38 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoCollapse | Whether the next level of links is shown dynamically while scrolling. | `boolean` | `semiDefault("Anchor", "autoCollapse", false)` |
+| defaultAnchor | Link highlighted by default. | `string` | `semiDefault("Anchor", "defaultAnchor", "")` |
+| getContainer | Returns the scrolling container, window when omitted. When it returns the value of a template ref, the listener follows the container as it appears or is replaced. | <ApiType detail={"(() => HTMLElement \u007c Window \u007c null)"}>Type</ApiType> | `undefined` |
+| maxHeight | max-height of the component, with a scrollbar when exceeded. A max-height in style wins. | `string \| number` | `semiDefault("Anchor", "maxHeight", strings.MAX_HEIGHT)` |
+| maxWidth | max-width of the component, truncating when exceeded. A max-width in style wins. | `string \| number` | `semiDefault("Anchor", "maxWidth", strings.MAX_WIDTH)` |
+| offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `semiDefault("Anchor", "offsetTop", 0)` |
+| position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Anchor", "position")` |
+| railTheme | Theme of the rail: primary, tertiary or muted. | `"muted" \| "primary" \| "tertiary"` | `semiDefault("Anchor", "railTheme", "primary")` |
+| scrollMotion | Whether scrolling after a click is animated. | `boolean` | `semiDefault("Anchor", "scrollMotion", false)` |
+| scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. | `Options` | `semiGlobalDefault("Anchor", "scrollIntoViewOptions")` |
+| showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `semiDefault("Anchor", "showTooltip", false)` |
+| size | Size of the anchor: small or default. | `"small" \| "default"` | `semiDefault("Anchor", "size", "default")` |
+| targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `semiDefault("Anchor", "targetOffset", 0)` |
+
+**Events**
+
+| Event  | Description                                                                                                                                                                                                     | Callback parameters                              |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| change | Emitted when the highlighted link changes, with the current and the previous link.                                                                                                                              | `[currentLink: string, previousLink: string]`    |
+| click  | Emitted when a link is clicked or activated with Enter, with the native MouseEvent or KeyboardEvent and the current link. As a component event, @click no longer listens for native clicks on the root element. | `[event: AnchorClickEvent, currentLink: string]` |
+
+**Slots**
+
+| Slot    | Description                   | Scope parameters |
+| ------- | ----------------------------- | ---------------- |
+| default | Children made of Anchor.Link. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,34 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| type | Steps type: fill, basic or nav. | `StepsType` | `semiDefault("Steps", "type", "fill")` |
+| current | Current step, counting from 0; a child Step can override the state with status. | `number` | `semiDefault("Steps", "current", 0)` |
+| initial | Starting index, counting from 0. | `number` | `semiDefault("Steps", "initial", 0)` |
+| direction | Direction: horizontal or vertical. | `StepsDirection` | `semiDefault("Steps", "direction", "horizontal")` |
+| status | State of the current step: wait, process, finish, error or warning. | `StepStatus` | `semiDefault("Steps", "status", "process")` |
+| size | Size of the basic and nav types: default or small. | `StepsSize` | `semiDefault("Steps", "size", "default")` |
+| hasLine | Whether the basic type shows connecting lines. | `boolean` | `semiDefault("Steps", "hasLine", true)` |
+| prefixCls | Class name prefix of the root element. | `string` | `semiDefault("Steps", "prefixCls", stepsClasses.PREFIX)` |
+| onChange | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. It is a function prop, bound with @change as usual; passing it makes every Step clickable. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined` |
+| onUpdate:current | Update function bound by v-model:current, behaving like onChange. | <ApiType detail={"((current: number) => void)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                                                                      | Scope parameters |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| default | Steps.Step children; every element or component takes one step position in order, whitespace and text excepted, and a component that wraps Step is numbered too. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

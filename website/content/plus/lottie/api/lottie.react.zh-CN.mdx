@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 容器 `div` 的类名，与组件自身的类名合并。 | `string` | - |
+| getAnimationInstance | 每创建一次动画（包括每次重新加载）调用一次，参数为当前动画的 AnimationItem。 | <ApiType detail={"(animation: AnimationItem) => void"}>Type</ApiType> | - |
+| getLottie | lottie-web 加载完成后，每次挂载调用一次，参数为全局 lottie。 | <ApiType detail={"(lottiePKG: typeof lottie) => void"}>Type</ApiType> | - |
+| height | 容器高度，需带单位，如 300px。 | `string` | - |
+| params | 传给 lottie-web `lottie.loadAnimation` 的参数。内容与上次加载时深比较不同才会重新加载，每次渲染传入内容相同的新对象不会重新加载；原地修改对象不会触发。未设置的 `renderer` 为 `svg`，`loop` 为 `true`，系统开启减少动效时 `autoplay` 为 `false`。 | <ApiType detail={"Partial\u003cParameters\u003ctypeof lottie.loadAnimation>[0]>"}>Type</ApiType> | - |
+| ref | 容器 `div` 的引用；设置了 `params.container` 时组件不渲染任何内容，引用为 `null`。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| style | 容器 `div` 的样式。`width` 与 `height` 属性写在其上，同名样式以 `style` 为准。 | `React.CSSProperties` | - |
+| width | 容器宽度，需带单位，如 300px。 | `string` | - |

@@ -1,0 +1,38 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| activeIndex | 当前展示的索引，传入即为受控；传 `undefined` 时交还内部状态，从最后一次的索引继续。 | `number` | - |
+| animation | 切换动画，可选 `slide` 或 `fade`。 | `'slide' \| 'fade'` | `"slide"` |
+| aria-label | 轮播区域的名称，有名称时才是地标。 | `string` | - |
+| arrowProps | 上一项、下一项箭头按钮的属性：`leftArrow`、`rightArrow` 的 `props` 为按钮的原生属性（如 `aria-label`、`style`、`onClick`）。`props` 展开在内置属性之后，同名的 `onClick` 与 `class` 会覆盖内置处理与内置类名。箭头内容用 `leftArrow`、`rightArrow` 属性。 | `ArrowProps` | - |
+| arrowType | 箭头展示时机，可选 `always` 或 `hover`。 | `'always' \| 'hover'` | `"always"` |
+| autoPlay | 是否自动循环播放，也可传入 `{ interval, hoverToPause }`：`interval` 为切换间隔（毫秒，默认 2000），`hoverToPause` 为悬浮时是否暂停（默认 true）。 | `CarouselAutoPlay` | `true` |
+| children | 幻灯片，每个直接子元素是一张。幻灯片需要是 DOM 元素，Carousel 会直接修改它的 `id`、`role`、`inert`、`class` 等属性。 | `JSX.Element` | - |
+| class | 根元素的类名，与内置类名合并。 | `string` | - |
+| defaultActiveIndex | 初始展示的索引，非受控时使用。 | `number` | `0` |
+| indicatorPosition | 指示器位置，可选 `left`、`center` 或 `right`。 | `'left' \| 'center' \| 'right'` | `"center"` |
+| indicatorSize | 指示器尺寸，可选 `small` 或 `medium`。 | `'small' \| 'medium'` | `"small"` |
+| indicatorType | 指示器类型，可选 `dot`、`line` 或 `columnar`。 | `'columnar' \| 'line' \| 'dot'` | `"dot"` |
+| leftArrow | 替换上一项箭头的图标；传 `null` 时按钮内容为空。 | `JSX.Element` | - |
+| onChange | 切换到新的一项时触发，参数为新索引和上一个索引。 | <ApiType detail={"(index: number, preIndex: number) => void"}>Type</ApiType> | - |
+| ref | 根元素（`role="region"` 的 `div`），其上挂有下方 Methods 中的方法。 | <ApiType detail={"Ref\u003cCarouselElement>"}>Type</ApiType> | - |
+| rightArrow | 替换下一项箭头的图标；传 `null` 时按钮内容为空。 | `JSX.Element` | - |
+| showArrow | 是否展示箭头。 | `boolean` | `true` |
+| showIndicator | 是否展示指示器。 | `boolean` | `true` |
+| slideDirection | 动画为 `slide` 时的滑动方向，可选 `left` 或 `right`。 | `'left' \| 'right'` | `"left"` |
+| speed | 切换速度，单位为毫秒。 | `number` | `300` |
+| theme | 指示器和箭头的主题，可选 `primary`、`light` 或 `dark`。 | `'dark' \| 'primary' \| 'light'` | `"light"` |
+| trigger | 指示器触发切换的时机，可选 `click` 或 `hover`。 | `'click' \| 'hover'` | `"click"` |
+
+**Methods**
+
+| 方法 | 说明                                                      | 类型                                                             |
+| ---- | --------------------------------------------------------- | ---------------------------------------------------------------- |
+| goTo | 切换到指定索引，超出范围时循环。                          | <ApiType detail={"(targetIndex: number) => void"}>Type</ApiType> |
+| next | 切换到下一项。                                            | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| play | 开始自动播放，`autoPlay` 为 `false` 时同样生效。          | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| prev | 切换到上一项。                                            | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| stop | 停止自动播放，之后手动切换也不会恢复，直到调用 `play()`。 | <ApiType detail={"() => void"}>Type</ApiType>                    |

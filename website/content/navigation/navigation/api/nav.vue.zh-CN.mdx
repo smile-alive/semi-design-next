@@ -1,0 +1,56 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| bodyStyle | 导航项列表的自定义样式。 | `StyleValue` | `semiGlobalDefault("Nav", "bodyStyle")` |
+| defaultIsCollapsed | 默认是否处于收起状态，仅 mode 为 vertical 时有效。 | `boolean` | `semiGlobalDefault("Nav", "defaultIsCollapsed")` |
+| defaultOpenKeys | 初始展开的子导航 itemKey 数组，仅 mode 为 vertical 且侧边栏处于展开状态时有效。 | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultOpenKeys")` |
+| defaultSelectedKeys | 初始选中的导航项 itemKey 数组。 | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultSelectedKeys")` |
+| footer | 底部区域的数据配置：collapseButton、class、style，以及 `data-*` 与 `aria-*` 属性。底部节点使用 #footer 插槽或 Nav.Footer 子组件。 | `NavFooterConfig` | `semiGlobalDefault("Nav", "footer")` |
+| header | 头部区域的数据配置：text、link、linkOptions、class、style，以及 `data-*` 与 `aria-*` 属性。头部节点使用 #header 插槽，Logo 使用 Nav.Header 子组件的 #logo 插槽。 | `NavHeaderConfig` | `semiGlobalDefault("Nav", "header")` |
+| isCollapsed | 是否处于收起状态的受控值，仅 mode 为 vertical 时有效，配合 v-model:isCollapsed 使用。 | `boolean` | `semiGlobalDefault("Nav", "isCollapsed")` |
+| items | 导航项数据，每一项可以继续带有 items 属性；字符串项同时作为 text 和 itemKey。配置对象中只有 Item、Sub 声明过的属性、class、style、onMouseenter、onMouseleave、`data-*` 与 `aria-*` 会传给导航项，其余字段（如 path）会被忽略。图标、文案节点和箭头图标使用 #icon、#text、#toggleIcon、#expandIcon 作用域插槽。 | `NavItems` | `semiGlobalDefault("Nav", "items")` |
+| limitIndent | 是否限制缩进。设为 false 后多级导航按层级缩进，仅 mode 为 vertical 时生效，水平模式始终限制缩进。 | `boolean` | `semiDefault("Nav", "limitIndent", true)` |
+| mode | 导航方向，可选 vertical 或 horizontal。 | `Mode` | `semiDefault("Nav", "mode", "vertical")` |
+| openKeys | 展开的子导航 itemKey 数组的受控值，配合 v-model:openKeys 使用，仅 mode 为 vertical 且侧边栏处于展开状态时有效；null 表示受控的空值。 | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "openKeys")` |
+| selectedKeys | 选中的导航项 itemKey 数组的受控值，配合 v-model:selectedKeys 使用；null 表示受控的空值。 | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "selectedKeys")` |
+| subDropdownProps | items 生成的子导航在水平模式或竖直收起状态下弹层 Dropdown 的参数。 | `SubDropdownProps` | `semiGlobalDefault("Nav", "subDropdownProps")` |
+| subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒，收起或水平模式下有效。 | `number` | <ApiType detail={"semiDefault(\"Nav\", \"subNavCloseDelay\", numbers.DEFAULT_SUBNAV_CLOSE_DELAY)"}>Type</ApiType> |
+| subNavMotion | 子导航折叠动画。 | `boolean` | `semiDefault("Nav", "subNavMotion", true)` |
+| subNavOpenDelay | 子导航浮层显示的延迟，单位为毫秒，收起或水平模式下有效。 | `number` | <ApiType detail={"semiDefault(\"Nav\", \"subNavOpenDelay\", numbers.DEFAULT_SUBNAV_OPEN_DELAY)"}>Type</ApiType> |
+| toggleIconPosition | 带有子导航项的父级导航项的箭头位置，可选 left 或 right。 | `"left" \| "right"` | `semiDefault("Nav", "toggleIconPosition", "right")` |
+| tooltipHideDelay | 收起状态下 Tooltip 隐藏的延迟，单位为毫秒。 | `number` | <ApiType detail={"semiDefault(\"Nav\", \"tooltipHideDelay\", numbers.DEFAULT_TOOLTIP_HIDE_DELAY)"}>Type</ApiType> |
+| tooltipShowDelay | 收起状态下 Tooltip 显示的延迟，单位为毫秒。 | `number` | <ApiType detail={"semiDefault(\"Nav\", \"tooltipShowDelay\", numbers.DEFAULT_TOOLTIP_SHOW_DELAY)"}>Type</ApiType> |
+
+**Events**
+
+| 事件                | 说明                                                                                                        | 回调参数                    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------- |
+| update:selectedKeys | 选中项变化时触发，载荷只含被选中项自身的 itemKey，v-model:selectedKeys 使用。                               | `[selectedKeys: ItemKey[]]` |
+| update:openKeys     | 展开的子导航变化时触发，v-model:openKeys 使用；水平或收起模式下悬停打开子菜单同样触发。                     | `[openKeys: ItemKey[]]`     |
+| update:isCollapsed  | 收起状态变化时触发，v-model:isCollapsed 使用。                                                              | `[isCollapsed: boolean]`    |
+| select              | 第一次选中某个可选中导航项时触发，domEvent 为原生事件。                                                     | `[data: OnSelectedData]`    |
+| click               | 点击任意导航项时触发。点击导航项时数据带 text，点击子导航标题时带 openKeys 与 isOpen，domEvent 为原生事件。 | `[data: NavClickData]`      |
+| openChange          | 切换某个子导航显隐状态时触发，悬停打开浮层时没有 domEvent。                                                 | `[data: NavOpenChangeData]` |
+| collapseChange      | 收起状态变化时触发。                                                                                        | `[isCollapsed: boolean]`    |
+
+**Slots**
+
+| 插槽       | 说明                                                                                                                                               | 作用域参数            |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| default    | Nav.Item、Nav.Sub、Nav.Header、Nav.Footer 子组件，也可以放入其他自定义元素。Header 与 Footer 移到头部和底部，其余元素放在 items 生成的导航项之后。 | `any`                 |
+| header     | 头部内容，渲染在 header 配置的文案之后。                                                                                                           | `any`                 |
+| footer     | 底部内容，替换 footer 配置的收起按钮。                                                                                                             | `any`                 |
+| wrapper    | 自定义导航项外层组件，用 `<component :is="itemElement" />` 挂载导航项的 li。接收 itemElement、isSubNav、isInSubNav 与 props。                      | `NavWrapperSlotProps` |
+| icon       | items 中导航项的图标，接收 item 与 level。                                                                                                         | `NavItemSlotProps`    |
+| text       | items 中导航项的文案节点，接收 item 与 level；不提供时显示数据中的 text。                                                                          | `NavItemSlotProps`    |
+| toggleIcon | items 中导航项的展开收起图标位置上的图标，接收 item 与 level。                                                                                     | `NavItemSlotProps`    |
+| expandIcon | items 生成的子导航的展开收起箭头，接收 item 与 level。                                                                                             | `NavItemSlotProps`    |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

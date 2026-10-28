@@ -1,0 +1,25 @@
+**Props**
+
+| Property | Description                                                                    | Type      | Default                                    |
+| -------- | ------------------------------------------------------------------------------ | --------- | ------------------------------------------ |
+| active   | Whether to show the animated loading effect.                                   | `boolean` | `semiGlobalDefault("Skeleton", "active")`  |
+| loading  | When true, the placeholder slot is shown. Otherwise the default slot is shown. | `boolean` | `semiDefault("Skeleton", "loading", true)` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot        | Description                      | Scope parameters |
+| ----------- | -------------------------------- | ---------------- |
+| default     | Content shown once loading ends. | `any`            |
+| placeholder | Elements shown while loading.    | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

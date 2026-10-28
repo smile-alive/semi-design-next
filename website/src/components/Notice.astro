@@ -1,0 +1,82 @@
+---
+import { IconInfoCircle } from '@fibrae/semi-icons-react';
+
+interface Props {
+    title?: string;
+    // `info` has no style of its own and maps to primary
+    type?: 'primary' | 'info' | 'warning' | 'danger';
+}
+
+const { title, type = 'primary' } = Astro.props;
+---
+
+<aside class:list={['notice', type === 'info' ? 'primary' : type]}>
+    <IconInfoCircle className="notice-icon" />
+    <div class="notice-caption">
+        {title && <div class="notice-title">{title}</div>}
+        <div class="notice-body"><slot /></div>
+    </div>
+</aside>
+
+<style>
+    .notice {
+        display: flex;
+        align-items: flex-start;
+        padding: 24px;
+        margin: 0 0 32px;
+        border-radius: 3px 6px 6px 3px;
+    }
+
+    .notice > :global(.notice-icon) {
+        flex: none;
+        font-size: 22px;
+    }
+
+    .primary {
+        color: var(--semi-color-primary);
+        background: var(--semi-color-primary-light-default);
+        border-left: 4px solid var(--semi-color-primary);
+    }
+
+    .warning {
+        color: var(--semi-color-warning);
+        background: var(--semi-color-warning-light-default);
+        border-left: 4px solid var(--semi-color-warning);
+    }
+
+    .danger {
+        color: var(--semi-color-danger);
+        background: var(--semi-color-danger-light-default);
+        border-left: 4px solid var(--semi-color-danger);
+    }
+
+    .notice-caption {
+        min-width: 0;
+        padding-left: 12px;
+    }
+
+    .notice-title {
+        margin-bottom: 12.8px;
+        font-size: 19.2px;
+        font-weight: 700;
+        line-height: 1.15;
+    }
+
+    .notice-body {
+        line-height: 1.8;
+        color: var(--semi-color-text-1);
+    }
+
+    /* Notice text is often unwrapped, so paragraphs here take no margin */
+    .notice-body > :global(p) {
+        margin: 0;
+    }
+
+    .notice-body > :global(:first-child) {
+        margin-top: 0;
+    }
+
+    .notice-body > :global(:last-child) {
+        margin-bottom: 0;
+    }
+</style>

@@ -1,0 +1,105 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 当前选中的节点的 value（没有 value 时为 key），用 v-model 绑定；多选时只接受数组。传入后即为受控组件，传入 undefined 会清空选中项。 | <ApiType detail={"ByMultiple\u003cMultiple, T \u007c undefined, T[]>"}>Type</ApiType> | `undefined` |
+| defaultValue | 指定默认选中的条目，只在挂载时读取；多选时只接受数组。 | <ApiType detail={"ByMultiple\u003cMultiple, T \u007c undefined, T[]>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "defaultValue")` |
+| multiple | 是否多选。多选时所有子项都被选择会自动勾选其父项。 | `Multiple` | `undefined` |
+| treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。 | `TreeNodeData[]` | `semiDefault("TreeSelect", "treeData", [])` |
+| keyMaps | 自定义节点中 key、label、value、disabled、children、isLeaf、icon 的字段名。映射了 label 且开启搜索时，需把 treeNodeFilterProp 设为 treeData 的键之一，或自定义 filterTreeNode。 | `KeyMapProps` | `semiGlobalDefault("TreeSelect", "keyMaps")` |
+| treeNodeLabelProp | 作为选择框中显示文字的节点属性，默认 label。 | `string` | `semiDefault("TreeSelect", "treeNodeLabelProp", "label")` |
+| treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `semiDefault("TreeSelect", "treeNodeFilterProp", "label")` |
+| filterTreeNode | 是否根据输入项筛选：true 时按 treeNodeFilterProp 对应的属性值匹配，也可以传入自定义的匹配函数。 | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData \u007c undefined) => boolean)"}>Type</ApiType> | `undefined` |
+| showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `semiDefault("TreeSelect", "showFilteredOnly", false)` |
+| searchPosition | 搜索框的位置：dropdown 在下拉面板中，trigger 在选择框内。 | `TreeSelectSearchPosition` | `semiDefault("TreeSelect", "searchPosition", "dropdown")` |
+| searchPlaceholder | 下拉面板中搜索框的占位文字。 | `string` | `semiGlobalDefault("TreeSelect", "searchPlaceholder")` |
+| searchAutoFocus | 搜索框自动聚焦。 | `boolean` | `semiDefault("TreeSelect", "searchAutoFocus", false)` |
+| showSearchClear | 搜索框是否显示清除按钮。 | `boolean` | `semiDefault("TreeSelect", "showSearchClear", true)` |
+| remote | 是否启用远程搜索：输入时跳过本地过滤，只触发 search 事件，由使用方获取数据并更新 treeData。 | `boolean` | `semiDefault("TreeSelect", "remote", false)` |
+| expandAll | 展开所有节点，treeData 变化后仍然生效。 | `boolean` | `semiDefault("TreeSelect", "expandAll", false)` |
+| defaultExpandAll | 初始化时展开所有节点。之后 treeData 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `semiDefault("TreeSelect", "defaultExpandAll", false)` |
+| defaultExpandedKeys | 默认展开的节点，显示其直接子级。 | `string[]` | `semiGlobalDefault("TreeSelect", "defaultExpandedKeys")` |
+| expandedKeys | 展开的节点，用 v-model:expandedKeys 绑定。传入后展开状态完全受控。 | `string[]` | `semiGlobalDefault("TreeSelect", "expandedKeys")` |
+| autoExpandParent | expandedKeys 变化时是否自动展开其中节点的父节点；挂载时总会展开。开启后，展开受控时要先收起所有已展开的子节点才能收起父节点。 | `boolean` | `semiDefault("TreeSelect", "autoExpandParent", false)` |
+| expandAction | 展开逻辑：false 仅点击展开箭头时展开，click 单击节点展开，doubleClick 双击节点展开。键盘不触发该逻辑。 | `ExpandAction` | `semiDefault("TreeSelect", "expandAction", false)` |
+| motionExpand | 是否开启节点展开收起的动画；虚拟化时动画关闭。 | `boolean` | `semiDefault("TreeSelect", "motionExpand", true)` |
+| loadData | 异步加载节点的子级，返回 Promise；未设置 isLeaf 的节点在它存在时显示展开箭头。返回的 Promise 被拒绝后节点可以再次展开重试。 | <ApiType detail={"((data: TreeNodeData) => Promise\u003cvoid>)"}>Type</ApiType> | `undefined` |
+| loadedKeys | 已加载的节点，配合 loadData 使用，用 v-model:loadedKeys 绑定。 | `string[]` | `semiGlobalDefault("TreeSelect", "loadedKeys")` |
+| leafOnly | 多选时，值、change 事件的载荷和展示的标签只包含叶子节点。 | `boolean` | `semiDefault("TreeSelect", "leafOnly", false)` |
+| checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `semiDefault("TreeSelect", "checkRelation", "related")` |
+| disableStrictly | 严格禁用：禁用的节点不能通过父级或子级的选中关系改变状态。 | `boolean` | `semiDefault("TreeSelect", "disableStrictly", false)` |
+| autoMergeValue | 父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。 | `boolean` | `semiDefault("TreeSelect", "autoMergeValue", true)` |
+| changeWithObject | 布尔属性而不是事件：设为 true 时，modelValue 与 change 的载荷由 value 变为节点对象；受控时 modelValue 与 defaultValue 也要传对象，且必须含 value。 | `boolean` | `semiDefault("TreeSelect", "changeWithObject", false)` |
+| maxTagCount | 多选时最多显示的标签数量，超出部分以 +N 展示。 | `number` | `semiGlobalDefault("TreeSelect", "maxTagCount")` |
+| showRestTagsPopover | 超出 maxTagCount 后，hover +N 时是否用 Popover 显示剩余标签。 | `boolean` | `semiDefault("TreeSelect", "showRestTagsPopover", false)` |
+| restTagsPopoverProps | 剩余标签 Popover 的配置，参考 Popover。 | `PopoverProps` | `semiGlobalDefault("TreeSelect", "restTagsPopoverProps")` |
+| labelEllipsis | label 超出时是否省略；虚拟化时默认开启。 | `boolean` | `semiGlobalDefault("TreeSelect", "labelEllipsis")` |
+| showLine | 下拉面板中显示节点之间的连接线。 | `boolean` | `semiDefault("TreeSelect", "showLine", false)` |
+| virtualize | 列表虚拟化，用于大量节点：height、width、itemSize（必传）。开启后动画关闭。 | `Virtualize` | `semiGlobalDefault("TreeSelect", "virtualize")` |
+| placeholder | 选择框的占位文字。 | `string` | `semiGlobalDefault("TreeSelect", "placeholder")` |
+| disabled | 是否禁用。 | `boolean` | `semiDefault("TreeSelect", "disabled", false)` |
+| size | 选择框尺寸，可选 small、default、large。 | `Size` | `semiDefault("TreeSelect", "size", "default")` |
+| borderless | 无边框模式。 | `boolean` | `semiDefault("TreeSelect", "borderless", false)` |
+| validateStatus | 校验状态，只影响样式：default、warning 或 error。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
+| insetLabelId | insetLabel 插槽外层元素的 id，供 aria-labelledby 引用；不传时使用内部生成的 id。 | `string` | `undefined` |
+| showClear | 有值时选择框是否显示清除按钮。 | `boolean` | `semiDefault("TreeSelect", "showClear", false)` |
+| clickToHide | 单选时选中节点后是否关闭下拉面板。 | `boolean` | `semiDefault("TreeSelect", "clickToHide", true)` |
+| clickTriggerToHide | 下拉面板打开时，点击选择框是否关闭面板。 | `boolean` | `semiDefault("TreeSelect", "clickTriggerToHide", true)` |
+| defaultOpen | 默认展开下拉面板。 | `boolean` | `semiDefault("TreeSelect", "defaultOpen", false)` |
+| motion | 下拉面板是否有出现和消失的动画。 | `boolean` | `semiDefault("TreeSelect", "motion", true)` |
+| autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("TreeSelect", "autoAdjustOverflow", true)` |
+| position | 下拉面板的位置，可选值参考 Tooltip 的 position。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
+| stopPropagation | 是否阻止下拉面板上的点击事件冒泡；传入字符串时按布尔值处理。 | `string \| boolean` | `semiDefault("TreeSelect", "stopPropagation", true)` |
+| dropdownClassName | 下拉面板的类名。 | `string` | `semiGlobalDefault("TreeSelect", "dropdownClassName")` |
+| dropdownStyle | 下拉面板的样式。 | `StyleValue` | `semiGlobalDefault("TreeSelect", "dropdownStyle")` |
+| dropdownMatchSelectWidth | 下拉面板的最小宽度是否等于选择框的宽度。 | `boolean` | `semiDefault("TreeSelect", "dropdownMatchSelectWidth", true)` |
+| optionListStyle | 节点列表（role="tree" 的元素）的样式。 | `StyleValue` | `semiGlobalDefault("TreeSelect", "optionListStyle")` |
+| preventScroll | 聚焦时是否阻止浏览器滚动页面以显示新聚焦的元素。 | `boolean` | `semiGlobalDefault("TreeSelect", "preventScroll")` |
+| triggerTagWrap | 是否允许触发器内的多选标签换行；仅在 multiple、filterTreeNode 开启且 searchPosition 为 trigger 时生效。 | `boolean` | `semiDefault("TreeSelect", "triggerTagWrap", false)` |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| --- | --- | --- |
+| update:modelValue | 选中值变化时触发，v-model 使用；清空时载荷为 undefined。 | <ApiType detail={"[value: ByMultiple\u003cMultiple, T \u007c undefined, T[]>]"}>Type</ApiType> |
+| change | 选中值变化时触发，载荷依次为值、节点和触发事件，值与 update:modelValue 相同。清空和多选时分别为 undefined 与数组；通过关闭标签触发时事件为 null；开启 changeWithObject 后值与节点是同一个节点对象。会遮住根元素上同名的原生事件。 | <ApiType detail={"[value: ByMultiple\u003cMultiple, T \u007c undefined, T[]>, node: ByMultiple\u003cMultiple, TreeNodeData \u007c undefined, TreeNodeData[]>, event: TreeSelectChangeEvent]"}>Type</ApiType> |
+| update:expandedKeys | 展开的节点变化时触发，v-model:expandedKeys 使用。 | `[expandedKeys: string[]]` |
+| expand | 展开或收起节点时触发，info 含 expanded 与 node。 | <ApiType detail={"[expandedKeys: string[], info: { expanded: boolean; node: TreeNodeData; }]"}>Type</ApiType> |
+| update:loadedKeys | 已加载的节点变化时触发，v-model:loadedKeys 使用。 | `[loadedKeys: string[]]` |
+| load | 节点加载完毕时触发，loadedKeys 为已加载节点 key 的 Set。 | <ApiType detail={"[loadedKeys: Set\u003cstring>, node: TreeNodeData]"}>Type</ApiType> |
+| select | 节点被选中或取消选中时触发，载荷为该节点的 key、是否选中和节点数据。会遮住根元素上同名的原生事件。 | `[selectedKey: string, selected: boolean, node: TreeNodeData]` |
+| search | 搜索框的值变化时触发；filteredExpandedKeys 是因搜索或 modelValue、defaultValue 而展开的节点，可在展开受控时用来展开搜索结果；filteredNodes 是搜索命中的节点。 | <ApiType detail={"[input: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]]"}>Type</ApiType> |
+| dropdownVisibleChange | 下拉面板显示或隐藏时触发。组件在 KeepAlive 中停用时会关闭面板并发出 false，不发出 blur。 | `[visible: boolean]` |
+| focus | 焦点从外部进入选择框（含其中的搜索框、清除按钮）或下拉面板时触发，载荷是 FocusEvent；焦点在它们之间移动不重复触发。选中节点并关闭面板后再次点击或按键打开时也会触发，载荷为该次点击或按键的事件；searchAutoFocus 挂载时自动聚焦的载荷为 null。禁用时不触发。会遮住根元素上同名的原生事件。 | `[event: MouseEvent \| KeyboardEvent \| FocusEvent \| null]` |
+| blur | 每次 focus 之后只触发一次：焦点离开选择框和下拉面板时载荷是 FocusEvent，点击外部时是 MouseEvent，选中节点并关闭面板时是该次点击或按键的事件。会遮住根元素上同名的原生事件。 | `[event: MouseEvent \| KeyboardEvent \| FocusEvent]` |
+| clear | 点击或用键盘触发清除按钮时触发，载荷是触发清除的事件，通过插槽函数清除且没有事件时为 null。 | `[event: TreeSelectChangeEvent]` |
+| keydown | 按键事件，先于 TreeSelect 自身的按键处理触发。会遮住根元素上同名的原生事件。 | `[event: KeyboardEvent]` |
+
+**Slots**
+
+| 插槽            | 说明                                                                                                               | 作用域参数                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| label           | 自定义节点的 label 内容。开启搜索时仍按 treeData 中的 label 文本匹配。                                             | `TreeLabelSlotProps`                                                            |
+| icon            | 自定义节点图标，按节点数据返回不同内容。                                                                           | `TreeIconSlotProps`                                                             |
+| expandIcon      | 自定义展开图标。返回单个元素时自动获得 class 与展开的点击处理；也可以用参数自行绑定。                              | `TreeExpandIconSlotProps`                                                       |
+| fullLabel       | 接管整行的内容。带 id、role 与状态的行元素由 TreeSelect 提供，插槽只写行内内容。                                   | `TreeFullLabelSlotProps`                                                        |
+| selectedItem    | 自定义已选项：单选时是选择框中显示的内容，多选时是内置标签里的内容；内容为空时单选显示占位文字，多选不渲染该标签。 | `TreeSelectSelectedItemSlotProps`                                               |
+| tag             | 多选时替换每个标签，优先于 selectedItem；内容为空时不渲染该标签。                                                  | `TreeSelectSelectedItemSlotProps`                                               |
+| trigger         | 替换整个触发器的内容，参数含已选节点、输入值以及 onSearch、onClear、onRemove 方法。                                | <ApiType detail={"TreeSelectTriggerSlotProps\u003cT, Multiple>"}>Type</ApiType> |
+| search          | 替换搜索框，参数可以直接 v-bind 到 Semi 的 Input 上，其中 inputRef 必须绑定；插槽内容为空时隐藏搜索框。            | `TreeSelectSearchSlotProps`                                                     |
+| prefix          | 选择框的前缀内容。                                                                                                 | `any`                                                                           |
+| suffix          | 选择框的后缀内容。                                                                                                 | `any`                                                                           |
+| insetLabel      | 选择框内的内嵌标签，同时作为下拉树的名称来源。                                                                     | `any`                                                                           |
+| arrowIcon       | 自定义右侧下拉箭头；插槽内容为空时隐藏箭头。showClear 开启且有值时，hover 优先显示清除按钮。                       | `any`                                                                           |
+| clearIcon       | 自定义清除按钮的图标，showClear 为 true 时有效；内容为空时使用默认图标。                                           | `any`                                                                           |
+| emptyContent    | 没有节点或搜索无结果时的内容；插槽内容为空时隐藏空状态。                                                           | `any`                                                                           |
+| outerTopSlot    | 渲染在下拉面板顶部、与节点列表平级的内容；它取代下拉面板中的搜索框。                                               | `any`                                                                           |
+| outerBottomSlot | 渲染在下拉面板底部、与节点列表平级的内容。                                                                         | `any`                                                                           |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

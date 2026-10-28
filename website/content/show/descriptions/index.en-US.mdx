@@ -1,0 +1,226 @@
+---
+order: 69
+title: Description
+icon: doc-descriptions
+brief: The description list is used to render key-value pairs.
+---
+
+import DescriptionsReactApi from './api/descriptions.react.en-US.mdx';
+import DescriptionsItemReactApi from './api/descriptions-item.react.en-US.mdx';
+import DescriptionsVueApi from './api/descriptions.vue.en-US.mdx';
+import DescriptionsItemVueApi from './api/descriptions-item.vue.en-US.mdx';
+import DescriptionsSolidApi from './api/descriptions.solid.en-US.mdx';
+import DescriptionsItemSolidApi from './api/descriptions-item.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Descriptions } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Descriptions } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Descriptions.Item` can also be imported by name as `DescriptionsItem`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Descriptions } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Data can be passed in as an array of key-value pairs `{ key: value }` through `data`.
+
+<Framework only="react">
+
+Both key and value support the `ReactNode` type. You can pass in a string or a higher degree of freedom ReactNode to freely customize the render dom.
+
+</Framework>
+
+<Framework only="vue">
+
+The key and value in `data` only accept strings or numbers. To customize the rendering, use the scoped slots `#itemKey` and `#value`, whose parameter is `{ item, index }`; `index` is the position of the item in `data`, including `hidden` items.
+
+</Framework>
+
+<Framework only="solid">
+
+`key` and `value` in `data` accept only strings or numbers. For custom rendering, pass `renderKey(item, index)` and `renderValue(item, index)`, where `index` is the item's position in `data` (hidden items included); they are not called for hidden items.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Alignment
+
+You can use `align` to set alignment of key-value. Supporting values including: `center`(default), `justify`, `left`, and `plain`. When `row` is true, this configuration is invalid  
+`left` means the start side: in RTL it mirrors to the right, like `center` and `justify`
+
+<Demo id="align" />
+
+### Descriptions Using Descriptions.Item
+
+<Framework only="react">
+
+Besides `props.data`, data can also be declared with children in JSX.
+
+</Framework>
+
+<Framework only="vue">
+
+Besides `data`, data can also be declared with `Descriptions.Item` in the default slot: the key goes in the `#itemKey` slot and the value in the default slot.
+
+</Framework>
+
+<Framework only="solid">
+
+Besides `data`, data can also be declared with `Descriptions.Item` as children of `Descriptions`: `itemKey` is the key, and the children are the value.
+
+</Framework>
+
+Note that `Descriptions.Item` must be a direct child of `Descriptions`.
+
+<Demo id="jsx" />
+
+### Set layout mode
+
+The layout mode can be set through `layout`. Default is `vertical`.
+
+<Demo id="layout" />
+
+Set `layout` to `horizontal` for horizontal layout. When horizontal is set, column can be used to specify the maximum number of columns per row.
+
+<Demo id="layout-horizontal" />
+
+### Row Display
+
+Set `row` to display the data to two-row, supporting three sizes: `small`, `medium`(default), and `large`. The `align` configuration no longer takes effect.
+
+<Demo id="row" />
+
+### Custom Key Style
+
+You can customize the style of key through `keyStyle` property, such as setting a fixed width to achieve alignment. This property supports all CSS styles, such as `width`, `maxWidth`, `textAlign`, `color`, etc.
+
+<Demo id="key-style" />
+
+You can also use it with `Descriptions.Item`:
+
+<Demo id="key-style-jsx" />
+
+## API Reference
+
+### Descriptions
+
+<Framework only="react">
+
+<DescriptionsReactApi />
+
+`className`, `style`, `ref` and native attributes (such as `id`, `data-*` and `aria-*`) land on the root `div` element of Descriptions.
+
+</Framework>
+
+<Framework only="vue">
+
+<DescriptionsVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the root element of Descriptions.
+
+</Framework>
+
+<Framework only="solid">
+
+<DescriptionsSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the root `div` element of Descriptions.
+
+</Framework>
+
+### DataItem
+
+<Framework only="react">
+
+| Properties | Instructions                                                    | type                           | Default |
+| ---------- | --------------------------------------------------------------- | ------------------------------ | ------- |
+| key        | Key value                                                       | ReactNode                      | -       |
+| value      | Data value                                                      | ReactNode \| (() => ReactNode) | -       |
+| hidden     | Toggle whether the data should be displayed                     | boolean                        | -       |
+| span       | The number of columns the cell should span                      | number                         | 1       |
+| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | CSSProperties                  | -       |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties | Instructions                                                    | type             | Default |
+| ---------- | --------------------------------------------------------------- | ---------------- | ------- |
+| key        | Key value; use the `#itemKey` slot to customize rendering       | string \| number | -       |
+| value      | Data value; use the `#value` slot to customize rendering        | string \| number | -       |
+| hidden     | Toggle whether the data should be displayed                     | boolean          | -       |
+| span       | The number of columns the cell should span                      | number           | 1       |
+| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | StyleValue       | -       |
+
+</Framework>
+
+<Framework only="solid">
+
+| Properties | Instructions                                                    | type                        | Default |
+| ---------- | --------------------------------------------------------------- | --------------------------- | ------- |
+| key        | Key value; custom rendering uses `renderKey`                    | string \| number            | -       |
+| value      | Data value; custom rendering uses `renderValue`                 | string \| number            | -       |
+| hidden     | Toggle whether the data should be displayed                     | boolean                     | -       |
+| span       | The number of columns the cell should span                      | number                      | 1       |
+| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | JSX.CSSProperties \| string | -       |
+
+</Framework>
+
+### Descriptions.Item
+
+<Framework only="react">
+
+<DescriptionsItemReactApi />
+
+In the vertical layout, `className`, `style`, `ref` and native attributes (such as `id`, `data-*` and `aria-*`) land on the outer wrapper `tr`. In the horizontal layout the Item renders only its cells, so these have no element to land on.
+
+</Framework>
+
+<Framework only="vue">
+
+<DescriptionsItemVueApi />
+
+In the vertical layout, `class`, `style` and native attributes land on the outer wrapper `tr` through attrs. In the horizontal layout the Item renders only its cells, so attrs have no element to land on.
+
+</Framework>
+
+<Framework only="solid">
+
+<DescriptionsItemSolidApi />
+
+In the vertical layout, `class`, `style`, `ref` and native attributes land on the outer wrapper `tr`. In the horizontal layout the Item renders only its cells, so these have no element to land on.
+
+</Framework>
+
+## Content Guidelines
+
+- Field names and values ​​are written in upper and lower case according to the Sentence case principle
+
+## Design Tokens
+
+<DesignToken />

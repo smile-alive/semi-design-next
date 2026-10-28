@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | Key of the selected option in the main view. | `string` | - |
+| afterVisibleChange | Called after a visibility change has completed, with whether the sidebar is visible; with motion it runs when the animation ends. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| children | Has no effect; the content is the main or detail view. | `JSX.Element` | - |
+| closeOnEsc | Whether pressing Esc calls onCancel. | `boolean` | - |
+| containerRef | Has no effect; use `ref` to get the container element. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| defaultSize | Initial size (width and height); applies only when resizable is true. | `{ width?: number \| string; height?: number \| string }` | - |
+| detailContent | The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable, imgUploadProps and onContentChange have no effect, as fileEditable, imgUploadProps and onFileContentChange decide them. | `DetailContent` | - |
+| fileEditable | Whether the rich text in file mode is editable. | `boolean` | `true` |
+| imgUploadProps | Image upload options of file mode, read when the editor is created; later changes have no effect. | `ImageUploadNodeOptions` | - |
+| maxWidth | Maximum width when resizing; applies only when resizable is true. | `string \| number` | - |
+| minWidth | Minimum width when resizing; applies only when resizable is true, 150 by default. | `string \| number` | - |
+| mode | Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by renderDetailContent. | `string` | `"main"` |
+| motion | Whether showing and hiding use the expand animation, true by default. | `boolean` | - |
+| onActiveOptionChange | Called when an option button is clicked, with the event and the option key; write the key back to activeKey yourself. | <ApiType detail={"(e: MouseEvent, activeKey: string) => void"}>Type</ApiType> | - |
+| onBackWard | Called when the back button of the detail header is clicked, with the event and main; set mode back to main yourself. The return value is ignored. | <ApiType detail={"(e: MouseEvent, mode: string) => void \u007c Promise\u003cunknown>"}>Type</ApiType> | - |
+| onCancel | Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onDetailContentCopy | Called after the copy button of the detail header is clicked, once the clipboard write has settled, with the event, the copied content and the result (false when the write is rejected). | <ApiType detail={"(e: MouseEvent, content: string, res: boolean) => void"}>Type</ApiType> | - |
+| onFileContentChange | Called after the rich text is edited in file mode, with the HTML string. | <ApiType detail={"(content: string) => void"}>Type</ApiType> | - |
+| options | Option buttons at the top of the main view, each with a name and a key; the icons come from renderOptionIcon. | `Option[]` | - |
+| renderDetailContent | Renders the detail content, called with the mode; when it returns no content, code and file modes fall back to the built-in detail. | <ApiType detail={"(mode: string) => JSX.Element"}>Type</ApiType> | - |
+| renderDetailHeader | Renders the detail header, called with the mode and detailContent; the built-in header is used when it returns no content. | <ApiType detail={"(mode: string, detailContent?: DetailContent) => JSX.Element"}>Type</ApiType> | - |
+| renderHeader | Has no effect; use title for the main view and renderDetailHeader for detail views. | <ApiType detail={"() => JSX.Element"}>Type</ApiType> | - |
+| renderMainContent | Renders the main view, called with the selected activeKey. | <ApiType detail={"(activeKey: string) => JSX.Element"}>Type</ApiType> | - |
+| renderOptionIcon | Renders the icon of a built-in option button, called with the option. | <ApiType detail={"(option: Option) => JSX.Element"}>Type</ApiType> | - |
+| renderOptionItem | Renders an option button; the second argument, onChange, selects the option. | <ApiType detail={"(option: Option, onChange: (e: MouseEvent, activeKey: string) => void) => JSX.Element"}>Type</ApiType> | - |
+| resizable | Whether the width can be resized by dragging, true by default; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | - |
+| showClose | Whether the header shows the close button, true by default. | `boolean` | - |
+| style | Inline style of the container element, a style object or a string. | `JSX.CSSProperties \| string` | - |
+| title | Title of the main view; detail views use the detail header. | `JSX.Element` | - |
+| visible | Whether the sidebar is shown. | `boolean` | - |

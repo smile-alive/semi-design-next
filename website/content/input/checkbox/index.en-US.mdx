@@ -1,0 +1,296 @@
+---
+title: Checkbox
+order: 37
+icon: doc-checkbox
+brief: Checkboxes allow the user to select one or more items from a set.
+---
+
+import { CheckboxGroup } from '@fibrae/semi-ui-react';
+import CheckboxReactApi from './api/checkbox.react.en-US.mdx';
+import CheckboxGroupReactApi from './api/checkbox-group.react.en-US.mdx';
+import CheckboxVueApi from './api/checkbox.vue.en-US.mdx';
+import CheckboxGroupVueApi from './api/checkbox-group.vue.en-US.mdx';
+import CheckboxSolidApi from './api/checkbox.solid.en-US.mdx';
+import CheckboxGroupSolidApi from './api/checkbox-group.solid.en-US.mdx';
+
+## When to use
+
+- When making multiple choices in a set of options;
+- Use independently to select from different states, similar to the Switch component. The difference is that switching the Switch triggers a state change directly, while Checkbox is generally used for tagging status and works with the submission.
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Checkbox, CheckboxGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Checkbox, CheckboxGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Framework only="react">
+
+When the Checkbox is used individually, you can control whether to check it through the `defaultChecked` and `checked` attributes. When `checked` is passed in, it is controlled component.
+
+</Framework>
+
+<Framework only="vue">
+
+When the Checkbox is used individually, you can control whether to check it through the `defaultChecked` and `modelValue` (`v-model`) props. When `modelValue` is passed in, it is controlled component.
+
+</Framework>
+
+<Framework only="solid">
+
+When the Checkbox is used individually, you can control whether to check it through the `defaultChecked` and `checked` attributes. When `checked` is passed in, it is controlled component.
+
+</Framework>
+
+<Demo id="basic" />
+
+<Demo id="default-checked" />
+
+<Framework only="react">
+
+You can use `extra` to add extra information. The extra information usually is longer and even has line changes.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#extra` slot to add extra information. The extra information usually is longer and even has line changes.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `extra` to add extra information. The extra information usually is longer and even has line changes.
+
+</Framework>
+
+<Demo id="extra" />
+
+### Disabled
+
+<Demo id="disabled" />
+
+### Checkbox Group in JSX
+
+<Framework only="react">
+
+By placing the Checkbox element inside the CheckboxGroup, you can declare the Checkbox group Using the Checkbox group, you can more conveniently control the selection of a group of Checkboxes through the `defaultValue` and `value` properties of the CheckboxGroup At this time, Checkbox does not need to declare `defaultChecked` and `checked` attributes
+
+</Framework>
+
+<Framework only="vue">
+
+By placing the Checkbox element inside the CheckboxGroup, you can declare the Checkbox group. Using the Checkbox group, you can more conveniently control the selection of a group of Checkboxes through the `defaultValue` and `modelValue` (`v-model`) props of the CheckboxGroup. At this time, Checkbox does not need to declare `defaultChecked` and `modelValue`.
+
+</Framework>
+
+<Framework only="solid">
+
+By placing the Checkbox element inside the CheckboxGroup, you can declare the Checkbox group. Using the Checkbox group, you can more conveniently control the selection of a group of Checkboxes through the `defaultValue` and `value` properties of the CheckboxGroup. At this time, Checkbox does not need to declare `defaultChecked` and `checked` attributes.
+
+</Framework>
+
+<Demo id="group-jsx" />
+
+### Checkbox Group in options
+
+You can pass an array using `options` to `CheckboxGroup` directly to generate a set of checkboxs.
+
+<Demo id="group-options" />
+
+### Layout Direction
+
+By setting `direction` to `horizontal` or `vertical`, You can adjust the layout within the Checkbox Group.
+
+<Demo id="direction" />
+
+### Controlled Component
+
+Used as a controlled component.
+
+<Demo id="controlled" />
+
+### Checkbox State
+
+You may use the `indeterminate` property to set the state to indeterminate.
+
+<Demo id="check-all" />
+
+### Card Style
+
+You can set `type='card'` to CheckboxGroup to realize card style with background.
+
+<Demo id="card" />
+
+### Pure Card Style
+
+You can set `type='pureCard'` to CheckboxGroup to realize a pure card style with background and no checkbox.
+
+<Demo id="pure-card" />
+
+### Using with Grid
+
+Use `CheckboxGroup` with `Grid` to achieve flexible layouts.
+
+<Demo id="grid" />
+
+## API Reference
+
+### Checkbox
+
+<Framework only="react">
+
+<CheckboxReactApi />
+
+`className` and `style` land on the root `span`. `id`, `name`, `tabIndex`, `autoFocus`, `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the inner native input; other native attributes and events (such as `role`, `onFocus`, `onBlur`, `onClick` and `data-*`) land on the root `span`.
+
+</Framework>
+
+<Framework only="vue">
+
+<CheckboxVueApi />
+
+`class` and `style` land on the root element. `id`, `name`, `tabindex`, `autofocus`, `aria-*` and focus and blur listeners passed as attrs land on the inner native input; other native attributes and listeners (such as `@mouseenter`) land on the root element. Inside a CheckboxGroup the group's `name` wins.
+
+</Framework>
+
+<Framework only="solid">
+
+<CheckboxSolidApi />
+
+`class`, `style` and `ref` land on the root `<span>`. `id`, `name`, `tabindex`, `autofocus`, `aria-*`, `onFocus` and `onBlur` land on the inner native input; other native attributes and events (such as `onMouseEnter` and `onClick`) land on the root element. Inside a CheckboxGroup the group's `name` wins.
+
+</Framework>
+
+### CheckboxGroup
+
+<Framework only="react">
+
+<CheckboxGroupReactApi />
+
+Other native attributes (such as `aria-label` and `data-*`) land on the root `div` (`role="group"`). `onBlur` fires only when focus leaves the whole group, not when it moves between Checkboxes in it. `aria-invalid` and `aria-errormessage` are passed to the native input of every Checkbox in the group; `aria-required`, `tabIndex` and the `aria-expanded`, `aria-haspopup` and `aria-controls` injected by Tooltip are not rendered.
+
+</Framework>
+
+<Framework only="vue">
+
+<CheckboxGroupVueApi />
+
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class` and `style`, and no `onChange`. Use the `#label` and `#extra` scoped slots for custom content. `class`, `style` and native attributes passed as attrs land on the root element. `aria-invalid` and `aria-errormessage` are passed to the native input of every Checkbox in the group; `aria-required`, `tabindex` and the `aria-expanded`, `aria-haspopup`, `aria-controls` injected by Tooltip are not rendered.
+
+</Framework>
+
+<Framework only="solid">
+
+<CheckboxGroupSolidApi />
+
+`class`, `style`, `ref` and native attributes and events land on the root `<div>`; `onBlur` is called when focus leaves the whole group, not when it moves between the checkboxes inside. `aria-invalid` and `aria-errormessage` are passed to the native input of every Checkbox in the group; `aria-required`, `tabindex` and the `aria-expanded`, `aria-haspopup`, `aria-controls` injected by Tooltip are not rendered.
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+Some internal methods provided by Checkbox can be accessed through ref:
+
+</Framework>
+
+### Checkbox
+
+<Framework only="react">
+
+Call them through a ref to the Checkbox, see the API Reference above.
+
+</Framework>
+
+<Framework only="vue">
+
+Call them through a template `ref` to the component instance; see Exposes above.
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` receives the root `<span>`, and its `focus()` and `blur()` act on the inner native input. `focus()` passes `preventScroll` along.
+
+| Name    | Description  |
+| ------- | ------------ |
+| blur()  | Remove focus |
+| focus() | Get focus    |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The role of Checkbox is `checkbox`, the role of CheckboxGroup is `group`, and its children have no extra role
+- `aria-label`: When using the Checkbox alone, if Children have no text, it is recommended to pass in the `aria-label` prop to describe the function of the Checkbox in one sentence, which will make the screen reader read out the content of this label
+- The native input's `aria-labelledby` points to the `addon` node, used to explain the role of the current Checkbox; a passed `aria-labelledby` also lands on the input, placed before the `addon` id
+- `aria-describedby` points to the `extra` node, which is used to supplement the explanation of the current Checkbox
+- The checked and disabled states are expressed by the native input's `checked` and `disabled`; `aria-checked` and `aria-disabled` are not rendered
+
+<Framework only="react">
+
+- If you are using Form.Checkbox, you can use the label provided by Form without passing in `aria-label`; the label injected by Form also lands on the input's `aria-labelledby`, placed before the `addon` id
+
+</Framework>
+
+### Keyboard and focus
+
+- Checkbox can be focused, keyboard users can use Tab and Shift + Tab to switch focus.
+- The Checkbox that gets the focus can switch the selected and unselected states through Space.
+- The click area of ​​Checkbox is larger than the box itself and contains the text behind the box; for checkboxes with auxiliary text, the auxiliary text is also included in the click area.
+- Disabled Checkbox is not focusable.
+
+## Content Guidelines
+
+<div style={{ border: '1px solid var(--semi-color-border)', padding: '10px', marginBottom: '24px' }}>
+    <p style={{ fontWeight: 600, fontSize: '16px' }}>Checkbox Content Demo</p>
+    <CheckboxGroup
+        options={[
+            { label: 'Call', value: 'abc' },
+            { label: 'IM', value: 'c' },
+            { label: 'Ticket', value: 'd' },
+            { label: 'Offline', value: 'e' },
+            { label: 'Buzz', value: 'f' },
+        ]}
+        direction="horizontal"
+        aria-label="CheckboxGroup 示例"
+        style={{ marginTop: 10 }}
+    />
+</div>
+
+- Capitalize the first letter
+- No punctuation
+
+## Design Tokens
+
+<DesignToken />

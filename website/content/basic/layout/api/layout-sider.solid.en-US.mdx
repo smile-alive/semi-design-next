@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property     | Description                                                                                                                                                                        | Type                                                                                     | Default |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------- |
+| breakpoint   | Breakpoints that trigger the responsive layout: xs, sm, md, lg, xl or xxl. Read once at mount.                                                                                     | <ApiType detail={"Array\u003ckeyof ResponsiveMap>"}>Type</ApiType>                       | -       |
+| onBreakpoint | Called once at mount for each screen listed in breakpoint with the current viewport state, then whenever it starts or stops matching, with the screen name and whether it matches. | <ApiType detail={"(screen: keyof ResponsiveMap, match: boolean) => void"}>Type</ApiType> | -       |
+| prefixCls    | Class name prefix. Defaults to `semi-layout`.                                                                                                                                      | `string`                                                                                 | -       |

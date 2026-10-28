@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                    | 类型                                                                                                                                  | 默认值      |
+| ----------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| visible     | 是否显示容器，配合 v-model:visible 使用。                               | `boolean`                                                                                                                             | `false`     |
+| title       | 纯文本标题；传入 title 插槽时以插槽为准。                               | `string`                                                                                                                              | `undefined` |
+| motion      | 显示与隐藏时是否使用展开动画。                                          | `boolean`                                                                                                                             | `true`      |
+| resizable   | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean`                                                                                                                             | `true`      |
+| minWidth    | 可调整的最小宽度，仅在 resizable 为 true 时生效。                       | `string \| number`                                                                                                                    | `150`       |
+| maxWidth    | 可调整的最大宽度，仅在 resizable 为 true 时生效。                       | `string \| number`                                                                                                                    | `undefined` |
+| defaultSize | 初始宽高，仅在 resizable 为 true 时生效。                               | <ApiType detail={"{ width?: string \u007c number \u007c undefined; height?: string \u007c number \u007c undefined; }"}>Type</ApiType> | `undefined` |
+| showClose   | 是否显示头部的关闭按钮。                                                | `boolean`                                                                                                                             | `true`      |
+| closeOnEsc  | 按下 Esc 键时是否触发 cancel。                                          | `boolean`                                                                                                                             | `false`     |
+
+**Events**
+
+| 事件               | 说明                                                                             | 回调参数                               |
+| ------------------ | -------------------------------------------------------------------------------- | -------------------------------------- |
+| update:visible     | 关闭按钮或 Esc 触发取消时先于 cancel 触发，值为 false，供 v-model:visible 回写。 | `[visible: false]`                     |
+| cancel             | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 触发。                          | `[event: MouseEvent \| KeyboardEvent]` |
+| afterVisibleChange | 显示或隐藏动画结束后触发，参数为当前是否可见。                                   | `[visible: boolean]`                   |
+
+**Slots**
+
+| 插槽    | 说明                                     | 作用域参数 |
+| ------- | ---------------------------------------- | ---------- |
+| default | 容器的内容区域。                         | `any`      |
+| title   | 头部标题，优先于 title 属性。            | `any`      |
+| header  | 替换整个头部；内容为空时回退到内置头部。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明                                                | 类型                     |
+| ---- | --------------------------------------------------- | ------------------------ |
+| root | 容器根元素 .semi-sidebar-container；隐藏时为 null。 | `HTMLDivElement \| null` |

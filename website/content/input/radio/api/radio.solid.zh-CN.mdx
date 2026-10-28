@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                            | 类型                                                                                        | 默认值      |
+| -------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ----------- |
+| addonClassName | 包裹内容容器的类名。                                                                            | `string`                                                                                    | -           |
+| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                | `string`                                                                                    | -           |
+| addonStyle     | 包裹内容容器的内联样式。                                                                        | `JSX.CSSProperties \| string`                                                               | -           |
+| checked        | 是否选中，受控使用；在 RadioGroup 中使用时无效。                                                | `boolean`                                                                                   | -           |
+| defaultChecked | 初始是否选中，非受控使用；在 RadioGroup 中使用时无效。                                          | `boolean`                                                                                   | `false`     |
+| disabled       | 是否禁用。                                                                                      | `boolean`                                                                                   | -           |
+| displayMode    | 设为 vertical 时 Radio 以块级元素独占一行。                                                     | `RadioDisplayMode`                                                                          | -           |
+| extra          | 辅助文本，aria-describedby 指向它；type 为 button 时不渲染。                                    | `JSX.Element`                                                                               | -           |
+| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                               | `string`                                                                                    | -           |
+| mode           | 设为 advanced 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。 | `RadioMode`                                                                                 | `""`        |
+| name           | 原生 input 的 name，同时设置时优先于所在 RadioGroup 的 name。                                   | `string`                                                                                    | -           |
+| onBlur         | 原生 input 失去焦点时的回调。                                                                   | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
+| onChange       | 选中状态变化时的回调，event.target 为 `{ checked, value, name, disabled }`。                    | <ApiType detail={"(event: RadioChangeEvent) => void"}>Type</ApiType>                        | -           |
+| onFocus        | 原生 input 获得焦点时的回调。                                                                   | <ApiType detail={"JSX.EventHandlerUnion\u003cHTMLInputElement, FocusEvent>"}>Type</ApiType> | -           |
+| prefixCls      | CSS 类名前缀，未设置时依次取所在 RadioGroup 的值与全局默认值。                                  | `string`                                                                                    | -           |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                                           | `boolean`                                                                                   | -           |
+| type           | 样式类型，可选 default、button、card、pureCard；在 RadioGroup 中以组的 type 为准。              | `RadioType`                                                                                 | `"default"` |
+| value          | Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。             | `string \| number \| boolean`                                                               | -           |

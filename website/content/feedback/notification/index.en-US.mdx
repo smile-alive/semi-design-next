@@ -1,0 +1,309 @@
+---
+title: Notification
+order: 88
+icon: doc-notification
+brief: Notifications are used to actively send message notifications to users.
+---
+
+import TaskNotification from './figures/task-notification.react.tsx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Notification } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Notification } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+Static methods render outside the component tree. Optionally call `app.use(Notification)`: static notifications then render with that app's context, so they can read values from `app.provide()` and globally registered components. The static methods of Toast, Notification and Modal share this record, so installing any one of them applies to all three; when several apps install, the last one wins.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Notification } from '@fibrae/semi-ui-solid';
+```
+
+Static methods render outside the component tree. They read `Notification.config()`, the global defaults and the default locale, and do not inherit the ConfigProvider or LocaleProvider of their position; use `Notification.useNotification()` when you need those.
+
+</Framework>
+
+### Basic Usage
+
+Close after 3 seconds.
+
+<Demo id="basic" />
+
+### Position
+
+Use `position` to set pop up position, supporting one of: `top`、`bottom`、`topLeft`、`topRight`(default)、`bottomLeft`、`bottomRight`。
+
+<Demo id="position" />
+
+### With Icons
+
+Use different methods to show Notification with icons or you can pass in `icon` for customized icon.
+
+<Demo id="icon" />
+
+### Colored Background
+
+You could use `theme` for a colored background style. Default is `normal`.
+
+<Demo id="theme" />
+
+### Custom Children with Link
+
+Use with Typography to create operation links for more complicated situations.
+
+<Framework only="vue">
+
+`title`, `content` and `icon` accept a `string`, a VNode, or a function returning VNodeChild; the Typography text in the demo below is built with `h()`.
+
+</Framework>
+
+<Framework only="solid">
+
+`title`, `content` and `icon` accept JSX elements or functions returning JSX; the demo below builds its JSX on click, so each notification gets fresh nodes.
+
+</Framework>
+
+<Demo id="link" />
+
+### Delay
+
+Use `duration` to set up time delay. By default it closes after 3 seconds.
+
+<Demo id="duration" />
+
+### Manual Close
+
+Set `duration` to 0 if you do not want the Notification to close by itself. In this case, it could only be closed manually.
+
+<Demo id="manual-close" />
+
+### Stack
+
+With `stack`, the notifications at one position stack once there are more than the threshold, and expand on hover. `true` sets the threshold to 3, and a number sets a custom one; a stack shows its front 3 layers only.
+
+<Demo id="stack" />
+
+### Update content
+
+You can use id to update notification content.
+
+<Demo id="update" />
+
+### Consume Context
+
+<Framework only="react">
+
+Use `Notification.useNotification` to create a contextHolder that can access context. Notifications render where the contextHolder is placed and enter and leave with the same animations as the static methods.
+
+</Framework>
+
+<Framework only="vue">
+
+Use `Notification.useNotification()` to create a Holder that can access context. Notifications render where `<Holder />` is placed, inherit the provides, ConfigProvider and locale there, and enter and leave with the same animations as the static methods. A function passed as `content`, `icon` or `title` is rendered as a functional component inside the notification, so it can `inject`.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `Notification.useNotification()` to create a `contextHolder` and place it where the context should be inherited. Call the hook below the Provider you need: notifications render where `contextHolder` is placed, inherit the context, ConfigProvider and locale there, and enter and leave with the same animations as the static methods. A function passed as `content`, `icon` or `title` is rendered inside the notification and can read the context of that position; JSX created in an event handler has no owner, so it cannot read context.
+
+</Framework>
+
+<Demo id="use-notification" />
+
+## API Reference
+
+The static methods provided are as follows:
+
+Display: You can pass in options object directly. Methods return the value of `id`: `const id = Notification.open({ /*...options*/ })`
+
+- `Notification.open({content: 'message', duration: 3})`
+- `Notification.info({content: 'message', duration: 3})`
+- `Notification.error({content: 'message', duration: 3})`
+- `Notification.warning({content: 'message', duration: 3})`
+- `Notification.success({content: 'message', duration: 3})`
+
+Close Manually (`id` is the return value of the display methods)
+
+- `Notification.close(id)`
+
+<Framework only="react">
+
+| Properties        | Instructions                                                                                                                                                                                    | type                 | Default             |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ------------------- |
+| className         | Class name of the notification element                                                                                                                                                          | string               |                     |
+| content           | Content                                                                                                                                                                                         | ReactNode            | ''                  |
+| direction         | Text direction. A per-notification option only, not part of the global configuration; follows ConfigProvider when omitted                                                                       | `ltr` \| `rtl`       |                     |
+| duration          | Automatic close delay, no auto-close when set to 0                                                                                                                                              | number               | 3                   |
+| getPopupContainer | Specifies the parent DOM, and the bullet layer will be rendered to the DOM, you need to set 'position: relative` This will change the DOM tree position, but not the view's rendering position. | () => HTMLElement    | () => document.body |
+| icon              | Topleft icon                                                                                                                                                                                    | ReactNode            |                     |
+| id                | Custom notification id; updates the content when a notification with the same id exists                                                                                                         | string               |                     |
+| position          | Pop-up position, one of `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                                                     | string               | `topRight`          |
+| showClose         | Toggle Whether show close button                                                                                                                                                                | boolean              | true                |
+| stack             | Stack the notifications at one position once there are more than this many; `true` means 3, `false` never stacks. The newest notification at the position decides                               | boolean \| number    | false               |
+| style             | Inline style of the notification element                                                                                                                                                        | CSSProperties        |                     |
+| theme             | Style of background fill, one of `light`, `normal`                                                                                                                                              | string               | `normal`            |
+| title             | Title                                                                                                                                                                                           | ReactNode            | ''                  |
+| zIndex            | Z-index value. Only take effect for the first time.                                                                                                                                             | number               | 1010                |
+| onClick           | Callback function when clicking the notification                                                                                                                                                | (e: event) => void   |                     |
+| onClose           | Callback function when closing notification, triggered for either auto-close or manually close, once per close                                                                                  | () => void           |                     |
+| onCloseClick      | Callback function when actively clicking on the close button                                                                                                                                    | (id: string) => void |                     |
+
+</Framework>
+
+<Framework only="vue">
+
+| Properties | Instructions | type | Default |
+| --- | --- | --- | --- |
+| class | Class name of the notification element | string \| object \| array |  |
+| content | Content. A function is rendered as a functional component inside the notification and can `inject` | string \| VNode \| (() => VNodeChild) | '' |
+| direction | Text direction. A per-notification option only, not part of the global configuration; follows ConfigProvider when omitted | `ltr` \| `rtl` |  |
+| duration | Automatic close delay, no auto-close when set to 0 | number | 3 |
+| getPopupContainer | Specifies the parent DOM, and the bullet layer will be rendered to the DOM, you need to set 'position: relative` This will change the DOM tree position, but not the view's rendering position. Only takes effect when the container is first created. | () => HTMLElement | () => document.body |
+| icon | Topleft icon | string \| VNode \| (() => VNodeChild) |  |
+| id | Custom notification id; updates the content when a notification with the same id exists | string |  |
+| position | Pop-up position, one of `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight` | string | `topRight` |
+| showClose | Toggle Whether show close button | boolean | true |
+| stack | Stack the notifications at one position once there are more than this many; `true` means 3, `false` never stacks. The newest notification at the position decides | boolean \| number | false |
+| style | Inline style of the notification element | StyleValue |  |
+| theme | Style of background fill, one of `light`, `normal` | string | `normal` |
+| title | Title | string \| VNode \| (() => VNodeChild) | '' |
+| zIndex | Z-index value. Applied each time a notification is shown. | number | 1010 |
+| onClick | Callback function when clicking the notification; lands on the notification element | (e: MouseEvent) => void |  |
+| onClose | Callback function when closing notification, triggered for either auto-close or manually close, once per close | () => void |  |
+| onCloseClick | Callback function when actively clicking on the close button | (id: string) => void |  |
+
+`onClick`, `onClose` and `onCloseClick` keep their key names in the options and do not use emits.
+
+</Framework>
+
+<Framework only="solid">
+
+| Property          | Description                                                                                                                                                                                                 | Type                               | Default             |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------- |
+| class             | Class name of the notification element                                                                                                                                                                      | string                             |                     |
+| content           | Content. A function is rendered inside the notification and can read the context of that position                                                                                                           | JSX.Element \| (() => JSX.Element) | ''                  |
+| direction         | Text direction. A per-notification option only, not part of the global configuration; follows ConfigProvider when omitted                                                                                   | `ltr` \| `rtl`                     |                     |
+| duration          | Automatic close delay in seconds; 0 disables auto-close                                                                                                                                                     | number                             | 3                   |
+| getPopupContainer | The parent DOM node the popup renders into; it needs `position: relative`. This changes where the popup sits in the DOM tree, not where it is shown. Only takes effect when the container is first created. | () => HTMLElement                  | () => document.body |
+| icon              | Icon at the top left                                                                                                                                                                                        | JSX.Element \| (() => JSX.Element) |                     |
+| id                | Custom notification id; updates the content when a notification with the same id exists                                                                                                                     | string                             |                     |
+| position          | Pop-up position, one of `top`, `bottom`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`                                                                                                                 | string                             | `topRight`          |
+| showClose         | Whether to show the close button                                                                                                                                                                            | boolean                            | true                |
+| stack             | Stack the notifications at one position once there are more than this many; `true` means 3, `false` never stacks. The newest notification at the position decides                                           | boolean \| number                  | false               |
+| style             | Inline style of the notification element; an object keyed by CSS property names, or a string                                                                                                                | JSX.CSSProperties \| string        |                     |
+| theme             | Style of background fill, one of `light`, `normal`                                                                                                                                                          | string                             | `normal`            |
+| title             | Title. A function is rendered inside the notification and can read the context of that position                                                                                                             | JSX.Element \| (() => JSX.Element) | ''                  |
+| zIndex            | Z-index value. Applied each time a notification is shown.                                                                                                                                                   | number                             | 1010                |
+| onClick           | Called when the notification is clicked; lands on the notification element                                                                                                                                  | (e: MouseEvent) => void            |                     |
+| onClose           | Called when the notification closes, automatically or manually, once per close                                                                                                                              | () => void                         |                     |
+| onCloseClick      | Called when the close button is clicked                                                                                                                                                                     | (id: string) => void               |                     |
+
+`class`, `style` and native attributes and events (such as `aria-*` and `data-*`) land on the root `div` of the notification. Options do not accept `ref`, since the notification element is managed inside the component. `onClick`, `onClose` and `onCloseClick` keep their key names in the options; pass functions directly.
+
+</Framework>
+
+The global configuration is set before any method call, and takes effect only once:
+
+- `Notification.config(config)`
+- `Notification.resetConfig()` restores the global configuration to its defaults; only notifications shown afterwards are affected
+
+`Notification.config` does not accept `direction`; text direction is an option of a single notification only.
+
+| Properties | Instructions                                                                                                     | type              | Default    |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | ----------------- | ---------- |
+| bottom     | Bottom, absolute position                                                                                        | number \| string  | -          |
+| duration   | Automatic close delay, no auto-close when set to 0                                                               | number(second)    | 3          |
+| left       | Left, absolute position                                                                                          | number \| string  | -          |
+| position   | Pop-up position, one of `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                      | string            | `topRight` |
+| right      | Right, absolute position                                                                                         | number \| string  | -          |
+| stack      | Stack the notifications at one position once there are more than this many; `true` means 3, `false` never stacks | boolean \| number | false      |
+| top        | Top, absolute position                                                                                           | number \| string  | -          |
+| zIndex     | Z-index                                                                                                          | number            | 1010       |
+
+Globally Destroy:
+
+- `Notification.destroyAll()`
+
+Hook Notification
+
+<Framework only="react">
+
+- `Notification.useNotification()`  
+  When you need access Context, you could use `Notification.useNotification` to create a `contextHolder` and insert to corresponding DOM tree. Notification created by hooks will be able to access the context where `contextHolder` is inserted. Hook Notification has following methods: `info`, `success`, `warning`, `error`, `open`, `close`; the first five take options without `type`, `id`, `zIndex` and `getPopupContainer`, and return the notification id. Notifications created by hooks use the built-in defaults and ignore `Notification.config()`; `close(id)` removes the notification after its leave animation without calling `onClose`. The contextHolder is wrapped in a container with `data-semi-keep-interactive`, so hook notifications stay interactive while a modal layer is open.
+
+</Framework>
+
+<Framework only="vue">
+
+- `Notification.useNotification()`  
+  Returns a tuple `[notification, Holder]`; place `<Holder />` in the corresponding node. Notifications created by the hook can access the context where `<Holder />` is placed. The notification object has the methods `info`, `success`, `warning`, `error`, `open` and `close`; the first five take the options without `type`, `id`, `zIndex` and `getPopupContainer` and return the notification id, and `close(id)` closes one manually. Notifications created by the hook use the built-in defaults and ignore `Notification.config()`; `close(id)` removes the notification after its leave animation without calling `onClose`. `<Holder />` is wrapped in a container with `data-semi-keep-interactive`, so hook notifications stay interactive while a modal layer is open. ConfigProvider and LocaleProvider are component-level provides that the static `Notification` cannot read; use `useNotification()` when you need them.
+
+</Framework>
+
+<Framework only="solid">
+
+- `Notification.useNotification()`  
+  Returns a tuple `[notification, contextHolder]`; place `contextHolder` in the corresponding node. Notifications created by the hook can access the context where `contextHolder` is placed. The notification object has the methods `info`, `success`, `warning`, `error`, `open` and `close`; the first five take the options without `type`, `id`, `zIndex` and `getPopupContainer` and return the notification id, and `close(id)` closes one manually. Notifications created by the hook use the built-in and global defaults and ignore `Notification.config()`; `close(id)` removes the notification after its leave animation without calling `onClose`. `contextHolder` is wrapped in a container with `data-semi-keep-interactive`, so hook notifications stay interactive while a modal layer is open.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The `role` of a notification depends on its type: `warning` and `error` are `alert`; `info`, `success` and `open` are `status`
+- `status` notifications are read by a persistent `aria-live="polite"` region owned by the list; the notification itself is `aria-live="off"`, and only the text of the title and content is announced. `warning` and `error` still announce themselves as `alert`
+- The notification's `aria-labelledby` is marked as the corresponding notification title
+
+### Keyboard and Focus
+
+- The close button is a native `button`: focus it with `Tab`, and activate it with `Enter` or `Space`
+- A notification does not take focus when it appears
+- When the pointer or keyboard focus enters a notification, its auto-close timer pauses and a stack expands; both resume when it leaves
+
+## Content Guidelines
+
+<div
+    style={{
+        border: '1px solid var(--semi-color-border)',
+        padding: 10,
+        marginBottom: 24,
+        justifyContent: 'center',
+        display: 'flex',
+    }}
+>
+    <TaskNotification title="Task completed" action="Check failed tasks" />
+</div>
+
+- Title
+    - Explain in clear and concise language
+    - Avoid punctuation such as commas, periods, etc.
+- Text
+    - On the premise of complete information transmission, try to compress the text to 1-2 sentences
+    - A detailed description or explanation of the title, rather than a repetition of the title
+    - Use correct punctuation, commas within sentences and periods between sentences
+- Operate
+    - The copy needs to show the specific meaning of the operation
+
+## Design Tokens
+
+<DesignToken />

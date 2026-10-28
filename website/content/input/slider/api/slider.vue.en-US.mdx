@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Current value, used with v-model. When given without a write-back, dragging, clicking and arrow keys only notify and the handle does not move. Back to undefined it returns to defaultValue, or min without one, and afterChange does not fire. | `number \| number[]` | `undefined` |
+| defaultValue | Initial value when uncontrolled. | `number \| number[]` | `semiGlobalDefault("Slider", "defaultValue")` |
+| disabled | Whether the slider is disabled. | `boolean` | `semiDefault("Slider", "disabled", false)` |
+| included | Takes effect when marks is not empty. true makes the marks nested, false makes them independent. | `boolean` | `semiDefault("Slider", "included", true)` |
+| marks | Marks. Keys are numbers in the closed range [min, max], values are strings or numbers; use the mark slot for node content. | <ApiType detail={"Record\u003cnumber, string \u007c number>"}>Type</ApiType> | `semiGlobalDefault("Slider", "marks")` |
+| max | Maximum value. | `number` | `semiDefault("Slider", "max", 100)` |
+| min | Minimum value. | `number` | `semiDefault("Slider", "min", 0)` |
+| range | Whether both ends can be dragged. | `boolean` | `semiDefault("Slider", "range", false)` |
+| step | Step, counted from min. | `number` | `semiDefault("Slider", "step", 1)` |
+| tipFormatter | Format of the tooltip, called once per handle with that handle's value. Shows the current value by default; null hides the tooltip. | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | `undefined` |
+| tooltipVisible | Whether the tooltip is always visible. | `boolean` | `semiGlobalDefault("Slider", "tooltipVisible")` |
+| tooltipOnMark | Whether the marks on the rail have a tooltip. | `boolean` | `semiDefault("Slider", "tooltipOnMark", false)` |
+| showMarkLabel | Whether to show the mark labels. | `boolean` | `semiDefault("Slider", "showMarkLabel", true)` |
+| showArrow | Whether the tooltip has an arrow. | `boolean` | `semiDefault("Slider", "showArrow", true)` |
+| showBoundary | Whether to show the maximum and minimum on hover. | `boolean` | `semiDefault("Slider", "showBoundary", false)` |
+| vertical | Whether the slider is vertical. | `boolean` | `semiDefault("Slider", "vertical", false)` |
+| verticalReverse | Reverses the vertical direction, so the larger value is on top. | `boolean` | `semiDefault("Slider", "verticalReverse", false)` |
+| railStyle | Style of the slider rail. | `CSSProperties` | `semiGlobalDefault("Slider", "railStyle")` |
+| handleDot | Dot on the handle: one object for a single handle, an array with one per handle for a range. | `HandleDot \| HandleDot[]` | `semiGlobalDefault("Slider", "handleDot")` |
+| id | Applied to the first handle's input, so a label for focuses that handle. | `string` | `undefined` |
+| ariaLabel | Accessible name of the handle. In range mode, the locale's start and end texts are appended for the two handles. | `string` | `semiGlobalDefault("Slider", "ariaLabel")` |
+| ariaLabelledby | The id of the labelling element, used as the handle's accessible name. In range mode each handle adds its start or end text. | `string` | `semiGlobalDefault("Slider", "ariaLabelledby")` |
+| ariaValuetext | A user-friendly name for the current value. | `string` | `semiGlobalDefault("Slider", "ariaValuetext")` |
+| getAriaValueText | Provides a user-friendly name for the current value, called with the handle's value and its index. | <ApiType detail={"((value: number, index?: number \u007c undefined) => string)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event             | Description                                                                                                                | Callback parameters                      |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| update:modelValue | Emitted when the value changes, for v-model to write back.                                                                 | `[value: number \| number[]]`            |
+| change            | Emitted when the value changes, with the current value.                                                                    | `[value: number \| number[]]`            |
+| afterChange       | Emitted after a change is complete, with the current value. Not emitted when a controlled value goes back to undefined.    | `[value: number \| number[]]`            |
+| mouseUp           | Emitted when the pointer (mouse, touch, pen) dragging a handle is released or cancelled, and when a value key is released. | `[event: KeyboardEvent \| PointerEvent]` |
+| focus             | Emitted when any handle receives focus.                                                                                    | `[event: FocusEvent]`                    |
+| blur              | Emitted when focus leaves the whole Slider; moving between the two handles does not emit it.                               | `[event: FocusEvent]`                    |
+
+**Slots**
+
+| Slot | Description                                                                                         | Scope parameters      |
+| ---- | --------------------------------------------------------------------------------------------------- | --------------------- |
+| mark | Custom mark label, also used for the tooltipOnMark tooltip. Scoped with the mark's value and label. | `SliderMarkSlotProps` |
+| tip  | Custom handle tooltip content. value is the result of tipFormatter and handle is min or max.        | `SliderTipSlotProps`  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                   | 类型                                                                             | 默认值 |
+| ------------ | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ |
+| activeKey    | 当前展开的分组 key，支持单个或多个。                                   | `string \| string[]`                                                             | -      |
+| info         | 参考来源分组列表，每组包含 header、key 与 annotations。                | `AnnotationInfo[]`                                                               | -      |
+| onChange     | 展开的分组变化时触发，参数为当前展开的 key。                           | <ApiType detail={"(key: string \u007c string[]) => void"}>Type</ApiType>         | -      |
+| onClick      | 点击某条参考来源时触发，参数为事件和该条目。                           | <ApiType detail={"(e: MouseEvent, item: AnnotationItem) => void"}>Type</ApiType> | -      |
+| renderHeader | 渲染分组标题图标后的内容，参数为该分组；不传时显示分组的 header 文本。 | <ApiType detail={"(info: AnnotationInfo) => JSX.Element"}>Type</ApiType>         | -      |
+| renderItem   | 自定义参考来源条目的渲染，参数为该条目。                               | <ApiType detail={"(annotation: AnnotationItem) => JSX.Element"}>Type</ApiType>   | -      |

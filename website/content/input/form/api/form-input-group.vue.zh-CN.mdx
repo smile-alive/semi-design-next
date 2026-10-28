@@ -1,0 +1,29 @@
+**Props**
+
+| 属性              | 说明                                                                                                 | 类型                                      | 默认值      |
+| ----------------- | ---------------------------------------------------------------------------------------------------- | ----------------------------------------- | ----------- |
+| disabled          | 组内字段统一的 disabled，不传时沿用 Form 的 disabled。                                               | `boolean`                                 | `undefined` |
+| label             | 整个 Group 的 Label：字符串作为文本，对象作为 Label 配置，其中 id 用作 Label 的 id；label 插槽优先。 | `string \| number \| FormInputGroupLabel` | `undefined` |
+| labelPosition     | Label 的位置，默认取自 Form，可选 top 或 left。                                                      | `"top" \| "left"`                         | `undefined` |
+| extraTextPosition | extraText 的位置，middle 在 Label 与 Group 之间，bottom 在 Group 之后。                              | `"bottom" \| "middle"`                    | `"bottom"`  |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽       | 说明                                                           | 作用域参数 |
+| ---------- | -------------------------------------------------------------- | ---------- |
+| default    | 组内的字段，只渲染设置了 field 的直接子项。                    | `any`      |
+| label      | Group 的 Label 内容，优先于 label 属性中的文本。               | `any`      |
+| labelExtra | 跟随在 Group Label 文本后的内容。                              | `any`      |
+| extraText  | 额外的提示信息，常显，由组内每个控件的 aria-describedby 引用。 | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 当前取值，配合 v-model 使用；只传不回写时拖动、点击与方向键仅触发通知，滑块不移动。变回 undefined 时回到 defaultValue，没有则回到 min，且不触发 afterChange。 | `number \| number[]` | `undefined` |
+| defaultValue | 非受控时的初始取值。 | `number \| number[]` | `semiGlobalDefault("Slider", "defaultValue")` |
+| disabled | 滑块是否禁用。 | `boolean` | `semiDefault("Slider", "disabled", false)` |
+| included | marks 不为空对象时有效，true 表示刻度为包含关系，false 表示并列。 | `boolean` | `semiDefault("Slider", "included", true)` |
+| marks | 刻度，key 为 number 且取值在闭区间 [min, max] 内，值为字符串或数字；节点内容使用 mark 插槽。 | <ApiType detail={"Record\u003cnumber, string \u007c number>"}>Type</ApiType> | `semiGlobalDefault("Slider", "marks")` |
+| max | 最大值。 | `number` | `semiDefault("Slider", "max", 100)` |
+| min | 最小值。 | `number` | `semiDefault("Slider", "min", 0)` |
+| range | 是否支持两端同时可滑动。 | `boolean` | `semiDefault("Slider", "range", false)` |
+| step | 步长，从 min 起计算。 | `number` | `semiDefault("Slider", "step", 1)` |
+| tipFormatter | 设置提示的展示格式，每个手柄单独调用，参数为该手柄的值；默认显示当前取值，null 隐藏提示。 | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | `undefined` |
+| tooltipVisible | 是否始终显示提示。 | `boolean` | `semiGlobalDefault("Slider", "tooltipVisible")` |
+| tooltipOnMark | 刻度上是否带有提示。 | `boolean` | `semiDefault("Slider", "tooltipOnMark", false)` |
+| showMarkLabel | 是否显示刻度标签。 | `boolean` | `semiDefault("Slider", "showMarkLabel", true)` |
+| showArrow | 提示是否带箭头。 | `boolean` | `semiDefault("Slider", "showArrow", true)` |
+| showBoundary | 是否在悬停时展示最大值与最小值。 | `boolean` | `semiDefault("Slider", "showBoundary", false)` |
+| vertical | 是否为垂直方向。 | `boolean` | `semiDefault("Slider", "vertical", false)` |
+| verticalReverse | 反转垂直方向，即上大下小。 | `boolean` | `semiDefault("Slider", "verticalReverse", false)` |
+| railStyle | 滑块轨道的样式。 | `CSSProperties` | `semiGlobalDefault("Slider", "railStyle")` |
+| handleDot | 滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。 | `HandleDot \| HandleDot[]` | `semiGlobalDefault("Slider", "handleDot")` |
+| id | 落在第一个手柄的 input 上，用于 label for 关联，点击 label 会聚焦该手柄。 | `string` | `undefined` |
+| ariaLabel | 手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。 | `string` | `semiGlobalDefault("Slider", "ariaLabel")` |
+| ariaLabelledby | 引用标签元素的 id，作为手柄的可访问名称；range 模式下每个手柄再加上起点或终点。 | `string` | `semiGlobalDefault("Slider", "ariaLabelledby")` |
+| ariaValuetext | 为当前值提供用户友好的名称。 | `string` | `semiGlobalDefault("Slider", "ariaValuetext")` |
+| getAriaValueText | 为当前值提供用户友好的名称，参数为滑块的值与滑块的顺序。 | <ApiType detail={"((value: number, index?: number \u007c undefined) => string)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件              | 说明                                                                       | 回调参数                                 |
+| ----------------- | -------------------------------------------------------------------------- | ---------------------------------------- |
+| update:modelValue | 值变化时触发，供 v-model 回写。                                            | `[value: number \| number[]]`            |
+| change            | 值变化时触发，参数为当前取值。                                             | `[value: number \| number[]]`            |
+| afterChange       | 值变化完成后触发，参数为当前取值；受控值被改回 undefined 时不触发。        | `[value: number \| number[]]`            |
+| mouseUp           | 拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时触发。 | `[event: KeyboardEvent \| PointerEvent]` |
+| focus             | 任一手柄获得焦点时触发。                                                   | `[event: FocusEvent]`                    |
+| blur              | 焦点离开整个 Slider 时触发，在两个手柄之间切换不触发。                     | `[event: FocusEvent]`                    |
+
+**Slots**
+
+| 插槽 | 说明                                                                             | 作用域参数            |
+| ---- | -------------------------------------------------------------------------------- | --------------------- |
+| mark | 自定义刻度标签，也用于 tooltipOnMark 的提示；作用域参数为刻度的 value 与 label。 | `SliderMarkSlotProps` |
+| tip  | 自定义手柄提示的内容；value 为 tipFormatter 的结果，handle 为 min 或 max。       | `SliderTipSlotProps`  |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

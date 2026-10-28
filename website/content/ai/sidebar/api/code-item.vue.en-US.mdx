@@ -1,0 +1,31 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| name | Name of the code item, shown by the CodeContent panel header and the Sidebar detail header; CodeItem itself does not render it. | `string` | `undefined` |
+| language | Language name as in the CodeHighlight language prop; register it with CodeHighlight.register first, otherwise plain text is shown. | `string` | `undefined` |
+| content | The code or JSON string. | `string` | `undefined` |
+| isJson | When true the content is shown by JsonViewer, otherwise by CodeHighlight. | `boolean` | `false` |
+| jsonViewerProps | Other props for JsonViewer, plus an extra class and style. modelValue (the content), width and height (100%), options (read-only, auto wrap) and showSearch (false) have defaults; a prop given here replaces its default as a whole. | <ApiType detail={"(Partial\u003cJsonViewerProps> & ElementLook)"}>Type</ApiType> | `undefined` |
+| codeHighlightProps | Other props for CodeHighlight, plus an extra class and style. | <ApiType detail={"(Partial\u003cCodeHighlightProps> & ElementLook)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot         | Description                                                                                               | Scope parameters                  |
+| ------------ | --------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| customRender | The customRender slot of JsonViewer, for the content matched by jsonViewerProps.options.customRenderRule. | `JsonViewerCustomRenderSlotProps` |
+| searchButton | The searchButton slot of JsonViewer, replacing its search button.                                         | `JsonViewerSearchButtonSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

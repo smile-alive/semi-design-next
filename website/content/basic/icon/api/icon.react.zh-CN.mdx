@@ -1,0 +1,11 @@
+**Props**
+
+| 属性      | 说明                                                                                                                  | 类型                 | 默认值      |
+| --------- | --------------------------------------------------------------------------------------------------------------------- | -------------------- | ----------- |
+| fill      | 双色、多色图标的填充颜色，支持字符串或字符串数组。设置后 Icon 通过 `cloneElement` 把它传给 `svg` 元素。               | `string \| string[]` | -           |
+| prefixCls | 类名前缀，根元素的类名为 `<prefixCls>-icon`。                                                                         | `string`             | `"semi"`    |
+| rotate    | 旋转角度，使用整数（单位为度），非整数会被忽略。                                                                      | `number`             | -           |
+| size      | 图标尺寸，可选 `extra-small`、`small`、`default`、`large`、`extra-large` 或 `inherit`，`inherit` 继承上下文字体大小。 | `IconSize`           | `"default"` |
+| spin      | 启用旋转动画。                                                                                                        | `boolean`            | `false`     |
+| svg       | 图标内容，传入 React 元素，如 `<StarIcon />`。                                                                        | `ReactNode`          | -           |
+| type      | 附加图标类型类名，根元素的类名为 `<prefixCls>-icon-<type>`。                                                          | `string`             | -           |

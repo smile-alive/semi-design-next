@@ -1,0 +1,302 @@
+---
+order: 30
+title: Markdown 渲染器
+icon: doc-markdown
+brief: 在网页中即时渲染 Markdown 和 MDX
+---
+
+import MarkdownRenderReactApi from './api/markdown-render.react.zh-CN.mdx';
+import MarkdownRenderVueApi from './api/markdown-render.vue.zh-CN.mdx';
+import MarkdownRenderSolidApi from './api/markdown-render.solid.zh-CN.mdx';
+
+## 使用场景
+
+Markdown 是一种文档标记语言，可以通过简单的标记实现例如标题，图片，表格，链接，加粗等基本常用富文本功能。MDX 是在 Markdown 基础上，允许引入 JSX 实现更加复杂定制化的文档撰写与展示需求。
+
+Semi 提供的 MarkdownRender 组件支持渲染 Markdown 和 MDX，无需特别配置，传入纯文本即可渲染出符合 Semi 样式规范的富文本内容。代码块由 [CodeHighlight](/zh-CN/react/plus/code-highlight) 高亮，用到的语言需先通过 `CodeHighlight.register` 注册，未注册的语言按纯文本显示。
+
+通常用于下列场景：
+
+- 文档站编写与渲染
+- 服务端动态生成富文本内容时，前端渲染
+- 偏内容展示的轻交互网站
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+导入 MarkdownRender 后，直接传入 Markdown 或 MDX 纯文本即可。
+
+注意因为 `<` `{` 等符号是合法的 JSX 符号会被判定为代码，无法直接渲染，需要使用 `\` 转义，如果你只需要渲染纯 Markdown，参考下方仅渲染 Markdown 一节。
+
+<Demo id="basic" />
+
+### 修改元素样式
+
+<Framework only="react">
+
+你可以任意替换 Markdown 或 MDX 文档中的文档元素的显示效果，只需向 `components` props 中传入你的渲染组件覆盖即可
+
+</Framework>
+
+<Framework only="vue">
+
+你可以任意替换 Markdown 或 MDX 文档中的文档元素的显示效果，只需向 `components` 属性传入你的 Vue 组件覆盖即可。元素的属性（如 `class`、`colspan`）以 HTML 属性名交给组件，由 attrs 读取；元素的内容通过默认插槽传入。
+
+</Framework>
+
+<Framework only="solid">
+
+你可以任意替换 Markdown 或 MDX 文档中的文档元素的显示效果，只需向 `components` props 中传入你的 Solid 组件覆盖即可。元素的属性（如 `class`、`colspan`）以 props 传给组件，元素的内容通过 `props.children` 读取。
+
+</Framework>
+
+比如，现在需要将所有2号标题的颜色设置成主色
+
+<Demo id="element-style" />
+
+任何由 Markdown 生成的元素标签都可以覆盖，常用的有 `a blockquote br code del em h1 h2 h3 h4 h5 h6 hr img li ol p pre strong ul table`
+
+### 仅纯 Markdown
+
+当你渲染的 Markdown 仅仅是纯 markdown，不包含任何 JSX 代码时，可传入 `format="md"` 来开启仅 Markdown 模式，在这种模式下无需转义特殊字符
+
+<Demo id="markdown-only" />
+
+<Framework only="react">
+
+`format="md"` 经 [unified](https://unifiedjs.com/) 管线渲染：remark-parse 解析，依次执行 remark-gfm（`remarkGfm` 为 true 时）与 `remarkPlugins`，remark-rehype 转为 HTML 语法树，执行 `rehypePlugins`，最后由 hast-util-to-jsx-runtime 生成 React 元素并套用 `components`。整个过程不生成、不执行代码，在禁用 `unsafe-eval` 的 CSP 下也能渲染，也不会加载 MDX 编译器。
+
+</Framework>
+
+<Framework only="vue">
+
+`format="md"` 经 [unified](https://unifiedjs.com/) 管线渲染：remark-parse 解析，依次执行 remark-gfm（`remarkGfm` 为 true 时）与 `remarkPlugins`，remark-rehype 转为 HTML 语法树，执行 `rehypePlugins`，最后由 hast-util-to-jsx-runtime 生成 Vue 虚拟节点并套用 `components`。整个过程不生成、不执行代码，在禁用 `unsafe-eval` 的 CSP 下也能渲染，也不会加载 MDX 编译器。
+
+</Framework>
+
+<Framework only="solid">
+
+`format="md"` 经 [unified](https://unifiedjs.com/) 管线渲染：remark-parse 解析，依次执行 remark-gfm（`remarkGfm` 为 true 时）与 `remarkPlugins`，remark-rehype 转为 HTML 语法树，执行 `rehypePlugins`，最后由 hast-util-to-jsx-runtime 生成 Solid 元素并套用 `components`。整个过程不生成、不执行代码，在禁用 `unsafe-eval` 的 CSP 下也能渲染，也不会加载 MDX 编译器。
+
+</Framework>
+
+`format="mdx"` 经 @mdx-js/mdx 把源文本编译成代码并在运行时执行，CSP 需要允许 `unsafe-eval`；@mdx-js/mdx 在首次渲染 MDX 时按需加载。
+
+<Notice type="primary" title="format='md' 模式下 HTML 标签的处理">
+
+在 `format="md"` 模式下，Markdown 中嵌入的 raw HTML（如 `<div>`、`<span style="color:red">` 等）以 raw 节点交给 `rehypePlugins`，插件处理后仍是 raw 节点的部分会被移除，不会渲染到页面上。
+
+如果你需要在 `format="md"` 模式下保留 HTML 标签的渲染，可以通过 rehypePlugins 传入 rehype-raw 插件：
+
+</Notice>
+
+<Framework only="react">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-react';
+import rehypeRaw from 'rehype-raw';
+
+function Demo() {
+    return <MarkdownRender format="md" raw={`<span style="color:red">红色文字</span>`} rehypePlugins={[rehypeRaw]} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-vue';
+    import rehypeRaw from 'rehype-raw';
+
+    const rehypePlugins = [rehypeRaw];
+</script>
+
+<template>
+    <MarkdownRender format="md" raw='<span style="color:red">红色文字</span>' :rehypePlugins="rehypePlugins" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { MarkdownRender } from '@fibrae/semi-ui-solid';
+import rehypeRaw from 'rehype-raw';
+
+function Demo() {
+    return <MarkdownRender format="md" raw={`<span style="color:red">红色文字</span>`} rehypePlugins={[rehypeRaw]} />;
+}
+```
+
+</Framework>
+
+### 添加自定义组件
+
+<Framework only="react">
+
+通过传入自定义组件到 `components` Props，能够实现在 Markdown 中直接书写 JSX，组件会被渲染到最终页面上，支持 JS 事件。默认的 Markdown 组件可从 `MarkdownRender.defaultComponents` 中获取，可以用于二次封装。
+
+</Framework>
+
+<Framework only="vue">
+
+通过传入自定义组件到 `components` 属性，能够实现在 Markdown 中直接书写 JSX，组件会被渲染到最终页面上，支持 JS 事件。默认的 Markdown 组件可从 `MarkdownRender.defaultComponents` 中获取，可以用于二次封装。
+
+MDX 中的 JSX 属性按 Vue 的规则交给组件：`className` 并入 `class`，`style` 可写字符串；监听器以 `onClick`、`onChange`、`onInput`、`onFocus`、`onBlur` 传入，组件用 `emit` 或 attrs 接收，其余事件按 Vue 命名，如 `onMouseenter`、`onKeydown`、`onDblclick`。
+
+</Framework>
+
+<Framework only="solid">
+
+通过传入自定义组件到 `components` props，能够实现在 Markdown 中直接书写 JSX，组件会被渲染到最终页面上，支持 JS 事件。默认的 Markdown 组件可从 `MarkdownRender.defaultComponents` 中获取，可以用于二次封装。
+
+MDX 中的 JSX 属性以 props 交给组件，`className` 并入 `class`；事件属性（如 `onClick`）以函数形式传入，组件用 `onClick={props.onClick}` 绑定，子内容通过 `props.children` 读取。
+
+</Framework>
+
+<Notice type="primary" title="注意事项">
+    <div>注意尽量确保被渲染的 Markdown 内 JSX 代码可信，防止 XSS。</div>
+</Notice>
+
+<Demo id="custom-component" />
+
+<Framework only="vue">
+
+替换内置的 `code` 组件时，围栏代码块的源码作为文本节点出现在默认插槽中，把默认插槽返回的节点交给 `codeText` 即可取得源码（保留末尾换行，未做 trim）；内置组件也可以从深路径单独导入：
+
+```ts
+import { codeText } from '@fibrae/semi-ui-vue/markdown-render/index';
+import { code, pre } from '@fibrae/semi-ui-vue/markdown-render/components/index';
+```
+
+</Framework>
+
+### 添加插件
+
+通过 `remarkPlugins` `rehypePlugins` 支持 unified 生态的 Remark 与 Rehype 插件，详情请参考 [MDXJS](https://mdxjs.com/docs/extending-mdx/) 与 [unified](https://unifiedjs.com/explore/)
+
+<Framework only="react">
+
+`raw`、`format`、`remarkGfm` 变化，或插件数组中的元素变化时会重新编译；`components` 变化只重新渲染，不重新编译。插件数组按元素比较，每次渲染新建的数组字面量只要元素相同就不会重新编译；`[插件, 配置对象]` 写法中的配置对象也按引用比较，写成字面量会在每次渲染时重新编译，需要用 `useMemo` 保持引用稳定：
+
+```jsx
+import { useMemo } from 'react';
+import { MarkdownRender } from '@fibrae/semi-ui-react';
+import remarkToc from 'remark-toc';
+
+function Demo({ raw }) {
+    const remarkPlugins = useMemo(() => [[remarkToc, { heading: '目录' }]], []);
+    return <MarkdownRender format="md" raw={raw} remarkPlugins={remarkPlugins} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+`raw`、`format`、`remarkGfm` 变化，或插件数组中的元素变化时会重新编译；`components` 变化只重新渲染，不重新编译。插件数组按元素比较，模板里的数组字面量只要元素相同就不会重新编译；`[插件, 配置对象]` 写法中的配置对象也按引用比较，写成模板字面量会在每次渲染时重新编译，需要在 `script setup` 中定义以保持引用稳定：
+
+```vue
+<script setup lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-vue';
+    import type { MarkdownRenderProps } from '@fibrae/semi-ui-vue';
+    import remarkToc from 'remark-toc';
+
+    defineProps<{ raw: string }>();
+
+    const remarkPlugins: MarkdownRenderProps['remarkPlugins'] = [[remarkToc, { heading: '目录' }]];
+</script>
+
+<template>
+    <MarkdownRender format="md" :raw="raw" :remarkPlugins="remarkPlugins" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`raw`、`format`、`remarkGfm` 变化，或插件数组中的元素变化时会重新编译；`components` 变化只重新渲染，不重新编译。插件数组按元素比较；`[插件, 配置对象]` 写法中的配置对象按引用比较，每次重新求值都新建的字面量会导致重新编译，需要定义在组件外保持引用稳定：
+
+```tsx
+import { MarkdownRender, type MarkdownRenderProps } from '@fibrae/semi-ui-solid';
+import remarkToc from 'remark-toc';
+
+const remarkPlugins: MarkdownRenderProps['remarkPlugins'] = [[remarkToc, { heading: '目录' }]];
+
+function Demo(props: { raw: string }) {
+    return <MarkdownRender format="md" raw={props.raw} remarkPlugins={remarkPlugins} />;
+}
+```
+
+</Framework>
+
+### 编译出错
+
+MDX 语法错误或插件抛错时，保留上一次成功渲染的内容，开发环境下通过 `console.error` 输出错误，不会产生未处理的 Promise rejection。
+
+### 无障碍
+
+传入 `aria-label` 或 `aria-labelledby` 且没有 `role` 时，根元素带 `role="group"`，使用方显式传入的 `role` 优先。链接内的图片不可预览，链接是唯一的交互元素；图片下方的说明文字对辅助技术隐藏，图片名称只来自 `alt`。
+
+### API
+
+<Framework only="react">
+
+<MarkdownRenderReactApi />
+
+`id`、`data-*`、`aria-*` 与事件属性（如 `onClick`）等其他原生属性落在根元素 `div` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+MarkdownRender 没有默认插槽和事件，`class`、`style`、`id`、`data-*` 与监听器落在根元素 `div` 上。
+
+<MarkdownRenderVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<MarkdownRenderSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`data-*`、`onClick`）落在根元素 `div` 上。
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

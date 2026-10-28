@@ -1,0 +1,478 @@
+---
+title: 版式
+order: 24
+icon: doc-typography
+brief: 文字，图片，段落，数值的基本格式。
+---
+
+import PureA from './figures/pure-a.react.tsx';
+import TypographyTextReactApi from './api/typography-text.react.zh-CN.mdx';
+import TypographyTitleReactApi from './api/typography-title.react.zh-CN.mdx';
+import TypographyParagraphReactApi from './api/typography-paragraph.react.zh-CN.mdx';
+import TypographyNumeralReactApi from './api/typography-numeral.react.zh-CN.mdx';
+import TypographyTextVueApi from './api/typography-text.vue.zh-CN.mdx';
+import TypographyTitleVueApi from './api/typography-title.vue.zh-CN.mdx';
+import TypographyParagraphVueApi from './api/typography-paragraph.vue.zh-CN.mdx';
+import TypographyNumeralVueApi from './api/typography-numeral.vue.zh-CN.mdx';
+import TypographyTextSolidApi from './api/typography-text.solid.zh-CN.mdx';
+import TypographyTitleSolidApi from './api/typography-title.solid.zh-CN.mdx';
+import TypographyParagraphSolidApi from './api/typography-paragraph.solid.zh-CN.mdx';
+import TypographyNumeralSolidApi from './api/typography-numeral.solid.zh-CN.mdx';
+
+## 使用场景
+
+- 对文章、博客、日志等的文本内容进行展示时。
+- 对文本进行复制和省略等基础操作时。
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Typography } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Typography } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+模板中使用 `Typography.Text`、`Typography.Title`、`Typography.Paragraph`、`Typography.Numeral`，也可以直接导入 `TypographyText`、`TypographyTitle`、`TypographyParagraph`、`TypographyNumeral`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 标题组件
+
+通过设置 heading 可以展示不同级别的标题。
+
+<Demo id="title" />
+
+### 文本组件
+
+内置不同样式的文本。
+
+<Framework only="react">
+
+可以通过 `icon` 属性传入图标，这种方式传入的图标默认与文本有间距，同时在链接文本的情况不会出现下划线符合设计规范。
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `#icon` 插槽传入图标，这种方式传入的图标默认与文本有间距，同时在链接文本的情况不会出现下划线符合设计规范。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `icon` 属性传入图标元素或图标组件，这种方式传入的图标默认与文本有间距，同时在链接文本的情况不会出现下划线符合设计规范。
+
+</Framework>
+
+<Demo id="text" />
+
+链接文本支持传入 `object`，将对应的属性挂在 `<a>` 标签上。  
+默认没有下划线，可以配合 underline 属性在 hover、active 态增加下划线的样式。
+
+<Demo id="link" />
+
+### 段落组件
+
+段落组件拥有两种行距，可以通过设置 `spacing='extended'` 使用更宽松的行距。
+
+<Demo id="paragraph" />
+
+### 数值组件
+
+Numeral 组件在Text组件的基础上，添加了属性: `rule`, `precision`, `truncate`, `parser`, 以提供需要单独处理文本中数值的能力。
+
+<Notice title='注意'>
+
+<Framework only="react">
+
+Numeral 组件会递归遍历 Children 检测其中所有的数字文本进行转换展示，请注意控制渲染结构层级；
+
+</Framework>
+
+<Framework only="vue">
+
+Numeral 组件会递归遍历 Children 检测其中所有的数字文本进行转换展示，请注意控制渲染结构层级；
+
+</Framework>
+
+<Framework only="solid">
+
+Numeral 组件只格式化直接的字符串与数字 children，每个 children 分别格式化；元素 children 原样输出，其中的数字不会被转换，需要转换时给该元素换成自己的 Numeral；
+
+</Framework>
+
+对于 rule 为 percentages 的 Numeral 组件，数值统一按 (num\*100)% 处理。
+
+</Notice>
+
+`precision` 可以设置小数点后保留位数, 用于设置精度  
+`truncate` 小数点后保留位截段取整方式，可选 `ceil`, `floor`, `round`，作用与 Math.ceil、Math.floor、Math.round 对齐  
+`rule` 用于设置解析规则
+
+- 设为 `percentages` 会将数字自动转换为百分比形式展示
+- 设为 `bytes-decimal` 会将数字自动换算为字节对应的单位展示， 1 KB 定义为等于 1000 字节，（B, KB, MB, GB, TB, PB, EB, ZB, YB）
+- 设为 `bytes-binary` 会将数字自动换算为字节对应的单位展示，1 KiB 定义为等于 1024字节，（B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB）
+- 设为 `text`时，仅自动对数字进行取整，根据 `precision` 和 `truncate` 属性
+- 设为 `numbers`时，会将非数字字符进行过滤，仅展示数字
+- 设为 `exponential` 时,会将数字自动转换为科学计数法形式展示
+
+Numeral 默认渲染 `span`，内容里包含 `p` 等块级元素时，用 `component="div"` 改为块级容器。
+
+<Framework only="vue">
+
+Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化，所以 `rule="numbers"` 的逗号分隔会跨过插值。
+
+</Framework>
+
+<Demo id="numeral" />
+
+可以通过 `parser` 自定义解析规则
+
+<Demo id="numeral-parser" />
+
+### 文本大小
+
+段落组件和文本组件支持两种尺寸 `small`（12px）和 `normal`（14px），另可设为 `inherit` 继承外层尺寸，默认为 `normal`。
+
+当段落组件或者文本组件嵌套使用时候，设置内层组件的 `size` 属性为 `inherit`，内层组件的 size 将继承外层组件的尺寸设置。
+
+<Demo id="size" />
+
+### 可复制文本
+
+可通过配置 copyable 属性支持文本的复制。  
+当 copyable 配置为 true时，默认复制内容为 children 本身，注意，此时 children 只支持 string类型传入  
+当 copyable 配置为 object 时，可通过 `copyable.content` 指定复制至粘贴板的内容，与 children 不再强关联， 此时 children 将不再限定类型，但 `copyable.content` 仍需要为 string
+
+<Framework only="react">
+
+可以通过 `copyable.render` 属性，自定义复制按钮的渲染逻辑
+
+</Framework>
+
+<Framework only="vue">
+
+复制按钮的内容用 `#copyIcon` 插槽，提示用 `#copyTip`，成功提示用 `#copySuccessTip`；用 `#copyAction="{ copied, copy, config }"` 完全自定义复制节点的渲染。
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `copyable.render` 属性，自定义复制按钮的渲染逻辑。
+
+</Framework>
+
+<Demo id="copyable" />
+
+### 省略文本
+
+支持文本的省略，可以通过 `ellipsis` 配置相关参数，具体参考 [Ellipsis Config](#Ellipsis-Config)。
+
+<Notice title='注意事项'>
+
+1. ellipsis 仅支持纯文本的截断，不支持 ReactNode、Vue 组件节点等复杂内容，请确保传入的内容是纯文本
+2. ellipsis 要实现缩略，需要有明确的 width 或 maxWidth 宽度限制做对比判断。若自身未设置宽度（例如纯依靠 flex 属性撑开），或 width 为 100% 等不定数值，那么父级需要有明确的 width 或 maxWidth
+3. ellipsis 需要获取 DOM 的宽高度等信息用以做基本判断，若自身或父级存在 display:none 样式会导致取值不正确，此时缩略会失效
+4. 省略文本的计算，分为 CSS 截断和 JS 截断，强依赖 DOM 元素的相关状态获取。在结构复杂的页面，大量使用 Typography 可能会导致过多的 reflow 重排，建议选择合适的省略方式避免造成性能负担。更多信息见 [FAQ](#faq)
+
+</Notice>
+
+<Demo id="ellipsis" />
+
+<Notice type="primary" title="注意事项">
+    当发生超长文本在弹出的 tooltip 没有换行时，可通过手动设置一下{' '}
+    <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/word-break" target="_blank" rel="noopener noreferrer">
+        word-break
+    </a>{' '}
+    或者{' '}
+    <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap" target="_blank" rel="noopener noreferrer">
+        word-wrap
+    </a>{' '}
+    等换行相关属性进行调整, 更多细节可查看 Tooltip 的 FAQ 部分
+</Notice>
+
+<Demo id="ellipsis-tooltip-wrap" />
+
+```scss
+// 按需配置 word-break
+
+.components-typography-demo {
+    word-break: break-word;
+    // 或
+    word-break: break-all;
+}
+```
+
+## API参考
+
+### Typography.Text
+
+<Framework only="react">
+
+<TypographyTextReactApi />
+
+`className`、`style` 与其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素上；`link` 为对象时，其中的属性落在内层 `a` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TypographyTextVueApi />
+
+`class`、`style`、`id`、`aria-*` 等原生属性经 attrs 落在文字元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<TypographyTextSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`）落在文字元素上。
+
+</Framework>
+
+### Typography.Title
+
+<Framework only="react">
+
+<TypographyTitleReactApi />
+
+`className`、`style` 与其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素上；`link` 为对象时，其中的属性落在内层 `a` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TypographyTitleVueApi />
+
+`class`、`style`、`id`、`aria-*` 等原生属性经 attrs 落在文字元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<TypographyTitleSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`）落在文字元素上。
+
+</Framework>
+
+### Typography.Paragraph
+
+<Framework only="react">
+
+<TypographyParagraphReactApi />
+
+`className`、`style` 与其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素上；`link` 为对象时，其中的属性落在内层 `a` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TypographyParagraphVueApi />
+
+`class`、`style`、`id`、`aria-*` 等原生属性经 attrs 落在文字元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<TypographyParagraphSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`）落在文字元素上。
+
+</Framework>
+
+### Typography.Numeral
+
+<Framework only="react">
+
+<TypographyNumeralReactApi />
+
+`className`、`style` 与其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素上；`link` 为对象时，其中的属性落在内层 `a` 元素上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TypographyNumeralVueApi />
+
+`class`、`style`、`id`、`aria-*` 等原生属性经 attrs 落在文字元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<TypographyNumeralSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`）落在文字元素上。
+
+</Framework>
+
+### Ellipsis Config
+
+<Framework only="react">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| collapseText | 折叠的展示文本 | string | `收起` |
+| collapsible | 是否支持折叠 | boolean | false |
+| expandText | 展开的展示文本 | string | `展开` |
+| expandable | 是否支持展开 | boolean | false |
+| pos | 省略截断的位置，支持末尾和中间截断：`end`, `middle` | string | `end` |
+| rows | 省略溢出行数 | number | 1 |
+| showTooltip | 是否展示 tooltip 及相关配置: type，浮层内容承载的组件，支持 Tooltip\| Popover；opts，其他需要透传给浮层组件的属性； renderTooltip，自定义渲染弹出层组件。Tooltip 可显示时文字可用 Tab 聚焦；文字位于 option、treeitem、menuitem、gridcell、row 等组合控件条目内时不加入 Tab 顺序。`expandable` 为 true 或设置了 `expandText` 时，`showTooltip` 不生效，二者互斥 | boolean\|\{type: 'tooltip'\|'popover', opts: object, renderTooltip: (content: ReactNode, children: ReactNode) => ReactNode\} | false |
+| suffix | 始终展示的后缀 | string | - |
+| onExpand | 展开/收起的回调 | function(expanded: bool, Event: e) | - |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| collapseText | 折叠的展示文本 | string | `收起` |
+| collapsible | 是否支持折叠 | boolean | false |
+| expandText | 展开的展示文本 | string | `展开` |
+| expandable | 是否支持展开 | boolean | false |
+| pos | 省略截断的位置，支持末尾和中间截断：`end`, `middle` | string | `end` |
+| rows | 省略溢出行数 | number | 1 |
+| showTooltip | 是否展示 tooltip 及相关配置: type，浮层内容承载的组件，支持 tooltip\| popover；opts，其他需要透传给浮层组件的属性，其中 `class`、`style` 落在浮层上。浮层内容用 `#ellipsisContent` 插槽，自定义浮层用 `#ellipsisTooltip="{ content, trigger }"`（`content` 是全文，`trigger` 是文字元素，用 `<component :is="trigger" />` 放入自己的浮层，只在溢出时渲染）。Tooltip 可显示时文字可用 Tab 聚焦；文字位于 option、treeitem、menuitem、gridcell、row 等组合控件条目内时不加入 Tab 顺序。`expandable` 为 true 或设置了 `expandText` 时，`showTooltip` 不生效，二者互斥 | boolean\|\{type?: 'tooltip'\|'popover', opts?: object\} | false |
+| suffix | 始终展示的后缀 | string | - |
+
+展开、收起时触发组件事件 `expand(expanded, e)`，写作 `@expand`。
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| collapseText | 折叠的展示文本 | string | `收起` |
+| collapsible | 是否支持折叠 | boolean | false |
+| expandText | 展开的展示文本 | string | `展开` |
+| expandable | 是否支持展开 | boolean | false |
+| pos | 省略截断的位置，支持末尾和中间截断：`end`, `middle` | string | `end` |
+| rows | 省略溢出行数 | number | 1 |
+| showTooltip | 是否展示 tooltip 及相关配置: type，浮层内容承载的组件，支持 tooltip\| popover；opts，其他需要透传给浮层组件的属性； renderTooltip，自定义渲染弹出层组件。Tooltip 可显示时文字可用 Tab 聚焦；文字位于 option、treeitem、menuitem、gridcell、row 等组合控件条目内时不加入 Tab 顺序。`expandable` 为 true 或设置了 `expandText` 时，`showTooltip` 不生效，二者互斥 | boolean\|\{type?: 'tooltip'\|'popover', opts?: object, renderTooltip?: (content: JSX.Element \| function, children: JSX.Element) => JSX.Element\} | false |
+| suffix | 始终展示的后缀 | string | - |
+| onExpand | 展开/收起的回调 | function(expanded: boolean, event: MouseEvent) | - |
+
+</Framework>
+
+### Copyable Config
+
+<Framework only="react">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| content | 复制出的文本 | string | - |
+| className | 复制操作外层 span 的类名 | string | - |
+| copyTip | 复制图标的 tooltip 展示内容 | React.node | - |
+| duration | 已复制状态持续的秒数 | number | 3 |
+| icon | 复制按钮的内容，任意节点原样渲染；按钮的可访问名称取图标元素的 `aria-label`，没有时用语言包的「复制」 | React.node | - |
+| onCopy | 复制回调，在写入剪贴板（`navigator.clipboard.writeText`）完成后异步调用；`res` 为 true 表示写入成功，false 表示写入被拒绝，此时不进入已复制状态 | Function(e:Event, content:string, res:boolean) | - |
+| render | 自定义渲染复制节点 | <ApiType detail='(copied: boolean, doCopy: (e: React.MouseEvent) => void, configs: CopyableConfig) => React.ReactNode'>function(copied, doCopy, configs)</ApiType> | - |
+| style | 复制操作外层 span 的样式 | CSSProperties | - |
+| successTip | 复制成功的展示内容 | React.node | - |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性     | 说明                     | 类型                      | 默认值 |
+| -------- | ------------------------ | ------------------------- | ------ |
+| content  | 复制出的文本             | string                    | -      |
+| class    | 复制操作外层 span 的类名 | string \| object \| array | -      |
+| duration | 已复制状态持续的秒数     | number                    | 3      |
+| style    | 复制操作外层 span 的样式 | StyleValue                | -      |
+
+复制按钮的内容、提示与成功提示用 `#copyIcon`、`#copyTip`、`#copySuccessTip` 插槽；用 `#copyAction="{ copied, copy, config }"` 自定义复制节点，`config` 是解析后的 `{ content, duration, class, style }`。复制完成后触发组件事件 `copy(e, content, res)`，写作 `@copy`：`res` 为 true 表示写入剪贴板成功，false 表示写入被拒绝，此时不进入已复制状态。
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| content | 复制出的文本 | string | - |
+| class | 复制操作外层 span 的类名 | string | - |
+| copyTip | 复制图标的 tooltip 展示内容；节点写成渲染函数，仅在 tooltip 显示时调用；传字符串时同时作为未复制状态下按钮的可访问名称，否则用语言包的「复制」 | string \| (() => JSX.Element) | - |
+| duration | 已复制状态持续的秒数 | number | 3 |
+| icon | 复制按钮的内容，渲染函数返回的节点原样渲染；不参与按钮的可访问名称 | () => JSX.Element | - |
+| onCopy | 复制回调，在写入剪贴板（`navigator.clipboard.writeText`）完成后异步调用；`res` 为 true 表示写入成功，false 表示写入被拒绝，此时不进入已复制状态 | function(e: MouseEvent, content: string, res: boolean) | - |
+| render | 自定义渲染复制节点 | <ApiType detail='(copied: boolean, doCopy: (e: MouseEvent) => void, configs: CopyableConfig) => JSX.Element'>function(copied, doCopy, configs)</ApiType> | - |
+| style | 复制操作外层 span 的样式 | JSX.CSSProperties \| string | - |
+| successTip | 复制成功的展示内容；节点写成渲染函数，仅在已复制状态下调用；传字符串时同时作为已复制状态下按钮的可访问名称，否则用语言包的「复制成功」 | string \| (() => JSX.Element) | - |
+
+</Framework>
+
+## 文案规范
+
+- Link
+    - 文字链接需要清晰且可预测，用户应该能够预测他们点击链接时会发生什么
+    - 切勿通过错误标记链接来误导用户
+    - 避免使用“Click here”或“Here”作为独立链接
+
+| ✅ 推荐用法                                  | ❌ 不推荐用法                            |
+| -------------------------------------------- | ---------------------------------------- |
+| No spaces yet? <PureA> Create space </PureA> | No spaces yet? <PureA>Click here</PureA> |
+
+- 避免将整个句子作为可点击的文字链接，而是将描述具体去向的文字作为链接内容
+
+| ✅ 推荐用法                                         | ❌ 不推荐用法                                      |
+| --------------------------------------------------- | -------------------------------------------------- |
+| Views <PureA>user documentation</PureA> for details | <PureA>View user documentation for details</PureA> |
+
+- 使用短术语或词作为链接文本会更有利于国际化，以避免由于不同的语言的语法和语序不同，而出现链接文字被拆分的问题
+
+| ✅ 推荐用法                            | ❌ 不推荐用法                          |
+| -------------------------------------- | -------------------------------------- |
+| Manage <PureA>notifications </PureA>to | <PureA>Manage notifications</PureA> to |
+
+- 以文字链接结尾时，不需要跟随标点符号，除了问号“？”
+
+| ✅ 推荐用法                                  | ❌ 不推荐用法                            |
+| -------------------------------------------- | ---------------------------------------- |
+| No spaces yet? <PureA> Create space </PureA> | No spaces yet? <PureA>Click here</PureA> |
+| <PureA> Forgot password ？</PureA>           | <PureA>Forgot password</PureA>           |
+
+- 链接文字不要包含冠词“the, a, an”
+
+| ✅ 推荐用法                                          | ❌ 不推荐用法                                          |
+| ---------------------------------------------------- | ------------------------------------------------------ |
+| View <PureA> user documentation </PureA> for details | View the<PureA> user documentation</PureA> for details |
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- **Typography 省略具体机制及注意事项?**
+
+    Semi 截断有两种策略， CSS 截断和 JS 截断。当设置中间截断（pos='middle')、可展开（expandable)、设置了展开文本（expandText 非 undefined）、有后缀（suffix 非空）、可复制（copyable），启用 JS 截断策略；非以上场景，启用 CSS 截断策略。
+
+    通常来说，CSS 截断性能优于 JS 截断。在 children、 容器尺寸不变的情况下，CSS 截断只涉及 1~2 次计算，js 截断可能涉及多次计算。
+
+    同时使用大量带有截断功能的 Typography 需注意性能消耗，如在 Table 中，可通过设置合理的页容量进行分页减少性能损耗。

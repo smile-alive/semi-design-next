@@ -1,0 +1,360 @@
+---
+order: 75
+title: List
+icon: doc-list
+brief: Lists display a set of related contents
+---
+
+import ListReactApi from './api/list.react.en-US.mdx';
+import ListItemReactApi from './api/list-item.react.en-US.mdx';
+import ListVueApi from './api/list.vue.en-US.mdx';
+import ListItemVueApi from './api/list-item.vue.en-US.mdx';
+import ListSolidApi from './api/list.solid.en-US.mdx';
+import ListItemSolidApi from './api/list-item.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { List } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { List, ListItem } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+In templates, `ListItem` can also be written as `List.Item`.
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, ButtonGroup, Checkbox, CheckboxGroup, Descriptions, Input, List, Pagination, Radio, RadioGroup, Rating, Skeleton, Spin } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Framework only="react">
+
+You can use `size` to size list. Supported values include `large`, `default`, `small`. Header and Footer customized.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use `size` to size list. Supported values include `large`, `default`, `small`. Customize the header and footer with the `#header` and `#footer` slots, and render each entry of `dataSource` with the `#item="{ item, index }"` scoped slot.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `size` to size list. Supported values include `large`, `default`, `small`. Header and Footer customized.
+
+</Framework>
+
+<Demo id="basic" />
+
+### Template
+
+<Framework only="react">
+
+List.Item has a built-in template consisting of: `header`, `main`, and `extra`. The alignment of `header` and `main` set by `align` properties using one of `flex-start`(default), `flex-end`, `center`, `baseline`, and `stretch` .
+
+</Framework>
+
+<Framework only="vue">
+
+List.Item has a built-in template provided through the `#header`, `#main` and `#extra` slots. The alignment of `header` and `main` set by `align` properties using one of `flex-start`(default), `flex-end`, `center`, `baseline`, and `stretch` .
+
+</Framework>
+
+<Framework only="solid">
+
+List.Item has a built-in template consisting of: `header`, `main`, and `extra`. The alignment of `header` and `main` set by `align` properties using one of `flex-start`(default), `flex-end`, `center`, `baseline`, and `stretch` .
+
+</Framework>
+
+<Demo id="template" />
+
+### Layout
+
+Use `layout` property to set list layout, one of `vertical`(default) or `horizontal`.
+
+<Demo id="layout" />
+
+### Grid
+
+Use `grid` property to set grid layout. Use `span` to set the number of occupying spaces for each item and `gutter` for spacing between items.
+
+<Demo id="grid" />
+
+### Responsive List
+
+Refer to [Grid](/en-US/react/basic/grid) for responsive dimensions.
+
+<Demo id="responsive" />
+
+### Load More
+
+<Framework only="react">
+
+You can use `loadMore` to achieve loading state for more incoming contents.
+
+</Framework>
+
+<Framework only="vue">
+
+You can use the `#loadMore` slot to achieve loading state for more incoming contents.
+
+</Framework>
+
+<Framework only="solid">
+
+You can use `loadMore` to achieve loading state for more incoming contents.
+
+</Framework>
+
+<Demo id="load-more" />
+
+### Scroll to Load
+
+<Framework only="react">
+
+You can integrate [react-infinite-scroller](https://github.com/CassetteRocks/react-infinite-scroller) to implement scrolling load list. Recommended interaction could be reveal a loadmore button after three scrolling loads.
+
+</Framework>
+
+<Framework only="vue">
+
+You can listen to the `scroll` event of the scroll container and load the next page near the bottom. Recommended interaction could be reveal a loadmore button after three scrolling loads.
+
+</Framework>
+
+<Framework only="solid">
+
+You can listen to the `scroll` event of the scroll container and load the next page near the bottom. Recommended interaction could be reveal a loadmore button after three scrolling loads.
+
+</Framework>
+
+<Demo id="scroll-load" />
+
+### Scroll to Load Infinite Lists
+
+You can integrate [TanStack Virtual](https://tanstack.com/virtual) to implement infinite scrolling lists with virtualization, which renders only the visible rows and improves the performance for large amounts of data.
+
+<Demo id="virtualized" />
+
+### Drag Sort
+
+<Framework only="react">
+
+You can integrate [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) to implement drag and drop sort.
+
+</Framework>
+
+<Framework only="vue">
+
+You can integrate the Vue build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/vue`) to implement drag and drop sort. The dragged element is the `li` rendered by `ListItem`; give every item returned from `#item` a `:key`, so that Vue can match the nodes to the right data after dnd-kit has reordered the DOM.
+
+</Framework>
+
+<Framework only="solid">
+
+You can integrate the Solid build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/solid`) to implement drag and drop sort. The dragged element is the `li` rendered by `List.Item`.
+
+</Framework>
+
+<Demo id="drag-sort" />
+
+### With Pagination
+
+You can use Pagination in combination to achieve a paged List
+
+<Demo id="pagination" />
+
+### With filter
+
+You can use it by assembling Input to filter the List
+
+<Demo id="filter" />
+
+### Add delete item
+
+<Demo id="add-delete" />
+
+### Single or multiple selection
+
+You can enhance the List into a list selector by combining Radio or Checkbox
+
+<Demo id="selection" />
+
+### Keyboard events
+
+You can monitor the keyboard events of the corresponding keys by yourself to realize the selection of different items. As in the following example, you can use the up and down arrow keys to select different items
+
+<Demo id="keyboard" />
+
+The custom styles involved in the Demo of the above book list example are as follows
+
+```scss
+.component-list-demo-booklist {
+    .list-item {
+        &:hover {
+            background-color: var(--semi-color-fill-0);
+        }
+        &:active {
+            background-color: var(--semi-color-fill-1);
+        }
+    }
+}
+
+.component-list-demo-booklist-active-item {
+    background-color: var(--semi-color-fill-0);
+}
+```
+
+## Accessibility
+
+Pass `aria-label` or `aria-labelledby` to List to describe the list; the root element then gets `role="group"`.
+
+<Framework only="react">
+
+A List.Item with `onClick` or `onRightClick` (including those set on the List) stays an `<li>` list item and renders a native `<button type="button">` inside it as its only focus target, which screen readers announce as a button.
+
+- The button wraps `header` and `main` (or `children` when there are none) and its click area covers the whole row. After tabbing to it, Enter or Space triggers `onClick` and the context-menu key triggers `onRightClick`
+- `extra` is rendered outside the button on a higher layer, so buttons and links in it can be focused and clicked normally, and clicking them does not trigger the Item's `onClick`
+- When `children` is combined with `header` or `main`, `children` sits outside the button and is covered by the full-row button, so put interactive content in `extra`
+- A List.Item without a click callback renders no button and is not focusable
+
+</Framework>
+
+<Framework only="vue">
+
+A List.Item with `@click` or `@rightClick` (including those set on the List) stays an `<li>` list item and renders a native `<button type="button">` inside it as its only focus target, which screen readers announce as a button.
+
+- The button wraps the content of the `#header` and `#main` slots (or the default slot when there are none) and its click area covers the whole row. After tabbing to it, Enter or Space triggers `@click` and the context-menu key triggers `@rightClick`
+- `#extra` is rendered outside the button on a higher layer, so buttons and links in it can be focused and clicked normally, and clicking them does not trigger the Item's `@click`
+- When the default slot is combined with `#header` or `#main`, the default slot sits outside the button and is covered by the full-row button, so put interactive content in `#extra`
+- A List.Item without a click callback renders no button and is not focusable
+
+</Framework>
+
+<Framework only="solid">
+
+A List.Item with `onClick` or `onRightClick` (including those set on the List) stays an `<li>` list item and renders a native `<button type="button">` inside it as its only focus target, which screen readers announce as a button.
+
+- The button wraps `header` and `main` (or `children` when there are none) and its click area covers the whole row. After tabbing to it, Enter or Space triggers `onClick` and the context-menu key triggers `onRightClick`
+- `extra` is rendered outside the button on a higher layer, so buttons and links in it can be focused and clicked normally, and clicking them does not trigger the Item's `onClick`
+- When `children` is combined with `header` or `main`, `children` sits outside the button and is covered by the full-row button, so put interactive content in `extra`
+- A List.Item without a click callback renders no button and is not focusable
+
+</Framework>
+
+A List.Item used outside a List renders as a plain list item without `grid`. With `grid`, the Row that holds the items has `role="list"` and the Col around each item has `role="none"`, so screen readers read the items as members of that list.
+
+## API reference
+
+### List
+
+<Framework only="react">
+
+<ListReactApi />
+
+Other native attributes (such as `data-*` and `id`) land on the root element; when `aria-label` or `aria-labelledby` is passed without a `role`, the root element gets `role="group"`. `onClick` and `onRightClick` act on the items, not on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+<ListVueApi />
+
+`class`, `style` and native attributes fall through to the root element; when `aria-label` or `aria-labelledby` is passed without a `role`, the root element gets `role="group"`. The payload of `@click` and `@rightClick` is the native `MouseEvent`, and they act on the items, not on the root element.
+
+</Framework>
+
+<Framework only="solid">
+
+<ListSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*`) land on the root element; when `aria-label` or `aria-labelledby` is passed without a `role`, the root element gets `role="group"`. The payload of `onClick` and `onRightClick` is the native `MouseEvent`, and they act on the items, not on the root element.
+
+</Framework>
+
+### List grid props
+
+<Framework only="react">
+
+`grid` accepts only the Row props `align`, `gutter`, `justify`, `type` and the Col props `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `className` and `style`; other div attributes are not accepted. Refer to [Grid](/en-US/react/basic/grid) for their meaning.
+
+</Framework>
+
+<Framework only="vue">
+
+`grid` accepts only the Row props `align`, `gutter`, `justify`, `type` and the Col props `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `class` and `style`; other attributes are not accepted. `class` and `style` land on the Col around each item. Refer to [Grid](/en-US/react/basic/grid) for their meaning.
+
+</Framework>
+
+<Framework only="solid">
+
+`grid` accepts only the Row props `align`, `gutter`, `justify`, `type` and the Col props `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `class` and `style`; other attributes are not accepted. `class` and `style` land on the Col around each item. Refer to [Grid](/en-US/react/basic/grid) for their meaning.
+
+</Framework>
+
+| Properties | Instructions                                                                  | type           | Default |
+| ---------- | ----------------------------------------------------------------------------- | -------------- | ------- |
+| span       | Number of grid spaces                                                         | number         | -       |
+| gutter     | Grid spacing                                                                  | number         | 0       |
+| xs         | `< 576px` responsive grid, a number or an object containing other attributes  | number\|object | -       |
+| sm         | `≥ 576px` responsive grid, a number or an object containing other properties  | number\|object | -       |
+| md         | `≥ 768px` responsive grid, a number or an object containing other properties  | number\|object | -       |
+| lg         | `≥ 992px` responsive grid, a number or an object containing other properties  | number\|object | -       |
+| xl         | `≥ 1200px` responsive grid, a number or an object containing other properties | number\|object | -       |
+| xxl        | `≥ 1600px` responsive grid, a number or an object containing other properties | number\|object | -       |
+
+### List.Item
+
+<Framework only="react">
+
+<ListItemReactApi />
+
+Other native attributes (such as `data-*`) land on the `li`; when clickable, `aria-*` and `tabIndex` land on the inner button instead. `onClick` is applied to the `li` and takes precedence over the List's `onClick`.
+
+</Framework>
+
+<Framework only="vue">
+
+<ListItemVueApi />
+
+`class`, `style`, `data-*`, `aria-*` and native attributes fall through to the `li`, not to the outer Col in grid mode.
+
+</Framework>
+
+<Framework only="solid">
+
+<ListItemSolidApi />
+
+`class`, `style`, `ref` and native attributes (such as `data-*`) land on the `li`, not on the outer Col in grid mode. When clickable, `aria-*` and `tabIndex` land on the inner button instead, and `ref.focus()` moves focus to that button.
+
+</Framework>
+
+## Content Guidelines
+
+- Capitalize the first letter
+- do not follow punctuation at the end
+- Grammatical parallelism: mixed use of active and passive, declarative and imperative sentences
+
+## Design Tokens
+
+<DesignToken />

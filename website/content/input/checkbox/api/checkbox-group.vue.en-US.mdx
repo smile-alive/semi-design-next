@@ -1,0 +1,34 @@
+**Props**
+
+| Property     | Description                                                                                               | Type                               | Default                                                 |
+| ------------ | --------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------- |
+| modelValue   | Selected values, controlled with v-model.                                                                 | `CheckboxValue[]`                  | `undefined`                                             |
+| defaultValue | Values selected by default when uncontrolled, matched against each Checkbox's value.                      | `CheckboxValue[]`                  | `semiDefault("CheckboxGroup", "defaultValue", [])`      |
+| disabled     | Whether the whole group is disabled.                                                                      | `boolean`                          | `semiDefault("CheckboxGroup", "disabled", false)`       |
+| name         | The name of every native input in the group. A unique value is generated per group when omitted.          | `string`                           | `semiGlobalDefault("CheckboxGroup", "name")`            |
+| options      | Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style }`. | `(string \| CheckboxOptionItem)[]` | `semiGlobalDefault("CheckboxGroup", "options")`         |
+| direction    | Layout direction inside the group: horizontal or vertical.                                                | `CheckboxDirection`                | `semiDefault("CheckboxGroup", "direction", "vertical")` |
+| type         | Style type of every Checkbox in the group: default, card or pureCard.                                     | `CheckboxType`                     | `semiDefault("CheckboxGroup", "type", "default")`       |
+| prefixCls    | CSS class name prefix.                                                                                    | `string`                           | `semiGlobalDefault("CheckboxGroup", "prefixCls")`       |
+
+**Events**
+
+| Event             | Description                                                                                      | Callback parameters        |
+| ----------------- | ------------------------------------------------------------------------------------------------ | -------------------------- |
+| update:modelValue | Emitted when the selected values change; drives v-model.                                         | `[value: CheckboxValue[]]` |
+| change            | Emitted when the selected values change, with the new array of values.                           | `[value: CheckboxValue[]]` |
+| blur              | Emitted when focus leaves the whole group; moving focus between its checkboxes does not emit it. | `[event: FocusEvent]`      |
+
+**Slots**
+
+| Slot    | Description                                                                            | Scope parameters               |
+| ------- | -------------------------------------------------------------------------------------- | ------------------------------ |
+| default | Checkbox components in the group. Ignored when options is set.                         | `any`                          |
+| label   | Custom label of each item in options, with the option and index scope parameters.      | `CheckboxGroupOptionSlotProps` |
+| extra   | Custom extra text of each item in options, with the option and index scope parameters. | `CheckboxGroupOptionSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

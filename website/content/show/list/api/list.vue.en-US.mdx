@@ -1,0 +1,38 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bordered | Whether to show a border. | `boolean` | `semiDefault("List", "bordered", false)` |
+| dataSource | Data source of the list; each entry is rendered through the item slot. | `T[]` | `semiGlobalDefault("List", "dataSource")` |
+| grid | Grid configuration: align, gutter, justify and type of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item. | `Grid` | `semiGlobalDefault("List", "grid")` |
+| layout | List layout: vertical or horizontal. | `"vertical" \| "horizontal"` | `semiDefault("List", "layout", "vertical")` |
+| loading | Whether the list is loading; a Spin is shown when true. | `boolean` | `semiDefault("List", "loading", false)` |
+| size | List size: small, default or large. | `Size` | `semiDefault("List", "size", "default")` |
+| split | Whether to show dividers between items. | `boolean` | `semiDefault("List", "split", true)` |
+| onClick | Click handler for the items that have no onClick of their own; an item with a handler renders a native button. Callers write @click; it remains a function prop because its presence decides whether an item renders a button. | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType> | `undefined` |
+| onRightClick | Context-menu handler for the items that have no onRightClick of their own; those items also render a native button. Callers write @rightClick; it remains a function prop for the same reason as onClick. | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot         | Description                                                                                     | Scope parameters                                             |
+| ------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| default      | List.Item children, rendered after the items of dataSource.                                     | `any`                                                        |
+| item         | Renders each entry of dataSource, receiving item and index and returning one or more List.Item. | <ApiType detail={"ListItemSlotProps\u003cT>"}>Type</ApiType> |
+| header       | List header.                                                                                    | `any`                                                        |
+| footer       | List footer.                                                                                    | `any`                                                        |
+| emptyContent | Content shown when there is no data; the locale's empty text by default.                        | `any`                                                        |
+| loadMore     | Load-more button.                                                                               | `any`                                                        |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

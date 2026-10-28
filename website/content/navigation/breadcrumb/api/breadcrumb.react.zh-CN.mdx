@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| activeIndex | 受控的当前项序号，从 0 开始计数；未设置时最后一项为当前项。 | `number` | - |
+| aria-label | 导航的可访问名称；未设置时使用语言包中的文案。 | `React.AriaAttributes['aria-label']` | - |
+| autoCollapse | 超出 `maxItemCount` 时是否自动折叠为省略号。 | `boolean` | `true` |
+| children | `Breadcrumb.Item` 子节点；传入非空的 `routes` 时不渲染 children。 | `ReactNode` | - |
+| className | 根元素 nav 的类名。 | `string` | - |
+| compact | 是否使用紧凑尺寸，影响文字与 Semi 图标的尺寸。 | `boolean` | `true` |
+| maxItemCount | 级别数超过该值后折叠，首项、当前项与末项始终可见。 | `number` | `4` |
+| moreType | 内置省略号区域的渲染类型，可选 `default` 或 `popover`；提供 `renderMore` 时以 `renderMore` 为准。 | `MoreType` | `"default"` |
+| onClick | 单击某项时调用。`routes` 写法收到该项的路由对象，字符串路由为 `{ name }`；`Breadcrumb.Item` 写法收到 `{ name, href }`，`name` 为该项的子节点。第二个参数为原生 MouseEvent。传入后，没有 `href`、未设置 `noLink` 且不是当前项的项也可以用 Enter 键操作。 | <ApiType detail={"(route: BreadcrumbItemInfo \u007c RouteProps, event: React.MouseEvent) => void"}>Type</ApiType> | - |
+| ref | 根元素 nav 的引用。 | <ApiType detail={"React.Ref\u003cHTMLElement>"}>Type</ApiType> | - |
+| renderItem | 自定义每一项的内容，配合 `routes` 使用，参数为该项的路由对象；字符串路由为 `{ name }`。 | <ApiType detail={"(route: RouteProps) => React.ReactNode"}>Type</ApiType> | - |
+| renderMore | 自定义省略号区域的内容，参数为被折叠的项，已去掉分隔符；提供时以它为准。 | <ApiType detail={"(restItem: Array\u003cReact.ReactNode>) => React.ReactNode"}>Type</ApiType> | - |
+| routes | 路由信息，由路由对象或字符串组成的数组；不为空时按它渲染各项，不再渲染 children。路由对象的字段见下方 Route。 | <ApiType detail={"Array\u003cRouteProps \u007c string>"}>Type</ApiType> | `[]` |
+| separator | 自定义分隔符，可以是文字或 React 节点。 | `React.ReactNode` | `"/"` |
+| showTooltip | 标题溢出时是否展示 Tooltip 及相关配置：`width` 为截断宽度，数字按 px 计算；`ellipsisPos` 为截断位置，`end` 或 `middle`；`opts` 为传给 Tooltip 的属性，不含 `content`，未设置时为 `{ autoAdjustOverflow: true, position: 'top' }`。传 `false` 时不展示 Tooltip，标题仍按 `width` 截断。 | `boolean \| showToolTipProps` | `{ width: 150, ellipsisPos: 'end' }` |
+| style | 根元素 nav 的内联样式。 | `React.CSSProperties` | - |

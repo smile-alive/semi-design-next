@@ -1,0 +1,34 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                     | 类型                                                             | 默认值      |
+| -------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| addonClassName | 包裹内容容器的类名。                                                                                     | `string`                                                         | -           |
+| addonId        | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                         | `string`                                                         | -           |
+| addonStyle     | 包裹内容容器的内联样式。                                                                                 | `React.CSSProperties`                                            | -           |
+| autoFocus      | 挂载后自动获取焦点，作用于内部的原生 input。                                                             | `boolean`                                                        | `false`     |
+| checked        | 是否选中，受控使用；在 RadioGroup 中使用时无效。                                                         | `boolean`                                                        | -           |
+| children       | 选项文字，可以是任意 ReactNode，渲染在 addon 节点中。                                                    | `React.ReactNode`                                                | -           |
+| className      | 根 label 元素的类名。                                                                                    | `string`                                                         | -           |
+| defaultChecked | 初始是否选中，非受控使用；在 RadioGroup 中使用时无效。                                                   | `boolean`                                                        | `false`     |
+| disabled       | 是否禁用；所在 RadioGroup 禁用时同样禁用。                                                               | `boolean`                                                        | -           |
+| displayMode    | 设为 `vertical` 时 Radio 以块级元素独占一行。                                                            | `RadioDisplayMode`                                               | -           |
+| extra          | 辅助文本，可以是任意 ReactNode，渲染在选项文字下方，aria-describedby 指向它；type 为 `button` 时不渲染。 | `React.ReactNode`                                                | -           |
+| extraId        | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                                        | `string`                                                         | -           |
+| mode           | 设为 `advanced` 时，已选中的 Radio 可以通过点击或空格取消选中；在 RadioGroup 中以组的 mode 为准。        | `RadioMode`                                                      | `""`        |
+| name           | 原生 input 的 name，优先于所在 RadioGroup 的 name。                                                      | `string`                                                         | -           |
+| onChange       | 选中状态变化时的回调，`event.target` 包含 `checked`、`value`、`name` 和 `disabled`。                     | <ApiType detail={"(e: RadioChangeEvent) => void"}>Type</ApiType> | -           |
+| prefixCls      | CSS 类名前缀，未设置时依次取所在 RadioGroup 的值与全局默认值，最后为 `semi-radio`。                      | `string`                                                         | -           |
+| preventScroll  | 聚焦时是否阻止浏览器滚动到该元素，作用于 `focus()` 方法。                                                | `boolean`                                                        | -           |
+| ref            | 句柄，提供 `focus()` 与 `blur()` 方法，见下方 Methods。                                                  | <ApiType detail={"React.Ref\u003cRadioHandle>"}>Type</ApiType>   | -           |
+| style          | 根 label 元素的内联样式。                                                                                | `React.CSSProperties`                                            | -           |
+| type           | 样式类型，可选 `default`、`button`、`card` 或 `pureCard`；在 RadioGroup 中以组的 type 为准。             | `RadioType`                                                      | `"default"` |
+| value          | Radio 的值，RadioGroup 据此判断是否选中；同时作为原生 input 的 value 参与表单提交。                      | `string \| number \| boolean`                                    | -           |
+
+**Methods**
+
+| 方法  | 说明                                                                    | 类型                                          |
+| ----- | ----------------------------------------------------------------------- | --------------------------------------------- |
+| blur  | 移除焦点，作用于内部的原生 input。                                      | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 获取焦点，作用于内部的原生 input，是否滚动由 `preventScroll` 属性决定。 | <ApiType detail={"() => void"}>Type</ApiType> |

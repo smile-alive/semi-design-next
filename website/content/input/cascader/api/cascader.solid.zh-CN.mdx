@@ -1,0 +1,86 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| aria-label | 组合框的可访问名称，次于 `aria-labelledby`，优先于 insetLabel 的内容。 | `string` | - |
+| arrowIcon | 自定义右侧下拉箭头，传入 `null` 时不显示箭头。 | `JSX.Element` | - |
+| autoAdjustOverflow | 下拉被边缘遮挡时是否自动调整展开方向。 | `boolean` | - |
+| autoMergeValue | 多选时，选中父节点后 value 不再包含它的子孙节点。`leafOnly` 也开启时，`leafOnly` 优先。 | `boolean` | `true` |
+| borderless | 是否使用无边框模式。 | `boolean` | `false` |
+| bottomSlot | 下拉底部的插槽内容。 | `JSX.Element` | - |
+| changeOnSelect | 单选时是否允许选择非叶子节点。 | `boolean` | `false` |
+| checkRelation | 多选时节点之间的选中关系：`related` 为父子联动，`unRelated` 为互不影响。 | `'related' \| 'unRelated'` | `"related"` |
+| clearIcon | 自定义清除按钮的图标，`showClear` 为 true 时有效。 | `JSX.Element` | - |
+| clickToSelect | 多选时点击任意节点即选中，常与 `showNext="hover"` 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `false` |
+| defaultOpen | 是否在挂载时默认展开下拉。 | `boolean` | `false` |
+| defaultValue | 默认选中的条目，只在挂载时读取：单选为节点或路径，多选为路径数组。 | <ApiType detail={"ModeValue\u003cMultiple>"}>Type</ApiType> | - |
+| disabled | 是否禁用。 | `boolean` | - |
+| disableStrictly | 是否开启严格禁用。开启后，禁用的节点不会因父级或子级的选中关系改变选中状态。 | `boolean` | `false` |
+| displayProp | 回填到触发器与标签中的节点属性。 | `string` | `"label"` |
+| displayRender | 自定义回填内容。单选时参数为路径上各级节点 label 的数组；多选时参数为节点的 Entity 与索引，返回每个标签的内容。 | <ApiType detail={"ByMultiple\u003cMultiple, (selected: Array\u003cstring \u007c number>) => JSX.Element, (selected: Entity, idx: number) => JSX.Element>"}>Type</ApiType> | - |
+| dropdownClassName | 下拉菜单的 class。 | `string` | - |
+| dropdownStyle | 下拉菜单的样式，可以是键为 kebab-case 的对象，也可以是字符串。 | `JSX.CSSProperties \| string` | - |
+| emptyContent | 没有可选数据或搜索无结果时展示的内容，默认为「暂无数据」；传入 `null` 时不展示。 | `JSX.Element` | - |
+| enableLeafClick | 多选时，点击叶子节点的选项是否触发勾选。 | `boolean` | `false` |
+| expandIcon | 自定义子菜单的展开图标。 | `JSX.Element` | - |
+| filterLeafOnly | 搜索结果是否只展示叶子节点的路径。 | `boolean` | `true` |
+| filterRender | 自定义渲染每一条搜索结果，参数为 `CascaderFilterRenderProps`。返回单个元素时，该元素获得选项的 `id`、`role="option"` 和选中状态；返回文本或多个节点时，组件包一层 `li`。 | <ApiType detail={"(props: FilterRenderProps) => JSX.Element"}>Type</ApiType> | - |
+| filterSorter | 对搜索结果排序。参数为两条结果路径（从根节点到匹配节点的节点数组）与输入内容，返回比较值。 | <ApiType detail={"(first: CascaderData[], second: CascaderData[], inputValue: string) => number"}>Type</ApiType> | - |
+| filterTreeNode | 是否开启搜索。为 true 时按 `treeNodeFilterProp` 的值匹配输入，不区分大小写；也可以传入匹配函数，参数为输入内容、节点的属性字符串与节点数据。 | <ApiType detail={"((inputValue: string, treeNodeString: string, data?: CascaderData) => boolean) \u007c boolean"}>Type</ApiType> | `false` |
+| id | 选择框根元素（触发器）的 id。 | `string` | - |
+| insetLabel | 嵌入触发器内的标签，作为组合框的名称来源；有 `prefix` 时不渲染。 | `JSX.Element` | - |
+| insetLabelId | insetLabel 内容的 id，用于关联组合框的名称；未设置时由组件生成。 | `string` | - |
+| keyMaps | 自定义节点中 value、label、children、disabled、isLeaf 的字段名。 | `BasicCascaderProps['keyMaps']` | - |
+| leafOnly | 多选时 value 与标签只包含叶子节点。 | `boolean` | `false` |
+| loadData | 异步加载数据，参数为从根到当前节点的路径，需要返回 Promise。不能与搜索同时使用。 | <ApiType detail={"(selectOptions: CascaderData[]) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| max | 多选时选中数量的上限，超出后触发 `onExceed`。 | `number` | - |
+| maxTagCount | 多选时标签的最大展示数量，超出部分以 `+N` 展示。 | `number` | - |
+| motion | 下拉框弹出时是否有动画。 | `boolean` | `true` |
+| multiple | 是否多选。它改变 value、defaultValue、onChange、onSelect、displayRender 与 triggerRender 的类型，没有全局默认值。 | `Multiple` | `false` |
+| onBlur | 失焦或关闭下拉时的回调，不是 DOM 的 blur 事件；通过 ref 的 `close()` 关闭时不传参数。 | <ApiType detail={"(e?: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onChange | 选中项变化时的回调。参数为选中路径的 value 数组，多选时为路径数组；`onChangeWithObject` 为 true 时参数为节点数据。 | <ApiType detail={"(value: ByMultiple\u003cMultiple, Array\u003cSimpleValueType>, Array\u003cArray\u003cSimpleValueType>>>) => void"}>Type</ApiType> | - |
+| onChangeWithObject | 为 true 时 onChange 的参数为节点数据（含 value 键），而不是 value；受控的 value 与 defaultValue 也要传节点数据。 | `boolean` | - |
+| onClear | 点击清除按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | 下拉展开或收起时的回调，参数为是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onExceed | 多选时超出 `max` 后的回调，参数为已选中的 Entity 数组。 | <ApiType detail={"(checkedItem: Entity[]) => void"}>Type</ApiType> | - |
+| onFocus | 组合框获得焦点，或下拉被鼠标、键盘打开时的回调，不是 DOM 的 focus 事件。 | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onListScroll | 列视图中某一列滚动时的回调，参数为事件与 `{ panelIndex, activeNode }`；搜索结果列表的滚动不触发。 | <ApiType detail={"(e: Event, panel: ScrollPanelProps) => void"}>Type</ApiType> | - |
+| onLoad | 节点加载完毕时的回调，参数为新加载的 key 集合与该节点的数据。 | <ApiType detail={"(newLoadedKeys: Set\u003cstring>, data: CascaderData) => void"}>Type</ApiType> | - |
+| onSearch | 搜索文本变化时的回调，参数为输入的内容。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onSelect | 节点被选中时的回调，参数为选中项的 value；多选时只选中一个节点为单个值，否则为数组。 | <ApiType detail={"(value: ByMultiple\u003cMultiple, string \u007c number, string \u007c number \u007c Array\u003cstring \u007c number>>) => void"}>Type</ApiType> | - |
+| placeholder | 选择框的占位文字。 | `string` | - |
+| position | 下拉的展开方向，默认 `bottomLeft`（RTL 下为 `bottomRight`）。 | `Position` | - |
+| prefix | 前缀标签，渲染在触发器内左侧。 | `JSX.Element` | - |
+| preventScroll | 组件内的 focus 是否阻止浏览器滚动文档以显示获得焦点的元素。 | `boolean` | - |
+| ref | 接收触发器元素，该元素挂有下方 Methods 中的 open、close、focus、blur 与 search 方法。 | <ApiType detail={"Ref\u003cCascaderElement>"}>Type</ApiType> | - |
+| remote | 是否开启远程搜索。开启后输入不再做本地过滤，只触发 `onSearch`，由使用方异步更新 `treeData`。 | `boolean` | `false` |
+| renderLabel | 自定义列视图中选项的内容，参数为节点数据；搜索结果、回显与标签仍显示节点的 label 文本。 | <ApiType detail={"(item: CascaderData) => JSX.Element"}>Type</ApiType> | - |
+| restTagsPopoverProps | 剩余标签 Popover 的属性，如 `position`、`trigger`，类型同 PopoverProps。 | `PopoverProps` | - |
+| searchPlaceholder | 搜索框的占位文字，未设置时使用 `placeholder`。 | `string` | - |
+| searchPosition | 搜索框的位置：`trigger` 在触发器内，`custom` 由使用方自定义，此时用 ref 的 `search` 方法传入搜索词。 | `'trigger' \| 'custom'` | `"trigger"` |
+| separator | 路径的分隔符，用于搜索结果，以及单选时回填到触发器的内容。 | `string` | `" / "` |
+| showClear | 是否展示清除按钮。 | `boolean` | `false` |
+| showNext | 展开子菜单的时机：`click` 或 `hover`。 | `'click' \| 'hover'` | `"click"` |
+| showRestTagsPopover | 超出 `maxTagCount` 后，悬停 `+N` 时是否用 Popover 展示剩余标签。 | `boolean` | `false` |
+| size | 选择框的尺寸，可选 `small`、`default`、`large`。在 InputGroup 中时以 InputGroup 的尺寸为准。 | `CascaderType` | - |
+| stopPropagation | 是否阻止下拉框上的点击事件冒泡。 | `boolean \| string` | `true` |
+| suffix | 后缀标签，渲染在触发器内右侧。 | `JSX.Element` | - |
+| topSlot | 下拉顶部的插槽内容。 | `JSX.Element` | - |
+| treeData | 节点数据，结构见 CascaderData。 | <ApiType detail={"Array\u003cCascaderData>"}>Type</ApiType> | `[]` |
+| treeNodeFilterProp | 搜索时用于匹配输入的节点属性。 | `string` | `"label"` |
+| triggerRender | 自定义触发器的渲染，参数为 `TriggerRenderProps`，返回的元素替换默认的触发器内容。 | <ApiType detail={"(props: TriggerRenderProps\u003cMultiple>) => JSX.Element"}>Type</ApiType> | - |
+| validateStatus | 触发器的校验状态，可选 `default`、`error`、`warning`，只影响样式。 | `ValidateStatus` | - |
+| value | 受控的选中条目，类型同 `defaultValue`。传入后即为受控组件，配合 `onChange` 更新。 | <ApiType detail={"ModeValue\u003cMultiple>"}>Type</ApiType> | - |
+| virtualizeInSearch | 搜索结果的虚拟列表配置，由 `height`、`width`、`itemSize` 组成，用于结果很多的场景；`height` 缺省为 180。 | `Virtualize` | - |
+
+**Methods**
+
+| 方法   | 说明                                                                                                     | 类型                                                       |
+| ------ | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| blur   | 使组合框失焦。                                                                                           | <ApiType detail={"() => void"}>Type</ApiType>              |
+| close  | 关闭下拉列表。                                                                                           | <ApiType detail={"() => void"}>Type</ApiType>              |
+| focus  | 聚焦组合框（搜索框或触发器），不展开下拉。                                                               | <ApiType detail={"() => void"}>Type</ApiType>              |
+| open   | 展开下拉列表。                                                                                           | <ApiType detail={"() => void"}>Type</ApiType>              |
+| search | 按传入的文本搜索，需同时设置 `filterTreeNode`；`searchPosition` 为 `custom` 时由使用方自定义展示搜索框。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

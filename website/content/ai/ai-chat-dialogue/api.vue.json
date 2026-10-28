@@ -1,0 +1,209 @@
+{
+    "ai-chat-dialogue": {
+        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/ai-chat-dialogue.vue",
+        "props": {
+            "align": {
+                "zh-CN": "对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。",
+                "en-US": "Conversation layout: leftRight or leftAlign."
+            },
+            "chats": {
+                "zh-CN": "受控对话消息列表，配合 v-model:chats 使用。",
+                "en-US": "Controlled list of conversation messages; bind it with v-model:chats."
+            },
+            "disabledFileItemClick": {
+                "zh-CN": "是否禁用文件卡片的点击。",
+                "en-US": "Whether clicking a file card is disabled."
+            },
+            "escapeHtml": {
+                "zh-CN": "是否转义用户消息中的 HTML 标签，避免被 Markdown 解析器当作 HTML 处理而丢失内容。",
+                "en-US": "Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content."
+            },
+            "hintCls": { "zh-CN": "提示区最外层的类名。", "en-US": "Class name of the outermost hint area element." },
+            "hints": {
+                "zh-CN": "提示信息。点击某条提示后，它成为新的用户消息，并触发 hintClick。",
+                "en-US": "Hint texts. Clicking a hint turns it into a new user message and emits hintClick."
+            },
+            "hintStyle": { "zh-CN": "提示区最外层的样式。", "en-US": "Style of the outermost hint area element." },
+            "selecting": { "zh-CN": "是否开启多选模式。", "en-US": "Whether multi-select mode is on." },
+            "markdownRenderProps": {
+                "zh-CN": "透传给每条消息所用 MarkdownRender 的属性，raw 由消息决定，不可传入；components 与内置组件合并，同名的（如 code）覆盖内置组件。",
+                "en-US": "Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one."
+            },
+            "mode": {
+                "zh-CN": "对话模式，可选 bubble、noBubble 或 userBubble。",
+                "en-US": "Conversation mode: bubble, noBubble or userBubble."
+            },
+            "roleConfig": {
+                "zh-CN": "各角色（user、assistant、system 等）的名称、头像与头像颜色，必填，不读取全局默认值。",
+                "en-US": "Name, avatar and avatar color of each role (user, assistant, system and so on). Required, and not read from the global defaults."
+            },
+            "showReset": { "zh-CN": "是否展示重置操作。", "en-US": "Whether to show the reset action." },
+            "showReference": {
+                "zh-CN": "是否在文字或文件消息中展示可被引用的图标，仅对用户消息生效。",
+                "en-US": "Whether to show the reference icon on text or file messages. Only user messages are affected."
+            }
+        },
+        "events": {
+            "update:chats": {
+                "zh-CN": "消息列表变化时触发，v-model:chats 据此更新，与 chatsChange 传出同一个数组。",
+                "en-US": "Emitted when the message list changes; v-model:chats updates from it. It carries the same array as chatsChange."
+            },
+            "chatsChange": {
+                "zh-CN": "消息列表变化时触发，载荷为新的消息数组。",
+                "en-US": "Emitted when the message list changes, with the new message array."
+            },
+            "annotationClick": {
+                "zh-CN": "点击参考来源时触发，载荷为被点击消息块的注释数组。",
+                "en-US": "Emitted when the references of a message block are clicked, with that block's annotations."
+            },
+            "fileClick": {
+                "zh-CN": "点击文件卡片时触发。",
+                "en-US": "Emitted when a file card is clicked."
+            },
+            "hintClick": { "zh-CN": "点击提示词时触发。", "en-US": "Emitted when a hint is clicked." },
+            "imageClick": { "zh-CN": "点击图片时触发。", "en-US": "Emitted when an image is clicked." },
+            "messageBadFeedback": {
+                "zh-CN": "对消息点踩时触发。",
+                "en-US": "Emitted when a message is disliked."
+            },
+            "messageCopy": {
+                "zh-CN": "复制消息时触发：文本写入剪贴板成功后才触发，复制的文本不含推理内容；没有可复制的文本时既不写入也不触发。",
+                "en-US": "Emitted when a message is copied, after the text has been written to the clipboard successfully. The copied text excludes reasoning; a message without text is neither written nor reported."
+            },
+            "messageDelete": { "zh-CN": "删除消息时触发。", "en-US": "Emitted when a message is deleted." },
+            "messageEdit": { "zh-CN": "编辑消息时触发。", "en-US": "Emitted when a message is edited." },
+            "messageGoodFeedback": {
+                "zh-CN": "对消息点赞时触发。",
+                "en-US": "Emitted when a message is liked."
+            },
+            "messageReset": { "zh-CN": "重置消息时触发。", "en-US": "Emitted when a message is reset." },
+            "messageShare": { "zh-CN": "分享消息时触发。", "en-US": "Emitted when a message is shared." },
+            "referenceClick": {
+                "zh-CN": "点击引用按钮时触发。载荷没有 id，加入 AIChatInput 的 references 前由使用方补上；文件项没有 type。",
+                "en-US": "Emitted when a reference button is clicked. The payload has no id, which the caller adds before putting it into the references of AIChatInput; a file item has no type."
+            },
+            "select": { "zh-CN": "选中的消息变化时触发。", "en-US": "Emitted when the selected messages change." }
+        },
+        "slots": {
+            "avatar": {
+                "zh-CN": "自定义头像，参数含默认头像 defaultAvatar、消息 message 与角色 role。",
+                "en-US": "Custom avatar, with the default avatar defaultAvatar, the message and the role."
+            },
+            "title": {
+                "zh-CN": "自定义标题，参数含默认标题 defaultTitle、消息 message 与角色 role。",
+                "en-US": "Custom title, with the default title defaultTitle, the message and the role."
+            },
+            "content": {
+                "zh-CN": "自定义内容区域，参数含默认内容 defaultContent、消息 message、角色 role 与 class。defaultContent 与默认渲染一致，包含引用列表与加载指示。",
+                "en-US": "Custom content area, with the default content defaultContent, the message, the role and class. defaultContent matches the default rendering, including the reference list and the loading indicator."
+            },
+            "action": {
+                "zh-CN": "自定义消息操作栏，参数含默认按钮数组 defaultActions、按名称索引的 defaultActionsObj、消息 message 与 class；按钮不显示时（如消息未完成）对应的键不存在。",
+                "en-US": "Custom action bar, with the default buttons defaultActions, the same buttons by name defaultActionsObj, the message and class. A key is missing when its button is not shown, for example while the message is unfinished."
+            },
+            "fullDialogue": {
+                "zh-CN": "完全自定义整条对话，参数含 defaultNodes（avatar、title、content、action）、消息 message、角色 role 与 class。",
+                "en-US": "Replaces a whole dialogue, with defaultNodes (avatar, title, content, action), the message, the role and class."
+            },
+            "contentItem": {
+                "zh-CN": "按内容项自定义渲染，每个内容项都会先经过它，参数含 item、type、message、index 与 parent；返回空内容时由内置渲染接管。",
+                "en-US": "Custom rendering by content item. Every item passes through it first, with item, type, message, index and parent; empty output leaves the item to the built-in rendering."
+            },
+            "messageText": {
+                "zh-CN": "替换内容为纯文本的消息的 Markdown 渲染，参数含文本 text 与消息 message。",
+                "en-US": "Replaces the Markdown rendering of a message whose content is plain text, with the text and the message."
+            },
+            "messageEdit": {
+                "zh-CN": "用户消息处于编辑状态时显示的编辑器，参数为消息转换得到的输入内容。",
+                "en-US": "The editor shown while a user message is being edited; its parameters are the input content converted from the message."
+            },
+            "hintBox": {
+                "zh-CN": "自定义提示项，参数含提示文本 content、序号 index 与点击回调 onHintClick。",
+                "en-US": "Custom hint item, with the hint text content, the index and the click callback onHintClick."
+            }
+        },
+        "exposed": {
+            "selectAll": { "zh-CN": "全选所有消息。", "en-US": "Selects all messages." },
+            "deselectAll": { "zh-CN": "取消全选所有消息。", "en-US": "Deselects all messages." },
+            "scrollToBottom": {
+                "zh-CN": "滚动到最底部，参数为 true 时带动画。",
+                "en-US": "Scrolls to the bottom, animated when the argument is true."
+            },
+            "scrollToTop": {
+                "zh-CN": "滚动到最顶部，参数为 true 时带动画。",
+                "en-US": "Scrolls to the top, animated when the argument is true."
+            }
+        }
+    },
+    "reasoning": {
+        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/reasoning.vue",
+        "props": {
+            "status": {
+                "zh-CN": "推理状态。为 completed 时标题显示已完成，且初次渲染时折叠；其他值显示思考中并展开。",
+                "en-US": "Reasoning status. completed shows the finished title and starts collapsed; any other value shows the thinking title and starts expanded."
+            },
+            "summary": {
+                "zh-CN": "推理摘要，非空时按换行拼接其中的文本作为推理正文。",
+                "en-US": "Reasoning summary. When it is not empty, its texts joined by line breaks form the reasoning text."
+            },
+            "content": {
+                "zh-CN": "推理内容，summary 为空时按换行拼接其中的文本作为推理正文。",
+                "en-US": "Reasoning content. When summary is empty, its texts joined by line breaks form the reasoning text."
+            },
+            "markdownRenderProps": {
+                "zh-CN": "透传给推理正文所用 MarkdownRender 的属性，raw 由推理正文决定。",
+                "en-US": "Props passed to the MarkdownRender of the reasoning text; raw comes from the reasoning text."
+            }
+        },
+        "events": {},
+        "slots": {
+            "content": {
+                "zh-CN": "替换推理正文的 Markdown 渲染，参数为 status、summary、content 与 markdownRenderProps。",
+                "en-US": "Replaces the Markdown rendering of the reasoning text, with status, summary, content and markdownRenderProps."
+            }
+        },
+        "exposed": {}
+    },
+    "dialogue-step": {
+        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/dialogue-step.vue",
+        "props": {
+            "steps": {
+                "zh-CN": "步骤列表。每个步骤含 summary、status 与 actions，status 为 completed 时显示完成图标，否则显示加载中；actions 只放数据（summary、description 等），步骤可点击或用 Enter、空格展开收起。",
+                "en-US": "List of steps. Each step has summary, status and actions; completed shows the done icon, any other status shows loading. actions hold data only (summary, description and so on), and a step expands or collapses on click, Enter or Space."
+            }
+        },
+        "events": {},
+        "slots": {
+            "actionIcon": {
+                "zh-CN": "显示在每个操作描述前的图标，参数为操作 item、序号 index、所属步骤 step 与步骤序号 stepIndex。",
+                "en-US": "Icon shown before each action's description, with the action item, its index, the step it belongs to and stepIndex."
+            }
+        },
+        "exposed": {}
+    },
+    "annotation": {
+        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/annotation.vue",
+        "props": {
+            "maxCount": {
+                "zh-CN": "最多显示的来源图标数，超出部分显示为 +N。",
+                "en-US": "Maximum number of source logos shown; the rest are shown as +N."
+            },
+            "annotation": {
+                "zh-CN": "参考来源列表，每项可含 title、logo、url、detail。",
+                "en-US": "List of references; each item may have title, logo, url and detail."
+            },
+            "description": {
+                "zh-CN": "来源图标后的描述文字，不传时显示来源数量。",
+                "en-US": "Text after the source logos; the number of references is shown when it is not set."
+            }
+        },
+        "events": {
+            "click": {
+                "zh-CN": "点击或用 Enter、空格激活时触发，参数为原生事件与参考来源列表。",
+                "en-US": "Emitted on click or on activation with Enter or Space, with the native event and the references."
+            }
+        },
+        "slots": {},
+        "exposed": {}
+    }
+}

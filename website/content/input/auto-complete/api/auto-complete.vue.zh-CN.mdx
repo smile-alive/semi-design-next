@@ -1,0 +1,62 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| modelValue | 输入框的当前值，用 v-model 绑定。传入后为受控；传入 undefined 时按非受控处理。 | `string \| number` | `undefined` |
+| modelModifiers | v-model 修饰符 trim 与 number，由 Vue 在使用 v-model.trim、v-model.number 时传入。 | `ModelModifiers` | `undefined` |
+| defaultValue | 非受控时输入框的初始值。 | `string \| number` | `semiGlobalDefault("AutoComplete", "defaultValue")` |
+| data | 候选项的数据源，可以是字符串、数字或对象的数组。对象项用 value 作选中值，label 作展示文本（缺省显示 value），disabled、class、style 与 data-\* 字段落在对应的候选行上；节点内容用 item 插槽。数组原地修改也会更新列表。 | `T[]` | `semiDefault("AutoComplete", "data", []) as T[]` |
+| autofocus | 是否在挂载后自动聚焦输入框。 | `boolean` | `semiDefault("AutoComplete", "autofocus", false)` |
+| autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。 | `boolean` | `semiGlobalDefault("AutoComplete", "autoAdjustOverflow")` |
+| defaultActiveFirstOption | 面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。 | `boolean` | `semiDefault("AutoComplete", "defaultActiveFirstOption", false)` |
+| defaultOpen | 挂载时是否默认展开下拉面板。 | `boolean` | `semiGlobalDefault("AutoComplete", "defaultOpen")` |
+| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("AutoComplete", "disabled")` |
+| dropdownClassName | 下拉列表的类名，落在 role="listbox" 元素上。 | `string` | `semiGlobalDefault("AutoComplete", "dropdownClassName")` |
+| dropdownMatchSelectWidth | 下拉面板的最小宽度是否等于输入框宽度。 | `boolean` | `semiDefault("AutoComplete", "dropdownMatchSelectWidth", true)` |
+| dropdownStyle | 下拉列表的内联样式，落在 role="listbox" 元素上。 | `StyleValue` | `semiGlobalDefault("AutoComplete", "dropdownStyle")` |
+| insetLabelId | insetLabel 前缀元素的 id，combobox 与 listbox 的名称引用它；不传时组件在渲染 insetLabel 时生成。 | `string` | `undefined` |
+| loading | 下拉列表是否显示加载动画；为 true 时代替候选项和空内容。 | `boolean` | `semiDefault("AutoComplete", "loading", false)` |
+| maxHeight | 下拉列表的最大高度，数字按 px 处理。 | `string \| number` | `semiDefault("AutoComplete", "maxHeight", 300)` |
+| motion | 下拉面板显示、隐藏时是否有动画。 | `boolean` | `semiDefault("AutoComplete", "motion", true)` |
+| selectWithObject | 布尔属性，不是事件：为 true 时，select 事件收到去掉内部字段的数据项对象，而不是选中值。 | `boolean` | `semiDefault("AutoComplete", "selectWithObject", false)` |
+| placeholder | 输入框的提示文案。 | `string` | `semiGlobalDefault("AutoComplete", "placeholder")` |
+| position | 下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
+| renderSelectedItem | 选中候选项后输入框显示的文本，必须返回字符串；字符串或数字项收到 `{ value, label }`，对象项收到数据项本身。保留为函数 prop，因为 foundation 在渲染之外调用它。 | <ApiType detail={"((option: AutoCompleteSelectedItem\u003cT>) => string)"}>Type</ApiType> | `undefined` |
+| showClear | 有内容时是否显示清除按钮。 | `boolean` | `semiDefault("AutoComplete", "showClear", false)` |
+| size | 输入框尺寸。 | `Size` | `semiDefault("AutoComplete", "size", "default")` |
+| stopPropagation | 是否阻止下拉面板上的 click、mousedown 与焦点进出事件冒泡。 | `string \| boolean` | `semiDefault("AutoComplete", "stopPropagation", true)` |
+| validateStatus | 校验状态，只影响展示样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
+
+**Events**
+
+| 事件                  | 说明                                                                                 | 回调参数                                            |
+| --------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| update:modelValue     | 输入框内容变化或选中候选项时触发，供 v-model 回写；先于 change 触发。                | `[value: string \| number]`                         |
+| change                | 输入框内容变化或选中候选项时触发。它是组件事件，会遮住输入框原生的 change 事件。     | `[value: string \| number]`                         |
+| search                | 用户输入时触发，参数为输入的文本。                                                   | `[inputValue: string]`                              |
+| select                | 选中候选项时触发，参数为选中值；设置 selectWithObject 时为去掉内部字段的数据项。     | `[value: string \| number \| AutoCompleteDataItem]` |
+| clear                 | 用清除按钮清空内容后触发。                                                           | `[]`                                                |
+| focus                 | 焦点进入组件时触发一次。它是组件事件，会遮住原生的 focus 事件。                      | `[event: FocusEvent]`                               |
+| blur                  | 焦点离开组件时触发一次。它是组件事件，会遮住原生的 blur 事件。                       | `[event: FocusEvent]`                               |
+| dropdownVisibleChange | 下拉面板显示或隐藏时触发，参数为是否可见；放在 KeepAlive 中失活时也会以 false 触发。 | `[visible: boolean]`                                |
+| keydown               | 组件处理完按键之后触发，参数为 KeyboardEvent。它会遮住原生的 keydown 事件。          | `[event: KeyboardEvent]`                            |
+
+**Slots**
+
+| 插槽 | 说明 | 作用域参数 |
+| --- | --- | --- |
+| prefix | 输入框的前缀内容。 | `any` |
+| suffix | 输入框的后缀内容。 | `any` |
+| insetLabel | 输入框内嵌标签。设置 prefix 或 trigger 时不渲染，也不作为可访问名称。 | `any` |
+| clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `any` |
+| emptyContent | data 为空时在下拉面板中显示的内容。 | `any` |
+| item | 候选项行内的内容，参数 item 是未经加工的数据项，index 是它在已渲染候选项中的位置；不提供时显示 label。 | <ApiType detail={"AutoCompleteItemSlotProps\u003cT>"}>Type</ApiType> |
+| trigger | 替换输入框。参数含 value、inputValue、placeholder、disabled、autofocus、size、validateStatus、showClear、insetLabelId、onChange（更新输入文本，触发 search 与 change 并展开列表）、onClear、onFocus、onBlur、controlAttrs（传给组件的 aria-\* 属性，放到自定义触发器的可聚焦元素上）与 componentProps。使用时 id 落在根元素上。 | <ApiType detail={"AutoCompleteTriggerSlotProps\u003cT>"}>Type</ApiType> |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

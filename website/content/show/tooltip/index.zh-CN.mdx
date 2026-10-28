@@ -1,0 +1,261 @@
+---
+order: 84
+title: 工具提示
+icon: doc-tooltip
+brief: 工具提示用于对一个元素进行标识或者附上少量辅助信息，最典型的场景是向用户解释图标的含义、展示被截断的文本、显示图片的描述等。
+---
+
+import TooltipReactApi from './api/tooltip.react.zh-CN.mdx';
+import TooltipVueApi from './api/tooltip.vue.zh-CN.mdx';
+import TooltipSolidApi from './api/tooltip.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Tooltip } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tooltip } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tooltip } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 注意事项
+
+<Framework only="react">
+
+Tooltip 通过 Fragment ref 直接找到 children 渲染出的 DOM 元素，用于计算弹出层位置并监听鼠标与焦点事件，因此 children 可以是 DOM 节点、函数组件或类组件，不需要透传 ref。
+
+键盘操作（`onKeyDown`）、`tabIndex` 与 `aria-*` 属性以 props 的形式传给 children。children 是自定义组件时，需要把收到的 props 透传到底层的 DOM 元素上，否则触发器无法用键盘打开弹出层，读屏软件也读不到两者的关联。
+
+</Framework>
+
+<Framework only="vue">
+
+Tooltip 需要将触发属性和事件监听器应用到默认插槽的触发元素上，并以触发元素的真实 DOM 元素计算弹出层的定位，因此默认插槽支持如下类型：
+
+1. 单个真实 DOM 元素，如 span，div，p...
+2. 单个组件，需要让未声明的属性落到它的根 DOM 元素上（默认的 attrs 透传即可）；根为多个节点的组件（如嵌套的 Tooltip）以它的第一个元素为锚点
+3. 文本或多个节点，Tooltip 会用一个 span 包裹它们作为触发元素
+
+</Framework>
+
+<Framework only="solid">
+
+Tooltip 需要将触发属性和事件监听器应用到触发元素上，并以触发元素的真实 DOM 元素计算弹出层的定位。children 支持如下类型：
+
+1. 函数 `(trigger) => JSX`：把 `{...trigger()}` 展开到接收焦点的元素上，元素可以是真实 DOM 节点，也可以是把属性与 `ref` 传到根 DOM 节点的组件，Button、Input 等需要焦点的触发元素都应使用这种写法
+2. 真实 DOM 元素或文本等其他内容，Tooltip 会用一个 span 包裹它们作为触发元素
+
+</Framework>
+
+<Demo id="children-types" />
+
+### 位置
+
+可以通过 position 配置弹出层方向以及对齐位置，position 详细可选值请参考下方 API 文档  
+配置为 `top` 时 向上弹出  
+配置为 `topLeft` 时，向上弹出，且弹出层与 children 左对齐（当arrowPointAtCenter=false时）  
+配置为 `topRight` 时，向上弹出，且弹出层与 children 右对齐（当arrowPointAtCenter=false时）  
+其他方向同理
+
+<Demo id="position" />
+
+### 指向元素中心
+
+默认情况下 `arrowPointAtCenter=true`，小三角始终指向 children 元素中心位置。你可以将其设置为 false，此时小三角将不再保持指向元素中心。弹出层与 children 边缘对齐
+
+<Demo id="arrow-point-at-center" />
+
+### 触发时机
+
+- 配置触发展示的时机，默认为 `hover`，可选 `hover`/`focus`/`click`/`custom`/ 'contextMenu'
+- 设为 `custom` 时，需要配合 `visible` 属性使用，此时显示与否完全受控
+- contextMenu 为右键触发
+
+<Demo id="trigger" />
+
+### condition 条件触发
+
+<Framework only="react">
+
+当 `condition={false}` 时，Tooltip 不响应 hover/click/focus 等触发行为（`trigger='custom'` 不受影响）；condition 由 true 变为 false 时，已显示的弹出层立即关闭；`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写 `visible` 后才关闭。
+
+</Framework>
+
+<Framework only="vue">
+
+当 `:condition="false"` 时，Tooltip 不响应 hover/click/focus 等触发行为（`trigger="custom"` 时仍按 `visible` 显示）；condition 由 true 变为 false 时，已显示的弹出层立即关闭；`visible` 受控时只发出 `update:visible` 与 `visibleChange(false)`，使用方回写 `visible` 后才关闭。
+
+</Framework>
+
+<Framework only="solid">
+
+当 `condition={false}` 时，Tooltip 不响应 hover/click/focus 等触发行为（`trigger="custom"` 时仍按 `visible` 显示）；condition 由 true 变为 false 时，已显示的弹出层立即关闭；`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写 `visible` 后才关闭。
+
+</Framework>
+
+<Demo id="condition" />
+
+### 覆盖特定样式
+
+<Framework only="react">
+
+你可以通过 className、style 为弹出层配置特定样式，例如覆盖默认的 maxWidth （240px）
+
+</Framework>
+
+<Framework only="vue">
+
+你可以通过 `class`、`style` 为弹出层配置特定样式，例如覆盖默认的 maxWidth （240px）
+
+</Framework>
+
+<Framework only="solid">
+
+你可以通过 `class`、`style` 为弹出层配置特定样式，例如覆盖默认的 maxWidth （240px）
+
+</Framework>
+
+<Demo id="custom-style" />
+
+### 搭配 Popover 或 Popconfirm 使用
+
+<Framework only="react">
+
+Tooltip、Popconfirm、Popover 的触发事件（mouseenter/mouseleave/click....）直接监听在触发元素的 DOM 上，直接嵌套时内外两层都能触发。  
+但外层注入的 `aria-describedby`、`data-popupid` 与方向键处理会被内层组件丢弃：读屏读不到外层的提示，键盘聚焦也打不开外层 hover 触发的弹出层。  
+需要这些能力时，在中间加一层元素（div 或 span）作为外层的触发元素。
+
+</Framework>
+
+<Framework only="vue">
+
+Tooltip、Popconfirm、Popover 都会在触发元素上绑定相关事件（mouseenter/mouseleave/click....），并注入 `aria-describedby`、`data-popupid` 等触发属性。  
+如果直接嵌套使用，外层注入的 aria 属性、tabindex、`data-popupid` 与方向键处理会被内层组件丢弃。  
+需要在中间加一层元素（div 或 span）作为外层的触发元素。
+
+</Framework>
+
+<Framework only="solid">
+
+Tooltip、Popconfirm、Popover 都会在触发元素上绑定相关事件（mouseenter/mouseleave/click....），并注入 `aria-describedby`、`data-popupid` 等触发属性。  
+外层以普通内容作为 children 时，会被包进外层自己的 span 里，这个 span 无法描述其中可聚焦的元素，开发环境下会输出警告。  
+需要保持各自的触发属性时，在中间加一层元素（div 或 span）作为外层的触发元素：外层用函数 children 把 `{...trigger({ tabIndex: -1 })}` 展开到它上面，内层把 `{...trigger()}` 展开到真正的触发元素上。
+
+</Framework>
+
+<Demo id="with-popconfirm" />
+
+### 仅当内容宽度超出时展示 Tooltip
+
+Semi 为这种场景提供了 Typography 组件，可以更简单快捷地满足需求。不需要自己再对 Tooltip 的出现做条件判断，详细的使用请参考[Typography 组件文档](/zh-CN/react/basic/typography#%E7%9C%81%E7%95%A5%E6%96%87%E6%9C%AC)
+
+<Demo id="ellipsis" />
+
+## API 参考
+
+---
+
+<Framework only="react">
+
+<TooltipReactApi />
+
+Tooltip 没有根 DOM 元素，未声明的属性不会透传到弹出层，`className`、`style` 落在弹出层上；触发元素保留自己的属性，并由 Tooltip 加上触发属性（如 `aria-describedby`、`data-popupid`、`tabIndex`）。
+
+</Framework>
+
+<Framework only="vue">
+
+<TooltipVueApi />
+
+`class`、`style` 落在弹出层上，其他未声明的属性会被丢弃；触发属性只加在触发元素上。所在子树被 `<KeepAlive>` 缓存（失活）时，弹出层按关闭处理并通知 `update:visible`、`visibleChange`（`false`）；单向绑定 `visible` 为 `true` 的弹出层随缓存的子树隐藏，重新激活后再次显示。
+
+</Framework>
+
+<Framework only="solid">
+
+<TooltipSolidApi />
+
+Tooltip 没有根 DOM 元素，`class`、`style` 落在弹出层上，其他未声明的属性与事件会被丢弃；触发属性只加在触发元素上，`ref` 返回组件方法。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Tooltip 具有 `tooltip` role，遵循 [WAI-ARIA](https://www.w3.org/TR/wai-aria-practices/#tooltip) 规范中对于 Tooltip 的定义
+- Tooltip 的 content 与 children
+    - 关于 content
+        - content 的 wrapper 会被自动添加 id 属性，用于与 children 的 `aria-describedby` 匹配，关联 content 与 children
+    - 关于 children
+        - Tooltip 的内容（content）与其触发器（children）之间应当具有显式联系。Tooltip 会自动为 children 元素添加 `aria-describedby` 属性，值为 content wraper的 id
+        - 若你 Tooltip的children 是Icon，不包含可见文本，我们推荐你在 children 上添加 `aria-label` 属性进行相应描述
+
+<Framework only="react">
+
+```js
+// 推荐做法：给 Tooltip 的 children 添加 aria-label 描述
+/* eslint-disable */
+<Tooltip content={<p id="description">Edit your setting</p>}>
+    <IconSetting aria-label="Settings"></IconSetting>
+</Tooltip>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<!-- 推荐做法：给 Tooltip 的触发元素添加 aria-label 描述 -->
+<Tooltip>
+    <IconSetting aria-label="Settings" />
+    <template #content><p id="description">Edit your setting</p></template>
+</Tooltip>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+// 推荐做法：给 Tooltip 的触发元素添加 aria-label 描述
+<Tooltip content={<p id="description">Edit your setting</p>}>{(trigger) => <IconSetting aria-label="Settings" {...trigger()} />}</Tooltip>
+```
+
+</Framework>
+
+## 文案规范
+
+- 只展示信息说明和引导，不展示报错信息
+- 不在 tooltip 里只能是额外的链接和按钮
+- 尽量精简至一句话进行说明，不展示标点符号
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- **为什么 Tooltip content 配置很长很长的内容时，某些情况下内容会超出显示区域?**  
+  Tooltip 的弹出层设置了 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap" target="_blank" rel="noopener noreferrer">overflow-wrap</a> 为 break-word，过长的单词会断开换行。不同语言内容（纯英文、中文、中英文混合、其他语种混合）对换行的需求不一致，默认设置不符合预期时，可以通过 style/className（Vue 为 style/class）设置换行相关 CSS 属性进行调整。

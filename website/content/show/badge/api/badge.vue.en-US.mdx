@@ -1,0 +1,31 @@
+**Props**
+
+| Property       | Description                                                                                                             | Type               | Default                                        |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------ | ---------------------------------------------- |
+| count          | Badge content as a number or string; use the count slot for other content.                                              | `string \| number` | `semiGlobalDefault("Badge", "count")`          |
+| dot            | Shows a small dot instead of the content.                                                                               | `boolean`          | `semiDefault("Badge", "dot", false)`           |
+| type           | Badge type: primary, secondary, tertiary, danger, warning or success.                                                   | `BadgeType`        | `semiDefault("Badge", "type", "primary")`      |
+| theme          | Badge theme: solid, light or inverted.                                                                                  | `BadgeTheme`       | `semiDefault("Badge", "theme", "solid")`       |
+| position       | Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise. | `BadgePosition`    | `semiGlobalDefault("Badge", "position")`       |
+| overflowCount  | Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset.    | `number`           | `semiGlobalDefault("Badge", "overflowCount")`  |
+| countClassName | Class name of the count element.                                                                                        | `string`           | `semiGlobalDefault("Badge", "countClassName")` |
+| countStyle     | Style of the count element.                                                                                             | `CSSProperties`    | `semiGlobalDefault("Badge", "countStyle")`     |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                      | Scope parameters |
+| ------- | -------------------------------------------------------------------------------- | ---------------- |
+| default | The element the badge is attached to. Without it the badge stands alone.         | `any`            |
+| count   | Custom badge content. It wins over count and removes the type and theme classes. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

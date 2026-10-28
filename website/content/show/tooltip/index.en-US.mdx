@@ -1,0 +1,259 @@
+---
+order: 84
+title: Tooltip
+icon: doc-tooltip
+brief: Tooltip is used to identify an element or attach a small amount of auxiliary information. The most typical scenario is to explain the meaning of the icon to the user, display the truncated text, display the description of the picture, and so on.
+---
+
+import TooltipReactApi from './api/tooltip.react.en-US.mdx';
+import TooltipVueApi from './api/tooltip.vue.en-US.mdx';
+import TooltipSolidApi from './api/tooltip.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Tooltip } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tooltip } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tooltip } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Cautions
+
+<Framework only="react">
+
+Tooltip finds the DOM elements its children render through a Fragment ref, which it uses to position the popup and to listen for mouse and focus events. Children can therefore be DOM nodes, function components or class components, and do not need to forward `ref`.
+
+Keyboard handling (`onKeyDown`), `tabIndex` and `aria-*` attributes reach the children as props. When the child is a custom component, pass the props it receives on to its underlying DOM element; otherwise the trigger cannot open the popup from the keyboard and screen readers do not get the link between them.
+
+</Framework>
+
+<Framework only="vue">
+
+Tooltip applies the trigger attributes and event listeners to the trigger in the default slot, and positions the popup against the real DOM element of that trigger, so the default slot supports the following:
+
+1. A single actual DOM element, such as span, div, p, etc.
+2. A single component whose undeclared attributes reach its root DOM element (the default attrs fallthrough is enough). For a component with several root nodes, such as a nested Tooltip, the first element is the anchor
+3. Text or several nodes, which Tooltip wraps in a span that becomes the trigger
+
+</Framework>
+
+<Framework only="solid">
+
+Tooltip applies the trigger attributes and event listeners to the trigger element, and positions the popup against the real DOM element of that trigger. children supports the following:
+
+1. A function `(trigger) => JSX`: spread `{...trigger()}` on the element that takes focus. It can be an actual DOM node, or a component that passes the props and `ref` to its root DOM node. Use this form for focusable triggers such as Button and Input
+2. An actual DOM element, text or any other content, which Tooltip wraps in a span that becomes the trigger
+
+</Framework>
+
+<Demo id="children-types" />
+
+### Position
+
+The direction and alignment position of the popup layer can be configured through `position`. For detailed optional values of position, please refer to the API document below
+
+When configured as `topLeft`, it pops up, and the popup layer is left-aligned with the children (when arrowPointAtCenter=false) . When configured as `topRight`, it pops up, and the popup layer is right-aligned with the children (when arrowPointAtCenter=false) . Same for other directions
+
+<Demo id="position" />
+
+### Arrow Point at Center
+
+By default `arrowPointAtCenter=true`, the small triangle always points to the center of the children element.  
+You can set it to false and the little triangle will no longer keep pointing to the center of the element. The popover is aligned to the edges of the children
+
+<Demo id="arrow-point-at-center" />
+
+### Trigger Timing
+
+- Configure the timing of the trigger display, the default is `hover`, optional `hover` / `focus` / `click` / `custom` / `contextMenu`.
+- When set to `custom`, it needs to be used in conjunction with the `visible`attribute, at which point the display is completely controlled
+- The `contextMenu` (right-click) trigger is available
+
+<Demo id="trigger" />
+
+### Conditional trigger (condition)
+
+<Framework only="react">
+
+When `condition={false}`, Tooltip will not respond to hover/click/focus triggers (does not affect `trigger='custom'`); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Framework only="vue">
+
+When `:condition="false"`, Tooltip will not respond to hover/click/focus triggers (with `trigger="custom"`, `visible` still shows it); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only emits `update:visible` and `visibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Framework only="solid">
+
+When `condition={false}`, Tooltip will not respond to hover/click/focus triggers (with `trigger="custom"`, `visible` still shows it); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Demo id="condition" />
+
+### Override Style
+
+<Framework only="react">
+
+Configure specific styles for the pop-up layer through the `className` and `style` API, such as overriding the default maxWidth (240px)
+
+</Framework>
+
+<Framework only="vue">
+
+Configure specific styles for the pop-up layer through `class` and `style`, such as overriding the default maxWidth (240px)
+
+</Framework>
+
+<Framework only="solid">
+
+Configure specific styles for the pop-up layer through `class` and `style`, such as overriding the default maxWidth (240px)
+
+</Framework>
+
+<Demo id="custom-style" />
+
+### Use with Popver or Popconfirm
+
+<Framework only="react">
+
+Tooltip, Popconfirm, and Popover listen for their trigger events (mouseenter / mouseleave / click ....) on the DOM of the trigger element, so both layers still open when they are nested directly.  
+The inner component discards the `aria-describedby`, `data-popupid` and arrow key handling added by the outer one, though: screen readers do not read the outer description, and keyboard focus does not open an outer popup triggered by hover.  
+When you need these, add a layer of elements (div or span) in the middle as the trigger of the outer one.
+
+</Framework>
+
+<Framework only="vue">
+
+Tooltip, Popconfirm, and Popover all bind related events on the trigger (mouseenter / mouseleave / click ....) and add trigger attributes such as `aria-describedby` and `data-popupid`. If they are nested directly, the inner component discards the ARIA attributes, tabindex, `data-popupid` and arrow key handling added by the outer one.  
+Add a layer of elements (div or span) in the middle as the trigger of the outer one.
+
+</Framework>
+
+<Framework only="solid">
+
+Tooltip, Popconfirm, and Popover all bind related events on the trigger (mouseenter / mouseleave / click ....) and add trigger attributes such as `aria-describedby` and `data-popupid`.  
+When the outer component receives plain content as children, it is wrapped in the outer component's own span, which cannot describe the focusable element inside it, and a warning is logged in development.  
+To keep each component's own trigger attributes, add a layer of elements (div or span) in the middle as the trigger of the outer one: the outer component spreads `{...trigger({ tabIndex: -1 })}` on it through function children, and the inner one spreads `{...trigger()}` on its real trigger element.
+
+</Framework>
+
+<Demo id="with-popconfirm" />
+
+### Show Tooltip only when the content overflows
+
+Semi provides the Typography component for this scenario, so you do not need to check for overflow yourself before showing a Tooltip. For details, see the [Typography documentation](/en-US/react/basic/typography#ellipsis).
+
+<Demo id="ellipsis" />
+
+## API Reference
+
+---
+
+<Framework only="react">
+
+<TooltipReactApi />
+
+Tooltip has no root DOM element: undeclared attributes are not passed to the popup, and `className` and `style` land on the popup. The trigger keeps its own attributes and gets the trigger attributes added by Tooltip, such as `aria-describedby`, `data-popupid` and `tabIndex`.
+
+</Framework>
+
+<Framework only="vue">
+
+<TooltipVueApi />
+
+`class` and `style` land on the popup; other undeclared attributes are discarded. The trigger attributes are added to the trigger element only. When the subtree is cached by `<KeepAlive>` (deactivated), the popup is treated as closed and `update:visible` and `visibleChange` are emitted with `false`; a popup whose `visible` is one-way bound to `true` is hidden with the cached subtree and shows again once reactivated.
+
+</Framework>
+
+<Framework only="solid">
+
+<TooltipSolidApi />
+
+Tooltip has no root DOM element: `class` and `style` land on the popup, and other undeclared attributes and events are discarded. The trigger attributes are added to the trigger element only, and `ref` returns the component methods.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- Tooltip has a tooltip role, following the definition of Tooltip in the [WAI-ARIA](https://www.w3.org/TR/wai-aria-practices/#tooltip) specification
+- Tooltip's content and children
+    - about content
+        - The wrapper of content will be automatically added with id attribute to match the `aria-describedby` of children and associate content with children
+    - about children
+        - There should be an explicit connection between the content of the Tooltip and its children. Tooltip will automatically add the `aria-describedby` attribute to the children element, the value is the id of the content wrapper.
+        - If the children of your Tooltip are Icon and do not contain visible text, we recommend that you add the `aria-label` attribute to the children to describe accordingly
+
+<Framework only="react">
+
+```js
+// Good practices, add aria-label to description tooltip children
+/* eslint-disable */
+<Tooltip content={<p id="description">Edit your setting</p>}>
+    <IconSetting aria-label="Settings"></IconSetting>
+</Tooltip>
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<!-- Good practices, add aria-label to the tooltip trigger -->
+<Tooltip>
+    <IconSetting aria-label="Settings" />
+    <template #content><p id="description">Edit your setting</p></template>
+</Tooltip>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+// Good practices, add aria-label to the tooltip trigger
+<Tooltip content={<p id="description">Edit your setting</p>}>{(trigger) => <IconSetting aria-label="Settings" {...trigger()} />}</Tooltip>
+```
+
+</Framework>
+
+## Content Guidelines
+
+- Only display information description and guidance, do not display error information
+- Only extra links and buttons not in tooltip
+- Try to simplify the description to one sentence without showing punctuation marks
+
+## Design Tokens
+
+<DesignToken />
+
+## FAQ
+
+- **Why do some forms of content not wrap when the content in Tooltip is very long?**  
+  The Tooltip popup sets <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap" target="_blank" rel="noopener noreferrer">overflow-wrap</a> to break-word, so an overlong word breaks onto the next line. Different language content (e.g. English, Chinese, combination of English and Chinese) needs different line breaking; if the default does not fit, adjust the line break related CSS properties through style and className (class in Vue).

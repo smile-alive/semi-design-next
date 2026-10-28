@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                                        | 类型                                                                            | 默认值       |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------ |
+| defaultValue | 非受控时组内默认选中的值，与 Checkbox 的 value 匹配。                                                                       | `CheckboxValue[]`                                                               | `[]`         |
+| direction    | 组内布局方向，可选 horizontal 或 vertical。                                                                                 | `CheckboxDirection`                                                             | `"vertical"` |
+| disabled     | 是否禁用整组。                                                                                                              | `boolean`                                                                       | `false`      |
+| name         | 组内所有原生 input 的 name；未设置时每组生成唯一值。                                                                        | `string`                                                                        | -            |
+| onChange     | 选中的值变化时触发，参数为新的选中值数组。                                                                                  | <ApiType detail={"(value: CheckboxValue[]) => void"}>Type</ApiType>             | -            |
+| options      | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style, onChange }`；label 与 extra 可传入 JSX。 | <ApiType detail={"Array\u003cstring \u007c CheckboxOptionItem>"}>Type</ApiType> | -            |
+| prefixCls    | CSS 类名前缀。                                                                                                              | `string`                                                                        | -            |
+| type         | 组内所有 Checkbox 的样式类型，可选 default、card、pureCard。                                                                | `CheckboxType`                                                                  | `"default"`  |
+| value        | 选中的值，传入时为受控使用。                                                                                                | `CheckboxValue[]`                                                               | -            |

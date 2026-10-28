@@ -1,0 +1,105 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| modelValue | Value of the selected node (its key when it has no value), bound with v-model; an array only when multiple. Passing it makes the component controlled, and undefined clears the selection. | <ApiType detail={"ByMultiple\u003cMultiple, T \u007c undefined, T[]>"}>Type</ApiType> | `undefined` |
+| defaultValue | The initially selected items, read once on mount; an array only when multiple. | <ApiType detail={"ByMultiple\u003cMultiple, T \u007c undefined, T[]>"}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "defaultValue")` |
+| multiple | Whether several nodes can be selected. A parent is checked automatically once all its children are. | `Multiple` | `undefined` |
+| treeData | Node data; keys are unique across the tree. Only a new array updates the options, changes made in place are not seen. | `TreeNodeData[]` | `semiDefault("TreeSelect", "treeData", [])` |
+| keyMaps | Custom field names for key, label, value, disabled, children, isLeaf and icon in a node. When label is mapped and search is on, set treeNodeFilterProp to one of the keys in treeData or provide filterTreeNode. | `KeyMapProps` | `semiGlobalDefault("TreeSelect", "keyMaps")` |
+| treeNodeLabelProp | The node field shown in the trigger, label by default. | `string` | `semiDefault("TreeSelect", "treeNodeLabelProp", "label")` |
+| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `semiDefault("TreeSelect", "treeNodeFilterProp", "label")` |
+| filterTreeNode | Whether to filter by the input: true matches the field named by treeNodeFilterProp, or pass a custom matching function. | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData \u007c undefined) => boolean)"}>Type</ApiType> | `undefined` |
+| showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `semiDefault("TreeSelect", "showFilteredOnly", false)` |
+| searchPosition | Where the search box sits: dropdown in the panel, trigger inside the select box. | `TreeSelectSearchPosition` | `semiDefault("TreeSelect", "searchPosition", "dropdown")` |
+| searchPlaceholder | Placeholder of the search box in the dropdown. | `string` | `semiGlobalDefault("TreeSelect", "searchPlaceholder")` |
+| searchAutoFocus | Focuses the search box automatically. | `boolean` | `semiDefault("TreeSelect", "searchAutoFocus", false)` |
+| showSearchClear | Whether the search box shows a clear button. | `boolean` | `semiDefault("TreeSelect", "showSearchClear", true)` |
+| remote | Enables remote search: typing skips local filtering and only emits search, so the caller can fetch data and update treeData. | `boolean` | `semiDefault("TreeSelect", "remote", false)` |
+| expandAll | Expands every node, and keeps doing so when treeData changes. | `boolean` | `semiDefault("TreeSelect", "expandAll", false)` |
+| defaultExpandAll | Expands every node on mount. Later changes of treeData do not affect it; use expandAll for that. | `boolean` | `semiDefault("TreeSelect", "defaultExpandAll", false)` |
+| defaultExpandedKeys | Nodes expanded initially, showing their direct children. | `string[]` | `semiGlobalDefault("TreeSelect", "defaultExpandedKeys")` |
+| expandedKeys | Expanded nodes, bound with v-model:expandedKeys. Passing it makes expansion fully controlled. | `string[]` | `semiGlobalDefault("TreeSelect", "expandedKeys")` |
+| autoExpandParent | Whether the parents of the nodes in expandedKeys expand automatically when expandedKeys changes; they always do on mount. When on, controlled expansion collapses a parent only after its expanded children are collapsed. | `boolean` | `semiDefault("TreeSelect", "autoExpandParent", false)` |
+| expandAction | How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it. | `ExpandAction` | `semiDefault("TreeSelect", "expandAction", false)` |
+| motionExpand | Whether expanding and collapsing nodes are animated; animation is off for a virtualized list. | `boolean` | `semiDefault("TreeSelect", "motionExpand", true)` |
+| loadData | Loads the children of a node and returns a Promise; a node without isLeaf shows the expand arrow while it is set. After a rejection the node can be expanded again to retry. | <ApiType detail={"((data: TreeNodeData) => Promise\u003cvoid>)"}>Type</ApiType> | `undefined` |
+| loadedKeys | Nodes already loaded, used with loadData and bound with v-model:loadedKeys. | `string[]` | `semiGlobalDefault("TreeSelect", "loadedKeys")` |
+| leafOnly | In multiple mode, the value, the payload of change and the displayed tags hold leaf nodes only. | `boolean` | `semiDefault("TreeSelect", "leafOnly", false)` |
+| checkRelation | How the checked states of nodes relate in multiple mode: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `semiDefault("TreeSelect", "checkRelation", "related")` |
+| disableStrictly | Strict disabling: a disabled node cannot change state through the selection of its parent or children. | `boolean` | `semiDefault("TreeSelect", "disableStrictly", false)` |
+| autoMergeValue | When a parent is selected the value leaves out its descendants; applies when leafOnly is false. | `boolean` | `semiDefault("TreeSelect", "autoMergeValue", true)` |
+| changeWithObject | A boolean attribute, not an event: when true the payload of modelValue and change is the node object instead of its value; a controlled modelValue and defaultValue must then be objects with a value. | `boolean` | `semiDefault("TreeSelect", "changeWithObject", false)` |
+| maxTagCount | The most tags shown in multiple mode; the rest collapse into +N. | `number` | `semiGlobalDefault("TreeSelect", "maxTagCount")` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `semiDefault("TreeSelect", "showRestTagsPopover", false)` |
+| restTagsPopoverProps | Configuration of the Popover for the remaining tags; see Popover. | `PopoverProps` | `semiGlobalDefault("TreeSelect", "restTagsPopoverProps")` |
+| labelEllipsis | Whether an overflowing label is truncated; on by default for a virtualized list. | `boolean` | `semiGlobalDefault("TreeSelect", "labelEllipsis")` |
+| showLine | Shows connecting lines between nodes in the dropdown. | `boolean` | `semiDefault("TreeSelect", "showLine", false)` |
+| virtualize | List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled. | `Virtualize` | `semiGlobalDefault("TreeSelect", "virtualize")` |
+| placeholder | Placeholder of the select box. | `string` | `semiGlobalDefault("TreeSelect", "placeholder")` |
+| disabled | Whether the component is disabled. | `boolean` | `semiDefault("TreeSelect", "disabled", false)` |
+| size | Size of the select box: small, default or large. | `Size` | `semiDefault("TreeSelect", "size", "default")` |
+| borderless | Borderless mode. | `boolean` | `semiDefault("TreeSelect", "borderless", false)` |
+| validateStatus | Validation status, which only affects the style: default, warning or error. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
+| insetLabelId | The id of the element around the insetLabel slot, for aria-labelledby to point at; an internal id is used when omitted. | `string` | `undefined` |
+| showClear | Whether the select box shows a clear button when it has a value. | `boolean` | `semiDefault("TreeSelect", "showClear", false)` |
+| clickToHide | Whether the dropdown closes after a node is selected in single mode. | `boolean` | `semiDefault("TreeSelect", "clickToHide", true)` |
+| clickTriggerToHide | Whether clicking the select box closes the open dropdown. | `boolean` | `semiDefault("TreeSelect", "clickTriggerToHide", true)` |
+| defaultOpen | Opens the dropdown on mount. | `boolean` | `semiDefault("TreeSelect", "defaultOpen", false)` |
+| motion | Whether the dropdown animates in and out. | `boolean` | `semiDefault("TreeSelect", "motion", true)` |
+| autoAdjustOverflow | Whether the dropdown flips when it would be clipped. | `boolean` | `semiDefault("TreeSelect", "autoAdjustOverflow", true)` |
+| position | Position of the dropdown; see the position of Tooltip. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
+| stopPropagation | Whether click events on the dropdown stop propagating; a string is treated as a boolean. | `string \| boolean` | `semiDefault("TreeSelect", "stopPropagation", true)` |
+| dropdownClassName | Class of the dropdown. | `string` | `semiGlobalDefault("TreeSelect", "dropdownClassName")` |
+| dropdownStyle | Style of the dropdown. | `StyleValue` | `semiGlobalDefault("TreeSelect", "dropdownStyle")` |
+| dropdownMatchSelectWidth | Whether the minimum width of the dropdown equals the width of the select box. | `boolean` | `semiDefault("TreeSelect", "dropdownMatchSelectWidth", true)` |
+| optionListStyle | Style of the node list, the element with role="tree". | `StyleValue` | `semiGlobalDefault("TreeSelect", "optionListStyle")` |
+| preventScroll | Whether focusing stops the browser from scrolling the page to the newly focused element. | `boolean` | `semiGlobalDefault("TreeSelect", "preventScroll")` |
+| triggerTagWrap | Lets the tags in the trigger wrap onto more lines; applies with multiple, filterTreeNode and searchPosition set to trigger. | `boolean` | `semiDefault("TreeSelect", "triggerTagWrap", false)` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| --- | --- | --- |
+| update:modelValue | Emitted when the selection changes; used by v-model. The payload is undefined once cleared. | <ApiType detail={"[value: ByMultiple\u003cMultiple, T \u007c undefined, T[]>]"}>Type</ApiType> |
+| change | Emitted when the selection changes, with the value, the node and the triggering event; the value equals that of update:modelValue. It is undefined once cleared and arrays in multiple mode; the event is null for a closed tag; with changeWithObject the value and the node are the same node object. It shadows the native event of the same name on the root element. | <ApiType detail={"[value: ByMultiple\u003cMultiple, T \u007c undefined, T[]>, node: ByMultiple\u003cMultiple, TreeNodeData \u007c undefined, TreeNodeData[]>, event: TreeSelectChangeEvent]"}>Type</ApiType> |
+| update:expandedKeys | Emitted when the expanded nodes change; used by v-model:expandedKeys. | `[expandedKeys: string[]]` |
+| expand | Emitted when a node expands or collapses; info holds expanded and node. | <ApiType detail={"[expandedKeys: string[], info: { expanded: boolean; node: TreeNodeData; }]"}>Type</ApiType> |
+| update:loadedKeys | Emitted when the loaded nodes change; used by v-model:loadedKeys. | `[loadedKeys: string[]]` |
+| load | Emitted when a node has loaded; loadedKeys is the Set of keys of loaded nodes. | <ApiType detail={"[loadedKeys: Set\u003cstring>, node: TreeNodeData]"}>Type</ApiType> |
+| select | Emitted when a node is selected or deselected, with its key, whether it is selected and its data. It shadows the native event of the same name on the root element. | `[selectedKey: string, selected: boolean, node: TreeNodeData]` |
+| search | Emitted when the search input changes; filteredExpandedKeys are the nodes expanded by the search or by modelValue and defaultValue, which controlled expansion can use to show the results; filteredNodes are the nodes that matched. | <ApiType detail={"[input: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]]"}>Type</ApiType> |
+| dropdownVisibleChange | Emitted when the dropdown opens or closes. Deactivating the component inside KeepAlive closes it and emits false, without a blur. | `[visible: boolean]` |
+| focus | Emitted when focus enters the select box (including its search box and clear button) or the dropdown from outside, with a FocusEvent; moving between them does not emit again. It also fires when a click or key reopens the dropdown after a selection closed it, with that click or key event, and null for searchAutoFocus on mount. It is not emitted while disabled. It shadows the native event of the same name on the root element. | `[event: MouseEvent \| KeyboardEvent \| FocusEvent \| null]` |
+| blur | Emitted once after each focus: a FocusEvent when focus leaves the select box and the dropdown, a MouseEvent for a click outside, and the click or key event when a selection closes the dropdown. It shadows the native event of the same name on the root element. | `[event: MouseEvent \| KeyboardEvent \| FocusEvent]` |
+| clear | Emitted when the clear button is used by click or keyboard; the payload is the triggering event, null when cleared through a slot function without an event. | `[event: TreeSelectChangeEvent]` |
+| keydown | A key press, emitted before the TreeSelect handles the key. It shadows the native event of the same name on the root element. | `[event: KeyboardEvent]` |
+
+**Slots**
+
+| Slot            | Description                                                                                                                                                                                                         | Scope parameters                                                                |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| label           | Content of a node's label. Search still matches the label text in treeData.                                                                                                                                         | `TreeLabelSlotProps`                                                            |
+| icon            | A node's icon, which can differ by node data.                                                                                                                                                                       | `TreeIconSlotProps`                                                             |
+| expandIcon      | The expand icon. A single element gets the class and the click that expands; the parameters can also be bound by hand.                                                                                              | `TreeExpandIconSlotProps`                                                       |
+| fullLabel       | Content of the whole row. TreeSelect provides the row element carrying the id, role and state; the slot holds only what is inside.                                                                                  | `TreeFullLabelSlotProps`                                                        |
+| selectedItem    | A selected item: the content shown in the select box in single mode, or the content of a built-in tag in multiple mode; empty content shows the placeholder in single mode and leaves the tag out in multiple mode. | `TreeSelectSelectedItemSlotProps`                                               |
+| tag             | Replaces each tag in multiple mode, taking precedence over selectedItem; empty content leaves the tag out.                                                                                                          | `TreeSelectSelectedItemSlotProps`                                               |
+| trigger         | Replaces the content of the trigger; the parameters hold the selected nodes, the input value, and the onSearch, onClear and onRemove methods.                                                                       | <ApiType detail={"TreeSelectTriggerSlotProps\u003cT, Multiple>"}>Type</ApiType> |
+| search          | Replaces the search box. The parameters can be bound to a Semi Input with v-bind, and inputRef must be bound; an empty slot hides the search box.                                                                   | `TreeSelectSearchSlotProps`                                                     |
+| prefix          | Content before the value in the select box.                                                                                                                                                                         | `any`                                                                           |
+| suffix          | Content after the value in the select box.                                                                                                                                                                          | `any`                                                                           |
+| insetLabel      | A label inside the select box, which also names the dropdown tree.                                                                                                                                                  | `any`                                                                           |
+| arrowIcon       | The dropdown arrow on the right; an empty slot hides it. With showClear and a value, hovering shows the clear button first.                                                                                         | `any`                                                                           |
+| clearIcon       | The icon of the clear button, used when showClear is true; empty content keeps the default icon.                                                                                                                    | `any`                                                                           |
+| emptyContent    | Content shown when there are no nodes or the search finds none; an empty slot hides the empty state.                                                                                                                | `any`                                                                           |
+| outerTopSlot    | Content at the top of the dropdown, beside the node list; it takes the place of the search box in the dropdown.                                                                                                     | `any`                                                                           |
+| outerBottomSlot | Content at the bottom of the dropdown, beside the node list.                                                                                                                                                        | `any`                                                                           |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

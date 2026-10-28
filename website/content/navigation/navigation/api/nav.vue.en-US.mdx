@@ -1,0 +1,56 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bodyStyle | Custom style of the navigation item list. | `StyleValue` | `semiGlobalDefault("Nav", "bodyStyle")` |
+| defaultIsCollapsed | Whether the navigation is collapsed initially. Applies only when mode is vertical. | `boolean` | `semiGlobalDefault("Nav", "defaultIsCollapsed")` |
+| defaultOpenKeys | itemKeys of the sub navigations open initially. Applies only when mode is vertical and the sidebar is expanded. | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultOpenKeys")` |
+| defaultSelectedKeys | itemKeys of the items selected initially. | `ItemKey[]` | `semiGlobalDefault("Nav", "defaultSelectedKeys")` |
+| footer | Data configuration of the footer: collapseButton, class, style, and `data-*` and `aria-*` attributes. For footer nodes use the #footer slot or a Nav.Footer child. | `NavFooterConfig` | `semiGlobalDefault("Nav", "footer")` |
+| header | Data configuration of the header: text, link, linkOptions, class, style, and `data-*` and `aria-*` attributes. For header nodes use the #header slot, and for the logo use the #logo slot of a Nav.Header child. | `NavHeaderConfig` | `semiGlobalDefault("Nav", "header")` |
+| isCollapsed | Controlled collapsed state. Applies only when mode is vertical. Use it with v-model:isCollapsed. | `boolean` | `semiGlobalDefault("Nav", "isCollapsed")` |
+| items | Navigation item data. Each entry may carry nested items, and a string entry is both the text and the itemKey. Only the props declared by Item and Sub, class, style, onMouseenter, onMouseleave, `data-*` and `aria-*` reach the item; other fields such as path are ignored. Icons, text nodes and arrow icons use the #icon, #text, #toggleIcon and #expandIcon scoped slots. | `NavItems` | `semiGlobalDefault("Nav", "items")` |
+| limitIndent | Whether to limit indentation. When false, nested items indent by level. Applies only when mode is vertical; horizontal mode always limits indentation. | `boolean` | `semiDefault("Nav", "limitIndent", true)` |
+| mode | Orientation of the navigation: vertical or horizontal. | `Mode` | `semiDefault("Nav", "mode", "vertical")` |
+| openKeys | Controlled itemKeys of the open sub navigations. Use it with v-model:openKeys. Applies only when mode is vertical and the sidebar is expanded; null is a controlled empty value. | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "openKeys")` |
+| selectedKeys | Controlled itemKeys of the selected items. Use it with v-model:selectedKeys; null is a controlled empty value. | `ItemKey[] \| null` | `semiGlobalDefault("Nav", "selectedKeys")` |
+| subDropdownProps | Dropdown props for the sub navigations generated from items, used in horizontal mode or when the vertical navigation is collapsed. | `SubDropdownProps` | `semiGlobalDefault("Nav", "subDropdownProps")` |
+| subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or horizontal. | `number` | <ApiType detail={"semiDefault(\"Nav\", \"subNavCloseDelay\", numbers.DEFAULT_SUBNAV_CLOSE_DELAY)"}>Type</ApiType> |
+| subNavMotion | Whether the sub navigation animates when it expands and collapses. | `boolean` | `semiDefault("Nav", "subNavMotion", true)` |
+| subNavOpenDelay | Delay in milliseconds before a sub navigation popup opens. Applies when collapsed or horizontal. | `number` | <ApiType detail={"semiDefault(\"Nav\", \"subNavOpenDelay\", numbers.DEFAULT_SUBNAV_OPEN_DELAY)"}>Type</ApiType> |
+| toggleIconPosition | Position of the arrow of an item with sub navigation: left or right. | `"left" \| "right"` | `semiDefault("Nav", "toggleIconPosition", "right")` |
+| tooltipHideDelay | Delay in milliseconds before the Tooltip hides when collapsed. | `number` | <ApiType detail={"semiDefault(\"Nav\", \"tooltipHideDelay\", numbers.DEFAULT_TOOLTIP_HIDE_DELAY)"}>Type</ApiType> |
+| tooltipShowDelay | Delay in milliseconds before the Tooltip shows when collapsed. | `number` | <ApiType detail={"semiDefault(\"Nav\", \"tooltipShowDelay\", numbers.DEFAULT_TOOLTIP_SHOW_DELAY)"}>Type</ApiType> |
+
+**Events**
+
+| Event               | Description                                                                                                                                            | Callback parameters         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- |
+| update:selectedKeys | Emitted when the selection changes. The payload holds only the selected item's key, and v-model:selectedKeys uses it.                                  | `[selectedKeys: ItemKey[]]` |
+| update:openKeys     | Emitted when the open sub navigations change, and v-model:openKeys uses it. Opening a submenu by hover in horizontal or collapsed mode emits it too.   | `[openKeys: ItemKey[]]`     |
+| update:isCollapsed  | Emitted when the collapsed state changes, and v-model:isCollapsed uses it.                                                                             | `[isCollapsed: boolean]`    |
+| select              | Emitted when a selectable item is selected for the first time. domEvent is the native event.                                                           | `[data: OnSelectedData]`    |
+| click               | Emitted when any item is clicked. The data carries text for an item, and openKeys and isOpen for a sub navigation title. domEvent is the native event. | `[data: NavClickData]`      |
+| openChange          | Emitted when a sub navigation opens or closes. domEvent is missing when a popup opens by hover.                                                        | `[data: NavOpenChangeData]` |
+| collapseChange      | Emitted when the collapsed state changes.                                                                                                              | `[isCollapsed: boolean]`    |
+
+**Slots**
+
+| Slot       | Description                                                                                                                                                                                    | Scope parameters      |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| default    | Nav.Item, Nav.Sub, Nav.Header and Nav.Footer children, plus any other custom element. The Header and Footer move to the header and footer, and the rest follow the items generated from items. | `any`                 |
+| header     | Header content, rendered after the text configured by header.                                                                                                                                  | `any`                 |
+| footer     | Footer content. It replaces the collapse button configured by footer.                                                                                                                          | `any`                 |
+| wrapper    | Wraps each item. Mount the item's li with `<component :is="itemElement" />`. Receives itemElement, isSubNav, isInSubNav and props.                                                             | `NavWrapperSlotProps` |
+| icon       | Icon of an entry of items. Receives item and level.                                                                                                                                            | `NavItemSlotProps`    |
+| text       | Text node of an entry of items. Receives item and level. Without it the entry's text shows.                                                                                                    | `NavItemSlotProps`    |
+| toggleIcon | Icon at the toggle position of an entry of items. Receives item and level.                                                                                                                     | `NavItemSlotProps`    |
+| expandIcon | Expand arrow of a sub navigation generated from items. Receives item and level.                                                                                                                | `NavItemSlotProps`    |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

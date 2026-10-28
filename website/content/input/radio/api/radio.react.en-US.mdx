@@ -1,0 +1,34 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                                        | Type                                                             | Default     |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| addonClassName | Class name of the container wrapping the content.                                                                                                  | `string`                                                         | -           |
+| addonId        | Id of the addon node, which aria-labelledby points to. Generated when omitted.                                                                     | `string`                                                         | -           |
+| addonStyle     | Inline style of the container wrapping the content.                                                                                                | `React.CSSProperties`                                            | -           |
+| autoFocus      | Whether the native input gets focus on mount.                                                                                                      | `boolean`                                                        | `false`     |
+| checked        | Whether the radio is checked, for controlled use. Ignored inside a RadioGroup.                                                                     | `boolean`                                                        | -           |
+| children       | Label of the radio, which can be any ReactNode and is rendered in the addon node.                                                                  | `React.ReactNode`                                                | -           |
+| className      | Class name of the root label element.                                                                                                              | `string`                                                         | -           |
+| defaultChecked | Whether the radio is initially checked, for uncontrolled use. Ignored inside a RadioGroup.                                                         | `boolean`                                                        | `false`     |
+| disabled       | Whether the radio is disabled. It is also disabled when the enclosing RadioGroup is disabled.                                                      | `boolean`                                                        | -           |
+| displayMode    | When set to `vertical`, the radio is displayed as a block and takes a line of its own.                                                             | `RadioDisplayMode`                                               | -           |
+| extra          | Supplementary text, which can be any ReactNode and is rendered below the label. aria-describedby points to it. Not rendered when type is `button`. | `React.ReactNode`                                                | -           |
+| extraId        | Id of the extra node, which aria-describedby points to. Generated when omitted.                                                                    | `string`                                                         | -           |
+| mode           | When set to `advanced`, a checked radio can be unchecked by clicking it or pressing Space. Inside a RadioGroup the group's mode applies.           | `RadioMode`                                                      | `""`        |
+| name           | The native input's name. It takes precedence over the enclosing RadioGroup's name.                                                                 | `string`                                                         | -           |
+| onChange       | Called when the checked state changes. `event.target` contains `checked`, `value`, `name` and `disabled`.                                          | <ApiType detail={"(e: RadioChangeEvent) => void"}>Type</ApiType> | -           |
+| prefixCls      | CSS class name prefix. When omitted it falls back to the enclosing RadioGroup's value, then the global default, then `semi-radio`.                 | `string`                                                         | -           |
+| preventScroll  | Whether focusing prevents the browser from scrolling the element into view. Applies to the `focus()` method.                                       | `boolean`                                                        | -           |
+| ref            | Handle providing the `focus()` and `blur()` methods. See Methods below.                                                                            | <ApiType detail={"React.Ref\u003cRadioHandle>"}>Type</ApiType>   | -           |
+| style          | Inline style of the root label element.                                                                                                            | `React.CSSProperties`                                            | -           |
+| type           | Style type: `default`, `button`, `card` or `pureCard`. Inside a RadioGroup the group's type applies.                                               | `RadioType`                                                      | `"default"` |
+| value          | The radio's value, which RadioGroup compares to decide whether it is checked. It is also the native input's value in form submission.              | `string \| number \| boolean`                                    | -           |
+
+**Methods**
+
+| Method | Description                                                                          | Type                                          |
+| ------ | ------------------------------------------------------------------------------------ | --------------------------------------------- |
+| blur   | Removes focus from the native input.                                                 | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Focuses the native input. Whether it scrolls is decided by the `preventScroll` prop. | <ApiType detail={"() => void"}>Type</ApiType> |

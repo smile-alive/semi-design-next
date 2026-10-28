@@ -1,0 +1,35 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                  | Type                                                              | Default     |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------- |
+| addonId        | Id of the addon node, which `aria-labelledby` points to. Generated when omitted.                                             | `string`                                                          | -           |
+| autoFocus      | Whether the native input receives focus on mount.                                                                            | `boolean`                                                         | -           |
+| checked        | Whether the checkbox is checked. Passing it makes the checkbox controlled. Ignored inside a CheckboxGroup that sets `value`. | `boolean`                                                         | -           |
+| children       | Label of the checkbox, any `ReactNode`.                                                                                      | `React.ReactNode`                                                 | -           |
+| className      | Class name of the root element.                                                                                              | `string`                                                          | -           |
+| defaultChecked | Whether the checkbox is initially checked, for uncontrolled use. Ignored inside a CheckboxGroup that sets `value`.           | `boolean`                                                         | `false`     |
+| disabled       | Whether the checkbox is disabled. Inside a CheckboxGroup that sets `value`, a disabled group disables it too.                | `boolean`                                                         | -           |
+| extra          | Supplementary text, any `ReactNode`, which `aria-describedby` points to.                                                     | `React.ReactNode`                                                 | -           |
+| extraId        | Id of the extra node, which `aria-describedby` points to. Generated when omitted.                                            | `string`                                                          | -           |
+| id             | Id of the native input.                                                                                                      | `string`                                                          | -           |
+| indeterminate  | Indeterminate state. It only affects the appearance and the native input's `indeterminate` flag, never the checked value.    | `boolean`                                                         | `false`     |
+| name           | The `name` of the native input. Inside a CheckboxGroup that sets `value`, the group's `name` applies.                        | `string`                                                          | -           |
+| onChange       | Called when the checked state changes. `e.target` holds the component's props plus `checked`, the new checked state.         | <ApiType detail={"(e: CheckboxEvent) => any"}>Type</ApiType>      | -           |
+| onMouseEnter   | Called when the pointer enters the checkbox.                                                                                 | <ApiType detail={"(e: any) => void"}>Type</ApiType>               | -           |
+| onMouseLeave   | Called when the pointer leaves the checkbox.                                                                                 | <ApiType detail={"(e: any) => void"}>Type</ApiType>               | -           |
+| prefixCls      | CSS class name prefix.                                                                                                       | `string`                                                          | -           |
+| preventScroll  | Whether focusing prevents the browser from scrolling the element into view. Applies to the `focus()` method.                 | `boolean`                                                         | -           |
+| ref            | Handle that provides the `focus()` and `blur()` methods.                                                                     | <ApiType detail={"React.Ref\u003cCheckboxHandle>"}>Type</ApiType> | -           |
+| style          | Style of the root `span` element.                                                                                            | `React.CSSProperties`                                             | -           |
+| tabIndex       | `tabIndex` of the native input, which receives focus.                                                                        | `number`                                                          | -           |
+| type           | Style type: `default`, `card` or `pureCard`. Inside a CheckboxGroup that sets `value`, the group's `type` applies.           | `CheckboxType`                                                    | `"default"` |
+| value          | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group.                     | `any`                                                             | -           |
+
+**Methods**
+
+| Method | Description                                             | Type                                          |
+| ------ | ------------------------------------------------------- | --------------------------------------------- |
+| blur   | Removes focus.                                          | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Moves focus to the checkbox, following `preventScroll`. | <ApiType detail={"() => void"}>Type</ApiType> |

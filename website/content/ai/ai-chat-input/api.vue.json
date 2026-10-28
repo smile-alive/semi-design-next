@@ -1,0 +1,263 @@
+{
+    "ai-chat-input": {
+        "source": "packages/semi-ai-vue/src/ai-chat-input/ai-chat-input.vue",
+        "props": {
+            "canSend": {
+                "zh-CN": "是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。",
+                "en-US": "Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count."
+            },
+            "clearContentOnGenerating": {
+                "zh-CN": "generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。",
+                "en-US": "Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas)."
+            },
+            "defaultContent": {
+                "zh-CN": "输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。",
+                "en-US": "Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created."
+            },
+            "dropdownMatchTriggerWidth": {
+                "zh-CN": "下拉弹出层是否与输入框宽度一致。",
+                "en-US": "Whether the dropdown layer has the same width as the input."
+            },
+            "extensions": {
+                "zh-CN": "自定义 tiptap 扩展；只在创建编辑器时读取，之后变化不生效。",
+                "en-US": "Custom tiptap extensions. Read once, when the editor is created; later changes have no effect."
+            },
+            "generating": {
+                "zh-CN": "是否正在生成中。为 true 时发送按钮变为停止生成按钮。",
+                "en-US": "Whether a response is being generated. While true, the send button becomes the stop button."
+            },
+            "keepSkillAfterSend": {
+                "zh-CN": "发送消息后是否保留已选的技能。",
+                "en-US": "Whether the selected skill is kept after a message is sent."
+            },
+            "placeholder": {
+                "zh-CN": "输入框占位符，可以是字符串，也可以是按节点返回字符串的函数。",
+                "en-US": "Placeholder of the input: a string, or a function that returns a string for a node."
+            },
+            "popoverProps": {
+                "zh-CN": "下拉弹出层的配置参数；class 与内部类名合并，style 与面板宽度合并。",
+                "en-US": "Props of the dropdown layer. The class is merged with the internal class names and the style with the panel width."
+            },
+            "references": {
+                "zh-CN": "输入框的引用列表。",
+                "en-US": "References shown with the input."
+            },
+            "round": {
+                "zh-CN": "底部的配置区域和操作区域按钮是否为全圆角。",
+                "en-US": "Whether the buttons of the footer configure and action areas are fully rounded."
+            },
+            "sendHotKey": {
+                "zh-CN": "发送输入内容的键盘快捷键。enter 表示单独按下 Enter 发送，Shift 与 Enter 同时按下仅换行；shift+enter 相反。",
+                "en-US": "Keyboard shortcut that sends the input. enter sends on Enter alone and breaks the line on Shift+Enter; shift+enter is the reverse."
+            },
+            "showPlaceholderWhenSkillOnly": {
+                "zh-CN": "仅选中技能（无其他内容）时是否显示占位符，开启后占位符显示在技能后方；只在创建编辑器时读取。",
+                "en-US": "Whether the placeholder shows when only a skill is selected, after the skill. Read once, when the editor is created."
+            },
+            "showReference": {
+                "zh-CN": "是否展示引用区域，用于配合 #topSlot 使用。",
+                "en-US": "Whether the reference area is shown; use it together with #topSlot."
+            },
+            "showTemplateButton": {
+                "zh-CN": "是否展示模板按钮。未设置时，根据当前选中技能的 hasTemplate 决定。",
+                "en-US": "Whether the template button is shown. When unset, it follows hasTemplate of the selected skill."
+            },
+            "showUploadButton": {
+                "zh-CN": "是否显示右侧上传按钮。设为 false 时粘贴上传仍然有效。",
+                "en-US": "Whether the upload button on the right is shown. Paste upload still works when false."
+            },
+            "showUploadFile": {
+                "zh-CN": "是否展示上传文件区域，用于配合 #topSlot 使用。",
+                "en-US": "Whether the uploaded files area is shown; use it together with #topSlot."
+            },
+            "skillHotKey": {
+                "zh-CN": "输入框中触发技能面板的热键。",
+                "en-US": "Hotkey that opens the skill panel in the input."
+            },
+            "skills": {
+                "zh-CN": "技能列表。技能只含数据，图标使用 #skillIcon 插槽。",
+                "en-US": "Skills. A skill holds data only; its icon goes through the #skillIcon slot."
+            },
+            "suggestions": {
+                "zh-CN": "建议列表，每项为字符串或带 content 的对象。",
+                "en-US": "Suggestions, each a string or an object with content."
+            },
+            "templatesCls": {
+                "zh-CN": "模板面板的类名。",
+                "en-US": "Class name of the template panel."
+            },
+            "templatesStyle": {
+                "zh-CN": "模板面板的样式。",
+                "en-US": "Style of the template panel."
+            },
+            "topSlotPosition": {
+                "zh-CN": "#topSlot 的位置，相对于引用区域与上传文件区域。",
+                "en-US": "Position of #topSlot relative to the reference area and the uploaded files area."
+            },
+            "transformer": {
+                "zh-CN": "自定义扩展的转换规则，键为节点名，值为把节点转换成 contentChange 内容项的函数。",
+                "en-US": "Transform rules of custom extensions: the key is the node name, the value turns the node into a contentChange item."
+            },
+            "uploadProps": {
+                "zh-CN": "上传文件相关配置，同 Upload，但不接受 fileList 与 listType；onChange、onRemove 由 AIChatInput 自己调用，beforeRemove 支持 Promise。",
+                "en-US": "Upload settings, as Upload but without fileList and listType. AIChatInput calls onChange and onRemove itself; beforeRemove may return a Promise."
+            },
+            "uploadTipProps": {
+                "zh-CN": "上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 #uploadTip 插槽。",
+                "en-US": "Tooltip props of the upload tip without content; the tip content goes through the #uploadTip slot."
+            }
+        },
+        "events": {
+            "blur": {
+                "zh-CN": "富文本输入框失焦时触发。会遮住根元素上的原生 blur。",
+                "en-US": "Emitted when the rich text input loses focus. It shadows the native blur on the root element."
+            },
+            "configureChange": {
+                "zh-CN": "配置区域发生变化时触发，参数为全部配置值和本次变化的值；移除配置项时第二个参数为 undefined。",
+                "en-US": "Emitted when the configure area changes, with the whole value and the changed value; the second argument is undefined when an item is removed."
+            },
+            "contentChange": {
+                "zh-CN": "输入框内容变化时触发，参数为当前内容项列表。",
+                "en-US": "Emitted when the input content changes, with the current content items."
+            },
+            "focus": {
+                "zh-CN": "富文本输入框聚焦时触发。会遮住根元素上的原生 focus。",
+                "en-US": "Emitted when the rich text input gets focus. It shadows the native focus on the root element."
+            },
+            "messageSend": {
+                "zh-CN": "点击发送按钮时触发，参数包含引用、上传文件、输入内容和配置区域内容。",
+                "en-US": "Emitted when the send button is clicked, with the references, attachments, input contents and configure values."
+            },
+            "paste": {
+                "zh-CN": "监听输入框的粘贴事件，不阻止默认粘贴行为，可通过 event.clipboardData 获取内容。会遮住根元素上的原生 paste。",
+                "en-US": "Emitted on paste in the input without preventing the default behavior; read event.clipboardData for the content. It shadows the native paste on the root element."
+            },
+            "referenceClick": {
+                "zh-CN": "点击引用时触发。",
+                "en-US": "Emitted when a reference is clicked."
+            },
+            "referenceDelete": {
+                "zh-CN": "删除引用时触发。引用由使用方持有，需要在回调中自行移除。",
+                "en-US": "Emitted when a reference is deleted. The caller owns the references and removes the item itself."
+            },
+            "skillChange": {
+                "zh-CN": "技能切换时触发，移除技能时参数为 undefined。",
+                "en-US": "Emitted when the skill changes; the argument is undefined when the skill is removed."
+            },
+            "stopGenerate": {
+                "zh-CN": "点击停止生成按钮时触发。",
+                "en-US": "Emitted when the stop button is clicked."
+            },
+            "uploadChange": {
+                "zh-CN": "上传文件列表变化时触发。",
+                "en-US": "Emitted when the uploaded file list changes."
+            }
+        },
+        "slots": {
+            "reference": {
+                "zh-CN": "自定义渲染每个引用，作用域参数为 item 与 index。",
+                "en-US": "Replaces each reference, with the scope parameters item and index."
+            },
+            "topSlot": {
+                "zh-CN": "自定义顶部区域，作用域参数含引用、上传内容、输入内容和删除方法。位置由 topSlotPosition 决定。",
+                "en-US": "Custom top area, with the references, attachments, content and delete methods as scope parameters. Placed by topSlotPosition."
+            },
+            "uploadButton": {
+                "zh-CN": "自定义上传按钮内容，上传与粘贴上传逻辑仍由组件托管；作用域参数含 defaultNode、onOpenFileDialog、disabled、attachments。",
+                "en-US": "Replaces the upload button content while Upload keeps handling uploads and pasted files. Scope parameters: defaultNode, onOpenFileDialog, disabled, attachments."
+            },
+            "uploadTip": {
+                "zh-CN": "上传按钮提示的内容。",
+                "en-US": "Content of the upload tip."
+            },
+            "configureArea": {
+                "zh-CN": "底部配置区域，放置 AIChatInput.Configure 的各配置项。",
+                "en-US": "Footer configure area, holding the AIChatInput.Configure items."
+            },
+            "actionArea": {
+                "zh-CN": "自定义底部操作区域，作用域参数 menuItem 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。",
+                "en-US": "Replaces the footer action area. menuItem holds the upload node (a hidden Upload when showUploadButton is false; it must still be rendered for pasted files to upload) and the send or stop button; class is the class name of the action area."
+            },
+            "suggestionItem": {
+                "zh-CN": "自定义每个建议项，作用域参数含 suggestion 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。",
+                "en-US": "Replaces each suggestion. Scope parameters: suggestion, and id, class, role, aria-selected, onClick and onMouseenter to bind onto the root element."
+            },
+            "skillItem": {
+                "zh-CN": "自定义技能列表的每一项，作用域参数含 skill 和需要绑定到根元素的 id、class、role、aria-selected、onClick、onMouseenter。",
+                "en-US": "Replaces each skill. Scope parameters: skill, and id, class, role, aria-selected, onClick and onMouseenter to bind onto the root element."
+            },
+            "skillIcon": {
+                "zh-CN": "技能面板中每个技能前的图标，作用域参数为 item 与 index。",
+                "en-US": "Icon before each skill in the skill panel, with the scope parameters item and index."
+            },
+            "template": {
+                "zh-CN": "模板面板的内容，作用域参数为当前技能 skill 与用传入内容替换输入框内容的 onTemplateClick。",
+                "en-US": "Content of the template panel, with the current skill and onTemplateClick, which replaces the input content with the given content."
+            }
+        },
+        "exposed": {
+            "changeTemplateVisible": {
+                "zh-CN": "切换模板弹出层的可见性。",
+                "en-US": "Shows or hides the template layer."
+            },
+            "deleteContent": {
+                "zh-CN": "删除富文本中的某一项，按 content 中的 uniqueKey 匹配。",
+                "en-US": "Deletes an item of the rich text, matched by uniqueKey of the content."
+            },
+            "deleteUploadFile": {
+                "zh-CN": "删除上传文件中的某一项。",
+                "en-US": "Deletes one uploaded file."
+            },
+            "focusEditor": {
+                "zh-CN": "聚焦输入框，默认聚焦到末尾。",
+                "en-US": "Focuses the input, at the end by default."
+            },
+            "getEditor": {
+                "zh-CN": "获取 tiptap 的 editor 实例，编辑器创建前为 null。",
+                "en-US": "Returns the tiptap editor, or null until the editor is created."
+            },
+            "setContent": {
+                "zh-CN": "设置输入框内容。",
+                "en-US": "Sets the input content."
+            },
+            "setContentWhileSaveTool": {
+                "zh-CN": "保留技能项的同时设置输入框内容。",
+                "en-US": "Sets the input content and keeps the skill."
+            }
+        }
+    },
+    "mcp": {
+        "source": "packages/semi-ai-vue/src/ai-chat-input/configure/mcp.vue",
+        "props": {
+            "options": {
+                "zh-CN": "MCP 选项列表。选项只含数据，图标使用 #optionIcon 插槽。",
+                "en-US": "MCP options. An option holds data only; its icon goes through the #optionIcon slot."
+            },
+            "num": {
+                "zh-CN": "触发器与标题中显示的数量，不传时为 options 的数量。",
+                "en-US": "The count shown on the trigger and in the header; the number of options by default."
+            },
+            "showConfigure": {
+                "zh-CN": "是否显示配置按钮。",
+                "en-US": "Whether the configure button is shown."
+            }
+        },
+        "events": {
+            "configureButtonClick": {
+                "zh-CN": "点击配置按钮时触发。",
+                "en-US": "Emitted when the configure button is clicked."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "替换标题下方的内置菜单。",
+                "en-US": "Replaces the built-in menu below the header."
+            },
+            "optionIcon": {
+                "zh-CN": "每个选项的图标，作用域参数为 item 与 index。",
+                "en-US": "Icon of each option, with the scope parameters item and index."
+            }
+        },
+        "exposed": {}
+    }
+}

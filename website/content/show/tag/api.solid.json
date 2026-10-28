@@ -1,0 +1,112 @@
+{
+    "tag": {
+        "source": "packages/semi-ui-solid/src/tag/tag.tsx",
+        "props": {
+            "avatarShape": {
+                "zh-CN": "头像标签中头像的形状，可选 `square` 和 `circle`。",
+                "en-US": "Shape of the avatar in an avatar tag: `square` or `circle`."
+            },
+            "avatarSrc": {
+                "zh-CN": "头像的资源地址，设置后生成头像标签。",
+                "en-US": "Avatar image URL. Setting it makes an avatar tag."
+            },
+            "closable": {
+                "zh-CN": "标签是否可以关闭。",
+                "en-US": "Whether the tag can be closed."
+            },
+            "color": {
+                "zh-CN": "标签颜色，可选色板中的 16 种颜色和 `white`。",
+                "en-US": "Tag color: one of the 16 palette colors or `white`."
+            },
+            "colorful": {
+                "zh-CN": "是否为多彩标签。",
+                "en-US": "Whether the tag is colorful."
+            },
+            "gradient": {
+                "zh-CN": "多彩标签是否为渐变色，需 `colorful` 为 `true`。",
+                "en-US": "Whether a colorful tag uses a gradient. Requires `colorful` to be `true`."
+            },
+            "onClose": {
+                "zh-CN": "关闭标签时的回调，参数为标签内容、事件与 `tagKey`。`event` 为点击关闭图标的 click 事件，或按 Backspace、Delete 时的 keydown 事件。对事件调用 `preventDefault` 可保持标签显示。",
+                "en-US": "Callback when the tag is closed, with the tag content, the event and `tagKey`. `event` is the click on the close icon, or the keydown for Backspace or Delete. Call `preventDefault` on the event to keep the tag visible."
+            },
+            "prefixIcon": {
+                "zh-CN": "内容前的图标，传入 JSX 元素。",
+                "en-US": "Icon before the content, as a JSX element."
+            },
+            "shape": {
+                "zh-CN": "标签形状，可选 `square` 和 `circle`。",
+                "en-US": "Tag shape: `square` or `circle`."
+            },
+            "size": {
+                "zh-CN": "标签尺寸，可选 `default`、`small` 或 `large`。",
+                "en-US": "Tag size: `default`, `small` or `large`."
+            },
+            "suffixIcon": {
+                "zh-CN": "内容后的图标，传入 JSX 元素。",
+                "en-US": "Icon after the content, as a JSX element."
+            },
+            "tagKey": {
+                "zh-CN": "标签的唯一标识，作为 `onClose` 的第三个参数。",
+                "en-US": "Unique identifier of the tag, passed as the third argument of `onClose`."
+            },
+            "type": {
+                "zh-CN": "样式类型，可选 `light`、`ghost` 或 `solid`。",
+                "en-US": "Style type: `light`, `ghost` or `solid`."
+            },
+            "visible": {
+                "zh-CN": "标签是否可见。不传时关闭标签后会隐藏；传入后由该值决定显示。",
+                "en-US": "Whether the tag is visible. When omitted, closing the tag hides it; when given, this value decides."
+            }
+        }
+    },
+    "tag-group": {
+        "source": "packages/semi-ui-solid/src/tag/tag-group.tsx",
+        "props": {
+            "avatarShape": {
+                "zh-CN": "组内头像标签的头像形状，可选 `square` 和 `circle`。",
+                "en-US": "Avatar shape of the avatar tags in the group: `square` or `circle`."
+            },
+            "maxTagCount": {
+                "zh-CN": "最多显示的标签数，超出的部分显示为 +N。",
+                "en-US": "Maximum number of visible tags. The rest is shown as +N."
+            },
+            "onPlusNMouseEnter": {
+                "zh-CN": "指针移入 +N 标签时的回调。",
+                "en-US": "Callback when the pointer enters the +N tag."
+            },
+            "onTagClose": {
+                "zh-CN": "组内标签被关闭时的回调，参数为标签内容、关闭事件与该标签的 `tagKey`；需在回调中更新 `tagList`。",
+                "en-US": "Callback when a tag in the group is closed, with the tag content, the close event and the `tagKey` of the tag. Update `tagList` in the callback."
+            },
+            "popoverProps": {
+                "zh-CN": "传给 Popover 的属性，可设置 `position`、`trigger` 等。",
+                "en-US": "Props passed to the Popover, such as `position` and `trigger`."
+            },
+            "renderTag": {
+                "zh-CN": "自定义每个标签的渲染，参数为标签配置与它在 `tagList` 中的序号，返回值取代默认的 Tag。只为显示的标签调用，超出 `maxTagCount` 的标签在 Popover 打开时才渲染。",
+                "en-US": "Custom render of each tag, given the tag configuration and its index in `tagList`; the result replaces the default Tag. Called only for the tags shown: the tags beyond `maxTagCount` render when the Popover opens."
+            },
+            "restCount": {
+                "zh-CN": "+N 中显示的数量，缺省为超出 `maxTagCount` 的标签数。",
+                "en-US": "The number shown in +N. Defaults to the number of tags beyond `maxTagCount`."
+            },
+            "showPopover": {
+                "zh-CN": "悬停在 +N 上时，是否通过 Popover 显示剩余标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover."
+            },
+            "size": {
+                "zh-CN": "组内标签的尺寸，可选 `default`、`small` 或 `large`。",
+                "en-US": "Size of the tags in the group: `default`, `small` or `large`."
+            },
+            "tagList": {
+                "zh-CN": "标签配置数组，每项为 Tag 的属性，`children` 为 string 或 number 的标签文字，不含 `prefixIcon`、`suffixIcon`；其他内容用 `renderTag` 渲染。",
+                "en-US": "Tag configurations. Each item holds the props of a Tag, with `children` as the string or number text and without `prefixIcon` or `suffixIcon`; render other content with `renderTag`."
+            }
+        }
+    },
+    "split-tag-group": {
+        "source": "packages/semi-ui-solid/src/tag/split-tag-group.tsx",
+        "props": {}
+    }
+}

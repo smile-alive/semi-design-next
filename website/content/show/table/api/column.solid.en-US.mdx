@@ -1,0 +1,41 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| align | The alignment of the cell content. | `Align` | - |
+| children | Nested `Table.Column` children, which group the header. | `JSX.Element` | - |
+| class | The class name of the column, set on its `col` element. | `string` | - |
+| colSpan | The `colSpan` of the header cell. | `number` | - |
+| dataIndex | The field of a record that the column shows. A unique `dataIndex` is required when `sorter` or `onFilter` is used. | `string` | - |
+| defaultFilteredValue | The default filter values, used as the initial filter state when `filteredValue` is not given. | `any[]` | - |
+| defaultSortOrder | The default sort order, used as the initial sort state when `sortOrder` is not given. | `SortOrder` | - |
+| ellipsis | Truncates text that overflows the cell. An object sets `showTitle` (the native title hint) and `showTooltip` (a Tooltip). | `BaseEllipsis` | - |
+| filterChildrenRecord | Whether filtering also filters the child records of a tree table. | `boolean` | - |
+| filterConfirmMode | The filter confirm mode: `immediate` filters when an option is chosen, `confirm` filters after the confirm button is clicked. | `FilterConfirmMode` | - |
+| filterDropdown | Renders what replaces the filter trigger and its menu. | <ApiType detail={"() => JSX.Element"}>Type</ApiType> | - |
+| filterDropdownProps | The props of the filter dropdown, the same as Dropdown except `render` and `onVisibleChange`. | `FilterDropdownProps` | - |
+| filterDropdownVisible | Whether the filter dropdown is visible. | `boolean` | - |
+| filteredValue | The controlled filter values. When given, the filter state is controlled by the caller. | `any[]` | - |
+| filterIcon | The filter icon: a function that receives `filtered` and returns an element, called again when the filtered state changes. | `FilterIcon` | - |
+| filterMultiple | Whether the filter menu allows multiple selection. | `boolean` | - |
+| filters | The filter menu options of the header. Not required with `renderFilterDropdown`. An option's `text` is plain text; an option with markup goes to `renderFilterDropdownItem`. | `Filter[]` | - |
+| fixed | Fixes the column to the `left` or the `right`; `true` means `left`. | `Fixed` | - |
+| key | Identifies the column. Without it, the key is built from `dataIndex` or the position. | `string \| number` | - |
+| onCell | Sets the attributes and events of the data cells. It receives the record and the row index, and the returned object is merged into the `td`; with `colSpan` or `rowSpan` 0 the cell is not rendered and `render` is not called for it. | <ApiType detail={"OnCell\u003cRecordType>"}>Type</ApiType> | - |
+| onFilter | The filter function. It receives the filter value and a record, and keeps the record when it returns `true`. | <ApiType detail={"OnFilter\u003cRecordType>"}>Type</ApiType> | - |
+| onFilterDropdownVisibleChange | Called when the visibility of the filter dropdown changes. | `OnFilterDropdownVisibleChange` | - |
+| onHeaderCell | Sets the attributes and events of the header cell. It receives the column, the column index and the row index, and the returned object is merged into the `th`. | <ApiType detail={"OnHeaderCell\u003cRecordType>"}>Type</ApiType> | - |
+| render | Renders the cell content from `(text, record, index, options)` and returns an element; cell attributes and merging go to `onCell`. The fields of `options` are live, read them in the returned JSX; `expandIcon`, `selection` and `indentText` are render functions, called where they are shown. | <ApiType detail={"ColumnRender\u003cRecordType>"}>Type</ApiType> | - |
+| renderFilterDropdown | Renders the content of the filter dropdown. The argument holds the temporary filter values, their setter, and the confirm, clear and close methods; its fields are live, read them in the returned JSX. | <ApiType detail={"(props: RenderFilterDropdownProps) => JSX.Element"}>Type</ApiType> | - |
+| renderFilterDropdownItem | Renders each item of the filter menu, with its text, its checked state and its `onChange`. | `RenderFilterDropdownItem` | - |
+| resize | With `resizable` on the table, `false` leaves the column without a resize handle. | `boolean` | - |
+| showSortTip | Whether to show the sort tip while sorting. | `boolean` | - |
+| sortChildrenRecord | Whether sorting also sorts the child records of a tree table. | `boolean` | - |
+| sorter | The sort function. It receives two records and the current sort order, and returns a negative number, zero or a positive number. `dataIndex` is required with it. | <ApiType detail={"Sorter\u003cRecordType>"}>Type</ApiType> | - |
+| sortIcon | The sort icon. It receives `sortOrder` and returns an element. `sortOrder` is live, read it in the returned JSX. | `SortIcon` | - |
+| sortOrder | The controlled sort order. When given, the sort state is controlled by the caller. | `SortOrder` | - |
+| title | The header content: text, or a function that receives the `sorter`, `filter` and `selection` render functions and returns an element, calling each where it is shown. With `useFullRender`, the fields of that argument are live. | `ColumnTitle` | - |
+| useFullRender | Whether the column renders its header and cells in full, which lets `title` and `render` call the `sorter`, `filter`, `selection` and `expandIcon` render functions. | `boolean` | - |
+| width | The column width; a number is in pixels. Required with `resizable`. | `string \| number` | - |

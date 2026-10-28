@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                 | 类型                                                                              | 默认值 |
+| --------- | ---------------------------------------------------- | --------------------------------------------------------------------------------- | ------ |
+| children  | 值，可以是 `ReactNode`，也可以是渲染时调用的函数。   | <ApiType detail={"React.ReactNode \u007c (() => React.ReactNode)"}>Type</ApiType> | -      |
+| className | 纵向布局下外部 wrapper `tr` 的类名；横向布局下无效。 | `string`                                                                          | -      |
+| hidden    | 是否隐藏该项。                                       | `boolean`                                                                         | -      |
+| itemKey   | 键，可以是 `ReactNode`。                             | `React.ReactNode`                                                                 | -      |
+| keyStyle  | key 的自定义样式，可用于设置宽度、对齐方式等。       | `React.CSSProperties`                                                             | -      |
+| ref       | 纵向布局下外部 wrapper `tr` 的引用；横向布局下无效。 | <ApiType detail={"React.Ref\u003cHTMLTableRowElement>"}>Type</ApiType>            | -      |
+| span      | 单元格跨越的列数，未设置时为 1。                     | `number`                                                                          | -      |
+| style     | 纵向布局下外部 wrapper `tr` 的样式；横向布局下无效。 | `React.CSSProperties`                                                             | -      |

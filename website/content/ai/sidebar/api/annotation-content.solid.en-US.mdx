@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property     | Description                                                                                                | Type                                                                             | Default |
+| ------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------- |
+| activeKey    | Keys of the expanded groups, one or several.                                                               | `string \| string[]`                                                             | -       |
+| info         | Groups of references; each has a header, a key and its annotations.                                        | `AnnotationInfo[]`                                                               | -       |
+| onChange     | Called when the expanded groups change, with the expanded keys.                                            | <ApiType detail={"(key: string \u007c string[]) => void"}>Type</ApiType>         | -       |
+| onClick      | Called when a reference is clicked, with the event and the item.                                           | <ApiType detail={"(e: MouseEvent, item: AnnotationItem) => void"}>Type</ApiType> | -       |
+| renderHeader | Renders a group header after its icon, called with the group; without it the group's header text is shown. | <ApiType detail={"(info: AnnotationInfo) => JSX.Element"}>Type</ApiType>         | -       |
+| renderItem   | Renders a reference item, called with the item.                                                            | <ApiType detail={"(annotation: AnnotationItem) => JSX.Element"}>Type</ApiType>   | -       |

@@ -1,0 +1,35 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| allowEmpty | 值变为空的字段是否在 values 中保留 key。Form 与字段任一设置为 true 即生效。 | `boolean` | `false` |
+| autoScrollToError | 提交或调用 formApi.validate 校验失败时，是否自动滚动到出错的字段；传对象时作为 scroll-into-view-if-needed 的选项。 | `boolean \| ScrollOptions` | `false` |
+| children | 表单内容。传入函数时与 render 一样只调用一次，参数为 `{ formState, values, formApi }`，需在返回的 JSX 中读取它们，才会随表单更新。 | <ApiType detail={"JSX.Element \u007c ((props: FormRenderProps\u003cValues>) => JSX.Element)"}>Type</ApiType> | - |
+| component | 用于声明表单控件的组件，以 formState、values、formApi 作为 props 渲染；不可与 render、children 同时使用。 | <ApiType detail={"(props: FormRenderProps\u003cValues>) => JSX.Element"}>Type</ApiType> | - |
+| disabled | 统一应用在每个字段上的 disabled，字段自身的 disabled 优先。 | `boolean` | - |
+| extraTextPosition | 统一应用在每个字段上的 extraText 位置，middle 在 Label 与控件之间，bottom 在控件之后。字段上的同名属性优先。 | `'middle' \| 'bottom'` | - |
+| form | `Form.useForm()` 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"FormApi\u003cValues> & FormApiProxyInternals\u003cValues>"}>Type</ApiType> | - |
+| getFormApi | Form 挂载后调用，参数为 formApi。 | <ApiType detail={"(formApi: FormApi\u003cValues>) => void"}>Type</ApiType> | - |
+| id | form 元素的 id，同时写入 x-form-id；不传时自动生成。 | `string` | - |
+| initValues | 表单的初始值，仅在 Form 创建时复制一次。 | `Values` | - |
+| labelAlign | 统一应用在每个字段上的 label 文本对齐方式，字段上的同名属性优先。 | `'left' \| 'right'` | - |
+| labelCol | 统一应用在每个字段上的 label 栅格布局，同 Col 的 span、offset 等属性，需与 wrapperCol 一起设置。 | `ColProps` | - |
+| labelPosition | 统一应用在每个字段上的 label 位置，inset 仅部分字段支持，其余字段按 top 布局。字段上的同名属性优先。 | `'top' \| 'left' \| 'inset'` | `"top"` |
+| labelWidth | 统一应用在每个字段上的 label 宽度，数字单位为 px。 | `number \| string` | - |
+| layout | 字段的排列方向，可选 vertical 或 horizontal。 | `'horizontal' \| 'vertical'` | `"vertical"` |
+| onChange | 表单状态更新时调用，包括字段挂载、卸载、值变更、blur、校验状态与错误信息变更，参数为 formState。 | <ApiType detail={"(formState: FormState\u003cValues>) => void"}>Type</ApiType> | - |
+| onErrorChange | 校验状态更新时调用，参数为全部错误和本次变化的字段错误。validate、submit、reset 等批量操作只调用一次，静默校验不调用。 | <ApiType detail={"(errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues>, FieldError>>) => void"}>Type</ApiType> | - |
+| onReset | 点击重置按钮或调用 formApi.reset 时调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onSubmit | 点击提交按钮或调用 formApi.submitForm 且校验通过后调用，参数为 values 与提交事件。 | <ApiType detail={"(values: Values, e?: SubmitEvent) => void"}>Type</ApiType> | - |
+| onSubmitFail | 点击提交按钮或调用 formApi.submitForm 且校验失败后调用，参数为 errors、values 与提交事件。 | <ApiType detail={"(errors: FormValidateResult\u003cValues>, values: Partial\u003cValues>, e?: SubmitEvent) => void"}>Type</ApiType> | - |
+| onValueChange | 字段的值变化时调用，参数为全部 values 与本次变化的字段值。 | <ApiType detail={"(values: Values, changedValue: Partial\u003cValues>) => void"}>Type</ApiType> | - |
+| ref | 取得 form 元素的回调，元素上带有 formApi。 | <ApiType detail={"(element: FormElement\u003cValues>) => void"}>Type</ApiType> | - |
+| render | 用于声明表单控件的函数，只调用一次，参数为 `{ formState, values, formApi }`；不可与 component、children 同时使用。 | <ApiType detail={"(props: FormRenderProps\u003cValues>) => JSX.Element"}>Type</ApiType> | - |
+| showValidateIcon | 校验信息前是否显示对应状态的图标。 | `boolean` | `true` |
+| stopPropagation | 是否阻止 submit、reset 事件冒泡，用于嵌套 Form 时避免触发外层 Form 的事件。 | `{ submit?: boolean; reset?: boolean; }` | - |
+| stopValidateWithError | 使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。 | `boolean` | - |
+| trigger | 统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。 | `FieldValidateTriggerType` | - |
+| validator | Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise。设置后字段自身的 validator 与 rules 不再生效。返回空字符串或空对象表示通过，失败时返回以字段名为 key 的错误对象。 | <ApiType detail={"(values: Values) => FormValidateResult\u003cValues> \u007c Promise\u003cFormValidateResult\u003cValues>>"}>Type</ApiType> | - |
+| wrapperCol | 统一应用在每个字段上的控件栅格布局，同 Col 的 span、offset 等属性，需与 labelCol 一起设置。 | `ColProps` | - |

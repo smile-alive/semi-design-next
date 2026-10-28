@@ -1,0 +1,789 @@
+---
+title: 穿梭框
+order: 51
+icon: doc-transfer
+brief: 一个更直观高效的多选选择器，可以露出更多选项的信息，支持搜索功能，缺点是占据更多空间
+---
+
+import TransferReactApi from './api/transfer.react.zh-CN.mdx';
+import TransferVueApi from './api/transfer.vue.zh-CN.mdx';
+import TransferSolidApi from './api/transfer.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Transfer } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Transfer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Avatar, Button, ButtonGroup, Checkbox, Highlight, Input, Spin, Transfer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+数据项需传入 value、label、key
+
+<Demo id="basic" />
+
+### 分组
+
+将 type 设为 `groupList`
+
+分组的 dataSource，一级子元素必须拥有 title 以及 children 属性，结构参考 \<GroupItem\>
+
+暂不支持多层嵌套
+
+<Demo id="group" />
+
+### 自定义筛选逻辑，自定义选项数据渲染
+
+使用`filter`自定义搜索逻辑，返回 true 时表示当前项符合筛选规则，保留当前项在列表中的显示，返回 false 则表示不符合，当前项会被隐藏。  
+当 type 为 `treeList`时，如需要自定义搜索逻辑，需设置 `filter` 为 true，并通过 `treeProps` 的 `filterTreeNode` 设置自定义的搜索函数。
+
+<Framework only="react">
+
+使用`renderSourceItem`，你可以自定义左侧每一条源数据的渲染结构。例如结合 Highlight 组件高亮搜索匹配文本  
+使用`renderSelectedItem` 你可以自定义右侧每一条已选项的渲染结构。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `#sourceItem` 插槽，你可以自定义左侧每一条源数据的渲染结构。例如结合 Highlight 组件高亮搜索匹配文本  
+使用 `#selectedItem` 插槽你可以自定义右侧每一条已选项的渲染结构。  
+数据项自带的字段（如 demo 中的 `abbr`、`color`）都在插槽参数 `item` 上；只需要替换条目文本时，用 `#label` 插槽更简单，它同时作用于左侧条目、右侧已选条目和拖拽副本。
+
+</Framework>
+
+<Framework only="solid">
+
+使用 `renderSourceItem`，你可以自定义左侧每一条源数据的渲染结构。例如结合 Highlight 组件高亮搜索匹配文本  
+使用 `renderSelectedItem` 你可以自定义右侧每一条已选项的渲染结构。两者每项调用一次，参数中的 `checked` 是 getter，需要在返回的 JSX 中读取。
+
+</Framework>
+
+<Demo id="custom-filter" />
+
+```css
+.components-transfer-demo-selected-item {
+    .remove {
+        opacity: 0;
+    }
+    &:hover,
+    &:focus-within {
+        .remove {
+            opacity: 1;
+        }
+    }
+}
+
+.components-transfer-demo-selected-item,
+.components-transfer-demo-source-item {
+    height: 52px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    &:hover {
+        background-color: var(--semi-color-fill-0);
+    }
+    .info {
+        margin-left: 8px;
+        flex-grow: 1;
+    }
+    .name {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .email {
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--semi-color-text-2);
+    }
+}
+```
+
+### 禁用
+
+<Demo id="disabled" />
+
+### 拖拽排序
+
+将 `draggable`设为 true，开启拖拽排序功能。
+
+<Demo id="draggable" />
+
+### 左侧分页
+
+当左侧选项较多时，可以通过 `pagination` 属性开启分页功能。
+
+`pagination` 接收一个对象，包含以下属性：
+
+- `pageSize`: 每页显示的条数，默认为 10
+- `currentPage`: 当前页码（受控模式）
+- `defaultCurrentPage`: 默认当前页码（非受控模式）
+- `onPageChange`: 页码变化时的回调
+
+<Demo id="pagination" />
+
+### 左侧分页 + 受控页码
+
+通过 `pagination.currentPage` 可以受控地设置当前页码。
+
+<Demo id="pagination-controlled" />
+
+### 拖拽 + 自定义已选项渲染
+
+<Framework only="react">
+
+将 `draggable`设为 true，开启拖拽排序功能;使用 `renderSelectedItem` 自定义右侧已选项渲染；  
+你可以将触发器定义为任意你想要的ReactNode，并且添加样式。将拖拽触发器，使用 `sortableHandle` 进行包裹即可,
+
+</Framework>
+
+<Framework only="vue">
+
+将 `draggable`设为 true，开启拖拽排序功能;使用 `#selectedItem` 插槽自定义右侧已选项渲染；  
+你可以将触发器定义为任意你想要的内容，并且添加样式。`draggable` 时插槽参数 `handle` 是拖拽手柄组件，用 `<component :is="handle">` 包住触发器即可。
+
+</Framework>
+
+<Framework only="solid">
+
+将 `draggable` 设为 true，开启拖拽排序功能；使用 `renderSelectedItem` 自定义右侧已选项的渲染。`sortableHandle` 接收一个包裹拖拽图标的组件，返回拖拽手柄组件，在返回的 JSX 中渲染它即可；手柄是原生 `button`。`draggable` 为 false 时不提供 `sortableHandle`。
+
+</Framework>
+
+<Demo id="drag-custom-item" />
+
+### 自定义渲染面板头部信息
+
+<Framework only="react">
+
+Semi 提供 `renderSourceHeader`, `renderSelectedHeader` 参数允许用户自定义渲染左右两个面板的头部信息。  
+`renderSourceHeader: (props: SourceHeaderProps) => ReactNode`  
+`renderSelectedHeader: (props: SelectedHeaderProps) => ReactNode`  
+参数类型如下：
+
+```ts
+type SourceHeaderProps = {
+    num: number; // 数据总数或筛选结果数目
+    showButton: boolean; // 是否展示全选/取消全选按钮
+    allChecked: boolean; // 当前数据是否已全选
+    onAllClick: () => void; // 点击全选/取消全选按钮后应调用的函数
+    leafOnlyNum?: number; // 仅在 type 为 treeList 时有效，表示叶子节点数量
+};
+
+type SelectedHeaderProps = {
+    num: number; // 已选中数据总数
+    showButton: boolean; // 是否展示清空按钮
+    onClear: () => void; // 点击清空按钮后应调用的函数
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+`#sourceHeader`、`#selectedHeader` 插槽允许用户自定义渲染左右两个面板的头部信息，插槽参数类型分别为 `TransferSourceHeaderSlotProps`、`TransferSelectedHeaderSlotProps`：
+
+```ts
+type TransferSourceHeaderSlotProps = {
+    num: number; // 数据总数或筛选结果数目
+    showButton: boolean; // 是否展示全选/取消全选按钮
+    allChecked: boolean; // 当前数据是否已全选
+    onAllClick: () => void; // 点击全选/取消全选按钮后应调用的函数
+    leafOnlyNum?: number; // 仅在 type 为 treeList 时提供，表示叶子节点数量
+};
+
+type TransferSelectedHeaderSlotProps = {
+    num: number; // 已选中数据总数
+    showButton: boolean; // 是否展示清空按钮
+    onClear: () => void; // 点击清空按钮后应调用的函数
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`renderSourceHeader`、`renderSelectedHeader` 的参数是实时对象，类型分别为 `TransferSourceHeaderProps`、`TransferSelectedHeaderProps`，每个面板只调用一次。读取其字段需写在 JSX 中，解构只取首次渲染时的值：
+
+```ts
+type SourceHeaderProps = {
+    num: number; // 数据总数或筛选结果数目
+    showButton: boolean; // 是否展示全选/取消全选按钮
+    allChecked: boolean; // 当前数据是否已全选
+    onAllClick: () => void; // 点击全选/取消全选按钮后应调用的函数
+    leafOnlyNum?: number; // 仅在 type 为 treeList 时有效，表示叶子节点数量
+};
+
+type SelectedHeaderProps = {
+    num: number; // 已选中数据总数
+    showButton: boolean; // 是否展示清空按钮
+    onClear: () => void; // 点击清空按钮后应调用的函数
+};
+```
+
+</Framework>
+
+使用示例如下
+
+<Demo id="custom-header" />
+
+### 完全自定义渲染
+
+<Framework only="react">
+
+Semi 提供了 `renderSourcePanel`、`renderSelectedPanel` 入参，允许你完全自定义左右侧两个面板的渲染结构  
+通过该功能，你可以直接复用 Transfer 内部的逻辑能力，实现高度自定义样式结构的`Transfer`组件 `renderSourcePanel: (sourcePanelProps: SourcePanelProps) => ReactNode`  
+`SourcePanelProps`包含以下参数，你可以从中获取数据来渲染出你的 Panel 结构
+
+```ts
+interface SourcePanelProps {
+    value: Array<string | number>; // 所有选中项的 value
+    loading?: boolean; // 是否加载中
+    noMatch: boolean; // 是否没有符合当前搜索值匹配的项
+    filterData: Array<Item>; // 匹配当前搜索值的项
+    sourceData: Array<Item>; // 所有项
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // Transfer 的 dataSource
+    allChecked: boolean; // 是否全部选中
+    showNumber: number; // 筛选结果数量
+    inputValue: string; // input搜索框的值
+    onSearch: (searchString: string) => void; // 搜索框变化时应调用的函数，入参为搜索值
+    onAllClick: () => void; // 左侧全部按钮点击时应调用的函数
+    onSelectOrRemove: (item: Item) => void; // 选择、删除单个选项时应调用的函数，入参应为当前操作item
+    onSelect: (value: Array<string | number>) => void; // 受控批量选中，入参为选中项的 value
+    selectedItems: Map<string | number, Item>; // 所有已选项的集合，Map 的键是 item.key
+}
+```
+
+`renderSelectedPanel: (selectedPanelProps: SelectedPanelProps) => ReactNode`  
+`SelectedPanelProps`包含以下参数
+
+```ts
+interface SelectedPanelProps {
+    length: number; // 已选项的数量
+    onClear: () => void; // 点击清空时应调用的回调函数
+    onRemove: (item: Item) => void; // 删除单个选项时应调用的函数
+    onSortEnd: ({ oldIndex, newIndex }) => void; // 对结果重新排序时应调用的函数
+    selectedData: Array<Item>; // 所有已选项集合
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+Semi 提供了 `#sourcePanel`、`#selectedPanel` 插槽，允许你完全自定义左右侧两个面板的渲染结构  
+通过该功能，你可以直接复用 Transfer 内部的逻辑能力，实现高度自定义样式结构的`Transfer`组件  
+`#sourcePanel` 的参数类型为 `TransferSourcePanelSlotProps`，你可以从中获取数据来渲染出你的 Panel 结构
+
+```ts
+interface TransferSourcePanelSlotProps {
+    value: Array<string | number>; // 所有选中项的 value
+    loading: boolean | undefined; // 是否加载中
+    noMatch: boolean; // 是否没有符合当前搜索值匹配的项
+    filterData: Array<Item>; // 匹配当前搜索值的项
+    sourceData: Array<Item>; // 所有项
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // Transfer 的 dataSource
+    allChecked: boolean; // 是否全部选中
+    showNumber: number; // 筛选结果数量
+    inputValue: string; // input搜索框的值
+    selectedItems: Map<string | number, Item>; // 所有已选项的集合，Map 的键是 item.key
+    onSearch: (searchString: string) => void; // 搜索框变化时应调用的函数，入参为搜索值
+    onAllClick: () => void; // 左侧全部按钮点击时应调用的函数
+    onSelectOrRemove: (item: Item) => void; // 选择、删除单个选项时应调用的函数，入参应为当前操作item
+    onSelect: (values: Array<string | number>) => void; // 受控批量选中，入参为选中项的 value
+}
+```
+
+`#selectedPanel` 的参数类型为 `TransferSelectedPanelSlotProps`
+
+```ts
+interface TransferSelectedPanelSlotProps {
+    length: number; // 已选项的数量
+    selectedData: Array<Item>; // 所有已选项集合
+    onClear: () => void; // 点击清空时应调用的回调函数
+    onRemove: (item: Item) => void; // 删除单个选项时应调用的函数
+    onSortEnd: (payload: { oldIndex: number; newIndex: number }) => void; // 对结果重新排序时应调用的函数
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`renderSourcePanel`、`renderSelectedPanel` 允许你完全自定义左右侧两个面板的渲染结构，并复用 Transfer 内部的筛选与选择逻辑。两个参数都是实时对象，类型分别为 `TransferSourcePanelProps`、`TransferSelectedPanelProps`，每个面板只调用一次；读取字段需写在 JSX 中。
+
+```ts
+interface SourcePanelProps {
+    value: Array<string | number>; // 所有选中项的 value
+    loading?: boolean; // 是否加载中
+    noMatch: boolean; // 是否没有符合当前搜索值匹配的项
+    filterData: Array<Item>; // 匹配当前搜索值的项
+    sourceData: Array<Item>; // 所有项
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // Transfer 的 dataSource
+    allChecked: boolean; // 是否全部选中
+    showNumber: number; // 筛选结果数量
+    inputValue: string; // input搜索框的值
+    onSearch: (searchString: string) => void; // 搜索框变化时应调用的函数，入参为搜索值
+    onAllClick: () => void; // 左侧全部按钮点击时应调用的函数
+    onSelectOrRemove: (item: Item) => void; // 选择、删除单个选项时应调用的函数，入参应为当前操作item
+    onSelect: (value: Array<string | number>) => void; // 受控批量选中，入参为选中项的 value
+    selectedItems: Map<string | number, Item>; // 所有已选项的集合，Map 的键是 item.key
+}
+```
+
+```ts
+interface SelectedPanelProps {
+    length: number; // 已选项的数量
+    onClear: () => void; // 点击清空时应调用的回调函数
+    onRemove: (item: Item) => void; // 删除单个选项时应调用的函数，入参应为当前操作item
+    onSortEnd: ({ oldIndex, newIndex }) => void; // 对结果重新排序时应调用的函数，入参为拖拽前后的位置
+    selectedData: Array<Item>; // 所有已选项集合
+}
+```
+
+</Framework>
+
+<Demo id="custom-panel" />
+
+```scss
+.component-transfer-demo-custom-panel {
+    .sp-font {
+        color: var(--semi-grey-9);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+    }
+
+    .empty {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .panel-item {
+        flex-shrink: 0;
+        height: 56px;
+        border-radius: 4px;
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        background-color: rgba(22, 24, 35, 0.03);
+
+        &-main {
+            flex-grow: 1;
+        }
+
+        p {
+            margin: 0 12px;
+            flex-basis: 100%;
+        }
+
+        .panel-item-remove {
+            cursor: pointer;
+            color: var(--semi-color-primary);
+        }
+    }
+
+    .panel-header {
+        padding: 10px 12px;
+        border: 1px solid rgba(22, 24, 35, 0.16);
+        border-radius: 4px 4px 0 0;
+        height: 38px;
+        box-sizing: border-box;
+        background-color: var(--semi-color-tertiary-light-default);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .clear {
+            cursor: pointer;
+            color: var(--semi-color-primary);
+        }
+    }
+
+    .source-panel {
+        display: flex;
+        flex-direction: column;
+        width: 482px;
+        height: 353px;
+
+        .panel-main {
+            border: 1px solid var(--semi-color-border);
+            border-top: none;
+
+            .panel-list {
+                display: flex;
+                flex-wrap: wrap;
+                row-gap: 8px;
+                column-gap: 8px;
+                overflow-y: auto;
+                height: 214px;
+                margin-left: 12px;
+                margin-right: 12px;
+                padding-bottom: 8px;
+            }
+        }
+
+        .panel-controls {
+            margin: 10px 12px;
+            font-size: 12px;
+            line-height: 20px;
+
+            .semi-button {
+                margin-left: 8px;
+                font-size: 12px;
+            }
+        }
+
+        .panel-item {
+            width: 176px;
+        }
+
+        margin-right: 16px;
+    }
+
+    .selected-panel {
+        width: 200px;
+        height: 353px;
+
+        .panel-main {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 12px;
+            border: 1px solid var(--semi-color-border);
+            border-top: none;
+            height: 323px;
+            box-sizing: border-box;
+            row-gap: 8px;
+        }
+    }
+}
+```
+
+### 完全自定义渲染 、 拖拽排序
+
+在完全自定义渲染的场景下，由于拖拽区的渲染也已由你完全接管，因此你不声明 draggable 亦可。但你需要自行实现拖拽逻辑，你可以借助社区中的拖拽工具库 [dnd-kit](https://github.com/clauderic/dnd-kit) 快速实现功能。
+
+另外，要支持拖拽排序，你需要在拖拽排序结束后，将 oldIndex、newIndex 作为入参，调用 onSortEnd
+
+<Framework only="react">
+
+使用 dnd-kit 的示例如下，需要用到的核心依赖有 @dnd-kit/react，其中 `DragDropProvider` 提供拖拽上下文，核心 hook 为 `@dnd-kit/react/sortable` 导出的 useSortable，使用说明如下
+
+```
+1. 作用：通过唯一标志 id 与当前位置 index 获取拖拽过程中必要信息
+2. 核心输入参数：
+    - id: 唯一标识，数字或者字符串
+    - index: 该项在列表中的当前位置
+    - handle: 可选，拖拽手柄的元素，不传时整个节点都可拖拽
+3. 核心返回值说明:
+	- ref: 关联 dom 节点，使其成为一个可拖拽的项
+	- handleRef: 关联拖拽手柄的 dom 节点
+	- isDragging: 该节点是否正在被拖拽
+```
+
+拖拽结束后，在 `DragDropProvider` 的 `onDragEnd` 中，用 `event.operation.source` 的 `initialIndex` 与 `index` 得到拖拽前后的位置；`event.canceled` 为 true 表示拖拽已取消。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 dnd-kit 的示例如下，需要用到的核心依赖有 @dnd-kit/dom：`DragDropManager` 提供拖拽上下文，每个已选项对应一个 `@dnd-kit/dom/sortable` 导出的 `Sortable`，参数如下（项目使用 @dnd-kit/vue 时，它的 `useSortable` 接收同样的 id、index、element、handle）
+
+```
+1. 作用：通过唯一标志 id 与当前位置 index 获取拖拽过程中必要信息
+2. 核心输入参数：
+    - id: 唯一标识，数字或者字符串
+    - index: 该项在列表中的当前位置，列表变化后需同步更新
+    - element: 可拖拽的 dom 节点
+    - handle: 可选，拖拽手柄的元素，不传时整个节点都可拖拽
+3. 第二个参数是 DragDropManager 实例，卸载组件时需要调用各 Sortable 与 manager 的 destroy
+```
+
+拖拽结束后，在 `manager.monitor` 的 `dragend` 事件中，用 `event.operation.source` 的 `initialIndex` 与 `index` 得到拖拽前后的位置；`event.canceled` 为 true 表示拖拽已取消。
+
+示例用 `v-model` 保存已选值，拖拽结束后直接把调整后的顺序写回 `v-model`；不自己保存值时，也可以在 `#selectedPanel` 的参数里取 `onSortEnd` 调用。
+
+</Framework>
+
+<Framework only="solid">
+
+使用 dnd-kit 的示例如下，需要用到的核心依赖有 @dnd-kit/solid：`DragDropProvider` 提供拖拽上下文，`@dnd-kit/solid/sortable` 导出的 `useSortable` 接收 `id` 与 `index`，两者都以 getter 传入，列表重排后读取到的 `index` 随之更新。
+
+```
+1. 作用：通过唯一标志 id 与当前位置 index 获取拖拽过程中必要信息
+2. 核心输入参数：
+    - id: 唯一标识，数字或者字符串
+    - index: 该项在列表中的当前位置
+3. 核心返回值说明:
+    - ref: 绑定可拖拽项的 dom 节点，以 ref={(node) => ref(node)} 的形式使用
+    - handleRef: 绑定拖拽手柄的 dom 节点，只有手柄可以拖拽
+    - isDragSource: 该节点是否正在被拖拽
+```
+
+拖拽结束后，在 `DragDropProvider` 的 `onDragEnd` 中，用 `event.operation.source` 的 `initialIndex` 与 `index` 得到拖拽前后的位置；`event.canceled` 为 true 表示拖拽已取消。
+
+</Framework>
+
+<Demo id="custom-panel-dnd-kit" />
+
+### 树穿梭框
+
+传入 type 为`treeList`，使用[`Tree`](/zh-CN/react/navigation/tree)组件作为自定义渲染列表。
+
+可通过treeProps([TreeProps](/zh-CN/react/navigation/tree#Tree))来覆盖默认树的属性，左侧树默认属性为
+
+<Framework only="react">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+    searchRender:false,
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+}
+```
+
+Tree 自带的搜索框已用空的 `#search` 插槽隐藏，由 Transfer 自己的搜索框驱动过滤。Tree 的插槽中只有 `#label` 经 Transfer 的 `#label` 插槽转发，同时用于左侧树行和右侧已选项；Tree 的 `#icon`、`#expandIcon`、`#fullLabel` 不可用。
+
+</Framework>
+
+<Framework only="solid">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+    searchRender:false,
+}
+```
+
+Tree 自带的搜索框由 `searchRender` 为 `false` 隐藏，由 Transfer 自己的搜索框驱动过滤。
+
+</Framework>
+
+<Demo id="tree" />
+
+### 树穿梭框自定义头部显示叶子节点数量
+
+<Framework only="react">
+
+当 type 为 `treeList` 时，`renderSourceHeader` 的 `SourceHeaderProps` 参数中会额外提供 `leafOnlyNum` 字段，表示叶子节点的数量。这在文件选择等场景中非常有用，可以在头部只显示文件数量而不是包含文件夹的总数。
+
+</Framework>
+
+<Framework only="vue">
+
+当 type 为 `treeList` 时，`#sourceHeader` 的 `TransferSourceHeaderSlotProps` 参数中会额外提供 `leafOnlyNum` 字段，表示叶子节点的数量。这在文件选择等场景中非常有用，可以在头部只显示文件数量而不是包含文件夹的总数。
+
+</Framework>
+
+<Framework only="solid">
+
+当 type 为 `treeList` 时，`renderSourceHeader` 的 `SourceHeaderProps` 参数中会额外提供 `leafOnlyNum` 字段，表示叶子节点的数量。这在文件选择等场景中非常有用，可以在头部只显示文件数量而不是包含文件夹的总数。
+
+</Framework>
+
+<Demo id="tree-leaf-count" />
+
+## Accessibility
+
+### ARIA
+
+- 搜索框所在的容器是原生 `search` 元素（search 地标），名称取自语言包
+- 根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时，自动加 `role` `group`
+- 左侧选项列表添加 `role` `list`，选项为 `listitem`；`groupList` 的每个分组是外层列表的一个 `listitem`，其中分组标题命名嵌套的 `list`，选项在嵌套列表里
+- 右侧选中列表添加 `role` `list`，选中项添加 `role` `listitem`；自定义渲染的左右条目外会包一层 `role` `listitem` 的元素
+
+### 键盘交互
+
+- 默认过滤不区分大小写
+- 禁用时左右两个列表是 Tab 停靠点，用来用键盘滚动其中内容
+- `draggable` 的拖拽句柄是带名称的原生 `button`：Tab 聚焦句柄，空格拿起，方向键移动，空格放下；排序过程会通过读屏播报。鼠标拖拽不变
+- 拖拽排序所需的 dnd-kit 加载完成前，句柄是带 `aria-disabled="true"` 的占位
+
+## API 参考
+
+<Framework only="react">
+
+### Transfer
+
+<TransferReactApi />
+
+未列出的原生属性（如 `id`、`aria-*` 与事件）落在根 `div` 上；根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时为 `role="group"`。`tabIndex` 设置在搜索框上，包括外层 Tooltip 注入的值。搜索框的属性用 `inputProps` 传入，treeList 左侧 Tree 的属性用 `treeProps` 传入。
+
+下文 Item、GroupItem、TreeItem 在 `@fibrae/semi-ui-react` 中导出的类型名分别为 `TransferDataItem`、`TransferGroupItem`、`TransferTreeItem`。
+
+### Item Interface
+
+| 属性     | 说明                                                                                          | 类型             | 默认值 |
+| -------- | --------------------------------------------------------------------------------------------- | ---------------- | ------ |
+| disabled | 是否禁用                                                                                      | boolean          | false  |
+| key      | 必填，每个选项的唯一标识，不允许重复                                                          | string \| number |        |
+| label    | 选项展示内容                                                                                  | ReactNode        |        |
+| fullPath | 当 `type="treeList"` 且 `showPath` 为 `true` 时，返回当前节点从根节点到自身的完整路径节点数组 | Array\<Item\>    |        |
+| value    | 选项代表的值                                                                                  | string \| number |        |
+
+</Framework>
+
+<Framework only="vue">
+
+### Transfer
+
+<TransferVueApi />
+
+`class`、`style`、`aria-*` 等 attrs 落在 Transfer 根元素上；根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时为 `role="group"`。搜索框的属性用 `inputProps` 传入，treeList 左侧 Tree 的属性用 `treeProps` 传入。
+
+下文各接口在 `@fibrae/semi-ui-vue` 中导出的类型名为：Item 对应 `TransferDataItem`，GroupItem 对应 `TransferGroupItem`，TreeItem 对应 `TransferTreeItem`，VirtualizeProps 对应 `TransferVirtualize`，PaginationProps 对应 `TransferPagination`。
+
+### Item Interface
+
+数据项还可以带任意自定义字段，它们会原样出现在插槽参数与事件载荷的 `item` 上。
+
+| 属性     | 说明                                                                                          | 类型             | 默认值 |
+| -------- | --------------------------------------------------------------------------------------------- | ---------------- | ------ |
+| disabled | 是否禁用                                                                                      | boolean          | false  |
+| key      | 必填，每个选项的唯一标识，不允许重复                                                          | string \| number |        |
+| label    | 选项展示文本，默认过滤按它匹配；需要其他内容时用 `#label` 插槽                                | string           |        |
+| fullPath | 当 `type="treeList"` 且 `showPath` 为 `true` 时，返回当前节点从根节点到自身的完整路径节点数组 | Array\<Item\>    |        |
+| value    | 选项代表的值                                                                                  | string \| number |        |
+
+</Framework>
+
+<Framework only="solid">
+
+### Transfer
+
+<TransferSolidApi />
+
+`class`、`style`、`aria-*` 与其他原生属性和事件落在根 `div` 上；根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时为 `role="group"`。`ref` 接收根元素，搜索框的属性用 `inputProps` 传入，treeList 左侧 Tree 的属性用 `treeProps` 传入。
+
+### Item Interface
+
+数据项还可以带任意自定义字段，它们会原样出现在 `renderSourceItem`、`renderSelectedItem` 的参数上。
+
+| 属性     | 说明                                                                                          | 类型             | 默认值 |
+| -------- | --------------------------------------------------------------------------------------------- | ---------------- | ------ |
+| disabled | 是否禁用                                                                                      | boolean          | false  |
+| key      | 必填，每个选项的唯一标识，不允许重复                                                          | string \| number |        |
+| label    | 选项的文本，默认搜索匹配它；自定义内容用 `renderLabel`                                        | string \| number |        |
+| fullPath | 当 `type="treeList"` 且 `showPath` 为 `true` 时，返回当前节点从根节点到自身的完整路径节点数组 | Array\<Item\>    |        |
+| value    | 选项代表的值                                                                                  | string \| number |        |
+
+</Framework>
+
+### GroupItem Interface
+
+分组本身不是数据项，只有以下属性
+
+| 属性     | 说明         | 类型          | 默认值 |
+| -------- | ------------ | ------------- | ------ |
+| children | 该分组的元素 | Array\<Item\> |        |
+| title    | 分组名称     | string        |        |
+
+### TreeItem Interface
+
+TreeItem 继承 Item 的所有属性
+
+| 属性     | 说明   | 类型              | 默认值 |
+| -------- | ------ | ----------------- | ------ |
+| children | 子元素 | Array\<TreeItem\> |        |
+
+### VirtualizeProps Interface
+
+| 属性     | 说明                                                                                   | 类型             | 默认值 |
+| -------- | -------------------------------------------------------------------------------------- | ---------------- | ------ |
+| height   | 虚拟列表高度，传入 `number` 则直接生效，传入 `string`（如 `100%`）则根据剩余高度自适应 | number \| string |        |
+| width    | 虚拟列表宽度                                                                           | number \| string |        |
+| itemSize | 每行高度（固定）                                                                       | number           |        |
+
+### PaginationProps Interface
+
+| 属性               | 说明                       | 类型                          | 默认值 |
+| ------------------ | -------------------------- | ----------------------------- | ------ |
+| currentPage        | 当前页码（受控模式）       | number                        |        |
+| defaultCurrentPage | 默认当前页码（非受控模式） | number                        | 1      |
+| pageSize           | 每页显示条数               | number                        | 10     |
+| onPageChange       | 页码变化时的回调           | (currentPage: number) => void |        |
+
+<Framework only="react">
+
+## Methods
+
+`ref` 接收的 `TransferHandle` 句柄上的方法，可以通过 ref 调用实现某些特殊交互。
+
+```tsx
+const transferRef = useRef<TransferHandle>(null);
+
+<Transfer ref={transferRef} />;
+
+transferRef.current?.search('选项名称 1');
+```
+
+</Framework>
+
+<Framework only="solid">
+
+## Methods
+
+绑定在根元素上的方法，通过 `ref` 拿到根元素后调用，类型为 `TransferElement`。
+
+```jsx
+let transfer: TransferElement | undefined;
+
+<Transfer ref={(element) => (transfer = element)} />;
+
+transfer?.search('选项名称 1');
+```
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

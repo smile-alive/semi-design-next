@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property               | Description                                                                                            | Type                                          | Default |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------- | ------- |
+| children               | Content to expand or collapse.                                                                         | `JSX.Element`                                 | -       |
+| class                  | Class name of the outer wrapper.                                                                       | `string`                                      | -       |
+| collapseHeight         | Height in pixels when collapsed.                                                                       | `number`                                      | `0`     |
+| collapseHeightAdaptive | Whether the collapsed height follows the content when it is shorter than collapseHeight.               | `boolean`                                     | `false` |
+| duration               | Animation duration in milliseconds.                                                                    | `number`                                      | `250`   |
+| fade                   | Whether to fade in and out.                                                                            | `boolean`                                     | `false` |
+| id                     | id of the inner content element, for the trigger's aria-controls; it does not read the global default. | `string`                                      | -       |
+| isOpen                 | Whether the content area is expanded.                                                                  | `boolean`                                     | `false` |
+| keepDOM                | Whether to keep the DOM tree of the hidden content; it is destroyed by default.                        | `boolean`                                     | `false` |
+| lazyRender             | Used with keepDOM; when true, the content is not rendered on mount but after the first expansion.      | `boolean`                                     | `false` |
+| motion                 | Whether to enable the animation.                                                                       | `boolean`                                     | `true`  |
+| onMotionEnd            | Called when the expand or collapse animation ends.                                                     | <ApiType detail={"() => void"}>Type</ApiType> | -       |

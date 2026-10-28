@@ -1,0 +1,225 @@
+---
+title: 颜色选择器
+order: 38
+icon: doc-colorPlatteNew
+brief: 快速便捷地选择颜色，并提供滴管工具取色
+---
+
+import ColorPickerReactApi from './api/color-picker.react.zh-CN.mdx';
+import ColorPickerVueApi from './api/color-picker.vue.zh-CN.mdx';
+import ColorPickerSolidApi from './api/color-picker.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { ColorPicker } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ColorPicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+#### 放在弹层
+
+<Demo id="popover" />
+
+#### 正常展示
+
+<Demo id="inline" />
+
+### 滴管取色器
+
+<Framework only="react">
+
+滴管功能默认开启，支持从浏览器内或外部软件屏幕取色。传入 `eyeDropper={false}` 可关闭。
+
+</Framework>
+
+<Framework only="vue">
+
+滴管功能默认开启，支持从浏览器内或外部软件屏幕取色。传入 `:eyeDropper="false"` 可关闭。
+
+</Framework>
+
+<Framework only="solid">
+
+滴管功能默认开启，支持从浏览器内或外部软件屏幕取色。传入 `eyeDropper={false}` 可关闭。
+
+</Framework>
+
+<Notice title='注意事项'>
+开启此功能需要当前网页部署在 HTTPS 或 localhost 域名等安全 context 下，否则无效果。需用户浏览器版本 Chromium > 95
+</Notice>
+
+<Demo id="eye-dropper" />
+
+### 默认值
+
+<Framework only="react">
+
+在进行各种颜色表示格式之间相互转换时，部分格式之间存在理论误差，因此 onChange 返回给你的值是同时包含了 hsva hex rgba 三种格式的色值的对象。
+
+你传入的 defaultValue(非受控) 和 value(受控) 也应当是同样包含三种格式的对象。
+
+</Framework>
+
+<Framework only="vue">
+
+在进行各种颜色表示格式之间相互转换时，部分格式之间存在理论误差，因此 `change` 与 `update:modelValue` 事件返回给你的值是同时包含了 hsva hex rgba 三种格式的色值的对象。
+
+你传入的 `defaultValue`(非受控) 和 `modelValue`(受控) 也应当是同样包含三种格式的对象。
+
+</Framework>
+
+<Framework only="solid">
+
+在进行各种颜色表示格式之间相互转换时，部分格式之间存在理论误差，因此 onChange 返回给你的值是同时包含了 hsva hex rgba 三种格式的色值的对象。
+
+你传入的 defaultValue(非受控) 和 value(受控) 也应当是同样包含三种格式的对象。
+
+</Framework>
+
+我们在组件上提供了静态工具函数 `colorStringToValue`，用于将常见颜色字符串转换为该对象，支持 rgb(57,197,187) #39c5bb（也支持 #3cb 这样的简写）hsv(176,71,77) 等字符串直接传入，无法解析的字符串会抛出错误。
+
+<Demo id="default-value" />
+
+### 受控
+
+<Framework only="react">
+
+通过传入 value 来受控使用
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model` 绑定 `modelValue` 来受控使用。色值按不可变对象对待，更新时整体替换，不要原地修改 `hsva.h` 之类的字段，否则文本框不会同步。
+
+</Framework>
+
+<Framework only="solid">
+
+通过传入 value 来受控使用。色值按不可变对象对待，更新时整体替换，不要原地修改 `hsva.h` 之类的字段，否则文本框不会同步。
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 顶部和底部渲染额外元素
+
+<Framework only="react">
+
+使用 `topSlot` 和 `bottomSlot` 在顶部和底部渲染额外元素
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `#topSlot` 和 `#bottomSlot` 插槽在顶部和底部渲染额外元素
+
+</Framework>
+
+<Framework only="solid">
+
+使用 `topSlot` 和 `bottomSlot` 在顶部和底部渲染额外元素
+
+</Framework>
+
+<Demo id="slot" />
+
+### 键盘和焦点
+
+- 使用 `usePopover` 时，默认触发器是一个带名称的按钮，`Enter`、空格打开弹层；弹层是 `dialog`，默认以点击触发，`Esc` 关闭。弹层的名称默认取内置文案，传入 `popoverProps` 的 `aria-label` 或 `aria-labelledby`（Vue 中为 `ariaLabel`、`ariaLabelledby`）优先。
+- 选色区、色相条、透明度条的手柄都可以用键盘操作。选色区有饱和度与明度两个滑块，色相条、透明度条各有一个。
+- 方向键步进 1，`PageUp`、`PageDown` 步进 10，`Home`、`End` 跳到两端。在选色区内无论聚焦哪个滑块，左右键都改饱和度，上下键与 `PageUp`、`PageDown` 都改明度，`Home`、`End` 作用于聚焦的那一个。同时按下 `Alt`、`Ctrl`、`Meta` 时不处理，留给浏览器和辅助技术。
+- 聚焦手柄时显示主题焦点环；颜色输入框、透明度输入框和格式选择器都有可访问名称。
+
+### API 参考
+
+<Framework only="react">
+
+#### ColorPicker
+
+<ColorPickerReactApi />
+
+#### 属性落点
+
+`className`、`style`、`ref` 与其他原生属性和事件落在 picker 根元素上；使用 `usePopover` 时落在弹层内的 picker 元素上，不落在触发器与对话框上。使用方传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，picker 根元素加 `role="group"`。
+
+#### ColorValue
+
+`value`、`defaultValue` 与 `onChange` 的参数都是同一种对象：
+
+| 字段 | 说明                                                  | 类型                                             |
+| ---- | ----------------------------------------------------- | ------------------------------------------------ |
+| hsva | HSV 色值与透明度，h 为 0-360，s、v 为 0-100，a 为 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba | RGB 色值与透明度，r、g、b 为 0-255，a 为 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex  | 十六进制色值，`#rrggbb` 或带透明度的 `#rrggbbaa`      | `string`                                         |
+
+</Framework>
+
+<Framework only="vue">
+
+#### ColorPicker
+
+<ColorPickerVueApi />
+
+#### 属性落点
+
+`class`、`style` 与其他未声明的属性落在 picker 根元素上；使用 `usePopover` 时落在弹层内的 picker 元素上，不落在触发器与对话框上。使用方传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，picker 根元素加 `role="group"`。
+
+#### ColorValue
+
+`modelValue`、`defaultValue` 与事件载荷都是同一种对象：
+
+| 字段 | 说明                                                  | 类型                                             |
+| ---- | ----------------------------------------------------- | ------------------------------------------------ |
+| hsva | HSV 色值与透明度，h 为 0-360，s、v 为 0-100，a 为 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba | RGB 色值与透明度，r、g、b 为 0-255，a 为 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex  | 十六进制色值，`#rrggbb` 或带透明度的 `#rrggbbaa`      | `string`                                         |
+
+</Framework>
+
+<Framework only="solid">
+
+#### ColorPicker
+
+<ColorPickerSolidApi />
+
+#### 属性落点
+
+`class`、`style`、`ref` 与其他原生属性和事件落在 picker 根元素上；使用 `usePopover` 时落在弹层内的 picker 元素上，不落在触发器与对话框上。使用方传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，picker 根元素加 `role="group"`。
+
+#### ColorValue
+
+`value`、`defaultValue` 与 `onChange` 的参数都是同一种对象：
+
+| 字段 | 说明                                                  | 类型                                             |
+| ---- | ----------------------------------------------------- | ------------------------------------------------ |
+| hsva | HSV 色值与透明度，h 为 0-360，s、v 为 0-100，a 为 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba | RGB 色值与透明度，r、g、b 为 0-255，a 为 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex  | 十六进制色值，`#rrggbb` 或带透明度的 `#rrggbbaa`      | `string`                                         |
+
+</Framework>

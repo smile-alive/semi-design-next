@@ -1,0 +1,24 @@
+**Props**
+
+| Property   | Description                                                                                    | Type           | Default             |
+| ---------- | ---------------------------------------------------------------------------------------------- | -------------- | ------------------- |
+| prefixCls  | Class name prefix.                                                                             | `string`       | `cssClasses.PREFIX` |
+| breakpoint | Breakpoints that trigger the responsive layout: xs, sm, md, lg, xl or xxl. Read once at mount. | `Breakpoint[]` | `undefined`         |
+
+**Events**
+
+| Event      | Description                                                                                                                                                                         | Callback parameters                    |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| breakpoint | Emitted once at mount for each screen listed in breakpoint with the current viewport state, then whenever it starts or stops matching, with the screen name and whether it matches. | `[screen: Breakpoint, match: boolean]` |
+
+**Slots**
+
+| Slot    | Description           | Scope parameters |
+| ------- | --------------------- | ---------------- |
+| default | Content of the sider. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

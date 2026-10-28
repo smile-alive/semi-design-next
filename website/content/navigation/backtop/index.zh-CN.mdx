@@ -1,0 +1,114 @@
+---
+order: 55
+title: 回到顶部
+icon: doc-backtop
+---
+
+import BackTopReactApi from './api/back-top.react.zh-CN.mdx';
+import BackTopVueApi from './api/back-top.vue.zh-CN.mdx';
+import BackTopSolidApi from './api/back-top.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { BackTop } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { BackTop } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { BackTop } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+BackTop 是一个 [FloatButton](/zh-CN/react/basic/float-button)，滚动超过 `visibilityHeight` 后出现，点击后把 `target` 滚动到顶部。默认显示回到顶部图标，可访问名称默认取自语言包（简体中文为「回到顶部」），可以通过 `aria-label` 覆盖。
+
+<Demo id="basic" />
+
+### 自定义样式
+
+BackTop 默认距离底部 50px、距离右侧 100px（RTL 下为左侧），可以用 `style` 覆盖。
+
+<Framework only="react">
+
+外观通过 FloatButton 的 `icon`、`shape`、`size`、`colorful`、`badge` 定制。
+
+</Framework>
+
+<Framework only="vue">
+
+外观通过 FloatButton 的 `#icon` 插槽与 `shape`、`size`、`colorful`、`badge` 定制。
+
+</Framework>
+
+<Framework only="solid">
+
+外观通过 FloatButton 的 `icon`、`shape`、`size`、`colorful`、`badge` 定制。
+
+</Framework>
+
+<Demo id="custom-style" />
+
+## API 参考
+
+<Framework only="react">
+
+<BackTopReactApi />
+
+其他原生属性（如 `data-*`、`aria-*`）经 `...rest` 透传到 FloatButton，落在 `<button>` 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<BackTopVueApi />
+
+`class`、`style` 与原生属性（如 `data-*`、`aria-*`）经 attrs 传入，落在按钮上。`click` 声明为事件，会遮住根元素的原生 click 监听，并按 `duration` 节流。`target` 读取模板 ref 时，ref 在父组件 mounted 之前已赋值；稳定的 `target` 函数晚于挂载才返回元素时不会重新绑定，需要重新挂载 BackTop。组件 ref 的 `$el` 在可见时是 `<button>`，不可见时是占位注释节点。
+
+</Framework>
+
+<Framework only="solid">
+
+<BackTopSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`、`aria-*`）落在按钮上，`onClick` 按 `duration` 节流。
+
+`target` 在挂载后调用一次，此时读取父容器的 ref 能取到元素；稳定的 `target` 函数晚于挂载才返回元素时，需要重新挂载 BackTop。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- BackTop 渲染为单个原生按钮 `<button type="button">`，读屏软件读作按钮
+- 可访问名称取自 `aria-label`；没有时，传入了按钮内容则取按钮内容，否则取语言包中的默认名称（简体中文为「回到顶部」）
+- `children`（Vue 中为默认插槽）是按钮内的静态内容，会成为按钮名称的一部分；按钮内不能嵌套可交互元素
+
+### 键盘和焦点
+
+- 按钮显示后可以用 Tab 及 Shift + Tab 聚焦，聚焦时按 Enter 或 Space 滚动到顶部
+- 键盘聚焦时显示聚焦轮廓
+
+## 设计变量
+
+<DesignToken />

@@ -1,0 +1,390 @@
+---
+title: 输入框
+order: 41
+icon: doc-input
+brief: 输入框是最基本的接收用户文本输入的组件
+---
+
+import InputReactApi from './api/input.react.zh-CN.mdx';
+import TextAreaReactApi from './api/text-area.react.zh-CN.mdx';
+import InputGroupReactApi from './api/input-group.react.zh-CN.mdx';
+import InputVueApi from './api/input.vue.zh-CN.mdx';
+import TextAreaVueApi from './api/text-area.vue.zh-CN.mdx';
+import InputGroupVueApi from './api/input-group.vue.zh-CN.mdx';
+import InputSolidApi from './api/input.solid.zh-CN.mdx';
+import TextAreaSolidApi from './api/text-area.solid.zh-CN.mdx';
+import InputGroupSolidApi from './api/input-group.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本
+
+基本使用
+
+<Demo id="basic" />
+
+### 三种大小
+
+默认定义了三种尺寸：大、默认、小
+
+<Demo id="size" />
+
+### 不可用
+
+设定 `disabled` 属性为 `true`
+
+<Demo id="disabled" />
+
+### 前缀/后缀
+
+<Framework only="react">
+
+在输入框上增加前缀、后缀图标，可以是 ReactNode
+
+当 prefix、suffix 传入的内容为文本或者 Semi Icon 时，会自动带上左右间隔，若为自定义 ReactNode，则左右间隔为 0
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#prefix`、`#suffix` 插槽在输入框上增加前缀、后缀，内容可以是文本、图标或任意节点
+
+当插槽内容只有文本或者一个 Semi Icon 时，会自动带上左右间隔，若为自定义节点，则左右间隔为 0
+
+</Framework>
+
+<Framework only="solid">
+
+在输入框上增加前缀、后缀图标，可以是 JSX 元素
+
+当 prefix、suffix 传入的内容为文本或者 Semi Icon 时，会自动带上左右间隔，若为自定义 JSX 元素，则左右间隔为 0
+
+</Framework>
+
+<Demo id="prefix-suffix" />
+
+### 前置/后置标签
+
+<Framework only="react">
+
+在输入框上增加前置/后置标签
+
+当 addonBefore、addonAfter 传入的内容为文本或者 Semi Icon 时，会自动带上左右间隔，若为自定义 ReactNode，则左右间隔为 0
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#addonBefore`、`#addonAfter` 插槽在输入框上增加前置/后置标签
+
+当插槽内容只有文本或者一个 Semi Icon 时，会自动带上左右间隔，若为自定义节点，则左右间隔为 0
+
+</Framework>
+
+<Framework only="solid">
+
+在输入框上增加前置/后置标签，可以是 JSX 元素
+
+当 addonBefore、addonAfter 传入的内容为文本或者 Semi Icon 时，会自动带上左右间隔，若为自定义 JSX 元素，则左右间隔为 0
+
+</Framework>
+
+<Demo id="addon" />
+
+### 带移除图标
+
+点击图标删除所有内容
+
+<Demo id="clear" />
+
+### 密码模式
+
+隐藏输入的具体内容
+
+<Demo id="password" />
+
+### 校验状态
+
+可设置不同校验状态，展示不同样式
+
+<Demo id="validate-status" />
+
+### 受控组件
+
+<Framework only="react">
+
+`Input` 值完全取决于传入的 `value` 值，配合 `onChange` 回调函数使用
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model` 绑定值。若只用 `:modelValue` 单向绑定，组件不会改变自己的值：父组件不接受 `change` 带来的新值时，输入框会回到 `modelValue`。
+
+</Framework>
+
+<Framework only="solid">
+
+`Input` 值完全取决于传入的 `value` 值，配合 `onChange` 回调函数使用
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 输入框组合
+
+可以将多个输入框放入 InputGroup 的容器中，通过设置 `size` ，`disabled` 可统一设置组合中的输入框属性，支持输入框类型包括： `Input`， `InputNumber`， `Select`， `AutoComplete`、`TreeSelect`、`Cascader`、`DatePicker`
+
+<Notice type="primary" title="注意事项">
+    <div>InputGroup 不推荐插入非支持元素，Form.InputGroup 会对支持的元素进行错误聚合，而不会自定义元素进行处理。</div>
+</Notice>
+
+<Demo id="input-group" />
+
+<Demo id="input-group-tree" />
+
+### 多行输入框
+
+用于多行输入。通过设置 `maxCount` 属性可以进行字数限制并显示字数统计。支持 `showClear`。
+
+<Demo id="textarea" />
+
+### 设置 TextArea 高度
+
+通过 `textareaStyle` 可以设置内部 textarea 元素的样式，如高度、背景色等。
+
+<Demo id="textarea-height" />
+
+### 行号
+
+通过设置 `showLineNumber` 展示行号。可用 `lineNumberStart` 设置起始行号，或通过 `lineNumberStyle`/`lineNumberClassName` 自定义行号区样式。
+
+<Demo id="line-number" />
+
+### 使用 Shift + Enter 换行的多行输入框
+
+TextArea 默认情况下 Enter 回车与 Shift + Enter 均可实现换行  
+通过适当的事件监听与禁用默认行为，你可以实现禁用 Enter 换行，仅 Shift + Enter 才能换行
+
+<Demo id="shift-enter" />
+
+### 自动扩展的多行输入框
+
+通过设置 `autosize` 属性可设置只有高度自动随内容增加而变化。
+
+<Demo id="autosize" />
+
+### 自定义计算字符串长度
+
+通过设置 `getValueLength` 属性可以自定义计算字符串长度。搭配 maxLength 和 minLength（Vue 中为 maxlength、minlength）可以支持 emoji 长度按照可见长度计算。
+
+传入 getValueLength 时，Semi 内部做了什么：
+
+<Framework only="react">
+
+- maxLength：不直接透传 maxLength 给原生 input。如果输入长度超出最大限制，则使用上一次输入的合法长度字符。
+- minLength：动态切换 minLength 的长度，emoji 按照一个长度计算。
+- maxCount：使用 getValueLength 获取的值与 maxCount 进行比较
+
+</Framework>
+
+<Framework only="vue">
+
+- maxlength：不直接透传 maxlength 给原生 input。如果输入长度超出最大限制，则使用上一次输入的合法长度字符。
+- minlength：动态切换 minlength 的长度，emoji 按照一个长度计算。
+- maxCount：使用 getValueLength 获取的值与 maxCount 进行比较
+
+</Framework>
+
+<Framework only="solid">
+
+- maxLength：不直接透传 maxLength 给原生 input。如果输入长度超出最大限制，则使用上一次输入的合法长度字符。
+- minLength：动态切换 minLength 的长度，emoji 按照一个长度计算。
+- maxCount：使用 getValueLength 获取的值与 maxCount 进行比较
+
+</Framework>
+
+<Demo id="value-length" />
+
+一些问题的回答：
+
+> 为何不直接引入 `grapheme-splitter` 包？这个包未压缩体积为 200+kB，对于不需要把 emoji 按照可见长度计算的用户来说，这个体积有点过大了。因此 Semi 选择把长度计算函数作为参数让用户传入。
+
+> 为何不动态修改 maxLength（Vue 中为 maxlength）？动态修改 maxLength 在输入操作完成以后，计算剩余可以输入的字符长度。 如 maxLength 设置为 1，想输入一个 length 为 2 的 '💖'，但是由于 input maxLength 的限制，这里根本就输入不进去，也就无法更新 maxLength。
+
+### 输入法模式
+
+<Framework only="react">
+
+通过设置 `composition` 属性为 `true`，可以开启输入法模式。在该模式下，使用输入法（如中文拼音）输入时，`onChange` 不会在输入法未确认（如拼音过程中）触发，而是在输入法确认后触发一次。适用于实时搜索等场景，避免在拼音输入过程中触发不必要的请求。
+
+</Framework>
+
+<Framework only="vue">
+
+通过设置 `composition` 属性为 `true`，可以开启输入法模式。在该模式下，使用输入法（如中文拼音）输入时，`change` 事件不会在输入法未确认（如拼音过程中）触发，而是在输入法确认后触发一次。适用于实时搜索等场景，避免在拼音输入过程中触发不必要的请求。
+
+</Framework>
+
+<Framework only="solid">
+
+通过设置 `composition` 属性为 `true`，可以开启输入法模式。在该模式下，使用输入法（如中文拼音）输入时，`onChange` 不会在输入法未确认（如拼音过程中）触发，而是在输入法确认后触发一次。适用于实时搜索等场景，避免在拼音输入过程中触发不必要的请求。
+
+</Framework>
+
+Input 和 TextArea 均支持该属性。
+
+<Demo id="composition" />
+
+## API 参考
+
+### Input
+
+<Framework only="react">
+
+> 其他属性与html input 标签保持一致
+
+<InputReactApi />
+
+`className`、`style` 落在外层 wrapper `div` 上；其余原生属性与事件（如 `aria-*`、`id`、`name`、`onClick`）落在原生 `input` 上。`onFocus`、`onBlur` 监听在外层 `div` 上，焦点在输入框与组件内按钮之间移动时不触发。`onCompositionStart`、`onCompositionEnd`、`onCompositionUpdate` 为输入法组合开始、结束与更新时的回调，参数为原生事件。
+
+</Framework>
+
+<Framework only="vue">
+
+> 除 `class`、`style` 外，未声明的属性与监听器（含 `@click`）与 html input 标签保持一致，落在原生 input 上；`aria-*`、`id`、`name` 等也在其中。`focus`、`blur` 事件监听在外层元素上，焦点在输入框与组件内按钮之间移动时不触发。
+
+<InputVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<InputSolidApi />
+
+`class`、`style`、`ref` 落在外层容器 `div` 上；其余原生属性与事件（如 `aria-*`、`id`、`name`）落在原生 `input` 上。`onFocus`、`onBlur` 监听在外层容器上，焦点在输入框与组件内按钮之间移动时不触发。
+
+</Framework>
+
+### TextArea
+
+<Framework only="react">
+
+> 其他属性与 html textarea 标签保持一致
+
+<TextAreaReactApi />
+
+`className`、`style` 落在外层 wrapper `div` 上，`textareaStyle` 落在原生 `textarea` 上；其余原生属性与事件（如 `aria-*`、`id`、`name`、`onClick`）落在原生 `textarea` 上。`onFocus`、`onBlur` 监听在外层 `div` 上，焦点在文本框与清除按钮之间移动时不触发。`onCompositionStart`、`onCompositionEnd`、`onCompositionUpdate` 为输入法组合开始、结束与更新时的回调，参数为原生事件。
+
+</Framework>
+
+<Framework only="vue">
+
+> 除 `class`、`style` 外，未声明的属性与监听器（含 `@click`）与 html textarea 标签保持一致，落在原生 textarea 上。
+
+<TextAreaVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<TextAreaSolidApi />
+
+`class`、`style`、`ref` 落在外层容器 `div` 上；其余原生属性与事件（如 `aria-*`、`id`、`name`）落在原生 `textarea` 上。`onFocus`、`onBlur` 监听在外层容器上，焦点在文本框与清除按钮之间移动时不触发。
+
+</Framework>
+
+### InputGroup
+
+<Framework only="react">
+
+通用属性将设置到 InputGroup 的子级元素上，例如 size、disabled 等；子级显式设置的 disabled 优先于 InputGroup 的值。onFocus、onBlur 不会下发给子级：InputGroup 在自身根元素上监听焦点事件，子级获得或失去焦点时，InputGroup 与子级各自的处理器都会触发，互不覆盖。
+
+<InputGroupReactApi />
+
+`data-*`、`aria-*` 等其他属性不挂到 `role="group"` 元素上，而是下发给组内每个子元素，并覆盖子元素上的同名属性。
+
+</Framework>
+
+<Framework only="vue">
+
+通用属性（`size`、`disabled`、`data-*`、`aria-*` 等）下发给每个子节点；子级自己写的 `disabled`（含模板简写 `disabled` 和 `:disabled="false"`）优先于组的值，`size` 总是取组的值。`class`、`style` 留在 `role="group"` 的元素上。`focus`、`blur` 是组自己的事件，不下发给子级：子级获得或失去焦点时，组与子级各自的监听器都会触发，互不覆盖。`labelPosition` 也不下发。带 `label` 时，组件 ref 的 `$el` 是外层 wrapper。
+
+<InputGroupVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+<InputGroupSolidApi />
+
+`size` 与 `disabled` 下发给组内每个控件：控件自己设置的 `disabled` 优先，`size` 总是取组的值。其余未声明的属性（如 `data-*`、`aria-*`）同样下发，控件自己设置的属性优先。`class`、`style`、`ref` 落在 `role="group"` 的 `span` 上。`onFocus`、`onBlur` 监听在组的根元素上，组内控件获得或失去焦点时，组与控件各自的处理器都会触发，互不覆盖。
+
+</Framework>
+
+## Methods
+
+<Framework only="react">
+
+Input 与 TextArea 的 ref 是命令式句柄（类型分别为 `InputHandle`、`TextAreaHandle`），不是原生 DOM 节点。需要节点时读取句柄上的属性，属性每次读取都返回当前挂载的节点，卸载后为 `null`。
+
+成员见上方 Input 与 TextArea 的 **Methods** 表。
+
+</Framework>
+
+<Framework only="vue">
+
+Input 与 TextArea 的模板 ref 是命令式句柄（类型分别为 `InputHandle`、`TextAreaHandle`），成员见上方各组件的 Exposes 表。`input`、`textarea`、`nativeElement` 每次读取都返回当前挂载的节点，卸载后为 `null`。
+
+</Framework>
+
+<Framework only="solid">
+
+Input 与 TextArea 的 ref 是外层容器 `div`，不是命令式句柄。`focus()` 与 `blur()` 作用于内部的输入框或文本框；`select()`、`setSelectionRange()` 等原生方法需要先通过 `inputRef`、`textareaRef` 取得原生元素，再在元素上调用。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 当 validateStatus 为 error 时，输入框的 aria-invalid 为 true
+- 在 Form 中使用时，输入框通过 aria-labelledby 关联 Field 的 label
+
+### 键盘和焦点
+
+- Input 可被获取焦点，键盘用户可以使用 Tab 及 Shift + Tab 切换焦点
+- 密码显隐按钮是原生 `button`，名称随状态读语言包中的「显示密码」「隐藏密码」，可以被聚焦，聚焦后使用 Enter 或者空格键切换，切换后焦点回到输入框
+- `showClear` 开启、有内容且未禁用（或设置了 `showClearIgnoreDisabled`）时，清除按钮是原生 `button`，名称为语言包中的「清空输入」。Input 在 hover 或焦点位于其内时显示它，TextArea（不可编辑时不显示）在 hover 或焦点位于其内时显示它。从输入框按 Tab 移到清除按钮，Enter 或空格键清空，清空后焦点回到输入框；鼠标点击清除按钮时焦点留在原处
+
+## 设计变量
+
+<DesignToken />

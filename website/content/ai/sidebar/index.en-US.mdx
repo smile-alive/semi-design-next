@@ -1,0 +1,655 @@
+---
+order: 103
+title: Sidebar
+icon: doc-sidebar
+brief: Display configuration and detail information in AI scenarios
+showNew: true
+---
+
+import ContainerReactApi from './api/container.react.en-US.mdx';
+import MCPConfigureReactApi from './api/mcp-configure.react.en-US.mdx';
+import AnnotationReactApi from './api/annotation.react.en-US.mdx';
+import AnnotationContentReactApi from './api/annotation-content.react.en-US.mdx';
+import SidebarReactApi from './api/sidebar.react.en-US.mdx';
+import CodeContentReactApi from './api/code-content.react.en-US.mdx';
+import FileContentReactApi from './api/file-content.react.en-US.mdx';
+import CodeItemReactApi from './api/code-item.react.en-US.mdx';
+import FileItemReactApi from './api/file-item.react.en-US.mdx';
+import ContainerVueApi from './api/container.vue.en-US.mdx';
+import MCPConfigureVueApi from './api/mcp-configure.vue.en-US.mdx';
+import AnnotationVueApi from './api/annotation.vue.en-US.mdx';
+import AnnotationContentVueApi from './api/annotation-content.vue.en-US.mdx';
+import SidebarVueApi from './api/sidebar.vue.en-US.mdx';
+import CodeContentVueApi from './api/code-content.vue.en-US.mdx';
+import CodeItemVueApi from './api/code-item.vue.en-US.mdx';
+import FileContentVueApi from './api/file-content.vue.en-US.mdx';
+import FileItemVueApi from './api/file-item.vue.en-US.mdx';
+import ContainerSolidApi from './api/container.solid.en-US.mdx';
+import MCPConfigureSolidApi from './api/mcp-configure.solid.en-US.mdx';
+import AnnotationSolidApi from './api/annotation.solid.en-US.mdx';
+import AnnotationContentSolidApi from './api/annotation-content.solid.en-US.mdx';
+import SidebarSolidApi from './api/sidebar.solid.en-US.mdx';
+import CodeContentSolidApi from './api/code-content.solid.en-US.mdx';
+import FileContentSolidApi from './api/file-content.solid.en-US.mdx';
+import CodeItemSolidApi from './api/code-item.solid.en-US.mdx';
+import FileItemSolidApi from './api/file-item.solid.en-US.mdx';
+
+## Usage Scenarios
+
+The Sidebar is mainly used in AI scenarios for information display and feature configuration, including MCP configuration, reference sources, code preview, rich text preview and editing, etc.
+
+## Code Examples
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-react';
+
+const { Container, CodeContent, CodeItem, FileContent, FileItem } = Sidebar;
+const { AnnotationContent } = Annotation;
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-vue';
+
+    const { Container, CodeContent, CodeItem, FileContent, FileItem } = Sidebar;
+    const { AnnotationContent } = Annotation;
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-solid';
+
+const { Container, CodeContent, CodeItem, FileContent, FileItem } = Sidebar;
+const { AnnotationContent } = Annotation;
+```
+
+</Framework>
+
+### Basic Container
+
+The basic container of the Sidebar is the base container for [MCP configuration](#mcp-configuration), [References](#references) and [Sidebar](#sidebar).
+
+<Framework only="react">
+
+- `visible` together with `onCancel` is used to control show/hide
+- `title` sets the title
+- `motion` sets whether to enable the expand animation
+- `resizable` sets whether the width is resizable. When `true`, you can use `minWidth` and `maxWidth` to control min and max width
+
+</Framework>
+
+<Framework only="vue">
+
+- `v-model:visible` controls show/hide. Clicking the close button, or pressing Esc when `closeOnEsc` is `true`, updates it to `false` first and then emits `cancel`
+- `title` sets a plain-text title; use the `#title` slot for custom content
+- `motion` sets whether to enable the expand animation
+- `resizable` sets whether the width is resizable. When `true`, you can use `minWidth` and `maxWidth` to control min and max width
+
+</Framework>
+
+<Framework only="solid">
+
+- `visible` together with `onCancel` is used to control show/hide
+- `title` sets the title, which can be any content; use `renderHeader` to customize the whole header
+- `motion` sets whether to enable the expand animation
+- `resizable` sets whether the width is resizable. When `true`, you can use `minWidth` and `maxWidth` to control min and max width
+
+</Framework>
+
+<Demo id="container" />
+
+### MCP Configuration
+
+Use `MCPConfigure` to display, enable/disable, configure and search MCP tools.
+
+<Framework only="react">
+
+- Use `options` and `customOptions` to set built-in MCP tools and custom MCP tools
+- Use `visible` to control show and hide, and `onCancel` to listen to user close behavior
+- Use `onStatusChange` to handle enabling/disabling of MCP tools
+- Use `onAddClick` to handle actions after clicking the Add button in custom MCP page
+- Use `onConfigureClick` to listen to configuration of built-in MCP tools, and `onEditClick` to listen to configuration of custom MCP tools
+
+For other APIs of MCPConfigure, see [MCPConfigure](#MCPConfigure).
+
+The type of MCP tool item is as follows:
+
+```ts
+interface MCPOption {
+    icon?: ReactNode;
+    label?: string;
+    value: string; // required, identifies the tool and must be unique
+    desc?: ReactNode;
+    active?: boolean;
+    disabled?: boolean;
+    configure?: boolean; // whether to show configure button
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+- Bind `v-model:options` and `v-model:customOptions` to the built-in and custom MCP tools; switching a tool updates the bound value first and then emits `statusChange`
+- Use `v-model:visible` to control show and hide, and `cancel` to listen to user close behavior
+- Use `statusChange` to handle enabling/disabling of MCP tools
+- Use `addClick` to handle actions after clicking the Add button in custom MCP page
+- Use `configureClick` to listen to configuration of built-in MCP tools, and `editClick` to listen to configuration of custom MCP tools
+- Use the `#icon` and `#desc` slots for the icon and description of an item, and `#item` to replace the whole row; the slot parameters are `{ item, index, custom }`
+
+For other APIs of MCPConfigure, see [MCPConfigure](#MCPConfigure).
+
+The type of MCP tool item is as follows:
+
+```ts
+interface MCPConfigureOption {
+    icon?: string; // image URL; use the #icon slot for other content
+    label?: string;
+    value: string; // required, identifies the tool and must be unique
+    desc?: string; // plain text; use the #desc slot for other content
+    active?: boolean;
+    disabled?: boolean;
+    configure?: boolean; // whether to show configure button
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+- Use `options` and `customOptions` to set the built-in and custom MCP tools
+- Use `visible` to control show and hide, and `onCancel` to listen to user close behavior
+- Use `onStatusChange` to handle enabling/disabling of MCP tools; the component never changes the lists you pass, so write the callback argument back to `options` or `customOptions`
+- Use `onAddClick` to handle actions after clicking the Add button in custom MCP page
+- Use `onConfigureClick` to listen to configuration of built-in MCP tools, and `onEditClick` to listen to configuration of custom MCP tools
+- Use `renderIcon` and `renderDesc` for the icon and description of an item, and `renderItem` to replace the whole row; they are called with `{ option, custom }`
+
+For other APIs of MCPConfigure, see [MCPConfigure](#MCPConfigure).
+
+The type of MCP tool item is as follows:
+
+```ts
+interface MCPConfigureOption {
+    icon?: string; // image URL; use renderIcon for other content
+    label?: string;
+    value: string; // required, identifies the tool and must be unique
+    desc?: string; // plain text; use renderDesc for other content
+    active?: boolean;
+    disabled?: boolean;
+    configure?: boolean; // whether to show configure button
+}
+```
+
+</Framework>
+
+Usage example:
+
+<Demo id="mcp-configure" />
+
+### References
+
+Use the `Annotation` component to manage the display of reference sources.
+
+<Framework only="react">
+
+- Use `activeKey` together with `onChange` to manage the currently expanded item
+- `info` sets the reference content list
+
+</Framework>
+
+<Framework only="vue">
+
+- Use `v-model:activeKey` to manage the currently expanded item
+- `info` sets the reference content list
+- `click` is emitted when a reference is clicked, with the event and the item
+- Use the `#infoHeader` slot for a group header and `#item` to replace an item; `#header` is the header of the whole container
+
+</Framework>
+
+<Framework only="solid">
+
+- Use `activeKey` together with `onChange` to manage the currently expanded item
+- `info` sets the reference content list
+- `onClick` is called when a reference is clicked, with the event and the item
+- Use `renderInfoHeader` for a group header and `renderItem` to replace an item; `renderHeader` renders the header of the whole container
+
+</Framework>
+
+<Demo id="annotation" />
+
+### Code Display
+
+You can use `CodeItem` in `Sidebar` to display code. `CodeItem` is built based on [JsonViewer](/en-US/react/plus/json-viewer) and [CodeHighlight](/en-US/react/plus/code-highlight).
+
+- `content`: content string
+- `isJson`: whether the content is json
+- `language`: programming language name, same as `language` in `CodeHighlight`; register it with `CodeHighlight.register` first
+- `jsonViewerProps`: configure other JsonViewer props
+- `codeHighlightProps`: configure other CodeHighlight props
+
+<Framework only="vue">
+
+The value of JsonViewer is called `modelValue` in `jsonViewerProps`, and both `jsonViewerProps` and `codeHighlightProps` accept `class` and `style`. The custom rendering and search button of JsonViewer are available through the `#customRender` and `#searchButton` slots of `CodeItem`.
+
+</Framework>
+
+<Framework only="solid">
+
+`jsonViewerProps` and `codeHighlightProps` are the props of the Solid JsonViewer and CodeHighlight. They are spread after the built-in defaults, so `value`, `width`, `height` and the like override those defaults, and `class` and `style` are accepted too.
+
+</Framework>
+
+<Demo id="code-item" />
+
+### Code List
+
+You can use `CodeContent` in `Sidebar` to display a list of code blocks.
+
+<Framework only="react">
+
+- Use `activeKey` together with `onChange` to manage the expanded panels
+- Use `onExpand` to listen to the expand button in a panel header
+
+</Framework>
+
+<Framework only="vue">
+
+- Use `v-model:activeKey` to manage the expanded panels
+- Use `expand` to listen to the expand button in a panel header
+- `#customRender` and `#searchButton` are forwarded to the JsonViewer of every JSON panel
+
+</Framework>
+
+<Framework only="solid">
+
+- Use `activeKey` together with `onChange` to manage the expanded panels
+- Use `onExpand` to listen to the expand button in a panel header; the button is shown only when it is set
+
+</Framework>
+
+<Demo id="code-list" />
+
+### Rich Text Editor
+
+You can use `FileItem` in `Sidebar` to view and edit rich text content. `FileItem` is implemented based on [tiptap](https://tiptap.dev/docs/editor/getting-started/overview).
+
+<Framework only="react">
+
+- `content`: rich text content, supports the same types as TiptapContent. A change after mount is synced to the editor; it is not applied when it equals what the editor already holds, so typing and the cursor are not interrupted. The sync does not call `onContentChange`
+- `editable`: whether the content is editable; a change after mount is synced to the editor
+- `imgUploadProps`: configure image upload endpoint and how to set the src after upload. Use `action` to set upload url and `getUploadImageSrc(response)` to return the uploaded image url from the upload response (when omitted, a string response is used as the url, otherwise `response.src`), which will be used as src of img node in rich text. The toolbar shows the image button only when `action` or `customRequest` is set
+
+</Framework>
+
+<Framework only="vue">
+
+- `content`: rich text as HTML. A change after mount is synced to the editor; it is not applied when it equals what the editor already holds, so typing and the cursor are not interrupted. The sync does not emit `contentChange`
+- `editable`: whether the content is editable; a change after mount is synced to the editor
+- `imgUploadProps`: configure image upload endpoint and how to set the src after upload. Use `action` to set upload url and `getUploadImageSrc(response)` to return the uploaded image url from the upload response (when omitted, a string response is used as the url, otherwise `response.src`), which will be used as src of img node in rich text; the `on` listeners of Upload (such as `onSuccess`) can be passed here too. The toolbar shows the image button only when `action` or `customRequest` is set
+- `extensions` and `imgUploadProps` are read only when the editor is created; change the `key` to remount it with new values
+- `contentChange` is emitted after an edit, with the content as HTML
+
+</Framework>
+
+<Framework only="solid">
+
+- `content`: rich text as HTML. A change after mount is synced to the editor; it is not applied when it equals what the editor already holds, so typing and the cursor are not interrupted. The sync does not call `onContentChange`
+- `editable`: whether the content is editable; a change after mount is synced to the editor
+- `imgUploadProps`: configure image upload endpoint and how to set the src after upload. Use `action` to set upload url and `getUploadImageSrc(response)` to return the uploaded image url from the upload response (when omitted, a string response is used as the url, otherwise `response.src`), which will be used as src of img node in rich text; the `on` callbacks of Upload (such as `onSuccess`) can be passed here too. The toolbar shows the image button only when `action` or `customRequest` is set
+- `extensions` and `imgUploadProps` are read only when the editor is created; remount the component to apply new values, for example by wrapping it in `<Show when={version} keyed>`
+- `onContentChange` is called after an edit, with the content as HTML
+
+</Framework>
+
+<Demo id="file-item" />
+
+### Rich Text List
+
+You can use `FileContent` in `Sidebar` to display a list of rich text documents.
+
+<Framework only="react">
+
+- Use `activeKey` together with `onChange` to manage the expanded panels
+- Use `onExpand` to listen to the expand button in a panel header
+
+</Framework>
+
+<Framework only="vue">
+
+- Use `v-model:activeKey` to manage the expanded panels
+- Use `expand` to listen to the expand button in a panel header
+
+</Framework>
+
+<Framework only="solid">
+
+- Use `activeKey` together with `onChange` to manage the expanded panels
+- Use `onExpand` to listen to the expand button in a panel header; the button is shown only when it is set
+
+</Framework>
+
+<Demo id="file-list" />
+
+### Sidebar
+
+The `Sidebar` has a main view (`mode` is `main`) and detail views (`mode` is `code`, `file` and other custom values).
+
+<Framework only="react">
+
+In the main view you can configure the title through `title`, decide whether to show close button through `showClose`, and configure top button group through `options`.
+
+For content rendering in the main view, you can pass a render function via `renderMainContent`. You can use `AnnotationContent` in `Annotation` to render references, `FileContent` in `Sidebar` to render rich text, and `CodeContent` to render code.
+
+For detail views, if the content is rich text or code, set `mode` to `code` or `file` and provide `detailContent` to display the content with built-in code display component / rich text editor. If you want to customize how the detail view is rendered, you can use `renderDetailContent` to handle it yourself.
+
+</Framework>
+
+<Framework only="vue">
+
+In the main view you can configure the title through `title` or the `#title` slot, decide whether to show close button through `showClose`, and configure the top button group through `options` (each item is `{ name, key }`); `v-model:activeKey` binds the selected item. Use the `#optionIcon="{ item, index }"` slot for the button icon, or `#optionItem` to replace the whole button, whose `onClick` parameter selects the item.
+
+For content rendering in the main view, use the `#mainContent="{ activeKey }"` slot and render by the selected item. You can use `AnnotationContent` in `Annotation` to render references, `FileContent` in `Sidebar` to render rich text, and `CodeContent` to render code.
+
+For detail views, if the content is rich text or code, set `mode` to `code` or `file` and provide `detailContent` to display the content with built-in code display component / rich text editor; a new `key` in `detailContent` remounts it. If you want to customize how the detail view is rendered, use the `#detailContent="{ mode }"` slot, and customize the detail header through `#detailHeader="{ mode, detailContent }"`; with empty content, both fall back to the built-in ones. Clicking the back button of the detail header emits `backWard`.
+
+</Framework>
+
+<Framework only="solid">
+
+In the main view you can configure the title through `title`, decide whether to show close button through `showClose`, and configure the top button group through `options` (each item is `{ name, key }`); `activeKey` together with `onActiveOptionChange` manages the selected item. Use `renderOptionIcon` for the button icon, or `renderOptionItem` to replace the whole button, whose second parameter `onChange` selects the item.
+
+For content rendering in the main view, pass a render function via `renderMainContent`, called with the selected `activeKey`. You can use `AnnotationContent` in `Annotation` to render references, `FileContent` in `Sidebar` to render rich text, and `CodeContent` to render code. The render function runs again for every signal it reads, so read state signals such as the expanded panels only in the props you pass to the child components, which keeps the content from being rebuilt as a whole.
+
+For detail views, if the content is rich text or code, set `mode` to `code` or `file` and provide `detailContent` to display the content with built-in code display component / rich text editor; a new `key` in `detailContent` remounts it. If you want to customize how the detail view is rendered, use `renderDetailContent`, and customize the detail header through `renderDetailHeader`; when they return empty content, both fall back to the built-in ones. Clicking the back button of the detail header calls `onBackWard`.
+
+</Framework>
+
+<Demo id="sidebar" />
+
+## API Reference
+
+<Framework only="react">
+
+### Container
+
+<ContainerReactApi />
+
+The class name (`className`) and other native attributes (such as `data-*` and `aria-label`) land on the root element `.semi-sidebar-container`; when only `aria-label` is set without `role`, the root element's `role` is `group`.
+
+### MCPConfigure
+
+<MCPConfigureReactApi />
+
+The class name (`className`) and other native attributes land on the root element `.semi-sidebar-container`.
+
+#### MCPReactOption
+
+| Property  | Description                                                                                                          | Type      | Default |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | --------- | ------- |
+| active    | Whether this MCP is active                                                                                           | boolean   | false   |
+| configure | Whether to show configuration related operation/indicator                                                            | boolean   | false   |
+| desc      | Description content                                                                                                  | ReactNode | -       |
+| disabled  | Whether this MCP is disabled. When true, users cannot toggle its active state                                        | boolean   | false   |
+| icon      | Icon element                                                                                                         | ReactNode | -       |
+| label     | Label text                                                                                                           | string    | -       |
+| value     | Value, required. Identifies the option in onStatusChange and is used as the item key, so it must be unique in a list | string    | -       |
+
+### Annotation
+
+<AnnotationReactApi />
+
+The class name (`className`) and other native attributes land on the root element `.semi-sidebar-container`.
+
+### AnnotationContent
+
+<AnnotationContentReactApi />
+
+Other native attributes land on the Collapse root element.
+
+#### AnnotationItem
+
+| Property | Description                                                             | Type                                              | Default |
+| -------- | ----------------------------------------------------------------------- | ------------------------------------------------- | ------- |
+| detail   | Extra detail text such as video description or text note                | string                                            | -       |
+| duration | Duration, usually used for videos, in seconds                           | number                                            | -       |
+| img      | Image url, such as video cover or illustration                          | string                                            | -       |
+| logo     | Logo url of the site/platform to which the content belongs              | string                                            | -       |
+| onClick  | Callback when item is clicked, returns event and current reference item | (event: MouseEvent, item: AnnotationItem) => void | -       |
+| order    | Order/index number                                                      | number                                            | -       |
+| siteName | Name of the site/platform where the content belongs                     | string                                            | -       |
+| title    | Title                                                                   | string                                            | -       |
+| type     | Content type                                                            | 'video' \| 'text'                                 | -       |
+| url      | Resource url. Clicking the reference will open this link                | string                                            | -       |
+
+### Sidebar
+
+<SidebarReactApi />
+
+The class name (`className`) and other native attributes land on the root element `.semi-sidebar-container`.
+
+#### Option
+
+| Property | Description              | Type      | Default |
+| -------- | ------------------------ | --------- | ------- |
+| icon     | Option icon              | ReactNode | -       |
+| key      | Unique key of the option | string    | -       |
+| name     | Option name              | ReactNode | -       |
+
+### CodeContent
+
+<CodeContentReactApi />
+
+Other native attributes land on the Collapse root element.
+
+### CodeItem
+
+<CodeItemReactApi />
+
+Other native attributes land on the `.semi-sidebar-code-content` root element.
+
+### FileContent
+
+<FileContentReactApi />
+
+Other native attributes land on the Collapse root element.
+
+### FileItem
+
+<FileItemReactApi />
+
+Other native attributes land on the root element.
+
+</Framework>
+
+<Framework only="vue">
+
+The `class`, `style` and other undeclared attributes (such as `aria-label`) of Sidebar, Annotation, MCPConfigure and Container land on the `.semi-sidebar-container` element; when the root is named (`aria-label` or `aria-labelledby`) and no `role` is given, its `role` is `group`. Undeclared attributes of CodeContent, CodeItem, FileContent, FileItem and AnnotationContent land on their own root elements.
+
+The template ref of Sidebar, Annotation, MCPConfigure and Sidebar.Container is typed `SidebarContainerHandle` (exported from `@fibrae/semi-ai-vue`); its `root` member is `HTMLDivElement | null`, and `null` while the container is hidden.
+
+### Container
+
+<ContainerVueApi />
+
+### MCPConfigure
+
+<MCPConfigureVueApi />
+
+#### MCPConfigureOption
+
+| Property  | Description                                                                                                          | Type    | Default |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | ------- | ------- |
+| active    | Whether this MCP is active                                                                                           | boolean | false   |
+| configure | Whether to show the configure button                                                                                 | boolean | false   |
+| desc      | Description text, matched by the built-in filter; use the `#desc` slot for other content                             | string  | -       |
+| disabled  | Whether this MCP is disabled. When true, users cannot toggle its active state                                        | boolean | false   |
+| icon      | Image URL of the icon; use the `#icon` slot for other content                                                        | string  | -       |
+| label     | Label text                                                                                                           | string  | -       |
+| value     | Value, required. Identifies the option in `statusChange` and is used as the item key, so it must be unique in a list | string  | -       |
+
+### Annotation
+
+<AnnotationVueApi />
+
+### AnnotationContent
+
+<AnnotationContentVueApi />
+
+#### AnnotationInfo
+
+| Property    | Description                                                                                                                     | Type                                | Default |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
+| annotations | Reference items of the group                                                                                                    | [AnnotationItem](#AnnotationItem)[] | -       |
+| header      | Plain text of the group header; customize it with the `#infoHeader` slot (Annotation) or the `#header` slot (AnnotationContent) | string                              | -       |
+| key         | Unique key of the group                                                                                                         | string                              | -       |
+
+#### AnnotationItem
+
+| Property | Description                                                                                                          | Type              | Default |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | ----------------- | ------- |
+| detail   | Extra detail text such as video description or text note                                                             | string            | -       |
+| duration | Duration, usually used for videos, in seconds                                                                        | number            | -       |
+| img      | Image url, such as video cover or illustration                                                                       | string            | -       |
+| logo     | Logo url of the site/platform to which the content belongs                                                           | string            | -       |
+| order    | Order/index number                                                                                                   | number            | -       |
+| siteName | Name of the site/platform where the content belongs                                                                  | string            | -       |
+| title    | Title                                                                                                                | string            | -       |
+| type     | Content type                                                                                                         | 'video' \| 'text' | -       |
+| url      | Resource url, opened in a new tab. An item without it renders a link without href that only the pointer can activate | string            | -       |
+
+### Sidebar
+
+<SidebarVueApi />
+
+#### SideBarOption
+
+| Property | Description                                          | Type   | Default |
+| -------- | ---------------------------------------------------- | ------ | ------- |
+| key      | Unique key of the option                             | string | -       |
+| name     | Option name; use the `#optionIcon` slot for the icon | string | -       |
+
+### CodeContent
+
+Each item of `codes` is the props of [CodeItem](#CodeItem) plus a `key` that identifies its panel.
+
+<CodeContentVueApi />
+
+### CodeItem
+
+<CodeItemVueApi />
+
+### FileContent
+
+Each item of `files` is the props of [FileItem](#FileItem) plus a `key` that identifies its panel. It is rendered read-only: each entry's `extensions` and `imgUploadProps` reach its preview.
+
+<FileContentVueApi />
+
+### FileItem
+
+<FileItemVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+The `class`, `style`, `ref` and other undeclared attributes (such as `aria-label`, `id` and `data-*`) of Sidebar, Annotation, MCPConfigure and Container land on the `.semi-sidebar-container` element; when the root is named (`aria-label` or `aria-labelledby`) and no `role` is given, its `role` is `group`. For CodeContent, FileContent and AnnotationContent they land on their own root element (the collapse), and for CodeItem and FileItem on their own root `div`.
+
+### Container
+
+<ContainerSolidApi />
+
+### MCPConfigure
+
+<MCPConfigureSolidApi />
+
+#### MCPConfigureOption
+
+| Property  | Description                                                                                                   | Type      | Default |
+| --------- | ------------------------------------------------------------------------------------------------------------- | --------- | ------- |
+| active    | Whether the tool is active                                                                                    | `boolean` | false   |
+| configure | Whether to show the configure button                                                                          | `boolean` | false   |
+| desc      | Description text, matched by the built-in filter; use `renderDesc` for other content                          | `string`  | -       |
+| disabled  | Whether the tool is disabled; when true, the user cannot change its active state                              | `boolean` | false   |
+| icon      | Image URL of the icon; use `renderIcon` for other content                                                     | `string`  | -       |
+| label     | Label text                                                                                                    | `string`  | -       |
+| value     | Required. Identifies the tool in `onStatusChange` and keys its row, so it must be unique within the same list | `string`  | -       |
+
+### Annotation
+
+<AnnotationSolidApi />
+
+### AnnotationContent
+
+<AnnotationContentSolidApi />
+
+#### AnnotationInfo
+
+| Property    | Description                                                                                                             | Type                                | Default |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
+| annotations | References of the group                                                                                                 | [AnnotationItem](#AnnotationItem)[] | -       |
+| header      | Plain text of the group header; customize it with `renderInfoHeader` (Annotation) or `renderHeader` (AnnotationContent) | `string`                            | -       |
+| key         | Unique identifier of the group                                                                                          | `string`                            | -       |
+
+#### AnnotationItem
+
+| Property | Description                                                                                                      | Type                                                | Default |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ------- |
+| detail   | Detail or supplementary text (such as a video summary or a text note)                                            | `string`                                            | -       |
+| duration | Duration, usually of a video, in seconds                                                                         | `number`                                            | -       |
+| img      | Image URL (such as a video cover or a text illustration)                                                         | `string`                                            | -       |
+| logo     | Logo image URL of the site or platform                                                                           | `string`                                            | -       |
+| onClick  | Called when the item is clicked, with the event and the item (without onClick); used instead of the Annotation's | `(event: MouseEvent, item: AnnotationItem) => void` | -       |
+| order    | Citation number (used for ordering and for the number badge)                                                     | `number`                                            | -       |
+| siteName | Name of the site or platform                                                                                     | `string`                                            | -       |
+| title    | Title                                                                                                            | `string`                                            | -       |
+| type     | Content type                                                                                                     | `'video' \| 'text'`                                 | -       |
+| url      | Resource link, opened in a new tab; an item without url renders a link without href that only a pointer can use  | `string`                                            | -       |
+
+### Sidebar
+
+<SidebarSolidApi />
+
+#### SideBarOption
+
+| Property | Description                                      | Type     | Default |
+| -------- | ------------------------------------------------ | -------- | ------- |
+| key      | Unique identifier of the option                  | `string` | -       |
+| name     | Option name; use `renderOptionIcon` for the icon | `string` | -       |
+
+### CodeContent
+
+Each item of `codes` is the props of [CodeItem](#CodeItem) plus a `key` identifying its panel.
+
+<CodeContentSolidApi />
+
+### CodeItem
+
+<CodeItemSolidApi />
+
+`class`, `style` and native attributes land on the root `div`.
+
+### FileContent
+
+Each item of `files` is the props of [FileItem](#FileItem) plus a `key` identifying its panel. They are rendered read-only, and `extensions` and `imgUploadProps` reach their previews.
+
+<FileContentSolidApi />
+
+### FileItem
+
+<FileItemSolidApi />
+
+`class`, `style` and native attributes land on the root `div`.
+
+</Framework>

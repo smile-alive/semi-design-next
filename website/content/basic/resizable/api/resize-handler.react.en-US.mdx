@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                 | Type                                                              | Default |
+| ------------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| children      | Content that replaces the default grip icon.                                                | `React.ReactNode`                                                 | -       |
+| className     | Class name of the handle.                                                                   | `string`                                                          | -       |
+| direction     | Ignored. The direction of the handle follows the `direction` of the `ResizeGroup` it is in. | `Direction`                                                       | -       |
+| disabled      | Ignored. It does not disable the handle.                                                    | `boolean`                                                         | -       |
+| onResizeStart | Ignored. Use `onResizeStart` of `ResizeItem` for the callback when resizing starts.         | `HandlerCallback`                                                 | -       |
+| ref           | Reference to the root `div` element of the handle.                                          | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| style         | Style of the handle.                                                                        | `React.CSSProperties`                                             | -       |

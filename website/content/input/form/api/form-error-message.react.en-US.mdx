@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property         | Description                                                                                                                                                               | Type                                                              | Default |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| className        | Class name of the error message element.                                                                                                                                  | `string`                                                          | -       |
+| error            | The error. A string or ReactNode is shown as is and an array is joined with `, `. `true` shows the error container without text; `false` and empty values render nothing. | `ReactFieldError`                                                 | -       |
+| errorMessageId   | The id of the error text element, referenced by `aria-errormessage`.                                                                                                      | `string`                                                          | -       |
+| helpText         | The help text. It shares the block with the error, and the error is shown when both are set.                                                                              | `React.ReactNode`                                                 | -       |
+| helpTextId       | The id of the help text element, referenced by `aria-describedby`.                                                                                                        | `string`                                                          | -       |
+| isInInputGroup   | Whether it is inside an InputGroup. When it and `showValidateIcon` are `true`, the error icon shows whatever `validateStatus` is.                                         | `boolean`                                                         | -       |
+| ref              | Reference to the error message element.                                                                                                                                   | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| showValidateIcon | Whether to show the icon of `validateStatus`.                                                                                                                             | `boolean`                                                         | -       |
+| style            | Inline style of the error message element.                                                                                                                                | `React.CSSProperties`                                             | -       |
+| validateStatus   | Validation status of the message: `default`, `error`, `warning` or `success`.                                                                                             | `string`                                                          | -       |

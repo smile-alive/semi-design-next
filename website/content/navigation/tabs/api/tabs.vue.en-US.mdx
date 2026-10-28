@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | The itemKey of the active tab, used with v-model:activeKey. null activates no tab and is still controlled; omitted or undefined means uncontrolled. | `string \| null` | `semiGlobalDefault("Tabs", "activeKey")` |
+| arrowPosition | Position of the scroll arrows in collapsible mode. | `"both" \| "start" \| "end"` | `semiDefault("Tabs", "arrowPosition", "both")` |
+| collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| "auto"` | `semiDefault("Tabs", "collapsible", false)` |
+| contentStyle | Style of the outer content area. | `StyleValue` | `semiGlobalDefault("Tabs", "contentStyle")` |
+| defaultActiveKey | The itemKey selected initially when uncontrolled. Defaults to the first enabled tab that has an itemKey. | `string` | `semiGlobalDefault("Tabs", "defaultActiveKey")` |
+| dropdownProps | In collapsible mode, the Dropdown props passed to the start-side and end-side arrow menus. | `TabsDropdownProps` | `semiGlobalDefault("Tabs", "dropdownProps")` |
+| keepDOM | With TabPane children, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion. | `boolean` | `semiDefault("Tabs", "keepDOM", true)` |
+| lazyRender | Lazy rendering: a panel is rendered into the DOM only after it has been active. | `boolean` | `semiDefault("Tabs", "lazyRender", false)` |
+| more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, count is that number and dropdownProps is passed to the dropdown. The trigger and the menu content are customized with the more and moreContent slots. | `number \| TabsMore` | `semiGlobalDefault("Tabs", "more")` |
+| preventScroll | Whether focus calls inside the component stop the browser from scrolling the document to the newly focused element. | `boolean` | `semiGlobalDefault("Tabs", "preventScroll")` |
+| showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `semiDefault("Tabs", "showRestInDropdown", true)` |
+| size | Size of the tab bar; currently only the line type supports it. | `TabSize` | `semiDefault("Tabs", "size", "large")` |
+| tabBarClassName | Class name of the tab bar. | `string` | `semiGlobalDefault("Tabs", "tabBarClassName")` |
+| tabBarStyle | Style of the tab bar. | `StyleValue` | `semiGlobalDefault("Tabs", "tabBarStyle")` |
+| tabList | An array of tab data, each with itemKey, tab, disabled and closable. Any array, even an empty one, makes the default slot the content of the active tab and takes precedence over TabPane children; tab markup goes in the tab and icon slots. | `PlainTab[]` | `semiGlobalDefault("Tabs", "tabList")` |
+| tabPaneMotion | Whether switching panels is animated. | `boolean` | `semiDefault("Tabs", "tabPaneMotion", true)` |
+| tabPosition | Position of the tab bar: top is horizontal, left is vertical. | `TabPosition` | `semiDefault("Tabs", "tabPosition", "top")` |
+| type | Style of the tab bar: line, card, button or slash. slash supports horizontal mode only. | `TabType` | `semiDefault("Tabs", "type", "line")` |
+| visibleTabsStyle | In collapsible mode, the style of the whole scrolling area. | `StyleValue` | `semiGlobalDefault("Tabs", "visibleTabsStyle")` |
+
+**Events**
+
+| Event             | Description                                                                                                             | Callback parameters                                                          |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| update:activeKey  | Emitted when the active tab changes, for v-model:activeKey to write back.                                               | `[activeKey: string]`                                                        |
+| change            | Emitted when the tab changes, with the itemKey of the new active tab; emitted together with update:activeKey.           | `[activeKey: string]`                                                        |
+| tabClick          | Emitted when a tab is clicked or activated with Enter or Space; the event is a KeyboardEvent for keyboard activation.   | `[activeKey: string, event: MouseEvent \| KeyboardEvent]`                    |
+| tabClose          | Emitted when a tab is closed, with the itemKey of the closed tab. The caller removes the tab.                           | `[tabKey: string]`                                                           |
+| visibleTabsChange | In collapsible mode, emitted when the visibility of the tabs changes, with a Map from itemKey to whether it is visible. | <ApiType detail={"[visibleState: Map\u003cstring, boolean>]"}>Type</ApiType> |
+
+**Slots**
+
+| Slot               | Description                                                                                                                                                                                | Scope parameters           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| default            | TabPane children; with tabList, the content of the active tab. TabPane must be a direct child of Tabs.                                                                                     | `any`                      |
+| tab                | The tab of each tabList entry, with item and index; without it the entry's tab text shows.                                                                                                 | `TabsTabSlotProps`         |
+| icon               | The icon of each tabList entry, with item and index; an empty result renders no icon.                                                                                                      | `TabsTabSlotProps`         |
+| tabBarExtraContent | Extra content of the tab bar, placed outside the tablist.                                                                                                                                  | `any`                      |
+| tabBar             | Replaces the whole tab bar. tabBarProps holds data only and tabBar is the default tab bar node, rendered with component :is; a TabItem inside the custom bar controls its Tabs on its own. | `TabsTabBarSlotProps`      |
+| arrow              | Replaces each scroll arrow in collapsible mode, with the scrolled-out items, position, onClick and the default arrow defaultNode.                                                          | `TabsArrowSlotProps`       |
+| more               | Replaces the trigger of the More menu.                                                                                                                                                     | `any`                      |
+| moreContent        | Replaces the content of the More menu, with the tabs moved into it as items.                                                                                                               | `TabsMoreContentSlotProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

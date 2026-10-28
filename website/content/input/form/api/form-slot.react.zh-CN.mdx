@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                                   | 类型                                                              | 默认值 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
+| children      | slot 的主体内容。                                                                                                                      | `React.ReactNode`                                                 | -      |
+| className     | slot 的类名。                                                                                                                          | `string`                                                          | -      |
+| error         | 错误信息，渲染在内容之后：对象作为 ErrorMessage 的属性，其他内容作为错误内容；不传则不显示。                                           | `ErrorMessageProps \| React.ReactNode`                            | -      |
+| label         | Label 配置：对象作为 Form.Label 的属性，可配置 `text`、`extra`、`align`、`width`、`required`、`optional` 等；其他内容作为 Label 文本。 | `LabelProps \| React.ReactNode`                                   | -      |
+| labelPosition | slot 的 Label 位置，默认取自 Form，可选 `top` 或 `left`。                                                                              | `'top' \| 'left'`                                                 | -      |
+| noLabel       | 是否不渲染 Label；Form 同时设置了 labelCol 与 wrapperCol 时，Label 列仍保留。                                                          | `boolean`                                                         | -      |
+| ref           | 根 div 元素的引用。                                                                                                                    | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| style         | slot 的内联样式。                                                                                                                      | `React.CSSProperties`                                             | -      |

@@ -1,0 +1,65 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| canSend | 是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。 | `boolean` | - |
+| clearContentOnGenerating | generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。 | `boolean` | `true` |
+| defaultContent | 输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。 | `TiptapContent` | - |
+| dropdownMatchTriggerWidth | 下拉弹出层是否与输入框宽度一致。 | `boolean` | `true` |
+| extensions | 自定义 tiptap 扩展；只在创建编辑器时读取，之后变化不生效。 | `Extensions` | - |
+| generating | 是否正在生成中。为 true 时发送按钮变为停止生成按钮。 | `boolean` | `false` |
+| keepSkillAfterSend | 发送消息后是否保留已选的技能。 | `boolean` | `false` |
+| onBlur | 富文本输入区失去焦点时调用，参数为 focusout 事件。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onConfigureChange | 配置区域的值变化时调用。移除配置项时 changedValue 为 undefined。 | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onContentChange | 输入框内容变化时调用，参数为当前内容。 | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
+| onFocus | 富文本输入区获得焦点时调用，参数为 focusin 事件。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onMessageSend | 点击发送按钮时调用，参数包含引用、上传文件、输入内容与配置区域的值。 | <ApiType detail={"(props: MessageContent) => void"}>Type</ApiType> | - |
+| onPaste | 输入区粘贴时调用，不阻止默认的粘贴行为，可通过 event.clipboardData 读取内容。 | <ApiType detail={"(event: ClipboardEvent) => void"}>Type</ApiType> | - |
+| onReferenceClick | 点击引用时调用，参数为该引用。 | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onReferenceDelete | 删除引用时调用，参数为被删除的引用；引用列表由使用方持有，需要在回调中移除。 | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onSkillChange | 技能切换时调用，移除技能时参数为 undefined。 | <ApiType detail={"(skill?: Skill) => void"}>Type</ApiType> | - |
+| onStopGenerate | 点击停止生成按钮时调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onUploadChange | 上传文件列表变化时调用。 | <ApiType detail={"(props: OnChangeProps) => void"}>Type</ApiType> | - |
+| placeholder | 输入框占位符，可以是字符串，也可以是按节点返回字符串的函数。 | `PlaceholderProps` | - |
+| popoverProps | 下拉弹出层的配置参数；class 与内部类名合并，style 与面板宽度合并。 | `PopoverProps` | - |
+| ref | 根元素，类型为 AIChatInputElement，带有 AIChatInputHandle 的方法。 | <ApiType detail={"Ref\u003cAIChatInputElement>"}>Type</ApiType> | - |
+| references | 输入框的引用列表。 | `Reference[]` | - |
+| renderActionArea | 自定义底部的操作区域。参数 menuItem 依次为上传节点（showUploadButton 为 false 时是隐藏的上传节点，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。 | <ApiType detail={"(props: ActionAreaProps) => JSX.Element"}>Type</ApiType> | - |
+| renderConfigureArea | 自定义底部的配置区域，返回配置项（Configure 的子项）。 | <ApiType detail={"() => JSX.Element"}>Type</ApiType> | - |
+| renderReference | 自定义单个引用的渲染。 | <ApiType detail={"(reference: Reference) => JSX.Element"}>Type</ApiType> | - |
+| renderSkillIcon | 渲染技能列表中每项名称前的图标，参数为该技能。 | <ApiType detail={"(skill: Skill) => JSX.Element"}>Type</ApiType> | - |
+| renderSkillItem | 自定义技能列表中的单项。参数的 id、class、role、aria-selected、onClick 与 onMouseEnter 需要展开到根元素上。 | <ApiType detail={"(props: RenderSkillItemProps) => JSX.Element"}>Type</ApiType> | - |
+| renderSuggestionItem | 自定义建议列表中的单项。参数的 id、class、role、aria-selected、onClick 与 onMouseEnter 需要展开到根元素上。 | <ApiType detail={"(props: RenderSuggestionItemProps) => JSX.Element"}>Type</ApiType> | - |
+| renderTemplate | 自定义模版面板的内容。参数为当前技能（仅显示模版按钮且未选中技能时为 undefined）与模版点击回调，回调传入的内容会替换输入框内容。 | <ApiType detail={"(skill: Skill \u007c undefined, onTemplateClick: (content: string) => void) => JSX.Element"}>Type</ApiType> | - |
+| renderTopSlot | 自定义顶部区域。参数包含引用、上传文件、输入内容与删除回调，参数的 getter 随当前值变化，函数只调用一次。 | <ApiType detail={"(props: RenderTopSlotProps) => JSX.Element"}>Type</ApiType> | - |
+| renderUploadButton | 自定义底部操作区的上传按钮 UI，上传与粘贴上传仍由组件内部托管。参数的 getter 随当前值变化，函数只调用一次。`defaultNode` 是创建默认按钮的渲染函数，在要放置按钮的位置调用。 | <ApiType detail={"(props: RenderUploadButtonProps) => JSX.Element"}>Type</ApiType> | - |
+| round | 底部的配置区域和操作区域按钮是否为全圆角。 | `boolean` | `true` |
+| sendHotKey | 发送输入内容的键盘快捷键。enter 表示单独按下 Enter 发送，Shift 与 Enter 同时按下仅换行；shift+enter 相反。 | `'enter' \| 'shift+enter'` | `"enter"` |
+| showPlaceholderWhenSkillOnly | 仅选中技能（无其他内容）时是否显示占位符，开启后占位符显示在技能后方；只在创建编辑器时读取。 | `boolean` | - |
+| showReference | 是否展示引用区域，用于配合 renderTopSlot 使用。 | `boolean` | `true` |
+| showTemplateButton | 为 true 时始终展示模版按钮；未设置或为 false 时，由当前选中技能的 hasTemplate 决定是否展示。 | `boolean` | - |
+| showUploadButton | 是否显示右侧上传按钮。设为 false 时粘贴上传仍然有效。 | `boolean` | `true` |
+| showUploadFile | 是否展示上传文件区域，用于配合 renderTopSlot 使用。 | `boolean` | `true` |
+| skillHotKey | 输入框中唤起技能面板的热键。 | `string` | - |
+| skills | 技能列表，每项只含数据，图标由 renderSkillIcon 渲染。 | `Skill[]` | - |
+| suggestions | 建议列表，输入内容时按输入的内容展示。 | `Suggestion[]` | - |
+| templatesCls | 模版面板的类名。 | `string` | - |
+| templatesStyle | 模版面板的样式，与默认的最大高度合并，只接受对象。 | `JSX.CSSProperties` | - |
+| topSlotPosition | 顶部区域相对于引用区域与上传文件区域的位置。 | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| transformer | 自定义扩展的转换规则，用于保证 onContentChange 得到的节点数据符合预期。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
+| uploadProps | 上传文件相关配置，取值同 Upload 的属性，不含 fileList 与 listType。 | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |
+| uploadTipProps | 上传按钮的提示，取值同 Tooltip 的属性。使用 renderUploadButton 或 uploadProps.children 时，提示包裹在自定义节点外的 span 上。 | `TooltipProps` | - |
+
+**Methods**
+
+| 方法                    | 说明                                                      | 类型                                                                |
+| ----------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
+| changeTemplateVisible   | 切换模版面板的可见性。                                    | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>       |
+| deleteContent           | 删除富文本中的某一项，删除依据是 content 中的 uniqueKey。 | <ApiType detail={"(content: Content) => void"}>Type</ApiType>       |
+| deleteUploadFile        | 删除上传文件中的某一项。                                  | <ApiType detail={"(item: Attachment) => void"}>Type</ApiType>       |
+| focusEditor             | 聚焦输入框，默认聚焦到末尾，也可传入 FocusPosition。      | <ApiType detail={"(pos?: FocusPosition) => void"}>Type</ApiType>    |
+| getEditor               | 获取当前的 tiptap Editor 实例，编辑器创建前为 null。      | <ApiType detail={"() => Editor \u007c null"}>Type</ApiType>         |
+| setContent              | 设置输入框内容。                                          | <ApiType detail={"(content: TiptapContent) => void"}>Type</ApiType> |
+| setContentWhileSaveTool | 保留已选技能的同时设置输入框内容。                        | <ApiType detail={"(content: string) => void"}>Type</ApiType>        |

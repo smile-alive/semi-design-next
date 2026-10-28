@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                    | 说明                                                                                   | 类型                                                                                     | 默认值                                                           |
+| ----------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| collapseFrom            | collapse 模式的折叠方向，可选 start 或 end。                                           | `"start" \| "end"`                                                                       | `semiDefault("OverflowList", "collapseFrom", "end")`             |
+| items                   | 渲染项目，只放数据，不放节点；scroll 模式要求每项含 key。                              | `T[]`                                                                                    | `semiGlobalDefault("OverflowList", "items")`                     |
+| itemKey                 | 每项 key 的字段名，或取 key 的函数；默认读取 key 字段，没有时取该项在 items 中的位置。 | <ApiType detail={"OverflowListKey \u007c ((item: T) => OverflowListKey)"}>Type</ApiType> | `undefined`                                                      |
+| minVisibleItems         | collapse 模式下最少展示的项数。                                                        | `number`                                                                                 | `semiDefault("OverflowList", "minVisibleItems", 0)`              |
+| overflowRenderDirection | scroll 模式下溢出节点的位置，可选 both、start 或 end；供 Tabs 使用，不面向使用方。     | `"start" \| "end" \| "both"`                                                             | `semiDefault("OverflowList", "overflowRenderDirection", "both")` |
+| renderMode              | 渲染模式，可选 collapse 或 scroll。                                                    | `"collapse" \| "scroll"`                                                                 | `semiDefault("OverflowList", "renderMode", "collapse")`          |
+| threshold               | scroll 模式下触发溢出回调的可见比例阈值。                                              | `number`                                                                                 | `semiDefault("OverflowList", "threshold", 0.75)`                 |
+| wrapperClassName        | scroll 模式下滚动 wrapper 的类名。                                                     | `string`                                                                                 | `semiGlobalDefault("OverflowList", "wrapperClassName")`          |
+| wrapperProps            | scroll 模式下滚动 wrapper 的其他属性，例如承载可见项的 role。                          | <ApiType detail={"(HTMLAttributes & Record\u003cstring, unknown>)"}>Type</ApiType>       | `semiGlobalDefault("OverflowList", "wrapperProps")`              |
+| wrapperStyle            | scroll 模式下滚动 wrapper 的样式。                                                     | `StyleValue`                                                                             | `semiGlobalDefault("OverflowList", "wrapperStyle")`              |
+
+**Events**
+
+| 事件               | 说明                                                        | 回调参数                                                                                 |
+| ------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| overflow           | collapse 模式下溢出项变化时触发，全部放得下时参数为空数组。 | `[overflowItems: T[]]`                                                                   |
+| intersect          | scroll 模式下各项的相交状态变化时触发。                     | <ApiType detail={"[res: Record\u003cstring, IntersectionObserverEntry>]"}>Type</ApiType> |
+| visibleStateChange | scroll 模式下各项的显示或隐藏状态变化时触发。               | <ApiType detail={"[visibleState: Map\u003cstring, boolean>]"}>Type</ApiType>             |
+
+**Slots**
+
+| 插槽     | 说明                                                                                                                                           | 作用域参数                                                               |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| item     | 单个展示项的内容，参数为数据项及其在 items 中的位置。                                                                                          | <ApiType detail={"OverflowListItemSlotProps\u003cT>"}>Type</ApiType>     |
+| overflow | 溢出项的内容。collapse 模式调用一次，items 为放不下的项；scroll 模式在两侧各调用一次，position 为 start 或 end，items 为该侧滚出可见区域的项。 | <ApiType detail={"OverflowListOverflowSlotProps\u003cT>"}>Type</ApiType> |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

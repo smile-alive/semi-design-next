@@ -1,0 +1,39 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the panel has fully closed, in both modes. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| bodyStyle | Style of the content area, passed through to the Modal or SideSheet of the current mode. | `CSSProperties` | - |
+| cancelButtonProps | Props of the cancel button. In popup mode it is loading when either the built-in pending state or your loading says so, and onClick runs before the built-in handling. | `ButtonProps` | - |
+| checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | `CheckboxGroupProps` | - |
+| children | Feedback content for type custom. | `React.ReactNode` | - |
+| className | Class name of the panel root, merged with the built-in class names. | `string` | - |
+| closable | Whether to show the close button. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
+| closeIcon | Icon inside the close button. Passed through to the Modal or SideSheet of the current mode. | `ReactNode` | - |
+| closeOnEsc | Whether Esc closes the panel, passed through to the Modal or SideSheet of the current mode. In popup mode it must be true for Esc to call onCancel. | `boolean` | - |
+| footer | Replaces the footer that holds the default cancel and submit buttons, passed through to the Modal or SideSheet of the current mode. Passing null renders no footer. | `ReactNode` | - |
+| getPopupContainer | Container the panel is mounted into. Passed through to the Modal or SideSheet of the current mode. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| height | Height of the panel, applies in popup mode only and is passed through to the SideSheet. Popup mode uses `auto` by default, and a value you give wins. | `string \| number` | - |
+| keepDOM | Whether the DOM is kept after closing. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
+| mask | Whether to show the mask. Passed through to the Modal or SideSheet of the current mode. Popup mode shows no mask by default, and a value you give wins. | `boolean` | - |
+| maskClosable | Whether a click on the mask closes the panel. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
+| maskStyle | Style of the mask. Passed through to the Modal or SideSheet of the current mode. | `CSSProperties` | - |
+| mode | Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode. | `'modal' \| 'popup'` | `"popup"` |
+| motion | Whether to animate. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
+| okButtonProps | Props of the submit button. Without disabled, it is disabled while the content is empty; for type custom, your disabled decides whether submission is allowed. It is loading when either the built-in pending state or your loading says so. onClick runs before the built-in submission, which still runs. | `ButtonProps` | - |
+| onCancel | Called by the cancel button, the close button and Esc; the argument is a native KeyboardEvent for Esc. In popup mode a returned Promise keeps the cancel button loading, the filled-in value is cleared only once it resolves, and kept when it rejects. Closing is controlled by `visible`; the component never closes itself. | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
+| onOk | Called when the submit button is clicked, with the click event. In popup mode a returned Promise keeps the submit button loading, the filled-in value is cleared only once it resolves, and kept when it rejects; any other return clears the value at once. Closing is controlled by `visible`; the component never closes itself. | <ApiType detail={"(e: React.MouseEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
+| onValueChange | Called when the feedback content changes with the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox. | <ApiType detail={"(value: FeedbackValue) => void"}>Type</ApiType> | - |
+| radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | `RadioGroupProps` | - |
+| ref | Reference to the outermost container of the panel in the portal: the SideSheet's outermost element in popup mode, and the Modal's outermost element in modal mode. It is null while nothing is rendered. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| renderContent | Wraps the feedback content: receives the built-in content (the children for type custom) and returns the wrapped node. | <ApiType detail={"(content: React.ReactNode) => React.ReactNode"}>Type</ApiType> | - |
+| size | Size of the panel. Passed through to the Modal or SideSheet of the current mode. | `Size` | - |
+| style | Inline style, applied to the role="dialog" element in popup mode and to the `.semi-modal` dialog box in modal mode. | `CSSProperties` | - |
+| textAreaProps | Props of the multi-line input for the text and emoji types, written as the props of TextArea. Feedback takes over onChange, and your onChange is still called. | `TextAreaProps` | - |
+| title | Title of the panel. | `ReactNode` | - |
+| type | Type of the feedback content: `emoji`, `text`, `radio`, `checkbox` or `custom`. For custom, the content goes in children or is produced by renderContent. | `'text' \| 'emoji' \| 'radio' \| 'checkbox' \| 'custom'` | `"emoji"` |
+| visible | Whether the panel is shown. The component never closes itself; set it to false in onOk or onCancel. | `boolean` | - |
+| width | Width of the panel. Passed through to the Modal or SideSheet of the current mode. | `string \| number` | - |
+| zIndex | Stacking order of the panel. Passed through to the Modal or SideSheet of the current mode. | `number` | - |

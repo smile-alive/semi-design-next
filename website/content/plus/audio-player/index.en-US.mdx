@@ -1,0 +1,104 @@
+---
+order: 98
+title: AudioPlayer
+icon: doc-audioplayer
+brief: Used to play audio
+---
+
+import AudioPlayerReactApi from './api/audio-player.react.en-US.mdx';
+import AudioPlayerVueApi from './api/audio-player.vue.en-US.mdx';
+import AudioPlayerSolidApi from './api/audio-player.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { AudioPlayer } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AudioPlayer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AudioPlayer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+Basic usage by passing audio URL through `audioUrl`.  
+audioUrl supports string, string array, object, and object array. See [AudioPlayer](#AudioPlayer) for detailed parameters.
+
+<Demo id="basic" />
+
+### Hide Toolbar
+
+Set `showToolbar` to `false` to hide the toolbar: the volume, backward, forward, speed and reload buttons.
+
+<Demo id="hide-toolbar" />
+
+### Theme
+
+Set the audio player theme through `theme`, supports `light` and `dark`, default is `dark`. The speed menu and the volume popup render outside the player, so each carries its own theme modifier class matching `theme` (such as `semi-audio-player-control-volume-light`) and follows the theme
+
+<Demo id="theme" />
+
+## Keyboard and focus
+
+- Play (pause), previous, next, backward, forward, volume and reload are native buttons. Each is one Tab stop, triggered with Enter or Space; the volume button toggles mute.
+- The progress bar is a native range and one Tab stop: the arrow keys change it by 1 second, PageUp and PageDown by a tenth of the duration, and Home and End jump to the ends.
+- The volume popup, a dialog named "Volume", opens when the volume button receives focus. Down Arrow or Up Arrow moves focus to the volume slider inside it, which takes the same keys as the progress bar, with the arrow keys changing it by 1%. Escape closes the popup and returns focus to the volume button.
+- The speed menu opens when the speed button receives focus. Down Arrow and Up Arrow move focus to the first and last item; inside the menu, the up and down arrow keys, Home and End move between items, Enter or Space selects one, and Escape closes the menu. The speed button is named by its purpose followed by the current speed (such as "Playback speed 1.0x"), and its items are radio items (`menuitemradio`) that mark the current speed with `aria-checked`.
+
+## API Reference
+
+### AudioPlayer
+
+<Framework only="react">
+
+<AudioPlayerReactApi />
+
+Native attributes and events not listed above (such as `aria-label`, `id` and `onClick`) are spread onto the root `div`. Native media events of the `audio` element (such as `onTimeUpdate`) cannot be listened to: they do not bubble to the root, so the listener never fires.
+
+</Framework>
+
+<Framework only="vue">
+
+<AudioPlayerVueApi />
+
+`class`, `style` and native attributes are passed through attrs to the root `div`. Native media events of the `audio` element (such as `@timeupdate`) cannot be listened to: they do not bubble to the root, so the listener never fires.
+
+</Framework>
+
+<Framework only="solid">
+
+<AudioPlayerSolidApi />
+
+`class`, `style`, `ref` and native attributes and events land on the root `div`. Native media events of the `audio` element (such as `onTimeUpdate`) cannot be listened to: they do not bubble to the root, so the listener never fires.
+
+</Framework>
+
+The root gets `role="group"` when it has `aria-label` or `aria-labelledby`.
+
+### AudioInfo
+
+| Property | Description   | Type   | Default |
+| -------- | ------------- | ------ | ------- |
+| src      | Audio address | string | -       |
+| title    | Audio title   | string | -       |
+| cover    | Cover image   | string | -       |

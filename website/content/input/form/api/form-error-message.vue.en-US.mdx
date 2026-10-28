@@ -1,0 +1,29 @@
+**Props**
+
+| Property         | Description                                                                                                                                    | Type                                             | Default     |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------- |
+| error            | The error. A string is shown as is and an array is joined. true shows the error container without text; false and empty values render nothing. | `FieldError`                                     | `undefined` |
+| showValidateIcon | Whether to show the icon of validateStatus.                                                                                                    | `boolean`                                        | `undefined` |
+| validateStatus   | Validation status of the message: default, error, warning or success.                                                                          | `"error" \| "default" \| "warning" \| "success"` | `undefined` |
+| isInInputGroup   | Whether it is inside an InputGroup. When it and showValidateIcon are true, the error icon shows whatever validateStatus is.                    | `boolean`                                        | `undefined` |
+| errorMessageId   | The id of the error text element, referenced by aria-errormessage.                                                                             | `string`                                         | `undefined` |
+| helpTextId       | The id of the help text element, referenced by aria-describedby.                                                                               | `string`                                         | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot     | Description                                                                    | Scope parameters         |
+| -------- | ------------------------------------------------------------------------------ | ------------------------ |
+| helpText | Help text, shown while there is no error and sharing the block with the error. | `any`                    |
+| error    | Custom rendering of the error. The scope provides error.                       | `{ error: FieldError; }` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

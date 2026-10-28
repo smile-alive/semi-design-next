@@ -1,0 +1,64 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| motion | Whether the popup is animated. | `boolean` | `semiDefault("Tooltip", "motion", true)` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiDefault("Tooltip", "autoAdjustOverflow", true)` |
+| position | Position of the popup relative to the trigger element. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiDefault("Tooltip", "position", "top")` |
+| prefixCls | Class prefix of the popup. A custom value drops the Tooltip styles. | `string` | `semiDefault("Tooltip", "prefixCls", cssClasses.PREFIX)` |
+| spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number; }` | `semiDefault("Tooltip", "spacing", numbers.SPACING)` |
+| showArrow | Whether the arrow is shown. | `boolean` | `semiDefault("Tooltip", "showArrow", true)` |
+| role | ARIA role of the popup. | `string` | `semiDefault("Tooltip", "role", "tooltip")` |
+| ariaLabel | aria-label of the popup when its role is dialog. | `string` | `semiGlobalDefault("Tooltip", "ariaLabel")` |
+| ariaLabelledby | aria-labelledby of the popup when its role is dialog. | `string` | `semiGlobalDefault("Tooltip", "ariaLabelledby")` |
+| ariaDescribedby | aria-describedby of the popup when its role is dialog. | `string` | `semiGlobalDefault("Tooltip", "ariaDescribedby")` |
+| arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires showArrow. | `boolean` | `semiDefault("Tooltip", "arrowPointAtCenter", true)` |
+| wrapWhenSpecial | Whether a disabled or loading trigger is wrapped in a span so that it still triggers the popup. | `boolean` | `semiDefault("Tooltip", "wrapWhenSpecial", true)` |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | `semiGlobalDefault("Tooltip", "stopPropagation")` |
+| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | `semiGlobalDefault("Tooltip", "wrapperClassName")` |
+| wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | `undefined` |
+| keepDOM | Whether the popup content stays mounted while closed. | `boolean` | `semiDefault("Tooltip", "keepDOM", false)` |
+| clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | `semiGlobalDefault("Tooltip", "clickToHide")` |
+| clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | `semiGlobalDefault("Tooltip", "clickTriggerToHide")` |
+| closeOnEsc | Whether Esc closes the open popup. With trigger custom it only emits escKeyDown and the caller decides whether to close. | `boolean` | `semiDefault("Tooltip", "closeOnEsc", true)` |
+| condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only emits update:visible and visibleChange(false), and the popup closes once the caller writes back. | `boolean` | `semiDefault("Tooltip", "condition", true)` |
+| disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the popup. | `boolean` | `semiDefault("Tooltip", "disableArrowKeyDown", false)` |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | `semiDefault("Tooltip", "disableFocusListener", false)` |
+| guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | `semiDefault("Tooltip", "guardFocus", false)` |
+| mouseEnterDelay | Milliseconds before the popup shows after the pointer enters. Applies to the hover and focus triggers. | `number` | `semiDefault("Tooltip", "mouseEnterDelay", numbers.MOUSE_ENTER_DELAY)` |
+| mouseLeaveDelay | Milliseconds before the popup hides after the pointer leaves. Applies to the hover and focus triggers; not less than mouseEnterDelay. | `number` | `semiDefault("Tooltip", "mouseLeaveDelay", numbers.MOUSE_LEAVE_DELAY)` |
+| preventScroll | Whether focusing an element avoids scrolling it into view. | `boolean` | `semiGlobalDefault("Tooltip", "preventScroll")` |
+| returnFocusOnClose | Whether focus returns to the trigger after the popup closes. | `boolean` | `semiDefault("Tooltip", "returnFocusOnClose", false)` |
+| trigger | When the popup shows. With custom, visible alone decides. | `"hover" \| "focus" \| "click" \| "custom" \| "contextMenu"` | `semiDefault("Tooltip", "trigger", "hover")` |
+| visible | Whether the popup is shown, used with v-model:visible. When given, this value decides. | `boolean` | `semiGlobalDefault("Tooltip", "visible")` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                                                                                  | Callback parameters      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| open           | Emitted once per opening when the popup is shown, as its enter animation starts, before afterOpen, controlled or not; not emitted for a hover open withdrawn because the pointer already left.                               | `[]`                     |
+| update:visible | Emitted when the popup should show or hide, for v-model:visible to write back.                                                                                                                                               | `[visible: boolean]`     |
+| visibleChange  | Emitted when the visibility of the popup changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible.                                                         | `[visible: boolean]`     |
+| clickOutSide   | Emitted when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom, or with clickTriggerToHide.                                                                      | `[event: MouseEvent]`    |
+| escKeyDown     | Emitted when Esc is pressed while the popup is open and closeOnEsc is true.                                                                                                                                                  | `[event: KeyboardEvent]` |
+| afterOpen      | Emitted after the popup has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not emitted for an open that is closed before the enter animation ends. | `[]`                     |
+| afterClose     | Emitted after the popup has closed and its leave animation has finished.                                                                                                                                                     | `[]`                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                                       | Scope parameters                                                        |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| default | The trigger. A single element or component receives the trigger attributes directly; text or several nodes are wrapped in a span. | `any`                                                                   |
+| content | Popup content. The scope parameter initialFocusRef binds to the element that receives focus when the popup opens.                 | <ApiType detail={"RenderContentProps\u003cFocusTarget>"}>Type</ApiType> |
+| arrow   | Replaces the arrow.                                                                                                               | `any`                                                                   |
+
+**Exposes**
+
+| Name | Description | Type |
+| --- | --- | --- |
+| focusTrigger | Focuses the trigger element. Only works when returnFocusOnClose is true and trigger is not custom. | <ApiType detail={"() => void"}>Type</ApiType> |
+| getPopupId | Returns the id of the popup element. | <ApiType detail={"() => string"}>Type</ApiType> |
+| hide | Closes the popup. With a controlled visible it only emits update:visible and visibleChange for the caller to write back. | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition | Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

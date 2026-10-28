@@ -1,0 +1,32 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| cycled | Whether the column cycles. In wheel mode the list scrolls without end; in both modes the arrow keys wrap around. | `boolean` | `semiDefault("ScrollItem", "cycled", false)` |
+| list | Items of the column. | `T[]` | `semiGlobalDefault("ScrollItem", "list")` |
+| mode | Mode: normal or wheel. | `"normal" \| "wheel"` | `semiDefault("ScrollItem", "mode", "wheel")` |
+| motion | Whether to animate scrolling. | `boolean` | `semiDefault("ScrollItem", "motion", true)` |
+| selectedIndex | Index of the selected item, used with v-model:selectedIndex. There is no uncontrolled mode. | `number` | `semiGlobalDefault("ScrollItem", "selectedIndex")` |
+| transform | Formats the text of the selected item; the text is undefined for an item without one. When omitted, text is shown, or value when there is no text. An item's own transform takes precedence. | <ApiType detail={"((value: T[\"value\"], text?: string \u007c undefined) => string)"}>Type</ApiType> | `undefined` |
+| type | Identifies the column to components such as TimePicker and DatePicker, not meant for end users. | `string \| number` | `semiGlobalDefault("ScrollItem", "type")` |
+
+**Events**
+
+| Event                | Description                                                                                                 | Callback parameters                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| update:selectedIndex | Emitted when the selection changes, backing v-model:selectedIndex.                                          | `[index: number]`                                                       |
+| select               | Emitted when an item is selected, with the item's data plus the column's type and the item's index in list. | <ApiType detail={"[data: ScrollItemSelectData\u003cT>]"}>Type</ApiType> |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

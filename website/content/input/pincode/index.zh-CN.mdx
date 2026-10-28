@@ -1,0 +1,157 @@
+---
+title: 验证码输入
+order: 43
+icon: doc-pincode
+brief: 用于便捷直观地输入验证码
+---
+
+import PinCodeReactApi from './api/pin-code.react.zh-CN.mdx';
+import PinCodeVueApi from './api/pin-code.vue.zh-CN.mdx';
+import PinCodeSolidApi from './api/pin-code.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { PinCode } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { PinCode } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本使用
+
+<Demo id="basic" />
+
+### 受控
+
+<Framework only="react">
+
+使用 value 传入验证码字符串，配合 onChange 受控使用
+
+</Framework>
+
+<Framework only="vue">
+
+使用 `v-model` 绑定验证码字符串
+
+</Framework>
+
+<Framework only="solid">
+
+使用 `value` 传入验证码字符串，配合 `onChange` 把新内容写回信号即可受控使用
+
+</Framework>
+
+<Demo id="controlled" />
+
+### 限制验证码格式
+
+#### 设置位数
+
+通过 count 设置位数，默认 6 位，下方 Demo 设置为 4 位
+
+<Demo id="count" />
+
+#### 设置字符范围
+
+使用 format 控制可输入的字符范围
+
+- 传入 "number" 只允许设置数字
+- 传入 "mixed" 允许数字和字母
+- 传入正则表达式，只允许输入可通过正则判定的字符
+- 传入函数，验证码会在输入的时候以字符为单位被依次作为参数分别单独传入进行校验，当函数返回 true 时，允许该字符被输入进 PinCode
+
+<Demo id="format" />
+
+### 手动聚焦失焦
+
+<Framework only="react">
+
+使用 Ref 上方法 focus 与 blur，入参为对应 Input 的序号，序号从 0 开始
+
+</Framework>
+
+<Framework only="vue">
+
+使用模板 ref 上的方法 focus 与 blur，入参为对应 Input 的序号，序号从 0 开始
+
+</Framework>
+
+<Framework only="solid">
+
+`ref` 指向分组根元素（`role="group"`）。调用 `focus()` 聚焦第一个空格，全部填满时聚焦最后一格；调用 `blur()` 移出焦点。目前不能按序号聚焦某一格，需要时直接取根元素下的输入框，例如 `ref.querySelectorAll('input')[2].focus()` 聚焦第三格，序号从 0 开始。
+
+</Framework>
+
+<Demo id="focus" />
+
+## API 参考
+
+<Framework only="react">
+
+<PinCodeReactApi />
+
+`aria-label`、`aria-labelledby`、`data-*` 与其余未声明的属性落在根元素（`role="group"`）上，`onBlur` 只在焦点离开整个验证码时触发一次，格子之间移动时不触发。`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required`、`tabIndex` 落在每个输入框上。`id` 落在第一个输入框上，`Form` 的 label 点击后聚焦它。`name`、`insetLabel`、`insetLabelId` 被丢弃。`onFocus` 经透传落在根元素上，每格获得焦点都会触发，需要判断焦点是否离开整个验证码时用 `onBlur`。
+
+</Framework>
+
+<Framework only="vue">
+
+<PinCodeVueApi />
+
+`class`、`style`、`aria-label`、`aria-labelledby`、`data-*` 经 attrs 落在 `role="group"` 的根元素上。`id` 落在第一个输入框上，`<label for>` 指向第一格。`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required`、`tabindex` 落在每个输入框上。`name`、`insetLabel`、`insetLabelId` 被丢弃。
+
+通过模板 ref 调用 `focus(index)` 与 `blur(index)`，序号从 0 开始，超出范围时忽略；`focus` 之后光标放在该格字符之后。
+
+</Framework>
+
+<Framework only="solid">
+
+<PinCodeSolidApi />
+
+`class`、`style`、`aria-label`、`aria-labelledby`、`data-*` 落在 `role="group"` 的根元素上。`id` 落在第一个输入框上，`<label for>` 指向第一格。`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required`、`tabindex` 落在每个输入框上。`name` 被丢弃。`autofocus` 挂载时聚焦第一个输入框，默认 `false`，只在用户明确进入验证码输入步骤时开启。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- 根元素为 `role="group"`，名称通过 `aria-label` 或 `aria-labelledby` 提供；没有可见标签时请传 `aria-label`，否则分组没有名称。
+- 每格输入框的可访问名称来自语言包，形如「第 1 位，共 6 位」，随 `count` 与格子序号变化，无需手动设置。
+- `aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在每个输入框上；`validateStatus` 传给每个输入框。
+- `format` 为 `"number"` 时输入框使用数字软键盘（`inputmode="numeric"`），其余为文本键盘。
+
+### 键盘和焦点
+
+- 每个格子是独立的输入框，输入一个合法字符后焦点移到下一格，在最后一格输入后失焦；已填内容总是从第一格起连续，在空格子之后输入的字符落在第一个空格子上。`Tab` 与 `Shift` + `Tab` 在格子之间切换。
+- `左箭头`、`右箭头` 在格子之间移动焦点；`Backspace` 与 `Delete` 都删除当前格字符，后面的字符依次前移，`Backspace` 还会把焦点移到上一格。
+- 粘贴整段验证码时，从当前格起按字符依次填入各格，遇到不合法字符即停止。
+- `autoFocus`（Vue 为 `autofocus`）只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。
+
+<Framework only="solid">
+
+属性名写作 `autofocus`，行为同上。
+
+</Framework>

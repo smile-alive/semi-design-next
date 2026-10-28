@@ -1,0 +1,218 @@
+---
+title: 多语言
+order: 96
+icon: doc-i18n
+brief: 国际化组件，为 Semi 组件提供多语言支持
+---
+
+import LocaleProviderVueApi from './api/locale-provider.vue.zh-CN.mdx';
+import LocaleConsumerVueApi from './api/locale-consumer.vue.zh-CN.mdx';
+import LocaleProviderSolidApi from './api/locale-provider.solid.zh-CN.mdx';
+import LocaleConsumerSolidApi from './api/locale-consumer.solid.zh-CN.mdx';
+
+## 目前支持语言
+
+| 最低支持版本 | 语言 |
+| --- | --- |
+| v0.0.1 | 简体中文: zh_CN |
+| v0.7.0 | 英语: en_GB、日语: ja_JP、韩语: ko_KR |
+| v1.8.0 | 阿拉伯语: ar |
+| v1.11.0 | 越南语: vi_VN、俄罗斯语: ru_RU、印尼语: id_ID、马来语: ms_MY、泰语: th_TH、土耳其语: tr_TR |
+| v1.17.0 | 葡萄牙语（巴西）: pt_BR |
+| v1.28.0 | 繁体中文: zh_TW |
+| v2.2.0 | 西班牙语: es |
+| v2.15.0 | 意大利语: it、法语：fr、德语：de |
+| v2.21.0 | 罗马尼亚语: ro |
+| v2.29.0 | 瑞典语： sv_SE、波兰语： pl_PL、荷兰语： nl_NL |
+| v2.88.0 | 阿塞拜疆语：az、保加利亚语：bg、加泰罗尼亚语：ca、捷克语：cs_CZ、宿务语：ceb_PH、丹麦语： da、希腊语：el_GR、西班牙语（拉美）：es_419、爱沙尼亚语：et、波斯语：fa_IR、菲律宾语：fil_PH、芬兰语： fi_FI、法语（加）：fr_CA、爱尔兰语：ga、希伯来语：he_IL、印地语：hi_IN、克罗地亚语：hr、匈牙利语：hu_HU、冰岛语：is、爪哇语：jv_ID、哈萨克语：kk、高棉语：km_KH、立陶宛语：lt、拉脱维亚语：lv、缅甸语：my_MM、挪威语： nb、葡萄牙语：pt、斯洛伐克语：sk、斯洛文尼亚语：sl、阿尔巴尼亚语：sq、斯瓦希里语：sw、乌克兰语：uk_UA、乌尔都语：ur、乌兹别克语：uz |
+
+## 已支持组件
+
+目前有以下组件存在内置默认文本，均已实现国际化多语言适配  
+Calendar、Cascader、Chat、DatePicker、Form、Image、List、Modal、Navigation、Nav、Pagination、Popconfirm、Select、Table、TimePicker、Transfer、Tree、TreeSelect、Typography、Upload
+
+## 使用
+
+<Framework only="react">
+
+LocaleProvider 使用了 React 的 context 上下文特性，你只需要在应用外围包裹一次即可全局生效  
+当需要切换语言时，直接切换 props 传入的 locale 即可
+
+```jsx hideInDSM
+import React, { useCallback, useMemo, useState } from 'react';
+import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import ko_KR from '@fibrae/semi-foundation/locale/source/ko_KR';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import vi_VN from '@fibrae/semi-foundation/locale/source/vi_VN';
+import ru_RU from '@fibrae/semi-foundation/locale/source/ru_RU';
+import id_ID from '@fibrae/semi-foundation/locale/source/id_ID';
+import ms_MY from '@fibrae/semi-foundation/locale/source/ms_MY';
+import th_TH from '@fibrae/semi-foundation/locale/source/th_TH';
+import tr_TR from '@fibrae/semi-foundation/locale/source/tr_TR';
+import pt_BR from '@fibrae/semi-foundation/locale/source/pt_BR';
+import zh_TW from '@fibrae/semi-foundation/locale/source/zh_TW';
+import sv_SE from '@fibrae/semi-foundation/locale/source/sv_SE';
+import pl_PL from '@fibrae/semi-foundation/locale/source/pl_PL';
+import nl_NL from '@fibrae/semi-foundation/locale/source/nl_NL';
+import ar from '@fibrae/semi-foundation/locale/source/ar';
+import es from '@fibrae/semi-foundation/locale/source/es';
+import it from '@fibrae/semi-foundation/locale/source/it';
+import de from '@fibrae/semi-foundation/locale/source/de';
+import fr from '@fibrae/semi-foundation/locale/source/fr';
+import ro from '@fibrae/semi-foundation/locale/source/ro';
+
+import { LocaleProvider } from '@fibrae/semi-ui-react';
+
+// 在locale中传入相应的语言包即可
+() => {
+    return (
+        <LocaleProvider locale={en_GB}>
+            {/* eslint-disable-next-line react/jsx-no-undef */}
+            <App />
+        </LocaleProvider>
+    );
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+LocaleProvider 通过 provide/inject 向后代传递语言包，你只需要在应用外围包裹一次即可全局生效  
+当需要切换语言时，直接切换 `locale` 属性的值即可
+
+```vue
+<script setup lang="ts">
+    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import { LocaleProvider } from '@fibrae/semi-ui-vue';
+</script>
+
+<template>
+    <LocaleProvider :locale="en_GB">
+        <App />
+    </LocaleProvider>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+`LocaleProvider` 使用 context 向后代传递语言包，你只需要在应用外围包裹一次即可全局生效  
+当需要切换语言时，把 `locale` 绑定到随之变化的值上即可，子树会自动更新。
+
+```jsx
+import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+import { LocaleProvider } from '@fibrae/semi-ui-solid';
+
+() => (
+    <LocaleProvider locale={en_GB}>
+        <App />
+    </LocaleProvider>
+);
+```
+
+</Framework>
+
+不传 `locale` 时 LocaleProvider 继承外层 LocaleProvider 的语言，最外层都没有时回退 `zh_CN`；ConfigProvider 的 `locale` 优先于 LocaleProvider。
+
+## 代码示例
+
+### 国际化
+
+<Demo id="i18n" />
+
+### 自定义国际化组件
+
+<Framework only="react">
+
+当你的自定义组件，也希望消费 Semi LocaleProvider Context 中的 localeCode 或者读取具体某个组件的 i18n 文本 localeData时，你可以使用 LocaleConsumer 进行获取；
+
+</Framework>
+
+<Framework only="vue">
+
+当你的自定义组件，也希望消费 Semi LocaleProvider 中的 localeCode 或者读取具体某个组件的 i18n 文本时，你可以使用 LocaleConsumer 的默认作用域插槽获取 `locale`、`localeCode`、`dateFnsLocale` 与 `currency`；在 `<script setup>` 中可以调用 `useLocale(componentName)`，它返回包含同样四项的 computed。语言的优先级为 ConfigProvider、LocaleProvider、`zh_CN`。自定义命名空间（示例中的 `ComponentA`）通过 declaration merging 扩展 `Locale` 类型。
+
+</Framework>
+
+<Framework only="solid">
+
+当你的自定义组件，也希望消费 Semi LocaleProvider 中的 localeCode 或者读取具体某个组件的 i18n 文本时，你可以使用 LocaleConsumer 获取：它的子节点是函数，参数依次为组件文案片段（locale）、localeCode、dateFnsLocale 与 currency。在组件体中也可以调用 `useLocale(componentName)`，它返回一个访问器，调用它即可读到同样四项。语言的优先级为 ConfigProvider、LocaleProvider、`zh_CN`。自定义命名空间（示例中的 `ComponentA`）通过 declaration merging 扩展 `Locale` 类型。
+
+</Framework>
+
+<Demo id="custom-component" />
+
+### 支持多语言的组件
+
+示例给出了目前所有支持多语言的组件
+
+当你的网站有RTL适配需求时，推荐直接使用ConfigProvider，除了可配置locale外，还可以直接同时配置direction='rtl'/'ltr'  
+若无RTL适配需求，直接使用LocaleProvider即可
+
+<Demo id="all-components" />
+
+<Framework only="vue">
+
+## API 参考
+
+---
+
+### LocaleProvider
+
+<LocaleProviderVueApi />
+
+LocaleProvider 不接受未声明的属性，`class`、`style` 等 attrs 不会落到 DOM 上。
+
+### LocaleConsumer
+
+<LocaleConsumerVueApi />
+
+LocaleConsumer 不渲染自己的元素，也不接受未声明的属性。
+
+### useLocale
+
+`useLocale(componentName)` 返回 `ComputedRef<LocaleResult>`，`componentName` 可以是字符串，也可以是 ref 或 getter。
+
+| 字段          | 说明                                                   | 类型                 |
+| ------------- | ------------------------------------------------------ | -------------------- |
+| locale        | `componentName` 对应的文案片段                         | `Locale[K]`          |
+| localeCode    | 语言代码                                               | string               |
+| dateFnsLocale | date-fns 的语言对象，缺失时由 date-fns 使用默认的 enUS | `Locale`（date-fns） |
+| currency      | 语言所在地区的 ISO 4217 货币码                         | string               |
+
+</Framework>
+
+<Framework only="solid">
+
+## API 参考
+
+---
+
+### LocaleProvider
+
+<LocaleProviderSolidApi />
+
+LocaleProvider 不渲染 DOM 元素，`class`、`style`、`ref` 与原生属性和事件都不会落到页面上。
+
+### LocaleConsumer
+
+<LocaleConsumerSolidApi />
+
+LocaleConsumer 不渲染自己的元素，`class`、`style`、`ref` 与原生属性和事件都不会落到页面上。
+
+### useLocale
+
+`useLocale(componentName)` 返回 `Accessor<LocaleResult>`，调用访问器读取结果。`componentName` 可以是字符串，也可以是返回字符串的访问器。
+
+| 字段          | 说明                                                   | 类型                 |
+| ------------- | ------------------------------------------------------ | -------------------- |
+| locale        | `componentName` 对应的文案片段                         | `Locale[K]`          |
+| localeCode    | 语言代码                                               | string               |
+| dateFnsLocale | date-fns 的语言对象，缺失时由 date-fns 使用默认的 enUS | `Locale`（date-fns） |
+| currency      | 语言所在地区的 ISO 4217 货币码                         | string               |
+
+</Framework>

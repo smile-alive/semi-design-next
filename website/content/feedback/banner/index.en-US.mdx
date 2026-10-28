@@ -1,0 +1,166 @@
+---
+title: Banner
+order: 87
+icon: doc-banner
+brief: The Banner component is usually used to identify the status or notification of the full page. It is usually resident and requires the user to close it initiatively.
+---
+
+import BannerReactApi from './api/banner.react.en-US.mdx';
+import BannerVueApi from './api/banner.vue.en-US.mdx';
+import BannerSolidApi from './api/banner.solid.en-US.mdx';
+
+## Demos
+
+### How to import
+
+<Framework only="react">
+
+```jsx
+import { Banner } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Banner } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Banner } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### Basic Usage
+
+<Demo id="basic" />
+
+### Types
+
+The `type` prop supports one of: `default`(default),`danger`,`warning`, `success`.
+
+<Demo id="types" />
+
+### Use in Container
+
+<Framework only="react">
+
+You could set `fullMode={false}` to use style for non-fullscreen mode. Also, use `bordered` for bordered style. `icon={null}` and `closeIcon={null}` hide the icon and the close button.
+
+</Framework>
+
+<Framework only="vue">
+
+You could set `:fullMode="false"` to use style for non-fullscreen mode. Also, use `bordered` for bordered style. Empty `#icon` and `#closeIcon` slots hide the icon and the close button.
+
+</Framework>
+
+<Framework only="solid">
+
+You could set `fullMode={false}` to use style for non-fullscreen mode. Also, use `bordered` for bordered style. `icon={null}` and `closeIcon={null}` hide the icon and the close button.
+
+</Framework>
+
+<Demo id="not-full-mode" />
+
+```css
+.components-banner-demo {
+    .semi-banner-info.semi-banner-bordered {
+        border: 1px solid var(--semi-color-primary-disabled);
+    }
+    .semi-banner-warning.semi-banner-bordered {
+        border: 1px solid var(--semi-color-warning-light-active);
+    }
+    .semi-banner-danger.semi-banner-bordered {
+        border: 1px solid var(--semi-color-danger-light-active);
+    }
+    .semi-banner-success.semi-banner-bordered {
+        border: 1px solid var(--semi-color-success-light-active);
+    }
+}
+```
+
+### Customized Content
+
+<Framework only="react">
+
+Use `children` to create customized content.
+
+</Framework>
+
+<Framework only="vue">
+
+Use the default slot to create customized content.
+
+</Framework>
+
+<Framework only="solid">
+
+Use `children` to create customized content.
+
+</Framework>
+
+<Demo id="custom-content" />
+
+## API Reference
+
+<Framework only="react">
+
+<BannerReactApi />
+
+Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root `div` element. The root's `role="alert"` is fixed and cannot be overridden.
+
+</Framework>
+
+<Framework only="vue">
+
+<BannerVueApi />
+
+`class`, `style` and native attributes are passed through attrs and land on the root element; the root's `role="alert"` is fixed and cannot be overridden. `title` is also a string prop, and the `#title` slot wins when both are given. Content of `0` in `title`, `description` and the default slot is rendered. The closed state lives inside the component and has no v-model; unmount and mount again with `v-if` to show it again.
+
+</Framework>
+
+<Framework only="solid">
+
+<BannerSolidApi />
+
+`class`, `style`, `ref` and native attributes and events (such as `aria-*` and `onClick`) land on the root element (`role="alert"`). The root's `role` is fixed and cannot be overridden. The closed state lives inside the component; unmount and mount again to show it again.
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- The component has a `role` of 'alert'.
+- The close button's `aria-label` comes from the current locale ('Close' in English, '关闭' in Simplified Chinese).
+
+### Keyboard and Focus
+
+- The close button of the Banner can be focused with the `Tab` key. After the button is focused, hit the `Enter` key or the `Space` key to close the banner.
+
+## Content Guidelines
+
+- Full screen Banner
+    - Try to keep the content displayed completely on one line
+    - Use correct punctuation, commas within sentences and periods between sentences
+- Non-fullscreen Banner
+    - title
+        - Instructions in condensed language
+        - Try to avoid using commas, periods and other punctuation marks in the title, and support the use of question marks at the end when there are and only interrogative sentences
+    - text
+        - On the premise of complete information transmission, try to compress the text to 1-2 sentences
+        - A detailed description or explanation of the title, rather than a repetition of the title
+        - Use correct punctuation, commas within sentences and periods between sentences
+
+## Design Tokens
+
+<DesignToken />

@@ -1,0 +1,104 @@
+---
+order: 98
+title: 音频播放器
+icon: doc-audioplayer
+brief: 用于播放音频
+---
+
+import AudioPlayerReactApi from './api/audio-player.react.zh-CN.mdx';
+import AudioPlayerVueApi from './api/audio-player.vue.zh-CN.mdx';
+import AudioPlayerSolidApi from './api/audio-player.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { AudioPlayer } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AudioPlayer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AudioPlayer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+基本使用，通过`audioUrl`传入音频地址  
+audioUrl 可以传入字符串，字符串数组，对象，对象数组， 具体参数参考 [AudioPlayer](#AudioPlayer)
+
+<Demo id="basic" />
+
+### 隐藏工具栏
+
+`showToolbar` 设置为 `false` 时隐藏工具栏，即音量、后退、前进、倍速与重新加载按钮。
+
+<Demo id="hide-toolbar" />
+
+### 主题
+
+通过 `theme` 设置音频播放器主题，支持 `light` 和 `dark`，默认 `dark`。倍速菜单与音量弹层渲染在播放器之外，会各自带上与 `theme` 对应的主题修饰类（如 `semi-audio-player-control-volume-light`），样式随主题切换
+
+<Demo id="theme" />
+
+## 键盘和焦点
+
+- 播放（暂停）、上一首、下一首、后退、前进、音量、重新加载都是原生按钮，各占一个 Tab 停靠点，用 Enter 或空格触发；音量按钮切换静音。
+- 进度条是原生 range，占一个 Tab 停靠点：方向键按 1 秒增减，PageUp、PageDown 按总时长的十分之一增减，Home、End 跳到两端。
+- 音量按钮获得焦点时展开以「音量」命名的对话框弹层，下方向键或上方向键把焦点移到弹层内的音量滑块；滑块键位同进度条，方向键按 1% 增减。Esc 关闭弹层，焦点回到音量按钮。
+- 倍速按钮获得焦点时展开菜单，下方向键、上方向键把焦点移到第一项、最后一项；菜单内用上下方向键、Home、End 移动，Enter 或空格选择，Esc 关闭。倍速按钮的名称为用途加当前倍速（如「倍速 1.0x」），菜单项是单选项（`menuitemradio`），以 `aria-checked` 标出当前倍速。
+
+## API 参考
+
+### AudioPlayer
+
+<Framework only="react">
+
+<AudioPlayerReactApi />
+
+未列出的原生属性与事件（如 `aria-label`、`id`、`onClick`）展开到根元素 `div` 上。不支持监听 `audio` 元素的原生媒体事件（如 `onTimeUpdate`）：它们不会冒泡到根元素，监听不会触发。
+
+</Framework>
+
+<Framework only="vue">
+
+<AudioPlayerVueApi />
+
+`class`、`style` 与原生属性通过 attrs 落在根元素 `div` 上。不支持监听 `audio` 元素的原生媒体事件（如 `@timeupdate`）：它们不会冒泡到根元素，监听不会触发。
+
+</Framework>
+
+<Framework only="solid">
+
+<AudioPlayerSolidApi />
+
+`class`、`style`、`ref` 与原生属性、事件落在根元素 `div` 上。不支持监听 `audio` 元素的原生媒体事件（如 `onTimeUpdate`）：它们不会冒泡到根元素，监听不会触发。
+
+</Framework>
+
+根元素带 `aria-label` 或 `aria-labelledby` 时会加上 `role="group"`。
+
+### AudioInfo
+
+| 属性  | 说明     | 类型   | 默认值 |
+| ----- | -------- | ------ | ------ |
+| src   | 音频地址 | string | -      |
+| title | 音频标题 | string | -      |
+| cover | 封面图片 | string | -      |

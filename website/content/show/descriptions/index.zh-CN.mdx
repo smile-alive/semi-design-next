@@ -1,0 +1,227 @@
+---
+order: 69
+title: 描述列表
+icon: doc-descriptions
+brief: 描述列表用于键值对的呈现。
+---
+
+import DescriptionsReactApi from './api/descriptions.react.zh-CN.mdx';
+import DescriptionsItemReactApi from './api/descriptions-item.react.zh-CN.mdx';
+import DescriptionsVueApi from './api/descriptions.vue.zh-CN.mdx';
+import DescriptionsItemVueApi from './api/descriptions-item.vue.zh-CN.mdx';
+import DescriptionsSolidApi from './api/descriptions.solid.zh-CN.mdx';
+import DescriptionsItemSolidApi from './api/descriptions-item.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Descriptions } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Descriptions } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+`Descriptions.Item` 也可以按名导入：`DescriptionsItem`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Descriptions } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+可以通过 `data` 以键值对 `{ key: value }` 数组方式传入数据
+
+<Framework only="react">
+
+key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由度的 ReactNode 自由定制渲染效果
+
+</Framework>
+
+<Framework only="vue">
+
+`data` 中的 key、value 只接受字符串或数字。需要自定义渲染时，使用作用域插槽 `#itemKey`、`#value`，参数为 `{ item, index }`，其中 `index` 是该项在 `data` 中的位置（包含 `hidden` 的项）
+
+</Framework>
+
+<Framework only="solid">
+
+`data` 中的 key、value 只接受字符串或数字。需要自定义渲染时，传入 `renderKey(item, index)`、`renderValue(item, index)`，其中 `index` 是该项在 `data` 中的位置（包含 `hidden` 的项）；隐藏的项不调用它们。
+
+</Framework>
+
+<Demo id="basic" />
+
+### 设置对齐方式
+
+可以通过设置 `align` 值选择对齐方式，支持 `center`, `justify`, `left`, 和 `plain`。默认对齐方式为 `center`  
+当 row 为 true 时，该配置无效  
+`left` 指起始侧，在 RTL 下随页面方向镜像为靠右，与 `center`、`justify` 一致
+
+<Demo id="align" />
+
+### Descriptions.Item 写法
+
+<Framework only="react">
+
+除了通过 props.data 声明数据外，还可以通过 Children JSX 写法声明数据
+
+</Framework>
+
+<Framework only="vue">
+
+除了通过 `data` 声明数据外，还可以在默认插槽中写 `Descriptions.Item` 声明数据：key 通过 `#itemKey` 插槽传入，值写在默认插槽中。
+
+</Framework>
+
+<Framework only="solid">
+
+除了通过 `data` 声明数据外，还可以在 `Descriptions` 的子节点中写 `Descriptions.Item` 声明数据：`itemKey` 为键，子节点为值。
+
+</Framework>
+
+注意 `Descriptions.Item` 应当是 `Descriptions` 的直接子元素。
+
+<Demo id="jsx" />
+
+### 设置布局模式
+
+可以通过 `layout` 设置布局模式，默认为 `vertical` 纵向布局 。
+
+<Demo id="layout" />
+
+横向布局可设置 layout为 `horizontal` 。当设置 horizontal 时，可配合 column 指定每行最大列数
+
+<Demo id="layout-horizontal" />
+
+### 双行显示
+
+可以通过设置 `row` 可选择双行显示，支持三种不同的大小：`small`, `medium`, `large`。默认大小为 `medium`，此时 align 配置不再生效
+
+<Demo id="row" />
+
+### 自定义 Key 样式
+
+可以通过 `keyStyle` 属性自定义 key 的样式，例如设置固定宽度实现对齐效果。该属性支持所有 CSS 样式，如 `width`、`maxWidth`、`textAlign`、`color` 等。
+
+<Demo id="key-style" />
+
+也可以配合 `Descriptions.Item` 写法使用：
+
+<Demo id="key-style-jsx" />
+
+## API 参考
+
+### Descriptions
+
+<Framework only="react">
+
+<DescriptionsReactApi />
+
+`className`、`style`、`ref` 与原生属性（如 `id`、`data-*`、`aria-*`）落在 Descriptions 的根元素（`div`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<DescriptionsVueApi />
+
+`class`、`style` 与原生属性经 attrs 传入，落在 Descriptions 的根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<DescriptionsSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `data-*`、`aria-*`）落在 Descriptions 的根元素（`div`）上。
+
+</Framework>
+
+### DataItem
+
+<Framework only="react">
+
+| 属性     | 说明                                         | 类型                           | 默认值 |
+| -------- | -------------------------------------------- | ------------------------------ | ------ |
+| key      | 键值                                         | ReactNode                      | -      |
+| value    | 属性值                                       | ReactNode \| (() => ReactNode) | -      |
+| hidden   | 该数据是否需要展示                           | boolean                        | -      |
+| span     | 单元格应跨越的列数                           | number                         | 1      |
+| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | CSSProperties                  | -      |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性     | 说明                                         | 类型             | 默认值 |
+| -------- | -------------------------------------------- | ---------------- | ------ |
+| key      | 键值，自定义渲染使用 `#itemKey` 插槽         | string \| number | -      |
+| value    | 属性值，自定义渲染使用 `#value` 插槽         | string \| number | -      |
+| hidden   | 该数据是否需要展示                           | boolean          | -      |
+| span     | 单元格应跨越的列数                           | number           | 1      |
+| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | StyleValue       | -      |
+
+</Framework>
+
+<Framework only="solid">
+
+| 属性     | 说明                                         | 类型                        | 默认值 |
+| -------- | -------------------------------------------- | --------------------------- | ------ |
+| key      | 键值，自定义渲染使用 `renderKey`             | string \| number            | -      |
+| value    | 属性值，自定义渲染使用 `renderValue`         | string \| number            | -      |
+| hidden   | 该数据是否需要展示                           | boolean                     | -      |
+| span     | 单元格应跨越的列数                           | number                      | 1      |
+| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | JSX.CSSProperties \| string | -      |
+
+</Framework>
+
+### DescriptionItem
+
+<Framework only="react">
+
+<DescriptionsItemReactApi />
+
+纵向布局下，`className`、`style`、`ref` 与原生属性（如 `id`、`data-*`、`aria-*`）落在 Item 外部 wrapper `tr` 上；横向布局下 Item 只输出单元格，这些属性无处落点。
+
+</Framework>
+
+<Framework only="vue">
+
+<DescriptionsItemVueApi />
+
+纵向布局下，`class`、`style` 与原生属性经 attrs 落在 Item 外部 wrapper `tr` 上；横向布局下 Item 只输出单元格，attrs 无处落点。
+
+</Framework>
+
+<Framework only="solid">
+
+<DescriptionsItemSolidApi />
+
+纵向布局下，`class`、`style`、`ref` 与原生属性落在 Item 外部 wrapper `tr` 上；横向布局下 Item 只输出单元格，这些属性无处落点。
+
+</Framework>
+
+## 文案规范
+
+- 字段名和值都按 Sentence case 原则书写大小写
+
+## 设计变量
+
+<DesignToken />

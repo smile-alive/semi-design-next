@@ -1,0 +1,209 @@
+{
+    "popconfirm": {
+        "source": "packages/semi-ui-solid/src/popconfirm/popconfirm.tsx",
+        "props": {
+            "ref": {
+                "zh-CN": "接收句柄的回调，句柄只有 `focusTrigger` 方法；组件创建时调用一次。",
+                "en-US": "Callback that receives the handle, which only has `focusTrigger`. It is called once when the component is created."
+            },
+            "aria-label": {
+                "zh-CN": "对话框的 `aria-label`，传入后优先于标题。",
+                "en-US": "`aria-label` of the dialog. When given, it takes precedence over the title."
+            },
+            "aria-labelledby": {
+                "zh-CN": "对话框的 `aria-labelledby`，缺省指向标题，没有标题时指向内容。",
+                "en-US": "`aria-labelledby` of the dialog. Defaults to the title, or to the content without a title."
+            },
+            "afterClose": {
+                "zh-CN": "确认框关闭且离场动画结束后调用。",
+                "en-US": "Called after the card has closed and its leave animation has finished."
+            },
+            "afterOpen": {
+                "zh-CN": "确认框打开且进场动画结束后调用；没有进场动画时打开后即调用，受控与非受控相同；进场结束前被关闭的打开不调用。",
+                "en-US": "Called after the card has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not. An open that is closed before the enter animation ends does not call it."
+            },
+            "arrowPointAtCenter": {
+                "zh-CN": "箭头是否指向触发元素中心，需要同时开启 `showArrow`，缺省为 `true`。",
+                "en-US": "Whether the arrow points at the center of the trigger. Requires `showArrow`. Defaults to `true`."
+            },
+            "arrowStyle": {
+                "zh-CN": "箭头的边框色、背景色与边框透明度。",
+                "en-US": "Border color, background color and border opacity of the arrow."
+            },
+            "autoAdjustOverflow": {
+                "zh-CN": "弹出层被遮挡时是否自动调整方向，缺省为 `true`。",
+                "en-US": "Whether the popup flips automatically when it would be clipped. Defaults to `true`."
+            },
+            "cancelButtonProps": {
+                "zh-CN": "取消按钮的属性。`autoFocus` 为 `true` 时打开后聚焦该按钮，`class`、`style` 与其他属性落在按钮上。",
+                "en-US": "Props of the cancel button. `autoFocus` focuses it on open; `class`, `style` and other props land on the button."
+            },
+            "cancelText": {
+                "zh-CN": "取消按钮文字，缺省取语言包 `Popconfirm.cancel`。",
+                "en-US": "Cancel button text. Defaults to the locale entry `Popconfirm.cancel`."
+            },
+            "cancelType": {
+                "zh-CN": "取消按钮类型，缺省为 `tertiary`。",
+                "en-US": "Cancel button type. Defaults to `tertiary`."
+            },
+            "children": {
+                "zh-CN": "触发元素，使用函数形式 `(getTriggerProps) => JSX.Element`，在触发元素上展开 `{...getTriggerProps()}`，让它获得聚焦、键盘与 ARIA 属性；其他写法会被包在 Tooltip 的 span 中。",
+                "en-US": "The trigger. Use the function form `(getTriggerProps) => JSX.Element` and spread `{...getTriggerProps()}` onto the focusable element, which gets the focus, keyboard and ARIA attributes. Any other form is wrapped in the span of Tooltip."
+            },
+            "class": {
+                "zh-CN": "确认卡片（`.semi-popconfirm`）的类名，不落在弹出层上。",
+                "en-US": "Class name of the confirmation card (`.semi-popconfirm`), not of the popup."
+            },
+            "clickToHide": {
+                "zh-CN": "点击弹出层及其内部任一元素时是否关闭。",
+                "en-US": "Whether a click on the popup or anything inside it closes it."
+            },
+            "closeOnEsc": {
+                "zh-CN": "弹出层打开期间按 Esc 是否关闭确认框，与焦点位置无关，缺省为 `true`；`trigger` 为 `custom` 时只调用 `onEscKeyDown`，由使用方决定是否关闭。",
+                "en-US": "Whether Esc closes the open card, wherever focus is. Defaults to `true`. With `trigger` `custom` it only calls `onEscKeyDown`, and the caller decides whether to close."
+            },
+            "content": {
+                "zh-CN": "确认框内容，可以是 JSX 元素，也可以是函数。函数的参数是 `{ initialFocusRef }`，把 `initialFocusRef` 作为 `ref` 绑定到打开时需要聚焦的元素上。",
+                "en-US": "Content of the card: a JSX element or a function. The function receives `{ initialFocusRef }`; pass `initialFocusRef` as the `ref` of the element that takes focus on open."
+            },
+            "contentClassName": {
+                "zh-CN": "内容容器的类名。",
+                "en-US": "Class name of the content container."
+            },
+            "condition": {
+                "zh-CN": "是否允许触发显示，缺省为 `true`；仅显式设为 `false` 时，`hover`、`click`、`focus` 等触发行为不生效。由 `true` 变为 `false` 时立即关闭已显示的确认框；`visible` 受控时只通过 `onVisibleChange` 请求关闭，使用方回写后才关闭。",
+                "en-US": "Whether it may be triggered, defaults to `true`. Only an explicit `false` disables the `hover`, `click` and `focus` triggers. Changing it from `true` to `false` closes an open card at once; with a controlled `visible` it only requests the close through `onVisibleChange`, and the card closes once the caller writes back."
+            },
+            "defaultVisible": {
+                "zh-CN": "非受控时初始是否展示。",
+                "en-US": "Whether it is initially shown when uncontrolled."
+            },
+            "disableArrowKeyDown": {
+                "zh-CN": "是否禁用在触发元素上按方向键把焦点移入确认框。",
+                "en-US": "Whether the arrow keys on the trigger are prevented from moving focus into the card."
+            },
+            "disableFocusListener": {
+                "zh-CN": "`trigger` 为 `hover` 时，是否不响应键盘聚焦打开。",
+                "en-US": "Whether keyboard focus is ignored when `trigger` is `hover`."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用，缺省为 `false`；禁用时只渲染触发元素，不弹出确认框。",
+                "en-US": "Whether it is disabled, defaults to `false`. A disabled Popconfirm renders only the trigger and never opens."
+            },
+            "guardFocus": {
+                "zh-CN": "焦点位于确认框内时，Tab 是否在其中循环，缺省为 `true`。",
+                "en-US": "Whether Tab cycles inside the card while focus is in it. Defaults to `true`."
+            },
+            "icon": {
+                "zh-CN": "自定义图标，接受 JSX 元素。未传入时显示默认警告图标；传入 `null` 或 `false` 时不显示图标。",
+                "en-US": "Custom icon, a JSX element. The default warning icon shows when omitted; `null` or `false` renders no icon."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留内容而不销毁。",
+                "en-US": "Whether the content stays mounted while closed."
+            },
+            "mouseEnterDelay": {
+                "zh-CN": "指针移入后延迟显示的毫秒数，仅 `trigger` 为 `hover` 或 `focus` 时生效。",
+                "en-US": "Milliseconds before it shows after the pointer enters. Applies when `trigger` is `hover` or `focus`."
+            },
+            "mouseLeaveDelay": {
+                "zh-CN": "指针移出后延迟隐藏的毫秒数，仅 `trigger` 为 `hover` 或 `focus` 时生效。",
+                "en-US": "Milliseconds before it hides after the pointer leaves. Applies when `trigger` is `hover` or `focus`."
+            },
+            "motion": {
+                "zh-CN": "弹出层出现与隐藏时是否有动画，缺省为 `true`。",
+                "en-US": "Whether the popup animates when it appears and hides. Defaults to `true`."
+            },
+            "okButtonProps": {
+                "zh-CN": "确认按钮的属性。`autoFocus` 为 `true` 时打开后聚焦该按钮，`class`、`style` 与其他属性落在按钮上。",
+                "en-US": "Props of the confirm button. `autoFocus` focuses it on open; `class`, `style` and other props land on the button."
+            },
+            "okText": {
+                "zh-CN": "确认按钮文字，缺省取语言包 `Popconfirm.confirm`（zh_CN 为 `确定`）。",
+                "en-US": "Confirm button text. Defaults to the locale entry `Popconfirm.confirm` (`确定` in zh_CN, `Confirm` in en_US)."
+            },
+            "okType": {
+                "zh-CN": "确认按钮类型，缺省为 `primary`。",
+                "en-US": "Confirm button type. Defaults to `primary`."
+            },
+            "onCancel": {
+                "zh-CN": "点击取消按钮或关闭按钮时调用，参数是原生 `MouseEvent`。返回 Promise 时按钮保持加载，落定后才关闭确认框，reject 时保留确认框；返回其他值会被忽略。",
+                "en-US": "Called with the native `MouseEvent` when the cancel or close button is clicked. A returned Promise keeps the button loading and closes the card once it settles; a rejection keeps the card open. Any other return value is ignored."
+            },
+            "onClickOutSide": {
+                "zh-CN": "弹出层处于展示状态时，点击非触发元素、非弹层内部的区域时调用，参数是原生 `MouseEvent`。",
+                "en-US": "Called with the native `MouseEvent` when the popup is shown and the mouse is pressed outside the trigger and the popup."
+            },
+            "onConfirm": {
+                "zh-CN": "点击确认按钮时调用，参数是原生 `MouseEvent`。返回 Promise 时按钮保持加载，落定后才关闭确认框，reject 时保留确认框；返回其他值会被忽略。",
+                "en-US": "Called with the native `MouseEvent` when the confirm button is clicked. A returned Promise keeps the button loading and closes the card once it settles; a rejection keeps the card open. Any other return value is ignored."
+            },
+            "onEscKeyDown": {
+                "zh-CN": "弹出层打开期间按 Esc 时调用，参数是原生 `KeyboardEvent`。",
+                "en-US": "Called with the native `KeyboardEvent` when Esc is pressed while the popup is open."
+            },
+            "onOpen": {
+                "zh-CN": "确认框显示、进场动画开始时调用，每次打开一次，早于 `afterOpen`，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。",
+                "en-US": "Called once per opening when the card is shown, as its enter animation starts, before `afterOpen`, controlled or not. A hover open withdrawn because the pointer already left does not call it."
+            },
+            "onVisibleChange": {
+                "zh-CN": "显示状态请求变化时调用，参数是请求的显示状态。`visible` 受控时只报告用户交互发起的请求，使用方自己改变 `visible` 不触发。",
+                "en-US": "Called with the requested visibility. With a controlled `visible` it reports only requests from user interaction, not changes the caller makes to `visible`."
+            },
+            "position": {
+                "zh-CN": "弹出方向，缺省为 `bottomLeft`（RTL 下为 `bottomRight`）。",
+                "en-US": "Popup position. Defaults to `bottomLeft` (`bottomRight` in RTL)."
+            },
+            "prefixCls": {
+                "zh-CN": "确认卡片的类名前缀，缺省为 `semi-popconfirm`。",
+                "en-US": "Class prefix of the confirmation card. Defaults to `semi-popconfirm`."
+            },
+            "returnFocusOnClose": {
+                "zh-CN": "关闭后焦点是否回到触发元素，缺省为 `true`；`trigger` 为 `custom` 时不生效，受控的 `visible` 照常生效。",
+                "en-US": "Whether focus returns to the trigger after closing. Defaults to `true`. It has no effect when `trigger` is `custom`, and works as usual with a controlled `visible`."
+            },
+            "role": {
+                "zh-CN": "弹出层的 ARIA role，缺省为 `dialog`，与 `trigger` 无关。",
+                "en-US": "ARIA role of the popup. Defaults to `dialog` whatever the `trigger`."
+            },
+            "showArrow": {
+                "zh-CN": "是否显示箭头三角形，缺省为 `false`。",
+                "en-US": "Whether the arrow triangle is shown. Defaults to `false`."
+            },
+            "showCloseIcon": {
+                "zh-CN": "是否显示右上角关闭按钮，缺省为 `true`。关闭按钮触发 `onCancel`。",
+                "en-US": "Whether the close button in the top-right corner is shown. Defaults to `true`. It calls `onCancel`."
+            },
+            "spacing": {
+                "zh-CN": "弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。",
+                "en-US": "Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的点击事件冒泡，缺省为 `true`。确认卡片内的点击始终不会传到文档上的监听器。",
+                "en-US": "Whether click events on the popup stop bubbling, defaults to `true`. Clicks inside the card never reach document listeners."
+            },
+            "style": {
+                "zh-CN": "确认卡片的样式，接受对象（键为 kebab-case）或字符串。",
+                "en-US": "Style of the confirmation card, as an object with kebab-case keys or as a string."
+            },
+            "title": {
+                "zh-CN": "标题，可以是字符串或 JSX 元素。有标题时，对话框以标题命名（见 `aria-labelledby`）。",
+                "en-US": "Title, a string or a JSX element. With a title, the dialog is named by it (see `aria-labelledby`)."
+            },
+            "trigger": {
+                "zh-CN": "触发展示的时机，可选 `hover`、`focus`、`click`、`contextMenu` 或 `custom`，缺省为 `click`。`visible` 受控时，触发器事件只通过 `onVisibleChange` 请求打开或关闭。",
+                "en-US": "When it shows: `hover`, `focus`, `click`, `contextMenu` or `custom`. Defaults to `click`. With a controlled `visible`, trigger events only request opening or closing through `onVisibleChange`."
+            },
+            "visible": {
+                "zh-CN": "受控的展示状态。传入后由该值决定是否显示；点击触发器、确认、取消、点击外部与 Esc 只通过 `onVisibleChange` 请求变化，由使用方回写 `visible` 后才生效。",
+                "en-US": "Controlled visibility. When given, this value decides whether it shows. Clicking the trigger, confirming, cancelling, clicking outside and Esc only request a change through `onVisibleChange`, which takes effect once the caller writes `visible` back."
+            }
+        },
+        "methods": {
+            "focusTrigger": {
+                "zh-CN": "让触发元素获得焦点。仅在 `returnFocusOnClose` 为 `true` 且 `trigger` 不是 `custom` 时生效；`disabled` 时没有触发元素可聚焦，调用无效果。",
+                "en-US": "Moves focus to the trigger element. It only takes effect when `returnFocusOnClose` is `true` and `trigger` is not `custom`. When `disabled`, there is no trigger element to focus and the call does nothing."
+            }
+        }
+    }
+}

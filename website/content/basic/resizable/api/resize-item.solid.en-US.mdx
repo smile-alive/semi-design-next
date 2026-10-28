@@ -1,0 +1,10 @@
+**Props**
+
+| Property      | Description                                                                                                                     | Type                  | Default |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ------- |
+| defaultSize   | Initial size. A string supports %, px, vw and vh; a number or numeric string takes a proportional share of the remaining space. | `string \| number`    | -       |
+| max           | Maximum size (%, px, vw or vh).                                                                                                 | `string`              | -       |
+| min           | Minimum size (%, px, vw or vh).                                                                                                 | `string`              | -       |
+| onChange      | Called when a drag or arrow key changes the size, with the new size, the event and the direction.                               | `ResizeCallback`      | -       |
+| onResizeEnd   | Called when resizing ends, with the final size, the event and the direction.                                                    | `ResizeCallback`      | -       |
+| onResizeStart | Called when resizing starts. If the item on either side of the handler returns false, the resize is cancelled.                  | `ResizeStartCallback` | -       |

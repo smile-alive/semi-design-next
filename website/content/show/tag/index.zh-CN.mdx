@@ -1,0 +1,272 @@
+---
+order: 82
+title: 标签
+icon: doc-tag
+brief: 标签是图形化标记界面上的元素的组件，达到快速识别、分组的目的。
+---
+
+import TagReactApi from './api/tag.react.zh-CN.mdx';
+import TagGroupReactApi from './api/tag-group.react.zh-CN.mdx';
+import SplitTagGroupReactApi from './api/split-tag-group.react.zh-CN.mdx';
+import TagVueApi from './api/tag.vue.zh-CN.mdx';
+import TagGroupVueApi from './api/tag-group.vue.zh-CN.mdx';
+import SplitTagGroupVueApi from './api/split-tag-group.vue.zh-CN.mdx';
+import TagSolidApi from './api/tag.solid.zh-CN.mdx';
+import TagGroupSolidApi from './api/tag-group.solid.zh-CN.mdx';
+import SplitTagGroupSolidApi from './api/split-tag-group.solid.zh-CN.mdx';
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+基本标签用法，将内容使用 `<Tag>` 标签包裹即可。  
+可以通过添加 `closable` 属性将其变为可关闭标签。
+
+<Framework only="react">
+
+此时点击 x 关闭会触发 onClose 事件，在 onClose 中阻止默认事件可以使其点击后依然显示不隐藏
+
+</Framework>
+
+<Framework only="vue">
+
+此时点击 x 关闭会触发 `close` 事件，在 `@close` 处理函数中对事件调用 `preventDefault` 可以使其点击后依然显示不隐藏
+
+</Framework>
+
+<Framework only="solid">
+
+此时点击 x 关闭会触发 `onClose` 事件，在 `onClose` 中对事件调用 `preventDefault` 可以使其点击后依然显示不隐藏
+
+</Framework>
+
+<Demo id="basic" />
+
+### 尺寸
+
+默认定义了两种尺寸：大、小（默认）。
+
+<Demo id="size" />
+
+### 形状
+
+默认定义了两种形状：`square`（默认）、`circle`。
+
+<Demo id="shape" />
+
+### 配置图标
+
+<Framework only="react">
+
+通过配置 `prefixIcon`、`suffixIcon`，可以在 children 内容前后添加 Icon 图标。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `#prefixIcon`、`#suffixIcon` 插槽，可以在内容前后添加 Icon 图标。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `prefixIcon`、`suffixIcon` 属性传入 JSX 元素，可以在内容前后添加 Icon 图标。
+
+</Framework>
+
+<Demo id="icon" />
+
+### 颜色
+
+标签支持默认色板的 16 种颜色和白色，包括：`amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow`、 `white`，也可以通过 style 来自定义颜色样式。
+
+<Demo id="color" />
+
+### AI 风格 - 多彩标签
+
+设置 `colorful` 为 `true` 即可获得多彩的标签。<strong>注意: </strong> 多彩标签的字重和非多彩标签字重不同。
+
+多彩标签可通过 `gradient` 区分是否为渐变色。
+
+<Demo id="colorful" />
+
+### 样式类型
+
+标签支持三种样式类型，包括浅色底色 `light`，白色底色 `ghost`，深色底色 `solid`；默认值为 `light`。通过 type 配置
+
+<Demo id="type" />
+
+### 头像标签
+
+设置 `avatarSrc` 可以生成头像标签。结合 `avatarShape` 可以调整头像标签的形状，支持 `square` 和 `circle`。
+
+<Demo id="avatar" />
+
+### 不可见的
+
+通过 visible 属性控制标签是否可见。
+
+<Demo id="visible" />
+
+### TagGroup 使用
+
+在 TagGroup 内通过 `tagList` 传入 tags 配置，并且设置 `maxTagCount` 属性, 超出数量限制后，会显示为 +N  
+通过设置 `showPopover` 属性，来控制 hover 到 +N Tag 时，是否通过 Popover 显示剩余内容
+
+<Demo id="tag-group" />
+
+<Framework only="react">
+
+如果 TagGroup 中的标签可删除，用户需要在 `onTagClose` 中处理传递给 TagGroup 的 `tagList`。从列表移除标签时请为每项提供 `tagKey`，否则文字相同的标签移除前一个后会错位。
+
+</Framework>
+
+<Framework only="vue">
+
+如果 TagGroup 中的标签可删除，用户需要在 `@tagClose` 处理函数中处理传递给 TagGroup 的 `tagList`。从列表移除标签时请为每项提供 `tagKey`，否则文字相同的标签移除前一个后会错位。`tagList` 每项的 `children` 为 `string | number`，需要完全自定义每个标签的节点时使用 `#tag="{ tag, index }"` 插槽。
+
+</Framework>
+
+<Framework only="solid">
+
+如果 TagGroup 中的标签可删除，用户需要在 `onTagClose` 中更新传给 TagGroup 的 `tagList`。从列表移除标签时请为每项提供 `tagKey`，否则文字相同的标签移除前一个后会错位。`tagList` 每项的 `children` 为 `string | number`，需要完全自定义每个标签的节点时使用 `renderTag={(tag, index) => ...}`。
+
+</Framework>
+
+<Demo id="tag-group-closable" />
+
+### SplitTagGroup 组合标签
+
+使用 `SplitTagGroup` 可以将多个标签组合成一个整体，首尾标签会有圆角，中间标签圆角为 0，形成连续的视觉效果。
+
+<Demo id="split-tag-group" />
+
+## API参考
+
+### Tag
+
+<Framework only="react">
+
+<TagReactApi />
+
+`aria-label`、`onClick` 等原生属性经展开落在根元素（`div`）上。声明 `onClick` 或 `closable` 后，根元素成为可聚焦的按钮（`role="button"`）。
+
+</Framework>
+
+<Framework only="vue">
+
+<TagVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在根元素上。声明 `@click` 监听后标签可交互。
+
+</Framework>
+
+<Framework only="solid">
+
+<TagSolidApi />
+
+`class`、`style`、`ref` 与原生属性经展开落在根元素（`div`）上。声明 `onClick` 后标签可交互。
+
+</Framework>
+
+### TagGroup
+
+<Framework only="react">
+
+<TagGroupReactApi />
+
+其他原生属性经展开落在 TagGroup 的根元素（`div`）上。
+
+</Framework>
+
+<Framework only="vue">
+
+<TagGroupVueApi />
+
+`class`、`style` 与原生属性经 attrs 落在 TagGroup 的根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<TagGroupSolidApi />
+
+`class`、`style`、`ref` 与原生属性经展开落在 TagGroup 的根元素（`div`）上。
+
+</Framework>
+
+### SplitTagGroup
+
+<Framework only="react">
+
+<SplitTagGroupReactApi />
+
+`className`、`style`、`children`、`aria-label` 等原生属性经展开落在根元素（`div`）上，根元素的 `role` 固定为 `group`。
+
+</Framework>
+
+<Framework only="vue">
+
+<SplitTagGroupVueApi />
+
+`class`、`style`、`aria-label` 等原生属性经 attrs 落在根元素上。
+
+</Framework>
+
+<Framework only="solid">
+
+<SplitTagGroupSolidApi />
+
+`class`、`style`、`aria-label` 等原生属性经展开落在根元素（`div`）上。
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+- `aria-label` 用于表示 `Tag` 的作用，对于可删除或者可点击的 `Tag` ，我们推荐使用此属性
+
+### 键盘和焦点
+
+- 如果当前 `Tag` 可交互，那么这个 `Tag` 可被聚焦到。如：
+    - 使用了 `onClick` 属性（Vue 为 `@click`）时，键盘用户可以通过 `Enter` 或空格键激活此 `Tag`
+    - `closable` 属性为 `true` 时，键盘用户可以通过 `Delete` 或 `Backspace` 键删除此 `Tag`，焦点会移到相邻的可聚焦 `Tag`
+
+## 文案规范
+
+- 由于空间有限，标签文本应尽可能简短
+- 避免换行
+- 使用句子大小写；
+
+## 设计变量
+
+<DesignToken />

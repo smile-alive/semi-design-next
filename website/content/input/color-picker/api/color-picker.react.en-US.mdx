@@ -1,0 +1,22 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| alpha | Whether to enable transparency selection. | `boolean` | `true` |
+| bottomSlot | Renders extra elements at the bottom. | `React.ReactNode` | - |
+| children | The trigger when `usePopover`, a swatch of the current color by default; not rendered without `usePopover`. | `React.ReactNode` | - |
+| className | Class name of the picker root element; it is inside the popover when `usePopover`. | `string` | - |
+| defaultFormat | Color format used by default for manual input: `rgba`, `hex` or `hsva`. | `ColorFormat` | `"hex"` |
+| defaultValue | Initial value when uncontrolled, a ColorValue holding hsva, hex and rgba. | `ColorValue` | <ApiType detail={"{\n hsva: { h: 176, s: 71, v: 77, a: 1 },\n rgba: { r: 57, g: 197, b: 187, a: 1 },\n hex: '#39c5bb',\n }"}>Type</ApiType> |
+| eyeDropper | Whether to enable the eyedropper. It needs a secure context such as HTTPS or localhost and Chromium 95 or later; otherwise it has no effect. | `boolean` | `true` |
+| height | Height in pixels; 280 when not set. | `number` | - |
+| onChange | Called with a ColorValue, holding hsva, hex and rgba, when the user picks a color. | <ApiType detail={"(value: ColorValue) => void"}>Type</ApiType> | - |
+| popoverProps | Props passed to the Popover when usePopover is on, such as `trigger`, `aria-label` and `aria-labelledby`. The popup opens on click with role `dialog` by default and takes its name from the locale; `aria-label` or `aria-labelledby` takes precedence. | `PopoverProps` | - |
+| ref | Reference to the picker root element (`div`); it is the picker inside the popover when `usePopover`. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
+| style | Style of the picker root element; it is inside the popover when `usePopover`. | `React.CSSProperties` | - |
+| topSlot | Renders extra elements at the top. | `React.ReactNode` | - |
+| usePopover | Whether to render inside a Popover; the trigger is `children`. Defaults to `false`. | `boolean` | - |
+| value | Controlled value, same shape as defaultValue. `undefined` means uncontrolled, and going back to `undefined` from a controlled value shows defaultValue again. `null` is a controlled empty value: it shows defaultValue and only reports changes. Treat ColorValue as immutable and replace it as a whole. | `ColorValue \| null` | - |
+| width | Width in pixels; 280 when not set. | `number` | - |

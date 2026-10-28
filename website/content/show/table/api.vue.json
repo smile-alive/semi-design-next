@@ -1,0 +1,259 @@
+{
+    "table": {
+        "source": "packages/semi-ui-vue/src/table/table.vue",
+        "props": {
+            "bordered": {
+                "zh-CN": "是否展示外边框和列边框。",
+                "en-US": "Whether to show the outer border and the column borders."
+            },
+            "childrenRecordName": {
+                "zh-CN": "树形表格中，数据项里表示子级数据的字段名。",
+                "en-US": "The field of a record that holds its child records in a tree table."
+            },
+            "clickGroupedRowToExpand": {
+                "zh-CN": "点击分组行时展开或收起该组。",
+                "en-US": "Clicking a group row expands or collapses the group."
+            },
+            "columns": {
+                "zh-CN": "列配置，详见 Column。传入时（包括空数组）优先于 Table.Column 子项。",
+                "en-US": "The column configuration, see Column. When given, an empty array included, it takes precedence over the Table.Column children."
+            },
+            "components": {
+                "zh-CN": "覆盖 Table 的组成元素，如 table、body、row、td、th，值为标签名或 Vue 组件，组件会收到被替换元素的属性与监听器。",
+                "en-US": "Replaces the elements Table renders, such as table, body, row, td and th, with a tag name or a Vue component that receives the attributes and listeners of the element it replaces."
+            },
+            "dataSource": {
+                "zh-CN": "数据。请为每一条数据分配一个独立的 key，或使用 rowKey 指定一个作为主键的属性名。原地增删元素（push、splice）会重新排序和筛选；只修改记录字段时，单元格显示新值，但不重新排序和筛选。",
+                "en-US": "The data. Give every record a unique key, or name the primary key field with rowKey. Rows added or removed in place (push, splice) are sorted and filtered again; a record field changed in place shows in its cell but does not sort or filter again."
+            },
+            "defaultExpandAllGroupRows": {
+                "zh-CN": "默认是否展开所有分组行，动态加载数据时不生效。",
+                "en-US": "Whether all group rows start expanded. Has no effect on data loaded later."
+            },
+            "defaultExpandAllRows": {
+                "zh-CN": "默认是否展开所有行，动态加载数据时不生效。",
+                "en-US": "Whether all rows start expanded. Has no effect on data loaded later."
+            },
+            "defaultExpandedRowKeys": {
+                "zh-CN": "默认展开的行 key 数组，动态加载数据时不生效。",
+                "en-US": "The keys of the rows that start expanded. Has no effect on data loaded later."
+            },
+            "direction": {
+                "zh-CN": "文字方向，默认值取 ConfigProvider 的 direction，可在此单独配置。",
+                "en-US": "The text direction. Defaults to the direction of ConfigProvider and can be set here per table."
+            },
+            "expandAllGroupRows": {
+                "zh-CN": "是否展开所有分组行。",
+                "en-US": "Whether all group rows are expanded."
+            },
+            "expandAllRows": {
+                "zh-CN": "是否展开所有行。",
+                "en-US": "Whether all rows are expanded."
+            },
+            "expandCellFixed": {
+                "zh-CN": "展开按钮所在列是否固定，取值与 Column 的 fixed 相同。",
+                "en-US": "Whether the column of the expand button is fixed, with the same values as the fixed field of a column."
+            },
+            "expandIcon": {
+                "zh-CN": "只接受 false，隐藏展开按钮。自定义展开图标使用 expandIcon 插槽。",
+                "en-US": "Accepts only false, which hides the expand buttons. Use the expandIcon slot for a custom icon."
+            },
+            "expandedRowKeys": {
+                "zh-CN": "展开的行 key 数组，传入后行展开受控，配合 v-model:expandedRowKeys 使用。",
+                "en-US": "The keys of the expanded rows. When given, row expansion is controlled; use it with v-model:expandedRowKeys."
+            },
+            "expandRowByClick": {
+                "zh-CN": "点击行时是否展开可展开行。",
+                "en-US": "Whether clicking a row expands an expandable row."
+            },
+            "footer": {
+                "zh-CN": "纯文本表格尾部，footer 插槽优先。",
+                "en-US": "The table footer as plain text. The footer slot takes precedence."
+            },
+            "groupBy": {
+                "zh-CN": "分组依据，可以是数据项中的字段名，或返回字符串、数字的函数。",
+                "en-US": "The grouping rule: a record field name, or a function that returns a string or a number."
+            },
+            "groupSectionColumn": {
+                "zh-CN": "分组行唯一一列的列配置，返回值不含 title、children、dataIndex。",
+                "en-US": "The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex."
+            },
+            "headerStyle": {
+                "zh-CN": "所有表头单元格（包括固定表头）的内联样式。",
+                "en-US": "Inline style of every header cell, fixed headers included."
+            },
+            "hideExpandedColumn": {
+                "zh-CN": "表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。",
+                "en-US": "In an expandable table the expand button shares the first cell by default; set false to render it as its own column."
+            },
+            "indentSize": {
+                "zh-CN": "树形数据每一层的缩进宽度，单位为像素。",
+                "en-US": "The indent of each tree level, in pixels."
+            },
+            "keepDOM": {
+                "zh-CN": "折叠行时是否保留被折叠的 DOM。",
+                "en-US": "Whether collapsing a row keeps its DOM."
+            },
+            "loading": { "zh-CN": "是否显示加载状态。", "en-US": "Whether the table shows its loading state." },
+            "pagination": {
+                "zh-CN": "分页配置，传 false 关闭分页。",
+                "en-US": "The pagination configuration. Pass false to turn pagination off."
+            },
+            "prefixCls": { "zh-CN": "样式名前缀。", "en-US": "The prefix of the class names." },
+            "resizable": {
+                "zh-CN": "是否开启列宽伸缩，需要伸缩的列必须提供 width。传入对象时可配置 onResize、onResizeStart、onResizeStop 与 handlerClassName。",
+                "en-US": "Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName."
+            },
+            "rowExpandable": {
+                "zh-CN": "判断某一行是否可展开，返回 false 时不渲染该行的展开按钮。",
+                "en-US": "Tells whether a row can be expanded. A row that returns false has no expand button."
+            },
+            "rowKey": {
+                "zh-CN": "行 key 的取值：数据项的字段名，或返回字符串、数字的函数。",
+                "en-US": "The row key: a record field name, or a function that returns a string or a number."
+            },
+            "rowSelection": {
+                "zh-CN": "行选择配置，传 true 使用默认配置，详见 rowSelection。",
+                "en-US": "The row selection configuration. Pass true for the defaults, see rowSelection."
+            },
+            "rowSpanHover": {
+                "zh-CN": "悬停在带 rowSpan 的单元格上时，高亮它跨越的所有行。",
+                "en-US": "Hovering a cell with rowSpan highlights every row the cell spans."
+            },
+            "scroll": {
+                "zh-CN": "滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。",
+                "en-US": "The scroll area: x is the width and y the height, see scroll."
+            },
+            "showHeader": { "zh-CN": "是否显示表头。", "en-US": "Whether to show the header." },
+            "size": {
+                "zh-CN": "表格尺寸，影响单元格的内边距。",
+                "en-US": "The table size, which sets the padding of the cells."
+            },
+            "sticky": {
+                "zh-CN": "将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。",
+                "en-US": "Sticks the header to the top of the page. With an object, top is the distance from the scroll container."
+            },
+            "title": {
+                "zh-CN": "纯文本表格标题，title 插槽优先。",
+                "en-US": "The table title as plain text. The title slot takes precedence."
+            },
+            "virtualized": {
+                "zh-CN": "开启虚拟化，需同时传 scroll.y（数字）。对象形式可配置行高 itemSize 与额外渲染的行数 overscanCount。",
+                "en-US": "Turns on virtualization, which needs scroll.y as a number. An object sets the row height itemSize and the extra rows overscanCount."
+            },
+            "onGroupedRow": {
+                "zh-CN": "类似 onRow，单独用于分组行，返回值是 tr 的属性与监听器。index 在未开启 virtualized 时是分组序号，开启后是该行在虚拟列表中的位置。",
+                "en-US": "Like onRow, for group rows. The returned object holds the attributes and listeners of the tr. index is the group's ordinal, or its position among the virtual list's rows when virtualized is on."
+            },
+            "onHeaderRow": {
+                "zh-CN": "设置表头行的属性与监听器，返回值会合并到表头行（不含 style）。",
+                "en-US": "Sets the attributes and listeners of a header row. The returned object (without style) is merged into the row."
+            },
+            "onRow": {
+                "zh-CN": "设置数据行的属性与监听器，第三个参数为行状态。返回的监听器在行自身的处理和 rowXxx 事件之后调用。",
+                "en-US": "Sets the attributes and listeners of a data row; the third argument is the row state. The returned listeners run after the row's own handling and the rowXxx events."
+            }
+        },
+        "events": {
+            "change": {
+                "zh-CN": "分页、排序、筛选变化时触发，参数含 pagination、filters、sorter 与 extra.changeType。",
+                "en-US": "Emitted when the page, the sorting or the filters change. The argument holds pagination, filters, sorter and extra.changeType."
+            },
+            "expand": {
+                "zh-CN": "点击展开按钮时触发，参数为展开状态、行数据（分组行为 groupKey 对象）和鼠标事件。",
+                "en-US": "Emitted when an expand button is clicked, with the expanded state, the record (an object with groupKey for a group row) and the mouse event."
+            },
+            "expandedRowsChange": {
+                "zh-CN": "展开的行变化时触发，参数为展开的行数据数组。",
+                "en-US": "Emitted when the expanded rows change, with the array of expanded records."
+            },
+            "update:expandedRowKeys": {
+                "zh-CN": "展开的行变化时触发，参数为展开的行 key 数组，包含已展开的分组 key，用于 v-model:expandedRowKeys。",
+                "en-US": "Emitted when the expanded rows change, with the array of expanded keys, group keys included. Backs v-model:expandedRowKeys."
+            },
+            "scroll": {
+                "zh-CN": "虚拟化表体的纵向偏移变化时触发，横向滚动不触发。",
+                "en-US": "Emitted when the vertical offset of a virtualized body changes. A horizontal scroll does not emit it."
+            },
+            "rowMouseEnter": {
+                "zh-CN": "鼠标进入数据行时触发，先于 onRow 返回的 onMouseenter 调用。",
+                "en-US": "Emitted when the pointer enters a data row, before the onMouseenter returned by onRow."
+            },
+            "rowMouseLeave": {
+                "zh-CN": "鼠标离开数据行时触发，先于 onRow 返回的 onMouseleave 调用。",
+                "en-US": "Emitted when the pointer leaves a data row, before the onMouseleave returned by onRow."
+            },
+            "rowDoubleClick": {
+                "zh-CN": "双击数据行时触发，先于 onRow 返回的 onDblclick 调用。",
+                "en-US": "Emitted when a data row is double-clicked, before the onDblclick returned by onRow."
+            },
+            "rowContextMenu": {
+                "zh-CN": "数据行触发右键菜单时触发，先于 onRow 返回的 onContextmenu 调用。",
+                "en-US": "Emitted when a data row opens the context menu, before the onContextmenu returned by onRow."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "Table.Column 子项，传入 columns 时被忽略。",
+                "en-US": "Table.Column children. Ignored when columns is given."
+            },
+            "cell": {
+                "zh-CN": "数据单元格的内容，对所有数据列调用，用 column.dataIndex 或 column.key 区分列；输出为空时显示原始值。Table.Column 自己的 cell 插槽优先。",
+                "en-US": "The content of a data cell, called for every data column; tell the columns apart with column.dataIndex or column.key. Empty output shows the value. The cell slot of a Table.Column takes precedence."
+            },
+            "headerCell": {
+                "zh-CN": "列标题的内容；输出为空时显示 column.title。Table.Column 的 title 插槽优先。",
+                "en-US": "The content of a column title. Empty output shows column.title. The title slot of a Table.Column takes precedence."
+            },
+            "title": {
+                "zh-CN": "表格标题，参数 pageData 为当前页数据。",
+                "en-US": "The table title, with the records of the current page as pageData."
+            },
+            "footer": {
+                "zh-CN": "表格尾部，参数 pageData 为当前页数据。",
+                "en-US": "The table footer, with the records of the current page as pageData."
+            },
+            "empty": {
+                "zh-CN": "无数据时展示的内容，不提供时显示语言包的空文案，提供空插槽时不显示任何内容。",
+                "en-US": "The content shown without data. Without the slot the locale's empty text shows; an empty slot shows nothing."
+            },
+            "expandedRow": {
+                "zh-CN": "展开行的内容，参数含 record、index、expanded；输出为空时该行不渲染。",
+                "en-US": "The content of an expanded row, with record, index and expanded. Empty output leaves the row out."
+            },
+            "groupSection": {
+                "zh-CN": "分组行的内容，参数含 groupKey 与 group（该组的行 key）。",
+                "en-US": "The content of a group row, with groupKey and group (the row keys of the group)."
+            },
+            "sortIcon": {
+                "zh-CN": "排序图标，参数含 sortOrder 与 column；输出为空时显示默认箭头。Table.Column 自己的 sortIcon 插槽优先。",
+                "en-US": "The sort icon, with sortOrder and column. Empty output shows the default arrows. The sortIcon slot of a Table.Column takes precedence."
+            },
+            "filterIcon": {
+                "zh-CN": "筛选按钮的内容，参数含 filtered 与 column；输出为空时显示默认图标。Table.Column 自己的 filterIcon 插槽优先。",
+                "en-US": "The content of the filter button, with filtered and column. Empty output shows the default icon. The filterIcon slot of a Table.Column takes precedence."
+            },
+            "filterDropdown": {
+                "zh-CN": "筛选面板，用于 filterDropdown 为 true 的列，参数含临时筛选值与 onConfirm、onClear、onClose、onReset；输出为空时显示筛选菜单。",
+                "en-US": "The filter panel of a column with filterDropdown set to true, with the temporary value and onConfirm, onClear, onClose, onReset. Empty output shows the filter menu."
+            },
+            "filterDropdownItem": {
+                "zh-CN": "筛选菜单中的一项，参数含 text、value、checked、level、onChange 等；输出为空时显示默认项。",
+                "en-US": "An item of the filter menu, with text, value, checked, level, onChange and more. Empty output shows the default item."
+            },
+            "selectionCell": {
+                "zh-CN": "选择列的单元格，表头与数据行都调用，参数含 selected、inHeader、originNode 等；输出为空时显示默认复选框。",
+                "en-US": "A cell of the selection column, called for the header and the rows, with selected, inHeader, originNode and more. Empty output shows the default checkbox."
+            },
+            "expandIcon": {
+                "zh-CN": "展开按钮的图标，参数 expanded；输出为空时显示默认图标。自定义图标不带旋转动画。",
+                "en-US": "The icon of an expand button, with expanded. Empty output shows the default icon. A custom icon does not rotate."
+            },
+            "pagination": {
+                "zh-CN": "替换分页信息与分页器，参数 pagination 可直接 v-bind 给 Pagination；输出为空时显示默认分页。",
+                "en-US": "Replaces the pagination info and the Pagination. The pagination argument can be bound to a Pagination as is. Empty output shows the default pagination."
+            }
+        },
+        "exposed": {}
+    }
+}

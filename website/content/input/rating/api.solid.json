@@ -1,0 +1,65 @@
+{
+    "rating": {
+        "source": "packages/semi-ui-solid/src/rating/rating.tsx",
+        "props": {
+            "allowClear": {
+                "zh-CN": "是否允许再次点击后清除。",
+                "en-US": "Whether clicking the selected star again clears the value."
+            },
+            "allowHalf": { "zh-CN": "是否允许半选。", "en-US": "Whether half stars can be selected." },
+            "autofocus": { "zh-CN": "挂载时自动获取焦点。", "en-US": "Whether to focus on mount." },
+            "character": {
+                "zh-CN": "每颗星中绘制的字符，可传入 JSX 元素，如 `<IconLikeHeart />`，未设置时为星形图标。传入纯文本字符串时，该文本作为各星可访问名称与整组摘要的单位。",
+                "en-US": "Character drawn in every star, a JSX element such as `<IconLikeHeart />`; the star icon when not set. When it is a plain text string, that text is the unit in each star's accessible name and the group summary."
+            },
+            "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
+            "defaultValue": { "zh-CN": "非受控时的初始值。", "en-US": "Initial value when uncontrolled." },
+            "disabled": {
+                "zh-CN": "只读，无法进行交互，也无法获得焦点。",
+                "en-US": "Read-only: no interaction and no focus."
+            },
+            "name": {
+                "zh-CN": "不生效：radiogroup 不能带 name，传入的值被丢弃。",
+                "en-US": "Ineffective: a radiogroup cannot carry a name, so the value is dropped."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开整个评分组件时的回调，在星之间移动不触发。",
+                "en-US": "Called when focus leaves the whole rating; moving between stars does not call it."
+            },
+            "onChange": {
+                "zh-CN": "选择变化时的回调，参数为新的值。",
+                "en-US": "Called when the selection changes, with the new value."
+            },
+            "onClick": {
+                "zh-CN": "点击星或按 Enter、Space 选中时的回调，参数为事件与星的序号；不会作为根元素的原生 click 监听。",
+                "en-US": "Called when a star is clicked or selected with Enter or Space, with the event and the star index. It is not a native click listener on the root element."
+            },
+            "onFocus": {
+                "zh-CN": "焦点进入整个评分组件时的回调，在星之间移动不触发。",
+                "en-US": "Called when focus enters the whole rating; moving between stars does not call it."
+            },
+            "onHoverChange": {
+                "zh-CN": "指针经过时数值变化的回调；指针移出或点击清除时参数为 `undefined`。",
+                "en-US": "Called when the hovered value changes; receives `undefined` when the pointer leaves or a click clears the value."
+            },
+            "onKeyDown": {
+                "zh-CN": "仅在方向键使值移动时的回调。",
+                "en-US": "Called only for an arrow key that moved the value."
+            },
+            "prefixCls": { "zh-CN": "组件的样式类名前缀。", "en-US": "Class name prefix of the component." },
+            "preventScroll": {
+                "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。",
+                "en-US": "Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 default、small，也可传入 number 自定义尺寸。",
+                "en-US": "Size: default or small, or a number for a custom size."
+            },
+            "tooltips": { "zh-CN": "每一项的提示信息。", "en-US": "Prompt text for each item." },
+            "value": {
+                "zh-CN": "当前受控值，传入后由该值决定显示；变回 undefined 时回到 defaultValue 并转为非受控。",
+                "en-US": "Controlled value. When given, this value decides what is shown; back to undefined it returns to defaultValue and becomes uncontrolled."
+            }
+        }
+    }
+}

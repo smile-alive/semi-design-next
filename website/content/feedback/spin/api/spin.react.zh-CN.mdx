@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                            | 类型                                                              | 默认值     |
+| ---------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------- |
+| children         | 被包裹的内容。有内容时 Spin 作为包裹元素，加载中内容带 `inert`，不能聚焦和操作。                | `React.ReactNode`                                                 | -          |
+| childStyle       | 内部子元素的内联样式。                                                                          | `React.CSSProperties`                                             | -          |
+| delay            | 延迟显示加载效果的时间，单位毫秒。                                                              | `number`                                                          | `0`        |
+| indicator        | 自定义加载指示符，传入 ReactNode。未设置时显示内置加载图标，全局配置的 indicator 可覆盖该图标。 | `React.ReactNode`                                                 | -          |
+| ref              | 根元素（`div`）的引用。                                                                         | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -          |
+| size             | 组件大小，可选 `small`、`middle` 或 `large`。                                                   | `SpinSize`                                                        | `"middle"` |
+| spinning         | 是否处于加载中的状态，受控属性。                                                                | `boolean`                                                         | `true`     |
+| style            | 根元素的内联样式。                                                                              | `React.CSSProperties`                                             | -          |
+| tip              | 加载中显示在指示符下方的描述文字，常在 Spin 作为包裹元素时使用，传入 ReactNode。                | `React.ReactNode`                                                 | -          |
+| wrapperClassName | 根元素的额外类名，与 `className` 一并添加到根元素上。                                           | `string`                                                          | -          |

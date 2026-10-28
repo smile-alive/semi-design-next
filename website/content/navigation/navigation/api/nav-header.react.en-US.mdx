@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                              | Type                                                                                  | Default |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------- |
+| children    | Content of the header, rendered after the logo and the text.                                                             | `ReactNode`                                                                           | -       |
+| className   | Class name of the outermost `div`.                                                                                       | `string`                                                                              | -       |
+| link        | `href` of the header. When given, the header content sits inside a link.                                                 | `string`                                                                              | -       |
+| linkOptions | Attributes passed to the link.                                                                                           | <ApiType detail={"React.AnchorHTMLAttributes\u003cHTMLAnchorElement>"}>Type</ApiType> | -       |
+| logo        | Logo node, such as an image or an icon.                                                                                  | `Logo`                                                                                | -       |
+| ref         | Reference to the outermost `div` of the header.                                                                          | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                     | -       |
+| style       | Style of the outermost `div`.                                                                                            | `CSSProperties`                                                                       | -       |
+| text        | Logo text. It is hidden when collapsed; when collapsed and `link` is set, a string or number text names the header link. | `React.ReactNode`                                                                     | -       |

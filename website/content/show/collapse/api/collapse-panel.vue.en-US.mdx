@@ -1,0 +1,27 @@
+**Props**
+
+| Property  | Description                                                          | Type      | Default     |
+| --------- | -------------------------------------------------------------------- | --------- | ----------- |
+| itemKey   | Required and unique, matched against activeKey and defaultActiveKey. | `string`  | `undefined` |
+| showArrow | Whether to show the arrow icon.                                      | `boolean` | `true`      |
+| disabled  | Whether the panel is disabled.                                       | `boolean` | `false`     |
+
+**Events**
+
+| Event     | Description                                         | Callback parameters |
+| --------- | --------------------------------------------------- | ------------------- |
+| motionEnd | Emitted when the expand or collapse animation ends. | `[]`                |
+
+**Slots**
+
+| Slot    | Description                                                                                       | Scope parameters |
+| ------- | ------------------------------------------------------------------------------------------------- | ---------------- |
+| default | Panel content.                                                                                    | `any`            |
+| header  | Panel header content, rendered inside the toggle button; must not contain interactive elements.   | `any`            |
+| extra   | Auxiliary content on the right of the panel header, outside the toggle button; may hold controls. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,133 @@
+{
+    "resizable": {
+        "source": "packages/semi-ui-solid/src/resizable/resizable.tsx",
+        "props": {
+            "size": {
+                "zh-CN": "受控尺寸，按轴生效：未设置的轴仍跟随拖拽。拖动时需在 onChange 中把新尺寸写回。",
+                "en-US": "Controlled size, applied per axis: an axis left unset follows the drag. Write the new size back in onChange while dragging."
+            },
+            "defaultSize": {
+                "zh-CN": "初始宽高，支持数字和字符串（px/vw/vh/%）。",
+                "en-US": "Initial width and height, as a number or a string (px/vw/vh/%)."
+            },
+            "enable": {
+                "zh-CN": "可伸缩的方向，未设置为 false 的方向均可拖动；传入 false 则不渲染任何手柄。",
+                "en-US": "Directions that can be resized. A direction not set to false is enabled; false renders no handles."
+            },
+            "grid": {
+                "zh-CN": "调整大小时对齐的增量。",
+                "en-US": "Increment that resizing snaps to."
+            },
+            "snap": {
+                "zh-CN": "调整大小时对齐的绝对像素值，x 与 y 均可省略。",
+                "en-US": "Absolute pixel values that resizing snaps to. Both x and y are optional."
+            },
+            "snapGap": {
+                "zh-CN": "移动到下一个对齐目标所需的最小间隙。",
+                "en-US": "Minimum gap required to move to the next snap target."
+            },
+            "boundElement": {
+                "zh-CN": "限制宽高的元素：'parent'、'window' 或一个 HTMLElement。",
+                "en-US": "Element that bounds the size: 'parent', 'window' or an HTMLElement."
+            },
+            "boundsByDirection": {
+                "zh-CN": "是否按拖动方向计算边界：为 true 时，从左侧或上侧手柄拖动，最大尺寸按元素固定的那一侧到限制元素对侧边缘的距离计算。",
+                "en-US": "Whether bounds are computed by drag direction. When true, dragging from a left or top handle limits the size by the distance from the side that stays put to the opposite edge of the bound element."
+            },
+            "minWidth": { "zh-CN": "最小宽度。", "en-US": "Minimum width." },
+            "minHeight": { "zh-CN": "最小高度。", "en-US": "Minimum height." },
+            "maxWidth": { "zh-CN": "最大宽度。", "en-US": "Maximum width." },
+            "maxHeight": { "zh-CN": "最大高度。", "en-US": "Maximum height." },
+            "lockAspectRatio": {
+                "zh-CN": "锁定横纵比：true 按初始宽高锁定，数字为宽高比。",
+                "en-US": "Locks the aspect ratio: true keeps the initial one, a number is the width to height ratio."
+            },
+            "lockAspectRatioExtraWidth": {
+                "zh-CN": "锁定横纵比时，不参与比例计算的额外宽度（如内边距），单位为像素。",
+                "en-US": "Extra width in pixels (such as padding) left out of the ratio when the aspect ratio is locked."
+            },
+            "lockAspectRatioExtraHeight": {
+                "zh-CN": "锁定横纵比时，不参与比例计算的额外高度（如内边距），单位为像素。",
+                "en-US": "Extra height in pixels (such as padding) left out of the ratio when the aspect ratio is locked."
+            },
+            "scale": {
+                "zh-CN": "元素被外部缩放的比例，用于校正指针位移。",
+                "en-US": "Scale applied to the element from outside, used to correct the pointer movement."
+            },
+            "ratio": {
+                "zh-CN": "拖动距离与实际尺寸变化的比例，可传 [宽, 高]。方向键每次固定改变 10px，不受 ratio 与 scale 影响。",
+                "en-US": "Ratio of pointer movement to size change; pass [width, height] for per-axis ratios. Arrow keys always change the size by 10px, regardless of ratio and scale."
+            },
+            "handleStyle": {
+                "zh-CN": "各方向手柄的样式，可传对象或字符串。",
+                "en-US": "Styles of the handle in each direction, as objects or strings."
+            },
+            "handleClass": {
+                "zh-CN": "各方向手柄的类名。",
+                "en-US": "Class names of the handle in each direction."
+            },
+            "handleWrapperStyle": {
+                "zh-CN": "包裹所有手柄的容器样式。",
+                "en-US": "Style of the element that wraps all handles."
+            },
+            "handleWrapperClass": {
+                "zh-CN": "包裹所有手柄的容器类名。",
+                "en-US": "Class name of the element that wraps all handles."
+            },
+            "renderHandle": {
+                "zh-CN": "各启用方向手柄的内容，替换默认的握把图标；每个启用的方向调用一次，参数为该手柄的方向。",
+                "en-US": "Content of the handle in each enabled direction, in place of the default grip icon. It is called once per enabled direction, with that handle's direction."
+            },
+            "onResizeStart": {
+                "zh-CN": "开始伸缩时调用，返回 false 取消本次伸缩。",
+                "en-US": "Called when resizing starts. Return false to cancel the resize."
+            },
+            "onChange": {
+                "zh-CN": "拖动或方向键改变尺寸时调用，参数为新尺寸、事件与方向。",
+                "en-US": "Called when a drag or arrow key changes the size, with the new size, the event and the direction."
+            },
+            "onResizeEnd": {
+                "zh-CN": "结束伸缩时调用，参数为最终尺寸、事件与方向。",
+                "en-US": "Called when resizing ends, with the final size, the event and the direction."
+            }
+        }
+    },
+    "resize-group": {
+        "source": "packages/semi-ui-solid/src/resizable/resize-group.tsx",
+        "props": {
+            "direction": {
+                "zh-CN": "组内的伸缩方向，可选 horizontal 或 vertical。",
+                "en-US": "Resize direction within the group: horizontal or vertical."
+            }
+        }
+    },
+    "resize-item": {
+        "source": "packages/semi-ui-solid/src/resizable/resize-item.tsx",
+        "props": {
+            "min": {
+                "zh-CN": "最小尺寸（%、px、vw 或 vh）。",
+                "en-US": "Minimum size (%, px, vw or vh)."
+            },
+            "max": {
+                "zh-CN": "最大尺寸（%、px、vw 或 vh）。",
+                "en-US": "Maximum size (%, px, vw or vh)."
+            },
+            "defaultSize": {
+                "zh-CN": "初始尺寸。字符串支持 %、px、vw、vh；纯数字或数字字符串表示按比例分配剩余空间。",
+                "en-US": "Initial size. A string supports %, px, vw and vh; a number or numeric string takes a proportional share of the remaining space."
+            },
+            "onResizeStart": {
+                "zh-CN": "开始伸缩时调用，手柄任一侧的项返回 false 即取消本次伸缩。",
+                "en-US": "Called when resizing starts. If the item on either side of the handler returns false, the resize is cancelled."
+            },
+            "onChange": {
+                "zh-CN": "拖动或方向键改变尺寸时调用，参数为新尺寸、事件与方向。",
+                "en-US": "Called when a drag or arrow key changes the size, with the new size, the event and the direction."
+            },
+            "onResizeEnd": {
+                "zh-CN": "结束伸缩时调用，参数为最终尺寸、事件与方向。",
+                "en-US": "Called when resizing ends, with the final size, the event and the direction."
+            }
+        }
+    }
+}

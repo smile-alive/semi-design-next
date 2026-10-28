@@ -1,0 +1,51 @@
+{
+    "layout": {
+        "source": "packages/semi-ui-solid/src/layout/layout.tsx",
+        "props": {
+            "hasSider": {
+                "zh-CN": "表示子元素里有 Sider，一般不用指定。Sider 在创建时向最近的 Layout 登记，首帧（含 SSR）即带 has-sider 类。传 false 不能去掉 Sider 带来的 has-sider 类。",
+                "en-US": "Indicates that a Sider is inside; usually not needed. A Sider registers with the nearest Layout when it is created, so the has-sider class is present on the first frame, including SSR. Passing false cannot remove the has-sider class that a Sider adds."
+            },
+            "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
+            "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." }
+        }
+    },
+    "layout-header": {
+        "source": "packages/semi-ui-solid/src/layout/basic.tsx#Header",
+        "props": {
+            "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." },
+            "tagName": { "zh-CN": "根元素的标签名，默认为 `header`。", "en-US": "Tag name of the root element. Defaults to `header`." },
+            "type": { "zh-CN": "内部使用，决定类名后缀，默认为 `header`。", "en-US": "For internal use; decides the class name suffix. Defaults to `header`." }
+        }
+    },
+    "layout-footer": {
+        "source": "packages/semi-ui-solid/src/layout/basic.tsx#Footer",
+        "props": {
+            "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." },
+            "tagName": { "zh-CN": "根元素的标签名，默认为 `footer`。", "en-US": "Tag name of the root element. Defaults to `footer`." },
+            "type": { "zh-CN": "内部使用，决定类名后缀，默认为 `footer`。", "en-US": "For internal use; decides the class name suffix. Defaults to `footer`." }
+        }
+    },
+    "layout-content": {
+        "source": "packages/semi-ui-solid/src/layout/basic.tsx#Content",
+        "props": {
+            "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." },
+            "tagName": { "zh-CN": "根元素的标签名，默认为 `main`。", "en-US": "Tag name of the root element. Defaults to `main`." },
+            "type": { "zh-CN": "内部使用，决定类名后缀，默认为 `content`。", "en-US": "For internal use; decides the class name suffix. Defaults to `content`." }
+        }
+    },
+    "layout-sider": {
+        "source": "packages/semi-ui-solid/src/layout/sider.tsx",
+        "props": {
+            "breakpoint": {
+                "zh-CN": "触发响应式布局的断点，可选 xs、sm、md、lg、xl、xxl。仅在挂载时读取一次。",
+                "en-US": "Breakpoints that trigger the responsive layout: xs, sm, md, lg, xl or xxl. Read once at mount."
+            },
+            "onBreakpoint": {
+                "zh-CN": "断点命中状态变化时的回调，参数为断点名与是否命中。挂载时对 breakpoint 中的每个断点按当前视口调用一次，之后在命中或离开时调用。",
+                "en-US": "Called once at mount for each screen listed in breakpoint with the current viewport state, then whenever it starts or stops matching, with the screen name and whether it matches."
+            },
+            "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." }
+        }
+    }
+}

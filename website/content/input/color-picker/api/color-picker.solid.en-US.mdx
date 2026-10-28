@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| alpha | Whether to enable transparency selection. | `boolean` | `true` |
+| bottomSlot | Renders extra elements at the bottom. | `JSX.Element` | - |
+| children | The trigger when usePopover, a color swatch button by default; not rendered without usePopover. A function (declare its parameter) receives `getTriggerProps`, which is spread onto the element that takes focus. | `PopoverProps['children']` | - |
+| defaultFormat | Color format used by default for manual input: `rgba`, `hex` or `hsva`. | `ColorFormat` | `"hex"` |
+| defaultValue | Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of `#39c5bb`. | `ColorValue` | <ApiType detail={"{\n hsva: { h: 176, s: 71, v: 77, a: 1 },\n rgba: { r: 57, g: 197, b: 187, a: 1 },\n hex: '#39c5bb',\n}"}>Type</ApiType> |
+| eyeDropper | Whether to enable the eyedropper color picker. | `boolean` | `true` |
+| height | Height in pixels; 280 when not set. | `number` | - |
+| onChange | Called with a ColorValue, holding hsva, hex and rgba, when the user picks a color. | <ApiType detail={"(value: ColorValue) => void"}>Type</ApiType> | - |
+| popoverProps | Props passed to the Popover when usePopover is on, such as `trigger`, `aria-label` and `aria-labelledby`. The popup opens on click with role `dialog` by default and takes its name from the locale; `aria-label` or `aria-labelledby` takes precedence. | `PopoverProps` | - |
+| topSlot | Renders extra elements at the top. | `JSX.Element` | - |
+| usePopover | Whether to render inside a Popover; the trigger is `children`. Defaults to false. | `boolean` | - |
+| value | Controlled value, same shape as defaultValue. `undefined` means uncontrolled, and going back to `undefined` from a controlled value shows defaultValue again. `null` is a controlled empty value: it shows defaultValue and only reports changes. Treat ColorValue as immutable and replace it as a whole. | `ColorValue \| null` | - |
+| width | Width in pixels; 280 when not set. | `number` | - |

@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                                     | 类型                                                         | 默认值         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------ | -------------- |
+| current   | 当前步骤，从 0 开始计数；子 Step 可用 status 覆盖状态。                                                                  | `number`                                                     | `0`            |
+| direction | 步骤条方向，可选 horizontal、vertical；用于 basic 与 fill 类型。                                                         | `Direction`                                                  | `"horizontal"` |
+| hasLine   | 是否显示步骤间的连接线；仅用于 basic 类型。                                                                              | `boolean`                                                    | `true`         |
+| initial   | 起始序号，从 0 开始计数。                                                                                                | `number`                                                     | `0`            |
+| onChange  | 点击或按 Enter、空格选择步骤时调用，参数为该步骤序号（initial 加索引）；点击当前步骤不调用。传入后所有 Step 变为可点击。 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | -              |
+| prefixCls | 根元素的类名前缀。                                                                                                       | `string`                                                     | `"semi-steps"` |
+| size      | 尺寸，可选 small、default；用于 basic 与 nav 类型。                                                                      | `Size`                                                       | `"default"`    |
+| status    | 当前步骤的状态，可选 wait、process、finish、error、warning；用于 basic 与 fill 类型。                                    | `Status`                                                     | `"process"`    |
+| type      | 步骤条类型，可选 fill、basic、nav。                                                                                      | `'fill' \| 'basic' \| 'nav'`                                 | `"fill"`       |

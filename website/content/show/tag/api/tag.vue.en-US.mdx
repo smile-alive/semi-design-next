@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| tabindex | tabindex of the tag. An interactive tag defaults to 0. | `number` | `semiGlobalDefault("Tag", "tabindex")` |
+| tagKey | Unique identifier of the tag, passed as the second argument of close. | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
+| size | Tag size: small, default or large. | `"default" \| "small" \| "large"` | `semiDefault("Tag", "size", "default")` |
+| color | Tag color: one of the 16 palette colors or white. | <ApiType detail={"\"grey\" \u007c \"red\" \u007c \"pink\" \u007c \"purple\" \u007c \"violet\" \u007c \"indigo\" \u007c \"blue\" \u007c \"light-blue\" \u007c \"cyan\" \u007c \"teal\" \u007c \"green\" \u007c \"light-green\" \u007c \"lime\" \u007c \"yellow\" \u007c \"amber\" \u007c \"orange\" \u007c \"white\""}>Type</ApiType> | `semiDefault("Tag", "color", "grey")` |
+| type | Style type: light, ghost or solid. | `"light" \| "solid" \| "ghost"` | `semiDefault("Tag", "type", "light")` |
+| closable | Whether the tag can be closed. | `boolean` | `semiDefault("Tag", "closable", false)` |
+| visible | Whether the tag is visible, used with v-model:visible. When given, this value decides. | `boolean` | `semiGlobalDefault("Tag", "visible")` |
+| avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | `semiGlobalDefault("Tag", "avatarSrc")` |
+| colorful | Whether the tag is colorful. | `boolean` | `semiDefault("Tag", "colorful", false)` |
+| gradient | Whether a colorful tag uses a gradient. Requires colorful. | `boolean` | `semiDefault("Tag", "gradient", false)` |
+| avatarShape | Shape of the avatar in an avatar tag: square or circle. | `AvatarShape` | `semiDefault("Tag", "avatarShape", "square")` |
+| shape | Tag shape: square or circle. | `TagShape` | `semiDefault("Tag", "shape", "square")` |
+
+**Events**
+
+| Event          | Description                                                                                                                                                          | Callback parameters                                             |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| close          | Emitted when the tag is closed: a click event for the close icon, a keydown event for Backspace or Delete. Call preventDefault on the event to keep the tag visible. | `[event: TagCloseEvent, tagKey: string \| number \| undefined]` |
+| update:visible | Emitted when closing the tag changes its visibility, for v-model:visible to write back.                                                                              | `[visible: boolean]`                                            |
+| keydown        | Emitted when a key is pressed on the tag.                                                                                                                            | `[event: KeyboardEvent]`                                        |
+
+**Slots**
+
+| Slot       | Description              | Scope parameters |
+| ---------- | ------------------------ | ---------------- |
+| default    | Tag content.             | `any`            |
+| prefixIcon | Icon before the content. | `any`            |
+| suffixIcon | Icon after the content.  | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

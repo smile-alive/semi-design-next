@@ -1,0 +1,58 @@
+{
+    "color-picker": {
+        "source": "packages/semi-ui-vue/src/color-picker/color-picker.vue",
+        "props": {
+            "modelValue": {
+                "zh-CN": "受控值，使用 v-model 绑定；形态同 defaultValue。传 undefined 视为非受控，从受控变回 undefined 时显示回到 defaultValue。ColorValue 按不可变值对待，更新时整体替换。",
+                "en-US": "Controlled value, bound with v-model; same shape as defaultValue. undefined means uncontrolled, and going back to undefined from a controlled value shows defaultValue again. Treat ColorValue as immutable and replace it as a whole."
+            },
+            "defaultValue": {
+                "zh-CN": "非受控的初始值，是同时包含 hsva、hex、rgba 三种格式的对象，默认对应 #39c5bb。",
+                "en-US": "Initial value when uncontrolled, an object holding hsva, hex and rgba; defaults to the color object of #39c5bb."
+            },
+            "alpha": { "zh-CN": "是否开启透明度选择。", "en-US": "Whether to enable transparency selection." },
+            "eyeDropper": {
+                "zh-CN": "是否开启滴管拾色器，需要安全 context 与 Chromium 95 以上。",
+                "en-US": "Whether to enable the eyedropper color picker; requires a secure context and Chromium 95 or later."
+            },
+            "defaultFormat": {
+                "zh-CN": "手动输入时默认使用的颜色格式，可选 rgba、hex、hsva。",
+                "en-US": "Color format used by default for manual input: rgba, hex or hsva."
+            },
+            "width": { "zh-CN": "宽度，单位为像素。", "en-US": "Width in pixels." },
+            "height": { "zh-CN": "高度，单位为像素。", "en-US": "Height in pixels." },
+            "usePopover": {
+                "zh-CN": "是否放入 Popover 渲染，触发器使用默认插槽。",
+                "en-US": "Whether to render inside a Popover; the trigger comes from the default slot."
+            },
+            "popoverProps": {
+                "zh-CN": "放入 Popover 时传给 Popover 的属性与监听器（onVisibleChange 等）；class、style 替代 className、style。弹层默认以 click 触发、role 为 dialog，默认名称取语言包，ariaLabel、ariaLabelledby 优先。",
+                "en-US": "Props and listeners (such as onVisibleChange) passed to the Popover when usePopover is on; class and style replace className and style. The popup opens on click with role dialog by default and takes its default name from the locale; ariaLabel and ariaLabelledby take precedence."
+            }
+        },
+        "events": {
+            "update:modelValue": {
+                "zh-CN": "用户选中颜色时触发，载荷为 ColorValue，供 v-model 回写。",
+                "en-US": "Emitted when the user picks a color, with a ColorValue payload, for v-model to write back."
+            },
+            "change": {
+                "zh-CN": "用户选中颜色时触发，载荷为 ColorValue；picker 内部输入框冒泡的原生 change 不会到达该事件。",
+                "en-US": "Emitted when the user picks a color, with a ColorValue payload; native change events bubbling from the inner inputs do not reach it."
+            }
+        },
+        "slots": {
+            "default": {
+                "zh-CN": "usePopover 时的触发器，默认是一个色块按钮；不使用 Popover 时不渲染。",
+                "en-US": "The trigger when usePopover is on, a color swatch button by default; not rendered otherwise."
+            },
+            "topSlot": { "zh-CN": "在顶部渲染额外元素。", "en-US": "Renders extra elements at the top." },
+            "bottomSlot": { "zh-CN": "在底部渲染额外元素。", "en-US": "Renders extra elements at the bottom." }
+        },
+        "exposed": {
+            "root": {
+                "zh-CN": "picker 根元素；usePopover 时位于弹层内，弹层关闭时为 null。",
+                "en-US": "The picker root element; inside the popup when usePopover is on, so null while the popup is closed."
+            }
+        }
+    }
+}

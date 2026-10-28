@@ -1,0 +1,26 @@
+{
+    "highlight": {
+        "source": "packages/semi-ui-vue/src/highlight/highlight.vue",
+        "props": {
+            "autoEscape": {
+                "zh-CN": "是否自动转义 searchWords 中的正则特殊字符。",
+                "en-US": "Whether to escape regular expression characters in searchWords."
+            },
+            "caseSensitive": { "zh-CN": "是否区分大小写。", "en-US": "Whether matching is case sensitive." },
+            "sourceString": { "zh-CN": "源文本。", "en-US": "Source text." },
+            "searchWords": {
+                "zh-CN": "需要高亮的文本：字符串、字符串数组，或带 text、class、style 的对象数组。",
+                "en-US": "Text to highlight: a string, a string array, or an array of objects with text, class and style."
+            },
+            "highlightStyle": {
+                "zh-CN": "高亮标签的内联样式；Vue 不会给数值补 px，长度要写成字符串。",
+                "en-US": "Inline style of the highlight tag. Vue adds no px to numbers, so write lengths as strings."
+            },
+            "highlightClassName": { "zh-CN": "高亮标签的类名。", "en-US": "Class name of the highlight tag." },
+            "component": { "zh-CN": "高亮标签名。", "en-US": "Tag name of the highlight element." }
+        },
+        "events": {},
+        "slots": {},
+        "exposed": {}
+    }
+}

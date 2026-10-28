@@ -1,0 +1,29 @@
+**Props**
+
+| 属性             | 说明                               | 类型            | 默认值                                          |
+| ---------------- | ---------------------------------- | --------------- | ----------------------------------------------- |
+| size             | 组件大小。                         | `SpinSize`      | `semiDefault("Spin", "size", "middle")`         |
+| spinning         | 是否处于加载中的状态。             | `boolean`       | `semiDefault("Spin", "spinning", true)`         |
+| delay            | 延迟显示加载效果的时间，单位毫秒。 | `number`        | `semiDefault("Spin", "delay", 0)`               |
+| wrapperClassName | 包裹元素的类名。                   | `string`        | `semiGlobalDefault("Spin", "wrapperClassName")` |
+| childStyle       | 内部子元素的样式。                 | `CSSProperties` | `semiGlobalDefault("Spin", "childStyle")`       |
+
+**Events**
+
+| 事件 | 说明 | 回调参数 |
+| ---- | ---- | -------- |
+| 无   |      |          |
+
+**Slots**
+
+| 插槽      | 说明                                                                                                    | 作用域参数 |
+| --------- | ------------------------------------------------------------------------------------------------------- | ---------- |
+| default   | 被包裹的内容；有默认插槽时 Spin 作为包裹元素，加载期间带 aria-busy，且内容不可聚焦、不可操作（inert）。 | `any`      |
+| indicator | 自定义加载指示符。                                                                                      | `any`      |
+| tip       | 当 Spin 作为包裹元素时，自定义描述文字。                                                                | `any`      |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                      | Type                                                              | Default |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------- |
+| children  | Child `Anchor.Link` elements, rendered only while the link is expanded.                                                          | `React.ReactNode`                                                 | -       |
+| className | Class name of the link item, on its outermost div.                                                                               | `string`                                                          | -       |
+| disabled  | Whether the link is disabled and ignores clicks.                                                                                 | `boolean`                                                         | `false` |
+| href      | Target of the link. A value starting with # is looked up by element id, anything else as a CSS selector.                         | `string`                                                          | `"#"`   |
+| ref       | Reference to the outermost div of the link item (`role="listitem"`).                                                             | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -       |
+| style     | Style of the link item, on its outermost div.                                                                                    | `React.CSSProperties`                                             | -       |
+| title     | Text of the link, which can be a node. When showTooltip is off and the value is a non-empty string, it is also the native title. | `React.ReactNode`                                                 | `""`    |

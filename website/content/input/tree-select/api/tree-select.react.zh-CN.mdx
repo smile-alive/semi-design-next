@@ -1,0 +1,94 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| aria-label | combobox 的可访问名称：搜索框在选择框内时是搜索框，否则是触发器。 | `string` | - |
+| arrowIcon | 自定义右侧下拉箭头图标，传 `null` 不显示箭头。`showClear` 开启且有已选值时，hover 优先显示清除图标。 | `React.ReactNode` | <ApiType detail={"\u003cIconChevronDown />"}>Type</ApiType> |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autoExpandParent | 是否自动展开父节点。 | `boolean` | `false` |
+| autoMergeValue | 是否合并值：开启后选中父节点时，值中不包含其后代节点。仅在 `leafOnly` 为 false 时生效。 | `boolean` | `true` |
+| borderless | 是否使用无边框样式。 | `boolean` | `false` |
+| checkRelation | 多选时节点选中状态的关系，可选 `related`、`unRelated`。`unRelated` 时节点之间的选中互不影响。 | `CheckRelation` | `"related"` |
+| className | 选择框的类名，落在触发器元素上。 | `string` | - |
+| clearIcon | 自定义清除按钮的图标，`showClear` 为 true 时有效。 | `React.ReactNode` | - |
+| clickToHide | 选中后是否自动关闭下拉面板，仅在单选时生效。 | `boolean` | `true` |
+| clickTriggerToHide | 面板打开时，点击触发器后是否关闭面板。 | `boolean` | `true` |
+| defaultExpandAll | 初始化时是否展开全部节点。数据（`treeData`）变化后此属性不再生效，需要时使用 `expandAll`。 | `boolean` | - |
+| defaultExpandedKeys | 默认展开的节点 key，展开后显示直接子节点。 | `string[]` | - |
+| defaultOpen | 是否默认打开下拉面板。 | `boolean` | `false` |
+| defaultValue | 默认选中的值，只在挂载时读取；多选时为数组。 | <ApiType detail={"ModeValue\u003cT, Multiple>"}>Type</ApiType> | - |
+| disabled | 是否禁用。 | `boolean` | - |
+| disableStrictly | 严格禁用：节点禁用时，它的选中状态不会因为父或子节点的变化而改变。 | `boolean` | `false` |
+| dropdownClassName | 下拉面板的类名。 | `string` | - |
+| dropdownMatchSelectWidth | 下拉面板的最小宽度是否与选择框相同。 | `boolean` | `true` |
+| dropdownStyle | 下拉面板的样式。 | `React.CSSProperties` | - |
+| emptyContent | 无数据或搜索无结果时的空状态内容，未设置时显示语言包中的文案；传 `null` 时不显示。 | `ReactNode` | - |
+| expandAction | 节点的展开方式，可选 `false`（只有点击展开图标才展开）、`click`、`doubleClick`。 | `ExpandAction` | `false` |
+| expandAll | 是否默认展开全部节点。数据（`treeData`）变化后仍受此属性影响。 | `boolean` | `false` |
+| expandedKeys | （受控）展开的节点 key，展开后显示直接子节点。 | `string[]` | - |
+| expandIcon | 自定义展开图标，可传节点或函数。函数入参为 `className`、`onClick` 与 `expanded`，由函数渲染展开按钮并把它们挂到元素上。 | <ApiType detail={"React.ReactNode \u007c ((props: { onClick: (e: React.MouseEvent) => void; className: string; expanded: boolean }) => React.ReactNode)"}>Type</ApiType> | - |
+| filterTreeNode | 是否可搜索，也可以传入函数自定义搜索逻辑，函数的第三个参数为节点数据 `data`。 | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean)"}>Type</ApiType> | `false` |
+| insetLabel | 选择框内的标签，同时作为下拉树的名称。 | `React.ReactNode` | - |
+| insetLabelId | `insetLabel` 外层元素的 id，供 `aria-labelledby` 引用。 | `string` | - |
+| keyMaps | 自定义节点中 key、label、value、disabled、children、isLeaf 与 icon 字段的名称。如果自定义了 label 的字段名并开启搜索，需要把 `treeNodeFilterProp` 设为 `treeData` 中的某个字段，或通过 `filterTreeNode` 传入自定义搜索函数。 | `KeyMapProps` | - |
+| labelEllipsis | 标签溢出时是否省略。未设置时，虚拟化模式下为 true，否则为 false。 | `boolean` | - |
+| leafOnly | 多选时是否只展示叶子节点的标签，`onChange` 的入参也只包含叶子节点的值。 | `boolean` | - |
+| loadData | 异步加载子节点，返回 Promise。需要在 `treeData` 中用 `isLeaf` 标明叶子节点。 | <ApiType detail={"(data: BasicTreeNodeData) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| loadedKeys | （受控）已加载完成的节点 key，与 `loadData` 配合使用。 | `string[]` | - |
+| maxTagCount | 最多显示的标签数量，超出部分以 +N 的形式展示。 | `number` | - |
+| motion | 下拉面板打开和关闭时是否带动画。 | `boolean` | `true` |
+| motionExpand | 节点展开和收起时是否带动画。 | `boolean` | `true` |
+| multiple | 是否多选。 | `Multiple` | `false` |
+| onBlur | 失去焦点时的回调，每次 `onFocus` 后只触发一次。焦点离开触发器与下拉面板时入参为原生 FocusEvent，点击外部时为原生 MouseEvent，选中节点并关闭下拉面板时为该次点击或按键的事件。 | <ApiType detail={"(e: React.MouseEvent \u007c React.KeyboardEvent \u007c globalThis.MouseEvent \u007c globalThis.FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 选中值变化时的回调，入参为节点的 value（多选时为数组）、节点数据与事件。关闭标签时事件为 `null`，键盘选中时为 `KeyboardEvent`，清空单选时值为 `undefined`。`onChangeWithObject` 为 true 时，入参变为节点数据与事件。 | <ApiType detail={"(...args: OnChangeArgs\u003cT, Multiple, WithObject>) => void"}>Type</ApiType> | - |
+| onChangeWithObject | `onChange` 的入参是否为节点的全部属性。为 true 时，`onChange` 的入参变为 `(node, e)`。 | `WithObject` | `false` |
+| onClear | 点击清除按钮时的回调。 | <ApiType detail={"(e: React.MouseEvent) => void"}>Type</ApiType> | - |
+| onExpand | 展开或收起节点时的回调，入参为展开的 key 数组与 `{ expanded, node }`。 | <ApiType detail={"(expandedKeys: string[], expandedOtherProps: ExpandedOtherProps) => void"}>Type</ApiType> | - |
+| onFocus | 焦点从外部进入触发器（含搜索框、清除按钮）或下拉面板时的回调，入参为原生 FocusEvent；在它们之间移动焦点不会再次触发。选中后关闭下拉面板，又通过点击或按键重新打开时也会触发，入参为该次点击或按键的事件；`searchAutoFocus` 挂载时聚焦的入参为 `null`。 | <ApiType detail={"(e: React.MouseEvent \u007c React.KeyboardEvent \u007c globalThis.FocusEvent \u007c null) => void"}>Type</ApiType> | - |
+| onLoad | 节点加载完毕时的回调，入参为已加载的 key 集合与节点数据。 | <ApiType detail={"(keys: Set\u003cstring>, data: BasicTreeNodeData) => void"}>Type</ApiType> | - |
+| onSearch | 搜索值变化时的回调。入参为搜索值、`filteredExpandedKeys`（因搜索或 value 而展开的节点 key，展开受控时可用于实现搜索展开）与 `filteredNodes`（命中搜索的节点）。 | <ApiType detail={"(searchValue: string, filteredExpandedKeys: string[], filteredNodes: BasicTreeNodeData[]) => void"}>Type</ApiType> | - |
+| onSelect | 节点被选中或取消选中时的回调，入参为节点的 key、是否选中与节点数据。 | <ApiType detail={"(selectedKey: string, selected: boolean, selectedNode: TreeNodeData) => void"}>Type</ApiType> | - |
+| onVisibleChange | 下拉面板显示或隐藏时的回调，入参为是否可见。 | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| optionListStyle | 选项列表的样式。 | `React.CSSProperties` | - |
+| outerBottomSlot | 渲染在下拉面板底部的自定义内容，与选项列表同级。 | `React.ReactNode` | - |
+| outerTopSlot | 渲染在下拉面板顶部的自定义内容，与选项列表同级。开启 `filterTreeNode` 时它会替代搜索框，需要自定义搜索时可以通过 `ref` 的 `search` 方法实现。 | `React.ReactNode` | - |
+| placeholder | 输入框的占位文本。 | `string` | - |
+| position | 下拉面板的位置，可选值参考 Tooltip 的 position，默认 `bottomLeft`（RTL 下为 `bottomRight`）。 | `PopoverProps['position']` | - |
+| prefix | 选择框前面的内容。 | `React.ReactNode` | - |
+| preventScroll | 组件内部调用 `focus` 时是否阻止浏览器滚动文档以显示新聚焦的元素，不作用于用户传入的元素。 | `boolean` | - |
+| ref | 组件句柄，带有 `search` 与 `close` 方法，类型为 `TreeSelectHandle`，不是 DOM 元素。 | <ApiType detail={"React.Ref\u003cTreeSelectHandle>"}>Type</ApiType> | - |
+| remote | 是否开启远程搜索。开启后输入时跳过本地过滤，仅触发 `onSearch` 回调，用户可自行处理远程数据获取并更新 `treeData`。 | `boolean` | `false` |
+| renderFullLabel | 自定义整行的渲染。返回值外层会包一层带 `role="treeitem"` 与状态属性的行元素，用法与 Tree 的 `renderFullLabel` 相同。 | <ApiType detail={"(renderFullLabelProps: RenderFullLabelProps) => ReactNode"}>Type</ApiType> | - |
+| renderLabel | 自定义节点文本的渲染，入参为原文本、节点数据与搜索词。 | <ApiType detail={"(label?: ReactNode, treeNode?: TreeNodeData, searchWord?: string) => ReactNode"}>Type</ApiType> | - |
+| renderSelectedItem | 自定义选择框中已选项的渲染。单选时返回内容；多选时返回 `{ content, isRenderInTag }`，`isRenderInTag` 为 true 时内容自动包进带背景色与关闭按钮的 Tag 中。 | <ApiType detail={"ByMultiple\u003cMultiple, RenderSelectedItemInSingle, RenderSelectedItemInMultiple>"}>Type</ApiType> | - |
+| restTagsPopoverProps | 超出 `maxTagCount` 后折叠标签的 Popover 配置，见 [Popover](/zh-CN/react/show/popover#API%20%E5%8F%82%E8%80%83)。 | `PopoverProps` | `{}` |
+| searchAutoFocus | 搜索框挂载后是否自动聚焦。 | `boolean` | `false` |
+| searchPlaceholder | 下拉面板中搜索框的占位文本。 | `string` | - |
+| searchPosition | 搜索框的位置，可选 `dropdown`、`trigger`。 | `'dropdown' \| 'trigger'` | `"dropdown"` |
+| searchRender | 自定义搜索框；传 `false` 时不渲染搜索框。入参为输入框的属性，包括 `ref` 与 ARIA 属性，需要全部写到输入框上。 | <ApiType detail={"boolean \u007c ((inputProps: InputProps & { ref: (el: SearchInputElement \u007c null) => void }) => React.ReactNode)"}>Type</ApiType> | - |
+| showClear | 值不为空时，触发器是否显示清除按钮。 | `boolean` | `false` |
+| showFilteredOnly | 搜索时是否只展示过滤后的结果。 | `boolean` | - |
+| showLine | 选项面板中的节点是否显示连接线。 | `boolean` | - |
+| showRestTagsPopover | 标签数量超过 `maxTagCount` 后，hover 到 +N 时是否用 Popover 展示其余标签。 | `boolean` | `false` |
+| showSearchClear | 下拉面板中的搜索框是否支持清空。 | `boolean` | `true` |
+| size | 输入框的尺寸，可选 `large`、`small`、`default`。 | `Size` | `"default"` |
+| stopPropagation | 是否阻止下拉面板上的点击事件冒泡。 | `boolean \| string` | `true` |
+| style | 选择框（触发器）的内联样式。 | `React.CSSProperties` | - |
+| suffix | 选择框后面的内容。 | `React.ReactNode` | - |
+| treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。 | `TreeNodeData[]` | - |
+| treeNodeFilterProp | 搜索时匹配的 `TreeNodeData` 属性。 | `string` | `"label"` |
+| treeNodeLabelProp | 显示文本所用的 `TreeNodeData` 属性。 | `string` | `"label"` |
+| triggerRender | 自定义触发器，入参为 `TriggerRenderProps`，返回值替换整个触发器。 | <ApiType detail={"(props: TriggerRenderProps) => React.ReactNode"}>Type</ApiType> | - |
+| triggerTagWrap | 已选标签在触发器内是否允许换行。仅在 `multiple`、开启搜索且 `searchPosition` 为 `trigger` 时生效。 | `boolean` | `false` |
+| validateStatus | 校验状态，可选 `warning`、`error`、`default`，只影响组件的背景色。 | `ValidateStatus` | - |
+| value | （受控）当前选中的值，传入后即为受控组件，可配合 `onChange` 使用；多选时为数组。 | <ApiType detail={"ModeValue\u003cT, Multiple>"}>Type</ApiType> | - |
+| virtualize | 虚拟列表配置，对象包含 `itemSize`（必传，每行的高度）、`height`（下拉高度，建议传数值）与 `width`。虚拟化时动画关闭。 | `Virtualize` | - |
+
+**Methods**
+
+| 方法   | 说明                                                                                                          | 类型                                                       |
+| ------ | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| close  | 关闭下拉面板。                                                                                                | <ApiType detail={"() => void"}>Type</ApiType>              |
+| search | 按输入了该值来搜索，先打开下拉面板，需要同时设置 `filterTreeNode`。在外部自定义搜索框时，可在其值变化时调用。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> |

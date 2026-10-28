@@ -1,0 +1,375 @@
+{
+    "form": {
+        "source": "packages/semi-ui-react/src/form/base-form.tsx",
+        "props": {
+            "aria-label": {
+                "zh-CN": "表单的可访问名称，写在 form 元素上。",
+                "en-US": "Accessible name of the form, set on the form element."
+            },
+            "allowEmpty": {
+                "zh-CN": "值变为空时是否在 values 中保留该字段的 key。Form 与字段任一设置为 `true` 即生效。",
+                "en-US": "Whether a field whose value becomes empty keeps its key in values. Setting it to `true` on either the Form or the field takes effect."
+            },
+            "autoScrollToError": {
+                "zh-CN": "提交或调用 `formApi.validate()` 校验失败时，是否自动滚动到出错的字段；传对象时作为 scroll-into-view-if-needed 的选项。",
+                "en-US": "Whether to scroll to the first invalid field when submit or `formApi.validate()` fails. An object is passed to scroll-into-view-if-needed as its options."
+            },
+            "children": {
+                "zh-CN": "表单内容。传入函数时，参数为 `{ formState, values, formApi }`，用于声明表单控件。",
+                "en-US": "The content of the form. A function receives `{ formState, values, formApi }` and declares the fields."
+            },
+            "className": {
+                "zh-CN": "form 元素的类名。",
+                "en-US": "Class name of the form element."
+            },
+            "component": {
+                "zh-CN": "用于声明表单控件的组件，以 `formState`、`values`、`formApi` 作为 props 渲染；不可与 `render`、`children` 同时使用。",
+                "en-US": "A component that declares the fields, rendered with `formState`, `values` and `formApi` as its props. Do not use it together with `render` or `children`."
+            },
+            "disabled": {
+                "zh-CN": "统一应用在每个字段上的 disabled，字段自身的 disabled 优先。",
+                "en-US": "The disabled state applied to every field. A field's own disabled takes precedence."
+            },
+            "extraTextPosition": {
+                "zh-CN": "统一应用在每个字段上的 extraText 位置，`middle` 在 Label 与控件之间，`bottom` 在控件之后。未设置时为 `bottom`，字段上的同名属性优先。",
+                "en-US": "Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence."
+            },
+            "form": {
+                "zh-CN": "`Form.useForm()` 返回的 formApi，用于在 Form 外部控制表单。",
+                "en-US": "The formApi returned by `Form.useForm()`, used to control the form from outside."
+            },
+            "getFormApi": {
+                "zh-CN": "Form 挂载后调用，参数为 formApi。",
+                "en-US": "Called once the Form has mounted, with the formApi."
+            },
+            "id": {
+                "zh-CN": "form 元素的 id，同时写入 `x-form-id`；不传时自动生成。",
+                "en-US": "The id of the form element, also written to `x-form-id`. Generated when omitted."
+            },
+            "initValues": {
+                "zh-CN": "表单的初始值，仅在 Form 创建时复制一次。",
+                "en-US": "Initial values of the form, copied once when the Form is created."
+            },
+            "labelAlign": {
+                "zh-CN": "统一应用在每个字段上的 label 文本对齐方式，可选 `left` 或 `right`，未设置时为 `left`。字段上的同名属性优先。",
+                "en-US": "Text alignment of the label of every field: `left` or `right`. Defaults to `left`. The same property on a field takes precedence."
+            },
+            "labelCol": {
+                "zh-CN": "统一应用在每个字段上的 label 栅格布局，同 Col 的 span、offset 等属性，需与 wrapperCol 一起设置。",
+                "en-US": "Grid layout of the label of every field, with the properties of Col such as span and offset. Set it together with wrapperCol."
+            },
+            "labelPosition": {
+                "zh-CN": "统一应用在每个字段上的 label 位置，可选 `top`、`left` 或 `inset`，`inset` 仅部分字段支持，其余字段按 `top` 布局。字段上的同名属性优先。",
+                "en-US": "Label position of every field: `top`, `left` or `inset`. `inset` is supported by some fields only; the others are laid out as `top`. The same property on a field takes precedence."
+            },
+            "labelWidth": {
+                "zh-CN": "统一应用在每个字段上的 label 宽度，数字单位为 px。",
+                "en-US": "Label width of every field. A number is in px."
+            },
+            "layout": {
+                "zh-CN": "字段的排列方向，可选 `vertical` 或 `horizontal`。",
+                "en-US": "Direction in which the fields are arranged: `vertical` or `horizontal`."
+            },
+            "onChange": {
+                "zh-CN": "表单状态更新时调用，包括字段挂载、卸载、值变更、blur、校验状态与错误信息变更，参数为 formState。",
+                "en-US": "Called when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState."
+            },
+            "onErrorChange": {
+                "zh-CN": "校验状态更新时调用，参数为全部错误和本次变化的字段错误。`validate`、`submit`、`reset` 等批量操作只调用一次，静默校验不调用。",
+                "en-US": "Called when validation state changes, with all errors and the errors that changed. Batch operations such as `validate`, `submit` and `reset` call it once; silent validation does not."
+            },
+            "onReset": {
+                "zh-CN": "点击重置按钮或调用 `formApi.reset()` 时调用。",
+                "en-US": "Called when a reset button is clicked or `formApi.reset()` is called."
+            },
+            "onSubmit": {
+                "zh-CN": "点击提交按钮或调用 `formApi.submitForm()` 且校验通过后调用，参数为 values 与提交事件。",
+                "en-US": "Called when a submit button is clicked or `formApi.submitForm()` is called and validation passes, with values and the submit event."
+            },
+            "onSubmitFail": {
+                "zh-CN": "点击提交按钮或调用 `formApi.submitForm()` 且校验失败后调用，参数为 errors、values 与提交事件。",
+                "en-US": "Called when a submit button is clicked or `formApi.submitForm()` is called and validation fails, with errors, values and the submit event."
+            },
+            "onValueChange": {
+                "zh-CN": "字段的值变化时调用，参数为全部 values 与本次变化的字段值。",
+                "en-US": "Called when a field value changes, with all values and the values that changed."
+            },
+            "ref": {
+                "zh-CN": "指向句柄 `{ formApi }` 的引用，可通过句柄上的 formApi 控制表单。",
+                "en-US": "Reference to the handle `{ formApi }`, whose formApi controls the form."
+            },
+            "render": {
+                "zh-CN": "用于声明表单控件的函数，参数为 `{ formState, values, formApi }`；不可与 `component`、`children` 同时使用。",
+                "en-US": "A function that declares the fields, called with `{ formState, values, formApi }`. Do not use it together with `component` or `children`."
+            },
+            "showValidateIcon": {
+                "zh-CN": "校验信息前是否显示对应状态的图标。",
+                "en-US": "Whether the validation message is preceded by an icon of its status."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止 submit、reset 事件冒泡，可传 `{ submit, reset }` 分别设置，用于嵌套 Form 时避免触发外层 Form 的事件。未设置时不阻止冒泡。",
+                "en-US": "Whether to stop the submit and reset events from bubbling, as `{ submit, reset }`, so that a nested Form does not trigger the events of the outer one. Events bubble when it is not set."
+            },
+            "stopValidateWithError": {
+                "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
+                "en-US": "Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence."
+            },
+            "style": {
+                "zh-CN": "form 元素的内联样式。",
+                "en-US": "Inline style of the form element."
+            },
+            "trigger": {
+                "zh-CN": "统一应用在每个字段上的校验时机，可选 `change`、`blur`、`mount`、`custom` 或其数组。字段上的同名属性优先。",
+                "en-US": "When every field validates: `change`, `blur`, `mount`, `custom`, or an array of them. The same property on a field takes precedence."
+            },
+            "validator": {
+                "zh-CN": "Form 级别的校验函数，submit 与 `formApi.validate()` 时调用，可返回 Promise。设置后字段自身的 validator 与 rules 不再生效。返回空字符串或空对象表示通过，失败时返回与 values 结构一致的错误对象。",
+                "en-US": "Form-level validation, called on submit and `formApi.validate()`, and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an error object shaped like the values."
+            },
+            "wrapperCol": {
+                "zh-CN": "统一应用在每个字段上的控件栅格布局，同 Col 的 span、offset 等属性，需与 labelCol 一起设置。",
+                "en-US": "Grid layout of the control of every field, with the properties of Col such as span and offset. Set it together with labelCol."
+            }
+        },
+        "methods": {
+            "formApi": {
+                "zh-CN": "表单的 formApi，用于读取与修改表单状态、校验与提交。",
+                "en-US": "The formApi of the form, used to read and change its state, validate and submit."
+            }
+        }
+    },
+    "array-field": {
+        "source": "packages/semi-ui-react/src/form/array-field.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "每一行的渲染函数，必填，参数为 `{ arrayFields, add, addWithInitValue }`，返回 ReactNode。",
+                "en-US": "Required. A function that renders the rows. It receives `{ arrayFields, add, addWithInitValue }` and returns a ReactNode."
+            },
+            "field": {
+                "zh-CN": "数组在 formState.values 中的路径，必填。例如各行字段为 `a[0].name`、`a[1].name` 时应传 `a`。",
+                "en-US": "Required. Path of the array in formState.values. For rows with fields `a[0].name` and `a[1].name`, pass `a`."
+            },
+            "initValue": {
+                "zh-CN": "数组的初始值，必须是数组；与 Form 的 `initValues` 同时配置时优先。",
+                "en-US": "Initial value of the array, which must be an array. It takes precedence over the initValues of the Form."
+            }
+        }
+    },
+    "form-section": {
+        "source": "packages/semi-ui-react/src/form/section.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "分组的内容。",
+                "en-US": "Content of the section."
+            },
+            "className": {
+                "zh-CN": "section 元素的类名。",
+                "en-US": "Class name of the section element."
+            },
+            "ref": {
+                "zh-CN": "section 元素的引用。",
+                "en-US": "Reference to the section element."
+            },
+            "style": {
+                "zh-CN": "section 元素的内联样式。",
+                "en-US": "Inline style of the section element."
+            },
+            "text": {
+                "zh-CN": "分组标题，为空时不渲染标题。",
+                "en-US": "The title of the section. No title is rendered when it is empty."
+            }
+        }
+    },
+    "form-label": {
+        "source": "packages/semi-ui-react/src/form/label.tsx",
+        "props": {
+            "align": {
+                "zh-CN": "Label 文本的对齐方式，可选 `left` 或 `right`。",
+                "en-US": "Text alignment of the label: `left` or `right`."
+            },
+            "children": {
+                "zh-CN": "Label 的内容，`text` 未设置时使用。",
+                "en-US": "Content of the label, used when `text` is not set."
+            },
+            "className": {
+                "zh-CN": "label 元素的类名。",
+                "en-US": "Class name of the label element."
+            },
+            "disabled": {
+                "zh-CN": "是否为禁用样式。",
+                "en-US": "Whether the label looks disabled."
+            },
+            "extra": {
+                "zh-CN": "跟随在 label 文本后的内容。",
+                "en-US": "Content after the label text."
+            },
+            "id": {
+                "zh-CN": "label 元素的 id。",
+                "en-US": "The id of the label element."
+            },
+            "name": {
+                "zh-CN": "所标注控件的 id，写入 label 的 `for` 属性；不传时使用原生的 `htmlFor`。",
+                "en-US": "The id of the labeled control, written to the `for` attribute. The native `htmlFor` is used when it is not set."
+            },
+            "optional": {
+                "zh-CN": "是否在文本后追加语言包中的可选标识。为 `true` 时不再显示 required 的 `*`。",
+                "en-US": "Whether to append the optional text of the locale. When `true`, the `*` of required is hidden."
+            },
+            "ref": {
+                "zh-CN": "label 元素的引用。",
+                "en-US": "Reference to the label element."
+            },
+            "required": {
+                "zh-CN": "是否显示必填的 `*` 号，`optional` 为 `true` 时不显示。",
+                "en-US": "Whether to display the required `*` symbol. It is hidden when `optional` is `true`."
+            },
+            "style": {
+                "zh-CN": "label 元素的内联样式。",
+                "en-US": "Inline style of the label element."
+            },
+            "text": {
+                "zh-CN": "Label 文本；不传时使用 children。",
+                "en-US": "Text of the label. children is used when it is not set."
+            },
+            "width": {
+                "zh-CN": "Label 宽度，数字单位为 px。",
+                "en-US": "Width of the label. A number is in px."
+            }
+        }
+    },
+    "form-input-group": {
+        "source": "packages/semi-ui-react/src/form/group.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "组内的字段。",
+                "en-US": "The fields in the group."
+            },
+            "className": {
+                "zh-CN": "组内 InputGroup 的类名。",
+                "en-US": "Class name of the InputGroup inside."
+            },
+            "disabled": {
+                "zh-CN": "组内字段统一的 disabled，不传时沿用 Form 的 disabled。",
+                "en-US": "The disabled state applied to the fields in the group. Falls back to the Form's disabled when not set."
+            },
+            "extraText": {
+                "zh-CN": "额外的提示信息，位置由 `extraTextPosition` 决定。",
+                "en-US": "Extra text of the group, positioned by `extraTextPosition`."
+            },
+            "extraTextPosition": {
+                "zh-CN": "extraText 的位置，`middle` 在 Label 与 Group 之间，`bottom` 在 Group 之后。未设置时为 `bottom`。",
+                "en-US": "Position of the extra text: `middle` puts it between the label and the group, `bottom` after the group. Defaults to `bottom`."
+            },
+            "label": {
+                "zh-CN": "整个 Group 的 Label：对象作为 Label 配置，其中 `id` 用作 Label 的 id，其他内容作为 Label 文本。",
+                "en-US": "Label of the whole group: an object is the label configuration, whose `id` becomes the id of the label, and any other content is the label text."
+            },
+            "labelPosition": {
+                "zh-CN": "Label 的位置，默认取自 Form，可选 `top` 或 `left`。",
+                "en-US": "Label position. Defaults to the Form's, and can be `top` or `left`."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开组内任一控件时调用，在组内控件之间移动焦点时也会调用。",
+                "en-US": "Called as focus leaves any control in the group, also for a move to another control in it."
+            },
+            "onFocus": {
+                "zh-CN": "组内任一控件获得焦点时调用，从组内另一控件移入时也会调用。",
+                "en-US": "Called as any control in the group takes focus, also for a move from another control in it."
+            },
+            "ref": {
+                "zh-CN": "组内 InputGroup 的根元素（`role=\"group\"`）的引用。",
+                "en-US": "Reference to the root element of the InputGroup inside (`role=\"group\"`)."
+            },
+            "size": {
+                "zh-CN": "组内所有控件的尺寸，可选 `small`、`default` 或 `large`，未设置时为 `default`。",
+                "en-US": "Size of every control in the group: `small`, `default` or `large`. Defaults to `default`."
+            },
+            "style": {
+                "zh-CN": "组内 InputGroup 的内联样式。",
+                "en-US": "Inline style of the InputGroup inside."
+            }
+        }
+    },
+    "form-slot": {
+        "source": "packages/semi-ui-react/src/form/slot.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "slot 的主体内容。",
+                "en-US": "The content of the slot."
+            },
+            "className": {
+                "zh-CN": "slot 的类名。",
+                "en-US": "Class name of the slot."
+            },
+            "error": {
+                "zh-CN": "错误信息，渲染在内容之后：对象作为 ErrorMessage 的属性，其他内容作为错误内容；不传则不显示。",
+                "en-US": "The error, rendered after the content: an object is the props of ErrorMessage and any other content is the error. Nothing shows when omitted."
+            },
+            "label": {
+                "zh-CN": "Label 配置：对象作为 Form.Label 的属性，可配置 `text`、`extra`、`align`、`width`、`required`、`optional` 等；其他内容作为 Label 文本。",
+                "en-US": "Label configuration: an object is the props of Form.Label, with `text`, `extra`, `align`, `width`, `required`, `optional` and so on; any other content is the label text."
+            },
+            "labelPosition": {
+                "zh-CN": "slot 的 Label 位置，默认取自 Form，可选 `top` 或 `left`。",
+                "en-US": "Label position of the slot. Defaults to the Form's, and can be `top` or `left`."
+            },
+            "noLabel": {
+                "zh-CN": "是否不渲染 Label；Form 同时设置了 labelCol 与 wrapperCol 时，Label 列仍保留。",
+                "en-US": "Whether to render no label. When the Form sets both labelCol and wrapperCol, the label column is still kept."
+            },
+            "ref": {
+                "zh-CN": "根 div 元素的引用。",
+                "en-US": "Reference to the root div element."
+            },
+            "style": {
+                "zh-CN": "slot 的内联样式。",
+                "en-US": "Inline style of the slot."
+            }
+        }
+    },
+    "form-error-message": {
+        "source": "packages/semi-ui-react/src/form/error-message.tsx",
+        "props": {
+            "className": {
+                "zh-CN": "错误信息元素的类名。",
+                "en-US": "Class name of the error message element."
+            },
+            "error": {
+                "zh-CN": "错误信息。字符串与 ReactNode 直接显示，数组会用 `, ` 合并其中的错误；`true` 只显示错误态容器，没有文本；`false` 与空值不渲染。",
+                "en-US": "The error. A string or ReactNode is shown as is and an array is joined with `, `. `true` shows the error container without text; `false` and empty values render nothing."
+            },
+            "errorMessageId": {
+                "zh-CN": "错误文本元素的 id，供 `aria-errormessage` 引用。",
+                "en-US": "The id of the error text element, referenced by `aria-errormessage`."
+            },
+            "helpText": {
+                "zh-CN": "提示信息，与错误信息共用同一区块，两者都有时显示错误信息。",
+                "en-US": "The help text. It shares the block with the error, and the error is shown when both are set."
+            },
+            "helpTextId": {
+                "zh-CN": "提示文本元素的 id，供 `aria-describedby` 引用。",
+                "en-US": "The id of the help text element, referenced by `aria-describedby`."
+            },
+            "isInInputGroup": {
+                "zh-CN": "是否位于 InputGroup 中；为 `true` 且 `showValidateIcon` 为 `true` 时，不论 `validateStatus` 都显示错误图标。",
+                "en-US": "Whether it is inside an InputGroup. When it and `showValidateIcon` are `true`, the error icon shows whatever `validateStatus` is."
+            },
+            "ref": {
+                "zh-CN": "错误信息元素的引用。",
+                "en-US": "Reference to the error message element."
+            },
+            "showValidateIcon": {
+                "zh-CN": "是否显示 `validateStatus` 对应的图标。",
+                "en-US": "Whether to show the icon of `validateStatus`."
+            },
+            "style": {
+                "zh-CN": "错误信息元素的内联样式。",
+                "en-US": "Inline style of the error message element."
+            },
+            "validateStatus": {
+                "zh-CN": "信息所属的校验状态，可选 `default`、`error`、`warning`、`success`。",
+                "en-US": "Validation status of the message: `default`, `error`, `warning` or `success`."
+            }
+        }
+    }
+}

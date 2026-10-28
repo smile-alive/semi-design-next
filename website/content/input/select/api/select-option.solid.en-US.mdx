@@ -1,0 +1,11 @@
+**Props**
+
+| Property | Description                                                                                                                                                                                             | Type                          | Default |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ------- |
+| children | Content of the option in the dropdown and in the selection; when set it shows instead of label and can be any JSX. It is not searched and is not the label in callbacks; pass label as well for search. | `JSX.Element`                 | -       |
+| class    | Class name of the option row.                                                                                                                                                                           | `string`                      | -       |
+| disabled | Whether the option is disabled.                                                                                                                                                                         | `boolean`                     | -       |
+| label    | Text of the option, used for search, highlighting and callbacks, and shown when there are no children. value is used when it is not set.                                                                | `string \| number`            | -       |
+| showTick | Whether a tick icon shows when the option is selected; shown by default.                                                                                                                                | `boolean`                     | -       |
+| style    | Style of the option row.                                                                                                                                                                                | `JSX.CSSProperties \| string` | -       |
+| value    | The value of the option, which identifies it; every option should declare one.                                                                                                                          | `string \| number`            | -       |

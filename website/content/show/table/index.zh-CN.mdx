@@ -1,0 +1,2154 @@
+---
+title: 表格
+order: 81
+icon: doc-table
+brief: 表格用于呈现结构化的数据内容，通常会伴随提供对数据进行操作（排序、搜索、分页……）的能力。
+---
+
+import StickyHeaderTable from './figures/sticky-header-table.react.tsx';
+import TableReactApi from './api/table.react.zh-CN.mdx';
+import ColumnReactApi from './api/column.react.zh-CN.mdx';
+import TableVueApi from './api/table.vue.zh-CN.mdx';
+import TableSolidApi from './api/table.solid.zh-CN.mdx';
+import ColumnSolidApi from './api/column.solid.zh-CN.mdx';
+
+## 如何使用
+
+往 Table 传入表头 `columns` 和数据 `dataSource` 进行渲染。
+
+<Notice title='注意事项'>
+
+请为 `dataSource` 中的每个数据项提供一个与其他数据项值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名，表格的行选择、展开等绝大多数行操作功能都会使用到。
+
+</Notice>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Table, Tag } from '@fibrae/semi-ui-react';
+
+function App() {
+    const columns = [
+        {
+            title: '标题',
+            dataIndex: 'name',
+        },
+        {
+            title: '大小',
+            dataIndex: 'size',
+        },
+        {
+            title: '所有者',
+            dataIndex: 'owner',
+        },
+        {
+            title: '更新日期',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design 设计稿.fig',
+            nameIconSrc: '/assets/placeholder/app.svg',
+            size: '2M',
+            owner: '姜鹏志',
+            status: 'success',
+            updateTime: '2020-02-02 05:13',
+            avatarBg: 'grey',
+        },
+        {
+            key: '2',
+            name: 'Semi Design 分享演示文稿',
+            nameIconSrc: '/assets/docs-icon.png',
+            size: '2M',
+            owner: '郝宣',
+            status: 'pending',
+            updateTime: '2020-01-17 05:31',
+            avatarBg: 'red',
+        },
+        {
+            key: '3',
+            name: '设计文档',
+            nameIconSrc: '/assets/docs-icon.png',
+            size: '34KB',
+            status: 'wait',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+            avatarBg: 'light-blue',
+        },
+    ];
+
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+
+    const columns = [
+        {
+            title: '标题',
+            dataIndex: 'name',
+        },
+        {
+            title: '大小',
+            dataIndex: 'size',
+        },
+        {
+            title: '所有者',
+            dataIndex: 'owner',
+        },
+        {
+            title: '更新日期',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design 设计稿.fig',
+            size: '2M',
+            owner: '姜鹏志',
+            updateTime: '2020-02-02 05:13',
+        },
+        {
+            key: '2',
+            name: 'Semi Design 分享演示文稿',
+            size: '2M',
+            owner: '郝宣',
+            updateTime: '2020-01-17 05:31',
+        },
+        {
+            key: '3',
+            name: '设计文档',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+        },
+    ];
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="data" :pagination="false" />
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Table } from '@fibrae/semi-ui-solid';
+
+function App() {
+    const columns = [
+        {
+            title: '标题',
+            dataIndex: 'name',
+        },
+        {
+            title: '大小',
+            dataIndex: 'size',
+        },
+        {
+            title: '所有者',
+            dataIndex: 'owner',
+        },
+        {
+            title: '更新日期',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design 设计稿.fig',
+            size: '2M',
+            owner: '姜鹏志',
+            updateTime: '2020-02-02 05:13',
+        },
+        {
+            key: '2',
+            name: 'Semi Design 分享演示文稿',
+            size: '2M',
+            owner: '郝宣',
+            updateTime: '2020-01-17 05:31',
+        },
+        {
+            key: '3',
+            name: '设计文档',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+        },
+    ];
+
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+}
+```
+
+</Framework>
+
+## 代码演示
+
+### 基本表格
+
+对于表格，最基本的两个参数为 `dataSource` 和 `columns`，前者为数据项，后者为每列的配置，二者皆为数组类型。
+
+<Demo id="basic" />
+
+<Framework only="react">
+
+### JSX 写法
+
+你也可以使用 JSX 语法定义 `columns`，注意 Table 仅支持 `columns` 的 JSX 语法定义。你不能够使用任何组件包裹 `Table.Column` 组件。
+
+<Notice type="primary" title="注意事项">
+    <div>1. JSX 写法的表格暂时不支持 resizable 功能；</div>
+    <div>2. 使用 JSX 写法时，请不要与配置写法同时使用；如果同时使用，仅配置写法生效，不会进行聚合操作。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+### Table.Column 写法
+
+你也可以把 `Table.Column` 写成 Table 的子组件来定义列：列的数据写在属性上，单元格和标题的自定义内容写在它的 `#cell`、`#title` 等插槽中。Table 只读取直接子项，你不能够使用任何组件包裹 `Table.Column`，`v-if`、`v-for` 展开后的直接子项可以。
+
+<Notice type="primary" title="注意事项">
+    <div>1. Table.Column 写法的表格暂时不支持 resizable 功能：子项列照常渲染，没有拖动手柄，开发环境会给出警告；</div>
+    <div>2. 请不要同时传入 `columns` 与 `Table.Column`；如果同时使用，仅 `columns` 生效（包括空数组），不会进行聚合操作。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+### JSX 写法
+
+你也可以使用 JSX 语法定义 `columns`，注意 Table 仅支持 `columns` 的 JSX 语法定义。你不能够使用任何组件包裹 `Table.Column` 组件。
+
+<Notice type="primary" title="注意事项">
+    <div>1. JSX 写法的表格暂时不支持 resizable 功能：子项列照常渲染，没有拖动手柄，并会给出警告；</div>
+    <div>2. 请不要与配置写法同时使用；如果同时使用，仅配置写法生效，不会进行聚合操作。</div>
+</Notice>
+
+</Framework>
+
+<Demo id="jsx" />
+
+### 行选择操作
+
+往 Table 传入 [rowSelection](#rowSelection) 即可打开此功能。
+
+- 点击表头的选择框，会选择 `dataSource` 里所有不是 `disabled` 状态的行。选择所有行回调函数为 `onSelectAll`；
+- 点击行的选择框会选中当前行。它的回调函数为 `onSelect`；
+
+<Framework only="react">
+
+<Notice title='注意事项'>
+
+1. 请务必为 `dataSource` 中每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+2. 如你遇见在第二页点击行选择后，回到第一页问题，请检查组件渲染是否触发了 `dataSource` 更新（浅对比）。`dataSource` 更新后，非受控的翻页器会回到第一页。请将 `dataSource` 放在 state 内。
+
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice title='注意事项'>
+
+1. 请务必为 `dataSource` 中每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+2. 如你遇见在第二页点击行选择后，回到第一页问题，请检查每次渲染是否都生成了新的数据项（例如在模板里写对象字面量数组）。`dataSource` 的数据项变化后，非受控的翻页器会回到第一页；数据项引用不变的新数组不算变化，原地增删（`push`、`splice`）算变化。请将 `dataSource` 放在 `ref`、`shallowRef` 或 `<script setup>` 顶层常量内。
+
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice title='注意事项'>
+
+请务必为 `dataSource` 中每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+
+</Notice>
+
+</Framework>
+
+<Demo id="row-selection" />
+
+### 自定义渲染
+
+<Framework only="solid">
+
+用户可以使用 `Column.render` 来自定义某一列单元格的渲染，该功能适用于需要渲染较为复杂的单元格内容时。`render` 每次行数据或序号变化时重新调用，返回的 JSX 中读取 `options` 的字段即可跟随行状态更新，无需额外订阅。
+
+`render` 函数的第四个参数 `options` 是一个对象，包含以下属性：
+
+- `expandIcon`: 展开图标的渲染函数（当使用树形数据或可展开行时），在插入处调用，如 `{options.expandIcon?.()}`
+- `selection`: 选择框的渲染函数（当开启行选择时）
+- `indentText`: 缩进内容的渲染函数（当使用树形数据时）
+- `isHovering`: 当前行是否处于悬停状态
+
+通过 `isHovering` 参数，可以实现鼠标悬停时显示操作按钮等交互效果。
+
+</Framework>
+
+<Framework only="react">
+
+用户可以使用 `Column.render` 来自定义某一列单元格的渲染，该功能适用于需要渲染较为复杂的单元格内容时。
+
+`render` 函数的第四个参数 `options` 是一个对象，包含以下属性：
+
+- `expandIcon`: 展开图标（当使用树形数据或可展开行时）
+- `selection`: 选择框（当开启行选择时）
+- `indentText`: 缩进内容（当使用树形数据时）
+- `isHovering`: 当前行是否处于悬停状态
+
+通过 `isHovering` 参数，可以实现鼠标悬停时显示操作按钮等交互效果。
+
+</Framework>
+
+<Framework only="vue">
+
+用户可以使用 `#cell` 作用域插槽来自定义单元格的渲染，该功能适用于需要渲染较为复杂的单元格内容时。Table 上的 `#cell` 对所有数据列调用，用 `column.dataIndex` 或 `column.key` 区分列；插槽输出为空时显示原始值。只想定制一列时，也可以把 `#cell` 写在该列的 `Table.Column` 上，它优先于 Table 上的插槽。
+
+`#cell` 的参数是一个对象，包含以下属性：
+
+- `text`: `column.dataIndex` 对应的值，没有 `dataIndex` 的列为数据项本身
+- `record`: 当前行的数据项
+- `index`: 数据项在同级中的序号
+- `column`: 当前列的配置
+- `expandIcon`: 展开图标（当使用树形数据或可展开行时）
+- `isHovering`: 当前行是否处于悬停状态
+- `selection`、`indentText`: 选择框与缩进内容，仅在列开启 `useFullRender` 时提供，见[完全自定义渲染](#完全自定义渲染)
+
+通过 `isHovering` 参数，可以实现鼠标悬停时显示操作按钮等交互效果。
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### 带分页组件的表格
+
+表格分页目前支持两种模式：受控和非受控模式。
+
+- 受控模式下，分页的状态完全由外部传入，依据为是否往 Table 传入了 `pagination.currentPage` 这个字段。一般情况下，受控模式适用于远程拉取数据并渲染。
+- 非受控模式下，Table 默认会将传入的 `dataSource` 长度作为 `total` 传给 Pagination 组件，当然你也可以传入一个 `total` 字段来覆盖 Table 组件的取值，不过我们并不推荐用户在非受控分页模式下传入这个字段。
+
+<Demo id="pagination" />
+
+### 拉取远程数据
+
+正常情况下，数据往往不是一次性获取的，我们会在点击页码、过滤器或者排序按钮时从接口重新获取数据，这种情况下请使用**受控模式**来处理分页。用户需往 Table 传入 `pagination.currentPage` 这个字段，此时分页组件的渲染完全依赖于传入的 `pagination` 对象。
+
+<Framework only="react">
+
+<Notice type="primary" title="注意事项">
+    <div>1. 非受控时，pagination 如果是对象类型则不推荐使用字面量写法，原因是字面量写法会导致表格渲染至初始状态（看起来像是分页器没有生效）。请尽量将引用型参数定义在 render 方法之外，如果使用了 hooks 请利用 useMemo 或 useState 进行存储；</div>
+    <div>2. 受控模式下，Table 不会对 dataSource 分页，请给 dataSource 传入当前页数据</div>
+</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice type="primary" title="注意事项">
+    <div>1. 非受控时，pagination 如果是对象类型则不推荐在模板里直接写对象字面量，原因是每次渲染都会生成新的对象，Table 会重新读取其中的配置，分页状态可能被覆盖（看起来像是分页器没有生效）。请将引用型参数定义在 script setup 顶层，或放进 ref、computed；</div>
+    <div>2. 受控模式下，Table 不会对 dataSource 分页，请给 dataSource 传入当前页数据</div>
+</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice type="primary" title="注意事项">
+    <div>受控模式下，Table 不会对 dataSource 分页，请给 dataSource 传入当前页数据，并在 `onChange` 或 `pagination.onPageChange` 中更新 `pagination.currentPage`</div>
+</Notice>
+
+</Framework>
+
+<Demo id="remote-data" />
+
+### 固定列或表头
+
+可以通过设置 column 的 `fixed` 属性以及 `scroll.x` 来进行列固定，通过设置 `scroll.y` 来进行表头固定。
+
+如果是固定值，设置为 >=所有固定列宽之和 + 所有表格列宽之和 的数值。
+
+> - 建议指定 `scroll.x` 为大于表格宽度的**固定值**或百分比。如果是固定值，设置为 `>=所有固定列宽之和+所有表格列宽之和` 的数值。
+> - 若列头与内容不对齐或出现列重复或者固定列失效的情况，请指定固定列的宽度 `width`，若指定宽度后仍不生效，请尝试建议留一列不设宽度以适应弹性布局，或者检查是否有超长连续字段破坏布局。
+> - 请确保表格内部的所有元素在渲染后不会对单元格的高度造成影响（例如含有未加载完成的图片等），这种情况下请给定子元素一个确定的高度，以此确保左右固定列单元格不会错乱。
+
+<Demo id="fixed" />
+
+通过 `sticky` 属性可以将表头固定在页面顶部。传入 `top` 时可以控制距离滚动容器的距离。
+
+开启 sticky 后，Table 会自动打开 fixed 布局，列宽将由 `column.width` 决定。没有给定 width 的列宽由浏览器自动分配。
+
+<Framework only="react">
+
+<StickyHeaderTable client:only="react" />
+
+```jsx
+import React, { useState, useMemo } from 'react';
+import { Table, Avatar } from '@fibrae/semi-ui-react';
+import { IconMore } from '@fibrae/semi-icons-react';
+import * as dateFns from 'date-fns';
+
+const DAY = 24 * 60 * 60 * 1000;
+const figmaIconUrl = '/assets/placeholder/app.svg';
+
+const columns = [
+    {
+        title: '标题',
+        dataIndex: 'name',
+        fixed: true,
+        width: 250,
+        render: (text, record, index) => {
+            return (
+                <div>
+                    <Avatar size="small" shape="square" src={figmaIconUrl} style={{ marginRight: 12 }}></Avatar>
+                    {text}
+                </div>
+            );
+        },
+        filters: [
+            {
+                text: 'Semi Design 设计稿',
+                value: 'Semi Design 设计稿',
+            },
+            {
+                text: 'Semi D2C 设计稿',
+                value: 'Semi D2C 设计稿',
+            },
+        ],
+        onFilter: (value, record) => record.name.includes(value),
+    },
+    {
+        title: '大小',
+        dataIndex: 'size',
+        width: 200,
+        sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
+        render: (text) => `${text} KB`,
+    },
+    {
+        title: '所有者',
+        dataIndex: 'owner',
+        width: 200,
+        render: (text, record, index) => {
+            return (
+                <div>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                        {typeof text === 'string' && text.slice(0, 1)}
+                    </Avatar>
+                    {text}
+                </div>
+            );
+        },
+    },
+    {
+        title: '更新日期',
+        dataIndex: 'updateTime',
+        width: 200,
+        sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
+        render: (value) => {
+            return dateFns.format(new Date(value), 'yyyy-MM-dd');
+        },
+    },
+    {
+        title: '',
+        dataIndex: 'operate',
+        fixed: 'right',
+        align: 'center',
+        width: 100,
+        render: () => {
+            return <IconMore />;
+        },
+    },
+];
+
+function App() {
+    const [dataSource, setData] = useState([]);
+
+    const scroll = useMemo(() => ({ y: 300, x: 1200 }), []);
+    const rowSelection = useMemo(
+        () => ({
+            onChange: (selectedRowKeys, selectedRows) => {
+                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            },
+            getCheckboxProps: (record) => ({
+                disabled: record.name === 'Michael James', // 这一行不可勾选
+                name: record.name,
+            }),
+            fixed: true,
+        }),
+        []
+    );
+
+    const getData = () => {
+        const data = [];
+        for (let i = 0; i < 46; i++) {
+            const isSemiDesign = i % 2 === 0;
+            const randomNumber = (i * 1000) % 199;
+            data.push({
+                key: '' + i,
+                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+                owner: isSemiDesign ? '姜鹏志' : '郝宣',
+                size: randomNumber,
+                updateTime: new Date().valueOf() + randomNumber * DAY,
+                avatarBg: isSemiDesign ? 'grey' : 'red',
+            });
+        }
+        return data;
+    };
+
+    useEffect(() => {
+        const data = getData();
+        setData(data);
+    }, []);
+
+    return <Table sticky={{ top: 60 }} columns={columns} dataSource={dataSource} rowSelection={rowSelection} scroll={scroll} />;
+}
+
+render(App);
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { onMounted, shallowRef } from 'vue';
+    import * as dateFns from 'date-fns';
+    import { IconMore } from '@fibrae/semi-icons-vue';
+    import { Avatar, Table } from '@fibrae/semi-ui-vue';
+    import type { ColumnProps, RowSelectionProps } from '@fibrae/semi-ui-vue';
+
+    interface Row {
+        key: string;
+        name: string;
+        owner: string;
+        size: number;
+        updateTime: number;
+        avatarBg: 'grey' | 'red';
+    }
+
+    const DAY = 24 * 60 * 60 * 1000;
+    const figmaIconUrl = '/assets/placeholder/app.svg';
+
+    const columns: ColumnProps<Row>[] = [
+        {
+            title: '标题',
+            dataIndex: 'name',
+            fixed: true,
+            width: 250,
+            filters: [
+                {
+                    text: 'Semi Design 设计稿',
+                    value: 'Semi Design 设计稿',
+                },
+                {
+                    text: 'Semi D2C 设计稿',
+                    value: 'Semi D2C 设计稿',
+                },
+            ],
+            onFilter: (value, record) => record.name.includes(value),
+        },
+        {
+            title: '大小',
+            dataIndex: 'size',
+            width: 200,
+            sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
+        },
+        {
+            title: '所有者',
+            dataIndex: 'owner',
+            width: 200,
+        },
+        {
+            title: '更新日期',
+            dataIndex: 'updateTime',
+            width: 200,
+            sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
+        },
+        {
+            title: '',
+            dataIndex: 'operate',
+            fixed: 'right',
+            align: 'center',
+            width: 100,
+        },
+    ];
+
+    const dataSource = shallowRef<Row[]>([]);
+    const scroll = { y: 300, x: 1200 };
+    const sticky = { top: 60 };
+    const rowSelection: RowSelectionProps<Row> = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        getCheckboxProps: (record) => ({
+            disabled: record.name === 'Michael James', // 这一行不可勾选
+            name: record.name,
+        }),
+        fixed: true,
+    };
+
+    onMounted(() => {
+        const data: Row[] = [];
+        for (let i = 0; i < 46; i++) {
+            const isSemiDesign = i % 2 === 0;
+            const randomNumber = (i * 1000) % 199;
+            data.push({
+                key: '' + i,
+                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+                owner: isSemiDesign ? '姜鹏志' : '郝宣',
+                size: randomNumber,
+                updateTime: new Date().valueOf() + randomNumber * DAY,
+                avatarBg: isSemiDesign ? 'grey' : 'red',
+            });
+        }
+        dataSource.value = data;
+    });
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="dataSource" :rowSelection="rowSelection" :scroll="scroll" :sticky="sticky">
+        <template #cell="{ column, record, text }">
+            <div v-if="column.dataIndex === 'name'">
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
+                {{ text }}
+            </div>
+            <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
+            <div v-else-if="column.dataIndex === 'owner'">
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                    {{ typeof text === 'string' && text.slice(0, 1) }}
+                </Avatar>
+                {{ text }}
+            </div>
+            <template v-else-if="column.dataIndex === 'updateTime'">
+                {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
+            </template>
+            <IconMore v-else-if="column.dataIndex === 'operate'" />
+        </template>
+    </Table>
+</template>
+```
+
+</Framework>
+
+### 带排序和过滤功能的表头
+
+表格内部集成了过滤器和排序控件，用户可以通过在 Column 中传入 `filters` 以及 `onFilter` 开启表头的过滤器控件展示，传入 `sorter` 开启表头的排序控件的展示。
+
+<Notice title='注意事项'>
+
+1. 请为 `dataSource` 中的每个数据项提供一个与其他数据项值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名，表格的行选择、展开等绝大多数行操作功能都会使用到。
+2. 排序和筛选列必须设置独立的 `dataIndex`
+
+</Notice>
+
+<Demo id="sort-filter" />
+
+sorter 为函数类型时，可以通过函数的第三个参数获取 sortOrder 状态。函数类型为 `(a?: RecordType, b?: RecordType, sortOrder?: 'ascend' | 'descend') => number`。
+
+可通过 `showSortTip` 属性控制是否展示排序提示，默认为 `false`。当开启提示后，当仅有排序功能时候，鼠标移动至表头时，会展示排序提示；其他情况下，仅鼠标移动至排序图标时，会展示排序提示。
+
+**注**：在使用 `sortOrder` 属性受控排序时，由于无法预测下一个排序顺序，因此 `showSortTip` 不生效，不会展示提示。
+
+<Demo id="sort-tip" />
+
+### 自定义表头筛选
+
+<Framework only="react">
+
+如果你需要将筛选器输入框展示在表头，可在 `title` 传入 ReactNode，配合 `filteredValue` 使用。
+
+</Framework>
+
+<Framework only="vue">
+
+如果你需要将筛选器输入框展示在表头，可用 `#headerCell` 插槽（或 `Table.Column` 的 `#title` 插槽）渲染列标题，配合 `filteredValue` 使用。列的 `title` 仍是纯文本，插槽输出为空时显示它。
+
+</Framework>
+
+<Framework only="solid">
+
+如果你需要将筛选器输入框展示在表头，可在 `title` 传入返回 JSX 的函数，配合 `filteredValue` 使用。`filteredValue` 可以是 signal 的读取，它变化后表头和数据会同步更新。
+
+</Framework>
+
+<Demo id="custom-filter-dropdown" />
+
+### 自定义筛选器
+
+<Framework only="react">
+
+使用 `renderFilterDropdown` 自定义渲染筛选器面板。
+
+你可以在用户输入筛选值的时候调用 `setTempFilteredValue` 存储筛选值，在筛选值输入完毕后调用 `confirm` 触发真正的筛选。也可以通过 `confirm({ filteredValue })` 直接筛选。
+
+设置 `tempFilteredValue` 的原因是在需要存储临时筛选值的场景，不需要自己声明一个 state 保存这个临时筛选值。
+
+```typescript
+type RenderFilterDropdown = (props: RenderFilterDropdownProps) => React.ReactNode;
+interface RenderFilterDropdownProps {
+    /** 临时筛选值，初始值为 `filteredValue` 或 `defaultFilteredValue`  */
+    tempFilteredValue: any[];
+    /** 设置临时筛选值  */
+    setTempFilteredValue: (tempFilteredValue: any[]) => void;
+    /** `confirm` 默认会将 `tempFilteredValue` 赋值给 `filteredValue` 并触发 `onChange` 事件。你也可以通过传入 `filteredValue` 直接设置筛选值  */
+    confirm: (props?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** 清除筛选值、临时筛选值  */
+    clear: (props?: { closeDropdown?: boolean }) => void;
+    /** 关闭 dropdown  */
+    close: () => void;
+    /** 把临时筛选值还原为已生效的筛选值  */
+    reset: () => void;
+    /** 筛选器配置项，如不需要可以不传  */
+    filters?: RenderDropdownProps['filters'];
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+把列的 `filterDropdown` 设为 `true`，再用 `#filterDropdown` 插槽自定义渲染筛选器面板。插槽可以写在 Table 上（对所有 `filterDropdown` 为 `true` 的列调用，用 `column` 区分列），也可以写在 `Table.Column` 上；插槽输出为空时显示筛选菜单。
+
+你可以在用户输入筛选值的时候调用 `onTempFilteredValueChange` 存储筛选值，在筛选值输入完毕后调用 `onConfirm` 触发真正的筛选。也可以通过 `onConfirm({ filteredValue })` 直接筛选。
+
+设置 `tempFilteredValue` 的原因是在需要存储临时筛选值的场景，不需要自己声明一个 ref 保存这个临时筛选值。
+
+```typescript
+interface TableFilterDropdownSlotProps {
+    /** 当前列的配置 */
+    column: ColumnProps;
+    /** 筛选器配置项，列没有 `filters` 时为 `undefined` */
+    filters: TableFilter[] | undefined;
+    /** 临时筛选值，没有暂存值时为已生效的筛选值 */
+    tempFilteredValue: any[] | undefined;
+    /** 设置临时筛选值 */
+    onTempFilteredValueChange: (value: any[] | undefined) => void;
+    /** `onConfirm` 默认会将临时筛选值作为 `filteredValue` 并触发 `change` 事件。你也可以通过传入 `filteredValue` 直接设置筛选值 */
+    onConfirm: (options?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** 清除筛选值、临时筛选值 */
+    onClear: (options?: { closeDropdown?: boolean }) => void;
+    /** 关闭 dropdown */
+    onClose: () => void;
+    /** 把临时筛选值还原为已生效的筛选值 */
+    onReset: () => void;
+}
+```
+
+`filterDropdownProps` 中的 `onVisibleChange` 不生效，筛选面板的开合通过列的 `onFilterDropdownVisibleChange` 获取。
+
+</Framework>
+
+<Framework only="solid">
+
+使用 `renderFilterDropdown` 自定义渲染筛选器面板。参数的字段是实时的，在返回的 JSX 中读取即可。
+
+你可以在用户输入筛选值的时候调用 `setTempFilteredValue` 存储筛选值，在筛选值输入完毕后调用 `confirm` 触发真正的筛选。也可以通过 `confirm({ filteredValue })` 直接筛选。
+
+```typescript
+type RenderFilterDropdown = (props: RenderFilterDropdownProps) => JSX.Element;
+interface RenderFilterDropdownProps {
+    /** 临时筛选值，初始值为 `filteredValue` 或 `defaultFilteredValue`  */
+    tempFilteredValue: any[];
+    /** 设置临时筛选值  */
+    setTempFilteredValue: (tempFilteredValue: any[]) => void;
+    /** `confirm` 默认会将 `tempFilteredValue` 赋值给 `filteredValue` 并触发 `onChange` 事件。你也可以通过传入 `filteredValue` 直接设置筛选值  */
+    confirm: (props?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** 清除筛选值、临时筛选值  */
+    clear: (props?: { closeDropdown?: boolean }) => void;
+    /** 关闭 dropdown  */
+    close: () => void;
+    /** 把临时筛选值还原为已生效的筛选值  */
+    reset: () => void;
+    /** 筛选器配置项，如不需要可以不传  */
+    filters?: RenderDropdownProps['filters'];
+}
+```
+
+</Framework>
+
+<Demo id="custom-filter" />
+
+### 筛选确认模式
+
+通过设置 `filterConfirmMode='confirm'`，可以让筛选下拉面板支持确认模式。在该模式下：
+
+- 点击筛选项不会立即生效，而是先暂存到临时状态
+- 下拉面板底部会显示"确定"和"重置"按钮
+- 点击"确定"按钮后才会应用筛选条件并关闭下拉面板
+- 点击"重置"按钮会恢复到打开下拉面板时的初始状态（不会关闭面板）
+
+这个功能适用于需要多选筛选条件后再一次性应用的场景，避免每次点击都触发筛选。
+
+<Demo id="filter-confirm" />
+
+### 自定义筛选项渲染
+
+<Framework only="react">
+
+支持往 column 中传入 `renderFilterDropdownItem` 自定义每个筛选项的渲染方式。
+
+- `text: ReactNode` 当前筛选项的文案；
+- `value: any` 当前筛选项的值；
+- `checked: boolean` 当前筛选项是否已经选中；
+- `filteredValue: any[]` 当前所有的筛选值；
+- `level: number` 当前筛选项所处层级，如果是嵌套的筛选项，该值会 >= 1；
+- `filterMultiple: boolean` 当前筛选项是否为多选。
+
+</Framework>
+
+<Framework only="vue">
+
+用 `#filterDropdownItem` 插槽自定义每个筛选项的渲染方式。插槽可以写在 Table 上，也可以写在 `Table.Column` 上（优先）；插槽输出为空时显示默认筛选项。参数如下：
+
+- `column: ColumnProps` 当前列的配置；
+- `text: string | undefined` 当前筛选项的文案；
+- `value: any` 当前筛选项的值；
+- `checked: boolean` 当前筛选项是否已经选中；
+- `filteredValue: any[]` 菜单当前显示的筛选值，确认模式下是尚未生效的临时值；
+- `level: number` 当前筛选项所处菜单的层级，顶层菜单为 `0`；
+- `filterMultiple: boolean` 当前筛选项是否为多选；
+- `onChange: (event: MouseEvent) => void` 切换当前筛选项的选中状态，绑定到筛选项的 `click`。
+
+</Framework>
+
+<Framework only="solid">
+
+支持往 column 中传入 `renderFilterDropdownItem` 自定义每个筛选项的渲染方式，参数如下：
+
+- `text: string` 当前筛选项的文案；
+- `value: any` 当前筛选项的值；
+- `checked: boolean` 当前筛选项是否已经选中；
+- `filteredValue: any[]` 当前所有的筛选值；
+- `level: number` 当前筛选项所处层级，如果是嵌套的筛选项，该值会 >= 1；
+- `filterMultiple: boolean` 当前筛选项是否为多选。
+
+</Framework>
+
+<Demo id="filter-item-render" />
+
+### 可以展开的表格
+
+<Notice type="primary" title="注意事项">
+    <div>1. 展开按钮会默认与第一列文案渲染在同一个单元格内，你可以通过往 Table 传入 hideExpandedColumn=false 将展开按钮单独作为一列渲染；</div>
+    <div>2. 请务必为每行数据提供一个与其他行值不同的 key，或者使用 rowKey 参数指定一个作为主键的属性名。</div>
+</Notice>
+
+#### 一般可展开行
+
+<Framework only="react">
+
+如果需要渲染可以展开的表格，除了需要在 Table 传 `expandedRowRender` 这个方法外，还必须要指定 `rowKey`（默认为 `key`），Table 会根据 `rowKey` 取得行唯一标识符。
+
+</Framework>
+
+<Framework only="vue">
+
+如果需要渲染可以展开的表格，除了需要为 Table 提供 `#expandedRow` 插槽（参数 `record`、`index`、`expanded`，输出为空的行不渲染展开内容）外，还必须要指定 `rowKey`（默认为 `key`），Table 会根据 `rowKey` 取得行唯一标识符。展开的行可以用 `v-model:expandedRowKeys` 受控。
+
+</Framework>
+
+<Framework only="solid">
+
+如果需要渲染可以展开的表格，除了需要在 Table 传 `expandedRowRender` 这个方法外，还必须要指定 `rowKey`（默认为 `key`），Table 会根据 `rowKey` 取得行唯一标识符。展开的行可以通过 `expandedRowKeys` 与 `onExpandedRowsChange` 受控。
+
+</Framework>
+
+- 如果 `rowKey` 为 `Function`，则会把 `rowKey(record)` 的结果作为行唯一 ID
+- 如果 `rowKey` 为 `string` 类型，则会把 `record[rowKey]` 作为行唯一 ID
+
+<Demo id="expand" />
+
+#### 展开按钮渲染为单独列
+
+默认情况，展开按钮会与第一列文案渲染在同一个单元格内，你可以将 `hideExpandedColumn` 设为 `false` 来渲染为单独一列：
+
+<Demo id="expand-column" />
+
+#### 关闭某一行的可展开按钮渲染
+
+可传入 `rowExpandable` 方法，入参为 `record`，判断返回值是否为 `false` 来关闭某一行的可展开按钮的渲染。
+
+<Demo id="expand-row-disabled" />
+
+### 树形数据展示
+
+表格支持树形数据的展示，当数据中有 `children` 字段时会自动展示为树形表格，如果不需要或使用其他字段可以用 `childrenRecordName` 进行配置。另外可以通过设置 `indentSize` 以控制每一层的缩进宽度。
+
+> <strong>注意：</strong>请务必为每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+
+#### 树形数据简单示例
+
+<Demo id="tree-data" />
+
+#### 行可交换的树形数据
+
+你可以通过改变 `dataSource` 元素的顺序来实现行交换操作。
+
+<Demo id="tree-drag" />
+
+#### 树形选择
+
+默认情况下，表格的行选中是各自独立的，你可以通过定义 `selectedRowKeys` 来模拟一个树形选中。
+
+<Demo id="tree-selection" />
+
+#### 树形选择关联（checkRelation）
+
+通过设置 `rowSelection.checkRelation` 为 `'related'`，可以实现父子节点选择关联。选中父节点会自动选中所有子节点，选中子节点会影响父节点的状态（全选/半选/未选）。
+
+<Demo id="check-relation" />
+
+### 自定义行或单元格事件以及属性
+
+- 传入 `onRow`/`onHeaderRow` 可以定义表格或表头行的原生事件或属性。
+- 传入 `column.onCell`/`column.onHeaderCell` 可以定义表格或表头单元格原生事件或属性。
+
+<Framework only="react">
+
+原则上 tr/td/th 上支持的属性或事件都能够被定义。例如下面这个例子：
+
+- 表头的 tr 定义了 `onMouseEnter`/`onMouseLeave`
+- 表格的 tr 定义了 `className`
+- 表格的第三行定义了 `onClick`
+
+</Framework>
+
+<Framework only="vue">
+
+原则上 tr/td/th 上支持的属性或事件都能够被定义，返回对象使用 Vue 的命名：`class`、`style`、`data-*` 与监听器 `onClick`、`onMouseenter`、`onDblclick`、`onContextmenu` 等。拼错的键是类型错误。例如下面这个例子：
+
+- 表头的 tr 定义了 `onMouseenter`/`onMouseleave`
+- 表格的 tr 定义了 `class`
+- 表格的第三行定义了 `onClick`
+
+</Framework>
+
+<Framework only="solid">
+
+原则上 tr/td/th 上支持的属性或事件都能够被定义，返回对象使用 JSX 的属性名：`class`、`style`、`data-*` 与事件 `onClick`、`onMouseEnter`、`onMouseLeave`、`onDblClick`、`onContextMenu` 等。例如下面这个例子：
+
+- 表头的 tr 定义了 `onMouseEnter`/`onMouseLeave`
+- 表格的 tr 定义了 `class`
+- 表格的第三行定义了 `onClick`
+
+</Framework>
+
+<Demo id="row-cell-events" />
+
+### 实现斑马纹样式
+
+使用 `onRow` 给每行设置一个背景色，实现有斑马纹效果的表格。如果设置了固定列，可以通过 `onCell` 给每列设置一个背景色实现相同效果。
+
+<Demo id="zebra" />
+
+### 实现表头样式定制
+
+<Framework only="react">
+
+可以通过 Column.onHeaderCell 返回特定 style 或 className，定制表头的样式  
+如下例子，通过传入 backgroundColor 改变了表头背景色
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 Column.onHeaderCell 返回特定 style 或 class，定制表头的样式  
+如下例子，通过传入 backgroundColor 改变了表头背景色
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 Column.onHeaderCell 返回特定 style 或 class，定制表头的样式  
+如下例子，通过传入 `background-color` 改变了表头背景色
+
+</Framework>
+
+<Demo id="header-style" />
+
+### 实现单元格 Hover 样式定制
+
+Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可以通过 CSS 覆盖的方式自行实现。  
+如下例子，通过 CSS 覆盖，将可 Hover 的背景色或者由行高亮改为 Cell 单元格高亮
+
+```css
+.component-table-demo-cell-hover-custom {
+    .semi-table-tbody {
+        // 去掉行 hover 的原有样式
+    .semi-table-row:hover {
+            .semi-table-row-cell {
+                background-color: transparent;
+                background-image: none;
+                &.semi-table-cell-fixed-left::before {
+                    background-color: transparent;
+                }
+            }
+            // 给单个单元格加样式
+      .semi-table-row-cell:hover {
+                background-color: var(--semi-light-green-1);
+            }
+        }
+    }
+}
+```
+
+<Demo id="cell-hover" />
+
+### 单元格缩略
+
+使用 `ellipsis` 可以让单元格自动实现缩略效果。
+
+<Demo id="ellipsis" />
+
+<Framework only="react">
+
+设置 `ellipsis.showTitle` 为 false 可以隐藏默认原生的 HTML title。配合 `column.render` 可以自定义内容提示。
+
+</Framework>
+
+<Framework only="vue">
+
+设置 `ellipsis.showTitle` 为 false 可以隐藏默认原生的 HTML title。配合 `#cell` 插槽可以自定义内容提示。
+
+</Framework>
+
+<Framework only="solid">
+
+设置 `ellipsis.showTitle` 为 false 可以隐藏默认原生的 HTML title。配合 `render` 可以自定义内容提示。
+
+</Framework>
+
+<Demo id="ellipsis-custom-tip" />
+
+### 可伸缩列
+
+#### 基本伸缩列
+
+对于一些内容比较多的列，可以选择打开伸缩列功能，在表头进行拉拽实现列宽的实时变化。
+
+不过你需要注意一些参数：
+
+- `resizable` 设定为 `true` 或者一个 `object`
+- `columns` 里需要伸缩功能的列都要指定 `width` 这个字段（如果不传，该列不具备伸缩功能，且其列宽度会被浏览器自动调整）
+- `column.resize` 可以在 resizable 开启后生效，设置为 false 后，列不再支持伸缩。
+- 拖动过的列保留拖动后的宽度，没拖动过的列跟随 `columns` 里的 `width`
+
+> 与固定列同时使用时，需指定某一列不设置宽度
+
+> 不推荐与 `scroll.x` 同时使用，scroll.x 指定表格是有宽度范围的，而伸缩列会拓展列宽，这可能会导致表格对不齐
+
+<Demo id="resizable" />
+
+#### 进阶的伸缩列
+
+`resizable` 还能为一个 `Object`，包括三个事件方法：
+
+- `onResize`
+- `onResizeStart`
+- `onResizeStop`
+
+分别触发于`列宽改变中`、`开始改变`和`结束改变`三个时机。开发者可以选择在这个时机修改 column，例如在拉拽时增加一个拖动时的竖线效果等，如下例。
+
+<Demo id="resizable-advanced" />
+
+本例中使用的 CSS 样式定义：
+
+```css
+#components-table-demo-resizable-column .my-resizing {
+    border-right: 2px solid red;
+}
+
+#components-table-demo-resizable-column .semi-table-resize-handle:hover {
+    background-color: red;
+}
+
+#components-table-demo-resizable-column .my-resizing:hover .semi-table-resize-handle {
+    background-color: inherit;
+}
+```
+
+### 拖拽排序
+
+<Framework only="react">
+
+使用 [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) 搭配 [`components`](https://github.com/DouyinFE/semi-design/blob/340c93e4e1612a879be869c43ad7a9a85ab5a302/packages/semi-ui-react/table/interface.ts#L200) API 可轻松实现拖拽排序。
+
+</Framework>
+
+<Framework only="vue">
+
+使用 [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) 的 `@dnd-kit/vue` 搭配 `components` 属性可轻松实现拖拽排序：`components.body.row` 传入一个 Vue 组件，它会收到每个数据行的属性与监听器（包括 `data-row-key`），在其中调用 `useSortable` 即可。
+
+</Framework>
+
+<Framework only="solid">
+
+使用 [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) 的 `@dnd-kit/solid` 搭配 `components` 属性可轻松实现拖拽排序：`components.body.row` 传入一个 Solid 组件，它会收到每个数据行的属性（包括 `data-row-key`）以及 `onRow` 返回的 `index`，在其中调用 `useSortable` 即可。外层用 `DragDropProvider` 包裹 Table，拖拽结束后在 `onDragEnd` 中按 `source.initialIndex` 与 `source.index` 调整 `dataSource`。
+
+</Framework>
+
+<Demo id="drag-sort" />
+
+### 表格分组
+
+<Framework only="react">
+
+对于一些数据需要分组展示的表格，可以传入 `groupBy` 定义分组规则，使用 `renderGroupSection` 来定义分组表头的渲染。
+
+</Framework>
+
+<Framework only="vue">
+
+对于一些数据需要分组展示的表格，可以传入 `groupBy` 定义分组规则，使用 `#groupSection` 插槽（参数 `groupKey`、`group`）来定义分组表头的渲染；分组行唯一一列的列配置由 `groupSectionColumn` 返回。
+
+</Framework>
+
+<Framework only="solid">
+
+对于一些数据需要分组展示的表格，可以传入 `groupBy` 定义分组规则，使用 `renderGroupSection(groupKey)` 来定义分组表头的渲染。
+
+</Framework>
+
+> <strong>注意：</strong>请务必为每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+
+<Demo id="grouping" />
+
+### 虚拟化表格
+
+虚拟化可用于需要渲染大规模数据的场景，通过配置 `virtualized` 参数来开启这个功能。需要注意的是：
+
+<Framework only="react">
+
+- 必须传递 `scroll.y`（number）与 `style.width`（number）；
+
+</Framework>
+
+<Framework only="vue">
+
+- 必须传递 `scroll.y`（number）；表格宽度取 `style.width`，未设置时取 `scroll.x`。`style` 是透传到根元素的样式，`width` 写成带单位的字符串，如 `'750px'`；
+
+</Framework>
+
+- 需要传递每行的高度 `virtualized.itemSize`（不传时按 `size` 取默认行高：`default` 为 `53`，`middle` 为 `45`，`small` 为 `37`，组头行高与普通行相同），可以为如下类型：
+    - `number`
+    - `(index, { sectionRow?: boolean, expandedRow?: boolean }) => number`
+- 表格分组虚拟化已支持
+- `virtualized` 对象另外支持 `overscanCount`：可视区上下额外渲染的行数，默认 2
+
+<Framework only="react">
+
+通过 `getVirtualizedListRef` 获取虚拟列表的 ref，`ref.current` 提供 `scrollTo(offset)` 与 `scrollToItem(index, align)`，align 为 `auto`（默认）、`smart`、`center`、`start`、`end`。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 Table 的组件 ref 调用 `scrollTo(offset)` 与 `scrollToItem(index, align)`，align 为 `auto`（默认）、`smart`、`center`、`start`、`end`；表格没有开启虚拟化时调用会在开发环境给出警告。
+
+</Framework>
+
+<Framework only="solid">
+
+- 必须传递 `scroll.y`（number）；表格宽度取 `style.width`，未设置时取 `scroll.x`。`style` 落在根元素上，`width` 写成带单位的字符串，如 `'750px'`；
+
+通过 `getVirtualizedListRef` 获取虚拟列表的实例，实例提供 `scrollTo(offset)` 与 `scrollToItem(index, align)`，align 为 `auto`（默认）、`smart`、`center`、`start`、`end`。
+
+</Framework>
+
+以下为渲染 1000 条数据的示例。
+
+<Demo id="virtualized" />
+
+### 无限滚动
+
+<Framework only="react">
+
+基于虚拟化特性，通过传入 `virtualized.onScroll` 我们可以实现无限滚动加载数据。
+
+</Framework>
+
+<Framework only="vue">
+
+基于虚拟化特性，通过监听 `@scroll` 事件我们可以实现无限滚动加载数据。事件参数含 `scrollDirection`、`scrollOffset` 与 `scrollUpdateWasRequested`，只在纵向滚动偏移变化时触发。
+
+</Framework>
+
+<Framework only="solid">
+
+基于虚拟化特性，通过传入 `virtualized.onScroll` 我们可以实现无限滚动加载数据。
+
+</Framework>
+
+<Demo id="infinite-scroll" />
+
+### 受控的动态表格
+
+<Demo id="dynamic" />
+
+### 完全自定义渲染
+
+<Framework only="vue">
+
+一般情况下，使用 `#cell` 插槽即可，但是你也可以通过传递 `Column.useFullRender=true` 来开启完全自定义渲染模式，此时插槽的输出会替换整个单元格，复选框按钮、展开按钮、缩进等节点将会传给 `#headerCell`（或 `Table.Column` 的 `#title`）与 `#cell` 插槽，你可以进一步来定义表头和单元格的内容渲染方式。
+
+其中 `#headerCell` 的参数为：
+
+```text
+{
+    column: ColumnProps,
+    title: string | undefined, // 列标题
+    filter: VNode | null, // 筛选按钮
+    sorter: VNode | null, // 排序按钮
+    selection: VNode | null, // 选择按钮
+}
+```
+
+`#cell` 的参数中与完全自定义渲染有关的部分为：
+
+```text
+{
+    expandIcon: VNode | null, // 展开按钮
+    selection: VNode | null, // 选择按钮
+    indentText: VNode | null, // 缩进
+}
+```
+
+使用 `<component :is="selection" />` 渲染这些节点。
+
+</Framework>
+
+<Framework only="react">
+
+一般情况下，使用 `Column.render` 即可，但是你也可以通过传递 `Column.useFullRender=true` 来开启完全自定义渲染模式，此时复选框按钮、展开按钮、缩进等组件将会透传至 `Column.title` 与 `Column.render` 方法中，你可以进一步来定义表头和单元格的内容渲染方式。
+
+其中 `Column.title` 接受的入参为：
+
+```text
+{
+    filter: ReactNode, // 筛选按钮
+    sorter: ReactNode, // 排序按钮
+    selection: ReactNode, // 选择按钮
+}
+```
+
+`Column.render` 第四个入参为一个 object，结构如下：
+
+```text
+{
+    expandIcon: ReactNode, // 展开按钮
+    selection: ReactNode, // 选择按钮
+    indentTex: ReactNode, // 缩进
+}
+```
+
+</Framework>
+
+<Framework only="solid">
+
+一般情况下，使用 `Column.render` 即可，但是你也可以通过传递 `Column.useFullRender=true` 来开启完全自定义渲染模式，此时复选框按钮、展开按钮、缩进等节点将会透传至 `Column.title` 与 `Column.render` 方法中，你可以进一步来定义表头和单元格的内容渲染方式。
+
+其中 `Column.title` 为函数时接受的入参为：
+
+```text
+{
+    filter?: () => JSX.Element, // 筛选按钮的渲染函数，列没有筛选时不存在
+    sorter?: () => JSX.Element, // 排序按钮的渲染函数，列没有排序时不存在
+    selection?: () => JSX.Element, // 选择按钮的渲染函数
+}
+```
+
+`Column.render` 第四个入参为一个 object，结构如下：
+
+```text
+{
+    expandIcon?: () => JSX.Element, // 展开按钮的渲染函数
+    selection?: () => JSX.Element, // 选择按钮的渲染函数
+    indentText?: () => JSX.Element, // 缩进的渲染函数
+}
+```
+
+这些节点都是渲染函数，每次调用都会新建节点，只在要显示的位置调用（如 `{parts.sorter?.()}`），没有调用的节点不会创建。在 `useFullRender` 下，`title` 函数只调用一次，其入参的字段是实时的：在返回的 JSX 中读取字段即可跟随变化。
+
+</Framework>
+
+> 下方的例子则是将复选框与内容渲染至同一单元格和表头中。
+
+<Demo id="full-render" />
+
+### 表头合并
+
+<Framework only="react">
+
+用户可以通过表头合并功能进行表头的分组，表头合并支持与固定列、虚拟化、数据分组、列伸缩等功能复合使用，也同时支持 JSX 或者配置式写法。
+
+#### 合并表头配置式写法
+
+<Demo id="header-merge" />
+
+#### 合并表头 JSX 写法
+
+<Demo id="header-merge-jsx" />
+
+</Framework>
+
+<Framework only="vue">
+
+用户可以通过表头合并功能进行表头的分组，表头合并支持与固定列、虚拟化、数据分组、列伸缩等功能复合使用，也同时支持 `Table.Column` 或者配置式写法。
+
+#### 合并表头配置式写法
+
+<Demo id="header-merge" />
+
+#### 合并表头 Table.Column 写法
+
+<Demo id="header-merge-jsx" />
+
+</Framework>
+
+<Framework only="solid">
+
+用户可以通过表头合并功能进行表头的分组，表头合并支持与固定列、虚拟化、数据分组、列伸缩等功能复合使用，也同时支持 JSX 或者配置式写法。
+
+#### 合并表头配置式写法
+
+<Demo id="header-merge" />
+
+#### 合并表头 JSX 写法
+
+<Demo id="header-merge-jsx" />
+
+</Framework>
+
+### 行列合并
+
+<Framework only="react">
+
+- 表头除了通过 `children` 写法进行合并外，可通过设置 `column.colSpan` 进行表头的列合并。
+- 表格支持行/列合并，使用 `render` 里的单元格属性 `colSpan` 或者 `rowSpan` 设值为 0 时，设置的表格不会渲染。
+
+```text
+type Render = (text: string, record: Object, index: number, options?: RenderOptions) => {
+    children: React.ReactNode;
+    // 合并进 td 的属性，colSpan 或 rowSpan 为 0 时不渲染该单元格
+    props: React.TdHTMLAttributes<HTMLElement>,
+}
+
+interface RenderOptions {
+    expandIcon?: React.ReactNode;
+    isHovering?: boolean;
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+- 表头除了通过 `children` 写法进行合并外，可通过设置 `column.colSpan` 进行表头的列合并。
+- 表格支持行/列合并，由 `column.onCell` 返回单元格属性 `colSpan` 或者 `rowSpan`，设值为 0 时，该单元格不会渲染。
+
+```text
+type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
+
+// TableCellAttrs：td 支持的属性与监听器，加上 colSpan 与 rowSpan
+```
+
+</Framework>
+
+<Framework only="solid">
+
+- 表头除了通过 `children` 写法进行合并外，可通过设置 `column.colSpan` 进行表头的列合并。
+- 表格支持行/列合并，由 `column.onCell` 返回单元格属性 `colSpan` 或者 `rowSpan`，设值为 0 时，该单元格不会渲染，也不调用 `render`。
+
+```text
+type OnCell = (record: RecordType, rowIndex: number) => JSX.TdHTMLAttributes<HTMLElement>;
+```
+
+</Framework>
+
+<Demo id="span" />
+
+## API 参考
+
+## Table
+
+<Framework only="react">
+
+<TableReactApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby` 落在 `role="table"` 的元素上，其他原生属性（如 `data-*`、`onClick`）落在最外层的 `div` 上。
+
+`virtualized` 传对象时的字段：
+
+| 字段          | 说明                                                                                           | 类型                                                                                                                         | 默认值 |
+| ------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------ |
+| itemSize      | 每行的高度，不传时按 `size` 取默认值：default 为 53，middle 为 45，small 为 37，组头行同普通行 | `number \| ((index: number, row: { sectionRow?: boolean, expandedRow?: boolean }) => number)`                                | `53`   |
+| onScroll      | 虚拟化滚动回调方法，只在纵向滚动偏移变化时调用                                                 | `(object: { scrollDirection?: 'forward' \| 'backward', scrollOffset?: number, scrollUpdateWasRequested?: boolean }) => void` | -      |
+| overscanCount | 可视区上下额外渲染的行数                                                                       | `number`                                                                                                                     | `2`    |
+
+</Framework>
+
+<Framework only="vue">
+
+<TableVueApi />
+
+`class`、`style`、`id`、`data-*` 等原生属性经 attrs 落在最外层元素；`aria-label`、`aria-labelledby`、`aria-describedby` 落在 `role="table"` 的元素上（表头与表体分离或虚拟化时是它们的共同容器，否则是表体的 `table`）。有标题而使用方没有传名称时，表格通过 `aria-labelledby` 指向标题。
+
+`TableProps`、`TableEmits`、`TableSlots`、`TableHandle` 与各数据类型都可以从 `@fibrae/semi-ui-vue` 导入，`RecordType` 是它们的泛型参数 `R`，默认为 `Record<string, any>`。
+
+`virtualized` 传对象时的字段（`TableVirtualizedProps`）：
+
+| 字段          | 说明                                                                                           | 类型                                                                                          | 默认值 |
+| ------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
+| itemSize      | 每行的高度，不传时按 `size` 取默认值：default 为 53，middle 为 45，small 为 37，组头行同普通行 | `number \| ((index: number, row: { sectionRow?: boolean, expandedRow?: boolean }) => number)` | `53`   |
+| overscanCount | 可视区上下额外渲染的行数                                                                       | `number`                                                                                      | `2`    |
+
+`components` 的值是标签名或 Vue 组件，组件会收到被替换元素的属性与监听器，默认插槽是元素的内容。可以替换的位置（`TableComponents`）：
+
+| 位置                                                  | 说明                                |
+| ----------------------------------------------------- | ----------------------------------- |
+| header.outer、header.wrapper、header.row、header.cell | 表头的 `table`、`thead`、`tr`、`th` |
+| body.outer、body.wrapper、body.row、body.cell         | 表体的 `table`、`tbody`、`tr`、`td` |
+| body.colgroup.wrapper、body.colgroup.col              | `colgroup` 与 `col`                 |
+
+</Framework>
+
+<Framework only="solid">
+
+<TableSolidApi />
+
+`class`、`style`、`id`、`data-*` 等原生属性落在最外层元素；`aria-label`、`aria-labelledby`、`aria-describedby` 落在 `role="table"` 的元素上。通过 `ref` 获取的实例提供 `getCurrentPageData` 等方法，见下文「方法」。
+
+</Framework>
+
+### headerStyle 示例
+
+`headerStyle` 会应用到所有表头 `<th>` 元素，包括 fixed 表头。
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+    import type { ColumnProps } from '@fibrae/semi-ui-vue';
+
+    const columns: ColumnProps[] = [
+        { title: '姓名', dataIndex: 'name', width: 180, fixed: 'left' },
+        { title: '年龄', dataIndex: 'age', width: 120 },
+        { title: '地址', dataIndex: 'address', width: 280 },
+        { title: '公司', dataIndex: 'company', width: 280 },
+    ];
+
+    const dataSource = Array.from({ length: 6 }).map((_, i) => ({
+        key: i,
+        name: `Edward ${i}`,
+        age: 20 + i,
+        address: '西湖区湖底公园 1 号',
+        company: 'Semi Design',
+    }));
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :headerStyle="{ backgroundColor: '#F5F6F7', fontWeight: 600 }" />
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+const columns = [
+    {
+        title: '姓名',
+        dataIndex: 'name',
+        width: 180,
+        fixed: 'left',
+    },
+    {
+        title: '年龄',
+        dataIndex: 'age',
+        width: 120,
+    },
+    {
+        title: '地址',
+        dataIndex: 'address',
+        width: 280,
+    },
+    {
+        title: '公司',
+        dataIndex: 'company',
+        width: 280,
+    },
+];
+
+const dataSource = Array.from({ length: 6 }).map((_, i) => ({
+    key: i,
+    name: `Edward ${i}`,
+    age: 20 + i,
+    address: '西湖区湖底公园 1 号',
+    company: 'Semi Design',
+}));
+
+export default function Demo() {
+    return <Table columns={columns} dataSource={dataSource} scroll={{ x: 900 }} headerStyle={{ backgroundColor: '#F5F6F7', fontWeight: 600 }} />;
+}
+```
+
+一些上面用到的类型定义：
+
+```typescript
+// PaginationProps 为 Pagination 组件支持的 props
+interface TablePaginationProps extends PaginationProps {
+    position?: PaginationPosition;
+    formatPageText?: FormatPageText;
+}
+
+type VirtualizedItemSizeFn = (index?: number, row?: { sectionRow?: boolean; expandedRow?: boolean }) => number;
+type VirtualizedOnScrollArgs = {
+    scrollDirection?: 'forward' | 'backward';
+    scrollOffset?: number;
+    scrollUpdateWasRequested?: boolean;
+};
+type VirtualizedOnScroll = (object: VirtualizedOnScrollArgs) => void;
+
+type Virtualized =
+    | boolean
+    | {
+          itemSize?: number | VirtualizedItemSizeFn;
+          onScroll?: VirtualizedOnScroll;
+      };
+```
+
+RecordType 为 Table 和 Column 的泛型参数，默认为 object 类型。你可以这样使用 RecordType：
+
+```typescript
+import { ColumnProps } from 'table/interface';
+
+interface Record {
+    title?: string;
+    dataIndex?: string;
+    width?: number;
+    render?: Function;
+    key?: string;
+    name?: string;
+    age?: number;
+    address?: string;
+}
+
+function App() {
+    const columns: ColumnProps<Record>[] = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                width: 200,
+            },
+            // ...
+    ];
+
+    const data: Record[] = [
+        {
+            key: '1',
+            name: 'John Brown',
+            age: 32,
+            address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
+        },
+        // ...
+    ];
+
+    return (
+        <Table<Record>
+            columns={columns}
+            dataSource={data}
+            // ...
+        >
+    );
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+一些上面用到的类型定义，均可从 `@fibrae/semi-ui-vue` 导入：
+
+```typescript
+// PaginationProps 为 Pagination 组件支持的 props
+interface TablePaginationProps extends PaginationProps {
+    position?: 'top' | 'bottom' | 'both';
+    formatPageText?: boolean | ((pageInfo: { currentStart: number; currentEnd: number; total: number }) => string);
+    onChange?: (currentPage: number, pageSize: number) => void;
+    onPageChange?: (currentPage: number) => void;
+    onPageSizeChange?: (pageSize: number) => void;
+}
+```
+
+RecordType 为 Table 和 Column 的泛型参数 `R`，默认为 `Record<string, any>`。你可以这样使用：
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+    import type { ColumnProps } from '@fibrae/semi-ui-vue';
+
+    interface Row {
+        key: string;
+        name: string;
+        age: number;
+        address: string;
+    }
+
+    const columns: ColumnProps<Row>[] = [
+        { title: 'Name', dataIndex: 'name', width: 200 },
+        // ...
+    ];
+
+    const data: Row[] = [
+        { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
+        // ...
+    ];
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="data" />
+</template>
+```
+
+</Framework>
+
+## onHeaderRow / onRow 用法
+
+`onHeaderRow` 中可以返回 th 支持的属性或者事件 `onRow` 中可以返回 tr 支持的属性或者事件
+
+`onRow` 的第三个参数 `rowStatus` 可以获取当前行的状态信息，包括 `disabled` 和 `selected` 属性。这在需要根据行的选中或禁用状态执行不同逻辑时非常有用，例如点击行时判断是否允许选中。
+
+<Framework only="vue">
+
+返回对象里的事件监听按 Vue 的 `onXxx` 命名（`onClick`、`onMouseenter`、`onMouseleave`），样式类用 `class`。
+
+```vue
+<script setup lang="ts">
+    import { Table } from '@fibrae/semi-ui-vue';
+
+    const onRow = (record, index, rowStatus) => ({
+        onClick: () => {
+            // rowStatus.disabled 表示当前行是否被禁用
+            // rowStatus.selected 表示当前行是否被选中
+            if (rowStatus.disabled) {
+                return;
+            }
+            console.log('点击行', index, rowStatus);
+        },
+        onMouseenter: () => {}, // 鼠标移入行
+        onMouseleave: () => {}, // 鼠标移出行
+        class: '',
+        // 其他可以作用于 tr 的属性或事件
+    });
+
+    const onHeaderRow = (columns, index) => ({
+        onClick: () => {}, // 点击表头行
+        class: '',
+        // 其他可以作用于 tr 的属性或事件
+    });
+</script>
+
+<template>
+    <Table :columns="columns" :dataSource="dataSource" :onRow="onRow" :onHeaderRow="onHeaderRow" />
+</template>
+```
+
+</Framework>
+
+<Framework only="react">
+
+```jsx
+import React from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+() => (
+    <Table
+        onRow={(record, index, rowStatus) => {
+            return {
+                onClick: (event) => {
+                    // rowStatus.disabled 表示当前行是否被禁用
+                    // rowStatus.selected 表示当前行是否被选中
+                    if (rowStatus?.disabled) {
+                        console.log('该行已被禁用');
+                        return;
+                    }
+                    console.log('点击行', index, rowStatus);
+                }, // 点击行
+                onMouseEnter: (event) => {}, // 鼠标移入行
+                onMouseLeave: (event) => {}, // 鼠标移出行
+                className: '',
+                // ...
+                // 其他可以作用于 tr 的属性或事件
+            };
+        }}
+        onHeaderRow={(columns, index) => {
+            return {
+                onClick: (event) => {}, // 点击表头行
+                onMouseEnter: (event) => {}, // 鼠标移入表头行
+                onMouseLeave: (event) => {}, // 鼠标移出表头行
+                className: '',
+                // ...
+                // 其他可以作用于 th 的属性或事件
+            };
+        }}
+    />
+);
+```
+
+</Framework>
+
+## Column
+
+列配置只接受下表的属性，拼错的属性名会报类型错误。需要在列上携带自定义字段时，用交叉类型扩展，如 `ColumnProps<RecordType> & { tooltip: string }`。
+
+<Framework only="vue">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| align | 设置列的对齐方式，在 RTL 时会自动切换 | 'left' \| 'right' \| 'center' | 'left' |
+| class | 列样式名 | string \| object \| array |  |
+| children | 表头合并时用于子列的设置 | Column[] |  |
+| colSpan | 表头列合并，设置为 0 时，不渲染 | number |  |
+| dataIndex | 列数据在数据项中对应的 key，使用排序或筛选时必传，且需要保持不重复 | string |  |
+| defaultFilteredValue | 筛选的默认值，值为已筛选的 value 数组 | any[] |  |
+| defaultSortOrder | 排序的默认值，可设置为 'ascend'\|'descend'\|false | boolean \| string | false |
+| ellipsis | 文本缩略，开启后 table-layout 会自动切换为 fixed | boolean \| \{ showTitle: boolean \} | false |
+| filterChildrenRecord | 是否需要对子级数据进行本地过滤，开启该功能后如果子级符合过滤标准，父级即使不符合仍然会保留 | boolean |  |
+| filterDropdown | 为 true 时显示筛选按钮，面板内容由 Table 的 `#filterDropdown` 插槽提供，需要自行编写各种交互 | boolean |  |
+| filterDropdownProps | 透传给 Dropdown 的属性与事件监听（`on` 开头的键），触发方式固定为点击，详情点击[Dropdown API](/zh-CN/react/show/dropdown#Dropdown) | object |  |
+| filterDropdownVisible | 控制 Dropdown 的 visible，详情点击[Dropdown API](/zh-CN/react/show/dropdown#Dropdown) | boolean |  |
+| filterMultiple | 是否多选 | boolean | true |
+| filterConfirmMode | 筛选确认模式。`immediate` 为点击筛选项立即生效；`confirm` 为点击筛选项后需点击确定按钮才生效，此时下拉面板底部会显示确定和重置按钮 | 'immediate' \| 'confirm' | 'immediate' |
+| filteredValue | 筛选的受控属性，外界可用此控制列的筛选状态，值为已筛选的 value 数组 | any[] |  |
+| filters | 表头的筛选菜单项。 | Filter[] |  |
+| fixed | 列是否固定，可选 true(等效于 left) 'left' 'right'，在 RTL 时会自动切换 | boolean \| string | false |
+| key | 列的标识，用于选择、排序、筛选与列宽；已设置唯一的 dataIndex 时可以省略 | string \| number |  |
+| resize | 是否开启 resize 模式，只有 Table resizable 开启后此属性才会生效 | boolean |  |
+| showSortTip | 是否展示排序提示，如果设置了 sortOrder，排序受控，则该参数不会生效 | boolean | false |
+| sortChildrenRecord | 是否对子级数据进行本地排序 | boolean |  |
+| sortOrder | 排序的受控属性，外界可用此控制列的排序，可设置为 'ascend'\|'descend'\|false | boolean \| string | false |
+| sorter | 排序函数，本地排序使用一个函数 (参考 Array.sort 的 compareFunction)，需要服务端排序可设为 true。**必须给排序列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | boolean \| (r1: RecordType, r2: RecordType, sortOrder: 'ascend' \| 'descend') => number | true |
+| title | 列头显示的纯文本，同时是省略时的 Tooltip 内容和排序按钮的名称。需要自定义内容时用 `#headerCell` 插槽 | string |  |
+| useFullRender | 是否完全自定义渲染，用法详见[完全自定义渲染](#完全自定义渲染)，开启此功能会造成一定的性能损耗 | boolean | false |
+| width | 列宽度 | string \| number |  |
+| onCell | 设置单元格属性 | (record: RecordType, rowIndex: number) => object |  |
+| onFilter | 本地模式下，确定筛选的运行函数。**必须给筛选列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilterDropdownVisibleChange | 自定义筛选菜单可见变化时回调 | (visible: boolean) => void |  |
+| onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+
+单元格、表头、排序与筛选图标和筛选项的自定义渲染用 Table 的插槽：`#cell`、`#headerCell`、`#sortIcon`、`#filterIcon`、`#filterDropdown`、`#filterDropdownItem`，参数见上文 Table 的 Slots。`Table.Column` 写法时，这些插槽也可以写在该列上（表头用 `#title` 代替 `#headerCell`），优先于 Table 上的同名插槽；写了 `#filterDropdown` 的列等同于设置了 `filterDropdown: true`，嵌套的 `Table.Column` 写在默认插槽里作为分组子列。没有 `render`、`renderFilterDropdown`、`renderFilterDropdownItem`、`shouldCellUpdate`。
+
+一些上面用到的类型定义：
+
+```typescript
+type Filter = {
+    value: any;
+    text: string;
+    children?: Filter[];
+};
+```
+
+</Framework>
+
+<Framework only="react">
+
+<ColumnReactApi />
+
+一些上面用到的类型定义：
+
+```typescript
+type Filter = {
+    value: any;
+    text: React.ReactNode;
+    children?: Filter[];
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+<ColumnSolidApi />
+
+`Column` 是 Table 的子组件声明，本身不渲染任何内容，Table 读取它的 props 作为列配置。配置写法与 `Table.Column` 写法的列属性相同。
+
+</Framework>
+
+## Column.onCell / onHeaderCell 用法
+
+与 `onRow`、`onHeaderRow类似`，在 `column.onCell` `column.onHeaderCell` 中也能返回 td/th 支持的属性或事件
+
+## rowSelection
+
+<Framework only="vue">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| class | 所处列样式名 | string \| object \| array |  |
+| checkRelation | 父子节点选择关联模式。设置为 `'related'` 时，选中父节点会自动选中所有子节点，选中子节点会影响父节点的状态（全选/半选/未选）；默认为 `'unRelated'` 即父子节点选择互不影响 | 'related' \| 'unRelated' | 'unRelated' |
+| clickRow | 是否启用点击行选择功能。开启后，点击行任意位置（包括固定列）都会触发行选择/取消选择。被禁用的行（通过 getCheckboxProps 设置）无法通过点击选中；`disabled` 为 true 时点击行也不会选中 | boolean | false |
+| defaultSelectedRowKeys | 初始选中项的 key 数组，只在挂载时读取，传了 selectedRowKeys 时不生效 | (string \| number)[] |  |
+| disabled | 表头的 `Checkbox` 是否禁用；为 true 时 `clickRow` 点击行选择也不生效 | boolean | false |
+| fixed | 把选择框列固定在左边 | boolean | false |
+| getCheckboxProps | 选择框的默认属性配置 | (record: RecordType) => object |  |
+| hidden | 是否隐藏选择列 | boolean | false |
+| selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | (string \| number)[] |  |
+| width | 自定义列表选择框宽度 | string \| number |  |
+| onChange | 选中项发生变化时的回调。第一个参数会保存上次选中的 row keys，即使你做了分页受控或更新了 dataSource [FAQ](#faq) | (selectedRowKeys: (string \| number)[], selectedRows: RecordType[]) => void |  |
+| onCell | 设置选择列数据单元格的属性 | (record: RecordType, rowIndex: number) => object |  |
+| onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+| onSelect | 用户手动选择某行的回调。`event` 为选择框的 change 事件；`clickRow` 点击行时为鼠标事件 | (record: RecordType, selected: boolean, selectedRows: RecordType[], event: Event) => void |  |
+| onSelectAll | 用户手动点击表头选择框的回调，会选中/取消选中当前筛选结果里的所有可选行（不含禁用行），`changedRows` 只包含选中状态发生变化的行 | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], event: Event) => void |  |
+
+自定义选择框用 Table 的 `#selectionCell` 插槽，不再有 `renderCell` 和 `shouldCellUpdate`。
+
+</Framework>
+
+<Framework only="react">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 所处列样式名 | string |  |
+| checkRelation | 父子节点选择关联模式。设置为 `'related'` 时，选中父节点会自动选中所有子节点，选中子节点会影响父节点的状态（全选/半选/未选）；默认为 `'unRelated'` 即父子节点选择互不影响 | 'related' \| 'unRelated' | 'unRelated' |
+| clickRow | 是否启用点击行选择功能。开启后，点击行任意位置（包括固定列）都会触发行选择/取消选择。被禁用的行（通过 getCheckboxProps 设置）无法通过点击选中；`disabled` 为 true 时点击行也不会选中。 | boolean | false |
+| defaultSelectedRowKeys | 初始选中项的 key 数组，只在挂载时读取，传了 selectedRowKeys 时不生效 | (string \| number)[] |  |
+| disabled | 表头的 `Checkbox` 是否禁用；为 true 时 `clickRow` 点击行选择也不生效 | boolean | false |
+| fixed | 把选择框列固定在左边 | boolean | false |
+| getCheckboxProps | 选择框的默认属性配置 | (record: RecordType) => object |  |
+| hidden | 是否隐藏选择列 | boolean | false |
+| renderCell | 自定义渲染勾选框 | (\{ selected: boolean, record: RecordType, originNode: JSX.Element, inHeader: boolean, disabled: boolean, indeterminate: boolean, index?: number, selectRow?: (selected: boolean, e: Event) => void, selectAll?: (selected: boolean, e: Event) => void \}) => ReactNode |  |
+| selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | string[] |  |
+| shouldCellUpdate | 自定义控制单元格是否渲染。默认 cell 会深对比 props 和 nextProps 是否变化，来决定是否渲染单元格。如果你的 props 中的 record 比较复杂，建议使用 `shouldCellUpdate` 接管单元格的渲染。 | (props: TableCellProps, prevProps: TableCellProps) => boolean |  |
+| width | 自定义列表选择框宽度 | string\|number |  |
+| onChange | 选中项发生变化时的回调。第一个参数会保存上次选中的 row keys，即使你做了分页受控或更新了 dataSource [FAQ](#faq) | (selectedRowKeys: number[]\|string[], selectedRows: RecordType[]) => void |  |
+| onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+| onSelect | 用户手动选择某行的回调。`nativeEvent` 为选择框的 change 事件；`clickRow` 点击行时为鼠标事件；经 `renderCell` 的 `selectRow` 触发时为传给它的事件 | (record: RecordType, selected: boolean, selectedRows: RecordType[], nativeEvent: CheckboxEvent \| React.MouseEvent \| Event) => void |  |
+| onSelectAll | 用户手动点击表头选择框的回调，会选中/取消选中当前筛选结果里的所有可选行（不含禁用行），`changedRows` 只包含选中状态发生变化的行。`e` 为选择框的 change 事件，经 `renderCell` 的 `selectAll` 触发时为传给它的事件 | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], e: CheckboxEvent \| Event) => void |  |
+
+</Framework>
+
+## scroll
+
+| 属性                     | 说明                                                                                                                                                   | 类型           | 默认值 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- | ------ |
+| scrollToFirstRowOnChange | 当分页、排序、筛选变化后是否自动滚动到表格顶部。当设置了 `scroll.y` 时，会重置表格内部滚动位置到顶部；当未设置 `scroll.y` 时，会滚动页面到表格头部位置 | boolean        | false  |
+| x                        | 设置横向滚动区域的宽，可以为像素值、百分比或 'max-content'                                                                                             | string\|number |        |
+| y                        | 设置纵向滚动区域的高，可以为像素值                                                                                                                     | number         |        |
+
+## pagination
+
+翻页组件配置。`pagination` 建议不要使用字面量写法。
+
+注意：pagination.onChange 设置后，Table onChange 不再响应分页器变化。
+
+<Framework only="react">
+
+| 属性                              | 说明                                                                                                                                                            | 类型                                                                                            | 默认值   |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------- |
+| currentPage                       | 当前页码                                                                                                                                                        | number                                                                                          | -        |
+| defaultCurrentPage                | 默认的当前页码                                                                                                                                                  | number                                                                                          | 1        |
+| formatPageText                    | 翻页区域文案自定义格式化，传 false 关闭文案显示；该项影响表格翻页区域左侧文案显示，不同于 `Pagination` 组件的 `showTotal` 参数，请注意甄别。                    | boolean \| (\{ currentStart: number, currentEnd: number, total: number \}) => string\|ReactNode | true     |
+| pageSize                          | 每页条数                                                                                                                                                        | number                                                                                          | 10       |
+| position                          | 位置                                                                                                                                                            | 'bottom'\|'top'\|'both'                                                                         | 'bottom' |
+| total                             | 数据总数                                                                                                                                                        | number                                                                                          | 0        |
+| preventPageChangeOnPageSizeChange | 切换 pageSize 时是否阻止自动调整 currentPage。默认情况下，切换 pageSize 时组件会自动计算新的 currentPage 以保持当前数据位置，设为 true 后由用户自行控制页码变化 | boolean                                                                                         | false    |
+
+</Framework>
+
+<Framework only="vue">
+
+| 属性                              | 说明                                                                                                                                                            | 类型                                                                                 | 默认值   |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | -------- |
+| currentPage                       | 当前页码                                                                                                                                                        | number                                                                               | -        |
+| defaultCurrentPage                | 默认的当前页码                                                                                                                                                  | number                                                                               | 1        |
+| formatPageText                    | 翻页区域文案自定义格式化，传 false 关闭文案显示；该项影响表格翻页区域左侧文案显示，不同于 `Pagination` 组件的 `showTotal` 参数，请注意甄别。                    | boolean \| (\{ currentStart: number, currentEnd: number, total: number \}) => string | true     |
+| pageSize                          | 每页条数                                                                                                                                                        | number                                                                               | 10       |
+| position                          | 位置                                                                                                                                                            | 'bottom' \| 'top' \| 'both'                                                          | 'bottom' |
+| total                             | 数据总数                                                                                                                                                        | number                                                                               | 0        |
+| preventPageChangeOnPageSizeChange | 切换 pageSize 时是否阻止自动调整 currentPage。默认情况下，切换 pageSize 时组件会自动计算新的 currentPage 以保持当前数据位置，设为 true 后由用户自行控制页码变化 | boolean                                                                              | false    |
+| onChange                          | 页码或每页条数变化时的回调，设置后 Table 的 `change` 事件不再响应分页器变化                                                                                     | (currentPage: number, pageSize: number) => void                                      |          |
+| onPageChange                      | 页码变化时的回调                                                                                                                                                | (currentPage: number) => void                                                        |          |
+| onPageSizeChange                  | 每页条数变化时的回调                                                                                                                                            | (pageSize: number) => void                                                           |          |
+
+</Framework>
+
+其他配置详见[Pagination](/zh-CN/react/navigation/pagination#API参考)
+
+## Resizable
+
+`resizable` 对象型的参数，主要包括一些表格列伸缩时的事件方法。这些事件方法都可以返回一个对象，该对象会和最终的 column 合并。
+
+| 属性             | 说明                              | 类型                                                     | 默认值     |
+| ---------------- | --------------------------------- | -------------------------------------------------------- | ---------- |
+| handlerClassName | 列宽调整期间加到该列上的 class 名 | string                                                   | 'resizing' |
+| onResize         | 表格列改变宽度时触发              | (column: [Column](#Column)) => [Column](#Column) \| void |            |
+| onResizeStart    | 表格列开始改变宽度时触发          | (column: [Column](#Column)) => [Column](#Column) \| void |            |
+| onResizeStop     | 表格列停止改变宽度时触发          | (column: [Column](#Column)) => [Column](#Column) \| void |            |
+
+## 方法
+
+<Framework only="react">
+
+通过 ref 可以访问到 Table 提供的一些内部方法：
+
+```jsx
+import React, { useRef, useEffect } from 'react';
+import { Table } from '@fibrae/semi-ui-react';
+
+function Demo() {
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current.getCurrentPageData(); // => { dataSource: [/*...*/], groups: /*...*/ }
+    }, []);
+
+    return <Table columns={[/*...*/]} dataSource={[/*...*/]} ref={ref} />;
+}
+```
+
+句柄上的方法见 Table API 中的方法表。
+
+</Framework>
+
+<Framework only="vue">
+
+通过组件 ref 可以访问到 Table 暴露的方法，类型为 `TableHandle`：
+
+```vue
+<script setup lang="ts">
+    import { onMounted, useTemplateRef } from 'vue';
+    import { Table } from '@fibrae/semi-ui-vue';
+    import type { TableHandle } from '@fibrae/semi-ui-vue';
+
+    const table = useTemplateRef<TableHandle>('table');
+
+    onMounted(() => {
+        table.value?.getCurrentPageData(); // => { dataSource: [/*...*/], groups: /*...*/ }
+    });
+</script>
+
+<template>
+    <Table ref="table" :columns="columns" :dataSource="dataSource" />
+</template>
+```
+
+| 名称                        | 描述                                                                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| getCurrentPageData()        | 返回当前页的数据对象：\{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}，groups 的键是分组键，值是该组的行键集合 |
+| scrollTo(offset)            | 虚拟化表格滚动到指定的像素偏移                                                                                                                          |
+| scrollToItem(index, align?) | 虚拟化表格滚动到指定的行，`align` 为 'auto' \| 'smart' \| 'center' \| 'start' \| 'end'                                                                  |
+
+</Framework>
+
+<Framework only="solid">
+
+通过 ref 可以访问到 Table 提供的一些内部方法：
+
+| 名称                 | 描述                                                                                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| getCurrentPageData() | 返回当前页的数据对象：\{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}，groups 的键是分组键，值是该组的行键集合 |
+
+</Framework>
+
+## Accessibility
+
+### ARIA
+
+Table 按 [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/) 输出静态表格语义，单元格之间不用方向键移动，可交互内容（排序、筛选、展开、选择）都是可以 Tab 聚焦的原生控件。
+
+- 表格的 role 为 table，行为 row，表头单元格为 columnheader，单元格为 cell；树形表格同样是 table，不输出行的层级
+- 排序按钮是表头里的原生 `button`，以列标题命名；当前排序方向写在表头单元格的 `aria-sort` 上（`ascending` 或 `descending`），未排序的列不带该属性。`showSortTip` 的提示在按钮聚焦时显示
+- 展开按钮是原生 `button`，名称为「展开此行」，`aria-expanded` 表示该行是否展开
+- 行选择的复选框带有「选择此行」「全选所有行」等可访问名称
+
+<Framework only="react">
+
+- 默认的列筛选图标是原生 `button`，可用 Tab 聚焦，Enter、Space 或下箭头打开筛选菜单，并带有 `aria-haspopup="menu"` 与 `aria-expanded`；自定义 `filterIcon` 时由使用方保证其可聚焦
+
+</Framework>
+
+<Framework only="vue">
+
+- 列筛选按钮是原生 `button`，可用 Tab 聚焦，Enter、Space 或下箭头打开筛选菜单，并带有 `aria-haspopup="menu"` 与 `aria-expanded`；名称为「筛选此列数据」，有筛选值时为「筛选此列数据，筛选已生效」。`#filterIcon` 插槽只替换按钮内的图标，按钮的名称和键盘操作不变
+
+</Framework>
+
+- 固定表头（`scroll.y`、`sticky`）或虚拟化时，表头和表体渲染为两个 table 元素，二者的共同容器是 role 为 table 的元素，内部 table 为 role none，单元格仍与列头关联
+- 虚拟化表格的 `aria-rowcount` 为表头行数加数据总行数，数据行的 `aria-rowindex` 接在表头行之后，屏幕阅读器据此报出不在 DOM 中的行
+
+已知限制：
+
+- 带排序的列，`title` 渲染在排序按钮里，`title` 中不要放按钮、链接等可交互内容
+
+<Framework only="solid">
+
+- 默认的列筛选图标是原生 `button`，可用 Tab 聚焦，Enter、Space 或下箭头打开筛选菜单，并带有 `aria-haspopup="menu"` 与 `aria-expanded`；自定义 `filterIcon` 时由使用方保证其可聚焦
+
+</Framework>
+
+## RTL/LTR
+
+- Table 的 RTL 默认值为 [ConfigProvider](/zh-CN/react/other/config-provider) direction，可以通过 Table direction 覆盖
+- Table 列的 align 与 fixed 属性会在 RTL 时会自动切换，left \<-> right
+- Table 的树形数据暂不支持 RTL（[Chrome、Safari 浏览器表现与 Firefox 表现不同](https://codesandbox.io/s/table-rtl-treedata-uy7gzl?file=/src/App.jsx)）
+
+## 文案规范
+
+- 表格标题
+    - 表格标题应清晰的让用户感知到表格的目的；
+    - 为复杂表格添加描述，为用户提供更多关于表格的上下文信息；
+    - 使用句子大小写；
+- 列标题
+    - 保持列标题简洁，建议使用 1-2 个词作为列标题；
+    - 当列标题较长时，建议 2 行显示，剩余文字缩略并在 Tooltip 中显示完全；
+    - 采用 Sentence case 的大小写规则；
+    - 列标题使用句子大小写；
+- 表格操作
+    - 可以遵循 [Button 的文案规范](/zh-CN/react/basic/button#%E6%96%87%E6%A1%88%E8%A7%84%E8%8C%83)
+
+## 设计变量
+
+<DesignToken />
+
+## FAQ
+
+- **点击第二页的行选择按钮，会跳转到第一页？**
+
+    Table 的 dataSource 更新后，会将页码重置到初始态。请检查数据源是否在组件渲染时发生了变化。
+
+      <Framework only="vue">
+
+    Vue 的 Table 逐项比较新旧 `dataSource`，每一项都是原来的记录时不会重置，新增或删除记录会重置。不要在模板里写字面量，也不要在每次渲染时重新生成记录对象。
+
+    ```vue
+    <script setup lang="ts">
+        import { shallowRef } from 'vue';
+
+        const dataSource = shallowRef<Record<string, any>[]>([]);
+
+        // 只在需要时整体替换
+        const load = async () => {
+            dataSource.value = await fetchData();
+        };
+    </script>
+
+    <template>
+        <!-- 错误：每次渲染都会生成新的记录对象 -->
+        <Table :dataSource="list.map((item) => ({ ...item }))" :columns="columns" />
+    </template>
+    ```
+
+      </Framework>
+
+      <Framework only="react">
+
+    ```typescript
+    function App() {
+        const [dataSource, setDataSource] = useState([]);
+
+        useEffect(() => {
+            // ✅ 正确
+            const getData = () => {
+                // 获取数据
+                const newData = fetch(/**/);
+                // 设置数据
+                setDataSource(dataSource);
+            };
+
+            getData();
+        }, []);
+
+        // ❌ 错误
+        const data = [];
+
+        return <Table dataSource={data} columns={[/*...*/]} />;
+    }
+    ```
+
+      </Framework>
+
+      <Framework only="solid">
+
+    组件只执行一次，`dataSource` 应放在 signal 中，并在 JSX 里读取（如 `dataSource={data()}`）。替换整个数组会触发更新；原地修改数组（如 `push`）不会触发，需要改为生成新数组后 `setData`。
+
+      </Framework>
+
+- **筛选后的数据条数不对？**
+
+    请检查你的筛选列和数据源是否配置正确。
+
+    筛选列需设置独立的 dataIndex，同时 dataSource 需要设置独立的 key，请参考 dataSource API。否则筛选功能无法正常工作。
+
+- **表格数据为何没有更新？**
+
+      <Framework only="react">
+
+    Table 组件目前所有参数都为浅层对比，也就是说如果该参数值类型为一个 Array 或者 Object，你需要手动改变其引用才能触发更新。同理，如果你不想触发额外更新，尽量不要直接在传参的时候使用字面量或是在 render 过程中定义引用型参数值：
+
+    ```text
+    // ...render() {
+        <Table dataSource={[/*...*/]} columns={[/*...*/]} />}
+    ```
+
+    上述的写法在每次 render 时都会触发表格内部对数据的更新（会清空当前的选中行以及展开行 key 数组等）。为了性能及避免一些异常，**请尽量将一些引用型参数定义在 render 方法之外（如果使用了 hooks 请利用 useMemo 或者 useState 进行存储）。**
+
+      </Framework>
+
+      <Framework only="vue">
+
+    Vue 通过响应式追踪变化：`dataSource` 用 `ref` 或 `shallowRef` 保存，替换整个数组或调用 `push`、`splice` 等方法都会触发更新；`shallowRef` 下直接修改某条记录的字段不会触发，需要整体替换数组。`columns` 同理，依赖响应式数据时用 `computed`，不依赖时定义在 `script setup` 顶层，避免写在模板里的字面量。
+
+      </Framework>
+
+      <Framework only="solid">
+
+    Table 按 props 的读取位置更新，`columns`、`dataSource` 等在 JSX 中读取 signal 即可跟随变化。`columns` 数组定义在组件内部时只会创建一次，依赖 signal 的列配置请使用 getter 或在 `render` 中读取。
+
+      </Framework>
+
+- **为何我的表格行不能选中以及展开？**
+
+    请指定 rowKey 或者给 dataSource 的每项设置一个各不相同的 "key" 属性。**表格内所有行相关的操作都需要使用到。**
+
+- **如何实现点击排序按钮时自定义排序或传参给服务端排序？**
+
+    onChange 方法的入参包括 pagination、filters、sorter，用户可以根据 sorter 对 dataSource 进行自定义排序。
+
+- **如何给某一行添加 className？**
+
+    使用 onRow 或 onHeaderRow。
+
+- **如何给 table cell 设置样式？**
+
+    涉及到单个 cell 需要控制样式的，可以通过 column.onHeaderCell、column.onCell 控制。
+
+- **为何 rowSelection onChange 的第一个参数缓存了之前选中的 keys？**
+
+    这么做为了在分页受控时，在第一页选中数据后，去第二页选择数据，回到第一页后选择的 row keys 丢失的场景。如果不想用缓存的 keys，可以从当前 dataSource 过滤一遍，或者使用 rowSelection onChange 的第二个参数。
+
+- **支持单行选择吗**
+
+    Table 暂不支持单行选择功能，用户可以通过自定义方式实现单选。

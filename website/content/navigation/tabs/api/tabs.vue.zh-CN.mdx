@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                                                                                                                                 | 类型                         | 默认值                                            |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- | ------------------------------------------------- |
+| activeKey          | 当前激活的标签页的 itemKey，配合 v-model:activeKey 使用。传 null 时不激活任何标签页，仍是受控；不传或为 undefined 时按非受控处理。                                                   | `string \| null`             | `semiGlobalDefault("Tabs", "activeKey")`          |
+| arrowPosition      | 折叠模式下，左右切换箭头的位置。                                                                                                                                                     | `"both" \| "start" \| "end"` | `semiDefault("Tabs", "arrowPosition", "both")`    |
+| collapsible        | 是否开启滚动折叠（仅水平模式）。传 'auto' 时在标签溢出或换行时自动折叠，放得下时自动退出。                                                                                           | `boolean \| "auto"`          | `semiDefault("Tabs", "collapsible", false)`       |
+| contentStyle       | 内容区域外层的样式。                                                                                                                                                                 | `StyleValue`                 | `semiGlobalDefault("Tabs", "contentStyle")`       |
+| defaultActiveKey   | 非受控时初始选中的 itemKey。不传时取第一个启用且有 itemKey 的标签页。                                                                                                                | `string`                     | `semiGlobalDefault("Tabs", "defaultActiveKey")`   |
+| dropdownProps      | 折叠模式下，分别透传给起始侧与末尾侧箭头下拉菜单的 Dropdown 属性。                                                                                                                   | `TabsDropdownProps`          | `semiGlobalDefault("Tabs", "dropdownProps")`      |
+| keepDOM            | 使用 TabPane 子元素时，是否渲染未激活面板的 DOM。为 false 时只渲染当前面板，没有切换动画。                                                                                           | `boolean`                    | `semiDefault("Tabs", "keepDOM", true)`            |
+| lazyRender         | 懒渲染，面板被激活过才渲染进 DOM。                                                                                                                                                   | `boolean`                    | `semiDefault("Tabs", "lazyRender", false)`        |
+| more               | 将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 count 为标签数，dropdownProps 透传给下拉菜单。触发器与菜单内容分别用 more 与 moreContent 插槽自定义。 | `number \| TabsMore`         | `semiGlobalDefault("Tabs", "more")`               |
+| preventScroll      | 组件内部调用 focus 时，是否阻止浏览器滚动文档以显示新聚焦的元素。                                                                                                                    | `boolean`                    | `semiGlobalDefault("Tabs", "preventScroll")`      |
+| showRestInDropdown | 折叠模式下，是否将被收起的标签页展示在下拉菜单中。                                                                                                                                   | `boolean`                    | `semiDefault("Tabs", "showRestInDropdown", true)` |
+| size               | 标签栏尺寸，目前仅线条式（line）标签栏支持。                                                                                                                                         | `TabSize`                    | `semiDefault("Tabs", "size", "large")`            |
+| tabBarClassName    | 标签栏的类名。                                                                                                                                                                       | `string`                     | `semiGlobalDefault("Tabs", "tabBarClassName")`    |
+| tabBarStyle        | 标签栏的样式。                                                                                                                                                                       | `StyleValue`                 | `semiGlobalDefault("Tabs", "tabBarStyle")`        |
+| tabList            | 标签页的数据数组，每项含 itemKey、tab、disabled、closable。只要传了数组（含空数组），默认插槽就是当前标签页的内容，并优先于 TabPane 子元素；标签内的节点用 tab 与 icon 插槽。        | `PlainTab[]`                 | `semiGlobalDefault("Tabs", "tabList")`            |
+| tabPaneMotion      | 是否使用动画切换面板。                                                                                                                                                               | `boolean`                    | `semiDefault("Tabs", "tabPaneMotion", true)`      |
+| tabPosition        | 标签栏位置：top 为水平，left 为垂直。                                                                                                                                                | `TabPosition`                | `semiDefault("Tabs", "tabPosition", "top")`       |
+| type               | 标签栏样式：line、card、button、slash。slash 仅支持水平模式。                                                                                                                        | `TabType`                    | `semiDefault("Tabs", "type", "line")`             |
+| visibleTabsStyle   | 折叠模式下，整体滚动区域的样式。                                                                                                                                                     | `StyleValue`                 | `semiGlobalDefault("Tabs", "visibleTabsStyle")`   |
+
+**Events**
+
+| 事件              | 说明                                                                         | 回调参数                                                                     |
+| ----------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| update:activeKey  | 激活的标签页变化时触发，供 v-model:activeKey 回写。                          | `[activeKey: string]`                                                        |
+| change            | 切换标签页时触发，参数为新激活的 itemKey；与 update:activeKey 同时发出。     | `[activeKey: string]`                                                        |
+| tabClick          | 单击，或用 Enter、Space 激活标签页时触发；用键盘激活时事件是 KeyboardEvent。 | `[activeKey: string, event: MouseEvent \| KeyboardEvent]`                    |
+| tabClose          | 关闭标签页时触发，参数为被关闭标签页的 itemKey。标签页的移除由使用方完成。   | `[tabKey: string]`                                                           |
+| visibleTabsChange | 折叠模式下溢出项的可见状态变化时触发，参数为 itemKey 到是否可见的 Map。      | <ApiType detail={"[visibleState: Map\u003cstring, boolean>]"}>Type</ApiType> |
+
+**Slots**
+
+| 插槽               | 说明                                                                                                                                          | 作用域参数                 |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| default            | TabPane 子元素；传了 tabList 时是当前标签页的内容。TabPane 必须是 Tabs 的直接子元素。                                                         | `any`                      |
+| tab                | tabList 中每个标签页的标签，参数为 item 与 index；不提供时显示该项的 tab 文本。                                                               | `TabsTabSlotProps`         |
+| icon               | tabList 中每个标签页的图标，参数为 item 与 index；返回空内容则不渲染图标。                                                                    | `TabsTabSlotProps`         |
+| tabBarExtraContent | 标签栏的附加内容，位于 tablist 之外。                                                                                                         | `any`                      |
+| tabBar             | 替换整个标签栏。参数 tabBarProps 只含数据，tabBar 是默认标签栏节点，可用 component :is 渲染；自定义标签栏里的 TabItem 会自行控制所在的 Tabs。 | `TabsTabBarSlotProps`      |
+| arrow              | 替换折叠模式下的每个滚动箭头，参数为被滚出的 items、position、onClick 与默认箭头 defaultNode。                                                | `TabsArrowSlotProps`       |
+| more               | 替换「更多」菜单的触发器。                                                                                                                    | `any`                      |
+| moreContent        | 替换「更多」菜单的内容，参数 items 为收入菜单的标签页。                                                                                       | `TabsMoreContentSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明 | 类型 |
+| ---- | ---- | ---- |
+| 无   |      |      |

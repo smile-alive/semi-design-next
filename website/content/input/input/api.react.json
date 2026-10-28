@@ -1,0 +1,295 @@
+{
+    "input": {
+        "source": "packages/semi-ui-react/src/input/index.tsx",
+        "props": {
+            "aria-label": { "zh-CN": "原生 input 的 `aria-label`。", "en-US": "`aria-label` of the native input." },
+            "aria-describedby": { "zh-CN": "原生 input 的 `aria-describedby`。", "en-US": "`aria-describedby` of the native input." },
+            "aria-errormessage": { "zh-CN": "原生 input 的 `aria-errormessage`。", "en-US": "`aria-errormessage` of the native input." },
+            "aria-invalid": {
+                "zh-CN": "原生 input 的 `aria-invalid`；`validateStatus` 为 `error` 时固定为 `true`。",
+                "en-US": "`aria-invalid` of the native input; fixed to `true` when `validateStatus` is `error`."
+            },
+            "aria-labelledby": {
+                "zh-CN": "原生 input 的 `aria-labelledby`。未设置、没有 `aria-label` 且渲染了 `insetLabel` 时，指向该标签。",
+                "en-US": "`aria-labelledby` of the native input. When it is not set, there is no `aria-label` and an `insetLabel` is rendered, it refers to that label."
+            },
+            "aria-required": { "zh-CN": "原生 input 的 `aria-required`。", "en-US": "`aria-required` of the native input." },
+            "addonBefore": {
+                "zh-CN": "前置标签，可以是文本、Semi 图标或任意 `ReactNode`。",
+                "en-US": "Addon before the input: text, a Semi icon or any `ReactNode`."
+            },
+            "addonAfter": {
+                "zh-CN": "后置标签，可以是文本、Semi 图标或任意 `ReactNode`。",
+                "en-US": "Addon after the input: text, a Semi icon or any `ReactNode`."
+            },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "className": { "zh-CN": "外层 wrapper `div` 的类名。", "en-US": "Class name of the wrapper `div`." },
+            "clearIcon": {
+                "zh-CN": "清除按钮的图标，`showClear` 为 `true` 时有效。",
+                "en-US": "Icon of the clear button, effective when `showClear` is `true`."
+            },
+            "composition": {
+                "zh-CN": "是否开启输入法模式，开启后输入法组合期间不触发 `onChange`，组合结束后触发一次。",
+                "en-US": "Whether to enable IME mode; `onChange` does not fire during a composition and fires once after it ends."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when the input is uncontrolled." },
+            "disabled": {
+                "zh-CN": "是否禁用。在 InputGroup 中未设置时，使用组的 `disabled`。",
+                "en-US": "Whether the input is disabled. Inside an InputGroup, the group's `disabled` applies when it is not set."
+            },
+            "getValueLength": {
+                "zh-CN": "自定义计算字符串长度，搭配 `maxLength`、`minLength` 使用，例如把 emoji 按可见长度计算。",
+                "en-US": "Custom string length calculation, used with `maxLength` and `minLength`, such as counting an emoji as one character."
+            },
+            "hideSuffix": {
+                "zh-CN": "清除按钮显示时隐藏后缀，默认两者并列。",
+                "en-US": "Hides the suffix while the clear button is shown; by default the two sit side by side."
+            },
+            "inputStyle": { "zh-CN": "原生 input 元素的内联样式。", "en-US": "Inline style of the native input." },
+            "insetLabel": {
+                "zh-CN": "内嵌标签，未设置 `prefix` 时渲染在前缀位置。",
+                "en-US": "Inset label rendered in the prefix position when `prefix` is not set."
+            },
+            "insetLabelId": {
+                "zh-CN": "`insetLabel` 所在元素的 `id`，供 `aria-labelledby` 引用。",
+                "en-US": "The `id` of the element around `insetLabel`, for `aria-labelledby` to reference."
+            },
+            "mode": {
+                "zh-CN": "输入框模式，可选 `password`，显示密码显隐按钮。",
+                "en-US": "Input mode: `password` shows a button that reveals or hides the text."
+            },
+            "onBlur": {
+                "zh-CN": "输入框失去焦点时的回调。监听在外层 `div` 上，焦点在输入框与组件内按钮之间移动时不触发。",
+                "en-US": "Called when focus leaves the input. It listens on the wrapper `div`, so focus moving between the input and the buttons inside the component does not fire it."
+            },
+            "onChange": {
+                "zh-CN": "输入内容变化时的回调，参数为新值与事件；点击清除按钮清空时也会触发。",
+                "en-US": "Called when the value changes, with the new value and the event; clearing with the clear button also triggers it."
+            },
+            "onClear": { "zh-CN": "点击清除按钮时的回调。", "en-US": "Called when the clear button is clicked." },
+            "onEnterPress": {
+                "zh-CN": "按下回车时的回调（keydown），输入法组合中确认的回车不触发。",
+                "en-US": "Called on Enter keydown; the Enter that commits an IME composition does not fire it."
+            },
+            "onFocus": {
+                "zh-CN": "输入框获得焦点时的回调。监听在外层 `div` 上，组件内部的焦点移动不会再次触发。",
+                "en-US": "Called when the input gets focus. It listens on the wrapper `div`, so focus moving inside the component does not fire it again."
+            },
+            "onInput": { "zh-CN": "原生 `input` 事件的回调。", "en-US": "Called on the native `input` event." },
+            "onKeyDown": { "zh-CN": "keydown 回调，参数为原生事件。", "en-US": "Called on keydown with the native event." },
+            "onKeyUp": { "zh-CN": "keyup 回调，参数为原生事件。", "en-US": "Called on keyup with the native event." },
+            "onlyBorder": {
+                "zh-CN": "外层 wrapper 的边框宽度，单位 px；`style` 中的同名值会覆盖它。",
+                "en-US": "Border width of the wrapper, in px; a `borderWidth` in `style` overrides it."
+            },
+            "placeholder": { "zh-CN": "输入框为空时显示的提示文字。", "en-US": "Hint text shown while the input is empty." },
+            "prefix": {
+                "zh-CN": "前缀标签，可以是文本、Semi 图标或任意 `ReactNode`。",
+                "en-US": "Prefix: text, a Semi icon or any `ReactNode`."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动文档，作用于 `focus()` 方法（未传 `options.preventScroll` 时）。",
+                "en-US": "Whether focusing avoids scrolling the document; applies to the `focus()` method when `options.preventScroll` is not given."
+            },
+            "readonly": {
+                "zh-CN": "是否只读：禁止输入，且不显示清除按钮。原生 `readOnly` 只禁止输入。",
+                "en-US": "Read-only: blocks typing and hides the clear button. The native `readOnly` only blocks typing."
+            },
+            "ref": {
+                "zh-CN": "命令式句柄（`InputHandle`），成员见 **Methods** 表。",
+                "en-US": "Imperative handle (`InputHandle`); its members are in the **Methods** table."
+            },
+            "showClear": {
+                "zh-CN": "输入框有内容且悬停或焦点位于组件内时展示清除按钮。",
+                "en-US": "Shows a clear button when the input has content and the pointer or focus is inside the component."
+            },
+            "showClearIgnoreDisabled": {
+                "zh-CN": "内部属性，供 DatePicker 使用：禁用时仍可清除。",
+                "en-US": "Internal prop used by DatePicker: the clear button stays available while disabled."
+            },
+            "size": {
+                "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`。在 InputGroup 中由组的 `size` 替代。",
+                "en-US": "Input size: `large`, `default` or `small`. Inside an InputGroup, the group's `size` replaces it."
+            },
+            "style": { "zh-CN": "外层 wrapper `div` 的内联样式。", "en-US": "Inline style of the wrapper `div`." },
+            "suffix": {
+                "zh-CN": "后缀标签，可以是文本、Semi 图标或任意 `ReactNode`。",
+                "en-US": "Suffix: text, a Semi icon or any `ReactNode`."
+            },
+            "type": { "zh-CN": "原生 input 的 `type`。", "en-US": "The `type` of the native input." },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 `default`、`error` 或 `warning`；`error` 时输出 `aria-invalid` 为 `true`。",
+                "en-US": "Validation status: `default`, `error` or `warning`; `error` sets `aria-invalid` to `true`."
+            },
+            "value": {
+                "zh-CN": "输入框内容，受控使用，配合 `onChange` 更新。",
+                "en-US": "Content of the input, used as a controlled value together with `onChange`."
+            }
+        },
+        "methods": {
+            "focus": {
+                "zh-CN": "获取焦点。未传 `options.preventScroll` 时，使用 `preventScroll` 属性的值。",
+                "en-US": "Focuses the input. The `preventScroll` prop applies when `options.preventScroll` is not given."
+            },
+            "blur": { "zh-CN": "移出焦点。", "en-US": "Removes focus from the input." },
+            "select": { "zh-CN": "选中输入框中的全部文本。", "en-US": "Selects all the text in the input." },
+            "setSelectionRange": {
+                "zh-CN": "设置选区，参数同原生 `setSelectionRange`。",
+                "en-US": "Sets the selection, with the parameters of the native `setSelectionRange`."
+            },
+            "input": {
+                "zh-CN": "原生 `input` 元素。每次读取返回当前挂载的节点，卸载后为 `null`。",
+                "en-US": "The native `input` element. Each read returns the node mounted now, and `null` after unmount."
+            },
+            "nativeElement": {
+                "zh-CN": "组件根元素，即外层 `div`。卸载后为 `null`。",
+                "en-US": "The root element of the component, the wrapper `div`. `null` after unmount."
+            }
+        }
+    },
+    "text-area": {
+        "source": "packages/semi-ui-react/src/input/textarea.tsx",
+        "props": {
+            "autoFocus": { "zh-CN": "挂载后自动获得焦点。", "en-US": "Focuses the textarea on mount." },
+            "autosize": {
+                "zh-CN": "高度是否随内容自适应。传入 `{ minRows, maxRows }` 可限制行数，`minRows` 缺省时取 `rows`。",
+                "en-US": "Whether the height follows the content. Pass `{ minRows, maxRows }` to limit the rows; `minRows` defaults to `rows`."
+            },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "cols": { "zh-CN": "可见宽度，按平均字符宽度计。", "en-US": "Visible width in average character widths." },
+            "composition": {
+                "zh-CN": "是否开启输入法模式，开启后输入法组合期间不触发 `onChange`，组合结束后触发一次。",
+                "en-US": "Whether to enable IME mode; `onChange` does not fire during a composition and fires once after it ends."
+            },
+            "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when the textarea is uncontrolled." },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the textarea is disabled." },
+            "disabledEnterStartNewLine": {
+                "zh-CN": "内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。",
+                "en-US": "Internal prop used by Chat: Enter does not start a new line, Shift + Enter does."
+            },
+            "getValueLength": {
+                "zh-CN": "自定义计算字符串长度，搭配 `maxLength`、`minLength` 与 `maxCount` 使用。",
+                "en-US": "Custom string length calculation, used with `maxLength`, `minLength` and `maxCount`."
+            },
+            "lineNumberClassName": { "zh-CN": "行号区域的类名。", "en-US": "Class name of the line number area." },
+            "lineNumberStart": { "zh-CN": "行号起始值。", "en-US": "Starting line number." },
+            "lineNumberStyle": { "zh-CN": "行号区域的内联样式。", "en-US": "Inline style of the line number area." },
+            "maxCount": {
+                "zh-CN": "字数上限，设置后显示字数统计；超出时计数器标红，但不截断输入，需要限制输入时搭配 `maxLength`。",
+                "en-US": "Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated; use `maxLength` to limit input."
+            },
+            "onBlur": {
+                "zh-CN": "失去焦点时的回调。监听在外层 `div` 上，焦点在文本框与清除按钮之间移动时不触发。",
+                "en-US": "Called when focus leaves the textarea. It listens on the wrapper `div`, so focus moving between the textarea and the clear button does not fire it."
+            },
+            "onChange": {
+                "zh-CN": "文本内容变化时的回调，参数为新值与事件。",
+                "en-US": "Called when the text changes, with the new value and the event."
+            },
+            "onClear": { "zh-CN": "点击清除按钮时的回调。", "en-US": "Called when the clear button is clicked." },
+            "onEnterPress": {
+                "zh-CN": "按下回车时的回调（keydown），输入法组合中确认的回车不触发。",
+                "en-US": "Called on Enter keydown; the Enter that commits an IME composition does not fire it."
+            },
+            "onFocus": {
+                "zh-CN": "获得焦点时的回调。监听在外层 `div` 上，组件内部的焦点移动不会再次触发。",
+                "en-US": "Called when the textarea gets focus. It listens on the wrapper `div`, so focus moving inside the component does not fire it again."
+            },
+            "onInput": { "zh-CN": "原生 `input` 事件的回调，直接绑定在 `textarea` 元素上。", "en-US": "Called on the native `input` event, bound to the `textarea` element." },
+            "onKeyDown": { "zh-CN": "keydown 回调，参数为原生事件。", "en-US": "Called on keydown with the native event." },
+            "onKeyUp": { "zh-CN": "keyup 回调，参数为原生事件，直接绑定在 `textarea` 元素上。", "en-US": "Called on keyup with the native event, bound to the `textarea` element." },
+            "onResize": {
+                "zh-CN": "尺寸变化回调：`autosize` 导致高度变化时触发；用户拖拽 `resize` 调整尺寸时也会触发，并额外给出 `width`。",
+                "en-US": "Called when the size changes: when `autosize` changes the height, and when the user drags the resize handle, which also provides `width`."
+            },
+            "placeholder": { "zh-CN": "文本框为空时显示的提示文字。", "en-US": "Hint text shown while the textarea is empty." },
+            "readonly": {
+                "zh-CN": "是否只读：禁止输入，且不显示清除按钮。原生 `readOnly` 只禁止输入。",
+                "en-US": "Read-only: blocks typing and hides the clear button. The native `readOnly` only blocks typing."
+            },
+            "ref": {
+                "zh-CN": "命令式句柄（`TextAreaHandle`），成员见 **Methods** 表。",
+                "en-US": "Imperative handle (`TextAreaHandle`); its members are in the **Methods** table."
+            },
+            "resize": {
+                "zh-CN": "是否允许用户拖拽调整尺寸及方向，可选 `none`、`both`、`horizontal`、`vertical`、`block`、`inline`。仅在显式传入时生效，`autosize` 开启时忽略。",
+                "en-US": "Whether and in which direction the user may resize: `none`, `both`, `horizontal`, `vertical`, `block` or `inline`. It takes effect only when given, and is ignored with `autosize`."
+            },
+            "rows": { "zh-CN": "可见行数。", "en-US": "Number of visible text lines." },
+            "showClear": {
+                "zh-CN": "文本框有内容且悬停或焦点位于组件内时展示清除按钮；不可编辑时不显示。",
+                "en-US": "Shows a clear button when the textarea has content and the pointer or focus is inside the component; hidden when it is not editable."
+            },
+            "showCounter": {
+                "zh-CN": "是否显示字数统计；设置 `maxCount` 时总是显示。",
+                "en-US": "Whether to show the character counter; it is always shown when `maxCount` is set."
+            },
+            "showLineNumber": { "zh-CN": "是否展示行号。", "en-US": "Whether to show line numbers." },
+            "textareaStyle": {
+                "zh-CN": "内部 `textarea` 元素的内联样式，如高度、背景色。",
+                "en-US": "Inline style of the inner `textarea` element, such as its height or background color."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 `default`、`error` 或 `warning`；`error` 时输出 `aria-invalid` 为 `true`。",
+                "en-US": "Validation status: `default`, `error` or `warning`; `error` sets `aria-invalid` to `true`."
+            },
+            "value": {
+                "zh-CN": "文本内容，受控使用，配合 `onChange` 更新。",
+                "en-US": "Text content, used as a controlled value together with `onChange`."
+            }
+        },
+        "methods": {
+            "focus": { "zh-CN": "获取焦点。", "en-US": "Focuses the textarea." },
+            "blur": { "zh-CN": "移出焦点。", "en-US": "Removes focus from the textarea." },
+            "select": { "zh-CN": "选中文本框中的全部文本。", "en-US": "Selects all the text in the textarea." },
+            "setSelectionRange": {
+                "zh-CN": "设置选区，参数同原生 `setSelectionRange`。",
+                "en-US": "Sets the selection, with the parameters of the native `setSelectionRange`."
+            },
+            "textarea": {
+                "zh-CN": "原生 `textarea` 元素。每次读取返回当前挂载的节点，卸载后为 `null`；切换 `showLineNumber` 会重新挂载它。",
+                "en-US": "The native `textarea` element. Each read returns the node mounted now, and `null` after unmount; toggling `showLineNumber` remounts it."
+            },
+            "nativeElement": {
+                "zh-CN": "组件根元素，即外层 `div`。卸载后为 `null`。",
+                "en-US": "The root element of the component, the wrapper `div`. `null` after unmount."
+            }
+        }
+    },
+    "input-group": {
+        "source": "packages/semi-ui-react/src/input/input-group.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "组内的控件，如 `Input`、`InputNumber`、`Select` 等。",
+                "en-US": "Controls in the group, such as `Input`, `InputNumber` and `Select`."
+            },
+            "className": { "zh-CN": "`role=\"group\"` 元素的类名。", "en-US": "Class name of the `role=\"group\"` element." },
+            "disabled": {
+                "zh-CN": "是否禁用，下发给组内未自行设置 `disabled` 的控件。",
+                "en-US": "Whether the group is disabled; it applies to the controls that set no `disabled` of their own."
+            },
+            "label": {
+                "zh-CN": "组的标签，对象形式，属性同 `Form.Label`，如 `text`、`required`、`extra`；`text` 可以是 `ReactNode`。",
+                "en-US": "Label of the group, as an object with the `Form.Label` props such as `text`, `required` and `extra`; `text` can be a `ReactNode`."
+            },
+            "labelPosition": { "zh-CN": "标签位置，可选 `top` 或 `left`。", "en-US": "Label position: `top` or `left`." },
+            "onBlur": {
+                "zh-CN": "组内任一控件失去焦点时的回调，组内控件之间移动焦点也会触发。",
+                "en-US": "Called when any control in the group loses focus, including a move to another control in it."
+            },
+            "onFocus": {
+                "zh-CN": "组内任一控件获得焦点时的回调，组内控件之间移动焦点也会触发。",
+                "en-US": "Called when any control in the group gets focus, including a move from another control in it."
+            },
+            "ref": {
+                "zh-CN": "`role=\"group\"` 元素的引用。带 `label` 时仍指向该元素，而不是外层容器。",
+                "en-US": "Reference to the `role=\"group\"` element. With a `label` it still points to that element, not the outer container."
+            },
+            "size": {
+                "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`；下发给组内每个控件，替代控件自身的 `size`。",
+                "en-US": "Input size: `large`, `default` or `small`; it is passed to every control in the group and replaces their own `size`."
+            },
+            "style": { "zh-CN": "`role=\"group\"` 元素的内联样式。", "en-US": "Inline style of the `role=\"group\"` element." }
+        }
+    }
+}

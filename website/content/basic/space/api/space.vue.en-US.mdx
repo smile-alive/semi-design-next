@@ -1,0 +1,26 @@
+**Props**
+
+| Property | Description                                                                                                          | Type                            | Default                                    |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------ |
+| wrap     | Whether to wrap automatically. Only applies to horizontal spacing.                                                   | `boolean`                       | `semiDefault("Space", "wrap", false)`      |
+| align    | Alignment: start, center, end or baseline.                                                                           | `Align`                         | `semiDefault("Space", "align", "center")`  |
+| vertical | Whether the spacing is vertical.                                                                                     | `boolean`                       | `semiDefault("Space", "vertical", false)`  |
+| spacing  | Spacing size: loose, medium, tight or a number of pixels. Pass a [horizontal, vertical] array to set each direction. | `Spacing \| [Spacing, Spacing]` | `semiDefault("Space", "spacing", "tight")` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description            | Scope parameters |
+| ------- | ---------------------- | ---------------- |
+| default | Children to space out. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

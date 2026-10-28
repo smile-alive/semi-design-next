@@ -1,0 +1,259 @@
+---
+import { IconChevronDown } from '@fibrae/semi-icons-react';
+import { translate } from '#/i18n';
+import type { Framework, Locale } from '#/lib/docs';
+
+interface Props {
+    locale: Locale;
+    framework: Framework;
+    groups: { key: string; label: string; items: { href: string; title: string; icon?: string; showNew?: boolean }[] }[];
+    current: string;
+}
+
+const { locale, framework, groups, current } = Astro.props;
+---
+
+<aside class="site-sidebar" id="side-nav" aria-label={translate(locale)('nav_docs')}>
+    {/* Same-locale pages keep one sidebar node (expansion, scroll); a locale change swaps it by name */}
+    <div class="side-nav" transition:persist={`side-nav-${locale}-${framework}`}>
+        {
+            groups.map((group) => (
+                <details class="side-nav-group" open>
+                    <summary class="side-nav-title">
+                        {group.label}
+                        <IconChevronDown className="side-nav-arrow" />
+                    </summary>
+                    <ul class="side-nav-list">
+                        {group.items.map((item) => (
+                            <li>
+                                <a class="side-nav-item" href={item.href} aria-current={item.href === current ? 'page' : undefined}>
+                                    {item.icon && <img src={item.icon} alt="" width="24" height="24" />}
+                                    <span class="side-nav-text">
+                                        {item.title}
+                                        {item.showNew && <span class="side-nav-new">New</span>}
+                                    </span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </details>
+            ))
+        }
+    </div>
+</aside>
+<script is:inline data-astro-rerun>
+    // Centers the current page on first appearance without scrolling the window. Reruns per navigation (the client
+    // router skips identical inline scripts) since a locale change swaps the sidebar; a marker skips centered ones
+    {
+        const nav = document.querySelector('.side-nav');
+        if (nav && !nav.hasAttribute('data-centered')) {
+            nav.setAttribute('data-centered', '');
+            const current = nav.querySelector('[aria-current="page"]');
+            if (current) {
+                nav.scrollTop +=
+                    current.getBoundingClientRect().top - nav.getBoundingClientRect().top - nav.clientHeight / 2;
+            }
+        }
+    }
+</script>
+
+<script>
+    // A collapsed drawer is only off-screen; inert removes its links from the Tab order and screen readers
+    const narrow = matchMedia('(max-width: 820px)');
+    const setNavOpen = (open: boolean) => {
+        document.body.classList.toggle('nav-open', open);
+        document.getElementById('nav-toggle')?.setAttribute('aria-expanded', String(open));
+        document.getElementById('side-nav')?.toggleAttribute('inert', narrow.matches && !open);
+    };
+    narrow.addEventListener('change', () => setNavOpen(false));
+
+    // Runs once while header and sidebar nodes are replaced on every navigation, so events delegate to document
+    document.addEventListener('click', (event) => {
+        const target = event.target as Element;
+        if (target.closest('#nav-toggle')) {
+            setNavOpen(!document.body.classList.contains('nav-open'));
+        }
+        // Clicking the current page does not swap body, so close the mobile drawer here
+        if (target.closest('#side-nav a')) {
+            setNavOpen(false);
+        }
+    });
+    // The client router handles clicks in the bubble phase and skips preventDefault'ed ones, so intercept in capture
+    document.addEventListener(
+        'click',
+        (event) => {
+            if ((event.target as Element).closest('#side-nav a[aria-current="page"]')) event.preventDefault();
+        },
+        true
+    );
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && document.body.classList.contains('nav-open')) {
+            setNavOpen(false);
+            document.getElementById('nav-toggle')?.focus();
+        }
+    });
+    document.addEventListener('astro:page-load', () => setNavOpen(false));
+
+    // Moving the node into the new body shifts its scroll (62px on first navigation): save and restore it, then
+    // scroll the minimum if the current item is hidden
+    let sideNavScroll = 0;
+    let sideNavCurrent: string | null = null;
+    document.addEventListener('astro:before-swap', (event) => {
+        sideNavScroll = document.querySelector('.side-nav')?.scrollTop ?? 0;
+        sideNavCurrent = event.newDocument.querySelector('.side-nav [aria-current="page"]')?.getAttribute('href') ?? null;
+    });
+    document.addEventListener('astro:after-swap', () => {
+        // Unmarked means a sidebar swapped in by a locale change; its own inline script centers it
+        const nav = document.querySelector<HTMLElement>('.side-nav[data-centered]');
+        if (!nav) return;
+        nav.scrollTop = sideNavScroll;
+        let current: HTMLAnchorElement | undefined;
+        for (const link of nav.querySelectorAll('a')) {
+            if (link.getAttribute('href') === sideNavCurrent) {
+                link.setAttribute('aria-current', 'page');
+                current = link;
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        }
+        if (!current) return;
+        const item = current.getBoundingClientRect();
+        const view = nav.getBoundingClientRect();
+        if (item.top < view.top) nav.scrollTop -= view.top - item.top;
+        else if (item.bottom > view.bottom) nav.scrollTop += item.bottom - view.bottom;
+    });
+</script>
+
+<style>
+    .site-sidebar {
+        position: fixed;
+        top: var(--site-header-height);
+        bottom: 0;
+        left: 0;
+        z-index: 90;
+        box-sizing: border-box;
+        width: var(--site-sidebar-width);
+        background: var(--semi-color-bg-0);
+    }
+
+    /* Mirrors Semi's vertical Navigation so the shell loads no React or Semi components; rows are 24px for doc icons */
+    .side-nav {
+        box-sizing: border-box;
+        height: 100%;
+        padding: 12px 0 0 8px;
+        overflow-y: auto;
+        line-height: 24px;
+        background: var(--semi-color-nav-bg);
+        border-right: 1px solid var(--semi-color-border);
+    }
+
+    .side-nav-group {
+        margin-bottom: 8px;
+    }
+
+    .side-nav-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    /* Semi items are 36px tall; the 24px content exceeds the padding room by 4px */
+    :is(.side-nav-title, .side-nav-item) {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        height: 36px;
+        padding: 8px 12px;
+        color: var(--semi-color-text-0);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .side-nav-title {
+        margin-bottom: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .side-nav-title::-webkit-details-marker {
+        display: none;
+    }
+
+    /* The arrow comes from a React component, so it has no scope marker */
+    .side-nav-title :global(.side-nav-arrow) {
+        margin-left: auto;
+        color: var(--semi-color-text-2);
+    }
+
+    .side-nav-group[open] > .side-nav-title :global(.side-nav-arrow) {
+        transform: rotate(180deg);
+    }
+
+    .side-nav-item {
+        margin-bottom: 8px;
+        text-decoration: none;
+    }
+
+    .side-nav-item img {
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    /* No ellipsis: overflow past the sidebar width is clipped */
+    .side-nav-text {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .side-nav-item[aria-current='page'] {
+        background-color: var(--semi-color-primary-light-default);
+    }
+
+    :is(.side-nav-title, .side-nav-item):hover {
+        background-color: var(--semi-color-fill-0);
+    }
+
+    :is(.side-nav-title, .side-nav-item):active {
+        background-color: var(--semi-color-fill-1);
+    }
+
+    :is(.side-nav-title, .side-nav-item):focus-visible {
+        outline-offset: -2px;
+    }
+
+    /* Matches Semi Tag small, purple, light */
+    .side-nav-new {
+        box-sizing: border-box;
+        display: inline-flex;
+        height: 20px;
+        padding: 2px 8px;
+        margin-inline-start: 4px;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--semi-purple-8);
+        background-color: rgb(from var(--semi-purple-5) r g b / 0.15);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    @media (max-width: 820px) {
+        .site-sidebar {
+            transform: translateX(-100%);
+        }
+
+        :global(.nav-open) .site-sidebar {
+            transform: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .side-nav-title :global(.side-nav-arrow) {
+            transition: transform 0.2s ease-in-out;
+        }
+    }
+
+    @media (max-width: 820px) and (prefers-reduced-motion: no-preference) {
+        .site-sidebar {
+            transition: transform 0.2s ease-in-out;
+        }
+    }
+</style>

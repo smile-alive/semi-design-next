@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                                              | Type                                                                          | Default  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | -------- |
+| dataSource    | Data array. When it is not empty the items are rendered from it and the children are ignored. See the item fields below. | `Data[]`                                                                      | -        |
+| mode          | Position of the timeline relative to the content: left, right, center or alternate.                                      | `TimelineMode`                                                                | `"left"` |
+| renderContent | Renders the content of each dataSource item, called with (item, index); defaults to item.content.                        | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |
+| renderDot     | Renders the custom dot of each dataSource item, called with (item, index).                                               | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |
+| renderExtra   | Renders the extra content of each dataSource item, called with (item, index); defaults to item.extra.                    | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |
+| renderTime    | Renders the time of each dataSource item, called with (item, index); defaults to item.time.                              | <ApiType detail={"(item: Data, index: number) => JSX.Element"}>Type</ApiType> | -        |

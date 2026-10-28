@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Controlled index of the current item, counted from 0. The last item is current when omitted. | `number` | - |
+| autoCollapse | Whether items beyond maxItemCount collapse automatically. | `boolean` | `true` |
+| compact | Whether the compact size is used, which sets the size of icons and text. | `boolean` | `true` |
+| maxItemCount | Number of levels above which the breadcrumb collapses. | `number` | `4` |
+| moreType | Built-in rendering of the ellipsis area: default or popover. renderMore wins when it is provided. | `MoreType` | `"default"` |
+| onClick | Called on click. With routes it receives the route of the item; with Breadcrumb.Item children it receives `{ name, href }`, where name is the children of the item. The second parameter is the native MouseEvent. Passing it makes items without href operable with Enter as well. | <ApiType detail={"(route: BreadcrumbItemInfo \u007c RouteProps, event: MouseEvent) => void"}>Type</ApiType> | - |
+| renderIcon | Renders the icon of each item of routes. The parameters are the route object of the item and its index, counting the collapsed items. | <ApiType detail={"(route: RouteProps, index: number) => JSX.Element"}>Type</ApiType> | - |
+| renderItem | Renders the content of each item with routes. The parameter is the route object of the item, `{ name }` for a string route. | <ApiType detail={"(route: RouteProps) => JSX.Element"}>Type</ApiType> | - |
+| renderMore | Custom content of the ellipsis area. The parameter holds the data of the collapsed items: the route objects with routes, or the props of the Breadcrumb.Item children. It wins over moreType when provided. | <ApiType detail={"(restItems: Array\u003cRouteProps \u007c BreadcrumbItemProps>) => JSX.Element"}>Type</ApiType> | - |
+| routes | Route information as an array of route objects or strings. When it is not empty, the items come from it and children are not rendered. | <ApiType detail={"Array\u003cRouteProps \u007c string>"}>Type</ApiType> | `[]` |
+| separator | Custom separator, either text or a JSX element. | `JSX.Element` | `"/"` |
+| showTooltip | Whether a Tooltip shows for an overflowing title, with its options: width is the truncation width, a number in px or 'auto' for no truncation; ellipsisPos truncates at the end or in the middle; opts are passed to the Tooltip without content. false hides the Tooltip. | `boolean \| showToolTipProps` | `{ width: 150, ellipsisPos: 'end' }` |

@@ -1,0 +1,235 @@
+---
+title: 布局
+order: 19
+icon: doc-layout
+brief: 用于快捷划分页面整体布局
+---
+
+import LayoutReactApi from './api/layout.react.zh-CN.mdx';
+import LayoutSiderReactApi from './api/layout-sider.react.zh-CN.mdx';
+import LayoutVueApi from './api/layout.vue.zh-CN.mdx';
+import LayoutHeaderVueApi from './api/layout-header.vue.zh-CN.mdx';
+import LayoutFooterVueApi from './api/layout-footer.vue.zh-CN.mdx';
+import LayoutContentVueApi from './api/layout-content.vue.zh-CN.mdx';
+import LayoutSiderVueApi from './api/layout-sider.vue.zh-CN.mdx';
+import LayoutSolidApi from './api/layout.solid.zh-CN.mdx';
+import LayoutHeaderSolidApi from './api/layout-header.solid.zh-CN.mdx';
+import LayoutFooterSolidApi from './api/layout-footer.solid.zh-CN.mdx';
+import LayoutContentSolidApi from './api/layout-content.solid.zh-CN.mdx';
+import LayoutSiderSolidApi from './api/layout-sider.solid.zh-CN.mdx';
+
+## 概述
+
+- `Layout`：布局容器，其下可嵌套 `Header` `Sider` `Content` `Footer` 或 `Layout` 本身，可以放在任何父容器中。
+- `Header`：顶部布局，其下可嵌套任何元素，只能放在 `Layout` 中。
+- `Sider`：侧边栏，其下可嵌套任何元素，只能放在 `Layout` 中。
+- `Content`：内容部分，其下可嵌套任何元素，只能放在 `Layout` 中。
+- `Footer`：底部布局，其下可嵌套任何元素，只能放在 `Layout` 中。
+
+<Notice title="注意事项">
+    1、布局组件采用 Flex 布局实现，无法在非现代浏览器中工作 <br />
+    2、Layout 组件仅会帮你实现布局，但不会附带背景色、文本色、宽高度等样式。你可以根据自己实际需求传入 style 或给定特定类名另行编写 css 实现
+</Notice>
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { Layout } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { Layout } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+子组件通过 `Layout.Header`、`Layout.Sider`、`Layout.Content`、`Layout.Footer` 使用，也可以按名导入 `LayoutHeader`、`LayoutSider`、`LayoutContent`、`LayoutFooter`。
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { Layout } from '@fibrae/semi-ui-solid';
+```
+
+子组件通过 `Layout.Header`、`Layout.Sider`、`Layout.Content`、`Layout.Footer` 使用。
+
+</Framework>
+
+### 三行布局
+
+<Demo id="three-rows" />
+
+### 左侧边栏布局
+
+<Demo id="left-sider" />
+
+### 右侧边栏布局
+
+<Demo id="right-sider" />
+
+### 侧边栏布局
+
+<Demo id="sider" />
+
+### 响应式布局
+
+侧边栏预设了六个响应尺寸：`xs`、`sm`、`md`、`lg`、`xl`、`xxl`。可以通过设置 `breakpoint` 属性设置断点。
+
+<Framework only="react">
+
+通过 `onBreakpoint` 调用回调函数。
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `@breakpoint` 监听断点命中状态的变化。
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `onBreakpoint` 调用回调函数。
+
+</Framework>
+
+<Demo id="responsive" />
+
+## 布局示例
+
+### 顶部导航布局
+
+<Demo id="top-nav" />
+
+### 顶部导航-侧边布局
+
+<Demo id="top-nav-sider" />
+
+### 侧边导航
+
+<Demo id="sider-nav" />
+
+## API 参考
+
+### Layout
+
+<Framework only="vue">
+
+<LayoutVueApi />
+
+`class`、`style` 与原生属性（含 `role`、`aria-*`）经 attrs 落在根元素上。
+
+### Layout.Header、Layout.Footer、Layout.Content
+
+三者的 API 相同，默认标签依次为 `header`、`footer`、`main`。
+
+#### Layout.Header
+
+<LayoutHeaderVueApi />
+
+#### Layout.Footer
+
+<LayoutFooterVueApi />
+
+#### Layout.Content
+
+<LayoutContentVueApi />
+
+`class`、`style` 与原生属性（含 `role`、`aria-*`）经 attrs 落在各自的根元素上。
+
+### Layout.Sider
+
+<LayoutSiderVueApi />
+
+`class`、`style` 与原生属性（含 `role`、`aria-*`）经 attrs 落在根元素 `aside` 上。
+
+</Framework>
+
+<Framework only="solid">
+
+<LayoutSolidApi />
+
+`class`、`style`、`ref` 与原生属性（含 `role`、`aria-*`）落在根元素上。
+
+### Layout.Header、Layout.Footer、Layout.Content
+
+三者的 API 相同，默认标签依次为 `header`、`footer`、`main`。
+
+#### Layout.Header
+
+<LayoutHeaderSolidApi />
+
+#### Layout.Footer
+
+<LayoutFooterSolidApi />
+
+#### Layout.Content
+
+<LayoutContentSolidApi />
+
+`class`、`style`、`ref` 与原生属性（含 `role`、`aria-*`）落在各自的根元素上。
+
+### Layout.Sider
+
+<LayoutSiderSolidApi />
+
+`class`、`style`、`ref` 与原生属性和事件（含 `role`、`aria-*`、`onClick`）落在根元素 `aside` 上。
+
+</Framework>
+
+<Framework only="react">
+
+<LayoutReactApi />
+
+未列出的原生属性（含 `role`、`aria-*`）落在根元素上。
+
+> `Layout.Header` `Layout.Footer` `Layout.Content` API 与 `Layout` 相同，但没有 `hasSider`，另有内部使用的 `type`
+
+| 属性      | 说明             | 类型                          | 默认值                                                             |
+| --------- | ---------------- | ----------------------------- | ------------------------------------------------------------------ |
+| className | 根元素的类名。   | `string`                      | -                                                                  |
+| prefixCls | 类名前缀。       | `string`                      | `semi-layout`                                                      |
+| style     | 根元素的样式。   | `CSSProperties`               | -                                                                  |
+| tagName   | 根元素的标签名。 | `keyof HTMLElementTagNameMap` | `header`、`footer`、`main` 分别为 Header、Footer、Content 的默认值 |
+
+`ref` 与未列出的原生属性（含 `role`、`aria-*`）落在各自的根元素上。
+
+### Layout.Sider
+
+<LayoutSiderReactApi />
+
+未列出的原生属性（含 `aria-*`、`onClick`）落在根元素 `aside` 上。
+
+</Framework>
+
+### responsive map
+
+```text
+{
+    xs: '(max-width: 575px)',
+    sm: '(min-width: 576px)',
+    md: '(min-width: 768px)',
+    lg: '(min-width: 992px)',
+    xl: '(min-width: 1200px)',
+    xxl: '(min-width: 1600px)',
+};
+```
+
+## Accessibility
+
+### ARIA
+
+- Sider 渲染 `aside`，可传入 `aria-label` 描述该 Sider 的作用。
+- Header、Footer 默认渲染 `header`、`footer`，位于 Layout 的 `section` 内时不会成为 banner、contentinfo 地标；作为整页的页头、页脚时传入 `role="banner"`、`role="contentinfo"`。
+- Content 默认渲染 `main`，一个页面只应有一个 `main`；嵌套使用时可通过 `tagName` 换成其他标签。
+- Header、Content、Footer 可传入 `role`、`aria-label` 描述对应元素的作用。

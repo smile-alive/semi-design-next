@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import ApiType from '#/components/ApiType.astro';
+import Demo from '#/components/Demo.astro';
+import DesignToken from '#/components/DesignToken.astro';
+import DocLink from '#/components/DocLink.astro';
+import Notice from '#/components/Notice.astro';
+import DocLayout from '#/layouts/DocLayout.astro';
+import { docFrameworks, getDocs, parseDocId } from '#/lib/docs';
+
+export async function getStaticPaths() {
+    const docs = await getDocs();
+    return docs.filter((doc) => docFrameworks(doc).includes('react')).map((doc) => {
+            const { category, page, locale } = parseDocId(doc.id);
+            return { params: { locale, framework: 'react', category, page }, props: { doc } };
+    });
+}
+
+const { doc } = Astro.props;
+const { Content, headings } = await render(doc);
+---
+
+<DocLayout doc={doc} headings={headings} framework="react">
+    <Content framework="react" components={{ a: DocLink, ApiType, Demo, DesignToken, Notice }} />
+</DocLayout>

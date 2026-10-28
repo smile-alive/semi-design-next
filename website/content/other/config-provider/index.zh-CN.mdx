@@ -1,0 +1,445 @@
+---
+title: 全局配置
+order: 95
+icon: doc-configprovider
+brief: 为组件提供统一的全局化配置。
+---
+
+import ConfigProviderReactApi from './api/config-provider.react.zh-CN.mdx';
+import ConfigProviderVueApi from './api/config-provider.vue.zh-CN.mdx';
+import ConfigConsumerVueApi from './api/config-consumer.vue.zh-CN.mdx';
+import ConfigProviderSolidApi from './api/config-provider.solid.zh-CN.mdx';
+import ConfigConsumerSolidApi from './api/config-consumer.solid.zh-CN.mdx';
+
+## 使用场景
+
+覆盖配置分为两种场景
+
+- 需要覆盖多个组件公有 Props 配置（例如 `timezone`、`rtl`），使用 `ConfigProvider`
+- 当 `ConfigProvider` 暴露参数未能满足，希望修改全局修改某个组件的 某类 Props（例如期望将所有`Button`的 `theme` 都配置为 `solid` 或所有 `Popover`的 `position`），使用 `semiGlobal`
+
+## ConfigProvider
+
+<Framework only="react">
+
+ConfigProvider 借助 React Context 机制实现，因此它能影响 React 节点树中的子组件
+
+</Framework>
+
+<Framework only="vue">
+
+ConfigProvider 借助 provide / inject 实现，因此它能影响组件树中的子组件。ConfigProvider、ConfigConsumer 丢弃未声明的属性，`class`、`style` 等不会落到 DOM 上。
+
+</Framework>
+
+<Framework only="solid">
+
+ConfigProvider 借助 context 机制实现，因此它能影响 JSX 树中的子组件。ConfigProvider 与 ConfigConsumer 不渲染自己的元素（方向切换时才会多包一层带 `dir` 属性的 `div`），未声明的属性（`class`、`style`、`ref` 和原生属性）会被丢弃，不会落到 DOM 上。
+
+</Framework>
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { ConfigProvider } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { ConfigProvider, ConfigConsumer, useConfig } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { ConfigProvider, ConfigConsumer, useConfig } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+通过传入 timeZone 参数，用户可以为时间类组件配置时区：
+
+<Demo id="time-zone" />
+
+### 手动获取值
+
+通常情况下，组件内部会自动获取 ConfigProvider 的值自动消费，无需关心。但是一些特殊场景，你可能需要手动获取值来进行其他操作。
+
+<Framework only="react">
+
+使用 ConfigConsumer 获取 ConfigProvider 的值
+
+</Framework>
+
+<Framework only="vue">
+
+使用 ConfigConsumer 的默认作用域插槽获取 ConfigProvider 的值；在子组件的 `<script setup>` 中也可以调用 `useConfig()`，它返回 `ComputedRef<ContextValue>`，没有 ConfigProvider 时为空对象。
+
+</Framework>
+
+<Framework only="solid">
+
+使用 ConfigConsumer 的 children 函数获取 ConfigProvider 的值。函数只执行一次，读取字段时写作 `config.xxx`，不要解构。在子组件中也可以调用 `useConfig()`，它返回 `Accessor<ContextValue>`，调用访问器（`config()`）才能读到当前值，没有 ConfigProvider 时为空对象。
+
+</Framework>
+
+<Demo id="consumer" />
+
+### 响应式断点监听
+
+ConfigProvider 支持配置响应式断点，并在断点变化时进行订阅回调。
+
+<Notice title={"注意事项"}>
+
+- 由于性能考虑，`responsiveObserve` 默认值为 `false`，不开启时不会注册任何 `matchMedia` 监听。
+- `onBreakpoint` / `screens` 不属于 ConfigProvider 的 props，需要通过 `ConfigConsumer` 获取（Vue 也可以用 `useConfig()`）。
+- 订阅时回调会**立即执行一次**，传入的就是当前各断点的命中情况，因此你不需要在初始挂载时再单独调用一次 `window.matchMedia`。
+- `responsiveMap` 按内容比较：内联写的对象内容不变时，重新渲染不会重新注册监听。
+
+</Notice>
+
+#### 开启监听与自定义断点
+
+- 通过 `responsiveObserve` 开启断点监听（建议只在确实需要订阅的场景开启）
+- 通过 `responsiveMap` 自定义断点（未传入时使用默认断点）
+
+<Framework only="react">
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import { ConfigProvider, ConfigConsumer, Typography } from '@fibrae/semi-ui-react';
+
+function BreakpointSubscriber({ onBreakpoint, screens }) {
+    const [subscribedScreens, setSubscribedScreens] = useState(screens);
+
+    useEffect(() => {
+        if (!onBreakpoint) {
+            return;
+        }
+        const unsubscribe = onBreakpoint((next) => {
+            setSubscribedScreens(next);
+        });
+        return unsubscribe;
+    }, [onBreakpoint]);
+
+    return <Typography.Text>{JSON.stringify(subscribedScreens || screens)}</Typography.Text>;
+}
+
+function Demo() {
+    return (
+        <ConfigProvider
+            responsiveObserve
+            responsiveMap={{
+                xs: '(max-width: 575px)',
+                sm: '(min-width: 576px)',
+                md: '(min-width: 768px)',
+                lg: '(min-width: 992px)',
+                xl: '(min-width: 1200px)',
+                xxl: '(min-width: 1600px)',
+            }}
+        >
+            <ConfigConsumer>{({ onBreakpoint, screens }) => <BreakpointSubscriber onBreakpoint={onBreakpoint} screens={screens} />}</ConfigConsumer>
+        </ConfigProvider>
+    );
+}
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<!-- breakpoint-subscriber.vue -->
+<script setup lang="ts">
+    import { onBeforeUnmount, onMounted, ref } from 'vue';
+    import { TypographyText, useConfig } from '@fibrae/semi-ui-vue';
+
+    const config = useConfig();
+    const screens = ref(config.value.screens);
+    let unsubscribe: (() => void) | undefined;
+
+    onMounted(() => {
+        unsubscribe = config.value.onBreakpoint?.((next) => {
+            screens.value = next;
+        });
+    });
+    onBeforeUnmount(() => unsubscribe?.());
+</script>
+
+<template>
+    <TypographyText>{{ JSON.stringify(screens) }}</TypographyText>
+</template>
+```
+
+```vue
+<script setup lang="ts">
+    import { ConfigProvider } from '@fibrae/semi-ui-vue';
+    import BreakpointSubscriber from './breakpoint-subscriber.vue';
+
+    const responsiveMap = {
+        xs: '(max-width: 575px)',
+        sm: '(min-width: 576px)',
+        md: '(min-width: 768px)',
+        lg: '(min-width: 992px)',
+        xl: '(min-width: 1200px)',
+        xxl: '(min-width: 1600px)',
+    };
+</script>
+
+<template>
+    <ConfigProvider responsiveObserve :responsiveMap="responsiveMap">
+        <BreakpointSubscriber />
+    </ConfigProvider>
+</template>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { createSignal, onCleanup, onMount } from 'solid-js';
+import { ConfigProvider, ConfigConsumer, Typography } from '@fibrae/semi-ui-solid';
+
+function BreakpointSubscriber(props) {
+    const [screens, setScreens] = createSignal(props.screens);
+
+    onMount(() => {
+        const unsubscribe = props.onBreakpoint?.((next) => setScreens(next));
+        onCleanup(() => unsubscribe?.());
+    });
+
+    return <Typography.Text>{JSON.stringify(screens())}</Typography.Text>;
+}
+
+function Demo() {
+    return (
+        <ConfigProvider
+            responsiveObserve
+            responsiveMap={{
+                xs: '(max-width: 575px)',
+                sm: '(min-width: 576px)',
+                md: '(min-width: 768px)',
+                lg: '(min-width: 992px)',
+                xl: '(min-width: 1200px)',
+                xxl: '(min-width: 1600px)',
+            }}
+        >
+            <ConfigConsumer>{(config) => <BreakpointSubscriber onBreakpoint={config.onBreakpoint} screens={config.screens} />}</ConfigConsumer>
+        </ConfigProvider>
+    );
+}
+```
+
+</Framework>
+
+#### 订阅 API
+
+`onBreakpoint` 支持两种签名，均会返回取消订阅函数：
+
+- `onBreakpoint((screens) => void)`：回调拿到完整的 screens 映射
+- `onBreakpoint(['md', 'lg'], (screen, match) => void)`：只监听指定断点，回调拿到单个断点变化
+
+### RTL/LTR
+
+全局配置 `direction` 可以改变组件的文本方向。
+
+`rtl` 表示从右到左 (类似希伯来语或阿拉伯语)， `ltr` 表示从左到右 (类似中文、英语等大部分语言)。显式传入的 `direction` 与外层不同时（含最外层），ConfigProvider 会在内容外包一层带 `dir` 属性的 `div`。组件的 RTL 样式用 `:dir(rtl)` 匹配，跟随最近的祖先 `dir` 属性；弹层根元素按 ConfigProvider 的 `direction` 输出 `dir`。页面自己在 `<html>` 等元素上设置 `dir="rtl"` 时，页面内的组件样式按 RTL 显示，但键盘方向、弹层位置等逻辑只读 ConfigProvider 的 `direction`，ConfigProvider 内的弹层与 Table 也按它的 `direction`（默认 `ltr`）显示，因此仍需同时设置 `direction="rtl"`。
+
+特殊组件：
+
+- Modal，Notification，Toast 的命令式调用需要通过 prop 传 `direction`。
+- 如果你想对有方向性的 Icon 做 RTL 国际化，需要自己单独进行处理。我们认为对 Icon 进行 RTL 会让它变得难以理解和维护。其他组件内的 icon Semi 已经做了 RTL 适配。
+- Table 的树形数据暂不支持 RTL（[Chrome、Safari 浏览器表现与 Firefox 表现不同](https://codesandbox.io/s/table-rtl-treedata-uy7gzl?file=/src/App.jsx)），固定列支持 RTL。
+
+<Framework only="vue">
+
+Vue 的命令式调用读不到 ConfigProvider（它是组件级 provide），需要跟随方向时在选项里传 `direction`，或改用 `Modal.useModal()`、`Toast.useToast()`、`Notification.useNotification()`，它们返回的 Holder 组件渲染在哪里，就继承哪里的 ConfigProvider。
+
+</Framework>
+
+<Framework only="solid">
+
+命令式调用（`Modal.success()`、`Toast.info()` 等）渲染在 ConfigProvider 之外，读不到它的方向，需要跟随方向时在选项里传 `direction`，或改用 `Modal.useModal()`、`Toast.useToast()`、`Notification.useNotification()`，它们返回的 Holder 组件渲染在哪里，就继承哪里的 ConfigProvider。
+
+</Framework>
+
+<Demo id="rtl" />
+
+### 嵌套使用
+
+`ConfigProvider` 可以嵌套。内层只覆盖显式传入的属性，没传的属性（`direction`、`locale`、`timeZone`、`getPopupContainer`、`responsiveObserve`、`responsiveMap`）继承外层。属性值为 `undefined` 视为没传；`locale={null}` 是显式传入，会清除外层的 `locale`，交给其内部的 `LocaleProvider` 或默认语言。
+
+`direction` 为 `rtl` 的 ConfigProvider 内可以用 `direction="ltr"` 把子树切回从左到右，内层组件的逻辑和样式都按 `ltr` 处理。
+
+<Demo id="nested" />
+
+## API 参考
+
+### ConfigProvider
+
+<Framework only="react">
+
+<ConfigProviderReactApi />
+
+`ConfigProvider.defaultResponsiveMap` 与具名导出 `defaultResponsiveMap` 是默认断点配置。`locale` 的用法同 `LocaleProvider` 中 `locale` 参数的[用法](/zh-CN/react/other/locale#使用)。ConfigProvider 不渲染自己的元素（方向切换时才会多包一层带 `dir` 属性的 `div`），未声明的属性会被丢弃，不会落到 DOM 上。
+
+</Framework>
+
+<Framework only="vue">
+
+<ConfigProviderVueApi />
+
+`ConfigProvider.defaultResponsiveMap` 与具名导出 `defaultResponsiveMap` 是默认断点配置。`locale` 的用法同 `LocaleProvider` 中 `locale` 参数的[用法](/zh-CN/react/other/locale#使用)。
+
+### ConfigConsumer
+
+<ConfigConsumerVueApi />
+
+### useConfig
+
+`useConfig(): ComputedRef<ContextValue>` 返回当前生效的配置，没有 ConfigProvider 时为空对象。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`getPopupContainer`、`responsiveObserve`、`responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。
+
+</Framework>
+
+<Framework only="solid">
+
+<ConfigProviderSolidApi />
+
+`ConfigProvider.defaultResponsiveMap` 与具名导出 `defaultResponsiveMap` 是默认断点配置。`locale` 的用法同 `LocaleProvider` 中 `locale` 参数的[用法](/zh-CN/react/other/locale#使用)。ConfigProvider 不接收 `class`、`style`、`ref` 与原生属性，它们不会落到 DOM 上。
+
+### ConfigConsumer
+
+<ConfigConsumerSolidApi />
+
+ConfigConsumer 同样不渲染元素，未声明的属性会被丢弃。
+
+### useConfig
+
+`useConfig(): Accessor<ContextValue>` 返回当前生效配置的访问器，调用它才能读到值，没有 ConfigProvider 时为空对象。`ContextValue` 包含上表的 `direction`、`timeZone`、`locale`、`getPopupContainer`、`responsiveObserve` 和 `responsiveMap`，以及只读的 `screens`（各断点的命中情况）和 `onBreakpoint`（订阅函数，见上文「订阅 API」）。
+
+</Framework>
+
+### 时区标识
+
+- 数字，例如 `1`、`-9.5`，代表距离 UTC 的时间偏移，单位为小时，可以为负数或小数；
+- 字符串，例如`GMT-09:30`、`GMT+08:00`这样的以 `"GMT"` 开头的表征偏移字符串，也可以为 [IANA](https://time.is/time_zones) 标识，如`Asia/Shanghai`、`America/Los_Angeles`等。
+
+数字和 `GMT-09:30` 这类写法表示全年固定的偏移，不随夏令时变化。例如 `-3.5` 和 `GMT-03:30` 全年都是 UTC-03:30，时间格式中的时区名（`z`）显示为 `GMT-03:30`。
+
+需要跟随某个地区的夏令时，请使用 IANA 标识。这里可以查看 [IANA 标识列表](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)，以及时区是否有夏令时。
+
+### FAQ
+
+- ConfigProvider中没有提供全局自定义prefix classname的功能，有类似需求如何实现（例如SDK中使用了Semi，期望打包的dom样式不带.semi-xx前缀，以免被宿主的全局 CSS 影响）？
+    - 由于 prefixCls 需要同时被组件层的 js/css 消费，Semi 将此开关放在了webpack plugin的配置项中，而不是作为ConfigProvider的配置项。
+    - 如果你使用webpack，请在`SemiWebpackPlugin`的参数中进行配置
+
+```diff
+# webpack配置示例
+const SemiWebpackPlugin = require('@fibrae/semi-webpack-plugin').default;
+module.exports = {
++    plugins: [new SemiWebpackPlugin({ prefixCls: 'imes' })],
+}
+```
+
+## semiGlobal
+
+除了 ConfigProvider外，你还可以通过 semiGlobal 配置覆盖全局组件的默认 Props。
+
+<Framework only="react">
+
+在 `semiGlobal.config.overrideDefaultProps` 可配置组件默认 Props。配置在组件每次渲染时读取，已渲染的组件在下一次渲染才生效，因此建议放在站点入口处。
+
+</Framework>
+
+<Framework only="vue">
+
+在 `semiGlobal.config.overrideDefaultProps` 可配置组件默认 Props。非函数类型的默认值在实例首次缺省该属性时读取并缓存；函数类型的默认值（如 `getPopupContainer`）由各组件在需要时读取，时机因组件而异。全局配置不是响应式的，修改它不会让已创建的实例更新。因此建议在创建应用之前设置，放在站点入口处。需要为单个 app 使用独立的配置时，用 `app.provide(semiGlobalKey, { config: { overrideDefaultProps } })`，`semiGlobalKey` 同样从 `@fibrae/semi-ui-vue` 导入。
+
+</Framework>
+
+<Framework only="solid">
+
+在 `semiGlobal.config.overrideDefaultProps` 可配置组件默认 Props。组件在创建时读取一次全局配置，之后修改它不会更新已创建的组件，因此建议在挂载应用之前设置，放在站点入口处。默认值里的 DOM 节点会被丢弃并告警（一个节点只能挂在一处，各实例会互相搬走它），字符串与图标组件照常生效。
+
+</Framework>
+
+`id`、`insetLabelId`、`wrapperId`、`addonId`、`extraId` 这类每个实例唯一的属性不能经全局默认值设置：类型里没有这些键，运行时也忽略。
+
+<Notice title={'注意事项'}>semiGlobal 是单例模式，会影响整个站点，如果你只想覆盖某些地方的某些组件 Props ，建议不要使用 semiGlobal，而是将对应需要覆盖的组件封装一层并传入修改后的默认 props。</Notice>
+
+比如下方配置就是将所有的 Button 默认设置为 warning，Select 默认开启 filter 等
+
+<Framework only="react">
+
+```js
+import { semiGlobal } from '@fibrae/semi-ui-react';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```ts
+import { semiGlobal } from '@fibrae/semi-ui-vue';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```ts
+import { semiGlobal } from '@fibrae/semi-ui-solid';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>

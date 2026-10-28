@@ -1,0 +1,245 @@
+---
+title: 自动完成
+order: 35
+icon: doc-autocomplete
+brief: 输入框自动填充。
+---
+
+import AutoCompleteReactApi from './api/auto-complete.react.zh-CN.mdx';
+import AutoCompleteVueApi from './api/auto-complete.vue.zh-CN.mdx';
+import AutoCompleteSolidApi from './api/auto-complete.solid.zh-CN.mdx';
+
+## 使用场景
+
+用于对输入框提供输入建议，进行自动补全的操作
+
+与可搜索的 Select 组件的区别：
+
+- AutoComplete 本质上是一个增强型的提供了输入建议的 Input 组件，而 Select 是一个选择器
+- 点击展开时，Select 会将输入框的值全部清空，而 AutoComplete 会保留上次选中的值
+
+<Framework only="react">
+
+- Select 的已选项渲染（renderSelectedItem）可定制化程度更高，可以为任意类型的 ReactNode，而 AutoComplete 只允许为字符串
+
+</Framework>
+
+<Framework only="vue">
+
+- Select 的已选项渲染（`#selectedItem` 插槽）可以是任意节点，而 AutoComplete 的 `renderSelectedItem` 只允许返回字符串
+
+</Framework>
+
+<Framework only="solid">
+
+- Select 的已选项渲染（`renderSelectedItem`）可以返回任意 JSX 元素，而 AutoComplete 的 `renderSelectedItem` 只允许返回字符串
+
+</Framework>
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { AutoComplete } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { AutoComplete } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { AutoComplete } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 基本用法
+
+<Framework only="react">
+
+通过 onSearch 监听用户输入，将输入建议通过更新 props.data 传入。通过 onChange 保持受控，当输入框变化/选中输入项时会触发 onChange
+
+</Framework>
+
+<Framework only="vue">
+
+通过 `@search` 监听用户输入，将输入建议通过更新 `data` 传入。用 `v-model` 保持受控，当输入框变化/选中输入项时 `v-model` 会更新
+
+</Framework>
+
+<Framework only="solid">
+
+通过 `onSearch` 监听用户输入，将输入建议通过更新 `data` 传入。通过 `value` 与 `onChange` 保持受控，当输入框变化或选中输入项时会触发 `onChange`
+
+</Framework>
+
+<Demo id="basic" />
+
+### 自定义候选项渲染
+
+<Framework only="react">
+
+需要自定义候选项渲染时，data 可以传入一个对象数组（每个 Object 必须含有 label、value 两个 key，value 为候选项选中的值，label 为候选项展示的内容）  
+通过 renderItem 可以自定义候选项的渲染
+
+</Framework>
+
+<Framework only="vue">
+
+需要自定义候选项渲染时，data 可以传入一个对象数组（每个 Object 含有 label、value 两个 key，value 为候选项选中的值，label 为候选项展示的文本，缺省时显示 value）  
+通过 `#item="{ item, index }"` 插槽可以自定义候选项的内容：`item` 是传入的数据项本身，数据项里只放数据，节点写在插槽里
+
+</Framework>
+
+<Framework only="solid">
+
+需要自定义候选项渲染时，data 可以传入一个对象数组（每个 Object 必须含有 label、value 两个 key，value 为候选项选中的值，label 为候选项展示的文本）。通过 `renderItem` 返回 JSX 可以自定义候选项的渲染
+
+</Framework>
+
+<Demo id="custom-render" />
+
+### 远程搜索
+
+<Framework only="react">
+
+从 onSearch 中获取用户输入值，动态更新 data 值
+
+</Framework>
+
+<Framework only="vue">
+
+从 `@search` 中获取用户输入值，动态更新 `data` 值
+
+</Framework>
+
+<Framework only="solid">
+
+从 `onSearch` 中获取用户输入值，动态更新 `data` 值
+
+</Framework>
+
+<Demo id="remote-search" />
+
+### 尺寸
+
+通过设置 size 可设置输入框尺寸，可选`small`，`default`(默认)，`large`
+
+<Demo id="size" />
+
+### 下拉菜单的位置
+
+通过设置 position 可设置下拉菜单位置，可选值参考 Tooltip position
+
+<Demo id="position" />
+
+### 禁用
+
+<Demo id="disabled" />
+
+### 校验状态
+
+可设置不同校验状态，展示不同样式
+
+<Demo id="validate-status" />
+
+### 自定义空内容
+
+可设置自定义展示空内容
+
+<Demo id="empty-content" />
+
+## API 参考
+
+<Framework only="react">
+
+<AutoCompleteReactApi />
+
+`className`、`style`、`data-*` 与其他原生属性和事件（例如 `onClick`）落在根 div 上，根 div 的 `tabIndex` 固定为 `-1`。`id`、`name`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-label`、`aria-labelledby` 与 `aria-required` 落在输入框（`role="combobox"`）上，因此 `<label for>` 能关联到输入框。使用 `triggerRender` 时没有输入框：`id` 落在根 div 上，`name` 不落到任何元素，上面列出的 `aria-*` 通过参数交给自定义触发器的可聚焦元素，其他 `aria-*` 不作为直接参数传到触发器上。
+
+</Framework>
+
+<Framework only="vue">
+
+<AutoCompleteVueApi />
+
+`id`、`name` 以及 `aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-label`、`aria-labelledby`、`aria-required` 落在输入框（`role="combobox"`）上，`<label for>` 因此能关联到输入框；`class`、`style`、`data-*` 和其他未声明的属性与监听器（例如 `@click`）落在根 div 上，根 div 的 `tabindex` 固定为 `-1`。使用 `#trigger` 时没有输入框，`id` 落在根 div 上，`name` 不落到任何元素，`aria-*` 通过插槽参数 `controlAttrs` 交给自定义触发器的可聚焦元素。
+
+`data` 的对象项：
+
+| 字段     | 说明                                                        | 类型                        |
+| -------- | ----------------------------------------------------------- | --------------------------- |
+| value    | 选中后的值                                                  | `string \| number`          |
+| label    | 候选项展示的文本，缺省时显示 value；节点内容用 `#item` 插槽 | `string \| number`          |
+| disabled | 是否禁用该候选项                                            | `boolean`                   |
+| class    | 候选行的类名                                                | `string \| object \| array` |
+| style    | 候选行的样式                                                | `StyleValue`                |
+
+其他字段原样保留，出现在 `#item` 插槽的 `item` 和 `@select` 的载荷里（设置 `selectWithObject` 时）。以 `data-` 开头的字段落在候选行上。字符串和数字项在 `renderSelectedItem` 中以 `{ value, label }` 形式收到。
+
+AutoComplete 通过模板 ref 暴露下列成员，类型为 `AutoCompleteHandle`：
+
+| 成员          | 说明                                                      | 类型                     |
+| ------------- | --------------------------------------------------------- | ------------------------ |
+| nativeElement | 只读，包裹输入框或自定义触发器的根 div，未挂载时为 `null` | `HTMLDivElement \| null` |
+
+</Framework>
+
+<Framework only="solid">
+
+<AutoCompleteSolidApi />
+
+`class`、`style`、`ref`、`data-*` 与其他未声明的属性和事件（例如 `onClick`）落在根 div 上，根 div 的 `tabindex` 固定为 `-1`。`id`、`name` 与 `aria-*` 落在输入框（`role="combobox"`）上，因此 `<label for>` 能关联到输入框。使用 `triggerRender` 时没有输入框：`id` 落在根 div 上，`name` 不落到任何元素，`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 与 `aria-required` 通过参数交给自定义触发器的可聚焦元素，其他 `aria-*` 不会传到触发器上。
+
+`data` 的对象项：
+
+| 字段     | 说明                                               | 类型                          |
+| -------- | -------------------------------------------------- | ----------------------------- |
+| value    | 选中后的值                                         | `string \| number`            |
+| label    | 候选行的文本，须提供；标记内容经 `renderItem` 渲染 | `string \| number`            |
+| disabled | 是否禁用该候选项                                   | `boolean`                     |
+| class    | 候选行的类名                                       | `string`                      |
+| style    | 候选行的样式                                       | `JSX.CSSProperties \| string` |
+
+其他字段原样保留，出现在 `renderItem` 的参数里；设置 `onSelectWithObject` 时，`onSelect` 收到的数据项对象同样保留这些字段。以 `data-` 开头的字段落在候选行上。字符串和数字项在 `renderSelectedItem` 中以 `{ value, label }` 形式收到。
+
+</Framework>
+
+## Accessibility
+
+### 键盘和焦点
+
+- AutoComplete 的 input 框带有 `role="combobox"`，并通过 `aria-expanded`、`aria-controls`、`aria-autocomplete="list"` 和 `aria-activedescendant` 与选项面板关联
+- combobox 的名称按优先级取：`aria-labelledby`、`aria-label`、实际渲染出来的 insetLabel（combobox 的 `aria-labelledby` 指向它，未传 `insetLabelId` 时组件生成 id；有 prefix 时 insetLabel 不渲染，也不作名称）。listbox 使用同一个名称来源。AutoComplete 没有默认名称：以上都没有时，请用 `aria-label` 或 `aria-labelledby` 为输入框命名；`<label for>` 只命名输入框，listbox 仍没有名称
+- AutoComplete 的 input 框可被聚焦，聚焦后，键盘用户可以通过 `上箭头` 或 `下箭头` 打开选项面板；data 为空时面板里显示 emptyContent（没有提供时为空），加载中显示加载动画
+- AutoComplete 也支持通过 `Enter` 键打开和收起面板
+- 若用户将 defaultActiveFirstOption 属性设置为 true 时，选项面板打开后默认高亮第一个选项
+- 若下拉菜单打开时：
+    - 使用 `Esc` 可以关闭菜单
+    - 使用 `Tab` 可以关闭菜单，焦点照常移到下一个可聚焦元素
+    - 使用 `上箭头` 或 `下箭头` 可以切换选项，被高亮的选项（`aria-activedescendant` 指向的项）`aria-selected` 为 `true`
+    - 被聚焦的选项可以通过 `Enter` 键选中，并收起面板
+    - 用鼠标选中选项后，焦点留在输入框中
+- `showClear` 开启且有内容时，清除按钮与 Input 相同：原生 `button`，名称为语言包中的「清空输入」，从输入框按 `Tab` 移到它，`Enter` 或空格键清空并把焦点放回输入框
+
+## 文案规范
+
+- 需要清晰地展示内容，让用户显而易见地感知到可用的各个选项
+- 限制一次性展示的选项数量
+
+## 设计变量
+
+<DesignToken />

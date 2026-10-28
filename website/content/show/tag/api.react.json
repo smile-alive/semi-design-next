@@ -1,0 +1,153 @@
+{
+    "tag": {
+        "source": "packages/semi-ui-react/src/tag/index.tsx",
+        "props": {
+            "avatarShape": {
+                "zh-CN": "头像标签中头像的形状，可选 `square` 和 `circle`。",
+                "en-US": "Shape of the avatar in an avatar tag: `square` or `circle`."
+            },
+            "avatarSrc": {
+                "zh-CN": "头像的资源地址，设置后生成头像标签。",
+                "en-US": "Avatar image URL. Setting it makes an avatar tag."
+            },
+            "children": {
+                "zh-CN": "标签内容。纯文字或数字超出时省略，其他节点居中显示。",
+                "en-US": "Tag content. Plain text or numbers are truncated with an ellipsis; other nodes are centered."
+            },
+            "className": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "closable": {
+                "zh-CN": "标签是否可以关闭。可关闭的标签也可以通过 Backspace 或 Delete 键关闭。",
+                "en-US": "Whether the tag can be closed. A closable tag can also be closed with the Backspace or Delete key."
+            },
+            "color": {
+                "zh-CN": "标签颜色，可选色板中的 16 种颜色和 `white`。",
+                "en-US": "Tag color: one of the 16 palette colors or `white`."
+            },
+            "colorful": {
+                "zh-CN": "是否为多彩标签。",
+                "en-US": "Whether the tag is colorful."
+            },
+            "gradient": {
+                "zh-CN": "多彩标签是否为渐变色，需 `colorful` 为 `true`。",
+                "en-US": "Whether a colorful tag uses a gradient. Requires `colorful` to be `true`."
+            },
+            "onClose": {
+                "zh-CN": "关闭标签时的回调，参数为标签内容、事件与 `tagKey`。`event` 为点击关闭图标的 click 事件，或按 Backspace、Delete 时的 keydown 事件。对事件调用 `preventDefault` 可保持标签显示。",
+                "en-US": "Callback when the tag is closed, with the tag content, the event and `tagKey`. `event` is the click on the close icon, or the keydown for Backspace or Delete. Call `preventDefault` on the event to keep the tag visible."
+            },
+            "onMouseEnter": {
+                "zh-CN": "指针移入标签时的回调。",
+                "en-US": "Callback when the pointer enters the tag."
+            },
+            "prefixIcon": {
+                "zh-CN": "内容前的图标。",
+                "en-US": "Icon before the content."
+            },
+            "ref": {
+                "zh-CN": "根元素的引用。",
+                "en-US": "Reference to the root element."
+            },
+            "shape": {
+                "zh-CN": "标签形状，可选 `square` 和 `circle`。",
+                "en-US": "Tag shape: `square` or `circle`."
+            },
+            "size": {
+                "zh-CN": "标签尺寸，可选 `default`、`small` 或 `large`。",
+                "en-US": "Tag size: `default`, `small` or `large`."
+            },
+            "style": {
+                "zh-CN": "根元素的样式。",
+                "en-US": "Style of the root element."
+            },
+            "suffixIcon": {
+                "zh-CN": "内容后的图标。",
+                "en-US": "Icon after the content."
+            },
+            "tabIndex": {
+                "zh-CN": "根元素的 `tabIndex`，`TagInput` 用它让方向键而非 Tab 在标签间移动焦点。",
+                "en-US": "`tabIndex` of the root element. `TagInput` uses it so that arrow keys, not Tab, move focus between tags."
+            },
+            "tagKey": {
+                "zh-CN": "标签的唯一标识，作为 `onClose` 的第三个参数传出，不允许重复。",
+                "en-US": "Unique identifier of the tag, passed as the third argument of `onClose`. Must not repeat."
+            },
+            "type": {
+                "zh-CN": "样式类型，可选 `light`、`ghost` 或 `solid`。",
+                "en-US": "Style type: `light`, `ghost` or `solid`."
+            },
+            "visible": {
+                "zh-CN": "标签是否可见。不传时关闭标签后会隐藏；传入后由该值决定显示。",
+                "en-US": "Whether the tag is visible. When omitted, closing the tag hides it; when given, this value decides."
+            }
+        }
+    },
+    "tag-group": {
+        "source": "packages/semi-ui-react/src/tag/group.tsx",
+        "props": {
+            "avatarShape": {
+                "zh-CN": "组内头像标签的头像形状，可选 `square` 和 `circle`。",
+                "en-US": "Avatar shape of the avatar tags in the group: `square` or `circle`."
+            },
+            "className": {
+                "zh-CN": "根元素的类名。",
+                "en-US": "Class name of the root element."
+            },
+            "maxTagCount": {
+                "zh-CN": "最多显示的标签数，超出的部分显示为 +N。",
+                "en-US": "Maximum number of visible tags. The rest is shown as +N."
+            },
+            "mode": {
+                "zh-CN": "传 `custom` 时，`tagList` 的每一项按原样渲染，不再包装为 Tag。",
+                "en-US": "With `custom`, each `tagList` item is rendered as given instead of being wrapped in a Tag."
+            },
+            "onPlusNMouseEnter": {
+                "zh-CN": "指针移入 +N 标签时的回调。",
+                "en-US": "Callback when the pointer enters the +N tag."
+            },
+            "onTagClose": {
+                "zh-CN": "组内标签被关闭时的回调，参数为标签内容、事件与该标签的 `tagKey`；需在回调中更新 `tagList`。",
+                "en-US": "Callback when a tag in the group is closed, with the tag content, the event and the `tagKey` of the tag. Update `tagList` in the callback."
+            },
+            "popoverProps": {
+                "zh-CN": "传给 Popover 的属性，可设置 `position`、`trigger` 等，参见 [Popover](/zh-CN/react/show/popover#API_参考)。",
+                "en-US": "Props passed to the Popover, such as `position` and `trigger`. See [Popover](/en-US/react/show/popover#API)."
+            },
+            "ref": {
+                "zh-CN": "根元素的引用。",
+                "en-US": "Reference to the root element."
+            },
+            "restCount": {
+                "zh-CN": "+N 中显示的数量，缺省为超出 `maxTagCount` 的标签数。",
+                "en-US": "The number shown in +N. Defaults to the number of tags beyond `maxTagCount`."
+            },
+            "showPopover": {
+                "zh-CN": "悬停在 +N 上时，是否通过 Popover 显示剩余标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover."
+            },
+            "size": {
+                "zh-CN": "组内标签的尺寸，可选 `default`、`small` 或 `large`。",
+                "en-US": "Size of the tags in the group: `default`, `small` or `large`."
+            },
+            "style": {
+                "zh-CN": "根元素的样式。",
+                "en-US": "Style of the root element."
+            },
+            "tagList": {
+                "zh-CN": "标签配置数组，每项为 Tag 的属性，`children` 为标签内容；`mode` 为 `custom` 时为 ReactNode 数组。",
+                "en-US": "Tag configurations. Each item holds the props of a Tag, with `children` as the tag content. With `mode` set to `custom`, it is an array of ReactNode."
+            }
+        }
+    },
+    "split-tag-group": {
+        "source": "packages/semi-ui-react/src/tag/split-tag-group.tsx",
+        "props": {
+            "ref": {
+                "zh-CN": "根元素的引用。",
+                "en-US": "Reference to the root element."
+            }
+        }
+    }
+}

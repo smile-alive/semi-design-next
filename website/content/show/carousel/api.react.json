@@ -1,0 +1,113 @@
+{
+    "carousel": {
+        "source": "packages/semi-ui-react/src/carousel/index.tsx",
+        "props": {
+            "activeIndex": {
+                "zh-CN": "当前展示的索引，传入即为受控；传 `undefined` 时交还内部状态，从最后一次的索引继续。",
+                "en-US": "Index of the slide being shown. Passing it makes the carousel controlled; passing `undefined` hands control back to the internal state, continuing from the last index."
+            },
+            "aria-label": {
+                "zh-CN": "轮播区域的名称，有名称时才是地标。",
+                "en-US": "Name of the carousel region; only a named region is a landmark."
+            },
+            "animation": {
+                "zh-CN": "切换动画，可选 `slide` 或 `fade`。",
+                "en-US": "Transition animation: `slide` or `fade`."
+            },
+            "arrowProps": {
+                "zh-CN": "上一项、下一项箭头按钮的数据：`leftArrow`、`rightArrow` 的 `children` 为箭头内容，`props` 为按钮的原生属性（如 `aria-label`、`style`、`onClick`）。`props` 展开在内置属性之后，同名的 `onClick`、`className` 会覆盖内置处理与内置类名。",
+                "en-US": "Data for the previous and next arrow buttons: `children` is the arrow content, and `props` holds the native attributes of the button (such as `aria-label`, `style` and `onClick`). `props` is spread after the built-in attributes, so its `onClick` and `className` replace the built-in handler and class names."
+            },
+            "arrowType": {
+                "zh-CN": "箭头展示时机，可选 `always` 或 `hover`。",
+                "en-US": "When the arrows are shown: `always` or `hover`."
+            },
+            "autoPlay": {
+                "zh-CN": "是否自动循环播放，也可传入 `{ interval, hoverToPause }`：`interval` 为切换间隔（毫秒，默认 2000），`hoverToPause` 为悬浮时是否暂停（默认 true）。",
+                "en-US": "Whether to play automatically, or an object with `interval` (milliseconds between slides, default 2000) and `hoverToPause` (pause while hovered, default true)."
+            },
+            "children": {
+                "zh-CN": "幻灯片，每个直接子元素是一张，文本等非元素子节点不计入。幻灯片需要把 `id`、`role`、`inert`、`style`、`className` 等属性落到 DOM 上，通常是 DOM 元素或能转发这些属性的组件。",
+                "en-US": "The slides, one per direct child element; text and other non-element children are not counted. A slide must put attributes such as `id`, `role`, `inert`, `style` and `className` on the DOM, so it is usually a DOM element or a component that forwards them."
+            },
+            "className": {
+                "zh-CN": "根元素的类名，与内置类名合并。",
+                "en-US": "Class name of the root element, merged with the built-in class names."
+            },
+            "defaultActiveIndex": {
+                "zh-CN": "初始展示的索引，非受控时使用。",
+                "en-US": "Index of the slide shown initially, used when uncontrolled."
+            },
+            "indicatorPosition": {
+                "zh-CN": "指示器位置，可选 `left`、`center` 或 `right`。",
+                "en-US": "Indicator position: `left`, `center` or `right`."
+            },
+            "indicatorSize": {
+                "zh-CN": "指示器尺寸，可选 `small` 或 `medium`。",
+                "en-US": "Indicator size: `small` or `medium`."
+            },
+            "indicatorType": {
+                "zh-CN": "指示器类型，可选 `dot`、`line` 或 `columnar`。",
+                "en-US": "Indicator type: `dot`, `line` or `columnar`."
+            },
+            "onChange": {
+                "zh-CN": "切换到新的一项时触发，参数为新索引和上一个索引。",
+                "en-US": "Called when the shown slide changes, with the new index and the previous index."
+            },
+            "ref": {
+                "zh-CN": "指向组件句柄而非 DOM 元素，可调用下方 Methods 中的方法。",
+                "en-US": "Points to the component handle rather than a DOM element; it exposes the methods listed below."
+            },
+            "showArrow": {
+                "zh-CN": "是否展示箭头。",
+                "en-US": "Whether to show the arrows."
+            },
+            "showIndicator": {
+                "zh-CN": "是否展示指示器。",
+                "en-US": "Whether to show the indicator."
+            },
+            "slideDirection": {
+                "zh-CN": "动画为 `slide` 时的滑动方向，可选 `left` 或 `right`。",
+                "en-US": "Slide direction when the animation is `slide`: `left` or `right`."
+            },
+            "speed": {
+                "zh-CN": "切换速度，单位为毫秒。",
+                "en-US": "Transition duration in milliseconds."
+            },
+            "style": {
+                "zh-CN": "根元素的内联样式。",
+                "en-US": "Inline style of the root element."
+            },
+            "theme": {
+                "zh-CN": "指示器和箭头的主题，可选 `primary`、`light` 或 `dark`。",
+                "en-US": "Theme of the indicator and arrows: `primary`, `light` or `dark`."
+            },
+            "trigger": {
+                "zh-CN": "指示器触发切换的时机，可选 `click` 或 `hover`。",
+                "en-US": "How the indicator switches slides: `click` or `hover`."
+            }
+        },
+        "methods": {
+            "next": {
+                "zh-CN": "切换到下一项。",
+                "en-US": "Goes to the next slide."
+            },
+            "prev": {
+                "zh-CN": "切换到上一项。",
+                "en-US": "Goes to the previous slide."
+            },
+            "goTo": {
+                "zh-CN": "切换到指定索引，超出范围时循环。",
+                "en-US": "Goes to the given index; an out-of-range index wraps around."
+            },
+            "play": {
+                "zh-CN": "开始自动播放，`autoPlay` 为 `false` 时同样生效。",
+                "en-US": "Starts autoplay, even when `autoPlay` is `false`."
+            },
+            "stop": {
+                "zh-CN": "停止自动播放，之后手动切换也不会恢复，直到调用 `play()`。",
+                "en-US": "Stops autoplay; switching manually does not resume it until `play()` is called."
+            }
+        }
+    }
+}

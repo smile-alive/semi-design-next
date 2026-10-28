@@ -1,0 +1,121 @@
+{
+    "transfer": {
+        "source": "packages/semi-ui-solid/src/transfer/transfer.tsx",
+        "props": {
+            "disabled": {
+                "zh-CN": "是否禁用。",
+                "en-US": "Whether the whole transfer is disabled."
+            },
+            "dataSource": {
+                "zh-CN": "数据源。type 为 `list` 时是数据项数组，`groupList` 时是分组数组，`treeList` 时是带 `children` 的树形数据。数据按数组引用计算，原地修改数组不会生效，需要传入新数组。",
+                "en-US": "Data source: an array of items for `list`, an array of groups for `groupList`, or tree data with `children` for `treeList`. The data is derived from the array reference, so an in-place change is not seen; pass a new array."
+            },
+            "filter": {
+                "zh-CN": "筛选逻辑。为 `false` 时不显示搜索框；传入函数时自定义匹配，返回 `true` 表示保留该项；默认按 `label` 不区分大小写匹配。`treeList` 想自定义搜索时需设为 `true`，并通过 `treeProps` 的 `filterTreeNode` 传入匹配函数。",
+                "en-US": "Filtering logic. `false` hides the search box; a function replaces the default case-insensitive label match and returns `true` to keep an item. For a custom search in `treeList`, set it to `true` and pass the matching function as `filterTreeNode` in `treeProps`."
+            },
+            "defaultValue": {
+                "zh-CN": "默认已选中的 value 数组，只在创建时读取。",
+                "en-US": "The values selected initially, read once when the Transfer is created."
+            },
+            "value": {
+                "zh-CN": "已选中的 value 数组，传入后即为受控组件，数组顺序就是右侧的显示顺序；传入 `undefined` 回到非受控。",
+                "en-US": "Array of the values of the selected items. Passing it makes the component controlled and its order is the order on the right; `undefined` returns to uncontrolled."
+            },
+            "inputProps": {
+                "zh-CN": "传给搜索框 Input 的属性，可配置项参考 Input；`value` 与 `onChange` 由 Transfer 占用，需要外部驱动搜索时调用 ref 上的 `search` 方法。",
+                "en-US": "Props passed to the search Input, see Input for the options. `value` and `onChange` belong to Transfer; to search from outside, call the `search` method on the ref."
+            },
+            "type": {
+                "zh-CN": "穿梭框类型，可选 `list`、`groupList`、`treeList`。",
+                "en-US": "Transfer type: `list`, `groupList` or `treeList`."
+            },
+            "emptyContent": {
+                "zh-CN": "自定义空状态的提示：`left` 为左侧没有数据时，`right` 为右侧没有已选项时，`search` 为搜索没有结果时。某一项为 `null` 时不渲染对应的空状态；未提供时显示语言包文案。",
+                "en-US": "Custom empty-state content: `left` when the left list has no data, `right` when nothing is selected, `search` when the search matches nothing. A `null` entry hides that empty state; a missing one shows the locale text."
+            },
+            "draggable": {
+                "zh-CN": "是否开启右侧已选项的拖拽排序。排序后 `onChange` 的数组顺序随之改变。",
+                "en-US": "Enables drag sorting of the selected items on the right. After a sort, the order of the array passed to `onChange` changes."
+            },
+            "treeProps": {
+                "zh-CN": "仅 `treeList` 有效，传给左侧 Tree 的属性，会覆盖默认的 `multiple`、`disableStrictly`、`leafOnly`、`filterTreeNode`、`defaultExpandAll` 与 `searchRender`（为 `false`）。`value`、`treeData`、`keyMaps`、`treeDataSimpleJson`、`onChangeWithObject`、`onChange` 与 `ref` 由 Transfer 决定，传入会被忽略。",
+                "en-US": "`treeList` only: props passed to the Tree on the left, overriding the defaults `multiple`, `disableStrictly`, `leafOnly`, `filterTreeNode`, `defaultExpandAll` and `searchRender` (`false`). `value`, `treeData`, `keyMaps`, `treeDataSimpleJson`, `onChangeWithObject`, `onChange` and `ref` belong to Transfer and are ignored."
+            },
+            "showPath": {
+                "zh-CN": "仅 `treeList` 有效，控制右侧已选项是否显示从根节点到自身的选择路径。",
+                "en-US": "`treeList` only: whether the selected items on the right show their path from the root."
+            },
+            "loading": {
+                "zh-CN": "左侧选项是否正在加载，加载中显示 Spin 代替列表。",
+                "en-US": "Whether the options on the left are loading; a Spin replaces the list while it is."
+            },
+            "virtualize": {
+                "zh-CN": "右侧已选列表虚拟化，仅在默认右侧面板且 `draggable` 为 `false` 时生效。`height` 为数字时按像素生效，为其他值时按面板剩余高度测量；`itemSize` 为每行高度。",
+                "en-US": "Virtualizes the selected list on the right, only with the default right panel and `draggable` off. A numeric `height` applies in pixels; any other value is measured from the remaining panel height. `itemSize` is the height of each row."
+            },
+            "pagination": {
+                "zh-CN": "左侧面板的分页配置，仅对 `list` 与 `groupList` 生效。`onPageChange` 写在该对象内。",
+                "en-US": "Paging of the left panel, for `list` and `groupList` only. `onPageChange` lives inside the object."
+            },
+            "onChange": {
+                "zh-CN": "选中值变化时触发，拖拽排序后也会触发。参数依次为 value 数组与对应的数据项数组。",
+                "en-US": "Called when the selection changes, including after a drag sort, with the array of values and the array of their items."
+            },
+            "onSelect": {
+                "zh-CN": "勾选一项时触发，参数为该数据项。",
+                "en-US": "Called when an item is checked, with that item."
+            },
+            "onDeselect": {
+                "zh-CN": "取消勾选一项时触发，参数为该数据项。",
+                "en-US": "Called when an item is unchecked, with that item."
+            },
+            "onSearch": {
+                "zh-CN": "搜索框输入内容变化时触发，参数为搜索值。通过 ref 的 `search` 方法驱动的搜索不触发。",
+                "en-US": "Called when the text of the search box changes, with the search value. A search driven by the ref's `search` method does not call it."
+            },
+            "renderLabel": {
+                "zh-CN": "自定义左右两侧每一项的内容与 treeList 中节点的内容，参数为数据项；未设置时显示 label。`showPath` 的路径仍是 label 文本。",
+                "en-US": "Renders the content of each item in both lists and of each node in treeList; it receives the data item. Without it the label shows. The path with `showPath` stays label text."
+            },
+            "renderSourceItem": {
+                "zh-CN": "自定义左侧单个候选项的渲染，每个选项调用一次。参数为数据项，另含 `onChange` 与 `checked`；`checked` 是 getter，需在返回的 JSX 中读取。",
+                "en-US": "Renders one candidate on the left; called once per item. The argument is the item and also carries `onChange` and `checked`; `checked` is a getter, read it in the returned JSX."
+            },
+            "renderSelectedItem": {
+                "zh-CN": "自定义右侧单个已选项的渲染，每个选项调用一次。参数为数据项，另含 `onRemove`；`draggable` 时还有 `sortableHandle`。`treeList` 且 `showPath` 时可通过 `fullPath` 获取完整路径。",
+                "en-US": "Renders one selected item on the right; called once per item. The argument is the item and also carries `onRemove`; with `draggable` it also carries `sortableHandle`. With `treeList` and `showPath`, `fullPath` holds the whole path."
+            },
+            "renderSourcePanel": {
+                "zh-CN": "完全自定义左侧候选面板，参数为实时对象（SourcePanelProps），只调用一次。读取其字段需写在 JSX 中，解构只取首次渲染时的值。",
+                "en-US": "Replaces the whole left panel; called once with a live object (SourcePanelProps). Read its fields in the JSX: destructuring takes only the values of the first render."
+            },
+            "renderSelectedPanel": {
+                "zh-CN": "完全自定义右侧已选面板，参数为实时对象（SelectedPanelProps），只调用一次。读取其字段需写在 JSX 中。",
+                "en-US": "Replaces the whole right panel; called once with a live object (SelectedPanelProps). Read its fields in the JSX."
+            },
+            "renderSourceHeader": {
+                "zh-CN": "自定义左侧面板头部，参数为实时对象（SourceHeaderProps），只调用一次。`leafOnlyNum` 仅 `treeList` 提供。",
+                "en-US": "Replaces the header of the left panel; called once with a live object (SourceHeaderProps). `leafOnlyNum` is provided for `treeList` only."
+            },
+            "renderSelectedHeader": {
+                "zh-CN": "自定义右侧面板头部，参数为实时对象（SelectedHeaderProps），只调用一次。",
+                "en-US": "Replaces the header of the right panel; called once with a live object (SelectedHeaderProps)."
+            },
+            "tabIndex": {
+                "zh-CN": "设置在搜索框上，包括外层 Tooltip 注入的值；根元素本身不是焦点目标。",
+                "en-US": "Set on the search box, including a value injected by a wrapping Tooltip; the root element is not a focus target."
+            },
+            "ref": {
+                "zh-CN": "接收根 `div` 元素，类型为 TransferElement，元素上带有 `search` 方法。",
+                "en-US": "Receives the root `div` element, typed as TransferElement; the element carries the `search` method."
+            }
+        },
+        "methods": {
+            "search": {
+                "zh-CN": "按输入了该值来搜索，该值会被置给搜索框；不触发 `onSearch`。",
+                "en-US": "Searches as if the value were typed into the search box, and puts the value there; `onSearch` is not called."
+            }
+        }
+    }
+}

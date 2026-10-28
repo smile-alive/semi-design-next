@@ -1,0 +1,99 @@
+---
+import { IconGithubLogo, IconMenu } from '@fibrae/semi-icons-react';
+import SemiLogo from '#/assets/semi-logo.svg';
+import LocaleMenu from '#/components/LocaleMenu.astro';
+import FrameworkMenu from '#/components/FrameworkMenu.astro';
+import SearchDialog from '#/components/SearchDialog.astro';
+import ThemeToggle from '#/components/ThemeToggle.astro';
+import { translate } from '#/i18n';
+import { docUrl, type Framework, type Locale } from '#/lib/docs';
+
+interface Props {
+    locale: Locale;
+    framework: Framework;
+    localeHrefs: Record<Locale, string>;
+    frameworkHrefs: Partial<Record<Framework, string>>;
+}
+
+const { locale, framework, localeHrefs, frameworkHrefs } = Astro.props;
+const t = translate(locale);
+---
+
+<header class="site-header">
+    <button type="button" class="site-icon-button site-menu" id="nav-toggle" aria-controls="side-nav" aria-expanded="false" aria-label={t('nav_menu')}>
+        <IconMenu size="extra-large" />
+    </button>
+    <a class="site-logo" href={docUrl(locale, framework, 'start', 'introduction')} aria-label="Semi Design Next">
+        <SemiLogo aria-hidden="true" />
+    </a>
+    <nav class="site-nav" aria-label={t('nav_main')}>
+        <a href={docUrl(locale, framework, 'start', 'overview')}>{t('nav_components')}</a>
+    </nav>
+    <div class="site-actions">
+        <SearchDialog locale={locale} framework={framework} />
+        <ThemeToggle locale={locale} />
+        <FrameworkMenu locale={locale} framework={framework} hrefs={frameworkHrefs} />
+        <a class="site-icon-button" href="https://github.com/smile-alive/semi-design-next" aria-label="GitHub">
+            <IconGithubLogo size="extra-large" />
+        </a>
+        <LocaleMenu locale={locale} hrefs={localeHrefs} />
+    </div>
+</header>
+
+<style>
+    .site-header {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        height: var(--site-header-height);
+        padding: 0 24px;
+        background: color-mix(in srgb, var(--semi-color-bg-0) 75%, transparent);
+        border-bottom: 1px solid var(--semi-color-border);
+        backdrop-filter: saturate(1.8) blur(40px);
+    }
+
+    .site-header a {
+        text-decoration: none;
+    }
+
+    .site-logo {
+        display: flex;
+        margin-left: 8px;
+        color: var(--semi-color-text-0);
+    }
+
+    .site-nav {
+        display: flex;
+        gap: 40px;
+        margin-left: 40px;
+    }
+
+    .site-nav a {
+        font-weight: 600;
+        color: var(--semi-color-text-0);
+    }
+
+    .site-actions {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    .site-menu {
+        display: none;
+        margin-right: 12px;
+    }
+
+    @media (max-width: 820px) {
+        .site-menu {
+            display: inline-flex;
+        }
+
+        .site-nav {
+            display: none;
+        }
+    }
+</style>

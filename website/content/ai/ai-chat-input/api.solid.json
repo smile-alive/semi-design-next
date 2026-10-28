@@ -1,0 +1,410 @@
+{
+    "ai-chat-input": {
+        "source": "packages/semi-ai-solid/src/ai-chat-input/ai-chat-input.tsx",
+        "props": {
+            "canSend": {
+                "zh-CN": "是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。",
+                "en-US": "Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count."
+            },
+            "clearContentOnGenerating": {
+                "zh-CN": "generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。",
+                "en-US": "Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas)."
+            },
+            "defaultContent": {
+                "zh-CN": "输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。",
+                "en-US": "Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created."
+            },
+            "dropdownMatchTriggerWidth": {
+                "zh-CN": "下拉弹出层是否与输入框宽度一致。",
+                "en-US": "Whether the dropdown layer has the same width as the input."
+            },
+            "extensions": {
+                "zh-CN": "自定义 tiptap 扩展；只在创建编辑器时读取，之后变化不生效。",
+                "en-US": "Custom tiptap extensions. Read once, when the editor is created; later changes have no effect."
+            },
+            "generating": {
+                "zh-CN": "是否正在生成中。为 true 时发送按钮变为停止生成按钮。",
+                "en-US": "Whether a response is being generated. While true, the send button becomes the stop button."
+            },
+            "keepSkillAfterSend": {
+                "zh-CN": "发送消息后是否保留已选的技能。",
+                "en-US": "Whether the selected skill is kept after a message is sent."
+            },
+            "onBlur": {
+                "zh-CN": "富文本输入区失去焦点时调用，参数为 focusout 事件。",
+                "en-US": "Called when focus leaves the editor area, with the focusout event."
+            },
+            "onConfigureChange": {
+                "zh-CN": "配置区域的值变化时调用。移除配置项时 changedValue 为 undefined。",
+                "en-US": "Called when a configure value changes. changedValue is undefined when an item is removed."
+            },
+            "onContentChange": {
+                "zh-CN": "输入框内容变化时调用，参数为当前内容。",
+                "en-US": "Called when the input content changes, with the current content."
+            },
+            "onFocus": {
+                "zh-CN": "富文本输入区获得焦点时调用，参数为 focusin 事件。",
+                "en-US": "Called when the editor area gains focus, with the focusin event."
+            },
+            "onMessageSend": {
+                "zh-CN": "点击发送按钮时调用，参数包含引用、上传文件、输入内容与配置区域的值。",
+                "en-US": "Called when the send button is clicked, with the references, uploaded files, input content and configure values."
+            },
+            "onPaste": {
+                "zh-CN": "输入区粘贴时调用，不阻止默认的粘贴行为，可通过 event.clipboardData 读取内容。",
+                "en-US": "Called when content is pasted into the editor. It does not prevent the default paste; read the content from event.clipboardData."
+            },
+            "onReferenceClick": {
+                "zh-CN": "点击引用时调用，参数为该引用。",
+                "en-US": "Called when a reference is clicked, with that reference."
+            },
+            "onReferenceDelete": {
+                "zh-CN": "删除引用时调用，参数为被删除的引用；引用列表由使用方持有，需要在回调中移除。",
+                "en-US": "Called when a reference is deleted, with the deleted reference. The caller owns the references list and removes it in the callback."
+            },
+            "onSkillChange": {
+                "zh-CN": "技能切换时调用，移除技能时参数为 undefined。",
+                "en-US": "Called when the skill changes; the argument is undefined when the skill is removed."
+            },
+            "onStopGenerate": {
+                "zh-CN": "点击停止生成按钮时调用。",
+                "en-US": "Called when the stop button is clicked."
+            },
+            "onUploadChange": {
+                "zh-CN": "上传文件列表变化时调用。",
+                "en-US": "Called when the uploaded file list changes."
+            },
+            "placeholder": {
+                "zh-CN": "输入框占位符，可以是字符串，也可以是按节点返回字符串的函数。",
+                "en-US": "Placeholder of the input: a string, or a function that returns a string for a node."
+            },
+            "popoverProps": {
+                "zh-CN": "下拉弹出层的配置参数；class 与内部类名合并，style 与面板宽度合并。",
+                "en-US": "Props of the dropdown layer. The class is merged with the internal class names and the style with the panel width."
+            },
+            "ref": {
+                "zh-CN": "根元素，类型为 AIChatInputElement，带有 AIChatInputHandle 的方法。",
+                "en-US": "The root element, an AIChatInputElement that carries the AIChatInputHandle methods."
+            },
+            "references": {
+                "zh-CN": "输入框的引用列表。",
+                "en-US": "References shown with the input."
+            },
+            "renderActionArea": {
+                "zh-CN": "自定义底部的操作区域。参数 menuItem 依次为上传节点（showUploadButton 为 false 时是隐藏的上传节点，仍需渲染才能粘贴上传）与发送或停止按钮，class 为操作区域的类名。",
+                "en-US": "Customizes the action area at the bottom. menuItem lists, in order, the upload node (a hidden one when showUploadButton is false, which must still render for paste upload) and the send or stop button; class is the class name of the area."
+            },
+            "renderConfigureArea": {
+                "zh-CN": "自定义底部的配置区域，返回配置项（Configure 的子项）。",
+                "en-US": "Customizes the configure area at the bottom; returns the configure items."
+            },
+            "renderReference": {
+                "zh-CN": "自定义单个引用的渲染。",
+                "en-US": "Customizes how a single reference is rendered."
+            },
+            "renderSkillIcon": {
+                "zh-CN": "渲染技能列表中每项名称前的图标，参数为该技能。",
+                "en-US": "Renders the icon before each skill in the skill list, called with the skill."
+            },
+            "renderSkillItem": {
+                "zh-CN": "自定义技能列表中的单项。参数的 id、class、role、aria-selected、onClick 与 onMouseEnter 需要展开到根元素上。",
+                "en-US": "Customizes one item of the skill list. The id, class, role, aria-selected, onClick and onMouseEnter of the argument must be spread onto the root element."
+            },
+            "renderSuggestionItem": {
+                "zh-CN": "自定义建议列表中的单项。参数的 id、class、role、aria-selected、onClick 与 onMouseEnter 需要展开到根元素上。",
+                "en-US": "Customizes one item of the suggestion list. The id, class, role, aria-selected, onClick and onMouseEnter of the argument must be spread onto the root element."
+            },
+            "renderTemplate": {
+                "zh-CN": "自定义模版面板的内容。参数为当前技能（仅显示模版按钮且未选中技能时为 undefined）与模版点击回调，回调传入的内容会替换输入框内容。",
+                "en-US": "Customizes the template panel. It receives the current skill (undefined when only the template button is shown without a selected skill) and the template click callback, whose content replaces the input content."
+            },
+            "renderTopSlot": {
+                "zh-CN": "自定义顶部区域。参数包含引用、上传文件、输入内容与删除回调，参数的 getter 随当前值变化，函数只调用一次。",
+                "en-US": "Customizes the top area. The argument carries references, uploaded files, the input content and the delete callbacks; its getters follow the current values, and the function is called once."
+            },
+            "renderUploadButton": {
+                "zh-CN": "自定义底部操作区的上传按钮 UI，上传与粘贴上传仍由组件内部托管。参数的 getter 随当前值变化，函数只调用一次。`defaultNode` 是创建默认按钮的渲染函数，在要放置按钮的位置调用。",
+                "en-US": "Customizes the upload button UI of the footer action area; the upload and paste upload stay inside the component. The argument's getters follow the current values, and the function is called once. `defaultNode` is a render function that creates the default button, called where the button goes."
+            },
+            "round": {
+                "zh-CN": "底部的配置区域和操作区域按钮是否为全圆角。",
+                "en-US": "Whether the buttons of the footer configure and action areas are fully rounded."
+            },
+            "sendHotKey": {
+                "zh-CN": "发送输入内容的键盘快捷键。enter 表示单独按下 Enter 发送，Shift 与 Enter 同时按下仅换行；shift+enter 相反。",
+                "en-US": "Keyboard shortcut that sends the input. enter sends on Enter alone, and Shift with Enter only starts a new line; shift+enter does the opposite."
+            },
+            "showPlaceholderWhenSkillOnly": {
+                "zh-CN": "仅选中技能（无其他内容）时是否显示占位符，开启后占位符显示在技能后方；只在创建编辑器时读取。",
+                "en-US": "Whether the placeholder shows when only a skill is selected, after the skill. Read once, when the editor is created."
+            },
+            "showReference": {
+                "zh-CN": "是否展示引用区域，用于配合 renderTopSlot 使用。",
+                "en-US": "Whether the reference area is shown; use it together with renderTopSlot."
+            },
+            "showTemplateButton": {
+                "zh-CN": "为 true 时始终展示模版按钮；未设置或为 false 时，由当前选中技能的 hasTemplate 决定是否展示。",
+                "en-US": "When true, the template button is always shown. When unset or false, the hasTemplate of the selected skill decides."
+            },
+            "showUploadButton": {
+                "zh-CN": "是否显示右侧上传按钮。设为 false 时粘贴上传仍然有效。",
+                "en-US": "Whether the upload button on the right is shown. When false, paste upload still works."
+            },
+            "showUploadFile": {
+                "zh-CN": "是否展示上传文件区域，用于配合 renderTopSlot 使用。",
+                "en-US": "Whether the uploaded file area is shown; use it together with renderTopSlot."
+            },
+            "skillHotKey": {
+                "zh-CN": "输入框中唤起技能面板的热键。",
+                "en-US": "Key that opens the skill panel in the input."
+            },
+            "skills": {
+                "zh-CN": "技能列表，每项只含数据，图标由 renderSkillIcon 渲染。",
+                "en-US": "Skill list. Each skill holds data only; its icon comes from renderSkillIcon."
+            },
+            "suggestions": {
+                "zh-CN": "建议列表，输入内容时按输入的内容展示。",
+                "en-US": "Suggestion list, shown as the user types."
+            },
+            "templatesCls": {
+                "zh-CN": "模版面板的类名。",
+                "en-US": "Class name of the template panel."
+            },
+            "templatesStyle": {
+                "zh-CN": "模版面板的样式，与默认的最大高度合并，只接受对象。",
+                "en-US": "Style of the template panel, merged over its default max height. Only an object is accepted."
+            },
+            "topSlotPosition": {
+                "zh-CN": "顶部区域相对于引用区域与上传文件区域的位置。",
+                "en-US": "Position of the top area relative to the reference area and the uploaded file area."
+            },
+            "transformer": {
+                "zh-CN": "自定义扩展的转换规则，用于保证 onContentChange 得到的节点数据符合预期。",
+                "en-US": "Conversion rules of custom extensions, so that the node data received by onContentChange matches what is expected."
+            },
+            "uploadProps": {
+                "zh-CN": "上传文件相关配置，取值同 Upload 的属性，不含 fileList 与 listType。",
+                "en-US": "Upload settings, the Upload props without fileList and listType."
+            },
+            "uploadTipProps": {
+                "zh-CN": "上传按钮的提示，取值同 Tooltip 的属性。使用 renderUploadButton 或 uploadProps.children 时，提示包裹在自定义节点外的 span 上。",
+                "en-US": "Tip of the upload button, with the Tooltip props. With renderUploadButton or uploadProps.children, the tip wraps the custom node in a span."
+            }
+        },
+        "methods": {
+            "changeTemplateVisible": {
+                "zh-CN": "切换模版面板的可见性。",
+                "en-US": "Shows or hides the template panel."
+            },
+            "deleteContent": {
+                "zh-CN": "删除富文本中的某一项，删除依据是 content 中的 uniqueKey。",
+                "en-US": "Removes one item from the editor, matched by the uniqueKey of the content."
+            },
+            "deleteUploadFile": {
+                "zh-CN": "删除上传文件中的某一项。",
+                "en-US": "Removes one uploaded file."
+            },
+            "focusEditor": {
+                "zh-CN": "聚焦输入框，默认聚焦到末尾，也可传入 FocusPosition。",
+                "en-US": "Focuses the editor. It focuses the end by default, or pass a FocusPosition."
+            },
+            "getEditor": {
+                "zh-CN": "获取当前的 tiptap Editor 实例，编辑器创建前为 null。",
+                "en-US": "Returns the tiptap Editor instance, or null before the editor is created."
+            },
+            "setContent": {
+                "zh-CN": "设置输入框内容。",
+                "en-US": "Sets the input content."
+            },
+            "setContentWhileSaveTool": {
+                "zh-CN": "保留已选技能的同时设置输入框内容。",
+                "en-US": "Sets the input content while keeping the selected skill."
+            }
+        }
+    },
+    "mcp": {
+        "source": "packages/semi-ai-solid/src/ai-chat-input/configure/mcp.tsx",
+        "props": {
+            "options": {
+                "zh-CN": "MCP 选项列表，选项只含数据，图标由 renderOptionIcon 渲染。",
+                "en-US": "MCP option list. Options hold data only; their icons come from renderOptionIcon."
+            },
+            "renderOptionIcon": {
+                "zh-CN": "渲染内置菜单每项的图标，参数为该选项。",
+                "en-US": "Renders the icon of each built-in menu item, called with the option."
+            },
+            "num": {
+                "zh-CN": "触发器与标题中显示的数量，不传时为 options 的数量。",
+                "en-US": "Number shown in the trigger and the header. Defaults to the length of options."
+            },
+            "showConfigure": {
+                "zh-CN": "是否显示配置按钮。",
+                "en-US": "Whether the configure button is shown."
+            },
+            "onConfigureButtonClick": {
+                "zh-CN": "点击配置按钮时调用。",
+                "en-US": "Called when the configure button is clicked."
+            },
+            "children": {
+                "zh-CN": "替换标题下方内置的菜单，传入时不再由 options 生成菜单。",
+                "en-US": "Replaces the menu under the header. When given, the menu is no longer built from options."
+            },
+            "afterClose": {
+                "zh-CN": "菜单关闭且离场动画结束后调用。",
+                "en-US": "Called after the menu has closed and its leave animation has ended."
+            },
+            "afterOpen": {
+                "zh-CN": "菜单打开且进场动画结束后调用；没有进场动画时打开后即调用；进场结束前被关闭的打开不调用。",
+                "en-US": "Called after the menu has opened and its enter animation has ended, or right after opening when there is no enter animation. An opening closed before the enter animation ends does not call it."
+            },
+            "arrowPointAtCenter": {
+                "zh-CN": "箭头是否指向触发元素的中心；只在 showArrow 为 true 时生效。",
+                "en-US": "Whether the arrow points at the center of the trigger. Takes effect only when showArrow is true."
+            },
+            "autoAdjustOverflow": {
+                "zh-CN": "弹出层被遮挡时是否自动调整方向，默认 true。",
+                "en-US": "Whether the menu flips to another side when it would be clipped. Defaults to true."
+            },
+            "class": {
+                "zh-CN": "弹出层外层 `.semi-dropdown-wrapper` 的类名。",
+                "en-US": "Class name of the popup's outer `.semi-dropdown-wrapper` element."
+            },
+            "clickToHide": {
+                "zh-CN": "在弹出层内点击时是否自动关闭弹出层。",
+                "en-US": "Whether a click inside the popup closes it."
+            },
+            "clickTriggerToHide": {
+                "zh-CN": "点击触发元素时是否关闭已打开的菜单。",
+                "en-US": "Whether a click on the trigger closes an open menu."
+            },
+            "closeOnEsc": {
+                "zh-CN": "在触发元素或弹出层按 Esc 是否关闭菜单，默认 true。trigger 为 custom 时只调用 onEscKeyDown，由使用方决定是否关闭。",
+                "en-US": "Whether Esc on the trigger or in the popup closes the menu. Defaults to true. With trigger custom it only calls onEscKeyDown, and the caller decides whether to close."
+            },
+            "condition": {
+                "zh-CN": "是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效，trigger 为 custom 时仍按 visible 显示。由 true 变为 false 时立即关闭已显示的菜单。",
+                "en-US": "Whether the trigger may show the menu. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the menu. Changing it from true to false closes an open menu at once."
+            },
+            "contentClassName": {
+                "zh-CN": "下拉菜单容器 `.semi-dropdown` 的类名。",
+                "en-US": "Class name of the menu container `.semi-dropdown`."
+            },
+            "disableFocusListener": {
+                "zh-CN": "trigger 为 hover 时，是否不响应键盘聚焦打开菜单，默认 false。",
+                "en-US": "Whether keyboard focus is ignored when trigger is hover. Defaults to false."
+            },
+            "guardFocus": {
+                "zh-CN": "焦点位于弹出层内时，Tab 是否在弹出层内循环，默认 false。",
+                "en-US": "Whether Tab cycles inside the popup while focus is in it. Defaults to false."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留菜单的 DOM 而不销毁，默认 false。",
+                "en-US": "Whether the menu's DOM is kept instead of destroyed when it closes. Defaults to false."
+            },
+            "menu": {
+                "zh-CN": "通过数据快速配置菜单，数据项为 `node` 为 `item`、`title` 或 `divider` 的对象，见下方 DropdownMenuItem；提供 render 时以 render 为准。",
+                "en-US": "Configures the menu from data: objects whose node is item, title or divider, see DropdownMenuItem below. render takes precedence when it is provided."
+            },
+            "mouseEnterDelay": {
+                "zh-CN": "指针移入触发元素后延迟显示的毫秒数，默认 50，仅 trigger 为 hover 或 focus 时生效。",
+                "en-US": "Milliseconds before the menu shows after the pointer enters the trigger. Defaults to 50. Applies to the hover and focus triggers."
+            },
+            "mouseLeaveDelay": {
+                "zh-CN": "指针移出弹出层后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效，默认 100。",
+                "en-US": "Milliseconds before the menu hides after the pointer leaves the popup. Defaults to 100. Applies to the hover and focus triggers."
+            },
+            "motion": {
+                "zh-CN": "是否展示弹出层的进出场动画，默认 true。",
+                "en-US": "Whether the popup plays its enter and leave animations. Defaults to true."
+            },
+            "onClickOutSide": {
+                "zh-CN": "按下触发元素与弹出层以外的区域时调用，参数是原生 `MouseEvent`。仅 trigger 为 click、contextMenu、custom 或开启 clickTriggerToHide 时生效。",
+                "en-US": "Called when the mouse is pressed outside the trigger and the popup, with the native `MouseEvent`. Takes effect only for trigger click, contextMenu or custom, or with clickTriggerToHide."
+            },
+            "onEscKeyDown": {
+                "zh-CN": "菜单打开期间按 Esc 时调用，参数是原生 `KeyboardEvent`。",
+                "en-US": "Called when Esc is pressed while the menu is open, with the native `KeyboardEvent`."
+            },
+            "onOpen": {
+                "zh-CN": "菜单显示、进场动画开始时调用，每次打开调用一次，早于 afterOpen；悬停打开后指针已离开而撤回的打开不调用。",
+                "en-US": "Called once per opening when the menu is shown and its enter animation starts, before afterOpen. An opening withdrawn because the pointer already left does not call it."
+            },
+            "onVisibleChange": {
+                "zh-CN": "菜单显示状态变化时调用。visible 受控时只报告用户交互发起的请求，使用方自己改变 visible 不调用。",
+                "en-US": "Called when the visibility of the menu changes. With a controlled visible it reports only requests from user interaction, not changes the caller makes to visible."
+            },
+            "position": {
+                "zh-CN": "弹出菜单相对触发元素的位置，常用 bottom、bottomLeft、bottomRight，默认 bottom，更多见 Tooltip 的位置。",
+                "en-US": "Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; the default is bottom. See the Tooltip positions for more."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到被聚焦元素，默认 false。",
+                "en-US": "Whether focusing an element avoids scrolling it into view. Defaults to false."
+            },
+            "prefixCls": {
+                "zh-CN": "弹出层类名前缀，默认 semi-dropdown。",
+                "en-US": "Class prefix of the popup, semi-dropdown by default."
+            },
+            "returnFocusOnClose": {
+                "zh-CN": "菜单关闭后焦点是否回到触发元素，默认 true。",
+                "en-US": "Whether focus returns to the trigger after the menu closes. Defaults to true."
+            },
+            "role": {
+                "zh-CN": "包裹菜单的弹层容器的 ARIA role，默认 presentation，菜单本身的 role 为 menu。",
+                "en-US": "ARIA role of the popup container around the menu, presentation by default. The menu itself has role menu."
+            },
+            "aria-label": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",
+                "en-US": "aria-label of the popup when its role is dialog."
+            },
+            "aria-labelledby": {
+                "zh-CN": "弹出层 role 为 dialog 时的 aria-labelledby。",
+                "en-US": "aria-labelledby of the popup when its role is dialog."
+            },
+            "selectionMode": {
+                "zh-CN": "本层菜单项的选择方式，已选项由 active 标记：single 时菜单项为带 aria-checked 的 menuitemradio，multiple 时为带 aria-checked 的 menuitemcheckbox；未设置时 showTick 开启则为带 aria-checked 的 menuitemcheckbox，否则为 menuitem。只影响角色与状态，勾的显示仍由 showTick 决定；嵌套的子菜单不继承。",
+                "en-US": "How the items of this menu are selected; active marks the selected ones. With single the items are menuitemradio with aria-checked, with multiple menuitemcheckbox with aria-checked; unset, they are menuitemcheckbox with aria-checked when showTick is on, otherwise menuitem. It sets roles and states only: showTick alone shows the tick. Nested submenus do not inherit it."
+            },
+            "showArrow": {
+                "zh-CN": "是否显示箭头，默认 false。",
+                "en-US": "Whether the arrow is shown. Defaults to false."
+            },
+            "showTick": {
+                "zh-CN": "是否在 active 的 Dropdown.Item 左侧展示表示选中的勾，默认 false；只作用于本 Dropdown 的菜单，嵌套的子菜单不继承。",
+                "en-US": "Whether an active Dropdown.Item shows a tick on its leading side. Defaults to false. It applies to the menu of this Dropdown only; nested submenus do not inherit it."
+            },
+            "spacing": {
+                "zh-CN": "弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 4，嵌套的子菜单为 2。",
+                "en-US": "Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡，默认 false。",
+                "en-US": "Whether click, mousedown and focus in/out events on the popup stop propagating. Defaults to false."
+            },
+            "style": {
+                "zh-CN": "下拉菜单容器 `.semi-dropdown` 的样式，接受对象（键用 kebab-case，如 `'margin-top'`）或字符串。",
+                "en-US": "Style of the menu container `.semi-dropdown`, as an object with kebab-case keys such as `'margin-top'`, or a string."
+            },
+            "trigger": {
+                "zh-CN": "触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu，默认 hover；custom 时显示与否完全由 visible 决定。",
+                "en-US": "What shows the menu: hover, focus, click, custom or contextMenu. Defaults to hover. With custom, visible alone decides."
+            },
+            "visible": {
+                "zh-CN": "菜单是否显示。配合 trigger 为 custom 使用；传入后由该值决定显示，触发器、点击外部与 Esc 只通过 onVisibleChange 请求打开或关闭。",
+                "en-US": "Whether the menu is shown. Used with trigger custom. When given, this value decides, and the trigger, a click outside and Esc only request a change through onVisibleChange."
+            },
+            "wrapperClassName": {
+                "zh-CN": "触发元素被 span 包裹时，该 span 的类名。",
+                "en-US": "Class name of the span that wraps the trigger when a wrapper is needed."
+            },
+            "wrapperId": {
+                "zh-CN": "弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。",
+                "en-US": "id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted."
+            },
+            "wrapWhenSpecial": {
+                "zh-CN": "触发元素为禁用或加载中的 Button 等特殊触发器时，是否在外层包裹 span 以保证触发行为，默认 true。",
+                "en-US": "Whether a special trigger, such as a disabled or loading Button, is wrapped in a span so that it still triggers the menu. Defaults to true."
+            }
+        }
+    }
+}

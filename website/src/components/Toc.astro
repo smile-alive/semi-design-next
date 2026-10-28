@@ -1,0 +1,124 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { translate } from '#/i18n';
+import type { Locale } from '#/lib/docs';
+
+interface Props {
+    locale: Locale;
+    headings: MarkdownHeading[];
+}
+
+const { locale, headings } = Astro.props;
+const t = translate(locale);
+
+// From the demos heading on, demos are listed individually and later sections keep only h2; pages without demos list h2
+const demosIndex = headings.findIndex((h) => h.depth === 2 && h.text === t('toc_demos'));
+const toc =
+    demosIndex === -1
+        ? headings.filter((h) => h.depth === 2)
+        : headings.slice(demosIndex + 1).filter((h, i, rest) => {
+              if (h.depth === 2) return true;
+              if (h.depth !== 3) return false;
+              const nextH2 = rest.findIndex((x) => x.depth === 2);
+              return nextH2 === -1 || i < nextH2;
+          });
+---
+
+{/* Rendered even without a TOC so the script loads with the first page and survives navigation */}
+{
+    toc.length > 0 && (
+        <nav class="site-toc" aria-label={t('toc_on_this_page')}>
+            <ul>
+                {toc.map((h) => (
+                    <li>
+                        <a href={`#${h.slug}`}>{h.text}</a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    )
+}
+
+<script>
+    // Highlights the last entry scrolled past the anchor line. The observed zone runs from just below where anchor jumps
+    // land (the html scroll-padding-top in site.css, 84px) up through the whole page; a viewport-only zone misses jumps
+    // from the TOC and headings scrolled past in one screen
+    const anchorLine = 85;
+    let tocObserver: IntersectionObserver | undefined;
+    const watchToc = () => {
+        tocObserver?.disconnect();
+        const links = [...document.querySelectorAll<HTMLAnchorElement>('.site-toc a')];
+        const targets = links.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))));
+        const passed = new Set<Element>();
+        tocObserver = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) passed.add(entry.target);
+                    else passed.delete(entry.target);
+                }
+                const active = targets.findLastIndex((target) => target && passed.has(target));
+                links.forEach((link, i) => link.toggleAttribute('data-active', i === Math.max(active, 0)));
+            },
+            { rootMargin: `1000000px 0px ${anchorLine - innerHeight}px 0px` }
+        );
+        for (const target of targets) if (target) tocObserver.observe(target);
+    };
+    // The zone's lower edge is in pixels from the viewport height, so rebuild on resize
+    addEventListener('resize', watchToc);
+    // The TOC is replaced with the page, so reattach after each navigation
+    document.addEventListener('astro:page-load', watchToc);
+</script>
+
+<style>
+    .site-toc {
+        position: fixed;
+        top: 120px;
+        right: 0;
+        width: 150px;
+        max-height: 77vh;
+        overflow-y: auto;
+        font-size: 12px;
+        line-height: 16px;
+        scrollbar-width: none;
+    }
+
+    .site-toc ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        border-left: 2px solid var(--semi-color-fill-0);
+    }
+
+    .site-toc a {
+        display: block;
+        padding: 4px 0 4px 8px;
+        margin-left: -2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--semi-color-text-2);
+        white-space: nowrap;
+        text-decoration: none;
+        border-left: 2px solid transparent;
+    }
+
+    .site-toc a:hover {
+        color: var(--semi-color-text-0);
+    }
+
+    .site-toc [data-active] {
+        color: var(--semi-color-text-0);
+        border-left-color: var(--semi-color-primary);
+    }
+
+    @media (max-width: 1599px) {
+        .site-toc {
+            width: 120px;
+        }
+    }
+
+    @media (max-width: 1399px) {
+        .site-toc {
+            display: none;
+        }
+    }
+</style>

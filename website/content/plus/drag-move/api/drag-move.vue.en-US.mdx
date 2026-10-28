@@ -1,0 +1,36 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property         | Description                                                                                                     | Type                                                                                           | Default                                                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| handler          | Returns the element that starts a drag. Falls back to the dragged element itself when it returns null.          | <ApiType detail={"(() => HTMLElement \u007c null)"}>Type</ApiType>                             | `undefined`                                               |
+| constrainer      | Element that bounds the movement: 'parent' or a function returning it. The element needs relative positioning.  | <ApiType detail={"\"parent\" \u007c (() => HTMLElement \u007c null)"}>Type</ApiType>           | `undefined`                                               |
+| allowInputDrag   | Whether pressing on a native input or textarea starts a drag.                                                   | `boolean`                                                                                      | `semiDefault("DragMove", "allowInputDrag", false)`        |
+| allowMove        | Called when a pointer goes down. Return false to not drag.                                                      | <ApiType detail={"((e: PointerEvent, element: HTMLElement) => boolean)"}>Type</ApiType>        | `undefined`                                               |
+| customMove       | Takes the new position instead of the element's top and left; the component only reports the computed position. | <ApiType detail={"((element: HTMLElement, top: number, left: number) => void)"}>Type</ApiType> | `undefined`                                               |
+| positionStrategy | Positioning strategy. relative keeps the element's place in the layout.                                         | `"absolute" \| "relative"`                                                                     | `semiDefault("DragMove", "positionStrategy", "absolute")` |
+
+**Events**
+
+| Event       | Description                                      | Callback parameters |
+| ----------- | ------------------------------------------------ | ------------------- |
+| mouseDown   | Emitted when a mouse or pen pointer is pressed.  | `[e: PointerEvent]` |
+| mouseMove   | Emitted when a mouse or pen pointer moves.       | `[e: PointerEvent]` |
+| mouseUp     | Emitted when a mouse or pen pointer is released. | `[e: PointerEvent]` |
+| touchStart  | Emitted when a touch pointer is pressed.         | `[e: PointerEvent]` |
+| touchMove   | Emitted when a touch pointer moves.              | `[e: PointerEvent]` |
+| touchEnd    | Emitted when a touch pointer is released.        | `[e: PointerEvent]` |
+| touchCancel | Emitted when a touch pointer is cancelled.       | `[e: PointerEvent]` |
+
+**Slots**
+
+| Slot    | Description                                                                               | Scope parameters |
+| ------- | ----------------------------------------------------------------------------------------- | ---------------- |
+| default | Content to drag. Each top-level element, or single-root component, is dragged on its own. | `any`            |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

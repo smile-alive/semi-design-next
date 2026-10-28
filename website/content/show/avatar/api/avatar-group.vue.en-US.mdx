@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                 | Type                     | Default                                              |
+| ----------- | ----------------------------------------------------------- | ------------------------ | ---------------------------------------------------- |
+| shape       | Shape of the avatars in the group.                          | `AvatarShape`            | `semiDefault("AvatarGroup", "shape", "circle")`      |
+| size        | Size of the avatars in the group.                           | `string`                 | `semiDefault("AvatarGroup", "size", "medium")`       |
+| overlapFrom | Avatar overlap direction: start or end.                     | `AvatarGroupOverlapFrom` | `semiDefault("AvatarGroup", "overlapFrom", "start")` |
+| maxCount    | Maximum number of visible avatars; overflow is shown as +N. | `number`                 | `semiGlobalDefault("AvatarGroup", "maxCount")`       |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                             | Scope parameters                                                                                                                              |
+| ------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| default | Avatar components in the group.                                                                         | `any`                                                                                                                                         |
+| more    | Custom overflow label, receiving the remaining count restNumber and the avatar VNode array restAvatars. | <ApiType detail={"{ restNumber: number; restAvatars: VNode\u003cRendererNode, RendererElement, { [key: string]: any; }>[]; }"}>Type</ApiType> |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

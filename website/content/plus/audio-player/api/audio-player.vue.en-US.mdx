@@ -1,0 +1,27 @@
+**Props**
+
+| Property     | Description                                                                                                            | Type               | Default                                           |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------- |
+| audioUrl     | Audio address: a string, an AudioInfo object, or an array of them. An array shows the previous and next track buttons. | `AudioUrl`         | `undefined`                                       |
+| autoPlay     | Whether to play automatically.                                                                                         | `boolean`          | `semiDefault("AudioPlayer", "autoPlay", false)`   |
+| showToolbar  | Whether to display the toolbar.                                                                                        | `boolean`          | `semiDefault("AudioPlayer", "showToolbar", true)` |
+| skipDuration | Seconds skipped by each backward or forward button press.                                                              | `number`           | `semiDefault("AudioPlayer", "skipDuration", 10)`  |
+| theme        | Player theme: dark or light.                                                                                           | `AudioPlayerTheme` | `semiDefault("AudioPlayer", "theme", "dark")`     |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot | Description | Scope parameters |
+| ---- | ----------- | ---------------- |
+| None |             |                  |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                                                                                             | Type                                                              | Default      |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------ |
+| children      | Actions below the description, such as buttons.                                                                                                                         | `React.ReactNode`                                                 | -            |
+| className     | Class name of the root element.                                                                                                                                         | `string`                                                          | -            |
+| darkModeImage | Placeholder image in dark mode, following the theme-mode attribute of document.body. Takes the same values as image.                                                    | `React.ReactNode \| SVGNode`                                      | -            |
+| description   | Description content, shown below the title.                                                                                                                             | `React.ReactNode`                                                 | -            |
+| image         | Placeholder image: a ReactNode such as an illustration component, an image URL string, or an in-page SVG sprite symbol as `{ id }`. An empty string counts as no image. | `React.ReactNode \| SVGNode`                                      | -            |
+| imageStyle    | Inline style of the placeholder image area, typed as `CSSProperties`.                                                                                                   | `React.CSSProperties`                                             | -            |
+| layout        | Layout mode: `vertical` or `horizontal`.                                                                                                                                | `'vertical' \| 'horizontal'`                                      | `"vertical"` |
+| ref           | Reference to the root `div` element.                                                                                                                                    | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -            |
+| style         | Inline style of the root element.                                                                                                                                       | `React.CSSProperties`                                             | -            |
+| title         | Title, rendered in the title style. Accepts any ReactNode.                                                                                                              | `React.ReactNode`                                                 | -            |

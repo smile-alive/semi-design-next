@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                            | Type                                                                              | Default |
+| --------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------- |
+| children  | Value: a `ReactNode`, or a function called when rendered.                              | <ApiType detail={"React.ReactNode \u007c (() => React.ReactNode)"}>Type</ApiType> | -       |
+| className | Class name of the outer wrapper `tr` in vertical layout; ignored in horizontal layout. | `string`                                                                          | -       |
+| hidden    | Whether to hide the item.                                                              | `boolean`                                                                         | -       |
+| itemKey   | Key, a `ReactNode`.                                                                    | `React.ReactNode`                                                                 | -       |
+| keyStyle  | Custom style of the key, such as its width or alignment.                               | `React.CSSProperties`                                                             | -       |
+| ref       | Reference to the outer wrapper `tr` in vertical layout; ignored in horizontal layout.  | <ApiType detail={"React.Ref\u003cHTMLTableRowElement>"}>Type</ApiType>            | -       |
+| span      | Number of columns the cell spans; 1 when unset.                                        | `number`                                                                          | -       |
+| style     | Style of the outer wrapper `tr` in vertical layout; ignored in horizontal layout.      | `React.CSSProperties`                                                             | -       |

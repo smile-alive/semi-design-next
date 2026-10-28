@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                     | Type                                                                | Default  |
+| --------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------- |
+| align     | Text alignment of the label: `left` or `right`.                                                                 | `string`                                                            | `"left"` |
+| children  | Content of the label, used when `text` is not set.                                                              | `React.ReactNode`                                                   | -        |
+| className | Class name of the label element.                                                                                | `string`                                                            | `""`     |
+| disabled  | Whether the label looks disabled.                                                                               | `boolean`                                                           | -        |
+| extra     | Content after the label text.                                                                                   | `React.ReactNode`                                                   | -        |
+| id        | The id of the label element.                                                                                    | `string`                                                            | -        |
+| name      | The id of the labeled control, written to the `for` attribute. The native `htmlFor` is used when it is not set. | `string`                                                            | -        |
+| optional  | Whether to append the optional text of the locale. When `true`, the `*` of required is hidden.                  | `boolean`                                                           | `false`  |
+| ref       | Reference to the label element.                                                                                 | <ApiType detail={"React.Ref\u003cHTMLLabelElement>"}>Type</ApiType> | -        |
+| required  | Whether to display the required `*` symbol. It is hidden when `optional` is `true`.                             | `boolean`                                                           | `false`  |
+| style     | Inline style of the label element.                                                                              | `React.CSSProperties`                                               | -        |
+| text      | Text of the label. children is used when it is not set.                                                         | `React.ReactNode`                                                   | -        |
+| width     | Width of the label. A number is in px.                                                                          | `number \| string`                                                  | -        |

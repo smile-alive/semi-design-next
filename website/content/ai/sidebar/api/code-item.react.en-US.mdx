@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property           | Description                                                                                          | Type                                                             | Default |
+| ------------------ | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------- |
+| codeHighlightProps | Props of CodeHighlight, spread after `code` and `language`.                                          | `CodeHighlightProps`                                             | -       |
+| content            | Code or text content.                                                                                | `string`                                                         | -       |
+| isJson             | Whether the content is JSON; when true, JsonViewer displays it.                                      | `boolean`                                                        | -       |
+| jsonViewerProps    | Props of JsonViewer, spread after the defaults for `value`, `height`, `width` and so on.             | <ApiType detail={"Partial\u003cJsonViewerProps>"}>Type</ApiType> | `{}`    |
+| key                | Identifies the panel for the `activeKey` of CodeContent, and decides when a Sidebar detail remounts. | `string`                                                         | -       |
+| language           | Language of the code (such as js, ts or css), same as `language` of CodeHighlight.                   | `string`                                                         | -       |
+| name               | Name, shown in the panel header and in the Sidebar detail header.                                    | `string`                                                         | -       |

@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性              | 说明                                                                                                                                                                                                                  | 类型                                                 | 默认值 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------ |
+| children          | 受该配置影响的内容。显式传入的 `direction` 与外层不同时（含最外层），内容外包一层带 `dir` 属性的 `div`。                                                                                                              | `React.ReactNode`                                    | -      |
+| direction         | 文本方向，可选 `ltr` 或 `rtl`。未传时继承外层 ConfigProvider，最外层为 `ltr`。                                                                                                                                        | `'ltr' \| 'rtl'`                                     | -      |
+| getPopupContainer | 返回弹层容器的函数，只影响仍通过 Portal 渲染的 Modal、SideSheet、ImagePreview，容器需要设置 `position: relative`。未传时继承外层，最外层为 `document.body`。                                                          | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | -      |
+| locale            | 多语言配置，优先级高于 LocaleProvider。未传时继承外层 ConfigProvider；没有 ConfigProvider 设置时由 LocaleProvider 决定，两者都没有时使用 `zh_CN`。传 `null` 清除外层的 locale，交给内部的 LocaleProvider 或默认语言。 | `Locale \| null`                                     | -      |
+| responsiveMap     | 自定义响应式断点，key 为 `xs`、`sm`、`md`、`lg`、`xl`、`xxl`，value 为 media query 字符串。按内容比较，内联写对象不会重新注册监听；未传时继承外层，最外层使用 `ConfigProvider.defaultResponsiveMap`。                 | `ResponsiveMap`                                      | -      |
+| responsiveObserve | 是否开启响应式断点监听。关闭时不注册任何 `matchMedia` 监听；开启后在首次订阅时注册，无订阅时注销。未传时继承外层，最外层为 `false`。                                                                                  | `boolean`                                            | -      |
+| timeZone          | 时间类组件使用的时区：数字（距 UTC 的小时偏移）、`GMT±HH:MM` 字符串或 IANA 标识。数字和 GMT 写法是全年固定的偏移。未传时继承外层。                                                                                    | `string \| number`                                   | -      |

@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                   | 类型                                                              | 默认值 |
+| ------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- | ------ |
+| children      | 替换默认握把图标的内容。                                               | `React.ReactNode`                                                 | -      |
+| className     | 手柄的类名。                                                           | `string`                                                          | -      |
+| direction     | 组件忽略此属性，手柄方向由所在 `ResizeGroup` 的 `direction` 决定。     | `Direction`                                                       | -      |
+| disabled      | 组件忽略此属性，不会禁用手柄。                                         | `boolean`                                                         | -      |
+| onResizeStart | 组件忽略此属性，开始伸缩的回调请使用 `ResizeItem` 的 `onResizeStart`。 | `HandlerCallback`                                                 | -      |
+| ref           | 手柄根元素（`div`）的引用。                                            | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -      |
+| style         | 手柄的样式。                                                           | `React.CSSProperties`                                             | -      |

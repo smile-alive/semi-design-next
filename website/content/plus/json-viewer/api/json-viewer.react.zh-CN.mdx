@@ -1,0 +1,31 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| className | 根元素的类名。 | `string` | - |
+| height | 高度，数字按 px 处理，字符串原样使用。 | `number \| string` | `400` |
+| limitSearchButtonBounds | 是否限制搜索按钮的拖动范围在组件容器内。 | `boolean` | - |
+| onChange | 编辑内容变化时调用，参数为编辑器当前文本。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| options | 编辑器配置，字段见 JsonViewerOptions。ariaLabel 未传时取语言包 `JsonViewer.content`，readOnly 与 autoWrap 默认分别为 `false` 与 `true`；三者按键合并，只传部分字段时其余仍取默认值。options 按深比较变化时重建编辑器；就地修改 formatOptions、customRenderRule 等嵌套对象不会被察觉，需替换为新对象。 | `JsonViewerOptions` | - |
+| ref | 组件句柄，类型为 `JsonViewerHandle`，上面的方法见下方 Methods。注意它不是根 DOM 元素。 | <ApiType detail={"React.Ref\u003cJsonViewerHandle>"}>Type</ApiType> | - |
+| renderSearchButton | 自定义渲染搜索按钮。第一个参数是默认按钮的 ReactNode，可直接放进返回的内容中；第二个参数 `searchControls` 为搜索状态与方法，其中 `showSearchBar` 是渲染时的值，状态变化后组件会重新渲染。 | <ApiType detail={"( defaultSearchButton: React.ReactNode, searchControls: { showSearchBar: boolean; onToggleSearchBar: () => void; onSearch: (text: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void; onPrevSearch: () => void; onNextSearch: () => void; onReplace: (text: string) => void; onReplaceAll: (text: string) => void; } ) => React.ReactNode"}>Type</ApiType> | - |
+| showSearch | 是否显示搜索按钮。 | `boolean` | `true` |
+| style | 根元素的内联样式，同名属性会覆盖组件设置的 width、height 与 position。 | `React.CSSProperties` | - |
+| value | 展示与编辑的 JSON 文本，未传时为空文本。只有 value 与编辑器当前内容不同时才会重建编辑器，把 onChange 的值写回 value 不会丢失光标、焦点和撤销历史。 | `string` | `""` |
+| width | 宽度，数字按 px 处理，字符串原样使用。 | `number \| string` | `400` |
+
+**Methods**
+
+| 方法             | 说明                                                                                           | 类型                                                                                                                           |
+| ---------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| format           | 按 formatOptions 格式化当前内容。                                                              | <ApiType detail={"() => void"}>Type</ApiType>                                                                                  |
+| getSearchResults | 获取当前搜索结果。                                                                             | <ApiType detail={"() => ReturnType\u003cJsonViewerFoundation['getSearchResults']>"}>Type</ApiType>                             |
+| getStyle         | 返回当前的 width 与 height。                                                                   | <ApiType detail={"() => { width: number \u007c string; height: number \u007c string }"}>Type</ApiType>                         |
+| getValue         | 获取编辑器当前文本。                                                                           | <ApiType detail={"() => string"}>Type</ApiType>                                                                                |
+| nextSearch       | 跳转到下一个搜索结果，可选步长。                                                               | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |
+| prevSearch       | 跳转到上一个搜索结果，可选步长。                                                               | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |
+| replace          | 替换当前搜索匹配项；替换文本为空串时删除匹配，没有匹配时不做任何事，只读模式下同样不做任何事。 | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                               |
+| replaceAll       | 替换所有搜索匹配项；替换文本为空串时删除全部匹配，只读模式下不做任何事。                       | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                               |
+| search           | 搜索文本，可选参数控制大小写敏感、全词匹配和正则表达式。                                       | <ApiType detail={"(searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void"}>Type</ApiType> |

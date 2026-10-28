@@ -1,0 +1,68 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bordered | Whether to show the outer border and the column borders. | `boolean` | `false` |
+| children | `Table.Column` children, read when `columns` is not given. | `ReactNode` | - |
+| childrenRecordName | The field of a record that holds its child records in a tree table. | `string` | `"children"` |
+| className | Class name of the outermost container. | `string` | `""` |
+| clickGroupedRowToExpand | Clicking a group row expands or collapses the group. | `boolean` | - |
+| columns | The column configuration, see Column. When given, an empty array included, it takes precedence over the `Table.Column` children. | <ApiType detail={"ColumnProps\u003cRecordType>[]"}>Type</ApiType> | - |
+| components | Replaces the elements Table renders, such as `table`, `header.cell` and `body.row`, with a tag name or a component; the component receives the props of the element it replaces. | `TableComponents` | - |
+| dataSource | The data. Give every record a unique key, or name the primary key field with `rowKey`. | `RecordType[]` | `[]` |
+| defaultExpandAllGroupRows | Whether all group rows start expanded. Has no effect on data loaded later. | `boolean` | `false` |
+| defaultExpandAllRows | Whether all rows start expanded. Has no effect on data loaded later. | `boolean` | `false` |
+| defaultExpandedRowKeys | The keys of the rows that start expanded. Has no effect on data loaded later. | `(string \| number)[]` | `[]` |
+| direction | The text direction. Defaults to the direction of ConfigProvider and can be set here per table. | `Direction` | - |
+| empty | The content shown when there is no data. Defaults to the empty text of the locale. | `ReactNode` | - |
+| expandAllGroupRows | Whether all group rows are expanded. | `boolean` | `false` |
+| expandAllRows | Whether all rows are expanded. | `boolean` | `false` |
+| expandCellFixed | Whether the column of the expand button is fixed, with the same values as the `fixed` field of a column. | `Fixed` | `false` |
+| expandedRowKeys | The keys of the expanded rows. When given, row expansion is controlled. | `(string \| number)[]` | - |
+| expandedRowRender | The extra row rendered under a record. Returns an element, or an object `{ children, fixed }` that sets how the expanded row is fixed. Give every record a unique key, or name the primary key field with `rowKey`. | <ApiType detail={"ExpandedRowRender\u003cRecordType>"}>Type</ApiType> | - |
+| expandIcon | `false` hides the expand buttons. An element or a function replaces the icon; the function receives `expanded`. | `ExpandIcon` | - |
+| expandRowByClick | Whether clicking a row expands an expandable row. | `boolean` | `false` |
+| footer | The table footer: an element, or a function that receives the data of the current page and returns an element. | <ApiType detail={"Footer\u003cRecordType>"}>Type</ApiType> | - |
+| getVirtualizedListRef | Called with the ref of the list once a virtualized table creates it; its `current` provides `scrollTo` and `scrollToItem`. Only effective with `virtualized`. | `GetVirtualizedListRef` | - |
+| groupBy | The grouping rule: a record field name, or a function that returns a string or a number. | <ApiType detail={"GroupBy\u003cRecordType>"}>Type</ApiType> | - |
+| headerStyle | Inline style of every header cell, fixed headers included. | `React.CSSProperties` | - |
+| hideExpandedColumn | In an expandable table the expand button shares the first cell by default; set `false` to render it as its own column. | `boolean` | `true` |
+| id | Id of the outermost container. | `string` | - |
+| indentSize | The indent of each tree level, in pixels. | `number` | `20` |
+| keepDOM | Whether collapsing a row keeps its DOM. | `boolean` | - |
+| loading | Whether the table shows its loading state. | `boolean` | `false` |
+| onChange | Called when pagination, sorting or filtering changes. `changeInfo` holds `pagination`, `filters`, `sorter` and `extra`, whose `extra.changeType` is `sorter`, `filter` or `pagination`. | <ApiType detail={"OnChange\u003cRecordType>"}>Type</ApiType> | - |
+| onExpand | Called when the expand icon of a row is clicked, with whether the row is now expanded, the record and the mouse event. | <ApiType detail={"OnExpand\u003cRecordType>"}>Type</ApiType> | - |
+| onExpandedRowsChange | Called when the expanded rows change, with the records of the expanded rows. | <ApiType detail={"OnExpandedRowsChange\u003cRecordType>"}>Type</ApiType> | - |
+| onGroupedRow | Like `onRow`, for group rows: the returned object is merged into the `tr` of the group row. `index` is the group's ordinal, or its position among the virtual list's rows when `virtualized` is on. | <ApiType detail={"OnGroupedRow\u003cRecordType>"}>Type</ApiType> | - |
+| onHeaderRow | Sets the attributes and events of a header row. The returned object is merged into the `tr` of the header row, without `style`; use `headerStyle` for it. | <ApiType detail={"OnHeaderRow\u003cRecordType>"}>Type</ApiType> | - |
+| onRow | Sets the attributes and events of a data row; the third argument is the row state, with `disabled` and `selected`. The returned object is merged into the `tr` of the row. | <ApiType detail={"OnRow\u003cRecordType>"}>Type</ApiType> | - |
+| onRowContextMenu | Called when a data row receives the context menu, before the `onContextMenu` returned by `onRow`; both run. | <ApiType detail={"(record: RecordType, e: React.MouseEvent\u003cHTMLElement>) => void"}>Type</ApiType> | - |
+| onRowDoubleClick | Called when a data row is double-clicked, before the `onDoubleClick` returned by `onRow`; both run. | <ApiType detail={"(record: RecordType, e: React.MouseEvent\u003cHTMLElement>) => void"}>Type</ApiType> | - |
+| onRowMouseEnter | Called when the mouse enters a data row, before the `onMouseEnter` returned by `onRow`; both run. | <ApiType detail={"(record: RecordType, e: React.MouseEvent\u003cHTMLElement>) => void"}>Type</ApiType> | - |
+| onRowMouseLeave | Called when the mouse leaves a data row, before the `onMouseLeave` returned by `onRow`; both run. | <ApiType detail={"(record: RecordType, e: React.MouseEvent\u003cHTMLElement>) => void"}>Type</ApiType> | - |
+| pagination | The pagination configuration. Pass `false` to turn pagination off. | `TablePagination` | `true` |
+| prefixCls | The prefix of the class names. | `string` | `"semi-table"` |
+| ref | The table handle, which provides the `getCurrentPageData` method below. | <ApiType detail={"React.Ref\u003cTableHandle\u003cRecordType>>"}>Type</ApiType> | - |
+| renderGroupSection | Renders the content of a group row. An element is the content of the single cell of the group row; an object `{ children, ...column }` gives the content in `children` and the other fields as the configuration of that column. | `RenderGroupSection` | - |
+| renderPagination | Renders a custom pager from the pagination configuration, and returns an element. | `RenderPagination` | - |
+| resizable | Whether columns can be resized; a resizable column needs a `width`. An object configures `onResize`, `onResizeStart`, `onResizeStop` and `handlerClassName`. | <ApiType detail={"Resizable\u003cRecordType>"}>Type</ApiType> | - |
+| rowExpandable | Tells whether a row can be expanded. A row that returns `false` has no expand button. | <ApiType detail={"RowExpandable\u003cRecordType>"}>Type</ApiType> | - |
+| rowKey | The row key: a record field name, or a function that returns a string or a number. | <ApiType detail={"RowKey\u003cRecordType>"}>Type</ApiType> | `"key"` |
+| rowSelection | The row selection configuration. Pass `true` for the defaults, see rowSelection. | <ApiType detail={"RowSelection\u003cRecordType>"}>Type</ApiType> | `null` |
+| rowSpanHover | Hovering a cell with `rowSpan` highlights every row the cell spans. | `boolean` | - |
+| scroll | The scroll area: `x` is the width and `y` the height, see scroll. | `Scroll` | - |
+| showHeader | Whether to show the header. | `boolean` | `true` |
+| size | The table size, which sets the padding of the cells. | `Size` | `"default"` |
+| sticky | Sticks the header to the top of the page. With an object, `top` is the distance from the top of the scroll container. | `Sticky` | - |
+| style | Style of the outermost container. | `React.CSSProperties` | - |
+| title | The table title: an element, or a function that receives the data of the current page and returns an element. | <ApiType detail={"Title\u003cRecordType>"}>Type</ApiType> | - |
+| virtualized | Turns on virtualization, which needs `scroll.y` as a number. An object sets the row height `itemSize`, the scroll callback `onScroll` and the extra rows `overscanCount`. | `Virtualized` | - |
+
+**Methods**
+
+| Method             | Description                                                                                                                                                 | Type                                                                                                            |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| getCurrentPageData | Returns the data of the current page, deep cloned, as `{ dataSource, groups }`; `groups` is a Map from each group key to the set of row keys of that group. | <ApiType detail={"() => Pick\u003cBasePageData\u003cRecordType>, 'dataSource' \u007c 'groups'>"}>Type</ApiType> |

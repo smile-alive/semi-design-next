@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                        | Type                                                       | Default  |
+| ----------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- | -------- |
+| bordered    | Whether to show a border. Only takes effect in non-full mode.                                                      | `boolean`                                                  | -        |
+| closeIcon   | Replaces the icon in the close button. Pass null to remove the close button.                                       | `JSX.Element`                                              | -        |
+| description | Description content.                                                                                               | `JSX.Element`                                              | -        |
+| fullMode    | Whether the banner is in full mode.                                                                                | `boolean`                                                  | `true`   |
+| icon        | Replaces the icon of `type`. Pass null to hide the icon.                                                           | `JSX.Element`                                              | -        |
+| onClose     | Called when the close button is clicked, with its native click event. The banner hides after the callback returns. | <ApiType detail={"(e: MouseEvent) => void"}>Type</ApiType> | -        |
+| title       | Title content.                                                                                                     | `JSX.Element`                                              | -        |
+| type        | Type: info, success, danger or warning.                                                                            | `BannerType`                                               | `"info"` |

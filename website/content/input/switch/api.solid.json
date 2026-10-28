@@ -1,0 +1,51 @@
+{
+    "switch": {
+        "source": "packages/semi-ui-solid/src/switch/switch.tsx",
+        "props": {
+            "checked": {
+                "zh-CN": "选中状态。不为 `undefined` 时为受控：显示由该值决定，点击只触发 onChange，需在回调中更新该值。变回 `undefined` 后取消选中并转为非受控。",
+                "en-US": "Checked state. When not `undefined` it is controlled: the value decides what is shown, and a click only calls onChange, so update the value in the callback. Setting it back to `undefined` unchecks the switch and makes it uncontrolled."
+            },
+            "checkedText": {
+                "zh-CN": "选中时展示的内容，size 为 small 时不显示。",
+                "en-US": "Content shown when checked. Not shown when size is small."
+            },
+            "defaultChecked": {
+                "zh-CN": "非受控时的初始选中状态，只在首次渲染时读取。",
+                "en-US": "Initial checked state when uncontrolled. Read only once, on the first render."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。",
+                "en-US": "Whether the switch is disabled."
+            },
+            "loading": {
+                "zh-CN": "是否处于加载中；加载中 input 仍可聚焦并带 `aria-disabled`，切换被忽略且不触发 onChange。",
+                "en-US": "Whether the switch is loading. While loading, the input stays focusable with `aria-disabled`; toggles are ignored and onChange is not called."
+            },
+            "name": {
+                "zh-CN": "原生 input 的 name，用于表单提交。",
+                "en-US": "Name of the native input, used when the form is submitted."
+            },
+            "onBlur": {
+                "zh-CN": "原生 input 失去焦点时的回调。焦点事件不冒泡，因此挂在 input 上。",
+                "en-US": "Called when the native input loses focus. Focus events do not bubble, so it is attached to the input."
+            },
+            "onChange": {
+                "zh-CN": "切换状态时的回调，参数为新的选中状态与原生 change 事件；加载中不触发。",
+                "en-US": "Called when the user toggles the switch, with the new checked state and the native change event. Not called while loading."
+            },
+            "onFocus": {
+                "zh-CN": "原生 input 获得焦点时的回调。焦点事件不冒泡，因此挂在 input 上。",
+                "en-US": "Called when the native input gets focus. Focus events do not bubble, so it is attached to the input."
+            },
+            "size": {
+                "zh-CN": "开关尺寸，可选 large、default 或 small。",
+                "en-US": "Switch size: large, default or small."
+            },
+            "uncheckedText": {
+                "zh-CN": "未选中时展示的内容，size 为 small 时不显示。",
+                "en-US": "Content shown when unchecked. Not shown when size is small."
+            }
+        }
+    }
+}

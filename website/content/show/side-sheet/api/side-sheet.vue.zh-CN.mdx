@@ -1,0 +1,48 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                | 说明                                                                                                       | 类型                                                   | 默认值                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------- |
+| bodyStyle           | 面板内容区的样式。                                                                                         | `StyleValue`                                           | `semiGlobalDefault("SideSheet", "bodyStyle")`           |
+| canVerticalSetWidth | placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。                                       | `boolean`                                              | `semiGlobalDefault("SideSheet", "canVerticalSetWidth")` |
+| closable            | 是否显示右上角的关闭按钮。                                                                                 | `boolean`                                              | `semiDefault("SideSheet", "closable", true)`            |
+| closeOnEsc          | 是否允许按 Esc 关闭面板。                                                                                  | `boolean`                                              | `semiDefault("SideSheet", "closeOnEsc", false)`         |
+| disableScroll       | 带遮罩且渲染在 document.body 中时是否禁止 body 滚动，即给 body 添加 overflow: hidden。                     | `boolean`                                              | `semiDefault("SideSheet", "disableScroll", true)`       |
+| getPopupContainer   | 指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative；这会改变浮层的 DOM 位置，不改变视图位置。 | <ApiType detail={"(() => HTMLElement)"}>Type</ApiType> | `undefined`                                             |
+| headerStyle         | 面板头部的样式。                                                                                           | `StyleValue`                                           | `semiGlobalDefault("SideSheet", "headerStyle")`         |
+| height              | 高度，placement 为 top、bottom 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时为 448。             | `string \| number`                                     | `semiGlobalDefault("SideSheet", "height")`              |
+| keepDOM             | 关闭时是否保留面板内部节点而不销毁。                                                                       | `boolean`                                              | `semiDefault("SideSheet", "keepDOM", false)`            |
+| mask                | 是否显示遮罩；为 false 时允许操作外部区域。                                                                | `boolean`                                              | `semiDefault("SideSheet", "mask", true)`                |
+| maskClosable        | 是否允许点击遮罩关闭面板。                                                                                 | `boolean`                                              | `semiDefault("SideSheet", "maskClosable", true)`        |
+| maskStyle           | 遮罩的样式。                                                                                               | `StyleValue`                                           | `semiGlobalDefault("SideSheet", "maskStyle")`           |
+| motion              | 是否开启动画。                                                                                             | `boolean`                                              | `semiDefault("SideSheet", "motion", true)`              |
+| placement           | 面板滑出的位置。                                                                                           | `Placement`                                            | `semiDefault("SideSheet", "placement", "right")`        |
+| size                | 尺寸，small 为 448px、medium 为 684px、large 为 920px，仅 placement 为 left、right 时生效。                | `"small" \| "medium" \| "large"`                       | `semiDefault("SideSheet", "size", "small")`             |
+| title               | 纯文本标题；同时给出 title 插槽时插槽优先。                                                                | `string`                                               | `semiGlobalDefault("SideSheet", "title")`               |
+| visible             | 面板是否可见，配合 v-model:visible 使用。                                                                  | `boolean`                                              | `semiGlobalDefault("SideSheet", "visible")`             |
+| width               | 宽度，placement 为 left、right 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时由 size 决定。       | `string \| number`                                     | `semiGlobalDefault("SideSheet", "width")`               |
+| zIndex              | 弹层的 z-index。                                                                                           | `number`                                               | `semiDefault("SideSheet", "zIndex", 1000)`              |
+
+**Events**
+
+| 事件               | 说明                                                                                                                                                                | 回调参数                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| cancel             | 用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，晚于 update:visible；载荷为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。                                            | `[event: MouseEvent \| KeyboardEvent]` |
+| update:visible     | 关闭按钮、遮罩或 Esc 关闭面板时先于 cancel 触发，值为 false，供 v-model:visible 回写。                                                                              | `[visible: boolean]`                   |
+| afterVisibleChange | 显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次；在 KeepAlive 中失活、重新激活时不触发。 | `[visible: boolean]`                   |
+
+**Slots**
+
+| 插槽      | 说明                                                                        | 作用域参数 |
+| --------- | --------------------------------------------------------------------------- | ---------- |
+| default   | 面板的正文。                                                                | `any`      |
+| title     | 标题，优先于 title 属性，同时作为对话框的可访问名称。内容为空时不渲染标题。 | `any`      |
+| footer    | 面板底部。内容为空时不渲染底部。                                            | `any`      |
+| closeIcon | 关闭按钮中的图标；空插槽时回落到默认图标，隐藏按钮用 closable 为 false。    | `any`      |
+
+**Exposes**
+
+| 名称 | 说明                                                      | 类型                     |
+| ---- | --------------------------------------------------------- | ------------------------ |
+| root | Portal 内的最外层 .semi-sidesheet 元素，未渲染时为 null。 | `HTMLDivElement \| null` |

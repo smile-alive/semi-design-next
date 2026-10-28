@@ -1,0 +1,49 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| mode | 展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。 | `FeedbackMode` | `semiDefault("Feedback", "mode", "popup")` |
+| type | 反馈内容的类型。custom 时内容写在默认插槽中。 | `FeedbackType` | `semiDefault("Feedback", "type", "emoji")` |
+| visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `semiDefault("Feedback", "visible", false)` |
+| title | 纯文本标题，同时作为对话框的可访问名称；同时给出 title 插槽时以插槽为准。 | `string` | `semiGlobalDefault("Feedback", "title")` |
+| textAreaProps | type 为 text 与 emoji 时多行输入框的属性。受控值键为 modelValue，监听键为 onChange；传入的 modelValue 优先于 Feedback 的内部值。 | `FeedbackTextAreaProps` | `semiGlobalDefault("Feedback", "textAreaProps")` |
+| radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackRadioGroupProps` | `semiGlobalDefault("Feedback", "radioGroupProps")` |
+| checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackCheckboxGroupProps` | `semiGlobalDefault("Feedback", "checkboxGroupProps")` |
+| okButtonProps | 提交按钮的属性。未给 disabled 时按值禁用（值为空时禁用），给出后以使用方的值为准，type 为 custom 时用它控制提交；loading 取内置的挂起态与使用方的 loading 任一为真；onClick 先于内置处理调用，不会替换内置处理。 | `ModalButtonProps` | `semiGlobalDefault("Feedback", "okButtonProps")` |
+| cancelButtonProps | 取消按钮的属性。loading 取内置的挂起态与使用方的 loading 任一为真；onClick 先于内置处理调用，不会替换内置处理。 | `ModalButtonProps` | `semiGlobalDefault("Feedback", "cancelButtonProps")` |
+| onOk | 点击提交按钮时调用，返回后清空已填写的值；返回 Promise 时按钮保持加载，fulfill 后才清空，reject 时保留。组件不会自行关闭，由使用方把 visible 设为 false。保留为函数 prop 以读取返回值，使用方照常写 @ok。 | <ApiType detail={"((event: MouseEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+| onCancel | 取消按钮、关闭按钮、Esc（modal 模式另有点击遮罩）触发；按 Esc 时参数为原生 KeyboardEvent。返回后清空已填写的值并更新 v-model:visible；返回 Promise 时取消按钮保持加载，fulfill 后才清空并更新，reject 时保持打开。保留为函数 prop 以读取返回值，使用方照常写 @cancel。 | <ApiType detail={"((event: MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cunknown>)"}>Type</ApiType> | `undefined` |
+
+**Events**
+
+| 事件               | 说明                                                                                                                                                        | 回调参数                 |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| update:visible     | 取消路径（取消按钮、关闭按钮、Esc，modal 模式另有遮罩）完成后触发，值为 false，供 v-model:visible 回写。提交按钮只调用 onOk，不触发该事件。                 | `[visible: boolean]`     |
+| valueChange        | 反馈内容变化时触发，载荷为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。 | `[value: FeedbackValue]` |
+| afterClose         | 弹层完全关闭后触发，两种模式都会触发。                                                                                                                      | `[]`                     |
+| afterVisibleChange | 显示状态变化且动画结束后触发，仅 popup 模式发出。                                                                                                           | `[visible: boolean]`     |
+
+**Slots**
+
+| 插槽          | 说明                                                                                                               | 作用域参数                     |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
+| default       | type 为 custom 时的反馈内容。                                                                                      | `any`                          |
+| content       | 包裹或替换内置内容，任何 type 都可用，参数 content 是内置内容的 VNode，用 `<component :is="content" />` 放置。     | `FeedbackContentSlotProps`     |
+| title         | 标题，优先于 title 属性。                                                                                          | `any`                          |
+| footer        | 替换默认的取消、提交按钮。传入空插槽时不渲染页脚区域。                                                             | `any`                          |
+| closeIcon     | 关闭按钮中的图标。                                                                                                 | `any`                          |
+| header        | 仅 modal 模式：完全替换默认头部。                                                                                  | `any`                          |
+| icon          | 仅 modal 模式：标题前的图标。                                                                                      | `any`                          |
+| modal         | 仅 modal 模式：自定义渲染对话框本身，参数 modal 是 role=dialog 元素的 VNode，用 `<component :is="modal" />` 放置。 | `FeedbackModalSlotProps`       |
+| radioLabel    | 自定义 radioGroupProps.options 中每一项的文本，作用域参数为 option 与 index。                                      | `RadioGroupOptionSlotProps`    |
+| radioExtra    | 自定义 radioGroupProps.options 中每一项的辅助文本，作用域参数为 option 与 index。                                  | `RadioGroupOptionSlotProps`    |
+| checkboxLabel | 自定义 checkboxGroupProps.options 中每一项的文本，作用域参数为 option 与 index。                                   | `CheckboxGroupOptionSlotProps` |
+| checkboxExtra | 自定义 checkboxGroupProps.options 中每一项的辅助文本，作用域参数为 option 与 index。                               | `CheckboxGroupOptionSlotProps` |
+
+**Exposes**
+
+| 名称 | 说明                                                         | 类型                     |
+| ---- | ------------------------------------------------------------ | ------------------------ |
+| root | Portal 内 Modal 或 SideSheet 的最外层元素，未渲染时为 null。 | `HTMLDivElement \| null` |

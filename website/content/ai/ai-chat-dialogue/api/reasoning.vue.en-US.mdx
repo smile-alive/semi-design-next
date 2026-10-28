@@ -1,0 +1,26 @@
+**Props**
+
+| Property            | Description                                                                                                                              | Type                                                            | Default     |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------- |
+| status              | Reasoning status. completed shows the finished title and starts collapsed; any other value shows the thinking title and starts expanded. | `string`                                                        | `undefined` |
+| summary             | Reasoning summary. When it is not empty, its texts joined by line breaks form the reasoning text.                                        | `{ text?: string \| undefined; type?: string \| undefined; }[]` | `undefined` |
+| content             | Reasoning content. When summary is empty, its texts joined by line breaks form the reasoning text.                                       | `{ text?: string \| undefined; type?: string \| undefined; }[]` | `undefined` |
+| markdownRenderProps | Props passed to the MarkdownRender of the reasoning text; raw comes from the reasoning text.                                             | `MarkdownRenderProps`                                           | `undefined` |
+
+**Events**
+
+| Event | Description | Callback parameters |
+| ----- | ----------- | ------------------- |
+| None  |             |                     |
+
+**Slots**
+
+| Slot    | Description                                                                                                   | Scope parameters       |
+| ------- | ------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| content | Replaces the Markdown rendering of the reasoning text, with status, summary, content and markdownRenderProps. | `ReasoningWidgetProps` |
+
+**Exposes**
+
+| Name | Description | Type |
+| ---- | ----------- | ---- |
+| None |             |      |

@@ -1,0 +1,76 @@
+{
+    "timeline": {
+        "source": "packages/semi-ui-react/src/timeline/index.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "时间轴的节点，通常为 `Timeline.Item`；dataSource 非空时被忽略。",
+                "en-US": "Timeline items, usually `Timeline.Item`. Ignored when dataSource is not empty."
+            },
+            "className": {
+                "zh-CN": "根元素 `ul` 的类名。",
+                "en-US": "Class name of the root `ul` element."
+            },
+            "dataSource": {
+                "zh-CN": "数据数组，非空时按数据渲染节点并忽略子节点；每项的属性与 Timeline.Item 相同，`content` 为节点内容。",
+                "en-US": "Data array. When it is not empty, the items are rendered from it and children are ignored. Each item takes the Timeline.Item props, with `content` as its content."
+            },
+            "mode": {
+                "zh-CN": "时间轴与内容的相对位置，可选 `left`、`right`、`center` 或 `alternate`。",
+                "en-US": "Position of the timeline relative to the content: `left`, `right`, `center` or `alternate`."
+            },
+            "ref": {
+                "zh-CN": "根元素 `ul` 的引用。",
+                "en-US": "Reference to the root `ul` element."
+            },
+            "style": {
+                "zh-CN": "根元素 `ul` 的样式。",
+                "en-US": "Style of the root `ul` element."
+            }
+        }
+    },
+    "timeline-item": {
+        "source": "packages/semi-ui-react/src/timeline/item.tsx",
+        "props": {
+            "children": {
+                "zh-CN": "节点内容。",
+                "en-US": "Content of the item."
+            },
+            "className": {
+                "zh-CN": "根元素 `li` 的类名。",
+                "en-US": "Class name of the root `li` element."
+            },
+            "color": {
+                "zh-CN": "圆点的背景色，覆盖 type 对应的颜色。",
+                "en-US": "Background color of the dot, overriding the color of type."
+            },
+            "dot": {
+                "zh-CN": "自定义圆点内容，替换默认圆点。",
+                "en-US": "Custom dot content, replacing the default dot."
+            },
+            "extra": {
+                "zh-CN": "辅助说明内容，为空时不渲染；点击该区域不触发 onClick。",
+                "en-US": "Extra content, not rendered when empty. Clicks in this area do not trigger onClick."
+            },
+            "position": {
+                "zh-CN": "覆盖 Timeline 的 mode，指定该项位于 `left` 或 `right` 一侧。",
+                "en-US": "Overrides the mode of the Timeline for this item: `left` or `right`."
+            },
+            "ref": {
+                "zh-CN": "根元素 `li` 的引用。",
+                "en-US": "Reference to the root `li` element."
+            },
+            "style": {
+                "zh-CN": "根元素 `li` 的样式。",
+                "en-US": "Style of the root `li` element."
+            },
+            "time": {
+                "zh-CN": "时间文本，为空时不渲染。",
+                "en-US": "Time text, not rendered when empty."
+            },
+            "type": {
+                "zh-CN": "圆点类型，可选 `default`、`ongoing`、`success`、`warning` 或 `error`。",
+                "en-US": "Dot type: `default`, `ongoing`, `success`, `warning` or `error`."
+            }
+        }
+    }
+}

@@ -1,0 +1,134 @@
+---
+order: 33
+title: 快捷键
+icon: doc-configprovider
+brief: 用于方便用户自定义快捷键及相关操作
+---
+
+import HotKeysReactApi from './api/hot-keys.react.zh-CN.mdx';
+import HotKeysVueApi from './api/hot-keys.vue.zh-CN.mdx';
+import HotKeysSolidApi from './api/hot-keys.solid.zh-CN.mdx';
+
+## 使用场景
+
+需要向用户表达快捷键组合的使用方式时，使用 Hotkeys 组件可快速渲染出对应的 UI 元素且自动获得事件绑定
+
+## 代码演示
+
+### 如何引入
+
+<Framework only="react">
+
+```jsx
+import { HotKeys } from '@fibrae/semi-ui-react';
+```
+
+</Framework>
+
+<Framework only="vue">
+
+```vue
+<script setup lang="ts">
+    import { HotKeys } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="solid">
+
+```jsx
+import { HotKeys } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+### 说明
+
+快捷键由一个普通键加上 0 个或多个修饰键（`Shift`、`Control`、`Meta`、`Alt`）组成，不带修饰键的单个普通键（如 `['k']`）同样有效。监听挂在 `document.body`（或 `getListenerTarget` 返回的元素）的 keydown 上，焦点在输入框内时同样会触发；需要避开输入场景时，请在 `onHotKey`（Vue 为 `@hotKey`）中自行判断 `event.target`。修饰键必须与设定完全一致：设定为 `['k']` 时，按住 Ctrl 再按 K 不会触发。
+
+按键按物理按键位置匹配，`!`、`@`、`?` 等需要按住 Shift 才能输入的符号不是有效按键，设置时会抛错。请写成 `Shift` 加基础键，例如 `['Shift', '1']`、`['Shift', '/']`。
+
+> [Meta](https://developer.mozilla.org/zh-CN/docs/Web/API/KeyboardEvent/metaKey) 在MacOS中为`Command`，在Windows中为`Win`
+
+当设定快捷键与常用快捷键如`Ctrl/Meta + C`相同时，可以通过设置`preventDefault`控制默认事件是否触发。
+
+### 基本用法
+
+基本使用，通过`hotKeys`传入快捷键组合，通过 `onHotKey`（Vue 为 `@hotKey`）绑定快捷键处理函数，作出响应动作。
+
+按下 Ctrl + Shift + A， 唤起modal。默认在 body.document 监听，全局生效。
+
+[hotKeys取值参考](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values)，也可以使用`HotKeys.Keys`进行设置
+
+<Demo id="basic" />
+
+### 自定义内容
+
+通过`content`传入渲染的字符
+
+<Demo id="content" />
+
+<Framework only="react">
+
+通过`render`传入代替渲染的元素
+
+</Framework>
+
+<Framework only="vue">
+
+通过默认插槽传入代替渲染的元素。传入空的默认插槽时不渲染任何元素，快捷键仍然有效。
+
+</Framework>
+
+<Framework only="solid">
+
+通过`render`传入代替渲染的元素，可以是 JSX 元素，也可以是返回 JSX 元素的函数。传入`null`或返回`null`时不渲染任何元素，快捷键仍然有效。
+
+</Framework>
+
+<Demo id="render" />
+
+### 阻止默认事件
+
+通过设置`preventDefault`控制默认事件是否触发。
+
+<Demo id="prevent-default" />
+
+### 修改监听挂载DOM
+
+快捷键默认在 body 监听，通过`getListenerTarget`修改快捷键监听挂载的DOM
+
+<Demo id="listener-target" />
+
+## API 参考
+
+### HotKeys
+
+<Framework only="react">
+
+<HotKeysReactApi />
+
+除表中属性外的原生属性（如 `id`、`aria-*`、`onClick`）落在根元素（`div`）上。`render` 为 `null` 或返回 `null` 时不渲染根元素，这些属性无处可落。
+
+</Framework>
+
+<Framework only="vue">
+
+<HotKeysVueApi />
+
+`class`、`style` 与原生属性（包括 `@click`）落在根元素上。默认插槽为空时不渲染根元素，这些属性无处可落。
+
+</Framework>
+
+<Framework only="solid">
+
+<HotKeysSolidApi />
+
+`class`、`style`、`ref` 与原生属性（如 `id`、`aria-*`、`onClick`）落在根元素（`div`）上。`render` 为 `null` 或返回 `null` 时不渲染根元素，这些属性无处可落。
+
+</Framework>
+
+## 设计变量
+
+<DesignToken />

@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Index of the slide being shown. Passing it makes the carousel controlled; passing `undefined` hands control back to the internal state, continuing from the last index. | `number` | - |
+| animation | Transition animation: `slide` or `fade`. | `'slide' \| 'fade'` | `"slide"` |
+| aria-label | Name of the carousel region; only a named region is a landmark. | `string` | - |
+| arrowProps | Data for the previous and next arrow buttons: `children` is the arrow content, and `props` holds the native attributes of the button (such as `aria-label`, `style` and `onClick`). `props` is spread after the built-in attributes, so its `onClick` and `className` replace the built-in handler and class names. | `ArrowProps` | - |
+| arrowType | When the arrows are shown: `always` or `hover`. | `'always' \| 'hover'` | `"always"` |
+| autoPlay | Whether to play automatically, or an object with `interval` (milliseconds between slides, default 2000) and `hoverToPause` (pause while hovered, default true). | `CarouselAutoPlay` | `true` |
+| children | The slides, one per direct child element; text and other non-element children are not counted. A slide must put attributes such as `id`, `role`, `inert`, `style` and `className` on the DOM, so it is usually a DOM element or a component that forwards them. | <ApiType detail={"ReactNode \u007c Array\u003cReactNode>"}>Type</ApiType> | `[]` |
+| className | Class name of the root element, merged with the built-in class names. | `string` | - |
+| defaultActiveIndex | Index of the slide shown initially, used when uncontrolled. | `number` | `0` |
+| indicatorPosition | Indicator position: `left`, `center` or `right`. | `'left' \| 'center' \| 'right'` | `"center"` |
+| indicatorSize | Indicator size: `small` or `medium`. | `'small' \| 'medium'` | `"small"` |
+| indicatorType | Indicator type: `dot`, `line` or `columnar`. | `'columnar' \| 'line' \| 'dot'` | `"dot"` |
+| onChange | Called when the shown slide changes, with the new index and the previous index. | <ApiType detail={"(index: number, preIndex: number) => void"}>Type</ApiType> | - |
+| ref | Points to the component handle rather than a DOM element; it exposes the methods listed below. | <ApiType detail={"React.Ref\u003cCarouselHandle>"}>Type</ApiType> | - |
+| showArrow | Whether to show the arrows. | `boolean` | `true` |
+| showIndicator | Whether to show the indicator. | `boolean` | `true` |
+| slideDirection | Slide direction when the animation is `slide`: `left` or `right`. | `'left' \| 'right'` | `"left"` |
+| speed | Transition duration in milliseconds. | `number` | `300` |
+| style | Inline style of the root element. | `React.CSSProperties` | - |
+| theme | Theme of the indicator and arrows: `primary`, `light` or `dark`. | `'dark' \| 'primary' \| 'light'` | `"light"` |
+| trigger | How the indicator switches slides: `click` or `hover`. | `'click' \| 'hover'` | `"click"` |
+
+**Methods**
+
+| Method | Description                                                                     | Type                                                             |
+| ------ | ------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| goTo   | Goes to the given index; an out-of-range index wraps around.                    | <ApiType detail={"(targetIndex: number) => void"}>Type</ApiType> |
+| next   | Goes to the next slide.                                                         | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| play   | Starts autoplay, even when `autoPlay` is `false`.                               | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| prev   | Goes to the previous slide.                                                     | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| stop   | Stops autoplay; switching manually does not resume it until `play()` is called. | <ApiType detail={"() => void"}>Type</ApiType>                    |

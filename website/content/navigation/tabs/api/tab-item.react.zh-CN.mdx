@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                  | 类型                                                                                                        | 默认值 |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------ |
+| className     | 根元素的类名。                                                                                                        | `string`                                                                                                    | -      |
+| closable      | 是否显示关闭按钮。                                                                                                    | `boolean`                                                                                                   | -      |
+| deleteTabItem | 点击关闭按钮时的处理函数，参数为 itemKey 与事件。在 Tabs 内默认使用 Tabs 的处理函数，通常无需设置。                   | <ApiType detail={"(tabKey: string, event: MouseEvent) => void"}>Type</ApiType>                              | -      |
+| disabled      | 是否禁用；禁用时点击与关闭按钮均不生效，关闭按钮仍会显示。                                                            | `boolean`                                                                                                   | -      |
+| handleKeyDown | 键盘处理函数，参数为事件、itemKey 与 closable。在 Tabs 内默认使用 Tabs 的键盘处理函数，通常无需设置。                 | <ApiType detail={"(event: React.KeyboardEvent, itemKey: string, closable: boolean) => void"}>Type</ApiType> | -      |
+| icon          | 标签图标；没有内容则不渲染图标。                                                                                      | `ReactNode`                                                                                                 | -      |
+| itemKey       | 标签的唯一标识，对应 Tabs 的 `activeKey`。                                                                            | `string`                                                                                                    | -      |
+| onClick       | 单击标签时触发，参数为 itemKey 与事件；禁用时不触发。TabItem 本身不会选中标签页，需在回调中更新 Tabs 的 `activeKey`。 | <ApiType detail={"(itemKey: string, e: MouseEvent) => void"}>Type</ApiType>                                 | -      |
+| ref           | 标签根元素（`role="tab"`）的引用。                                                                                    | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>                                           | -      |
+| selected      | 是否为选中状态，影响样式与 `aria-selected`。                                                                          | `boolean`                                                                                                   | -      |
+| size          | 尺寸，`small` 与 `medium` 会添加对应的类名。                                                                          | `TabSize`                                                                                                   | -      |
+| tab           | 标签内容。                                                                                                            | `ReactNode`                                                                                                 | -      |
+| tabPosition   | 位置，未设置时取所在 Tabs 的 `tabPosition`。                                                                          | `TabPosition`                                                                                               | -      |
+| type          | 样式，未设置时取所在 Tabs 的 `type`。                                                                                 | `TabType`                                                                                                   | -      |
