@@ -1,0 +1,18 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": true,
+        "rootDir": "src",
+        "declaration": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "erasableSyntaxOnly": true,
+        "jsx": "preserve",
+        "jsxImportSource": "vue",
+        "types": []
+    },
+    "vueCompilerOptions": { "checkUnknownComponents": true, "strictVModel": true, "inferComponentDollarEl": true },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+    "exclude": ["src/**/__tests__/**"]
+}

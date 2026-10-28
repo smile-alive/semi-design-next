@@ -1,0 +1,56 @@
+{
+    "name": "@fibrae/semi-ai-vue",
+    "version": "0.1.0",
+    "description": "Semi AI components for Vue: AIChatInput, AIChatDialogue, Chat and Sidebar.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ai-vue"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./styles.css": "./dist/styles.css",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "@fibrae/semi-ai-foundation": "workspace:*",
+        "@fibrae/semi-foundation": "workspace:*",
+        "@fibrae/semi-icons-vue": "workspace:*",
+        "@fibrae/semi-illustrations-vue": "workspace:*",
+        "@fibrae/semi-ui-vue": "workspace:*",
+        "@tiptap/core": "catalog:",
+        "@tiptap/pm": "catalog:",
+        "@tiptap/vue-3": "catalog:",
+        "es-toolkit": "catalog:"
+    },
+    "peerDependencies": {
+        "vue": "catalog:peer"
+    },
+    "devDependencies": {
+        "@tiptap/extension-document": "catalog:",
+        "@tiptap/extension-paragraph": "catalog:",
+        "@tiptap/extension-text": "catalog:",
+        "@vitejs/plugin-vue": "catalog:",
+        "typescript": "catalog:",
+        "vue": "catalog:",
+        "vue-tsc": "catalog:"
+    }
+}
