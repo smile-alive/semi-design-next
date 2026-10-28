@@ -1,0 +1,16 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src",
+        "declaration": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "erasableSyntaxOnly": true,
+        "jsx": "preserve",
+        "jsxImportSource": "vue",
+        "types": []
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist", "**/__tests__/**"]
+}

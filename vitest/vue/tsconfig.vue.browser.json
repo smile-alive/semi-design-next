@@ -1,0 +1,20 @@
+{
+    "extends": "./tsconfig.vue.json",
+    "compilerOptions": { "types": ["node", "vite/client", "@vitest/browser-playwright"] },
+    "include": [
+        "vue.setup.ts",
+        "../utils/vue.ts",
+        "../utils/browser.ts",
+        "../../packages/semi-ui-vue/**/__tests__/**/*.browser.test.ts",
+        "../../packages/semi-ui-vue/**/__tests__/**/*.browser.test.tsx",
+        "../../packages/semi-ui-vue/**/__tests__/fixtures/**/*.vue",
+        "../../packages/*/__tests__/vue/*.browser.test.ts",
+        "../../packages/semi-ui-vue/src/styles.d.ts",
+        "../../packages/semi-ai-vue/**/__tests__/**/*.browser.test.ts",
+        "../../packages/semi-ai-vue/**/__tests__/**/*.browser.test.tsx",
+        "../../packages/semi-ai-vue/**/__tests__/fixtures/**/*.vue",
+        "../../packages/semi-ai-vue/src/styles.d.ts",
+        "../../packages/semi-ai-vue/src/semi-global.ts"
+    ],
+    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist"]
+}
