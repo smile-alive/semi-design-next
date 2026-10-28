@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-polyfill",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Optional polyfills for the APIs Semi uses that Safari 17.2 lacks",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",
