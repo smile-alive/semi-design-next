@@ -1,0 +1,56 @@
+{
+    "name": "@fibrae/semi-ai-react",
+    "version": "0.1.0",
+    "description": "Semi AI components for React: AIChatInput, AIChatDialogue, Chat and Sidebar.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ai-react"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./styles.css": "./dist/styles.css",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "@fibrae/semi-ai-foundation": "workspace:*",
+        "@fibrae/semi-foundation": "workspace:*",
+        "@fibrae/semi-icons-react": "workspace:*",
+        "@fibrae/semi-illustrations-react": "workspace:*",
+        "@fibrae/semi-ui-react": "workspace:*",
+        "@tiptap/core": "catalog:",
+        "@tiptap/pm": "catalog:",
+        "@tiptap/react": "catalog:",
+        "clsx": "catalog:",
+        "es-toolkit": "catalog:"
+    },
+    "peerDependencies": {
+        "react": "catalog:peer",
+        "react-dom": "catalog:peer"
+    },
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "devDependencies": {
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "react": "catalog:",
+        "react-dom": "catalog:",
+        "typescript": "catalog:"
+    }
+}
