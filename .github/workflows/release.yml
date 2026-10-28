@@ -28,6 +28,5 @@ jobs:
                   commit: 'chore: 发布新版本'
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                  # pnpm publishes natively and reads its own PNPM_CONFIG_* settings, not npm's NPM_CONFIG_PROVENANCE
-                  PNPM_CONFIG_PROVENANCE: 'true'
+                  # No NPM_TOKEN: every @fibrae package trusts this workflow, so pnpm publishes through OIDC
+                  # (`id-token: write`) and attaches provenance on its own
