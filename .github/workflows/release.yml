@@ -29,4 +29,5 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                  NPM_CONFIG_PROVENANCE: 'true'
+                  # pnpm publishes natively and reads its own PNPM_CONFIG_* settings, not npm's NPM_CONFIG_PROVENANCE
+                  PNPM_CONFIG_PROVENANCE: 'true'
