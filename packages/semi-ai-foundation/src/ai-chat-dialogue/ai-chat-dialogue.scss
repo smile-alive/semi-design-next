@@ -1,0 +1,786 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'semi:foundation/base/mixin' as *;
+
+$module: #{$prefix}-ai-chat-dialogue;
+
+@mixin loading-circle-common() {
+    width: $height-aiChatDialogue_loading_circle;
+    height: $width-aiChatDialogue_loading_circle;
+    border-radius: $radius-aiChatDialogue_loading_circle;
+}
+
+@mixin icon-reference-shown() {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+}
+
+.#{$module} {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &-list {
+        position: relative;
+        flex: 1 1;
+        overflow-y: scroll;
+    }
+
+    &-wrapper {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        column-gap: $spacing-aiChatDialogue_wrapper-columnGap;
+        align-items: center;
+        width: $width-aiChatDialogue_wrapper;
+        padding: $spacing-aiChatDialogue_wrapper-paddingY $spacing-aiChatDialogue_wrapper-paddingX;
+        margin-top: $spacing-aiChatDialogue_wrapper-marginTop;
+
+        &-selected {
+            background-color: $color-aiChatDialogue_wrapper-selected-bg;
+            border-radius: $radius-aiChatDialogue_wrapper_selected;
+        }
+
+        .#{$module}-container {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: row;
+            column-gap: $spacing-aiChatDialogue_container-columnGap;
+
+            &-right {
+                flex-direction: row-reverse;
+
+                .#{$module}-inner {
+                    align-items: flex-end;
+                }
+
+                .#{$module}-content {
+                    &-no-bubble,
+                    &-user,
+                    &-custom-renderer {
+                        margin-left: auto;
+                    }
+
+                    &-inner {
+                        text-align: right;
+
+                        .#{$prefix}-markdownRender {
+                            text-align: left;
+                        }
+                    }
+                }
+            }
+        }
+
+        &:hover,
+        &:focus-within {
+            .#{$module}-action:not(.#{$module}-action-hidden) {
+                opacity: 1;
+            }
+        }
+    }
+
+    &-backBottom {
+        position: relative;
+        z-index: $z-aiChatDialogue_backBottom;
+
+        &-button {
+            width: $width-aiChatDialogue_backBottom_button;
+            height: $height-aiChatDialogue_backBottom_button;
+            border-radius: $radius-aiChatDialogue_backBottom_button;
+        }
+
+        .#{$prefix}-button {
+            @include flex-center;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    &-title {
+        font-size: $font-aiChatDialogue_title-fontSize;
+        font-weight: $font-aiChatDialogue_title-fontWeight;
+        line-height: $font-aiChatDialogue_title-lineHeight;
+    }
+
+    &-inner {
+        display: flex;
+        flex-direction: column;
+        width: $width-aiChatDialogue_inner;
+    }
+
+    &-avatar {
+        flex-shrink: 0;
+        width: $width-aiChatDialogue_avatar;
+        height: $height-aiChatDialogue_avatar;
+
+        &-hidden {
+            visibility: hidden;
+        }
+    }
+
+    &-content {
+        max-width: $width-aiChatDialogue_content_max;
+        font-size: $font-aiChatDialogue_content-fontSize;
+
+        pre {
+            background-color: transparent;
+        }
+
+        &-editing {
+            width: $width-aiChatDialogue_content_editing;
+        }
+
+        &-wrapper {
+            display: flex;
+            align-items: end;
+        }
+
+        &-inner {
+            width: $width-aiChatDialogue_content_inner;
+            margin-left: auto;
+        }
+
+        &-failed {
+            margin-right: $spacing-aiChatDialogue_content_failed-marginRight;
+            color: $color-aiChatDialogue_failed;
+        }
+
+        &-user {
+            display: flex;
+
+            &:hover,
+            &:focus-within {
+                .#{$module}-content-icon-reference {
+                    @include icon-reference-shown;
+                    @include flex-center;
+                    display: flex;
+                    padding: $spacing-aiChatDialogue_icon_reference-paddingY $spacing-aiChatDialogue_icon_reference-paddingX;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        &-bubble,
+        &-userBubble {
+            box-sizing: border-box;
+            width: fit-content;
+            max-width: $width-aiChatDialogue_bubble_max;
+            padding: $spacing-aiChatDialogue_bubble-paddingY $spacing-aiChatDialogue_bubble-paddingX;
+            margin-top: $spacing-aiChatDialogue_content_bubble-marginTop;
+            background-color: $color-aiChatDialogue_bubble-bg;
+            border-radius: $radius-aiChatDialogue_bubble;
+        }
+
+        &-no-bubble {
+            width: fit-content;
+            margin-top: $spacing-aiChatDialogue_content_noBubble-marginTop;
+        }
+
+        &-loading {
+            display: flex;
+            align-items: center;
+            margin-top: $spacing-aiChatDialogue_content_loading-marginTop;
+
+            > span:nth-child(1) {
+                background-color: $color-aiChatDialogue_loading_circle_first-bg;
+                animation-delay: -200ms;
+            }
+
+            > span:nth-child(2) {
+                background-color: $color-aiChatDialogue_loading_circle_second-bg;
+                animation-delay: -100ms;
+            }
+
+            > span:nth-child(3) {
+                background-color: $color-aiChatDialogue_loading_circle_third-bg;
+                animation-delay: 0ms;
+            }
+
+            &-item {
+                @include loading-circle-common();
+                position: relative;
+                margin: $spacing-aiChatDialogue_loading_item-marginY $spacing-aiChatDialogue_loading_item-marginX;
+                overflow: visible;
+                animation: #{$module}-loading-bounce 1s infinite ease;
+            }
+
+            &-text {
+                margin-left: $spacing-aiChatDialogue_loading_text-marginLeft;
+                font-size: $font-aiChatDialogue_loading_text-fontSize;
+                color: $color-aiChatDialogue_loading_text;
+            }
+        }
+
+        // Visually hidden rather than display: none, so the keyboard can still reach it
+        &-icon-reference {
+            @include bare-button;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+        }
+
+        &-img {
+            margin-top: $spacing-aiChatDialogue_img-marginTop;
+            border-radius: $radius-aiChatDialogue_img;
+
+            img {
+                width: $width-aiChatDialogue_img;
+                height: $height-aiChatDialogue_img;
+                object-fit: cover;
+            }
+
+            &-list {
+                display: inline-flex;
+                flex-direction: column;
+                margin-right: $spacing-aiChatDialogue_img_list-marginRight;
+
+                img {
+                    width: $width-aiChatDialogue_img_list;
+                    height: $height-aiChatDialogue_img_list;
+                    object-fit: cover;
+                }
+            }
+
+            &-last {
+                margin-right: 0;
+            }
+        }
+
+        &-file {
+            display: inline-flex;
+            flex-direction: row;
+            column-gap: $spacing-aiChatDialogue_file-columnGap;
+            align-items: center;
+            width: $width-aiChatDialogue_file;
+            padding: $spacing-aiChatDialogue_file-paddingY $spacing-aiChatDialogue_file-paddingX;
+            margin-top: $spacing-aiChatDialogue_file-marginTop;
+            margin-right: $spacing-aiChatDialogue_file-marginRight;
+            vertical-align: top;
+
+            text-decoration: none;
+            background: $color-aiChatDialogue_file-bg;
+            border-radius: $radius-aiChatDialogue_file;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+
+            &:hover,
+            &:focus-within {
+                .#{$module}-content-icon-reference {
+                    @include icon-reference-shown;
+                    @include flex-center;
+                    display: flex;
+                    flex-shrink: 0;
+                    padding: $spacing-aiChatDialogue_icon_reference-paddingY $spacing-aiChatDialogue_icon_reference-paddingX;
+                    margin-left: auto;
+                    color: $color-aiChatDialogue_icon_reference-text;
+                    cursor: pointer;
+                }
+
+                .#{$module}-content-file-title-ellipsis {
+                    max-width: $width-aiChatDialogue_file_title_max-hover;
+                }
+            }
+
+            &-last {
+                margin-right: 0;
+            }
+
+            &-icon {
+                color: $color-aiChatDialogue_icon-text;
+
+                &-wrapper {
+                    @include flex-center;
+                    flex-shrink: 0;
+                    width: $width-aiChatDialogue_file_icon_wrapper;
+                    height: $height-aiChatDialogue_file_icon_wrapper;
+                    border-radius: $radius-aiChatDialogue_icon_wrapper;
+                }
+
+                &-code {
+                    background-color: $color-aiChatDialogue_code_icon-bg;
+                }
+
+                &-word {
+                    background-color: $color-aiChatDialogue_word_icon-bg;
+                }
+
+                &-pdf {
+                    background-color: $color-aiChatDialogue_pdf_icon-bg;
+                }
+
+                &-excel {
+                    background-color: $color-aiChatDialogue_excel_icon-bg;
+                }
+
+                &-video {
+                    background-color: $color-aiChatDialogue_video_icon-bg;
+                }
+
+                &-image {
+                    .#{$module}-content-file-icon {
+                        width: $width-aiChatDialogue_file_icon_wrapper;
+                        height: $height-aiChatDialogue_file_icon_wrapper;
+                        background-position: center;
+                        background-size: cover;
+                    }
+                }
+
+                &-default {
+                    background-color: $color-aiChatDialogue_default_icon-bg;
+                }
+            }
+
+            &-info {
+                display: flex;
+                flex-shrink: 1;
+                flex-direction: column;
+                text-align: left;
+            }
+
+            &-title {
+                max-width: $width-aiChatDialogue_file_title_max;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: $font-aiChatDialogue_file_title-fontSize;
+                color: $color-aiChatDialogue_file_title-text;
+                white-space: nowrap;
+            }
+
+            &-metadata {
+                font-size: $font-aiChatDialogue_file_metadata-fontSize;
+                color: $color-aiChatDialogue_file_metadata-text;
+            }
+
+            &-type {
+                text-transform: uppercase;
+            }
+        }
+
+        &-tool-call {
+            @include flex-center;
+            column-gap: $spacing-aiChatDialogue_tool_call-columnGap;
+            width: fit-content;
+            padding: $spacing-aiChatDialogue_tool_call-paddingY $spacing-aiChatDialogue_tool_call-paddingX;
+            margin-top: $spacing-aiChatDialogue_tool_call-marginTop;
+            color: $color-aiChatDialogue_tool_call-text;
+            background-color: $color-aiChatDialogue_tool_call-bg;
+            border-radius: $radius-aiChatDialogue_tool_call;
+        }
+
+        &-custom-renderer {
+            width: fit-content;
+            margin-top: $spacing-aiChatDialogue_custom_renderer-marginTop;
+        }
+    }
+
+    // opacity, not visibility: hidden buttons would leave the Tab order and the accessibility tree
+    &-action {
+        margin-top: $spacing-aiChatDialogue_action-marginTop;
+        opacity: 0;
+
+        &-btn {
+            width: $width-aiChatDialogue_action_btn;
+            height: $height-aiChatDialogue_action_btn;
+        }
+
+        &-icon-flip {
+            transform: scaleY(-1);
+        }
+
+        &-show {
+            opacity: 1;
+        }
+
+        &.#{$module}-action-hidden,
+        &:hover.#{$module}-action-hidden {
+            visibility: hidden;
+        }
+
+        &-dropdown {
+            li {
+                color: $color-aiChatDialogue_action_dropdown-text;
+            }
+
+            .#{$prefix}-icon {
+                font-size: $font-aiChatDialogue_dropdown_icon-fontSize;
+            }
+        }
+    }
+
+    &-reasoning {
+        width: $width-aiChatDialogue_reasoning;
+
+        &-wrapper {
+            width: $width-aiChatDialogue_reasoning_wrapper;
+            margin-top: $spacing-aiChatDialogue_reasoning_wrapper-marginTop;
+            border: $width-aiChatDialogue_reasoning-border solid $color-aiChatDialogue_reasoning-border;
+            border-radius: $radius-aiChatDialogue_reasoning_wrapper;
+        }
+
+        &-header {
+            @include bare-button;
+            @include flex-center;
+
+            box-sizing: border-box;
+            flex-direction: row;
+            width: 100%;
+            padding: $spacing-aiChatDialogue_reasoning_header-padding;
+            text-align: inherit;
+            border-radius: $radius-aiChatDialogue_reasoning_wrapper;
+
+            &-prefix,
+            &-suffix {
+                @include flex-center;
+                width: $width-aiChatDialogue_reasoning_prefix;
+                height: $height-aiChatDialogue_reasoning_prefix;
+            }
+
+            &-title {
+                flex: 1 1 auto;
+                font-weight: $font-aiChatDialogue_reasoning_header_title-fontWeight;
+                line-height: $font-aiChatDialogue_reasoning_header_title-lineHeight;
+            }
+        }
+
+        &-content {
+            padding: $spacing-aiChatDialogue_reasoning_content-paddingY $spacing-aiChatDialogue_reasoning_content-paddingX;
+            border-top: $width-aiChatDialogue_reasoning-border solid $color-aiChatDialogue_reasoning-border;
+        }
+    }
+
+    &-step {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        padding: $spacing-aiChatDialogue_step-paddingY $spacing-aiChatDialogue_step-paddingX;
+        margin-top: $spacing-aiChatDialogue_step-marginTop;
+        font-size: $font-aiChatDialogue_step-fontSize;
+        line-height: $font-aiChatDialogue_step-lineHeight;
+        border: $width-aiChatDialogue_step-border solid $color-aiChatDialogue_step-border;
+        border-radius: $radius-aiChatDialogue_step;
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+
+        .#{$module}-content-loading {
+            margin-top: 0;
+        }
+
+        &-completed {
+            color: $color-aiChatDialogue_step_completed-text;
+        }
+
+        &-summary {
+            display: inline-block;
+            width: fit-content;
+            cursor: pointer;
+        }
+
+        &-prefix {
+            @include flex-center;
+            width: $width-aiChatDialogue_step_prefix;
+            height: $height-aiChatDialogue_step_prefix;
+            margin-right: $spacing-aiChatDialogue_step_prefix-marginRight;
+            color: $color-aiChatDialogue_step_suffix-text;
+        }
+
+        &-suffix {
+            @include flex-center;
+            width: $width-aiChatDialogue_step_suffix;
+            height: $height-aiChatDialogue_step_suffix;
+            margin-left: $spacing-aiChatDialogue_step_suffix-marginLeft;
+            color: $color-aiChatDialogue_step_suffix-text;
+        }
+
+        &-panel {
+            display: flex;
+            gap: $spacing-aiChatDialogue_step_panel-gap;
+        }
+
+        &-line {
+            width: $width-aiChatDialogue_step_line;
+            margin-left: $spacing-aiChatDialogue_step_line-marginLeft;
+            background-color: $color-aiChatDialogue_step-border;
+        }
+
+        &-action {
+            margin-top: $spacing-aiChatDialogue_step_action-marginTop;
+            font-size: $font-aiChatDialogue_step_action-fontSize;
+            line-height: $font-aiChatDialogue_step_action-lineHeight;
+
+            &-summary {
+                margin-bottom: $spacing-aiChatDialogue_step_action_summary-marginBottom;
+            }
+
+            &-desc {
+                display: inline-flex;
+                column-gap: $spacing-aiChatDialogue_step_action_desc-columnGap;
+                align-items: center;
+                justify-content: center;
+                width: fit-content;
+                padding: $spacing-aiChatDialogue_step_action_desc-paddingY $spacing-aiChatDialogue_step_action_desc-paddingX;
+                color: $color-aiChatDialogue_step_action-text;
+                background-color: $color-aiChatDialogue_step_action-bg;
+                border-radius: $radius-aiChatDialogue_action_desc;
+            }
+        }
+    }
+
+    &-step-wrapper {
+        > .#{$module}-step:first-child {
+            margin-top: $spacing-aiChatDialogue_step_wrapper-marginTop;
+        }
+    }
+
+    &-annotation {
+        width: $width-aiChatDialogue_annotation;
+
+        &-wrapper {
+            flex: 1 1 auto;
+            width: fit-content;
+            padding: $spacing-aiChatDialogue_annotation_wrapper-paddingY $spacing-aiChatDialogue_annotation_wrapper-paddingX;
+            margin-top: $spacing-aiChatDialogue_annotation_wrapper-marginTop;
+            border: $width-aiChatDialogue_annotation-border solid $color-aiChatDialogue_annotation-border;
+            border-radius: $radius-aiChatDialogue_annotation_wrapper;
+
+            &:hover {
+                background-color: $color-aiChatDialogue_annotation-bg-hover;
+            }
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+        }
+
+        &-content {
+            @include flex-center;
+            flex-direction: row;
+            column-gap: $spacing-aiChatDialogue_annotation_content-columnGap;
+            font-size: $font-aiChatDialogue_annotation_content-fontSize;
+            color: $color-aiChatDialogue_annotation-text;
+            cursor: pointer;
+
+            .#{$prefix}-avatar-group {
+                display: flex;
+            }
+
+            &-logo {
+                display: flex;
+                width: $width-aiChatDialogue_annotation_logo;
+                height: $height-aiChatDialogue_annotation_logo;
+            }
+
+            &-logo-renderMore {
+                width: $width-aiChatDialogue_annotation_logo;
+                height: $height-aiChatDialogue_annotation_logo;
+            }
+
+            &-icon {
+                @include flex-center;
+            }
+        }
+    }
+
+    &-references {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: $spacing-aiChatDialogue_references-rowGap;
+        column-gap: $spacing-aiChatDialogue_references-columnGap;
+        margin-top: $spacing-aiChatDialogue_references-marginTop;
+        font-size: $font-aiChatDialogue_references-fontSize;
+        line-height: $font-aiChatDialogue_references-lineHeight;
+        color: $color-aiChatDialogue_reference-text;
+
+        .#{$module}-reference {
+            box-sizing: border-box;
+            display: flex;
+            flex-shrink: 1;
+            column-gap: $spacing-aiChatDialogue_reference-columnGap;
+            align-items: center;
+            width: fit-content;
+            max-width: $width-aiChatDialogue_reference_max;
+            padding: $spacing-aiChatDialogue_reference-paddingY $spacing-aiChatDialogue_reference-paddingX;
+            margin-left: auto;
+            background-color: $color-aiChatDialogue_reference-bg;
+            border-radius: $radius-aiChatDialogue_reference;
+
+            &-content {
+                display: flex;
+                flex-grow: 1;
+                align-items: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            &-icon {
+                @include flex-center;
+                width: $width-aiChatDialogue_reference_icon;
+                height: $height-aiChatDialogue_reference_icon;
+                margin-right: $spacing-aiChatDialogue_reference_icon-marginRight;
+                color: $color-aiChatDialogue_icon-text;
+                border-radius: $radius-aiChatDialogue_reference_icon;
+
+                &-word {
+                    background-color: $color-aiChatDialogue_word_icon-bg;
+                }
+
+                &-pdf {
+                    background-color: $color-aiChatDialogue_pdf_icon-bg;
+                }
+
+                &-excel {
+                    background-color: $color-aiChatDialogue_excel_icon-bg;
+                }
+
+                &-video {
+                    background-color: $color-aiChatDialogue_video_icon-bg;
+                }
+
+                &-code {
+                    background-color: $color-aiChatDialogue_code_icon-bg;
+                }
+            }
+
+            &-img {
+                margin-right: $spacing-aiChatDialogue_reference_img-marginRight;
+            }
+
+            &-name {
+                display: inline-block;
+                max-width: $width-aiChatDialogue_reference_name_max;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-break: break-all;
+            }
+        }
+    }
+
+    &-code {
+        overflow: hidden;
+        line-height: $font-aiChatDialogue_code-lineHeight;
+        border: $width-aiChatDialogue_code-border solid $color-aiChatDialogue_code-border;
+        border-radius: $radius-aiChatDialogue_code;
+
+        & .#{$prefix}-codeHighlight pre {
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        &-topSlot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: $spacing-aiChatDialogue_code_topSlot-paddingY $spacing-aiChatDialogue_code_topSlot-paddingX;
+            font-size: $font-aiChatDialogue_code_topSlot-fontSize;
+            color: $color-aiChatDialogue_code_topSlot-text;
+            background-color: $color-aiChatDialogue_code_topSlot-bg;
+
+            &-copy {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                width: $width-aiChatDialogue_action_copy;
+
+                &-wrapper {
+                    @include flex-center;
+                    cursor: pointer;
+                    background: transparent;
+                    border: none;
+
+                    &:focus-visible {
+                        @include focus-ring;
+                    }
+                }
+            }
+        }
+
+        .#{$prefix}-codeHighlight pre {
+            margin: 0;
+            background: $color-aiChatDialogue_code_content-bg;
+        }
+    }
+
+    &-hints {
+        display: flex;
+        flex-direction: column;
+        row-gap: $spacing-aiChatDialogue_hints-rowGap;
+        margin-top: $spacing-aiChatDialogue_hints-marginTop;
+        margin-bottom: $spacing-aiChatDialogue_hints-marginBottom;
+        margin-left: $spacing-aiChatDialogue_hints-marginLeft;
+
+        &-selecting {
+            margin-left: $spacing-aiChatDialogue_hints_selecting-marginLeft;
+        }
+    }
+
+    &-hint {
+        &-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: fit-content;
+            padding: $spacing-aiChatDialogue_hint_item-paddingY $spacing-aiChatDialogue_hint_item-paddingX;
+            cursor: pointer;
+            background: $color-aiChatDialogue_hint-bg;
+            border: $width-aiChatDialogue_hint-border solid $color-aiChatDialogue_hint-border;
+            border-radius: $radius-aiChatDialogue_hint_item;
+
+            &:hover {
+                background-color: $color-aiChatDialogue_hint-bg-hover;
+            }
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+        }
+
+        &-content {
+            font-size: $font-aiChatDialogue_hint_content-fontSize;
+            color: $color-aiChatDialogue_hint-text;
+        }
+    }
+}
+
+@keyframes #{$module}-loading-bounce {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    18% {
+        transform: translateY(-4px) scale(0.96);
+    }
+
+    36% {
+        transform: translateY(0) scale(1.06);
+    }
+
+    44% {
+        transform: translateY(-0.5px) scale(0.98);
+    }
+
+    52% {
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@include meta.load-css('rtl');
