@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": true,
+        "allowJs": true,
+        "declaration": true,
+        "strict": true,
+        // tsconfig.base.json turns it off for semi-ui-react and semi-foundation; an explicit setting overrides strict
+        "strictNullChecks": true
+    },
+    "include": ["index.ts", "src"]
+}

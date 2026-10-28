@@ -1,0 +1,37 @@
+{
+    "name": "@fibrae/semi-polyfill",
+    "version": "0.1.0",
+    "description": "Optional polyfills for the APIs Semi uses that Safari 17.2 lacks",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-polyfill"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "keywords": [
+        "polyfill",
+        "semi"
+    ],
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./abort-signal-any": "./dist/abort-signal-any.js",
+        "./check-visibility": "./dist/check-visibility.js",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": true,
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}
