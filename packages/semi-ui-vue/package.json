@@ -1,0 +1,56 @@
+{
+    "name": "@fibrae/semi-ui-vue",
+    "version": "0.1.0",
+    "description": "Semi Design Next Vue components",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ui-vue"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./styles.css": "./dist/styles.css",
+        "./tailwind.css": "./dist/tailwind.css",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css",
+        "./dist/tokens.js",
+        "./src/tokens.ts"
+    ],
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "@dnd-kit/vue": "catalog:",
+        "@fibrae/semi-foundation": "workspace:*",
+        "@fibrae/semi-icons-vue": "workspace:*",
+        "@tanstack/vue-virtual": "catalog:",
+        "async-validator": "catalog:",
+        "date-fns": "catalog:",
+        "es-toolkit": "catalog:",
+        "scroll-into-view-if-needed": "catalog:",
+        "unified": "catalog:"
+    },
+    "peerDependencies": {
+        "vue": "catalog:peer"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "catalog:",
+        "typescript": "catalog:",
+        "vue": "catalog:",
+        "vue-tsc": "catalog:"
+    }
+}
