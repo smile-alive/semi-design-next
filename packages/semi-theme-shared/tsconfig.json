@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "lib": ["esnext"],
+        "types": ["node"],
+        "noEmit": true,
+        // exports points Node at the .ts source, which it loads without resolving extensionless specifiers
+        "allowImportingTsExtensions": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true
+    },
+    "include": ["src"]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "@fibrae/semi-theme-shared",
+    "version": "0.1.0",
+    "description": "Theme transforms shared by the Semi build plugins; bundled into each plugin, never published",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "dependencies": {
+        "sass": "catalog:"
+    },
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}
