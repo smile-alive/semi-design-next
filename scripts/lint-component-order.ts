@@ -22,8 +22,10 @@ interface Node {
 }
 
 const listed = (pathspecs: string[]) =>
-    execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', ...pathspecs, ':!*/__tests__/*'], { encoding: 'utf8' })
+    execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', ...pathspecs], { encoding: 'utf8' })
         .split('\n')
+        // filtered here: the exclude pathspec `:!*/__tests__/*` matched the tests locally but not on the CI runner's git
+        .filter((file) => !file.includes('/__tests__/'))
         // --cached still lists files deleted in the worktree but not yet staged
         .filter((file) => file && fs.existsSync(file));
 
