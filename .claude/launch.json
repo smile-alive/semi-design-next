@@ -1,0 +1,17 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "website",
+            "runtimeExecutable": "sh",
+            "runtimeArgs": ["-c", "export PATH=\"$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH\" && pnpm site:dev"],
+            "port": 4321
+        },
+        {
+            "name": "website-preview",
+            "runtimeExecutable": "sh",
+            "runtimeArgs": ["-c", "export PATH=\"$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH\" && pnpm site:serve"],
+            "port": 4322
+        }
+    ]
+}
