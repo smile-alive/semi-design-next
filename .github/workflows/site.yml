@@ -1,0 +1,31 @@
+name: Deploy site
+
+on:
+    push:
+        branches: [main]
+        paths: ['website/**', 'packages/**', 'pnpm-lock.yaml']
+    workflow_dispatch:
+
+concurrency:
+    group: site
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        if: github.repository == 'smile-alive/semi-design-next'
+        runs-on: ubuntu-latest
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v5
+            - uses: jdx/mise-action@v3
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
+            - run: pnpm site:build
+            - uses: cloudflare/wrangler-action@v3
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  command: pages deploy website/dist --project-name=semi-design-next --branch=main

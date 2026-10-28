@@ -1,0 +1,32 @@
+name: Release
+
+on:
+    push:
+        branches: [main]
+
+concurrency: release-${{ github.ref }}
+
+permissions:
+    contents: write
+    pull-requests: write
+    id-token: write
+
+jobs:
+    release:
+        if: github.repository == 'smile-alive/semi-design-next'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - uses: jdx/mise-action@v3
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
+            - uses: changesets/action@v1
+              with:
+                  version: pnpm changeset version
+                  publish: pnpm changeset publish
+                  title: 'chore: 发布新版本'
+                  commit: 'chore: 发布新版本'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NPM_CONFIG_PROVENANCE: 'true'
