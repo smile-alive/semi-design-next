@@ -1,0 +1,39 @@
+{
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        // vite/client types import.meta.glob, which the demo-rendering tests use
+        "types": ["node", "vite/client"],
+        "noEmit": true,
+        // the tests compile the package source they import
+        "strict": true,
+        "noImplicitAny": false,
+        // Tests import the package they test by name; it resolves to source as at runtime (semiSourceAliases), since
+        // mixing built declarations with source would make classes with `#` members two incompatible types.
+        // The Lottie and JsonViewer tests mock or import dependencies only semi-foundation declares.
+        "paths": {
+            "@test/*": ["./*"],
+            "@fibrae/semi-foundation/*": ["../packages/semi-foundation/src/*"],
+            "@fibrae/semi-ai-foundation/*": ["../packages/semi-ai-foundation/src/*"],
+            "@fibrae/semi-json-viewer-core": ["../packages/semi-json-viewer-core/dist/index.d.ts"],
+            "lottie-web": ["../packages/semi-foundation/node_modules/lottie-web"]
+        }
+    },
+    "include": [
+        "setup.ts",
+        "vitest.setup.ts",
+        "__mocks__/**/*.ts",
+        "utils/function/**/*.ts",
+        "utils/dom/common.ts",
+        "utils/dom/*-core.ts",
+        "utils/table/data.ts",
+        "utils/host-contract.ts",
+        "../packages/semi-foundation/**/__tests__/**/*.ts",
+        "../packages/semi-foundation/src/dom.d.ts",
+        "../packages/semi-ai-foundation/**/__tests__/**/*.ts",
+        "../packages/semi-icons-core/**/__tests__/**/*.ts",
+        "../packages/semi-animation/__tests__/*.ts"
+    ],
+    // Browser tests: their matcher types replace jest-dom's, so tsconfig.browser.json checks them.
+    // theme-shared and scss-compile: their `.ts` imports need tsconfig.node.json
+    "exclude": ["../packages/**/*.browser.test.*", "browser.setup.ts", "utils/browser.ts", "../packages/*/node_modules", "../packages/*/dist"]
+}
