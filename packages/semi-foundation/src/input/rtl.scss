@@ -1,0 +1,11 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-input;
+
+.#{$module}-wrapper:dir(rtl),
+.#{$module}-textarea-wrapper:dir(rtl),
+.#{$module}-group:dir(rtl) {
+    direction: rtl;
+}

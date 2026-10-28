@@ -1,0 +1,359 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-tag;
+
+$colors: 'amber', 'blue', 'cyan', 'green', 'grey', 'indigo', 'light-blue', 'light-green', 'lime', 'orange', 'pink', 'purple', 'red', 'teal', 'violet', 'yellow';
+
+$types: 'ghost', 'solid', 'light';
+
+.#{$module} {
+    @include flex-center;
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    overflow: hidden;
+    vertical-align: bottom;
+    white-space: nowrap;
+    user-select: none;
+    background-color: transparent;
+    border-radius: $radius-tag;
+
+    &-default,
+    &-small {
+        @include font-size-small;
+        height: $height-tag_small;
+        padding: $spacing-tag_small-paddingY $spacing-tag_small-paddingX;
+
+        &:focus-visible {
+            outline: $width-tag-outline solid $color-tag-outline-focus;
+        }
+    }
+
+    &-square {
+        border-radius: $radius-tag;
+    }
+
+    &-circle {
+        border-radius: $radius-tag_circle;
+    }
+
+    &-large {
+        @include font-size-small;
+        height: $height-tag_large;
+        padding: $spacing-tag_large-paddingY $spacing-tag_large-paddingX;
+
+        &:focus-visible {
+            outline: $width-tag-outline solid $color-tag-outline-focus;
+        }
+    }
+
+    &-invisible {
+        display: none;
+    }
+
+    &-prefix-icon {
+        display: flex;
+        padding-inline-end: $spacing-tag_prefix_icon_paddingRight;
+    }
+
+    &-suffix-icon {
+        display: flex;
+        padding-inline-start: $spacing-tag_suffix_icon_paddingLeft;
+    }
+
+    &-content {
+        flex: 1;
+
+        &-ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &-center {
+            @include flex-center;
+            display: flex;
+            min-width: 0;
+            height: 100%;
+        }
+    }
+
+    &-close {
+        @include flex-center;
+        padding-inline-start: $spacing-tag_close-paddingLeft;
+        color: $color-tag_close-icon-default;
+        cursor: pointer;
+
+        &:hover {
+            color: $color-tag_close-icon-hover;
+        }
+
+        &:active {
+            color: $color-tag_close-icon-active;
+        }
+    }
+
+    &-closable {
+        padding-block: $spacing-tag_closable-paddingTop $spacing-tag_closable-paddingBottom;
+        padding-inline: $spacing-tag_closable-paddingLeft $spacing-tag_closable-paddingRight;
+    }
+
+    &-avatar-square,
+    &-avatar-circle {
+        .#{$prefix}-avatar {
+            margin-inline-end: $spacing-tag_avatar-marginRight;
+        }
+    }
+
+    &-avatar-square {
+        padding-block: $spacing-tag_avatar_square-paddingTop $spacing-tag_avatar_square-paddingBottom;
+        padding-inline: $spacing-tag_avatar_square-paddingLeft $spacing-tag_avatar_square-paddingRight;
+
+        .#{$prefix}-avatar {
+            & > img {
+                background-color: $color-tag_avatar_square_img-bg-default;
+            }
+        }
+    }
+
+    &-avatar-circle {
+        padding-block: $spacing-tag_avatar_circle-paddingTop $spacing-tag_avatar_circle-paddingBottom;
+        padding-inline: $spacing-tag_avatar_circle-paddingLeft $spacing-tag_avatar_circle-paddingRight;
+    }
+
+    &-avatar-square.#{$module}-default,
+    &-avatar-square.#{$module}-small {
+        .#{$prefix}-avatar {
+            width: $height-tag_small;
+            height: $height-tag_small;
+        }
+    }
+
+    &-avatar-square.#{$module}-large {
+        .#{$prefix}-avatar {
+            width: $height-tag_large;
+            height: $height-tag_large;
+        }
+    }
+
+    &-avatar-circle.#{$module}-small,
+    &-avatar-circle.#{$module}-default {
+        border-radius: $height-tag_small * 0.5 + 1px;
+
+        .#{$prefix}-avatar {
+            width: $width-tag_avatar_circle_small;
+            height: $width-tag_avatar_circle_small;
+        }
+    }
+
+    &-avatar-circle.#{$module}-large {
+        border-radius: $height-tag_large * 0.5 + 1px;
+
+        .#{$prefix}-avatar {
+            width: $width-tag_avatar_circle_large;
+            height: $width-tag_avatar_circle_large;
+        }
+    }
+
+    &-colorful {
+        font-weight: $font-tag_colorful-fontWeight;
+
+        &.#{$module}-solid {
+            color: $color-tag_colorful_solid-text;
+            background: $color-tag_colorful_solid-bg;
+
+            &.#{$module}-gradient {
+                background: $color-tag_colorful_solid_gradient-bg;
+            }
+        }
+
+        &.#{$module}-light {
+            color: $color-tag_colorful_light-text;
+            background: $color-tag_colorful_light-bg;
+
+            &.#{$module}-gradient {
+                background: $color-tag_colorful_light_gradient-bg;
+
+                .#{$module}-prefix-icon {
+                    svg {
+                        stop:nth-child(1) {
+                            stop-color: $color-tag_colorful_light_gradient-1;
+                        }
+
+                        stop:nth-child(2) {
+                            stop-color: $color-tag_colorful_light_gradient-2;
+                        }
+
+                        stop:nth-child(3) {
+                            stop-color: $color-tag_colorful_light_gradient-3;
+                        }
+
+                        stop:nth-child(4) {
+                            stop-color: $color-tag_colorful_light_gradient-4;
+                        }
+                    }
+                }
+
+                .#{$module}-content {
+                    color: transparent;
+                    background: $color-tag_colorful_light_gradient-text;
+                    background-clip: text;
+                }
+            }
+        }
+
+        &.#{$module}-ghost {
+            color: $color-tag_colorful_ghost-text;
+            background: $color-tag_colorful_ghost-bg;
+            border-color: $color-tag_colorful_ghost-border;
+
+            &.#{$module}-gradient {
+                border: none;
+
+                .#{$module}-prefix-icon {
+                    svg {
+                        stop:nth-child(1) {
+                            stop-color: $color-tag_colorful_ghost_gradient-1;
+                        }
+
+                        stop:nth-child(2) {
+                            stop-color: $color-tag_colorful_ghost_gradient-2;
+                        }
+
+                        stop:nth-child(3) {
+                            stop-color: $color-tag_colorful_ghost_gradient-3;
+                        }
+
+                        stop:nth-child(4) {
+                            stop-color: $color-tag_colorful_ghost_gradient-4;
+                        }
+                    }
+                }
+
+                &.#{$module}-circle {
+                    &::before {
+                        border-radius: $radius-tag_circle;
+                    }
+                }
+
+                &::before {
+                    position: absolute;
+                    inset: 0;
+                    padding: $width-tag-border;
+                    pointer-events: none;
+                    content: '';
+                    background: $color-tag_colorful_ghost-border;
+                    border-radius: $radius-tag;
+                    mask:
+                        linear-gradient($color-tag_colorful_ghost-bg 0 0) content-box,
+                        linear-gradient($color-tag_colorful_ghost-bg 0 0);
+                    mask-composite: exclude;
+                }
+
+                .#{$module}-content {
+                    color: transparent;
+                    background: $color-tag_colorful_ghost_gradient-text;
+                    background-clip: text;
+                }
+            }
+        }
+    }
+}
+
+.#{$module}-group {
+    display: block;
+    height: auto;
+
+    .#{$module} {
+        margin-inline-end: $spacing-tag_group-marginRight;
+        margin-bottom: $spacing-tag_group-marginBottom;
+    }
+
+    &-max.#{$module}-group-small {
+        height: ($height-tag_small + 2px);
+    }
+
+    &-max.#{$module}-group-large {
+        height: ($height-tag_large + 2px);
+    }
+}
+
+.#{$module}-rest-group-popover {
+    .#{$module} {
+        margin-inline-end: $spacing-tag_group-marginRight;
+        margin-bottom: $spacing-tag_group-marginBottom;
+
+        &:last-of-type {
+            margin-inline-end: 0;
+        }
+    }
+}
+
+@each $c in $colors {
+    @each $t in $types {
+        .#{$module}-#{$c}-#{$t} {
+            @include tag-style($c, $t);
+        }
+    }
+}
+
+@each $t in $types {
+    .#{$module}-white-#{$t} {
+        color: $color-tag_white-text-default;
+        background-color: $color-tag_white-bg-default;
+        border: $width-tag-border solid $color-tag_white-border-default;
+    }
+}
+
+.#{$module}-white-ghost,
+.#{$module}-white-light,
+.#{$module}-white-solid {
+    .#{$module}-close {
+        color: $color-tag_white-icon-default;
+    }
+}
+
+.#{$module}-avatar-square,
+.#{$module}-avatar-circle {
+    color: $color-tag_avatar-text-default;
+    background-color: $color-tag_avatar-bg-default;
+    border: $width-tag_avatar-border solid $color-tag_avatar-border-default;
+}
+
+.#{$module}-split {
+    display: inline-flex;
+    align-items: center;
+
+    > .#{$module} {
+        margin-inline-end: 1px;
+        border-radius: 0;
+
+        &:first-child {
+            border-start-start-radius: $radius-tag;
+            border-end-start-radius: $radius-tag;
+        }
+
+        &:last-child {
+            margin-inline-end: unset;
+            border-start-end-radius: $radius-tag;
+            border-end-end-radius: $radius-tag;
+        }
+
+        &-circle {
+            &:first-child {
+                border-start-start-radius: $radius-tag_circle;
+                border-end-start-radius: $radius-tag_circle;
+            }
+
+            &:last-child {
+                border-start-end-radius: $radius-tag_circle;
+                border-end-end-radius: $radius-tag_circle;
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');

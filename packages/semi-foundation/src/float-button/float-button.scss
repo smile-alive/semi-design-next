@@ -1,0 +1,203 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-floatButton;
+
+$moduleGroup: #{$prefix}-floatButtonGroup;
+
+@mixin native-reset {
+    margin: 0;
+    font-family: inherit;
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+
+    &:focus-visible {
+        @include focus-ring;
+    }
+}
+
+.#{$module} {
+    @include native-reset;
+    position: fixed;
+    right: $spacing-floatButton-right;
+    bottom: $spacing-floatButton-bottom;
+    z-index: $z-floatButton;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    cursor: pointer;
+
+    &-body {
+        @include flex-center;
+        color: $color-floatButton-text;
+        background-color: $color-floatButton-bg;
+        box-shadow: $shadow-floatButton;
+
+        &:hover {
+            background-color: $color-floatButton-bg-hover;
+        }
+
+        &:active {
+            background-color: $color-floatButton-bg-active;
+        }
+    }
+
+    &-disabled {
+        color: $color-floatButton-disabled-text;
+        cursor: not-allowed;
+        background: $color-floatButton-disabled-bg;
+
+        &:hover {
+            background-color: $color-floatButton-disabled-bg;
+        }
+    }
+
+    &-colorful {
+        color: $color-floatButton-colorful-text;
+        background: $color-floatButton-colorful-bg;
+
+        &:hover {
+            background: $color-floatButton-colorful-bg-hover;
+        }
+
+        &:active {
+            background: $color-floatButton-colorful-bg-active;
+        }
+    }
+
+    &.#{$module}-square {
+        .#{$prefix}-badge-dot,
+        .#{$prefix}-badge-count {
+            inset-inline-end: calc(0.29 * $radius-floatButton_square);
+
+            /* Badge center sits on the circle's diagonal: (√2 - 1) / √2 * R = 0.29 * R */
+            top: calc(0.29 * $radius-floatButton_square);
+        }
+    }
+
+    &-default {
+        width: $width-floatButton;
+        height: $width-floatButton;
+
+        &.#{$module}-round {
+            .#{$prefix}-badge-dot,
+            .#{$prefix}-badge-count {
+                inset-inline-end: calc(0.29 * 0.5 * $width-floatButton);
+
+                /* Badge center sits on the circle's diagonal: 0.29 * R, R = 0.5 * width */
+                top: calc(0.29 * 0.5 * $width-floatButton);
+            }
+        }
+    }
+
+    &-small {
+        width: $width-floatButton_small;
+        height: $width-floatButton_small;
+
+        &.#{$module}-round {
+            .#{$prefix}-badge-dot,
+            .#{$prefix}-badge-count {
+                inset-inline-end: calc(0.29 * 0.5 *$width-floatButton_small);
+                top: calc(0.29 * 0.5 * $width-floatButton_small);
+            }
+        }
+    }
+
+    &-large {
+        width: $width-floatButton_large;
+        height: $width-floatButton_large;
+
+        &.#{$module}-round {
+            .#{$prefix}-badge-dot,
+            .#{$prefix}-badge-count {
+                inset-inline-end: calc(0.29 * 0.5 * $width-floatButton_large);
+                top: calc(0.29 * 0.5 * $width-floatButton_large);
+            }
+        }
+    }
+
+    &-square {
+        border-radius: $radius-floatButton_square;
+    }
+
+    &-round {
+        border-radius: $radius-floatButton_round;
+    }
+}
+
+.#{$moduleGroup} {
+    position: fixed;
+    right: $spacing-floatButton_group-right;
+    bottom: $spacing-floatButton_group-bottom;
+    z-index: $z-floatButton_group;
+    display: inline-flex;
+    gap: $spacing-floatButton_group-columnGap;
+    padding: $spacing-floatButton_group-padding;
+    background: $color-floatButton_group-bg;
+    border-radius: $radius-floatButton_group-border-radius;
+    box-shadow: $shadow-floatButton_group;
+
+    &-item {
+        @include native-reset;
+        display: flex;
+        column-gap: $spacing-floatButton_group_item-columnGap;
+        align-items: center;
+        padding: $spacing-floatButton_group_item-paddingY $spacing-floatButton_group_item-paddingX;
+        font-size: $font-floatButton_group_item-fontSize;
+        font-style: normal;
+        font-weight: $font-floatButton_group_item-fontWeight;
+        line-height: $font-floatButton_group_item-lineHeight;
+        color: $color-floatButton_group_item-text;
+        white-space: nowrap;
+        cursor: pointer;
+        border-radius: $radius-floatButton_group_item-border-radius;
+
+        &:hover {
+            background: $color-floatButton_group_item-bg-hover;
+        }
+
+        &:active {
+            background: $color-floatButton_group_item-bg-active;
+        }
+
+        &-disabled {
+            color: $color-floatButton_group_item-disabled-text;
+            cursor: not-allowed;
+
+            &:hover,
+            &:active {
+                background: transparent;
+            }
+        }
+
+        // An item with shape, size or colorful carries the class names of a standalone FloatButton, whose width and
+        // height apply as they are; shape and colorful repeat the declarations because the item's own radius and
+        // transparent background above would otherwise win by source order
+        &.#{$module}-round {
+            border-radius: $radius-floatButton_round;
+        }
+
+        &.#{$module}-square {
+            border-radius: $radius-floatButton_square;
+        }
+
+        &.#{$module}-colorful {
+            color: $color-floatButton-colorful-text;
+            background: $color-floatButton-colorful-bg;
+
+            &:hover {
+                background: $color-floatButton-colorful-bg-hover;
+            }
+
+            &:active {
+                background: $color-floatButton-colorful-bg-active;
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');

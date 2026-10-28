@@ -1,0 +1,586 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-cascader;
+
+.#{$module} {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    min-width: $width-cascader;
+    height: auto;
+    min-height: $height-cascader_default;
+    font-weight: $font-cascader-fontWeight;
+    line-height: $height-cascader_default;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: $color-cascader_default-bg-default;
+    border: $width-cascader-border solid $color-cascader_default-border-default;
+    border-radius: $radius-cascader;
+
+    &:hover {
+        background-color: $color-cascader_default-bg-hover;
+        border: $width-cascader_hover-border $color-cascader_default-border-hover solid;
+    }
+
+    &:is(:focus, :has(input[role='combobox']:focus)):not(&-disabled) {
+        outline: 0;
+        background-color: $color-cascader_default-bg-default;
+        border: $width-cascader_focus-border solid $color-cascader_default-border-focus;
+    }
+
+    &:active {
+        background-color: $color-cascader_default-bg-active;
+    }
+
+    &-small {
+        min-height: $height-cascader_small;
+        line-height: $height-cascader_small;
+
+        .#{$module}-selection {
+            padding-inline: $spacing-cascader_small_selection-paddingLeft $spacing-cascader_small_selection-paddingRight;
+
+            &-multiple {
+                padding-inline: $spacing-cascader_small_selection_multiple-paddingLeft $spacing-cascader_small_selection_multiple-paddingRight;
+            }
+        }
+    }
+
+    &-large {
+        min-height: $height-cascader_large;
+        line-height: $height-cascader_large;
+
+        .#{$module}-selection {
+            @include font-size-header-6;
+        }
+
+        .#{$module}-selection {
+            padding-inline: $spacing-cascader_large_selection-paddingLeft $spacing-cascader_large_selection-paddingRight;
+
+            &-multiple {
+                padding-inline: $spacing-cascader_large_selection_multiple-paddingLeft $spacing-cascader_large_selection_multiple-paddingRight;
+            }
+        }
+    }
+
+    &-focus {
+        outline: 0;
+        border: $width-cascader_focus-border solid $color-cascader_default-border-focus;
+
+        &:hover {
+            background-color: $color-cascader_default-bg-default;
+            border: $width-cascader_focus-border solid $color-cascader_default-border-focus;
+        }
+
+        &:active {
+            background-color: $color-cascader_default-bg-active;
+        }
+    }
+
+    &-warning {
+        background-color: $color-cascader_warning-bg-default;
+        border-color: $color-cascader_warning-border-default;
+
+        &:hover {
+            background-color: $color-cascader_warning-bg-hover;
+            border-color: $color-cascader_warning-border-hover;
+        }
+
+        &.#{$module}-focus {
+            background-color: $color-cascader_warning-bg-focus;
+            border-color: $color-cascader_warning-border-focus;
+        }
+
+        &:active {
+            background-color: $color-cascader_warning-bg-active;
+            border-color: $color-cascader_warning-border-active;
+        }
+    }
+
+    &-error {
+        background-color: $color-cascader_danger-bg-default;
+        border-color: $color-cascader_danger-border-default;
+
+        &:hover {
+            background-color: $color-cascader_danger-bg-hover;
+            border-color: $color-cascader_danger-border-hover;
+        }
+
+        &.#{$module}-focus {
+            background-color: $color-cascader_danger-bg-focus;
+            border-color: $color-cascader_danger-border-focus;
+        }
+
+        &:active {
+            background-color: $color-cascader_danger-bg-active;
+            border-color: $color-cascader_danger-border-active;
+        }
+    }
+
+    &-selection {
+        @include font-size-regular;
+        display: inline-flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        height: 100%;
+
+        padding-inline: $spacing-cascader_selection-paddingLeft $spacing-cascader_selection-paddingRight;
+        overflow: hidden;
+        color: $color-cascader_selection-text-default;
+        cursor: pointer;
+
+        &-multiple {
+            padding-inline: $spacing-cascader_selection_multiple-paddingLeft $spacing-cascader_selection_multiple-paddingRight;
+        }
+
+        &-placeholder {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: $color-cascader_placeholder-text-default;
+            white-space: nowrap;
+        }
+
+        &-tag {
+            margin-block: $spacing-cascader_selection_tag-marginY;
+            margin-inline: $spacing-cascader_selection_tag-marginLeft $spacing-cascader_selection_tag-marginRight;
+
+            &:first-child {
+                margin-inline-start: 0;
+            }
+
+            &-disabled.#{$prefix}-tag {
+                color: $color-cascader_input_disabled-text-default;
+                cursor: not-allowed;
+                background-color: $color-cascader_tag_disabled-bg-default;
+
+                .#{$prefix}-tag-close {
+                    color: $color-cascader_input_disabled-text-default;
+                    pointer-events: none;
+                    cursor: not-allowed;
+                }
+            }
+        }
+
+        &-n {
+            padding-inline: $spacing-cascader_selection_n-paddingX;
+            margin-inline-end: $spacing-cascader_selection_n-marginRight;
+            font-size: $font-cascader_selection_n-fontSize;
+            color: $color-cascader_selection_n-text-default;
+            cursor: pointer;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+
+            &-disabled {
+                color: $color-cascader_selection_n-text-disabled;
+                cursor: not-allowed;
+            }
+        }
+
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .#{$module}-tagInput-wrapper {
+            margin-inline-start: $spacing-cascader_selection_tagInput-marginLeft;
+            background: transparent;
+            border: hidden;
+        }
+
+        .#{$prefix}-tagInput {
+            min-height: $height-cascader_selection_tagInput_wrapper_default;
+
+            &-small {
+                min-height: $height-cascader_selection_tagInput_wrapper_small;
+            }
+
+            &-large {
+                min-height: $height-cascader_selection_tagInput_wrapper_large;
+            }
+
+            .#{$prefix}-input-wrapper {
+                margin-inline-start: $spacing-cascader_selection_input-marginLeft;
+
+                .#{$prefix}-input {
+                    padding-inline-start: 0;
+                }
+
+                &-default {
+                    margin-top: $spacing-cascader_selection_tag-marginY;
+                    margin-bottom: $spacing-cascader_selection_tag-marginY;
+                }
+
+                &-large {
+                    margin-top: $spacing-cascader_selection_tag-marginY;
+                    margin-bottom: $spacing-cascader_selection_tag-marginY;
+                }
+            }
+        }
+
+        &-text {
+            &-inactive {
+                color: $color-cascader_selection_text_inactive;
+            }
+
+            &-hide {
+                display: none;
+            }
+        }
+    }
+
+    &-clearbtn {
+        @include bare-button;
+    }
+
+    &-arrow,
+    &-clearbtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: $width-cascader-icon;
+        height: 100%;
+        color: $color-cascader-icon-default;
+    }
+
+    &-clearbtn {
+        display: none;
+
+        &:hover {
+            color: $color-cascader-icon-hover;
+        }
+
+        &:active {
+            color: $color-cascader-icon-active;
+        }
+    }
+
+    &:hover,
+    &-focus,
+    // also while focus is inside, so Tab can reach the clear button
+    &:focus-within {
+        .#{$module}-clearbtn {
+            display: inline-flex;
+        }
+
+        .#{$module}-clearbtn ~ .#{$module}-arrow {
+            display: none;
+        }
+    }
+
+    &-prefix,
+    &-suffix {
+        @include flex-center;
+        display: inline;
+
+        &-text {
+            @include font-size-regular;
+            margin: 0 $spacing-cascader_text-marginX;
+            font-weight: $font-cascader_prefix_suffix_fontWeight;
+            color: $color-cascader_prefix_suffix_text-default;
+            white-space: nowrap;
+        }
+
+        &-icon {
+            margin: 0 $spacing-cascader_icon-marginX;
+            color: $color-cascader-icon-default;
+        }
+    }
+
+    &-inset-label {
+        @include font-size-regular;
+        display: inline;
+        flex-shrink: 0;
+        margin: 0 $spacing-cascader_text-marginX;
+        font-weight: $font-cascader_prefix_suffix_fontWeight;
+        color: $color-cascader_prefix_suffix_text-default;
+        white-space: nowrap;
+    }
+
+    &.#{$module}-with-prefix {
+        display: inline-flex;
+        align-items: center;
+
+        .#{$module}-selection {
+            padding-inline-start: 0;
+        }
+    }
+
+    &.#{$module}-with-suffix {
+        .#{$module}-selection {
+            padding-inline-end: 0;
+        }
+    }
+
+    &-disabled {
+        cursor: not-allowed;
+        user-select: none;
+        background-color: $color-cascader_input_disabled-bg-default;
+
+        .#{$module}-selection {
+            cursor: not-allowed;
+        }
+
+        &:hover {
+            background-color: $color-cascader_input_disabled-bg-hover;
+        }
+
+        .#{$module}-selection,
+        .#{$module}-selection-placeholder,
+        .#{$module}-prefix,
+        .#{$module}-suffix {
+            color: $color-cascader_input_disabled-text-default;
+            cursor: not-allowed;
+        }
+
+        .#{$module}-arrow {
+            color: $color-cascader_input_disabled-icon-default;
+        }
+    }
+}
+
+.#{$module}-popover {
+    .#{$module}-search-wrapper {
+        padding: $spacing-cascader_search-paddingY $spacing-cascader_search-paddingX;
+        border-bottom: $width-cascader_search-border solid $color-cascader_search-border-default;
+    }
+
+    .#{$module}-option-lists .#{$module}-option-empty {
+        @include font-size-regular;
+        padding: $spacing-cascader_option_empty-paddingY $spacing-cascader_option_empty-paddingX;
+        margin: 0;
+        color: $color-cascader_option_empty-text-default;
+        text-align: center;
+        cursor: not-allowed;
+        user-select: none;
+        border-radius: $radius-cascader_option_empty;
+
+        &:hover {
+            background-color: transparent;
+        }
+    }
+}
+
+.#{$module}-single.#{$module}-filterable {
+    display: inline-flex;
+
+    .#{$module}-selection {
+        .#{$module}-search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: $height-cascader_selection_wrapper;
+
+            &-small {
+                height: $height-cascader_selection_wrapper_small;
+            }
+
+            &-large {
+                height: $height-cascader_selection_wrapper_large;
+            }
+
+            .#{$prefix}-input-wrapper {
+                position: absolute;
+                inset-inline-start: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: $color-cascader_input-bg-default;
+                border: $color-cascader_input-border-default;
+            }
+
+            .#{$prefix}-input-wrapper-focus {
+                border: $color-cascader_input-border-default;
+            }
+
+            .#{$prefix}-input {
+                padding-inline: 0;
+            }
+        }
+    }
+}
+
+.#{$module}-option-lists {
+    display: flex;
+    height: $height-cascader_option_list;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+
+    &-empty {
+        justify-content: center;
+        height: auto;
+        cursor: not-allowed;
+    }
+
+    ul,
+    li {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    ul > li {
+        padding-inline: $spacing-cascader_option-paddingLeft $spacing-cascader_option-paddingRight;
+        padding-top: $spacing-cascader_option-paddingTop;
+        padding-bottom: $spacing-cascader_option-paddingBottom;
+    }
+
+    .#{$module}-option-list {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: $width-cascader_option;
+        height: 100%;
+        padding: $spacing-cacader_option_list-paddingY $spacing-cacader_option_list-paddingX;
+        margin: 0;
+        overflow: auto;
+        list-style: none;
+        border-inline-start: $width-cascader_option_list-border solid $color-cascader_option_list-border-default;
+
+        &:first-child {
+            border-inline-start: none;
+        }
+    }
+
+    .#{$module}-option {
+        @include font-size-regular;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: min-content;
+        color: $color-cascader_option_main-text-default;
+        word-break: break-all;
+        cursor: pointer;
+        transition: background-color $transition_duration-cascader_option-bg $transition_function-cascader_option-bg $transition_delay-cascader_option-bg;
+
+        &:hover {
+            background-color: $color-cascader_option-bg-hover;
+        }
+
+        &:active {
+            background-color: $color-cascader_option-bg-active;
+        }
+
+        // focus stays on the combobox (aria-activedescendant); only the keyboard sets this, so always show the ring
+        &-focused {
+            @include focus-ring(-2px);
+        }
+
+        &-icon {
+            display: inline-flex;
+            flex-shrink: 0;
+            width: $width-cascader-option-icon;
+            color: $color-cascader_option-icon-default;
+
+            &-active,
+            &-empty {
+                margin-inline-end: $spacing-cascader_empty_icon-marginRight;
+            }
+
+            &-left {
+                margin-inline-start: $spacing-cascader_option-icon-marginLeft;
+            }
+        }
+
+        &-spin-icon {
+            width: $width-cascader-option-icon;
+            height: $width-cascader-option-icon;
+            line-height: 0;
+
+            & svg {
+                width: $width-cascader-option-icon;
+                height: $width-cascader-option-icon;
+            }
+        }
+
+        &-label {
+            display: flex;
+            align-items: center;
+            white-space: pre;
+
+            &-checkbox {
+                margin-inline: $spacing-cascader_label_checkbox-marginRight;
+            }
+        }
+
+        &-hidden {
+            display: none;
+        }
+
+        &-active {
+            background-color: $color-cascader_option-bg-selected;
+
+            &:hover {
+                background-color: $color-cascader_option-bg-selected;
+            }
+        }
+
+        &-select,
+        &-label-highlight {
+            font-weight: $font-cascader_select-fontWeight;
+            color: $color-cascader_select_highlight;
+        }
+
+        &-disabled {
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: $color-cascader_option_disabled-bg-hover;
+            }
+
+            &:active {
+                background-color: $color-cascader_option_disabled-bg-active;
+            }
+
+            .#{$module}-option-label {
+                color: $color-cascader_option_disabled-text-default;
+            }
+        }
+
+        &-flatten {
+            padding-inline-end: $spacing-cascader_flatten_list-paddingRight;
+        }
+    }
+}
+
+.#{$module}-borderless {
+    &:not(:focus-within):not(:hover) {
+        background-color: transparent;
+        border-color: transparent;
+
+        .#{$module}-arrow {
+            opacity: 0;
+        }
+    }
+
+    &:focus-within:not(:active) {
+        background-color: transparent;
+    }
+
+    &.#{$module}-error:not(:focus-within) {
+        border-color: $color-cascader_danger-border-focus;
+    }
+
+    &.#{$module}-warning:not(:focus-within) {
+        border-color: $color-cascader_warning-border-focus;
+    }
+
+    &.#{$module}-error:focus-within {
+        border-color: $color-cascader_danger-border-focus;
+    }
+
+    &.#{$module}-warning:focus-within {
+        border-color: $color-cascader_warning-border-focus;
+    }
+}
+
+@include meta.load-css('rtl');

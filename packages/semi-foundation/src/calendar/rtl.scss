@@ -1,0 +1,10 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-calendar;
+
+.#{$module}-day:dir(rtl),
+.#{$module}-week:dir(rtl),
+.#{$module}-month:dir(rtl) {
+    direction: rtl;
+}

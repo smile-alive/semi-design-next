@@ -1,0 +1,17 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+// items clip overflow and sit flush, so the ring is drawn inside
+.#{$prefix}-steps-item:focus-visible {
+    @include focus-ring(-2px);
+}
+
+@include meta.load-css('fill-steps');
+@include meta.load-css('bacis-steps');
+@include meta.load-css('nav-steps');
+
+@include meta.load-css('rtl');

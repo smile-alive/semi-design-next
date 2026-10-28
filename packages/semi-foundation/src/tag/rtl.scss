@@ -1,0 +1,12 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-tag;
+
+.#{$module}:dir(rtl),
+.#{$module}-group:dir(rtl),
+.#{$module}-split:dir(rtl),
+.#{$module}-rest-group-popover:dir(rtl) {
+    direction: rtl;
+}

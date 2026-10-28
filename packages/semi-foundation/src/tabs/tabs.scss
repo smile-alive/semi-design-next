@@ -1,0 +1,933 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-tabs;
+// Radio and Checkbox inside a tab must not receive the tab icon overrides
+$ignoreIcon: '.#{$prefix}-icon-checkbox_tick, .#{$prefix}-icon-radio, .#{$prefix}-icon-checkbox_indeterminate';
+
+.#{$module} {
+    position: relative;
+    box-sizing: border-box;
+
+    &-left {
+        display: flex;
+        flex-direction: row;
+    }
+
+    &-bar {
+        position: relative;
+        white-space: nowrap;
+        outline: none;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &-tablist {
+            display: contents;
+        }
+
+        &-extra {
+            padding: $spacing-tabs_bar_extra-paddingY $spacing-tabs_bar_extra-paddingX;
+        }
+
+        &-more-trigger {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+            font: inherit;
+            color: var(--semi-color-text-2);
+            text-align: inherit;
+            appearance: none;
+            cursor: pointer;
+            background: none;
+            border: 0;
+
+            &:focus-visible {
+                outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                outline-offset: $width-tabs-outline-offset;
+            }
+
+            &-content {
+                display: flex;
+                align-content: center;
+
+                &-icon:not(:not(&-icon)) {
+                    display: flex;
+                    flex-shrink: 0;
+                    align-items: center;
+                    margin-inline: $spacing-tabs_tab-more_trigger_icon-marginLeft $spacing-tabs_tab-more_trigger_icon-marginRight;
+                    // :not(:not(&-icon)) outranks the generic icon rules
+                    margin-top: $spacing-tabs_tab-more_trigger_icon-marginTop;
+                    margin-bottom: $spacing-tabs_tab-more_trigger_icon-marginBottom;
+                }
+            }
+
+            &-line {
+                padding-block: $spacing-tabs_bar_line_tab-paddingTop $spacing-tabs_bar_line_tab-paddingBottom;
+                padding-inline: $spacing-tabs_bar_line_tab-paddingLeft $spacing-tabs_bar_line_tab-paddingRight;
+            }
+
+            &-card {
+                padding: $spacing-tabs_bar_card_tab-paddingY $spacing-tabs_bar_card_tab-paddingX;
+            }
+
+            &-button {
+                padding: $spacing-tabs_bar_button_tab-paddingY $spacing-tabs_bar_button_tab-paddingX;
+            }
+        }
+
+        .#{$module}-tab {
+            @include font-size-regular;
+            position: relative;
+            float: inline-start;
+            box-sizing: border-box;
+            display: block;
+
+            font-weight: $font-tabs_tab-fontWeight;
+            color: $color-tabs_tab_line_default-text-default;
+            cursor: pointer;
+
+            user-select: none;
+
+            .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                position: relative;
+                top: $spacing-tabs_tab_icon-top;
+                margin-inline-end: $spacing-tabs_tab_icon-marginRight;
+                color: $color-tabs_tab-icon-default;
+                transition: color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+            }
+
+            .#{$prefix}-icon.#{$module}-tab-icon-close {
+                margin-inline-start: 10px;
+                margin-inline-end: 0;
+                font-size: 14px;
+                color: var(--semi-color-text-2);
+                cursor: pointer;
+            }
+
+            &:hover {
+                color: $color-tabs_tab_line_default-text-hover;
+
+                .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                    color: $color-tabs_tab-icon-hover;
+                }
+            }
+
+            &:active {
+                color: $color-tabs_tab_line_default-text-active;
+
+                .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                    color: $color-tabs_tab-icon-active;
+                }
+            }
+        }
+
+        .#{$module}-tab-active {
+            &,
+            &:hover {
+                font-weight: $font-tabs_tab_active-fontWeight;
+                color: $color-tabs_tab_line_selected-text-default;
+                cursor: default;
+
+                .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                    color: $color-tabs_tab_selected-icon-default;
+                }
+
+                .#{$prefix}-icon.#{$module}-tab-icon-close {
+                    color: var(--semi-color-text-2);
+                }
+            }
+
+            .#{$prefix}-icon.#{$module}-tab-icon-close:hover {
+                color: var(--semi-color-text-1);
+            }
+        }
+
+        .#{$module}-tab-disabled {
+            color: $color-tabs_tab_line_disabled-text-default;
+            cursor: not-allowed;
+
+            &:hover {
+                color: $color-tabs_tab_line_disabled-text-hover;
+                border-bottom: none;
+            }
+        }
+    }
+
+    &-tab-single {
+        &.#{$module}-tab {
+            @include font-size-regular;
+            position: relative;
+            box-sizing: border-box;
+            display: inline-block;
+
+            font-weight: $font-tabs_tab-fontWeight;
+            color: $color-tabs_tab_line_default-text-default;
+            cursor: pointer;
+
+            user-select: none;
+
+            .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                position: relative;
+                top: $spacing-tabs_tab_icon-top;
+                margin-inline-end: $spacing-tabs_tab_icon-marginRight;
+                color: $color-tabs_tab-icon-default;
+                transition: color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+            }
+
+            .#{$prefix}-icon.#{$module}-tab-icon-close {
+                margin-inline-start: 10px;
+                margin-inline-end: 0;
+                font-size: 14px;
+                color: var(--semi-color-text-2);
+                cursor: pointer;
+
+                &.#{$prefix}-icon-close:hover {
+                    color: var(--semi-color-text-0);
+                }
+            }
+
+            &:hover {
+                color: $color-tabs_tab_line_default-text-hover;
+
+                .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                    color: $color-tabs_tab-icon-hover;
+                }
+
+                .#{$prefix}-icon.#{$module}-tab-icon-close {
+                    color: var(--semi-color-text-2);
+                }
+            }
+
+            &:active {
+                color: $color-tabs_tab_line_default-text-active;
+
+                .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                    color: $color-tabs_tab-icon-active;
+                }
+
+                .#{$prefix}-icon.#{$module}-tab-icon-close {
+                    color: var(--semi-color-text-2);
+                }
+            }
+        }
+
+        &.#{$module}-tab-active {
+            &,
+            &:hover {
+                font-weight: $font-tabs_tab_active-fontWeight;
+                color: $color-tabs_tab_line_selected-text-default;
+                cursor: default;
+
+                .#{$prefix}-icon:not(#{$ignoreIcon}) {
+                    color: $color-tabs_tab_selected-icon-default;
+                }
+
+                .#{$prefix}-icon.#{$module}-tab-icon-close {
+                    color: var(--semi-color-text-2);
+                }
+            }
+
+            .#{$prefix}-icon.#{$module}-tab-icon-close:hover {
+                color: var(--semi-color-text-1);
+            }
+        }
+
+        &.#{$module}-tab-disabled {
+            color: $color-tabs_tab_line_disabled-text-default;
+            cursor: not-allowed;
+
+            &:hover {
+                color: $color-tabs_tab_line_disabled-text-hover;
+                border-bottom: none;
+            }
+        }
+    }
+
+    &-bar-collapse {
+        &,
+        .#{$module}-bar-overflow-list {
+            display: flex;
+            align-items: center;
+        }
+
+        .#{$prefix}-overflow-list {
+            flex: 1;
+
+            .#{$prefix}-overflow-list-scroll-wrapper {
+                @include hide-scrollbar;
+
+                &:focus-visible {
+                    outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                    outline-offset: $width-tabs-outline-offset;
+                }
+            }
+            & > .#{$prefix}-button-disabled {
+                color: $color-tabs_tab-pane_arrow_disabled-text-default;
+                background-color: $color-tabs_tab-pane_arrow_disabled-bg-default;
+
+                &:hover {
+                    color: $color-tabs_tab-pane_arrow_disabled-text-hover;
+                    background-color: $color-tabs_tab-pane_arrow_disabled-bg-hover;
+                }
+            }
+        }
+
+        .#{$module}-bar-arrow-start {
+            margin-inline-end: $spacing-tabs_overflow_icon-marginRight;
+            & > .#{$prefix}-button[aria-disabled='false'] {
+                padding: $spacing-tabs_tab-pane_arrow;
+                color: $color-tabs_tab-pane_arrow-text-default;
+                background-color: $color-tabs_tab-pane_arrow-bg-default;
+                border: $width-tabs_tab-pane_arrow-border solid $color-tabs_tab-pane_arrow-border-default;
+
+                &:hover {
+                    color: $color-tabs_tab-pane_arrow-text-hover;
+                    background-color: var(--semi-color-fill-0);
+                    border-color: $color-tabs_tab-pane_arrow-border-hover;
+                }
+
+                &:active {
+                    color: $color-tabs_tab-pane_arrow-text-active;
+                    background-color: var(--semi-color-fill-1);
+                    border-color: $color-tabs_tab-pane_arrow-border-active;
+                }
+            }
+        }
+
+        .#{$module}-bar-arrow-end {
+            margin-inline-start: $spacing-tabs_overflow_icon-marginLeft;
+            & > .#{$prefix}-button[aria-disabled='false'] {
+                padding: $spacing-tabs_tab-pane_arrow;
+                color: $color-tabs_tab-pane_arrow-text-default;
+                background-color: $color-tabs_tab-pane_arrow-bg-default;
+                border: $width-tabs_tab-pane_arrow-border solid $color-tabs_tab-pane_arrow-border-default;
+
+                &:hover {
+                    color: $color-tabs_tab-pane_arrow-text-hover;
+                    background-color: var(--semi-color-fill-0);
+                    border-color: $color-tabs_tab-pane_arrow-border-hover;
+                }
+
+                &:active {
+                    color: $color-tabs_tab-pane_arrow-text-active;
+                    background-color: var(--semi-color-fill-1);
+                    border-color: $color-tabs_tab-pane_arrow-border-active;
+                }
+            }
+        }
+    }
+
+    &-bar-dropdown {
+        max-height: $height-tabs_overflow_list;
+        overflow-y: auto;
+    }
+
+    &-bar::after {
+        clear: both;
+        display: block;
+        height: 0;
+        content: '';
+    }
+
+    &-bar-line {
+        &.#{$module}-bar-top {
+            border-bottom: $width-tabs_bar_line-border solid $color-tabs_tab_line_default-border-default;
+            transform: scale($transform_scale-tabs_tab_line-item);
+            transition: color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+            .#{$module}-tab {
+                padding-block: $spacing-tabs_bar_line_tab-paddingTop $spacing-tabs_bar_line_tab-paddingBottom;
+                padding-inline: $spacing-tabs_bar_line_tab-paddingLeft $spacing-tabs_bar_line_tab-paddingRight;
+                border-bottom: $width-tabs_bar_line_tab-border solid transparent;
+                transition:
+                    border-bottom-color $transition_duration-tabs_tab_line-border $transition_function-tabs_tab_line-border $transition_delay-tabs_tab_line-border,
+                    color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+                &:nth-of-type(1) {
+                    padding-inline-start: 0;
+                }
+
+                &:hover {
+                    border-bottom: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-hover;
+                }
+
+                &:focus-visible {
+                    outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                    outline-offset: $width-tabs_bar_line-outline-offset;
+                }
+
+                &:active {
+                    border-bottom: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-active;
+                }
+
+                &:not(:last-of-type) {
+                    margin-inline-end: $spacing-tabs_bar_line_tab-marginRight;
+                }
+
+                &-small {
+                    padding-block: $spacing-tabs_bar_line_tab_small-paddingTop $spacing-tabs_bar_line_tab_small-paddingBottom;
+                    padding-inline: $spacing-tabs_bar_line_tab_small-paddingLeft $spacing-tabs_bar_line_tab_small-paddingRight;
+                }
+
+                &-medium {
+                    padding-block: $spacing-tabs_bar_line_tab_medium-paddingTop $spacing-tabs_bar_line_tab_medium-paddingBottom;
+                    padding-inline: $spacing-tabs_bar_line_tab_medium-paddingLeft $spacing-tabs_bar_line_tab_medium-paddingRight;
+                }
+            }
+
+            .#{$module}-tab-active {
+                &,
+                &:hover {
+                    border-bottom: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_indicator_selected-icon-default;
+                }
+            }
+        }
+
+        &.#{$module}-bar-left {
+            border-inline-end: $width-tabs_bar_line-border solid $color-tabs_tab_line_default-border-default;
+
+            .#{$module}-tab {
+                padding: $spacing-tabs_bar_line_tab_left-padding;
+                border-inline-start: $width-tabs_bar_line_tab-border solid transparent;
+                transition:
+                    background-color $transition_duration-tabs-tab_button-bg $transition_function-tabs_tab_button-bg $transition_delay-tabs_tab_button-bg,
+                    color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+                &:hover {
+                    background-color: $color-tabs_tab_line_vertical-bg-hover;
+                    border-inline-start: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-hover;
+                }
+
+                &:focus-visible {
+                    outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                    outline-offset: $width-tabs-outline-offset;
+                }
+
+                &:active {
+                    background-color: $color-tabs_tab_line_vertical-bg-active;
+                    border-inline-start: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-active;
+                }
+
+                &-small {
+                    padding: $spacing-tabs_bar_line_tab_left_small-padding;
+                }
+
+                &-medium {
+                    padding: $spacing-tabs_bar_line_tab_left_medium-padding;
+                }
+            }
+
+            .#{$module}-tab-active {
+                background-color: $color-tabs_tab_line_vertical_selected-bg-default;
+
+                &,
+                &:hover {
+                    background-color: $color-tabs_tab_line_vertical_selected-bg-default;
+                    border-inline-start: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_indicator_selected-icon-default;
+                }
+            }
+        }
+
+        .#{$module}-bar-extra {
+            height: $height-tabs_bar_extra_large;
+            line-height: $font-tabs_bar_extra_large-lineHeight;
+        }
+
+        .#{$module}-bar-line-extra-small {
+            height: $height-tabs_bar_extra_small;
+            line-height: $font-tabs_bar_extra_small-lineHeight;
+        }
+    }
+
+    &-bar-card {
+        &.#{$module}-bar-top {
+            &::before {
+                position: absolute;
+                inset-inline: 0;
+                bottom: 0;
+                content: '';
+                border-bottom: $width-tabs_bar_card-border solid $color-tabs_tab_card_default-border-default;
+            }
+
+            .#{$module}-tab {
+                border: $width-tabs_bar_card-border solid transparent;
+                border-bottom: none;
+                border-radius: $radius-tabs_tab_card;
+
+                &:hover {
+                    border-bottom: none;
+                }
+
+                &:not(:last-of-type) {
+                    margin-inline-end: $spacing-tabs_bar_card_tab-marginRight;
+                }
+            }
+
+            .#{$module}-tab-active {
+                &,
+                &:hover {
+                    padding-block: $spacing-tabs_bar_card_tab_active-paddingTop $spacing-tabs_bar_card_tab_active-paddingBottom;
+                    padding-inline: $spacing-tabs_bar_card_tab_active-paddingLeft $spacing-tabs_bar_card_tab_active-paddingRight;
+                    background: transparent;
+                    border: $width-tabs_bar_card-border solid $color-tabs_tab_card_indicator_selected-icon-default;
+                    border-bottom: $width-tabs_bar_card-border solid $color-tabs_tab_card_selected-bg-default;
+                }
+            }
+        }
+
+        &.#{$module}-bar-left {
+            border-inline-end: $width-tabs_bar_card-border solid $color-tabs_tab_line_default-border-default;
+
+            .#{$module}-tab {
+                border: $width-tabs_bar_card-border solid transparent;
+                border-inline-end: none;
+                border-radius: $radius-tabs_tab_card_left;
+
+                &:hover {
+                    border-inline-end: none;
+                }
+
+                &:not(:last-of-type) {
+                    margin-bottom: $spacing-tabs_bar_card_tab_left-marginBottom;
+                }
+            }
+
+            .#{$module}-tab-active {
+                &::after {
+                    position: absolute;
+                    inset-inline-end: -1px;
+                    top: 0;
+                    bottom: 0;
+                    width: 1px;
+                    content: ' ';
+                    background: $color-tabs_tab_card_selected-bg-default;
+                }
+
+                &,
+                &:hover {
+                    padding: $spacing-tabs_bar_card_tab_left_active-paddingY $spacing-tabs_bar_card_tab_left_active-paddingX;
+                    background: transparent;
+                    border: $width-tabs_bar_card-border solid $color-tabs_tab_card_indicator_selected-icon-default;
+                    border-inline-end: none;
+                }
+            }
+        }
+
+        .#{$module}-tab {
+            padding: $spacing-tabs_bar_card_tab-paddingY $spacing-tabs_bar_card_tab-paddingX;
+
+            transform: scale($transform_scale-tabs_tab_card-item);
+            transition:
+                background-color $transition_duration-tabs_tab_card-bg $transition_function-tabs_tab_card-bg $transition_delay-tabs_tab_card-bg,
+                color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+            &:hover {
+                background: $color-tabs_tab_card-bg-hover;
+            }
+
+            &:focus-visible {
+                outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                outline-offset: $width-tabs-outline-offset;
+            }
+
+            &:active {
+                background: $color-tabs_tab_card-bg-active;
+            }
+        }
+    }
+
+    &-bar-button {
+        border: none;
+
+        &.#{$module}-bar-left {
+            .#{$module}-tab {
+                &:not(:last-of-type) {
+                    margin-bottom: $spacing-tabs_bar_button_tab_left-marginBottom;
+                }
+            }
+        }
+
+        &.#{$module}-bar-top {
+            .#{$module}-tab {
+                &:not(:last-of-type) {
+                    margin-inline-end: $spacing-tabs_bar_button_tab-marginRight;
+                }
+            }
+        }
+
+        .#{$module}-tab {
+            padding: $spacing-tabs_bar_button_tab-paddingY $spacing-tabs_bar_button_tab-paddingX;
+            color: $color-tabs_tab_button-text-default;
+            border: none;
+            border-radius: $radius-tabs_tab_button;
+
+            transform: scale($transform_scale-tabs_tab_button-item);
+            transition:
+                background-color $transition_duration-tabs-tab_button-bg $transition_function-tabs_tab_button-bg $transition_delay-tabs_tab_button-bg,
+                color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+            &:hover {
+                background-color: $color-tabs_tab_button-bg-hover;
+                border: none;
+            }
+
+            &:focus-visible {
+                outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                outline-offset: $width-tabs-outline-offset;
+            }
+
+            &:active {
+                background-color: $color-tabs_tab_button-bg-active;
+            }
+        }
+
+        .#{$module}-tab-active {
+            &,
+            &:hover {
+                color: $color-tabs_tab_button_selected-text-default;
+                background-color: $color-tabs_tab_button_selected-bg-default;
+                border: none;
+            }
+        }
+    }
+
+    &-bar-slash {
+        .#{$module}-tab {
+            padding: $spacing-tabs_bar_slash_tab-paddingY $spacing-tabs_bar_slash_tab-paddingX;
+
+            &:focus-visible {
+                outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                outline-offset: $width-tabs-outline-offset;
+            }
+
+            &:nth-of-type(1) {
+                padding-inline-start: 0;
+            }
+
+            &:not(:last-of-type) {
+                margin-inline-end: $spacing-tabs_bar_slash-marginRight;
+
+                &::after {
+                    display: inline-block;
+                    width: $width-tabs_tab_slash_line;
+                    height: $height-tabs_tab_slash_line;
+                    margin-inline-start: $spacing-tabs_bar_slash_line_marginLeft;
+                    margin-top: $spacing-tabs_bar_slash_line_marginTop;
+                    margin-bottom: $spacing-tabs_bar_slash_line_marginBottom;
+                    vertical-align: bottom;
+                    content: '';
+                    background: linear-gradient(to bottom right, transparent 0%, transparent calc(50% - 1px), $color-tabs_tab_slash_line 50%, transparent calc(50% + 1px), transparent 100%);
+                }
+            }
+        }
+    }
+
+    &-content {
+        width: 100%;
+        padding: $spacing-tabs_content-paddingY $spacing-tabs_content-paddingX;
+    }
+
+    &-content-left {
+        height: 100%;
+        padding: $spacing-tabs_content_left-paddingY $spacing-tabs_content_left-paddingX;
+    }
+
+    &-pane {
+        width: 100%;
+        overflow: hidden;
+        color: $color-tabs_tab-pane-text-default;
+
+        &:focus-visible {
+            outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+        }
+    }
+
+    &-pane-inactive {
+        display: none;
+    }
+
+    @keyframes #{$module}-panel-keyframe-leftShow {
+        0% {
+            opacity: $animation_opacity-tabs_tabPanel_show;
+            transform: translateX($animation_transform_translateX-tabs_tabPanel-leftShow);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    @keyframes #{$module}-panel-keyframe-rightShow {
+        0% {
+            opacity: $animation_opacity-tabs_tabPanel_show;
+            transform: translateX($animation_transform_translateX-tabs_tabPanel-rightShow);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes #{$module}-panel-keyframe-topShow {
+        0% {
+            opacity: $animation_opacity-tabs_tabPanel_show;
+            transform: translateY($animation_transform_translateX-tabs_tabPanel-leftShow);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes #{$module}-panel-keyframe-bottomShow {
+        0% {
+            opacity: $animation_opacity-tabs_tabPanel_show;
+            transform: translateY($animation_transform_translateX-tabs_tabPanel-rightShow);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    &-pane-animate-leftShow {
+        animation: $animation_duration-tabs_tabPanel-show #{$module}-panel-keyframe-leftShow $animation_function-tabs_tabPanel-show $animation_delay-tabs_tabPanel-show;
+        animation-fill-mode: forwards;
+    }
+
+    &-pane-animate-rightShow {
+        animation: $animation_duration-tabs_tabPanel-show #{$module}-panel-keyframe-rightShow $animation_function-tabs_tabPanel-show $animation_delay-tabs_tabPanel-show;
+        animation-fill-mode: forwards;
+    }
+
+    &-pane-animate-topShow {
+        animation: $animation_duration-tabs_tabPanel-show #{$module}-panel-keyframe-topShow $animation_function-tabs_tabPanel-show $animation_delay-tabs_tabPanel-show;
+        animation-fill-mode: forwards;
+    }
+
+    &-pane-animate-bottomShow {
+        animation: $animation_duration-tabs_tabPanel-show #{$module}-panel-keyframe-bottomShow $animation_function-tabs_tabPanel-show $animation_delay-tabs_tabPanel-show;
+        animation-fill-mode: forwards;
+    }
+
+    &-tab-line {
+        &.#{$module}-tab-top {
+            &.#{$module}-tab {
+                padding-block: $spacing-tabs_bar_line_tab-paddingTop $spacing-tabs_bar_line_tab-paddingBottom;
+                padding-inline: $spacing-tabs_bar_line_tab-paddingLeft $spacing-tabs_bar_line_tab-paddingRight;
+                font-size: $font-tabs_bar_large-fontSize;
+                border-bottom: $width-tabs_bar_line_tab-border solid transparent;
+                transition:
+                    border-bottom-color $transition_duration-tabs_tab_line-border $transition_function-tabs_tab_line-border $transition_delay-tabs_tab_line-border,
+                    color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+                &:nth-of-type(1) {
+                    padding-inline-start: 0;
+                }
+
+                &:hover {
+                    border-bottom: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-hover;
+                }
+
+                &:focus-visible {
+                    outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                    outline-offset: $width-tabs_bar_line-outline-offset;
+                }
+
+                &:active {
+                    border-bottom: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-active;
+                }
+
+                &-small {
+                    padding-block: $spacing-tabs_bar_line_tab_small-paddingTop $spacing-tabs_bar_line_tab_small-paddingBottom;
+                    padding-inline: $spacing-tabs_bar_line_tab_small-paddingLeft $spacing-tabs_bar_line_tab_small-paddingRight;
+                    font-size: $font-tabs_bar_small-fontSize;
+                }
+
+                &-medium {
+                    padding-block: $spacing-tabs_bar_line_tab_medium-paddingTop $spacing-tabs_bar_line_tab_medium-paddingBottom;
+                    padding-inline: $spacing-tabs_bar_line_tab_medium-paddingLeft $spacing-tabs_bar_line_tab_medium-paddingRight;
+                    font-size: $font-tabs_bar_medium-fontSize;
+                }
+            }
+
+            &.#{$module}-tab-active {
+                &,
+                &:hover {
+                    border-bottom: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_indicator_selected-icon-default;
+                }
+            }
+        }
+
+        &.#{$module}-tab-left {
+            &.#{$module}-tab {
+                padding: $spacing-tabs_bar_line_tab_left-padding;
+                border-inline-start: $width-tabs_bar_line_tab-border solid transparent;
+                transition:
+                    background-color $transition_duration-tabs-tab_button-bg $transition_function-tabs_tab_button-bg $transition_delay-tabs_tab_button-bg,
+                    color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+                &:hover {
+                    background-color: $color-tabs_tab_line_vertical-bg-hover;
+                    border-inline-start: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-hover;
+                }
+
+                &:focus-visible {
+                    outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                    outline-offset: $width-tabs-outline-offset;
+                }
+
+                &:active {
+                    background-color: $color-tabs_tab_line_vertical-bg-active;
+                    border-inline-start: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_default-border-active;
+                }
+
+                &-small {
+                    padding: $spacing-tabs_bar_line_tab_left_small-padding;
+                }
+
+                &-medium {
+                    padding: $spacing-tabs_bar_line_tab_left_medium-padding;
+                }
+            }
+
+            &.#{$module}-tab-active {
+                background-color: $color-tabs_tab_line_vertical_selected-bg-default;
+
+                &,
+                &:hover {
+                    background-color: $color-tabs_tab_line_vertical_selected-bg-default;
+                    border-inline-start: $width-tabs_bar_line_tab-border solid $color-tabs_tab_line_indicator_selected-icon-default;
+                }
+            }
+        }
+    }
+
+    &-tab-card {
+        &.#{$module}-tab-top {
+            &.#{$module}-tab {
+                border: $width-tabs_bar_card-border solid transparent;
+                border-bottom: none;
+                border-radius: $radius-tabs_tab_card;
+
+                &:hover {
+                    border-bottom: none;
+                }
+            }
+
+            &.#{$module}-tab-active {
+                &,
+                &:hover {
+                    padding-block: $spacing-tabs_bar_card_tab_active-paddingTop $spacing-tabs_bar_card_tab_active-paddingBottom;
+                    padding-inline: $spacing-tabs_bar_card_tab_active-paddingLeft $spacing-tabs_bar_card_tab_active-paddingRight;
+                    background: transparent;
+                    border: $width-tabs_bar_card-border solid $color-tabs_tab_card_indicator_selected-icon-default;
+                    border-bottom: $width-tabs_bar_card-border solid $color-tabs_tab_card_selected-bg-default;
+                }
+            }
+        }
+
+        &.#{$module}-tab-left {
+            &.#{$module}-tab {
+                border: $width-tabs_bar_card-border solid transparent;
+                border-inline-end: none;
+                border-radius: $radius-tabs_tab_card_left;
+
+                &:hover {
+                    border-inline-end: none;
+                }
+            }
+
+            &.#{$module}-tab-active {
+                &::after {
+                    position: absolute;
+                    inset-inline-end: -1px;
+                    top: 0;
+                    bottom: 0;
+                    width: 1px;
+                    content: ' ';
+                    background: $color-tabs_tab_card_selected-bg-default;
+                }
+
+                &,
+                &:hover {
+                    padding: $spacing-tabs_bar_card_tab_left_active-paddingY $spacing-tabs_bar_card_tab_left_active-paddingX;
+                    background: transparent;
+                    border: $width-tabs_bar_card-border solid $color-tabs_tab_card_indicator_selected-icon-default;
+                    border-inline-end: none;
+                }
+            }
+        }
+
+        &.#{$module}-tab {
+            padding: $spacing-tabs_bar_card_tab-paddingY $spacing-tabs_bar_card_tab-paddingX;
+
+            transform: scale($transform_scale-tabs_tab_card-item);
+            transition:
+                background-color $transition_duration-tabs_tab_card-bg $transition_function-tabs_tab_card-bg $transition_delay-tabs_tab_card-bg,
+                color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+            &:hover {
+                background: $color-tabs_tab_card-bg-hover;
+            }
+
+            &:focus-visible {
+                outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                outline-offset: $width-tabs-outline-offset;
+            }
+
+            &:active {
+                background: $color-tabs_tab_card-bg-active;
+            }
+        }
+    }
+
+    &-tab-button {
+        border: none;
+
+        &.#{$module}-tab {
+            padding: $spacing-tabs_bar_button_tab-paddingY $spacing-tabs_bar_button_tab-paddingX;
+            color: $color-tabs_tab_button-text-default;
+            border: none;
+            border-radius: $radius-tabs_tab_button;
+
+            transform: scale($transform_scale-tabs_tab_button-item);
+            transition:
+                background-color $transition_duration-tabs-tab_button-bg $transition_function-tabs_tab_button-bg $transition_delay-tabs_tab_button-bg,
+                color $transition_duration-tabs_tab_line-text $transition_function-tabs_tab_line-text $transition_delay-tabs_tab_line-text;
+
+            &:hover {
+                background-color: $color-tabs_tab_button-bg-hover;
+                border: none;
+            }
+
+            &:focus-visible {
+                outline: $width-tabs-outline solid $color-tabs_tab-outline-focus;
+                outline-offset: $width-tabs-outline-offset;
+            }
+
+            &:active {
+                background-color: $color-tabs_tab_button-bg-active;
+            }
+        }
+
+        &.#{$module}-tab-active {
+            &,
+            &:hover {
+                color: $color-tabs_tab_button_selected-text-default;
+                background-color: $color-tabs_tab_button_selected-bg-default;
+                border: none;
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');

@@ -1,0 +1,151 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-userGuide;
+
+.#{$module} {
+    &-spotlight {
+        position: fixed;
+        top: 0;
+        // stylelint-disable-next-line property-disallowed-list -- viewport coordinates from JS are physical
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+
+        &-transparent-rect {
+            pointer-events: auto;
+        }
+
+        &-rect {
+            transition: all $transition_duration-userGuide_spotLight $transition_function-userGuide_spotLight;
+        }
+    }
+
+    &-popover {
+        width: $width-userGuide_popover-default;
+        max-width: fit-content;
+    }
+
+    &-popup-content {
+        color: $color-userGuide_popup-text-default;
+
+        &-primary {
+            color: $color-userGuide_popup-text-primary;
+        }
+
+        &-cover {
+            img {
+                display: block;
+                width: 100%;
+                height: $height-userGuide_popup_content_cover-default;
+                border-radius: $radius-userGuide_popup_content_cover;
+            }
+        }
+
+        &-body {
+            padding: $spacing-userGuide_popup_content_body-padding;
+        }
+
+        &-title {
+            margin-bottom: $spacing-userGuide_popup_content_title-marginBottom;
+            font-size: $font-userGuide_popup_content_title-fontSize;
+            font-weight: $font-userGuide_popup_content_title-fontWeight;
+            line-height: $font-userGuide_popup_content_title-lineHeight;
+        }
+
+        &-description {
+            margin-bottom: $spacing-userGuide_popup_content_description-marginBottom;
+            font-size: $font-userGuide_popup_content_description-fontSize;
+            line-height: $font-userGuide_popup_content_description-lineHeight;
+        }
+
+        &-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        &-buttons {
+            display: flex;
+            gap: $spacing-userGuide_popup_content_button-gap;
+            margin-inline-start: $spacing-userGuide_popup_content_button-marginLeft;
+        }
+
+        &-indicator {
+            font-size: $font-size-regular;
+            line-height: $font-userGuide_popup_content_indicator-lineHeight;
+        }
+    }
+
+    &-modal {
+        .#{$prefix}-modal-small {
+            width: fit-content;
+        }
+
+        .#{$prefix}-modal-content {
+            width: $width-userGuide_modal_content_cover-default;
+            max-width: fit-content;
+            padding: 0;
+        }
+
+        &-cover {
+            height: $height-userGuide_modal_content_cover-default;
+        }
+
+        &-indicator {
+            @include flex-center;
+            column-gap: $spacing-userGuide_popup_content_indicator-gap;
+            height: $height-userGuide_modal_content_indicator-default;
+
+            &-item {
+                width: $width-userGuide_modal_content_indicator_item-default;
+                height: $height-userGuide_modal_content_indicator_item-default;
+                background-color: $color-userGuide_modal_content_indicator-bg;
+                border-radius: $radius-userGuide_modal_content_indicator;
+
+                &-active {
+                    background: $color-userGuide_modal_content_indicator-bg-active;
+                }
+            }
+        }
+
+        // the dots are decoration; this visually hidden text carries "current/total" for screen readers
+        &-progress {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            white-space: nowrap;
+            border: 0;
+            clip-path: inset(50%);
+        }
+
+        &-body {
+            @include flex-center;
+            flex-direction: column;
+            padding: $spacing-userGuide_modal_content_body-padding;
+
+            &-title {
+                margin-bottom: $spacing-userGuide_modal_content_title-marginBottom;
+                font-size: $font-userGuide_modal_content_title-fontSize;
+                font-weight: $font-userGuide_modal_content_title-fontWeight;
+                line-height: $font-userGuide_modal_content_title-lineHeight;
+            }
+
+            &-description {
+                font-size: $font-userGuide_modal_content_description-fontSize;
+                line-height: $font-userGuide_modal_content_description-lineHeight;
+            }
+        }
+
+        &-footer {
+            @include flex-center;
+            column-gap: $spacing-userGuide_modal_content_button-gap;
+            padding: $spacing-userGuide_modal_content_footer-padding;
+        }
+    }
+}

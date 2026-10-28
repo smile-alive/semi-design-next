@@ -1,0 +1,29 @@
+@use 'semi:theme' as *;
+// Media queries breakpoints
+// Extra small screen / phone
+
+// Small screen / tablet
+$width-grid_screen-sm: 576px; // 小尺寸设备 - 平板
+$width-grid_screen-sm-min: $width-grid_screen-sm;
+
+// Medium screen / desktop
+$width-grid_screen-md: 768px; // 中尺寸设备 - 水平平板
+$width-grid_screen-md-min: $width-grid_screen-md;
+
+// Large screen / wide desktop
+$width-grid_screen-lg: 992px; // 大尺寸设备 - 小尺寸桌面端
+$width-grid_screen-lg-min: $width-grid_screen-lg;
+
+// Extra large screen / full hd
+$width-grid_screen-xl: 1200px; // 超大尺寸设备 - 桌面端
+$width-grid_screen-xl-min: $width-grid_screen-xl;
+
+// Extra extra large screen / large desktop
+$width-grid_screen-xxl: 1600px; // 超大尺寸设备 - 桌面端 HD
+$width-grid_screen-xxl-min: $width-grid_screen-xxl;
+
+// provide a maximum
+
+// Grid system
+$width-grid_columns: 24; // 栅格宽度
+$width-grid_gutter: 0; // 槽宽度

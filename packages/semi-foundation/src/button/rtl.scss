@@ -1,0 +1,18 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-button;
+
+.#{$module}:dir(rtl),
+.#{$module}-split:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-group:dir(rtl) {
+    direction: rtl;
+
+    & > .#{$module}:not(:last-child) .#{$module}-content {
+        border-inline-end: $width-button_group-border $color-button_group-border-default solid;
+    }
+}

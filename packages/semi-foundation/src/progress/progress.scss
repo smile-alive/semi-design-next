@@ -1,0 +1,170 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-progress;
+
+.#{$module} {
+    display: flex;
+    align-items: center;
+
+    &-track {
+        background-color: $color-progress_default-bg;
+        border-radius: $radius-progress_track;
+    }
+
+    &-horizontal {
+        height: $height-progress_horizontal;
+        margin-top: $spacing-progress_horizontal-marginY;
+        margin-bottom: $spacing-progress_horizontal-marginY;
+
+        &.#{$module}-large {
+            height: $height-progress_horizontal_large;
+        }
+
+        .#{$module}-track {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .#{$module}-track-inner {
+            height: 100%;
+            background-color: $color-progress_track_inner-bg;
+            border-radius: $radius-progress_track_inner;
+            transition: width $motion-progress-transition_duration;
+            transition-timing-function: $motion-progress-transition_timing_function;
+        }
+
+        .#{$module}-track-inner-indeterminate {
+            width: 35%;
+            transition: none;
+            animation: semi-progress-indeterminate-slide 1.6s ease-in-out infinite;
+        }
+
+        .#{$module}-line-text {
+            min-width: $width-progress_line_text;
+            margin-inline-start: $spacing-progress_line_text-marginLeft;
+            font-weight: $font-progress_line_text-fontWeight;
+            color: $color-progress_line_text-text;
+        }
+    }
+
+    &-vertical {
+        display: inline-flex;
+        flex-direction: column;
+        width: $width-progress_vertical;
+        height: 100%;
+        margin-inline: $spacing-progress_vertical-marginX;
+
+        &.#{$module}-large {
+            width: $width-progress_vertical_large;
+        }
+
+        .#{$module}-track {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .#{$module}-track-inner {
+            width: 100%;
+            background-color: $color-progress_track_inner-bg;
+            border-radius: $radius-progress_track_inner;
+            transition: height $motion-progress-transition_duration;
+            transition-timing-function: $motion-progress-transition_timing_function;
+        }
+
+        .#{$module}-track-inner-indeterminate {
+            width: 100%;
+            height: 35%;
+            transition: none;
+            animation: semi-progress-indeterminate-slide-vertical 1.6s ease-in-out infinite;
+        }
+
+        .#{$module}-line-text {
+            margin-top: $spacing-progress_vertical_line_text-marginTop;
+            font-weight: $font-progress_line_text-fontWeight;
+        }
+    }
+
+    &-circle {
+        position: relative;
+        display: inline-block;
+
+        &-ring {
+            display: block;
+        }
+
+        &-ring-track {
+            stroke: $color-progress_default-bg;
+        }
+
+        &-ring-inner {
+            stroke: $color-progress_track_inner-bg;
+
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset $motion-progress-transition_duration;
+            transition-timing-function: $motion-progress-transition_timing_function;
+        }
+
+        &-ring-inner-indeterminate {
+            transform: rotate(0deg);
+            transform-origin: 50% 50%;
+            animation: semi-progress-indeterminate-rotate 1.2s linear infinite;
+        }
+
+        &-text {
+            position: absolute;
+            top: 50%;
+            // stylelint-disable-next-line property-disallowed-list -- centered by left: 50% plus translate
+            left: 50%;
+            width: 100%;
+            color: $color-progress_circle-text;
+            text-align: center;
+            user-select: none;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+@keyframes semi-progress-indeterminate-slide {
+    0% {
+        transform: translateX(-120%);
+    }
+
+    55% {
+        transform: translateX(300%);
+    }
+
+    100% {
+        transform: translateX(300%);
+    }
+}
+
+@keyframes semi-progress-indeterminate-slide-vertical {
+    0% {
+        transform: translateY(-120%);
+    }
+
+    55% {
+        transform: translateY(300%);
+    }
+
+    100% {
+        transform: translateY(300%);
+    }
+}
+
+@keyframes semi-progress-indeterminate-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@include meta.load-css('rtl');

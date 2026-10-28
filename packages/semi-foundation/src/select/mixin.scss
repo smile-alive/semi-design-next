@@ -1,0 +1,8 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@mixin select-tag-margin {
+    margin-inline-end: $spacing-select_tag-marginRight;
+    margin-top: $spacing-select_tag-marginTop;
+    margin-bottom: $spacing-select_tag-marginBottom;
+}

@@ -1,0 +1,65 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-codeHighlight;
+
+.#{$module} {
+    pre {
+        padding: 1em;
+        margin: 0.5em 0;
+        overflow: auto;
+        font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Courier New', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--semi-color-text-0);
+        text-align: left;
+        tab-size: 4;
+        white-space: pre;
+        background-color: var(--semi-color-tertiary-light-default);
+        direction: ltr;
+    }
+
+    &-lineNumber code {
+        counter-reset: line;
+    }
+
+    &-lineNumber .line::before {
+        display: inline-block;
+        width: 2em;
+        margin-inline-end: 1.5em;
+        color: var(--semi-color-text-2);
+        text-align: end;
+        user-select: none;
+        content: counter(line);
+        counter-increment: line;
+    }
+}
+
+// Shiki emits both themes as CSS variables only (defaultColor: false). Mode selectors mirror theme/global.scss;
+// :where keeps the light rule's specificity, so a container override and the later always-light rule win
+.#{$module} .shiki {
+    background-color: var(--shiki-light-bg);
+}
+
+.#{$module} .shiki,
+.#{$module} .shiki span {
+    color: var(--shiki-light);
+}
+
+:where([theme-mode='dark'], .#{$prefix}-always-dark) .#{$module} .shiki {
+    background-color: var(--shiki-dark-bg);
+}
+
+:where([theme-mode='dark'], .#{$prefix}-always-dark) .#{$module} .shiki,
+:where([theme-mode='dark'], .#{$prefix}-always-dark) .#{$module} .shiki span {
+    color: var(--shiki-dark);
+}
+
+:where(.#{$prefix}-always-light) .#{$module} .shiki {
+    background-color: var(--shiki-light-bg);
+}
+
+:where(.#{$prefix}-always-light) .#{$module} .shiki,
+:where(.#{$prefix}-always-light) .#{$module} .shiki span {
+    color: var(--shiki-light);
+}

@@ -1,0 +1,344 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-videoPlayer;
+
+.#{$module} {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+
+    ::-webkit-media-controls {
+        display: none;
+    }
+
+    &-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        line-height: 0;
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        &-dark {
+            color: $color-videoPlayer_theme_dark-text;
+            background-color: $color-videoPlayer_theme_dark-bg;
+        }
+
+        &-light {
+            color: $color-videoPlayer_theme_light-text;
+            background-color: $color-videoPlayer_theme_light-bg;
+        }
+    }
+
+    &-pause {
+        @include flex-center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+
+        svg {
+            font-size: 88px;
+            color: $color-videoPlayer_pause-bg;
+            pointer-events: none;
+        }
+    }
+
+    &-error {
+        @include flex-center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        font-size: $font-videoPlayer_error-fontSize;
+        font-weight: $font-videoPlayer_error-fontWeight;
+
+        &-svg {
+            margin-bottom: $spacing-videoPlayer_error_svg-marginBottom;
+        }
+
+        &-dark {
+            color: $color-videoPlayer_theme_dark-text;
+            background-color: $color-videoPlayer_theme_dark-bg;
+
+            path {
+                fill: $color-videoPlayer_theme_dark-text;
+            }
+        }
+
+        &-light {
+            color: $color-videoPlayer_theme_light-text;
+            background-color: $color-videoPlayer_theme_light-bg;
+
+            path {
+                fill: $color-videoPlayer_theme_light-text;
+            }
+        }
+    }
+
+    &-poster {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+
+        &-hide {
+            opacity: 0;
+        }
+    }
+
+    &-notification {
+        position: absolute;
+        bottom: $height-videoPlayer_controls_menu-default + $spacing-videoPlayer_notification-bottom;
+        left: $spacing-videoPlayer_notification-left;
+        padding: $spacing-videoPlayer_notification_text-paddingY $spacing-videoPlayer_notification_text-paddingX;
+        font-size: $font-videoPlayer_notification-fontSize;
+        line-height: $font-videoPlayer_notification-lineHeight;
+        color: $color-videoPlayer_notification-text;
+        text-align: center;
+        background-color: $color-videoPlayer_notification-bg;
+        border-radius: $radius-videoPlayer_notification;
+    }
+
+    &-mirror {
+        video {
+            transform: rotateX(0deg) rotateY(180deg);
+        }
+    }
+
+    &-controls {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        height: fit-content;
+        opacity: 1;
+        transition: opacity $animation_duration-videoPlayer_controls-show ease-in-out;
+
+        // :focus-within would also keep the bar up after a mouse click
+        &-hide:not(:has(:focus-visible)) {
+            opacity: 0;
+        }
+
+        &-menu {
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: $height-videoPlayer_controls_menu-default;
+            padding: $spacing-videoPlayer-controls-padding;
+            background-color: $color-videoPlayer_controls-bg;
+
+            &-left,
+            &-right {
+                display: flex;
+                align-items: center;
+            }
+
+            &-item {
+                margin-right: $spacing-videoPlayer-controls_item-gap;
+            }
+
+            &-button {
+                svg {
+                    color: $color-videoPlayer_controls-text;
+                }
+            }
+        }
+
+        &-time {
+            padding: 0 $spacing-videoPlayer-controls_time-paddingX;
+            margin-right: $spacing-videoPlayer-controls_item-gap;
+            font-size: $font-videoPlayer_controls_time_text-fontSize;
+            font-variant-numeric: tabular-nums;
+            color: $color-videoPlayer_controls-text;
+            white-space: nowrap;
+        }
+
+        // Compound selectors here and on the menu: a single class ties with the Popover and Dropdown rules, and the
+        // stylesheet load order would then decide
+        &-popover.#{$prefix}-popover-wrapper {
+            background-color: transparent;
+        }
+
+        &-volume {
+            box-sizing: border-box;
+            width: $width-videoPlayer_controls_volume-default;
+            height: $height-videoPlayer_controls_volume-default;
+            padding: $spacing-videoPlayer-controls_volume_popup-paddingY $spacing-videoPlayer-controls_volume_popup-paddingX;
+            font-size: $font-videoPlayer_controls_item-fontSize;
+            line-height: $font-videoPlayer_controls_popup_item-lineHeight;
+            color: $color-videoPlayer_controls_popup_item-text-default;
+            user-select: none;
+            background-color: $color-videoPlayer_controls_popup-bg;
+            border-radius: $radius-videoPlayer_controls_popup;
+
+            &-title {
+                padding: $spacing-videoPlayer-controls_volume_title-paddingX $spacing-videoPlayer-controls_volume_title-paddingY;
+                text-align: center;
+            }
+        }
+
+        &-popup {
+            @include flex-center;
+            width: $width-videoPlayer_controls_popup_item-default;
+            height: $height-videoPlayer_controls_popup-default;
+            padding: 0;
+            font-family: inherit;
+            font-size: $font-videoPlayer_controls_item-fontSize;
+            font-weight: $font-videoPlayer_controls_popup_item-fontWeight;
+            line-height: $font-videoPlayer_controls_popup_item-lineHeight;
+            color: $color-videoPlayer_controls-text;
+            cursor: pointer;
+            background-color: $color-videoPlayer_controls_item_popup-bg-default;
+            border: 0;
+            border-radius: $radius-videoPlayer_controls_item;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+
+            &-menu {
+                &.#{$prefix}-dropdown-wrapper {
+                    width: $width-videoPlayer_controls_popup-default;
+                    background-color: $color-videoPlayer_controls_popup-bg;
+                    border-radius: $radius-videoPlayer_controls_popup;
+                }
+
+                &-item.#{$prefix}-dropdown-item {
+                    @include flex-center;
+                    height: $height-videoPlayer_controls_popup_item-default;
+                    padding: $spacing-videoPlayer-controls_popup-paddingY $spacing-videoPlayer-controls_popup-paddingX;
+                    font-size: $font-videoPlayer_controls_item-fontSize;
+                    color: $color-videoPlayer_controls-text;
+                }
+
+                // outranks the Dropdown.Item hover and active rules (0-3-0)
+                & &-item.#{$prefix}-dropdown-item:hover {
+                    background-color: $color-videoPlayer_controls_item_popup-bg-hover;
+                }
+
+                .#{$prefix}-dropdown-item-active {
+                    font-weight: $font-videoPlayer_controls_popup_item-fontWeight;
+                    color: $color-videoPlayer_controls_popup_item-text-active;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    &-progress {
+        @include flex-center;
+        position: relative;
+        height: $height-videoPlayer_progress_bar_hotSpot-default;
+        margin: $spacing-videoPlayer-progress_bar_wrapper-marginY $spacing-videoPlayer-progress_bar_wrapper-marginX;
+        // a touch drag seeks; page scrolling would cancel the pointer
+        touch-action: none;
+        cursor: pointer;
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+
+        // a captured pointer dragged off the bar stops matching :hover
+        &:hover,
+        &:focus-visible,
+        &-dragging {
+            .#{$module}-progress-handle {
+                opacity: 1;
+            }
+        }
+
+        &-markers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        &-tooltip {
+            // it follows the pointer and its arrow reaches into the bar: hit-testable, it would steal the bar's hover
+            pointer-events: none;
+
+            &-content {
+                @include flex-center;
+            }
+        }
+
+        &-slider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: $radius-videoPlayer_progress_bar;
+
+            &-active,
+            &:hover {
+                .#{$module}-progress-slider-list,
+                .#{$module}-progress-slider-played,
+                .#{$module}-progress-slider-buffered {
+                    height: $height-videoPlayer_progress_bar-hover;
+                    transition-timing-function: $animation_function-videoPlayer_slider-in;
+                }
+            }
+
+            &-list,
+            &-played,
+            &-buffered {
+                position: absolute;
+                inset-block-start: $spacing-videoPlayer_progress_bar-centerY;
+                left: 0;
+                height: $height-videoPlayer_progress_bar-default;
+                border-radius: $radius-videoPlayer_progress_bar;
+                translate: 0 -50%;
+                transition: height $animation_duration-videoPlayer_slider-in;
+                transition-timing-function: $animation_function-videoPlayer_slider-out;
+            }
+
+            &-list {
+                width: calc(100% - $spacing-videoPlayer-progress_bar_chapter-marginRight);
+                margin-right: $spacing-videoPlayer-progress_bar_chapter-marginRight;
+                background-color: $color-videoPlayer_progress_bar-bg-unplayed;
+            }
+
+            &-played {
+                background-color: $color-videoPlayer_progress_bar-bg-played;
+            }
+
+            &-buffered {
+                background-color: $color-videoPlayer_progress_bar-bg-loaded;
+            }
+        }
+
+        &-handle {
+            position: absolute;
+            inset-block-start: $spacing-videoPlayer_progress_bar-centerY;
+            box-sizing: border-box;
+            width: $height-videoPlayer_progress_bar_handle;
+            height: $height-videoPlayer_progress_bar_handle;
+            pointer-events: none;
+            background-color: $color-videoPlayer_progress_bar_handle-bg;
+            border: 1px solid $color-videoPlayer_progress_bar_handle-border;
+            border-radius: $radius-videoPlayer_progress_bar_handle;
+            box-shadow: 0 0 4px 0 $color-videoPlayer_progress_bar_handle-shadow;
+            opacity: 0;
+            translate: 0 -50%;
+            transition: opacity 0.3s;
+        }
+    }
+}

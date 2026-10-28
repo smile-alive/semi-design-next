@@ -1,0 +1,10 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-timepicker;
+
+.#{$module}:dir(rtl),
+.#{$module}-panel:dir(rtl),
+.#{$module}-range:dir(rtl) {
+    direction: rtl;
+}

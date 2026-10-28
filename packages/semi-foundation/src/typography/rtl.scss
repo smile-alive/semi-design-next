@@ -1,0 +1,13 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-typography;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-link:dir(rtl) a,
+.#{$module}:dir(rtl) a {
+    display: inline-block;
+}

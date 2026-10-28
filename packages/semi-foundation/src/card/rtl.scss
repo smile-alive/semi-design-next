@@ -1,0 +1,18 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-card;
+
+.#{$module}:dir(rtl),
+.#{$module}-group:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-header-wrapper:dir(rtl) {
+    align-items: flex-end;
+}
+
+.#{$module}-header-wrapper-title:dir(rtl) {
+    display: flex;
+    align-items: flex-end;
+}

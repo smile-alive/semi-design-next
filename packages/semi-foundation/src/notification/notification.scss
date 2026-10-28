@@ -1,0 +1,428 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-notification;
+
+.#{$module}-wrapper {
+    position: fixed;
+}
+
+.#{$module}-notice-announcer {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+    clip-path: inset(50%);
+}
+
+.#{$module}-list {
+    position: fixed;
+    z-index: $z-notification;
+    box-sizing: border-box;
+    padding: $spacing-notification_list-padding;
+    padding-block-start: $spacing-notification_list-padding + $spacing-notification_notice-margin;
+    margin: $spacing-notification_list-margin;
+    pointer-events: none;
+
+    /* stylelint-disable property-disallowed-list -- placements name physical screen corners;
+       centered ones use left: 50% */
+    &[x-placement='topRight'] {
+        top: 0;
+        right: 0;
+    }
+
+    &[x-placement='top'] {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &[x-placement='topLeft'] {
+        top: 0;
+        left: 0;
+    }
+
+    &[x-placement='bottom'] {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &[x-placement='bottomRight'] {
+        right: 0;
+        bottom: 0;
+    }
+
+    &[x-placement='bottomLeft'] {
+        bottom: 0;
+        left: 0;
+    }
+    // stylelint-enable property-disallowed-list
+}
+
+// Stacked notices sit in zero-height items; opening grows each to its notice's height. The single row grows from 0fr
+// to 1fr rather than the height from 0 to auto: track sizes interpolate in every supported browser, an auto height
+// only under interpolate-size. Bottom placements end-align so the notice overflows upward
+.#{$module}-notice-stack-item {
+    position: relative;
+    display: grid;
+    // a fixed 0 minimum: an auto one would keep the notice's padding and margin open
+    grid-template-rows: minmax(0, 0fr);
+    transition:
+        grid-template-rows $animation_duration-notification-show $animation_function-notification-show,
+        transform $animation_duration-notification-show $animation_function-notification-show,
+        opacity $animation_duration-notification-show $animation_function-notification-show,
+        visibility $animation_duration-notification-show $animation_function-notification-show;
+
+    // keeps the notice at its natural size while the row is shorter
+    > .#{$module}-notice {
+        align-self: start;
+    }
+
+    .#{$module}-list[x-placement^='bottom'] & > .#{$module}-notice {
+        align-self: end;
+    }
+
+    // the gap between notices must stay hoverable, or the pointer leaves the list and the stack flickers
+    &-expanded {
+        grid-template-rows: minmax(0, 1fr);
+        pointer-events: auto;
+    }
+
+    // visibility also takes the hidden layers out of the tab order
+    &-hidden {
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    // an animated item clips its overflow so its height can grow and shrink; a collapsed item has no height to
+    // animate, and clipping it would hide its notice for the whole slide
+    &:not(.#{$module}-notice-stack-item-expanded) {
+        overflow: visible;
+    }
+
+    // Vue's TransitionGroup slides moved children with an inline transform whenever its move class keeps a transform
+    // transition. That would wipe the depth transform and cut the height transition, and items here already animate
+    // their own position, so the move class drops transform
+    &.#{$module}-notice-move {
+        transition-property: grid-template-rows, opacity, visibility;
+    }
+}
+
+.#{$module} {
+    &-notice {
+        @include shadow-elevated;
+        position: relative;
+        display: flex;
+        width: $width-notification_notice;
+        min-width: $width-notification_notice_minWidth;
+        padding-inline: $spacing-notification_notice-paddingLeft $spacing-notification_notice-paddingRight;
+        padding-top: $spacing-notification_notice-paddingTop;
+        padding-bottom: $spacing-notification_notice-paddingBottom;
+        // end margin only: a notice's slot is independent of its neighbours, so enter and leave can empty it anywhere
+        margin: 0 $spacing-notification_notice-margin $spacing-notification_notice-margin;
+        pointer-events: auto;
+        background-color: $color-notification-bg-default;
+        border-radius: $radius-notification_notice;
+
+        &-icon {
+            @include font-size-header-6;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            width: $width-notification_notice-icon;
+            height: 100%;
+            margin-inline-end: $spacing-notification_notice_icon-marginRight;
+        }
+
+        &-info {
+            color: $color-notification_info-icon;
+        }
+
+        &-warning {
+            color: $color-notification_warning-icon;
+        }
+
+        &-error {
+            color: $color-notification_danger-icon;
+        }
+
+        &-success {
+            color: $color-notification_success-icon;
+        }
+
+        &-light {
+            &.#{$module}-notice-warning {
+                background-color: $color-notification_ambient-bg;
+                background-image: linear-gradient(0deg, $color-notification_warning_light-bg, $color-notification_warning_light-bg);
+                border: $width-notification_notice-border solid $color-notification_warning_light-border;
+            }
+
+            &.#{$module}-notice-success {
+                background-color: $color-notification_ambient-bg;
+                background-image: linear-gradient(0deg, $color-notification_success_light-bg, $color-notification_success_light-bg);
+                border: $width-notification_notice-border solid $color-notification_success_light-border;
+            }
+
+            &.#{$module}-notice-info,
+            &.#{$module}-notice-default {
+                background-color: $color-notification_ambient-bg;
+                background-image: linear-gradient(0deg, $color-notification_info_light-bg, $color-notification_info_light-bg);
+                border: $width-notification_notice-border solid $color-notification_info_light-border;
+            }
+
+            &.#{$module}-notice-error {
+                background-color: $color-notification_ambient-bg;
+                background-image: linear-gradient(0deg, $color-notification_danger_light-bg, $color-notification_danger_light-bg);
+                border: $width-notification_notice-border solid $color-notification_danger_light-border;
+            }
+        }
+
+        &-title {
+            @include font-size-header-6;
+            margin-bottom: $spacing-notification_notice_title-marginBottom;
+            font-weight: $font-notification_notice_title-fontWeight;
+            color: $color-notification_title-text;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        &-inner {
+            display: flex;
+            width: 100%;
+            min-width: 0;
+        }
+
+        &-content-wrapper {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin-inline-end: $spacing-notification_notice_content_wrapper-marginRight;
+        }
+
+        &-content {
+            @include font-size-regular;
+            font-weight: $font-notification_notice_content-fontWeight;
+            color: $color-notification_content-text;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        &-icon-close {
+            height: $width-icon-extra-large;
+
+            .#{$prefix}-icon-close {
+                color: $color-notification_closeBtn-icon;
+            }
+        }
+
+        &-controls {
+            @include font-size-regular;
+            display: flex;
+            cursor: pointer;
+        }
+
+        &-detail {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        &-later {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        // a stack item carries an inline transform for its depth, which an animated transform would override; the
+        // translate property composes with it
+        @keyframes #{$module}-slideShow_top {
+            from {
+                opacity: $animation_opacity-notification-show;
+                translate: 0 -100%;
+            }
+
+            to {
+                opacity: 1;
+                translate: 0;
+            }
+        }
+
+        @keyframes #{$module}-slideHide_top {
+            from {
+                opacity: 1;
+                translate: 0;
+            }
+
+            to {
+                opacity: $animation_opacity-notification-hide;
+                translate: 0 -100%;
+            }
+        }
+
+        @keyframes #{$module}-slideShow_topLeft {
+            from {
+                opacity: $animation_opacity-notification-show;
+                translate: -100%;
+            }
+
+            to {
+                opacity: 1;
+                translate: 0;
+            }
+        }
+
+        @keyframes #{$module}-slideHide_topLeft {
+            from {
+                opacity: 1;
+                translate: 0;
+            }
+
+            to {
+                opacity: $animation_opacity-notification-hide;
+                translate: -100%;
+            }
+        }
+
+        @keyframes #{$module}-slideShow_topRight {
+            from {
+                opacity: $animation_opacity-notification-show;
+                translate: 100%;
+            }
+
+            to {
+                opacity: 1;
+                translate: 0;
+            }
+        }
+
+        @keyframes #{$module}-slideHide_topRight {
+            from {
+                opacity: 1;
+                translate: 0;
+            }
+
+            to {
+                opacity: $animation_opacity-notification-hide;
+                translate: 100%;
+            }
+        }
+
+        @keyframes #{$module}-slideShow_bottom {
+            from {
+                opacity: $animation_opacity-notification-show;
+                translate: 0 100%;
+            }
+
+            to {
+                opacity: 1;
+                translate: 0;
+            }
+        }
+
+        @keyframes #{$module}-slideHide_bottom {
+            from {
+                opacity: 1;
+                translate: 0;
+            }
+
+            to {
+                opacity: $animation_opacity-notification-hide;
+                translate: 0 100%;
+            }
+        }
+
+        @keyframes #{$module}-slideShow_bottomLeft {
+            from {
+                opacity: $animation_opacity-notification-show;
+                translate: -100%;
+            }
+
+            to {
+                opacity: 1;
+                translate: 0;
+            }
+        }
+
+        @keyframes #{$module}-slideHide_bottomLeft {
+            from {
+                opacity: 1;
+                translate: 0;
+            }
+
+            to {
+                opacity: $animation_opacity-notification-hide;
+                translate: -100%;
+            }
+        }
+
+        @keyframes #{$module}-slideShow_bottomRight {
+            from {
+                opacity: $animation_opacity-notification-show;
+                translate: 100%;
+            }
+
+            to {
+                opacity: 1;
+                translate: 0;
+            }
+        }
+
+        @keyframes #{$module}-slideHide_bottomRight {
+            from {
+                opacity: 1;
+                translate: 0;
+            }
+
+            to {
+                opacity: $animation_opacity-notification-hide;
+                translate: 100%;
+            }
+        }
+
+        // the slot (height, block padding, end margin) animates too, so neighbours move instead of jumping
+        @keyframes #{$module}-expand {
+            from {
+                height: 0;
+                padding-block: 0;
+                margin-block-end: 0;
+            }
+        }
+
+        @keyframes #{$module}-collapse {
+            to {
+                height: 0;
+                padding-block: 0;
+                margin-block-end: 0;
+            }
+        }
+
+        // without interpolate-size the hosts pin the natural height inline (utils/animated-height.ts)
+        @each $placement in top, topLeft, topRight, bottom, bottomLeft, bottomRight {
+            &-animation-show_#{$placement},
+            &-animation-hide_#{$placement} {
+                interpolate-size: allow-keywords;
+                overflow: hidden;
+            }
+
+            &-animation-show_#{$placement} {
+                animation:
+                    #{$module}-slideShow_#{$placement} $animation_duration-notification-show $animation_function-notification-show $animation_delay-notification-show,
+                    #{$module}-expand $animation_duration-notification-show $animation_function-notification-show $animation_delay-notification-show;
+                animation-fill-mode: forwards;
+            }
+
+            &-animation-hide_#{$placement} {
+                animation:
+                    #{$module}-slideHide_#{$placement} $animation_duration-notification-hide $animation_function-notification-hide $animation_delay-notification-hide,
+                    #{$module}-collapse $animation_duration-notification-hide $animation_function-notification-hide $animation_delay-notification-hide;
+                animation-fill-mode: forwards;
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');

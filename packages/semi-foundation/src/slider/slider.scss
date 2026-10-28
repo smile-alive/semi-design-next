@@ -1,0 +1,269 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-slider;
+
+.#{$module} {
+    padding: $spacing-slider-paddingY $spacing-slider-paddingX;
+    margin: $spacing-slider-margin;
+
+    &-wrapper {
+        position: relative;
+        box-sizing: border-box;
+        display: inline-block;
+        width: 100%;
+        height: $height-slider_wrapper;
+        // the baseline alignment would make the parent taller than this inline-block
+        vertical-align: bottom;
+    }
+
+    &-rail {
+        position: absolute;
+        top: $spacing-slider_rail-top;
+        box-sizing: border-box;
+        width: 100%;
+        height: $height-slider_rail;
+        padding: $spacing-slider_rail-padding;
+        margin: $spacing-slider_rail-margin;
+        font-size: $font-slider_rail-fontSize;
+        font-feature-settings: 'tnum';
+        font-variant: tabular-nums;
+        line-height: $font-slider_rail-lineHeight;
+        color: $color-slider_rail;
+        touch-action: none;
+        cursor: pointer;
+        list-style: none;
+        background-color: $color-slider_rail-bg-default;
+        border-radius: $radius-slider_rail;
+    }
+
+    &-handle {
+        @include shadow-knob;
+        position: absolute;
+        // otherwise the border shifts the handle down 1px on click
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: $width-slider_handle;
+        height: $width-slider_handle;
+        margin-top: $spacing-slider_handle-marginTop;
+        touch-action: none;
+        cursor: pointer;
+        background-color: $color-slider_handle-bg-default;
+        border: none;
+        border-radius: 50%;
+        transform: $transform_scale-slider_handle translateX(-50%) translateY($spacing-slider_handle-translateY);
+        transition: background-color $transition_duration_slider_handle-bg $transition_function-slider-handle-bg $transition_delay-slider_handle-bg;
+
+        // the focusable control is the hidden input, so the ring goes on the visible handle
+        // [data-semi-pointer-focus] marks pointer-triggered focus in browsers without focus({ focusVisible })
+        &:has(> .#{$module}-handle-input:focus-visible:not([data-semi-pointer-focus])) {
+            outline: $width-slider_handle-focus solid $color-slider_handle-focus;
+        }
+
+        // visually hidden native range: keeps focus, label and form semantics
+        &-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            white-space: nowrap;
+            border: 0;
+            clip-path: inset(50%);
+        }
+
+        &-dot {
+            width: $width-slider_handle_dot;
+            height: $width-slider_handle_dot;
+            background: $color-slider_handle_dot;
+            border-radius: var(--semi-border-radius-circle);
+        }
+    }
+
+    &-handle:hover {
+        background-color: $color-slider_handle-bg-hover;
+    }
+
+    &-handle-clicked {
+        cursor: grabbing;
+        border: solid $width-slider_handle_clicked $color-slider_handle-border-focus;
+    }
+
+    &-track {
+        position: absolute;
+        top: $spacing-slider_track-top;
+        height: $height-slider_track;
+        cursor: pointer;
+        background: $color-slider_track-bg-default;
+        border-radius: $radius-slider_track;
+    }
+
+    &-tooltip {
+        position: absolute;
+        top: $spacing-slider_tooltip-top;
+    }
+
+    &-dots {
+        width: 100%;
+        background: transparent;
+    }
+
+    &-dot {
+        position: absolute;
+        top: $spacing-slider_dot-top;
+        width: $width-slider_dot;
+        height: $width-slider_dot;
+        cursor: pointer;
+        background-color: $color-slider_dot-bg-default;
+        border-radius: 50%;
+        transform: translateX($spacing-slider_dot-translateX);
+    }
+
+    &-dot-active {
+        background-color: $color-slider_dot-border-active;
+    }
+
+    /* stylelint-disable property-disallowed-list -- JS places marks on a physical side */
+    &-marks {
+        position: absolute;
+        top: $spacing-slider_marks-top;
+        left: $spacing-slider_marks-left;
+        width: 100%;
+        font-size: $font-slider_marks-fontSize;
+    }
+
+    &-mark {
+        position: absolute;
+        display: inline-block;
+        color: $color-slider_mark-text-default;
+        text-align: center;
+        cursor: pointer;
+        transform: translate(-50%, 0);
+    }
+
+    &-marks-reverse {
+        position: absolute;
+        top: $spacing-slider_marks-top;
+        left: $spacing-slider_marks-left;
+        width: 100%;
+        font-size: $font-slider_marks-fontSize;
+    }
+    // stylelint-enable property-disallowed-list
+
+    &-mark-reverse {
+        position: absolute;
+        display: inline-block;
+        color: $color-slider_mark-text-default;
+        text-align: center;
+        cursor: pointer;
+        transform: translate(-50%, 0) rotate(-180deg);
+    }
+
+    &-boundary {
+        position: relative;
+        top: $spacing-slider_boundary-top;
+        visibility: hidden;
+        font-size: $font-size-small;
+        color: $color-slider-text-default;
+
+        span {
+            position: absolute;
+            display: inline-block;
+        }
+    }
+
+    &-boundary-min {
+        inset-inline-start: $spacing-slider_boundary_min-left;
+    }
+
+    &-boundary-max {
+        inset-inline-end: $spacing-slider_boundary_max-right;
+    }
+
+    &-boundary-show {
+        visibility: visible;
+    }
+}
+
+/* stylelint-disable property-disallowed-list -- the vertical slider does not mirror: JS positions it by top */
+.#{$module}-vertical-wrapper {
+    width: $height-slider_vertical_wrapper;
+    height: 100%;
+
+    .#{$module}-track {
+        width: $height-slider_track;
+    }
+
+    .#{$module}-marks {
+        height: 100%;
+        margin-top: $spacing-slider_vertical_marks-marginTop;
+        margin-left: $spacing-slider_vertical_marks-marginLeft;
+    }
+
+    .#{$module}-marks-reverse {
+        height: 100%;
+        margin-top: $spacing-slider_vertical_marks-marginTop;
+        margin-left: $spacing-slider_vertical_marks-reverse-marginLeft;
+    }
+
+    .#{$module}-rail {
+        top: $spacing-slider_vertical_rail-top;
+        width: $height-slider_rail;
+        height: 100%;
+    }
+
+    .#{$module}-handle {
+        margin-top: $spacing-slider_vertical_handle-marginTop;
+        margin-left: $spacing-slider_vertical_handle-marginLeft;
+        transform: $transform_scale-slider_handle translateY(-50%) translateX($spacing-slider_vertical_handle-translateX);
+    }
+    .#{$module}-dot {
+        transform: translateY($spacing-slider_vertical_dot-translateY);
+    }
+}
+// stylelint-enable property-disallowed-list
+
+.#{$module}-disabled {
+    cursor: not-allowed;
+
+    .#{$module}-handle {
+        @include shadow-0;
+        cursor: not-allowed;
+        border: $width-slider_handle_border_disabled $color-slider_handle_disabled-border solid;
+
+        &:hover {
+            background-color: $color-slider_handle_disabled-border-hover;
+        }
+    }
+
+    .#{$module}-rail {
+        cursor: not-allowed;
+    }
+
+    .#{$module}-track {
+        cursor: not-allowed;
+        background-color: $color-slider_track_disabled-bg;
+    }
+
+    .#{$module}-dot {
+        cursor: not-allowed;
+        background-color: $color-slider_dot-bg-default;
+        border-color: $color-slider_dot-border;
+        box-shadow: none;
+    }
+}
+
+.#{$module}-handle-tooltip {
+    text-align: center;
+}
+
+.#{$module}-reverse {
+    transform: rotate(180deg);
+}
+
+@include meta.load-css('rtl');

@@ -1,0 +1,49 @@
+@use 'semi:theme' as *;
+
+$color-carousel_indicator_theme_dark-bg-default: rgb(from var(--semi-black) r g b / 0.5);
+$color-carousel_indicator_theme_dark-bg-hover: rgb(from var(--semi-black) r g b / 0.7);
+$color-carousel_indicator_theme_dark-bg-active: var(--semi-black);
+
+$color-carousel_indicator_theme_primary-bg-default: rgb(from var(--semi-blue-6) r g b / 0.4);
+$color-carousel_indicator_theme_primary-bg-hover: rgb(from var(--semi-blue-6) r g b / 0.7);
+$color-carousel_indicator_theme_primary-bg-active: var(--semi-blue-6);
+
+$color-carousel_indicator_theme_light-bg-default: rgb(from var(--semi-white) r g b / 0.4);
+$color-carousel_indicator_theme_light-bg-hover: rgb(from var(--semi-white) r g b / 0.7);
+$color-carousel_indicator_theme_light-bg-active: var(--semi-white);
+
+$color-carousel_arrow_theme_dark-bg-default: rgb(from var(--semi-black) r g b / 0.5);
+$color-carousel_arrow_theme_dark-bg-hover: var(--semi-black);
+
+$color-carousel_arrow_theme_primary-bg-default: rgb(from var(--semi-blue-6) r g b / 0.4);
+$color-carousel_arrow_theme_primary-bg-hover: var(--semi-blue-6);
+
+$color-carousel_arrow_theme_light-bg-default: rgb(from var(--semi-white) r g b / 0.4);
+$color-carousel_arrow_theme_light-bg-hover: var(--semi-white);
+
+$width-carousel_indicator_line: 240px;
+$width-carousel_indicator_columnar_small: 4px;
+$width-carousel_indicator_columnar_medium: 6px;
+$width-carousel_indicator_dot_small: 8px;
+$width-carousel_indicator_dot_medium: 12px;
+$width-carousel_arrow: 32px;
+$radius-carousel_arrow: 50%; // decides the keyboard focus ring shape
+
+$height-carousel_indicator_columnar_small_default: 12px;
+$height-carousel_indicator_columnar_small_active: 20px;
+$height-carousel_indicator_columnar_medium_default: 20px;
+$height-carousel_indicator_columnar_medium_active: 28px;
+
+$height-carousel_indicator_line_small: 4px;
+$height-carousel_indicator_line_medium: 6px;
+
+$radius-carousel_indicator_dot: 50%;
+
+$spacing-carousel_indicator-padding: 32px;
+
+$spacing-carousel_indicator_columnar-marginX: 4px;
+$spacing-carousel_indicator_line-marginX: 4px;
+$spacing-carousel_indicator_dot-marginX: 8px;
+
+$spacing-carousel_arrow-left: 20px;
+$spacing-carousel_arrow-right: 20px;

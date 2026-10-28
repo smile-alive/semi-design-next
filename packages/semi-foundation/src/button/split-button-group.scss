@@ -1,0 +1,36 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$dropdown: #{$prefix}-dropdown;
+$module: #{$prefix}-button;
+$component: #{$module}-split;
+$content: #{$module};
+$icon: #{$module}-with-icon;
+
+.#{$component} {
+    display: inline-block;
+
+    .#{$module} {
+        margin-inline-end: 1px;
+        border-radius: 0;
+
+        &-first {
+            border-start-start-radius: $radius-button_splitButtonGroup_first_topLeft;
+            border-end-start-radius: $radius-button_splitButtonGroup_first_bottomLeft;
+        }
+
+        &-last {
+            margin-inline-end: unset;
+            border-start-end-radius: $radius-button_splitButtonGroup_last_topRight;
+            border-end-end-radius: $radius-button_splitButtonGroup_last_bottomRight;
+        }
+    }
+
+    &:hover {
+        // restores the borderless :active background the rule above overrides
+        .#{$module}-borderless:active {
+            background-color: $color-button_borderless-bg-active;
+        }
+    }
+}

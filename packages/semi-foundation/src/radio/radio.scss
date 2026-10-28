@@ -1,0 +1,457 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-radio;
+$inner-width: $width-icon-medium;
+
+.#{$module} {
+    @include box-sizing;
+    @include font-size-regular;
+    position: relative;
+    display: inline-flex;
+    column-gap: $spacing-radio_addon-paddingLeft;
+    min-width: $width-radio_inner;
+    min-height: $height-radio_inner_min;
+    vertical-align: bottom;
+    text-align: start;
+    cursor: pointer;
+    transition:
+        background-color $transition_duration-radio-bg $transition_function-radio-bg $transition_delay-radio-bg,
+        border $transition_duration-radio-border $transition_function-radio-border $transition_delay-radio-border;
+
+    &.#{$module}-vertical {
+        display: block;
+    }
+
+    input[type='checkbox'],
+    input[type='radio'] {
+        position: absolute;
+        inset-inline-start: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    &:hover {
+        .#{$module}-inner-display {
+            background: $color-radio_default-bg-hover;
+            border: solid $width-radio_hover-border $color-radio_default-border-hover;
+        }
+
+        &.#{$module}-cardRadioGroup {
+            .#{$module}-inner-display {
+                background: $color-radio_card-bg-hover;
+            }
+        }
+
+        .#{$module}-inner-checked {
+            .#{$module}-inner-display {
+                background: $color-radio_primary-bg-hover;
+                border-color: $color-radio_checked-border-hover;
+            }
+        }
+    }
+
+    &:active {
+        .#{$module}-inner-display {
+            background: $color-radio_default-bg-active;
+        }
+
+        &.#{$module}-cardRadioGroup {
+            .#{$module}-inner-display {
+                background: $color-radio_card-bg-active;
+            }
+        }
+
+        .#{$module}-inner-checked {
+            .#{$module}-inner-display {
+                background: $color-radio_primary-bg-active;
+                border-color: $color-radio_checked-border-active;
+            }
+        }
+    }
+
+    &-buttonRadioComponent {
+        padding: $spacing-radio_buttonRadio-padding;
+        background: $color-radio_buttonRadio-bg-default;
+        border-radius: $radius-radio_buttonRadio;
+    }
+
+    &-buttonRadioGroup {
+        position: relative;
+        padding: $spacing-radio_buttonRadioGroup_middle-padding;
+        line-height: $font-radio_buttonRadioGroup_middle-lineHeight;
+        border-radius: $radius-radio_buttonRadio;
+
+        &:not(:last-child) {
+            padding-inline-end: $spacing-radio_buttonRadioGroup-paddingRight;
+        }
+
+        &-small {
+            padding: $spacing-radio_buttonRadioGroup_small-paddingX $spacing-radio_buttonRadioGroup_small-paddingY;
+            line-height: $font-radio_buttonRadioGroup_small-lineHeight;
+        }
+
+        &-large {
+            padding: $spacing-radio_buttonRadioGroup_large-padding;
+            line-height: $font-radio_buttonRadioGroup_large-lineHeight;
+        }
+    }
+
+    &-cardRadioGroup {
+        flex-wrap: nowrap;
+        padding: $spacing-radio_cardRadioGroup-paddingY $spacing-radio_cardRadioGroup-paddingX;
+        background: $color-radio_cardRadioGroup-bg-default;
+        border: $width-radio_cardRadioGroup_checked-border solid $color-radio_cardRadioGroup_border-default;
+        border-radius: $radius-radio_cardRadioGroup;
+        transition:
+            background-color $transition_duration_radio-bg $transition_function-radio-bg $transition_delay-radio-bg,
+            border $transition_duration-radio-border $transition_function-radio-border $transition_delay-radio-border;
+
+        .#{$module}-inner {
+            flex-shrink: 0;
+
+            &-display {
+                background: $color-radio_card-bg-default;
+            }
+        }
+
+        .#{$module}-addon {
+            font-size: $font-radio_cardRadioGroup_addon-size;
+            font-weight: $font-radio_cardRadioGroup_addon-fontWeight;
+            line-height: $font-radio_cardRadioGroup_addon-lineHeight;
+            color: $color-radio_cardRadioGroup_addon-text-default;
+        }
+
+        .#{$module}-extra {
+            padding-inline-start: 0;
+            font-size: $font-radio_cardRadioGroup_extra-size;
+            font-weight: $font-radio_cardRadioGroup_extra-fontWeight;
+            line-height: $font-radio_cardRadioGroup_extra-lineHeight;
+            color: $color-radio_cardRadioGroup_extra-text-default;
+        }
+
+        // :where keeps the specificity below :active so pressing still shows the active background
+        &:hover:where(:not(.#{$module}-checked, .#{$module}-disabled)) {
+            background: $color-radio_cardRadioGroup-bg-hover;
+        }
+
+        &:active {
+            background: $color-radio_cardRadioGroup-bg-active;
+        }
+
+        &_checked {
+            background: $color-radio_cardRadioGroup-bg-checked;
+            border: $width-radio_cardRadioGroup_checked-border solid $color-radio_cardRadioGroup_border-active;
+
+            &:hover {
+                border: $width-radio_cardRadioGroup_checked-border solid $color-radio_cardRadioGroup_checked_border-hover;
+
+                .#{$module}-inner-checked .#{$module}-inner-display {
+                    border-color: $color-radio_cardRadioGroup_checked_border-hover;
+                }
+            }
+
+            &:active {
+                background: $color-radio_cardRadioGroup-bg-checked;
+                border: $width-radio_cardRadioGroup_checked-border solid $color-radio_cardRadioGroup_checked_border-active;
+
+                .#{$module}-inner-checked {
+                    .#{$module}-inner-display {
+                        border-color: $color-radio_cardRadioGroup_checked_border-active;
+                    }
+
+                    &:hover .#{$module}-inner-display {
+                        background: $color-radio_primary-bg-active;
+                    }
+                }
+            }
+        }
+
+        &_disabled {
+            &:active {
+                background: $color-radio_cardRadioGroup_disabled-bg-active;
+            }
+        }
+
+        &_checked_disabled.#{$module}-cardRadioGroup {
+            background: $color-radio_cardRadioGroup_disabled-bg-checked;
+            border: $width-radio_cardRadioGroup_checked_disabled-border solid $color-radio_cardRadioGroup_border_disabled-active;
+
+            .#{$module}-inner-checked .#{$module}-inner-display {
+                border-color: $color-radio_cardRadioGroup_checked_disabled-border-default;
+            }
+
+            &:hover {
+                .#{$module}-inner-checked .#{$module}-inner-display {
+                    border-color: $color-radio_cardRadioGroup_checked_disabled-border-hover;
+                }
+            }
+        }
+    }
+
+    &.#{$module}-disabled:hover,
+    &.#{$module}-disabled:active {
+        .#{$module}-inner-display {
+            background: $color-radio_disabled-bg-default;
+            border: solid $width-radio_disabled-border $color-radio_disabled-border-default;
+        }
+
+        .#{$module}-inner-checked {
+            .#{$module}-inner-display {
+                color: $color-radio_checked-icon-disabled;
+                background: $color-radio_checked-bg-disabled;
+                border-color: $color-radio_checked-border-disabled;
+            }
+        }
+    }
+
+    &-inner {
+        position: relative;
+        display: inline-flex;
+        width: $width-radio_inner;
+        height: $width-radio_inner;
+        margin-top: 2px;
+        vertical-align: sub;
+        user-select: none;
+
+        &-display {
+            @include box-sizing;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: $width-radio_inner;
+            height: $width-radio_inner;
+            background: $color-radio_default-bg-default;
+            border: solid $width-radio_innder-border $color-radio_default-border-default;
+            border-radius: $width-radio_inner;
+            transition:
+                background-color $transition_duration-radio-bg $transition_function-radio-bg $transition_delay-radio-bg,
+                border $transition_duration-radio-border $transition_function-radio-border $transition_delay-radio-border;
+
+            .#{$prefix}-icon {
+                width: 100%;
+                height: 100%;
+                font-size: 14px;
+
+                // Safari offsets an inline SVG sized in em, shifting the checked dot
+                svg {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+    }
+
+    &-content {
+        display: flex;
+        flex-direction: column;
+        row-gap: $spacing-radio_content-rowGap;
+    }
+
+    &:hover {
+        .#{$module}-inner-display {
+            background: $color-radio_default-bg-hover;
+        }
+    }
+
+    &:active {
+        .#{$module}-inner-display {
+            background: $color-radio_default-bg-active;
+        }
+    }
+
+    &-addon {
+        display: inline-flex;
+        align-items: center;
+        color: $color-radio_default-text-default;
+        user-select: none;
+
+        &-buttonRadio {
+            padding: $spacing-radio_addon_buttonRadio_middle-paddingY $spacing-radio_addon_buttonRadio_middle-paddingX;
+            font-size: $font-radio_buttonRadio_middle-default-size;
+            font-weight: $font-radio_buttonRadio-default-fontWeight;
+            color: $color-radio_buttonRadio-text-default;
+            text-align: center;
+            white-space: nowrap;
+            border-radius: $radius-radio_addon_buttonRadio;
+            transition:
+                background-color $transition_duration-radio-bg $transition_function-radio-bg $transition_delay-radio-bg,
+                border $transition_duration-radio-border $transition_function-radio-border $transition_delay-radio-border;
+
+            .#{$module}:hover:not(.#{$module}-checked, .#{$module}-disabled) & {
+                font-weight: $font-radio_buttonRadio-hover-fontWeight;
+                background: $color-radio_addon_buttonRadio-bg-hover;
+            }
+
+            &-checked {
+                font-weight: $font-radio_buttonRadio-checked-fontWeight;
+                color: $color-radio_addon_buttonRadio-text-checked;
+                background: $color-radio_addon_buttonRadio-bg-checked;
+            }
+
+            &-disabled {
+                color: $color-radio_buttonRadio-text-disabled;
+                cursor: not-allowed;
+            }
+
+            &-small {
+                padding: $spacing-radio_addon_buttonRadio_small-paddingY $spacing-radio_addon_buttonRadio_small-paddingX;
+                font-size: $font-radio_buttonRadio_small-default-size;
+            }
+
+            &-large {
+                padding: $spacing-radio_addon_buttonRadio_large-paddingY $spacing-radio_addon_buttonRadio_large-paddingX;
+                font-size: $font-radio_buttonRadio_large-default-size;
+            }
+        }
+    }
+
+    .#{$module}-inner-checked {
+        &:hover {
+            .#{$module}-inner-display {
+                background: $color-radio_primary-bg-hover;
+            }
+        }
+
+        &:active {
+            .#{$module}-inner-display {
+                background: $color-radio_primary-bg-active;
+            }
+        }
+
+        .#{$module}-inner-display {
+            color: $color-radio_primary-text-default;
+            background: $color-radio_primary-bg-default;
+            border: solid $width-radio_innder-border $color-radio_primary-border-default;
+            border-radius: $width-radio_inner;
+        }
+
+        > .#{$module}-addon {
+            color: $color-radio_default-text-default;
+        }
+    }
+
+    .#{$module}-inner-buttonRadio,
+    .#{$module}-inner-pureCardRadio {
+        position: absolute;
+        inset-inline-start: 0;
+        top: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        margin-top: 0;
+        opacity: 0;
+    }
+
+    &-disabled {
+        &,
+        &:hover {
+            cursor: not-allowed;
+        }
+
+        .#{$module}-inner {
+            cursor: not-allowed;
+
+            &-display {
+                background: $color-radio_disabled-bg-default;
+                border-color: $color-radio_default-border-disabled;
+                opacity: 0.75;
+
+                &:hover {
+                    background: $color-radio_disabled-bg-hover;
+                }
+            }
+        }
+
+        .#{$module}-inner-checked {
+            .#{$module}-inner-display {
+                color: $color-radio_checked-icon-disabled;
+                background: $color-radio_checked-bg-disabled;
+                border-color: $color-radio_checked-border-disabled;
+
+                &:hover {
+                    color: $color-radio_checked-icon-disabled;
+                    background: $color-radio_checked-bg-disabled;
+                    border-color: $color-radio_checked-border-disabled;
+                }
+            }
+        }
+
+        .#{$module}-addon {
+            color: $color-radio_disabled-text-default;
+        }
+
+        .#{$module}-extra {
+            color: $color-radio_disabled-text-default;
+        }
+    }
+
+    &-extra {
+        box-sizing: border-box;
+        color: $color-radio_extra-text-default;
+    }
+
+    // the focusable control is the transparent input, so its focus ring is drawn on the circle, card or button label;
+    // :focus-visible skips the focus a mouse click moves into the input
+    &:not(.#{$module}-cardRadioGroup, .#{$module}-buttonRadioGroup) > .#{$module}-inner:has(> input:focus-visible) > .#{$module}-inner-display {
+        outline: $width-radio-outline solid $color-radio_primary-outline-focus;
+    }
+
+    &:not(.#{$module}-cardRadioGroup, .#{$module}-buttonRadioGroup) > .#{$module}-inner:not(.#{$module}-inner-checked):has(> input:focus-visible) > .#{$module}-inner-display {
+        border: solid $width-radio_hover-border $color-radio_default-border-hover;
+    }
+
+    &.#{$module}-cardRadioGroup:has(> .#{$module}-inner > input:focus-visible) {
+        outline: $width-radio-outline solid $color-radio_primary-outline-focus;
+    }
+
+    &.#{$module}-buttonRadioGroup:has(> .#{$module}-inner > input:focus-visible) .#{$module}-addon-buttonRadio {
+        outline: $width-radio-outline solid $color-radio_primary-outline-focus;
+    }
+}
+
+.#{$module}Group {
+    @include font-size-regular;
+
+    &-vertical {
+        display: flex;
+        flex-direction: column;
+        row-gap: $spacing-radio_group_vertical-marginBottom;
+
+        &-default {
+            .#{$module} {
+                display: flex;
+            }
+        }
+
+        &-card {
+            .#{$module} {
+                display: flex;
+            }
+        }
+    }
+
+    &-horizontal {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: $spacing-radio_group_horizontal-marginRight;
+        vertical-align: bottom;
+    }
+
+    &-buttonRadio {
+        display: inline-block;
+        vertical-align: middle;
+        background: $color-radio_buttonRadio-bg-default;
+        border-radius: $radius-radio_buttonRadio;
+    }
+}
+
+@include meta.load-css('rtl');

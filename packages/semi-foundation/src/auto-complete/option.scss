@@ -1,0 +1,78 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-autocomplete;
+$filterable: #{$module}-filterable;
+
+.#{$module}-option {
+    @include font-size-regular;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-inline: $spacing-autoComplete_option-paddingLeft $spacing-autoComplete_option-paddingRight;
+    padding-top: $spacing-autoComplete_option-paddingTop;
+    padding-bottom: $spacing-autoComplete_option-paddingBottom;
+    color: $color-autoComplete_option_main-text;
+    word-break: break-all;
+    cursor: pointer;
+    border-radius: $radius-autoComplete_option;
+    transition: background-color $transition_duration-autoComplete_option-bg $transition_function-autoComplete_option-bg $transition_delay-autoComplete_option-bg;
+
+    &-icon {
+        display: flex;
+        visibility: hidden;
+        align-content: center;
+        justify-content: center;
+        width: $width-autoComplete_option_tick;
+        margin-inline-end: $spacing-autoComplete_option_tick-marginRight;
+        color: $color-autoComplete_option-icon-default;
+    }
+
+    &-text {
+        display: flex;
+        flex-wrap: wrap;
+        white-space: pre;
+    }
+
+    &:active {
+        background-color: $color-autoComplete_option-bg-active;
+    }
+
+    &-empty {
+        justify-content: center;
+        color: $color-autoComplete_option_disabled-text;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: inherit;
+        }
+
+        &:active {
+            background-color: inherit;
+        }
+    }
+
+    &-disabled {
+        color: $color-autoComplete_option_disabled-text;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: $color-autoComplete_option-bg-hover;
+        }
+    }
+
+    &-focused {
+        background-color: $color-autoComplete_option-bg-hover;
+    }
+
+    &:first-of-type {
+        margin-top: $spacing-autoComplete_option_first-marginTop;
+    }
+
+    &:last-of-type {
+        margin-bottom: $spacing-autoComplete_option_last-marginBottom;
+    }
+}

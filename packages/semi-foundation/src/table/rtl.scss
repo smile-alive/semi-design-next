@@ -1,0 +1,24 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-table;
+
+.#{$module}:dir(rtl),
+.#{$prefix}-spin:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-align-left:dir(rtl) .#{$module}-operate-wrapper {
+    justify-content: flex-end;
+}
+
+.#{$module}-align-right:dir(rtl) .#{$module}-operate-wrapper {
+    justify-content: flex-start;
+}
+
+.#{$module}:dir(rtl) .#{$module}-column-expand .#{$module}-expand-icon,
+.#{$module}-expand-icon:dir(rtl) {
+    transform: scaleX(-1) translateY(2px);
+}

@@ -1,0 +1,467 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-tree-select;
+
+.#{$module} {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    min-width: $width-treeSelect_default;
+    min-height: $height-treeSelect_default;
+    font-weight: $font-treeSelect_default-fontWeight;
+    line-height: $font-treeSelect_default-lineHeight;
+    cursor: pointer;
+    background-color: $color-treeSelect_default-bg-default;
+    border: $width-treeSelect-border solid $color-treeSelect_default-border-default;
+    border-radius: $radius-treeSelect;
+
+    &:hover {
+        background-color: $color-treeSelect_default-bg-hover;
+        border: $width-treeSelect_hover-border solid $color-treeSelect_default-border-hover;
+    }
+
+    &:focus-visible {
+        @include focus-ring;
+    }
+
+    // a search input on the trigger draws no ring itself; a pointer press shows the focus border instead
+    &:not(.#{$module}-focus):has(input[role='combobox']:focus-visible) {
+        @include focus-ring;
+    }
+
+    &:active {
+        background-color: $color-treeSelect_default-bg-active;
+    }
+
+    &-focus {
+        outline: 0;
+        background-color: $color-treeSelect_default-bg-focus;
+        border: $width-treeSelect_focus-border solid $color-treeSelect_default-border-focus;
+
+        &:hover {
+            outline: 0;
+            background-color: $color-treeSelect_default-bg-focus;
+            border: $width-treeSelect_focus-border solid $color-treeSelect_default-border-focus;
+        }
+
+        &:active {
+            background-color: $color-treeSelect_default-bg-active;
+        }
+    }
+
+    &-warning {
+        background-color: $color-treeSelect_warning-bg-default;
+        border-color: $color-treeSelect_warning-border-default;
+
+        &:hover {
+            background-color: $color-treeSelect_warning-bg-hover;
+            border-color: $color-treeSelect_warning-border-hover;
+        }
+
+        &.#{$module}-focus {
+            background-color: $color-treeSelect_warning-bg-focus;
+            border-color: $color-treeSelect_warning-border-focus;
+        }
+
+        &:active {
+            background-color: $color-treeSelect_warning-bg-active;
+            border-color: $color-treeSelect_warning-border-active;
+        }
+    }
+
+    &-error {
+        background-color: $color-treeSelect_danger-bg-default;
+        border-color: $color-treeSelect_danger-border-default;
+
+        &:hover {
+            background-color: $color-treeSelect_danger-bg-hover;
+            border-color: $color-treeSelect_danger-border-hover;
+        }
+
+        &.#{$module}-focus {
+            background-color: $color-treeSelect_danger-bg-focus;
+            border-color: $color-treeSelect_danger-border-focus;
+        }
+
+        &:active {
+            background-color: $color-treeSelect_danger-bg-active;
+            border-color: $color-treeSelect_danger-border-active;
+        }
+    }
+
+    &-disabled {
+        cursor: not-allowed;
+        user-select: none;
+
+        background-color: $color-treeSelect_input_disabled-bg-default;
+
+        &:hover {
+            background-color: $color-treeSelect_input_disabled-bg-hover;
+        }
+
+        .#{$module}-selection,
+        .#{$module}-selection-placeholder {
+            color: $color-treeSelect_input_disabled-text-default;
+            cursor: not-allowed;
+        }
+
+        .#{$module}-arrow,
+        .#{$module}-prefix,
+        .#{$module}-suffix {
+            color: $color-treeSelect_input_disabled-text-default;
+        }
+
+        .#{$prefix}-tag {
+            color: $color-treeSelect_input_disabled-text-default;
+            background-color: $color-treeSelect_tag_disabled-bg-default;
+        }
+    }
+
+    &-selection {
+        @include font-size-regular;
+        position: relative;
+        display: inline-flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        align-items: center;
+
+        height: 100%;
+        padding-inline: $spacing-treeSelect_selection-paddingLeft 0;
+        overflow: hidden;
+        color: $color-treeSelect_selection-text-default;
+        cursor: pointer;
+
+        &-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &-placeholder {
+            color: $color-treeSelect_input_placeholder-text-default;
+        }
+
+        .#{$prefix}-tag-group {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            height: inherit;
+        }
+
+        .#{$prefix}-tag {
+            margin: $spacing-treeSelect_tag-marginY $spacing-treeSelect_tag-marginX;
+        }
+
+        &-TriggerSearchItem {
+            position: absolute;
+            max-width: calc(100% - $spacing-treeSelect_selection-paddingLeft);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            &-placeholder {
+                opacity: 0.6;
+            }
+
+            &-disabled {
+                color: $color-treeSelect_selection_TriggerSearchItem_disabled-text-default;
+                cursor: not-allowed;
+            }
+        }
+
+        .#{$module}-triggerSingleSearch-upper {
+            z-index: 1;
+        }
+
+        .#{$module}-triggerSingleSearch-wrapper {
+            width: 100%;
+
+            .#{$module}-inputTrigger {
+                .#{$prefix}-input-wrapper {
+                    background: transparent;
+                }
+            }
+
+            .#{$prefix}-input-wrapper {
+                width: 100%;
+                height: 100%;
+                background-color: $color-treeSelect_inputTrigger-bg-default;
+                border: $color-treeSelect_inputTrigger-border-default;
+            }
+
+            .#{$prefix}-input-wrapper-focus {
+                border: $color-treeSelect_inputTrigger-border-default;
+            }
+
+            .#{$prefix}-input {
+                padding-inline: 0;
+            }
+        }
+
+        .#{$prefix}-tagInput {
+            min-height: $height-treeSelect_selection_tagInput_wrapper_default;
+            background: transparent;
+            border: hidden;
+
+            &-small {
+                min-height: $height-treeSelect_selection_tagInput_wrapper_small;
+            }
+
+            &-large {
+                min-height: $height-treeSelect_selection_tagInput_wrapper_large;
+            }
+
+            .#{$prefix}-tagInput-wrapper {
+                padding-inline: $spacing-treeSelect_selection_tagInput_wrapper-paddingX;
+
+                .#{$prefix}-input-wrapper {
+                    .#{$prefix}-input {
+                        padding-inline-start: 0;
+                    }
+
+                    &-default {
+                        margin-top: $spacing-treeSelect_tag-marginY;
+                        margin-bottom: $spacing-treeSelect_tag-marginY;
+                    }
+
+                    &-large {
+                        margin-top: $spacing-treeSelect_tag-marginY;
+                        margin-bottom: $spacing-treeSelect_tag-marginY;
+                    }
+                }
+            }
+        }
+    }
+
+    &-multiple-tagInput-notEmpty {
+        .#{$prefix}-tagInput {
+            margin-inline-start: $spacing-treeSelect_selection_tagInput_notEmpty-marginLeft;
+        }
+    }
+
+    &-multiple-tagInput-empty {
+        .#{$prefix}-tagInput {
+            margin-inline-start: $spacing-treeSelect_selection_tagInput_empty-marginLeft;
+        }
+    }
+
+    &-multiple {
+        display: inline-flex;
+
+        .#{$module}-selection {
+            padding-inline: $spacing-treeSelect_selection_multiple-paddingLeft 0;
+
+            &-placeholder {
+                padding-inline-start: $spacing-treeSelect_placeholder_multiple-paddingLeft;
+            }
+        }
+    }
+
+    &-triggerTagWrap {
+        max-width: 100%;
+
+        .#{$module}-selection {
+            min-width: 0;
+        }
+
+        &.#{$module}-multiple {
+            height: auto;
+
+            .#{$module}-selection {
+                height: auto;
+                min-height: $height-treeSelect_default - 2 * $width-treeSelect-border;
+                overflow: visible;
+            }
+
+            &.#{$module}-small {
+                .#{$module}-selection {
+                    min-height: $height-treeSelect_small - 2 * $width-treeSelect-border;
+                }
+            }
+
+            &.#{$module}-large {
+                .#{$module}-selection {
+                    min-height: $height-treeSelect_large - 2 * $width-treeSelect-border;
+                }
+            }
+        }
+
+        .#{$prefix}-tagInput {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 100%;
+
+            .#{$prefix}-tagInput-wrapper-input {
+                max-width: 100%;
+            }
+        }
+    }
+
+    &-small {
+        min-height: $height-treeSelect_small;
+        line-height: $font-treeSelect_small-lineHeight;
+    }
+
+    &-large {
+        min-height: $height-treeSelect_large;
+        line-height: $font-treeSelect_large-lineHeight;
+
+        .#{$module}-selection {
+            @include font-size-header-6;
+        }
+    }
+
+    &-arrow {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: $width-treeSelect_arrow;
+        height: 100%;
+        color: $color-treeSelect_default-icon-default;
+    }
+
+    &-inset-label {
+        @include font-size-regular;
+        display: inline;
+        flex-shrink: 0;
+        margin: $spacing-treeSelect_prefix_text-marginY $spacing-treeSelect_prefix_text-marginX;
+        font-weight: $font-treeSelect_prefix_suffix_fontWeight;
+        color: $color-treeSelect_prefix_suffix_text-default;
+        white-space: nowrap;
+    }
+
+    &.#{$module}-with-prefix {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    &-clearbtn {
+        @include bare-button;
+    }
+
+    &-arrow,
+    &-clearbtn {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: $width-treeSelect_arrow;
+        height: 100%;
+        color: $color-treeSelect_default-icon-default;
+    }
+
+    &-clearbtn {
+        display: none;
+
+        &:hover {
+            color: $color-treeSelect_default-icon-hover;
+        }
+
+        &:active {
+            color: $color-treeSelect_default-icon-active;
+        }
+    }
+
+    // also while focus is inside so Tab can reach the clear button
+    &:hover,
+    &-focus,
+    &:focus-within {
+        .#{$module}-clearbtn {
+            display: inline-flex;
+        }
+
+        .#{$module}-clearbtn ~ .#{$module}-arrow {
+            display: none;
+        }
+    }
+
+    &-prefix,
+    &-suffix {
+        @include flex-center;
+        display: inline;
+
+        &-text {
+            @include font-size-regular;
+            margin: $spacing-treeSelect_prefix_text-marginY $spacing-treeSelect_prefix_text-marginX;
+            font-weight: $font-treeSelect_prefix_suffix_fontWeight;
+            color: $color-treeSelect_prefix_suffix_text-default;
+            white-space: nowrap;
+        }
+
+        &-icon {
+            margin: $spacing-treeSelect_prefix_icon-marginY $spacing-treeSelect_prefix_icon-marginX;
+            color: $color-treeSelect_default-icon-default;
+        }
+    }
+
+    &.#{$module}-with-suffix .#{$module}-selection {
+        padding-inline-end: $spacing-treeSelect_selection_withSuffix-paddingRight;
+    }
+}
+
+.#{$module}-popover {
+    max-height: $height-treeSelect_popover;
+    overflow: auto;
+
+    .#{$prefix}-tree-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .#{$prefix}-tree-option-list {
+            flex: 1;
+            min-width: $width-treeSelect_option;
+
+            &-hidden {
+                padding: 0;
+            }
+        }
+
+        .#{$prefix}-tree-search-wrapper {
+            border-bottom: $width-treeSelect_search_wrapper-border $color-treeSelect_search-border-default solid;
+        }
+
+        // focus stays on the trigger or search input (aria-activedescendant); only the keyboard sets the row
+        .#{$prefix}-tree-option-focused {
+            @include focus-ring(-2px);
+        }
+    }
+}
+
+.#{$module}-borderless {
+    &:not(:focus-within):not(:hover) {
+        background-color: transparent;
+        border-color: transparent;
+
+        .#{$module}-arrow {
+            opacity: 0;
+        }
+    }
+
+    &:focus-within:not(:active) {
+        background-color: transparent;
+    }
+
+    &.#{$module}-error:not(:focus-within) {
+        border-color: $color-treeSelect_danger-border-focus;
+    }
+
+    &.#{$module}-warning:not(:focus-within) {
+        border-color: $color-treeSelect_warning-border-focus;
+    }
+
+    &.#{$module}-error:focus-within {
+        border-color: $color-treeSelect_danger-border-focus;
+    }
+
+    &.#{$module}-warning:focus-within {
+        border-color: $color-treeSelect_warning-border-focus;
+    }
+}
+
+@include meta.load-css('rtl');

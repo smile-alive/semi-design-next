@@ -1,0 +1,61 @@
+// Defined here so a theme without these tokens still compiles; a theme that defines them wins
+@use 'semi:theme' as *;
+
+$width-focus-ring: 2px;
+$color-focus-ring: var(--semi-color-primary-light-active);
+$color-scrollbar-thumb: var(--semi-color-fill-2);
+
+// Chrome ignores ::-webkit-scrollbar once these standard properties are set: no rounded thumb or hover color.
+// The ::-webkit-scrollbar rules serve browsers without them (Chrome < 121, Safari < 18.2 for width, < 26.2 for color).
+@mixin scrollbar {
+    scrollbar-color: $color-scrollbar-thumb transparent;
+    scrollbar-width: thin;
+
+    @supports not (scrollbar-width: none) {
+        &::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+    }
+
+    @supports not (scrollbar-color: red blue) {
+        &::-webkit-scrollbar-thumb {
+            background-color: $color-scrollbar-thumb;
+            border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+    }
+}
+
+@mixin hide-scrollbar {
+    scrollbar-width: none;
+
+    @supports not (scrollbar-width: none) {
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+@mixin focus-ring($offset: null) {
+    outline: $width-focus-ring solid $color-focus-ring;
+    outline-offset: $offset;
+}
+
+// Include first: later declarations override the reset.
+@mixin bare-button($offset: null) {
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    background: none;
+    border: 0;
+
+    &:focus-visible {
+        @include focus-ring($offset);
+    }
+}

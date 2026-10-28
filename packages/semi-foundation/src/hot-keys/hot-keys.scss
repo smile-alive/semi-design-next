@@ -1,0 +1,30 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-hotKeys;
+
+.#{$module} {
+    @include flex-center;
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    vertical-align: bottom;
+    white-space: nowrap;
+    user-select: none;
+
+    &-content {
+        @include font-size-small;
+        height: $height-hotKeys;
+        padding: $spacing-hotKeys-paddingY $spacing-hotKeys-paddingX;
+        color: $color-hotKeys-text;
+        background-color: $color-hotKeys-bg;
+        border: $width-hotKeys-border;
+        border-radius: $radius-hotKeys;
+    }
+
+    &-split {
+        @include font-size-small;
+        margin: 0 3px;
+        color: $color-hotKeys-split;
+    }
+}

@@ -1,0 +1,287 @@
+@use 'sass:math';
+@use 'semi:theme' as *;
+@use 'palette';
+
+// Several components size themselves from the inherited line-height (`normal` otherwise), so the host's value would
+// change their heights. The 14px/20px pairing is Semi's body text; it is not set on always-light/dark subtrees so those
+// keep inheriting from the page.
+:root {
+    // Mode-independent tokens without var(), declared only here so always-light/dark subtrees inherit app overrides.
+    // `#{}` ones are emitted from variables.scss because Sass cannot compute with var().
+    --semi-spacing-none: 0; // 间距 - 零
+    --semi-spacing-super-tight: #{$spacing-super-tight}; // 间距 - 极紧凑
+    --semi-spacing-extra-tight: #{$spacing-extra-tight}; // 间距 - 超紧凑
+    --semi-spacing-tight: #{$spacing-tight}; // 间距 - 紧凑
+    --semi-spacing-base-tight: #{$spacing-base-tight}; // 间距 - 默认（偏紧凑）
+    --semi-spacing-base: #{$spacing-base}; // 间距 - 默认
+    --semi-spacing-base-loose: #{$spacing-base-loose}; // 间距 - 默认（偏宽松）
+    --semi-spacing-loose: 24px; // 间距 - 宽松
+    --semi-spacing-extra-loose: 32px; // 间距 - 超宽松
+    --semi-spacing-super-loose: #{$spacing-super-loose}; // 间距 - 极宽松
+    --semi-height-control-small: #{$height-control-small}; // 表单项高度 - 小尺寸
+    --semi-height-control-default: #{$height-control-default}; // 表单项高度 - 默认尺寸
+    --semi-height-control-large: #{$height-control-large}; // 表单项高度 - 大尺寸
+    --semi-font-family-regular: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif; // semi 预置字体回退
+    --semi-font-size-small: 12px; // 小文本字号
+    --semi-font-size-regular: 14px; // 常规文本字号
+    --semi-font-size-header-6: 16px; // 六级标题字号
+    --semi-font-size-header-5: 18px; // 五级标题字号
+    --semi-font-size-header-4: 20px; // 四级标题字号
+    --semi-font-size-header-3: 24px; // 三级标题字号
+    --semi-font-size-header-2: 28px; // 二级标题字号
+    --semi-font-size-header-1: 32px; // 一级标题字号
+    --semi-line-height-small: 16px; // 小文本行高
+    --semi-line-height-regular: 20px; // 常规文本行高
+    --semi-line-height-header-6: 22px; // 六级标题行高
+    --semi-line-height-header-5: 24px; // 五级标题行高
+    --semi-line-height-header-4: 28px; // 四级标题行高
+    --semi-line-height-header-3: 32px; // 三级标题行高
+    --semi-line-height-header-2: 40px; // 二级标题行高
+    --semi-line-height-header-1: 44px; // 一级标题行高
+    --semi-font-weight-light: 200; // 字重 - 轻
+    --semi-font-weight-regular: 400; // 字重 - 常规
+    --semi-font-weight-bold: 600; // 字重 - 加粗
+    --semi-border-thickness: #{$border-thickness}; // 描边宽度 - 零
+    --semi-border-thickness-control: #{$border-thickness-control}; // 描边宽度 - 默认状态
+    --semi-border-thickness-control-focus: 1px; // 描边宽度 - focus 状态
+    --semi-border-radius-extra-small: 3px; // 超小圆角，用于 checkbox 内圆角
+    --semi-border-radius-small: 3px; // 小圆角, 用于 button、tag、tabs 等大多数组件, 比较常用
+    --semi-border-radius-medium: 6px; // 中圆角, 用于 dropdown、scrollist、transfer 等菜单类组件
+    --semi-border-radius-large: 12px; // 大圆角, 用于 modal
+    --semi-border-radius-circle: 50%; // 全圆角, 用于 avatar, badge 等组件
+    --semi-border-radius-full: 9999px; // 用于创建全尺寸圆角，如胶囊标签等
+    --semi-color-overlay-bg: rgba(22, 22, 26, 0.6); // 蒙层背景色
+    --semi-z-portal: 1; // 抽象插槽，适用于未经特殊定制的所有组件
+    --semi-z-affix: 10; // 固定位置的页面元素
+    --semi-z-backtop: 10; // 返回顶部
+    --semi-z-badge: 1; // badge
+    --semi-z-table-fixed: #{$z-table-fixed}; // table fixed column
+    --semi-z-modal: 1000; // modal
+    --semi-z-modal-mask: 1000; // modal 遮罩
+    --semi-z-toast: 1010; // toast
+    --semi-z-notification: 1010; // notification
+    --semi-z-image_preview: 1070; // Image 预览层
+    --semi-z-image_preview_header: 1; // Image 预览层 header
+    --semi-z-resizable_handler: 10; // 伸缩框 handler，低于弹出层
+    line-height: math.div(20px, 14px);
+}
+
+// Same formula in both modes, but var() resolves on the element that declares it: every element that switches the
+// palette declares these again
+:root,
+:root .#{$prefix}-always-light,
+[theme-mode='dark'],
+:root .#{$prefix}-always-dark {
+    --semi-color-black: var(--semi-black); // 深色模式下浅色背景内容Inverse
+
+    --semi-color-primary: var(--semi-blue-5); // 主要颜色。仅在需要非常强调的情况下使用。
+    --semi-color-primary-hover: var(--semi-blue-6); // 主要颜色悬浮态
+    --semi-color-primary-active: var(--semi-blue-7); // 主要颜色激活态
+    --semi-color-primary-disabled: var(--semi-blue-2); // 主要颜色禁用态
+
+    --semi-color-secondary: var(--semi-light-blue-5); // 次要颜色。强调作用次于主要颜色，但仍然具有强调作用。
+    --semi-color-secondary-hover: var(--semi-light-blue-6); // 次要颜色悬浮态
+    --semi-color-secondary-active: var(--semi-light-blue-7); // 次要颜色激活态
+    --semi-color-secondary-disabled: var(--semi-light-blue-2); // 次要颜色禁用态
+
+    --semi-color-tertiary: var(--semi-grey-5); // 第三颜色，可以在页面上多次使用
+    --semi-color-tertiary-hover: var(--semi-grey-6); // 第三颜色悬浮态
+    --semi-color-tertiary-active: var(--semi-grey-7); // 第三颜色激活态
+
+    --semi-color-default: var(--semi-grey-0); // 不建议使用
+    --semi-color-default-hover: var(--semi-grey-1); // 不建议使用
+    --semi-color-default-active: var(--semi-grey-2); // 不建议使用
+
+    --semi-color-info: var(--semi-blue-5); // 信息色, 通常用于表达客观、中立信息
+    --semi-color-info-hover: var(--semi-blue-6); // 信息色悬浮态
+    --semi-color-info-active: var(--semi-blue-7); // 信息色激活态
+    --semi-color-info-disabled: var(--semi-blue-2); // 信息色禁用态
+
+    --semi-color-success: var(--semi-green-5); // 成功色，表示安全、成功、开启的状态
+    --semi-color-success-hover: var(--semi-green-6); // 成功色悬浮态
+    --semi-color-success-active: var(--semi-green-7); // 成功色激活态
+    --semi-color-success-disabled: var(--semi-green-2); // 成功色禁用态
+
+    --semi-color-danger: var(--semi-red-5); // 危险色，表示危险的操作、或需要特别注意的危险信息
+    --semi-color-danger-hover: var(--semi-red-6); // 危险色悬浮态
+    --semi-color-danger-active: var(--semi-red-7); // 危险色激活态
+
+    --semi-color-warning: var(--semi-orange-5); // 警示色，表示警告、不安全的状态
+    --semi-color-warning-hover: var(--semi-orange-6); // 警示色悬浮态
+    --semi-color-warning-active: var(--semi-orange-7); // 警示色激活态
+
+    --semi-color-focus-border: var(--semi-blue-5); // 多用于边框激活态颜色
+
+    --semi-color-disabled-text: rgb(from var(--semi-grey-9) r g b / 0.35); // 禁用态 - 文字
+    --semi-color-disabled-border: var(--semi-grey-1); // 禁用态 - 描边
+    --semi-color-disabled-bg: var(--semi-grey-1); // 禁用态 - 背景
+    --semi-color-disabled-fill: rgb(from var(--semi-grey-8) r g b / 0.04); // 禁用态 - 填充
+
+    --semi-color-shadow: rgb(from var(--semi-black) r g b / 0.04); // 用于模拟描边的阴影颜色
+
+    --semi-color-link: var(--semi-blue-5); // 链接颜色
+    --semi-color-link-hover: var(--semi-blue-6); // 链接颜色 - 悬浮态
+    --semi-color-link-active: var(--semi-blue-7); // 链接颜色 - 激活态
+    --semi-color-link-visited: var(--semi-blue-5); // 链接颜色 - 已访问
+
+    --semi-color-text-0: var(--semi-grey-9); // 文本/图标颜色 - 最主要
+    --semi-color-text-1: rgb(from var(--semi-grey-9) r g b / 0.8); // 文本/图标颜色 - 稍次要
+    --semi-color-text-3: rgb(from var(--semi-grey-9) r g b / 0.35); // 文本/图标颜色 - 最次要
+
+    --semi-color-ai-general: var(--semi-ai-general-5); // AI 场景颜色
+    --semi-color-ai-general-hover: var(--semi-ai-general-6); // AI 场景颜色 - 悬浮态
+    --semi-color-ai-general-active: var(--semi-ai-general-7); // AI 场景颜色 - 激活态
+    --semi-color-ai-general-disabled: var(--semi-ai-general-2); // AI 场景颜色 - 禁用态
+
+    --semi-color-ai-purple: var(--semi-ai-purple-5); // AI 次要场景颜色
+    --semi-color-ai-purple-hover: var(--semi-ai-purple-6); // AI 次要场景颜色 - 悬浮态
+    --semi-color-ai-purple-active: var(--semi-ai-purple-7); // AI 次要场景颜色 - 激活态
+    --semi-color-ai-purple-disabled: var(--semi-ai-purple-2); // AI 次要场景颜色 - 禁用态
+    font-family: $font-family-regular;
+    -webkit-font-smoothing: antialiased;
+}
+
+// Not on :root: only the root's color-scheme reaches the canvas and viewport scrollbars, and `normal` there keeps the
+// page's own choice (meta color-scheme) when theme-mode sits on body
+:root .#{$prefix}-always-light {
+    color-scheme: light;
+}
+
+:root,
+:root .#{$prefix}-always-light {
+    --semi-color-white: var(--semi-white); // 浅色模式下深色背景内容Inverse
+    --semi-color-primary-light-default: var(--semi-blue-0); // 浅版主要颜色（多用于背景）。仅在需要非常强调的情况下使用。
+    --semi-color-primary-light-hover: var(--semi-blue-1); // 浅版主要颜色悬浮态
+    --semi-color-primary-light-active: var(--semi-blue-2); // 浅版主要颜色激活态
+    --semi-color-secondary-light-default: var(--semi-light-blue-0); // 浅版次要颜色（多用于背景）。强调作用次于主要颜色，但仍然具有强调作用。
+    --semi-color-secondary-light-hover: var(--semi-light-blue-1); // 浅版次要颜色悬浮态
+    --semi-color-secondary-light-active: var(--semi-light-blue-2); // 浅版次要颜色激活态
+    --semi-color-tertiary-light-default: var(--semi-grey-0); // 浅版第三颜色（多用于背景），可以在页面上多次使用
+    --semi-color-tertiary-light-hover: var(--semi-grey-1); // 浅版第三颜色悬浮态
+    --semi-color-tertiary-light-active: var(--semi-grey-2); // 浅版第三颜色激活态
+    --semi-color-info-light-default: var(--semi-blue-0); // 浅版信息色（多用于背景），通常用于表达客观、中立信息
+    --semi-color-info-light-hover: var(--semi-blue-1); // 浅版信息色悬浮态
+    --semi-color-info-light-active: var(--semi-blue-2); // 浅版信息色激活态
+    --semi-color-success-light-default: var(--semi-green-0); // 浅版成功色（多用于背景），表示安全、成功、开启的状态
+    --semi-color-success-light-hover: var(--semi-green-1); // 浅版成功色悬浮态
+    --semi-color-success-light-active: var(--semi-green-2); // 浅版成功色激活态
+    --semi-color-danger-light-default: var(--semi-red-0); // 浅版危险色（多用于背景），表示危险的操作、或需要特别注意的危险信息
+    --semi-color-danger-light-hover: var(--semi-red-1); // 浅版危险色悬浮态
+    --semi-color-danger-light-active: var(--semi-red-2); // 浅版危险色激活态
+    --semi-color-warning-light-default: var(--semi-orange-0); // 浅版警示色（多用于背景），表示警告、不安全的状态
+    --semi-color-warning-light-hover: var(--semi-orange-1); // 浅版警示色悬浮态
+    --semi-color-warning-light-active: var(--semi-orange-2); // 浅版警示色激活态
+    --semi-color-border: rgb(from var(--semi-grey-9) r g b / 0.08); // 默认描边颜色
+    --semi-color-nav-bg: var(--semi-white); // 导航背景色
+    --semi-color-fill-0: rgb(from var(--semi-grey-8) r g b / 0.05); // 填充色 - 默认态
+    --semi-color-fill-1: rgb(from var(--semi-grey-8) r g b / 0.09); // 填充色 - 悬浮态
+    --semi-color-fill-2: rgb(from var(--semi-grey-8) r g b / 0.13); // 填充色 - 激活态
+    --semi-color-bg-0: var(--semi-white); // 背景色 - 最下层（底部页面）
+    --semi-color-bg-1: var(--semi-white); // 背景色 - 次下层（页面中需要提升的内容）
+    --semi-color-bg-2: var(--semi-white); // 背景色 - 中间层（模态等容器）
+    --semi-color-bg-3: var(--semi-white); // 背景色 - 次上层（通知，Toast等）
+    --semi-color-bg-4: var(--semi-white); // 背景色 - 最上层（特殊）
+    --semi-color-text-2: rgb(from var(--semi-grey-9) r g b / 0.62); // 文本/图标颜色 - 次要
+    --semi-shadow-knob: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.3); // 用于 switch、slider 等滑块的阴影
+    --semi-shadow-elevated: 0 0 1px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.1); // 用于toast, modal, popover等需要提升层级的界面元素
+    --semi-color-highlight-bg: var(--semi-yellow-4); // 高亮文本背景色
+    --semi-color-highlight: var(--semi-black); // 高亮文本色
+    --semi-color-data-0: rgba(87, 105, 255, 1); //vchart 数据色板颜色 - 0
+    --semi-color-data-1: rgba(142, 212, 231, 1); //vchart 数据色板颜色 - 1
+    --semi-color-data-2: rgba(245, 135, 0, 1); //vchart 数据色板颜色 - 2
+    --semi-color-data-3: rgba(220, 183, 252, 1); //vchart 数据色板颜色 - 3
+    --semi-color-data-4: rgba(74, 156, 247, 1); //vchart 数据色板颜色 - 4
+    --semi-color-data-5: rgba(243, 204, 53, 1); //vchart 数据色板颜色 - 5
+    --semi-color-data-6: rgba(254, 128, 144, 1); //vchart 数据色板颜色 - 6
+    --semi-color-data-7: rgba(139, 215, 210, 1); //vchart 数据色板颜色 - 7
+    --semi-color-data-8: rgba(131, 176, 35, 1); //vchart 数据色板颜色 - 8
+    --semi-color-data-9: rgba(233, 165, 229, 1); //vchart 数据色板颜色 - 9
+    --semi-color-data-10: rgba(48, 167, 206, 1); //vchart 数据色板颜色 - 10
+    --semi-color-data-11: rgba(249, 192, 100, 1); //vchart 数据色板颜色 - 11
+    --semi-color-data-12: rgba(177, 113, 249, 1); //vchart 数据色板颜色 - 12
+    --semi-color-data-13: rgba(119, 182, 249, 1); //vchart 数据色板颜色 - 13
+    --semi-color-data-14: rgba(200, 143, 2, 1); //vchart 数据色板颜色 - 14
+    --semi-color-data-15: rgba(255, 170, 178, 1); //vchart 数据色板颜色 - 15
+    --semi-color-data-16: rgba(51, 176, 171, 1); //vchart 数据色板颜色 - 16
+    --semi-color-data-17: rgba(182, 215, 129, 1); //vchart 数据色板颜色 - 17
+    --semi-color-data-18: rgba(212, 88, 212, 1); //vchart 数据色板颜色 - 18
+    --semi-color-data-19: rgba(188, 198, 255, 1); //vchart 数据色板颜色 - 19
+
+    --semi-color-ai-background-bottom: linear-gradient(201.15deg, rgba(255, 255, 255, 0.04) 6.58%, rgba(255, 226, 138, 0.04) 32.88%, rgba(231, 45, 255, 0.04) 67.93%, rgba(0, 115, 255, 0.04) 94.23%); // AI 场景背景色底部
+    --semi-color-ai-background-bottom-hover: linear-gradient(201.15deg, rgba(255, 255, 255, 0.08) 6.58%, rgba(255, 226, 138, 0.08) 32.88%, rgba(231, 45, 255, 0.08) 67.93%, rgba(0, 115, 255, 0.08) 94.23%); // AI 场景背景色底部 - 悬浮态
+    --semi-color-ai-background-bottom-active: linear-gradient(201.15deg, rgba(255, 255, 255, 0.12) 6.58%, rgba(255, 226, 138, 0.12) 32.88%, rgba(231, 45, 255, 0.12) 67.93%, rgba(0, 115, 255, 0.12) 94.23%); // AI 场景背景色底部 - 激活态
+
+    --semi-color-ai-background-top: linear-gradient(201.15deg, rgba(83, 56, 255, 0.16) 6.58%, rgba(176, 48, 240, 0.096) 32.88%, rgba(231, 45, 255, 0.048) 59.17%, rgba(255, 255, 255, 0) 94.23%); // AI 场景背景色顶部
+    --semi-color-ai-background-top-hover: linear-gradient(201.15deg, rgba(83, 56, 255, 0.24) 6.58%, rgba(176, 48, 240, 0.144) 32.88%, rgba(231, 45, 255, 0.072) 59.17%, rgba(255, 255, 255, 0) 94.23%); // AI 场景背景色顶部 - 悬浮态
+    --semi-color-ai-background-top-active: linear-gradient(201.15deg, rgba(83, 56, 255, 0.32) 6.58%, rgba(176, 48, 240, 0.192) 32.88%, rgba(231, 45, 255, 0.096) 59.17%, rgba(255, 255, 255, 0) 94.23%); // AI 场景背景色顶部 - 激活态
+}
+
+[theme-mode='dark'],
+:root .#{$prefix}-always-dark {
+    --semi-color-white: rgba(228, 231, 245, 1);
+    --semi-color-primary-light-default: rgb(from var(--semi-blue-5) r g b / 0.2);
+    --semi-color-primary-light-hover: rgb(from var(--semi-blue-5) r g b / 0.3);
+    --semi-color-primary-light-active: rgb(from var(--semi-blue-5) r g b / 0.4);
+    --semi-color-secondary-light-default: rgb(from var(--semi-light-blue-5) r g b / 0.2);
+    --semi-color-secondary-light-hover: rgb(from var(--semi-light-blue-5) r g b / 0.3);
+    --semi-color-secondary-light-active: rgb(from var(--semi-light-blue-5) r g b / 0.4);
+    --semi-color-tertiary-light-default: rgb(from var(--semi-grey-5) r g b / 0.2);
+    --semi-color-tertiary-light-hover: rgb(from var(--semi-grey-5) r g b / 0.3);
+    --semi-color-tertiary-light-active: rgb(from var(--semi-grey-5) r g b / 0.4);
+    --semi-color-info-light-default: rgb(from var(--semi-blue-5) r g b / 0.2);
+    --semi-color-info-light-hover: rgb(from var(--semi-blue-5) r g b / 0.3);
+    --semi-color-info-light-active: rgb(from var(--semi-blue-5) r g b / 0.4);
+    --semi-color-success-light-default: rgb(from var(--semi-green-5) r g b / 0.2);
+    --semi-color-success-light-hover: rgb(from var(--semi-green-5) r g b / 0.3);
+    --semi-color-success-light-active: rgb(from var(--semi-green-5) r g b / 0.4);
+    --semi-color-danger-light-default: rgb(from var(--semi-red-5) r g b / 0.2);
+    --semi-color-danger-light-hover: rgb(from var(--semi-red-5) r g b / 0.3);
+    --semi-color-danger-light-active: rgb(from var(--semi-red-5) r g b / 0.4);
+    --semi-color-warning-light-default: rgb(from var(--semi-orange-5) r g b / 0.2);
+    --semi-color-warning-light-hover: rgb(from var(--semi-orange-5) r g b / 0.3);
+    --semi-color-warning-light-active: rgb(from var(--semi-orange-5) r g b / 0.4);
+    --semi-color-nav-bg: rgba(35, 36, 41, 1);
+    --semi-shadow-knob: 0 4px 6px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.3);
+    --semi-shadow-elevated: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 14px rgba(0, 0, 0, 0.25);
+    --semi-color-fill-0: rgb(from var(--semi-white) r g b / 0.12);
+    --semi-color-fill-1: rgb(from var(--semi-white) r g b / 0.16);
+    --semi-color-fill-2: rgb(from var(--semi-white) r g b / 0.2);
+    --semi-color-border: rgb(from var(--semi-white) r g b / 0.08);
+    --semi-color-bg-0: rgba(22, 22, 26, 1);
+    --semi-color-bg-1: rgba(35, 36, 41, 1);
+    --semi-color-bg-2: rgba(53, 54, 60, 1);
+    --semi-color-bg-3: rgba(67, 68, 74, 1);
+    --semi-color-bg-4: rgba(79, 81, 89, 1);
+    --semi-color-text-2: rgb(from var(--semi-grey-9) r g b / 0.6);
+    --semi-color-highlight-bg: var(--semi-yellow-2); // 高亮文本背景色
+    --semi-color-highlight: var(--semi-white); // 高亮文本色
+    --semi-color-data-0: rgba(94, 109, 194, 1); //vchart 数据色板颜色 - 0
+    --semi-color-data-1: rgba(8, 104, 120, 1); //vchart 数据色板颜色 - 1
+    --semi-color-data-2: rgba(250, 173, 63, 1); //vchart 数据色板颜色 - 2
+    --semi-color-data-3: rgba(76, 43, 156, 1); //vchart 数据色板颜色 - 3
+    --semi-color-data-4: rgba(16, 125, 248, 1); //vchart 数据色板颜色 - 4
+    --semi-color-data-5: rgba(248, 202, 16, 1); //vchart 数据色板颜色 - 5
+    --semi-color-data-6: rgba(195, 30, 87, 1); //vchart 数据色板颜色 - 6
+    --semi-color-data-7: rgba(5, 119, 115, 1); //vchart 数据色板颜色 - 7
+    --semi-color-data-8: rgba(154, 207, 13, 1); //vchart 数据色板颜色 - 8
+    --semi-color-data-9: rgba(117, 29, 138, 1); //vchart 数据色板颜色 - 9
+    --semi-color-data-10: rgba(16, 162, 180, 1); //vchart 数据色板颜色 - 10
+    --semi-color-data-11: rgba(208, 110, 11, 1); //vchart 数据色板颜色 - 11
+    --semi-color-data-12: rgba(113, 66, 197, 1); //vchart 数据色板颜色 - 12
+    --semi-color-data-13: rgba(7, 100, 212, 1); //vchart 数据色板颜色 - 13
+    --semi-color-data-14: rgba(251, 232, 110, 1); //vchart 数据色板颜色 - 14
+    --semi-color-data-15: rgba(160, 19, 73, 1); //vchart 数据色板颜色 - 15
+    --semi-color-data-16: rgba(11, 179, 167, 1); //vchart 数据色板颜色 - 16
+    --semi-color-data-17: rgba(98, 138, 6, 1); //vchart 数据色板颜色 - 17
+    --semi-color-data-18: rgba(162, 48, 179, 1); //vchart 数据色板颜色 - 18
+    --semi-color-data-19: rgba(40, 51, 138, 1); //vchart 数据色板颜色 - 19
+
+    --semi-color-ai-background-bottom: linear-gradient(201.15deg, rgba(255, 226, 138, 0.2) 6.58%, rgba(231, 45, 255, 0.2) 50.4%, rgba(0, 115, 255, 0.2) 94.23%); // AI 场景背景色底部
+    --semi-color-ai-background-bottom-hover: linear-gradient(201.15deg, rgba(255, 226, 138, 0.3) 6.58%, rgba(231, 45, 255, 0.3) 50.4%, rgba(0, 115, 255, 0.3) 94.23%); // AI 场景背景色底部 - 悬浮态
+    --semi-color-ai-background-bottom-active: linear-gradient(201.15deg, rgba(255, 226, 138, 0.4) 6.58%, rgba(231, 45, 255, 0.4) 50.4%, rgba(0, 115, 255, 0.4) 94.23%); // AI 场景背景色底部 - 激活态
+
+    --semi-color-ai-background-top: linear-gradient(201.15deg, rgba(83, 56, 255, 0.36) 6.58%, rgba(176, 48, 240, 0.216) 32.88%, rgba(154, 0, 174, 0.108) 59.17%, rgba(0, 0, 0, 0) 94.23%); // AI 场景背景色顶部
+    --semi-color-ai-background-top-hover: linear-gradient(201.15deg, rgba(83, 56, 255, 0.54) 6.58%, rgba(176, 48, 240, 0.324) 32.88%, rgba(154, 0, 174, 0.162) 59.17%, rgba(0, 0, 0, 0) 94.23%); // AI 场景背景色顶部 - 悬浮态
+    --semi-color-ai-background-top-active: linear-gradient(201.15deg, rgba(83, 56, 255, 0.72) 6.58%, rgba(176, 48, 240, 0.432) 32.88%, rgba(154, 0, 174, 0.216) 59.17%, rgba(0, 0, 0, 0) 94.23%); // AI 场景背景色顶部 - 激活态
+    color-scheme: dark;
+}

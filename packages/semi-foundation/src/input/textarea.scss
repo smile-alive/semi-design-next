@@ -1,0 +1,313 @@
+@use 'sass:math';
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-input;
+
+.#{$module}-textarea-wrapper {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    vertical-align: bottom;
+    background-color: $color-input_default-bg-default;
+    border: $width-input_wrapper-border $color-input_default-border-default solid;
+    border-radius: $radius-input_wrapper;
+    transition:
+        background-color $transition_duration-input-bg $transition_function-input-bg $transition_delay-input-bg,
+        border $transition_duration-input-border $transition_function-input-border $transition_delay-input-border;
+
+    // shrink-to-fit so the border, clear button and counter follow a native horizontal resize; inline-flex would
+    // misalign the clear button and counter
+    &-resizeX {
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+    }
+
+    &-resizeY {
+        // vertical resize needs no width change on the wrapper
+    }
+
+    &:hover {
+        background-color: $color-input_default-bg-hover;
+    }
+
+    &-focus {
+        background-color: $color-input_default-bg-focus;
+        border: $width-input_wrapper_focus-border $color-input_default-border-focus solid;
+
+        &:hover,
+        &:active {
+            background-color: $color-input_default-bg-focus;
+        }
+    }
+
+    &:active {
+        background-color: $color-input_default-bg-active;
+    }
+
+    .#{$module}-clearbtn {
+        @include bare-button;
+        @include flex-center;
+        position: absolute;
+        inset-inline-end: $spacing-textarea-icon-right;
+        top: 0;
+        visibility: hidden;
+        min-width: $width-textarea-icon;
+        height: $height-textarea-default;
+        color: $color-textarea-icon-default;
+
+        & > svg {
+            pointer-events: none;
+        }
+
+        &:hover {
+            cursor: pointer;
+
+            .#{$prefix}-icon {
+                color: $color-textarea-icon-hover;
+            }
+        }
+    }
+
+    // also shown while focus is inside so Tab can reach it
+    &:hover,
+    &:focus-within {
+        .#{$module}-clearbtn {
+            visibility: visible;
+        }
+    }
+
+    &-disabled,
+    &-readonly {
+        color: $color-input_disabled-text-default;
+        cursor: not-allowed;
+        background-color: $color-input_disabled-bg-default;
+
+        &:hover {
+            background-color: $color-input_disabled-bg-default;
+        }
+
+        &::placeholder {
+            color: $color-input_disabled-text-default;
+        }
+    }
+
+    &-readonly {
+        cursor: text;
+    }
+
+    &-error {
+        background-color: $color-input_danger-bg-default;
+        border-color: $color-input_danger-border-default;
+
+        &:hover {
+            background-color: $color-input_danger-bg-hover;
+            border-color: $color-input_danger-border-hover;
+        }
+
+        &.#{$module}-textarea-wrapper-focus {
+            background-color: $color-input_danger-bg-focus;
+            border-color: $color-input_danger-border-focus;
+        }
+
+        &:active {
+            background-color: $color-input_danger-bg-active;
+            border-color: $color-input_danger-border-focus;
+        }
+    }
+
+    &-warning {
+        background-color: $color-input_warning-bg-default;
+        border-color: $color-input_warning-border-default;
+
+        &:hover {
+            background-color: $color-input_warning-bg-hover;
+            border-color: $color-input_warning-border-hover;
+        }
+
+        &.#{$module}-textarea-wrapper-focus {
+            background-color: $color-input_warning-bg-focus;
+            border-color: $color-input_warning-border-focus;
+        }
+
+        &:active {
+            background-color: $color-input_warning-bg-active;
+            border-color: $color-input_warning-border-focus;
+        }
+    }
+}
+
+.#{$module}-textarea {
+    @include shadow-0;
+    @include font-size-regular;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    padding: $spacing-textarea-paddingY $spacing-textarea-paddingX;
+    vertical-align: bottom;
+    color: $color-input_default-text-default;
+    cursor: text;
+    resize: none;
+    outline: none;
+    background-color: transparent;
+    border: $width-textarea-border solid $color-textarea-border-default;
+
+    &:hover {
+        border-color: $color-textarea-border-hover;
+    }
+
+    &::placeholder {
+        color: $color-input_placeholder-text-default;
+    }
+
+    &-showClear {
+        padding-inline-end: $spacing-textarea_withShowClear-paddingRight;
+    }
+
+    &-disabled,
+    &-readonly {
+        color: $color-input_disabled-text-default;
+        cursor: not-allowed;
+        background-color: transparent;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        &::placeholder {
+            color: $color-input_disabled-text-default;
+        }
+    }
+
+    &-readonly {
+        cursor: text;
+    }
+
+    // border-box: the bounds add block padding and border to the line count; an unset max-rows makes max-block-size
+    // invalid at computed-value time, which resolves to `none`
+    &-autosize {
+        // a theme may give the border width as a bare 0, which calc() rejects next to lengths
+        $border: $width-textarea-border;
+        @if math.is-unitless($border) {
+            $border: $border * 1px;
+        }
+
+        $chrome-block: calc(2 * #{$spacing-textarea-paddingY} + 2 * #{$border});
+        min-block-size: calc(var(--#{$module}-textarea-min-rows) * 1lh + #{$chrome-block});
+        max-block-size: calc(var(--#{$module}-textarea-max-rows) * 1lh + #{$chrome-block});
+        field-sizing: content;
+        // autosize owns the height, so native resize must stay off
+        resize: none;
+    }
+
+    &-counter {
+        @include font-size-small;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: $height-textarea_counter;
+        padding-block: $spacing-textarea_counter-paddingTop $spacing-textarea_counter-paddingBottom;
+        padding-inline: $spacing-textarea_counter-paddingLeft $spacing-textarea_counter-paddingRight;
+        color: $color-input_counter-text-default;
+        text-align: end;
+
+        &-exceed {
+            color: $color-input_counter_danger-text-default;
+        }
+    }
+}
+
+.#{$module}-textarea-borderless {
+    &:not(:focus-within):not(:hover) {
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    &:focus-within:not(:active) {
+        background-color: transparent;
+    }
+
+    &.#{$module}-textarea-wrapper-error:not(:focus-within) {
+        border-color: $color-input_danger-border-focus;
+    }
+
+    &.#{$module}-textarea-wrapper-warning:not(:focus-within) {
+        border-color: $color-input_warning-border-focus;
+    }
+
+    &.#{$module}-textarea-wrapper-error {
+        .#{$module}-textarea-counter {
+            color: $color-input_danger-border-focus;
+        }
+    }
+
+    &.#{$module}-textarea-wrapper-warning {
+        .#{$module}-textarea-counter {
+            color: $color-input_warning-border-focus;
+        }
+    }
+}
+
+.#{$module}-textarea-wrapper-withLineNumber {
+    display: flex;
+    align-items: flex-start;
+    padding: 0;
+
+    &.#{$module}-textarea-wrapper-resizeX {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+
+        .#{$module}-textarea-content {
+            flex: 0 0 auto;
+        }
+    }
+
+    .#{$module}-textarea-lineNumber {
+        @include hide-scrollbar;
+        flex-shrink: 0;
+        // 36px of digits, the inline padding and the 1px divider
+        min-width: 36px + 2 * $spacing-textarea-paddingX + 1px;
+        padding: $spacing-textarea-paddingY $spacing-textarea-paddingX;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family: ui-monospace, 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+        font-size: inherit;
+        line-height: 1.5;
+        color: var(--semi-color-text-2);
+        text-align: end;
+        user-select: none;
+        background-color: var(--semi-color-fill-1);
+        border-inline-end: 1px solid var(--semi-color-border);
+        border-start-start-radius: $radius-input_wrapper;
+        border-end-start-radius: $radius-input_wrapper;
+    }
+
+    .#{$module}-textarea-content {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .#{$module}-textarea-lineNumber-item {
+        box-sizing: border-box;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+    }
+
+    .#{$module}-textarea {
+        flex: 1;
+        line-height: 1.5;
+        border-radius: 0;
+        border-start-end-radius: $radius-input_wrapper;
+        border-end-end-radius: $radius-input_wrapper;
+    }
+}
+
+@include meta.load-css('rtl');

@@ -1,0 +1,57 @@
+{
+    "name": "@fibrae/semi-foundation",
+    "version": "0.1.0",
+    "description": "",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-foundation"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        "./*.css": "./dist/*.css",
+        "./*.scss": "./dist/*.scss",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "@date-fns/tz": "^1.5.0",
+        "@dnd-kit/dom": "catalog:",
+        "@fibrae/semi-json-viewer-core": "workspace:*",
+        "@mdx-js/mdx": "^3.1.1",
+        "@shikijs/core": "catalog:",
+        "async-validator": "catalog:",
+        "clsx": "catalog:",
+        "date-fns": "catalog:",
+        "es-toolkit": "catalog:",
+        "hast-util-to-jsx-runtime": "^2.3.6",
+        "lottie-web": "^5.13.0",
+        "remark-gfm": "^4.0.1",
+        "remark-parse": "^11.0.0",
+        "remark-rehype": "^11.1.0",
+        "scroll-into-view-if-needed": "catalog:",
+        "shiki": "catalog:",
+        "tabbable": "^6.5.1",
+        "unified": "catalog:"
+    },
+    "keywords": [],
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}

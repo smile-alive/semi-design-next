@@ -1,0 +1,10 @@
+@use 'semi:theme' as *;
+
+$z-resizable_background: 20; // 伸缩框组件中背景的z-index，保持略高于handler
+
+$height-row-handler: 10px; // 单个伸缩框中上下handler的高度
+$width-col-handler: 10px; // 单个伸缩框中左右handler的宽度
+$width-edge-handler: 20px; // 单个伸缩框中边角handler的宽度
+$height-edge-handler: 20px; // 单个伸缩框中边角handler的高度
+$width-horizontal-handler: 10px; // 组合伸缩框中水平方向handler的宽度
+$height-vertical-handler: 10px; // 组合伸缩框中垂直方向handler的高度

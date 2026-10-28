@@ -1,0 +1,14 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-steps;
+$basicModule: #{$prefix}-steps-basic;
+$navModule: #{$prefix}-steps-nav;
+
+.#{$module}:dir(rtl),
+.#{$basicModule}:dir(rtl),
+.#{$navModule}:dir(rtl) {
+    direction: rtl;
+}

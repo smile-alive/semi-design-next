@@ -1,0 +1,198 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-scrolllist;
+
+.#{$module} {
+    @include font-size-regular;
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+    background: $color-scrollList-bg;
+    border-radius: $radius-scrollList;
+    box-shadow: $shadow-scrollList;
+
+    &-header {
+        padding: $spacing-scrollList_header-paddingY $spacing-scrollList_header-paddingX;
+        text-align: center;
+        background: $color-scrollList_header-bg;
+
+        &-title {
+            @include font-size-regular;
+            padding: $spacing-scrollList_header_title-paddingY $spacing-scrollList_header_title-paddingX;
+            font-weight: $font-scrollList_header_title-fontWeight;
+            color: $color-scrollList_header-title;
+        }
+    }
+
+    &-body {
+        display: flex;
+        height: $height-scrollList;
+        padding: $spacing-scrollList_body-paddingY $spacing-scrollList_body-paddingX;
+        overflow: hidden;
+
+        .#{$module}-item-wheel .#{$module}-list-outer-nocycle,
+        .#{$module}-item {
+            & > ul {
+                &::before {
+                    display: block;
+                    width: 100%;
+                    height: ($height-scrollList - $height-scrollList_item) * 0.5;
+                    content: '';
+                }
+            }
+        }
+
+        .#{$module}-item {
+            position: relative;
+            flex: 1;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            &:not(:last-child) {
+                border-inline-end: $width-scrollList_item-border solid $color-scrollList-border;
+            }
+        }
+
+        .#{$module}-item,
+        .#{$module}-item-wheel .#{$module}-list-outer {
+            // Columns scroll by wheel, drag and keys; the base thin scrollbar would turn macOS overlay bars into permanent ones
+            @include hide-scrollbar;
+
+            // the listbox is taller than its column, and the body clips an outside ring
+            &:has(> ul:focus-visible) {
+                @include focus-ring(-2px);
+            }
+
+            & > ul {
+                box-sizing: border-box;
+                width: 100%;
+                padding: $spacing-scrollList_item_ul-padding;
+                padding-bottom: $spacing-scrollList_item_ul-paddingBottom;
+                margin: $spacing-scrollList_item_ul-margin;
+                outline: none;
+                list-style: none;
+
+                & > li {
+                    @include flex-center;
+                    box-sizing: border-box;
+                    height: $height-scrollList_item;
+                    color: $color-scrollList_item-text;
+                    text-align: center;
+                    cursor: pointer;
+                    list-style: none;
+                    background-color: $color-scrollList_item-bg;
+                    transition: background-color $transition_duration-scrollList_selected_item-bg $transition_function-scrollList_selected_item-bg $transition_delay-scrollList_selected_item-bg;
+
+                    &.#{$module}-item-sel {
+                        color: $color-scrollList_selected_item-text;
+                        background: $color-scrollList_selected_item-bg;
+
+                        > svg {
+                            width: $width-scrollList_item_sel_svg;
+                            height: $width-scrollList_item_sel_svg;
+                            margin-inline-end: $spacing-scrollList_item_sel_svg-marginRight;
+                            color: $color-scrollList_selected_item-icon;
+                        }
+                    }
+
+                    &:not(.disabled):not(.#{$module}-item-disabled):not(.#{$module}-item-sel):not(.#{$module}-item-selected) {
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: $color-scrollList_item-text-hover;
+                        }
+
+                        &:active {
+                            background-color: $color-scrollList_item-bg-active;
+                        }
+                    }
+
+                    &.#{$module}-item-disabled {
+                        color: $color-scrollList_disabled_item-text;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+
+        .#{$module}-item-wheel {
+            position: relative;
+            flex: 1;
+            overflow: hidden;
+
+            &:not(:last-child) {
+                border-inline-end: $border-thickness-control solid $color-scrollList-border;
+            }
+
+            .#{$module}-item-selected {
+                font-weight: $font-scrollList_item_wheel_item_selected-fontWeight;
+            }
+
+            .#{$module}-list-outer {
+                width: 100%;
+
+                height: 100%;
+                padding-inline-end: $spacing-scrollList_item_wheel_list_outer-paddingRight;
+                overflow-x: hidden;
+                overflow-y: auto;
+
+                // must out-rank the list item colour rule above
+                > ul > li.#{$module}-item-selected {
+                    color: var(--semi-color-primary);
+                }
+            }
+
+            .#{$module}-shade {
+                position: absolute;
+                width: 100%;
+                height: 50%;
+                pointer-events: none;
+
+                &-pre {
+                    top: 0;
+                    margin-top: $spacing-scrollList_item_wheel_list_shade_pre-marginTop;
+                    background: $color-scrollList-bg;
+                    opacity: 0.5;
+                }
+
+                &-post {
+                    top: 50%;
+                    margin-top: $spacing-scrollList_item_wheel_list_shade_post-marginTop;
+                    background: $color-scrollList-bg;
+                    opacity: 0.5;
+                }
+            }
+
+            .#{$module}-selector {
+                position: absolute;
+                top: 50%;
+                width: 100%;
+                height: $height-scrollList_item;
+                pointer-events: none;
+                border-top: $width-scrollList_item_wheel_selector-border solid $color-scrollList-border;
+                border-bottom: $width-scrollList_item_wheel_selector-border solid $color-scrollList-border;
+                transform: translateY(-50%);
+            }
+        }
+    }
+
+    .#{$module}-footer {
+        padding: $spacing-scrollList_footer-padding;
+        border-top: $width-scrollList_footer-border solid $color-scrollList_footer-border;
+    }
+
+    .#{$module}-line {
+        height: $height-scrollList_line;
+        background: $color-scrollList-border;
+    }
+}
+
+@include meta.load-css('rtl');

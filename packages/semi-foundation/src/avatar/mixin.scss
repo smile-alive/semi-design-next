@@ -1,0 +1,7 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@mixin avatar-style($color) {
+    color: var(--semi-white);
+    background-color: var(--semi-#{$color}-3);
+}

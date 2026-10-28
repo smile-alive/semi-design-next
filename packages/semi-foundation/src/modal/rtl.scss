@@ -1,0 +1,10 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-modal;
+
+.#{$module}:dir(rtl),
+.#{$module}-confirm:dir(rtl) {
+    direction: rtl;
+}

@@ -1,0 +1,107 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-banner;
+
+.#{$module} {
+    padding: $spacing-banner-paddingY $spacing-banner-paddingX;
+
+    &-content-wrapper {
+        display: flex;
+        flex-direction: row;
+    }
+
+    &-description {
+        margin: 0;
+    }
+
+    .#{$module}-content-wrapper {
+        .#{$module}-content {
+            display: flex;
+            flex: 1;
+        }
+    }
+
+    &-in-container {
+        border-radius: $radius-banner;
+
+        .#{$module}-content-wrapper {
+            .#{$module}-content {
+                &-body {
+                    flex: 1;
+
+                    .#{$module}-title + .#{$module}-description {
+                        margin-top: $spacing-banner_title_description-marginTop;
+                    }
+                }
+            }
+        }
+    }
+
+    &-full {
+        .#{$module}-content-wrapper {
+            .#{$module}-content {
+                justify-content: center;
+            }
+            .#{$module}-icon,
+            .#{$module}-content-body {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    &-close {
+        width: $width-banner_closeBtn;
+        height: $height-banner_closeBtn;
+        margin-inline-start: $spacing-banner_closeBtn-marginLeft;
+    }
+
+    &-extra {
+        margin-top: $spacing-banner_extra-marginTop;
+    }
+
+    &-icon {
+        display: flex;
+        margin-inline-end: $spacing-banner_icon-marginRight;
+    }
+
+    &-info {
+        color: $color-banner_info-text-default;
+        background-color: $color-banner_info-bg-default;
+
+        &.#{$module}-bordered {
+            border: $width-banner-border solid $color-banner_info-border-default;
+        }
+    }
+
+    &-warning {
+        color: $color-banner_warning-text-default;
+        background-color: $color-banner_warning-bg-default;
+
+        &.#{$module}-bordered {
+            border: $width-banner-border solid $color-banner_warning-border-default;
+        }
+    }
+
+    &-success {
+        color: $color-banner_success-text-default;
+        background-color: $color-banner_success-bg-default;
+
+        &.#{$module}-bordered {
+            border: $width-banner-border solid $color-banner_success-border-default;
+        }
+    }
+
+    &-danger {
+        color: $color-banner_danger-text-default;
+        background-color: $color-banner_danger-bg-default;
+
+        &.#{$module}-bordered {
+            border: $width-banner-border solid $color-banner_danger-border-default;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

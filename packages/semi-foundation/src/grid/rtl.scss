@@ -1,0 +1,10 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix};
+
+.#{$module}-row:dir(rtl),
+.#{$module}-row-flex:dir(rtl) {
+    direction: rtl;
+}

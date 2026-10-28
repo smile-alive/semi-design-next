@@ -1,0 +1,17 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-navigation;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+// the collapse animation names the physical side that padding-inline-start resolves to
+.#{$module}:dir(rtl),
+.#{$module}-collapsed:dir(rtl),
+.#{$module}-vertical:dir(rtl) .#{$module}-header-collapsed {
+    transition: $motion-navigation_padding_rtl, $motion-navigation_width;
+}

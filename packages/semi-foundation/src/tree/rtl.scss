@@ -1,0 +1,16 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-tree;
+
+.#{$module}:dir(rtl),
+.#{$module}-wrapper:dir(rtl),
+.#{$module}-option-list:dir(rtl),
+.#{$module}-option-list-block:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-option-list:dir(rtl) .#{$module}-option-collapsed .#{$module}-option-expand-icon {
+    transform: rotate(90deg);
+}

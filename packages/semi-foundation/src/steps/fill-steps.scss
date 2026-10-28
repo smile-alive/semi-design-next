@@ -1,0 +1,179 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-steps;
+
+.#{$module} {
+    .#{$prefix}-col {
+        flex: 1;
+    }
+
+    &-vertical {
+        .#{$prefix}-row-flex {
+            flex-direction: column;
+        }
+    }
+
+    .#{$module}-item {
+        @include box-sizing;
+        position: relative;
+        display: flex;
+        height: $height-steps_item;
+        padding: $spacing-steps_item-paddingY $spacing-steps_item-paddingX;
+        margin-inline-end: $spacing-steps_item-marginRight;
+        overflow: hidden;
+        border: $width-steps_item-border solid $color-steps-border-default;
+        border-radius: $radius-steps_item;
+        transform: scale($transform_scale-step-item);
+        transition:
+            color $transition_duration-steps_item_title-text $transition_function-steps_item_title-text $transition_delay-steps_item_title-text,
+            background-color $transition_duration-steps_item-backgroundColor $transition_function-steps_item_backgroundColor $transition_delay-steps_item_backgroundColor;
+
+        .#{$module}-item-title {
+            @include font-size-header-5;
+            @include text-overflow-hidden;
+            position: relative;
+            width: $width-steps_item_title;
+            font-weight: $font-weight-bold;
+            color: $color-steps_main-text-default;
+            transition: color $transition_duration-steps_item_title-text $transition_function-steps_item_title-text $transition_delay-steps_item_title-text;
+        }
+
+        .#{$module}-item-description {
+            @include font-size-regular;
+            @include text-overflow-hidden;
+            width: $width-steps_item_description;
+            color: $color-steps_minor-text-default;
+        }
+
+        &-process {
+            background-color: $color-steps_process-bg-default;
+
+            .#{$module}-item-left:not(.#{$module}-item-icon) {
+                background: $color-steps_primary-bg-default;
+            }
+
+            .#{$module}-item-title,
+            .#{$module}-item-icon {
+                color: $color-steps_primary-icon-default;
+            }
+        }
+
+        &-wait {
+            .#{$module}-item-left:not(.#{$module}-item-icon) {
+                background: $color-steps-bg-default;
+            }
+
+            .#{$module}-item-icon {
+                color: $color-steps-icon-default;
+            }
+        }
+
+        &-finish {
+            .#{$prefix}-icon,
+            .#{$module}-item-title {
+                color: $color-steps_success-text-default;
+            }
+
+            &-hover:hover {
+                background-color: $color-steps-bg-hover;
+
+                .#{$prefix}-icon,
+                .#{$module}-item-title {
+                    color: $color-steps_success-text-hover;
+                }
+            }
+
+            &-active:active {
+                background-color: $color-steps-bg-active;
+
+                .#{$prefix}-icon,
+                .#{$module}-item-title {
+                    color: $color-steps_success-text-active;
+                }
+            }
+        }
+
+        &-error {
+            .#{$prefix}-icon,
+            .#{$module}-item-title {
+                color: $color-steps_danger-text-default;
+            }
+
+            &-hover:hover {
+                background: $color-steps-bg-hover;
+
+                .#{$prefix}-icon,
+                .#{$module}-item-title {
+                    color: $color-steps_danger-text-hover;
+                }
+            }
+
+            &-active:active {
+                background-color: $color-steps-bg-active;
+
+                .#{$prefix}-icon,
+                .#{$module}-item-title {
+                    color: $color-steps_danger-text-active;
+                }
+            }
+        }
+
+        &-warning {
+            .#{$module}-item-title,
+            .#{$prefix}-icon {
+                color: $color-steps_warning-text-default;
+            }
+
+            &-hover:hover {
+                background: $color-steps-bg-hover;
+
+                .#{$module}-item-title,
+                .#{$prefix}-icon {
+                    color: $color-steps_warning-text-hover;
+                }
+            }
+
+            &-active:active {
+                background-color: $color-steps-bg-active;
+
+                .#{$module}-item-title,
+                .#{$prefix}-icon {
+                    color: $color-steps_warning-text-active;
+                }
+            }
+        }
+
+        &-clickable {
+            cursor: pointer;
+        }
+
+        &-left {
+            @include flex-center;
+            @include font-size-header-4;
+            flex-grow: 0;
+            width: $width-steps_item_left;
+            height: $height-steps_item_left;
+            font-weight: $font-weight-bold;
+            line-height: $font-steps_item_left-lineHeight;
+            text-align: center;
+            border-radius: $radius-steps_item_left;
+
+            &.#{$module}-item-plain {
+                color: $color-steps-text-default;
+            }
+
+            &-process {
+                background: $color-steps_process-bg-default;
+            }
+        }
+
+        &-content {
+            flex: 1;
+            margin-inline-start: $spacing-steps_item_content-marginLeft;
+            overflow: hidden;
+        }
+    }
+}

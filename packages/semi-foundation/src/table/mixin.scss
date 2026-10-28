@@ -1,0 +1,12 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@mixin genResizing() {
+    border-inline-end: $width-table_resizer_border solid $color-table_resizer-bg-default;
+
+    .#{$prefix}-table-resize-handle {
+        &:hover {
+            background-color: unset;
+        }
+    }
+}

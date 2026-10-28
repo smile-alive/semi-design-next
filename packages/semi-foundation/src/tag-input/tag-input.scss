@@ -1,0 +1,358 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-tagInput;
+
+.#{$module} {
+    box-sizing: border-box;
+    display: inline-flex;
+    width: 100%;
+    min-height: $height-tagInput-default;
+    font-weight: $font-weight-regular;
+    background-color: $color-tagInput_default-bg-default;
+    border: $width-tagInput-border-default $color-tagInput-border-default solid;
+    border-radius: $radius-tagInput;
+    transition:
+        background-color $transition_duration-tagInput-bg $transition_function-tagInput-bg $transition_delay-tagInput-bg,
+        border $transition_duration-tagInput-border $transition_function-tagInput-border $transition_delay-tagInput-border;
+
+    &-small {
+        min-height: $height-tagInput-small;
+    }
+
+    &-large {
+        min-height: $height-tagInput-large;
+    }
+
+    &-drag {
+        &-item {
+            display: flex;
+            align-items: center;
+        }
+
+        &-handler {
+            margin-inline-end: $spacing-tagInput_drag_handler-marginRight;
+            color: $color-tagInput_handler-icon-default;
+            cursor: move;
+        }
+    }
+
+    // renders like the bare icon it wraps
+    &-sortable-handle {
+        @include bare-button;
+
+        display: inline-flex;
+        line-height: 0;
+        cursor: inherit;
+    }
+
+    &-sortable-item {
+        position: relative;
+        max-width: 100%;
+
+        &-over {
+            overflow: visible;
+
+            &::before {
+                position: absolute;
+                inset-inline-start: -$width-tagInput_sortable_item_over;
+                top: 0;
+                display: block;
+                width: $width-tagInput_sortable_item_over;
+                height: 100%;
+                content: '';
+                background-color: $color-tagInput_sortable_item_over-bg;
+            }
+        }
+
+        // keyed to the overlay's attribute: the class follows React state, which lags dnd-kit hiding the overlay
+        &-active {
+            :has(~ [data-dnd-overlay][data-dnd-dragging]) > & {
+                opacity: 0.5;
+            }
+        }
+    }
+
+    // :where keeps one class of weight, so the focus and disabled rules below still win
+    &:where(:hover:not(.#{$module}-disabled)) {
+        background-color: $color-tagInput_default-bg-hover;
+        border: $width-tagInput-border-hover $color-tagInput-border-hover solid;
+    }
+
+    &-focus {
+        background-color: $color-tagInput_default-bg-focus;
+        border: $width-tagInput-border-focus $color-tagInput-border-focus solid;
+    }
+
+    &-warning {
+        background-color: $color-tagInput_warning-bg-default;
+        border-color: $color-tagInput_warning-border-default;
+
+        &:hover {
+            background-color: $color-tagInput_warning-bg-hover;
+            border-color: $color-tagInput_warning-border-hover;
+        }
+
+        &.#{$module}-focus {
+            background-color: $color-tagInput_warning-bg-focus;
+            border-color: $color-tagInput_warning-border-focus;
+        }
+    }
+
+    &-error {
+        background-color: $color-tagInput_danger-bg-default;
+        border-color: $color-tagInput_danger-border-default;
+
+        &:hover {
+            background-color: $color-tagInput_danger-bg-hover;
+            border-color: $color-tagInput_danger-border-hover;
+        }
+
+        &.#{$module}-focus {
+            background-color: $color-tagInput_danger-bg-focus;
+            border-color: $color-tagInput_danger-border-focus;
+        }
+    }
+
+    &-disabled {
+        cursor: not-allowed;
+        background-color: $color-tagInput_disabled-bg;
+
+        .#{$module}-prefix,
+        .#{$module}-suffix {
+            color: $color-tagInput_disabled-text-default;
+        }
+
+        .#{$module}-wrapper {
+            cursor: not-allowed;
+        }
+
+        .#{$module}-wrapper-tag {
+            color: $color-tagInput_disabled-text-default;
+            background-color: transparent;
+        }
+
+        .#{$module}-wrapper-input {
+            cursor: not-allowed;
+
+            &::placeholder {
+                color: $color-tagInput_disabled-text-default;
+            }
+        }
+    }
+
+    &-wrapper {
+        position: relative;
+        display: flex;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        padding-inline: $spacing-extra-tight;
+        overflow: hidden;
+
+        &-tag {
+            max-width: 100%;
+            margin-inline-end: $spacing-extra-tight;
+            white-space: pre;
+
+            &-size {
+                &-small {
+                    margin-top: $spacing-tagInput_small-Y;
+                    margin-bottom: $spacing-tagInput_small-Y;
+                }
+
+                &-default {
+                    margin-top: $spacing-tagInput_default-Y;
+                    margin-bottom: $spacing-tagInput_default-Y;
+                }
+
+                &-large {
+                    margin-top: $spacing-tagInput_large-Y;
+                    margin-bottom: $spacing-tagInput_large-Y;
+                }
+            }
+
+            &-icon {
+                padding-inline-start: $spacing-tagInput_tag_icon_paddingLeft;
+            }
+        }
+
+        &-typo {
+            // Typography sets font-size at the same specificity; this class wins regardless of CSS order
+            &.#{$prefix}-typography {
+                font-size: $font-size-small;
+            }
+
+            &-disabled {
+                color: $color-tagInput_disabled-text-default;
+            }
+        }
+
+        &-n {
+            padding-inline: $spacing-tagInput_wrapper_n_paddingX;
+            margin-inline-end: $spacing-extra-tight;
+            font-size: $font-size-small;
+            color: var(--semi-color-text-0);
+            cursor: pointer;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+
+            &-disabled {
+                color: $color-tagInput_disabled-text-default;
+                cursor: not-allowed;
+            }
+        }
+
+        & &-input {
+            flex-grow: 1;
+            width: min-content;
+            min-width: 2px;
+            max-width: 100%;
+            font-size: $font-size-regular;
+            outline: none;
+            background-color: transparent;
+            border: none;
+
+            &:hover {
+                background-color: transparent;
+            }
+
+            // the input's text width becomes the wrapper's min-content, so long text wraps to the next line instead of
+            // scrolling in place
+            & > input {
+                width: auto;
+                min-width: 100%;
+                max-width: 100%;
+                field-sizing: content;
+            }
+
+            &:not(:first-child) > input {
+                padding-inline-start: 0;
+            }
+
+            &-small {
+                height: $height-tagInput_input_small;
+                margin-top: $spacing-tagInput_small-Y;
+                margin-bottom: $spacing-tagInput_small-Y;
+                line-height: $height-tagInput_input_small;
+
+                & .#{$prefix}-input-small {
+                    height: $height-tagInput_input_small;
+                    line-height: $height-tagInput_input_small;
+                }
+            }
+
+            &-default {
+                height: $height-tagInput_input_default;
+                margin-top: $spacing-tagInput_default-Y;
+                margin-bottom: $spacing-tagInput_default-Y;
+                line-height: $height-tagInput_input_default;
+
+                & .#{$prefix}-input-default {
+                    height: $height-tagInput_input_default;
+                    line-height: $height-tagInput_input_default;
+                }
+            }
+
+            &-large {
+                height: $height-tagInput_input_large;
+                margin-top: $spacing-tagInput_large-Y;
+                margin-bottom: $spacing-tagInput_large-Y;
+                line-height: $height-tagInput_input_large;
+
+                & .#{$prefix}-input-large {
+                    height: $height-tagInput_input_large;
+                    line-height: $height-tagInput_input_large;
+                }
+            }
+        }
+    }
+
+    &-clearBtn {
+        @include bare-button;
+        @include flex-center;
+        visibility: hidden;
+        flex-shrink: 0;
+        width: $width-tagInput-clear-medium;
+        color: $color-tagInput-icon-default;
+
+        &:hover {
+            color: $color-tagInput-icon-hover;
+        }
+
+        &-placeholder {
+            flex-shrink: 0;
+            width: $width-tagInput-clear-medium;
+        }
+    }
+
+    // also while focus is inside so Tab can reach it
+    &:hover,
+    &:focus-within {
+        .#{$module}-clearBtn {
+            visibility: visible;
+        }
+    }
+
+    &-inset-label {
+        @include font-size-regular;
+        flex-shrink: 0;
+        margin: 0 $spacing-tagInput_prefix_suffix-marginX;
+        font-weight: $font-tagInput_prefix_suffix-fontWeight;
+        color: $color-tagInput_prefix-default;
+        white-space: nowrap;
+    }
+
+    &-prefix,
+    &-suffix {
+        @include flex-center;
+
+        &-text {
+            @include font-size-regular;
+            margin: 0 $spacing-tagInput_prefix_suffix-marginX;
+            font-weight: $font-tagInput_prefix_suffix-fontWeight;
+            white-space: nowrap;
+        }
+
+        &-icon {
+            margin: 0 $spacing-tight;
+            color: $color-tagInput-icon-default;
+        }
+    }
+
+    &-prefix {
+        &-text {
+            color: $color-tagInput_prefix-default;
+        }
+    }
+
+    &-suffix {
+        &-text {
+            color: $color-tagInput_suffix-default;
+        }
+    }
+
+    &-with-prefix {
+        .#{$prefix}-input {
+            padding-inline-start: 0;
+        }
+    }
+
+    &-tag-content-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    &-sortable-list {
+        display: flex;
+        flex-flow: row wrap;
+        width: 100%;
+    }
+}
+
+@include meta.load-css('rtl');

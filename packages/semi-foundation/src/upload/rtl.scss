@@ -1,0 +1,13 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-upload;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-file-list-title-choosen:dir(rtl),
+.#{$module}-file-list-title-clear:dir(rtl) {
+    display: inline-block;
+}

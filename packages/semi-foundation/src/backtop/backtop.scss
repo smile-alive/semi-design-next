@@ -1,0 +1,15 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-backtop;
+
+// two classes outrank FloatButton's placement regardless of load order; the start inset is reset so RTL
+// does not keep FloatButton's physical `right`
+.#{$prefix}-floatButton.#{$module} {
+    inset-inline: auto $spacing-backtop-right;
+    bottom: $spacing-backtop-bottom;
+    z-index: $z-backtop;
+}
+
+@include meta.load-css('rtl');

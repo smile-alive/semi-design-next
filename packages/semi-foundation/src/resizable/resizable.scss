@@ -1,0 +1,147 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-resizable;
+
+.#{$module} {
+    &-resizable {
+        position: relative;
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+
+    &-resizableHandler {
+        @mixin row-resize-base {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: $height-row-handler;
+            cursor: row-resize;
+        }
+
+        @mixin col-resize-base {
+            top: 0;
+            left: 0;
+            width: $width-col-handler;
+            height: 100%;
+            cursor: col-resize;
+        }
+
+        @mixin edge-resize-base {
+            position: absolute;
+            width: $width-edge-handler;
+            height: $height-edge-handler;
+        }
+        position: absolute;
+        z-index: $z-resizable_handler;
+        // a touch drag would otherwise scroll the page and cancel the pointer
+        touch-action: none;
+        user-select: none;
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+
+        &-top {
+            @include row-resize-base;
+            top: calc(-1 * $height-row-handler / 2);
+        }
+
+        &-right {
+            @include col-resize-base;
+            right: calc(-1 * $width-col-handler / 2);
+            left: auto;
+        }
+
+        &-bottom {
+            @include row-resize-base;
+            top: auto;
+            bottom: calc(-1 * $height-row-handler / 2);
+        }
+
+        &-left {
+            @include col-resize-base;
+            left: calc(-1 * $width-col-handler / 2);
+        }
+
+        &-topRight {
+            @include edge-resize-base;
+            top: calc(-1 * $height-edge-handler / 2);
+            right: calc(-1 * $width-edge-handler / 2);
+            cursor: ne-resize;
+        }
+
+        &-bottomRight {
+            @include edge-resize-base;
+            right: calc(-1 * $width-edge-handler / 2);
+            bottom: calc(-1 * $height-edge-handler / 2);
+            cursor: se-resize;
+        }
+
+        &-bottomLeft {
+            @include edge-resize-base;
+            bottom: calc(-1 * $height-edge-handler / 2);
+            left: calc(-1 * $width-edge-handler / 2);
+            cursor: sw-resize;
+        }
+
+        &-topLeft {
+            @include edge-resize-base;
+            top: calc(-1 * $height-edge-handler / 2);
+            left: calc(-1 * $width-edge-handler / 2);
+            cursor: nw-resize;
+        }
+    }
+
+    &-group {
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+
+    &-item {
+        position: relative;
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+
+    &-handler {
+        @include flex-center;
+        z-index: $z-resizable_handler;
+        // a touch drag would otherwise scroll the page and cancel the pointer
+        touch-action: none;
+        user-select: none;
+        background-color: var(--semi-color-fill-0);
+        opacity: 1;
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+
+        &-vertical {
+            flex-shrink: 0;
+            width: 100%;
+            height: $height-vertical-handler;
+            cursor: row-resize;
+        }
+
+        &-horizontal {
+            flex-shrink: 0;
+            width: $width-horizontal-handler;
+            height: 100%;
+            cursor: col-resize;
+        }
+    }
+
+    &-background {
+        position: fixed;
+        inset: 0;
+        z-index: $z-resizable_background;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+}

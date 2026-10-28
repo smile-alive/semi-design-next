@@ -1,0 +1,5 @@
+@use 'semi:theme' as *;
+
+$transition_duration-cascader_option-bg: var(--semi-transition_duration-none);
+$transition_function-cascader_option-bg: var(--semi-transition_function-easeIn);
+$transition_delay-cascader_option-bg: var(--semi-transition_delay-none);

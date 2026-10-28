@@ -1,0 +1,7 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@mixin size($num) {
+    width: $num;
+    height: $num;
+}

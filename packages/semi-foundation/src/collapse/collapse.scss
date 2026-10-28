@@ -1,0 +1,112 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-collapse;
+
+.#{$module} {
+    &-item {
+        border-bottom: $width-collapse_item-border solid $color-collapse_item-border-default;
+    }
+
+    &-header {
+        @include font-size-regular;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-collapse_header-padding;
+        margin: $spacing-collapse_header-marginY $spacing-collapse_header-marginX;
+        font-weight: $font-collapse_header-fontWeight;
+        color: $color-collapse_header-text-default;
+        cursor: pointer;
+        border-radius: $radius-collapse_header;
+
+        &-title {
+            min-width: 0;
+        }
+
+        &-button {
+            @include bare-button;
+            // a button shrinks to its content even when block-level, so width: 100% keeps it inside the heading
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-align: start;
+
+            // the ring moves to the header row below, the area the pointer toggles
+            &:focus-visible {
+                outline: none;
+            }
+        }
+
+        &:has(> .#{$module}-header-title > .#{$module}-header-button:focus-visible) {
+            @include focus-ring(-2px);
+        }
+
+        &-right {
+            display: flex;
+            align-items: center;
+
+            span {
+                display: flex;
+                padding-inline-end: $spacing-collapse_right-paddingRight;
+
+                &:last-child {
+                    padding-inline-end: 0;
+                }
+            }
+        }
+
+        &-icon {
+            width: $size-collapse_icon-default;
+            height: $size-collapse_icon-default;
+            color: $color-collapse_header-icon-default;
+        }
+
+        &-iconLeft {
+            justify-content: flex-start;
+            .#{$module}-header-icon {
+                margin-inline-end: $spacing-collapse_header_iconLeft-marginRight;
+            }
+        }
+
+        &-iconDisabled {
+            color: var(--semi-color-disabled-text);
+        }
+
+        &:hover {
+            background-color: $color-collapse_header-bg-hover;
+        }
+
+        &:active {
+            background-color: $color-collapse_header-bg-active;
+        }
+
+        &-disabled {
+            color: $color-collapse_header-text-disabled;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+    }
+
+    &-content {
+        @include font-size-regular;
+        padding-block: $spacing-collapse_content-paddingTop $spacing-collapse_content-paddingBottom;
+        padding-inline: $spacing-collapse_content-paddingLeft $spacing-collapse_content-paddingRight;
+        color: $color-collapse_content-text-default;
+
+        // capped-height content scrolls, so it is keyboard focusable
+        &:focus-visible {
+            @include focus-ring(-2px);
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

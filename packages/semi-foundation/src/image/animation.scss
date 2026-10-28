@@ -1,0 +1,9 @@
+@use 'semi:theme' as *;
+
+$transform_rotate-image_preview_spinner: var(--semi-transform_rotate-clockwise360deg); // 预览图像加载spin旋转角度
+$transform_scale3d-image_preview_image_img: 1, 1, 1; // 预览图片放大
+$transform_rotate-image_preview_image_img: var(--semi-transform_rotate-none); // 预览图片旋转角度
+
+$transition_duration-image_preview: 500ms; // 预览图片透明度变化动画时间
+
+$transform_rotate-image_preview_icon_rtl: var(--semi-transform_rotate-clockwise180deg); // rtl模式下向前/向后切换图片按钮旋转角度

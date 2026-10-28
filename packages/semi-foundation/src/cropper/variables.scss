@@ -1,0 +1,8 @@
+@use 'semi:theme' as *;
+
+$color-cropper_mask-bg: var(--semi-color-overlay-bg);
+$color-cropper_box-outline: var(--semi-color-primary);
+$color-cropper_box_corner-bg: var(--semi-color-primary);
+
+$width-cropper_box-outline: 1px;
+$width-cropper_box_corner: 10px;

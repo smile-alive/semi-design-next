@@ -1,0 +1,7 @@
+@use 'semi:theme' as *;
+
+$module: #{$prefix}-layout;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}

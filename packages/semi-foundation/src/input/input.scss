@@ -1,0 +1,738 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-input;
+
+@keyframes #{$module}-active {
+    from {
+        transform: scale($motion-scale_size-inactive);
+    }
+
+    to {
+        transform: scale($motion-scale_size-active);
+    }
+}
+
+@keyframes #{$module}-inactive {
+    from {
+        transform: scale($motion-scale_size-active);
+    }
+
+    to {
+        transform: scale($motion-scale_size-inactive);
+    }
+}
+
+.#{$module} {
+    transform: scale($transform_scale-input);
+    transition:
+        background-color $transition_duration-input-bg $transition_function-input-bg $transition_delay-input-bg,
+        border $transition_duration-input-border $transition_function-input-border $transition_delay-input-border;
+}
+
+.#{$module}-wrapper {
+    @include shadow-0;
+    @include font-size-regular;
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+
+    width: 100%;
+    vertical-align: middle;
+    color: $color-input_default-text-default;
+    cursor: text;
+    outline: none;
+    background-color: $color-input_default-bg-default;
+    border: $width-input_wrapper-border $color-input_default-border-default solid;
+    border-radius: $radius-input_wrapper;
+
+    transform: scale($transform_scale-input);
+
+    transition:
+        background-color $transition_duration-input-bg $transition_function-input-bg $transition_delay-input-bg,
+        border $transition_duration-input-border $transition_function-input-border $transition_delay-input-border;
+
+    &-default {
+        @include font-size-regular;
+        height: $height-input_wrapper_default;
+        line-height: $height-input_default;
+    }
+
+    &-small {
+        @include font-size-regular;
+        height: $height-input_wrapper_small;
+        line-height: $height-input_small;
+    }
+
+    &-large {
+        @include font-size-header-6;
+        height: $height-input_wrapper_large;
+        line-height: $height-input_large;
+    }
+
+    &:hover {
+        background-color: $color-input_default-bg-hover;
+        border-color: $color-input_default-border-hover;
+    }
+
+    &-focus {
+        background-color: $color-input_default-bg-focus;
+        border: $color-input_default-border-focus solid $width-input_wrapper_focus-border;
+
+        &:hover {
+            background-color: $color-input_default-bg-focus-hover;
+            border-color: $color-input_default-border-focus;
+        }
+
+        &:active {
+            background-color: $color-input_default-bg-active;
+            border-color: $color-input_default-border-focus;
+        }
+    }
+
+    &-readonly {
+        cursor: default;
+
+        // the native input takes the text cursor from the user agent stylesheet
+        .#{$module} {
+            cursor: inherit;
+        }
+    }
+
+    &-error {
+        background-color: $color-input_danger-bg-default;
+        border-color: $color-input_danger-border-default;
+
+        &:hover {
+            background-color: $color-input_danger-bg-hover;
+            border-color: $color-input_danger-border-hover;
+        }
+
+        &.#{$module}-wrapper-focus {
+            background-color: $color-input_danger-bg-focus;
+            border-color: $color-input_danger-border-focus;
+        }
+
+        &:active {
+            background-color: $color-input_danger-bg-active;
+            border-color: $color-input_danger-border-focus;
+        }
+    }
+
+    &-warning {
+        background-color: $color-input_warning-bg-default;
+        border-color: $color-input_warning-border-default;
+
+        &:hover {
+            background-color: $color-input_warning-bg-hover;
+            border-color: $color-input_warning-border-hover;
+        }
+
+        &.#{$module}-wrapper-focus {
+            background-color: $color-input_warning-bg-focus;
+            border-color: $color-input_warning-border-focus;
+        }
+
+        &:active {
+            background-color: $color-input_warning-bg-active;
+            border-color: $color-input_warning-border-focus;
+        }
+    }
+
+    &__with-prefix {
+        display: inline-flex;
+        align-items: center;
+
+        .#{$module} {
+            padding-inline-start: 0;
+        }
+    }
+
+    &__with-suffix {
+        display: inline-flex;
+        align-items: center;
+
+        .#{$module} {
+            padding-inline-end: 0;
+        }
+    }
+
+    &-clearable,
+    &-modebtn {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    &-hidden {
+        border: none;
+    }
+
+    // the clear button stays rendered so Tab reaches it; a hideSuffix suffix yields its place only while it shows
+    &:not(:hover, :focus-within) .#{$module}-clearbtn,
+    &:is(:hover, :focus-within) .#{$module}-suffix-hidden {
+        display: none;
+    }
+
+    .#{$prefix}-icon {
+        color: $color-input-icon-default;
+    }
+
+    .#{$module}-clearbtn,
+    .#{$module}-modebtn {
+        @include bare-button($width-input_icon-outlineOffset);
+    }
+
+    .#{$module}-clearbtn,
+    .#{$module}-modebtn {
+        color: $color-input-icon-hover;
+
+        & > svg {
+            pointer-events: none;
+        }
+
+        &:hover {
+            cursor: pointer;
+
+            .#{$prefix}-icon {
+                color: $color-input-icon-hover;
+            }
+        }
+
+        &:focus-visible {
+            border-radius: $radius-input_wrapper;
+        }
+    }
+
+    &__with-suffix-icon.#{$module}-wrapper-clearable:not(.#{$module}-wrapper__with-suffix-hidden) {
+        .#{$module}-clearbtn {
+            justify-content: flex-end;
+            min-width: $width-input-icon_clear_before_suffix;
+        }
+    }
+
+    &-modebtn.#{$module}-wrapper-clearable {
+        .#{$module}-clearbtn {
+            justify-content: center;
+            min-width: $width-input-icon_clear_before_modebtn;
+        }
+    }
+
+    &.#{$module}-wrapper__with-append-only {
+        .#{$module} {
+            border-radius: 0;
+            border-start-end-radius: $radius-input_wrapper;
+            border-end-end-radius: $radius-input_wrapper;
+
+            &:not(:last-child) {
+                border-inline-end-style: none;
+                border-radius: 0;
+            }
+        }
+    }
+
+    &.#{$module}-wrapper__with-prepend-only {
+        .#{$module} {
+            border-radius: 0;
+            border-start-start-radius: $radius-input_wrapper;
+            border-end-start-radius: $radius-input_wrapper;
+
+            &:not(:last-child) {
+                border-inline-end-style: none;
+            }
+        }
+    }
+
+    &.#{$module}-wrapper__with-prepend,
+    &.#{$module}-wrapper__with-append {
+        display: inline-flex;
+        align-items: center;
+        background-color: transparent;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        &.#{$module}-wrapper-focus {
+            background-color: transparent;
+            border: $width-input_wrapper_focus-border $color-input_default-border-default solid;
+        }
+
+        .#{$module} {
+            background-color: $color-input_default-bg-default;
+            border: $width-input_wrapper_focus-border transparent solid;
+
+            &:hover {
+                background-color: $color-input_default-bg-hover;
+
+                & + .#{$module}-clearbtn,
+                & ~ .#{$module}-modebtn {
+                    background-color: $color-input_default-bg-hover;
+                }
+            }
+
+            &:focus {
+                background-color: $color-input_default-bg-focus;
+                border: $width-input_wrapper_focus-border $color-input_default-border-focus solid;
+
+                &.#{$module}-sibling-clearbtn,
+                &.#{$module}-sibling-modebtn {
+                    border-inline-end-style: none;
+                }
+
+                &.#{$module}-sibling-modebtn {
+                    & + .#{$module}-clearbtn {
+                        border-inline-end-style: none;
+                    }
+                }
+
+                & + .#{$module}-clearbtn,
+                & ~ .#{$module}-modebtn {
+                    box-sizing: border-box;
+                    background-color: $color-input_default-bg-focus;
+                }
+
+                & + .#{$module}-clearbtn {
+                    border: $width-input_wrapper_focus-border $color-input_default-border-focus solid;
+                    border-inline-start-style: none;
+                    border-radius: 0;
+                    border-start-end-radius: $radius-input_wrapper;
+                    border-end-end-radius: $radius-input_wrapper;
+
+                    &:not(:last-child) {
+                        border-radius: 0;
+                    }
+                }
+
+                & ~ .#{$module}-modebtn {
+                    border: $width-input_wrapper_focus-border $color-input_default-border-focus solid;
+                    border-inline-start-style: none;
+                    border-radius: 0;
+                    border-start-end-radius: $radius-input_wrapper;
+                    border-end-end-radius: $radius-input_wrapper;
+
+                    &:not(:last-child) {
+                        border-radius: 0;
+                    }
+                }
+            }
+
+            &:active {
+                background-color: $color-input_default-bg-active;
+
+                & + .#{$module}-clearbtn,
+                & ~ .#{$module}-modebtn {
+                    background-color: $color-input_default-bg-active;
+                }
+            }
+
+            &-clearbtn,
+            &-modebtn,
+            &-clearbtn:hover,
+            &-modebtn:hover {
+                background-color: $color-input_default-bg-default;
+
+                &:last-child {
+                    border-radius: 0;
+                    border-start-end-radius: $radius-input_wrapper;
+                    border-end-end-radius: $radius-input_wrapper;
+                }
+            }
+        }
+
+        &.#{$module}-wrapper-error {
+            border-color: transparent;
+
+            .#{$module} {
+                background-color: $color-input_danger-bg-default;
+                border-color: $color-input_danger-border-default;
+
+                &:hover {
+                    background-color: $color-input_danger-bg-hover;
+                    border-color: $color-input_danger-border-hover;
+
+                    & + .#{$module}-clearbtn,
+                    & + .#{$module}-modebtn {
+                        background-color: $color-input_danger-bg-hover;
+                    }
+                }
+
+                &:focus {
+                    background-color: $color-input_danger-bg-focus;
+                    border-color: $color-input_danger-border-focus;
+
+                    & + .#{$module}-clearbtn,
+                    & + .#{$module}-modebtn {
+                        background-color: $color-input_danger-bg-focus;
+                        border-color: $color-input_danger-border-focus;
+                    }
+                }
+
+                &:active {
+                    background-color: $color-input_danger-bg-active;
+
+                    & + .#{$module}-clearbtn,
+                    & + .#{$module}-modebtn {
+                        background-color: $color-input_danger-bg-active;
+                        border-color: $color-input_danger-border-focus;
+                    }
+                }
+
+                &-clearbtn,
+                &-modebtn,
+                &-clearbtn:hover,
+                &-modebtn:hover {
+                    background-color: $color-input_danger-bg-default;
+
+                    &:last-child {
+                        border-radius: 0;
+                        border-start-end-radius: $radius-input_wrapper;
+                        border-end-end-radius: $radius-input_wrapper;
+                    }
+                }
+            }
+        }
+
+        &.#{$module}-wrapper-warning {
+            border-color: transparent;
+
+            .#{$module} {
+                background-color: $color-input_warning-bg-default;
+                border-color: $color-input_warning-border-default;
+
+                &:hover {
+                    background-color: $color-input_warning-bg-hover;
+                    border-color: $color-input_warning-border-hover;
+
+                    & + .#{$module}-clearbtn,
+                    & + .#{$module}-modebtn {
+                        background-color: $color-input_warning-bg-hover;
+                    }
+                }
+
+                &:focus {
+                    background-color: $color-input_warning-bg-focus;
+                    border-color: $color-input_warning-border-focus;
+
+                    & + .#{$module}-clearbtn,
+                    & + .#{$module}-modebtn {
+                        background-color: $color-input_warning-bg-focus;
+                        border-color: $color-input_warning-border-focus;
+                    }
+                }
+
+                &:active {
+                    background-color: $color-input_warning-bg-active;
+
+                    & + .#{$module}-clearbtn,
+                    & + .#{$module}-modebtn {
+                        background-color: $color-input_warning-bg-active;
+                        border-color: $color-input_warning-border-focus;
+                    }
+                }
+
+                &-clearbtn,
+                &-modebtn,
+                &-clearbtn:hover,
+                &-modebtn:hover {
+                    background-color: $color-input_warning-bg-default;
+
+                    &:last-child {
+                        border-radius: 0;
+                        border-start-end-radius: $radius-input_wrapper;
+                        border-end-end-radius: $radius-input_wrapper;
+                    }
+                }
+            }
+        }
+    }
+
+    &-disabled {
+        color: $color-input_disabled-text-default;
+        cursor: not-allowed;
+        background-color: $color-input_disabled-bg-default;
+        // Safari ignores `color` on disabled inputs
+        -webkit-text-fill-color: $color-input_disabled-text-default;
+
+        &:hover {
+            background-color: $color-input_disabled-bg-default;
+        }
+
+        .#{$module}-append,
+        .#{$module}-prepend,
+        .#{$module}-suffix,
+        .#{$module}-prefix,
+        .#{$prefix}-icon {
+            color: $color-input_disabled-text-default;
+        }
+    }
+}
+
+.#{$module} {
+    box-sizing: border-box;
+    width: 100%;
+    // the UA gives a native input 1px that Preflight removes
+    padding-block: 0;
+    padding-inline: $spacing-input-paddingLeft $spacing-input-paddingRight;
+    color: inherit;
+    outline: none;
+
+    background-color: transparent;
+    border: none;
+
+    &:placeholder-shown {
+        text-overflow: ellipsis;
+    }
+
+    &[type='search']::-webkit-search-cancel-button {
+        display: none;
+    }
+
+    &::placeholder {
+        color: $color-input_placeholder-text-default;
+    }
+
+    &-large {
+        @include font-size-header-6;
+        height: $height-input_large;
+        line-height: $height-input_large;
+    }
+
+    &-small {
+        @include font-size-regular;
+        height: $height-input_small;
+        line-height: $height-input_small;
+    }
+
+    &-default {
+        @include font-size-regular;
+        height: $height-input_default;
+        line-height: $height-input_default;
+    }
+
+    &-disabled {
+        color: inherit;
+        cursor: not-allowed;
+    }
+
+    &-inset-label {
+        flex-shrink: 0;
+        margin: 0 $spacing-input_prefix_suffix-marginX;
+        font-weight: $font-input_prefix_suffix-fontWeight;
+        color: $color-input_prefix-text-default;
+        white-space: nowrap;
+    }
+
+    &-prefix,
+    &-suffix {
+        @include flex-center;
+
+        &-text {
+            margin: 0 $spacing-input_prefix_suffix-marginX;
+            font-weight: $font-input_prefix_suffix-fontWeight;
+            color: $color-input_prefix-text-default;
+            white-space: nowrap;
+        }
+
+        &-icon {
+            margin: $spacing-input_prefix_icon-marginY $spacing-input_prefix_icon-marginX;
+            color: $color-input-icon-default;
+        }
+    }
+
+    &-suffix {
+        @include flex-center;
+    }
+
+    &-clearbtn,
+    &-modebtn {
+        @include flex-center;
+        min-width: $width-input-icon;
+        height: 100%;
+    }
+
+    &-clearbtn + &-suffix {
+        & + .#{$module}-suffix-text {
+            margin-inline-start: 0;
+        }
+
+        & + .#{$module}-suffix-icon {
+            margin-inline-start: 0;
+        }
+    }
+
+    &-prepend,
+    &-append {
+        @include font-size-regular;
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        height: 100%;
+        color: $color-input_prefix-text-default;
+
+        background-color: $color-input_default-bg-default;
+
+        &-icon,
+        &-text {
+            padding: $spacing-input_prepend-paddingY $spacing-input_prepend-paddingX;
+        }
+    }
+
+    &-append {
+        border-inline-start: $width-input_append-border $color-input_default-border-default solid;
+        border-radius: 0;
+        border-start-end-radius: $radius-input_wrapper;
+        border-end-end-radius: $radius-input_wrapper;
+    }
+
+    &-prepend {
+        border-inline-end: $width-input_prepend-border $color-input_default-border-default solid;
+        border-radius: 0;
+        border-start-start-radius: $radius-input_wrapper;
+        border-end-start-radius: $radius-input_wrapper;
+    }
+
+    &-disabled {
+        &::placeholder {
+            color: $color-input_disabled-text-default;
+        }
+    }
+
+    &-group {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-content: center;
+        align-items: center;
+
+        .#{$prefix}-select,
+        .#{$prefix}-tagInput,
+        .#{$prefix}-cascader,
+        .#{$prefix}-tree-select,
+        & > .#{$module}-wrapper {
+            border-radius: 0;
+
+            &:first-child {
+                border-start-start-radius: $radius-input_wrapper;
+                border-end-start-radius: $radius-input_wrapper;
+            }
+
+            &:last-child {
+                border-start-end-radius: $radius-input_wrapper;
+                border-end-end-radius: $radius-input_wrapper;
+            }
+
+            &:not(:last-child) {
+                position: relative;
+
+                &::after {
+                    position: absolute;
+                    inset-inline-end: -1px;
+                    top: 1px;
+                    bottom: 1px;
+                    width: $width-input_group_pseudo-border;
+                    content: '';
+                    background-color: $color-input_group-border-default;
+                }
+            }
+        }
+
+        .#{$prefix}-select {
+            overflow-y: visible;
+        }
+
+        .#{$prefix}-input-number,
+        .#{$prefix}-datepicker,
+        .#{$prefix}-timepicker,
+        .#{$prefix}-autocomplete {
+            .#{$module}-wrapper,
+            .#{$prefix}-datepicker-range-input {
+                border-radius: 0;
+            }
+
+            &:first-child {
+                .#{$module}-wrapper,
+                .#{$prefix}-datepicker-range-input {
+                    border-start-start-radius: $radius-input_wrapper;
+                    border-end-start-radius: $radius-input_wrapper;
+                }
+            }
+
+            &:last-child {
+                .#{$module}-wrapper,
+                .#{$prefix}-datepicker-range-input {
+                    border-start-end-radius: $radius-input_wrapper;
+                    border-end-end-radius: $radius-input_wrapper;
+                }
+            }
+
+            &:not(:last-child) {
+                position: relative;
+
+                &::after {
+                    position: absolute;
+                    inset-inline-end: -1px;
+                    top: 1px;
+                    bottom: 1px;
+                    width: $width-input_group_pseudo-border;
+                    content: '';
+                    background-color: $color-input_group-border-default;
+                }
+            }
+        }
+    }
+
+    &-group-wrapper {
+        &-with-top-label {
+            margin-top: $spacing-input_group_withTopLabel-marginTop;
+            margin-bottom: $spacing-input_group_withTopLabel-marginBottom;
+
+            .#{$prefix}-input-group {
+                display: flex;
+            }
+
+            .#{$prefix}-input-group {
+                .#{$prefix}-form-field {
+                    margin-top: 0;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+.#{$module}-only_border {
+    background: transparent;
+    border-color: $color_input-default-border-only_border-default;
+
+    &:hover {
+        background: transparent;
+        border-color: $color_input-default-border-only_border-hover;
+    }
+
+    &:focus-within {
+        background: transparent;
+    }
+}
+
+.#{$module}-borderless {
+    &:not(:focus-within):not(:hover) {
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    &:focus-within:not(:active) {
+        background-color: transparent;
+    }
+
+    &.#{$module}-wrapper-error:not(:focus-within) {
+        border-color: $color-input_danger-border-focus;
+    }
+
+    &.#{$module}-wrapper-warning:not(:focus-within) {
+        border-color: $color-input_warning-border-focus;
+    }
+}
+
+@include meta.load-css('rtl');

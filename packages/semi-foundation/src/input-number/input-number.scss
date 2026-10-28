@@ -1,0 +1,124 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-input-number;
+
+.#{$module} {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    transform: scale($transform_scale-inputNumber);
+    transition:
+        background-color $transition_duration-inputNumber-bg $transition_function-inputNumber-bg $transition_delay-inputNumber-bg,
+        border $transition_duration-inputNumber-border $transition_function-inputNumber-border $transition_delay-inputNumber-border;
+
+    &-suffix-btns {
+        box-sizing: border-box;
+        display: inline-flex;
+        flex-direction: column;
+        margin-inline-start: $spacing-inputNumber_button-marginLeft;
+        background-color: $color-inputNumber_button-bg-default;
+        border: $width-inputNumber_button-border solid $color-inputNumber_button-border-default;
+        border-radius: $radius-inputNumber;
+
+        & > .#{$module}-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: $width-inputNumber_button;
+            height: 50%;
+            padding: 0;
+            margin: 0;
+            color: $color-inputNumber_button-text-default;
+            // a drifting held finger would scroll the page and cancel the repeat
+            touch-action: none;
+            user-select: none;
+            border-radius: 0;
+        }
+
+        & > .#{$module}-button-up:not(.#{$module}-button-up-not-allowed),
+        & > .#{$module}-button-down:not(.#{$module}-button-down-not-allowed) {
+            &:hover {
+                cursor: pointer;
+                background-color: $color-inputNumber_button-bg-hover;
+            }
+
+            &:active {
+                cursor: pointer;
+                background-color: $color-inputNumber_button-bg-active;
+            }
+        }
+
+        & > .#{$module}-button-up.#{$module}-button-up-disabled,
+        & > .#{$module}-button-down.#{$module}-button-down-disabled {
+            color: $color-inputNumber_button-text-disabled;
+            background-color: $color-inputNumber_button-bg-disabled;
+        }
+
+        & > .#{$module}-button-up.#{$module}-button-up-not-allowed,
+        & > .#{$module}-button-down.#{$module}-button-down-not-allowed {
+            cursor: not-allowed;
+        }
+
+        &-inner-hover {
+            border-color: $color-inputNumber_button-border-hover;
+        }
+    }
+
+    &-suffix-btns-inner {
+        margin-inline-start: $spacing-inputNumber_button_inner-marginLeft;
+        overflow: hidden;
+        border-radius: $radius-inputNumber_inner;
+    }
+
+    .#{$prefix}-input-clearbtn {
+        & + .#{$prefix}-input-suffix {
+            margin-inline-start: $spacing-inputNumber_clearbtn_suffix-marginLeft;
+
+            .#{$module}-suffix-btns-inner {
+                margin-inline-start: 0;
+            }
+        }
+    }
+
+    &-size {
+        &-default {
+            .#{$module}-suffix-btns {
+                height: $height-inputNumber_button_default;
+            }
+            .#{$module}-suffix-btns-inner {
+                height: $height-inputNumber_button_inner_default;
+            }
+        }
+
+        &-large {
+            .#{$module}-suffix-btns {
+                height: $height-inputNumber_button_large;
+            }
+            .#{$module}-suffix-btns-inner {
+                height: $height-inputNumber_button_inner_large;
+            }
+        }
+
+        &-small {
+            .#{$module}-suffix-btns {
+                height: $height-inputNumber_button_small;
+            }
+            .#{$module}-suffix-btns-inner {
+                height: $height-inputNumber_button_inner_small;
+            }
+        }
+    }
+}
+
+.#{$module}:not(:focus-within):not(:hover) {
+    .#{$prefix}-input-borderless {
+        & + .#{$module}-suffix-btns {
+            opacity: 0;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

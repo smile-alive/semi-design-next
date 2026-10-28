@@ -1,0 +1,11 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-radio;
+
+.#{$module}:dir(rtl),
+.#{$module}Group:dir(rtl) {
+    direction: rtl;
+}

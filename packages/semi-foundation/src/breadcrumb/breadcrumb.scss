@@ -1,0 +1,116 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-breadcrumb;
+
+.#{$module} {
+    overflow: hidden;
+
+    &-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+
+        &-loose {
+            @include font-size-regular;
+            font-size: $font-breadcrumb_loose-fontSize;
+        }
+
+        &-compact {
+            @include font-size-small;
+            font-size: $font-breadcrumb_compact-fontSize;
+        }
+    }
+
+    &-item-wrap {
+        display: inline-flex;
+        align-items: center;
+        margin: $spacing-breadcrumb_item_wrap-marginY 0;
+        margin-inline-end: $spacing-breadcrumb_item_wrap-marginRight;
+    }
+
+    &-item {
+        display: inline-flex;
+        column-gap: $spacing-breadcrumb_item_text-marginLeft;
+        align-items: center;
+        margin-inline-end: $spacing-breadcrumb_item-marginRight;
+        font-weight: $font-breadcrumb_default-fontWeight;
+        color: $color-breadcrumb_default-text-default;
+
+        .#{$prefix}-typography {
+            color: inherit;
+        }
+
+        &-title-inline {
+            display: inline-flex;
+        }
+    }
+
+    &-item-active {
+        font-weight: $font-breadcrumb_active-fontWeight;
+        color: $color-breadcrumb_active-text-default;
+
+        &:hover,
+        &:active {
+            margin-bottom: 0;
+            color: $color-breadcrumb_active-text-active;
+            cursor: default;
+            border: none;
+        }
+
+        .#{$prefix}-typography {
+            font-weight: $font-breadcrumb_active-fontWeight;
+        }
+    }
+
+    &-item-icon {
+        margin-bottom: -1px;
+    }
+
+    &-item-more {
+        & svg {
+            vertical-align: middle;
+        }
+    }
+
+    &-item-more:focus-visible,
+    &-item-link:focus-visible {
+        // negative offset: the root clips overflow
+        @include focus-ring(-2px);
+    }
+
+    &-item-link {
+        text-decoration: inherit;
+        transform: scale($transform_scale-breadcrumb_link-text);
+        transition: color $transition_duration-breadcrumb_link-text $transition-function_breadcrumb_link-text $transition_delay-breadcrumb_link-text;
+
+        &:hover {
+            color: $color-breadcrumb_default-text-hover;
+            cursor: pointer;
+        }
+
+        &:active {
+            color: $color-breadcrumb_default-text-active;
+            cursor: pointer;
+        }
+    }
+
+    &-collapse {
+        display: inline-flex;
+        flex-shrink: 0;
+    }
+
+    &-separator {
+        display: flex;
+        color: $color-breadcrumb_sepearator_default-icon-default;
+    }
+
+    &-restItem {
+        margin-inline-end: $spacing-breadcrumb_restItem-marginRight;
+        color: $color-breadcrumb_restItem-text-default;
+    }
+}
+
+@include meta.load-css('rtl');

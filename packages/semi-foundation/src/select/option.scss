@@ -1,0 +1,86 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-select;
+$single: #{$module}-single;
+$filterable: #{$module}-filterable;
+$multiple: #{$module}-multiple;
+
+.#{$module}-option {
+    @include font-size-regular;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-inline: $spacing-select_option-paddingLeft $spacing-select_option-paddingRight;
+    padding-top: $spacing-select_option-paddingTop;
+    padding-bottom: $spacing-select_option-paddingBottom;
+    color: $color-select_option_main-text;
+    word-break: break-all;
+    cursor: pointer;
+    border-radius: $radius-select_option;
+    transition: background-color $transition_duration-select_option-bg $transition_function-select_option-bg $transition_delay-select_option-bg;
+
+    &-icon {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        width: $width-select_option_tick;
+        margin-inline-end: $spacing-select_option_tick-marginRight;
+        color: $color-select_option-icon-default;
+    }
+
+    &-text {
+        display: flex;
+        flex-wrap: wrap;
+        white-space: pre;
+    }
+
+    &-keyword {
+        font-weight: $font-select_keyword-fontWeight;
+        color: $color-select_option_keyword-text;
+        background-color: inherit;
+    }
+
+    &:active {
+        background-color: $color-select_option-bg-active;
+    }
+
+    &-empty {
+        justify-content: center;
+        color: $color-select_option_disabled-text;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: inherit;
+        }
+
+        &:active {
+            background-color: inherit;
+        }
+    }
+
+    &-disabled {
+        color: $color-select_option_disabled-text;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: $color-select_option-bg-hover;
+        }
+    }
+
+    &-selected {
+        font-weight: $font-weight-bold;
+        background: $color-select-option-bg-selected;
+        .#{$module}-option-icon {
+            color: $color-select_option-icon-active;
+        }
+    }
+
+    &-focused {
+        background-color: $color-select_option-bg-hover;
+    }
+}

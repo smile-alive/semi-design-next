@@ -1,0 +1,28 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-image;
+
+.#{$module}-preview:dir(rtl),
+.#{$module}-preview-group:dir(rtl) {
+    direction: rtl;
+}
+
+// keeps the base translateY(-50%) that centers the arrows
+.#{$module}-preview-prev:dir(rtl),
+.#{$module}-preview-next:dir(rtl) {
+    transform: translateY(-50%) $transform_rotate-image_preview_icon_rtl;
+}
+
+.#{$module}-preview-footer-page:dir(rtl) {
+    display: flex;
+    direction: rtl;
+}
+
+.#{$module}-preview-footer:dir(rtl) {
+    .#{$prefix}-icon-chevron_left,
+    .#{$prefix}-icon-chevron_right {
+        transform: $transform_rotate-image_preview_icon_rtl;
+    }
+}

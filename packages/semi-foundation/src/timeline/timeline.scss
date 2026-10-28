@@ -1,0 +1,190 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-timeline;
+
+.#{$module} {
+    width: $width-timeline;
+    padding: $spacing-timeline-padding;
+    margin: $spacing-timeline-margin;
+    list-style: none;
+
+    &-item {
+        position: relative;
+        padding-block: $spacing-none $spacing-timeline_item-paddingBottom;
+        padding-inline: $spacing-none;
+        margin: $spacing-timeline_item-margin;
+        list-style: none;
+
+        &-tail {
+            position: absolute;
+            inset-inline-start: $spacing-timeline_tail-left;
+            top: $spacing-timeline_tail-top;
+            height: $height-timline_tail;
+            border-inline-start: $width-timeline_tail-border solid $color-timeline_tail-border;
+        }
+
+        &-head {
+            position: absolute;
+            top: $spacing-timeline_head-top;
+            width: $width-timeline_dot;
+            height: $width-timeline_dot;
+            border-radius: $radius-timeline_head;
+
+            &-ongoing {
+                background-color: $color-timeline_dot_default-bg-default;
+            }
+
+            &-default {
+                background-color: $color-timeline_dot_info-bg-default;
+            }
+
+            &-success {
+                background-color: $color-timeline_dot_success-bg-default;
+            }
+
+            &-warning {
+                background-color: $color-timeline_dot_warning-bg-default;
+            }
+
+            &-error {
+                background-color: $color-timeline_dot_error-bg-default;
+            }
+        }
+
+        &-head-custom {
+            position: absolute;
+            // the centering translate does not follow direction; rtl.scss flips it
+            inset-inline-start: $spacing-timeline_head_custom-left;
+            top: $spacing-timeline_head_custom-top;
+            display: flex;
+            align-self: center;
+            width: $width-timeline_head_custom;
+            height: $height-timeline_head_custom;
+            border: $width-timeline_head_custom-border;
+            border-radius: $radius-timeline_head_custom;
+            transform: $motion-timeline_head_custom-transform;
+        }
+
+        .#{$module}-item-head-custom.#{$module}-item-head-ongoing {
+            color: $color-timeline_dot_default-bg-default;
+            background-color: $color-timeline_item_head-bg;
+        }
+
+        .#{$module}-item-head-custom.#{$module}-item-head-success {
+            color: $color-timeline_dot_success-bg-default;
+            background-color: $color-timeline_item_head-bg;
+        }
+
+        .#{$module}-item-head-custom.#{$module}-item-head-warning {
+            color: $color-timeline_dot_warning-bg-default;
+            background-color: $color-timeline_item_head-bg;
+        }
+
+        .#{$module}-item-head-custom.#{$module}-item-head-error {
+            color: $color-timeline_dot_error-bg-default;
+            background-color: $color-timeline_item_head-bg;
+        }
+
+        .#{$module}-item-head-custom.#{$module}-item-head-default {
+            color: $color-timeline_dot_info-bg-default;
+            background-color: $color-timeline_item_head-bg;
+        }
+
+        &-content {
+            @include font-size-regular;
+            position: relative;
+            margin-block: $spacing-none;
+            margin-inline: $spacing-timeline_content-marginLeft $spacing-none;
+            color: $color-timeline_item_content-text-default;
+            word-break: break-word;
+
+            &-main[role='button']:focus-visible {
+                @include focus-ring;
+            }
+
+            &-extra,
+            &-time {
+                @include font-size-small;
+                margin-top: $spacing-timeline_time-marginTop;
+                color: $color-timeline_time_default-text-default;
+            }
+        }
+
+        &:last-child {
+            & > .#{$module}-item-tail {
+                border-inline-start: none;
+            }
+        }
+    }
+
+    &-alternate,
+    &-right,
+    &-center {
+        .#{$module}-item {
+            &-tail,
+            &-head,
+            &-head-custom {
+                inset-inline-start: $spacing-timeline_item_head_custom-left;
+            }
+
+            &-head {
+                &.#{$module}-item-head-custom {
+                    margin-inline-start: 0;
+                }
+            }
+
+            &-head {
+                margin-inline-start: $spacing-timeline_item_head-marginLeft;
+            }
+
+            &-left {
+                .#{$module}-item-content {
+                    inset-inline-start: $spacing-timeline_item_left_item_content-left;
+                    width: $width-timeline_item_left_item_content;
+                    text-align: start;
+                }
+            }
+
+            &-right {
+                .#{$module}-item-content {
+                    width: $width-timeline_item_right_item_content;
+                    margin: $spacing-timeline_item_right_item_content;
+                    text-align: end;
+                }
+            }
+        }
+    }
+
+    &-center {
+        .#{$module}-item {
+            &-content-time {
+                position: absolute;
+                top: $spacing-timeline_time-top;
+                width: $width-timeline_item_content_time;
+                margin-inline-start: $spacing-timeline_item_content_time-marginLeft;
+                text-align: end;
+            }
+        }
+    }
+
+    &-right {
+        .#{$module}-item-right {
+            .#{$module}-item {
+                &-tail,
+                &-head,
+                &-head-custom {
+                    inset-inline-start: $spacing-timeline_item_right_item-left;
+                }
+
+                &-content {
+                    width: $width-timeline_item_right_content;
+                }
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');
