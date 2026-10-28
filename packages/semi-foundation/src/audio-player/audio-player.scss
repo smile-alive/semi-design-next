@@ -1,0 +1,278 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-audio-player;
+
+.#{$module} {
+    @include flex-center;
+    gap: $gap-audio-player-large;
+    max-width: $width-audio-player-max;
+    height: $height-audio-player;
+    background: $color-audio-player-background;
+
+    &-control {
+        display: flex;
+        gap: $gap-audio-player-medium;
+        align-items: center;
+    }
+
+    &-control-button-icon {
+        color: $color-audio-player-control-icon;
+    }
+
+    // out-ranks the light Button's state rules (0-3-0) in every state
+    & &-control-button-play.#{$prefix}-button.#{$prefix}-button-light {
+        color: $color-audio-player-control-icon-play;
+        background: $color-audio-player-control-icon;
+    }
+
+    & &-control-button-play-disabled.#{$prefix}-button.#{$prefix}-button-light {
+        color: $color-audio-player-disabled-text;
+        background: $color-audio-player-disabled-bg;
+    }
+
+    &-slider-container {
+        width: $width-audio-player-slider;
+        height: 100%;
+        // the dot is centered on the track's ends and overhangs them by half its size; this keeps it off the time text
+        margin-inline: $size-audio-player-slider-dot * 0.5;
+    }
+
+    &-info-container {
+        display: flex;
+        gap: $gap-audio-player-medium;
+        align-items: center;
+    }
+
+    &-info {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-audio-player-small;
+    }
+
+    &-info-title {
+        display: flex;
+        align-items: center;
+        font-size: $font-size-audio-player-text;
+        font-weight: 600;
+        color: $color-audio-player-font-color;
+    }
+
+    &-info-time {
+        display: flex;
+        gap: $gap-audio-player-small;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: $height-audio-player-time;
+        font-size: $font-size-audio-player-text;
+        color: $color-audio-player-font-color;
+        user-select: none;
+    }
+
+    &-control-speed {
+        @include flex-center;
+        gap: $gap-audio-player-small;
+        width: $width-audio-player-speed;
+        height: $height-audio-player-speed;
+        padding: 0;
+        font-family: inherit;
+        font-size: $font-size-audio-player-small;
+        font-weight: 600;
+        line-height: $line-height-audio-player-small;
+        color: var(--semi-color-default);
+        user-select: none;
+        background: $color-audio-player-font-color-speed;
+        border: 0;
+        border-radius: $border-radius-audio-player-speed;
+
+        &:focus-visible {
+            @include focus-ring;
+        }
+    }
+
+    // compound with the Dropdown classes: a single class ties with their rules and the stylesheet load order decides
+    &-control-speed-menu.#{$prefix}-dropdown-wrapper {
+        width: $width-audio-player-speed-menu;
+        background: $color-audio-player-font-color-speed;
+    }
+
+    &-control-speed-menu-item.#{$prefix}-dropdown-item {
+        color: $color-audio-player-text-default;
+    }
+
+    // out-ranks the Dropdown item's own hover and active rules (0-3-0)
+    &-control-speed-menu &-control-speed-menu-item.#{$prefix}-dropdown-item:hover {
+        background: var(--semi-color-tertiary-active);
+    }
+
+    &-control-volume {
+        @include flex-center;
+        flex-direction: column;
+        gap: $gap-audio-player-small * 2;
+        width: $width-audio-player-volume;
+        height: $height-audio-player-volume;
+        padding: 4px 0;
+        background: $color-audio-player-font-color-speed;
+        border-radius: $border-radius-audio-player-volume;
+    }
+
+    &-control-volume-title {
+        font-size: $font-size-audio-player-small;
+        font-weight: 600;
+        line-height: $line-height-audio-player-small;
+        color: $color-audio-player-text-default;
+        user-select: none;
+    }
+
+    &-error {
+        display: flex;
+        gap: $gap-audio-player-small;
+        align-items: center;
+        margin-left: 4px;
+        color: var(--semi-color-danger);
+        white-space: nowrap;
+    }
+
+    &-light {
+        background: $color-audio-player-background-light;
+        border: 1px solid var(--semi-color-border);
+
+        .#{$module}-control-button-icon {
+            color: $color-audio-player-control-icon-light;
+        }
+
+        .#{$module}-control-button-play.#{$prefix}-button.#{$prefix}-button-light {
+            color: $color-audio-player-control-icon-play-light;
+            background: $color-audio-player-control-icon-light;
+        }
+
+        .#{$module}-control-button-play-disabled.#{$prefix}-button.#{$prefix}-button-light {
+            color: $color-audio-player-light-disabled-text;
+            background: $color-audio-player-light-disabled-bg;
+        }
+
+        .#{$module}-info-title,
+        .#{$module}-info-time {
+            color: $color-audio-player-font-color-light;
+        }
+    }
+
+    // portalled out of the player, so a root-theme descendant selector cannot reach them
+    &-control-speed-menu#{&}-control-speed-menu-light {
+        background: $color-audio-player-light-popup-bg;
+    }
+
+    &-control-speed-menu-light &-control-speed-menu-item {
+        color: $color-audio-player-light-text;
+    }
+
+    &-control-speed-menu-light &-control-speed-menu-item.#{$prefix}-dropdown-item:hover {
+        background: $color-audio-player-light-hover-bg;
+    }
+
+    &-control-volume-light {
+        background: $color-audio-player-light-popup-bg;
+    }
+
+    &-control-volume-light &-control-volume-title {
+        color: $color-audio-player-light-text;
+    }
+}
+
+.#{$module}-slider {
+    position: relative;
+    background: $color-audio-player-slider-bg;
+    border-radius: $border-radius-audio-player-slider;
+
+    &-light {
+        background: $color-audio-player-slider-bg-light;
+    }
+
+    &-wrapper {
+        @include flex-center;
+        position: relative;
+        // scrolling the page would cancel the pointer mid-drag
+        touch-action: none;
+        cursor: pointer;
+
+        &-vertical {
+            width: 100%;
+        }
+
+        &-horizontal {
+            height: 100%;
+        }
+
+        // [data-semi-pointer-focus] marks pointer-triggered focus in browsers without focus({ focusVisible })
+        &:has(> .#{$module}-slider-input:focus-visible:not([data-semi-pointer-focus])) {
+            @include focus-ring;
+        }
+
+        // a captured pointer dragged off the slider stops matching :hover
+        &:hover,
+        &.#{$module}-slider-wrapper-dragging,
+        &:has(> .#{$module}-slider-input:focus-visible:not([data-semi-pointer-focus])) {
+            .#{$module}-slider-horizontal {
+                height: $width-audio-player-slider-bar-hover;
+            }
+
+            .#{$module}-slider-vertical {
+                width: $width-audio-player-slider-bar-hover;
+            }
+
+            .#{$module}-slider-dot {
+                opacity: 1;
+            }
+        }
+    }
+
+    &-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    &-vertical {
+        width: $width-audio-player-slider-bar;
+        height: 100%;
+    }
+
+    &-horizontal {
+        width: 100%;
+        height: $width-audio-player-slider-bar;
+    }
+
+    &-progress {
+        position: absolute;
+        background: $color-audio-player-slider-progress;
+        border-radius: $border-radius-audio-player-slider;
+    }
+
+    &-progress-vertical {
+        bottom: 0;
+    }
+
+    &-progress-horizontal {
+        left: 0;
+    }
+
+    &-dot {
+        position: absolute;
+        width: $size-audio-player-slider-dot;
+        height: $size-audio-player-slider-dot;
+        background: $color-audio-player-slider-dot-bg;
+        border: 1px solid var(--semi-color-primary);
+        border-radius: 50%;
+        box-shadow: 0 0 4px 0 var(--semi-color-shadow);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+}

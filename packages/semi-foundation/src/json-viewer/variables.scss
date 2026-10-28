@@ -1,0 +1,18 @@
+@use 'semi:theme' as *;
+
+$color-json-viewer-background: var(--semi-color-default); // JSON背景颜色
+$color-json-viewer-key: var(--semi-red-5); // JSON key 颜色
+$color-json-viewer-value: var(--semi-blue-5);
+$color-json-viewer-number: var(--semi-green-5); // JSON number 颜色
+$color-json-viewer-keyword: var(--semi-blue-5); // JSON keyword 颜色
+$color-json-viewer-delimiter-comma: var(--semi-blue-6); // JSON delimiter comma 颜色
+
+$color-json-viewer-search-result-background: var(--semi-green-2); // JSON search result background 颜色
+$color-json-viewer-current-search-result-background: var(--semi-yellow-4); // JSON current search result background 颜色
+
+$color-json-viewer-folding-icon: var(--semi-blue-7); // JSON folding icon 颜色
+
+$color-json-viewer-line-number: var(--semi-grey-5); // JSON line number 颜色
+
+$spacing-json-viewer-paddingY: 12px; // JSON 垂直内边距
+$spacing-json-viewer-paddingX: 0; // JSON 水平内边距

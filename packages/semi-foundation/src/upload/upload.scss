@@ -1,0 +1,640 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-upload;
+
+.#{$module} {
+    display: flex;
+    flex-wrap: wrap;
+
+    &-tooltip-children-wrapper {
+        display: inline-flex;
+        width: fit-content;
+        height: fit-content;
+        vertical-align: middle;
+    }
+
+    &-disabled {
+        cursor: not-allowed;
+
+        .#{$module}-file-card {
+            cursor: not-allowed;
+
+            &-close {
+                cursor: not-allowed;
+            }
+        }
+
+        .#{$module}-drag-area {
+            cursor: not-allowed;
+            border: none;
+
+            &:hover {
+                background-color: $color-upload_drag_area-bg;
+            }
+
+            &-main-text,
+            &-sub-text,
+            &-icon {
+                color: $color-upload_drag_area_disabled-text;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    &-hidden-input {
+        display: none;
+    }
+
+    &-hidden-input-replace {
+        display: none;
+    }
+
+    &-add,
+    &-drag-area {
+        &:focus-visible {
+            @include focus-ring;
+        }
+    }
+
+    &-add {
+        display: flex;
+        align-items: center;
+    }
+
+    &[x-prompt-pos='right'] {
+        .#{$module}-add {
+            display: inline-flex;
+        }
+
+        .#{$module}-prompt {
+            display: inline-flex;
+        }
+    }
+
+    &[x-prompt-pos='bottom'] {
+        .#{$module}-add {
+            display: flex;
+        }
+
+        .#{$module}-prompt {
+            display: flex;
+            flex-basis: 100%;
+        }
+
+        .#{$module}-file-list {
+            flex-basis: 100%;
+        }
+    }
+
+    &[x-prompt-pos='left'] {
+        .#{$module}-add {
+            display: inline-flex;
+        }
+
+        .#{$module}-prompt {
+            display: inline-flex;
+            order: -1;
+        }
+
+        .#{$module}-file-list {
+            order: 2;
+        }
+    }
+
+    &-file-list {
+        display: block;
+        flex-shrink: 0;
+        flex-basis: 100%;
+        margin-top: $spacing-tight;
+        margin-bottom: $spacing-tight;
+
+        &-main {
+            display: flex;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: $spacing-upload_picture_file_card-gap;
+            margin-bottom: $spacing-upload_picture_file_card-marginBottom;
+
+            p {
+                @include ver-center;
+            }
+        }
+
+        &-title {
+            @include font-size-small;
+            margin-bottom: $spacing-upload_title-marginBottom;
+            color: $color-upload_assist-text;
+
+            &-choosen {
+                margin-inline-end: $spacing-upload_title_choosen-marginRight;
+            }
+
+            &-clear {
+                @include bare-button;
+                color: $color-upload_clear-text;
+            }
+        }
+    }
+
+    // Keyboard-only target: transparent and ignores the pointer
+    &-preview-trigger {
+        @include bare-button(-2px);
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    &-file-card {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        width: $width-upload_file_card;
+        height: $height-upload_file_card;
+        cursor: pointer;
+        background-color: $color-upload_card-bg;
+        border-radius: $radius-upload_file_card;
+
+        &:hover {
+            background-color: $color-upload_card-bg-hover;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        &-preview {
+            @include flex-center;
+            flex-shrink: 0;
+            width: $width-upload_file_card_preview;
+            height: $height-upload_file_card_preview;
+            margin: $spacing-upload_file_card_preview-margin;
+            color: $color-upload_preview-icon;
+            border-radius: $radius-upload_file_card_preview;
+
+            img {
+                width: $width-upload_file_card_preview_img;
+                height: $width-upload_file_card_preview_img;
+                object-fit: cover;
+            }
+        }
+
+        &-preview-placeholder {
+            color: $color-upload_file_card_preview_placeholder-text;
+            background-color: $color-upload_file_card_preview_placeholder-bg;
+        }
+
+        &-show-pointer {
+            cursor: pointer;
+        }
+
+        &-info {
+            display: flex;
+            align-items: center;
+
+            &-main {
+                display: flex;
+                flex: 1;
+                flex-wrap: wrap;
+
+                &-text {
+                    @include ver-center;
+                    flex-basis: 100%;
+                }
+
+                &-control {
+                    display: flex;
+                }
+            }
+
+            &-name {
+                @include font-size-regular;
+                display: inline-block;
+                flex: 1;
+                width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-weight: $font-upload_file_card_info_name-fontWeight;
+                color: $color-upload-text;
+                white-space: nowrap;
+            }
+
+            &-size {
+                @include font-size-small;
+                margin-inline-start: $spacing-upload_file_card_info_size-marginLeft;
+                margin-top: 1px;
+                font-weight: $font-upload_file_card_info_size-fontWeight;
+                color: $color-upload_assist-text;
+            }
+
+            &-replace {
+                display: inline-flex;
+                margin-inline-start: $spacing-tight;
+                color: var(--semi-color-text-2);
+            }
+
+            &-validate-message {
+                @include font-size-small;
+                @include ver-center;
+                color: $color-upload-text;
+            }
+
+            &-retry {
+                @include bare-button;
+                @include font-size-small;
+                margin-inline-start: $spacing-upload_file_card_info_retry-marginLeft;
+                color: $color-upload_retry-text;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+
+            .#{$prefix}-progress {
+                flex-basis: 100%;
+                margin-top: $spacing-upload_file_card_info_progress-marginTop;
+            }
+        }
+
+        &-close {
+            flex-shrink: 0;
+            margin-inline: $spacing-upload_file_card_close-marginLeft $spacing-upload_file_card_close-marginRight;
+        }
+
+        &-replace {
+            flex-shrink: 0;
+            width: 24px;
+            margin-inline-start: $spacing-tight;
+        }
+
+        &-icon {
+            &-loading,
+            &-error.#{$prefix}-icon {
+                margin-inline-end: $spacing-upload_file_card_icon-marginRight;
+                font-size: $width-upload_file_card-icon;
+            }
+
+            &-error {
+                position: relative;
+                top: $spacing-upload_picture_file_card_icon_error-top;
+            }
+
+            &-loading {
+                line-height: 0; // centers the spin icon
+
+                .#{$prefix}-spin-wrapper svg {
+                    width: $width-upload_file_card-icon;
+                    height: $width-upload_file_card-icon;
+                }
+            }
+        }
+
+        &-fail {
+            background-color: $color-upload_card_fail-bg;
+
+            &:hover {
+                background-color: $color-upload_card_fail-bg-hover;
+            }
+
+            .#{$module}-file-card {
+                &-info-validate-message {
+                    color: $color-upload_file_card_fail_info-text;
+                }
+            }
+        }
+    }
+
+    &-picture {
+        display: flex;
+
+        &[x-prompt-pos='bottom'] {
+            flex-direction: column;
+
+            .#{$module}-prompt {
+                order: 1;
+            }
+        }
+
+        &[x-prompt-pos='right'] {
+            .#{$module}-prompt {
+                order: 1;
+            }
+        }
+
+        &-add {
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: $width-upload_file_pic_card;
+            height: $height-upload_file_pic_card;
+            color: $color-upload-icon;
+            cursor: pointer;
+            background-color: $color-upload_pic_add-bg;
+            border: $width-upload_picture_add-border dashed $color-upload-border;
+            border-radius: $radius-upload_picture_add;
+
+            &:hover {
+                background-color: $color-upload_pic_add-bg-hover;
+            }
+
+            &:active {
+                background-color: $color-upload_pic_add-bg-active;
+            }
+        }
+
+        &-add-disabled {
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: $color-upload_pic_add-bg;
+            }
+
+            &:active {
+                background-color: $color-upload_pic_add-bg;
+            }
+        }
+
+        &-file-list {
+            flex-basis: inherit;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        &-list {
+            display: contents;
+        }
+
+        &-file-card {
+            @include flex-center;
+            position: relative;
+            box-sizing: border-box;
+            width: $width-upload_file_pic_card;
+            height: $height-upload_file_pic_card;
+            overflow: hidden;
+            border-radius: $radius-upload_picture_file_card_img;
+
+            img {
+                width: $width-upload_picture_file_card_img;
+                height: $width-upload_picture_file_card_img;
+                object-fit: cover;
+                border-radius: $radius-upload_picture_file_card_img;
+            }
+
+            &-custom-thumbnail {
+                .#{$prefix}-image {
+                    img {
+                        width: inherit;
+                        height: inherit;
+                    }
+                }
+            }
+
+            &-close {
+                @include bare-button;
+                position: absolute;
+                inset-inline-end: $spacing-upload_picture_file_card_close-right;
+                top: $spacing-upload_picture_file_card_close-top;
+                display: inline-flex;
+                // hidden controls must not catch taps
+                pointer-events: none;
+                cursor: pointer;
+                border-radius: $radius-upload_picture_file_card_close;
+                opacity: 0;
+                transition: all 0s;
+            }
+
+            &-icon-close {
+                font-size: $width-upload_picture_file_card_close;
+                color: $color-upload_picture_file_card_close-icon;
+            }
+
+            &::before {
+                position: absolute;
+                inset-inline: 0;
+                top: 0;
+                bottom: 0;
+                visibility: hidden;
+                content: '';
+                background-color: $color-upload_picture_file_card_hover-bg;
+            }
+
+            &-retry {
+                @include bare-button;
+                @include flex-center;
+                position: absolute;
+                top: 50%;
+                // stylelint-disable-next-line property-disallowed-list -- centered by left: 50% plus translate
+                left: 50%;
+                width: $width-upload_file_card_retry;
+                height: $width-upload_file_card_retry;
+                color: $color-upload_file_card_retry-text;
+                pointer-events: none;
+                cursor: pointer;
+                background-color: $color-upload_file_card_retry-bg;
+                border-radius: $radius-upload_file_card_retry;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+
+            &-icon-retry {
+                font-size: $width-upload_file_card_retry-icon;
+                transform: scale(-1, 1);
+            }
+
+            &-replace {
+                @include bare-button;
+                position: absolute;
+                top: 50%;
+                // stylelint-disable-next-line property-disallowed-list -- centered by left: 50% plus translate
+                left: 50%;
+                display: inline-flex;
+                color: $color-upload_replace-text;
+                pointer-events: none;
+                cursor: pointer;
+                opacity: 0;
+                transform: translate3D(-50%, -50%, 0);
+            }
+
+            &-preview {
+                position: absolute;
+                top: 50%;
+                // stylelint-disable-next-line property-disallowed-list -- centered by left: 50% plus translate
+                left: 50%;
+                display: inline-flex;
+                visibility: hidden;
+                cursor: pointer;
+                transform: translate3D(-50%, -50%, 0);
+            }
+
+            &-preview-fallback {
+                color: $color-upload-icon;
+                background-color: $color-upload_pic_add-bg;
+                border: $width-upload_picture_add-border $color-upload-border;
+                border-radius: $radius-upload_picture_add;
+            }
+
+            &-pic-info {
+                position: absolute;
+                inset-inline-start: 0;
+                bottom: 0;
+                box-sizing: border-box;
+                display: inline-flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                height: 24px;
+                padding: 0 10px;
+                font-size: $font-upload_picture_file_card_pic_info-fontSize;
+                font-weight: $font-upload_picture_file_card_pic_info-fontWeight;
+                color: $color-upload_picture_file_card_pic_info-text;
+                background: linear-gradient(0deg, rgba(22, 22, 26, 0.3) 0%, rgba(22, 22, 26, 0) 77.08%);
+            }
+
+            &-icon-loading,
+            &-icon-error {
+                position: absolute;
+                inset-inline-end: $spacing-upload_picture_file_card_loading_error-right;
+                bottom: $spacing-upload_picture_file_card_loading_error-bottom;
+                color: $color-upload_picture_file_card_loading_error-icon;
+            }
+
+            &-icon-loading {
+                font-size: $width-upload_picture_file_card_loading-icon;
+            }
+
+            &-show-pointer {
+                cursor: pointer;
+            }
+
+            &-error {
+                outline: 1px solid $color-upload_picture_file_card_error-border;
+                border: 1px solid $color-upload_picture_file_card_error-border;
+            }
+
+            // opacity, not visibility, so keyboard focus can reach the controls
+            &:hover,
+            &:has(:focus-visible) {
+                &::before {
+                    visibility: visible;
+                }
+
+                .#{$module}-picture-file-card-close,
+                .#{$module}-picture-file-card-replace,
+                .#{$module}-picture-file-card-retry {
+                    pointer-events: auto;
+                    opacity: 1;
+                }
+
+                .#{$module}-picture-file-card-preview {
+                    visibility: visible;
+                }
+            }
+
+            &-uploading {
+                &::before {
+                    visibility: visible;
+                }
+            }
+
+            .#{$prefix}-progress-circle {
+                position: absolute;
+                top: 50%;
+                // stylelint-disable-next-line property-disallowed-list -- centered by left: 50% plus translate
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+
+    &-drag-area {
+        @include flex-center;
+        flex-direction: column;
+        width: 100%;
+        padding: $spacing-upload_drag_area-padding;
+        cursor: pointer;
+        background-color: $color-upload_drag_area-bg;
+        border: $width-upload_drag_area-border dashed $color-upload-border;
+        border-radius: $radius-upload_drag_area;
+
+        &:hover {
+            background-color: $color-upload_drag_area-bg-hover;
+            border-color: $color-upload_drag_area-border-hover;
+        }
+
+        &-custom {
+            padding: 0;
+            background-color: inherit;
+            border: none;
+
+            &:hover {
+                background-color: inherit;
+            }
+        }
+
+        &-legal {
+            background-color: $color-upload_drag_area-bg-hover;
+            border-color: $color-upload_drag_area-border-hover;
+
+            .#{$module}-drag-area-sub-text {
+                display: none;
+            }
+        }
+
+        &-icon {
+            color: $color-upload_drag_area_icon;
+        }
+
+        &-text {
+            text-align: center;
+        }
+
+        &-main-text {
+            @include font-size-regular;
+            margin-bottom: $spacing-upload_drag_area_main_text-marginBottom;
+            color: $color-upload_drag_area_main-text-default;
+            cursor: pointer;
+
+            &:hover {
+                color: $color-upload_drag_area_main-text-hover;
+            }
+
+            &:active {
+                color: $color-upload_drag_area_main-text-active;
+            }
+        }
+
+        &-sub-text {
+            @include font-size-small;
+            color: $color-upload_drag_area_sub-text-default;
+            cursor: pointer;
+
+            &:hover {
+                color: $color-upload_drag_area_sub-text-hover;
+            }
+
+            &:active {
+                color: $color-upload_drag_area_sub-text-active;
+            }
+        }
+
+        &-tips {
+            @include font-size-small;
+            font-weight: $font-upload_drag_area_tips-fontWeight;
+
+            &-legal {
+                color: $color-upload_drag_area_tips-text;
+            }
+        }
+    }
+
+    &-validate-message {
+        display: block;
+        flex-shrink: 0;
+        flex-basis: 100%;
+        color: $color-upload_file_card_fail_info-text;
+    }
+}
+
+@include meta.load-css('rtl');

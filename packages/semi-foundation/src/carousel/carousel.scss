@@ -1,0 +1,451 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-carousel;
+
+.#{$module} {
+    position: relative;
+    overflow: hidden;
+
+    &-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        &-item {
+            position: absolute;
+            inset-inline-start: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            &-current {
+                z-index: 1;
+            }
+        }
+
+        &-fade {
+            > * {
+                opacity: 0;
+            }
+
+            .#{$module}-content-item-current {
+                opacity: 1;
+            }
+        }
+
+        &-slide {
+            & > *:not(.#{$module}-content-item-current) {
+                visibility: hidden;
+            }
+
+            .#{$module}-content-item-slide-out {
+                display: block;
+                animation: #{$module}-content-item-keyframe-slide-out;
+                animation-fill-mode: forwards;
+            }
+
+            .#{$module}-content-item-slide-in {
+                display: block;
+                animation: #{$module}-content-item-keyframe-slide-in;
+                animation-fill-mode: forwards;
+            }
+        }
+
+        &-reverse {
+            .#{$module}-content-item-slide-out {
+                animation: #{$module}-content-item-keyframe-slide-out-reverse;
+                animation-fill-mode: forwards;
+            }
+
+            .#{$module}-content-item-slide-in {
+                animation: #{$module}-content-item-keyframe-slide-in-reverse;
+                animation-fill-mode: forwards;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .#{$module}-content-item-slide-in,
+            .#{$module}-content-item-slide-out {
+                animation: none;
+            }
+        }
+    }
+
+    &-indicator {
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+
+        /* stylelint-disable property-disallowed-list -- physical sides; center pairs left: 50% with translate */
+        &-left {
+            position: absolute;
+            bottom: $spacing-carousel_indicator-padding;
+            left: $spacing-carousel_indicator-padding;
+        }
+
+        &-center {
+            position: absolute;
+            bottom: $spacing-carousel_indicator-padding;
+            left: 50%;
+            transform: translate(-50%);
+        }
+
+        &-right {
+            position: absolute;
+            right: $spacing-carousel_indicator-padding;
+            bottom: $spacing-carousel_indicator-padding;
+        }
+        // stylelint-enable property-disallowed-list
+
+        &-item {
+            padding: 0;
+            border: 0;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+        }
+
+        &-dot {
+            .#{$module}-indicator-item {
+                cursor: pointer;
+                border-radius: $radius-carousel_indicator_dot;
+
+                &:not(:last-child) {
+                    margin-inline-end: $spacing-carousel_indicator_dot-marginX;
+                }
+
+                &-small {
+                    width: $width-carousel_indicator_dot_small;
+                    height: $width-carousel_indicator_dot_small;
+                }
+
+                &-medium {
+                    width: $width-carousel_indicator_dot_medium;
+                    height: $width-carousel_indicator_dot_medium;
+                }
+
+                &-primary {
+                    background-color: $color-carousel_indicator_theme_primary-bg-default;
+                    transition: background-color $transition_duration-carousel_indicator-bg $transition_function-carousel_indicator-bg $transition_delay-carousel_indicator-bg;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_primary-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_primary-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_primary-bg-active;
+                    }
+                }
+
+                &-light {
+                    background-color: $color-carousel_indicator_theme_light-bg-default;
+                    transition: background-color $transition_duration-carousel_indicator-bg $transition_function-carousel_indicator-bg $transition_delay-carousel_indicator-bg;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_light-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_light-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_light-bg-active;
+                    }
+                }
+
+                &-dark {
+                    background-color: $color-carousel_indicator_theme_dark-bg-default;
+                    transition: background-color $transition_duration-carousel_indicator-bg $transition_function-carousel_indicator-bg $transition_delay-carousel_indicator-bg;
+
+                    &.#{$module}-indicator-item-active {
+                        background-color: $color-carousel_indicator_theme_dark-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_dark-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_dark-bg-active;
+                    }
+                }
+            }
+        }
+
+        &-line {
+            width: $width-carousel_indicator_line;
+
+            .#{$module}-indicator-item {
+                flex: 1;
+                cursor: pointer;
+
+                &:not(:last-child) {
+                    margin-inline-end: $spacing-carousel_indicator_line-marginX;
+                }
+
+                &-small {
+                    height: $height-carousel_indicator_line_small;
+                }
+
+                &-medium {
+                    height: $height-carousel_indicator_line_medium;
+                }
+
+                &-primary {
+                    background-color: $color-carousel_indicator_theme_primary-bg-default;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_primary-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_primary-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_primary-bg-active;
+                    }
+                }
+
+                &-light {
+                    background-color: $color-carousel_indicator_theme_light-bg-default;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_light-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_light-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_light-bg-active;
+                    }
+                }
+
+                &-dark {
+                    background-color: $color-carousel_indicator_theme_dark-bg-default;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_dark-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_dark-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_dark-bg-active;
+                    }
+                }
+            }
+        }
+
+        &-columnar {
+            .#{$module}-indicator-item {
+                cursor: pointer;
+
+                &:not(:last-child) {
+                    margin-inline-end: $spacing-carousel_indicator_columnar-marginX;
+                }
+
+                &-small {
+                    width: $width-carousel_indicator_columnar_small;
+                    height: $height-carousel_indicator_columnar_small_default;
+
+                    &.#{$module}-indicator-item-active {
+                        height: $height-carousel_indicator_columnar_small_active;
+                    }
+                }
+
+                &-medium {
+                    width: $width-carousel_indicator_columnar_medium;
+                    height: $height-carousel_indicator_columnar_medium_default;
+
+                    &.#{$module}-indicator-item-active {
+                        height: $height-carousel_indicator_columnar_medium_active;
+                    }
+                }
+
+                &-primary {
+                    background-color: $color-carousel_indicator_theme_primary-bg-default;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_primary-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_primary-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_primary-bg-active;
+                    }
+                }
+
+                &-light {
+                    background-color: $color-carousel_indicator_theme_light-bg-default;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_light-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_light-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_light-bg-active;
+                    }
+                }
+
+                &-dark {
+                    background-color: $color-carousel_indicator_theme_dark-bg-default;
+
+                    &.#{$module}-indicator-item-active {
+                        background: $color-carousel_indicator_theme_dark-bg-active;
+                    }
+
+                    &:hover {
+                        background-color: $color-carousel_indicator_theme_dark-bg-hover;
+                    }
+
+                    &:active {
+                        background: $color-carousel_indicator_theme_dark-bg-active;
+                    }
+                }
+            }
+        }
+    }
+
+    &-arrow {
+        display: flex;
+        font-size: $width-carousel_arrow;
+        cursor: pointer;
+
+        &-prev,
+        &-next {
+            // flex drops the icon's line box so the button is the icon's square and the radius draws a circle
+            display: flex;
+            padding: 0;
+            font: inherit;
+            line-height: inherit;
+            background: none;
+            border: 0;
+            border-radius: $radius-carousel_arrow;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+        }
+
+        &-prev {
+            position: absolute;
+            inset-inline-start: $spacing-carousel_arrow-left;
+            top: 50%;
+            z-index: 2;
+            transform: translateY(-50%);
+        }
+
+        &-next {
+            position: absolute;
+            inset-inline-end: $spacing-carousel_arrow-right;
+            top: 50%;
+            z-index: 2;
+            transform: translateY(-50%);
+        }
+
+        &-light {
+            color: $color-carousel_arrow_theme_light-bg-default;
+            transition: color $transition_duration-carousel_arrow-bg $transition_funciton_carousel_arrow-bg $transition_delay-carousel_arrow-bg;
+
+            &:hover {
+                color: $color-carousel_arrow_theme_light-bg-hover;
+            }
+        }
+
+        &-primary {
+            color: $color-carousel_arrow_theme_primary-bg-default;
+            transition: color $transition_duration-carousel_arrow-bg $transition_funciton_carousel_arrow-bg $transition_delay-carousel_arrow-bg;
+
+            &:hover {
+                color: $color-carousel_arrow_theme_primary-bg-hover;
+            }
+        }
+
+        &-dark {
+            color: $color-carousel_arrow_theme_dark-bg-default;
+            transition: color $transition_duration-carousel_arrow-bg $transition_funciton_carousel_arrow-bg $transition_delay-carousel_arrow-bg;
+
+            &:hover {
+                color: $color-carousel_arrow_theme_dark-bg-hover;
+            }
+        }
+    }
+
+    &-arrow-hover > * {
+        z-index: 2;
+        opacity: 0;
+    }
+
+    &:hover,
+    &:focus-within {
+        .#{$module}-arrow-hover > * {
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes #{$module}-content-item-keyframe-slide-in {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes #{$module}-content-item-keyframe-slide-out {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes #{$module}-content-item-keyframe-slide-in-reverse {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes #{$module}-content-item-keyframe-slide-out-reverse {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@include meta.load-css('rtl');

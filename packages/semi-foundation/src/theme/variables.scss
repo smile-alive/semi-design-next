@@ -1,0 +1,56 @@
+$prefix: 'semi';
+
+// Sizing tokens are CSS variables declared in global.scss. A variable that component stylesheets compute with (`*`,
+// `math.div`, `+`, `-`) keeps its literal value here, because Sass cannot compute with var(); global.scss emits that
+// token from this value.
+
+$height-control-small: 24px; // 表单项高度 - 小尺寸
+$height-control-default: 32px; // 表单项高度 - 默认尺寸
+$height-control-large: 40px; // 表单项高度 - 大尺寸
+$border-thickness: 0; // 描边宽度 - 零
+$border-thickness-control: 1px; // 描边宽度 - 默认状态（checkbox 等）
+$border-thickness-control-focus: var(--semi-border-thickness-control-focus); // 描边宽度 - focus 状态（checkbox 等）
+
+$width-icon-extra-small: 8px; // 图标尺寸 - 超小
+$width-icon-small: 12px; // 图标尺寸 - 小
+$width-icon-medium: 16px; // 图标尺寸 - 中
+$width-icon-large: 20px; // 图标尺寸 - 大
+$width-icon-extra-large: 24px; // 图标尺寸 - 超大
+
+$spacing-none: var(--semi-spacing-none); // 间距 - 零
+$spacing-super-tight: 2px; // 间距 - 极紧凑尺寸内/外边距
+$spacing-extra-tight: 4px; // 间距 - 超紧凑尺寸内/外边距
+$spacing-tight: 8px; // 间距 - 紧凑尺寸内/外边距
+$spacing-base-tight: 12px; // 间距 - 默认（偏紧凑）尺寸内/外边距
+$spacing-base: 16px; // 间距 - 默认尺寸内/外边距
+$spacing-base-loose: 20px; // 间距 - 默认（偏宽松）尺寸内/外边距
+$spacing-loose: var(--semi-spacing-loose); // 间距 - 宽松尺寸内/外边距
+$spacing-super-loose: 40px; // 间距 - 极宽松尺寸内/外边距
+
+$z-portal: var(--semi-z-portal); // 抽象插槽，适用于未经特殊定制的所有组件
+$z-backtop: var(--semi-z-backtop); // 返回顶部 z-index
+$z-badge: var(--semi-z-badge); // badge z-index
+$z-table-fixed: 101; // table fixed column
+$z-modal: var(--semi-z-modal); // modal z-index
+$z-modal-mask: var(--semi-z-modal-mask); // modal 遮罩 z-index
+
+$z-toast: var(--semi-z-toast); // toast 组件 z-index
+$z-notification: var(--semi-z-notification); // notification 组件 z-index
+$z-image_preview: var(--semi-z-image_preview); // Image 组件预览层z-index
+$z-image_preview_header: var(--semi-z-image_preview_header); // Image 组件预览层中 header 部分 z-index
+
+$z-resizable_handler: var(--semi-z-resizable_handler); // 伸缩框组件中handler的z-index，保持较低层级避免覆盖弹出层组件
+
+$font-family-regular: var(--semi-font-family-regular); // semi 预置字体回退
+$font-size-small: var(--semi-font-size-small); // 小文本字号
+$font-size-regular: var(--semi-font-size-regular); // 常规文本字号
+
+$font-size-header-6: var(--semi-font-size-header-6); // 六级标题字号
+$font-size-header-5: var(--semi-font-size-header-5); // 五级标题字号
+$font-size-header-4: var(--semi-font-size-header-4); // 四级标题字号
+$font-size-header-3: var(--semi-font-size-header-3); // 三级标题字号
+$font-size-header-2: var(--semi-font-size-header-2); // 二级标题字号
+$font-size-header-1: var(--semi-font-size-header-1); // 一级标题字号
+
+$font-weight-regular: var(--semi-font-weight-regular); // 字重 - 常规
+$font-weight-bold: var(--semi-font-weight-bold); // 字重 - 加粗

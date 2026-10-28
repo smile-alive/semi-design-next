@@ -1,0 +1,66 @@
+@mixin shadow-elevated {
+    box-shadow: var(--semi-shadow-elevated);
+}
+
+@mixin shadow-0 {
+    box-shadow: none;
+}
+
+@mixin shadow-knob {
+    box-shadow: var(--semi-shadow-knob);
+}
+
+@mixin box-sizing() {
+    box-sizing: border-box;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin ver-center {
+    display: flex;
+    align-items: center;
+}
+
+// hor-center and no-scrollbar are unused internally; public mixins for themes and apps
+@mixin hor-center {
+    display: flex;
+    justify-content: center;
+}
+
+@mixin text-overflow-hidden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Chrome ignores ::-webkit-scrollbar once the standard properties are set, so only those are used
+@mixin no-scrollbar {
+    scrollbar-width: none;
+
+    &:hover {
+        scrollbar-color: var(--semi-color-fill-2) transparent;
+        scrollbar-width: thin;
+    }
+
+    // Browsers without scrollbar-width (Chrome < 121, Safari < 18.2) need the WebKit pseudo-elements
+    @supports not (scrollbar-width: none) {
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        &:hover::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        &:hover::-webkit-scrollbar-thumb {
+            background-color: var(--semi-color-fill-2);
+            border-radius: 3px;
+        }
+    }
+}

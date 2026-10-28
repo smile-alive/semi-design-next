@@ -1,0 +1,53 @@
+@use 'semi:theme' as *;
+
+$color-audio-player-background: rgb(from var(--semi-grey-9) r g b / 0.8);
+$color-audio-player-control-icon: var(--semi-color-bg-0);
+$color-audio-player-control-icon-play: var(--semi-color-text-0);
+$color-audio-player-font-color: var(--semi-color-bg-0);
+$color-audio-player-font-color-speed: var(--semi-grey-8);
+
+$color-audio-player-background-light: var(--semi-color-bg-0);
+$color-audio-player-control-icon-light: var(--semi-grey-9);
+$color-audio-player-control-icon-play-light: var(--semi-color-bg-0);
+$color-audio-player-font-color-light: var(--semi-grey-9);
+
+$font-size-audio-player-text: 14px;
+
+$gap-audio-player-small: 4px;
+$gap-audio-player-medium: 16px;
+$gap-audio-player-large: 24px;
+
+$width-audio-player-max: 1440px;
+$height-audio-player: 78px;
+$width-audio-player-slider: 323px;
+$width-audio-player-speed: 40px;
+$height-audio-player-speed: 24px;
+$width-audio-player-speed-menu: 65px;
+$width-audio-player-volume: 43px;
+$height-audio-player-volume: 164px;
+$height-audio-player-time: 22px;
+
+$border-radius-audio-player-speed: 3px;
+$border-radius-audio-player-volume: 4px;
+$border-radius-audio-player-slider: 9999px;
+
+$font-size-audio-player-small: 12px;
+$line-height-audio-player-small: 16px;
+
+$width-audio-player-slider-bar: 4px;
+$width-audio-player-slider-bar-hover: 8px; // 悬停、拖动或键盘聚焦时的轨道粗细
+$size-audio-player-slider-dot: 16px;
+
+$color-audio-player-disabled-bg: rgb(from var(--semi-grey-0) r g b / 0.35);
+$color-audio-player-slider-bg: var(--semi-grey-5);
+$color-audio-player-slider-bg-light: var(--semi-grey-2);
+$color-audio-player-slider-progress: var(--semi-blue-4);
+$color-audio-player-slider-dot-bg: var(--semi-white);
+
+$color-audio-player-disabled-text: var(--semi-grey-7);
+$color-audio-player-text-default: var(--semi-color-default);
+$color-audio-player-light-disabled-bg: var(--semi-color-disabled-text);
+$color-audio-player-light-disabled-text: var(--semi-white);
+$color-audio-player-light-popup-bg: var(--semi-color-bg-3);
+$color-audio-player-light-text: var(--semi-color-text-0);
+$color-audio-player-light-hover-bg: var(--semi-color-fill-0);

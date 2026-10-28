@@ -1,0 +1,131 @@
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-colorPicker;
+
+.#{$module} {
+    &-colorChooseArea {
+        position: relative;
+        flex-grow: 1;
+        // scrolling the page would cancel the pointer mid-drag
+        touch-action: none;
+        background-image: linear-gradient(to top, #000, rgba(0, 0, 0, 0)), linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+        border-color: transparent;
+        // stylelint-disable-next-line declaration-property-value-disallowed-list -- saturation area does not mirror
+        border-radius: $radius-colorPicker-topLeft $radius-colorPicker-topRight $radius-colorPicker-bottomLeft $radius-colorPicker-bottomRight;
+
+        /**
+         *  Referrer from https://github.com/web-padawan/vanilla-colorful/blob/5d219ee360ae2f29534864b28ca9e6074233b9ce/src/lib/styles/saturation.css
+         */
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+
+    &-handle {
+        position: absolute;
+        box-sizing: border-box;
+        cursor: grab;
+        border: $width-colorPicker_handle-border solid $color-colorPicker_handle-border;
+        border-radius: $radius-colorPicker-handle;
+    }
+
+    // the native ranges inside are visually hidden, so their focus is drawn on the dot
+    &-handle:has(> .#{$module}-handleSlider:focus-visible),
+    &-alphaHandle:has(> .#{$module}-handleSlider:focus-visible) {
+        @include focus-ring;
+    }
+
+    &-handleSlider {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    &-alphaSlider {
+        position: relative;
+        margin-top: $spacing-colorPicker_slider-marginTop;
+        // scrolling the page would cancel the pointer mid-drag
+        touch-action: none;
+        cursor: pointer;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"><rect x="8" width="8" height="8"/><rect y="8" width="8" height="8"/></svg>');
+        border-radius: $radius-colorPicker-handle;
+
+        .#{$module}-alphaSliderInner {
+            width: 100%;
+            height: 100%;
+            border-radius: $radius-colorPicker-alphaSliderInner;
+        }
+
+        .#{$module}-alphaHandle {
+            position: absolute;
+            box-sizing: border-box;
+            cursor: grab;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"><rect x="8" width="8" height="8"/><rect y="8" width="8" height="8"/></svg>');
+            border: $width-colorPicker_handle-border solid $color-colorPicker_handle-border;
+            border-radius: $radius-colorPicker-handle;
+        }
+    }
+
+    &-colorSlider {
+        position: relative;
+        margin-top: $spacing-colorPicker_slider-marginTop;
+        // scrolling the page would cancel the pointer mid-drag
+        touch-action: none;
+        cursor: pointer;
+        background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+        border-radius: $radius-colorPicker-handle;
+    }
+
+    &-dataPart {
+        display: flex;
+        align-items: center;
+        margin-top: $spacing-colorPicker_dataPart-marginTop;
+        .#{$module}-colorDemoBlock {
+            border-radius: $radius-colorPicker-demoBlock;
+        }
+        .#{$module}-inputGroup {
+            flex: 1;
+            flex-wrap: nowrap;
+            width: 100%;
+
+            /* stylelint-disable-next-line property-disallowed-list -- dataPart stays LTR in RTL while this input group
+               turns rtl, so a logical margin would land on the wrong edge */
+            margin-left: $spacing-colorPicker_inputGroup-marginLeft;
+            .#{$module}-colorPickerInput {
+                flex: 1;
+            }
+            .#{$module}-colorPickerInputNumber {
+                width: $width-colorPicker-colorPickerInputNumber;
+                .#{$module}-inputNumberSuffix {
+                    padding: $spacing-colorPicker_inputNumberSuffix-vertical $spacing-colorPicker_inputNumberSuffix-horizontal;
+                    font-size: $font-colorPicker_inputNumberSuffix-fontSize;
+                }
+            }
+        }
+        .#{$module}-formatSelect {
+            width: $width-colorPicker-formatSelect;
+        }
+    }
+
+    &-popover {
+        padding: $spacing-colorPicker_popover-padding;
+
+        &-defaultChildren {
+            width: $width-colorPicker-defaultTrigger;
+            height: $width-colorPicker-defaultTrigger;
+            padding: 0;
+            cursor: pointer;
+            border: 0;
+            border-radius: $radius-colorPicker-defaultTrigger;
+
+            &:focus-visible {
+                @include focus-ring;
+            }
+        }
+    }
+}

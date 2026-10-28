@@ -1,0 +1,13 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-timeline;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+// the centering translate does not follow direction
+.#{$module}-item-head-custom:dir(rtl) {
+    transform: $motion-timeline_head_custom-transform-rtl;
+}

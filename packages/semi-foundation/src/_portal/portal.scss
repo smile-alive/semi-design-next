@@ -1,0 +1,18 @@
+@use 'semi:theme' as *;
+
+$module: #{$prefix}-portal;
+
+.#{$module} {
+    position: absolute;
+    top: 0;
+    // stylelint-disable-next-line property-disallowed-list -- origin of the JS-computed page coordinates
+    left: 0;
+    z-index: $z-portal;
+    width: 100%;
+
+    &-inner {
+        position: absolute;
+        min-width: max-content;
+        background-color: transparent;
+    }
+}

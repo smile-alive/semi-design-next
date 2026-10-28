@@ -1,0 +1,36 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@include meta.load-css('option');
+
+$module: #{$prefix}-autocomplete;
+
+.#{$module} {
+    box-sizing: border-box;
+    display: inline-flex;
+    vertical-align: middle;
+    cursor: text;
+
+    &-option-list {
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        &-chosen {
+            .#{$module}-option-icon {
+                display: flex;
+            }
+        }
+    }
+
+    &-loading-wrapper {
+        padding-top: $spacing-autoComplete_loading_wrapper-paddingTop;
+        padding-bottom: $spacing-autoComplete_loading_wrapper-paddingBottom;
+        cursor: not-allowed;
+        .#{$prefix}-spin {
+            width: 100%;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

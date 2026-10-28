@@ -1,0 +1,36 @@
+{
+    "name": "@fibrae/semi-json-viewer-core",
+    "version": "0.1.0",
+    "description": "Framework-free JSON viewer and editor core of Semi's JsonViewer",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-json-viewer-core"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist"
+    ],
+    "devDependencies": {
+        "jsonc-parser": "^3.3.1",
+        "typescript": "catalog:"
+    },
+    "sideEffects": false,
+    "keywords": [
+        "semi",
+        "json-viewer"
+    ]
+}

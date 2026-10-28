@@ -1,0 +1,119 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-rating;
+
+.#{$module} {
+    display: inline-block;
+    padding: $spacing-rating-padding;
+    margin: $spacing-rating-margin;
+    color: $color-rating-icon-default;
+    outline: none;
+    list-style: none;
+    border-radius: 3px;
+
+    // the empty star is invisible, so its focus ring goes on the whole list
+    &:has(> li:last-child [role='radio']:focus-visible) {
+        outline: $width-rating-outline-focus solid $color-rating-outline-focus;
+    }
+
+    &-no-focus {
+        outline: none;
+    }
+
+    &-disabled &-star {
+        cursor: default;
+
+        &:hover {
+            transform: scale(1);
+        }
+    }
+
+    &-star {
+        position: relative;
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        color: inherit;
+        cursor: pointer;
+        transform: scale($transform-scale-rating);
+        transition: all 0.5s;
+
+        &:not(:last-child) {
+            margin-inline-end: $spacing-rating_item-marginRight;
+
+            // ring around the whole star, not half of it
+            > .#{$module}-star-wrapper:has(> [role='radio']:focus-visible) {
+                outline: $width-rating-outline-focus solid $color-rating-outline-focus;
+            }
+        }
+
+        & > div {
+            &:hover,
+            &:focus {
+                transform: scale(1.1);
+            }
+
+            &.#{$module}-star-disabled {
+                transform: none;
+            }
+        }
+
+        &-small {
+            width: $width-rating_item_small;
+            height: $width-rating_item_small;
+            font-size: $font-rating_item_small-fontSize;
+        }
+
+        &-default {
+            width: $width-rating_item_default;
+            height: $width-rating_item_default;
+            font-size: $font-rating_item_default-fontSize;
+        }
+
+        &-outer {
+            display: inline-flex;
+            width: fit-content;
+            height: fit-content;
+        }
+
+        &-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+
+        &-first,
+        &-second {
+            color: $color-rating-bg-default;
+            user-select: none;
+            transition: color $transition_duration-rating-color $transition_function-rating-color $transition_delay-rating-color;
+        }
+
+        &-first {
+            position: absolute;
+            inset-inline-start: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        &-half &-first,
+        &-half &-second {
+            opacity: 1;
+        }
+
+        &-half &-first,
+        &-full &-second {
+            color: inherit;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

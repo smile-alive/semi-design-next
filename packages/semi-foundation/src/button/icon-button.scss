@@ -1,0 +1,76 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-button;
+
+.#{$module} {
+    &.#{$module}-with-icon {
+        display: inline-flex;
+        align-items: center;
+
+        .#{$module}-content {
+            @include flex-center;
+        }
+    }
+
+    &.#{$module}-loading {
+        pointer-events: none;
+        cursor: not-allowed;
+
+        .#{$module}-content {
+            & > svg,
+            &-loading-icon {
+                width: 16px;
+                height: 16px;
+                animation: $animation_duration-button_icon_loading linear infinite #{$prefix}-animation-rotate;
+                animation-fill-mode: forwards;
+            }
+        }
+    }
+
+    &.#{$module}-with-icon-only {
+        align-items: center;
+        justify-content: center;
+        width: $width-button_iconOnly_default;
+        height: $height-button_iconOnly_default;
+        padding-inline: $spacing-button_iconOnly_default-paddingLeft $spacing-button_iconOnly_default-paddingRight;
+        padding-top: $spacing-button_iconOnly_default-paddingTop;
+        padding-bottom: $spacing-button_iconOnly_default-paddingRight;
+
+        &.#{$module}-size {
+            &-small {
+                width: $width-button_iconOnly_small;
+                height: $height-button_iconOnly_small;
+                padding-inline: $spacing-button_iconOnly_small-paddingLeft $spacing-button_iconOnly_small-paddingRight;
+                padding-top: $spacing-button_iconOnly_small-paddingTop;
+                padding-bottom: $spacing-button_iconOnly_small-paddingBottom;
+            }
+
+            &-large {
+                width: $width-button_iconOnly_large;
+                height: $height-button_iconOnly_large;
+                padding-inline: $spacing-button_iconOnly_large-paddingLeft $spacing-button_iconOnly_large-paddingRight;
+                padding-top: $spacing-button_iconOnly_large-paddingTop;
+                padding-bottom: $spacing-button_iconOnly_large-paddingBottom;
+            }
+        }
+    }
+
+    &-content {
+        &-left {
+            display: flex;
+            align-items: center;
+            margin-inline-end: $spacing-button_iconOnly_content-marginRight;
+        }
+
+        &-right {
+            display: flex;
+            align-items: center;
+            margin-inline-start: $spacing-button_iconOnly_content-marginLeft;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

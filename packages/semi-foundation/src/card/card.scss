@@ -1,0 +1,149 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-card;
+
+.#{$module} {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-size: $font-card_default-fontSize;
+    font-style: normal;
+    font-weight: $font-card_default-fontWeight;
+    line-height: $font-card_default-lineHeight;
+    letter-spacing: 0;
+    background-color: $color-card-bg-default;
+    border-radius: $radius-card;
+
+    &-shadows {
+        cursor: pointer;
+        transition: box-shadow $motion-card-transition_duration;
+
+        &-hover {
+            &:hover {
+                // keeps the hover shadow from being covered by neighbours in a card grid
+                z-index: $z-card_hover;
+                box-shadow: $shadow-card;
+            }
+        }
+
+        &-always {
+            box-shadow: $shadow-card;
+        }
+    }
+
+    &-bordered {
+        border: $width-card-border solid $color-card-border;
+    }
+
+    &-header {
+        padding: $spacing-card-padding;
+
+        &-bordered {
+            border-bottom: $width-card-border solid $color-card-border;
+        }
+
+        &-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            &-spacing {
+                margin-inline-end: $spacing-card-margin;
+            }
+
+            &-title {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            &-extra {
+                flex-shrink: 0;
+                margin-inline-start: auto;
+                font-size: $font-card_extra-fontSize;
+                font-style: normal;
+                font-weight: $font-card_extra-fontWeight;
+                color: $color-card_extra-text;
+                letter-spacing: 0;
+            }
+        }
+    }
+
+    &-cover {
+        > * {
+            display: block;
+            width: 100%;
+        }
+    }
+
+    &-body {
+        padding: $spacing-card-padding;
+        font-size: $font-card_default-fontSize;
+        font-style: normal;
+        font-weight: $font-card_default-fontWeight;
+        line-height: $font-card_default-lineHeight;
+        color: $color-card_body-text;
+        letter-spacing: 0;
+
+        &-actions {
+            padding-top: $spacing-card-padding;
+            margin-top: $spacing-card-margin;
+            border-top: $width-card-border solid $color-card-border;
+        }
+    }
+
+    &-footer {
+        padding: $spacing-card-padding;
+
+        &-bordered {
+            border-top: $width-card-border solid $color-card-border;
+        }
+    }
+
+    &-meta {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        &-avatar {
+            margin-inline-end: $spacing-card_avatar-marginRight;
+        }
+
+        &-wrapper {
+            &-title {
+                font-size: $font-card_title-fontSize;
+                font-style: normal;
+                font-weight: $font-card_title-fontWeight;
+                line-height: $font-card_title-lineHeight;
+                color: $color-card_title-text;
+                letter-spacing: 0;
+            }
+
+            &-description {
+                font-size: $font-card_default-fontSize;
+                font-style: normal;
+                font-weight: $font-card_default-fontWeight;
+                line-height: $font-card_default-lineHeight;
+                color: $color-card_description-text;
+                letter-spacing: 0;
+            }
+        }
+    }
+}
+
+.#{$module}-group {
+    &-grid {
+        & .#{$module} {
+            border-radius: 0;
+        }
+
+        & .#{$prefix}-card {
+            margin-inline-start: $spacing-cardGroup_card-margin;
+            margin-top: $spacing-cardGroup_card-margin;
+        }
+    }
+}
+
+@include meta.load-css('rtl');

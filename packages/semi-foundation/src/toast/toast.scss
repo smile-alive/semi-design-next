@@ -1,0 +1,238 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-toast;
+$icon: #{$prefix}-toast-icon;
+
+.#{$module} {
+    pointer-events: none;
+
+    &-announcer {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    &-wrapper {
+        position: fixed;
+        top: $spacing-toast_wrapper-top;
+        z-index: $z-toast;
+        display: flex;
+        justify-content: center;
+        width: $width-toast_wrapper;
+        height: 0;
+        // inherited, so a wrapper element around a toast never blocks the page beside the narrower toasts; the
+        // content opts back in
+        .#{$module}-innerWrapper {
+            width: fit-content;
+            height: fit-content;
+            text-align: center;
+            pointer-events: none;
+
+            &-hover {
+                .#{$module}-zero-height-wrapper {
+                    perspective: unset;
+                    perspective-origin: center center;
+                }
+            }
+        }
+    }
+
+    // The single row grows from 0fr to 1fr rather than the height from 0 to auto: track sizes interpolate in every
+    // supported browser, an auto height only under interpolate-size. The row holds the toast's margin box, so the
+    // margin moves with it.
+    &-zero-height-wrapper {
+        display: grid;
+        // a fixed 0 minimum: an auto one would keep the toast's margin open
+        grid-template-rows: minmax(0, 0fr);
+        overflow: visible;
+        // the gaps of an expanded stack stay hoverable, or the list's mouseleave would collapse it under the pointer
+        pointer-events: auto;
+        perspective: $spacing-toast-perspective;
+        perspective-origin: center $spacing-toast-perspective-originY;
+        transition: grid-template-rows $animation_duration-toast-stack $animation_function-toast-stack;
+
+        &-expanded {
+            grid-template-rows: minmax(0, 1fr);
+        }
+
+        // keeps the toast at its natural size while the row is shorter
+        > .#{$module} {
+            align-self: start;
+        }
+    }
+
+    &-stack-hidden {
+        // visibility also takes the hidden layers out of the tab order
+        visibility: hidden;
+        opacity: 0;
+        transition:
+            opacity $animation_duration-toast-stack $animation_function-toast-stack,
+            visibility $animation_duration-toast-stack $animation_function-toast-stack;
+    }
+
+    &-content {
+        @include shadow-elevated;
+        @include font-size-regular;
+        display: inline-flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-block: $spacing-toast_content-paddingTop $spacing-toast_content-paddingBottom;
+        padding-inline: $spacing-toast_content-paddingLeft $spacing-toast_content-paddingRight;
+        margin: $spacing-toast_content-margin;
+        font-weight: $font-toast_content-fontWeight;
+        color: $color-toast-text-default;
+        pointer-events: all;
+        background-color: $color-toast-bg-default;
+        border-radius: $radius-toast_content;
+
+        .#{$module}-close-button {
+            height: $width-icon-large;
+            margin-top: $spacing-toast_content_close_btn-marginTop;
+        }
+
+        .#{$module}-content-text {
+            margin-inline: $spacing-toast_content_text-marginLeft $spacing-toast_content_text-marginRight;
+            text-align: start;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+    }
+
+    &-light {
+        &.#{$module}-warning {
+            .#{$module}-content {
+                background-color: $color-toast_warning_light-bg;
+                border: $width-toast_light-border solid $color-toast_warning_light-border;
+            }
+            .#{$icon}-warning {
+                color: $color-toast_warning_light-icon;
+            }
+        }
+
+        &.#{$module}-success {
+            .#{$module}-content {
+                background-color: $color-toast_success_light-bg;
+                border: $width-toast_light-border solid $color-toast_success_light-border;
+            }
+            .#{$icon}-success {
+                color: $color-toast_success_light-icon;
+            }
+        }
+
+        &.#{$module}-info {
+            .#{$module}-content {
+                background-color: $color-toast_info_light-bg;
+                border: $width-toast_light-border solid $color-toast_info_light-border;
+            }
+            .#{$icon}-info {
+                color: $color-toast_info_light-icon;
+            }
+        }
+
+        &.#{$module}-error {
+            .#{$module}-content {
+                background-color: $color-toast_danger_light-bg;
+                border: $width-toast_light-border solid $color-toast_danger_light-border;
+            }
+            .#{$icon}-error {
+                color: $color-toast_danger_light-icon;
+            }
+        }
+    }
+
+    .#{$icon}-warning {
+        color: $color-toast_warning-icon;
+    }
+
+    .#{$icon}-success {
+        color: $color-toast_success-icon;
+    }
+
+    .#{$icon}-info {
+        color: $color-toast_info-icon;
+    }
+
+    .#{$icon}-error {
+        color: $color-toast_danger-icon;
+    }
+
+    // The classed element fades and collapses, the content slides: Vue puts the class on the wrapper and React on the
+    // toast, and the slide must not depend on which. A percentage translate on the classed element would also shrink
+    // with its height.
+    &-animation-show {
+        animation: $animation_duration-toast-show #{$module}-keyframe-toast-show $animation_function-toast-show $animation_delay-toast-show;
+        animation-fill-mode: forwards;
+
+        .#{$module}-content {
+            animation: $animation_duration-toast-show #{$module}-keyframe-toast-slide-down $animation_function-toast-show $animation_delay-toast-show;
+            animation-fill-mode: forwards;
+        }
+    }
+
+    // without interpolate-size the hosts pin the natural height inline (utils/animated-height.ts)
+    &-animation-hide {
+        interpolate-size: allow-keywords;
+        animation: $animation_duration-toast-hide #{$module}-keyframe-toast-hide $animation_function-toast-hide $animation_delay-toast-hide;
+        animation-fill-mode: forwards;
+
+        .#{$module}-content {
+            animation: $animation_duration-toast-hide #{$module}-keyframe-toast-slide-up $animation_function-toast-hide $animation_delay-toast-hide;
+            animation-fill-mode: forwards;
+        }
+    }
+
+    // Vue's TransitionGroup adds the enter and leave classes to every toast; one without motion cancels the
+    // animations here, and Vue, reading a zero duration, ends it within two frames
+    &-no-motion,
+    &-no-motion .#{$module}-content {
+        animation: none;
+    }
+
+    @keyframes #{$module}-keyframe-toast-show {
+        0% {
+            opacity: $animation_opacity-toast-show;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes #{$module}-keyframe-toast-slide-down {
+        0% {
+            transform: translateY($animation_transform_translateY-toast-show);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes #{$module}-keyframe-toast-hide {
+        0% {
+            opacity: 1;
+        }
+
+        100% {
+            height: 0;
+            opacity: $animation_opacity-toast-hide;
+        }
+    }
+
+    @keyframes #{$module}-keyframe-toast-slide-up {
+        100% {
+            transform: translateY($animation_transform_translateY-toast-hide);
+        }
+    }
+}
+
+@include meta.load-css('rtl');

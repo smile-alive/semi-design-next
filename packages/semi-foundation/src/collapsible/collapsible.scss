@@ -1,0 +1,28 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-collapsible;
+
+.#{$module}-wrapper {
+    height: var(--#{$module}-height);
+}
+
+// Without calc-size() the adaptive preview's height is invalid and falls back to auto, so a max-height caps it at
+// collapseHeight; the foundation animates the height there. Removable once Firefox and Safari support calc-size().
+@supports not (height: calc-size(auto, size)) {
+    .#{$module}-wrapper {
+        max-height: var(--#{$module}-max-height, none);
+    }
+}
+
+.#{$module}-transition {
+    transition:
+        height $transition_duration-collapsible-height $transition_function-collapsible-height $transition_delay-collapsible-height,
+        opacity $transition_duration-collapsible-opacity $transition_function-collapsible-opacity $transition_delay-collapsible-opacity;
+
+    // a transition needs a computed start style; this supplies it when the side being left never got one
+    @starting-style {
+        height: var(--#{$module}-from-height);
+    }
+}

@@ -1,0 +1,128 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../scroll-list/variables' as scrollList;
+
+$module: #{$prefix}-timepicker;
+$module-list: #{$prefix}-scrolllist;
+
+.#{$module} {
+    display: inline-block;
+
+    &-panel {
+        .#{$module-list}-body {
+            height: $height-timePicker_panel_body;
+
+            .#{$module-list}-item-wheel .#{$module-list}-list-outer-nocycle,
+            .#{$module-list}-item {
+                & > ul {
+                    &::before {
+                        height: ($height-timePicker_panel_body - scrollList.$height-scrollList_item) * 0.5;
+                    }
+                }
+            }
+
+            .#{$module-list}-item,
+            .#{$module-list}-item-wheel .#{$module-list}-list-outer {
+                & > ul {
+                    padding-bottom: ($height-timePicker_panel_body - scrollList.$height-scrollList_item) * 0.5;
+                }
+            }
+        }
+
+        .#{$module-list}-item,
+        .#{$module-list}-item-wheel {
+            flex: none;
+        }
+        .#{$module-list}-item-wheel,
+        .#{$module-list}-item-wheel:not(:last-child) {
+            border: none;
+        }
+
+        &-list {
+            &-ampm {
+                width: $width-timePicker_panel_list_ampm;
+            }
+
+            &-hour {
+                width: $width-timePicker_panel_list_hour;
+            }
+
+            &-minute {
+                width: $width-timePicker_panel_list_minute;
+            }
+
+            &-second {
+                width: $width-timePicker_panel_list_second;
+            }
+        }
+    }
+
+    &-range {
+        &-panel {
+            .#{$module}-lists {
+                display: flex;
+                border: $width-timePicker_range_panel-border solid $color-timePicker_range_panel-border;
+                border-radius: $radius-timePicker_range_panel;
+                box-shadow: $shadow-timePicker_range_panel;
+
+                .#{$prefix}-scrolllist:first-of-type {
+                    border-radius: 0;
+                    border-start-start-radius: $radius-timePicker_range_panel;
+                    border-end-start-radius: $radius-timePicker_range_panel;
+                }
+                .#{$prefix}-scrolllist:last-of-type {
+                    border-radius: 0;
+                    border-start-end-radius: $radius-timePicker_range_panel;
+                    border-end-end-radius: $radius-timePicker_range_panel;
+                }
+
+                & > .#{$prefix}-scrolllist:not(:last-child) {
+                    .#{$prefix}-scrolllist {
+                        &-body {
+                            border-inline-end: $width-timePicker_range_panel_scrolllist_body-border solid $color-timePicker_range_picker_panel_split-border;
+                        }
+                    }
+                }
+
+                & > .#{$prefix}-scrolllist {
+                    box-shadow: none;
+
+                    .#{$prefix}-scrolllist {
+                        &-body,
+                        &-header {
+                            padding: $spacing-timePicker_range_panel_scrolllist_header_body-padding;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .#{$module}-input {
+        @include font-size-regular;
+        align-items: center;
+        border-radius: $radius-timePicker_input;
+    }
+
+    .#{$module}-input-readonly {
+        cursor: pointer;
+
+        // the native input takes the text cursor from the user agent stylesheet
+        .#{$prefix}-input {
+            cursor: inherit;
+        }
+    }
+}
+
+.#{$module} {
+    .#{$prefix}-input-borderless:not(:focus-within):not(:hover) {
+        .#{$prefix}-input {
+            &-suffix {
+                opacity: 0;
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');

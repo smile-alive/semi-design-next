@@ -1,0 +1,11 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-avatar;
+
+.#{$module}:dir(rtl),
+.#{$module}-group:dir(rtl) {
+    direction: rtl;
+}

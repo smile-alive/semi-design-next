@@ -1,0 +1,12 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-ai-chat-dialogue;
+
+.#{$module}-wrapper:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-wrapper-action-icon-redo:dir(rtl) {
+    transform: scaleX(-1);
+}

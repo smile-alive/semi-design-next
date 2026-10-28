@@ -1,0 +1,84 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-popconfirm;
+
+.#{$module} {
+    box-sizing: border-box;
+    max-width: $width-popconfirm-maxWidth;
+
+    &-inner {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding-block: $spacing-popconfirm-top;
+        padding-inline: $spacing-popconfirm-bottom $spacing-popconfirm-top;
+    }
+
+    &-header {
+        display: flex;
+        justify-content: flex-start;
+
+        &-title {
+            @include font-size-header-6;
+            margin-bottom: $spacing-popconfirm_header_title-marginBottom;
+            font-weight: $font-popconfirm_header_title-fontWeight;
+            color: $color-popconfirm_header-text;
+        }
+
+        &-icon {
+            width: $width-popconfirm-icon;
+            height: $width-popconfirm-icon;
+            margin-inline-end: $spacing-popconfirm_header_icon-marginRight;
+        }
+
+        .#{$prefix}-icon {
+            &-alert_triangle {
+                color: $color-popconfirm_header_alert-icon;
+            }
+        }
+
+        &-body {
+            display: inline-flex;
+            flex-grow: 1;
+            flex-direction: column;
+        }
+    }
+
+    &-body {
+        color: $color-popconfirm_body-text;
+
+        &-withIcon {
+            margin-inline-start: $width-popconfirm-icon + $spacing-popconfirm_header_icon-marginRight;
+        }
+
+        & > p {
+            padding: $spacing-popconfirm_body_p-padding;
+            margin: $spacing-popconfirm_body_p-margin;
+        }
+    }
+
+    &-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: $spacing-popconfirm_footer-marginTop;
+
+        & > .#{$prefix}-button:first-child:not(:last-child) {
+            margin-inline-end: $spacing-popconfirm_footer_btn-marginRight;
+        }
+    }
+
+    &-popover {
+        border-radius: $radius-popconfirm-popover;
+    }
+}
+
+.#{$prefix}-popover-with-arrow {
+    .#{$module}-inner {
+        // four physical sides; rtl.scss swaps in the mirrored variable
+        padding: $spacing-popconfirm_popover_with_arrow_inner-padding;
+    }
+}
+
+@include meta.load-css('rtl');

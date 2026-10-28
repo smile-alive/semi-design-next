@@ -1,0 +1,60 @@
+{
+    "name": "@fibrae/semi-ai-foundation",
+    "version": "0.1.0",
+    "description": "Framework-free logic and styles of the Semi AI components.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ai-foundation"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        "./*.css": "./dist/*.css",
+        "./*.scss": "./dist/*.scss",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "scripts": {
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "@fibrae/semi-foundation": "workspace:*",
+        "@tiptap/core": "catalog:",
+        "@tiptap/extension-blockquote": "catalog:",
+        "@tiptap/extension-bold": "catalog:",
+        "@tiptap/extension-code": "catalog:",
+        "@tiptap/extension-code-block": "catalog:",
+        "@tiptap/extension-document": "catalog:",
+        "@tiptap/extension-hard-break": "catalog:",
+        "@tiptap/extension-heading": "catalog:",
+        "@tiptap/extension-horizontal-rule": "catalog:",
+        "@tiptap/extension-image": "catalog:",
+        "@tiptap/extension-italic": "catalog:",
+        "@tiptap/extension-link": "catalog:",
+        "@tiptap/extension-list": "catalog:",
+        "@tiptap/extension-paragraph": "catalog:",
+        "@tiptap/extension-strike": "catalog:",
+        "@tiptap/extension-text": "catalog:",
+        "@tiptap/extension-text-align": "catalog:",
+        "@tiptap/extension-text-style": "catalog:",
+        "@tiptap/extensions": "catalog:",
+        "@tiptap/pm": "catalog:",
+        "es-toolkit": "catalog:"
+    },
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}

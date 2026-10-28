@@ -1,0 +1,63 @@
+@use 'variables' as tooltip;
+@use 'animation' as tooltip-animation;
+
+/**
+ * The part of a Tooltip/Popover/Dropdown wrapper that comes from the top layer: the foundation writes left/top,
+ * transform-origin and the arrow offsets inline once the popup is shown. Visual appearance (background, shadow,
+ * padding) stays in each component's own stylesheet. Popover draws the same mechanism with its own motion durations,
+ * so they default to Tooltip's and are overridden by its caller.
+ *
+ * The zoom is a keyframe animation, not a transition: an animation starts when the popup leaves `display: none`, with
+ * no `@starting-style`, and the exit plays while the popup is still open, so it keeps the top layer without
+ * `overlay`. The host hides the popover once the exit has finished.
+ */
+@mixin wrapper-styles($module, $animation_duration-tooltip_out: tooltip-animation.$animation_duration-tooltip_out, $animation_function-tooltip_out: tooltip-animation.$animation_function-tooltip_out) {
+    // reset the UA popover stylesheet (inset: 0, margin: auto), which would center it over the inline left/top
+    position: fixed;
+    inset: auto;
+    // the popup is measured at its content's width, not squeezed by a left near the viewport's right edge
+    width: max-content;
+    max-width: 100vw;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    color: inherit;
+    background: none;
+    border: none;
+
+    &:popover-open {
+        animation: #{$module}-zoom-in $animation_duration-tooltip_out $animation_function-tooltip_out;
+    }
+
+    // closing renders the popup without the show class; forwards holds it invisible until hidePopover()
+    &:popover-open:not(.#{$module}-wrapper-show) {
+        animation: #{$module}-zoom-out $animation_duration-tooltip_out $animation_function-tooltip_out forwards;
+    }
+
+    &.#{$module}-no-motion:popover-open {
+        animation: none;
+    }
+
+    // opacity takes half the duration while scale runs throughout
+    @keyframes #{$module}-zoom-in {
+        from {
+            opacity: 0;
+            transform: scale(tooltip.$motion-zoom_scale-from);
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes #{$module}-zoom-out {
+        50%,
+        to {
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(tooltip.$motion-zoom_scale-from);
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "strict": true,
+        "lib": ["esnext"],
+        "types": ["node"],
+        "declaration": true,
+        "rewriteRelativeImportExtensions": true,
+        "rootDir": "./src",
+        "noImplicitReturns": false,
+        "noImplicitThis": true,
+        "strictNullChecks": true
+    },
+    "include": ["src"]
+}

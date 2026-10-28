@@ -1,0 +1,153 @@
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-feedback;
+
+.#{$module} {
+    &-emoji-container {
+        @include flex-center;
+        column-gap: $spacing-feedback_emoji_container-columnGap;
+        align-self: stretch;
+        margin-top: $spacing-feedback_emoji_container-marginY;
+        margin-bottom: $spacing-feedback_emoji_container-marginY;
+    }
+
+    &-emoji-item {
+        // keeps the hidden radio inside the label, so focusing it does not scroll the page
+        position: relative;
+        height: $font-feedback_emoji-fontSize;
+        font-family: 'Inter', sans-serif;
+        font-size: $font-feedback_emoji-fontSize;
+        font-style: normal;
+        line-height: $font-feedback_emoji-fontSize;
+        cursor: pointer;
+        user-select: none;
+
+        &:has(> .#{$module}-emoji-input:focus-visible) {
+            @include focus-ring;
+        }
+    }
+
+    // On the glyph rather than the label: a filter on the label would gray its focus ring too
+    &-emoji-glyph {
+        filter: grayscale(100%);
+
+        .#{$module}-emoji-item:hover > &,
+        .#{$module}-emoji-item-selected > & {
+            filter: none;
+        }
+    }
+
+    // The native radio carries the semantics and the keyboard; the emoji beside it is what shows
+    &-emoji-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    &-thank-text {
+        margin-top: $spacing-feedback_thank_text-marginTop;
+        margin-bottom: $spacing-feedback_thank_text-marginBottom;
+        font-size: $font-feedback_thank_text-fontSize;
+        font-weight: $font-feedback_thank_text-fontWeight;
+        line-height: $font-feedback_thank_text-lineHeight;
+        color: $color-feedback_thank_text;
+        text-align: center;
+    }
+
+    .#{$prefix}-checkboxGroup-vertical {
+        row-gap: $spacing-feedback_checkbox_group_vertical-rowGap;
+    }
+
+    &-footer {
+        display: flex;
+        column-gap: $spacing-feedback_footer-columnGap;
+        justify-content: flex-end;
+    }
+
+    .#{$prefix}-modal {
+        width: $width-feedback;
+    }
+
+    &.#{$module}-text {
+        .#{$prefix}-modal {
+            width: $width-feedback;
+        }
+    }
+
+    .#{$prefix}-sidesheet-inner {
+        border-radius: $radius-feedback_sidesheet_inner;
+    }
+
+    &.#{$prefix}-sidesheet {
+        &.#{$prefix}-sidesheet-size-small {
+            width: $width-feedback;
+        }
+
+        &.#{$module}-text {
+            width: $width-feedback_text;
+        }
+
+        /* stylelint-disable property-disallowed-list -- the bottom feedback sheet sits in the physical bottom-right
+           corner, like the sideSheet placements it extends */
+        &-bottom {
+            right: $spacing-feedback_sidesheet_bottom-right;
+            left: auto;
+        }
+
+        // stylelint-enable property-disallowed-list
+
+        &-bottom {
+            .#{$prefix}-sidesheet-inner-wrap {
+                bottom: $spacing-feedback_sidesheet_bottom_inner_wrap-bottom;
+            }
+
+            // The bottom offset makes the travel distance differ from the sideSheet's, so only the animation name is
+            // replaced on the feedback panel and the sideSheet's own keyframes stay untouched
+            .#{$prefix}-sidesheet-animation-content_show_bottom {
+                animation-name: #{$module}-slideShow_bottom;
+            }
+
+            .#{$prefix}-sidesheet-animation-content_hide_bottom {
+                animation-name: #{$module}-slideHide_bottom;
+            }
+        }
+
+        @keyframes #{$module}-slideShow_bottom {
+            from {
+                transform: translateY(calc(100% + $spacing-feedback_sidesheet_bottom_inner_wrap-bottom));
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes #{$module}-slideHide_bottom {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(calc(100% + $spacing-feedback_sidesheet_bottom_inner_wrap-bottom));
+            }
+        }
+
+        .#{$prefix}-sidesheet-fixed {
+            &.#{$module}-bottom {
+                top: auto;
+
+                .#{$prefix}-sidesheet-inner {
+                    bottom: $spacing-feedback_sidesheet_bottom_inner_wrap-bottom;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$highlight: #{$prefix}-highlight;
+$tag: #{$prefix}-highlight-tag;
+
+.#{$tag} {
+    font-weight: $font-highlight-text-fontWeight;
+    color: $color-highlight-text-default;
+    background-color: $color-highlight-text-bg-default;
+}

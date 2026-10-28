@@ -1,0 +1,98 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-switch;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-checked:dir(rtl) {
+    .#{$module}-knob {
+        transform: translateX(-$spacing-switch_checked-translateX);
+    }
+
+    &:active {
+        .#{$module}-knob {
+            transform: translateX($width-switch_knob_expand - $spacing-switch_checked-translateX);
+        }
+    }
+}
+
+.#{$module}-knob:dir(rtl) {
+    // stylelint-disable-next-line property-disallowed-list -- knob moves by translateX
+    right: 0;
+    // stylelint-disable-next-line property-disallowed-list -- paired with the right above
+    left: auto;
+    transform: translateX(-1 * $spacing-switch_unchecked-translateX);
+}
+
+.#{$module}-loading:dir(rtl) {
+    .#{$module}-loading-spin {
+        transform: translateX(-$spacing-switch_spin_unchecked-translateX);
+    }
+
+    &.#{$module}-checked {
+        .#{$module}-loading-spin {
+            transform: translateX(-$spacing-switch_spin_checked-translateX);
+        }
+    }
+}
+
+.#{$module}-loading.#{$module}-small:dir(rtl) {
+    .#{$module}-loading-spin {
+        transform: translateX(-$spacing-switch_spin_unchecked_small-translateX);
+    }
+    &.#{$module}-checked {
+        .#{$module}-loading-spin {
+            transform: translateX(-$spacing-switch_spin_checked_small-translateX);
+        }
+    }
+}
+
+.#{$module}-loading.#{$module}-large:dir(rtl) {
+    .#{$module}-loading-spin {
+        transform: translateX(-$spacing-switch_spin_unchecked_large-translateX);
+    }
+
+    &.#{$module}-checked {
+        .#{$module}-loading-spin {
+            transform: translateX(-$spacing-switch_spin_checked_large-translateX);
+        }
+    }
+}
+
+.#{$module}-large:dir(rtl) {
+    .#{$module}-knob {
+        transform: translateX(-$spacing-switch_unchecked_large-translateX);
+    }
+    &.#{$module}-checked {
+        .#{$module}-knob {
+            transform: translateX(-$spacing-switch_checked_large-translateX);
+        }
+
+        &:active {
+            .#{$module}-knob {
+                transform: translateX($spacing-switch_expand_large-translateX - $spacing-switch_checked_large-translateX);
+            }
+        }
+    }
+}
+
+.#{$module}-small:dir(rtl) {
+    .#{$module}-knob {
+        transform: translateX(-$spacing-switch_unchecked_small-translateX);
+    }
+    &.#{$module}-checked {
+        .#{$module}-knob {
+            transform: translateX(-$spacing-switch_checked_small-translateX);
+        }
+
+        &:active {
+            .#{$module}-knob {
+                transform: translateX($spacing-switch_expand_small-translateX - $spacing-switch_checked_small-translateX);
+            }
+        }
+    }
+}

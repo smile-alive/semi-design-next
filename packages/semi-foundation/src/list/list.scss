@@ -1,0 +1,162 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-list;
+
+.#{$module} {
+    @include font-size-regular;
+
+    &-items {
+        padding: $spacing-none;
+        margin: $spacing-none;
+        list-style: none;
+    }
+
+    &-header,
+    &-footer {
+        padding: $spacing-list_footer-paddingX $spacing-list_footer-paddingY;
+    }
+
+    &-empty {
+        width: 100%;
+        padding: $spacing-list_empty-paddingY $spacing-list_empty-paddingX;
+        color: $color-list_empty-text-default;
+        text-align: center;
+    }
+
+    &-item {
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: $spacing-list_item-paddingX $spacing-list_item-paddingY;
+        margin: $spacing-none;
+        list-style: none;
+
+        &-body {
+            display: flex;
+            flex: 1;
+
+            &-header {
+                margin-inline-end: $spacing-list_header-marginRight;
+            }
+        }
+
+        &-body-flex-start {
+            align-items: flex-start;
+        }
+
+        &-body-flex-end {
+            align-items: flex-end;
+        }
+
+        &-body-center {
+            align-items: center;
+        }
+
+        &-body-stretch {
+            align-items: stretch;
+        }
+
+        &-body-baseline {
+            align-items: baseline;
+        }
+
+        // stretched-link: the native button is the only tab stop and its ::after covers the li; extra sits above it
+        &-clickable {
+            position: relative;
+        }
+
+        &-button {
+            display: flex;
+            flex: 1;
+            min-width: 0;
+            padding: $spacing-none;
+            margin: $spacing-none;
+            font: inherit;
+            color: inherit;
+            text-align: inherit;
+            cursor: pointer;
+            background: none;
+            border: 0;
+
+            &::after {
+                position: absolute;
+                inset: 0;
+                content: '';
+            }
+
+            &:focus-visible {
+                outline: none;
+
+                &::after {
+                    @include focus-ring(-2px);
+                }
+            }
+        }
+
+        &-extra {
+            position: relative;
+            z-index: 1;
+            flex: 0 0 auto;
+            margin-inline-start: $spacing-list_extra-marginLeft;
+        }
+    }
+
+    &-split &-item {
+        border-bottom: $border-thickness-control solid $color-list_default-border-default;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &-split &-header {
+        border-bottom: $border-thickness-control solid $color-list_default-border-default;
+    }
+
+    &-split &-footer {
+        border-top: $border-thickness-control solid $color-list_default-border-default;
+    }
+
+    &-small &-item,
+    &-small &-header,
+    &-small &-footer {
+        padding: $spacing-list_small-paddingX $spacing-list_small-paddingY;
+    }
+
+    &-large &-item,
+    &-large &-header,
+    &-large &-footer {
+        padding: $spacing-list_large-paddingX $spacing-list_large-paddingY;
+    }
+
+    &.#{$module}-grid {
+        .#{$module}-item {
+            padding: $spacing-none;
+        }
+    }
+
+    &.#{$module}-bordered {
+        border: $border-thickness-control solid $color-list_default-border-default;
+    }
+
+    &.#{$module}-flex {
+        .#{$module}-items {
+            display: flex;
+        }
+
+        &.#{$module}-split .#{$module}-item {
+            border-inline-end: $border-thickness-control solid $color-list_default-border-default;
+            border-bottom: none;
+
+            &:last-child {
+                border-inline-end: none;
+            }
+        }
+    }
+}
+
+@include meta.load-css('rtl');

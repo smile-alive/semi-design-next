@@ -1,0 +1,285 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-modal;
+
+.#{$module} {
+    @include font-size-regular;
+    position: relative;
+    margin: $spacing-modal-marginY $spacing-modal-marginX;
+    color: $color-modal_main-text;
+
+    &-mask {
+        position: fixed;
+        inset-inline: $spacing-modal_mask-left $spacing-modal_mask-right;
+        top: $spacing-modal_mask-top;
+        bottom: $spacing-modal_mask-bottom;
+        z-index: $z-modal-mask;
+        height: 100%;
+        background-color: $color-modal_mask-bg;
+        -webkit-backdrop-filter: $filter-modal_mask-bg;
+        backdrop-filter: $filter-modal_mask-bg;
+
+        &-hidden {
+            display: none;
+        }
+    }
+
+    &-icon-wrapper {
+        display: inline-flex;
+        width: $width-icon-extra-large;
+        margin-inline-end: $spacing-modal_icon_wrapper-marginRight;
+    }
+
+    &-wrap {
+        position: fixed;
+        inset-inline: $spacing-modal_wrap-left $spacing-modal_wrap-right;
+        top: $spacing-modal_wrap-top;
+        bottom: $spacing-modal_wrap-bottom;
+        z-index: $z-modal;
+        overflow: auto;
+        outline: 0;
+
+        &-center {
+            display: flex;
+            // not `align-items: center`: overflowing content would clip the modal's top;
+            // auto margins collapse to 0 instead
+            align-items: flex-start;
+        }
+    }
+
+    &-title {
+        display: inline-flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: $width-modal_title;
+        margin: $spacing-modal_title-margin;
+    }
+
+    &-content {
+        position: relative;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        width: $width-modal_content;
+        height: $height-modal_content;
+        padding: $spacing-modal_content-paddingY $spacing-modal_content-paddingX;
+        overflow: hidden;
+        background-color: $color-modal-bg;
+        background-clip: padding-box;
+        border: $width-modal_content-border solid $color-modal_content-border;
+        border-radius: $radius-modal_content;
+        box-shadow: $shadow-modal_content;
+        -webkit-backdrop-filter: $filter-modal_content-bg;
+        backdrop-filter: $filter-modal_content-bg;
+    }
+
+    &-footerfill {
+        display: flex;
+    }
+
+    &-content-height-set {
+        height: 100%;
+    }
+
+    &-content-fullScreen {
+        top: $spacing-modal_content_fullscreen-top;
+        height: 100%;
+        border: none;
+        border-radius: $radius-modal_content_fullscreen;
+    }
+
+    &-header {
+        display: flex;
+        align-items: flex-start;
+        padding: $spacing-modal_header-paddingY $spacing-modal_header-paddingX;
+        margin: $spacing-modal_header-marginY $spacing-modal_header-marginX;
+        font-size: $font-modal_header-fontSize;
+        font-weight: $font-modal_header-fontWeight;
+        color: $color-modal_main-text;
+        background-color: $color-modal_header-bg;
+        border-bottom: $width-modal_header-border solid $color-modal_header-border;
+    }
+
+    &-body-wrapper {
+        display: flex;
+        align-items: flex-start;
+        margin: $spacing-modal_body_wrapper-marginY $spacing-modal_body_wrapper-marginX;
+    }
+
+    &-body {
+        flex: 1 1 auto;
+        padding: $spacing-modal_body-padding;
+        margin: $spacing-modal_body-margin;
+    }
+
+    &-withIcon {
+        margin-inline-start: $spacing-modal_content_withicon-marginLeft;
+    }
+
+    &-footer {
+        padding: $spacing-modal_footer-paddingY $spacing-modal_footer-paddingX;
+        margin: $spacing-modal_footer-marginY $spacing-modal_footer-marginX;
+        text-align: end;
+        background-color: $color-modal_footer-bg;
+        border-top: $width-modal_footer-border solid $color-modal_footer-border;
+        border-radius: $radius-modal_footer;
+
+        .#{$prefix}-button {
+            margin-inline: $spacing-modal_footer_button-marginLeft 0;
+        }
+    }
+
+    &-confirm {
+        .#{$module}-header {
+            margin-bottom: $spacing-modal_confirm_header-marginBottom;
+        }
+
+        &-icon-wrapper {
+            display: inline-flex;
+            width: $width-icon-extra-large;
+            margin-inline-end: $spacing-modal_confirm_icon_wrapper-marginRight;
+        }
+
+        &-icon {
+            display: inline-flex;
+            color: $color-modal_primary-icon;
+        }
+    }
+
+    &-info-icon {
+        color: $color-modal_info-icon;
+    }
+
+    &-success-icon {
+        color: $color-modal_success-icon;
+    }
+
+    &-error-icon {
+        color: $color-modal_danger-icon;
+    }
+
+    &-warning-icon {
+        color: $color-modal_warning-icon;
+    }
+
+    &-small {
+        width: $width-modal_small;
+    }
+
+    &-medium {
+        width: $width-modal_medium;
+    }
+
+    &-large {
+        width: $width-modal_large;
+    }
+
+    &-full-width {
+        width: $width-modal_full_width;
+    }
+}
+
+.#{$module}-centered {
+    // `auto` on all sides centers vertically inside the flex-start wrap
+    margin: auto;
+}
+
+.#{$module}-popup {
+    .#{$module}-mask,
+    .#{$module}-wrap {
+        position: absolute;
+        overflow: hidden;
+    }
+}
+
+.#{$module}-fixed {
+    .#{$module}-mask,
+    .#{$module}-wrap {
+        position: fixed;
+        overflow: hidden;
+    }
+}
+
+// no mask leaves the page behind usable, so its viewport-sized wrap must not catch the page's clicks
+.#{$module}-no-mask {
+    .#{$module}-wrap {
+        pointer-events: none;
+    }
+
+    .#{$module} {
+        pointer-events: auto;
+    }
+}
+
+.#{$module}-displayNone {
+    display: none;
+}
+
+.#{$module}-content-animate-show {
+    animation: $animation_duration-modal-show #{$module}-content-keyframe-show $animation_function-modal-show $animation_delay-modal-show forwards;
+    animation-fill-mode: forwards;
+}
+
+.#{$module}-content-animate-hide {
+    animation: $animation_duration-modal-hide #{$module}-content-keyframe-hide $animation_function-modal-hide $animation_delay-modal-hide forwards;
+    animation-fill-mode: forwards;
+}
+
+.#{$module}-mask-animate-show {
+    animation: $animation_duration-modal_mask-show #{$module}-mask-keyframe-show $animation_function-modal_mask-show $animation_delay-modal_mask-show forwards;
+    animation-fill-mode: forwards;
+}
+
+.#{$module}-mask-animate-hide {
+    animation: $animation_duration-modal_mask-hide #{$module}-mask-keyframe-hide $animation_function-modal_mask-hide $animation_delay-modal_mask-hide forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes #{$module}-content-keyframe-show {
+    0% {
+        opacity: $animation_opacity-modal_content_open;
+        transform: scale($animation_transform_scale-modal_content-open);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes #{$module}-content-keyframe-hide {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: $animation_opacity-modal_content-close;
+        transform: scale($animation_transform_scale-modal_content-close);
+    }
+}
+
+@keyframes #{$module}-mask-keyframe-show {
+    0% {
+        opacity: $animation_opacity-modal_mask-open;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes #{$module}-mask-keyframe-hide {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: $animation_opacity-modal_mask-close;
+    }
+}
+
+@include meta.load-css('rtl');

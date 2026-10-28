@@ -1,0 +1,111 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+@use '../base/mixin' as base;
+
+$module: #{$prefix}-spin;
+
+.#{$module} {
+    @include size($width-spin_middle);
+    position: relative;
+    display: inline-block;
+
+    &-wrapper {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        color: $color-spin-bg;
+        text-align: center;
+        transform: translateY(-50%);
+
+        & > svg {
+            @include size($width-spin_middle);
+            display: inline;
+            vertical-align: top;
+            animation: $animation_duration-spin_wrapper-spin linear infinite #{$prefix}-animation-rotate;
+            animation-fill-mode: forwards;
+        }
+    }
+
+    &-animate {
+        display: inline-flex;
+        animation: $animation_duration-spin_customChildren-spin linear infinite #{$prefix}-animation-rotate;
+        animation-fill-mode: forwards;
+    }
+
+    &-children {
+        user-select: none;
+        opacity: $opacity-spin_children;
+    }
+
+    &-block {
+        display: block;
+
+        &:focus-visible {
+            @include base.focus-ring(-2px);
+        }
+
+        &::after {
+            position: absolute;
+            inset-inline-start: 0;
+            top: 0;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            content: '';
+        }
+
+        .#{$module}-wrapper {
+            display: block;
+        }
+
+        &.#{$module} {
+            width: auto;
+            height: auto;
+        }
+    }
+
+    &-hidden {
+        &::after {
+            content: none;
+        }
+
+        // nested: the opacity is decided by the direct parent's hidden class
+        & > .#{$module}-children {
+            user-select: auto;
+            opacity: 1;
+        }
+    }
+}
+
+.#{$module}-small {
+    @include size($width-spin_small);
+
+    & > .#{$module}-wrapper svg {
+        @include size($width-spin_small);
+    }
+}
+
+.#{$module}-middle {
+    @include size($width-spin_middle);
+
+    & > .#{$module}-wrapper svg {
+        @include size($width-spin_middle);
+    }
+}
+
+.#{$module}-large {
+    @include size($width-spin_large);
+
+    & > .#{$module}-wrapper svg {
+        @include size($width-spin_large);
+    }
+}
+
+.#{$module}-container {
+    overflow: hidden;
+}
+
+@include meta.load-css('rtl');

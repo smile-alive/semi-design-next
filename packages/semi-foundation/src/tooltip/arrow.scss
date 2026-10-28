@@ -1,0 +1,178 @@
+@use 'variables' as tooltip;
+
+@mixin minWidth($module, $min-width) {
+    &.#{$module}-with-arrow,
+    .#{$module}-with-arrow {
+        min-width: $min-width;
+    }
+}
+
+@mixin minHeight($module, $min-height) {
+    &.#{$module}-with-arrow,
+    .#{$module}-with-arrow {
+        min-height: $min-height;
+    }
+}
+
+// Popover draws the same arrow with its own sizes, so they are parameters that default to Tooltip's
+@mixin styles(
+    $module,
+    $module-icon,
+    $color-tooltip_arrow-icon-default: tooltip.$color-tooltip_arrow-icon-default,
+    $height-tooltip_arrow: tooltip.$height-tooltip_arrow,
+    $height-tooltip_arrow_vertical: tooltip.$height-tooltip_arrow_vertical,
+    $spacing-tooltip_arrow_adjusted_offset-x: tooltip.$spacing-tooltip_arrow_adjusted_offset-x,
+    $spacing-tooltip_arrow_adjusted_offset-y: tooltip.$spacing-tooltip_arrow_adjusted_offset-y,
+    $spacing-tooltip_arrow_offset-x: tooltip.$spacing-tooltip_arrow_offset-x,
+    $spacing-tooltip_arrow_offset-y: tooltip.$spacing-tooltip_arrow_offset-y,
+    $vertical-rate: tooltip.$vertical-rate,
+    $width-tooltip_arrow: tooltip.$width-tooltip_arrow,
+    $width-tooltip_arrow_vertical: tooltip.$width-tooltip_arrow_vertical
+) {
+    $min-width: $spacing-tooltip_arrow_adjusted_offset-x * 2 + $width-tooltip_arrow;
+    $min-height: $height-tooltip_arrow_vertical + $spacing-tooltip_arrow_adjusted_offset-y * 2;
+
+    /* stylelint-disable property-disallowed-list -- x-placement names a physical side, the arrow sits on the side
+       facing the trigger, and the centered offsets come from --semi-tooltip-arrow-offset-x/y, which the foundation
+       measures in the viewport; none of them follow direction */
+    .#{$module} {
+        &-wrapper {
+            .#{$module-icon} {
+                position: absolute;
+                width: $width-tooltip_arrow;
+                height: $height-tooltip_arrow;
+                color: $color-tooltip_arrow-icon-default;
+            }
+
+            &[x-placement='top'] {
+                .#{$module-icon} {
+                    bottom: (-$height-tooltip_arrow + $spacing-tooltip_arrow_offset-y);
+                    left: var(--semi-tooltip-arrow-offset-x, 50%);
+                    transform: translateX(-50%);
+                }
+
+                @include minWidth($module, $min-width);
+            }
+
+            &[x-placement='topLeft'] {
+                .#{$module-icon} {
+                    bottom: (-$height-tooltip_arrow + $spacing-tooltip_arrow_offset-y);
+                    left: $spacing-tooltip_arrow_adjusted_offset-x;
+                }
+
+                @include minWidth($module, $min-width);
+            }
+
+            &[x-placement='topRight'] {
+                .#{$module-icon} {
+                    right: $spacing-tooltip_arrow_adjusted_offset-x;
+                    bottom: (-$height-tooltip_arrow + $spacing-tooltip_arrow_offset-y);
+                }
+
+                @include minWidth($module, $min-width);
+            }
+
+            &[x-placement='leftTop'] {
+                .#{$module-icon} {
+                    top: $vertical-rate * $height-tooltip_arrow_vertical + $spacing-tooltip_arrow_adjusted_offset-y;
+                    right: (-$width-tooltip_arrow_vertical + $spacing-tooltip_arrow_offset-x);
+                    width: $width-tooltip_arrow_vertical;
+                    height: $height-tooltip_arrow_vertical;
+                }
+
+                @include minHeight($module, $min-height);
+            }
+
+            &[x-placement='left'] {
+                .#{$module-icon} {
+                    top: var(--semi-tooltip-arrow-offset-y, 50%);
+                    right: (-$width-tooltip_arrow_vertical + $spacing-tooltip_arrow_offset-x);
+                    width: $width-tooltip_arrow_vertical;
+                    height: $height-tooltip_arrow_vertical;
+                    transform: translateY(-50%);
+                }
+
+                @include minHeight($module, $min-height);
+            }
+
+            &[x-placement='leftBottom'] {
+                .#{$module-icon} {
+                    right: (-$width-tooltip_arrow_vertical + $spacing-tooltip_arrow_offset-x);
+                    bottom: $vertical-rate * $height-tooltip_arrow_vertical + $spacing-tooltip_arrow_adjusted_offset-y;
+                    width: $width-tooltip_arrow_vertical;
+                    height: $height-tooltip_arrow_vertical;
+                }
+
+                @include minHeight($module, $min-height);
+            }
+
+            &[x-placement='rightTop'] {
+                .#{$module-icon} {
+                    top: $vertical-rate * $height-tooltip_arrow_vertical + $spacing-tooltip_arrow_adjusted_offset-y;
+                    left: -$width-tooltip_arrow_vertical + $spacing-tooltip_arrow_offset-x;
+                    width: $width-tooltip_arrow_vertical;
+                    height: $height-tooltip_arrow_vertical;
+                    transform: rotate(180deg);
+                }
+
+                @include minHeight($module, $min-height);
+            }
+
+            &[x-placement='right'] {
+                .#{$module-icon} {
+                    top: var(--semi-tooltip-arrow-offset-y, 50%);
+                    left: -$width-tooltip_arrow_vertical + $spacing-tooltip_arrow_offset-x;
+                    width: $width-tooltip_arrow_vertical;
+                    height: $height-tooltip_arrow_vertical;
+                    transform: translateY(-50%) rotate(180deg);
+                }
+
+                @include minHeight($module, $min-height);
+            }
+
+            &[x-placement='rightBottom'] {
+                .#{$module-icon} {
+                    bottom: $vertical-rate * $height-tooltip_arrow_vertical + $spacing-tooltip_arrow_adjusted_offset-y;
+                    left: -$width-tooltip_arrow_vertical + $spacing-tooltip_arrow_offset-x;
+                    width: $width-tooltip_arrow_vertical;
+                    height: $height-tooltip_arrow_vertical;
+                    transform: rotate(180deg);
+                }
+
+                @include minHeight($module, $min-height);
+            }
+
+            &[x-placement='bottomLeft'] {
+                .#{$module-icon} {
+                    top: (-$height-tooltip_arrow + $spacing-tooltip_arrow_offset-y);
+                    left: $spacing-tooltip_arrow_adjusted_offset-x;
+                    transform: rotate(180deg);
+                }
+
+                @include minWidth($module, $min-width);
+            }
+
+            &[x-placement='bottom'] {
+                .#{$module-icon} {
+                    top: (-$height-tooltip_arrow + $spacing-tooltip_arrow_offset-y);
+                    left: var(--semi-tooltip-arrow-offset-x, 50%);
+                    transform: translateX(-50%) rotate(180deg);
+                }
+
+                @include minWidth($module, $min-width);
+            }
+
+            &[x-placement='bottomRight'] {
+                .#{$module-icon} {
+                    top: (-$height-tooltip_arrow + $spacing-tooltip_arrow_offset-y);
+                    right: $spacing-tooltip_arrow_adjusted_offset-x;
+                    transform: rotate(180deg);
+                }
+
+                @include minWidth($module, $min-width);
+            }
+        }
+    }
+
+    /* stylelint-enable property-disallowed-list */
+}

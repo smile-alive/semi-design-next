@@ -1,0 +1,28 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-datepicker;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-navigation:dir(rtl),
+.#{$module}-yam:dir(rtl) {
+    .#{$prefix}-icon-chevron_left,
+    .#{$prefix}-icon-chevron_right,
+    .#{$prefix}-icon-double_chevron_left,
+    .#{$prefix}-icon-double_chevron_right {
+        transform: scaleX(-1);
+    }
+}
+
+.#{$module}-compact:dir(rtl) .#{$module}-inset-input-separator {
+    /* stylelint-disable-next-line property-disallowed-list --
+       flips with translateX, which ignores direction */
+    border-right: $width-datepicker-border solid $color-datepicker_border-bg-default;
+    // stylelint-disable-next-line property-disallowed-list -- pairs with border-right
+    border-left: 0;
+    transform: translateX(-50%);
+}

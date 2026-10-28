@@ -1,0 +1,49 @@
+@use 'variables' as *;
+
+@mixin font-size-small {
+    font-family: $font-family-regular;
+    font-size: $font-size-small;
+    line-height: var(--semi-line-height-small);
+}
+
+@mixin font-size-regular {
+    font-family: $font-family-regular;
+    font-size: $font-size-regular;
+    line-height: var(--semi-line-height-regular);
+}
+
+@mixin font-size-header-6 {
+    font-family: $font-family-regular;
+    font-size: $font-size-header-6;
+    line-height: var(--semi-line-height-header-6);
+}
+
+@mixin font-size-header-5 {
+    font-family: $font-family-regular;
+    font-size: $font-size-header-5;
+    line-height: var(--semi-line-height-header-5);
+}
+
+@mixin font-size-header-4 {
+    font-family: $font-family-regular;
+    font-size: $font-size-header-4;
+    line-height: var(--semi-line-height-header-4);
+}
+
+@mixin font-size-header-3 {
+    font-family: $font-family-regular;
+    font-size: $font-size-header-3;
+    line-height: var(--semi-line-height-header-3);
+}
+
+@mixin font-size-header-2 {
+    font-family: $font-family-regular;
+    font-size: $font-size-header-2;
+    line-height: var(--semi-line-height-header-2);
+}
+
+@mixin font-size-header-1 {
+    font-family: $font-family-regular;
+    font-size: $font-size-header-1;
+    line-height: var(--semi-line-height-header-1);
+}

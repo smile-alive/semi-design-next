@@ -1,0 +1,73 @@
+// Framework-free View Transition Classes: pass one to React's <ViewTransition>, or set `view-transition-class` on an
+// element with a `view-transition-name` inside document.startViewTransition(). One class covers every trigger (enter
+// has only the new snapshot, exit only the old), so `semi-slide-left` enters from the right and leaves to the left.
+@use 'sass:list';
+
+$duration: var(--semi-view-transition-duration, 250ms);
+$easing: var(--semi-view-transition-easing, cubic-bezier(0.2, 0, 0, 1));
+$offset: var(--semi-view-transition-offset, 100%);
+
+// name -> transform of the new snapshot before it enters, transform of the old snapshot after it leaves
+$presets: (
+    fade: (
+        none,
+        none,
+    ),
+    zoom: (
+        scale(0.85),
+        scale(0.85),
+    ),
+    slide-up: (
+        translateY($offset),
+        translateY(calc(-1 * $offset)),
+    ),
+    slide-down: (
+        translateY(calc(-1 * $offset)),
+        translateY($offset),
+    ),
+    slide-left: (
+        translateX($offset),
+        translateX(calc(-1 * $offset)),
+    ),
+    slide-right: (
+        translateX(calc(-1 * $offset)),
+        translateX($offset),
+    ),
+);
+
+@each $name, $transforms in $presets {
+    @keyframes semi-view-transition-#{$name}-in {
+        from {
+            opacity: 0;
+            transform: list.nth($transforms, 1);
+        }
+    }
+
+    @keyframes semi-view-transition-#{$name}-out {
+        to {
+            opacity: 0;
+            transform: list.nth($transforms, 2);
+        }
+    }
+
+    ::view-transition-new(.semi-#{$name}) {
+        animation: semi-view-transition-#{$name}-in $duration $easing both;
+    }
+
+    ::view-transition-old(.semi-#{$name}) {
+        animation: semi-view-transition-#{$name}-out $duration $easing both;
+    }
+}
+
+// Neither the browser nor React reduces view transitions on their own; movement and scaling fall back to a fade
+@media (prefers-reduced-motion: reduce) {
+    @each $name, $transforms in $presets {
+        ::view-transition-new(.semi-#{$name}) {
+            animation-name: semi-view-transition-fade-in;
+        }
+
+        ::view-transition-old(.semi-#{$name}) {
+            animation-name: semi-view-transition-fade-out;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+@use 'semi:theme' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-base;
+
+// A layer loses to every component rule, so components declaring their own box-sizing keep it.
+// Not named `base`: with cssLayer: false it would merge into Tailwind's `base` layer
+@layer semi-base {
+    :where([class^='#{$prefix}-'], [class*=' #{$prefix}-']),
+    :where([class^='#{$prefix}-'], [class*=' #{$prefix}-'])::before,
+    :where([class^='#{$prefix}-'], [class*=' #{$prefix}-'])::after {
+        box-sizing: border-box;
+    }
+
+    :where([class^='#{$prefix}-'], [class*=' #{$prefix}-']) {
+        @include scrollbar;
+    }
+}
+
+// emitted once here: base ships with every component (tokens.scss) and in the full stylesheet
+@keyframes #{$prefix}-animation-rotate {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.#{$prefix}-scrollbar {
+    &,
+    * {
+        @include scrollbar;
+    }
+}

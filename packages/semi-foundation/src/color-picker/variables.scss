@@ -1,0 +1,26 @@
+@use 'semi:theme' as *;
+
+$radius-colorPicker-topLeft: 8px;
+$radius-colorPicker-topRight: 8px;
+$radius-colorPicker-bottomLeft: 0px;
+$radius-colorPicker-bottomRight: 0px;
+$radius-colorPicker-handle: var(--semi-border-radius-full);
+$radius-colorPicker-alphaSliderInner: 4px;
+$radius-colorPicker-demoBlock: 4px;
+$radius-colorPicker-defaultTrigger: 4px;
+
+$width-colorPicker_handle-border: 2px;
+$width-colorPicker-colorPickerInputNumber: 58px;
+$width-colorPicker-formatSelect: 80px;
+$width-colorPicker-defaultTrigger: 24px;
+
+$color-colorPicker_handle-border: var(--semi-color-white);
+
+$spacing-colorPicker_inputNumberSuffix-horizontal: 4px;
+$spacing-colorPicker_inputGroup-marginLeft: 4px;
+$spacing-colorPicker_popover-padding: 8px;
+$spacing-colorPicker_inputNumberSuffix-vertical: 4px;
+$spacing-colorPicker_slider-marginTop: 6px;
+$spacing-colorPicker_dataPart-marginTop: 8px;
+
+$font-colorPicker_inputNumberSuffix-fontSize: 14px;

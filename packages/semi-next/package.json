@@ -1,0 +1,35 @@
+{
+    "name": "@fibrae/semi-next",
+    "version": "0.1.0",
+    "description": "Plugin that support Semi Design Next in Next.js",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-next"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.mjs",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "vp pack",
+        "test": "vp pack && node test/run.ts",
+        "prepublishOnly": "npm run build"
+    },
+    "devDependencies": {
+        "typescript": "catalog:"
+    },
+    "dependencies": {
+        "@fibrae/semi-webpack-plugin": "workspace:*"
+    }
+}

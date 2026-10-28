@@ -1,0 +1,79 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-markdownRender;
+
+.#{$module} {
+    &-simple-code {
+        color: $color-markdownRender_simpleCode-text;
+        background: $color-markdownRender_simpleCode-bg;
+    }
+
+    ul,
+    li {
+        color: $color-markdownRender_component_list;
+    }
+
+    // host resets such as Tailwind Preflight strip list markers, indent and margins
+    ul,
+    ol {
+        padding-inline-start: $spacing-markdownRender_component_list-paddingLeft;
+        margin-block: $spacing-markdownRender_component_list-marginTop $spacing-markdownRender_component_list-marginBottom;
+    }
+
+    ul {
+        list-style: disc;
+    }
+
+    ol {
+        list-style: decimal;
+    }
+
+    &-component-image {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: $width-markdownRender_component_image-maxWidth;
+        max-height: $width-markdownRender_component_image-maxHeight;
+        margin: $spacing-markdownRender_component_image-marginTop $spacing-markdownRender_component_image-marginRight $spacing-markdownRender_component_image-marginBottom $spacing-markdownRender_component_image-marginLeft;
+
+        &-alt {
+            margin-top: $spacing-markdownRender_component_image_alt-marginTop;
+            color: $color-markdownRender_component_image_alt;
+            text-align: center;
+        }
+    }
+
+    &-component-header.#{$prefix}-typography {
+        &.#{$prefix}-typography-h1 {
+            margin-top: $spacing-markdownRender_component_header1-marginTop;
+            margin-bottom: $spacing-markdownRender_component_header1-marginBottom;
+        }
+        &.#{$prefix}-typography-h2 {
+            margin-top: $spacing-markdownRender_component_header2-marginTop;
+            margin-bottom: $spacing-markdownRender_component_header2-marginBottom;
+        }
+        &.#{$prefix}-typography-h3 {
+            margin-top: $spacing-markdownRender_component_header3-marginTop;
+            margin-bottom: $spacing-markdownRender_component_header3-marginBottom;
+        }
+        &.#{$prefix}-typography-h4 {
+            margin-top: $spacing-markdownRender_component_header4-marginTop;
+            margin-bottom: $spacing-markdownRender_component_header4-marginBottom;
+        }
+        &.#{$prefix}-typography-h5 {
+            margin-top: $spacing-markdownRender_component_header5-marginTop;
+            margin-bottom: $spacing-markdownRender_component_header5-marginBottom;
+        }
+        &.#{$prefix}-typography-h6 {
+            margin-top: $spacing-markdownRender_component_header6-marginTop;
+            margin-bottom: $spacing-markdownRender_component_header6-marginBottom;
+        }
+    }
+
+    &-component-p {
+        strong {
+            font-weight: $font-weight-bold;
+        }
+    }
+}

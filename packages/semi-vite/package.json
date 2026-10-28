@@ -1,0 +1,45 @@
+{
+    "name": "@fibrae/semi-vite-plugin",
+    "version": "0.1.0",
+    "description": "A vite plugin for Semi Design Next to custom theme, replace prefix and so on.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-vite"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.mjs",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org"
+    },
+    "scripts": {
+        "build": "vp pack",
+        "dev": "vp pack --watch",
+        "test": "vp pack && node test/run.ts",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "sass": "catalog:"
+    },
+    "peerDependencies": {
+        "vite": ">=8.0.0"
+    },
+    "devDependencies": {
+        "@fibrae/semi-theme-shared": "workspace:*",
+        "typescript": "catalog:",
+        "vite": "catalog:"
+    }
+}

@@ -1,0 +1,72 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use '../base/mixin' as *;
+@use 'variables' as *;
+@use 'position';
+@use 'arrow';
+
+$module: #{$prefix}-tooltip;
+$module-icon: #{$module}-icon-arrow;
+
+// Tooltip, Popover and Dropdown make bare icon triggers focusable; semi-icons-react cannot reach the focus tokens
+.#{$prefix}-icon:focus-visible {
+    @include focus-ring;
+}
+
+.#{$module}-trigger-wrapper:focus-visible {
+    @include focus-ring;
+}
+
+// utils/layer.ts marks a popup a modal layer covers: the top layer would otherwise paint it above the modal's mask
+[popover][data-semi-covered] {
+    visibility: hidden;
+}
+
+// A page with a fixed header sets this on :root to the header's height; the foundation reads it as pixels, which a
+// registered <length> resolves calc() and var() to
+@property --semi-tooltip-viewport-inset-top {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0;
+}
+
+.#{$module} {
+    &-wrapper {
+        @include position.wrapper-styles($module);
+        @include font-size-regular;
+        max-width: $width-tooltip;
+        padding-inline: $spacing-tooltip_content-paddingLeft $spacing-tooltip_content-paddingRight;
+        padding-top: $spacing-tooltip_content-paddingTop;
+        padding-bottom: $spacing-tooltip_content-paddingBottom;
+        font-size: $font-tooltip-fontSize;
+        color: $color-tooltip-text-default;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        background-color: $color-tooltip-bg-default;
+        border-radius: $radius-tooltip;
+        -webkit-backdrop-filter: $filter-tooltip-bg;
+        backdrop-filter: $filter-tooltip-bg;
+    }
+
+    &-content {
+        min-width: 0;
+    }
+
+    &-trigger {
+        display: inline-block;
+        width: auto;
+        height: auto;
+    }
+
+    // flex only once shown: an author `display` would override the UA's `display: none` of a closed popover
+    &-with-arrow {
+        box-sizing: border-box;
+
+        &:popover-open {
+            @include flex-center;
+        }
+    }
+}
+
+@include arrow.styles($module, $module-icon);
+@include meta.load-css('rtl');

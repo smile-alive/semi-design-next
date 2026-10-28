@@ -1,0 +1,18 @@
+@use 'sass:string';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@mixin tag-style($color, $type) {
+    @if $type==solid {
+        color: var(--semi-white);
+        background-color: string.unquote('var(--semi-#{$color}-5)');
+    } @else if $type==ghost {
+        color: string.unquote('var(--semi-#{$color}-5)');
+        background-color: transparent;
+        border: 1px solid string.unquote('var(--semi-#{$color}-4)');
+    } @else if $type==light {
+        color: string.unquote('var(--semi-#{$color}-8)');
+        background-color: string.unquote('rgb(from var(--semi-#{$color}-5) r g b / 0.15)');
+    } @else {
+        @error 'Unknown type #{$type}.';
+    }
+}

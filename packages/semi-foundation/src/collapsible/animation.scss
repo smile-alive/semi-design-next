@@ -1,0 +1,9 @@
+@use 'semi:theme' as *;
+
+$transition_duration-collapsible-height: 250ms;
+$transition_function-collapsible-height: cubic-bezier(0.25, 0.1, 0.25, 1);
+$transition_delay-collapsible-height: var(--semi-transition_delay-none);
+
+$transition_duration-collapsible-opacity: 250ms;
+$transition_function-collapsible-opacity: var(--semi-transition_function-easeIn);
+$transition_delay-collapsible-opacity: var(--semi-transition_delay-none);

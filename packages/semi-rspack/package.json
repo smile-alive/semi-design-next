@@ -1,0 +1,41 @@
+{
+    "name": "@fibrae/semi-rspack-plugin",
+    "version": "0.1.0",
+    "description": "An rspack plugin for Semi Design Next to custom theme, replace prefix and so on.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-rspack"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.mjs",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "vp pack",
+        "dev": "vp pack --watch",
+        "test": "vp pack && node test/run.ts",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "sass": "catalog:"
+    },
+    "peerDependencies": {
+        "@rspack/core": "^2.0.0"
+    },
+    "devDependencies": {
+        "@fibrae/semi-theme-shared": "workspace:*",
+        "@rspack/core": "^2.2.9",
+        "typescript": "catalog:"
+    }
+}

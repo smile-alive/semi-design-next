@@ -1,0 +1,23 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-slider;
+
+// the vertical slider is positioned by top and does not mirror
+.#{$module}:dir(rtl) {
+    direction: rtl;
+
+    // handles and marks are positioned from the right, so the centering translate flips
+    .#{$module}-handle {
+        transform: $transform_scale-slider_handle translateX(50%) translateY($spacing-slider_handle-translateY);
+    }
+
+    .#{$module}-mark {
+        transform: translate(50%, 0);
+    }
+
+    .#{$module}-mark-reverse {
+        transform: translate(50%, 0) rotate(-180deg);
+    }
+}

@@ -1,0 +1,7 @@
+@use 'semi:theme' as *;
+
+$module: #{$prefix}-overflow-list;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}

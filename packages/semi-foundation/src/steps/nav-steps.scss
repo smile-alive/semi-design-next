@@ -1,0 +1,66 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-steps;
+$item: #{$module}-item;
+$basicType: #{$module}-nav;
+
+.#{$basicType} {
+    display: inline-flex;
+    flex-flow: row nowrap;
+
+    .#{$item} {
+        @include box-sizing;
+
+        &:last-child {
+            flex: none;
+
+            .#{$item}-content {
+                width: auto;
+            }
+        }
+
+        .#{$item}-container {
+            display: flex;
+            align-items: center;
+            color: $color-steps_nav_item_container-text;
+
+            .#{$item}-icon {
+                display: inline-flex;
+                flex: 1;
+                justify-content: center;
+                min-width: $width-steps_nav_item_icon-minWidth;
+                color: $color-steps_nav_item-icon;
+            }
+        }
+
+        .#{$item}-content {
+            display: inline-block;
+            flex: 1;
+        }
+
+        .#{$item}-title {
+            @include font-size-header-6;
+            @include text-overflow-hidden;
+            max-width: $width-steps_nav_item_title-maxWidth;
+            font-weight: $font-steps_nav_item_title-fontWeight;
+        }
+
+        &-active {
+            .#{$item}-title {
+                font-weight: $font-steps_nav_item_title_active-fontWeight;
+                color: $color-steps_nav_item_title-text-active;
+            }
+        }
+    }
+
+    &.#{$module}-small {
+        .#{$item} {
+            .#{$item}-title {
+                @include font-size-regular;
+            }
+        }
+    }
+}

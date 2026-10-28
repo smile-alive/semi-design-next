@@ -1,0 +1,260 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-transfer;
+
+.#{$module} {
+    box-sizing: border-box;
+    display: flex;
+    min-width: $width-transfer-minWidth;
+    height: $height-transfer;
+    background-color: $color-transfer-bg;
+    border: $width-transfer-border solid $color-transfer-border;
+    border-radius: $radius-transfer;
+
+    &-disabled {
+        .#{$module}-header {
+            color: $color-transfer_disabled-text;
+            cursor: not-allowed;
+        }
+
+        .#{$module}-item {
+            color: $color-transfer_disabled-text;
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: inherit;
+
+                .#{$module}-item-close-icon {
+                    visibility: hidden;
+                }
+            }
+
+            &:focus-within .#{$module}-item-close-icon {
+                visibility: hidden;
+            }
+
+            &:active {
+                background-color: inherit;
+            }
+        }
+    }
+
+    &-custom-panel {
+        min-width: inherit;
+        height: inherit;
+        border: none;
+    }
+
+    &-header {
+        @include font-size-small;
+        @include ver-center;
+        flex-shrink: 0;
+        height: $height-transfer_header;
+        margin-inline: $spacing-transfer_header-marginLeft $spacing-transfer_header-marginRight;
+        margin-top: $spacing-transfer_header-marginTop;
+        margin-bottom: $spacing-transfer_header-marginBottom;
+        color: $color-transfer_header-text;
+
+        &-total {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &-all {
+            margin-inline-start: $spacing-transfer_header_all-marginLeft;
+            font-weight: $font-transfer_header_all-fontWeight;
+        }
+
+        .#{$prefix}-button {
+            @include font-size-small;
+        }
+    }
+
+    &-item {
+        @include font-size-regular;
+        @include ver-center;
+        box-sizing: border-box;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        min-height: $height-transfer_item-minHeight;
+        padding-inline: $spacing-transfer_item-paddingLeft $spacing-transfer_item-paddingRight;
+        padding-top: $spacing-transfer_item-paddingTop;
+        padding-bottom: $spacing-transfer_item-paddingBottom;
+        color: $color-transfer_item-text;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color $transition_duration_transfer_item-bg $transition_function-transfer_item-bg $transition_delay-transfer_item-bg;
+
+        &:hover {
+            background-color: $color-transfer_item-bg-hover;
+        }
+
+        &:active {
+            background-color: $color-transfer_item-bg-active;
+        }
+
+        &-disabled {
+            cursor: not-allowed;
+
+            &:hover {
+                background-color: inherit;
+            }
+        }
+
+        // opacity, not visibility, keeps the button focusable
+        .#{$module}-item-close-icon {
+            @include bare-button;
+
+            display: inline-flex;
+            font-size: $width-transfer_item_close-icon;
+            color: $color-transfer_close_icon-icon;
+            opacity: 0;
+
+            &:disabled {
+                cursor: inherit;
+            }
+        }
+    }
+
+    &-left {
+        display: flex;
+        flex-direction: column;
+        width: $width-transfer_left;
+        border-inline-end: $width-transfer_left-border solid $color-transfer-border;
+
+        &-list {
+            flex-grow: 1;
+            overflow: auto;
+
+            // an overflowing scroll container is keyboard focusable
+            &:focus-visible {
+                @include focus-ring(-2px);
+            }
+        }
+
+        &-pagination {
+            display: flex;
+            flex-shrink: 0;
+            justify-content: center;
+            padding-inline: $spacing-base-tight;
+            padding-top: $spacing-base-tight;
+            padding-bottom: $spacing-base-tight;
+        }
+
+        &-empty {
+            height: $height-transfer_left_empty;
+        }
+
+        > .#{$prefix}-spin {
+            flex-grow: 1;
+            width: 100%;
+        }
+    }
+
+    &-right {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: $width-transfer_right;
+
+        &-header {
+            flex-shrink: 0;
+            height: $height-transfer_right_header;
+            margin-top: $spacing-transfer_right_header-marginTop;
+            margin-bottom: $spacing-transfer_right_header-marginBottom;
+        }
+
+        &-list {
+            flex-grow: 1;
+            overflow: auto;
+
+            // the scroll container is keyboard focusable when the transfer is disabled
+            &:focus-visible {
+                @include focus-ring(-2px);
+            }
+        }
+
+        &-item {
+            color: $color-transfer_selected_item-text;
+            cursor: auto;
+
+            &:hover,
+            &:focus-within {
+                .#{$module}-item-close-icon {
+                    flex-shrink: 0;
+                    cursor: pointer;
+                    opacity: 1;
+                }
+
+                .#{$module}-item-close-icon.#{$module}-item-close-icon-disabled {
+                    visibility: hidden;
+                }
+            }
+
+            &-text {
+                flex: 1;
+                word-break: break-all;
+            }
+
+            &-drag {
+                &-handler {
+                    flex-shrink: 0;
+                    margin-inline-end: $spacing-transfer_right_item_drag_handler-marginRight;
+                    cursor: move;
+                }
+            }
+
+            // renders like the bare icon it wraps; the scrolling list clips an outside ring
+            &-sortable-handle {
+                @include bare-button(-2px);
+
+                display: inline-flex;
+                line-height: 0;
+                cursor: inherit;
+            }
+
+            &-sortable-item {
+                // keyed to the overlay's attribute: the class follows React state, which lags dnd-kit's overlay
+                &-active {
+                    :has(~ [data-dnd-overlay][data-dnd-dragging]) > & {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+
+        &-empty {
+            position: absolute;
+            height: $height-transfer_right_empty;
+        }
+    }
+
+    &-empty {
+        @include flex-center;
+        @include font-size-small;
+        width: $width-transfer_empty;
+        color: $color-transfer_empty-text;
+    }
+
+    &-filter {
+        margin-inline: $spacing-transfer_filter-marginLeft $spacing-transfer_filter-marginRight;
+        margin-top: $spacing-transfer_filter-marginTop;
+        margin-bottom: $spacing-transfer_filter-marginBottom;
+    }
+
+    &-group-title {
+        @include font-size-small;
+        @include ver-center;
+        height: $height-transfer_group_title;
+        padding-inline-start: $spacing-transfer_group_title-paddingLeft;
+        color: $color-transfer_group_title-text;
+    }
+}
+
+@include meta.load-css('rtl');

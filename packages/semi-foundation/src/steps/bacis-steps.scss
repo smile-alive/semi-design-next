@@ -1,0 +1,338 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-steps;
+$item: #{$module}-item;
+$basicType: #{$module}-basic;
+
+.#{$basicType} {
+    &.#{$module}-horizontal {
+        display: flex;
+        flex-flow: row nowrap;
+
+        &.#{$module}-hasline {
+            .#{$item}-title {
+                &::after {
+                    position: absolute;
+                    inset-inline-start: 100%;
+                    top: 50%;
+                    display: block;
+                    width: $width-steps_title_after;
+                    height: $height-steps_title_after;
+                    content: '';
+                    background: $color-steps_title_after-bg;
+                }
+            }
+        }
+
+        .#{$item} {
+            padding-inline-start: $spacing-steps_basic_item-paddingLeft;
+
+            &:first-child {
+                padding-inline-start: 0;
+            }
+
+            &:last-child {
+                flex: none;
+
+                .#{$item}-title {
+                    max-width: 100%;
+                    padding-inline-end: 0;
+
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+
+            &-done {
+                .#{$item}-container {
+                    .#{$item}-title {
+                        &::after {
+                            background: $color-steps_item_done_after-bg;
+                        }
+                    }
+                }
+            }
+
+            .#{$item}-content {
+                flex: 1;
+            }
+
+            .#{$item}-description {
+                @include font-size-small;
+                @include text-overflow-hidden;
+                width: $width-steps_basic_item_description;
+                max-width: $width-steps_basic_item_description-maxWidth;
+                color: $color-steps_minor-text-default;
+            }
+
+            .#{$item}-title {
+                display: inline-flex;
+                align-items: center;
+                max-width: $width-steps_basic_item_title-maxWidth;
+                min-height: $height-steps_basic_item_left-icon;
+
+                .#{$item}-title-text {
+                    @include text-overflow-hidden;
+                    transition: color $transition_duration-steps_item_title-text $transition_function-steps_item_title-text $transition_delay-steps_item_title-text;
+
+                    &-empty {
+                        width: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    &.#{$module}-vertical {
+        display: flex;
+        flex-flow: column nowrap;
+
+        .#{$item}-icon {
+            box-sizing: content-box;
+        }
+
+        &.#{$module}-small {
+            .#{$item} {
+                .#{$item}-content {
+                    min-height: $height-steps_basic_vertical_small_item_content-minHeight;
+                }
+            }
+        }
+
+        &.#{$module}-hasline {
+            .#{$item}-icon {
+                &::after {
+                    position: absolute;
+                    top: 100%;
+                    // stylelint-disable-next-line property-disallowed-list -- centers the connector under the icon
+                    left: 50%;
+                    display: block;
+                    width: $width-steps_vertical_icon_after;
+                    height: $height-steps_vertical_icon_after;
+                    content: '';
+                    background: $color-steps_icon_after-bg;
+                }
+            }
+        }
+
+        .#{$item} {
+            padding-top: $spacing-steps_basic_vertical_item-paddingTop;
+
+            &:first-child {
+                padding-top: 0;
+            }
+
+            &:last-child {
+                .#{$item}-icon {
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+
+            &-done {
+                .#{$item}-icon {
+                    &::after {
+                        background: $color-steps_item_done_icon_after-bg;
+                    }
+                }
+            }
+
+            .#{$item}-content {
+                min-height: $height-steps_basic_vertical_icon_content-minHeight;
+                padding-bottom: $spacing-steps_basic_vertical_item_content-paddingBottom;
+            }
+
+            .#{$item}-icon {
+                position: relative;
+                display: inline-flex;
+                padding-bottom: $spacing-steps_basic_vertical_item_icon-paddingBottom;
+            }
+
+            .#{$item}-description {
+                @include font-size-small;
+                width: $width-steps_basic_vertical_item_description;
+                color: $color-steps_minor-text-default;
+            }
+
+            .#{$item}-title {
+                max-width: $width-steps_basic_vertical_item_title-maxWidth;
+
+                .#{$item}-title-text {
+                    @include text-overflow-hidden;
+                }
+            }
+        }
+    }
+
+    .#{$item} {
+        @include box-sizing;
+        position: relative;
+        display: inline-block;
+        flex: 1;
+        overflow: hidden;
+        vertical-align: top;
+
+        transform: scale($transform_scale-step-item);
+        transition:
+            color $transition_duration-steps_item_title-text $transition_function-steps_item_title-text $transition_delay-steps_item_title-text,
+            background-color $transition_duration-steps_item-backgroundColor $transition_function-steps_item_backgroundColor $transition_delay-steps_item_backgroundColor;
+
+        &-clickable {
+            cursor: pointer;
+        }
+
+        &-hover:hover {
+            .#{$item}-title {
+                color: $color-steps_item_title-text-hover;
+            }
+
+            .#{$item}-description {
+                color: $color-steps_item_description-text-hover;
+            }
+        }
+
+        .#{$item}-container {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .#{$item}-left {
+            @include flex-center;
+            margin-inline-end: $spacing-steps_basic_item_left-marginRight;
+
+            .#{$item}-icon {
+                display: flex;
+                align-items: center;
+                height: $height-steps_basic_item_left-icon;
+            }
+
+            .#{$item}-number-icon {
+                @include font-size-header-6;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: $width-steps_basic_item_left_number-icon;
+                height: $height-steps_basic_item_left_number-icon;
+                font-weight: $font-steps_basic_item_left_number_icon-fontWeight;
+                color: $color-steps_item_left_number_icon-icon;
+                background: $color-steps_item_left_number_icon-bg;
+                border-radius: $radius-steps_basic_item_left_number_icon;
+                transition: color $transition_duration-steps_item_title-icon $transition_function-steps_item_title-icon $transition_delay-steps_item_title-icon;
+            }
+        }
+
+        .#{$item}-title {
+            @include font-size-header-6;
+            position: relative;
+            display: inline-block;
+            padding-inline-end: $spacing-steps_basic_item_title-paddingRight;
+            margin-bottom: $spacing-steps_basic_item_title-paddingBottom;
+            font-weight: $font-steps_basic_item_title-fontWeight;
+            line-height: $font-steps_basic_item_title-lineHeight;
+            vertical-align: top;
+            color: $color-steps_main-text-default;
+            transition: color $transition_duration-steps_item_title-text $transition_function-steps_item_title-text $transition_delay-steps_item_title-text;
+        }
+
+        &-finish {
+            .#{$item}-left {
+                .#{$item}-icon {
+                    color: $color-steps_item_finish-icon;
+
+                    .#{$item}-number-icon {
+                        color: $color-steps_item_finish_number-icon;
+                    }
+                }
+            }
+        }
+
+        &-wait {
+            .#{$item}-title {
+                color: $color-steps_item_wait_title-text;
+            }
+
+            .#{$item}-left {
+                .#{$item}-icon {
+                    color: $color-steps_item_wait_left_icon-icon;
+
+                    .#{$item}-number-icon {
+                        color: $color-steps_item_wait_left_number_icon-icon;
+                        background: $color-steps_item_wait_left_number_icon-bg;
+                    }
+                }
+            }
+
+            &-hover:hover {
+                .#{$item}-left {
+                    .#{$item}-icon {
+                        .#{$item}-number-icon {
+                            color: $color-steps_item_wait_left_number_icon-icon-hover;
+                            background: $color-steps_item_wait_left_number_icon-bg-hover;
+                        }
+                    }
+                }
+            }
+        }
+
+        &-process {
+            .#{$item}-left {
+                .#{$item}-icon {
+                    color: $color-steps_item_process_left-icon;
+
+                    .#{$item}-number-icon {
+                        color: $color-steps_item_process_left_number-icon;
+                    }
+                }
+            }
+        }
+
+        &-error {
+            .#{$item}-left {
+                .#{$item}-icon {
+                    color: $color-steps_item_error_left-icon;
+
+                    .#{$item}-number-icon {
+                        color: $color-steps_item_error_left_number-icon;
+                    }
+                }
+            }
+        }
+
+        &-warning {
+            .#{$item}-left {
+                .#{$item}-icon {
+                    color: $color-steps_item_warning_left-icon;
+
+                    .#{$item}-number-icon {
+                        color: $color-steps_item_warning_left_number-icon;
+                    }
+                }
+            }
+        }
+    }
+
+    &.#{$module}-small {
+        .#{$item} {
+            .#{$item}-title {
+                @include font-size-regular;
+            }
+
+            .#{$item}-left {
+                .#{$item}-icon {
+                    height: $height-steps_basic_small_item_left-icon;
+
+                    .#{$item}-number-icon {
+                        @include font-size-small;
+                        width: $width-steps_basic_small_item_left_number-icon;
+                        height: $width-steps_basic_small_item_left_number-icon;
+                    }
+                }
+            }
+        }
+    }
+}

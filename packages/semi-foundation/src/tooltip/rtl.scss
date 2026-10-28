@@ -1,0 +1,9 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-tooltip;
+
+.#{$module}-wrapper:dir(rtl) {
+    direction: rtl;
+}

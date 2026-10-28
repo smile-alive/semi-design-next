@@ -1,0 +1,44 @@
+{
+    "name": "@fibrae/semi-icons-core",
+    "version": "0.1.0",
+    "description": "Framework-free data and styles of Semi's icons, generated from the SVG sources; full-colour icons under @fibrae/semi-icons-core/lab, illustrations under @fibrae/semi-icons-core/illustrations",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-icons-core"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "keywords": [
+        "semi",
+        "icons"
+    ],
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.js",
+        "./lab": "./dist/lab/index.js",
+        "./illustrations": "./dist/illustrations/index.js",
+        "./*.css": "./dist/*.css",
+        "./*.scss": "./dist/*.scss",
+        "./package.json": "./package.json",
+        "./*": "./dist/*.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "scripts": {
+        "build:icon": "node scripts/build-icon.ts",
+        "build": "vp pack",
+        "prepublishOnly": "npm run build"
+    },
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}

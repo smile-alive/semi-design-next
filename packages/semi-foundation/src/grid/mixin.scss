@@ -1,0 +1,119 @@
+@use 'sass:math';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@mixin clearfix() {
+    zoom: 1;
+
+    &::before,
+    &::after {
+        display: table;
+        content: '';
+    }
+
+    &::after {
+        clear: both;
+    }
+}
+
+@mixin make-row() {
+    @include clearfix();
+    position: relative;
+    height: auto;
+}
+
+// a Col outside any Row has no gutter variables and falls back to 0
+@mixin make-gutter($module, $suffix) {
+    .#{$module}-row,
+    .#{$module}-row-flex {
+        margin-block: calc(var(--semi-row-gutter-y#{$suffix}, 0) * -0.5);
+        margin-inline: calc(var(--semi-row-gutter-x#{$suffix}, 0) * -0.5);
+    }
+
+    .#{$module}-col {
+        padding-block: calc(var(--semi-row-gutter-y#{$suffix}, 0) * 0.5);
+        padding-inline: calc(var(--semi-row-gutter-x#{$suffix}, 0) * 0.5);
+    }
+}
+
+@mixin make-grid-columns($module) {
+    $index: 1;
+
+    @for $i from $index through $width-grid_columns {
+        $item: '.#{$module}-col-#{$i}, .#{$module}-col-xs-#{$i}, .#{$module}-col-sm-#{$i}, .#{$module}-col-md-#{$i}, .#{$module}-col-lg-#{$i}';
+
+        #{$item} {
+            position: relative;
+            min-height: 1px;
+            padding-inline: ($width-grid_gutter * 0.5);
+        }
+    }
+}
+
+@mixin float-grid-columns($module, $class) {
+    $index: 1;
+
+    @for $i from $index through $width-grid_columns {
+        $item: '.#{$module}-col#{$class}-#{$i}';
+
+        #{$item} {
+            float: inline-start;
+            flex: 0 0 auto;
+        }
+    }
+}
+
+@mixin loop-grid-columns($module, $index, $class) {
+    // 0 is a real value: a breakpoint such as md={{ offset: 0 }} resets what a smaller breakpoint set
+    .#{$module}-col#{$class}-push-0 {
+        inset-inline-start: 0;
+    }
+
+    .#{$module}-col#{$class}-pull-0 {
+        inset-inline-end: 0;
+    }
+
+    .#{$module}-col#{$class}-offset-0 {
+        margin-inline-start: 0;
+    }
+
+    .#{$module}-col#{$class}-order-0 {
+        order: 0;
+    }
+
+    @for $i from 1 through ($index) {
+        .#{$module}-col#{$class}-#{$i} {
+            box-sizing: border-box;
+            display: block;
+            width: math.percentage(math.div($i, $width-grid_columns));
+        }
+
+        .#{$module}-col#{$class}-push-#{$i} {
+            inset-inline-start: math.percentage(math.div($i, $width-grid_columns));
+        }
+
+        .#{$module}-col#{$class}-pull-#{$i} {
+            inset-inline-end: math.percentage(math.div($i, $width-grid_columns));
+        }
+
+        .#{$module}-col#{$class}-offset-#{$i} {
+            margin-inline-start: math.percentage(math.div($i, $width-grid_columns));
+        }
+
+        .#{$module}-col#{$class}-order-#{$i} {
+            order: $i;
+        }
+    }
+}
+
+// Must come after make-grid of the same breakpoint: both selectors have equal specificity and the `display: block` of
+// the 1..24 spans would otherwise win. Inside the breakpoint's media query so 0 hides only there.
+@mixin make-hidden($module, $class) {
+    .#{$module}-col#{$class}-0 {
+        display: none;
+    }
+}
+
+@mixin make-grid($module, $class: '') {
+    @include float-grid-columns($module, $class);
+    @include loop-grid-columns($module, $width-grid_columns, $class);
+}

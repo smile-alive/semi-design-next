@@ -1,0 +1,182 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-descriptions;
+
+.#{$module} {
+    line-height: $font-descriptions-lineHeight;
+
+    // child selectors only: the value may hold the consumer's own table
+    > table,
+    > table > tbody > tr {
+        padding: 0;
+        margin: 0;
+        border: 0;
+    }
+
+    > table {
+        // not left to the UA default (separate) or a host reset (collapse)
+        border-collapse: collapse;
+    }
+
+    &-item {
+        padding: 0;
+        border: 0;
+    }
+
+    &-item-th {
+        padding-inline-end: $spacing-descriptions_th-paddingRight;
+    }
+
+    & &-item {
+        padding-bottom: $spacing-descriptions_item-paddingBottom;
+        margin: 0;
+        vertical-align: top;
+        text-align: start;
+    }
+
+    &-key {
+        @include font-size-regular;
+        min-height: $font-size-regular;
+        font-weight: 400;
+        color: $color-descriptions_key-text-default;
+        white-space: nowrap;
+    }
+
+    &-value {
+        @include font-size-regular;
+        font-weight: 400;
+        color: $color-descriptions_value-text-default;
+    }
+
+    &-center {
+        .#{$module}-item-th {
+            text-align: end;
+        }
+
+        .#{$module}-item-td {
+            text-align: start;
+        }
+    }
+
+    &-left {
+        .#{$module}-item-th,
+        .#{$module}-item-td {
+            // "left" is the start side, so it mirrors in RTL like center and justify
+            text-align: start;
+        }
+    }
+
+    &-justify {
+        .#{$module}-item-th {
+            text-align: start;
+        }
+
+        .#{$module}-item-td {
+            text-align: end;
+        }
+    }
+
+    &-plain {
+        .#{$module}-key,
+        .#{$module}-value {
+            display: inline-block;
+        }
+
+        .#{$module}-value {
+            padding-inline-start: $spacing-descriptions_value_plain-paddingLeft;
+
+            & .#{$prefix}-tag {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    &-double {
+        > table > tbody {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        > table > tbody > tr {
+            display: inline-flex;
+            flex-direction: column;
+        }
+
+        & .#{$module}-item {
+            flex: 1;
+            padding: $spacing-descriptions_item_double-padding;
+        }
+
+        .#{$module}-value {
+            font-weight: $font-descriptions_value-fontWeight;
+        }
+
+        &-small {
+            .#{$module}-item {
+                padding-inline-end: $spacing-descriptions_item_small-paddingRight;
+            }
+
+            .#{$module}-key {
+                @include font-size-small;
+                padding-bottom: 0;
+                font-size: $font-descriptions_key_small-fontSize;
+            }
+
+            .#{$module}-value {
+                @include font-size-header-6;
+                font-size: $font-descriptions_value_small-fontSize;
+            }
+        }
+
+        &-medium {
+            .#{$module}-item {
+                padding-inline-end: $spacing-descriptions_item_medium-paddingRight;
+            }
+
+            & .#{$module}-key {
+                padding-bottom: $spacing-descriptions_key_medium-paddingBottom;
+                font-size: $font-descriptions_key_medium-fontSize;
+            }
+
+            & .#{$module}-value {
+                @include font-size-header-4;
+                font-size: $font-descriptions_value_medium-fontSize;
+            }
+        }
+
+        &-large {
+            .#{$module}-item {
+                padding-inline-end: $spacing-descriptions_item_large-paddingRight;
+            }
+
+            & .#{$module}-key {
+                padding-bottom: $spacing-descriptions_key_large-paddingBottom;
+                font-size: $font-descriptions_key_large-fontSize;
+            }
+
+            & .#{$module}-value {
+                @include font-size-header-2;
+                font-size: $font-descriptions_value_large-fontSize;
+            }
+        }
+    }
+
+    &-horizontal {
+        > table {
+            table-layout: fixed;
+        }
+
+        > table,
+        > table > tbody {
+            width: 100%;
+        }
+    }
+
+    &-horizontal &-item {
+        flex: 0;
+    }
+}
+
+@include meta.load-css('rtl');

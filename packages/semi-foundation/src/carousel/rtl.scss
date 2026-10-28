@@ -1,0 +1,14 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-carousel;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-arrow-prev:dir(rtl),
+.#{$module}-arrow-next:dir(rtl) {
+    transform: scaleX(-1) translateY(-50%);
+}

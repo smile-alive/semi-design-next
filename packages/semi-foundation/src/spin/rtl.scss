@@ -1,0 +1,11 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-spin;
+
+.#{$module}:dir(rtl),
+.#{$module}-container:dir(rtl) {
+    direction: rtl;
+}

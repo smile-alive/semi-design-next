@@ -1,0 +1,224 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use '../base/mixin' as *;
+
+$module: #{$prefix}-json-viewer;
+
+.#{$module} {
+    box-sizing: border-box;
+    padding: $spacing-json-viewer-paddingY $spacing-json-viewer-paddingX;
+
+    &-background {
+        background-color: $color-json-viewer-background;
+    }
+
+    &-string-key {
+        color: $color-json-viewer-key;
+    }
+
+    &-string-value {
+        color: $color-json-viewer-value;
+    }
+
+    &-keyword {
+        color: $color-json-viewer-keyword;
+    }
+
+    &-number {
+        color: $color-json-viewer-number;
+    }
+
+    &-delimiter-comma {
+        color: $color-json-viewer-delimiter-comma;
+    }
+
+    &-delimiter-bracket-0 {
+        color: var(--semi-blue-7);
+    }
+
+    &-delimiter-bracket-1 {
+        color: var(--semi-green-7);
+    }
+
+    &-delimiter-bracket-2 {
+        color: var(--semi-orange-7);
+    }
+
+    &-delimiter-array-0 {
+        color: var(--semi-blue-7);
+    }
+
+    &-delimiter-array-1 {
+        color: var(--semi-green-7);
+    }
+
+    &-delimiter-array-2 {
+        color: var(--semi-orange-7);
+    }
+
+    &-search-result {
+        background-color: $color-json-viewer-search-result-background;
+    }
+
+    &-current-search-result {
+        background-color: $color-json-viewer-current-search-result-background;
+    }
+
+    &-folding-icon {
+        color: $color-json-viewer-folding-icon;
+        opacity: 0.7;
+        transition: opacity 0.8s;
+    }
+
+    &-view-line {
+        font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Fira Code', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Courier New', monospace;
+        font-size: 12px;
+        font-variation-settings: normal;
+        font-weight: 400;
+        font-feature-settings:
+            'liga' 0,
+            'calt' 0;
+        color: #237893;
+        letter-spacing: 0;
+        word-break: break-all;
+        white-space: pre-wrap;
+    }
+
+    &-line-number {
+        width: 50px;
+        font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Fira Code', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Courier New', monospace;
+        font-size: 12px;
+        font-variation-settings: normal;
+        font-weight: 400;
+        font-feature-settings:
+            'liga' 0,
+            'calt' 0;
+        color: $color-json-viewer-line-number;
+        text-align: center;
+        letter-spacing: 0;
+        word-wrap: normal;
+        overflow-wrap: normal;
+        user-select: none;
+    }
+
+    &-content-container {
+        @include hide-scrollbar;
+
+        // read-only only: an editable textbox matches :focus-visible on every click and the caret marks focus; inset
+        // because the editor's scroll box clips the right edge
+        &[role='region']:focus-visible {
+            @include focus-ring(-2px);
+        }
+
+        &[role='textbox']:focus-visible {
+            outline: none;
+        }
+    }
+
+    &-search-bar-container {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 458px;
+        padding: 8px;
+        background-color: var(--semi-color-bg-0);
+        border: 1px solid var(--semi-color-border);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    &-search-bar {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+
+        // outranks the Input wrapper's width: 100% (0-1-0)
+        & &-input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .#{$prefix}-button-group {
+            flex-wrap: nowrap;
+        }
+
+        // scoped to the group so the option and close buttons keep their own width
+        .#{$prefix}-button-group .#{$prefix}-button {
+            width: 40px;
+        }
+    }
+
+    &-replace-bar {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+
+        &-input {
+            width: 261px;
+        }
+
+        .#{$prefix}-button:nth-of-type(1) {
+            width: 52px;
+        }
+
+        .#{$prefix}-button:nth-of-type(2) {
+            width: 80px;
+        }
+    }
+
+    &-search-options {
+        @include flex-center;
+        gap: 8px;
+        padding-inline-start: 0;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        list-style: none;
+    }
+
+    &-search-options-item {
+        @include flex-center;
+        min-width: 32px;
+        height: 32px;
+        color: var(--semi-color-text-2);
+        cursor: pointer;
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    &-search-options-item:hover {
+        background-color: var(--semi-color-default);
+    }
+
+    &-search-options-item-active {
+        color: var(--semi-color-primary);
+        background-color: var(--semi-color-primary-light-default);
+    }
+
+    &-complete-suggestions-container {
+        z-index: 1000;
+        min-width: 200px;
+        max-width: 400px;
+        padding: 4px 0;
+        margin: 0;
+        list-style: none;
+        background-color: var(--semi-color-bg-3);
+        border-radius: var(--semi-border-radius-medium);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    &-complete-container {
+        position: absolute;
+        z-index: 1000;
+    }
+
+    &-complete-suggestions-item {
+        padding: 8px 16px;
+        color: var(--semi-color-text-0);
+        cursor: pointer;
+    }
+
+    &-error {
+        text-decoration: underline wavy var(--semi-color-danger);
+        text-decoration-thickness: 1px;
+        text-underline-position: under;
+    }
+}

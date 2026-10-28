@@ -1,0 +1,9 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-input-number;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}

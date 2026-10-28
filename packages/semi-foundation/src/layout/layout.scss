@@ -1,0 +1,51 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+
+$module: #{$prefix}-layout;
+
+.#{$module} {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    min-height: auto;
+
+    &,
+    &-header,
+    &-footer,
+    &-content,
+    &-sider,
+    &-sider-children {
+        box-sizing: border-box;
+    }
+
+    &-header,
+    &-footer {
+        flex: 0 0 auto;
+    }
+
+    &-content {
+        flex: auto;
+        min-height: auto;
+    }
+
+    &-sider {
+        position: relative;
+        min-width: auto;
+
+        &-children {
+            height: 100%;
+            padding-top: 0.1px;
+            margin-top: -0.1px;
+        }
+    }
+}
+
+.#{$module}-has-sider {
+    flex-direction: row;
+    & > .#{$module},
+    & > .#{$module}-content {
+        overflow-x: hidden;
+    }
+}
+
+@include meta.load-css('rtl');

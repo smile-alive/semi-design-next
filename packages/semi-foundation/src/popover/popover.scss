@@ -1,0 +1,64 @@
+@use 'sass:meta';
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use '../tooltip/position';
+@use '../tooltip/arrow' as tooltip-arrow;
+
+$module: #{$prefix}-popover;
+$module-icon: #{$module}-icon-arrow;
+
+.#{$module} {
+    &-wrapper {
+        @include position.wrapper-styles($module, $animation_duration-tooltip_out: $animation_duration-popover-out, $animation_function-tooltip_out: $animation_function-popover-out);
+        @include shadow-elevated;
+        @include font-size-regular;
+        background-color: $color-popover-bg-default;
+        border-radius: $radius-popover;
+        -webkit-backdrop-filter: $filter-popover-bg;
+        backdrop-filter: $filter-popover-bg;
+    }
+
+    &-trigger {
+        display: inline-block;
+        width: auto;
+        height: auto;
+    }
+
+    &-title {
+        padding: $spacing-popover_title-padding;
+        border-bottom: $width-popover_title-border solid $color-popover-border-default;
+    }
+
+    &-confirm {
+        position: absolute;
+    }
+
+    &-with-arrow {
+        box-sizing: border-box;
+        padding: $spacing-popover_withArrow-padding;
+    }
+}
+
+.#{$module}-icon-arrow {
+    path:nth-child(1) {
+        fill: $color-popover-arrow-border;
+    }
+
+    path:nth-child(2) {
+        fill: $color-popover-arrow-bg;
+    }
+}
+
+@include tooltip-arrow.styles(
+    $module,
+    $module-icon,
+    $color-tooltip_arrow-icon-default: $color-popover_arrow-icon-default,
+    $height-tooltip_arrow: $height-popover_arrow,
+    $height-tooltip_arrow_vertical: $height-popover_arrow_vertical,
+    $spacing-tooltip_arrow_adjusted_offset-x: $spacing-popover_arrow_adjusted_offset-x,
+    $spacing-tooltip_arrow_adjusted_offset-y: $spacing-popover_arrow_adjusted_offset-y,
+    $width-tooltip_arrow: $width-popover_arrow,
+    $width-tooltip_arrow_vertical: $width-popover_arrow_vertical
+);
+@include meta.load-css('rtl');

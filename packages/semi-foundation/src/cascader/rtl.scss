@@ -1,0 +1,14 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+
+$module: #{$prefix}-cascader;
+
+.#{$module}:dir(rtl),
+.#{$module}-option-lists:dir(rtl) {
+    direction: rtl;
+}
+
+.#{$module}-option-lists:dir(rtl) .#{$module}-option .#{$prefix}-icon-chevron_right {
+    transform: scaleX(-1);
+}

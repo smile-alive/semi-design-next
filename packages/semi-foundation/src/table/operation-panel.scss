@@ -1,0 +1,42 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+@use 'animation' as *;
+@use 'mixin' as *;
+
+$module: #{$prefix}-table;
+
+.#{$module}-panel {
+    &-operation {
+        display: flex;
+        justify-content: space-between;
+        padding-inline: $spacing-table_panel_operation-paddingX;
+        padding-top: $spacing-table_panel_operation-paddingY;
+        padding-bottom: $spacing-table_panel_operation-paddingY;
+        color: $color-table_page-text-default;
+        background-color: $color-table_panel-bg-default;
+
+        &-right,
+        &-left {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &-selected {
+            color: $color-table_panel-text-default;
+        }
+    }
+}
+
+.#{$module}-pagination {
+    &-info {
+        @include font-size-regular;
+        font-weight: $font-weight-regular;
+        white-space: nowrap;
+    }
+
+    &-outer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

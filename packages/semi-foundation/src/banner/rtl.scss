@@ -1,0 +1,8 @@
+@use 'semi:theme' as *;
+@use 'variables' as *;
+
+$module: #{$prefix}-banner;
+
+.#{$module}:dir(rtl) {
+    direction: rtl;
+}
