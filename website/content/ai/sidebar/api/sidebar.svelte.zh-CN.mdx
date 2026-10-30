@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| activeKey | 主视图中当前选中的选项 key，可用 `bind:activeKey` 绑定。 | `string` | - |
+| afterVisibleChange | 显示或隐藏动画结束后调用，参数为当前是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| closeOnEsc | 按下 Esc 键时是否调用 onCancel。 | `boolean` | - |
+| customRender | 转发给内置代码详情中 JsonViewer 的 customRender snippet，用于渲染 customRenderRule 匹配的内容。 | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
+| defaultSize | 初始宽高，仅在 resizable 为 true 时生效。 | `{ width?: number \| string; height?: number \| string }` | - |
+| detailBody | 详情模式的内容，参数为 mode；内容为空时回退到内置的代码或富文本详情。因 detailContent 已是数据属性，所以叫 detailBody。 | <ApiType detail={"Snippet\u003c[SideBarDetailBodySnippetProps]>"}>Type</ApiType> | - |
+| detailContent | code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable 与 imgUploadProps 不生效，由 fileEditable 与 imgUploadProps 决定。 | `SideBarDetailContent` | - |
+| detailHeader | 详情模式的头部，参数为 mode 与 detailContent；内容为空时回退到内置头部。 | <ApiType detail={"Snippet\u003c[SideBarDetailHeaderSnippetProps]>"}>Type</ApiType> | - |
+| fileEditable | file 模式的富文本是否可编辑。 | `boolean` | `true` |
+| imgUploadProps | file 模式的图片上传配置，编辑器创建时读取，之后变化不生效。 | `ImageUploadNodeOptions` | - |
+| mainContent | 主视图中选项下方的内容，参数为 activeKey。 | <ApiType detail={"Snippet\u003c[SideBarMainContentSnippetProps]>"}>Type</ApiType> | - |
+| maxWidth | 可调整的最大宽度，仅在 resizable 为 true 时生效。 | `number \| string` | - |
+| minWidth | 可调整的最小宽度，仅在 resizable 为 true 时生效。 | `number \| string` | - |
+| mode | 展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 detailBody snippet 自行渲染。 | `string` | `"main"` |
+| motion | 显示与隐藏时是否使用展开动画。 | `boolean` | - |
+| onActiveOptionChange | 点击选项、activeKey 更新后调用，参数为点击事件和该选项的 key。 | <ApiType detail={"(event: MouseEvent, activeKey: string) => void"}>Type</ApiType> | - |
+| onBackWard | 点击详情头部的返回按钮时调用，参数为点击事件和 main。 | <ApiType detail={"(event: MouseEvent, mode: string) => void"}>Type</ApiType> | - |
+| onCancel | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。 | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onDetailContentCopy | 复制按钮写入剪贴板后调用，参数为点击事件、复制的内容和是否成功。 | <ApiType detail={"(event: MouseEvent, content: string, success: boolean) => void"}>Type</ApiType> | - |
+| onFileContentChange | file 模式下编辑后调用，参数为 HTML 字符串。 | <ApiType detail={"(content: string) => void"}>Type</ApiType> | - |
+| optionIcon | 内置选项按钮的图标，参数为 item 与 index。 | <ApiType detail={"Snippet\u003c[SideBarOptionSnippetProps]>"}>Type</ApiType> | - |
+| optionItem | 替换整个选项按钮，参数为 item、index、active 与 onClick（选中该选项）。 | <ApiType detail={"Snippet\u003c[SideBarOptionItemSnippetProps]>"}>Type</ApiType> | - |
+| options | 主视图顶部的选项按钮，每项包含 name 与 key；图标使用 optionIcon snippet。 | `SideBarOption[]` | - |
+| resizable | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。 | `boolean` | - |
+| searchButton | 转发给内置代码详情中 JsonViewer 的 searchButton snippet，替换其搜索按钮。 | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
+| showClose | 是否显示头部的关闭按钮。 | `boolean` | - |
+| title | 标题，可以是纯文本或 snippet。 | `Snippet \| string` | - |
+| visible | 是否显示，可用 `bind:visible` 绑定。 | `boolean` | - |
+
+**Methods**
+
+| 方法    | 说明                                                      | 类型                                         |
+| ------- | --------------------------------------------------------- | -------------------------------------------- |
+| getRoot | 返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。 | <ApiType detail={"() => any"}>Type</ApiType> |

@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                      | 类型                                                                                  | 默认值 |
+| ------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------ |
+| activeKey    | 当前展开的代码面板 key，可用 `bind:activeKey` 绑定。                                      | `string \| string[]`                                                                  | -      |
+| codes        | 代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。                                | `CodeItemData[]`                                                                      | `[]`   |
+| customRender | 转发给每个 JSON 面板中 JsonViewer 的 customRender snippet。                               | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType>         | -      |
+| onChange     | 通过箭头展开或收起面板时调用，参数为当前展开的 key。                                      | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>        | -      |
+| onExpand     | 点击面板头部旁的展开按钮时调用，参数为点击事件、对应条目和 code。未传入时不渲染展开按钮。 | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | -      |
+| searchButton | 转发给每个 JSON 面板中 JsonViewer 的 searchButton snippet，替换其搜索按钮。               | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType>         | -      |

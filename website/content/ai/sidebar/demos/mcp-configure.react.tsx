@@ -32,7 +32,7 @@ const defaultOptions: MCPOption[] = [
     },
 ];
 
-const CustomOptionCreateModel = ({ visible, handleOk, handleCancel, formRef }: CustomOptionCreateModelProps) => {
+function CustomOptionCreateModel({ visible, handleOk, handleCancel, formRef }: CustomOptionCreateModelProps) {
     return (
         <Modal title="自定义 MCP" visible={visible} onOk={handleOk} onCancel={handleCancel} closeOnEsc>
             <Form ref={formRef} layout="vertical" onValueChange={(values) => console.log(values)}>
@@ -57,7 +57,7 @@ const CustomOptionCreateModel = ({ visible, handleOk, handleCancel, formRef }: C
             </Form>
         </Modal>
     );
-};
+}
 
 let index = 1;
 

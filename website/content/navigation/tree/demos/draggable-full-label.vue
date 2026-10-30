@@ -60,7 +60,7 @@
         },
     ]);
 
-    function onDrop(info: TreeOnDragProps) {
+    const onDrop = (info: TreeOnDragProps) => {
         const { dropToGap, node, dragNode } = info;
         const dropKey = node.key;
         const dragKey = dragNode.key;
@@ -105,9 +105,9 @@
             }
         }
         treeData.value = data;
-    }
+    };
 
-    function findDescendantKeys(node: TreeNodeData) {
+    const findDescendantKeys = (node: TreeNodeData) => {
         const res = [node.key];
         const findChild = (item?: TreeNodeData) => {
             if (!item) return;
@@ -122,18 +122,18 @@
         };
         findChild(node);
         return res;
-    }
+    };
 
-    function onSelect(key: string, _selected: boolean, node: TreeNodeData) {
+    const onSelect = (key: string, _selected: boolean, node: TreeNodeData) => {
         selected.value = new Set([key]);
         selectedThroughParent.value = new Set(findDescendantKeys(node));
-    }
+    };
 
-    function rowBackground(key: string | undefined) {
+    const rowBackground = (key: string | undefined) => {
         if (selected.value.has(key)) return 'var(--semi-blue-0)';
         if (selectedThroughParent.value.has(key)) return 'rgb(from var(--semi-blue-0) r g b / .5)';
         return 'transparent';
-    }
+    };
 
     const treeStyle = {
         width: '260px',

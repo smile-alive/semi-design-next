@@ -33,8 +33,8 @@ import ApiType from '#/components/ApiType.astro';
 | placeholder | 选择框的占位文字。 | `string` | `semiGlobalDefault("Cascader", "placeholder")` |
 | searchPlaceholder | 搜索框的占位文字，不传时使用 placeholder。 | `string` | `semiGlobalDefault("Cascader", "searchPlaceholder")` |
 | searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义，此时用 search 方法传入搜索词。 | `"trigger" \| "custom"` | <ApiType detail={"semiDefault(\"Cascader\", \"searchPosition\", strings.SEARCH_POSITION_TRIGGER)"}>Type</ApiType> |
-| disabled | 是否禁用。禁用后不可 Tab 到达。 | `boolean` | `semiDefault("Cascader", "disabled", false)` |
-| size | 选择框的尺寸。 | `Size` | `semiDefault("Cascader", "size", "default")` |
+| disabled | 是否禁用。禁用后不可 Tab 到达。 | `boolean` | `undefined` |
+| size | 选择框的尺寸。 | `Size` | `undefined` |
 | borderless | 是否使用无边框模式。 | `boolean` | `semiDefault("Cascader", "borderless", false)` |
 | validateStatus | 触发器的校验状态，只影响样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Cascader", "validateStatus")` |
 | insetLabelId | insetLabel 内容的 id，用于关联 combobox 的名称；不传时在使用 insetLabel 插槽时由组件生成。 | `string` | `undefined` |
@@ -57,8 +57,8 @@ import ApiType from '#/components/ApiType.astro';
 | change | 选中值变化时触发。单选为所选路径，多选为各选中路径的数组；开启 changeWithObject 时为节点数据。与原生 change 同名，声明后会遮住根元素上冒泡的同名原生事件。 | <ApiType detail={"[value: ByMultiple\u003cMultiple, CascaderSimpleValue[], CascaderSimpleValue[][]>]"}>Type</ApiType> |
 | select | 选中某个节点时触发，载荷是该节点的 value；多选时只勾选了一个节点时是它的 value，勾选多个时是 value 数组。 | <ApiType detail={"[value: ByMultiple\u003cMultiple, string \u007c number, string \u007c number \u007c (string \u007c number)[]>]"}>Type</ApiType> |
 | search | 搜索输入变化时触发，载荷是输入的文本。 | `[value: string]` |
-| focus | 点击或按键打开下拉时触发，载荷是那次 MouseEvent 或 KeyboardEvent。不是 DOM 焦点事件，Tab 进出不会触发。 | `[event: MouseEvent \| KeyboardEvent]` |
-| blur | 关闭下拉时触发：点击外部时载荷为 MouseEvent，Esc 为 KeyboardEvent，通过方法 close 关闭时为 undefined。不是 DOM 失焦事件。 | `[event?: MouseEvent \| KeyboardEvent \| undefined]` |
+| focus | 点击或按键打开下拉时触发，载荷是那次 MouseEvent 或 KeyboardEvent。不是 DOM 焦点事件，Tab 进出不会触发。 | `[event: MouseEvent \| KeyboardEvent \| FocusEvent]` |
+| blur | 关闭下拉时触发：点击外部时载荷为 MouseEvent，Esc 为 KeyboardEvent，通过方法 close 关闭时为 undefined。不是 DOM 失焦事件。 | `[event?: MouseEvent \| KeyboardEvent \| FocusEvent \| undefined]` |
 | dropdownVisibleChange | 下拉展开或收起时触发，载荷是是否展开。 | `[visible: boolean]` |
 | clear | 点击清除按钮清空选中值时触发。 | `[]` |
 | exceed | 多选时选中数量超出 max 时触发，载荷是已选节点的 Entity 数组。 | `[checkedItem: CascaderEntity[]]` |

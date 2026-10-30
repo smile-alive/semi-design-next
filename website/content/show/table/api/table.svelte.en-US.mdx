@@ -1,0 +1,77 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aria-describedby | aria-describedby of the table. | `string \| null` | - |
+| aria-label | The accessible name of the table. Without aria-label and aria-labelledby, a table with a title is named by the title. | `string \| null` | - |
+| aria-labelledby | aria-labelledby of the table. It wins over title. | `string \| null` | - |
+| bordered | Whether to show the outer border and the column borders. | `boolean` | `false` |
+| cell | The content of a data cell, called for every data column, with text, record, index, column, expandIcon, isHovering and more; tell the columns apart with column.dataIndex or column.key. Render text for the columns the snippet leaves alone. With useFullRender on a column the snippet replaces the whole cell, and the selection, indentText and expandIcon arguments place the checkbox, the indent and the expand button. | <ApiType detail={"Snippet\u003c[TableCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| childrenRecordName | The field of a record that holds its child records in a tree table. | `string` | `"children"` |
+| clickGroupedRowToExpand | Clicking a group row expands or collapses the group. | `boolean` | `false` |
+| columns | The column configuration, see Column. A column holds data only; markup goes to the cell, headerCell, sortIcon, filterIcon, filterDropdown and other snippets of Table. | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | - |
+| components | Replaces the elements Table renders, such as the outer, wrapper, row and cell of the header and the body, with a tag name that replaces the default tag of that part. | `TableComponents` | - |
+| currentPage | The current page, bound with `bind:currentPage` and written back when the page changes. It wins over `pagination.currentPage`. Without `currentPage` in `pagination`, Table still pages dataSource itself and a change from the parent turns the page; with it, the pager is controlled and Table does not page dataSource. | `number` | - |
+| dataSource | The data. Give every record a unique key, or name the primary key field with rowKey. Rows added or removed in place (push, splice) are sorted and filtered again; a record field changed in place shows in its cell but does not sort or filter again. | `R[]` | - |
+| defaultExpandAllGroupRows | Whether all group rows start expanded. Has no effect on data loaded later. | `boolean` | `false` |
+| defaultExpandAllRows | Whether all rows start expanded. Has no effect on data loaded later. | `boolean` | `false` |
+| direction | The text direction. Defaults to the direction of ConfigProvider and can be set here per table. | `'ltr' \| 'rtl'` | - |
+| empty | The content shown without data. Without the snippet the locale's empty text shows; an empty snippet shows nothing. | `Snippet` | - |
+| expandAllGroupRows | Whether all group rows are expanded. | `boolean` | `false` |
+| expandAllRows | Whether all rows are expanded. | `boolean` | `false` |
+| expandCellFixed | Whether the column of the expand button is fixed, with the same values as the fixed field of a column. | `ColumnFixed` | `false` |
+| expandedRow | The content of an expanded row, with record, index and expanded. Once given, every expandable row has an expand button; empty output leaves the row out. | <ApiType detail={"Snippet\u003c[TableExpandedRowSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| expandedRowKeys | The keys of the expanded rows, bound with `bind:expandedRowKeys`, group keys included. Leave it out for uncontrolled expansion. | `(string \| number)[]` | - |
+| expandIcon | Pass false to hide the expand buttons, or a snippet with expanded to replace the icon of an expand button. A custom icon does not rotate. | <ApiType detail={"boolean \u007c Snippet\u003c[TableExpandIconSnippetProps]>"}>Type</ApiType> | - |
+| expandRowByClick | Whether clicking a row expands an expandable row. | `boolean` | `false` |
+| filterDropdown | The filter panel of a column with filterDropdown set to true, with column, the temporary value tempFilteredValue and onTempFilteredValueChange, onConfirm, onClear, onClose and onReset; tell the columns apart with column. | <ApiType detail={"Snippet\u003c[TableFilterDropdownSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| filterDropdownItem | An item of the filter menu, with text, value, checked, level, onChange and more. Once given, it replaces every item. | <ApiType detail={"Snippet\u003c[TableFilterDropdownItemSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| filterIcon | The content of the filter button, with filtered and column. | <ApiType detail={"Snippet\u003c[TableFilterIconSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| footer | The table footer: plain text, or a snippet with the records of the current page as pageData. | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| groupBy | The grouping rule: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | - |
+| groupSection | The content of a group row, with groupKey and group (the row keys of the group). | <ApiType detail={"Snippet\u003c[TableGroupSectionSnippetProps]>"}>Type</ApiType> | - |
+| groupSectionColumn | The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex. | <ApiType detail={"(groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, 'title' \u007c 'children' \u007c 'dataIndex'>"}>Type</ApiType> | - |
+| headerCell | The content of a column title, with column, title and sorter, filter, selection. Render title for the columns the snippet leaves alone. With useFullRender on a column the snippet replaces the whole header cell, and sorter, filter and selection place the sort, filter and selection controls. | <ApiType detail={"Snippet\u003c[TableHeaderCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| headerStyle | Inline style string of every header cell, fixed headers included. | `string` | - |
+| hideExpandedColumn | In an expandable table the expand button shares the first cell by default; set false to render it as its own column. | `boolean` | `true` |
+| indentSize | The indent of each tree level, in pixels. | `number` | `20` |
+| keepDOM | Whether collapsing a row keeps its DOM. | `boolean` | `false` |
+| loading | Whether the table shows its loading state. | `boolean` | `false` |
+| onChange | Called when the page, the sorting or the filters change. The argument holds pagination, filters, sorter and extra.changeType. | <ApiType detail={"(changeInfo: TableChangeInfo\u003cR>) => void"}>Type</ApiType> | - |
+| onExpand | Called when an expand button is clicked, with the expanded state, the record (an object with groupKey for a group row) and the mouse event. | <ApiType detail={"(expanded: boolean, record: TableIncludeGroupRecord\u003cR>, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onExpandedRowsChange | Called when the expanded rows change, with the array of expanded records. | <ApiType detail={"(expandedRows: TableIncludeGroupRecord\u003cR>[]) => void"}>Type</ApiType> | - |
+| onGroupedRow | Like onRow, for group rows. The returned object holds the attributes and lowercase listeners of the tr. index is the group's ordinal, or its position among the virtual list's rows when virtualized is on. | <ApiType detail={"(record: { groupKey: string \u007c number; records: R[] }, index: number) => TableRowAttrs"}>Type</ApiType> | - |
+| onHeaderRow | Sets the attributes and lowercase listeners of a header row. The returned object (without style) is merged into the row. | <ApiType detail={"(columns: ColumnProps\u003cR>[], index: number) => Omit\u003cTableRowAttrs, 'style'>"}>Type</ApiType> | - |
+| onRow | Sets the attributes and lowercase listeners (such as onclick and onmouseenter) of a data row; the third argument is the row state. The returned listeners run after the row's own handling and the onRowXxx callbacks. | <ApiType detail={"(record: R, index: number, rowState: { disabled: boolean; selected: boolean }) => TableRowAttrs"}>Type</ApiType> | - |
+| onRowContextMenu | Called when a data row opens the context menu, before the oncontextmenu returned by onRow. | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRowDoubleClick | Called when a data row is double-clicked, before the ondblclick returned by onRow. | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRowMouseEnter | Called when the pointer enters a data row, before the onmouseenter returned by onRow. | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRowMouseLeave | Called when the pointer leaves a data row, before the onmouseleave returned by onRow. | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onScroll | Called when the vertical offset of a virtualized body changes, with scrollOffset. A horizontal scroll does not call it. | <ApiType detail={"(args: TableVirtualizedScrollArgs) => void"}>Type</ApiType> | - |
+| pagination | The pagination configuration. Pass false to turn pagination off. | `boolean \| TablePaginationProps` | `true` |
+| paginationContent | Replaces the pagination info and the Pagination. The pagination argument can be spread on a Pagination as is. It is named apart from the pagination prop, which shares the namespace. | <ApiType detail={"Snippet\u003c[TablePaginationSnippetProps]>"}>Type</ApiType> | - |
+| prefixCls | The prefix of the class names. | `string` | `"semi-table"` |
+| resizable | Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName. | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | `false` |
+| rowExpandable | Tells whether a row can be expanded. A row that returns false has no expand button. | <ApiType detail={"TableRowExpandable\u003cR>"}>Type</ApiType> | - |
+| rowKey | The row key: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `"key"` |
+| rowSelection | The row selection configuration. Pass true for the defaults, see rowSelection. | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | - |
+| rowSpanHover | Hovering a cell with rowspan highlights every row the cell spans. | `boolean` | `false` |
+| scroll | The scroll area: x is the width and y the height, see scroll. | `TableScroll` | - |
+| selectedRowKeys | The keys of the selected rows, bound with `bind:selectedRowKeys` and written back when the selection changes. It wins over `rowSelection.selectedRowKeys`. Pass `rowSelection` as well to show the selection column. | `(string \| number)[]` | - |
+| selectionCell | A cell of the selection column, called for the header and the rows, with selected, inHeader, originNode (the default checkbox) and more. Render originNode to keep the default checkbox. | <ApiType detail={"Snippet\u003c[TableSelectionCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| showHeader | Whether to show the header. | `boolean` | `true` |
+| size | The table size, which sets the padding of the cells. | `TableSize` | `"default"` |
+| sortIcon | The sort icon, with sortOrder and column. | <ApiType detail={"Snippet\u003c[TableSortIconSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| sticky | Sticks the header to the top of the page. With an object, top is the distance from the scroll container. | `TableSticky` | - |
+| title | The table title: plain text, or a snippet with the records of the current page as pageData. | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| virtualized | Turns on virtualization, which needs scroll.y as a number. An object sets the row height itemSize and the extra rows overscanCount. | `TableVirtualized` | - |
+
+**Methods**
+
+| Method             | Description                                                                      | Type                                                                                                                |
+| ------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| getCurrentPageData | Returns a deep copy of the data of the current page, with dataSource and groups. | <ApiType detail={"() => Pick\u003cBasePageData\u003cAnyRecord>, \"dataSource\" \u007c \"groups\">"}>Type</ApiType>  |
+| scrollTo           | Scrolls a virtualized table to a vertical offset, in pixels.                     | <ApiType detail={"(offset: number) => void"}>Type</ApiType>                                                         |
+| scrollToItem       | Scrolls a virtualized table to a row. The second argument is the alignment.      | <ApiType detail={"(index: number, align?: Parameters\u003cTableHandle['scrollToItem']>[1]) => void"}>Type</ApiType> |

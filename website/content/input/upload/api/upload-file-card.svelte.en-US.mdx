@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property            | Description                                                                                         | Type                                                                              | Default  |
+| ------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------- |
+| disabled            | Whether the card is disabled. A disabled card shows no remove, retry or replace button.             | `boolean`                                                                         | -        |
+| ellipsisTooltip     | Custom popup content for a truncated file name, with content and trigger.                           | <ApiType detail={"Snippet\u003c[TypographyEllipsisTooltipProps]>"}>Type</ApiType> | -        |
+| file                | The file to show. Required.                                                                         | `FileItem`                                                                        | -        |
+| fileOperation       | Custom operation area of a list item.                                                               | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| fileValidateMessage | Custom validate message, which receives validateMessage.                                            | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| index               | Position of the file in the list.                                                                   | `number`                                                                          | -        |
+| listType            | Display type of the card: list, picture or none. none renders no card.                              | `UploadListType`                                                                  | `"list"` |
+| onPreviewClick      | While present the card is clickable and shows a preview button; its presence changes the rendering. | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| onRemove            | Called when remove is clicked.                                                                      | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| onReplace           | Called when replace is clicked.                                                                     | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| onRetry             | Called when retry is clicked.                                                                       | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| picClose            | Custom close button of the picture wall, with class and onRemove. Only applies in picture mode.     | <ApiType detail={"Snippet\u003c[UploadPicCloseSlotProps]>"}>Type</ApiType>        | -        |
+| picHeight           | Height of the picture in picture mode.                                                              | `string \| number`                                                                | -        |
+| picInfo             | Custom picture wall information. Only applies in picture mode with showPicInfo set to true.         | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| picPreviewIcon      | Custom preview icon shown on hover in the picture wall. Only applies in picture mode.               | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| picWidth            | Width of the picture in picture mode.                                                               | `string \| number`                                                                | -        |
+| previewFile         | Custom preview that replaces the thumbnail. Only applies in list mode.                              | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| showPicInfo         | Whether to show picture information. Only applies in picture mode.                                  | `boolean`                                                                         | -        |
+| showReplace         | Whether to show a replace button after success. The showReplace of the file wins.                   | `boolean`                                                                         | -        |
+| showRetry           | Whether to show a retry button on failure. The showRetry of the file wins.                          | `boolean`                                                                         | -        |
+| showTooltip         | Whether a truncated file name shows a tooltip, or the tooltip type and the props passed to it.      | `boolean \| ShowTooltip`                                                          | `true`   |
+| thumbnail           | Custom picture wall thumbnail. Only applies in picture mode.                                        | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| validateMessage     | Validate message. Wins over the validateMessage of the file.                                        | `string`                                                                          | -        |

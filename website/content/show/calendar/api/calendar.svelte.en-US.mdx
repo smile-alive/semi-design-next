@@ -1,0 +1,26 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allDayEvents | Snippet for the area for events at the top of the day, range and week views; events is the whole events array that was passed in, to be filtered by the snippet, which renders li items. | <ApiType detail={"Snippet\u003c[CalendarAllDayEventsArgs]>"}>Type</ApiType> | - |
+| dateDisplay | Snippet for custom date text: the column titles of the week and range views and every cell of the month view. The day view does not use it. | <ApiType detail={"Snippet\u003c[CalendarDateDisplayArgs]>"}>Type</ApiType> | - |
+| dateGrid | Snippet for custom content of a date cell or column, with the date and its dateString (date.toString()). Use absolute positioning for elements. | <ApiType detail={"Snippet\u003c[CalendarDateGridArgs]>"}>Type</ApiType> | - |
+| displayValue | Display date. When omitted it is the current date and updates at midnight. | `Date` | - |
+| event | Snippet for custom event content. event is the original object from events and the snippet is called once for each place the event appears. The text of children is rendered when it is absent. | <ApiType detail={"Snippet\u003c[CalendarEventArgs]>"}>Type</ApiType> | - |
+| events | Events to render, see Event Object. | `EventObject[]` | `[]` |
+| header | Snippet for custom header content. | `Snippet` | - |
+| height | Height of the calendar; a number is in pixels. | `number \| string` | `600` |
+| markWeekend | Shows weekend columns in grey to tell them from weekdays. | `boolean` | `false` |
+| minEventHeight | Minimum height in pixels of events in the day, range and week views. | `number` | - |
+| mode | View mode: day, week, month or range. The view switches as soon as it changes. | `CalendarMode` | `"week"` |
+| onClick | Called when a date cell is clicked, with the event and the date of the cell. The unit is half an hour in the day, week and range views and one day in the month view. | <ApiType detail={"(event: MouseEvent, value: Date) => void"}>Type</ApiType> | - |
+| onClose | Called when the card showing all events of a day closes in the month view: the click event for the close button or a second click on "N more", the keyboard event for Esc, and null for a click outside. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent \u007c null) => void"}>Type</ApiType> | - |
+| onMoreClick | Called when a click on "N more" opens the card in the month view, with the event, the date and the number of collapsed events. It is not called when a second click closes the card. | <ApiType detail={"(event: MouseEvent, date: Date, remaining: number) => void"}>Type</ApiType> | - |
+| range | Date range shown in range mode, left-closed and right-open. Required in range mode. | `Date[]` | - |
+| scrollTop | Default scroll offset of the content in the day, week and range views. | `number` | `400` |
+| showCurrTime | Shows the red line of the current time in the day, week and range views. | `boolean` | `true` |
+| timeDisplay | Snippet for custom time text in the day, week and range views; time is the hour. | <ApiType detail={"Snippet\u003c[CalendarTimeDisplayArgs]>"}>Type</ApiType> | - |
+| weekStartsOn | Day of the week that starts the week, 0 for Sunday, 1 for Monday and so on. Applies to the month and week views. | `WeekStartsOn` | `0` |
+| width | Width of the calendar; a number is in pixels. | `number \| string` | - |

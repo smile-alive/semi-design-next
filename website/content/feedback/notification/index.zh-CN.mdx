@@ -41,6 +41,18 @@ import { Notification } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Notification } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+静态方法只能在浏览器中调用（服务端调用会抛错），在事件处理函数里调用即可，读取 `Notification.config()` 与全局默认值以及默认语言包，不继承所在位置的 ConfigProvider 与 LocaleProvider；需要读取时改用 `Notification.useNotification()`。
+
+</Framework>
+
 ### 普通通知
 
 最基本的用法，3s 后自动关闭
@@ -78,6 +90,12 @@ import { Notification } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 `title`、`content`、`icon` 接受 JSX 元素，或返回 JSX 的函数；示例中的内容在点击时用 JSX 构造，每次弹出都是新节点。
+
+</Framework>
+
+<Framework only="svelte">
+
+`title`、`content`、`icon` 接受字符串或 snippet：用 `{#snippet}` 在组件里定义后传入，snippet 里可以直接使用 Typography 等组件。
 
 </Framework>
 
@@ -124,6 +142,12 @@ import { Notification } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `Notification.useNotification()` 创建 `contextHolder`，并把它放在需要继承上下文的位置。hook 须在该位置的 Provider 之下调用：通知渲染在 `contextHolder` 所在的节点处，继承那里的 context、ConfigProvider 和语言，进场、离场动画与静态方法相同。`content`、`icon`、`title` 传函数时，函数在通知内部渲染，可以读取该位置的 context；事件处理函数中创建的 JSX 没有所属组件，读不到 context。
+
+</Framework>
+
+<Framework only="svelte">
+
+在组件初始化时调用 `Notification.useNotification()`，通知继承调用它的组件所在位置的 context、ConfigProvider 和语言，不需要放置 Holder，进场、离场动画与静态方法相同。通知挂载在 `document.body` 下，调用组件销毁时一并移除。`content`、`icon`、`title` 传 snippet 时，snippet 里可以 `getContext` 读到调用组件的 context。
 
 </Framework>
 
@@ -221,6 +245,32 @@ import { Notification } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+| 属性              | 说明                                                                                                                                                  | 类型                      | 默认值              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------- |
+| class             | 通知元素的类名                                                                                                                                        | string \| object \| array |                     |
+| content           | 通知内容，字符串或 snippet；snippet 在通知内部渲染                                                                                                    | string \| Snippet         | ''                  |
+| direction         | 文字方向，只作为单条通知的选项，不属于全局配置；不传时跟随 ConfigProvider                                                                             | `ltr` \| `rtl`            |                     |
+| duration          | 自动关闭的延时，单位 s，设为 0 时不自动关闭                                                                                                           | number                    | 3                   |
+| getPopupContainer | 指定父级 DOM，弹层将会渲染至该 DOM 中，自定义需要设置 `position: relative`。这会改变浮层 DOM 树位置，但不会改变视图渲染位置。只在首次创建容器时生效。 | () => HTMLElement         | () => document.body |
+| icon              | 左上角图标，字符串或 snippet                                                                                                                          | string \| Snippet         |                     |
+| id                | 自定义通知 id；已有相同 id 的通知时更新其内容                                                                                                         | string                    |                     |
+| position          | 弹出位置，可选 `top`、`bottom`、`topLeft`、`topRight`、`bottomLeft`、`bottomRight`                                                                    | string                    | `topRight`          |
+| showClose         | 是否展示关闭按钮                                                                                                                                      | boolean                   | true                |
+| stack             | 同一位置的通知超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠；以该位置最新一条通知的设置为准                                                       | boolean \| number         | false               |
+| style             | 通知元素的内联样式，只接受字符串                                                                                                                      | string                    |                     |
+| theme             | 填充样式，可选 `light`、`normal`                                                                                                                      | string                    | `normal`            |
+| title             | 通知标题，字符串或 snippet                                                                                                                            | string \| Snippet         | ''                  |
+| zIndex            | 弹层 z-index 值，每次弹出时生效                                                                                                                       | number                    | 1010                |
+| onClick           | 点击通知的回调函数，落在通知元素上                                                                                                                    | (e: MouseEvent) => void   |                     |
+| onClose           | 通知关闭的回调函数，主动关闭、延时到达关闭都会触发，每次关闭只触发一次                                                                                | () => void                |                     |
+| onCloseClick      | 主动点击关闭按钮时的回调函数                                                                                                                          | (id: string) => void      |                     |
+
+`class`、`style` 与原生属性和事件（如 `aria-*`、`data-*`）落在通知的根 `div` 上。回调保留 `onClick`、`onClose`、`onCloseClick` 的键名，直接传入函数。
+
+</Framework>
+
 全局配置在调用前提前配置，全局一次生效：
 
 - `Notification.config(config)`
@@ -263,6 +313,13 @@ Hook Notification：
 
 - `Notification.useNotification()`  
   返回元组 `[notification, contextHolder]`，把 `contextHolder` 放进相应的节点中，此时通过 hook 创建的通知将会得到 `contextHolder` 所在位置的所有上下文。notification 对象拥有以下方法：`info`、`success`、`warning`、`error`、`open`、`close`；前五个接收不含 `type`、`id`、`zIndex`、`getPopupContainer` 的选项，返回通知 id，`close(id)` 手动关闭。hook 创建的通知使用内置默认值与全局默认值，不受 `Notification.config()` 影响；`close(id)` 播放离场动画后移除通知，不触发 `onClose`。`contextHolder` 外包一层带 `data-semi-keep-interactive` 的容器，模态层打开时 hook 通知仍可交互。
+
+</Framework>
+
+<Framework only="svelte">
+
+- `Notification.useNotification()`  
+  在组件初始化时调用，返回 notification 对象，通过它创建的通知将会得到调用组件所在位置的所有上下文。notification 对象拥有以下方法：`info`、`success`、`warning`、`error`、`open`、`close`；前五个接收不含 `type`、`id`、`zIndex`、`getPopupContainer` 的选项，返回通知 id，`close(id)` 手动关闭。hook 创建的通知使用内置默认值，不受 `Notification.config()` 影响；`close(id)` 播放离场动画后移除通知，不触发 `onClose`。ConfigProvider、LocaleProvider 的值静态 `Notification` 读不到，需要时改用 `useNotification()`。
 
 </Framework>
 

@@ -1,0 +1,57 @@
+{
+    "progress": {
+        "source": "packages/semi-ui-svelte/src/progress/progress.svelte",
+        "props": {
+            "direction": {
+                "zh-CN": "条状进度条的方向，可选 horizontal、vertical。",
+                "en-US": "Direction of the line progress bar: horizontal or vertical."
+            },
+            "format": {
+                "zh-CN": "自定义显示文字的 snippet，参数 `{ percent }`，percent 为当前显示的数字（限制在 0 到 100）；只在显示文字时渲染。",
+                "en-US": "Snippet for custom text. Its argument `{ percent }` is the shown number clamped to 0-100. It renders only when the text is shown."
+            },
+            "indeterminate": {
+                "zh-CN": "是否为不确定状态。开启后 percent 不再控制进度长度，且不展示文字，aria-valuenow 省略。",
+                "en-US": "Whether the progress is indeterminate. When on, percent no longer controls the length, the text is hidden and aria-valuenow is omitted."
+            },
+            "motion": {
+                "zh-CN": "文字数字是否以动画过渡到新的 percent；关闭后直接跳到目标值。",
+                "en-US": "Whether the shown number animates to the new percent. When off it jumps to the target."
+            },
+            "orbitStroke": { "zh-CN": "进度条轨道的填充色。", "en-US": "Fill color of the track." },
+            "percent": {
+                "zh-CN": "进度百分比；传入 NaN 会抛出错误。",
+                "en-US": "Progress percentage. Passing NaN throws an error."
+            },
+            "showInfo": {
+                "zh-CN": "是否显示文字：环形显示在中间，条状显示在右侧。",
+                "en-US": "Whether to show the text: in the center of a circle, or on the right of a bar."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 default、small（仅 type 为 circle 时生效）、large（仅 type 为 line 时生效）。",
+                "en-US": "Size: default, small (circle only) or large (line only)."
+            },
+            "stroke": {
+                "zh-CN": "填充色。数组形式为 `{ percent, color }` 的区间列表，color 可为任意 CSS 颜色或 Semi 色板名。",
+                "en-US": "Fill color. An array is a list of `{ percent, color }` intervals, where color is any CSS color or a Semi palette name."
+            },
+            "strokeGradient": {
+                "zh-CN": "是否自动生成渐变色补齐区间颜色，需要 stroke 至少设置一个颜色区间。",
+                "en-US": "Whether to generate gradient colors between intervals. Requires at least one interval in stroke."
+            },
+            "strokeLinecap": {
+                "zh-CN": "环形进度条端点形状，可选 round、square。",
+                "en-US": "Line cap of the circle progress bar: round or square."
+            },
+            "strokeWidth": {
+                "zh-CN": "环形进度条的线宽。",
+                "en-US": "Stroke width of the circle progress bar."
+            },
+            "type": { "zh-CN": "类型，可选 line、circle。", "en-US": "Type: line or circle." },
+            "width": {
+                "zh-CN": "环形进度条的直径；缺省时 size 为 small 时为 24，其他为 72。",
+                "en-US": "Diameter of the circle progress bar. Defaults to 24 when size is small and 72 otherwise."
+            }
+        }
+    }
+}

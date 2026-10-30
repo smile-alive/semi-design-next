@@ -42,9 +42,9 @@ const containerStyle = { display: 'flex', 'flex-direction': 'column', 'row-gap':
 const rowStyle = { display: 'flex', 'align-items': 'center', 'column-gap': '10px' } as const;
 const panelStyle = { border: '1px solid var(--semi-color-border)', 'border-radius': '12px', 'margin-top': '10px', padding: '20px' } as const;
 
-const onSelect = (selectionIds: string[]) => {
+function onSelect(selectionIds: string[]) {
     console.log('onSelect', selectionIds);
-};
+}
 
 export default function AIChatDialogueDemo() {
     let dialogue: AIChatDialogueElement | undefined;

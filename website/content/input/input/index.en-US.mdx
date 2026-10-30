@@ -11,6 +11,9 @@ import InputGroupReactApi from './api/input-group.react.en-US.mdx';
 import InputVueApi from './api/input.vue.en-US.mdx';
 import TextAreaVueApi from './api/text-area.vue.en-US.mdx';
 import InputGroupVueApi from './api/input-group.vue.en-US.mdx';
+import InputSvelteApi from './api/input.svelte.en-US.mdx';
+import TextAreaSvelteApi from './api/text-area.svelte.en-US.mdx';
+import InputGroupSvelteApi from './api/input-group.svelte.en-US.mdx';
 import InputSolidApi from './api/input.solid.en-US.mdx';
 import TextAreaSolidApi from './api/text-area.solid.en-US.mdx';
 import InputGroupSolidApi from './api/input-group.solid.en-US.mdx';
@@ -32,6 +35,16 @@ import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -75,6 +88,14 @@ When the slot content is only text or a single Semi Icon, the left and right mar
 
 </Framework>
 
+<Framework only="svelte">
+
+Add a prefix or suffix to the input with the `prefix` and `suffix` snippets; the content can be text, an icon, or any node.
+
+When the snippet content is only text or a single Semi Icon, horizontal spacing is added automatically; for a custom node the spacing is 0.
+
+</Framework>
+
 <Framework only="solid">
 
 Add a prefix or suffix to the input; the content can be text, an icon, or any JSX element.
@@ -98,6 +119,14 @@ When the content of `addonBefore` and `addonAfter` is text or Semi Icon, the lef
 Add an addon before or after the input with the `#addonBefore` and `#addonAfter` slots.
 
 When the slot content is only text or a single Semi Icon, the left and right margin will be automatically added. If it is a custom node, the left and right margin will be 0.
+
+</Framework>
+
+<Framework only="svelte">
+
+Add an addon before or after the input with the `addonBefore` and `addonAfter` snippets.
+
+When the snippet content is only text or a single Semi Icon, horizontal spacing is added automatically; for a custom node the spacing is 0.
 
 </Framework>
 
@@ -140,6 +169,12 @@ You can use `value` along with `onChange` property if you want to use Input as a
 <Framework only="vue">
 
 Bind the value with `v-model`. With one-way `:modelValue` the component does not change its own value: when the parent does not accept the new value from `change`, the input returns to `modelValue`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the value with `bind:value`. A plain `value={x}` is only the initial content, which the component then maintains itself; to let the parent decide whether to accept a new value, use `bind:value={get, set}`: when `set` does not update the state, the input returns to the value of `get`.
 
 </Framework>
 
@@ -215,6 +250,14 @@ What is done inside Semi when getValueLength is passed in:
 
 </Framework>
 
+<Framework only="svelte">
+
+- maxlength: maxlength is not passed directly to the native input. If the input length exceeds the maximum limit, the legal length character entered last time is used.
+- minlength: the length of minlength is switched dynamically, and an emoji counts as one length.
+- maxCount: the value obtained by getValueLength is compared with maxCount
+
+</Framework>
+
 <Framework only="solid">
 
 - maxLength: maxLength is not passed directly to the native input. If the input length exceeds the maximum limit, the legal length character entered last time is used.
@@ -242,6 +285,12 @@ By setting the `composition` property to `true`, you can enable IME input mode. 
 <Framework only="vue">
 
 By setting the `composition` property to `true`, you can enable IME input mode. In this mode, when using an IME (e.g., Chinese pinyin input), the `change` event will not be triggered during IME confirmation (e.g., while pinyin is being typed), and will only be triggered once after the IME confirms the input. This is useful for real-time search scenarios to avoid unnecessary requests during pinyin input.
+
+</Framework>
+
+<Framework only="svelte">
+
+By setting the `composition` property to `true`, you can enable IME input mode. In this mode, when using an IME (e.g., Chinese pinyin input), `onChange` will not be called during IME confirmation (e.g., while pinyin is being typed), and will only be called once after the IME confirms the input. This is useful for real-time search scenarios to avoid unnecessary requests during pinyin input.
 
 </Framework>
 
@@ -277,6 +326,14 @@ Both Input and TextArea support this property.
 
 </Framework>
 
+<Framework only="svelte">
+
+> `class` and `style` land on the outer wrapper; other undeclared attributes and events (such as `aria-*`, `id`, `name` and `onclick`) behave like those of the html input tag and land on the native input. `onFocus` and `onBlur` listen on the outer element and do not fire when focus moves between the input and the buttons inside the component.
+
+<InputSvelteApi />
+
+</Framework>
+
 <Framework only="solid">
 
 <InputSolidApi />
@@ -305,6 +362,14 @@ Both Input and TextArea support this property.
 
 </Framework>
 
+<Framework only="svelte">
+
+> `class` and `style` land on the outer wrapper; other undeclared attributes and events (such as `aria-*`, `id`, `name` and `onclick`) behave like those of the html textarea tag and land on the native textarea.
+
+<TextAreaSvelteApi />
+
+</Framework>
+
 <Framework only="solid">
 
 <TextAreaSolidApi />
@@ -317,19 +382,27 @@ Both Input and TextArea support this property.
 
 <Framework only="react">
 
-Common attributes will be set to the child elements of InputGroup, such as size and disabled; a boolean disabled set explicitly on a child takes precedence over the InputGroup value. onFocus and onBlur are not passed down to the children: InputGroup listens for focus events on its own root element, so when a child gains or loses focus, the handlers of InputGroup and of the child both fire and neither overrides the other.
+`size` and `disabled` reach controls at any depth in the group through context (Button and the Buttons inside a ButtonGroup included), not only direct children. A value a control sets itself takes precedence over the group's, `disabled={false}` included. Other attributes such as `data-*`, `aria-*` and `id` land only on the `role="group"` element and are not passed to the controls; a `role`, `aria-label`, `aria-labelledby` or `id` you pass overrides the built-in value. The inputs and buttons that Select, Cascader, TreeSelect, AutoComplete, DatePicker, TimePicker, InputNumber and TagInput render inside themselves, and the controls in their popups, do not inherit from the group. onFocus and onBlur are not passed down to the controls: InputGroup listens for focus events on its own root element, so when a control gains or loses focus, the handlers of InputGroup and of the control both fire and neither overrides the other.
 
 <InputGroupReactApi />
-
-Other undeclared attributes such as `data-*` and `aria-*` do not land on the `role="group"` element. They are passed to every control in the group and override the controls' own attributes of the same name.
 
 </Framework>
 
 <Framework only="vue">
 
-Common attributes (`size`, `disabled`, `data-*`, `aria-*` and so on) are passed to every child; a `disabled` the child writes itself (including the template shorthand `disabled` and `:disabled="false"`) takes precedence over the group value, while `size` always comes from the group. `class` and `style` stay on the `role="group"` element. `focus` and `blur` are the group's own events and are not passed to the children: when a child gains or loses focus, the listeners of the group and of the child both fire and neither overrides the other. `labelPosition` is not passed down either. With a `label`, the `$el` of the component ref is the outer wrapper.
+`size` and `disabled` reach controls at any depth in the group through provide/inject (Button and the Buttons inside a ButtonGroup included); a value a control sets itself takes precedence over the group's, including the template shorthand `disabled` and `:disabled="false"`. `class`, `style`, `data-*`, `aria-*`, `id` and other attributes land only on the `role="group"` element and are not passed to the controls; a `role`, `aria-label`, `aria-labelledby` or `id` you pass overrides the built-in value. The inputs and buttons that Select, Cascader, TreeSelect, AutoComplete, DatePicker, TimePicker, InputNumber and TagInput render inside themselves, and the controls in their popups, do not inherit from the group. `focus` and `blur` are the group's own events and are not passed to the controls: when a control gains or loses focus, the listeners of the group and of the control both fire and neither overrides the other. With a `label`, the `$el` of the component ref is the outer wrapper.
 
 <InputGroupVueApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+`size` and `disabled` reach controls at any depth in the group through context (Button and the Buttons inside a ButtonGroup included); a value a control sets itself takes precedence over the group's, `disabled={false}` included. `class`, `style`, `data-*`, `aria-*`, `id` and other attributes land only on the `role="group"` element and are not passed to the controls; a `role`, `aria-label`, `aria-labelledby` or `id` you pass overrides the built-in value. The inputs and buttons that Select, Cascader, TreeSelect, AutoComplete, DatePicker, TimePicker, InputNumber and TagInput render inside themselves, and the controls in their popups, do not inherit from the group. `onFocus` and `onBlur` are callbacks of the group itself and are not passed to the controls: when a control in the group gains or loses focus, the handlers of the group and of the control both run, neither overriding the other.
+
+With `label` (put the text in `label.text`, or write node content with the `fieldLabel` snippet and extra content with the `labelExtra` snippet), the group gets an outer wrapper, and the label names the whole `role="group"` element.
+
+<InputGroupSvelteApi />
 
 </Framework>
 
@@ -337,7 +410,7 @@ Common attributes (`size`, `disabled`, `data-*`, `aria-*` and so on) are passed 
 
 <InputGroupSolidApi />
 
-`size` and `disabled` are passed to every control in the group: a control's own `disabled` takes precedence, while `size` always comes from the group. Other undeclared attributes (such as `data-*` and `aria-*`) are passed down the same way, with the control's own attributes taking precedence. `class`, `style` and `ref` land on the `span` with `role="group"`. `onFocus` and `onBlur` are listened for on the group's root element, so when a control gains or loses focus, the handlers of the group and of the control both fire and neither overrides the other.
+`size` and `disabled` reach controls at any depth in the group through context (Button and the Buttons inside a ButtonGroup included): a value a control sets itself takes precedence over the group's, `disabled={false}` included. The other undeclared attributes (such as `data-*`, `aria-*` and `id`), together with `class`, `style` and `ref`, land only on the `span` with `role="group"` and are not passed to the controls; a `role`, `aria-label`, `aria-labelledby` or `id` you pass overrides the built-in value. The inputs and buttons that Select, Cascader, TreeSelect, AutoComplete, DatePicker, TimePicker, InputNumber and TagInput render inside themselves, and the controls in their popups, do not inherit from the group. `onFocus` and `onBlur` are listened for on the group's root element, so when a control gains or loses focus, the handlers of the group and of the control both fire and neither overrides the other.
 
 </Framework>
 
@@ -354,6 +427,12 @@ Members are listed in the **Methods** tables of Input and TextArea above.
 <Framework only="vue">
 
 The template ref of Input and TextArea is an imperative handle (`InputHandle` and `TextAreaHandle`); see the Exposes table of each component above for its members. `input`, `textarea` and `nativeElement` return the node mounted now on each read, and `null` after unmount.
+
+</Framework>
+
+<Framework only="svelte">
+
+Input and TextArea expose methods through `export function`; get the instance with `bind:this` and call them. The members are in the **Methods** tables of each component above. `getInput`, `getTextarea` and `getNativeElement` return the currently mounted node on every call, and `null` after unmount.
 
 </Framework>
 

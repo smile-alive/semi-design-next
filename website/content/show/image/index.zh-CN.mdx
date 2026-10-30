@@ -11,6 +11,8 @@ import ImageVueApi from './api/image.vue.zh-CN.mdx';
 import ImagePreviewVueApi from './api/image-preview.vue.zh-CN.mdx';
 import ImageSolidApi from './api/image.solid.zh-CN.mdx';
 import ImagePreviewSolidApi from './api/image-preview.solid.zh-CN.mdx';
+import ImageSvelteApi from './api/image.svelte.zh-CN.mdx';
+import ImagePreviewSvelteApi from './api/image-preview.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -42,6 +44,16 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Image, ImagePreview } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 通过 `src` 指定图片路径即可获取一个具有预览功能的图片，通过 `width`，`height` 指定图片的宽高
@@ -68,6 +80,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`fallback` 接收字符串或 snippet：字符串是加载失败时显示的图片地址，snippet 渲染自定义内容；未设置时显示默认的加载失败图标
+
+</Framework>
+
 <Demo id="fallback" />
 
 ### 渐进加载
@@ -90,6 +108,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+大图可通过 `placeholder` snippet 实现渐进加载，snippet 渲染的内容在图片加载成功前显示
+
+</Framework>
+
 <Demo id="progressive" />
 
 ### 自定义预览图片
@@ -101,6 +125,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 ### 多图预览
 
 使用 ImagePreview 包裹 Image 即可实现多图片预览
+
+<Framework only="svelte">
+
+ImagePreview 的 `src` 数组决定组内有哪些图片及其顺序，Image 不会向 ImagePreview 登记自己。Image 按自己的 `src`（或 `preview.src`）在列表中的位置打开预览，`src` 不在列表中的 Image 单独预览。逐张的标题与替代文本用 `titles`、`alts` 设置，与 `src` 逐项对应。
+
+</Framework>
 
 <Demo id="multiple" />
 
@@ -121,6 +151,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 预览组件 ImagePreview 可以单独使用，通过 `visible` 和 `onVisibleChange` 控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle`（JSX 元素）设置预览顶部的标题
+
+</Framework>
+
+<Framework only="svelte">
+
+预览组件 ImagePreview 可以单独使用，通过 `bind:visible`（或 `visible` 加 `onVisibleChange`）控制是否预览，通过 `src` 传入可以预览的图片，通过 `previewTitle`（string）设置预览顶部的标题
 
 </Framework>
 
@@ -154,6 +190,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可以使用 `previewMenu` snippet 自定义预览底部操作区域，参数为 MenuProps。ImagePreview 包裹的 Image 使用 ImagePreview 的 snippet，单独使用的 Image 使用自己的同名 snippet
+
+</Framework>
+
 <Demo id="render-preview-menu" />
 
 <Framework only="react">
@@ -171,6 +213,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 如果想基于默认底部操作区域自定义预览底部操作区域，可以通过 renderPreviewMenu 的 menuItems 参数获取默认各项的 JSX 元素数组，顺序依次为上一张、页码、下一张、缩小、缩放滑块、放大、原始尺寸 / 适应页面、旋转、下载，可按任意位置渲染。
+
+</Framework>
+
+<Framework only="svelte">
+
+如果想基于默认底部操作区域自定义预览底部操作区域，可以渲染 MenuProps 中的 `menuItems` snippet：它一次渲染全部默认项，顺序依次为上一张、页码、下一张、缩小、缩放滑块、放大、原始尺寸 / 适应页面、旋转、下载，自定义内容只能放在它之前或之后，不能插到默认项之间。只有未传 `previewMenu` 时，默认各项之间才有分隔线。
 
 </Framework>
 
@@ -193,6 +241,12 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `renderHeader` 可以自定义预览顶部展示区，它接收当前标题（JSX 元素）并返回新的 JSX 元素
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `title` snippet（参数为 `{ title, index }`）替换预览顶部标题区的内容。有标题时预览对话框经 `aria-labelledby` 以标题区命名，名称即 snippet 渲染出的文字；没有标题时名称为语言包的「预览」。顶部的关闭按钮可用 `closeIcon` snippet 替换图标，切换箭头可用 `leftIcon`、`rightIcon` snippet（参数为 `{ index }`）替换图标
 
 </Framework>
 
@@ -228,6 +282,14 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<ImageSvelteApi />
+
+`width`、`height` 的数值按 px 处理。`class`、`style` 落在根元素上，其余未声明的原生属性与事件处理落在内部的 img 上。`preview` 对象接受 ImagePreview 的 props 与回调（`onVisibleChange`、`onChange`、`onClose`、`onZoomIn`、`onZoomOut`、`onPrev`、`onNext`、`onRatioChange`、`onRotateLeft`、`onDownload`、`onDownloadError`），但不含 `lazyLoad`、`lazyLoadMargin`、`class`、`style`（预览样式请用 `previewCls`、`previewStyle`）；自定义节点不放在 `preview` 里，使用 Image 的 snippet。`preview.src` 为数组时，切换图片后回到「适应页面」。处于 ImagePreview 内的 Image 不使用 `title`、`previewMenu`、`leftIcon`、`rightIcon`、`closeIcon` snippet，以 ImagePreview 的 snippet 为准。
+
+</Framework>
+
 ### ImagePreview
 
 <Framework only="react">
@@ -251,6 +313,14 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 <ImagePreviewSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `aria-label`、`aria-labelledby`）落在分组的根 div 上；传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时根元素带 `role="group"`。预览对话框渲染到 `getPopupContainer`（默认 `document.body`）中，名称来自 `previewTitle`，没有标题时来自语言包。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ImagePreviewSvelteApi />
+
+`class`、`style` 与原生属性（如 `aria-label`、`aria-labelledby`）落在分组的根 div 上；传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时根元素带 `role="group"`。预览对话框渲染到 `getPopupContainer`（默认 `document.body`）中，名称来自 `previewTitle`，没有标题时来自语言包。
 
 </Framework>
 
@@ -341,6 +411,34 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 | menuItems       | 默认底部预览操作区域各项的 JSX 元素数组，可原样渲染 | JSX.Element[]                |
 
 字段实时读取：在 JSX 表达式里直接读取 `menu.disabledPrev` 等字段，不要解构 `menu` 参数。
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性            | 说明                                           | 类型                         |
+| --------------- | ---------------------------------------------- | ---------------------------- |
+| curPage         | 当前图片页下标                                 | number                       |
+| disabledPrev    | 是否禁用向左切换按钮                           | boolean                      |
+| disabledNext    | 是否禁用向右切换按钮                           | boolean                      |
+| disabledZoomIn  | 是否已放大到最大比例（放大按钮禁用）           | boolean                      |
+| disabledZoomOut | 是否已缩小到最小比例（缩小按钮禁用）           | boolean                      |
+| disableDownload | 是否禁用下载按钮                               | boolean                      |
+| max             | 图片缩放最大比例（百分比）                     | number                       |
+| min             | 图片缩放最小比例（百分比）                     | number                       |
+| onDownload      | 图片下载的调用函数                             | () => void                   |
+| onZoomIn        | 图片放大时的调用函数                           | () => void                   |
+| onZoomOut       | 图片缩小时的调用函数                           | () => void                   |
+| onRatioClick    | 切换原始尺寸与适应页面的调用函数               | () => void                   |
+| onPrev          | 向前切换图片的调用函数                         | () => void                   |
+| onNext          | 向后切换图片的调用函数                         | () => void                   |
+| onRotateLeft    | 逆时针旋转图片的调用函数                       | () => void                   |
+| onRotateRight   | 顺时针旋转图片的调用函数                       | () => void                   |
+| ratio           | 原始尺寸或适应页面按钮状态                     | `"adaptation" \| "realSize"` |
+| step            | 缩放的比例步长（百分比）                       | number                       |
+| totalNum        | 可预览的总图片数                               | number                       |
+| zoom            | 当前图片缩放比例（百分比）                     | number                       |
+| menuItems       | 一次渲染全部默认底部预览操作区域各项的 snippet | Snippet                      |
 
 </Framework>
 

@@ -9,16 +9,16 @@
     };
     const ids = ref<string[]>([]);
 
-    function show() {
+    const show = () => {
         ids.value.push(Notification.info(opts));
-    }
+    };
 
-    function hide() {
+    const hide = () => {
         const first = ids.value.shift();
         if (first) {
             Notification.close(first);
         }
-    }
+    };
 </script>
 
 <template>

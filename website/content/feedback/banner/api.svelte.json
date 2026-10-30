@@ -1,0 +1,37 @@
+{
+    "banner": {
+        "source": "packages/semi-ui-svelte/src/banner/banner.svelte",
+        "props": {
+            "bordered": {
+                "zh-CN": "是否展示边框，仅在非全屏模式下有效。",
+                "en-US": "Whether to show a border. Only takes effect in non-full mode."
+            },
+            "children": {
+                "zh-CN": "消息下方的自定义内容。",
+                "en-US": "Custom content below the message."
+            },
+            "closeIcon": {
+                "zh-CN": "替换关闭按钮内图标的 snippet；传入 `null` 则不显示关闭按钮。",
+                "en-US": "Snippet that replaces the icon in the close button. Pass `null` to remove the button."
+            },
+            "description": { "zh-CN": "描述内容的 snippet。", "en-US": "Snippet for the description content." },
+            "fullMode": { "zh-CN": "是否为全屏模式。", "en-US": "Whether the banner is in full mode." },
+            "icon": {
+                "zh-CN": "替换类型图标的 snippet；传入 `null` 则不显示图标。",
+                "en-US": "Snippet that replaces the icon of the type. Pass `null` to hide the icon."
+            },
+            "onClose": {
+                "zh-CN": "点击关闭按钮时的回调，参数为按钮的原生 click 事件；回调返回后横幅隐藏。",
+                "en-US": "Called when the close button is clicked, with its native click event. The banner hides once the callback returns."
+            },
+            "title": {
+                "zh-CN": "标题，可以是字符串或 snippet。",
+                "en-US": "Title, a string or a snippet."
+            },
+            "type": {
+                "zh-CN": "类型，可选 info、success、danger、warning。",
+                "en-US": "Type: info, success, danger or warning."
+            }
+        }
+    }
+}

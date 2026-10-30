@@ -1,0 +1,61 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| afterClose | 确认框关闭且离场动画结束后调用。 | `TooltipProps['afterClose']` | - |
+| afterOpen | 确认框打开且进场动画结束后调用；没有进场动画时打开后即调用，受控与非受控相同；进场结束前被关闭的打开不调用。 | `TooltipProps['afterOpen']` | - |
+| aria-describedby | 对话框的 aria-describedby，缺省在同时有标题和内容时指向内容。 | `string` | - |
+| aria-label | 对话框的 aria-label，传入后优先于标题。 | `string` | - |
+| aria-labelledby | 对话框的 aria-labelledby，缺省指向标题，没有标题时指向内容。 | `string` | - |
+| arrowPointAtCenter | 箭头是否指向触发元素中心，需要同时开启 showArrow。 | `boolean` | - |
+| arrowStyle | 箭头的边框色、背景色与边框透明度。 | `ArrowStyle` | - |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | - |
+| cancelButtonProps | 取消按钮的属性，autoFocus 为 true 时打开后聚焦该按钮，onclick 先于内置的取消处理执行。 | `PopconfirmButtonProps` | - |
+| cancelText | 取消按钮文字，缺省取语言包 Popconfirm.cancel。 | `string` | - |
+| cancelType | 取消按钮类型。 | `ButtonType` | `"tertiary"` |
+| child | 直接渲染触发元素的 snippet，参数 `{ props }` 必须整体展开到触发元素上；传了 `child` 时 `children` 不再生效。 | `TooltipProps['child']` | - |
+| children | 触发元素的 snippet，会被包进 Tooltip 自己的 span，由该 span 接收触发属性。 | `TooltipProps['children']` | - |
+| class | 确认卡片的类名。 | `string` | - |
+| clickToHide | 点击弹出层及其内部任一元素时是否关闭。 | `boolean` | - |
+| closeOnEsc | 弹出层打开期间按 Esc 是否关闭确认框；trigger 为 custom 时只调用 onEscKeyDown，由使用方决定是否关闭。 | `boolean` | - |
+| condition | 是否允许触发显示；仅显式设为 false 时，hover、click、focus 等触发行为不生效。由 true 变为 false 时立即关闭已显示的确认框；visible 受控时只调用 onVisibleChange(false)，使用方回写后才关闭。 | `boolean` | - |
+| content | 确认框内容的 snippet，参数 `{ initialFocusRef }` 是回调，可直接写 `{@attach initialFocusRef}` 绑定到打开时需要聚焦的元素；不传时不渲染内容区。 | <ApiType detail={"Snippet\u003c[RenderContentProps]>"}>Type</ApiType> | - |
+| contentClassName | 内容容器的类名。 | `ClassValue` | - |
+| disableArrowKeyDown | 是否禁用在触发元素上按方向键把焦点移入确认框。 | `boolean` | - |
+| disabled | 是否禁用；禁用时只渲染触发元素，不弹出确认框。 | `boolean` | `false` |
+| disableFocusListener | trigger 为 hover 时，是否不响应键盘聚焦打开。 | `boolean` | - |
+| guardFocus | 焦点位于确认框内时，Tab 是否在其中循环。 | `boolean` | - |
+| icon | 自定义图标的 snippet；不传时显示默认警告图标，传入 `null` 则不渲染图标。 | `Snippet \| null` | - |
+| keepDOM | 关闭时是否保留内容而不销毁。 | `boolean` | - |
+| motion | 是否展示弹出动画。 | `boolean` | - |
+| mouseEnterDelay | 指针移入后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | - |
+| mouseLeaveDelay | 指针移出后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | - |
+| okButtonProps | 确认按钮的属性，autoFocus 为 true 时打开后聚焦该按钮，onclick 先于内置的确认处理执行。 | `PopconfirmButtonProps` | - |
+| okText | 确认按钮文字，缺省取语言包 Popconfirm.confirm（zh_CN 为「确定」）。 | `string` | - |
+| okType | 确认按钮类型。 | `ButtonType` | `"primary"` |
+| onCancel | 点击取消按钮或关闭按钮的回调，参数是按钮的原生 click 事件；返回 Promise 时按钮保持加载，落定后才关闭，reject 时保留确认框。 | <ApiType detail={"(event: MouseEvent) => Promise\u003cunknown> \u007c void"}>Type</ApiType> | - |
+| onClickOutSide | 确认框打开时在触发元素与确认框以外的区域按下鼠标时调用，仅 trigger 为 click、contextMenu 或 custom 时有效。 | `TooltipProps['onClickOutSide']` | - |
+| onConfirm | 点击确认按钮的回调，参数是按钮的原生 click 事件；返回 Promise 时按钮保持加载，落定后才关闭，reject 时保留确认框。 | <ApiType detail={"(event: MouseEvent) => Promise\u003cunknown> \u007c void"}>Type</ApiType> | - |
+| onEscKeyDown | closeOnEsc 为 true 时，确认框打开期间按 Esc 调用。 | `TooltipProps['onEscKeyDown']` | - |
+| onOpen | 确认框显示、进场动画开始时调用，每次打开一次，早于 afterOpen，受控与非受控相同；悬停打开后指针已离开而撤回的打开不调用。 | `TooltipProps['onOpen']` | - |
+| onVisibleChange | 显示状态变化时调用；visible 受控时只报告用户交互发起的请求，使用方自己改变 visible 不调用。 | `TooltipProps['onVisibleChange']` | - |
+| position | 弹出层相对触发元素的位置，共十二个方向。 | `TooltipProps['position']` | - |
+| prefixCls | 确认卡片的类名前缀。 | `string` | `"semi-popconfirm"` |
+| returnFocusOnClose | 关闭后焦点是否回到触发元素；受控的 visible 也照常生效，trigger 为 custom 时不生效。 | `boolean` | - |
+| role | 弹出层的 ARIA role，缺省为 dialog。 | `string` | `"dialog"` |
+| showArrow | 是否显示箭头三角形。 | `boolean` | - |
+| showCloseIcon | 是否显示右上角关闭按钮。 | `boolean` | `true` |
+| spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number }` | - |
+| stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean \| string` | `true` |
+| style | 确认卡片的样式字符串。 | `string` | - |
+| title | 标题，可以是字符串或 snippet，同时作为对话框的可访问名称。 | `string \| Snippet` | - |
+| trigger | 触发展示的时机，可选 hover、focus、click、contextMenu 或 custom。custom 时显示与否完全由 visible 决定。 | `TooltipProps['trigger']` | `"click"` |
+| visible | 是否展示，可用 `bind:visible` 双向绑定；传入后由该值决定显示，trigger 保持原值，触发器事件仍然生效。 | `boolean` | - |
+
+**Methods**
+
+| 方法         | 说明                                                                                                       | 类型                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| focusTrigger | 让触发元素获得焦点，仅在 returnFocusOnClose 为 true 且 trigger 不是 custom 时生效；disabled 时调用无效果。 | <ApiType detail={"() => void"}>Type</ApiType> |

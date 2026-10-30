@@ -3,14 +3,14 @@ import { Button, Form, FormCheckboxGroup, FormInput, Space, Toast, type FormApi 
 const allFields = ['a', 'b', 'c', 'd', 'b.name'];
 const options = allFields.map((item) => ({ label: item, value: item }));
 
-const validate = (val?: string) => {
+function validate(val?: string) {
     if (!val) {
         return "can't be empty";
     } else if (val.length <= 5) {
         return <span>我是传入的节点</span>;
     }
     return;
-};
+}
 
 export default function FormDemo() {
     let formApi: FormApi | undefined;

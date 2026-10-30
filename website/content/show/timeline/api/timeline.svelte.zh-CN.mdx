@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                                      | 类型                                                                    | 默认值   |
+| ---------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------- |
+| content    | dataSource 每一项内容的 snippet，参数 `{ item, index }`，缺省渲染 item.content。                          | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
+| dataSource | 数据数组，按数据渲染各节点；项的字段见下表，其中 `dot` 为该节点自定义圆点的 snippet，未设置时画默认圆点。 | `TimelineData[]`                                                        | -        |
+| extra      | dataSource 每一项辅助说明的 snippet，参数 `{ item, index }`，缺省渲染 item.extra。                        | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
+| mode       | 时间轴与内容的相对位置，可选 left、right、center、alternate。                                             | `TimelineMode`                                                          | `"left"` |
+| time       | dataSource 每一项时间的 snippet，参数 `{ item, index }`，缺省渲染 item.time。                             | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |

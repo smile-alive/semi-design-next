@@ -8,6 +8,7 @@ brief: Ratings provide insight regarding others' opinions and experiences with a
 import RatingReactApi from './api/rating.react.en-US.mdx';
 import RatingVueApi from './api/rating.vue.en-US.mdx';
 import RatingSolidApi from './api/rating.solid.en-US.mdx';
+import RatingSvelteApi from './api/rating.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { Rating } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Rating } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Rating } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -89,6 +100,12 @@ Use the `character` prop to customize the character.
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `character` prop to customize the character: pass a string, or a snippet defined with `{#snippet character()}...{/snippet}`.
+
+</Framework>
+
 <Demo id="custom" />
 
 ## API Reference
@@ -118,6 +135,16 @@ Use the `character` prop to customize the character.
 `class`, `style`, `ref` and native attributes (`id`, `aria-labelledby`, `aria-invalid`, `aria-required`, `data-*` and so on) land on the `role="radiogroup"` root `ul`; `tabIndex` and `name` are discarded and the list is fixed at `tabIndex={-1}`, so only the checked radio can be reached with Tab.
 
 `focus()` on the `ref` focuses the radio that Tab reaches (the same one `autofocus` uses), and `blur()` only takes effect when focus is inside the rating.
+
+</Framework>
+
+<Framework only="svelte">
+
+<RatingSvelteApi />
+
+`value` is bindable and there is no `defaultValue`: a plain `value` is the initial value, `bind:value` reads and writes it, and a function binding can refuse or rewrite it. `class`, `style` (a string) and native attributes (`id`, `aria-labelledby`, `aria-invalid`, `aria-required`, `data-*` and so on) land on the `role="radiogroup"` root `ul`; `aria-label` is used as the accessible name as is, and without it the name summarizes the current value; `tabindex` and `name` are discarded and the list is fixed at `tabindex="-1"`, so only the checked radio can be reached with Tab.
+
+`focus()` and `blur()` are called through `bind:this`: `focus()` focuses the radio that Tab reaches (the same one `autofocus` uses), and `blur()` only takes effect when focus is inside the rating.
 
 </Framework>
 

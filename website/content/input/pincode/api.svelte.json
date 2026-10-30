@@ -1,0 +1,43 @@
+{
+    "pin-code": {
+        "source": "packages/semi-ui-svelte/src/pincode/pincode.svelte",
+        "props": {
+            "autofocus": {
+                "zh-CN": "挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。",
+                "en-US": "Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it."
+            },
+            "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the input is disabled." },
+            "format": {
+                "zh-CN": "单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。",
+                "en-US": "Format limit for a single character: number allows digits only, mixed allows digits and letters, and a regular expression or function judges each character."
+            },
+            "onBlur": { "zh-CN": "焦点离开整个验证码时的回调。", "en-US": "Called when focus leaves the whole code." },
+            "onChange": { "zh-CN": "内容变化时的回调，参数为当前内容。", "en-US": "Called when the content changes, with the current content." },
+            "onComplete": { "zh-CN": "所有位数输入完毕时的回调，参数为当前内容。", "en-US": "Called once all digits are entered, with the current content." },
+            "onFocus": {
+                "zh-CN": "焦点进入整个验证码时的回调，在输入框之间移动不触发。",
+                "en-US": "Called when focus enters the code from outside; moving between the inputs does not call it."
+            },
+            "size": { "zh-CN": "输入框大小，可选 large、default、small。", "en-US": "Input size: large, default or small." },
+            "validateStatus": {
+                "zh-CN": "校验状态，传给每个输入框；error 时显示错误样式。",
+                "en-US": "Validation status, passed to every input; error shows the error style."
+            },
+            "value": {
+                "zh-CN": "输入框内容，可用 `bind:value` 双向绑定。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值。",
+                "en-US": "Input content; bind it with `bind:value`. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value."
+            }
+        },
+        "methods": {
+            "blur": {
+                "zh-CN": "让第 index 个输入框失焦，序号从 0 开始，超出范围时忽略。",
+                "en-US": "Blurs the input at index, counted from 0 and ignored when out of range."
+            },
+            "focus": {
+                "zh-CN": "聚焦第 index 个输入框，序号从 0 开始，超出范围时忽略；光标放在该格字符之后。",
+                "en-US": "Focuses the input at index, counted from 0 and ignored when out of range, with the caret after its character."
+            }
+        }
+    }
+}

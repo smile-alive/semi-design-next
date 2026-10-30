@@ -1,0 +1,89 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| allowCreate | 是否允许创建列表中不存在的选项，需配合 `filter`。 | `boolean` | `false` |
+| arrowIcon | 自定义下拉箭头，snippet。 | `Snippet` | - |
+| autoAdjustOverflow | 下拉层溢出视口时是否自动调整方位。 | `boolean` | `true` |
+| autoClearSearchValue | 多选选中后是否自动清空搜索关键字。 | `boolean` | `true` |
+| autofocus | 挂载后是否自动聚焦。 | `boolean` | `false` |
+| borderless | 是否无边框。 | `boolean` | `false` |
+| clearIcon | 自定义清除按钮图标，snippet。 | `Snippet` | - |
+| clickToHide | 多选时点击选项后是否关闭下拉列表。 | `boolean` | `false` |
+| createItem | 创建选项那一行的内容，snippet，参数为 `{ inputValue, focus, style }`；虚拟化时要把 `style` 用在自定义元素上。 | <ApiType detail={"Snippet\u003c[SelectCreateItemSnippetProps]>"}>Type</ApiType> | - |
+| defaultActiveFirstOption | 是否默认高亮第一个可用选项。 | `boolean` | `true` |
+| defaultOpen | 挂载后是否展开下拉列表。Select 没有受控的展开状态。 | `boolean` | `false` |
+| disabled | 是否禁用。 | `boolean` | - |
+| dropdownClassName | 下拉层的类名。 | `string` | - |
+| dropdownMatchSelectWidth | 下拉层的最小宽度是否跟随触发器宽度。 | `boolean` | `true` |
+| dropdownStyle | 下拉层的样式，字符串。 | `string` | - |
+| ellipsisTrigger | 是否对溢出的标签做自适应处理，宽度不足时最后一个标签内容截断。有一定性能损耗，不推荐在大表单场景使用。 | `boolean` | `false` |
+| emptyContent | 没有选项时的内容，snippet；传 `null` 隐藏空状态。 | `Snippet \| null` | - |
+| expandRestTagsOnClick | 设置 `maxTagCount` 时，打开下拉列表后是否展开被折叠的标签。 | `boolean` | `false` |
+| filter | 是否开启搜索。传 true 时用输入值与选项 label 或分组标题做 include 对比（不区分大小写），传函数时自定义匹配。 | <ApiType detail={"boolean \u007c ((inputValue: string, option: SelectOptionProps) => boolean)"}>Type</ApiType> | `false` |
+| groupLabel | 替换分组标题的内容，snippet，参数为 `{ group }`（含 `key`、`label`）；不传时显示 `group.label`。 | <ApiType detail={"Snippet\u003c[SelectGroupLabelSnippetProps]>"}>Type</ApiType> | - |
+| id | 触发器的 id，选项的 id 由它派生。 | `string` | - |
+| innerBottomSlot | 渲染在选项列表内部底部的内容，snippet，滚动到底部时展现。 | `Snippet` | - |
+| innerTopSlot | 渲染在选项列表内部顶部的内容，snippet，滚动到顶部时展现。 | `Snippet` | - |
+| inputProps | 搜索框 Input 的额外属性，`class` 与 `style` 落在 Input 外层。 | `SelectInputProps` | - |
+| insetLabel | 内嵌标签，snippet。没有 `prefix` 时渲染，并作为 combobox 的名称来源。 | `Snippet` | - |
+| insetLabelId | 内嵌标签容器的 id，供 aria-labelledby 引用；未传时在渲染 `insetLabel` 时由组件生成。 | `string` | - |
+| loading | 是否加载中，加载中时下拉列表显示加载状态而不是选项。 | `boolean` | `false` |
+| max | 多选时最多可选的数量，超出时触发 `onExceed`。 | `number` | - |
+| maxHeight | 下拉列表的最大高度。 | `string \| number` | `270` |
+| maxTagCount | 多选时标签的最大展示数量，超出后以 +N 形式展示。 | `number` | - |
+| motion | 是否开启下拉层的动画。 | `boolean` | `true` |
+| multiple | 是否多选。 | `boolean` | `false` |
+| onBlur | 焦点离开 Select 时触发一次；点击打开的下拉层之外时传入其 mousedown 事件。 | <ApiType detail={"(event: FocusEvent \u007c MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | 选中值变化时的回调，入参为新的值（开启 `onChangeWithObject` 时为选项对象）。 | <ApiType detail={"(value: SelectValue) => void"}>Type</ApiType> | - |
+| onChangeWithObject | `onChange` 与 `value` 是否使用选项对象而不是选项的值。 | `boolean` | `false` |
+| onClear | 点击清除按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onCreate | 创建选项时的回调。 | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onDeselect | 多选时取消选中某个选项的回调。 | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | 下拉列表展开或收起时的回调。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onExceed | 选中数量超过 `max` 时的回调。 | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onFocus | 焦点进入 Select 时触发一次。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onListScroll | 下拉列表滚动时的回调。 | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
+| onSearch | 搜索关键字变化时的回调；经 `search()` 或 `trigger` snippet 的 `onSearch` 触发时没有事件参数。 | <ApiType detail={"(value: string, event?: Event) => void"}>Type</ApiType> | - |
+| onSelect | 选中某个选项时的回调。 | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| optionItem | 替换整个选项行，snippet，参数含 `id`、`value`、`label`、`selected`、`focused`、`disabled`、`inputValue`、`class`、`style`、`onclick`、`onmouseenter` 以及条目上的其他字段。`id` 要与 `role="option"` 一起写在选项元素上。 | <ApiType detail={"Snippet\u003c[SelectOptionItemSnippetProps]>"}>Type</ApiType> | - |
+| optionLabel | 只替换选项行里的文字，snippet，参数为 `{ option }`。选中图标、行的 `role="option"`、状态与键盘行为不变；`label` 仍用于搜索与可访问名称，内容里不高亮搜索关键字。 | <ApiType detail={"Snippet\u003c[SelectOptionLabelSnippetProps]>"}>Type</ApiType> | - |
+| optionList | 选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style` 以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。 | `SelectOptionProps[]` | - |
+| outerBottomSlot | 下拉层底部与选项列表平级的内容，snippet，列表滚动时始终展现。 | `Snippet` | - |
+| outerTopSlot | 下拉层顶部与选项列表平级的内容，snippet，列表滚动时始终展现。 | `Snippet` | - |
+| placeholder | 未选中时的占位文字。 | `string` | - |
+| position | 下拉层相对触发器的方位。 | `Position` | - |
+| prefix | 选择框前缀，snippet。内容为文本或 Icon 时自动带上左右间隔。 | `Snippet` | - |
+| preventScroll | 聚焦时是否阻止浏览器滚动到元素。 | `boolean` | - |
+| remote | 是否为远程搜索，开启后不再在本地筛选选项，由使用方更新 `optionList`。 | `boolean` | `false` |
+| restTagsPopoverProps | +N 浮层的 Popover 属性。 | `PopoverProps` | - |
+| searchPlaceholder | 搜索框在下拉列表中时（`searchPosition="dropdown"`）搜索框的占位文字。 | `string` | - |
+| searchPosition | 搜索框的位置，可选 `trigger`、`dropdown`。 | `'trigger' \| 'dropdown'` | `"trigger"` |
+| selectedItem | 已选内容，snippet，参数为 `{ option, index, disabled, onClose }`。单选时替换选择框内容，多选时替换每个标签里的内容。 | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| showArrow | 是否显示右侧下拉箭头。 | `boolean` | `true` |
+| showClear | 是否显示清除按钮。 | `boolean` | `false` |
+| showRestTagsPopover | 超过 `maxTagCount` 后，hover 到 +N 时是否通过 Popover 显示剩余标签。 | `boolean` | `false` |
+| size | 尺寸，可选 `small`、`default`、`large`。 | `SelectSize` | - |
+| spacing | 下拉层与触发器的间距。 | `number \| { x: number; y: number }` | - |
+| stopPropagation | 是否阻止下拉层内的点击事件冒泡到外层。 | `boolean` | `true` |
+| suffix | 选择框后缀，snippet。内容为文本或 Icon 时自动带上左右间隔。 | `Snippet` | - |
+| tag | 多选时替换每个标签，snippet，参数同 `selectedItem`，同时提供时优先于 `selectedItem`。 | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| trigger | 替换触发器的内容，snippet，参数为 `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`。 | <ApiType detail={"Snippet\u003c[SelectTriggerSnippetProps]>"}>Type</ApiType> | - |
+| validateStatus | 校验状态，可选 `default`、`warning`、`error`，只影响背景颜色等样式。 | `ValidateStatus` | - |
+| value | 当前选中的值，可 `bind:value`。单选为单个值，多选为数组，开启 `onChangeWithObject` 时为选项对象。不传时由组件自行管理；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；绑成 `undefined` 会清空选中。没有 defaultValue。 | `SelectValue` | - |
+| virtualize | 开启列表虚拟化，`itemSize` 必传。开启后不渲染分组标题与 `role="group"`，选项按顺序平铺。 | `SelectVirtualize` | - |
+
+**Methods**
+
+| 方法        | 说明                                                   | 类型                                                                        |
+| ----------- | ------------------------------------------------------ | --------------------------------------------------------------------------- |
+| clearInput  | 清空搜索框的值。                                       | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| close       | 关闭下拉列表。                                         | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| deselectAll | 清空所有已选项。                                       | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| focus       | 聚焦触发器，可搜索时聚焦搜索框并展开下拉列表。         | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| open        | 展开下拉列表。                                         | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| rePosition  | 按触发器当前位置立即重新计算下拉层位置，一般无需调用。 | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| search      | 按输入了该值来搜索。                                   | <ApiType detail={"(keyword: string, event?: Event) => void"}>Type</ApiType> |
+| selectAll   | 选中所有可见且未禁用的选项，仅多选时有效。             | <ApiType detail={"() => void"}>Type</ApiType>                               |

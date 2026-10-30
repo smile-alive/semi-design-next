@@ -12,6 +12,7 @@ import AIChatInputVueApi from './api/ai-chat-input.vue.zh-CN.mdx';
 import McpVueApi from './api/mcp.vue.zh-CN.mdx';
 import AIChatInputSolidApi from './api/ai-chat-input.solid.zh-CN.mdx';
 import McpSolidApi from './api/mcp.solid.zh-CN.mdx';
+import AIChatInputSvelteApi from './api/ai-chat-input.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -45,6 +46,16 @@ import { AIChatInput } from '@fibrae/semi-ai-react';
 
 ```jsx
 import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AIChatInput } from '@fibrae/semi-ai-svelte';
+</script>
 ```
 
 </Framework>
@@ -86,6 +97,17 @@ import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+- `uploadProps` 配置文件上传相关的参数，取值同 [Upload](/zh-CN/react/input/upload#API) 的属性，不含 `fileList`、`listType` 与 `children`；初始附件用 `uploadProps.defaultFileList`
+- `onUploadChange` 获取文件上传变化
+- 删除上传文件时，会调用 `uploadProps.onRemove`，并遵循 `uploadProps.beforeRemove`（支持 Promise）
+- `placeholder` 输入框的占位符
+- `defaultContent` 输入框的默认内容
+- `onContentChange` 输入框内容变化时的回调函数，参数为当前输入框的内容
+
+</Framework>
+
 <Demo id="basic" />
 
 ### 消息发送
@@ -120,6 +142,16 @@ import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+当输入框中有内容（包括输入文本、上传内容），将允许发送消息。点击消息发送按钮，会调用 `onMessageSend`，参数为当前输入框的内容，包括输入区域的文本，引用内容，上传文件，配置区域内容。引用内容不参与是否可发送的判断，也可通过 `canSend` 直接指定。
+
+用户可在 `onMessageSend` 中根据判断是否设置 `generating` 表示消息正在处理中，如果 `generating` 为 `true`，则 AIChatInput 会在发送按钮位置显示停止生成按钮，并清空输入区的消息，以及上传文件，另外，引用内容需要用户自行清除。
+
+点击停止生成按钮，会调用 `onStopGenerate`，用户可在该回调中处理停止生成的逻辑， 如将 `generating` 设为 `false`。
+
+</Framework>
+
 <Demo id="send-message" />
 
 ### 富文本输入区
@@ -148,6 +180,12 @@ AIChatInput 使用 [tiptap](https://tiptap.dev/docs/editor/getting-started/overv
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过组件实例（`bind:this`）的 `setContent` 方法来设置输入框的内容，使用 `focusEditor` 方法可以将输入框的焦点设置到编辑器中。
+
+</Framework>
+
 <Demo id="rich-text" />
 
 ### 引用
@@ -173,6 +211,14 @@ AIChatInput 使用 [tiptap](https://tiptap.dev/docs/editor/getting-started/overv
 <Framework only="solid">
 
 - `renderReference` 自定义单个引用内容的渲染。
+- `onReferenceDelete` 处理引用内容的删除。
+- `onReferenceClick` 处理引用内容的点击。
+
+</Framework>
+
+<Framework only="svelte">
+
+- `reference` snippet 自定义单个引用内容的渲染，参数为 `{ item, index }`。
 - `onReferenceDelete` 处理引用内容的删除。
 - `onReferenceClick` 处理引用内容的点击。
 
@@ -217,6 +263,18 @@ AIChatInput 将管理配置项的状态，用户可以通过 `@configureChange` 
 `AIChatInput` 将管理配置项的状态，用户可以通过 `onConfigureChange` API 监听配置项的变化。一定要配置 `field` 属性，用于标识配置项的唯一标识。如需设置初始值，可通过 `initValue` 属性设置。
 
 如果用户有其他形式的配置需求，可以通过 `getConfigureItem` 将自定义组件扩展成 `Configure` 类型组件。
+
+</Framework>
+
+<Framework only="svelte">
+
+可通过 `configureArea` snippet 自定义输入框的操作按钮。
+
+使用 `AIChatInput.Configure` 中的 `Select`、`Button`、`Mcp`、`RadioButton` 等组件可以自定义配置项。
+
+AIChatInput 将管理配置项的状态，用户可以通过 `onConfigureChange` 监听配置项的变化。一定要配置 `field` 属性，用于标识配置项的唯一标识。如需设置初始值，可通过 `initValue` 属性设置。配置项自身的值变化也可通过 `onChange` 监听，参数为该项的新值。
+
+如果用户有其他形式的配置需求，可以通过 `AIChatInput.Configure.Item` 把自定义组件扩展成配置项。
 
 </Framework>
 
@@ -310,6 +368,37 @@ function getConfigureItem<P extends object, VK extends keyof P, CK extends keyof
 
 </Framework>
 
+<Framework only="svelte">
+
+```ts
+interface ConfigureItemProps {
+    // 被包装的组件：接收配置项的值，并报告变化
+    component: Component<any>;
+    // 配置项在 AIChatInput 配置值中的 key，必填
+    field: string;
+    // 配置项挂载时写入的初始值
+    initValue?: unknown;
+    // 接收值的 prop，默认是 value
+    valueKey?: string;
+    // 值变化的回调对应的 prop，默认是 onChange
+    changeKey?: string;
+    // 回调第一个参数中值所在的路径，默认参数本身就是值
+    valuePath?: string;
+    // 配置项的基础类名，与 class 合并
+    baseClass?: ClassValue;
+    // 传给被包装组件的默认属性，其余属性覆盖它
+    defaultProps?: Record<string, unknown>;
+    // 该项的值变化时调用，参数为新值
+    onChange?: (value: any) => void;
+    // 其余属性原样传给被包装组件
+    [key: string]: unknown;
+}
+```
+
+`<AIChatInput.Configure.Item component={Cascader} field="model" />` 把任意接收值和变化回调的组件变成配置项。被包装组件自己的 `onChange` 不会收到调用，该项的值变化由 `Configure.Item` 的 `onChange` 收到。
+
+</Framework>
+
 使用示例如下：
 
 <Demo id="configure-item" />
@@ -349,6 +438,22 @@ interface AIChatInputActionAreaSlotProps {
 ```ts
 interface ActionAreaProps {
     menuItem: JSX.Element[];
+    class: string;
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+输入框右下角为操作区域，用户可以通过 `actionArea` snippet 自定义操作区域，展示自定义的操作按钮。`upload` 是上传节点（`showUploadButton` 为 `false` 时是隐藏的 Upload，仍需渲染才能粘贴上传），`send` 是发送或停止按钮，都是 snippet，用 `{@render}` 渲染。
+
+```ts
+import type { Snippet } from 'svelte';
+
+interface AIChatInputActionAreaSnippetProps {
+    upload: Snippet;
+    send: Snippet;
     class: string;
 }
 ```
@@ -404,6 +509,26 @@ interface RenderUploadButtonProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+底部操作区左侧默认会渲染上传按钮。你可以通过 `uploadButton` snippet **仅自定义按钮 UI**（例如改成图标按钮、加 Tooltip 等）。
+
+注意：这不会影响上传/粘贴上传逻辑（`Upload` 仍由组件内部托管），`onOpenFileDialog` 会触发内部 Upload 的文件选择。点击事件冒泡到 Upload 时它自己会打开文件选择，自定义内容阻止了冒泡时才需要调用 `onOpenFileDialog`。
+
+```ts
+import type { Snippet } from 'svelte';
+
+interface AIChatInputUploadButtonSnippetProps {
+    // 默认的按钮内容，是 snippet，用 {@render defaultNode()} 渲染
+    defaultNode: Snippet;
+    onOpenFileDialog: () => void;
+    disabled: boolean;
+    attachments: Attachment[];
+}
+```
+
+</Framework>
+
 <Demo id="custom-upload-button" />
 
 ### 底部按钮形状
@@ -433,6 +558,12 @@ interface RenderUploadButtonProps {
 <Framework only="solid">
 
 还可通过 `renderSuggestionItem` API 自定义建议列表的展示，需要把参数里的 `id`、`class`、`role`、`aria-selected` 与事件处理展开到根元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+还可通过 `suggestionItem` snippet 自定义建议列表的展示，需要把参数里除 `suggestion` 之外的 `id`、`class`、`role`、`aria-selected`、`onclick`、`onmouseenter` 绑定到根元素上。
 
 </Framework>
 
@@ -520,6 +651,31 @@ renderTemplate?: (
 
 </Framework>
 
+<Framework only="svelte">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    // 技能是否有模版，有模版的技能被选中后，将在输入框的底部展示模版按钮
+    hasTemplate?: boolean;
+}
+```
+
+技能只含数据，技能前的图标通过 `skillIcon` snippet 渲染，参数为 `{ item, index }`，整项的展示可通过 `skillItem` snippet 自定义（绑定方式同建议项）。
+
+由于模版的展示形式丰富，因此我们不提供默认的展示形式，用户可以通过 `template` snippet 自定义模版的展示。模版面板的展示和关闭可通过点击模版按钮实现。
+
+```ts
+interface AIChatInputTemplateSnippetProps {
+    skill: Skill | undefined;
+    // 模版点击回调，点击模版后，用模版的内容替换输入框的内容
+    onTemplateClick: (content: string) => void;
+}
+```
+
+</Framework>
+
 使用示例如下：
 
 <Demo id="skill-template" />
@@ -584,6 +740,26 @@ interface TopSlotProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+用户可以通过 `topSlot` snippet 自定义渲染顶部区域，可自行渲染引用，上传内容以及配置项。可结合 `showReference` 和 `showUploadFile` API 控制是否展示引用和上传文件。另外，可通过 `topSlotPosition` API 配置自定义渲染内容相对于引用区域，上传展示区域的相对位置。
+
+```ts
+interface AIChatInputTopSlotSnippetProps {
+    // 引用
+    references: Reference[];
+    // 上传内容
+    attachments: Attachment[];
+    // 输入框消息
+    content: Content[];
+    onUploadFileDelete: (attachment: Attachment) => void;
+    // 调用 onReferenceDelete，引用由使用方持有，需要在回调中移除
+    onReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
 使用用例如下：
 
 <Demo id="custom-top-slot" />
@@ -607,6 +783,12 @@ interface TopSlotProps {
 <Framework only="solid">
 
 如果添加了自定义扩展，需要在 `transformer` 中添加对应的转换规则， 以保证在 `onContentChange` 中得到的该节点数据符合用户预期。示例中的节点视图直接用 DOM 实现（tiptap 的 `addNodeView`），候选面板用 `solid-js/web` 的 `render` 挂载 Solid 组件。
+
+</Framework>
+
+<Framework only="svelte">
+
+如果添加了自定义扩展，需要在 `transformer` 中添加对应的转换规则， 以保证在 `onContentChange` 中得到的该节点数据符合用户预期。示例中的节点视图直接用 DOM 实现（tiptap 的 `addNodeView`），候选面板用 Svelte 渲染并挂载到 `body`。
 
 </Framework>
 
@@ -721,6 +903,46 @@ interface MessageContent {
 
 </Framework>
 
+<Framework only="svelte">
+
+<AIChatInputSvelteApi />
+
+`class`、`style` 与未声明的属性和事件（如 `onclick`）落在根元素上。`onFocus`、`onBlur`、`onPaste` 来自富文本输入框，会遮住根元素上的原生 `onfocus`、`onblur`、`onpaste`。
+
+数据项类型：
+
+```ts
+type Suggestion = string | { content: string; [key: string]: any };
+
+interface Reference {
+    type?: string;
+    id: string;
+    [key: string]: any;
+}
+
+interface Content {
+    type: string;
+    [key: string]: any;
+}
+
+interface MessageContent {
+    references?: Reference[];
+    attachments?: Attachment[];
+    inputContents?: Content[];
+    setup?: Setup;
+}
+```
+
+`Configure.Select`、`Configure.Button`、`Configure.RadioButton` 的值由 AIChatInput 接管：不接受 `value`，`field` 必填，`initValue` 设置初始值，`onChange` 收到该项的新值。
+
+| 属性      | 说明                           | 类型                      | 默认值 |
+| --------- | ------------------------------ | ------------------------- | ------ |
+| field     | 配置项在配置值中的 key，必填   | string                    | -      |
+| initValue | 初始值                         | 与被包装组件的 value 一致 | -      |
+| onChange  | 该项的值变化时调用，参数为新值 | (value: unknown) => void  | -      |
+
+</Framework>
+
 ### Configure.Select
 
 其余属性同 [SelectProps](/zh-CN/react/input/select)
@@ -742,6 +964,12 @@ interface MessageContent {
 <Framework only="solid">
 
 其余属性同 [ButtonProps](/zh-CN/react/basic/button#Button)；值为 boolean，点击时切换，`onClick` 收到切换后的值 `(value: boolean) => void`
+
+</Framework>
+
+<Framework only="svelte">
+
+其余属性同 [ButtonProps](/zh-CN/react/basic/button#Button)，图标使用 `icon` snippet；值为 boolean，点击时切换，`onClick` 收到切换后的值 `(value: boolean) => void`，并输出 `aria-pressed`
 
 </Framework>
 
@@ -793,6 +1021,36 @@ interface McpOption {
     [key: string]: unknown;
 }
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性                   | 说明                                              | 类型                                   | 默认值 |
+| ---------------------- | ------------------------------------------------- | -------------------------------------- | ------ |
+| options                | MCP 选项列表。选项只含数据，图标使用 `optionIcon` | `McpOption[]`                          | -      |
+| num                    | 触发器与标题中显示的数量，不传时为 options 的数量 | `number`                               | -      |
+| showConfigure          | 是否显示配置按钮                                  | `boolean`                              | `true` |
+| onConfigureButtonClick | 点击配置按钮时的回调                              | `() => void`                           | -      |
+| optionIcon             | 每个选项图标的 snippet，参数为 `{ item, index }`  | `Snippet<[McpOptionIconSnippetProps]>` | -      |
+| children               | 替换标题下方内置菜单的 snippet                    | `Snippet`                              | -      |
+
+未声明的属性（Dropdown 的属性以及 `class`、`style`）透传给内部的 Dropdown，落点同 Dropdown。
+
+选项只含数据，图标通过 `optionIcon` snippet 渲染：
+
+```ts
+interface McpOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    [key: string]: unknown;
+}
+```
+
+### Configure.Item
+
+把任意接收值和变化回调的组件变成配置项，属性见「配置区域」一节中的 `ConfigureItemProps`。
 
 </Framework>
 

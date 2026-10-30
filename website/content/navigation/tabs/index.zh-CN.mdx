@@ -14,6 +14,8 @@ import TabItemVueApi from './api/tab-item.vue.zh-CN.mdx';
 import TabsSolidApi from './api/tabs.solid.zh-CN.mdx';
 import TabPaneSolidApi from './api/tab-pane.solid.zh-CN.mdx';
 import TabItemSolidApi from './api/tab-item.solid.zh-CN.mdx';
+import TabsSvelteApi from './api/tabs.svelte.zh-CN.mdx';
+import TabItemSvelteApi from './api/tab-item.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -45,6 +47,16 @@ import { Tabs, TabPane } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tabs } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 标签栏支持四种样式的显示：线条式，按钮式，卡片式，斜线式。默认选中第一个启用的标签页。  
@@ -69,6 +81,12 @@ Vue 中标签页的文字写在 `<TabPane>` 的 `#tab` 插槽，图标写在 `#i
 <Framework only="solid">
 
 `tabList` 的数据项只放数据（`itemKey`、`tab`、`disabled`、`closable`），需要节点时使用 Tabs 的 `renderTab`、`renderIcon`，参数为该项与其下标，不传 `renderTab` 时显示该项的 `tab` 文本。渲染函数在页签、「更多」菜单项与面板名称等每个显示位置各调用一次，该项的数据或下标变化时才重新调用。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 没有 `TabPane`，标签页只通过 `tabList` 传入。`tabList` 的数据项只放数据（`itemKey`、`tab`、`disabled`、`closable`），需要节点时使用 Tabs 的 `tab`、`icon` snippet，参数为 `{ item, index }`，不提供 `tab` snippet 时显示该项的 `tab` 文本；内容写在 `panel` snippet 中，参数为 `{ item, index, itemKey }`，每个标签页是各自的 tabpanel，`keepDOM`、`lazyRender` 与切换动画对它生效。不提供 `panel` 时，Tabs 的 `children` 是当前标签页的内容。`activeKey` 用 `bind:activeKey` 绑定，不提供 `defaultActiveKey`，初始值直接写 `activeKey="1"`。
 
 </Framework>
 
@@ -123,6 +141,17 @@ Vue 中标签页的文字写在 `<TabPane>` 的 `#tab` 插槽，图标写在 `#i
 
 </Framework>
 
+<Framework only="svelte">
+
+也支持高级配置，向 `more` 传入对象，内可传入
+
+- `count`: 表示收入下拉菜单的 Tab 数量
+- `dropdownProps`: 传入 Dropdown 属性，会被透传到下拉菜单
+
+「更多」触发器使用 `moreTrigger` snippet 自定义，下拉菜单的内容使用 `moreContent` snippet 自定义，参数 `{ items }` 是收入菜单的标签页。
+
+</Framework>
+
 <Demo id="more-advanced" />
 
 ### 垂直的标签栏
@@ -154,6 +183,12 @@ Vue 中标签页的文字写在 `<TabPane>` 的 `#tab` 插槽，图标写在 `#i
 <Framework only="solid">
 
 通过 `renderArrow` 修改滚动折叠模式下，左右切换箭头的渲染，入参依次为溢出的 `items`、位置 `pos`、点击处理函数 `handleArrowClick`，以及创建默认箭头的函数 `defaultNode`，在插入处调用 `defaultNode()`。`items` 是普通数据；TabPane 写法下不带 `tab`，需要标签文本时用 `tabList`。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `arrow` snippet 修改滚动折叠模式下，左右切换箭头的渲染，参数为 `{ items, position, onClick, defaultNode }`：溢出的标签页、位置、点击处理函数，以及默认箭头 `defaultNode`（用 `{@render defaultNode()}` 渲染）。
 
 </Framework>
 
@@ -202,6 +237,12 @@ Vue 中标签页的文字写在 `<TabPane>` 的 `#tab` 插槽，图标写在 `#i
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `tabBarExtraContent` snippet 可以在标签栏右侧添加附加操作。
+
+</Framework>
+
 <Demo id="extra-content" />
 
 ### 标签栏二次封装
@@ -225,6 +266,14 @@ Vue 中标签页的文字写在 `<TabPane>` 的 `#tab` 插槽，图标写在 `#i
 传入 `renderTabBar` 函数可对标签栏进行二次封装，同一个函数只调用一次。`tabBarProps` 是活的标签栏属性，字段需要在返回的 JSX 中读取；`DefaultTabBar` 是默认标签栏组件，用 `<DefaultTabBar {...tabBarProps} />` 渲染。
 
 用 `renderTabBar` 完全替换标签栏时，Tabs 的 `aria-label`、`aria-labelledby` 在 `tabBarProps` 中，不会自动落到你自己的元素上：可访问名称写在自定义的 `role="tablist"` 元素上。TabPane 写法下，`tabBarProps.list` 的各项是普通数据，不带 `tab`；需要标签文本时用 `tabList`。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `tabBar` snippet 可对标签栏进行二次封装，参数为 `{ tabBarProps, tabBar }`。`tabBarProps` 只含数据（见下方 TabBarProps），`tabBar` 是默认标签栏，用 `{@render tabBar()}` 渲染。
+
+用 `tabBar` 完全替换标签栏时，Tabs 的 `aria-label`、`aria-labelledby` 不会落到你自己的元素上：可访问名称写在自定义的 `role="tablist"` 元素上。
 
 </Framework>
 
@@ -267,6 +316,18 @@ npm install @dnd-kit/solid @dnd-kit/dom @dnd-kit/helpers
 ```
 
 </Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `tabBar` snippet，在自己的 `role="tablist"` 元素里用 `TabItem` 渲染各个标签，即可结合拖拽实现标签栏的排序。`TabItem` 在 Tabs 内点击时会自行选中所在的标签页，`draggable`、拖放事件等原生属性与监听落在它的根元素上。示例使用浏览器原生拖放，只支持指针操作；需要键盘排序时可以改用支持键盘的拖拽库。
+
+```svelte
+<script lang="ts">
+    import { TabItem } from '@fibrae/semi-ui-svelte';
+</script>
+```
 
 </Framework>
 
@@ -355,7 +416,71 @@ npm install @dnd-kit/solid @dnd-kit/dom @dnd-kit/helpers
 
 </Framework>
 
+<Framework only="svelte">
+
+<TabsSvelteApi />
+
+`activeKey` 配合 `bind:activeKey`；`aria-label`、`aria-labelledby` 落在 `role="tablist"` 元素上，`class`、`style` 与其他原生属性落在根元素上。
+
+**PlainTab**
+
+`tabList` 的数据项，只含数据。
+
+| 属性     | 说明                                    | 类型             | 默认值 |
+| -------- | --------------------------------------- | ---------------- | ------ |
+| itemKey  | 标签页的唯一标识，对应 `activeKey`      | string           | 无     |
+| tab      | 标签页文字；有 `tab` snippet 时以它为准 | string \| number | 无     |
+| disabled | 是否禁用                                | boolean          | 无     |
+| closable | 是否允许关闭                            | boolean          | 无     |
+
+**TabsMore**
+
+`more` 传对象时的形状。
+
+| 属性          | 说明                           | 类型                  | 默认值 |
+| ------------- | ------------------------------ | --------------------- | ------ |
+| count         | 收入下拉菜单的 Tab 数量        | number                | 无     |
+| dropdownProps | 透传给下拉菜单的 Dropdown 属性 | TabsDropdownItemProps | 无     |
+
+`TabsDropdownItemProps` 是 Dropdown 的属性，外加 `class`、`style` 与 `onVisibleChange`。`dropdownProps` 的 `start`、`end` 也使用该类型。
+
+**TabBarProps**
+
+`tabBar` snippet 的 `tabBarProps`，是默认标签栏的数据。
+
+| 属性               | 说明                                       | 类型                                    |
+| ------------------ | ------------------------------------------ | --------------------------------------- |
+| activeKey          | 当前激活的 itemKey，受控的空值为 null      | string \| null                          |
+| list               | 标签页数据                                 | PlainTab[]                              |
+| type               | 标签栏样式                                 | 'line' \| 'card' \| 'button' \| 'slash' |
+| size               | 尺寸                                       | 'small' \| 'medium' \| 'large'          |
+| tabPosition        | 位置                                       | 'top' \| 'left'                         |
+| collapsible        | 是否折叠                                   | boolean \| 'auto'                       |
+| showRestInDropdown | 折叠模式下，收起的标签是否展示在下拉菜单中 | boolean                                 |
+| more               | 收入「更多」菜单的配置                     | number \| TabsMore                      |
+| arrowPosition      | 折叠模式下箭头的位置                       | 'both' \| 'start' \| 'end'              |
+| visibleTabsStyle   | 折叠模式下整体滚动区域的样式               | string                                  |
+| dropdownProps      | 折叠模式下箭头下拉菜单的 Dropdown 属性     | TabsDropdownProps                       |
+| class              | tabBarClassName                            | string                                  |
+| style              | tabBarStyle                                | string                                  |
+
+</Framework>
+
 ### TabPane
+
+<Framework only="svelte">
+
+Svelte 没有 `TabPane`，标签页的内容用 Tabs 的 `panel` snippet 提供。
+
+### TabItem
+
+自定义标签栏（`tabBar` snippet）中单个标签的组件。在 Tabs 内点击会自行选中所在的标签页，并触发 Tabs 的 `onChange` 与 `onTabClick`。
+
+<TabItemSvelteApi />
+
+`class`、`style` 与原生属性和事件落在根元素上；`role`、`id`、`aria-selected`、`aria-disabled`、`aria-controls` 与 `tabindex` 由组件管理，不会被覆盖。
+
+</Framework>
 
 <Framework only="react">
 

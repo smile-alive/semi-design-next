@@ -21,7 +21,7 @@
         },
     ]);
 
-    function updateTreeData(list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] {
+    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
         return list.map((node) => {
             if (node.key === key) {
                 return { ...node, children };
@@ -31,9 +31,9 @@
             }
             return node;
         });
-    }
+    };
 
-    function loadData({ key, children }: TreeNodeData) {
+    const loadData = ({ key, children }: TreeNodeData) => {
         return new Promise<void>((resolve) => {
             if (children) {
                 resolve();
@@ -53,7 +53,7 @@
                 resolve();
             }, 1000);
         });
-    }
+    };
 </script>
 
 <template>

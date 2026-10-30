@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                                | Type                                                                                  | Default |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------- |
+| activeKey | Keys of the expanded file panels; bind it with `bind:activeKey`.                                                                           | `string \| string[]`                                                                  | -       |
+| files     | The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview.                                        | `FileItemData[]`                                                                      | `[]`    |
+| onChange  | Called when a panel opens or closes through its arrow, with the expanded keys.                                                             | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>        | -       |
+| onExpand  | Called when the expand button beside a panel header is clicked, with the event, its entry and file. Without it the button is not rendered. | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | -       |

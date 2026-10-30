@@ -1,0 +1,75 @@
+{
+    "json-viewer": {
+        "source": "packages/semi-ui-svelte/src/json-viewer/json-viewer.svelte",
+        "props": {
+            "value": {
+                "zh-CN": "编辑器的文本，配合 bind:value 使用；变为与编辑器当前内容不同的值时重建编辑器，与当前内容相同的回写不会丢失光标；未传时按空文本创建。",
+                "en-US": "Text of the editor, used with bind:value. A value different from the editor's current content re-creates the editor; echoing the current content back keeps the caret. Without it the editor starts empty."
+            },
+            "width": {
+                "zh-CN": "宽度，数字按 px 处理，字符串原样使用。",
+                "en-US": "Width. A number is taken as px; a string is used as is."
+            },
+            "height": {
+                "zh-CN": "高度，数字按 px 处理，字符串原样使用。",
+                "en-US": "Height. A number is taken as px; a string is used as is."
+            },
+            "showSearch": { "zh-CN": "是否显示搜索按钮。", "en-US": "Whether to show the search button." },
+            "options": {
+                "zh-CN": "编辑器配置，字段见 JsonViewerOptions。ariaLabel、readOnly、autoWrap 的默认值按键合并，只传部分字段时其余仍取默认值。内容按深比较变化时重建编辑器；就地修改 formatOptions、customRenderRule 等嵌套对象不会被察觉，需替换为新对象。",
+                "en-US": "Editor options; see JsonViewerOptions for the fields. The defaults of ariaLabel, readOnly and autoWrap merge per key, so passing some fields keeps the defaults of the others. A deep change re-creates the editor; mutating a nested object such as formatOptions or customRenderRule in place goes unnoticed, so replace it with a new object."
+            },
+            "limitSearchButtonBounds": {
+                "zh-CN": "是否限制搜索按钮的拖动范围在组件容器内。",
+                "en-US": "Whether to limit the search button drag bounds within the component container."
+            },
+            "onChange": {
+                "zh-CN": "编辑内容变化时调用，参数为编辑器当前文本。",
+                "en-US": "Called when the content changes, with the editor's current text."
+            },
+            "customRender": {
+                "zh-CN": "替换被 options.customRenderRule 命中的 token 的内容，snippet 参数为命中的规则 item、规则序号 index 与 token 原文 content；snippet 什么都不画时保留原文。仅在只读模式下生效。",
+                "en-US": "Replaces the content of a token matched by options.customRenderRule, with the matched rule item, its index and the token text content as snippet arguments. A snippet that draws nothing leaves the token's text in place. Only takes effect in read-only mode."
+            },
+            "searchButton": {
+                "zh-CN": "整体替换默认搜索按钮；defaultButton 是默认按钮的 snippet，用 `{@render defaultButton()}` 渲染，其余参数用于自建搜索界面。showSearch 为 false 时不渲染。",
+                "en-US": "Replaces the default search button as a whole. defaultButton is the default button's snippet, drawn with `{@render defaultButton()}`; the other arguments build a custom search UI. Not rendered when showSearch is false."
+            }
+        },
+        "methods": {
+            "getValue": { "zh-CN": "获取编辑器当前文本。", "en-US": "Returns the editor's current text." },
+            "format": {
+                "zh-CN": "按 formatOptions 格式化当前内容。",
+                "en-US": "Formats the content with formatOptions."
+            },
+            "search": {
+                "zh-CN": "搜索文本，可选参数控制大小写敏感、全词匹配和正则表达式。",
+                "en-US": "Searches for text; the optional parameters control case sensitivity, whole word and regular expression."
+            },
+            "getSearchResults": {
+                "zh-CN": "获取当前搜索结果。",
+                "en-US": "Returns the current search results."
+            },
+            "prevSearch": {
+                "zh-CN": "跳转到上一个搜索结果，可选步长。",
+                "en-US": "Moves to the previous search result, with an optional step."
+            },
+            "nextSearch": {
+                "zh-CN": "跳转到下一个搜索结果，可选步长。",
+                "en-US": "Moves to the next search result, with an optional step."
+            },
+            "replace": {
+                "zh-CN": "替换当前搜索匹配项；替换文本为空串时删除匹配，没有匹配时不做任何事。",
+                "en-US": "Replaces the current search match. An empty string deletes the match; without a match it does nothing."
+            },
+            "replaceAll": {
+                "zh-CN": "替换所有搜索匹配项；替换文本为空串时删除全部匹配。",
+                "en-US": "Replaces all search matches. An empty string deletes them."
+            },
+            "getStyle": {
+                "zh-CN": "返回当前的 width 与 height。",
+                "en-US": "Returns the current width and height."
+            }
+        }
+    }
+}

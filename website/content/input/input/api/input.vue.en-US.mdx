@@ -7,10 +7,10 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | Content of the input, for v-model. | `string \| number` | `undefined` |
 | modelModifiers | The trim, number and lazy v-model modifiers, passed by Vue for the matching v-model modifier. With lazy, typing does not update the bound value; update:modelValue is emitted on the native change (blur or Enter). The change event still fires on every input. | `InputModelModifiers` | `undefined` |
 | defaultValue | Initial content when the input is uncontrolled. | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
-| size | Input size: large, default or small. | `Size` | `semiDefault("Input", "size", "default")` |
+| size | Input size: large, default or small. | `Size` | `undefined` |
 | type | The type of the native input. | `string` | `semiDefault("Input", "type", "text")` |
 | mode | Input mode; password shows a button that reveals or hides the text. | `"password"` | `semiGlobalDefault("Input", "mode")` |
-| disabled | Whether the input is disabled. | `boolean` | `semiGlobalDefault("Input", "disabled")` |
+| disabled | Whether the input is disabled. | `boolean` | `undefined` |
 | readonly | Whether the input is read-only. | `boolean` | `semiDefault("Input", "readonly", false)` |
 | borderless | Borderless mode. | `boolean` | `semiDefault("Input", "borderless", false)` |
 | showClear | Shows a clear button when the input has content and the pointer or focus is inside the component. | `boolean` | `semiDefault("Input", "showClear", false)` |

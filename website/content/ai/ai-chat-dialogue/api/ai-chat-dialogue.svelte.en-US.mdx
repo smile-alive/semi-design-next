@@ -1,0 +1,51 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| action | Snippet for a custom action bar, with the default buttons `defaultActions`, the same buttons by name `defaultActionsObj`, the message and `class`. A key is missing when its button is not shown, for example while the message is unfinished. | <ApiType detail={"Snippet\u003c[AIChatDialogueActionSnippetProps]>"}>Type</ApiType> | - |
+| align | Conversation layout: leftRight or leftAlign. | `'leftRight' \| 'leftAlign'` | `"leftRight"` |
+| avatar | Snippet for a custom avatar, with the default avatar `defaultAvatar`, the message and the role. | <ApiType detail={"Snippet\u003c[AIChatDialogueAvatarSnippetProps]>"}>Type</ApiType> | - |
+| chats | List of conversation messages; bind it with `bind:chats`. Without a binding, changes made inside the component (such as deleting a message) stay local to it; `onChatsChange` is called once per change. | `Message[]` | - |
+| content | Snippet for a custom content area, with the default content `defaultContent`, the message, the role and `class`. `defaultContent` matches the default rendering, including the reference list and the loading indicator. | <ApiType detail={"Snippet\u003c[AIChatDialogueContentSnippetProps]>"}>Type</ApiType> | - |
+| contentItem | Snippet for custom rendering by content item. Every item passes through it first, with `item`, `type`, `message`, `index`, `parent`, the built-in rendering `defaultItem` and the `class` a custom node should carry. A snippet's output cannot be inspected, so render the items it leaves alone with `{@render defaultItem()}`; empty output does not fall back to the built-in rendering. | <ApiType detail={"Snippet\u003c[AIChatDialogueContentItemSnippetProps]>"}>Type</ApiType> | - |
+| disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `false` |
+| escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `true` |
+| fullDialogue | Snippet that replaces a whole dialogue, with `defaultNodes` (avatar, title, content, action), the message, the role and `class`. | <ApiType detail={"Snippet\u003c[AIChatDialogueFullDialogueSnippetProps]>"}>Type</ApiType> | - |
+| hintBox | Snippet for a custom hint item, with the hint text `content`, the index and the click callback `onHintClick`. | <ApiType detail={"Snippet\u003c[AIChatDialogueHintBoxSnippetProps]>"}>Type</ApiType> | - |
+| hintCls | Class name of the outermost hint area element. | `string` | - |
+| hints | Hint texts. Clicking a hint turns it into a new user message and calls onHintClick. | `string[]` | - |
+| hintStyle | Style string of the outermost hint area element. | `string` | - |
+| markdownRenderProps | Props passed to the MarkdownRender of each message. raw is decided by the message and cannot be passed; components are merged with the built-in ones, and a component with the same name (such as code) replaces the built-in one. | `MarkdownRenderProps` | - |
+| messageEdit | Snippet for the editor shown while a user message is being edited; its parameters are the input content converted from the message. | <ApiType detail={"Snippet\u003c[AIChatDialogueMessageEditSnippetProps]>"}>Type</ApiType> | - |
+| messageText | Snippet that replaces the Markdown rendering of a message whose content is plain text, with the `text` and the `message`. | <ApiType detail={"Snippet\u003c[AIChatDialogueMessageTextSnippetProps]>"}>Type</ApiType> | - |
+| mode | Conversation mode: bubble, noBubble or userBubble. | `'bubble' \| 'noBubble' \| 'userBubble'` | `"bubble"` |
+| onAnnotationClick | Called when the references of a message block are clicked, with that block's annotations. | <ApiType detail={"(annotations: Annotation[]) => void"}>Type</ApiType> | - |
+| onChatsChange | Called when the message list changes, with the new message array. | <ApiType detail={"(chats: Message[]) => void"}>Type</ApiType> | - |
+| onFileClick | Called when a file card is clicked. | <ApiType detail={"(file?: InputFile) => void"}>Type</ApiType> | - |
+| onHintClick | Called when a hint is clicked, with the hint text. | <ApiType detail={"(hint: string) => void"}>Type</ApiType> | - |
+| onImageClick | Called when an image is clicked. | <ApiType detail={"(image?: InputImage) => void"}>Type</ApiType> | - |
+| onMessageBadFeedback | Called when a message is disliked. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageCopy | Called when a message is copied, after the text has been written to the clipboard successfully. The copied text excludes reasoning; a message without text is neither written nor reported. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageDelete | Called when a message is deleted. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageEdit | Called when a message is edited. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageGoodFeedback | Called when a message is liked. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageReset | Called when a message is reset. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageShare | Called when a message is shared. | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onReferenceClick | Called when a reference button is clicked. The argument has no id, which the caller adds before putting it into the references of AIChatInput; a file item has no type. | <ApiType detail={"(item: Partial\u003cReference>) => void"}>Type</ApiType> | - |
+| onSelect | Called when the selected messages change, with the ids of the selected messages. | <ApiType detail={"(selectedIds: string[]) => void"}>Type</ApiType> | - |
+| roleConfig | Name, avatar and avatar color of each role (user, assistant, system and so on). Required; the global defaults are not read. | `RoleConfig` | - |
+| selecting | Whether multi-select mode is on. | `boolean` | `false` |
+| showReference | Whether to show the quote icon on text or file messages; it only applies to user messages. | `boolean` | `false` |
+| showReset | Whether to show the reset action. | `boolean` | `true` |
+| title | Snippet for a custom title, with the default title `defaultTitle`, the message and the role. | <ApiType detail={"Snippet\u003c[AIChatDialogueTitleSnippetProps]>"}>Type</ApiType> | - |
+
+**Methods**
+
+| Method         | Description                                                | Type                                                             |
+| -------------- | ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| deselectAll    | Deselects all messages.                                    | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| scrollToBottom | Scrolls to the bottom, animated when the argument is true. | <ApiType detail={"(animation?: boolean) => void"}>Type</ApiType> |
+| scrollToTop    | Scrolls to the top, animated when the argument is true.    | <ApiType detail={"(animation?: boolean) => void"}>Type</ApiType> |
+| selectAll      | Selects all messages.                                      | <ApiType detail={"() => void"}>Type</ApiType>                    |

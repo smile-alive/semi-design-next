@@ -8,6 +8,7 @@ brief: used to facilitate the customization of keyboard shortcut
 import HotKeysReactApi from './api/hot-keys.react.en-US.mdx';
 import HotKeysVueApi from './api/hot-keys.vue.en-US.mdx';
 import HotKeysSolidApi from './api/hot-keys.solid.en-US.mdx';
+import HotKeysSvelteApi from './api/hot-keys.svelte.en-US.mdx';
 
 ## When to use
 
@@ -39,6 +40,16 @@ import { HotKeys } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { HotKeys } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { HotKeys } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -89,6 +100,12 @@ Replace the element through `render`, which takes a JSX element or a function re
 
 </Framework>
 
+<Framework only="svelte">
+
+Replace the element through the `children` snippet (written inside the HotKeys tag). With it the default key hint is not rendered and the hot keys stay active.
+
+</Framework>
+
 <Demo id="render" />
 
 ### prevent Default event
@@ -128,6 +145,14 @@ Other native attributes (such as `id`, `aria-*` and `onClick`) land on the root 
 <HotKeysSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `id`, `aria-*` and `onClick`) land on the root element (`div`). When `render` is `null` or returns `null` there is no root element, so they have nowhere to land.
+
+</Framework>
+
+<Framework only="svelte">
+
+<HotKeysSvelteApi />
+
+`class`, `style` (a string) and native attributes (such as `id`, `aria-*` and `onclick`) land on the root element (`div`). `HotKeys.Keys` is kept and used as in the other frameworks.
 
 </Framework>
 

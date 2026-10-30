@@ -14,14 +14,14 @@
         stack: true,
     };
 
-    function onResizeStart() {
+    const onResizeStart = () => {
         Toast.info(opts_1);
-    }
+    };
 
-    function onResizeEnd() {
+    const onResizeEnd = () => {
         Toast.info(opts_2);
         text.value = 'Drag edge to resize';
-    }
+    };
 </script>
 
 <template>

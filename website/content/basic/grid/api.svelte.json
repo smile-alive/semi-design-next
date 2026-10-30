@@ -1,0 +1,76 @@
+{
+    "row": {
+        "source": "packages/semi-ui-svelte/src/grid/row.svelte",
+        "props": {
+            "align": {
+                "zh-CN": "flex 布局下的垂直对齐方式，可选 top、middle、bottom。",
+                "en-US": "Vertical alignment in flex layout: top, middle or bottom."
+            },
+            "children": { "zh-CN": "行内的 Col。", "en-US": "Col components in the row." },
+            "gutter": {
+                "zh-CN": "栅格间隔，可以是像素值、响应式对象 `{ xs, sm, md, lg, xl, xxl }`，或 `[水平, 垂直]` 数组。",
+                "en-US": "Grid gutter in pixels, a responsive object `{ xs, sm, md, lg, xl, xxl }`, or a `[horizontal, vertical]` pair."
+            },
+            "justify": {
+                "zh-CN": "flex 布局下的水平排列方式，可选 start、end、center、space-around、space-between。",
+                "en-US": "Horizontal arrangement in flex layout: start, end, center, space-around or space-between."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "type": {
+                "zh-CN": "布局模式，可选 flex。",
+                "en-US": "Layout mode: flex."
+            }
+        }
+    },
+    "col": {
+        "source": "packages/semi-ui-svelte/src/grid/col.svelte",
+        "props": {
+            "children": { "zh-CN": "栅格内的内容。", "en-US": "Content of the column." },
+            "lg": {
+                "zh-CN": "屏幕宽度 ≥992px 时生效的响应式栅格，可为栅格数或对象配置。",
+                "en-US": "Responsive grid for screens ≥992px, as a column count or an object."
+            },
+            "md": {
+                "zh-CN": "屏幕宽度 ≥768px 时生效的响应式栅格，可为栅格数或对象配置。",
+                "en-US": "Responsive grid for screens ≥768px, as a column count or an object."
+            },
+            "offset": {
+                "zh-CN": "栅格起始侧（从左到右排版时为左侧）的间隔格数，间隔内不可以有栅格。",
+                "en-US": "Number of columns to offset from the start side. No column can sit inside the offset."
+            },
+            "order": {
+                "zh-CN": "栅格顺序，flex 布局模式下有效。",
+                "en-US": "Column order. Takes effect in flex layout."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "pull": {
+                "zh-CN": "栅格向起始侧（从左到右排版时为左侧）移动的格数。",
+                "en-US": "Number of columns to move toward the start side."
+            },
+            "push": {
+                "zh-CN": "栅格向末尾侧（从左到右排版时为右侧）移动的格数。",
+                "en-US": "Number of columns to move toward the end side."
+            },
+            "sm": {
+                "zh-CN": "屏幕宽度 ≥576px 时生效的响应式栅格，可为栅格数或对象配置。",
+                "en-US": "Responsive grid for screens ≥576px, as a column count or an object."
+            },
+            "span": {
+                "zh-CN": "栅格占位格数，为 0 时相当于 display: none。",
+                "en-US": "Number of columns the cell spans. 0 behaves like display: none."
+            },
+            "xl": {
+                "zh-CN": "屏幕宽度 ≥1200px 时生效的响应式栅格，可为栅格数或对象配置。",
+                "en-US": "Responsive grid for screens ≥1200px, as a column count or an object."
+            },
+            "xs": {
+                "zh-CN": "基础层响应式栅格，所有屏幕宽度都生效，可为栅格数或对象配置。",
+                "en-US": "Base-layer responsive grid. It applies at every screen width, as a column count or an object."
+            },
+            "xxl": {
+                "zh-CN": "屏幕宽度 ≥1600px 时生效的响应式栅格，可为栅格数或对象配置。",
+                "en-US": "Responsive grid for screens ≥1600px, as a column count or an object."
+            }
+        }
+    }
+}

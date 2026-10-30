@@ -1,0 +1,23 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoCollapse | Whether the next level of links is shown dynamically while scrolling. | `boolean` | `false` |
+| defaultAnchor | Link highlighted by default. | `string` | `""` |
+| getContainer | Returns the scrolling container, window when omitted. | <ApiType detail={"() => HTMLElement \u007c Window \u007c null"}>Type</ApiType> | - |
+| links | Link data. Each item is `{ href, title, disabled, children }`, and `children` nests the next level. An `href` starting with # is looked up by element id, anything else as a CSS selector; `title` is the plain-text title, also the native title when showTooltip is off; a `disabled` link ignores clicks. | `AnchorLinkItem[]` | `[]` |
+| maxHeight | max-height of the component, with a scrollbar when exceeded. A max-height in style wins. | `string \| number` | `"750px"` |
+| maxWidth | max-width of the component, truncating when exceeded. A max-width in style wins. | `string \| number` | `"200px"` |
+| offsetTop | Offset from the top of the container at which the current link switches while content scrolls. | `number` | `0` |
+| onChange | Called when the highlighted link changes, with the current and the previous link. | <ApiType detail={"(currentLink: string, previousLink: string) => void"}>Type</ApiType> | - |
+| onClick | Called when a link is clicked or activated with Enter, with the native MouseEvent or KeyboardEvent and the current link. Only called when a link is activated, not for a click elsewhere on the root. | <ApiType detail={"(event: AnchorClickEvent, currentLink: string) => void"}>Type</ApiType> | - |
+| position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | `Position` | - |
+| railTheme | Theme of the rail: primary, tertiary or muted. | `'primary' \| 'tertiary' \| 'muted'` | `"primary"` |
+| scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. | `ScrollIntoViewOptions` | - |
+| scrollMotion | Whether scrolling after a click is animated. | `boolean` | `false` |
+| showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
+| size | Size of the anchor: small or default. | `'small' \| 'default'` | `"default"` |
+| targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |
+| title | Snippet that renders every link's title, with the parameter `{ item, level }`; `level` is the nesting depth, 1 at the top. It takes precedence over `title` in `links`. | <ApiType detail={"Snippet\u003c[AnchorTitleContext]>"}>Type</ApiType> | - |

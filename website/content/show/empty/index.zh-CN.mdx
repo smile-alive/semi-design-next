@@ -8,6 +8,7 @@ brief: 空状态时的展示占位图。
 import EmptyReactApi from './api/empty.react.zh-CN.mdx';
 import EmptyVueApi from './api/empty.vue.zh-CN.mdx';
 import EmptySolidApi from './api/empty.solid.zh-CN.mdx';
+import EmptySvelteApi from './api/empty.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Empty } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Empty } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -60,6 +71,14 @@ import { Empty } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `image` 设置占位图片，可以从 `@fibrae/semi-illustrations-solid` 中手动引入对应的插画（插画默认宽高是200x200），也可以传入自定义的 JSX 元素。目前拥有的插画可以查看[占位图插画](#占位图插画_建设中_)。`image` 还接受图片地址字符串，以及 `{ id }` 形式的 SVG sprite 符号。
+
+增加一系列暗色模式的插画，并支持通过 `darkModeImage` 传入暗色模式下需要使用的插画，以更好地适配暗色模式。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `image` 设置占位图片，可以从 `@fibrae/semi-illustrations-svelte` 中手动引入对应的插画（插画默认宽高是200x200），用 snippet 传入；也可以传入自定义内容的 snippet。目前拥有的插画可以查看[占位图插画](#占位图插画_建设中_)。`image` 还接受图片地址字符串，以及 `{ id }` 形式的 SVG sprite 符号。
 
 增加一系列暗色模式的插画，并支持通过 `darkModeImage` 传入暗色模式下需要使用的插画，以更好地适配暗色模式。
 
@@ -89,6 +108,12 @@ import { Empty } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+描述内容使用 `description` snippet，`children` 放在描述下方的操作区。
+
+</Framework>
+
 <Demo id="custom" />
 
 也可以不使用图片。
@@ -103,7 +128,7 @@ import { Empty } from '@fibrae/semi-ui-solid';
 
 ### 占位图插画(建设中)
 
-目前 `@fibrae/semi-illustrations-react`（Vue 为 `@fibrae/semi-illustrations-vue`）中支持以下插画。
+目前 `@fibrae/semi-illustrations-react`（Vue 为 `@fibrae/semi-illustrations-vue`，Svelte 为 `@fibrae/semi-illustrations-svelte`）中支持以下插画。
 
 <Demo id="illustrations" />
 
@@ -130,6 +155,14 @@ import { Empty } from '@fibrae/semi-ui-solid';
 <EmptySolidApi />
 
 `class`、`style`、`ref` 与原生属性落在根元素 `div` 上。`title`、`description`、`image`、`darkModeImage`、`imageStyle` 与 `layout` 是组件属性，不会落到根元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<EmptySvelteApi />
+
+`class`、`style` 与原生属性落在根元素 `div` 上。`title`、`description`、`image`、`darkModeImage`、`imageStyle` 与 `layout` 是组件属性，不会落到根元素上。暗色模式下，只有传了 `darkModeImage` 的 Empty 在挂载后观察 `document.body` 的 `theme-mode`，服务端渲染与激活时使用亮色图片。
 
 </Framework>
 

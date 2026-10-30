@@ -12,9 +12,9 @@ const defaultFileList: FileItem[] = [
     },
 ];
 
-const handlePreview = (file: FileItem) => {
+function handlePreview(file: FileItem) {
     window.open(file.url, 'imagePreview', 'width=300,height=300');
-};
+}
 
 export default function UploadDemo() {
     return (

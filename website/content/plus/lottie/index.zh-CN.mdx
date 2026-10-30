@@ -8,6 +8,7 @@ brief: 在网页中展示 Lottie 动画
 import LottieReactApi from './api/lottie.react.zh-CN.mdx';
 import LottieVueApi from './api/lottie.vue.zh-CN.mdx';
 import LottieSolidApi from './api/lottie.solid.zh-CN.mdx';
+import LottieSvelteApi from './api/lottie.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -26,6 +27,12 @@ Lottie 组件能够便捷简单地渲染 Lottie 动画，同时提供方式获�
 <Framework only="vue">
 
 - 更易和 Vue 项目结合使用
+
+</Framework>
+
+<Framework only="svelte">
+
+- 更易和 Svelte 项目结合使用
 
 </Framework>
 
@@ -55,6 +62,16 @@ import { Lottie } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Lottie } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Lottie } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -112,6 +129,12 @@ import { Lottie } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `getAnimationInstance` 属性传入回调获取当前播放的动画的 animation 实例，实例上含有许多方法用于调整动画的各项参数，例如播放暂停，获取当前帧序号，调整播放速度等。每创建一次动画（包括每次重新加载）调用一次。
+
+</Framework>
+
 关于动画实例上含有的方法，更多信息可以参考 `lottie-web` [文档](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
 
 <Demo id="animation-instance" />
@@ -142,6 +165,14 @@ import { Lottie } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `getLottie` 属性传入回调获取全局 lottie，也可以使用 Semi Lottie 组件上的静态方法 `Lottie.getLottie` 来获取全局 lottie
+
+`lottie-web` 体积较大，Semi 在需要创建动画时才按需加载它：`getLottie` 属性在加载完成、动画创建后调用，每次挂载调用一次；静态方法 `Lottie.getLottie()` 是异步的，返回解析为 lottie 的 `Promise`（需要使用 `await` 或 `.then`）。加载完成前组件不渲染动画；卸载时若尚未加载完成，则不会再创建动画。
+
+</Framework>
+
 关于全局 lottie 上含有的方法，更多信息可以参考 `lottie-web` [文档](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
 
 <Demo id="get-lottie" />
@@ -169,6 +200,14 @@ import { Lottie } from '@fibrae/semi-ui-solid';
 <LottieSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `data-*`、`aria-*`）落在容器 `div` 上。`params.container` 存在时组件不渲染任何内容，这些属性不会落地。
+
+</Framework>
+
+<Framework only="svelte">
+
+<LottieSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `data-*`、`aria-*`）落在容器 `div` 上。`params` 内容变化即重新加载，原地修改 `$state` 也会，交给 `lottie-web` 前会做快照；较大的动画数据用 `$state.raw` 持有。`params.container` 存在时组件不渲染任何内容，这些属性不会落地。
 
 </Framework>
 

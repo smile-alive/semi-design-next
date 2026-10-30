@@ -1,0 +1,79 @@
+{
+    "list": {
+        "source": "packages/semi-ui-svelte/src/list/list.svelte",
+        "props": {
+            "bordered": { "zh-CN": "是否显示边框。", "en-US": "Whether to show a border." },
+            "dataSource": {
+                "zh-CN": "列表数据源；每一项通过 item snippet 渲染。",
+                "en-US": "Data source of the list; each entry is rendered through the item snippet."
+            },
+            "grid": {
+                "zh-CN": "栅格配置：Row 的 align、gutter、justify、type 与 Col 的 span、offset、order、push、pull、响应式断点、class、style，class 与 style 落在每项外层的 Col 上。",
+                "en-US": "Grid configuration: align, gutter, justify and type of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item."
+            },
+            "layout": {
+                "zh-CN": "列表布局，可选 vertical 或 horizontal。",
+                "en-US": "List layout: vertical or horizontal."
+            },
+            "loading": {
+                "zh-CN": "是否处于加载中，为 true 时显示 Spin。",
+                "en-US": "Whether the list is loading; a Spin is shown when true."
+            },
+            "size": {
+                "zh-CN": "列表尺寸，可选 small、default 或 large。",
+                "en-US": "List size: small, default or large."
+            },
+            "split": { "zh-CN": "是否展示分割线。", "en-US": "Whether to show dividers between items." },
+            "onClick": {
+                "zh-CN": "列表项的点击回调，作用于每个没有自己 onClick 的项；有处理函数的项渲染为原生按钮。它是函数 prop 而不是原生 onclick，因为它的有无决定项是否渲染按钮。",
+                "en-US": "Click handler for the items that have no onClick of their own; an item with a handler renders a native button. It is a function prop rather than the native onclick because its presence decides whether an item renders a button."
+            },
+            "onRightClick": {
+                "zh-CN": "列表项的右键（上下文菜单）回调，作用于每个没有自己 onRightClick 的项，这些项同样渲染为原生按钮。",
+                "en-US": "Context-menu handler for the items that have no onRightClick of their own; those items also render a native button."
+            },
+            "item": {
+                "zh-CN": "渲染 dataSource 中每一项的 snippet，参数为 `{ item, index }`，通常返回一个 ListItem。",
+                "en-US": "Snippet that renders each entry of dataSource, receiving `{ item, index }` and usually returning a ListItem."
+            },
+            "header": { "zh-CN": "列表头部的 snippet。", "en-US": "Snippet for the list header." },
+            "footer": { "zh-CN": "列表底部的 snippet。", "en-US": "Snippet for the list footer." },
+            "emptyContent": {
+                "zh-CN": "没有数据时展示内容的 snippet，缺省为语言包中的空文案。写了标签内的内容（children）时列表不再算空。",
+                "en-US": "Snippet for the content shown when there is no data; the locale's empty text by default. A list with content inside its tag (children) is never empty."
+            },
+            "loadMore": { "zh-CN": "加载更多按钮的 snippet。", "en-US": "Snippet for the load-more button." },
+            "children": {
+                "zh-CN": "ListItem 子节点，写在标签内，渲染在 dataSource 各项之后。",
+                "en-US": "ListItem children, written inside the tag and rendered after the items of dataSource."
+            }
+        }
+    },
+    "list-item": {
+        "source": "packages/semi-ui-svelte/src/list/item.svelte",
+        "props": {
+            "align": {
+                "zh-CN": "header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。",
+                "en-US": "Vertical alignment of header and main: flex-start, flex-end, center, baseline or stretch; flex-start when omitted."
+            },
+            "onClick": {
+                "zh-CN": "点击回调，优先于 List 的 onClick；有处理函数时项渲染为原生按钮。",
+                "en-US": "Click handler, taking precedence over the List's onClick; an item with a handler renders a native button."
+            },
+            "onRightClick": {
+                "zh-CN": "右键（上下文菜单）回调，优先于 List 的 onRightClick；只设置它时项同样渲染为原生按钮。",
+                "en-US": "Context-menu handler, taking precedence over the List's onRightClick; an item with only this handler also renders a native button."
+            },
+            "header": { "zh-CN": "列表项头部内容的 snippet。", "en-US": "Snippet for the item header content." },
+            "main": { "zh-CN": "列表项主体内容的 snippet。", "en-US": "Snippet for the item main content." },
+            "extra": {
+                "zh-CN": "列表项附加内容的 snippet，渲染在按钮外，其中的交互元素可正常聚焦与点击，点击不会触发整行的点击。",
+                "en-US": "Snippet for additional item content, rendered outside the button; interactive elements in it stay focusable and clickable, and clicking them does not trigger the row's click."
+            },
+            "children": {
+                "zh-CN": "列表项内容，写在标签内；可点击且没有 header 与 main 时放在按钮内，否则放在按钮之外。",
+                "en-US": "Item content written inside the tag; inside the button when the item is clickable and has no header or main, otherwise outside it."
+            }
+        }
+    }
+}

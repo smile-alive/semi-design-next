@@ -14,6 +14,9 @@ import SplitTagGroupVueApi from './api/split-tag-group.vue.zh-CN.mdx';
 import TagSolidApi from './api/tag.solid.zh-CN.mdx';
 import TagGroupSolidApi from './api/tag-group.solid.zh-CN.mdx';
 import SplitTagGroupSolidApi from './api/split-tag-group.solid.zh-CN.mdx';
+import TagSvelteApi from './api/tag.svelte.zh-CN.mdx';
+import TagGroupSvelteApi from './api/tag-group.svelte.zh-CN.mdx';
+import SplitTagGroupSvelteApi from './api/split-tag-group.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -45,6 +48,16 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 基本标签用法，将内容使用 `<Tag>` 标签包裹即可。  
@@ -65,6 +78,12 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 此时点击 x 关闭会触发 `onClose` 事件，在 `onClose` 中对事件调用 `preventDefault` 可以使其点击后依然显示不隐藏
+
+</Framework>
+
+<Framework only="svelte">
+
+此时点击 x 关闭会调用 `onClose(event, tagKey)`，在 `onClose` 中对事件调用 `preventDefault` 可以使其点击后依然显示不隐藏。标签内容写在 Tag 标签内，即 `children` snippet。
 
 </Framework>
 
@@ -99,6 +118,12 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `prefixIcon`、`suffixIcon` 属性传入 JSX 元素，可以在内容前后添加 Icon 图标。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `prefixIcon`、`suffixIcon` snippet，可以在内容前后添加 Icon 图标：用 `{#snippet prefixIcon()}...{/snippet}` 写在 Tag 标签内，或定义后作为属性传入。
 
 </Framework>
 
@@ -161,6 +186,12 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+如果 TagGroup 中的标签可删除，用户需要在 `onTagClose` 中更新传给 TagGroup 的 `tagList`。从列表移除标签时请为每项提供 `tagKey`，否则文字相同的标签移除前一个后会错位。`tagList` 每项的 `children` 为 `string | number`，需要完全自定义每个标签的节点时使用 `tag` snippet，参数为 `{ tag, index }`。`tagList` 里数据项自己的 `onClose` 与分组的 `onTagClose` 都会调用。
+
+</Framework>
+
 <Demo id="tag-group-closable" />
 
 ### SplitTagGroup 组合标签
@@ -197,6 +228,14 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<TagSvelteApi />
+
+`class`、`style` 与原生属性经展开落在根元素（`div`）上，原生事件用小写名（`onclick`、`onmouseenter`）。声明 `onclick` 或 `closable` 后标签可交互。
+
+</Framework>
+
 ### TagGroup
 
 <Framework only="react">
@@ -220,6 +259,14 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 <TagGroupSolidApi />
 
 `class`、`style`、`ref` 与原生属性经展开落在 TagGroup 的根元素（`div`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TagGroupSvelteApi />
+
+`class`、`style` 与原生属性经展开落在 TagGroup 的根元素（`div`）上。`+N` 的 Tag 自己是 Popover 的触发器，不额外包 `span`。
 
 </Framework>
 
@@ -249,6 +296,14 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<SplitTagGroupSvelteApi />
+
+`class`、`style`、`aria-label` 等原生属性经展开落在根元素（`div`）上，根元素的 `role` 固定为 `group`。
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -258,7 +313,7 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 ### 键盘和焦点
 
 - 如果当前 `Tag` 可交互，那么这个 `Tag` 可被聚焦到。如：
-    - 使用了 `onClick` 属性（Vue 为 `@click`）时，键盘用户可以通过 `Enter` 或空格键激活此 `Tag`
+    - 使用了 `onClick` 属性（Vue 为 `@click`，Svelte 为 `onclick`）时，键盘用户可以通过 `Enter` 或空格键激活此 `Tag`
     - `closable` 属性为 `true` 时，键盘用户可以通过 `Delete` 或 `Backspace` 键删除此 `Tag`，焦点会移到相邻的可聚焦 `Tag`
 
 ## 文案规范

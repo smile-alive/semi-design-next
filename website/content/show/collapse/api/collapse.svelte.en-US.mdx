@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| accordion | Accordion mode. | `boolean` | `false` |
+| activeKey | Key of the currently expanded panel; bind it with `bind:activeKey`. null and the empty string mean all panels are collapsed. `bind:activeKey={get, set}` makes it fully controlled; a plain `activeKey` is the initial value and a click overrides it inside the component. | `string \| string[] \| null` | - |
+| children | Snippet for the CollapsePanel panels. | `Snippet` | - |
+| clickHeaderToExpand | Clicking anywhere in the header row toggles the panel; when false only the toggle button and the arrow respond. | `boolean` | `true` |
+| collapseIcon | Snippet for the icon shown while a panel is expanded, IconChevronUp by default. | `Snippet` | - |
+| expandIcon | Snippet for the icon shown while a panel is collapsed, IconChevronDown by default. | `Snippet` | - |
+| expandIconPosition | Position of the expand icon: left or right. | `'left' \| 'right'` | `"right"` |
+| keepDOM | Whether to keep the DOM tree of hidden panels; destroyed by default. When omitted it reads the global default of Collapse, then that of Collapsible. | `boolean` | - |
+| lazyRender | Used with keepDOM; when true, panel content is not rendered until the panel is first expanded. | `boolean` | `false` |
+| motion | Whether to enable the animation; enabled by default. When omitted it reads the global default of Collapse, then that of Collapsible. | `boolean` | - |
+| onChange | Called when a panel is toggled, with the array of expanded keys and the native MouseEvent (keyboard use also produces a click through the native button). | <ApiType detail={"(activeKey: string[], event: MouseEvent) => void"}>Type</ApiType> | - |

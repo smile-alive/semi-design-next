@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | The itemKey of the active tab, bound with `bind:activeKey`. `null` activates no tab and is still controlled; omitted or `undefined` means uncontrolled, with the first enabled tab selected. | `string \| null` | - |
+| arrow | Snippet that replaces each scroll arrow in collapsible mode, with `{ items, position, onClick, defaultNode }`: the scrolled-out tabs, the position, the click handler and the default arrow (render it with `{@render defaultNode()}`). | <ApiType detail={"Snippet\u003c[TabsArrowSnippetProps]>"}>Type</ApiType> | - |
+| arrowPosition | Position of the scroll arrows in collapsible mode. | `'both' \| 'start' \| 'end'` | `"both"` |
+| children | The content area when there is no `panel`: the content of the active tab, one tabpanel labelled by the selected tab. | `Snippet` | - |
+| collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). `'auto'` collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
+| contentStyle | Style string of the outer content area. | `string` | - |
+| dropdownProps | In collapsible mode, the Dropdown props passed to the start-side and end-side arrow menus. | `TabsDropdownProps` | - |
+| icon | Snippet for the icon of each `tabList` entry, with `{ item, index }`; the icon container renders even when the snippet outputs nothing. | <ApiType detail={"Snippet\u003c[TabsTabSnippetProps]>"}>Type</ApiType> | - |
+| keepDOM | With `panel`, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion. | `boolean` | `true` |
+| lazyRender | Lazy rendering: a panel is rendered into the DOM only after it has been active. | `boolean` | `false` |
+| more | Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, `count` is that number and `dropdownProps` is passed to the dropdown. The trigger and the menu content are customized with the `moreTrigger` and `moreContent` snippets. | `number \| TabsMore` | - |
+| moreContent | Snippet that replaces the content of the More menu, with the tabs moved into it as `{ items }`. | <ApiType detail={"Snippet\u003c[TabsMoreContentSnippetProps]>"}>Type</ApiType> | - |
+| moreTrigger | Snippet that replaces the trigger of the More menu. | `Snippet` | - |
+| onChange | Called when the tab changes, with the itemKey of the new active tab. | <ApiType detail={"(activeKey: string) => void"}>Type</ApiType> | - |
+| onTabClick | Called when a tab is clicked or activated with Enter or Space; the event is a KeyboardEvent for keyboard activation. | <ApiType detail={"(activeKey: string, event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onTabClose | Called when a tab is closed, with the itemKey of the closed tab. The caller removes the tab. | <ApiType detail={"(tabKey: string) => void"}>Type</ApiType> | - |
+| onVisibleTabsChange | In collapsible mode, called when the visibility of the tabs changes, with a Map from itemKey to whether it is visible. | <ApiType detail={"(visibleState: Map\u003cstring, boolean>) => void"}>Type</ApiType> | - |
+| panel | Snippet for the content of each `tabList` entry, with `{ item, index, itemKey }`; it makes every entry its own tabpanel, and `keepDOM`, `lazyRender` and motion apply. | <ApiType detail={"Snippet\u003c[TabsPanelSnippetProps]>"}>Type</ApiType> | - |
+| preventScroll | Whether focus calls inside the component stop the browser from scrolling the document to the newly focused element. | `boolean` | - |
+| showRestInDropdown | In collapsible mode, whether the collapsed tabs are listed in a dropdown menu. | `boolean` | `true` |
+| size | Size of the tab bar; currently only the line type supports it. | `TabSize` | `"large"` |
+| tab | Snippet for the tab of each `tabList` entry, with `{ item, index }`; without it the entry's `tab` text shows. | <ApiType detail={"Snippet\u003c[TabsTabSnippetProps]>"}>Type</ApiType> | - |
+| tabBar | Snippet that replaces the whole tab bar, with `{ tabBarProps, tabBar }`: `tabBarProps` holds data only and `tabBar` is the default tab bar, rendered with `{@render tabBar()}`; a TabItem inside the custom bar controls its Tabs on its own. | <ApiType detail={"Snippet\u003c[TabsTabBarSnippetProps]>"}>Type</ApiType> | - |
+| tabBarClassName | Class name of the tab bar. | `string` | - |
+| tabBarExtraContent | Snippet for the extra content of the tab bar, placed outside the tablist. | `Snippet` | - |
+| tabBarStyle | Style string of the tab bar. | `string` | - |
+| tabList | An array of tab data, each with itemKey, tab, disabled and closable, data only. Tab markup goes in the `tab` and `icon` snippets, and the content in the `panel` snippet or `children`. | `PlainTab[]` | `[]` |
+| tabPaneMotion | Whether switching panels is animated. | `boolean` | `true` |
+| tabPosition | Position of the tab bar: top is horizontal, left is vertical. | `TabPosition` | `"top"` |
+| type | Style of the tab bar: line, card, button or slash. slash supports horizontal mode only. | `TabType` | `"line"` |
+| visibleTabsStyle | In collapsible mode, the style string of the whole scrolling area. | `string` | - |

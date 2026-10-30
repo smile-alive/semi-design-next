@@ -1,0 +1,27 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                                                                                 | 类型                                                                     | 默认值      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ----------- |
+| addonId       | addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。                                                                                                                     | `string`                                                                 | -           |
+| checked       | 是否选中，可用 `bind:checked` 双向绑定；在 CheckboxGroup 中使用时无效。`bind:checked={get, set}` 时完全受控；只传 `checked` 时作为初值，点击在组件内覆盖，父级再传新值时以父级为准。 | `boolean`                                                                | -           |
+| children      | Checkbox 的文本内容 snippet，同时是原生 input 的可访问名称；写在标签内的其余内容就是它。                                                                                             | `Snippet`                                                                | -           |
+| disabled      | 是否禁用。                                                                                                                                                                           | `boolean`                                                                | `false`     |
+| extra         | 辅助文本的 snippet，aria-describedby 指向它。                                                                                                                                        | `Snippet`                                                                | -           |
+| extraId       | extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。                                                                                                                    | `string`                                                                 | -           |
+| indeterminate | 半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。                                                                                                                    | `boolean`                                                                | `false`     |
+| name          | 原生 input 的 name；在 CheckboxGroup 中以组的 `name` 为准。                                                                                                                          | `string \| null`                                                         | -           |
+| onChange      | 选中状态变化时的回调，参数的 `target` 为 `{ checked, value, name, disabled }`。                                                                                                      | <ApiType detail={"(event: CheckboxEvent) => void"}>Type</ApiType>        | -           |
+| onclick       | 点击根元素时的回调，在切换之前调用。                                                                                                                                                 | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType> | -           |
+| prefixCls     | CSS 类名前缀。                                                                                                                                                                       | `string`                                                                 | -           |
+| preventScroll | 聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。                                                                                                                                | `boolean`                                                                | -           |
+| type          | 样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。                                                                                                        | `CheckboxType`                                                           | `"default"` |
+| value         | 该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。                                                                                                                  | `CheckboxValue`                                                          | -           |
+
+**Methods**
+
+| 方法  | 说明                    | 类型                                          |
+| ----- | ----------------------- | --------------------------------------------- |
+| blur  | 使原生 input 失去焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 使原生 input 获得焦点。 | <ApiType detail={"() => void"}>Type</ApiType> |

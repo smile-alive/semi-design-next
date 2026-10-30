@@ -24,6 +24,15 @@ import CodeContentVueApi from './api/code-content.vue.en-US.mdx';
 import CodeItemVueApi from './api/code-item.vue.en-US.mdx';
 import FileContentVueApi from './api/file-content.vue.en-US.mdx';
 import FileItemVueApi from './api/file-item.vue.en-US.mdx';
+import ContainerSvelteApi from './api/container.svelte.en-US.mdx';
+import MCPConfigureSvelteApi from './api/mcp-configure.svelte.en-US.mdx';
+import AnnotationSvelteApi from './api/annotation.svelte.en-US.mdx';
+import AnnotationContentSvelteApi from './api/annotation-content.svelte.en-US.mdx';
+import SidebarSvelteApi from './api/sidebar.svelte.en-US.mdx';
+import CodeContentSvelteApi from './api/code-content.svelte.en-US.mdx';
+import CodeItemSvelteApi from './api/code-item.svelte.en-US.mdx';
+import FileContentSvelteApi from './api/file-content.svelte.en-US.mdx';
+import FileItemSvelteApi from './api/file-item.svelte.en-US.mdx';
 import ContainerSolidApi from './api/container.solid.en-US.mdx';
 import MCPConfigureSolidApi from './api/mcp-configure.solid.en-US.mdx';
 import AnnotationSolidApi from './api/annotation.solid.en-US.mdx';
@@ -66,6 +75,19 @@ const { AnnotationContent } = Annotation;
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-svelte';
+
+    const { Container, CodeContent, CodeItem, FileContent, FileItem } = Sidebar;
+    const { AnnotationContent } = Annotation;
+</script>
+```
+
+</Framework>
+
 <Framework only="solid">
 
 ```jsx
@@ -96,6 +118,15 @@ The basic container of the Sidebar is the base container for [MCP configuration]
 - `title` sets a plain-text title; use the `#title` slot for custom content
 - `motion` sets whether to enable the expand animation
 - `resizable` sets whether the width is resizable. When `true`, you can use `minWidth` and `maxWidth` to control min and max width
+
+</Framework>
+
+<Framework only="svelte">
+
+- `bind:visible` controls show/hide. Clicking the close button, or pressing Esc while `closeOnEsc` is `true`, sets it to `false` first and then calls `onCancel`
+- `title` sets the title, plain text or a snippet; use the `header` snippet to customize the whole header
+- `motion` sets whether there is an expand animation
+- `resizable` sets whether the width can be resized; when `true`, use `minWidth` and `maxWidth` to set the minimum and maximum width
 
 </Framework>
 
@@ -167,6 +198,33 @@ interface MCPConfigureOption {
 
 </Framework>
 
+<Framework only="svelte">
+
+- Use `bind:options` and `bind:customOptions` to bind the built-in and custom MCP tools; switching a tool updates the binding first, then calls `onStatusChange`
+- Use `bind:visible` to control show and hide, and `onCancel` to listen to user close behavior
+- Use `onStatusChange` to customize how enabling/disabling an MCP tool is handled
+- Use `onAddClick` to handle the add button of the custom MCP page
+- Use `onConfigureClick` to listen to configuring a built-in MCP tool, and `onEditClick` to listen to editing a custom one
+- Use the `icon` and `desc` snippets for the icon and description of an item, and `item` to replace the whole row; the snippet parameter is `{ item, index, custom }`
+
+For other APIs of MCPConfigure, see [MCPConfigure](#MCPConfigure).
+
+The type of MCP tool item is as follows:
+
+```ts
+interface MCPConfigureOption {
+    icon?: string; // image URL; use the icon snippet for other content
+    label?: string;
+    value: string; // required, identifies the tool and must be unique
+    desc?: string; // plain text; use the desc snippet for other content
+    active?: boolean;
+    disabled?: boolean;
+    configure?: boolean; // whether to show configure button
+}
+```
+
+</Framework>
+
 <Framework only="solid">
 
 - Use `options` and `customOptions` to set the built-in and custom MCP tools
@@ -218,6 +276,15 @@ Use the `Annotation` component to manage the display of reference sources.
 
 </Framework>
 
+<Framework only="svelte">
+
+- `bind:activeKey` manages the currently expanded item
+- `info` sets the reference content list
+- `onClick` is called when a reference is clicked, with the event and its item
+- Use the `infoHeader` snippet for a group header and `item` to replace an item; `header` is the whole container header
+
+</Framework>
+
 <Framework only="solid">
 
 - Use `activeKey` together with `onChange` to manage the currently expanded item
@@ -245,6 +312,12 @@ The value of JsonViewer is called `modelValue` in `jsonViewerProps`, and both `j
 
 </Framework>
 
+<Framework only="svelte">
+
+The value of JsonViewer in `jsonViewerProps` defaults to `content`, and both `jsonViewerProps` and `codeHighlightProps` accept `class` and `style`. The custom rendering and search button of JsonViewer are available through the `customRender` and `searchButton` snippets of `CodeItem`.
+
+</Framework>
+
 <Framework only="solid">
 
 `jsonViewerProps` and `codeHighlightProps` are the props of the Solid JsonViewer and CodeHighlight. They are spread after the built-in defaults, so `value`, `width`, `height` and the like override those defaults, and `class` and `style` are accepted too.
@@ -269,6 +342,14 @@ You can use `CodeContent` in `Sidebar` to display a list of code blocks.
 - Use `v-model:activeKey` to manage the expanded panels
 - Use `expand` to listen to the expand button in a panel header
 - `#customRender` and `#searchButton` are forwarded to the JsonViewer of every JSON panel
+
+</Framework>
+
+<Framework only="svelte">
+
+- Use `bind:activeKey` to manage the expanded panels
+- Use `onExpand` to listen to the expand button in a panel header; the button is shown only when it is set
+- The `customRender` and `searchButton` snippets are forwarded to the JsonViewer of every JSON panel
 
 </Framework>
 
@@ -303,6 +384,16 @@ You can use `FileItem` in `Sidebar` to view and edit rich text content. `FileIte
 
 </Framework>
 
+<Framework only="svelte">
+
+- `content`: rich text as HTML. A change after mount is synced to the editor; it is not applied when it equals what the editor already holds, so typing and the cursor are not interrupted. The sync does not call `onContentChange`
+- `editable`: whether the content is editable; a change after mount is synced to the editor
+- `imgUploadProps`: configure image upload endpoint and how to set the src after upload. Use `action` to set upload url and `getUploadImageSrc(response)` to return the uploaded image url from the upload response (when omitted, a string response is used as the url, otherwise `response.src`), which will be used as src of img node in rich text; the `on` callbacks of Upload (such as `onSuccess`) can be passed here too. The toolbar shows the image button only when `action` or `customRequest` is set
+- `extensions` and `imgUploadProps` are read only when the editor is created; use `{#key}` to remount it with new values
+- `onContentChange` is called after an edit, with the content as HTML
+
+</Framework>
+
 <Framework only="solid">
 
 - `content`: rich text as HTML. A change after mount is synced to the editor; it is not applied when it equals what the editor already holds, so typing and the cursor are not interrupted. The sync does not call `onContentChange`
@@ -330,6 +421,13 @@ You can use `FileContent` in `Sidebar` to display a list of rich text documents.
 
 - Use `v-model:activeKey` to manage the expanded panels
 - Use `expand` to listen to the expand button in a panel header
+
+</Framework>
+
+<Framework only="svelte">
+
+- Use `bind:activeKey` to manage the expanded panels
+- Use `onExpand` to listen to the expand button in a panel header; the button is shown only when it is set
 
 </Framework>
 
@@ -363,6 +461,16 @@ In the main view you can configure the title through `title` or the `#title` slo
 For content rendering in the main view, use the `#mainContent="{ activeKey }"` slot and render by the selected item. You can use `AnnotationContent` in `Annotation` to render references, `FileContent` in `Sidebar` to render rich text, and `CodeContent` to render code.
 
 For detail views, if the content is rich text or code, set `mode` to `code` or `file` and provide `detailContent` to display the content with built-in code display component / rich text editor; a new `key` in `detailContent` remounts it. If you want to customize how the detail view is rendered, use the `#detailContent="{ mode }"` slot, and customize the detail header through `#detailHeader="{ mode, detailContent }"`; with empty content, both fall back to the built-in ones. Clicking the back button of the detail header emits `backWard`.
+
+</Framework>
+
+<Framework only="svelte">
+
+In the main view you can configure the title through `title`, decide whether to show close button through `showClose`, and configure the top button group through `options` (each item is `{ name, key }`); `bind:activeKey` binds the selected item. Use the `optionIcon` snippet (parameter `{ item, index }`) for the button icon, or `optionItem` to replace the whole button, whose `onClick` parameter selects the item.
+
+For content rendering in the main view, use the `mainContent` snippet (parameter `{ activeKey }`) and render by the selected item. You can use `AnnotationContent` in `Annotation` to render references, `FileContent` in `Sidebar` to render rich text, and `CodeContent` to render code.
+
+For detail views, if the content is rich text or code, set `mode` to `code` or `file` and provide `detailContent` to display the content with built-in code display component / rich text editor; a new `key` in `detailContent` remounts it. If you want to customize how the detail view is rendered, use the `detailBody` snippet (parameter `{ mode }`), and customize the detail header through the `detailHeader` snippet (parameter `{ mode, detailContent }`); with empty content, both fall back to the built-in ones. Clicking the back button of the detail header calls `onBackWard`.
 
 </Framework>
 
@@ -559,6 +667,97 @@ Each item of `files` is the props of [FileItem](#FileItem) plus a `key` that ide
 ### FileItem
 
 <FileItemVueApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+The `class`, `style` and other undeclared attributes (such as `aria-label`) of Sidebar, Annotation, MCPConfigure and Container land on the `.semi-sidebar-container` element; when the root is named (`aria-label` or `aria-labelledby`) and no `role` is given, its `role` is `group`. Undeclared attributes of CodeContent, CodeItem, FileContent, FileItem and AnnotationContent land on their own root elements.
+
+Sidebar, Annotation, MCPConfigure and Sidebar.Container expose `getRoot()` through `export function`; get the instance with `bind:this` and call it. It returns `HTMLDivElement | null`, and `null` while the container is hidden. The type of Container is `SidebarContainerHandle` (exported from `@fibrae/semi-ai-svelte`).
+
+A snippet written inside a component tag becomes a prop of that component by its name, so only names the component declares, such as `optionIcon` and `mainContent`, can go inside the tag; declare your own helper snippets outside the component tag.
+
+### Container
+
+<ContainerSvelteApi />
+
+### MCPConfigure
+
+<MCPConfigureSvelteApi />
+
+#### MCPConfigureOption
+
+| Property  | Description                                                                                                            | Type    | Default |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- | ------- | ------- |
+| active    | Whether this MCP is active                                                                                             | boolean | false   |
+| configure | Whether to show the configure button                                                                                   | boolean | false   |
+| desc      | Description text, matched by the built-in filter; use the `desc` snippet for other content                             | string  | -       |
+| disabled  | Whether this MCP is disabled. When true, users cannot toggle its active state                                          | boolean | false   |
+| icon      | Image URL of the icon; use the `icon` snippet for other content                                                        | string  | -       |
+| label     | Label text                                                                                                             | string  | -       |
+| value     | Value, required. Identifies the option in `onStatusChange` and is used as the item key, so it must be unique in a list | string  | -       |
+
+### Annotation
+
+<AnnotationSvelteApi />
+
+### AnnotationContent
+
+<AnnotationContentSvelteApi />
+
+#### AnnotationInfo
+
+| Property    | Description                                                                                                     | Type                                | Default |
+| ----------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------- |
+| annotations | Reference items of the group                                                                                    | [AnnotationItem](#AnnotationItem)[] | -       |
+| header      | Plain-text group title; customize it with the `infoHeader` (Annotation) or `header` (AnnotationContent) snippet | string                              | -       |
+| key         | Unique key of the group                                                                                         | string                              | -       |
+
+#### AnnotationItem
+
+| Property | Description                                                                                                          | Type              | Default |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | ----------------- | ------- |
+| detail   | Extra detail text such as video description or text note                                                             | string            | -       |
+| duration | Duration, usually used for videos, in seconds                                                                        | number            | -       |
+| img      | Image url, such as video cover or illustration                                                                       | string            | -       |
+| logo     | Logo url of the site/platform to which the content belongs                                                           | string            | -       |
+| order    | Order/index number                                                                                                   | number            | -       |
+| siteName | Name of the site/platform where the content belongs                                                                  | string            | -       |
+| title    | Title                                                                                                                | string            | -       |
+| type     | Content type                                                                                                         | 'video' \| 'text' | -       |
+| url      | Resource url, opened in a new tab. An item without it renders a link without href that only the pointer can activate | string            | -       |
+
+### Sidebar
+
+<SidebarSvelteApi />
+
+#### SideBarOption
+
+| Property | Description                                            | Type   | Default |
+| -------- | ------------------------------------------------------ | ------ | ------- |
+| key      | Unique key of the option                               | string | -       |
+| name     | Option name; use the `optionIcon` snippet for the icon | string | -       |
+
+### CodeContent
+
+Each item of `codes` is the props of [CodeItem](#CodeItem) plus a `key` that identifies its panel.
+
+<CodeContentSvelteApi />
+
+### CodeItem
+
+<CodeItemSvelteApi />
+
+### FileContent
+
+Each item of `files` is the props of [FileItem](#FileItem) plus a `key` that identifies its panel; they are rendered read-only, and `extensions` and `imgUploadProps` reach their preview.
+
+<FileContentSvelteApi />
+
+### FileItem
+
+<FileItemSvelteApi />
 
 </Framework>
 

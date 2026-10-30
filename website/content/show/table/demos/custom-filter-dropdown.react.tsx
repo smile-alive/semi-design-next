@@ -5,7 +5,7 @@ import { Table, Avatar, Input, Space, Tag, type ColumnProps } from '@fibrae/semi
 
 const DAY = 24 * 60 * 60 * 1000;
 
-const getData = () => {
+function getData() {
     const data = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -21,7 +21,7 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 export default function TableDemo() {
     const [dataSource] = useState(getData);
@@ -43,7 +43,7 @@ export default function TableDemo() {
 
     const handleCompositionEnd = (event: CompositionEvent<HTMLInputElement>) => {
         compositionRef.current.isComposition = false;
-        const value = (event.target as HTMLInputElement).value;
+        const value = event.target instanceof HTMLInputElement ? event.target.value : '';
         const newFilteredValue = value ? [value] : [];
         setFilteredValue(newFilteredValue);
     };

@@ -1,5 +1,5 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 title: With TailwindCSS
 icon: doc-tailwind
 order: 13
@@ -144,6 +144,48 @@ import App from './App';
 
 </Framework>
 
+<Framework only="svelte">
+
+```js
+// src/main.ts - must be at the very top
+import './semi-layer.css'; // must be first
+import './tailwind.css'; // file containing @import "tailwindcss";
+import { mount } from 'svelte';
+import App from './App.svelte';
+// ... other imports
+```
+
+SvelteKit has no such JS entry file. Put the two imports at the very top of the script in the root layout `src/routes/+layout.svelte` instead. The root layout loads before every page, so the server-rendered styles of the first paint start with the layer order declaration in both development and production.
+
+```svelte
+<!-- src/routes/+layout.svelte, at the very top of the script -->
+<script lang="ts">
+    import './semi-layer.css';
+    import './tailwind.css';
+
+    let { children } = $props();
+</script>
+
+{@render children()}
+```
+
+Add Tailwind to the build with `@tailwindcss/vite`, as its official guide describes, next to the Semi Vite plugin:
+
+```ts
+// vite.config.ts, SvelteKit
+import { sveltekit } from '@sveltejs/kit/vite';
+import semi from '@fibrae/semi-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+// replace adapter with the SvelteKit adapter you use
+export default defineConfig({
+    plugins: [tailwindcss(), sveltekit({ adapter }), semi()],
+});
+```
+
+</Framework>
+
 <Notice type="warning" title="Important">
 
 `semi-layer.css` must be imported before any CSS file containing `@import "tailwindcss";` and before any Semi component imports, otherwise the CSS Layer order will be incorrect. It is recommended to place it on the first line of the entry file. You can also write the layer order declaration on the first line of the Tailwind entry CSS and import only that one file.
@@ -193,6 +235,15 @@ Semi generates a Tailwind theme mapping file, `tailwind.css`, from the default t
 
 </Framework>
 
+<Framework only="svelte">
+
+```css
+@import 'tailwindcss';
+@import '@fibrae/semi-ui-svelte/tailwind.css';
+```
+
+</Framework>
+
 Then use utilities such as `bg-semi-color-primary` and `text-semi-color-text-0`; opacity modifiers work too:
 
 <Framework only="react">
@@ -216,6 +267,14 @@ Then use utilities such as `bg-semi-color-primary` and `text-semi-color-text-0`;
 <Framework only="solid">
 
 ```jsx
+<div class="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
 <div class="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
 ```
 
@@ -264,6 +323,14 @@ The file uses `@theme inline` and only writes `var(--semi-*)` references, so uti
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<div class="p-semi-base gap-semi-tight text-semi-header-6 font-semi-bold">...</div>
+```
+
+</Framework>
+
 z-index, control heights and border widths have no Tailwind namespace and are not mapped; use the arbitrary value syntax:
 
 <Framework only="react">
@@ -292,6 +359,14 @@ z-index, control heights and border widths have no Tailwind namespace and are no
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<div class="z-(--semi-z-modal) h-(--semi-height-control-default) border-(length:--semi-border-thickness-control)">...</div>
+```
+
+</Framework>
+
 The palette has 212 colors: 16 hues with shades 0 to 9 (such as `semi-blue-5` and `semi-light-green-2`), `semi-white`, `semi-black`, the AI purple `semi-ai-purple-0` to `semi-ai-purple-9`, and the AI gradient stops `semi-ai-general-<shade>-<0 to 3>`. Palette values are complete colors; in dark mode each shade takes its dark value, and opacity modifiers work as well:
 
 <Framework only="react">
@@ -315,6 +390,14 @@ The palette has 212 colors: 16 hues with shades 0 to 9 (such as `semi-blue-5` an
 <Framework only="solid">
 
 ```jsx
+<div class="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
 <div class="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
 ```
 

@@ -24,8 +24,8 @@ import ApiType from '#/components/ApiType.astro';
 | restTagsPopoverProps | Configuration of the Popover that shows the remaining tags, such as position and trigger. | `PopoverProps` | `semiGlobalDefault("Select", "restTagsPopoverProps")` |
 | expandRestTagsOnClick | In multiple mode with maxTagCount, whether all tags are shown while the dropdown is open. | `boolean` | `semiDefault("Select", "expandRestTagsOnClick", false)` |
 | ellipsisTrigger | In multiple mode with maxTagCount, whether the last tag is truncated when the width is short. It costs some performance, so avoid it in large forms. | `boolean` | `semiDefault("Select", "ellipsisTrigger", false)` |
-| size | Size: small, default or large. | `Size` | `semiGlobalDefault("Select", "size")` |
-| disabled | Whether the Select is disabled. | `boolean` | `semiDefault("Select", "disabled", false)` |
+| size | Size: small, default or large. | `Size` | `undefined` |
+| disabled | Whether the Select is disabled. | `boolean` | `undefined` |
 | borderless | Whether the Select has no border. | `boolean` | `semiDefault("Select", "borderless", false)` |
 | validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Select", "validateStatus")` |
 | placeholder | Placeholder text shown while nothing is selected. | `string` | `semiGlobalDefault("Select", "placeholder")` |

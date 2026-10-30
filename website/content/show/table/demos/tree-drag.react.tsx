@@ -136,7 +136,7 @@ export default function TableDemo() {
         return obj;
     };
 
-    const getSameLevelRecords = (key: number | undefined, data: TreeRow[] = []): TreeRow[] => {
+    const getSameLevelRecords = (key?: number, data: TreeRow[] = []): TreeRow[] => {
         if (key != null && Array.isArray(data) && data.length) {
             if (data.find((item) => item[rowKey] === key)) {
                 return data;

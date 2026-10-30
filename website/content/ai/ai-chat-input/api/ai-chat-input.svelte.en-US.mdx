@@ -1,0 +1,65 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| actionArea | Snippet that replaces the footer action area. `upload` is the upload node (a hidden Upload when showUploadButton is false; it must still be rendered for pasted files to upload) and `send` is the send or stop button, both snippets rendered with `{@render}`; `class` is the class name of the action area. | <ApiType detail={"Snippet\u003c[AIChatInputActionAreaSnippetProps]>"}>Type</ApiType> | - |
+| canSend | Whether sending is allowed. When unset, it depends on the input content and the uploaded files; references do not count. | `boolean` | - |
+| clearContentOnGenerating | Whether the input content and attachments are cleared when generating turns on. Set it to false to keep the input (for non-conversational scenes such as an infinite canvas). | `boolean` | `true` |
+| configureArea | Snippet for the footer configure area, holding the `AIChatInput.Configure` items. | `Snippet` | - |
+| defaultContent | Default content of the input, an html string or JSON like Tiptap's Content. Read once, when the editor is created. | `TiptapContent` | - |
+| dropdownMatchTriggerWidth | Whether the dropdown layer has the same width as the input. | `boolean` | `true` |
+| extensions | Custom tiptap extensions. Read once, when the editor is created; later changes have no effect. | `Extensions` | - |
+| generating | Whether a response is being generated. While true, the send button becomes the stop button. | `boolean` | `false` |
+| keepSkillAfterSend | Whether the selected skill is kept after a message is sent. | `boolean` | `false` |
+| onBlur | Called when the rich text input loses focus. It shadows the native onblur on the root element. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onConfigureChange | Called when the configure area changes, with the whole value and the changed value; the second argument is undefined when an item is removed. | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onContentChange | Called when the input content changes, with the current content items. | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
+| onFocus | Called when the rich text input gets focus. It shadows the native onfocus on the root element. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onMessageSend | Called when the send button is clicked, with the references, attachments, input contents and configure values. | <ApiType detail={"(message: MessageContent) => void"}>Type</ApiType> | - |
+| onPaste | Listens to paste in the input without preventing the default behavior; read event.clipboardData for the content. It shadows the native onpaste on the root element. | <ApiType detail={"(event: ClipboardEvent) => void"}>Type</ApiType> | - |
+| onReferenceClick | Called when a reference is clicked. | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onReferenceDelete | Called when a reference is deleted. The caller owns the references and removes the item itself. | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onSkillChange | Called when the skill changes; the argument is undefined when the skill is removed. | <ApiType detail={"(skill?: Skill) => void"}>Type</ApiType> | - |
+| onStopGenerate | Called when the stop button is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onUploadChange | Called when the uploaded file list changes. | <ApiType detail={"(props: UploadOnChangeProps) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the input: a string, or a function that returns a string for a node. | `PlaceholderProps` | - |
+| popoverProps | Props of the dropdown layer. The class is merged with the internal class names and the style string with the panel width. | `AIChatInputPopoverProps` | - |
+| reference | Snippet that replaces each reference, with the parameters `item` and `index`. | <ApiType detail={"Snippet\u003c[AIChatInputReferenceSnippetProps]>"}>Type</ApiType> | - |
+| references | References shown with the input. | `Reference[]` | - |
+| round | Whether the buttons of the footer configure and action areas are fully rounded. | `boolean` | `true` |
+| sendHotKey | Keyboard shortcut that sends the input. enter sends on Enter alone and breaks the line on Shift+Enter; shift+enter is the reverse. | `'enter' \| 'shift+enter'` | `"enter"` |
+| showPlaceholderWhenSkillOnly | Whether the placeholder shows when only a skill is selected, after the skill. Read once, when the editor is created. | `boolean` | `false` |
+| showReference | Whether the reference area is shown; use it together with `topSlot`. | `boolean` | `true` |
+| showTemplateButton | Whether the template button is shown. When unset, it follows hasTemplate of the selected skill. | `boolean` | `false` |
+| showUploadButton | Whether the upload button on the right is shown. Paste upload still works when false. | `boolean` | `true` |
+| showUploadFile | Whether the uploaded files area is shown; use it together with `topSlot`. | `boolean` | `true` |
+| skillHotKey | Hotkey that opens the skill panel in the input. | `string` | - |
+| skillIcon | Snippet for the icon before each skill in the skill panel, with the parameters `item` and `index`. | <ApiType detail={"Snippet\u003c[AIChatInputSkillIconSnippetProps]>"}>Type</ApiType> | - |
+| skillItem | Snippet that replaces each skill. Parameters: `skill`, and `id`, `class`, `role`, `aria-selected`, `onclick` and `onmouseenter` to spread onto the root element. | <ApiType detail={"Snippet\u003c[AIChatInputSkillItemSnippetProps]>"}>Type</ApiType> | - |
+| skills | Skills. A skill holds data only; its icon goes through the `skillIcon` snippet. | `Skill[]` | - |
+| suggestionItem | Snippet that replaces each suggestion. Parameters: `suggestion`, and `id`, `class`, `role`, `aria-selected`, `onclick` and `onmouseenter` to spread onto the root element. | <ApiType detail={"Snippet\u003c[AIChatInputSuggestionItemSnippetProps]>"}>Type</ApiType> | - |
+| suggestions | Suggestions, each a string or an object with content. | `Suggestion[]` | - |
+| template | Snippet for the content of the template panel, with the current `skill` and `onTemplateClick`, which replaces the input content with the given content. | <ApiType detail={"Snippet\u003c[AIChatInputTemplateSnippetProps]>"}>Type</ApiType> | - |
+| templatesCls | Class name of the template panel. | `string` | - |
+| templatesStyle | Style string of the template panel. | `string` | - |
+| topSlot | Snippet for a custom top area, with the references, attachments, content and delete methods (`references`, `attachments`, `content`, `onUploadFileDelete`, `onReferenceDelete`) as parameters. Placed by topSlotPosition. | <ApiType detail={"Snippet\u003c[AIChatInputTopSlotSnippetProps]>"}>Type</ApiType> | - |
+| topSlotPosition | Position of `topSlot` relative to the reference area and the uploaded files area. | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into an onContentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
+| uploadButton | Snippet that replaces the upload button content while Upload keeps handling uploads and pasted files. Parameters: `defaultNode` (a snippet), `onOpenFileDialog`, `disabled`, `attachments`. | <ApiType detail={"Snippet\u003c[AIChatInputUploadButtonSnippetProps]>"}>Type</ApiType> | - |
+| uploadProps | Upload settings, as Upload but without fileList, listType and children; seed the attachments with `defaultFileList`. AIChatInput calls onChange and onRemove itself; beforeRemove may return a Promise. | `AIChatInputUploadProps` | - |
+| uploadTip | Snippet for the content of the upload tip. | `Snippet` | - |
+| uploadTipProps | Tooltip props of the upload tip without content; the tip content goes through the `uploadTip` snippet. | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child' \u007c 'arrow'>"}>Type</ApiType> | - |
+
+**Methods**
+
+| Method                  | Description                                                            | Type                                                                |
+| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| changeTemplateVisible   | Shows or hides the template layer.                                     | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>       |
+| deleteContent           | Deletes an item of the rich text, matched by uniqueKey of the content. | <ApiType detail={"(content: Content) => void"}>Type</ApiType>       |
+| deleteUploadFile        | Deletes one uploaded file.                                             | <ApiType detail={"(item: Attachment) => void"}>Type</ApiType>       |
+| focusEditor             | Focuses the input, at the end by default.                              | <ApiType detail={"(pos?: FocusPosition) => void"}>Type</ApiType>    |
+| getEditor               | Returns the tiptap editor, or undefined until the editor is created.   | <ApiType detail={"() => Editor \u007c undefined"}>Type</ApiType>    |
+| setContent              | Sets the input content.                                                | <ApiType detail={"(content: TiptapContent) => void"}>Type</ApiType> |
+| setContentWhileSaveTool | Sets the input content and keeps the skill.                            | <ApiType detail={"(content: string) => void"}>Type</ApiType>        |

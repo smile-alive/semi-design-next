@@ -108,7 +108,7 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
-const getData = () => {
+function getData() {
     const data: Row[] = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -124,17 +124,17 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 const data = getData();
 
-const fetchData = (currentPage: number) => {
+function fetchData(currentPage: number) {
     return new Promise<Row[]>((res) => {
         setTimeout(() => {
             res(data.slice((currentPage - 1) * pageSize, currentPage * pageSize));
         }, 300);
     });
-};
+}
 
 export default function TableDemo() {
     const [currentPage, setPage] = createSignal(1);

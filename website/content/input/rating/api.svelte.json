@@ -1,0 +1,61 @@
+{
+    "rating": {
+        "source": "packages/semi-ui-svelte/src/rating/rating.svelte",
+        "props": {
+            "allowClear": {
+                "zh-CN": "是否允许再次点击后清除。",
+                "en-US": "Whether clicking the selected star again clears the value."
+            },
+            "allowHalf": { "zh-CN": "是否允许半选。", "en-US": "Whether half stars can be selected." },
+            "autofocus": { "zh-CN": "挂载时自动获取焦点。", "en-US": "Whether to focus on mount." },
+            "character": {
+                "zh-CN": "每颗星中绘制的字符，字符串或 snippet；字符串同时是各星可访问名称与整组摘要的单位，snippet 则用语言包的单位。",
+                "en-US": "Character drawn in every star, a string or a snippet. A string is also the unit in each star's accessible name and the group summary; for a snippet the locale's unit is used."
+            },
+            "count": { "zh-CN": "星的总数。", "en-US": "Total number of stars." },
+            "disabled": { "zh-CN": "只读，无法进行交互，也无法获得焦点。", "en-US": "Read-only: no interaction and no focus." },
+            "onBlur": { "zh-CN": "焦点离开整个评分组件时的回调。", "en-US": "Called when focus leaves the rating." },
+            "onChange": { "zh-CN": "选择变化时的回调，参数为新的值。", "en-US": "Called when the selection changes, with the new value." },
+            "onClick": {
+                "zh-CN": "点击星或按 Enter、Space 选中时的回调，参数为事件与星的序号；会遮住根元素上的原生 click 监听。",
+                "en-US": "Called when a star is clicked or selected with Enter or Space, with the event and the star index. It shadows a native click listener on the root element."
+            },
+            "onFocus": {
+                "zh-CN": "焦点进入整个评分组件时的回调，在星之间移动不触发。",
+                "en-US": "Called when focus enters the rating; moving between stars does not call it."
+            },
+            "onHoverChange": {
+                "zh-CN": "指针经过时数值变化的回调；指针移出或点击清除时收到 undefined。",
+                "en-US": "Called when the hovered value changes; receives undefined when the pointer leaves or a click clears the value."
+            },
+            "onKeyDown": {
+                "zh-CN": "仅在方向键使值移动时的回调。",
+                "en-US": "Called only for an arrow key that moved the value."
+            },
+            "prefixCls": { "zh-CN": "组件的样式类名前缀。", "en-US": "Class name prefix of the component." },
+            "preventScroll": {
+                "zh-CN": "指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。",
+                "en-US": "Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 default、small，也可传入 number 自定义尺寸。",
+                "en-US": "Size: default or small, or a number for a custom size."
+            },
+            "tooltips": { "zh-CN": "每一项的提示信息。", "en-US": "Prompt text for each item." },
+            "value": {
+                "zh-CN": "当前值，可用 `bind:value` 双向绑定。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值，之后由用户操作改变。",
+                "en-US": "Current value; bind it with `bind:value`. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value and user interaction changes it afterwards."
+            }
+        },
+        "methods": {
+            "focus": {
+                "zh-CN": "聚焦 Tab 会到达的 radio，与 autofocus 的落点相同；disabled 时无效果。",
+                "en-US": "Focuses the radio that Tab reaches, the same one autofocus uses. Does nothing when disabled."
+            },
+            "blur": {
+                "zh-CN": "让评分内获得焦点的元素失焦；焦点不在评分内或 disabled 时无效果。",
+                "en-US": "Blurs the focused element inside the rating. Does nothing when focus is elsewhere or the rating is disabled."
+            }
+        }
+    }
+}

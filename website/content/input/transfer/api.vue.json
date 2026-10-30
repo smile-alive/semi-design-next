@@ -69,6 +69,10 @@
             "search": {
                 "zh-CN": "搜索框输入内容变化时触发，载荷为搜索值。search 方法驱动的搜索不触发。",
                 "en-US": "Emitted when the text of the search box changes, with the search value. A search driven by the search method does not emit it."
+            },
+            "blur": {
+                "zh-CN": "焦点从 Transfer 内部移到外部时触发一次，载荷为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不触发，窗口失焦（relatedTarget 为空）时触发。",
+                "en-US": "Emitted once when the focus moves from inside the Transfer to outside it, with the FocusEvent; moving between the search box, checkboxes, items, remove buttons and drag handles does not emit it, and a window blur (empty relatedTarget) does."
             }
         },
         "slots": {

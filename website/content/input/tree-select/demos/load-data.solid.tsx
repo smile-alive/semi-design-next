@@ -35,7 +35,7 @@ function updateTreeData(list: TreeNodeData[], key: string | undefined, children:
 export default function TreeSelectDemo() {
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>(initialData);
 
-    function onLoadData(treeNode?: TreeNodeData) {
+    const onLoadData = (treeNode?: TreeNodeData) => {
         return new Promise<void>((resolve) => {
             if (!treeNode || treeNode.children) {
                 resolve();
@@ -58,7 +58,7 @@ export default function TreeSelectDemo() {
                 resolve();
             }, 1000);
         });
-    }
+    };
 
     return <TreeSelect loadData={onLoadData} treeData={treeData()} style={{ width: '300px' }} placeholder="请选择" />;
 }

@@ -8,7 +8,7 @@
         { label: 'Leaf Node', value: '2', key: '2', isLeaf: true },
     ]);
 
-    function updateTreeData(list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] {
+    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
         return list.map((node) => {
             if (node.key === key) {
                 return { ...node, children };
@@ -18,9 +18,9 @@
             }
             return node;
         });
-    }
+    };
 
-    function onLoadData(treeNode?: TreeNodeData) {
+    const onLoadData = (treeNode?: TreeNodeData) => {
         const key = treeNode?.key;
         return new Promise<void>((resolve) => {
             if (treeNode?.children) {
@@ -35,7 +35,7 @@
                 resolve();
             }, 1000);
         });
-    }
+    };
 </script>
 
 <template>

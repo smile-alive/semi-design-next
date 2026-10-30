@@ -8,6 +8,7 @@ brief: 点击/鼠标移入元素，弹出气泡式的卡片浮层。
 import PopoverReactApi from './api/popover.react.zh-CN.mdx';
 import PopoverVueApi from './api/popover.vue.zh-CN.mdx';
 import PopoverSolidApi from './api/popover.solid.zh-CN.mdx';
+import PopoverSvelteApi from './api/popover.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -45,6 +46,16 @@ import { Popover } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Popover } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 注意事项
 
 <Framework only="react">
@@ -78,6 +89,15 @@ Popover 需要将触发属性和事件监听器应用到触发元素上，并以
 
 </Framework>
 
+<Framework only="svelte">
+
+Popover 需要将触发属性和事件监听器应用到触发元素上，并以触发元素的真实 DOM 元素计算弹出层的定位，因此触发元素支持如下写法：
+
+1. `child` snippet：参数 `{ props }` 必须整体展开到接收焦点的元素上，该元素可以是真实 DOM 元素（如 span、div、p...），也可以是会把属性透传到根 DOM 元素的组件（如 `<Button {...props} />`）
+2. `children` snippet（直接写在标签内的内容）：文本、组件、多个节点，Popover 会用一个 span 包裹它们作为触发元素
+
+</Framework>
+
 <Demo id="children" />
 
 ### 基本使用
@@ -99,6 +119,13 @@ Popover 需要将触发属性和事件监听器应用到触发元素上，并以
 <Framework only="solid">
 
 将浮层的触发器 Trigger 作为`children`，使用 Popover 包裹（如下的例子中触发器为 Tag 元素）。浮层内容通过`content`传入  
+注意事项同 [Tooltip](/zh-CN/react/show/tooltip#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
+
+</Framework>
+
+<Framework only="svelte">
+
+将浮层的触发器 Trigger 写在标签内（如下的例子中触发器为 Tag 元素），使用 Popover 包裹。浮层内容通过 `content` snippet 传入  
 注意事项同 [Tooltip](/zh-CN/react/show/tooltip#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
 
 </Framework>
@@ -131,6 +158,12 @@ Popover 需要将触发属性和事件监听器应用到触发元素上，并以
 
 </Framework>
 
+<Framework only="svelte">
+
+设置 `trigger="custom"`，此场景下，Popover 的显示与否完全受到参数 `visible` 的控制，可以配合 `bind:visible` 使用。
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### condition 条件触发
@@ -150,6 +183,12 @@ Popover 需要将触发属性和事件监听器应用到触发元素上，并以
 <Framework only="solid">
 
 当 `condition={false}` 时，Popover 不响应 hover/click/focus 等触发行为（`trigger="custom"` 不受影响）；condition 由 true 变为 false 时，已显示的弹出层立即关闭；`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写 `visible` 后才关闭。
+
+</Framework>
+
+<Framework only="svelte">
+
+当 `condition={false}` 时，Popover 不响应 hover/click/focus 等触发行为（`trigger="custom"` 时仍按 `visible` 显示）；condition 由 true 变为 false 时，已显示的弹出层立即关闭；`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写 `visible` 后才关闭。
 
 </Framework>
 
@@ -195,6 +234,12 @@ Popover content 支持传入函数，它的入参是一个对象，将 `initialF
 
 </Framework>
 
+<Framework only="svelte">
+
+`content` snippet 的参数为 `{ initialFocusRef }`，用 `{@attach initialFocusRef}` 把它绑定在可聚焦的元素上，打开面板时会自动聚焦在该位置。写在组件上时，`{@attach}` 落在组件内接收 `aria-*`、`tabindex` 的原生控件上（如示例中 Input 的原生 `<input>`）。
+
+</Framework>
+
 <Demo id="initial-focus" />
 
 ### 搭配 Tooltip 或 Popconfirm 使用
@@ -226,6 +271,14 @@ Methods 为绑定在 Popover 实例上的方法，可以通过 ref 调用实现�
 <PopoverSolidApi />
 
 `class`、`style` 落在弹出层上，其他未声明的属性会被丢弃（Popover 没有根 DOM 元素）；触发属性只加在触发元素上。`ref` 收到的是实例方法，不是 DOM 元素。
+
+</Framework>
+
+<Framework only="svelte">
+
+<PopoverSvelteApi />
+
+`class`、`style` 落在弹出层上，其他未声明的属性会被丢弃（Popover 没有根 DOM 元素）；触发属性只加在触发元素上。`bind:this` 收到的是实例方法，不是 DOM 元素。
 
 </Framework>
 
@@ -282,6 +335,14 @@ Methods 为绑定在 Popover 实例上的方法，可以通过 ref 调用实现�
       <Framework only="solid">
     1. 函数：把 `trigger()` 展开到真实 DOM 元素，或展开到会把属性透传到根 DOM 元素的组件上
     2. 其他内容（文本、组件、多个节点），由 Popover 用一个 span 包裹
+
+    若触发元素的真实 DOM 节点宽高并非是你的触发内容的全部，则位置可能有出入。例如设置了 prefix、suffix 的 Input，Popover位置仍是相对于不包含前缀部分的 input 框进行定位，此时只要在 Input 外层再套一个 div 就能解决问题。
+
+      </Framework>
+
+      <Framework only="svelte">
+    1. `child` snippet：把 `props` 展开到真实 DOM 元素，或展开到会把属性透传到根 DOM 元素的组件上
+    2. `children` snippet（文本、组件、多个节点），由 Popover 用一个 span 包裹
 
     若触发元素的真实 DOM 节点宽高并非是你的触发内容的全部，则位置可能有出入。例如设置了 prefix、suffix 的 Input，Popover位置仍是相对于不包含前缀部分的 input 框进行定位，此时只要在 Input 外层再套一个 div 就能解决问题。
 

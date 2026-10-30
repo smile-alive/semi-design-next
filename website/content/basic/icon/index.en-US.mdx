@@ -9,6 +9,7 @@ import IconList from './figures/icon-list.react.tsx';
 import IconReactApi from './api/icon.react.en-US.mdx';
 import IconVueApi from './api/icon.vue.en-US.mdx';
 import IconSolidApi from './api/icon.solid.en-US.mdx';
+import IconSvelteApi from './api/icon.svelte.en-US.mdx';
 
 ## Icon List
 
@@ -58,6 +59,17 @@ import { IconAvatar, IconCard } from '@fibrae/semi-icons-react/lab';
 ```jsx
 import Icon, { IconHome } from '@fibrae/semi-icons-solid';
 import { IconAvatar, IconCard } from '@fibrae/semi-icons-solid/lab';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import Icon, { IconHome } from '@fibrae/semi-icons-svelte';
+    import { IconAvatar, IconCard } from '@fibrae/semi-icons-svelte/lab';
+</script>
 ```
 
 </Framework>
@@ -122,6 +134,12 @@ The `svg` prop takes a component rather than an element, and Icon passes `fill` 
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte accepts custom SVG content through the `children` snippet. The snippet's `{ fill }` argument carries the Icon's `fill`, which you can pass on to the custom SVG. `class`, `style`, `aria-*` and native events land on the outer span; `elementType` and refs are not supported.
+
+</Framework>
+
 <Demo id="custom" />
 
 <Framework only="react">
@@ -154,6 +172,14 @@ import StarIcon from './star.svg';
 <IconReactApi />
 
 `className`, `style`, `onClick`, `aria-*` and other native attributes land on the outer span. `style` is merged with the `transform` that `rotate` produces, and takes precedence when both set the same property.
+
+</Framework>
+
+<Framework only="svelte">
+
+<IconSvelteApi />
+
+`class`, `style`, `aria-*` and other native attributes and events land on the outer span. `style` is merged with the `transform` that `rotate` produces, and takes precedence when both set the same property; `style` only accepts a string.
 
 </Framework>
 

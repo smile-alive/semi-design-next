@@ -1,0 +1,40 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeKey | Key of the selected option in the main view; bind it with `bind:activeKey`. | `string` | - |
+| afterVisibleChange | Called after the show or hide animation ends, with whether it is visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| closeOnEsc | Whether pressing Esc calls onCancel. | `boolean` | - |
+| customRender | Forwarded to the customRender snippet of the JsonViewer in the built-in code detail, for the content matched by customRenderRule. | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
+| defaultSize | Initial width and height; applies only when resizable is true. | `{ width?: number \| string; height?: number \| string }` | - |
+| detailBody | Content in detail modes, with mode; empty content falls back to the built-in code or file detail. detailContent is already the data prop, so this is named detailBody. | <ApiType detail={"Snippet\u003c[SideBarDetailBodySnippetProps]>"}>Type</ApiType> | - |
+| detailContent | The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable and imgUploadProps have no effect, as fileEditable and imgUploadProps decide them. | `SideBarDetailContent` | - |
+| detailHeader | Header in detail modes, with mode and detailContent; empty content falls back to the built-in header. | <ApiType detail={"Snippet\u003c[SideBarDetailHeaderSnippetProps]>"}>Type</ApiType> | - |
+| fileEditable | Whether the rich text in file mode is editable. | `boolean` | `true` |
+| imgUploadProps | Image upload options of file mode, read when the editor is created; later changes have no effect. | `ImageUploadNodeOptions` | - |
+| mainContent | Content below the options in the main view, with activeKey. | <ApiType detail={"Snippet\u003c[SideBarMainContentSnippetProps]>"}>Type</ApiType> | - |
+| maxWidth | Maximum width when resizing; applies only when resizable is true. | `number \| string` | - |
+| minWidth | Minimum width when resizing; applies only when resizable is true. | `number \| string` | - |
+| mode | Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by the detailBody snippet. | `string` | `"main"` |
+| motion | Whether showing and hiding use the expand animation. | `boolean` | - |
+| onActiveOptionChange | Called after activeKey took the clicked option, with the event and the option's key. | <ApiType detail={"(event: MouseEvent, activeKey: string) => void"}>Type</ApiType> | - |
+| onBackWard | Called when the back button of the detail header is clicked, with the event and main. | <ApiType detail={"(event: MouseEvent, mode: string) => void"}>Type</ApiType> | - |
+| onCancel | Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onDetailContentCopy | Called after the copy button wrote to the clipboard, with the event, the content and whether it succeeded. | <ApiType detail={"(event: MouseEvent, content: string, success: boolean) => void"}>Type</ApiType> | - |
+| onFileContentChange | Called after an edit in file mode, with the content as HTML. | <ApiType detail={"(content: string) => void"}>Type</ApiType> | - |
+| optionIcon | Icon of the built-in option button, with item and index. | <ApiType detail={"Snippet\u003c[SideBarOptionSnippetProps]>"}>Type</ApiType> | - |
+| optionItem | Replaces the whole option button, with item, index, active and onClick (which selects the option). | <ApiType detail={"Snippet\u003c[SideBarOptionItemSnippetProps]>"}>Type</ApiType> | - |
+| options | Option buttons at the top of the main view, each with a name and a key; icons use the optionIcon snippet. | `SideBarOption[]` | - |
+| resizable | Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true. | `boolean` | - |
+| searchButton | Forwarded to the searchButton snippet of the JsonViewer in the built-in code detail, replacing its search button. | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
+| showClose | Whether the header shows the close button. | `boolean` | - |
+| title | Title, plain text or a snippet. | `Snippet \| string` | - |
+| visible | Whether it is shown; bind it with `bind:visible`. | `boolean` | - |
+
+**Methods**
+
+| Method  | Description                                                            | Type                                         |
+| ------- | ---------------------------------------------------------------------- | -------------------------------------------- |
+| getRoot | Returns the `.semi-sidebar-container` root element; null while hidden. | <ApiType detail={"() => any"}>Type</ApiType> |

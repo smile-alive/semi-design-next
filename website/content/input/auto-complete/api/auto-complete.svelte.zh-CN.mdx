@@ -1,0 +1,50 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。 | `boolean` | - |
+| autofocus | 是否在挂载后自动聚焦输入框。 | `boolean` | `false` |
+| clearIcon | 自定义清除图标的 snippet，showClear 为 true 时有效。 | `Snippet` | - |
+| data | 候选项的数据源，可以是字符串、数字或对象的数组。对象项用 value 作选中值，label 作展示文本（缺省显示 value），disabled、class、style 与 data-\* 字段落在对应的候选行上，class 接受字符串、数组或对象，style 是字符串；节点内容用 item snippet。 | `T[]` | `[]` |
+| defaultActiveFirstOption | 面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。 | `boolean` | `false` |
+| defaultOpen | 挂载时是否默认展开下拉面板；AutoComplete 没有受控的展开状态。 | `boolean` | - |
+| disabled | 是否禁用。 | `boolean` | - |
+| dropdownClassName | 下拉列表的类名，落在 role="listbox" 元素上。 | `string` | - |
+| dropdownMatchSelectWidth | 下拉面板的最小宽度是否等于输入框宽度。 | `boolean` | `true` |
+| dropdownStyle | 下拉列表的内联样式字符串，落在 role="listbox" 元素上。 | `string` | - |
+| emptyContent | data 为空时在下拉面板中显示的内容的 snippet。 | `Snippet` | - |
+| insetLabel | 输入框内嵌标签的 snippet，只要传入就当作有内容。设置 prefix 或 trigger 时不渲染，也不作为可访问名称。 | `Snippet` | - |
+| insetLabelId | insetLabel 前缀元素的 id，combobox 与 listbox 的名称引用它；不传时组件在渲染 insetLabel 时生成。 | `string` | - |
+| item | 候选项行内容的 snippet，参数 `{ item, index }`：item 是未经加工的数据项，index 是它在已渲染候选项中的位置；不提供时显示 label。 | <ApiType detail={"Snippet\u003c[AutoCompleteItemSnippetProps\u003cT>]>"}>Type</ApiType> | - |
+| loading | 下拉列表是否显示加载动画；为 true 时代替候选项和空内容。 | `boolean` | `false` |
+| maxHeight | 下拉列表的最大高度，数字按 px 处理。 | `string \| number` | `300` |
+| motion | 下拉面板显示、隐藏时是否有动画。 | `boolean` | `true` |
+| onBlur | 焦点离开输入框时调用一次。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 输入框内容变化或选中候选项时调用。 | <ApiType detail={"(value: string \u007c number) => void"}>Type</ApiType> | - |
+| onClear | 用清除按钮清空内容后调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | 下拉面板显示或隐藏时调用，参数为是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onFocus | 焦点进入输入框时调用一次。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onSearch | 用户输入时调用，参数为输入的文本。 | <ApiType detail={"(inputValue: string) => void"}>Type</ApiType> | - |
+| onSelect | 选中候选项时调用，参数为选中值；设置 onSelectWithObject 时为去掉内部字段的数据项。 | <ApiType detail={"(value: string \u007c number \u007c AutoCompleteDataItem) => void"}>Type</ApiType> | - |
+| onSelectWithObject | 布尔属性，不是回调：为 true 时，onSelect 收到去掉内部字段的数据项对象，而不是选中值。 | `boolean` | `false` |
+| placeholder | 输入框的提示文案。 | `string` | - |
+| position | 下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。 | `Position` | - |
+| prefix | 输入框前缀的 snippet。 | `Snippet` | - |
+| renderSelectedItem | 选中候选项后输入框显示的文本，必须返回字符串；字符串或数字项收到 `{ value, label }`，对象项收到数据项本身。 | <ApiType detail={"(option: AutoCompleteSelectedItem\u003cT>) => string"}>Type</ApiType> | - |
+| showClear | 有内容时是否显示清除按钮。 | `boolean` | `false` |
+| size | 输入框尺寸。 | `Size` | - |
+| stopPropagation | 是否阻止下拉面板上的 click、mousedown 与焦点进出事件冒泡。 | `boolean \| string` | `true` |
+| suffix | 输入框后缀的 snippet。 | `Snippet` | - |
+| trigger | 替换输入框的 snippet。参数含 value、inputValue、placeholder、disabled、autofocus、size、validateStatus、showClear、insetLabelId、onChange（更新输入文本，触发 onSearch 与 onChange 并展开列表）、onClear、onFocus、onBlur、controlAttrs（传给组件的 aria-\* 属性，放到自定义触发器的可聚焦元素上）。使用时 id 落在根元素上。 | <ApiType detail={"Snippet\u003c[AutoCompleteTriggerSnippetProps]>"}>Type</ApiType> | - |
+| validateStatus | 校验状态，只影响展示样式。 | `ValidateStatus` | `"default"` |
+| value | 输入框的当前值，可 `bind:value`。不传时由组件自行管理；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`。没有 defaultValue。 | `string \| number` | - |
+
+**Methods**
+
+| 方法             | 说明                                     | 类型                                                                     |
+| ---------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| blur             | 使输入框失去焦点。                       | <ApiType detail={"() => void"}>Type</ApiType>                            |
+| focus            | 使输入框获得焦点。                       | <ApiType detail={"(options?: FocusOptions) => void"}>Type</ApiType>      |
+| getNativeElement | 返回根 div，它包裹输入框或自定义触发器。 | <ApiType detail={"() => HTMLDivElement \u007c undefined"}>Type</ApiType> |

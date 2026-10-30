@@ -1,0 +1,25 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                                             | 类型                                                                                | 默认值  |
+| ------------------ | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------- |
+| afterVisibleChange | 显示或隐藏动画结束后调用，参数为当前是否可见。                                                   | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>                       | -       |
+| children           | 容器的内容区域。                                                                                 | `Snippet`                                                                           | -       |
+| closeOnEsc         | 按下 Esc 键时是否调用 onCancel，默认关闭。                                                       | `boolean`                                                                           | `false` |
+| defaultSize        | 初始宽高，仅在 resizable 为 true 时生效。                                                        | `{ width?: number \| string; height?: number \| string }`                           | -       |
+| header             | 替换整个头部，标题与关闭按钮也由它负责。                                                         | `Snippet`                                                                           | -       |
+| maxWidth           | 可调整的最大宽度，仅在 resizable 为 true 时生效。                                                | `number \| string`                                                                  | -       |
+| minWidth           | 可调整的最小宽度，仅在 resizable 为 true 时生效。                                                | `number \| string`                                                                  | `150`   |
+| motion             | 显示与隐藏时是否使用展开动画。                                                                   | `boolean`                                                                           | `true`  |
+| onCancel           | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。                                          | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | -       |
+| resizable          | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。                          | `boolean`                                                                           | `true`  |
+| showClose          | 是否显示头部的关闭按钮。                                                                         | `boolean`                                                                           | `true`  |
+| title              | 标题，可以是纯文本，也可以是 snippet。                                                           | `Snippet \| string`                                                                 | -       |
+| visible            | 是否显示容器，可用 `bind:visible` 绑定。关闭按钮或 Esc 触发取消时先写入 false，再调用 onCancel。 | `boolean`                                                                           | -       |
+
+**Methods**
+
+| 方法    | 说明                                                      | 类型                                                                |
+| ------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
+| getRoot | 返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。 | <ApiType detail={"() => HTMLDivElement \u007c null"}>Type</ApiType> |

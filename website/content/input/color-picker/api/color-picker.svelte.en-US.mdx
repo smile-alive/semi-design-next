@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| alpha | Whether to enable transparency selection. | `boolean` | `true` |
+| bottomSlot | Snippet that renders extra elements at the bottom. | `Snippet` | - |
+| children | Snippet used as the trigger when usePopover is on, a swatch of the current color by default; not rendered without usePopover. | `Snippet` | - |
+| defaultFormat | Color format used by default for manual input: `rgba`, `hex` or `hsva`. | `ColorFormat` | `"hex"` |
+| eyeDropper | Whether to enable the eyedropper color picker. | `boolean` | `true` |
+| height | Height in pixels; 280 when not set. | `number` | `280` |
+| onChange | Called with a ColorValue, holding hsva, hex and rgba, when the user picks a color. | <ApiType detail={"(value: ColorValue) => void"}>Type</ApiType> | - |
+| popoverProps | Props passed to the Popover when usePopover is on, such as `trigger`, `aria-label` and `aria-labelledby`. The popup opens on click with role `dialog` by default and takes its name from the locale; `aria-label` or `aria-labelledby` takes precedence. | `PopoverProps` | - |
+| topSlot | Snippet that renders extra elements at the top. | `Snippet` | - |
+| usePopover | Whether to render inside a Popover; the trigger is `children`. Defaults to false. | `boolean` | `false` |
+| value | The color, supports `bind:value`; an object holding hsva, hex and rgba. Left out, the component manages it and starts at `#39c5bb`. A one-way `value={x}` only seeds it; for a fully controlled picker use the function binding `bind:value={get, set}`. `null` is a controlled empty value: it shows the default color and only reports changes. Treat ColorValue as immutable and replace it as a whole. | `ColorValue \| null` | - |
+| width | Width in pixels; 280 when not set. | `number` | `280` |
+
+**Methods**
+
+| Method  | Description                                                                                                 | Type                                                                |
+| ------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| getRoot | Returns the picker root element; inside the popup when usePopover is on, so null while the popup is closed. | <ApiType detail={"() => HTMLDivElement \u007c null"}>Type</ApiType> |

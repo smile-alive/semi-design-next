@@ -14,6 +14,9 @@ import SplitTagGroupVueApi from './api/split-tag-group.vue.en-US.mdx';
 import TagSolidApi from './api/tag.solid.en-US.mdx';
 import TagGroupSolidApi from './api/tag-group.solid.en-US.mdx';
 import SplitTagGroupSolidApi from './api/split-tag-group.solid.en-US.mdx';
+import TagSvelteApi from './api/tag.svelte.en-US.mdx';
+import TagGroupSvelteApi from './api/tag-group.svelte.en-US.mdx';
+import SplitTagGroupSvelteApi from './api/split-tag-group.svelte.en-US.mdx';
 
 ## Demos
 
@@ -45,6 +48,16 @@ import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tag, TagGroup, SplitTagGroup } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 To use this tag, just wrap the content with the `<Tag>` tag.  
@@ -65,6 +78,12 @@ At this time, clicking x to close will emit the `close` event, and calling `prev
 <Framework only="solid">
 
 At this time, clicking x to close will trigger the `onClose` event, and calling `preventDefault` on the event in `onClose` keeps the tag shown after clicking
+
+</Framework>
+
+<Framework only="svelte">
+
+At this time, clicking x to close will call `onClose(event, tagKey)`, and calling `preventDefault` on the event in `onClose` keeps the tag shown after clicking. The tag content goes inside the Tag tag, as the `children` snippet.
 
 </Framework>
 
@@ -99,6 +118,12 @@ Use the `#prefixIcon` and `#suffixIcon` slots to add icons before or after the c
 <Framework only="solid">
 
 Pass JSX elements through the `prefixIcon` and `suffixIcon` props to add icons before or after the content.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `prefixIcon` and `suffixIcon` snippets to add icons before or after the content: write `{#snippet prefixIcon()}...{/snippet}` inside the Tag tag, or define it and pass it as a prop.
 
 </Framework>
 
@@ -159,6 +184,12 @@ If the tags in the TagGroup can be deleted, the user needs to update the `tagLis
 
 </Framework>
 
+<Framework only="svelte">
+
+If the tags in the TagGroup can be deleted, the user needs to update the `tagList` passed to the TagGroup in `onTagClose`. Provide a `tagKey` for every item when tags are removed from the list; otherwise removing the earlier of two tags with the same text shifts the later one onto its instance. Items of `tagList` take `string | number` as `children`; use the `tag` snippet, whose parameter is `{ tag, index }`, to render a fully custom node for each tag. Both the item's own `onClose` in `tagList` and the group's `onTagClose` are called.
+
+</Framework>
+
 <Demo id="tag-group-closable" />
 
 ### SplitTagGroup
@@ -195,6 +226,14 @@ Use `SplitTagGroup` to combine multiple tags into a single connected group. The 
 
 </Framework>
 
+<Framework only="svelte">
+
+<TagSvelteApi />
+
+`class`, `style` and native attributes are spread onto the root element (`div`); native events use lowercase names (`onclick`, `onmouseenter`). An `onclick` listener or `closable` makes the tag interactive.
+
+</Framework>
+
 ### TagGroup
 
 <Framework only="react">
@@ -218,6 +257,14 @@ Other native attributes are spread onto the TagGroup root element (`div`).
 <TagGroupSolidApi />
 
 `class`, `style`, `ref` and native attributes are spread onto the TagGroup root element (`div`).
+
+</Framework>
+
+<Framework only="svelte">
+
+<TagGroupSvelteApi />
+
+`class`, `style` and native attributes are spread onto the TagGroup root element (`div`). The `+N` Tag is itself the Popover trigger, with no extra `span` around it.
 
 </Framework>
 
@@ -247,6 +294,14 @@ Other native attributes are spread onto the TagGroup root element (`div`).
 
 </Framework>
 
+<Framework only="svelte">
+
+<SplitTagGroupSvelteApi />
+
+`class`, `style`, `aria-label` and other native attributes are spread onto the root element (`div`). The root `role` is fixed to `group`.
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -256,7 +311,7 @@ Other native attributes are spread onto the TagGroup root element (`div`).
 ### Keyboard and Focus
 
 - If the current `Tag` is interactive, then this `Tag` can be focused. Such as:
-    - When the `onClick` attribute (`@click` in Vue) is used, the keyboard user can activate this `Tag` with the `Enter` or `Space` key
+    - When the `onClick` attribute (`@click` in Vue, `onclick` in Svelte) is used, the keyboard user can activate this `Tag` with the `Enter` or `Space` key
     - When the `closable` property is `true`, keyboard users can delete this `Tag` by pressing the `Delete` or `Backspace` key, and focus moves to the adjacent focusable `Tag`
 
 ## Content Guidelines

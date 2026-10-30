@@ -8,6 +8,7 @@ brief: The Banner component is usually used to identify the status or notificati
 import BannerReactApi from './api/banner.react.en-US.mdx';
 import BannerVueApi from './api/banner.vue.en-US.mdx';
 import BannerSolidApi from './api/banner.solid.en-US.mdx';
+import BannerSvelteApi from './api/banner.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Banner } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Demo id="basic" />
@@ -64,6 +75,12 @@ You could set `:fullMode="false"` to use style for non-fullscreen mode. Also, us
 </Framework>
 
 <Framework only="solid">
+
+You could set `fullMode={false}` to use style for non-fullscreen mode. Also, use `bordered` for bordered style. `icon={null}` and `closeIcon={null}` hide the icon and the close button.
+
+</Framework>
+
+<Framework only="svelte">
 
 You could set `fullMode={false}` to use style for non-fullscreen mode. Also, use `bordered` for bordered style. `icon={null}` and `closeIcon={null}` hide the icon and the close button.
 
@@ -108,6 +125,12 @@ Use `children` to create customized content.
 
 </Framework>
 
+<Framework only="svelte">
+
+Write the content directly inside the Banner tag (the `children` snippet) to create customized content.
+
+</Framework>
+
 <Demo id="custom-content" />
 
 ## API Reference
@@ -133,6 +156,14 @@ Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root 
 <BannerSolidApi />
 
 `class`, `style`, `ref` and native attributes and events (such as `aria-*` and `onClick`) land on the root element (`role="alert"`). The root's `role` is fixed and cannot be overridden. The closed state lives inside the component; unmount and mount again to show it again.
+
+</Framework>
+
+<Framework only="svelte">
+
+<BannerSvelteApi />
+
+`class`, `style` (a string) and native attributes and events (such as `aria-*` and `onclick`) land on the root element (`role="alert"`). The root's `role` is fixed and cannot be overridden. `title` can be a string or a snippet, and `description`, `icon` and `closeIcon` are snippets. The closed state lives inside the component and there is no `bind:`; unmount with `{#if}` and mount again to show it again.
 
 </Framework>
 

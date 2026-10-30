@@ -108,8 +108,8 @@
                 "en-US": "Internal prop used by DatePicker: the clear button stays available while disabled."
             },
             "size": {
-                "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`。在 InputGroup 中由组的 `size` 替代。",
-                "en-US": "Input size: `large`, `default` or `small`. Inside an InputGroup, the group's `size` replaces it."
+                "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`。在 InputGroup 中未设置时取组的 `size`。",
+                "en-US": "Input size: `large`, `default` or `small`. Inside an InputGroup it takes the group's `size` when not set."
             },
             "style": { "zh-CN": "外层 wrapper `div` 的内联样式。", "en-US": "Inline style of the wrapper `div`." },
             "suffix": {
@@ -259,14 +259,9 @@
     "input-group": {
         "source": "packages/semi-ui-react/src/input/input-group.tsx",
         "props": {
-            "children": {
-                "zh-CN": "组内的控件，如 `Input`、`InputNumber`、`Select` 等。",
-                "en-US": "Controls in the group, such as `Input`, `InputNumber` and `Select`."
-            },
-            "className": { "zh-CN": "`role=\"group\"` 元素的类名。", "en-US": "Class name of the `role=\"group\"` element." },
             "disabled": {
-                "zh-CN": "是否禁用，下发给组内未自行设置 `disabled` 的控件。",
-                "en-US": "Whether the group is disabled; it applies to the controls that set no `disabled` of their own."
+                "zh-CN": "是否禁用，组内任意深度未自行设置 `disabled` 的控件取这个值。",
+                "en-US": "Whether the group is disabled; controls at any depth in the group that set no `disabled` of their own take it."
             },
             "label": {
                 "zh-CN": "组的标签，对象形式，属性同 `Form.Label`，如 `text`、`required`、`extra`；`text` 可以是 `ReactNode`。",
@@ -286,10 +281,9 @@
                 "en-US": "Reference to the `role=\"group\"` element. With a `label` it still points to that element, not the outer container."
             },
             "size": {
-                "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`；下发给组内每个控件，替代控件自身的 `size`。",
-                "en-US": "Input size: `large`, `default` or `small`; it is passed to every control in the group and replaces their own `size`."
-            },
-            "style": { "zh-CN": "`role=\"group\"` 元素的内联样式。", "en-US": "Inline style of the `role=\"group\"` element." }
+                "zh-CN": "输入框大小，可选 `large`、`default` 或 `small`；组内任意深度未自行设置 `size` 的控件取这个值。",
+                "en-US": "Input size: `large`, `default` or `small`; controls at any depth in the group that set no `size` of their own take it."
+            }
         }
     }
 }

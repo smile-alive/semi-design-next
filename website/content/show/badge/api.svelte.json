@@ -1,0 +1,43 @@
+{
+    "badge": {
+        "source": "packages/semi-ui-svelte/src/badge/badge.svelte",
+        "props": {
+            "children": {
+                "zh-CN": "徽章依附的元素的 snippet；缺省时徽章独立显示。",
+                "en-US": "Snippet for the element the badge is attached to. Without it the badge stands alone."
+            },
+            "count": {
+                "zh-CN": "徽章内容，数字、字符串或 snippet；传 snippet 时直接渲染该 snippet，并去掉类型与主题样式类。",
+                "en-US": "Badge content as a number, string or snippet. A snippet is rendered as given and removes the type and theme classes."
+            },
+            "countClassName": {
+                "zh-CN": "内容区域的类名。",
+                "en-US": "Class name of the count element."
+            },
+            "countStyle": {
+                "zh-CN": "内容区域的样式字符串。",
+                "en-US": "Style string of the count element."
+            },
+            "dot": {
+                "zh-CN": "显示为小圆点，不展示内容。",
+                "en-US": "Shows a small dot instead of the content."
+            },
+            "overflowCount": {
+                "zh-CN": "数字内容的最大展示值，超出后显示为 `${overflowCount}+`；只对数字生效，0 视为未设置。",
+                "en-US": "Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset."
+            },
+            "position": {
+                "zh-CN": "徽章相对被包裹元素的位置；缺省时 RTL 的 ConfigProvider 下为 leftTop，否则为 rightTop。",
+                "en-US": "Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise."
+            },
+            "theme": {
+                "zh-CN": "徽章主题，可选 solid、light、inverted。",
+                "en-US": "Badge theme: solid, light or inverted."
+            },
+            "type": {
+                "zh-CN": "徽章类型，可选 primary、secondary、tertiary、danger、warning、success。",
+                "en-US": "Badge type: primary, secondary, tertiary, danger, warning or success."
+            }
+        }
+    }
+}

@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | multiple | 是否可以选择多个日期，仅 type 为 date 时有效。 | `boolean` | `semiDefault("DatePicker", "multiple", false)` |
 | max | multiple 为 true 时可选的日期个数，不传则不限制。 | `number` | `semiGlobalDefault("DatePicker", "max")` |
 | needConfirm | 是否需要点击确认才写入值，仅 dateTime 与 dateTimeRange 类型有效。 | `boolean` | `semiDefault("DatePicker", "needConfirm", false)` |
-| disabled | 是否禁用。 | `boolean` | `semiDefault("DatePicker", "disabled", false)` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | disabledDate | 日期禁止判断方法，返回 true 时禁止该日期。第二个参数提供 rangeStart、rangeEnd 和 rangeInputFocus。type 为 year 时以每年的 1 月 1 日调用，返回 true 时禁止该年。 | `DisabledDateType` | `undefined` |
 | disabledTime | 时间禁止配置，返回 disabledHours、disabledMinutes、disabledSeconds，参数为当前日期和面板位置。 | `DisabledTimeType` | `undefined` |
 | disabledTimePicker | 是否禁止时间选择，仅 dateTime 与 dateTimeRange 类型有效。 | `boolean` | `semiDefault("DatePicker", "disabledTimePicker", false)` |
@@ -23,7 +23,7 @@ import ApiType from '#/components/ApiType.astro';
 | endDateOffset | type 为 dateRange 时，单击选择范围的结束日期。 | `DateOffsetType` | `undefined` |
 | placeholder | 输入框提示文字，范围类型传数组。默认取语言包中 type 对应的文案。 | `string \| string[]` | `semiGlobalDefault("DatePicker", "placeholder")` |
 | rangeSeparator | 范围类型输入框中的日期分隔符，同时用于解析输入。只改变展示时用 rangeSeparator 插槽。 | `string` | <ApiType detail={"semiDefault(\"DatePicker\", \"rangeSeparator\", strings.DEFAULT_SEPARATOR_RANGE)"}>Type</ApiType> |
-| size | 输入框尺寸，可选 small、default、large。 | `Size` | `semiDefault("DatePicker", "size", "default")` |
+| size | 输入框尺寸，可选 small、default、large。 | `Size` | `undefined` |
 | density | 面板的尺寸，可选 default 或 compact。 | `DensityType` | `semiDefault("DatePicker", "density", "default")` |
 | borderless | 无边框模式。 | `boolean` | `semiDefault("DatePicker", "borderless", false)` |
 | showClear | 是否显示清除按钮。 | `boolean` | `semiDefault("DatePicker", "showClear", true)` |

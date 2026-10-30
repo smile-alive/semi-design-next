@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                                                   | 类型                                                           | 默认值 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | ------ |
+| children      | 组内的输入类组件，如 Input、InputNumber、Select、AutoComplete、TreeSelect、Cascader、DatePicker。                                                      | `Snippet`                                                      | -      |
+| disabled      | 是否禁用，组内任意深度的控件取这个值；控件自己写的 disabled 优先。                                                                                     | `boolean`                                                      | -      |
+| fieldLabel    | 标签的节点内容，替代 `label.text`。                                                                                                                    | `Snippet`                                                      | -      |
+| label         | 渲染一个命名该组的 FormLabel，配置为 Form.Label 的属性，另可设 id、class、style；`name` 会成为该组的 id。节点内容使用 fieldLabel、labelExtra snippet。 | `InputGroupLabel`                                              | -      |
+| labelExtra    | 标签的附加内容。                                                                                                                                       | `Snippet`                                                      | -      |
+| labelPosition | 标签位置，可选 top 或 left。                                                                                                                           | `'top' \| 'left'`                                              | -      |
+| onBlur        | 组内元素失去焦点时调用（focusout），焦点在子级之间移动也会调用；不下发给子级。                                                                         | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -      |
+| onFocus       | 组内元素获得焦点时调用（focusin），焦点在子级之间移动也会调用；不下发给子级。                                                                          | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -      |
+| size          | 输入框大小，可选 large、default、small；组内任意深度未自行设置 size 的控件取这个值。                                                                   | `InputSize`                                                    | -      |

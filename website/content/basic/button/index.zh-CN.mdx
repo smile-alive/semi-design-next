@@ -15,6 +15,9 @@ import SplitButtonGroupVueApi from './api/split-button-group.vue.zh-CN.mdx';
 import ButtonSolidApi from './api/button.solid.zh-CN.mdx';
 import ButtonGroupSolidApi from './api/button-group.solid.zh-CN.mdx';
 import SplitButtonGroupSolidApi from './api/split-button-group.solid.zh-CN.mdx';
+import ButtonSvelteApi from './api/button.svelte.zh-CN.mdx';
+import ButtonGroupSvelteApi from './api/button-group.svelte.zh-CN.mdx';
+import SplitButtonGroupSvelteApi from './api/split-button-group.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -42,6 +45,16 @@ import { Button, SplitButtonGroup } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -125,6 +138,12 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+图标用 `icon` snippet 传入，位置由 `iconPosition` 决定；标签内的其余内容是文字（`children`）。没有 `children` 即按纯图标按钮处理，此时请传 `aria-label`。
+
+</Framework>
+
 <Demo id="icon" />
 
 ### 链接按钮
@@ -150,6 +169,12 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 渐变填充只作用于以组件形式传入的图标（`icon={IconAIFilledLevel1}`）；传入元素（`icon={<IconAIFilledLevel1 />}`）时元素已经渲染，按钮无法再给它加填充。
+
+</Framework>
+
+<Framework only="svelte">
+
+多彩按钮给 `icon` snippet 传入参数 `{ fill }`，需要把它传给图标组件：`{#snippet icon({ fill })}<IconAIFilledLevel1 {fill} />{/snippet}`。
 
 </Framework>
 
@@ -191,6 +216,14 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<ButtonSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`、`onmousedown`）落在原生 `<button>` 上；`style` 只接受字符串。`loading` 时 `onclick` 不会触发。
+
+</Framework>
+
 <Framework only="vue">
 
 <ButtonVueApi />
@@ -217,6 +250,14 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<ButtonGroupSvelteApi />
+
+`class`、`style` 与原生属性（如 `data-*`、`aria-*`）落在按钮组的根元素（`role="group"`）上，传入的 `role` 覆盖默认的 `group`。组内任意后代 Button 都画分隔线，不限直接子项；分隔线在挂载后补上，服务端首帧没有。
+
+</Framework>
+
 <Framework only="vue">
 
 <ButtonGroupVueApi />
@@ -240,6 +281,14 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 <SplitButtonGroupReactApi />
 
 其他原生属性落在分裂按钮组的根元素（`role="group"`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SplitButtonGroupSvelteApi />
+
+`class`、`style` 与原生属性（如 `aria-*`）落在分裂按钮组的根元素（`role="group"`）上。
 
 </Framework>
 
@@ -312,5 +361,12 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 
 - #### 为什么 Button 的图标不显示？
     图标通过 `#icon` 插槽传入，不是 `icon` 属性：`<Button><template #icon><IconCamera /></template></Button>`。
+
+</Framework>
+
+<Framework only="svelte">
+
+- #### 为什么 Button 的图标不显示？
+    图标通过 `icon` snippet 传入，不是 `icon` 组件属性：`<Button>{#snippet icon()}<IconCamera />{/snippet}</Button>`。
 
 </Framework>

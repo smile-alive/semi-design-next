@@ -4,7 +4,7 @@ import { Table, Avatar, Input, Button, Space, type InputHandle, type ColumnProps
 
 const DAY = 24 * 60 * 60 * 1000;
 
-const getData = () => {
+function getData() {
     const data = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -19,7 +19,7 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 export default function TableDemo() {
     const [dataSource] = useState(getData);
@@ -41,9 +41,7 @@ export default function TableDemo() {
                 );
             },
             onFilter: (value, record) => record.name.includes(value),
-            renderFilterDropdown: (props) => {
-                const { tempFilteredValue, setTempFilteredValue, confirm, clear, close } = props;
-
+            renderFilterDropdown: ({ tempFilteredValue, setTempFilteredValue, confirm, clear, close }) => {
                 const handleChange = (value: string) => {
                     const filteredValue = value ? [value] : [];
                     setTempFilteredValue(filteredValue);
@@ -87,9 +85,7 @@ export default function TableDemo() {
             },
             onFilter: (value, record) => record.owner.includes(value),
             defaultFilteredValue: ['姜鹏志'],
-            renderFilterDropdown: (props) => {
-                const { tempFilteredValue, setTempFilteredValue, confirm, clear, close } = props;
-
+            renderFilterDropdown: ({ tempFilteredValue, setTempFilteredValue, confirm, clear, close }) => {
                 const handleChange = (value: string) => {
                     if (value) {
                         setTempFilteredValue([value]);

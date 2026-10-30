@@ -7,6 +7,7 @@ icon: doc-backtop
 import BackTopReactApi from './api/back-top.react.en-US.mdx';
 import BackTopVueApi from './api/back-top.vue.en-US.mdx';
 import BackTopSolidApi from './api/back-top.solid.en-US.mdx';
+import BackTopSvelteApi from './api/back-top.svelte.en-US.mdx';
 
 ## Demos
 
@@ -38,6 +39,16 @@ import { BackTop } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { BackTop } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 BackTop is a [FloatButton](/en-US/react/basic/float-button) that appears once `target` scrolls past `visibilityHeight` and scrolls it back to the top when clicked. It shows a back-to-top icon by default, and its accessible name comes from the locale by default ('Back to top' in English), which `aria-label` can override.
@@ -63,6 +74,12 @@ Its look is customized with the `#icon` slot and the FloatButton props `shape`, 
 <Framework only="solid">
 
 Its look is customized with the FloatButton props `icon`, `shape`, `size`, `colorful` and `badge`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Its look is customized with the `icon` snippet and the FloatButton props `shape`, `size`, `colorful` and `badge`; `style` only accepts a string.
 
 </Framework>
 
@@ -96,13 +113,23 @@ Other native props (such as `data-*` and `aria-*`) are spread through `...rest` 
 
 </Framework>
 
+<Framework only="svelte">
+
+<BackTopSvelteApi />
+
+`class`, `style` (a string) and native attributes (such as `data-*` and `aria-*`) land on the button. The click callback is the native `onclick`, throttled by `duration`, and `overrideDefaultProps.BackTop` cannot set it. `children`, `icon` and `badgeCount` are snippets.
+
+`target` is called once after mount, when the element reference of a parent container is already readable; a stable `target` function that returns the element only after mount needs BackTop remounted.
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
 
 - BackTop renders a single native `<button type="button">`, which screen readers announce as a button
 - The accessible name comes from `aria-label`; without it, it comes from the button content when content is passed, and otherwise from the locale's default name ('Back to top' in English)
-- `children` (the default slot in Vue) is static content of the button and becomes part of its name; the button must not contain interactive elements
+- `children` (the default slot in Vue, a snippet in Svelte) is static content of the button and becomes part of its name; the button must not contain interactive elements
 
 ### Keyboard and focus
 

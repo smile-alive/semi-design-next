@@ -8,6 +8,7 @@ brief: A tree view component presents a hierarchical list.
 import TreeReactApi from './api/tree.react.en-US.mdx';
 import TreeVueApi from './api/tree.vue.en-US.mdx';
 import TreeSolidApi from './api/tree.solid.en-US.mdx';
+import TreeSvelteApi from './api/tree.svelte.en-US.mdx';
 
 ## Demos
 
@@ -26,6 +27,16 @@ import { Tree } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Tree } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tree } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -71,6 +82,12 @@ After setting the `filterTreeNode` property to enable search, you can customize 
 
 </Framework>
 
+<Framework only="svelte">
+
+After setting the `filterTreeNode` property to enable search, you can customize the search box with the `search` snippet, whose arguments are `class`, `value`, `placeholder`, `showClear` and `onChange`. `search={false}` hides the search box.
+
+</Framework>
+
 <Framework only="solid">
 
 After setting the `filterTreeNode` property to enable search, you can customize the rendering method of the search box by setting `searchRender`. When set to `false`, the search box can be hidden. The parameter of `searchRender` is a live object, read it in the returned JSX and do not destructure it.
@@ -90,6 +107,12 @@ Use ref to get tree instance，you can call `search` method of tree to trigger s
 <Framework only="vue">
 
 Use a template ref to get the Tree instance, and call its `search` method to trigger search manually. Note that you need to set `filterTreeNode` to enable search at the same time. If the search box is outside the Tree, you can hide the search box inside it with an empty `#search` slot.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:this` to get the Tree instance, and call its `search` method to trigger search manually. Note that you need to set `filterTreeNode` to enable search at the same time. If the search box is outside the Tree, you can hide the search box inside it with `search={false}`.
 
 </Framework>
 
@@ -133,6 +156,14 @@ Node content is best kept for display. Buttons and links in a node can be reache
 
 </Framework>
 
+<Framework only="svelte">
+
+The `label` of `TreeNodeData` accepts only a string or a number. Custom node content comes from the `label` snippet, whose arguments are `item` (the node data), `label` and `searchWord` (the current search word). Search by `filterTreeNode` still matches the `label` text in `treeData`.
+
+Node content is best kept for display. Buttons and links in a node can be reached with Tab (see [Accessibility](#accessibility)), but screen readers read them as part of the node's name and arrow-key browsing skips them. Put actions on a node outside the tree, for example in a menu opened by `onContextMenu` or in a toolbar next to the tree.
+
+</Framework>
+
 <Framework only="solid">
 
 The `label` of `TreeNodeData` accepts only a string or a number; custom node content comes from `renderLabel`. `renderLabel` receives the label, the node data and the search word, and returns the node content; it is called again when one of them changes. Search still matches the `label` text in treeData.
@@ -155,6 +186,12 @@ Ellipsis for long labels. Truncate overlong text with an ellipsis inside the `#l
 
 </Framework>
 
+<Framework only="svelte">
+
+Ellipsis for long labels. Truncate overlong text with an ellipsis inside the `label` snippet.
+
+</Framework>
+
 <Framework only="solid">
 
 Ellipsis for long labels. Return a `Typography.Text` with the `ellipsis` property from `renderLabel` to truncate overlong text with an ellipsis.
@@ -174,6 +211,12 @@ You could use `icon` to add customized icon.
 <Framework only="vue">
 
 Use the `#icon` slot to add a customized icon. Its parameters are `item`, `level`, `expanded`, `isLeaf`, `loading`, `selected`, `checked` and `halfChecked`, so the icon can differ by node. `TreeNodeData` has no `icon` field.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `icon` snippet to add a customized icon. Its arguments are `item`, `level`, `expanded`, `isLeaf`, `loading`, `selected`, `checked` and `halfChecked`, so the icon can differ by node. `TreeNodeData` has no `icon` field.
 
 </Framework>
 
@@ -229,6 +272,12 @@ When `expandedKeys` is passed in, it is the expanded controlled component, which
 
 </Framework>
 
+<Framework only="svelte">
+
+Bind the expanded nodes with `bind:expandedKeys`, or use it along with `onExpand`. `bind:expandedKeys={get, set}` makes the expansion fully controlled; unbound, the given `expandedKeys` is only the initially expanded nodes. When the expansion is controlled, if you enable `filterTreeNode` and search, the node will not be automatically expanded. At this time, the expansion of the node is completely controlled by `expandedKeys`. You can use the second parameter `filteredExpandedKeys` of `onSearch` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
 <Framework only="solid">
 
 When `expandedKeys` is passed in, it is the expanded controlled component, which can be used with `onExpand`. When the expansion is controlled, if you enable `filterTreeNode` and search, the node will not be automatically expanded. At this time, the expansion of the node is completely controlled by `expandedKeys`. You can use the second argument `filteredExpandedKeys` of `onSearch` to realize the search expansion effect when the expansion is controlled.
@@ -248,6 +297,12 @@ You can use `value` along with `onChange` property if you want to use Tree as a 
 <Framework only="vue">
 
 When `modelValue` is passed in, Tree is a controlled component. Bind it with `v-model`, or use it along with `@change`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind `value` with `bind:value`, or use it along with `onChange`. `bind:value={get, set}` makes it fully controlled. Unbound, the given `value` is only the initial selection.
 
 </Framework>
 
@@ -293,6 +348,26 @@ The expansion Icon can be customized through the `#expandIcon` slot, whose param
         <IconMinus v-if="expanded" :class="className" @click="onClick" />
         <IconPlus v-else :class="className" @click="onClick" />
     </template>
+</Tree>
+```
+
+Examples are as follows:
+
+</Framework>
+
+<Framework only="svelte">
+
+The expansion Icon can be customized through the `expandIcon` snippet, whose arguments are `onClick`, `class` and `expanded`. Put `class` and `onclick` on the element it renders.
+
+```svelte
+<Tree {treeData}>
+    {#snippet expandIcon({ expanded, onClick, class: className })}
+        {#if expanded}
+            <IconMinus class={className} onclick={onClick} />
+        {:else}
+            <IconPlus class={className} onclick={onClick} />
+        {/if}
+    {/snippet}
 </Tree>
 ```
 
@@ -348,6 +423,12 @@ If tree is searchable, you could also turn on `showFilteredOnly` to reduce time 
 
 </Framework>
 
+<Framework only="svelte">
+
+`treeData` is replaced as a whole: only a new array updates the tree, while changes made in place to the array or a node are not seen. Declare the data with `$state.raw` and assign a new array after changing it.
+
+</Framework>
+
 <Demo id="dynamic-update" />
 
 ### Load Data Asynchronously
@@ -367,6 +448,12 @@ You could use `draggable` along with `onDrop` to achieve a draggable Tree.
 <Framework only="vue">
 
 You could use `draggable` along with `@drop` to achieve a draggable Tree.
+
+</Framework>
+
+<Framework only="svelte">
+
+You could use `draggable` along with `onDrop` to achieve a draggable Tree.
 
 </Framework>
 
@@ -418,6 +505,35 @@ The payload of each drag event is one object with the following fields:
 - @dragOver: { event, node: TreeDragNode }
 - @dragStart: { event, node: TreeDragNode }
 - @drop: { event, node: TreeDragNode, dragNode: TreeDragNode, dragNodesKeys: string[], dropPosition: number, dropToGap: boolean }
+```
+
+The data type TreeDragNode, in addition to all the attributes of TreeNodeData, also includes expanded and pos attributes,
+
+```
+TreeDragNode {
+    expanded: boolean,
+    pos: string
+    value?: string | number;
+    label?: string | number;
+    disabled?: boolean;
+    isLeaf?: boolean;
+    [key: string]: any;
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+The argument of each drag callback is one object with the following fields:
+
+```
+- onDragEnd: { event, node: TreeDragNode }
+- onDragEnter: { event, node: TreeDragNode, expandedKeys?: string[] }
+- onDragLeave: { event, node: TreeDragNode }
+- onDragOver: { event, node: TreeDragNode }
+- onDragStart: { event, node: TreeDragNode }
+- onDrop: { event, node: TreeDragNode, dragNode: TreeDragNode, dragNodesKeys: string[], dropPosition: number, dropToGap: boolean }
 ```
 
 The data type TreeDragNode, in addition to all the attributes of TreeNodeData, also includes expanded and pos attributes,
@@ -586,6 +702,65 @@ type TreeFullLabelSlotProps = {
 
 </Framework>
 
+<Framework only="svelte">
+
+You could use the `fullLabel` snippet for advanced rendering to render the content of the entire row on your own.
+
+The row element (`li`) carrying the `id`, `role="treeitem"` and the row state is provided by Tree itself, and so is the positioning style of a virtualized tree; the snippet holds only what is inside the row. Bind the `class` argument to the content element and it gets the same indentation, selection and focus styles and the same inline padding as a built-in row. The keyboard is handled by Tree, so a click inside the row is only a pointer shortcut.
+
+The snippet argument types are as follows:
+
+```ts
+type TreeFullLabelSnippetProps = {
+    /* The original data of the row */
+    data: TreeNodeData;
+    /* The level of the line can be used to customize the indentation value */
+    level: number;
+    /* Class name, including built-in styles such as indentation, selection, focus and drag state */
+    class: string;
+    /* The built-in expand button, rendered with {@render expandIcon()} */
+    expandIcon: Snippet;
+    /* Selected state */
+    checkStatus: {
+        /* Whether to select in the multi-select state */
+        checked: boolean;
+        /* Whether to half-select in the multi-select state */
+        halfChecked: boolean;
+    };
+    /* Expand status */
+    expandStatus: {
+        /* Has it been expanded */
+        expanded: boolean;
+        /* Is it unfolding */
+        loading: boolean;
+    };
+    /* Whether the node meets the search conditions */
+    filtered: boolean;
+    /* Current search box input */
+    searchWord: string;
+    /* Click the callback of the entire row: selects it, or checks it in a multiple tree */
+    onClick: (event: MouseEvent) => void;
+    /* Multi-select click callback */
+    onCheck: (event: MouseEvent) => void;
+    /* expand callback */
+    onExpand: (event: MouseEvent) => void;
+    /* Right-click the callback for the entire row */
+    onContextmenu: (event: MouseEvent) => void;
+    /* Double-click the entire line of callback */
+    onDblclick: (event: MouseEvent) => void;
+};
+```
+
+```svelte
+<Tree {treeData}>
+    {#snippet fullLabel({ data, class: className, onClick })}
+        <div class={className} onclick={onClick} role="presentation">{data.label}</div>
+    {/snippet}
+</Tree>
+```
+
+</Framework>
+
 <Framework only="solid">
 
 Tree's API covers most rendering needs. For a very special customization, use `renderFullLabel` to take over the rendering of the whole row. It is called once per row with a live object: read its fields in the returned JSX and do not destructure it.
@@ -657,6 +832,13 @@ First is to render Parent node as separator and only allow leaf nodes to be sele
 
 </Framework>
 
+<Framework only="svelte">
+
+First is to render Parent node as separator and only allow leaf nodes to be selected.  
+`fullLabel` only takes care of the UI rendering and won't affect inside data logic. But you could choose info to your needs and use it with controlled mode for advanced usage.
+
+</Framework>
+
 <Framework only="solid">
 
 - You only need to render the Checkbox in front of leaf nodes, clicking a parent node does not select it, and clicking a leaf node does.
@@ -691,6 +873,12 @@ Draggable (`draggable`) and advanced customization (`#fullLabel`) can be used at
 
 </Framework>
 
+<Framework only="svelte">
+
+Draggable (`draggable`) and advanced customization (`fullLabel`) can be used at the same time.
+
+</Framework>
+
 <Framework only="solid">
 
 Draggable (`draggable`) and advanced customization (`renderFullLabel`) can be used at the same time.
@@ -719,6 +907,14 @@ The Vue Tree has no `className` property: undeclared attributes such as `class`,
 
 </Framework>
 
+<Framework only="svelte">
+
+<TreeSvelteApi />
+
+The Svelte Tree has no `className` property: undeclared attributes such as `class`, `style` and `data-*` land on the root element `.semi-tree-wrapper`, and `aria-*` and `tabindex` land on the `role="tree"` element. The empty state has no `role="tree"` element, so `aria-*` attributes are dropped there.
+
+</Framework>
+
 <Framework only="solid">
 
 <TreeSolidApi />
@@ -741,6 +937,12 @@ The Vue Tree has no `className` property: undeclared attributes such as `class`,
 
 </Framework>
 
+<Framework only="svelte">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required; without it, the value property in `onChange`, `value` and `onChangeWithObject` points to the key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+</Framework>
+
 <Framework only="react">
 
 | Properties | Instructions                                                                                                             | Type              | Default |
@@ -760,6 +962,18 @@ The Vue Tree has no `className` property: undeclared attributes such as `class`,
 | ---------- | ------------------------------------------------------------------------------------------------------------------------ | -------------- | ------- |
 | value      | Value                                                                                                                    | string\|number | -       |
 | label      | Displayed label; custom content comes from the `#label` slot                                                             | string\|number | -       |
+| disabled   | Disabled. When the Tree's `disabled` is true the whole tree is disabled, and a node's `disabled: false` does not lift it | boolean        | false   |
+| key        | Required and must be unique                                                                                              | string         | -       |
+| isLeaf     | Toggle whether node is leaf node, only takes effect in async load data with `loadData`                                   | boolean        | -       |
+
+</Framework>
+
+<Framework only="svelte">
+
+| Properties | Instructions                                                                                                             | Type           | Default |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ | -------------- | ------- |
+| value      | Value                                                                                                                    | string\|number | -       |
+| label      | Displayed label; custom content comes from the `label` snippet                                                           | string\|number | -       |
 | disabled   | Disabled. When the Tree's `disabled` is true the whole tree is disabled, and a node's `disabled: false` does not lift it | boolean        | false   |
 | key        | Required and must be unique                                                                                              | string         | -       |
 | isLeaf     | Toggle whether node is leaf node, only takes effect in async load data with `loadData`                                   | boolean        | -       |
@@ -829,6 +1043,23 @@ Tree exposes `search` and `scrollTo` through a template ref, typed as `TreeHandl
 
 </Framework>
 
+<Framework only="svelte">
+
+Tree exposes `search` and `scrollTo` through `bind:this`, typed as `TreeHandle`; see the Methods part of the Tree table above.
+
+```svelte
+<script lang="ts">
+    import { Tree, type TreeHandle } from '@fibrae/semi-ui-svelte';
+
+    let tree = $state<TreeHandle>();
+    const search = (value: string) => tree?.search(value);
+</script>
+
+<Tree bind:this={tree} filterTreeNode {treeData} />
+```
+
+</Framework>
+
 <Framework only="solid">
 
 The `ref` of Tree points at the root element, which carries the `search` and `scrollTo` methods, typed as `TreeElement`; see the Tree table above for their descriptions.
@@ -861,6 +1092,12 @@ const search = (value: string) => tree?.search(value);
 <Framework only="vue">
 
 - The content of `#fullLabel` is wrapped in Tree's own `li`, which carries the `id`, `role="treeitem"` and the states above.
+
+</Framework>
+
+<Framework only="svelte">
+
+- The content of `fullLabel` is wrapped in Tree's own `li`, which carries the `id`, `role="treeitem"` and the states above.
 
 </Framework>
 
@@ -909,6 +1146,18 @@ Demo:
 
 ```vue
 <Tree aria-label="example tree" :treeData="treeData" />
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+Buttons and links inside a node (for example a control in the `label` snippet) can be reached with Tab. While one of them has focus, keys are handled by that control and the tree does not respond.
+
+Demo:
+
+```svelte
+<Tree aria-label="example tree" {treeData} />
 ```
 
 </Framework>

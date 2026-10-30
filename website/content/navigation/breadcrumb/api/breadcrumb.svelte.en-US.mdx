@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Controlled index of the current item, counted from 0. The last item is current when omitted. | `number` | - |
+| autoCollapse | Whether items beyond maxItemCount collapse automatically. | `boolean` | `true` |
+| compact | Whether the compact size is used. | `boolean` | `true` |
+| icon | Icon of each item, with the route, its index, size and class as parameters. Pass the last two to the icon. An empty result renders no icon. | <ApiType detail={"Snippet\u003c[BreadcrumbIconContext]>"}>Type</ApiType> | - |
+| item | Custom title of each item, with the route and its index as parameters. It renders inline, without truncation. | <ApiType detail={"Snippet\u003c[BreadcrumbRouteContext]>"}>Type</ApiType> | - |
+| maxItemCount | Number of levels above which the breadcrumb collapses. | `number` | `4` |
+| more | Custom ellipsis area. The parameter restItems holds the collapsed items as `{ route, index }`. | <ApiType detail={"Snippet\u003c[BreadcrumbMoreContext]>"}>Type</ApiType> | - |
+| moreType | Built-in rendering of the ellipsis area: default or popover. The more snippet wins when it is provided. | `BreadcrumbMoreType` | `"default"` |
+| onClick | Called on click with the route of the item (`{ name }` for a string route) and the native MouseEvent. It is a function prop, not the native click listener of the nav; passing it makes items without href operable with Enter as well. | `BreadcrumbClick` | - |
+| routes | Route information as an array of route objects or strings. | <ApiType detail={"Array\u003cBreadcrumbRoute \u007c string>"}>Type</ApiType> | `[]` |
+| separator | Separator, either text or a snippet. | `string \| Snippet` | `"/"` |
+| showTooltip | Whether a Tooltip shows for an overflowing title, with its options: width is the overflow width, ellipsisPos truncates at the end or in the middle, and opts are passed to the Tooltip without content, with class and style landing on the popup. | `boolean \| BreadcrumbShowTooltip` | `{ width: 150, ellipsisPos: 'end' }` |

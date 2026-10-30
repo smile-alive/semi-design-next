@@ -1,0 +1,115 @@
+{
+    "transfer": {
+        "source": "packages/semi-ui-svelte/src/transfer/transfer.svelte",
+        "props": {
+            "value": {
+                "zh-CN": "已选中项的 value 数组，可用 bind:value 绑定。只传值时作为初始选中项，之后由组件自己维护；`bind:value={get, set}` 使其完全受控，数组顺序就是右侧的显示顺序。",
+                "en-US": "Array of the values of the selected items, two-way bindable with bind:value. A plain value is the initial selection, which Transfer then maintains itself; `bind:value={get, set}` makes it fully controlled. Its order is the order on the right."
+            },
+            "dataSource": {
+                "zh-CN": "数据源。type 为 list 时是数据项数组，groupList 时是分组数组，treeList 时是带 children 的树形数据（叶子节点写 `children: []`）。treeList 的左侧树只在传入新数组时更新，原地修改不会生效。",
+                "en-US": "Data source: an array of items for list, an array of groups for groupList, or tree data with children for treeList (a leaf writes `children: []`). The tree of a treeList only updates when a new array is passed, changes made in place are not seen."
+            },
+            "type": {
+                "zh-CN": "穿梭框类型，可选 list、groupList、treeList。",
+                "en-US": "Transfer type: list, groupList or treeList."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the whole transfer is disabled." },
+            "draggable": {
+                "zh-CN": "是否开启右侧已选项的拖拽排序。排序后 value 与 onChange 的数组顺序随之改变。",
+                "en-US": "Enables drag sorting of the selected items on the right. After a sort, value and onChange carry the new order."
+            },
+            "loading": { "zh-CN": "左侧选项是否正在加载。", "en-US": "Whether the options on the left are loading." },
+            "showPath": {
+                "zh-CN": "仅 treeList 有效，控制右侧已选项是否显示从根节点到自身的选择路径。",
+                "en-US": "treeList only: whether the selected items on the right show their path from the root."
+            },
+            "filter": {
+                "zh-CN": "筛选逻辑。为 false 时不显示搜索框；传入函数时自定义匹配，返回 true 表示保留该项；默认按 label 不区分大小写匹配。treeList 想自定义搜索时需设为 true，并通过 treeProps 的 filterTreeNode 传入匹配函数。",
+                "en-US": "Filtering logic. false hides the search box; a function replaces the default case-insensitive label match and returns true to keep an item. For a custom search in treeList, set it to true and pass the matching function as filterTreeNode in treeProps."
+            },
+            "inputProps": {
+                "zh-CN": "传给搜索框 Input 的属性，可配置项参考 Input；值与 onChange 由 Transfer 占用，需要外部驱动搜索时调用 search 方法。",
+                "en-US": "Props passed to the search Input, see Input for the options. Transfer owns its value and onChange; to search from outside, call the search method."
+            },
+            "treeProps": {
+                "zh-CN": "仅 treeList 有效，传给左侧 Tree 的属性，会覆盖默认的 multiple、disableStrictly、leafOnly、filterTreeNode、defaultExpandAll。选中值、树数据由 Transfer 决定，value、onChange、keyMaps、treeData、treeDataSimpleJson、onChangeWithObject 会被忽略；Tree 的 snippet 只转发 label。",
+                "en-US": "treeList only: props passed to the Tree on the left, overriding the defaults multiple, disableStrictly, leafOnly, filterTreeNode and defaultExpandAll. Transfer decides the selection and the tree data, so value, onChange, keyMaps, treeData, treeDataSimpleJson and onChangeWithObject are ignored; of the Tree snippets only label is forwarded."
+            },
+            "pagination": {
+                "zh-CN": "左侧面板的分页配置，仅对 list 与 groupList 生效。onPageChange 在对象内。",
+                "en-US": "Paging of the left panel, for list and groupList only. onPageChange lives inside the object."
+            },
+            "virtualize": {
+                "zh-CN": "右侧已选列表虚拟化，仅在使用默认右侧面板且 draggable 为 false 时生效。height 为数字时直接生效，为字符串（如 100%）时按面板剩余高度测量。",
+                "en-US": "Virtualizes the selected list on the right, only with the default right panel and draggable off. A numeric height applies as is; a string such as 100% is measured from the remaining panel height."
+            },
+            "onChange": {
+                "zh-CN": "已选中的值变化时调用，拖拽排序后也会调用。参数依次为 value 数组与对应的数据项数组。这是 Transfer 自己的回调，不是根元素的原生 change。",
+                "en-US": "Called when the selection changes, including after a drag sort, with the array of values and the array of their items. This is the callback of Transfer, not the native change of the root element."
+            },
+            "onSelect": {
+                "zh-CN": "勾选一项时调用，参数为该数据项。",
+                "en-US": "Called when an item is checked, with that item."
+            },
+            "onDeselect": {
+                "zh-CN": "取消勾选一项时调用，参数为该数据项。",
+                "en-US": "Called when an item is unchecked, with that item."
+            },
+            "onSearch": {
+                "zh-CN": "搜索框输入内容变化时调用，参数为搜索值。search 方法驱动的搜索不调用。",
+                "en-US": "Called when the text of the search box changes, with the search value. A search driven by the search method does not call it."
+            },
+            "onBlur": {
+                "zh-CN": "焦点从 Transfer 内部移到外部时调用一次，参数为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不调用，窗口失焦（relatedTarget 为空）时调用。",
+                "en-US": "Called once when the focus moves from inside the Transfer to outside it, with the FocusEvent; moving between the search box, checkboxes, items, remove buttons and drag handles does not call it, and a window blur (empty relatedTarget) does."
+            },
+            "label": {
+                "zh-CN": "数据项的内容，同时用于左侧条目（treeList 为树行）、右侧已选条目与拖拽副本；默认显示数据项的 label。",
+                "en-US": "Content of an item, used by the source row (the tree row in treeList), the selected row and the drag copy; the label of the item by default."
+            },
+            "sourceItem": {
+                "zh-CN": "完全自定义左侧单个候选项。index 是过滤与分页后可见条目中的下标，不是在 dataSource 中的位置。",
+                "en-US": "Replaces one item on the left. index is the position among the shown items after filtering and paging, not the position in dataSource."
+            },
+            "selectedItem": {
+                "zh-CN": "完全自定义右侧单个已选项。draggable 时 handle 是 `Snippet<[Snippet]>`：把拖拽图标写成一个 snippet，用 `{@render handle?.(grip)}` 包住它。treeList 且 showPath 时 fullPath 为完整路径。",
+                "en-US": "Replaces one selected item on the right. With draggable, handle is a `Snippet<[Snippet]>`: write the drag icon as a snippet and wrap it with `{@render handle?.(grip)}`. With treeList and showPath, fullPath holds the whole path."
+            },
+            "sourceHeader": {
+                "zh-CN": "自定义左侧面板头部。leafOnlyNum 仅 treeList 提供。",
+                "en-US": "Replaces the header of the left panel. leafOnlyNum is provided for treeList only."
+            },
+            "selectedHeader": {
+                "zh-CN": "自定义右侧面板头部。",
+                "en-US": "Replaces the header of the right panel."
+            },
+            "sourcePanel": {
+                "zh-CN": "完全自定义左侧候选面板，可复用 Transfer 的筛选与选择逻辑。",
+                "en-US": "Replaces the whole left panel, reusing the filtering and selection logic of Transfer."
+            },
+            "selectedPanel": {
+                "zh-CN": "完全自定义右侧已选面板。onSortEnd 在自行实现拖拽排序结束后调用。",
+                "en-US": "Replaces the whole right panel. Call onSortEnd after a drag sort you implemented has finished."
+            },
+            "emptyLeft": {
+                "zh-CN": "左侧没有数据时的提示。未提供时显示语言包文案，传 false 隐藏该空状态。",
+                "en-US": "Shown when the left list has no data. The locale text appears when it is not provided; false hides the empty state."
+            },
+            "emptyRight": {
+                "zh-CN": "右侧没有已选项时的提示。未提供时显示语言包文案，传 false 隐藏该空状态。",
+                "en-US": "Shown when nothing is selected. The locale text appears when it is not provided; false hides the empty state."
+            },
+            "emptySearch": {
+                "zh-CN": "搜索没有结果时的提示。未提供时显示语言包文案，传 false 隐藏该空状态。",
+                "en-US": "Shown when the search matches nothing. The locale text appears when it is not provided; false hides the empty state."
+            }
+        },
+        "methods": {
+            "search": {
+                "zh-CN": "按输入了该值来搜索；不调用 onSearch。",
+                "en-US": "Searches as if the value were typed into the search box; onSearch is not called."
+            }
+        }
+    }
+}

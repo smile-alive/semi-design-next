@@ -1,0 +1,77 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| aria-describedby | 表格的 aria-describedby。 | `string \| null` | - |
+| aria-label | 表格的可访问名称；没有 aria-label 与 aria-labelledby 时，有 title 的表格用 title 命名。 | `string \| null` | - |
+| aria-labelledby | 表格的 aria-labelledby，优先于 title。 | `string \| null` | - |
+| bordered | 是否展示外边框和列边框。 | `boolean` | `false` |
+| cell | 数据单元格的内容，对所有数据列调用，参数含 text、record、index、column、expandIcon、isHovering 等，用 column.dataIndex 或 column.key 区分列；不处理的列需要自己渲染 text。列设置 useFullRender 时 snippet 替换整个单元格，参数里的 selection、indentText、expandIcon 用于摆放选择框、缩进和展开按钮。 | <ApiType detail={"Snippet\u003c[TableCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| childrenRecordName | 树形表格中，数据项里表示子级数据的字段名。 | `string` | `"children"` |
+| clickGroupedRowToExpand | 点击分组行时展开或收起该组。 | `boolean` | `false` |
+| columns | 列配置，详见 Column。列只含数据，列内的节点用 Table 的 cell、headerCell、sortIcon、filterIcon、filterDropdown 等 snippet 渲染。 | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | - |
+| components | 覆盖 Table 的组成元素，如 header 与 body 的 outer、wrapper、row、cell，值为标签名，该元素替换对应位置的默认标签。 | `TableComponents` | - |
+| currentPage | 当前页码，可用 `bind:currentPage` 双向绑定，翻页时写回。与 `pagination.currentPage` 同时传入时以它为准；`pagination` 没有 `currentPage` 时，Table 仍自己对 dataSource 分页，父级改值会翻页；`pagination` 传了 `currentPage` 时是受控分页，Table 不对 dataSource 分页。 | `number` | - |
+| dataSource | 数据。请为每一条数据分配一个独立的 key，或使用 rowKey 指定一个作为主键的属性名。原地增删元素（push、splice）会重新排序和筛选；只修改记录字段时，单元格显示新值，但不重新排序和筛选。 | `R[]` | - |
+| defaultExpandAllGroupRows | 默认是否展开所有分组行，动态加载数据时不生效。 | `boolean` | `false` |
+| defaultExpandAllRows | 默认是否展开所有行，动态加载数据时不生效。 | `boolean` | `false` |
+| direction | 文字方向，默认值取 ConfigProvider 的 direction，可在此单独配置。 | `'ltr' \| 'rtl'` | - |
+| empty | 无数据时展示的内容，不提供时显示语言包的空文案，提供空 snippet 时不显示任何内容。 | `Snippet` | - |
+| expandAllGroupRows | 是否展开所有分组行。 | `boolean` | `false` |
+| expandAllRows | 是否展开所有行。 | `boolean` | `false` |
+| expandCellFixed | 展开按钮所在列是否固定，取值与 Column 的 fixed 相同。 | `ColumnFixed` | `false` |
+| expandedRow | 展开行的内容，参数含 record、index、expanded；传入后每个可展开的行都有展开按钮，输出为空时该行不渲染。 | <ApiType detail={"Snippet\u003c[TableExpandedRowSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| expandedRowKeys | 展开的行 key 数组，可用 `bind:expandedRowKeys` 双向绑定，包含已展开的分组 key；不传时行展开不受控。 | `(string \| number)[]` | - |
+| expandIcon | 传 false 隐藏展开按钮；传 snippet 替换展开按钮的图标，参数 expanded，自定义图标不带旋转动画。 | <ApiType detail={"boolean \u007c Snippet\u003c[TableExpandIconSnippetProps]>"}>Type</ApiType> | - |
+| expandRowByClick | 点击行时是否展开可展开行。 | `boolean` | `false` |
+| filterDropdown | 筛选面板，用于 filterDropdown 为 true 的列，参数含 column、临时筛选值 tempFilteredValue 与 onTempFilteredValueChange、onConfirm、onClear、onClose、onReset，用 column 区分列。 | <ApiType detail={"Snippet\u003c[TableFilterDropdownSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| filterDropdownItem | 筛选菜单中的一项，参数含 text、value、checked、level、onChange 等；传入后替换所有筛选项。 | <ApiType detail={"Snippet\u003c[TableFilterDropdownItemSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| filterIcon | 筛选按钮的内容，参数含 filtered 与 column。 | <ApiType detail={"Snippet\u003c[TableFilterIconSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| footer | 表格尾部，可以是纯文本，或带参数 pageData（当前页数据）的 snippet。 | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| groupBy | 分组依据，可以是数据项中的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | - |
+| groupSection | 分组行的内容，参数含 groupKey 与 group（该组的行 key）。 | <ApiType detail={"Snippet\u003c[TableGroupSectionSnippetProps]>"}>Type</ApiType> | - |
+| groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"(groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, 'title' \u007c 'children' \u007c 'dataIndex'>"}>Type</ApiType> | - |
+| headerCell | 列标题的内容，参数含 column、title 与 sorter、filter、selection；不处理的列需要自己渲染 title。列设置 useFullRender 时 snippet 替换整个表头单元格，sorter、filter、selection 用于摆放排序、筛选与选择控件。 | <ApiType detail={"Snippet\u003c[TableHeaderCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| headerStyle | 所有表头单元格（包括固定表头）的内联样式字符串。 | `string` | - |
+| hideExpandedColumn | 表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。 | `boolean` | `true` |
+| indentSize | 树形数据每一层的缩进宽度，单位为像素。 | `number` | `20` |
+| keepDOM | 折叠行时是否保留被折叠的 DOM。 | `boolean` | `false` |
+| loading | 是否显示加载状态。 | `boolean` | `false` |
+| onChange | 分页、排序、筛选变化时调用，参数含 pagination、filters、sorter 与 extra.changeType。 | <ApiType detail={"(changeInfo: TableChangeInfo\u003cR>) => void"}>Type</ApiType> | - |
+| onExpand | 点击展开按钮时调用，参数为展开状态、行数据（分组行为 groupKey 对象）和鼠标事件。 | <ApiType detail={"(expanded: boolean, record: TableIncludeGroupRecord\u003cR>, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onExpandedRowsChange | 展开的行变化时调用，参数为展开的行数据数组。 | <ApiType detail={"(expandedRows: TableIncludeGroupRecord\u003cR>[]) => void"}>Type</ApiType> | - |
+| onGroupedRow | 类似 onRow，单独用于分组行，返回值是 tr 的属性与小写监听器。index 在未开启 virtualized 时是分组序号，开启后是该行在虚拟列表中的位置。 | <ApiType detail={"(record: { groupKey: string \u007c number; records: R[] }, index: number) => TableRowAttrs"}>Type</ApiType> | - |
+| onHeaderRow | 设置表头行的属性与小写监听器，返回值会合并到表头行（不含 style）。 | <ApiType detail={"(columns: ColumnProps\u003cR>[], index: number) => Omit\u003cTableRowAttrs, 'style'>"}>Type</ApiType> | - |
+| onRow | 设置数据行的属性与小写监听器（如 onclick、onmouseenter），第三个参数为行状态。返回的监听器在行自身的处理和 onRowXxx 回调之后调用。 | <ApiType detail={"(record: R, index: number, rowState: { disabled: boolean; selected: boolean }) => TableRowAttrs"}>Type</ApiType> | - |
+| onRowContextMenu | 数据行触发右键菜单时调用，先于 onRow 返回的 oncontextmenu 调用。 | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRowDoubleClick | 双击数据行时调用，先于 onRow 返回的 ondblclick 调用。 | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRowMouseEnter | 鼠标进入数据行时调用，先于 onRow 返回的 onmouseenter 调用。 | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRowMouseLeave | 鼠标离开数据行时调用，先于 onRow 返回的 onmouseleave 调用。 | <ApiType detail={"(record: R, event: MouseEvent) => void"}>Type</ApiType> | - |
+| onScroll | 虚拟化表体的纵向偏移变化时调用，参数为 scrollOffset，横向滚动不触发。 | <ApiType detail={"(args: TableVirtualizedScrollArgs) => void"}>Type</ApiType> | - |
+| pagination | 分页配置，传 false 关闭分页。 | `boolean \| TablePaginationProps` | `true` |
+| paginationContent | 替换分页信息与分页器，参数 pagination 可直接展开给 Pagination；与 pagination 属性同名空间，所以单独命名。 | <ApiType detail={"Snippet\u003c[TablePaginationSnippetProps]>"}>Type</ApiType> | - |
+| prefixCls | 样式名前缀。 | `string` | `"semi-table"` |
+| resizable | 是否开启列宽伸缩，需要伸缩的列必须提供 width。传入对象时可配置 onResize、onResizeStart、onResizeStop 与 handlerClassName。 | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | `false` |
+| rowExpandable | 判断某一行是否可展开，返回 false 时不渲染该行的展开按钮。 | <ApiType detail={"TableRowExpandable\u003cR>"}>Type</ApiType> | - |
+| rowKey | 行 key 的取值：数据项的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `"key"` |
+| rowSelection | 行选择配置，传 true 使用默认配置，详见 rowSelection。 | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | - |
+| rowSpanHover | 悬停在带 rowspan 的单元格上时，高亮它跨越的所有行。 | `boolean` | `false` |
+| scroll | 滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。 | `TableScroll` | - |
+| selectedRowKeys | 选中行的 key 数组，可用 `bind:selectedRowKeys` 双向绑定，勾选时写回。与 `rowSelection.selectedRowKeys` 同时传入时以它为准；需要同时传 `rowSelection` 才显示选择列。 | `(string \| number)[]` | - |
+| selectionCell | 选择列的单元格，表头与数据行都调用，参数含 selected、inHeader、originNode（默认复选框）等，用 originNode 保留默认复选框。 | <ApiType detail={"Snippet\u003c[TableSelectionCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| showHeader | 是否显示表头。 | `boolean` | `true` |
+| size | 表格尺寸，影响单元格的内边距。 | `TableSize` | `"default"` |
+| sortIcon | 排序图标，参数含 sortOrder 与 column。 | <ApiType detail={"Snippet\u003c[TableSortIconSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| sticky | 将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。 | `TableSticky` | - |
+| title | 表格标题，可以是纯文本，或带参数 pageData（当前页数据）的 snippet。 | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
+| virtualized | 开启虚拟化，需同时传 scroll.y（数字）。对象形式可配置行高 itemSize 与额外渲染的行数 overscanCount。 | `TableVirtualized` | - |
+
+**Methods**
+
+| 方法               | 说明                                              | 类型                                                                                                                |
+| ------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| getCurrentPageData | 返回当前页数据的深拷贝，含 dataSource 与 groups。 | <ApiType detail={"() => Pick\u003cBasePageData\u003cAnyRecord>, \"dataSource\" \u007c \"groups\">"}>Type</ApiType>  |
+| scrollTo           | 虚拟化表格滚动到指定纵向偏移，参数为像素。        | <ApiType detail={"(offset: number) => void"}>Type</ApiType>                                                         |
+| scrollToItem       | 虚拟化表格滚动到指定行，第二个参数为对齐方式。    | <ApiType detail={"(index: number, align?: Parameters\u003cTableHandle['scrollToItem']>[1]) => void"}>Type</ApiType> |

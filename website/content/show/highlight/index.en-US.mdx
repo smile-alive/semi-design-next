@@ -8,6 +8,7 @@ brief: highlight specific content
 import HighlightReactApi from './api/highlight.react.en-US.mdx';
 import HighlightVueApi from './api/highlight.vue.en-US.mdx';
 import HighlightSolidApi from './api/highlight.solid.en-US.mdx';
+import HighlightSvelteApi from './api/highlight.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { Highlight } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Highlight } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Highlight } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -68,6 +79,12 @@ Numbers get no `px`: write lengths in `highlightStyle` and in a search word's `s
 
 </Framework>
 
+<Framework only="svelte">
+
+`highlightStyle` and a search word's `style` are style objects whose keys may be camelCase or kebab-case. Numbers get no `px`: write lengths as strings such as `'4px'`. Unitless properties such as `fontWeight: 600` still work.
+
+</Framework>
+
 <Demo id="highlight-style" />
 
 ### Use Different Styles for Different Texts
@@ -83,6 +100,12 @@ In Vue the class field of an object item is `class`, as in templates.
 <Framework only="solid">
 
 The class field of an object item is `class`, as in JSX.
+
+</Framework>
+
+<Framework only="svelte">
+
+The class field of an object item is `class`, as in Svelte templates.
 
 </Framework>
 
@@ -119,5 +142,13 @@ Highlight has no root element and renders a Fragment: attrs such as `class`, `st
 <HighlightSolidApi />
 
 Highlight has no root element and renders inline chunks, so `class`, `style`, `ref` and native attributes such as `id` have nowhere to land and are dropped.
+
+</Framework>
+
+<Framework only="svelte">
+
+<HighlightSvelteApi />
+
+Highlight has no root element and renders inline chunks, so undeclared attributes such as `class`, `style` and `id` have nowhere to land and are dropped, and `bind:this` cannot reach an element.
 
 </Framework>

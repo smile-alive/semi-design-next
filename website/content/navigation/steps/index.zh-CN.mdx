@@ -11,6 +11,7 @@ import StepsVueApi from './api/steps.vue.zh-CN.mdx';
 import StepVueApi from './api/step.vue.zh-CN.mdx';
 import StepsSolidApi from './api/steps.solid.zh-CN.mdx';
 import StepSolidApi from './api/step.solid.zh-CN.mdx';
+import StepsSvelteApi from './api/steps.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -46,6 +47,18 @@ import { Steps } from '@fibrae/semi-ui-solid';
 ```
 
 只有 Steps.Step 占一个步骤位置；其他子节点（包括原生元素与文本）不渲染、不占序号，开发环境给出警告。Step 在 Steps 之外不渲染任何内容。
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Steps } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte 没有 `Steps.Step`：步骤写成 `dataSource`（`StepData[]`）里的数据项，每项可带 `status`、`title`、`description`、`icon`、`onClick`，其余属性落在步骤根元素上。需要自定义标题和描述时，用 Steps 的 `title`、`description` snippet，参数为 `{ item, index }`；图标写在各项的 `icon` 字段里。
 
 </Framework>
 
@@ -123,7 +136,13 @@ import { Steps } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
-通过设置 Steps.Step 的 `status` 属性，可以自定义每个 step 的状态
+<Framework only="svelte">
+
+通过 `dataSource` 项的 `icon` snippet 可以为该步骤启用自定义图标，未设置 `icon` 的步骤保留状态图标；`icon` 为 `false` 时该步骤不显示图标。
+
+</Framework>
+
+通过设置 Steps.Step 的 `status` 属性（Svelte 中为 `dataSource` 项的 `status`），可以自定义每个 step 的状态
 
 <Demo id="custom-icon" />
 
@@ -144,6 +163,12 @@ import { Steps } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `onChange` 监听步骤切换，回调接收一个 number 类型的参数，等于 initial 加所选步骤的索引；点击当前步骤不会触发。传入 `onChange` 后所有步骤变为可点击。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `onChange` 监听步骤切换，回调接收一个 number 类型的参数，等于 initial 加所选步骤的索引；点击当前步骤不会触发。传入 `onChange` 后所有步骤变为可点击，`dataSource` 项带 `onClick` 的那一步也可点击。`current` 不可绑定，需要在 `onChange` 里自己更新。
 
 </Framework>
 
@@ -188,6 +213,14 @@ import { Steps } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<StepsSvelteApi />
+
+`class`、`style`（字符串）与其他原生属性落在 Steps 根元素上。
+
+</Framework>
+
 ### Steps.Step
 
 步骤条内的每一个步骤。
@@ -213,6 +246,12 @@ import { Steps } from '@fibrae/semi-ui-solid';
 <StepSolidApi />
 
 `class`、`style`、`aria-*` 与原生事件（如 `onClick`、`onKeyDown`）落在 Step 的根元素（步骤项）上。`role` 由步骤是否可点击决定，传入时优先；`tabindex` 同样由步骤是否可点击决定，不能覆盖。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 没有单独的 Step 组件，步骤的属性写在 `dataSource` 项里：`status`、`title`、`description`、`icon`、`onClick` 之外的属性（`aria-label`、`role`、`class`、`style`、`onkeydown` 等）落在步骤项（根元素）上，`style` 只接受字符串。`role` 在步骤可点击时默认为 `button`，传入时优先；`tabindex` 由步骤是否可点击决定。
 
 </Framework>
 

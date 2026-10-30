@@ -6,10 +6,10 @@
     const total = ref(0);
 
     // x: nodes per level. y: nodes with children per level. z: depth (0 is one level).
-    function generateData(x = 5, y = 4, z = 3) {
+    const generateData = (x = 5, y = 4, z = 3) => {
         const data: TreeNodeData[] = [];
 
-        function fill(level: number, preKey: string, nodes: TreeNodeData[]) {
+        const fill = (level: number, preKey: string, nodes: TreeNodeData[]) => {
             const parents: string[] = [];
             for (let i = 0; i < x; i++) {
                 const key = `${preKey}-${i}`;
@@ -26,7 +26,7 @@
                 nodes[index].children = children;
                 fill(level - 1, key, children);
             });
-        }
+        };
         fill(z, '0', data);
 
         let count = 0;
@@ -34,13 +34,13 @@
             count += x * y ** n;
         }
         return { data, count };
-    }
+    };
 
-    function onGen() {
+    const onGen = () => {
         const { data, count } = generateData();
         treeData.value = data;
         total.value = count;
-    }
+    };
 
     const dropdownStyle = { overflow: 'hidden' };
     // Dropdown height 300 minus the search box, minus the 8 * 2 padding; a set dropdown height fills the remaining space.

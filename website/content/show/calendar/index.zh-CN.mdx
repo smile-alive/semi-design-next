@@ -8,6 +8,7 @@ brief: 日历组件，允许以日/周/月视图展示对应事件
 import CalendarReactApi from './api/calendar.react.zh-CN.mdx';
 import CalendarVueApi from './api/calendar.vue.zh-CN.mdx';
 import CalendarSolidApi from './api/calendar.solid.zh-CN.mdx';
+import CalendarSvelteApi from './api/calendar.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { Calendar } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Calendar } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Calendar } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -85,6 +96,12 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+事件的内容默认渲染 `children` 文本；需要自定义 DOM 时用 `event` snippet，参数 `{ event }` 是 `events` 中的原对象，可以带任意自定义字段。同一事件在多处显示（如跨天事件）时，snippet 每处各调用一次。
+
+</Framework>
+
 <Demo id="events" />
 
 ### 自定义渲染
@@ -104,6 +121,12 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 dateGridRender 可以自定义渲染日期单元格/列。需要使用绝对定位。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `dateGrid` snippet（参数 `{ date, dateString }`）可以自定义渲染日期单元格/列。需要使用绝对定位。
 
 </Framework>
 
@@ -131,6 +154,12 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过 `dateGrid` snippet 自定义单元格的背景，月视图的文字 zIndex 默认为 3，如需完全覆盖单元格可以设置更大的 zIndex 来实现。
+
+</Framework>
+
 <Demo id="custom-cell-style" />
 
 #### 自定义日期文案
@@ -150,6 +179,12 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 可以通过 renderDateDisplay 自定义日期文案。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `dateDisplay` snippet（参数 `{ date }`）自定义日期文案。
 
 </Framework>
 
@@ -180,6 +215,14 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 <CalendarSolidApi />
 
 `class`、`style`、`ref` 与其他原生属性（如 `id`、`data-*`）落在当前视图的根元素上；`aria-label` 优先于默认的表格名称。`onClick`、`onClose`、`onMoreClick` 是 Calendar 自身的回调，不会落到根元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CalendarSvelteApi />
+
+`class`、`style` 与其他原生属性（如 `id`、`data-*`、`aria-label`）落在当前视图的根元素上；`aria-label` 优先于默认的表格名称。`onClick`、`onClose`、`onMoreClick` 是 Calendar 自身的回调，不会落到根元素上。
 
 </Framework>
 
@@ -230,13 +273,26 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+| 属性     | 说明                                                        | 类型             | 默认值 |
+| -------- | ----------------------------------------------------------- | ---------------- | ------ |
+| allDay   | 全天事件                                                    | boolean          | false  |
+| children | 展示内容，未提供 `event` snippet 时渲染为文本               | string \| number | -      |
+| end      | 事情结束的时间                                              | Date             | -      |
+| key      | required 且要求唯一                                         | string           | -      |
+| start    | 事情起始的时间                                              | Date             | -      |
+| 其他字段 | 自定义字段原样保留，供 `event` snippet 读取（如颜色、标题） | any              | -      |
+
+</Framework>
+
 ## Accessibility
 
 ### 键盘和焦点
 
 - 日、周、多日视图可以滚动，视图本身是一个 Tab 停靠点，用方向键滚动
 - 月视图中折叠事件的「还有 N 项」是按钮，`Enter` 或 `空格` 打开当天的事件卡片，焦点移到卡片的关闭按钮；按 `Esc` 或关闭按钮关闭卡片，焦点回到「还有 N 项」
-- 日期格与时间槽的点击（React 的 `onClick`，Vue 的 `@click`）只响应指针，没有键盘方式
+- 日期格与时间槽的点击（React 的 `onClick`，Vue 的 `@click`，Svelte 的 `onClick`）只响应指针，没有键盘方式
 
 ## 文案规范
 

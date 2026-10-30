@@ -24,8 +24,8 @@ import ApiType from '#/components/ApiType.astro';
 | restTagsPopoverProps | 显示剩余标签的 Popover 的配置，可设置 position、trigger 等。 | `PopoverProps` | `semiGlobalDefault("Select", "restTagsPopoverProps")` |
 | expandRestTagsOnClick | 多选并设置 maxTagCount 时，下拉列表展开期间是否显示全部标签。 | `boolean` | `semiDefault("Select", "expandRestTagsOnClick", false)` |
 | ellipsisTrigger | 多选并设置 maxTagCount 时，宽度不足是否截断最后一个标签的内容。开启后有一定性能损耗，不建议在大表单中使用。 | `boolean` | `semiDefault("Select", "ellipsisTrigger", false)` |
-| size | 大小，可选 small、default、large。 | `Size` | `semiGlobalDefault("Select", "size")` |
-| disabled | 是否禁用。 | `boolean` | `semiDefault("Select", "disabled", false)` |
+| size | 大小，可选 small、default、large。 | `Size` | `undefined` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | borderless | 是否使用无边框样式。 | `boolean` | `semiDefault("Select", "borderless", false)` |
 | validateStatus | 校验状态，可选 default、warning、error，只影响背景色等样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Select", "validateStatus")` |
 | placeholder | 选择框中没有选中值时显示的占位文字。 | `string` | `semiGlobalDefault("Select", "placeholder")` |

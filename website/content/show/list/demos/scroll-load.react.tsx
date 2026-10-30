@@ -9,13 +9,13 @@ interface Book {
 const count = 5;
 const dataList: Book[] = Array.from({ length: 100 }, (_, i) => ({ title: `Semi Design Title ${i}` }));
 
-const fetchData = (page: number) => {
+function fetchData(page: number) {
     return new Promise<Book[]>((res) => {
         setTimeout(() => {
             res(dataList.slice(page * count, page * count + count));
         }, 1000);
     });
-};
+}
 
 export default function ListDemo() {
     const [page, setPage] = useState(0);

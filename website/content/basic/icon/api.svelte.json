@@ -1,0 +1,35 @@
+{
+    "icon": {
+        "source": "packages/semi-icons-svelte/src/components/icon.svelte",
+        "props": {
+            "children": {
+                "zh-CN": "自定义 SVG 内容的 snippet，参数为 `{ fill }`，可把 `fill` 传给自定义 SVG。",
+                "en-US": "Snippet for custom SVG content, with the argument `{ fill }`, so a custom SVG can apply `fill`."
+            },
+            "fill": {
+                "zh-CN": "双色、多色图标的填充颜色，支持字符串或字符串数组。",
+                "en-US": "Fill colors for bicolor and multicolor icons, as a string or an array of strings."
+            },
+            "prefixCls": {
+                "zh-CN": "CSS 类名前缀，可由构建插件改写。",
+                "en-US": "CSS class prefix; build plugins can replace it."
+            },
+            "rotate": {
+                "zh-CN": "旋转角度，使用整数（单位为度）。",
+                "en-US": "Rotation angle in integer degrees."
+            },
+            "size": {
+                "zh-CN": "图标尺寸，可选 extra-small、small、default、large、extra-large 或 inherit，inherit 继承上下文字体大小。",
+                "en-US": "Icon size: extra-small, small, default, large, extra-large or inherit, which uses the surrounding font size."
+            },
+            "spin": {
+                "zh-CN": "启用旋转动画。",
+                "en-US": "Enables the spinning animation."
+            },
+            "type": {
+                "zh-CN": "附加图标类型类名。",
+                "en-US": "Adds an icon type class name."
+            }
+        }
+    }
+}

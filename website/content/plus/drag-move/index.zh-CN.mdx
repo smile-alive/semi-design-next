@@ -43,6 +43,16 @@ import { DragMove } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { dragMove } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -60,6 +70,12 @@ import { DragMove } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 被 `DragMove` 包裹的元素将能够通过拖拽改变位置。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 中的 DragMove 是 `dragMove` attachment。在元素上写 `{@attach dragMove(options)}`，该元素即可通过拖拽改变位置。
 
 </Framework>
 
@@ -82,6 +98,12 @@ import { DragMove } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 - DragMove 把监听绑定在 `children` 渲染出的每个顶层 DOM 元素上，每个顶层元素各自可拖动。文本节点无法拖动，需要包在元素中；自定义组件渲染出的顶层元素同样会被绑定，无需透传 props 或转发 ref
+
+</Framework>
+
+<Framework only="svelte">
+
+- `dragMove` 是 attachment 而不是组件：它让所写的那个元素可拖动，每个元素需要各自写一个。它会内联写入 `position`、`top`、`left`、`cursor` 和 `touch-action`，所以元素上请用 `style:` 指令，不要用会随状态重写的 `style` 属性，否则会覆盖这些值。选项在 attachment 运行时读取；传入新的选项对象会让它重新运行，并结束正在进行的拖动
 
 </Framework>
 
@@ -130,5 +152,27 @@ DragMove 没有自己的根元素，`class`、`style` 等未声明的 attrs 无�
 <DragMoveSolidApi />
 
 DragMove 没有自己的根元素，`class`、`style`、`ref` 与原生属性等未声明的属性无处可落，会被丢弃；需要的属性请直接写在被拖动的元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+`dragMove(options?: DragMoveOptions)` 返回 `Attachment<HTMLElement>`。`DragMoveOptions` 从 `@fibrae/semi-ui-svelte` 导出。
+
+| 属性             | 说明                                                                            | 类型                                                      | 默认值     |
+| ---------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------- |
+| allowInputDrag   | 在原生 input、textarea 上按下时是否允许拖动。                                   | boolean                                                   | false      |
+| allowMove        | 按下时判断是否允许拖动的函数，返回 false 则不拖动。                             | (e: PointerEvent, element: HTMLElement) => boolean        | -          |
+| constrainer      | 限制拖动范围的元素：`'parent'` 或返回该元素的函数，该元素需要为 relative 定位。 | 'parent' \| (() => HTMLElement \| null)                   | -          |
+| customMove       | 自定义拖动后的位置处理；设置后只回传计算出的位置，不再改写元素的 top 与 left。  | (element: HTMLElement, top: number, left: number) => void | -          |
+| handler          | 触发拖动的元素或返回该元素的函数，缺省为被拖动元素本身。                        | HTMLElement \| (() => HTMLElement \| null)                | -          |
+| onMouseDown      | 鼠标或触控笔按下时调用。                                                        | (e: PointerEvent) => void                                 | -          |
+| onMouseMove      | 鼠标或触控笔移动时调用。                                                        | (e: PointerEvent) => void                                 | -          |
+| onMouseUp        | 鼠标或触控笔抬起时调用。                                                        | (e: PointerEvent) => void                                 | -          |
+| onTouchCancel    | 指针被系统取消（pointercancel）时调用。                                         | (e: PointerEvent) => void                                 | -          |
+| onTouchEnd       | 触摸结束时调用。                                                                | (e: PointerEvent) => void                                 | -          |
+| onTouchMove      | 触摸移动时调用。                                                                | (e: PointerEvent) => void                                 | -          |
+| onTouchStart     | 触摸开始时调用。                                                                | (e: PointerEvent) => void                                 | -          |
+| positionStrategy | 定位策略，relative 保留元素原有的布局位置。                                     | 'absolute' \| 'relative'                                  | 'absolute' |
 
 </Framework>

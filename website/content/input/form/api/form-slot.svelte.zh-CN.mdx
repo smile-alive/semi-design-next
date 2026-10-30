@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                               | 类型                                                                     | 默认值 |
+| ------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------ |
+| children      | 放置的自定义内容。                                                                                 | `Snippet`                                                                | -      |
+| error         | 错误信息，渲染在内容之后；不传则不显示。                                                           | `FieldError`                                                             | -      |
+| errorContent  | 自定义错误信息的渲染，参数为 `{ error }`。                                                         | <ApiType detail={"Snippet\u003c[{ error: FieldError }]>"}>Type</ApiType> | -      |
+| fieldLabel    | Label 内容，优先于 label 属性中的文本。                                                            | `Snippet`                                                                | -      |
+| label         | Label 的文本，或 text、align、width、required、optional 等 Label 配置；`fieldLabel` snippet 优先。 | `string \| number \| FieldLabel`                                         | -      |
+| labelExtra    | 跟随在 Label 文本后的内容。                                                                        | `Snippet`                                                                | -      |
+| labelPosition | Label 的位置，默认取自 Form，可选 top 或 left。                                                    | `'top' \| 'left'`                                                        | -      |
+| noLabel       | 是否不渲染 Label；Form 同时设置了 labelCol 与 wrapperCol 时，Label 列仍保留。                      | `boolean`                                                                | -      |

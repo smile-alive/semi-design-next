@@ -16,6 +16,10 @@ import ResizeItemVueApi from './api/resize-item.vue.zh-CN.mdx';
 import ResizableSolidApi from './api/resizable.solid.zh-CN.mdx';
 import ResizeGroupSolidApi from './api/resize-group.solid.zh-CN.mdx';
 import ResizeItemSolidApi from './api/resize-item.solid.zh-CN.mdx';
+import ResizableSvelteApi from './api/resizable.svelte.zh-CN.mdx';
+import ResizeGroupSvelteApi from './api/resize-group.svelte.zh-CN.mdx';
+import ResizeHandlerSvelteApi from './api/resize-handler.svelte.zh-CN.mdx';
+import ResizeItemSvelteApi from './api/resize-item.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -50,6 +54,17 @@ import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Resizable } from '@fibrae/semi-ui-svelte';
+    import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 单个组件 基本使用
 
 通过`defaultSize`设置初始大小，可以通过`onResizeStart`、`onChange`、`onResizeEnd`设置拖拽的回调
@@ -57,6 +72,12 @@ import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-solid';
 <Framework only="vue">
 
 用 `@resizeStart`、`@change`、`@resizeEnd` 监听。`onResizeStart` 是函数 prop（返回 `false` 可取消本次伸缩），使用方照常写 `@resizeStart`；`change`、`resizeEnd` 是事件。
+
+</Framework>
+
+<Framework only="svelte">
+
+`onResizeStart`、`onChange`、`onResizeEnd` 都是回调 prop，`onResizeStart` 返回 `false` 可取消本次伸缩；`style` 只接受字符串。
 
 </Framework>
 
@@ -119,6 +140,12 @@ Vue 中配合 `v-model:size` 使用。
 <Framework only="solid">
 
 拖动时需在 `onChange` 中把新尺寸写回 `size` 对应的信号，尺寸才会随拖拽变化；未写回时，尺寸保持为 `size` 的值。
+
+</Framework>
+
+<Framework only="svelte">
+
+`size` 是单向 prop，不能 `bind:size`：拖动时需在 `onChange` 中把新尺寸写回传给 `size` 的状态，尺寸才会随拖拽变化；未写回时，尺寸保持为 `size` 的值。
 
 </Framework>
 
@@ -241,6 +268,36 @@ type HandleClass = {
 
 </Framework>
 
+<Framework only="svelte">
+
+可通过 `handle` snippet 设置各方向的拖动元素节点：snippet 对每个启用的方向渲染一次，参数 `{ direction }` 为该手柄的方向，按方向返回内容；渲染空内容的方向仍保留手柄本身。可通过 handleStyle，handleClass 设置不同方向上的样式，样式的值是字符串。
+
+```ts
+type HandleStyle = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+
+type HandleClass = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+```
+
+</Framework>
+
 <Demo id="handle-node" />
 
 ### 允许阶段性调整宽高
@@ -273,6 +330,12 @@ interface Snap {
 <Framework only="vue">
 
 `ResizeItem` 同样用 `@resizeStart`、`@change`、`@resizeEnd` 监听：`onResizeStart` 是函数 prop，使用方照常写 `@resizeStart`；`change`、`resizeEnd` 是事件。
+
+</Framework>
+
+<Framework only="svelte">
+
+`ResizeItem` 的 `onResizeStart`、`onChange`、`onResizeEnd` 同样是回调 prop。
 
 </Framework>
 
@@ -320,6 +383,14 @@ interface Snap {
 
 </Framework>
 
+<Framework only="svelte">
+
+<ResizableSvelteApi />
+
+`class`、`style`（字符串）与原生属性落在根元素上；根元素的 `style` 先于组件计算出的尺寸，所以传入的 `width`、`height` 不会让拖拽失效。
+
+</Framework>
+
 ### ResizeGroup
 
 <Framework only="react">
@@ -343,6 +414,14 @@ interface Snap {
 <ResizeGroupSolidApi />
 
 `class`、`style`、`ref` 与原生属性经 rest 传入，落在根元素上；`flex-direction` 始终由 `direction` 决定。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ResizeGroupSvelteApi />
+
+`class`、`style`（字符串）与原生属性落在根元素上；`flex-direction` 始终由 `direction` 决定。
 
 </Framework>
 
@@ -370,6 +449,14 @@ interface Snap {
 
 </Framework>
 
+<Framework only="svelte">
+
+<ResizeHandlerSvelteApi />
+
+`class`、`style`（字符串）与原生属性落在手柄元素上；传入的 `aria-label` 优先于语言包名称。
+
+</Framework>
+
 ### ResizeItem
 
 <Framework only="react">
@@ -393,6 +480,14 @@ interface Snap {
 <ResizeItemSolidApi />
 
 `class`、`style` 与原生属性经 rest 传入，落在根元素上。ResizeGroup 把尺寸直接写在元素的 `style.width` 与 `style.height` 上，因此 `style` 请传对象：字符串形式的 `style` 在变化时会整体重新写入，把尺寸丢掉。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ResizeItemSvelteApi />
+
+`class`、`style` 与原生属性落在根元素上。ResizeGroup 把尺寸直接写在元素的 `style.width` 与 `style.height` 上，Svelte 的 `style` 只接受字符串，字符串变化时会整体重新写入，把尺寸丢掉，因此 `style` 请写成不变的值。
 
 </Framework>
 

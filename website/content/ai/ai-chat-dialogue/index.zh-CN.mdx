@@ -18,6 +18,10 @@ import AIChatDialogueSolidApi from './api/ai-chat-dialogue.solid.zh-CN.mdx';
 import AnnotationSolidApi from './api/annotation.solid.zh-CN.mdx';
 import DialogueStepSolidApi from './api/dialogue-step.solid.zh-CN.mdx';
 import ReasoningSolidApi from './api/reasoning.solid.zh-CN.mdx';
+import AIChatDialogueSvelteApi from './api/ai-chat-dialogue.svelte.zh-CN.mdx';
+import AnnotationSvelteApi from './api/annotation.svelte.zh-CN.mdx';
+import DialogueStepSvelteApi from './api/dialogue-step.svelte.zh-CN.mdx';
+import ReasoningSvelteApi from './api/reasoning.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -53,6 +57,16 @@ import { AIChatDialogue } from '@fibrae/semi-ai-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -70,6 +84,12 @@ import { AIChatDialogue } from '@fibrae/semi-ai-solid';
 <Framework only="solid">
 
 通过设置 `chats` 和 `onChatsChange` 实现基础对话显示和交互。更新时传入新的消息数组：消息数组保存在 `createSignal` 中时，原地修改（如 `push`）不会重新渲染，需要替换为新的数组。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `bind:chats` 实现基础对话显示和交互：消息列表变化时（如删除消息）组件把新列表写回 `chats`，同时调用 `onChatsChange`，每次变更只调用一次；不绑定 `chats` 时，组件内的变更只在组件内生效。组件也检测对 `chats` 的就地修改：向 `$state` 数组 `push` 新消息、往最后一条消息的文本里追加内容，都会调用 `onChatsChange` 并跟随滚动；只改 `content` 数组深处的文本、或单独改 `status` 会重新渲染，但不调用 `onChatsChange`，也不跟随滚动，此时整体替换该消息或整个数组。
 
 </Framework>
 
@@ -115,6 +135,12 @@ chats 类型为 `Message[]`， `Message` 包含对话的各种信息，如角色
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `references` 字段定义当前消息引用的文件或者文本， `showReference` 配置当前消息是否显示可被引用样式, `onReferenceClick` 配置引用按钮点击回调。具体和 AIChatInput 的搭配使用见 [AI 组件构建对话](/zh-CN/react/ai/ai-component#AI%20%E7%BB%84%E4%BB%B6%E6%9E%84%E5%BB%BA%E5%AF%B9%E8%AF%9D)
+
+</Framework>
+
 <Demo id="references" />
 
 ### 选择
@@ -136,6 +162,12 @@ chats 类型为 `Message[]`， `Message` 包含对话的各种信息，如角色
 </Framework>
 
 <Framework only="solid">
+
+通过 `hints` 可设置提示区域内容, 点击提示内容后，提示内容将成为新的用户输入内容，并触发 `onHintClick` 回调。
+
+</Framework>
+
+<Framework only="svelte">
 
 通过 `hints` 可设置提示区域内容, 点击提示内容后，提示内容将成为新的用户输入内容，并触发 `onHintClick` 回调。
 
@@ -175,6 +207,20 @@ interface AIChatDialogueHintBoxSlotProps {
 
 ```ts
 type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => JSX.Element;
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `hintBox` snippet 可自定义提示区域内容，参数为 `{ content, index, onHintClick }`，调用 `onHintClick` 即等同于点击该提示。
+
+```ts
+interface AIChatDialogueHintBoxSnippetProps {
+    content: string;
+    index: number;
+    onHintClick: () => void;
+}
 ```
 
 </Framework>
@@ -371,6 +417,43 @@ export interface DialogueRenderConfig {
 
 </Framework>
 
+<Framework only="svelte">
+
+各区块通过同名 snippet 自定义，提供 snippet 即替换对应区块，每个 snippet 的参数都带有默认节点，可在其中二次组合：
+
+| snippet        | 说明                   | 参数                                                    |
+| -------------- | ---------------------- | ------------------------------------------------------- |
+| `avatar`       | 自定义头像             | `{ message, role, defaultAvatar }`                      |
+| `title`        | 自定义标题             | `{ message, role, defaultTitle }`                       |
+| `content`      | 自定义内容区域         | `{ message, role, defaultContent, class }`              |
+| `action`       | 自定义消息操作栏       | `{ message, defaultActions, defaultActionsObj, class }` |
+| `fullDialogue` | 完全自定义渲染整条对话 | `{ message, role, defaultNodes, class }`                |
+
+`defaultActions` 是默认操作栏的按钮数组，`defaultActionsObj` 是同样的按钮按名称索引的对象，与默认操作栏显示的按钮一致，按钮不显示时（如消息未完成）对应的键不存在。`defaultNodes` 含 `avatar`、`title`、`content`、`action` 四个默认节点。默认节点都是 snippet 值，用 `{@render}` 渲染，如 `{@render defaultActions[0]?.()}`。
+
+```ts
+import type { Snippet } from 'svelte';
+
+interface DefaultActionNodeObj {
+    copyNode?: Snippet;
+    likeNode?: Snippet;
+    dislikeNode?: Snippet;
+    resetNode?: Snippet;
+    shareNode?: Snippet;
+    editNode?: Snippet;
+    moreNode?: Snippet;
+}
+
+interface FullDialogueNodes {
+    avatar: Snippet;
+    title: Snippet;
+    content: Snippet;
+    action: Snippet;
+}
+```
+
+</Framework>
+
 <Demo id="custom-dialogue-render" />
 
 ### 自定义渲染消息内容
@@ -390,6 +473,12 @@ export interface DialogueRenderConfig {
 <Framework only="solid">
 
 通过 `renderDialogueContentItem` 按照消息类型返回内容渲染，映射的键是内容项的 `type`。工具调用先按 `type` 再按 `name` 索引（如 `function_call` 下的 `create_travel_guide`）；内容为纯文本的消息用键 `default` 渲染。渲染函数中可以复用 `AIChatDialogue.Reasoning` 与 `AIChatDialogue.Annotation`，见下文 Static Properties。用法如下
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `contentItem` snippet 按照消息类型返回内容渲染：每个内容项（包括 `message` 类型内层的输入文本、图片、文件）都会先经过该 snippet，参数为 `{ item, type, message, index, parent, defaultItem, class }`，`type` 是内容项的类型，没有 `type` 的顶层内容项视为 `message`；内层项的 `parent` 是所属的 `message` 项。Svelte 读不到 snippet 的输出，所以渲染为空时不会回落到内置渲染：不处理的项要自己用 `{@render defaultItem()}` 渲染；自定义节点不再被额外包裹，需自行带上参数里的 `class`（即 `semi-ai-chat-dialogue-content-custom-renderer`）。内容为纯文本的消息不是内容项，用 `messageText` snippet 替换其 Markdown 渲染，参数为 `{ text, message }`。`AIChatDialogue.Reasoning`、`AIChatDialogue.Annotation` 可以直接用在 snippet 中，见下文 Static Properties；`AIChatDialogue.Reasoning` 替换正文的 snippet 是 `children`，参数为 `{ status, summary, content, markdownRenderProps }`。
 
 </Framework>
 
@@ -419,6 +508,14 @@ import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMe
 
 ```ts
 import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-svelte';
 ```
 
 </Framework>
@@ -484,6 +581,14 @@ function chatInputToChatCompletion(inputContent: MessageContent): ChatCompletion
 <AIChatDialogueSolidApi />
 
 `class`、`style`、`ref` 与原生属性落在根元素 `div` 上。根元素带 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，`role` 为 `group`，使用方传入的 `role` 优先。消息列表是带名称的 `role="log"` 区域，回复生成期间带 `aria-busy="true"`。`roleConfig` 是必填 prop，不读取全局默认值。
+
+</Framework>
+
+<Framework only="svelte">
+
+<AIChatDialogueSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `onclick`）落在根元素 `div` 上；`title`、`content` 在这里是 Semi 的 snippet，`onSelect` 是 Semi 的回调，不是原生属性。根元素带 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，`role` 为 `group`，使用方传入的 `role` 优先。消息列表是带名称的 `role="log"` 区域，回复生成期间带 `aria-busy="true"`。`roleConfig` 是必填 prop，不读取全局默认值。
 
 </Framework>
 
@@ -581,6 +686,23 @@ let dialogue: AIChatDialogueElement | undefined;
 const toBottom = () => dialogue?.scrollToBottom(true);
 
 <AIChatDialogue ref={(element) => (dialogue = element)} chats={messages()} roleConfig={roleConfig} onChatsChange={onChatsChange} />;
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+方法列在上方 API 参考的 Methods 表中。通过 `bind:this` 拿到组件实例后调用：
+
+```svelte
+<script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+
+    let dialogue = $state<ReturnType<typeof AIChatDialogue>>();
+    const toBottom = () => dialogue?.scrollToBottom(true);
+</script>
+
+<AIChatDialogue bind:this={dialogue} bind:chats={messages} {roleConfig} />
 ```
 
 </Framework>
@@ -740,6 +862,63 @@ function CustomCode(props: ComponentProps<typeof DefaultCode>) {
 <AnnotationSolidApi />
 
 `class`、`style`、`ref` 与原生属性落在根元素 `div` 上。
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性              | 说明                                                                                                                                      | 类型                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| defaultComponents | 默认的 Markdown 渲染组件集合，`code` 是增强版的代码块组件，支持代码语言标识和复制功能，可用于 `markdownRenderProps.components` 的二次封装 | `{ code: Component }` |
+| Reasoning         | 推理块组件，API 见下方 [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning)                                                              | `Component`           |
+| Step              | 步骤展示组件，API 见下方 [AIChatDialogue.Step](#AIChatDialogue.Step)                                                                      | `Component`           |
+| Annotation        | 参考来源组件，API 见下方 [AIChatDialogue.Annotation](#AIChatDialogue.Annotation)                                                          | `Component`           |
+
+当需要在自定义代码块渲染时保留默认功能，可以把默认组件包进自己的组件，再通过 `markdownRenderProps.components` 传入：
+
+```svelte
+<!-- CustomCode.svelte -->
+<script lang="ts">
+    import type { ComponentProps } from 'svelte';
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+
+    const DefaultCode = AIChatDialogue.defaultComponents.code;
+
+    let { children, ...rest }: ComponentProps<typeof DefaultCode> = $props();
+</script>
+
+<!-- 可以在此处添加自定义逻辑 -->
+<DefaultCode {...rest}>{@render children?.()}</DefaultCode>
+```
+
+```svelte
+<script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+    import CustomCode from './CustomCode.svelte';
+
+    const markdownRenderProps = { components: { code: CustomCode } };
+</script>
+
+<AIChatDialogue bind:chats={messages} {markdownRenderProps} {roleConfig} />
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningSvelteApi />
+
+`class`、`style` 与原生属性落在根元素 `div` 上。`content` 是推理数据，替换正文的 snippet 叫 `children`。
+
+### AIChatDialogue.Step
+
+<DialogueStepSvelteApi />
+
+`class`、`style` 与原生属性落在根元素 `div` 上。
+
+### AIChatDialogue.Annotation
+
+<AnnotationSvelteApi />
+
+`class`、`style` 与原生属性落在根元素 `div` 上；小写的 `onclick` 是根元素的原生监听器，`onClick` 在点击和 Enter、空格激活时都会触发。
 
 </Framework>
 

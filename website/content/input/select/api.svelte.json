@@ -1,0 +1,243 @@
+{
+    "select": {
+        "source": "packages/semi-ui-svelte/src/select/select.svelte",
+        "props": {
+            "value": {
+                "zh-CN": "当前选中的值，可 `bind:value`。单选为单个值，多选为数组，开启 `onChangeWithObject` 时为选项对象。不传时由组件自行管理；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；绑成 `undefined` 会清空选中。没有 defaultValue。",
+                "en-US": "The selected value, supports `bind:value`. A single value in single mode, an array in multiple mode, and option objects with `onChangeWithObject`. Left out, the component manages it; a one-way `value={x}` only seeds it, and for a fully controlled Select use the function binding `bind:value={get, set}`. Binding it to `undefined` clears the selection. There is no defaultValue."
+            },
+            "multiple": { "zh-CN": "是否多选。", "en-US": "Whether multiple options can be selected." },
+            "optionList": {
+                "zh-CN": "选项数据，条目含 `value`、`label`、`disabled`、`showTick`、`class`、`style` 以及可选的 `group: { key, label }`，其他字段随选项记录回传。同一分组的条目必须相邻。",
+                "en-US": "The option data. An entry has `value`, `label`, `disabled`, `showTick`, `class`, `style` and an optional `group: { key, label }`; other fields travel with the option record. Entries of one group must be adjacent."
+            },
+            "filter": {
+                "zh-CN": "是否开启搜索。传 true 时用输入值与选项 label 或分组标题做 include 对比（不区分大小写），传函数时自定义匹配。",
+                "en-US": "Whether to enable search. true compares the input case-insensitively with the option label or the group title; a function customizes the match."
+            },
+            "remote": {
+                "zh-CN": "是否为远程搜索，开启后不再在本地筛选选项，由使用方更新 `optionList`。",
+                "en-US": "Whether the search is remote. When on, the options are not filtered locally and the caller updates `optionList`."
+            },
+            "allowCreate": {
+                "zh-CN": "是否允许创建列表中不存在的选项，需配合 `filter`。",
+                "en-US": "Whether options that are not in the list can be created; use it with `filter`."
+            },
+            "autoClearSearchValue": {
+                "zh-CN": "多选选中后是否自动清空搜索关键字。",
+                "en-US": "Whether the search keyword is cleared after an option is selected in multiple mode."
+            },
+            "autofocus": { "zh-CN": "挂载后是否自动聚焦。", "en-US": "Whether to focus on mount." },
+            "defaultOpen": {
+                "zh-CN": "挂载后是否展开下拉列表。Select 没有受控的展开状态。",
+                "en-US": "Whether the dropdown list opens on mount. Select has no controlled open state."
+            },
+            "clickToHide": {
+                "zh-CN": "多选时点击选项后是否关闭下拉列表。",
+                "en-US": "Whether the dropdown list closes after an option is clicked in multiple mode."
+            },
+            "defaultActiveFirstOption": {
+                "zh-CN": "是否默认高亮第一个可用选项。",
+                "en-US": "Whether the first enabled option is highlighted by default."
+            },
+            "onChangeWithObject": {
+                "zh-CN": "`onChange` 与 `value` 是否使用选项对象而不是选项的值。",
+                "en-US": "Whether `onChange` and `value` carry option objects instead of option values."
+            },
+            "max": {
+                "zh-CN": "多选时最多可选的数量，超出时触发 `onExceed`。",
+                "en-US": "Maximum number of selected options in multiple mode; `onExceed` fires beyond it."
+            },
+            "maxTagCount": {
+                "zh-CN": "多选时标签的最大展示数量，超出后以 +N 形式展示。",
+                "en-US": "Maximum number of tags shown in multiple mode; the rest are shown as +N."
+            },
+            "maxHeight": {
+                "zh-CN": "下拉列表的最大高度。",
+                "en-US": "Maximum height of the dropdown list."
+            },
+            "showRestTagsPopover": {
+                "zh-CN": "超过 `maxTagCount` 后，hover 到 +N 时是否通过 Popover 显示剩余标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover once `maxTagCount` is exceeded."
+            },
+            "restTagsPopoverProps": {
+                "zh-CN": "+N 浮层的 Popover 属性。",
+                "en-US": "Popover props of the +N popover."
+            },
+            "expandRestTagsOnClick": {
+                "zh-CN": "设置 `maxTagCount` 时，打开下拉列表后是否展开被折叠的标签。",
+                "en-US": "With `maxTagCount`, whether the collapsed tags expand while the dropdown list is open."
+            },
+            "ellipsisTrigger": {
+                "zh-CN": "是否对溢出的标签做自适应处理，宽度不足时最后一个标签内容截断。有一定性能损耗，不推荐在大表单场景使用。",
+                "en-US": "Whether overflowing tags adapt: when the width is short the last tag is truncated. It has a performance cost and is not recommended in large forms."
+            },
+            "size": { "zh-CN": "尺寸，可选 `small`、`default`、`large`。", "en-US": "Size: `small`, `default` or `large`." },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the component is disabled." },
+            "borderless": { "zh-CN": "是否无边框。", "en-US": "Whether the trigger has no border." },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 `default`、`warning`、`error`，只影响背景颜色等样式。",
+                "en-US": "Validation status: `default`, `warning` or `error`; it only affects styles such as the background color."
+            },
+            "placeholder": { "zh-CN": "未选中时的占位文字。", "en-US": "Placeholder while nothing is selected." },
+            "searchPlaceholder": {
+                "zh-CN": "搜索框在下拉列表中时（`searchPosition=\"dropdown\"`）搜索框的占位文字。",
+                "en-US": "Placeholder of the search input when it is in the dropdown list (`searchPosition=\"dropdown\"`)."
+            },
+            "searchPosition": {
+                "zh-CN": "搜索框的位置，可选 `trigger`、`dropdown`。",
+                "en-US": "Where the search input sits: `trigger` or `dropdown`."
+            },
+            "loading": {
+                "zh-CN": "是否加载中，加载中时下拉列表显示加载状态而不是选项。",
+                "en-US": "Whether the options are loading; the dropdown list shows a spinner instead of the options."
+            },
+            "showArrow": { "zh-CN": "是否显示右侧下拉箭头。", "en-US": "Whether to show the dropdown arrow." },
+            "showClear": { "zh-CN": "是否显示清除按钮。", "en-US": "Whether to show the clear button." },
+            "insetLabelId": {
+                "zh-CN": "内嵌标签容器的 id，供 aria-labelledby 引用；未传时在渲染 `insetLabel` 时由组件生成。",
+                "en-US": "id of the inset label container, for aria-labelledby; when left out and `insetLabel` is rendered, one is generated."
+            },
+            "inputProps": {
+                "zh-CN": "搜索框 Input 的额外属性，`class` 与 `style` 落在 Input 外层。",
+                "en-US": "Extra props of the search Input; `class` and `style` land on the Input wrapper."
+            },
+            "dropdownClassName": { "zh-CN": "下拉层的类名。", "en-US": "Class name of the dropdown layer." },
+            "dropdownStyle": { "zh-CN": "下拉层的样式，字符串。", "en-US": "Style of the dropdown layer, a string." },
+            "dropdownMatchSelectWidth": {
+                "zh-CN": "下拉层的最小宽度是否跟随触发器宽度。",
+                "en-US": "Whether the minimum width of the dropdown layer follows the trigger width."
+            },
+            "position": { "zh-CN": "下拉层相对触发器的方位。", "en-US": "Placement of the dropdown layer relative to the trigger." },
+            "spacing": { "zh-CN": "下拉层与触发器的间距。", "en-US": "Gap between the dropdown layer and the trigger." },
+            "motion": { "zh-CN": "是否开启下拉层的动画。", "en-US": "Whether the dropdown layer animates." },
+            "autoAdjustOverflow": {
+                "zh-CN": "下拉层溢出视口时是否自动调整方位。",
+                "en-US": "Whether the dropdown layer flips automatically when it overflows the viewport."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止下拉层内的点击事件冒泡到外层。",
+                "en-US": "Whether clicks inside the dropdown layer are stopped from bubbling out."
+            },
+            "virtualize": {
+                "zh-CN": "开启列表虚拟化，`itemSize` 必传。开启后不渲染分组标题与 `role=\"group\"`，选项按顺序平铺。",
+                "en-US": "Turns on list virtualization; `itemSize` is required. Group titles and `role=\"group\"` are not rendered with it, and the options are laid out flat in order."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到元素。",
+                "en-US": "Whether focusing stops the browser from scrolling the element into view."
+            },
+            "id": {
+                "zh-CN": "触发器的 id，选项的 id 由它派生。",
+                "en-US": "id of the trigger; the option ids derive from it."
+            },
+            "onChange": {
+                "zh-CN": "选中值变化时的回调，入参为新的值（开启 `onChangeWithObject` 时为选项对象）。",
+                "en-US": "Called when the selection changes, with the new value (option objects with `onChangeWithObject`)."
+            },
+            "onDropdownVisibleChange": {
+                "zh-CN": "下拉列表展开或收起时的回调。",
+                "en-US": "Called when the dropdown list opens or closes."
+            },
+            "onSearch": {
+                "zh-CN": "搜索关键字变化时的回调；经 `search()` 或 `trigger` snippet 的 `onSearch` 触发时没有事件参数。",
+                "en-US": "Called when the search keyword changes; there is no event when it comes from `search()` or the `onSearch` of the `trigger` snippet."
+            },
+            "onSelect": { "zh-CN": "选中某个选项时的回调。", "en-US": "Called when an option is selected." },
+            "onDeselect": { "zh-CN": "多选时取消选中某个选项的回调。", "en-US": "Called when an option is deselected in multiple mode." },
+            "onExceed": { "zh-CN": "选中数量超过 `max` 时的回调。", "en-US": "Called when the selection would exceed `max`." },
+            "onCreate": { "zh-CN": "创建选项时的回调。", "en-US": "Called when an option is created." },
+            "onClear": { "zh-CN": "点击清除按钮时的回调。", "en-US": "Called when the clear button is clicked." },
+            "onFocus": { "zh-CN": "焦点进入 Select 时触发一次。", "en-US": "Called once when the focus enters the Select." },
+            "onBlur": {
+                "zh-CN": "焦点离开 Select 时触发一次；点击打开的下拉层之外时传入其 mousedown 事件。",
+                "en-US": "Called once when the focus leaves the Select; a press outside the open dropdown passes its mousedown event."
+            },
+            "onListScroll": { "zh-CN": "下拉列表滚动时的回调。", "en-US": "Called when the dropdown list scrolls." },
+            "prefix": {
+                "zh-CN": "选择框前缀，snippet。内容为文本或 Icon 时自动带上左右间隔。",
+                "en-US": "Prefix of the selection box, a snippet. The side padding is added when the content is text or an Icon."
+            },
+            "suffix": {
+                "zh-CN": "选择框后缀，snippet。内容为文本或 Icon 时自动带上左右间隔。",
+                "en-US": "Suffix of the selection box, a snippet. The side padding is added when the content is text or an Icon."
+            },
+            "insetLabel": {
+                "zh-CN": "内嵌标签，snippet。没有 `prefix` 时渲染，并作为 combobox 的名称来源。",
+                "en-US": "Inset label, a snippet. Rendered without a `prefix`, and the name source of the combobox."
+            },
+            "arrowIcon": { "zh-CN": "自定义下拉箭头，snippet。", "en-US": "Custom dropdown arrow, a snippet." },
+            "clearIcon": { "zh-CN": "自定义清除按钮图标，snippet。", "en-US": "Custom clear button icon, a snippet." },
+            "emptyContent": {
+                "zh-CN": "没有选项时的内容，snippet；传 `null` 隐藏空状态。",
+                "en-US": "Content when there are no options, a snippet; `null` hides the empty state."
+            },
+            "outerTopSlot": {
+                "zh-CN": "下拉层顶部与选项列表平级的内容，snippet，列表滚动时始终展现。",
+                "en-US": "Content at the top of the dropdown layer, level with the option list, a snippet; always visible while the list scrolls."
+            },
+            "innerTopSlot": {
+                "zh-CN": "渲染在选项列表内部顶部的内容，snippet，滚动到顶部时展现。",
+                "en-US": "Content inside the top of the option list, a snippet; visible when the list is scrolled to the top."
+            },
+            "outerBottomSlot": {
+                "zh-CN": "下拉层底部与选项列表平级的内容，snippet，列表滚动时始终展现。",
+                "en-US": "Content at the bottom of the dropdown layer, level with the option list, a snippet; always visible while the list scrolls."
+            },
+            "innerBottomSlot": {
+                "zh-CN": "渲染在选项列表内部底部的内容，snippet，滚动到底部时展现。",
+                "en-US": "Content inside the bottom of the option list, a snippet; visible when the list is scrolled to the bottom."
+            },
+            "optionItem": {
+                "zh-CN": "替换整个选项行，snippet，参数含 `id`、`value`、`label`、`selected`、`focused`、`disabled`、`inputValue`、`class`、`style`、`onclick`、`onmouseenter` 以及条目上的其他字段。`id` 要与 `role=\"option\"` 一起写在选项元素上。",
+                "en-US": "Replaces a whole option row, a snippet. Its parameter has `id`, `value`, `label`, `selected`, `focused`, `disabled`, `inputValue`, `class`, `style`, `onclick`, `onmouseenter` and the other fields of the entry. Put `id` on the element with `role=\"option\"`."
+            },
+            "optionLabel": {
+                "zh-CN": "只替换选项行里的文字，snippet，参数为 `{ option }`。选中图标、行的 `role=\"option\"`、状态与键盘行为不变；`label` 仍用于搜索与可访问名称，内容里不高亮搜索关键字。",
+                "en-US": "Replaces only the text inside an option row, a snippet with `{ option }`. The tick icon, the `role=\"option\"` of the row, its states and keyboard behavior stay; `label` still serves search and the accessible name, and the search keyword is not highlighted in the content."
+            },
+            "groupLabel": {
+                "zh-CN": "替换分组标题的内容，snippet，参数为 `{ group }`（含 `key`、`label`）；不传时显示 `group.label`。",
+                "en-US": "Replaces the content of a group title, a snippet with `{ group }` (`key` and `label`); without it `group.label` is shown."
+            },
+            "createItem": {
+                "zh-CN": "创建选项那一行的内容，snippet，参数为 `{ inputValue, focus, style }`；虚拟化时要把 `style` 用在自定义元素上。",
+                "en-US": "Content of the row that creates an option, a snippet with `{ inputValue, focus, style }`; with virtualization apply `style` to the custom element."
+            },
+            "selectedItem": {
+                "zh-CN": "已选内容，snippet，参数为 `{ option, index, disabled, onClose }`。单选时替换选择框内容，多选时替换每个标签里的内容。",
+                "en-US": "The selected content, a snippet with `{ option, index, disabled, onClose }`. In single mode it replaces the selection box content, in multiple mode the content of each tag."
+            },
+            "tag": {
+                "zh-CN": "多选时替换每个标签，snippet，参数同 `selectedItem`，同时提供时优先于 `selectedItem`。",
+                "en-US": "Replaces each tag in multiple mode, a snippet with the parameters of `selectedItem`; it takes precedence over `selectedItem`."
+            },
+            "trigger": {
+                "zh-CN": "替换触发器的内容，snippet，参数为 `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`。",
+                "en-US": "Replaces the trigger content, a snippet with `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`."
+            }
+        },
+        "methods": {
+            "close": { "zh-CN": "关闭下拉列表。", "en-US": "Closes the dropdown list." },
+            "open": { "zh-CN": "展开下拉列表。", "en-US": "Opens the dropdown list." },
+            "focus": {
+                "zh-CN": "聚焦触发器，可搜索时聚焦搜索框并展开下拉列表。",
+                "en-US": "Focuses the trigger, or the search input with the dropdown list opened when searchable."
+            },
+            "clearInput": { "zh-CN": "清空搜索框的值。", "en-US": "Clears the value of the search input." },
+            "selectAll": {
+                "zh-CN": "选中所有可见且未禁用的选项，仅多选时有效。",
+                "en-US": "Selects every shown, enabled option; multiple mode only."
+            },
+            "deselectAll": { "zh-CN": "清空所有已选项。", "en-US": "Clears all selected options." },
+            "search": {
+                "zh-CN": "按输入了该值来搜索。",
+                "en-US": "Searches as if the keyword were typed into the search input."
+            },
+            "rePosition": {
+                "zh-CN": "按触发器当前位置立即重新计算下拉层位置，一般无需调用。",
+                "en-US": "Recomputes the dropdown position from the trigger's current position at once; rarely needed."
+            }
+        }
+    }
+}

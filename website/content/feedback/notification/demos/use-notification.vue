@@ -10,16 +10,16 @@
     // The function is rendered as a functional component inside the notification, so it can inject from where Holder sits
     const content = () => `ReachableContext: ${inject(reachableKey)}`;
 
-    function show() {
+    const show = () => {
         ids.value.push(notification.info({ title: 'Hook Notification', content, duration: 0 }));
-    }
+    };
 
-    function hide() {
+    const hide = () => {
         const first = ids.value.shift();
         if (first) {
             notification.close(first);
         }
-    }
+    };
 </script>
 
 <template>

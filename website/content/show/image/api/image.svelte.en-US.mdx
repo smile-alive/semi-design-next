@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| alt | Image description, also the accessible name of a previewable thumbnail. | `string` | - |
+| closeIcon | Custom close icon. It applies to this Image's own preview only and has no effect inside an ImagePreview. | `Snippet` | - |
+| crossOrigin | The crossorigin attribute passed to the native img element. | `'anonymous' \| 'use-credentials'` | - |
+| fallback | Fallback image URL shown when loading fails, or a snippet for custom content. | `string \| Snippet` | - |
+| height | Display height of the image; a number is in px. | `string \| number` | - |
+| imgCls | Custom class name passed to the img element. | `string` | - |
+| imgStyle | Custom style passed to the img element. | `string` | - |
+| leftIcon | Custom previous icon. It applies to this Image's own preview only and has no effect inside an ImagePreview. | <ApiType detail={"Snippet\u003c[ImagePreviewIconSnippetProps]>"}>Type</ApiType> | - |
+| onError | Called when the image fails to load. | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
+| onLoad | Called when the image has loaded. | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
+| placeholder | Snippet for the placeholder content shown until the image has loaded. | `Snippet` | - |
+| preview | Preview options; false disables preview. The object carries data and callbacks only; use the Image snippets for custom content. | `boolean \| ImagePreviewProps` | `true` |
+| previewMenu | Custom bottom menu of the preview. It applies to this Image's own preview only and has no effect inside an ImagePreview. | <ApiType detail={"Snippet\u003c[MenuProps]>"}>Type</ApiType> | - |
+| rightIcon | Custom next icon. It applies to this Image's own preview only and has no effect inside an ImagePreview. | <ApiType detail={"Snippet\u003c[ImagePreviewIconSnippetProps]>"}>Type</ApiType> | - |
+| setDownloadName | Sets the download file name of the image. | <ApiType detail={"(src: string) => string"}>Type</ApiType> | - |
+| src | Image source URL. | `string` | - |
+| title | Replaces the content of the title section at the top of the preview; when there is a title, the dialog is named by the text the snippet renders. It applies to this Image's own preview only and has no effect inside an ImagePreview. | <ApiType detail={"Snippet\u003c[ImagePreviewTitleSnippetProps]>"}>Type</ApiType> | - |
+| width | Display width of the image; a number is in px. | `string \| number` | - |

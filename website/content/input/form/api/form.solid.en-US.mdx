@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | component | A component that declares the fields, rendered with formState, values and formApi as its props. Do not use it together with render or children. | <ApiType detail={"(props: FormRenderProps\u003cValues>) => JSX.Element"}>Type</ApiType> | - |
 | disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
 | extraTextPosition | Position of the extra text of every field: middle puts it between the label and the control, bottom after the control. The same property on a field takes precedence. | `'middle' \| 'bottom'` | - |
-| form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues> & FormApiProxyInternals\u003cValues>"}>Type</ApiType> | - |
+| form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> | - |
 | getFormApi | Called once the Form has mounted, with the formApi. | <ApiType detail={"(formApi: FormApi\u003cValues>) => void"}>Type</ApiType> | - |
 | id | The id of the form element, also written to x-form-id. Generated when omitted. | `string` | - |
 | initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |

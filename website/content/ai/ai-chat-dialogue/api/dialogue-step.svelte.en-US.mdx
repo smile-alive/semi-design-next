@@ -1,0 +1,8 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| actionIcon | Snippet for the icon shown before each action's description, with the action `item`, its `index`, the `step` it belongs to and `stepIndex`. | <ApiType detail={"Snippet\u003c[DialogueStepWidgetActionIconSnippetProps]>"}>Type</ApiType> | - |
+| steps | List of steps. Each step has summary, status and actions; completed shows the done icon, any other status shows loading. actions hold data only (summary, description and so on), and a step expands or collapses on click, Enter or Space. | `DialogueStep[]` | - |

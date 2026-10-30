@@ -1,0 +1,171 @@
+{
+    "input-number": {
+        "source": "packages/semi-ui-svelte/src/input-number/input-number.svelte",
+        "props": {
+            "addonAfter": { "zh-CN": "后置标签的 snippet。", "en-US": "Snippet of the trailing addon." },
+            "addonBefore": { "zh-CN": "前置标签的 snippet。", "en-US": "Snippet of the leading addon." },
+            "autofocus": { "zh-CN": "挂载后自动聚焦输入框。", "en-US": "Focuses the input after mount." },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "clearIcon": {
+                "zh-CN": "自定义清除按钮图标的 snippet，showClear 为 true 时有效。",
+                "en-US": "Snippet of the custom clear button icon; valid when showClear is true."
+            },
+            "composition": {
+                "zh-CN": "是否启用输入法组合模式，开启后组合输入期间不触发 onChange，组合结束后触发一次。",
+                "en-US": "Whether to enable composition mode. When enabled, onChange is not called during IME composition and is called once after it ends."
+            },
+            "currency": {
+                "zh-CN": "货币种类，可选值有 CNY、EUR、USD 等。设为 true 时使用 defaultCurrency，未设置时为语言包对应的货币；裸写 currency 等同于 true。",
+                "en-US": "Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true."
+            },
+            "currencyDisplay": {
+                "zh-CN": "货币展示方式，可选 symbol、code、name。",
+                "en-US": "How the currency is shown: symbol, code or name."
+            },
+            "defaultCurrency": {
+                "zh-CN": "currency 为 true 时使用的货币种类，优先级为自身属性、全局默认值、语言包。",
+                "en-US": "Currency used when currency is true. Priority: own prop, global default, locale pack."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether disabled." },
+            "formatter": {
+                "zh-CN": "指定输入框展示值的格式，一般与 parser 同时设置。优先级为自身属性、全局默认值。",
+                "en-US": "Format of the displayed value, usually set together with parser. Priority: own prop, global default."
+            },
+            "hideButtons": {
+                "zh-CN": "隐藏步进按钮；与 innerButtons 同时为 true 时也不显示内置按钮。",
+                "en-US": "Hides the step buttons; with innerButtons also true, no built-in button is shown either."
+            },
+            "hideSuffix": {
+                "zh-CN": "清除按钮显示时隐藏后缀，默认两者并列。",
+                "en-US": "Hides the suffix while the clear button is shown; by default the two sit side by side."
+            },
+            "innerButtons": {
+                "zh-CN": "将步进按钮放在输入框内部，悬停或聚焦时显示，并临时替换 suffix。",
+                "en-US": "Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix."
+            },
+            "inputStyle": {
+                "zh-CN": "原生 input 的样式，只接受字符串。",
+                "en-US": "Style of the native input. Accepts a string only."
+            },
+            "insetLabel": { "zh-CN": "内嵌标签的 snippet。", "en-US": "Snippet of the inset label." },
+            "insetLabelId": { "zh-CN": "内嵌标签的 id。", "en-US": "The id of the inset label." },
+            "keepFocus": {
+                "zh-CN": "点击步进按钮时保持输入框聚焦。",
+                "en-US": "Keeps the input focused when a step button is clicked."
+            },
+            "localeCode": {
+                "zh-CN": "货币模式下用于格式化的语言地区代码，如 zh-CN、en-US、de-DE。优先级为自身属性、全局默认值、LocaleProvider 或 ConfigProvider 的语言包。",
+                "en-US": "Locale code used for formatting in currency mode, such as zh-CN, en-US or de-DE. Priority: own prop, global default, locale pack of LocaleProvider or ConfigProvider."
+            },
+            "max": { "zh-CN": "限定最大值。", "en-US": "Maximum value." },
+            "maximumFractionDigits": {
+                "zh-CN": "显示的最大小数位数，传给 Intl.NumberFormat。",
+                "en-US": "Maximum number of fraction digits shown, passed to Intl.NumberFormat."
+            },
+            "maxlength": { "zh-CN": "输入框文本的最大长度。", "en-US": "Maximum length of the input text." },
+            "min": { "zh-CN": "限定最小值。", "en-US": "Minimum value." },
+            "minimumFractionDigits": {
+                "zh-CN": "显示的最小小数位数，传给 Intl.NumberFormat。",
+                "en-US": "Minimum number of fraction digits shown, passed to Intl.NumberFormat."
+            },
+            "minlength": { "zh-CN": "输入框文本的最小长度。", "en-US": "Minimum length of the input text." },
+            "onBlur": {
+                "zh-CN": "焦点离开输入框与清除按钮时的回调，事件为 Input 外层元素的 focusout。",
+                "en-US": "Called when focus leaves the input and the clear button. The event is the focusout of the Input wrapper."
+            },
+            "onChange": {
+                "zh-CN": "值变化时的回调。第二个参数是触发变化的事件：输入、步进按钮 pointerdown、方向键或 Home/End 键、失焦。挂载和父级传入新值不触发，越界值按原样显示，用户操作时才校正并通知。",
+                "en-US": "Called when the value changes. The second argument is the event that caused it: typing, a step button pointerdown, an arrow or Home/End keydown, or blur. Mounting and a new value from the parent do not call it; an out-of-range value is shown as given and is corrected and reported only after a user action."
+            },
+            "onClear": { "zh-CN": "点击清除按钮时的回调。", "en-US": "Called when the clear button is clicked." },
+            "onCompositionEnd": { "zh-CN": "输入法组合结束时的回调。", "en-US": "Called when an IME composition ends." },
+            "onCompositionStart": { "zh-CN": "输入法组合开始时的回调。", "en-US": "Called when an IME composition starts." },
+            "onCompositionUpdate": { "zh-CN": "输入法组合过程中的回调。", "en-US": "Called while an IME composition updates." },
+            "onDownClick": {
+                "zh-CN": "按下减小按钮步进时的回调，长按连续步进时每步触发一次；参数为步进后的值与 pointerdown 事件。",
+                "en-US": "Called when pressing the decrease button steps the value, once per step while it is held; the arguments are the stepped value and the pointerdown event."
+            },
+            "onEnterPress": { "zh-CN": "在输入框中按下 Enter 时的回调。", "en-US": "Called when Enter is pressed in the input." },
+            "onFocus": {
+                "zh-CN": "焦点进入输入框时的回调；焦点在输入框与清除按钮之间移动不触发。事件为 Input 外层元素的 focusin。",
+                "en-US": "Called when focus enters the input; moving focus between the input and the clear button does not call it. The event is the focusin of the Input wrapper."
+            },
+            "onInput": { "zh-CN": "原生 input 事件的回调。", "en-US": "Callback for the native input event." },
+            "onKeyDown": { "zh-CN": "在输入框中按下按键时的回调。", "en-US": "Called when a key is pressed in the input." },
+            "onKeyUp": { "zh-CN": "在输入框中松开按键时的回调。", "en-US": "Called when a key is released in the input." },
+            "onNumberChange": {
+                "zh-CN": "数字变化时的回调，事件参数同 onChange。",
+                "en-US": "Called when the number changes; the event argument is as in onChange."
+            },
+            "onUpClick": {
+                "zh-CN": "按下增大按钮步进时的回调，长按连续步进时每步触发一次；参数为步进后的值与 pointerdown 事件。",
+                "en-US": "Called when pressing the increase button steps the value, once per step while it is held; the arguments are the stepped value and the pointerdown event."
+            },
+            "parser": {
+                "zh-CN": "指定从 formatter 转换回数字串的方式，与 formatter 搭配使用。优先级为自身属性、全局默认值。",
+                "en-US": "Converts the text from formatter back to a number string; used together with formatter. Priority: own prop, global default."
+            },
+            "placeholder": { "zh-CN": "占位文本。", "en-US": "Placeholder text." },
+            "precision": { "zh-CN": "数值精度，即保留的小数位数。", "en-US": "Numerical precision, the number of fraction digits kept." },
+            "prefix": { "zh-CN": "前缀内容的 snippet。", "en-US": "Snippet of the prefix content." },
+            "pressInterval": {
+                "zh-CN": "长按步进按钮时，连续触发的间隔，单位毫秒。",
+                "en-US": "Interval in milliseconds between repeats while a step button is held."
+            },
+            "pressTimeout": {
+                "zh-CN": "长按步进按钮时，开始连续触发前的延迟，单位毫秒。",
+                "en-US": "Delay in milliseconds before repeating starts while a step button is held."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动文档以显示输入框，作用于组件内的 focus 调用。",
+                "en-US": "Whether focusing stops the browser from scrolling the document to the input; applies to focus calls inside the component."
+            },
+            "readonly": { "zh-CN": "是否只读。", "en-US": "Whether read-only." },
+            "readOnly": {
+                "zh-CN": "原生 `readonly`：只禁止键入，保留清除按钮；`readonly` 同时隐藏清除按钮。",
+                "en-US": "Native `readonly`: blocks typing only and keeps the clear button; `readonly` also hides the clear button."
+            },
+            "scientificNotation": {
+                "zh-CN": "启用科学计数法显示：失焦时显示科学计数法，聚焦时显示完整数字。可传入 `{ threshold }` 配置阈值，默认 15 位有效数字。不支持货币模式。",
+                "en-US": "Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode."
+            },
+            "shiftStep": {
+                "zh-CN": "按住 Shift 时每次改变的步长，可以为小数。",
+                "en-US": "Step of each change while Shift is held; may be a decimal."
+            },
+            "showClear": { "zh-CN": "是否显示清除按钮。", "en-US": "Whether to show the clear button." },
+            "showCurrencySymbol": {
+                "zh-CN": "是否显示货币符号、代码或名称，仅货币模式下生效。",
+                "en-US": "Whether to show the currency symbol, code or name; only in currency mode."
+            },
+            "size": { "zh-CN": "输入框大小，可选 default、small、large。", "en-US": "Input size: default, small or large." },
+            "step": { "zh-CN": "每次改变的步长，可以为小数。", "en-US": "Step of each change; may be a decimal." },
+            "suffix": {
+                "zh-CN": "后缀内容的 snippet；innerButtons 的按钮显示期间被替换。",
+                "en-US": "Snippet of the suffix content; replaced while the innerButtons buttons are shown."
+            },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 default、error、warning、success。",
+                "en-US": "Validation status: default, error, warning or success."
+            },
+            "value": {
+                "zh-CN": "当前值，可用 `bind:value` 双向绑定。输入的中间态或非法文本为字符串，清空时为 ''。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值。",
+                "en-US": "Current value; bind it with `bind:value`. A partial or invalid text is a string and a cleared input is ''. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value."
+            }
+        },
+        "methods": {
+            "blur": { "zh-CN": "移出焦点。", "en-US": "Removes focus." },
+            "focus": {
+                "zh-CN": "聚焦输入框；未传 options.preventScroll 时使用 preventScroll 属性的值。",
+                "en-US": "Focuses the input; preventScroll prop applies when options.preventScroll is not given."
+            },
+            "getInput": { "zh-CN": "返回原生 input 元素，卸载后为 null。", "en-US": "Returns the native input element; null after unmount." },
+            "getNativeElement": { "zh-CN": "返回组件根元素，卸载后为 null。", "en-US": "Returns the root element of the component; null after unmount." },
+            "select": { "zh-CN": "选中输入框中的全部文本。", "en-US": "Selects all the text in the input." },
+            "setSelectionRange": {
+                "zh-CN": "设置选区，参数同原生 setSelectionRange。",
+                "en-US": "Sets the selection, with the parameters of the native setSelectionRange."
+            }
+        }
+    }
+}

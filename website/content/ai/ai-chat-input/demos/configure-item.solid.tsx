@@ -19,17 +19,17 @@ const cascaderModalOptions = [
     },
 ];
 
-const myCascader = (props: CascaderProps) => {
+function myCascader(props: CascaderProps) {
     return <Cascader {...props} />;
-};
+}
 
 const CustomCascader = getConfigureItem(myCascader, {
     class: 'aiChatInput-cascader-configure',
 });
 
-const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+function onConfigureChange(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) {
     console.log('onConfigureChange', value, changedValue);
-};
+}
 
 export default function AIChatInputDemo() {
     const renderLeftMenu = () => <CustomCascader field="model" treeData={cascaderModalOptions} initValue={['GPT', 'GPT-4o']} />;

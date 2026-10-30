@@ -11,6 +11,8 @@ import AvatarVueApi from './api/avatar.vue.zh-CN.mdx';
 import AvatarGroupVueApi from './api/avatar-group.vue.zh-CN.mdx';
 import AvatarSolidApi from './api/avatar.solid.zh-CN.mdx';
 import AvatarGroupSolidApi from './api/avatar-group.solid.zh-CN.mdx';
+import AvatarSvelteApi from './api/avatar.svelte.zh-CN.mdx';
+import AvatarGroupSvelteApi from './api/avatar-group.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -38,6 +40,16 @@ import { Avatar, AvatarGroup } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Avatar, AvatarGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Avatar, AvatarGroup } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -92,6 +104,12 @@ Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状�
 
 </Framework>
 
+<Framework only="svelte">
+
+Avatar 支持 `onclick`、`onMouseEnter`、`onMouseLeave`，传了 `onclick` 才成为可聚焦的 button。通过 `hoverMask` snippet 传入悬停覆盖层，用 `{#snippet hoverMask()}...{/snippet}` 写在 Avatar 标签内，覆盖层无默认样式。
+
+</Framework>
+
 <Demo id="hover-mask" />
 
 ### 顶部和底部 Slot
@@ -105,6 +123,12 @@ Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状�
 <Framework only="solid">
 
 `topSlot`、`bottomSlot` 属性配置标记的外观与文字；`text` 传函数时渲染自定义内容（如图标），只在标记显示时调用；传入 `render` 函数时，由它完全渲染标记。
+
+</Framework>
+
+<Framework only="svelte">
+
+`topSlot`、`bottomSlot` 属性配置标记外观，`topSlotText`、`bottomSlotText` snippet 提供内容。`topSlot.render`、`bottomSlot.render` 传 snippet 时，由它完全渲染标记；`topSlot.style`、`bottomSlot.style` 是字符串。
 
 </Framework>
 
@@ -132,6 +156,12 @@ Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状�
 
 可以通过 AvatarGroup 将 `avatar` 显示为组。
 
+<Framework only="svelte">
+
+Svelte 的 AvatarGroup 用 `items` 传入每个头像的属性，用 `item` snippet（参数 `{ item, index }`）提供头像内的文字，不接受 `Avatar` 子节点。
+
+</Framework>
+
 <Demo id="group" />
 
 可以通过 `maxCount` 设置展示的头像数量。
@@ -153,6 +183,12 @@ Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状�
 <Framework only="vue">
 
 可以通过 `#more="{ restNumber, restAvatars }"` 作用域插槽自定义 more 标签。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `more` snippet 自定义 more 标签，参数为 `{ restNumber, restAvatars }`。`restAvatars` 是被隐藏的完整数据项（`items` 中的对应项）；头像的文字内容由 `item` snippet 提供，不在数据项里。
 
 </Framework>
 
@@ -192,6 +228,14 @@ Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状�
 
 </Framework>
 
+<Framework only="svelte">
+
+<AvatarSvelteApi />
+
+`class`、`style`、`id` 与其他原生属性落在头像 `span` 上；使用 `border`、`topSlot` 或 `bottomSlot` 时，`style` 落在外层包裹元素上，`class` 与其他原生属性仍落在头像 `span` 上。可点击头像的 `tabindex`、`aria-*` 落在内部唯一的焦点元素上。
+
+</Framework>
+
 ### AvatarGroup
 
 <Framework only="react">
@@ -215,6 +259,14 @@ Avatar 支持 `onClick`、`onMouseEnter`、`onMouseLeave`。其中 `hover` 状�
 <AvatarGroupSolidApi />
 
 `class`、`style`、`ref` 与原生属性（包括 `aria-*`）落在 AvatarGroup 根元素上，不会传给组内的头像。
+
+</Framework>
+
+<Framework only="svelte">
+
+<AvatarGroupSvelteApi />
+
+`class`、`style` 与原生属性（包括 `aria-*`）落在 AvatarGroup 根元素上，不会传给组内的头像。
 
 </Framework>
 
@@ -286,6 +338,23 @@ import { Avatar } from '@fibrae/semi-ui-solid';
 ```
 
 替代文本描述头像内容，避免空字符串，也不必重复说明「图片」。可点击时用 `onClick` 声明操作，组件自动提供 Tab 停靠点，并将 `Enter` 和空格转为点击。
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Avatar } from '@fibrae/semi-ui-svelte';
+
+    const src = '/assets/placeholder/avatar-a.svg';
+</script>
+
+<Avatar alt="一只可爱的猫咪" {src} />
+<Avatar alt="姜鹏志" {src} />
+```
+
+替代文本描述头像内容，避免空字符串，也不必重复说明「图片」。可点击时用 `onclick` 声明操作，组件自动提供 Tab 停靠点，并将 `Enter` 和空格转为点击。
 
 </Framework>
 

@@ -110,16 +110,16 @@ const defaultPagination: PageState = {
     total: allData.length,
 };
 
-const renderExpandedRow = (record: Row) => {
+function renderExpandedRow(record: Row) {
     return {
         children: <p>{record.description}</p>,
         fixed: 'left' as const,
     };
-};
+}
 
 const renderFooter = () => <p style={{ margin: 0 }}>This is footer.</p>;
 
-const mergeColumns = (column: ColumnProps, columns: ColumnProps[], keys: (keyof ColumnProps)[] = ['dataIndex']) => {
+function mergeColumns(column: ColumnProps, columns: ColumnProps[], keys: (keyof ColumnProps)[] = ['dataIndex']) {
     const nextColumns = [...columns];
     nextColumns.forEach((curColumn, index) => {
         let isTarget = !!(keys && keys.length);
@@ -137,9 +137,9 @@ const mergeColumns = (column: ColumnProps, columns: ColumnProps[], keys: (keyof 
     });
 
     return nextColumns;
-};
+}
 
-const filterData = (filters: ColumnProps[], dataSource: Row[]) => {
+function filterData(filters: ColumnProps[], dataSource: Row[]) {
     let result = [...dataSource];
     filters.forEach((filter) => {
         const filteredValue = filter.filteredValue;
@@ -150,9 +150,9 @@ const filterData = (filters: ColumnProps[], dataSource: Row[]) => {
     });
 
     return result;
-};
+}
 
-const sortData = (sortObj: ColumnProps, dataSource: Row[]) => {
+function sortData(sortObj: ColumnProps, dataSource: Row[]) {
     const { sortOrder, dataIndex = '' } = sortObj;
     let sorter = sortObj.sorter;
     let result = dataSource;
@@ -162,7 +162,7 @@ const sortData = (sortObj: ColumnProps, dataSource: Row[]) => {
     }
 
     if (typeof sorter === 'function') {
-        result = [...result].sort(sorter);
+        result = result.toSorted(sorter);
 
         if (sortOrder === 'descend') {
             result = result.reverse();
@@ -170,9 +170,9 @@ const sortData = (sortObj: ColumnProps, dataSource: Row[]) => {
     }
 
     return result;
-};
+}
 
-const fetchData = (pagination: PageState, currentPage = 1, sorter: ColumnProps = {}, filters: ColumnProps[] = []) => {
+function fetchData(pagination: PageState, currentPage = 1, sorter: ColumnProps = {}, filters: ColumnProps[] = []) {
     const nextPagination = { ...pagination, currentPage };
     return new Promise<FetchResult>((resolve) => {
         setTimeout(() => {
@@ -188,7 +188,7 @@ const fetchData = (pagination: PageState, currentPage = 1, sorter: ColumnProps =
             });
         }, 1500);
     });
-};
+}
 
 const getSorterColumn = (columns: ColumnProps[]) => columns.filter((column) => !!column.sorter)[0];
 

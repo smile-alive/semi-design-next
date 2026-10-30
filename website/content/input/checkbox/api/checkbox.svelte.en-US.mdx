@@ -1,0 +1,27 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addonId | Id of the addon node, which aria-labelledby points to. Generated when omitted. | `string` | - |
+| checked | Whether the checkbox is checked; bind it with `bind:checked`. Ignored inside a CheckboxGroup. `bind:checked={get, set}` makes it fully controlled; a plain `checked` is the initial value, a click overrides it inside the component, and a new value from the parent wins again. | `boolean` | - |
+| children | Label content snippet of the checkbox, which is also the native input's accessible name. The rest of the tag's content is this snippet. | `Snippet` | - |
+| disabled | Whether the checkbox is disabled. | `boolean` | `false` |
+| extra | Snippet of the supplementary text, which aria-describedby points to. | `Snippet` | - |
+| extraId | Id of the extra node, which aria-describedby points to. Generated when omitted. | `string` | - |
+| indeterminate | Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value. | `boolean` | `false` |
+| name | The native input's name. Inside a CheckboxGroup the group's `name` applies. | `string \| null` | - |
+| onChange | Called when the checked state changes. The event's `target` is `{ checked, value, name, disabled }`. | <ApiType detail={"(event: CheckboxEvent) => void"}>Type</ApiType> | - |
+| onclick | Called when the root element is clicked, before the toggle. | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| prefixCls | CSS class name prefix. | `string` | - |
+| preventScroll | Whether focusing prevents the browser from scrolling the element into view; applies to the focus method. | `boolean` | - |
+| type | Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies. | `CheckboxType` | `"default"` |
+| value | The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group. | `CheckboxValue` | - |
+
+**Methods**
+
+| Method | Description                          | Type                                          |
+| ------ | ------------------------------------ | --------------------------------------------- |
+| blur   | Removes focus from the native input. | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Focuses the native input.            | <ApiType detail={"() => void"}>Type</ApiType> |

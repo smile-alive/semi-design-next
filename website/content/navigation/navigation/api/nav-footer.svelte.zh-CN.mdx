@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                                          | 类型                                                                      | 默认值  |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------- |
+| children       | 底部内容；有内容时不显示收起按钮。                                                                                            | `Snippet`                                                                 | -       |
+| collapseButton | 是否展示底部的收起侧边栏按钮，仅 mode 为 vertical 且 Footer 没有 children 时有效；传入 snippet 则替换内置按钮，显示条件相同。 | `boolean \| Snippet`                                                      | `false` |
+| collapseText   | 内置收起按钮的文案，参数含 collapsed；只含文本时也作为图标按钮的可访问名称。                                                  | <ApiType detail={"Snippet\u003c[{ collapsed: boolean }]>"}>Type</ApiType> | -       |

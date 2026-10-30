@@ -22,7 +22,7 @@ export default function TreeDemo() {
     ];
     const [treeData, setTreeData] = useState<TreeNodeData[]>(initialData);
 
-    function updateTreeData(list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] {
+    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
         return list.map((node) => {
             if (node.key === key) {
                 return { ...node, children };
@@ -32,9 +32,9 @@ export default function TreeDemo() {
             }
             return node;
         });
-    }
+    };
 
-    function onLoadData(treeNode?: TreeNodeData) {
+    const onLoadData = (treeNode?: TreeNodeData) => {
         const key = treeNode?.key;
         return new Promise<void>((resolve) => {
             if (treeNode?.children) {
@@ -57,6 +57,6 @@ export default function TreeDemo() {
                 resolve();
             }, 1000);
         });
-    }
+    };
     return <Tree loadData={onLoadData} treeData={[...treeData]} />;
 }

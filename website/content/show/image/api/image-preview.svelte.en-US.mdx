@@ -1,0 +1,58 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| adaptiveTip | Tip of the fit-to-page button. | `string` | - |
+| alts | Alternative texts of the preview images, one per entry of src. | `(string \| undefined)[]` | - |
+| children | Snippet for the Image components to preview. | `Snippet` | - |
+| closable | Whether to show the close button. | `boolean` | `true` |
+| closeIcon | Snippet for the custom close icon. | `Snippet` | - |
+| closeOnEsc | Whether Esc closes the preview. | `boolean` | `true` |
+| crossOrigin | The crossorigin attribute passed to the preview img element. | `'anonymous' \| 'use-credentials'` | - |
+| currentIndex | Index of the current image; supports bind:currentIndex. Unbound, the component manages it and starts at 0. | `number` | - |
+| disableDownload | Whether to disable download. | `boolean` | `false` |
+| downloadTip | Tip of the download button. | `string` | - |
+| getPopupContainer | Parent DOM the preview renders into. A container other than document.body makes the preview non-modal; a custom container needs position: relative. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| infinite | Whether switching loops around. | `boolean` | `false` |
+| initialZoom | Initial zoom factor of an image, applied once when it first opens or is switched to, clamped by minZoom and maxZoom. | `number` | - |
+| lazyLoad | Whether to lazy-load the images of the group. | `boolean` | `true` |
+| lazyLoadMargin | The rootMargin of the lazy-load observer, relative to the viewport; scrolling ancestors still clip. | `string` | `"0px 100px 100px 0px"` |
+| leftIcon | Snippet for the custom previous icon, receiving `{ index }`. | <ApiType detail={"Snippet\u003c[ImagePreviewIconSnippetProps]>"}>Type</ApiType> | - |
+| maskClosable | Whether clicking the mask closes the preview. | `boolean` | `true` |
+| maxZoom | Maximum zoom factor. | `number` | `5` |
+| minZoom | Minimum zoom factor. | `number` | `0.1` |
+| nextTip | Tip of the next button. | `string` | - |
+| onChange | Called when the image switches. | <ApiType detail={"(index: number) => void"}>Type</ApiType> | - |
+| onClose | Called when closed with the close button or Esc; closing by the mask triggers onVisibleChange only. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDownload | Called when an image is downloaded. | <ApiType detail={"(src: string, index: number) => void"}>Type</ApiType> | - |
+| onDownloadError | Called when a download fails. | <ApiType detail={"(src: string) => void"}>Type</ApiType> | - |
+| onNext | Called when switching to the next image. | <ApiType detail={"(index: number) => void"}>Type</ApiType> | - |
+| onPrev | Called when switching to the previous image. | <ApiType detail={"(index: number) => void"}>Type</ApiType> | - |
+| onRatioChange | Called when switching between original size and fit-to-page. | <ApiType detail={"(type: RatioType) => void"}>Type</ApiType> | - |
+| onRotateLeft | Called when the image rotates counterclockwise. | <ApiType detail={"(angle: number) => void"}>Type</ApiType> | - |
+| onVisibleChange | Called when visibility changes. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onZoomIn | Called when the image zooms in. | <ApiType detail={"(zoom: number) => void"}>Type</ApiType> | - |
+| onZoomOut | Called when the image zooms out. | <ApiType detail={"(zoom: number) => void"}>Type</ApiType> | - |
+| originTip | Tip of the original-size button. | `string` | - |
+| preLoad | Whether to preload neighboring images. | `boolean` | `true` |
+| preLoadGap | How many images ahead and behind to preload. | `number` | `2` |
+| previewCls | Custom class name of the preview. | `string` | - |
+| previewMenu | Snippet for the custom bottom menu, receiving MenuProps; menuItems is a snippet that renders all the default items at once. | <ApiType detail={"Snippet\u003c[MenuProps]>"}>Type</ApiType> | - |
+| previewStyle | Custom style of the preview. | `string` | - |
+| previewTitle | Title at the top of the preview and the accessible name of the dialog; the title of the current image in titles takes precedence. | `string` | - |
+| prevTip | Tip of the previous button. | `string` | - |
+| rightIcon | Snippet for the custom next icon, receiving `{ index }`. | <ApiType detail={"Snippet\u003c[ImagePreviewIconSnippetProps]>"}>Type</ApiType> | - |
+| rotateTip | Tip of the rotate button. | `string` | - |
+| setDownloadName | Sets the download file name of an image. | <ApiType detail={"(src: string) => string"}>Type</ApiType> | - |
+| showTooltip | Whether to show tooltips on the bottom controls. | `boolean` | `false` |
+| src | Image URLs to preview; they define the images of the group and their order. A wrapped Image opens the preview at the position of its own src (or preview.src) in the list; an Image not in the list previews on its own. | `string \| string[]` | `[]` |
+| title | Snippet that replaces the content of the title section at the top of the preview, receiving `{ title, index }`. When there is a title, the dialog is named by that section through aria-labelledby, so its name is the text the snippet renders; without a title the name comes from the locale. | <ApiType detail={"Snippet\u003c[ImagePreviewTitleSnippetProps]>"}>Type</ApiType> | - |
+| titles | Preview titles, one per entry of src. | `(string \| undefined)[]` | - |
+| viewerVisibleDelay | Idle time in milliseconds before the preview controls hide. | `number` | `10000` |
+| visible | Whether the preview is open; supports bind:visible. Unbound, the component manages it and starts closed. | `boolean` | - |
+| zIndex | z-index of the preview layer. | `number` | `1070` |
+| zoomInTip | Tip of the zoom-in button. | `string` | - |
+| zoomOutTip | Tip of the zoom-out button. | `string` | - |
+| zoomStep | Zoom change per step. | `number` | `0.1` |

@@ -11,6 +11,7 @@ import AnchorVueApi from './api/anchor.vue.zh-CN.mdx';
 import AnchorLinkVueApi from './api/anchor-link.vue.zh-CN.mdx';
 import AnchorSolidApi from './api/anchor.solid.zh-CN.mdx';
 import AnchorLinkSolidApi from './api/anchor-link.solid.zh-CN.mdx';
+import AnchorSvelteApi from './api/anchor.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -44,9 +45,27 @@ import { Anchor } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+没有 `Anchor.Link`，链接用数据 prop `links` 传入。
+
+</Framework>
+
 ### 基本示例
 
 使用 Link 可以创建锚点，点击它会跳转到指定位置。
+
+<Framework only="svelte">
+
+链接写成 `links` 数组，元素为 `{ href, title, disabled, children }`，`children` 嵌套下一级；自定义标题用 `title` snippet，参数 `{ item, level }`。
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -156,6 +175,37 @@ function AnchorExample() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-svelte';
+
+    const links = [
+        { href: '#基本示例', title: '我是固定的 Anchor' },
+        { href: '#综合使用', title: '综合使用' },
+        { href: '#尺寸', title: '尺寸' },
+        { href: '#滑轨主题', title: '滑轨主题' },
+        { href: '#动态展示', title: '动态展示' },
+        { href: '#显示工具提示', title: '显示工具提示' },
+        { href: '#工具提示位置', title: '工具提示位置' },
+        {
+            href: '#API参考',
+            title: 'API参考',
+            children: [
+                { href: '#Anchor', title: 'Anchor' },
+                { href: '#Anchor.Link', title: 'Anchor.Link' },
+            ],
+        },
+    ];
+</script>
+
+<span>请看右侧固定的 Anchor </span>
+<Anchor {links} offsetTop={100} style="position: fixed; right: 20px; top: 100px; width: 200px; z-index: 3" targetOffset={100} />
+```
+
+</Framework>
+
 ### 尺寸
 
 Anchor 设置 `size` 可以控制锚点的尺寸。
@@ -231,6 +281,14 @@ Anchor 设置 `position` 可以设置Tooltip的显示位置。它仅在 `showToo
 
 </Framework>
 
+<Framework only="svelte">
+
+<AnchorSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `data-*`、`aria-*`）落在根元素（`role="navigation"`）上；`style` 中的 `max-width`、`max-height` 优先于 `maxWidth`、`maxHeight`。`onClick` 与 `onChange` 是组件回调，`onClick` 只在激活链接时触发。服务端首帧带全部链接，`autoCollapse` 的折叠首帧即正确；没有子链接的项不输出空的 `role="list"`。
+
+</Framework>
+
 ### Anchor.Link
 
 <Framework only="react">
@@ -254,6 +312,12 @@ Anchor 设置 `position` 可以设置Tooltip的显示位置。它仅在 `showToo
 <AnchorLinkSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `data-*`）落在链接最外层的 `div`（`role="listitem"`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 没有独立的 `Anchor.Link` 组件，每个链接是 `links` 数据中的一项，字段见上方 `links` 的说明。
 
 </Framework>
 
@@ -331,6 +395,21 @@ function App() {
         </Anchor>
     );
 }
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```text
+<script lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-svelte';
+
+    // 此容器不是 Anchor 组件的容器，是文档内容的容器，因为要根据文档容器去计算当前是哪个 id 在容器上方
+    const getContainer = () => document.querySelector<HTMLElement>('.my-container');
+</script>
+
+<Anchor {getContainer} {links} />
 ```
 
 </Framework>

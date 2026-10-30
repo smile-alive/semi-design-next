@@ -3,12 +3,12 @@ import { Typography } from '@fibrae/semi-ui-react';
 export default function TypographyDemo() {
     const { Numeral } = Typography;
 
-    function parserTCH(oldVal: string) {
+    const parserTCH = (oldVal: string) => {
         return oldVal
             .split(' ')
             .map((item) => (Number(item) ? `${item.replace(/(\d)(?=(?:\d{3})+(?:\.|$))/g, '$1,')}+` : item))
             .join(' ');
-    }
+    };
 
     const infos = [
         { type: 'Stars', min: '7100' },

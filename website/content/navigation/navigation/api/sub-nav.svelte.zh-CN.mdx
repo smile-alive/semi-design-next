@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                              | 类型                                                                 | 默认值 |
+| ---------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------ |
+| children         | 子导航中的 `NavItem` 与 `SubNav`。                                                                | `Snippet`                                                            | -      |
+| disabled         | 是否禁用。                                                                                        | `boolean`                                                            | -      |
+| dropdownProps    | 弹层 Dropdown 的参数，水平模式与收起状态下使用。                                                  | `SubDropdownProps`                                                   | -      |
+| dropdownStyle    | 弹层的样式，优先于 dropdownProps 中的 style。                                                     | `string`                                                             | -      |
+| expandIcon       | 展开收起箭头图标，参数含 size 与要放在图标元素上的 class。                                        | <ApiType detail={"Snippet\u003c[NavExpandIconArgs]>"}>Type</ApiType> | -      |
+| icon             | 子导航图标，参数含 size。                                                                         | <ApiType detail={"Snippet\u003c[NavIconArgs]>"}>Type</ApiType>       | -      |
+| indent           | 没有图标时是否保留其占位，仅对一级导航生效。                                                      | `boolean \| number`                                                  | -      |
+| itemKey          | 子导航的唯一标识。                                                                                | `ItemKey`                                                            | -      |
+| label            | 替换子导航标题显示的文案。因 `text` 已是属性而改名为 `label`。                                    | `Snippet`                                                            | -      |
+| level            | 当前项所在的嵌套层级，limitIndent 为 false 时用于确定缩进；通常由上层 SubNav 给出，这里只作覆盖。 | `number`                                                             | -      |
+| subDropdownProps | 弹层 Dropdown 的参数，未传 dropdownProps 时生效。                                                 | `SubDropdownProps`                                                   | -      |
+| text             | 子导航标题文案；显示的内容可用 `label` snippet 替换。                                             | `string \| number`                                                   | -      |

@@ -8,15 +8,15 @@
     const player1 = useTemplateRef('player1');
     const player2 = useTemplateRef('player2');
 
-    function handlePlayAll() {
+    const handlePlayAll = () => {
         void player1.value?.video?.play();
         void player2.value?.video?.play();
-    }
+    };
 
-    function handlePauseAll() {
+    const handlePauseAll = () => {
         player1.value?.video?.pause();
         player2.value?.video?.pause();
-    }
+    };
 </script>
 
 <template>

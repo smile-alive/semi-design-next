@@ -41,7 +41,7 @@ export default function frameworkMdx(): Plugin {
                     const directory = path.dirname(source);
                     this.addWatchFile(source);
                     this.addWatchFile(directory);
-                    const demos = [...globSync('demos/*.{react.tsx,vue,solid.tsx}', { cwd: directory })];
+                    const demos = [...globSync('demos/*.{react.tsx,vue,solid.tsx,svelte}', { cwd: directory })];
                     const data = parseFrontmatter(await fs.readFile(source, 'utf8')).frontmatter;
                     const enabled = availableFrameworks(demos, data.frameworks, file);
                     const key = file.slice('content/'.length, -'.mdx'.length);

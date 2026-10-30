@@ -18,6 +18,10 @@ import AIChatDialogueSolidApi from './api/ai-chat-dialogue.solid.en-US.mdx';
 import AnnotationSolidApi from './api/annotation.solid.en-US.mdx';
 import DialogueStepSolidApi from './api/dialogue-step.solid.en-US.mdx';
 import ReasoningSolidApi from './api/reasoning.solid.en-US.mdx';
+import AIChatDialogueSvelteApi from './api/ai-chat-dialogue.svelte.en-US.mdx';
+import AnnotationSvelteApi from './api/annotation.svelte.en-US.mdx';
+import DialogueStepSvelteApi from './api/dialogue-step.svelte.en-US.mdx';
+import ReasoningSvelteApi from './api/reasoning.svelte.en-US.mdx';
 
 ## When to use
 
@@ -53,6 +57,16 @@ import { AIChatDialogue } from '@fibrae/semi-ai-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="react">
@@ -70,6 +84,12 @@ Bind `v-model:chats` to enable basic conversation display and interactions: when
 <Framework only="solid">
 
 Set `chats` and `onChatsChange` to enable basic conversation display and interactions. When updating, pass a new message array: when the array is held in a `createSignal`, mutating it in place (such as `push`) does not re-render, so replace it with a new array.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind `chats` with `bind:chats` to enable basic conversation display and interactions: when the message list changes (for example a message is deleted), the component writes the new list back to `chats` and calls `onChatsChange` once per change. Without a binding, changes made inside the component stay local to it. The component also detects in-place changes to `chats`: pushing a new message onto a `$state` array, or appending text to the last message, calls `onChatsChange` and follows the scroll. Changing only text deep inside a `content` array, or flipping `status` on its own, re-renders but neither calls `onChatsChange` nor follows the scroll; replace that message or the whole array instead.
 
 </Framework>
 
@@ -115,6 +135,12 @@ Use `references` to define files or text cited by the current message. `showRefe
 
 </Framework>
 
+<Framework only="svelte">
+
+Use `references` to define files or text cited by the current message. `showReference` controls whether a quotable style is shown for the current message. Use `onReferenceClick` to handle clicks on the reference button.
+
+</Framework>
+
 <Demo id="references" />
 
 ### Selection
@@ -138,6 +164,12 @@ Use `hints` to set the hint area content. Clicking a hint populates it as the ne
 <Framework only="solid">
 
 Use `hints` to set the hint area content. Clicking a hint populates it as the new user input and triggers `onHintClick`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `hints` to set the hint area content. Clicking a hint populates it as the new user input and calls `onHintClick`.
 
 </Framework>
 
@@ -175,6 +207,20 @@ Customize the hint area with `renderHintBox`. Parameters:
 
 ```ts
 type renderHintBox = (props: { content: string; index: number; onHintClick: () => void }) => JSX.Element;
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+Customize the hint area with the `hintBox` snippet. Its parameters are `{ content, index, onHintClick }`; calling `onHintClick` is the same as clicking the hint.
+
+```ts
+interface AIChatDialogueHintBoxSnippetProps {
+    content: string;
+    index: number;
+    onHintClick: () => void;
+}
 ```
 
 </Framework>
@@ -371,6 +417,43 @@ Customize the avatar and title via `renderDialogueAvatar` and `renderDialogueTit
 
 </Framework>
 
+<Framework only="svelte">
+
+Each part is customized with the snippet of the same name. Providing a snippet replaces that part, and every snippet receives the default nodes, so you can recompose them:
+
+| Snippet        | Description                                  | Parameters                                              |
+| -------------- | -------------------------------------------- | ------------------------------------------------------- |
+| `avatar`       | Custom avatar                                | `{ message, role, defaultAvatar }`                      |
+| `title`        | Custom title                                 | `{ message, role, defaultTitle }`                       |
+| `content`      | Custom content area                          | `{ message, role, defaultContent, class }`              |
+| `action`       | Custom message action bar                    | `{ message, defaultActions, defaultActionsObj, class }` |
+| `fullDialogue` | Fully custom rendering of the whole dialogue | `{ message, role, defaultNodes, class }`                |
+
+`defaultActions` is the array of buttons in the default action bar, and `defaultActionsObj` holds the same buttons by name. They match the buttons the default action bar shows; a key is missing when its button is not shown (e.g. an unfinished message). `defaultNodes` holds the four default nodes `avatar`, `title`, `content` and `action`. Every default node is a snippet value, rendered with `{@render}`, such as `{@render defaultActions[0]?.()}`.
+
+```ts
+import type { Snippet } from 'svelte';
+
+interface DefaultActionNodeObj {
+    copyNode?: Snippet;
+    likeNode?: Snippet;
+    dislikeNode?: Snippet;
+    resetNode?: Snippet;
+    shareNode?: Snippet;
+    editNode?: Snippet;
+    moreNode?: Snippet;
+}
+
+interface FullDialogueNodes {
+    avatar: Snippet;
+    title: Snippet;
+    content: Snippet;
+    action: Snippet;
+}
+```
+
+</Framework>
+
 <Demo id="custom-dialogue-render" />
 
 ### Custom Message Content Rendering
@@ -390,6 +473,12 @@ Use the `#contentItem` slot to render by message type. Every content item (inclu
 <Framework only="solid">
 
 Use `renderDialogueContentItem` to provide renderers by message type. The keys are the `type` of each content item: a tool call is indexed by its type and then by its `name` (such as `create_travel_guide` under `function_call`), and a plain-text message is rendered with the key `default`. Inside the renderers you can reuse `AIChatDialogue.Reasoning` and `AIChatDialogue.Annotation`; see Static Properties below. Example:
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `contentItem` snippet to render by message type. Every content item (including the input text, images and files inside a `message` item) passes through the snippet first, with the parameters `{ item, type, message, index, parent, defaultItem, class }`. `type` is the item's type, and a top-level item without a `type` counts as `message`; for an inner item, `parent` is the `message` item it belongs to. Svelte cannot read the output of a snippet, so empty output does not fall back to the built-in rendering: render the items the snippet leaves alone with `{@render defaultItem()}`. A custom node is not wrapped any more, so give it the `class` from the parameters (`semi-ai-chat-dialogue-content-custom-renderer`). A message whose content is plain text is not a content item: replace its Markdown rendering with the `messageText` snippet, whose parameters are `{ text, message }`. `AIChatDialogue.Reasoning` and `AIChatDialogue.Annotation` can be used inside the snippets; see Static Properties below. The snippet that replaces the body of `AIChatDialogue.Reasoning` is `children`, with the parameters `{ status, summary, content, markdownRenderProps }`. Example:
 
 </Framework>
 
@@ -419,6 +508,14 @@ import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMe
 
 ```ts
 import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+import { chatCompletionToMessage, streamingChatCompletionToMessage, responseToMessage, streamingResponseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-svelte';
 ```
 
 </Framework>
@@ -484,6 +581,14 @@ Other native attributes are applied to the root `div` element. When the root ele
 <AIChatDialogueSolidApi />
 
 `class`, `style`, `ref` and native attributes land on the root `div` element. When the root has `aria-label` or `aria-labelledby` and no `role` is passed, its `role` is `group`; a `role` passed by the caller wins. The message list is a named `role="log"` region with `aria-busy="true"` while a reply is being generated. `roleConfig` is a required prop and does not read the global defaults.
+
+</Framework>
+
+<Framework only="svelte">
+
+<AIChatDialogueSvelteApi />
+
+`class`, `style`, native attributes and events (such as `onclick`) are applied to the root `div` element; `title` and `content` are Semi snippets here and `onSelect` is a Semi callback, not native attributes. When the root has `aria-label` or `aria-labelledby` and no `role`, its `role` is `group`; a `role` passed by the caller wins. The message list is a named `role="log"` region with `aria-busy="true"` while a reply is being generated. `roleConfig` is a required prop and does not read the global defaults.
 
 </Framework>
 
@@ -581,6 +686,23 @@ let dialogue: AIChatDialogueElement | undefined;
 const toBottom = () => dialogue?.scrollToBottom(true);
 
 <AIChatDialogue ref={(element) => (dialogue = element)} chats={messages()} roleConfig={roleConfig} onChatsChange={onChatsChange} />;
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+The methods are listed in the Methods table of the API reference above and are called through the component instance from `bind:this`:
+
+```svelte
+<script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+
+    let dialogue = $state<ReturnType<typeof AIChatDialogue>>();
+    const toBottom = () => dialogue?.scrollToBottom(true);
+</script>
+
+<AIChatDialogue bind:this={dialogue} bind:chats={messages} {roleConfig} />
 ```
 
 </Framework>
@@ -740,6 +862,63 @@ function CustomCode(props: ComponentProps<typeof DefaultCode>) {
 <AnnotationSolidApi />
 
 `class`, `style`, `ref` and native attributes land on the root `div` element.
+
+</Framework>
+
+<Framework only="svelte">
+
+| Property          | Description                                                                                                                                                                         | Type                  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| defaultComponents | Default Markdown rendering components. `code` is the enhanced code block component with a language label and copy button; it can be used to extend `markdownRenderProps.components` | `{ code: Component }` |
+| Reasoning         | Reasoning block component; see [AIChatDialogue.Reasoning](#AIChatDialogue.Reasoning) below for its API                                                                              | `Component`           |
+| Step              | Step display component; see [AIChatDialogue.Step](#AIChatDialogue.Step) below for its API                                                                                           | `Component`           |
+| Annotation        | References component; see [AIChatDialogue.Annotation](#AIChatDialogue.Annotation) below for its API                                                                                 | `Component`           |
+
+To preserve default functionality while customizing code block rendering, wrap the default component in your own component and pass it through `markdownRenderProps.components`:
+
+```svelte
+<!-- CustomCode.svelte -->
+<script lang="ts">
+    import type { ComponentProps } from 'svelte';
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+
+    const DefaultCode = AIChatDialogue.defaultComponents.code;
+
+    let { children, ...rest }: ComponentProps<typeof DefaultCode> = $props();
+</script>
+
+<!-- Add custom logic here -->
+<DefaultCode {...rest}>{@render children?.()}</DefaultCode>
+```
+
+```svelte
+<script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
+    import CustomCode from './CustomCode.svelte';
+
+    const markdownRenderProps = { components: { code: CustomCode } };
+</script>
+
+<AIChatDialogue bind:chats={messages} {markdownRenderProps} {roleConfig} />
+```
+
+### AIChatDialogue.Reasoning
+
+<ReasoningSvelteApi />
+
+`class`, `style` and native attributes are applied to the root `div` element. `content` is the reasoning data, so the snippet that replaces the body is `children`.
+
+### AIChatDialogue.Step
+
+<DialogueStepSvelteApi />
+
+`class`, `style` and native attributes are applied to the root `div` element.
+
+### AIChatDialogue.Annotation
+
+<AnnotationSvelteApi />
+
+`class`, `style` and native attributes are applied to the root `div` element; the lowercase `onclick` is a native listener of the root, while `onClick` also fires on Enter and Space.
 
 </Framework>
 

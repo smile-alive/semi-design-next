@@ -23,6 +23,12 @@ import SkeletonParagraphSolidApi from './api/skeleton-paragraph.solid.en-US.mdx'
 import SkeletonImageSolidApi from './api/skeleton-image.solid.en-US.mdx';
 import SkeletonTitleSolidApi from './api/skeleton-title.solid.en-US.mdx';
 import SkeletonButtonSolidApi from './api/skeleton-button.solid.en-US.mdx';
+import SkeletonSvelteApi from './api/skeleton.svelte.en-US.mdx';
+import SkeletonAvatarSvelteApi from './api/skeleton-avatar.svelte.en-US.mdx';
+import SkeletonParagraphSvelteApi from './api/skeleton-paragraph.svelte.en-US.mdx';
+import SkeletonImageSvelteApi from './api/skeleton-image.svelte.en-US.mdx';
+import SkeletonTitleSvelteApi from './api/skeleton-title.svelte.en-US.mdx';
+import SkeletonButtonSvelteApi from './api/skeleton-button.svelte.en-US.mdx';
 
 ## Overview
 
@@ -47,6 +53,12 @@ import SkeletonButtonSolidApi from './api/skeleton-button.solid.en-US.mdx';
 <Framework only="solid">
 
 > Note: Default styles can be overridden through `class` or `style`.
+
+</Framework>
+
+<Framework only="svelte">
+
+> Note: Default styles can be overridden through `class` or `style` (a string). In the Svelte package the placeholder blocks are both static members such as `Skeleton.Avatar` and the same components as named exports: `SkeletonAvatar`, `SkeletonImage`, `SkeletonTitle`, `SkeletonParagraph` and `SkeletonButton`.
 
 </Framework>
 
@@ -77,6 +89,25 @@ import { Skeleton } from '@fibrae/semi-ui-react';
 ```jsx
 import { Skeleton } from '@fibrae/semi-ui-solid';
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Skeleton, SkeletonAvatar, SkeletonButton, SkeletonImage, SkeletonParagraph, SkeletonTitle } from '@fibrae/semi-ui-svelte';
+</script>
+
+<Skeleton loading>
+    {#snippet placeholder()}
+        <SkeletonAvatar />
+    {/snippet}
+    <p>Content</p>
+</Skeleton>
+```
+
+The `placeholder` snippet is shown while loading, and `children` is shown once loading ends.
 
 </Framework>
 
@@ -141,6 +172,14 @@ Other native attributes (such as `id`, `aria-*` and events) fall through onto th
 <SkeletonSolidApi />
 
 `class`, `style`, `ref` and native attributes and events fall through onto the placeholder root element. When `loading` is `false` the component renders only the children and has no root element, so these are dropped together with the placeholder. The root's `aria-busy="true"` cannot be switched off.
+
+</Framework>
+
+<Framework only="svelte">
+
+<SkeletonSvelteApi />
+
+`class`, `style` (a string) and native attributes and events fall through onto the placeholder root element. When `loading` is `false` the component renders only the children and has no root element, so these are dropped together with the placeholder. The root's `aria-busy="true"` cannot be switched off.
 
 </Framework>
 
@@ -212,6 +251,30 @@ Other native attributes (such as `id`, `aria-*` and events) fall through onto th
 
 </Framework>
 
+<Framework only="svelte">
+
+In Svelte, `Skeleton.Avatar` below can also be written as the named export `SkeletonAvatar`, and so on.
+
+<SkeletonAvatarSvelteApi />
+
+`class`, `style` (a string) and native attributes and events fall through onto the placeholder block.
+
+### Skeleton.Image
+
+<SkeletonImageSvelteApi />
+
+### Skeleton.Title
+
+<SkeletonTitleSvelteApi />
+
+### Skeleton.Button
+
+<SkeletonButtonSvelteApi />
+
+`SkeletonImage`, `SkeletonTitle` and `SkeletonButton` have no `size` or `shape`; `class`, `style` and native attributes and events fall through onto the placeholder block.
+
+</Framework>
+
 ### Skeleton.Paragraph
 
 <Framework only="react">
@@ -235,6 +298,14 @@ Other native attributes (such as `id`, `aria-*` and events) fall through onto th
 <SkeletonParagraphSolidApi />
 
 `class`, `style`, `ref` and native attributes and events fall through onto the root `ul` element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<SkeletonParagraphSvelteApi />
+
+`class`, `style` (a string) and native attributes and events fall through onto the root `ul` element.
 
 </Framework>
 

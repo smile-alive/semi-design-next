@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| checked | Checked state; bind it with `bind:checked`. `bind:checked={get, set}` makes it fully controlled; a plain `checked` is the initial value, a click overrides it inside the component, and a new value from the parent wins again. | `boolean` | - |
+| checkedText | Snippet shown when checked. Not shown when size is small. | `Snippet` | - |
+| disabled | Whether the switch is disabled. | `boolean` | `false` |
+| loading | Whether the switch is loading. While loading, the input stays focusable with `aria-disabled`; toggles are ignored and onChange is not called. | `boolean` | `false` |
+| onChange | Called when the user toggles the switch, with the new checked state and the native change event. Not called while loading. | <ApiType detail={"(checked: boolean, event: Event) => void"}>Type</ApiType> | - |
+| size | Switch size: large, default or small. | `Size` | `"default"` |
+| uncheckedText | Snippet shown when unchecked. Not shown when size is small. | `Snippet` | - |

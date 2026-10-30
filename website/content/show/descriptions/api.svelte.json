@@ -1,0 +1,39 @@
+{
+    "descriptions": {
+        "source": "packages/semi-ui-svelte/src/descriptions/descriptions.svelte",
+        "props": {
+            "align": {
+                "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",
+                "en-US": "Alignment: center, justify, left or plain; ignored when row is true."
+            },
+            "column": {
+                "zh-CN": "横向布局下每行的总列数。",
+                "en-US": "Total number of columns per row in the horizontal layout."
+            },
+            "data": {
+                "zh-CN": "列表显示的数据，每项为 `DescriptionsData`。",
+                "en-US": "Data to display, each item a `DescriptionsData`."
+            },
+            "itemKey": {
+                "zh-CN": "每个数据项 key 的 snippet，参数为 `{ item, index }`，`index` 是该项在 `data` 中的位置（含 hidden 的项）；默认渲染 item.key。",
+                "en-US": "Snippet for the key of each data item, with the parameter `{ item, index }`, where `index` is the position in `data` (hidden items included); renders item.key by default."
+            },
+            "layout": {
+                "zh-CN": "布局模式，可选 vertical、horizontal。",
+                "en-US": "Layout mode: vertical or horizontal."
+            },
+            "row": {
+                "zh-CN": "是否双行显示。",
+                "en-US": "Whether to display key and value in two rows."
+            },
+            "size": {
+                "zh-CN": "双行显示时的尺寸，可选 small、medium、large。",
+                "en-US": "Size in two-row mode: small, medium or large."
+            },
+            "value": {
+                "zh-CN": "每个数据项值的 snippet，参数为 `{ item, index }`，`index` 是该项在 `data` 中的位置（含 hidden 的项）；默认渲染 item.value。",
+                "en-US": "Snippet for the value of each data item, with the parameter `{ item, index }`, where `index` is the position in `data` (hidden items included); renders item.value by default."
+            }
+        }
+    }
+}

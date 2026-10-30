@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property   | Description                                                                                                                                                        | Type                                                                    | Default  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------- |
+| content    | Snippet for the content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.content.                                                   | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
+| dataSource | Data array the items are rendered from. See the item fields below; `dot` is the snippet of a custom dot for that item, and the default circle is drawn when unset. | `TimelineData[]`                                                        | -        |
+| extra      | Snippet for the extra content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.extra.                                               | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |
+| mode       | Position of the timeline relative to the content: left, right, center or alternate.                                                                                | `TimelineMode`                                                          | `"left"` |
+| time       | Snippet for the time of each dataSource item, with the parameter `{ item, index }`. Defaults to item.time.                                                         | <ApiType detail={"Snippet\u003c[TimelineSnippetProps]>"}>Type</ApiType> | -        |

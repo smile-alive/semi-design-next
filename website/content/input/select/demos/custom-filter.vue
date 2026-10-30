@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { Select, type SelectOptionProps } from '@fibrae/semi-ui-vue';
 
-    function searchLabel(sugInput: string, option: SelectOptionProps) {
+    const searchLabel = (sugInput: string, option: SelectOptionProps) => {
         const label = String(option.label).toUpperCase();
         const sug = sugInput.toUpperCase();
         return label.includes(sug);
-    }
+    };
 </script>
 
 <template>

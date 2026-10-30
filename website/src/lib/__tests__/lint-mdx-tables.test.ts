@@ -43,7 +43,7 @@ describe('lint-mdx-tables', () => {
     });
 
     it('Framework 缺少有效的 only 时报错', async () => {
-        const source = [...frontmatter, '<Framework only="svelte">', '正文', '</Framework>'].join('\n');
+        const source = [...frontmatter, '<Framework only="angular">', '正文', '</Framework>'].join('\n');
         expect(await compileError(source, page)).toContain('<Framework> needs only="react" or only="vue"');
     });
 

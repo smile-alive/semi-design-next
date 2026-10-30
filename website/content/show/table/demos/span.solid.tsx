@@ -88,7 +88,7 @@ const columns: ColumnProps<Row>[] = [
 
 const DAY = 24 * 60 * 60 * 1000;
 
-const getData = (total: number) => {
+function getData(total: number) {
     const data: Row[] = [];
     for (let i = 0; i < total; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -103,7 +103,7 @@ const getData = (total: number) => {
         });
     }
     return data;
-};
+}
 
 const dataSource = getData(5);
 

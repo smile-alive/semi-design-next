@@ -1,6 +1,6 @@
 import { useFieldState, Form } from '@fibrae/semi-ui-react';
 
-const ComponentUsingFieldState = ({ field }: { field: string }) => {
+function ComponentUsingFieldState({ field }: { field: string }) {
     const fieldState = useFieldState(field);
     return (
         <div>
@@ -8,7 +8,7 @@ const ComponentUsingFieldState = ({ field }: { field: string }) => {
             <code>{JSON.stringify(fieldState)}</code>
         </div>
     );
-};
+}
 
 export default function FormDemo() {
     return (

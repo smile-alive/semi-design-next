@@ -1,0 +1,30 @@
+{
+    "spin": {
+        "source": "packages/semi-ui-svelte/src/spin/spin.svelte",
+        "props": {
+            "children": {
+                "zh-CN": "被包裹的内容；有内容时 Spin 作为包裹元素，加载期间带 `aria-busy`，且内容不可聚焦、不可操作（inert）。",
+                "en-US": "Wrapped content. With content, Spin acts as a wrapper and carries `aria-busy` while loading, and the content cannot be focused or operated (inert)."
+            },
+            "childStyle": {
+                "zh-CN": "内部子元素的样式字符串。",
+                "en-US": "Style string of the inner children element."
+            },
+            "delay": {
+                "zh-CN": "延迟显示加载效果的时间，单位毫秒。",
+                "en-US": "Delay in milliseconds before the loading effect is shown."
+            },
+            "indicator": {
+                "zh-CN": "自定义加载指示符的 snippet。",
+                "en-US": "Snippet for a custom loading indicator."
+            },
+            "size": { "zh-CN": "组件大小。", "en-US": "Component size." },
+            "spinning": { "zh-CN": "是否处于加载中的状态。", "en-US": "Whether it is loading." },
+            "tip": {
+                "zh-CN": "当 Spin 作为包裹元素时，描述文字的 snippet。",
+                "en-US": "Snippet for the description text, used when Spin acts as a wrapper."
+            },
+            "wrapperClassName": { "zh-CN": "包裹元素的类名。", "en-US": "Class name of the wrapper element." }
+        }
+    }
+}

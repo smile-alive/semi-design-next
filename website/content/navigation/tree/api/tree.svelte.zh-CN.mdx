@@ -1,0 +1,67 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoExpandParent | expandedKeys 变化时是否自动展开其中节点的父节点；挂载时总会展开。开启后，展开受控时要先收起所有已展开的子节点才能收起父节点。 | `boolean` | `false` |
+| autoExpandWhenDragEnter | 拖拽到收起的节点上时是否自动展开该节点。 | `boolean` | `true` |
+| autoMergeValue | 父节点被选中时，值不再包含它的子孙节点；leafOnly 为 false 时生效。 | `boolean` | `true` |
+| blockNode | 节点显示为整行，悬浮和选中高亮整行；关闭时只高亮节点的 label。 | `boolean` | `true` |
+| checkRelation | 多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。 | `CheckRelation` | `"related"` |
+| defaultExpandAll | 初始化时展开所有节点。之后 treeData 或 treeDataSimpleJson 的变化不再影响展开状态，需要时使用 expandAll。 | `boolean` | `false` |
+| directory | 目录树模式，自带目录图标，可用 icon snippet 覆盖。 | `boolean` | `false` |
+| disabled | 禁用整棵树。节点数据中的 disabled: false 不会解除禁用。 | `boolean` | `false` |
+| disableStrictly | 严格禁用：禁用的节点不能通过父级或子级的选中关系改变状态。 | `boolean` | `false` |
+| draggable | 是否允许拖拽节点，配合 onDrop 使用。不能与 virtualize 同时使用。 | `boolean` | `false` |
+| emptyContent | 没有节点，或开启 showFilteredOnly 后搜索无结果时的内容。 | `Snippet` | - |
+| expandAction | 展开逻辑：false 仅点击展开箭头时展开，click 单击节点展开，doubleClick 双击节点展开。键盘不触发该逻辑。 | `ExpandAction` | `false` |
+| expandAll | 展开所有节点，数据变化后仍然生效。 | `boolean` | `false` |
+| expandedKeys | 展开的节点，可用 `bind:expandedKeys` 绑定；不绑定时，传入的值只作为初始展开的节点，显示其直接子级。`bind:expandedKeys={get, set}` 使展开状态完全受控。 | `string[]` | - |
+| expandIcon | 自定义展开图标，参数为 `{ onClick, class, expanded }`；需要把 `class` 与 `onclick` 放在渲染的元素上。 | <ApiType detail={"Snippet\u003c[TreeExpandIconSnippetProps]>"}>Type</ApiType> | - |
+| filterTreeNode | 是否开启搜索。传 true 时按 treeNodeFilterProp 匹配；传函数时自定义匹配，data 为当前节点数据。 | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean)"}>Type</ApiType> | `false` |
+| fullLabel | 接管整行的内容，参数含 `class`、`data`、`level`、`expandIcon`、`checkStatus`、`expandStatus`、`filtered`、`searchWord` 和 `onClick`、`onCheck`、`onExpand`、`onContextmenu`、`onDblclick`。带 id、role 与状态的行元素由 Tree 提供，snippet 只写行内内容；虚拟化时定位样式也在行元素上。 | <ApiType detail={"Snippet\u003c[TreeFullLabelSnippetProps]>"}>Type</ApiType> | - |
+| hideDraggingNode | 拖拽时隐藏被拖拽节点的拖拽图像。 | `boolean` | `false` |
+| icon | 自定义节点图标，参数含 `item`、`level`、`expanded`、`isLeaf`、`loading`、`selected`、`checked`、`halfChecked`，可按节点返回不同内容；输出为空时保留目录模式的内置图标。 | <ApiType detail={"Snippet\u003c[TreeIconSnippetProps]>"}>Type</ApiType> | - |
+| keyMaps | 自定义节点中 key、label、value 的字段名。映射了 label 且开启搜索时，需把 treeNodeFilterProp 设为 treeData 的键之一，或自定义 filterTreeNode。 | `TreeKeyMapProps` | - |
+| label | 自定义节点的 label 内容，参数为 `{ item, label, searchWord }`。开启搜索时仍按 treeData 中的 label 文本匹配。 | <ApiType detail={"Snippet\u003c[TreeLabelSnippetProps]>"}>Type</ApiType> | - |
+| labelEllipsis | label 超出时是否省略；虚拟化时默认开启。 | `boolean` | - |
+| leafOnly | 多选时，值和 onChange 的载荷只包含叶子节点。 | `boolean` | `false` |
+| loadData | 异步加载子节点，返回 Promise。需要在数据中用 isLeaf 标明叶子节点；设置后未标明 isLeaf 的节点显示展开箭头。 | <ApiType detail={"(treeNode?: TreeNodeData) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| loadedKeys | 已加载的节点，配合 loadData 使用，可用 `bind:loadedKeys` 绑定。 | `string[]` | - |
+| motion | 是否开启展开收起的动画；虚拟化时动画关闭。 | `boolean` | `true` |
+| multiple | 是否多选。多选时所有子项都被选择会自动勾选其父项。 | `boolean` | `false` |
+| onChange | 选中状态变化时触发，参数为当前的值。 | <ApiType detail={"(value: TreeValue) => void"}>Type</ApiType> | - |
+| onChangeWithObject | 设为 true 时，onChange 的参数由 value 变为包含 value、label 及其他属性的节点对象；受控时 value 也要传对象，且必须含 value。 | `boolean` | `false` |
+| onContextMenu | 在节点上点击右键时触发，参数为事件与节点数据。 | <ApiType detail={"(event: MouseEvent, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onDoubleClick | 双击节点时触发，参数为事件与节点数据。 | <ApiType detail={"(event: MouseEvent, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onDragEnd | 拖拽结束时触发。 | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDragEnter | 拖拽进入节点时触发；进入收起的节点使其展开时，参数含 expandedKeys。 | <ApiType detail={"(info: TreeDragEnterProps) => void"}>Type</ApiType> | - |
+| onDragLeave | 拖拽离开节点时触发。 | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDragOver | 拖拽经过节点时触发。 | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDragStart | 开始拖拽节点时触发。 | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDrop | 节点被放下时触发，参数含 node、dragNode、dragNodesKeys、dropPosition、dropToGap。 | <ApiType detail={"(info: TreeOnDragProps) => void"}>Type</ApiType> | - |
+| onExpand | 展开或收起节点时触发，参数为展开的节点 key 数组和含 expanded 与 node 的信息。 | <ApiType detail={"(expandedKeys: string[], info: TreeExpandedOtherProps) => void"}>Type</ApiType> | - |
+| onLoad | 节点加载完毕时触发，参数为已加载节点的集合和刚加载的节点。 | <ApiType detail={"(loadedKeys: Set\u003cstring>, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onSearch | 搜索框的值变化时触发；filteredExpandedKeys 是因搜索或 value 而展开的节点，可在展开受控时用来展开搜索结果。 | <ApiType detail={"(input: string, filteredExpandedKeys: string[]) => void"}>Type</ApiType> | - |
+| onSelect | 节点被选中或取消选中时触发，参数为该节点的 key、是否选中和节点数据。 | <ApiType detail={"(selectedKey: string, selected: boolean, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| renderDraggingNode | 拖拽时浏览器显示的元素，参数为节点元素 nodeInstance 与节点数据 node；snippet 在 dragstart 时渲染到游离的容器中作为拖拽图像，只能读到应用级的 context。 | <ApiType detail={"Snippet\u003c[TreeDraggingNodeSnippetProps]>"}>Type</ApiType> | - |
+| search | 替换搜索框，参数含 `class`、`value`、`placeholder`、`showClear` 与 `onChange`；传 false 隐藏搜索框，filterTreeNode 仍然过滤。 | <ApiType detail={"Snippet\u003c[TreeSearchSnippetProps]> \u007c false"}>Type</ApiType> | - |
+| searchClassName | 搜索框容器的类名。 | `string` | - |
+| searchPlaceholder | 搜索框的占位文字。 | `string` | - |
+| searchStyle | 搜索框容器的样式字符串。 | `string` | - |
+| showClear | 搜索框是否显示清除按钮。 | `boolean` | `true` |
+| showFilteredOnly | 搜索时只展示过滤后的结果。 | `boolean` | `false` |
+| showLine | 显示节点之间的连接线。 | `boolean` | `false` |
+| treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。节点的图标由 icon snippet 绘制，label 为字符串或数字。 | `TreeNodeData[]` | - |
+| treeDataSimpleJson | 简单 JSON 形式的节点数据，返回值为包含选中节点的 JSON 数据。 | `TreeDataSimpleJson` | - |
+| treeNodeFilterProp | 搜索时用于匹配输入的节点属性，默认 label。 | `string` | `"label"` |
+| value | 当前选中的节点的 value（没有 value 时为 key），可用 `bind:value` 绑定；多选时为数组。不绑定时，传入的值只作为初始选中项；`bind:value={get, set}` 使其完全受控。 | `TreeValue` | - |
+| virtualize | 列表虚拟化，用于大量节点：height、width、itemSize（必传）。开启后动画关闭。 | `TreeVirtualize` | - |
+
+**Methods**
+
+| 方法     | 说明                                                                    | 类型                                                                    |
+| -------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| scrollTo | 在虚拟化的 Tree 中，把指定的已展开节点滚动到视图内；align 默认 center。 | <ApiType detail={"(scrollData: TreeScrollData) => void"}>Type</ApiType> |
+| search   | 手动触发搜索，效果同在搜索框中输入；需要同时设置 filterTreeNode。       | <ApiType detail={"(input: string) => void"}>Type</ApiType>              |

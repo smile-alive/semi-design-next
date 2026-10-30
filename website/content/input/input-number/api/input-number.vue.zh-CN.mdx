@@ -26,8 +26,8 @@ import ApiType from '#/components/ApiType.astro';
 | keepFocus | 点击步进按钮时保持输入框聚焦。 | `boolean` | `semiDefault("InputNumber", "keepFocus", false)` |
 | innerButtons | 将步进按钮放在输入框内部，悬停或聚焦时显示，并临时替换 suffix 插槽。 | `boolean` | `semiDefault("InputNumber", "innerButtons", false)` |
 | hideButtons | 隐藏步进按钮；与 innerButtons 同时为 true 时也不显示内置按钮。 | `boolean` | `semiDefault("InputNumber", "hideButtons", false)` |
-| size | 输入框大小，可选 default、small、large。 | `Size` | `semiDefault("InputNumber", "size", "default")` |
-| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("InputNumber", "disabled")` |
+| size | 输入框大小，可选 default、small、large。 | `Size` | `undefined` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | readonly | 是否只读。 | `boolean` | `semiGlobalDefault("InputNumber", "readonly")` |
 | borderless | 无边框模式。 | `boolean` | `semiGlobalDefault("InputNumber", "borderless")` |
 | showClear | 是否显示清除按钮。 | `boolean` | `semiGlobalDefault("InputNumber", "showClear")` |

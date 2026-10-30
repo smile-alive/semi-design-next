@@ -1,5 +1,5 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 title: Tailwind 搭配使用
 icon: doc-tailwind
 order: 13
@@ -144,6 +144,48 @@ import App from './App';
 
 </Framework>
 
+<Framework only="svelte">
+
+```js
+// src/main.ts - 必须放在最顶部
+import './semi-layer.css'; // 必须在最前面
+import './tailwind.css'; // 包含 @import "tailwindcss"; 的文件
+import { mount } from 'svelte';
+import App from './App.svelte';
+// ... 其他 import
+```
+
+SvelteKit 没有这样的 JS 入口文件，两个 import 放在根布局 `src/routes/+layout.svelte` 的脚本最前面。根布局先于所有页面加载，开发与生产环境下服务端渲染的首屏样式都以层顺序声明开头。
+
+```svelte
+<!-- src/routes/+layout.svelte，放在脚本最前面 -->
+<script lang="ts">
+    import './semi-layer.css';
+    import './tailwind.css';
+
+    let { children } = $props();
+</script>
+
+{@render children()}
+```
+
+Tailwind 按其官方指南用 `@tailwindcss/vite` 接入构建，与 Semi 的 Vite 插件并列：
+
+```ts
+// vite.config.ts，SvelteKit
+import { sveltekit } from '@sveltejs/kit/vite';
+import semi from '@fibrae/semi-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+// adapter 换成你使用的 SvelteKit adapter
+export default defineConfig({
+    plugins: [tailwindcss(), sveltekit({ adapter }), semi()],
+});
+```
+
+</Framework>
+
 <Notice type="warning" title="重要">
 
 `semi-layer.css` 必须在任何包含 `@import "tailwindcss";` 的 CSS 文件和任何 Semi 组件的 import 之前引入，否则 CSS Layer 顺序将不正确。建议将其放在入口文件的第一行。也可以把层顺序声明写在 Tailwind 入口 CSS 的第一行，只引入这一个文件。
@@ -193,6 +235,15 @@ Semi 在构建时从默认主题生成 Tailwind 的主题映射文件 `tailwind.
 
 </Framework>
 
+<Framework only="svelte">
+
+```css
+@import 'tailwindcss';
+@import '@fibrae/semi-ui-svelte/tailwind.css';
+```
+
+</Framework>
+
 之后即可使用 `bg-semi-color-primary`、`text-semi-color-text-0` 等原子类，也支持透明度修饰符：
 
 <Framework only="react">
@@ -216,6 +267,14 @@ Semi 在构建时从默认主题生成 Tailwind 的主题映射文件 `tailwind.
 <Framework only="solid">
 
 ```jsx
+<div class="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
 <div class="bg-semi-color-primary/50 text-semi-color-text-0 rounded-semi-large shadow-semi-elevated">...</div>
 ```
 
@@ -264,6 +323,14 @@ Semi 在构建时从默认主题生成 Tailwind 的主题映射文件 `tailwind.
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<div class="p-semi-base gap-semi-tight text-semi-header-6 font-semi-bold">...</div>
+```
+
+</Framework>
+
 z-index、控件高度、描边宽度在 Tailwind 中没有对应的命名空间，不映射，用任意值写法：
 
 <Framework only="react">
@@ -292,6 +359,14 @@ z-index、控件高度、描边宽度在 Tailwind 中没有对应的命名空间
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<div class="z-(--semi-z-modal) h-(--semi-height-control-default) border-(length:--semi-border-thickness-control)">...</div>
+```
+
+</Framework>
+
 调色板共 212 个颜色：16 个色系各 0 到 9 共 10 个色阶（如 `semi-blue-5`、`semi-light-green-2`），`semi-white`、`semi-black`，AI 紫色 `semi-ai-purple-0` 到 `semi-ai-purple-9`，以及 AI 渐变的色标 `semi-ai-general-<色阶>-<0 到 3>`。调色板的值是完整颜色，暗色模式下同名色阶换成暗色版本，同样支持透明度修饰符：
 
 <Framework only="react">
@@ -315,6 +390,14 @@ z-index、控件高度、描边宽度在 Tailwind 中没有对应的命名空间
 <Framework only="solid">
 
 ```jsx
+<div class="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
 <div class="bg-semi-blue-0 text-semi-blue-7 border-semi-grey-2/50">...</div>
 ```
 

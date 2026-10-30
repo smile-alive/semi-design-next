@@ -83,7 +83,7 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
-const getData = (total: number) => {
+function getData(total: number) {
     const data: Row[] = [];
     for (let i = 0; i < total; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -98,7 +98,7 @@ const getData = (total: number) => {
         });
     }
     return data;
-};
+}
 
 export default function TableDemo() {
     const [dataSource] = useState(() => getData(46));

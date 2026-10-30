@@ -1,0 +1,30 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                  | 类型                                                                                               | 默认值          |
+| ------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------- |
+| allowClear    | 是否允许再次点击后清除。                                                                                              | `boolean`                                                                                          | `true`          |
+| allowHalf     | 是否允许半选。                                                                                                        | `boolean`                                                                                          | `false`         |
+| autofocus     | 挂载时自动获取焦点。                                                                                                  | `boolean \| null`                                                                                  | -               |
+| character     | 每颗星中绘制的字符，字符串或 snippet；字符串同时是各星可访问名称与整组摘要的单位，snippet 则用语言包的单位。          | `string \| Snippet`                                                                                | -               |
+| count         | 星的总数。                                                                                                            | `number`                                                                                           | `5`             |
+| disabled      | 只读，无法进行交互，也无法获得焦点。                                                                                  | `boolean`                                                                                          | `false`         |
+| onBlur        | 焦点离开整个评分组件时的回调。                                                                                        | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType>                                     | -               |
+| onChange      | 选择变化时的回调，参数为新的值。                                                                                      | <ApiType detail={"(value: number) => void"}>Type</ApiType>                                         | -               |
+| onClick       | 点击星或按 Enter、Space 选中时的回调，参数为事件与星的序号；会遮住根元素上的原生 click 监听。                         | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent, index: number) => void"}>Type</ApiType> | -               |
+| onFocus       | 焦点进入整个评分组件时的回调，在星之间移动不触发。                                                                    | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType>                                     | -               |
+| onHoverChange | 指针经过时数值变化的回调；指针移出或点击清除时收到 undefined。                                                        | <ApiType detail={"(value?: number) => void"}>Type</ApiType>                                        | -               |
+| onKeyDown     | 仅在方向键使值移动时的回调。                                                                                          | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType>                                  | -               |
+| prefixCls     | 组件的样式类名前缀。                                                                                                  | `string`                                                                                           | `"semi-rating"` |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的聚焦。                                                      | `boolean`                                                                                          | -               |
+| size          | 尺寸，可选 default、small，也可传入 number 自定义尺寸。                                                               | `'small' \| 'default' \| number`                                                                   | `"default"`     |
+| tooltips      | 每一项的提示信息。                                                                                                    | `string[]`                                                                                         | -               |
+| value         | 当前值，可用 `bind:value` 双向绑定。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值，之后由用户操作改变。 | `number`                                                                                           | -               |
+
+**Methods**
+
+| 方法  | 说明                                                                  | 类型                                          |
+| ----- | --------------------------------------------------------------------- | --------------------------------------------- |
+| blur  | 让评分内获得焦点的元素失焦；焦点不在评分内或 disabled 时无效果。      | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 聚焦 Tab 会到达的 radio，与 autofocus 的落点相同；disabled 时无效果。 | <ApiType detail={"() => void"}>Type</ApiType> |

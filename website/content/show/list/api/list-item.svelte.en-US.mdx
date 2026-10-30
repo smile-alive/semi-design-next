@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property     | Description                                                                                                                                                                    | Type                                                                | Default        |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------------- |
+| align        | Vertical alignment of header and main: flex-start, flex-end, center, baseline or stretch; flex-start when omitted.                                                             | `'flex-start' \| 'flex-end' \| 'center' \| 'baseline' \| 'stretch'` | `"flex-start"` |
+| children     | Item content written inside the tag; inside the button when the item is clickable and has no header or main, otherwise outside it.                                             | `Snippet`                                                           | -              |
+| extra        | Snippet for additional item content, rendered outside the button; interactive elements in it stay focusable and clickable, and clicking them does not trigger the row's click. | `Snippet`                                                           | -              |
+| header       | Snippet for the item header content.                                                                                                                                           | `Snippet`                                                           | -              |
+| main         | Snippet for the item main content.                                                                                                                                             | `Snippet`                                                           | -              |
+| onClick      | Click handler, taking precedence over the List's onClick; an item with a handler renders a native button.                                                                      | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType>      | -              |
+| onRightClick | Context-menu handler, taking precedence over the List's onRightClick; an item with only this handler also renders a native button.                                             | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType>      | -              |

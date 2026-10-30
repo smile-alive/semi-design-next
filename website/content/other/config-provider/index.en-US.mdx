@@ -10,6 +10,8 @@ import ConfigProviderVueApi from './api/config-provider.vue.en-US.mdx';
 import ConfigConsumerVueApi from './api/config-consumer.vue.en-US.mdx';
 import ConfigProviderSolidApi from './api/config-provider.solid.en-US.mdx';
 import ConfigConsumerSolidApi from './api/config-consumer.solid.en-US.mdx';
+import ConfigProviderSvelteApi from './api/config-provider.svelte.en-US.mdx';
+import ConfigConsumerSvelteApi from './api/config-consumer.svelte.en-US.mdx';
 
 ## Scenes to be used
 
@@ -35,6 +37,12 @@ ConfigProvider is built on provide / inject, so it affects the child components 
 <Framework only="solid">
 
 ConfigProvider is built on context, so it affects the child components in the JSX tree. ConfigProvider and ConfigConsumer render no element of their own (a `div` carrying `dir` is added only when the direction changes), and undeclared attributes (`class`, `style`, `ref` and native attributes) are discarded, so they never reach the DOM.
+
+</Framework>
+
+<Framework only="svelte">
+
+ConfigProvider is built on Svelte context, so it affects the child components in the component tree. ConfigProvider and ConfigConsumer render no element of their own (a `div` carrying `dir` is added only when the direction changes), and undeclared attributes are discarded, so they never reach the DOM.
 
 </Framework>
 
@@ -68,6 +76,16 @@ import { ConfigProvider, ConfigConsumer, useConfig } from '@fibrae/semi-ui-solid
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { ConfigProvider, ConfigConsumer, useConfig } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 By passing in the timeZone parameter, users can configure the time zone for the time components:
@@ -93,6 +111,12 @@ Use the default scoped slot of ConfigConsumer to obtain the value of ConfigProvi
 <Framework only="solid">
 
 Use the children function of ConfigConsumer to obtain the value of ConfigProvider. The function runs only once, so read fields as `config.xxx` instead of destructuring them. In a child component you can also call `useConfig()`, which returns `Accessor<ContextValue>`; call the accessor (`config()`) to read the current value, and it is an empty object without a ConfigProvider.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `children` snippet of ConfigConsumer to obtain the value of ConfigProvider; its argument is the effective configuration. A child component can also call `useConfig()` during initialization, which returns the same configuration object, and it is an empty object without a ConfigProvider. The fields of the object are getters evaluated on read, so read them as `config.xxx` instead of destructuring and holding them, which would not follow changes.
 
 </Framework>
 
@@ -246,6 +270,45 @@ function Demo() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<!-- breakpoint-subscriber.svelte -->
+<script lang="ts">
+    import { onMount } from 'svelte';
+    import { TypographyText, useConfig } from '@fibrae/semi-ui-svelte';
+
+    const config = useConfig();
+    let screens = $state(config.screens);
+
+    onMount(() => config.onBreakpoint?.((next) => (screens = next)));
+</script>
+
+<TypographyText>{JSON.stringify(screens)}</TypographyText>
+```
+
+```svelte
+<script lang="ts">
+    import { ConfigProvider } from '@fibrae/semi-ui-svelte';
+    import BreakpointSubscriber from './breakpoint-subscriber.svelte';
+
+    const responsiveMap = {
+        xs: '(max-width: 575px)',
+        sm: '(min-width: 576px)',
+        md: '(min-width: 768px)',
+        lg: '(min-width: 992px)',
+        xl: '(min-width: 1200px)',
+        xxl: '(min-width: 1600px)',
+    };
+</script>
+
+<ConfigProvider responsiveObserve {responsiveMap}>
+    <BreakpointSubscriber />
+</ConfigProvider>
+```
+
+</Framework>
+
 #### Subscription API
 
 `onBreakpoint` supports two overloads (both return an unsubscribe function):
@@ -272,6 +335,12 @@ In Vue, command calls cannot read ConfigProvider (it is a component-level provid
 <Framework only="solid">
 
 Imperative calls (`Modal.success()`, `Toast.info()` and the like) render outside the ConfigProvider and cannot read its direction. To follow the direction, pass `direction` in the options, or use `Modal.useModal()`, `Toast.useToast()` and `Notification.useNotification()`, which inherit the ConfigProvider wherever their returned Holder component is rendered.
+
+</Framework>
+
+<Framework only="svelte">
+
+Imperative calls (`Modal.success()`, `Toast.info()`, `Notification.info()` and the like) render outside the ConfigProvider and cannot read its direction. To follow the direction, pass `direction` in the options, or use `Modal.useModal()`, `Toast.useToast()` and `Notification.useNotification()`. `Modal.useModal()` inherits the ConfigProvider at the position of the component that calls it; `useToast()` and `useNotification()` return `[api, Holder]` and inherit the ConfigProvider wherever the Holder component is rendered.
 
 </Framework>
 
@@ -331,6 +400,24 @@ ConfigConsumer renders no element either, so undeclared attributes are discarded
 
 </Framework>
 
+<Framework only="svelte">
+
+<ConfigProviderSvelteApi />
+
+`defaultResponsiveMap` is the default breakpoint map, a named export of `@fibrae/semi-ui-svelte`. `locale` works like the `locale` parameter of `LocaleProvider`, see its [usage](/en-US/react/other/locale). ConfigProvider does not accept `class`, `style` or native attributes, and they do not land on the DOM.
+
+### ConfigConsumer
+
+<ConfigConsumerSvelteApi />
+
+ConfigConsumer renders no element either, so undeclared attributes are discarded.
+
+### useConfig
+
+`useConfig(): ContextValue` returns the effective configuration object, an empty object without a ConfigProvider; call it during component initialization. `ContextValue` holds `direction`, `timeZone`, `locale`, `getPopupContainer`, `responsiveObserve` and `responsiveMap` from the table above, plus the read-only `screens` (which breakpoints match) and `onBreakpoint` (the subscribe function, see "Subscription API" above). The fields are getters, which return the current value when read.
+
+</Framework>
+
 ### Time Zone Identifier
 
 - Numbers, such as `1`,`-9.5`, represent the time offset from UTC, the unit is hour, and it can be negative or decimal;
@@ -373,6 +460,12 @@ In `semiGlobal.config.overrideDefaultProps` you can configure the component defa
 <Framework only="solid">
 
 In `semiGlobal.config.overrideDefaultProps` you can configure the component default Props. A component reads the global configuration once when it is created, so changes made afterwards do not update components that already exist. Set it before the application mounts, at the entrance of the entire site. A DOM node in the defaults is discarded with a warning, because one node can only be attached in one place and every instance would move it into itself; strings and icon components take effect as usual.
+
+</Framework>
+
+<Framework only="svelte">
+
+In `semiGlobal.config.overrideDefaultProps` you can configure the component default Props. A component reads the global configuration once when it is created, so changes made afterwards do not update components that already exist. Set it before the application mounts, at the entrance of the entire site. A prop whose value is `undefined` counts as not passed and takes the default. To give one app its own configuration, create a `SemiGlobal` instance and pass it with `mount(App, { context: new Map([[semiGlobalKey, semi]]) })`; `SemiGlobal` and `semiGlobalKey` are also exported from `@fibrae/semi-ui-svelte`.
 
 </Framework>
 
@@ -426,6 +519,26 @@ semiGlobal.config.overrideDefaultProps = {
 
 ```ts
 import { semiGlobal } from '@fibrae/semi-ui-solid';
+
+semiGlobal.config.overrideDefaultProps = {
+    Button: {
+        type: 'warning',
+    },
+    Select: {
+        filter: true,
+    },
+    Tooltip: {
+        trigger: 'click',
+    },
+};
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+import { semiGlobal } from '@fibrae/semi-ui-svelte';
 
 semiGlobal.config.overrideDefaultProps = {
     Button: {

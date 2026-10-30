@@ -63,7 +63,7 @@ export async function compileError(source: string, file: string) {
         await renderer.process(content, file, frontmatter);
         // framework-mdx builds index pages once more per other enabled framework, and remark-demo reads the `.<framework>.mdx` suffix
         if (path.basename(file).startsWith('index.')) {
-            const demos = globSync('demos/*.{react.tsx,vue,solid.tsx}', { cwd: path.dirname(file) });
+            const demos = globSync('demos/*.{react.tsx,vue,solid.tsx,svelte}', { cwd: path.dirname(file) });
             const enabled = availableFrameworks(demos, frontmatter.frameworks, file);
             for (const framework of frameworks.filter((item) => item !== 'react' && enabled.includes(item))) {
                 await renderer.process(content, `${file}.${framework}.mdx`, frontmatter);

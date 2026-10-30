@@ -119,8 +119,8 @@
                 "en-US": "Internal property used by DatePicker: the clear button stays available while disabled."
             },
             "size": {
-                "zh-CN": "输入框大小，可选 large、default、small。在 InputGroup 中由组的 size 替代。",
-                "en-US": "Input size: large, default or small. In an InputGroup, the size of the group replaces it."
+                "zh-CN": "输入框大小，可选 large、default、small。在 InputGroup 中未设置时取组的 size。",
+                "en-US": "Input size: large, default or small. In an InputGroup it takes the size of the group when not set."
             },
             "suffix": {
                 "zh-CN": "后缀标签，可以是文本、Semi 图标或任意 JSX 元素。",
@@ -273,8 +273,8 @@
         "source": "packages/semi-ui-solid/src/input/input-group.tsx",
         "props": {
             "disabled": {
-                "zh-CN": "是否禁用，下发给组内未自行设置 disabled 的控件。",
-                "en-US": "Whether the group is disabled; it applies to the controls that set no disabled of their own."
+                "zh-CN": "是否禁用，组内任意深度未自行设置 disabled 的控件取这个值。",
+                "en-US": "Whether the group is disabled; controls at any depth in the group that set no disabled of their own take it."
             },
             "label": {
                 "zh-CN": "组的标签，对象形式，属性同 Form.Label（如 text、required、extra）；text 可以是 JSX 元素。",
@@ -293,8 +293,8 @@
                 "en-US": "Called when any control in the group gets focus, including a move from another control in it."
             },
             "size": {
-                "zh-CN": "输入框大小，可选 large、default、small；下发给组内每个控件，替代控件自身的 size。",
-                "en-US": "Input size: large, default or small; it is passed to every control in the group and replaces their own size."
+                "zh-CN": "输入框大小，可选 large、default、small；组内任意深度未自行设置 size 的控件取这个值。",
+                "en-US": "Input size: large, default or small; controls at any depth in the group that set no size of their own take it."
             }
         }
     }

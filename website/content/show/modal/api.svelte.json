@@ -1,0 +1,146 @@
+{
+    "modal": {
+        "source": "packages/semi-ui-svelte/src/modal/modal.svelte",
+        "props": {
+            "afterClose": {
+                "zh-CN": "对话框完全关闭后触发；显示期间被卸载时也会触发一次。",
+                "en-US": "Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown."
+            },
+            "bodyStyle": { "zh-CN": "对话框内容区的样式，字符串。", "en-US": "Style of the dialog body, as a string." },
+            "cancelButtonProps": {
+                "zh-CN": "取消按钮的属性。autoFocus 为 true 时打开后聚焦该按钮；class、style 落在按钮上；onclick 先于内置的取消处理调用，不会替换内置处理。",
+                "en-US": "Props of the cancel button. autoFocus focuses it on open; class and style land on the button; onclick runs before the built-in cancel handling, which still runs."
+            },
+            "cancelLoading": {
+                "zh-CN": "取消按钮是否加载中；不传时跟随 onCancel 返回的 Promise，显式传入 false 关闭该行为。",
+                "en-US": "Whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off."
+            },
+            "cancelText": {
+                "zh-CN": "取消按钮文字，缺省取语言包 Modal.cancel。",
+                "en-US": "Cancel button text. Defaults to the locale entry Modal.cancel."
+            },
+            "centered": { "zh-CN": "是否垂直居中显示。", "en-US": "Whether the dialog is vertically centered." },
+            "closable": {
+                "zh-CN": "是否显示右上角的关闭按钮。",
+                "en-US": "Whether the close button in the corner is shown."
+            },
+            "closeOnEsc": {
+                "zh-CN": "是否允许按 Esc 取消对话框。",
+                "en-US": "Whether Esc cancels the dialog."
+            },
+            "confirmLoading": {
+                "zh-CN": "确认按钮是否加载中；不传时跟随 onOk 返回的 Promise，显式传入 false 关闭该行为。",
+                "en-US": "Whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off."
+            },
+            "footerFill": {
+                "zh-CN": "默认页脚的两个按钮是否撑满排列。",
+                "en-US": "Whether the two buttons of the default footer fill the row."
+            },
+            "fullScreen": {
+                "zh-CN": "是否全屏显示，开启后 width、height 不再生效。",
+                "en-US": "Whether the dialog fills the screen. width and height are ignored."
+            },
+            "getPopupContainer": {
+                "zh-CN": "指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative；这会改变浮层的 DOM 位置，不改变视图位置。",
+                "en-US": "Parent element the dialog is rendered into. A custom container needs position: relative; this changes where the dialog sits in the DOM, not where it is shown."
+            },
+            "hasCancel": {
+                "zh-CN": "默认页脚是否显示取消按钮。",
+                "en-US": "Whether the default footer shows the cancel button."
+            },
+            "height": {
+                "zh-CN": "对话框高度，数字按像素处理，字符串为合法 CSS 长度。",
+                "en-US": "Height of the dialog. A number is in pixels; a string is any valid CSS length."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留对话框内部节点而不销毁。",
+                "en-US": "Whether the dialog content stays mounted while closed."
+            },
+            "lazyRender": {
+                "zh-CN": "配合 keepDOM 使用；为 true 时，首次显示之前不渲染对话框。",
+                "en-US": "Used with keepDOM. When true, the dialog is not rendered until it is first shown."
+            },
+            "mask": { "zh-CN": "是否显示遮罩。", "en-US": "Whether the mask is shown." },
+            "maskClosable": {
+                "zh-CN": "是否允许点击遮罩取消对话框。",
+                "en-US": "Whether a click on the mask cancels the dialog."
+            },
+            "maskFixed": {
+                "zh-CN": "遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理（aria-modal、页面 inert、Tab 锁定、body 滚动锁定）。",
+                "en-US": "Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock)."
+            },
+            "maskStyle": { "zh-CN": "遮罩的样式，字符串。", "en-US": "Style of the mask, as a string." },
+            "modalContentClass": {
+                "zh-CN": "对话框内容元素的类名。",
+                "en-US": "Class name of the dialog content element."
+            },
+            "motion": { "zh-CN": "是否启用进出场动画。", "en-US": "Whether the enter and leave animations run." },
+            "okButtonProps": {
+                "zh-CN": "确认按钮的属性。autoFocus 为 true 时打开后聚焦该按钮；class、style 落在按钮上；onclick 先于内置的确认处理调用，不会替换内置处理。",
+                "en-US": "Props of the ok button. autoFocus focuses it on open; class and style land on the button; onclick runs before the built-in ok handling, which still runs."
+            },
+            "okText": {
+                "zh-CN": "确认按钮文字，缺省取语言包 Modal.confirm。",
+                "en-US": "Ok button text. Defaults to the locale entry Modal.confirm."
+            },
+            "okType": { "zh-CN": "确认按钮的类型。", "en-US": "Type of the ok button." },
+            "preventScroll": {
+                "zh-CN": "组件内部调用 focus 时是否阻止浏览器滚动到被聚焦元素，不影响使用方自己的 focus 调用。",
+                "en-US": "Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected."
+            },
+            "size": {
+                "zh-CN": "对话框宽度档位：small 为 448px，medium 为 684px，large 为 920px，full-width 为 100vw - 64px。",
+                "en-US": "Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px."
+            },
+            "visible": {
+                "zh-CN": "对话框是否可见，配合 bind:visible 使用。取消按钮、关闭按钮、遮罩和 Esc 在 onCancel 返回后写回 false；确认只调用 onOk，由使用方把 visible 设为 false。",
+                "en-US": "Whether the dialog is visible, used with bind:visible. The cancel button, the close button, the mask and Esc write false once onCancel returns; ok only calls onOk and the caller sets visible to false."
+            },
+            "width": {
+                "zh-CN": "对话框宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 size 决定。",
+                "en-US": "Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, size decides."
+            },
+            "zIndex": { "zh-CN": "弹层外层的 z-index。", "en-US": "z-index of the outer layer." },
+            "role": {
+                "zh-CN": "对话框元素的 role，可选 dialog 或 alertdialog。",
+                "en-US": "role of the dialog element: dialog or alertdialog."
+            },
+            "onCancel": {
+                "zh-CN": "取消按钮、关闭按钮、遮罩和 Esc 触发；按 Esc 时参数为原生 KeyboardEvent。返回 Promise 时取消按钮保持加载，fulfill 后才写回 visible，reject 时保持打开；回调执行时 visible 仍为 true。",
+                "en-US": "Called by the cancel button, the close button, the mask and Esc; the argument is a native KeyboardEvent for Esc. A returned Promise keeps the cancel button loading; visible is written back once it fulfills, and a rejection keeps the dialog open. visible is still true while the callback runs."
+            },
+            "onOk": {
+                "zh-CN": "点击确认按钮时调用；返回 Promise 时确认按钮保持加载直到落定。组件不会自行关闭，由使用方把 visible 设为 false。",
+                "en-US": "Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false."
+            },
+            "title": {
+                "zh-CN": "标题，纯文本或 snippet，同时作为对话框的可访问名称。声明为 prop，不会作为原生 title 属性落到元素上。",
+                "en-US": "Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute."
+            },
+            "header": {
+                "zh-CN": "完全替换默认头部（图标、标题与关闭按钮）的 snippet。写一个空 snippet 或传 null 时不渲染头部区域。",
+                "en-US": "Snippet that replaces the whole default header (icon, title and close button). An empty snippet or null renders no header area."
+            },
+            "footer": {
+                "zh-CN": "完全替换默认页脚按钮的 snippet。写一个空 snippet 或传 null 时不渲染页脚区域。",
+                "en-US": "Snippet that replaces the default footer buttons. An empty snippet or null renders no footer area."
+            },
+            "icon": { "zh-CN": "标题前图标的 snippet。", "en-US": "Snippet for the icon before the title." },
+            "closeIcon": {
+                "zh-CN": "关闭按钮中图标的 snippet。",
+                "en-US": "Snippet for the icon inside the close button."
+            },
+            "modal": {
+                "zh-CN": "自定义渲染对话框本身的 snippet，参数为 `{ modal }`，`modal` 是 role=dialog 元素对应的 snippet，用 `{@render modal()}` 放置。",
+                "en-US": "Snippet for custom rendering of the dialog itself. Its argument is `{ modal }`, a snippet of the role=dialog element, placed with `{@render modal()}`."
+            },
+            "children": { "zh-CN": "对话框的正文，写在标签内。", "en-US": "Body of the dialog, written inside the tag." }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回 Portal 内的最外层元素，未渲染时为 null。",
+                "en-US": "Returns the outermost element inside the portal, or null while nothing is rendered."
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性            | 说明                                                                                                                           | 类型                                                                             | 默认值 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------ |
+| alt             | 图像描述，同时作为可预览缩略图的读屏名称。                                                                                     | `string`                                                                         | -      |
+| closeIcon       | 自定义关闭图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                                      | `Snippet`                                                                        | -      |
+| crossOrigin     | 透传给原生 img 标签的 crossorigin。                                                                                            | `'anonymous' \| 'use-credentials'`                                               | -      |
+| fallback        | 加载失败时显示的容错图片地址，或自定义内容的 snippet。                                                                         | `string \| Snippet`                                                              | -      |
+| height          | 图片显示高度，数值按 px 处理。                                                                                                 | `string \| number`                                                               | -      |
+| imgCls          | 自定义样式类名，透传给 img 节点。                                                                                              | `string`                                                                         | -      |
+| imgStyle        | 自定义样式，透传给 img 节点。                                                                                                  | `string`                                                                         | -      |
+| leftIcon        | 自定义向左切换图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                                  | <ApiType detail={"Snippet\u003c[ImagePreviewIconSnippetProps]>"}>Type</ApiType>  | -      |
+| onError         | 图片加载失败时触发。                                                                                                           | <ApiType detail={"(event: Event) => void"}>Type</ApiType>                        | -      |
+| onLoad          | 图片加载成功时触发。                                                                                                           | <ApiType detail={"(event: Event) => void"}>Type</ApiType>                        | -      |
+| placeholder     | 图片未加载成功时的占位内容的 snippet。                                                                                         | `Snippet`                                                                        | -      |
+| preview         | 预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的 snippet。                                           | `boolean \| ImagePreviewProps`                                                   | `true` |
+| previewMenu     | 自定义预览底部操作区；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                                | <ApiType detail={"Snippet\u003c[MenuProps]>"}>Type</ApiType>                     | -      |
+| rightIcon       | 自定义向右切换图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。                                                  | <ApiType detail={"Snippet\u003c[ImagePreviewIconSnippetProps]>"}>Type</ApiType>  | -      |
+| setDownloadName | 设置图片下载名称。                                                                                                             | <ApiType detail={"(src: string) => string"}>Type</ApiType>                       | -      |
+| src             | 图片获取地址。                                                                                                                 | `string`                                                                         | -      |
+| title           | 替换预览顶部标题区的内容，有标题时对话框以 snippet 渲染出的文字命名；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。 | <ApiType detail={"Snippet\u003c[ImagePreviewTitleSnippetProps]>"}>Type</ApiType> | -      |
+| width           | 图片显示宽度，数值按 px 处理。                                                                                                 | `string \| number`                                                               | -      |

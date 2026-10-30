@@ -12,6 +12,8 @@ import FloatButtonVueApi from './api/float-button.vue.en-US.mdx';
 import FloatButtonGroupVueApi from './api/float-button-group.vue.en-US.mdx';
 import FloatButtonSolidApi from './api/float-button.solid.en-US.mdx';
 import FloatButtonGroupSolidApi from './api/float-button-group.solid.en-US.mdx';
+import FloatButtonSvelteApi from './api/float-button.svelte.en-US.mdx';
+import FloatButtonGroupSvelteApi from './api/float-button-group.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +41,16 @@ import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -95,9 +107,50 @@ Subitems can be passed in via `items`. Like a single FloatButton, each item rend
 
 </Framework>
 
+<Framework only="svelte">
+
+Subitems can be passed in via `items`, and their icons come from the `icon` snippet, which receives `{ item, index }`. Like a single FloatButton, each item renders as a native button or link and honours its own `href`, `target`, `rel`, `disabled` and `onClick`; clicking an item calls its `onClick(event)` first, then the group's `onClick(value, event)`. The group's `disabled` disables every item.
+
+</Framework>
+
 <Demo id="group" />
 
 ## API Reference
+
+<Framework only="svelte">
+
+### FloatButton
+
+<FloatButtonSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `aria-*` and `onclick`) land on the root element: an `<a>` when `href` is set, otherwise a `<button>`. The click callback is the native `onclick`, which receives the event, and is not called while disabled. `style` only accepts a string, and a number does not get `px` added. Refs are not supported.
+
+### FloatButtonGroupItem
+
+Add the following parameters based on the props of FloatButton. An item's `href`, `target`, `rel`, `disabled`, `class` and `style` mean the same as on FloatButton, and listeners such as `onClick` go in the data; `shape`, `size` and `colorful` work as the props of the same name on a standalone FloatButton, and an item with `size` has that fixed width and height. An item's `ref` is not supported.
+
+| Properties    | Instructions                                                   | Type                        | Default |
+| ------------- | -------------------------------------------------------------- | --------------------------- | ------- |
+| aria-label    | Accessible name of the item, required when it has only an icon | string                      | -       |
+| class         | Class name                                                     | string                      | -       |
+| content       | Text content; richer content uses the `content` snippet        | string \| number            | -       |
+| data-\*       | Custom data attributes                                         | string                      | -       |
+| id            | Element id                                                     | string                      | -       |
+| onClick       | Click callback, called before the group's `onClick`            | (event: MouseEvent) => void | -       |
+| oncontextmenu | Context menu callback                                          | (event: MouseEvent) => void | -       |
+| onmouseenter  | Pointer enter callback                                         | (event: MouseEvent) => void | -       |
+| onmouseleave  | Pointer leave callback                                         | (event: MouseEvent) => void | -       |
+| style         | Style string                                                   | string                      | -       |
+| title         | Native title attribute                                         | string                      | -       |
+| value         | Value of the item, passed as the first argument of `onClick`   | string                      | -       |
+
+### FloatButtonGroup
+
+<FloatButtonGroupSvelteApi />
+
+`class`, `style` and native attributes (such as `aria-*`) land on the root element (`role="group"`). The `icon`, node-typed `content` and node-typed `badge.count` of `items` come from the `icon`, `content` and `badgeCount` snippets, which receive `{ item, index }`.
+
+</Framework>
 
 <Framework only="react">
 

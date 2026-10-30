@@ -22,7 +22,7 @@ export default function TreeSelectDemo() {
     ];
     const [treeData, setTreeData] = useState(initialData);
 
-    function updateTreeData(list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] {
+    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
         return list.map((node) => {
             if (node.key === key) {
                 return { ...node, children };
@@ -32,9 +32,9 @@ export default function TreeSelectDemo() {
             }
             return node;
         });
-    }
+    };
 
-    function onLoadData({ key, children }: TreeNodeData) {
+    const onLoadData = ({ key, children }: TreeNodeData) => {
         return new Promise<void>((resolve) => {
             if (children) {
                 resolve();
@@ -56,6 +56,6 @@ export default function TreeSelectDemo() {
                 resolve();
             }, 1000);
         });
-    }
+    };
     return <TreeSelect loadData={onLoadData} treeData={treeData} style={{ width: 300 }} placeholder="请选择" />;
 }

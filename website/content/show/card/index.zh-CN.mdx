@@ -14,6 +14,9 @@ import CardGroupVueApi from './api/card-group.vue.zh-CN.mdx';
 import CardSolidApi from './api/card.solid.zh-CN.mdx';
 import CardMetaSolidApi from './api/card-meta.solid.zh-CN.mdx';
 import CardGroupSolidApi from './api/card-group.solid.zh-CN.mdx';
+import CardSvelteApi from './api/card.svelte.zh-CN.mdx';
+import CardMetaSvelteApi from './api/card-meta.svelte.zh-CN.mdx';
+import CardGroupSvelteApi from './api/card-group.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -44,6 +47,18 @@ import { Card } from '@fibrae/semi-ui-react';
 ```jsx
 import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Card, CardGroup, CardMeta } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+`CardMeta` 即 `Card.Meta`，两种写法等价。
 
 </Framework>
 
@@ -79,6 +94,12 @@ import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可以使用 `cover` snippet 设置封面。
+
+</Framework>
+
 <Demo id="cover" />
 
 ### 边线和外边框
@@ -110,6 +131,12 @@ import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 <Framework only="vue">
 
 可以利用 `CardMeta` 支持更灵活的内容，通过 `#title`（或 `title` 属性）、`#avatar`、`#description` 插槽设置。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以利用 `CardMeta` 支持更灵活的内容，允许设置 `title`、`avatar`、`description`，后两者是 snippet，`title` 可以是字符串或 snippet。
 
 </Framework>
 
@@ -165,6 +192,12 @@ import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`actions` 接收 snippet 数组，每个 snippet 是一个操作，元素间将以 12px 的水平间距展示于内容区底部。
+
+</Framework>
+
 <Demo id="actions" />
 
 ### 卡片组
@@ -199,6 +232,14 @@ import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<CardSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`）落在卡片的根元素（`div`）上。
+
+</Framework>
+
 <Framework only="react">
 
 <CardReactApi />
@@ -225,6 +266,14 @@ import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<CardGroupSvelteApi />
+
+`class`、`style` 与原生属性和事件同样落在内部 `Space` 的根元素上。
+
+</Framework>
+
 <Framework only="react">
 
 <CardGroupReactApi />
@@ -248,6 +297,14 @@ import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 <CardMetaSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在根元素（`div`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CardMetaSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`）落在根元素（`div`）上。
 
 </Framework>
 

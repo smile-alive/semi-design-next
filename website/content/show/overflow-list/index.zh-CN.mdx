@@ -8,6 +8,7 @@ brief: OverflowList 是一个行为组件，用于展示列表，并支持自适
 import OverflowListReactApi from './api/overflow-list.react.zh-CN.mdx';
 import OverflowListVueApi from './api/overflow-list.vue.zh-CN.mdx';
 import OverflowListSolidApi from './api/overflow-list.solid.zh-CN.mdx';
+import OverflowListSvelteApi from './api/overflow-list.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { OverflowList } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 折叠模式 - 默认
 
 通过 `renderMode="collapse"` (默认) 来实现内容的折叠。
@@ -52,6 +63,12 @@ import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 `items` 只放数据，不放节点。每个展示项由 `visibleItemRenderer` 返回的元素渲染；溢出项由 `overflowRenderer` 渲染，collapse 模式下只渲染一个溢出节点，参数是放不下的项。
+
+</Framework>
+
+<Framework only="svelte">
+
+`items` 只放数据，不放节点。每个展示项用 `item` snippet 渲染，参数 `{ item, index }`；溢出项用 `overflow` snippet 渲染，参数 `{ items, position }`，collapse 模式只在有溢出项时渲染一次，`items` 是放不下的项。
 
 </Framework>
 
@@ -85,6 +102,12 @@ import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+滚动模式下 `overflow` 在两侧各渲染一次，`position` 为 `start` 或 `end`，`items` 是该侧滚出可见区域的项。每项被包进 `display: contents` 的 span，并在 `item` snippet 渲染出的第一个元素上写 `data-scrollkey` 并观察它，所以 `item` 必须输出元素，否则该项被跳过。
+
+</Framework>
+
 <Demo id="scroll" />
 
 ## API 参考
@@ -110,6 +133,14 @@ import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
 <OverflowListSolidApi />
 
 `class`、`style`、`ref` 与 `aria-*` 等原生属性落在根元素上；滚动 wrapper 的类名、样式和其他属性用 `wrapperClassName`、`wrapperStyle`、`wrapperProps` 传入。
+
+</Framework>
+
+<Framework only="svelte">
+
+<OverflowListSvelteApi />
+
+`class`、`style`（字符串）与 `aria-*` 等原生属性落在根元素上；滚动 wrapper 的类名、样式和其他属性用 `wrapperClassName`、`wrapperStyle`、`wrapperProps` 传入。
 
 </Framework>
 

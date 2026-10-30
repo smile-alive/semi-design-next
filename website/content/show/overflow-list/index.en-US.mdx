@@ -8,6 +8,7 @@ brief: OverflowList is a behavior component used to take list of items and displ
 import OverflowListReactApi from './api/overflow-list.react.en-US.mdx';
 import OverflowListVueApi from './api/overflow-list.vue.en-US.mdx';
 import OverflowListSolidApi from './api/overflow-list.solid.en-US.mdx';
+import OverflowListSvelteApi from './api/overflow-list.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { OverflowList } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Collapse Mode - Simple
 
 You could use `renderMode="collapse"` (default) to render items.
@@ -52,6 +63,12 @@ You could use `renderMode="collapse"` (default) to render items.
 <Framework only="solid">
 
 `items` holds data only, never nodes. Each visible item is rendered by the element `visibleItemRenderer` returns; overflowing items are rendered by `overflowRenderer`, and collapse mode renders one overflow node whose argument is the items that do not fit.
+
+</Framework>
+
+<Framework only="svelte">
+
+`items` holds data, not nodes. Each visible item is rendered by the `item` snippet, with the parameter `{ item, index }`. The overflowing items are rendered by the `overflow` snippet, with the parameter `{ items, position }`; collapse mode renders it once, only when there are overflowing items, and `items` are the ones that do not fit.
 
 </Framework>
 
@@ -86,6 +103,12 @@ In scroll mode `overflowRenderer` receives `[start, end]`, the items scrolled ou
 
 </Framework>
 
+<Framework only="svelte">
+
+In scroll mode `overflow` is rendered once per side, with `position` set to `start` or `end` and `items` the items scrolled out on that side. Each item is wrapped in a `display: contents` span, and `data-scrollkey` is written on, and observed from, the first element the `item` snippet renders, so `item` must output an element or the item is skipped.
+
+</Framework>
+
 <Demo id="scroll" />
 
 ## API Reference
@@ -111,6 +134,14 @@ Other native attributes such as `aria-*`, `id`, `data-*` and `onClick` land on t
 <OverflowListSolidApi />
 
 `class`, `style`, `ref` and native attributes such as `aria-*` land on the root element; pass the scroll wrapper's class, style and other attributes with `wrapperClassName`, `wrapperStyle` and `wrapperProps`.
+
+</Framework>
+
+<Framework only="svelte">
+
+<OverflowListSvelteApi />
+
+`class`, `style` (a string) and native attributes such as `aria-*` land on the root element; pass the class, style and other attributes of the scroll wrapper with `wrapperClassName`, `wrapperStyle` and `wrapperProps`.
 
 </Framework>
 

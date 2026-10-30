@@ -1,0 +1,32 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| bodyStyle | 导航项列表的自定义样式。 | `string` | - |
+| children | `NavItem` 与 `SubNav`，放在 items 生成的导航项之后。 | `Snippet` | - |
+| expandIcon | items 生成的子导航的展开收起箭头，参数含 item、level、size 与要放在图标元素上的 class。 | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavExpandIconArgs]>"}>Type</ApiType> | - |
+| footer | 底部区域：配置对象（collapseButton、class、style，以及 `data-*` 与 `aria-*` 属性），或放有 `NavFooter` 的 snippet。 | `NavFooterConfig \| Snippet` | - |
+| header | 头部区域：配置对象（text、link、linkOptions、logo、class、style，以及 `data-*` 与 `aria-*` 属性），或放有 `NavHeader` 的 snippet。 | `NavHeaderConfig \| Snippet` | - |
+| icon | items 中导航项的图标，参数含 item、level 与 size；始终保留图标列，不能用空内容去掉图标框。 | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavIconArgs]>"}>Type</ApiType> | - |
+| isCollapsed | 是否处于收起状态，仅 mode 为 vertical 时有效；可用 `bind:isCollapsed` 绑定，单向传值只作初值，`undefined` 表示不受控。 | `boolean` | - |
+| items | 导航项数据，每一项可以继续带有 items 属性；字符串项同时作为 text 和 itemKey。配置对象中只有 Item、Sub 声明过的属性、class、style、onmouseenter、onmouseleave、`data-*` 与 `aria-*` 会传给导航项，其余字段（如 path）会被忽略。图标、文案节点和箭头图标使用 `icon`、`text`、`toggleIcon`、`expandIcon` snippet。 | `NavItems` | - |
+| limitIndent | 是否限制缩进。设为 false 后多级导航按层级缩进，仅 mode 为 vertical 时生效，水平模式始终限制缩进。 | `boolean` | `true` |
+| mode | 导航方向，可选 vertical 或 horizontal。 | `Mode` | `"vertical"` |
+| onClick | 点击任意导航项时调用。点击导航项时数据带 text，点击子导航标题时带 openKeys 与 isOpen，domEvent 为原生事件。 | <ApiType detail={"(data: NavClickData) => void"}>Type</ApiType> | - |
+| onCollapseChange | 收起状态变化时调用。 | <ApiType detail={"(isCollapsed: boolean) => void"}>Type</ApiType> | - |
+| onOpenChange | 切换某个子导航显隐状态时调用，悬停打开浮层时没有 domEvent。 | <ApiType detail={"(data: NavOpenChangeData) => void"}>Type</ApiType> | - |
+| onSelect | 第一次选中某个可选中导航项时调用，selectedKeys 只含被选中项自身的 itemKey，domEvent 为原生事件。 | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
+| openKeys | 展开的子导航 itemKey 数组，仅 mode 为 vertical 且侧边栏处于展开状态时有效；可用 `bind:openKeys` 绑定，单向传值只作初值，`null` 表示受控的空值。 | `ItemKey[] \| null` | - |
+| selectedKeys | 选中的导航项 itemKey 数组；可用 `bind:selectedKeys` 绑定，单向传值只作初值，`null` 表示受控的空值。 | `ItemKey[] \| null` | - |
+| subDropdownProps | items 生成的子导航在水平模式或竖直收起状态下弹层 Dropdown 的参数。 | `SubDropdownProps` | - |
+| subNavCloseDelay | 子导航浮层关闭的延迟，单位为毫秒，收起或水平模式下有效。 | `number` | `100` |
+| subNavMotion | 子导航折叠动画。 | `boolean` | `true` |
+| subNavOpenDelay | 子导航浮层显示的延迟，单位为毫秒，收起或水平模式下有效。 | `number` | `0` |
+| text | items 中导航项的文案，参数含 item 与 level；不提供时显示数据中的 text。 | <ApiType detail={"Snippet\u003c[NavItemRenderProps]>"}>Type</ApiType> | - |
+| toggleIcon | items 中导航项的展开收起图标位置上的图标，参数含 item、level 与 size。 | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavIconArgs]>"}>Type</ApiType> | - |
+| toggleIconPosition | 带有子导航项的父级导航项的箭头位置，可选 left 或 right。 | `'left' \| 'right'` | `"right"` |
+| tooltipHideDelay | 收起状态下 Tooltip 隐藏的延迟，单位为毫秒。 | `number` | `100` |
+| tooltipShowDelay | 收起状态下 Tooltip 显示的延迟，单位为毫秒。 | `number` | `0` |
+| wrapper | 自定义导航项外层，用 `{@render itemElement()}` 渲染导航项的 li，且只渲染一次。参数含 itemElement、isSubNav、isInSubNav 与 props。 | <ApiType detail={"Snippet\u003c[NavWrapperArgs]>"}>Type</ApiType> | - |

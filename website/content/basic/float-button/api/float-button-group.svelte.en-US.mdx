@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property   | Description                                                                                                                                                                              | Type                                                                                           | Default |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------- |
+| badgeCount | Snippet for custom badge content of an item, with the argument `{ item, index }`.                                                                                                        | <ApiType detail={"Snippet\u003c[FloatButtonGroupItemSnippetArgs]>"}>Type</ApiType>             | -       |
+| content    | Snippet for custom content of an item, with the argument `{ item, index }`. Defaults to item.content.                                                                                    | <ApiType detail={"Snippet\u003c[FloatButtonGroupItemSnippetArgs]>"}>Type</ApiType>             | -       |
+| disabled   | Disables every item.                                                                                                                                                                     | `boolean`                                                                                      | `false` |
+| icon       | Snippet for the icon of an item, with the argument `{ item, index }`.                                                                                                                    | <ApiType detail={"Snippet\u003c[FloatButtonGroupItemSnippetArgs]>"}>Type</ApiType>             | -       |
+| items      | List of items.                                                                                                                                                                           | `FloatButtonGroupItem[]`                                                                       | -       |
+| onClick    | Called when an enabled item is clicked, with the item's value (undefined if unset) and the native click event. The item's own onClick runs first. Not called for clicks outside an item. | <ApiType detail={"(value: string \u007c undefined, event: MouseEvent) => void"}>Type</ApiType> | -       |

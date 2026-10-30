@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | component | 用于声明表单控件的组件，以 formState、values、formApi 作为 props 渲染；不可与 render、children 同时使用。 | <ApiType detail={"(props: FormRenderProps\u003cValues>) => JSX.Element"}>Type</ApiType> | - |
 | disabled | 统一应用在每个字段上的 disabled，字段自身的 disabled 优先。 | `boolean` | - |
 | extraTextPosition | 统一应用在每个字段上的 extraText 位置，middle 在 Label 与控件之间，bottom 在控件之后。字段上的同名属性优先。 | `'middle' \| 'bottom'` | - |
-| form | `Form.useForm()` 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"FormApi\u003cValues> & FormApiProxyInternals\u003cValues>"}>Type</ApiType> | - |
+| form | `Form.useForm()` 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> | - |
 | getFormApi | Form 挂载后调用，参数为 formApi。 | <ApiType detail={"(formApi: FormApi\u003cValues>) => void"}>Type</ApiType> | - |
 | id | form 元素的 id，同时写入 x-form-id；不传时自动生成。 | `string` | - |
 | initValues | 表单的初始值，仅在 Form 创建时复制一次。 | `Values` | - |

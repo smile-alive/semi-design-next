@@ -6,10 +6,10 @@ const data = [
     { name: 'Semi C2D', role: 'Designer' },
 ];
 
-const ComponentUsingFormState = () => {
+function ComponentUsingFormState() {
     const formState = useFormState();
     return <TextArea aria-label="Form state" style={{ marginTop: 10 }} value={JSON.stringify(formState)} />;
-};
+}
 
 export default function FormDemo() {
     return (

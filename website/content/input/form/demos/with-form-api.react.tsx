@@ -1,14 +1,16 @@
 import { withFormApi, Form, Button, type FormApi } from '@fibrae/semi-ui-react';
 
-const SomeComponetInsideForm = (props: { formApi: FormApi }) => (
-    <Button
-        onClick={() => {
-            props.formApi.setValue('name', Math.random());
-        }}
-    >
-        Click Me!!! ChangeName By【formApi】
-    </Button>
-);
+function SomeComponetInsideForm(props: { formApi: FormApi }) {
+    return (
+        <Button
+            onClick={() => {
+                props.formApi.setValue('name', Math.random());
+            }}
+        >
+            Click Me!!! ChangeName By【formApi】
+        </Button>
+    );
+}
 const ComponentWithFormApi = withFormApi(SomeComponetInsideForm);
 
 export default function FormDemo() {

@@ -1,7 +1,7 @@
 import { IconUpload } from '@fibrae/semi-icons-solid';
 import { Button, type UploadCustomRequestArgs, Upload } from '@fibrae/semi-ui-solid';
 
-const mockRequest = ({ onProgress, onSuccess }: UploadCustomRequestArgs) => {
+function mockRequest({ onProgress, onSuccess }: UploadCustomRequestArgs) {
     let count = 0;
     const interval = setInterval(() => {
         if (count === 100) {
@@ -12,7 +12,7 @@ const mockRequest = ({ onProgress, onSuccess }: UploadCustomRequestArgs) => {
         onProgress({ total: 100, loaded: count });
         count += 20;
     }, 500);
-};
+}
 
 export default function UploadDemo() {
     return (

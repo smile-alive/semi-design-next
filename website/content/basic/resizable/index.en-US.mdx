@@ -16,6 +16,10 @@ import ResizeItemVueApi from './api/resize-item.vue.en-US.mdx';
 import ResizableSolidApi from './api/resizable.solid.en-US.mdx';
 import ResizeGroupSolidApi from './api/resize-group.solid.en-US.mdx';
 import ResizeItemSolidApi from './api/resize-item.solid.en-US.mdx';
+import ResizableSvelteApi from './api/resizable.svelte.en-US.mdx';
+import ResizeGroupSvelteApi from './api/resize-group.svelte.en-US.mdx';
+import ResizeHandlerSvelteApi from './api/resize-handler.svelte.en-US.mdx';
+import ResizeItemSvelteApi from './api/resize-item.svelte.en-US.mdx';
 
 ## Demos
 
@@ -50,6 +54,17 @@ import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Resizable } from '@fibrae/semi-ui-svelte';
+    import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Single Component
 
 Basic Usage and Callbacks You can set the initial size using defaultSize, and set drag callbacks with `onResizeStart`, `onChange`, and `onResizeEnd`.
@@ -57,6 +72,12 @@ Basic Usage and Callbacks You can set the initial size using defaultSize, and se
 <Framework only="vue">
 
 Listen with `@resizeStart`, `@change` and `@resizeEnd`. `onResizeStart` is a function prop (return `false` to cancel the resize), bound with `@resizeStart` as usual; `change` and `resizeEnd` are events.
+
+</Framework>
+
+<Framework only="svelte">
+
+`onResizeStart`, `onChange` and `onResizeEnd` are all callback props, and returning `false` from `onResizeStart` cancels the resize; `style` only accepts a string.
 
 </Framework>
 
@@ -119,6 +140,12 @@ In Vue, use it with `v-model:size`.
 <Framework only="solid">
 
 While dragging, write the new size back to the signal behind `size` in `onChange`; otherwise the size stays at the value of `size`.
+
+</Framework>
+
+<Framework only="svelte">
+
+`size` is a one-way prop and cannot be bound with `bind:size`: while dragging, write the new size back in `onChange` to the state passed to `size`; otherwise the size stays at the value of `size`.
 
 </Framework>
 
@@ -241,6 +268,36 @@ type HandleClass = {
 
 </Framework>
 
+<Framework only="svelte">
+
+You can customize the drag handle content for each direction with the `handle` snippet. It renders once for each enabled direction, and its argument `{ direction }` is that handle's direction, so render the content for the direction you want. A direction that renders nothing keeps its handle element. Apply different styles with handleStyle and handleClass; the style values are strings.
+
+```ts
+type HandleStyle = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+
+type HandleClass = {
+    left?: string;
+    right?: string;
+    top?: string;
+    bottom?: string;
+    topLeft?: string;
+    topRight?: string;
+    bottomLeft?: string;
+    bottomRight?: string;
+};
+```
+
+</Framework>
+
 <Demo id="handle-node" />
 
 ### Allowing Incremental Width and Height Adjustment
@@ -273,6 +330,12 @@ Use the direction prop to set the resizing direction. Options are `horizontal` a
 <Framework only="vue">
 
 `ResizeItem` is listened to with `@resizeStart`, `@change` and `@resizeEnd` as well: `onResizeStart` is a function prop, bound with `@resizeStart` as usual; `change` and `resizeEnd` are events.
+
+</Framework>
+
+<Framework only="svelte">
+
+`onResizeStart`, `onChange` and `onResizeEnd` of `ResizeItem` are callback props as well.
 
 </Framework>
 
@@ -320,6 +383,14 @@ Other native `div` attributes, such as `id` and `aria-*`, are passed through res
 
 </Framework>
 
+<Framework only="svelte">
+
+<ResizableSvelteApi />
+
+`class`, `style` (a string) and native attributes land on the root element. The root `style` is applied before the size the component computes, so a `width` or `height` you pass does not freeze the drag.
+
+</Framework>
+
 ### ResizeGroup
 
 <Framework only="react">
@@ -343,6 +414,14 @@ Other native `div` attributes are passed through rest onto the root element. The
 <ResizeGroupSolidApi />
 
 `class`, `style`, `ref` and native attributes are passed in through rest and land on the root element. `flex-direction` is always decided by `direction`.
+
+</Framework>
+
+<Framework only="svelte">
+
+<ResizeGroupSvelteApi />
+
+`class`, `style` (a string) and native attributes land on the root element. `flex-direction` is always decided by `direction`.
 
 </Framework>
 
@@ -370,6 +449,14 @@ The content that replaces the default grip icon is passed in through `children`.
 
 </Framework>
 
+<Framework only="svelte">
+
+<ResizeHandlerSvelteApi />
+
+`class`, `style` (a string) and native attributes land on the handle element; an `aria-label` you pass overrides the locale name.
+
+</Framework>
+
 ### ResizeItem
 
 <Framework only="react">
@@ -393,6 +480,14 @@ Other native `div` attributes are passed through rest onto the root element. Res
 <ResizeItemSolidApi />
 
 `class`, `style` and native attributes are passed in through rest and land on the root element. ResizeGroup writes the size straight onto the element's `style.width` and `style.height`, so pass `style` as an object: a string `style` is written again whole when it changes, which drops the size.
+
+</Framework>
+
+<Framework only="svelte">
+
+<ResizeItemSvelteApi />
+
+`class`, `style` and native attributes land on the root element. ResizeGroup writes the size straight onto the element's `style.width` and `style.height`, and a Svelte `style` can only be a string, which is written again whole when it changes and drops the size, so keep `style` a constant value.
 
 </Framework>
 

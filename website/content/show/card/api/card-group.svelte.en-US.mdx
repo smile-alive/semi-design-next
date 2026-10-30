@@ -1,0 +1,10 @@
+**Props**
+
+| Property | Description                                                                            | Type                         | Default |
+| -------- | -------------------------------------------------------------------------------------- | ---------------------------- | ------- |
+| align    | Cross-axis alignment of the children, passed to Space: start, center, end or baseline. | `Align`                      | -       |
+| children | The cards to arrange.                                                                  | `Snippet`                    | -       |
+| spacing  | Spacing between cards, a number or [horizontal, vertical]; ignored when type is grid.  | `number \| [number, number]` | `16`    |
+| type     | Set to grid for a grid layout, which overrides spacing.                                | `CardGroupType`              | -       |
+| vertical | Whether to lay out vertically, passed to Space.                                        | `boolean`                    | `false` |
+| wrap     | Whether to wrap, passed to Space; ignored when vertical.                               | `boolean`                    | `true`  |

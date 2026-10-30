@@ -1,9 +1,9 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 title: Introduction
 icon: doc-intro
 order: 1
-brief: Semi Design Next is a community fork of Semi Design that ships React 19, Vue 3.5+ and Solid component libraries on top of a shared, framework-free Foundation.
+brief: Semi Design Next is a community fork of Semi Design that ships React 19, Vue 3.5+, Solid and Svelte 5 component libraries on top of a shared, framework-free Foundation.
 ---
 
 ## What is Semi Design Next
@@ -16,7 +16,7 @@ This project does not sync with upstream and does not keep backward compatibilit
 
 ## Differences from upstream
 
-- Two component libraries, React 19 and Vue 3.5+, published as `@fibrae/semi-ui-react` and `@fibrae/semi-ui-vue`, sharing `@fibrae/semi-foundation`.
+- Four component libraries, React 19, Vue 3.5+, Solid and Svelte 5, published as `@fibrae/semi-ui-react`, `@fibrae/semi-ui-vue`, `@fibrae/semi-ui-solid` and `@fibrae/semi-ui-svelte`, sharing `@fibrae/semi-foundation`.
 - Chrome 120, Firefox 125, Safari 17.2 and later are supported. Newer browsers use native features; older versions are covered by fallbacks inside the components and the optional `@fibrae/semi-polyfill`.
 - The published output is ESM only. There are no UMD or CDN builds.
 - Accessibility follows the recommendations of WAI-ARIA and APG, and accessible names and built-in texts are read from the locale packs.
@@ -46,13 +46,13 @@ The JavaScript of every component is split into two parts, Foundation and Adapte
 
 ### Foundation
 
-The Foundation contains the business logic of component interaction, including the calculations and branching after a UI behavior is triggered. It neither manipulates nor references the DOM. Anything that needs DOM operations or drives rendering updates is delegated to the Adapter. The Foundation is framework-free and does not depend on React, Vue or the UI packages.
+The Foundation contains the business logic of component interaction, including the calculations and branching after a UI behavior is triggered. It neither manipulates nor references the DOM. Anything that needs DOM operations or drives rendering updates is delegated to the Adapter. The Foundation is framework-free and does not depend on React, Vue, Solid, Svelte or the UI packages.
 
 ### Adapter
 
-The Adapter is an interface with all the methods the Foundation needs to implement its logic. It declares the DOM structure of the component and handles everything related to DOM operations and updates, usually through framework APIs such as setState, getState, addEventListener and removeListener. React integrates through adapters and hooks, Vue through composables.
+The Adapter is an interface with all the methods the Foundation needs to implement its logic. It declares the DOM structure of the component and handles everything related to DOM operations and updates, usually through framework APIs such as setState, getState, addEventListener and removeListener. React integrates through adapters and hooks, Vue through composables, Svelte through runes.
 
-There are currently two implementations, React and Vue, corresponding to `@fibrae/semi-ui-react` and `@fibrae/semi-ui-vue`. The AI components are in `@fibrae/semi-ai-react` and `@fibrae/semi-ai-vue`.
+There are currently four implementations, React, Vue, Solid and Svelte, corresponding to `@fibrae/semi-ui-react`, `@fibrae/semi-ui-vue`, `@fibrae/semi-ui-solid` and `@fibrae/semi-ui-svelte`. The AI components are in `@fibrae/semi-ai-react`, `@fibrae/semi-ai-vue`, `@fibrae/semi-ai-solid` and `@fibrae/semi-ai-svelte`.
 
 ## Compatibility
 

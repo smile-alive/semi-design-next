@@ -11,6 +11,7 @@ import DescriptionsVueApi from './api/descriptions.vue.zh-CN.mdx';
 import DescriptionsItemVueApi from './api/descriptions-item.vue.zh-CN.mdx';
 import DescriptionsSolidApi from './api/descriptions.solid.zh-CN.mdx';
 import DescriptionsItemSolidApi from './api/descriptions-item.solid.zh-CN.mdx';
+import DescriptionsSvelteApi from './api/descriptions.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -44,6 +45,18 @@ import { Descriptions } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Descriptions } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte 不提供 `Descriptions.Item`，只用 `data` 声明数据。
+
+</Framework>
+
 ### 基本用法
 
 可以通过 `data` 以键值对 `{ key: value }` 数组方式传入数据
@@ -63,6 +76,12 @@ key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由
 <Framework only="solid">
 
 `data` 中的 key、value 只接受字符串或数字。需要自定义渲染时，传入 `renderKey(item, index)`、`renderValue(item, index)`，其中 `index` 是该项在 `data` 中的位置（包含 `hidden` 的项）；隐藏的项不调用它们。
+
+</Framework>
+
+<Framework only="svelte">
+
+`data` 中的 key、value 只接受字符串或数字。需要自定义渲染时，使用 `itemKey`、`value` snippet，参数为 `{ item, index }`，其中 `index` 是该项在 `data` 中的位置（包含 `hidden` 的项）。
 
 </Framework>
 
@@ -96,7 +115,29 @@ key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 不提供 `Descriptions.Item`：数据只写在 `data` 中，自定义内容用 `{#snippet itemKey({ item, index })}...{/snippet}`、`{#snippet value({ item, index })}...{/snippet}`，效果与下面的示例相同。
+
+</Framework>
+
+<Framework only="react">
+
 注意 `Descriptions.Item` 应当是 `Descriptions` 的直接子元素。
+
+</Framework>
+
+<Framework only="vue">
+
+注意 `Descriptions.Item` 应当是 `Descriptions` 的直接子元素。
+
+</Framework>
+
+<Framework only="solid">
+
+注意 `Descriptions.Item` 应当是 `Descriptions` 的直接子元素。
+
+</Framework>
 
 <Demo id="jsx" />
 
@@ -122,7 +163,29 @@ key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由
 
 <Demo id="key-style" />
 
+<Framework only="react">
+
 也可以配合 `Descriptions.Item` 写法使用：
+
+</Framework>
+
+<Framework only="vue">
+
+也可以配合 `Descriptions.Item` 写法使用：
+
+</Framework>
+
+<Framework only="solid">
+
+也可以配合 `Descriptions.Item` 写法使用：
+
+</Framework>
+
+<Framework only="svelte">
+
+也可以配合 `itemKey`、`value` snippet 使用：
+
+</Framework>
 
 <Demo id="key-style-jsx" />
 
@@ -151,6 +214,14 @@ key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由
 <DescriptionsSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `data-*`、`aria-*`）落在 Descriptions 的根元素（`div`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<DescriptionsSvelteApi />
+
+`class`、`style` 与原生属性（如 `id`、`data-*`、`aria-*`）落在 Descriptions 的根元素（`div`）上。
 
 </Framework>
 
@@ -192,6 +263,18 @@ key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由
 
 </Framework>
 
+<Framework only="svelte">
+
+| 属性     | 说明                                         | 类型             | 默认值 |
+| -------- | -------------------------------------------- | ---------------- | ------ |
+| key      | 键值，自定义渲染使用 `itemKey` snippet       | string \| number | -      |
+| value    | 属性值，自定义渲染使用 `value` snippet       | string \| number | -      |
+| hidden   | 该数据是否需要展示                           | boolean          | -      |
+| span     | 单元格应跨越的列数                           | number           | 1      |
+| keyStyle | key 的自定义样式，可用于设置宽度、对齐方式等 | string           | -      |
+
+</Framework>
+
 ### DescriptionItem
 
 <Framework only="react">
@@ -215,6 +298,12 @@ key、value 均支持 ReactNode 类型，你可以传入字符串或更高自由
 <DescriptionsItemSolidApi />
 
 纵向布局下，`class`、`style`、`ref` 与原生属性落在 Item 外部 wrapper `tr` 上；横向布局下 Item 只输出单元格，这些属性无处落点。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 不提供 `Descriptions.Item`，数据项只用 `data` 的 `DataItem` 声明。
 
 </Framework>
 

@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterVisibleChange | Called with true right after the commit that shows the sheet, without waiting for the enter animation. Called with false after the leave animation, and once with false if the sheet is unmounted while shown. | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType> | - |
+| bodyStyle | Style of the panel body, as a string. | `string` | - |
+| canVerticalSetWidth | Whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | - |
+| children | Body of the sheet, written inside the tag. | `Snippet` | - |
+| closable | Whether the close button in the corner is shown. | `boolean` | `true` |
+| closeIcon | Snippet for the icon inside the close button; hide the button with closable set to false. | `Snippet` | - |
+| closeOnEsc | Whether Esc closes the sheet. | `boolean` | `false` |
+| disableScroll | Whether body scrolling is locked (overflow: hidden on body) while a masked sheet is rendered in document.body. | `boolean` | `true` |
+| footer | Snippet for the footer of the sheet. Nothing is rendered when it is empty. | `Snippet` | - |
+| getPopupContainer | Parent element the sheet is rendered into. A custom container needs position: relative; this changes where the sheet sits in the DOM, not where it is shown. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| headerStyle | Style of the panel header, as a string. | `string` | - |
+| height | Height, used when placement is top or bottom. A number is in pixels; a string is any valid CSS length. 448 when omitted. | `number \| string` | - |
+| keepDOM | Whether the sheet content stays mounted while closed. | `boolean` | `false` |
+| mask | Whether the mask is shown. When false the content outside stays operable. | `boolean` | `true` |
+| maskClosable | Whether clicking the mask closes the sheet. | `boolean` | `true` |
+| maskStyle | Style of the mask, as a string. | `string` | - |
+| motion | Whether animation is enabled. | `boolean` | `true` |
+| onCancel | Called when the user closes the sheet with the close button, the mask or Esc, after visible has been written back to false. The argument is the native MouseEvent, or the native KeyboardEvent for Esc. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| placement | Edge the sheet slides in from. | `Placement` | `"right"` |
+| size | Size: small is 448px, medium 684px, large 920px. Used only when placement is left or right. | `'small' \| 'medium' \| 'large'` | `"small"` |
+| style | Style that lands on the role=dialog element, as a string. | `string` | - |
+| title | Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute. | `Snippet \| string` | - |
+| visible | Whether the sheet is visible, used with bind:visible. | `boolean` | - |
+| width | Width, used when placement is left or right. A number is in pixels; a string is any valid CSS length. Decided by size when omitted. | `number \| string` | - |
+| zIndex | z-index of the layer. | `number` | `1000` |
+
+**Methods**
+
+| Method  | Description                                                                                     | Type                                                                |
+| ------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| getRoot | Returns the outer .semi-sidesheet element inside the portal, or null while nothing is rendered. | <ApiType detail={"() => HTMLDivElement \u007c null"}>Type</ApiType> |

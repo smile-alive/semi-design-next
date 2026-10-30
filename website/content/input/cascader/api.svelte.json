@@ -1,0 +1,289 @@
+{
+    "cascader": {
+        "source": "packages/semi-ui-svelte/src/cascader/cascader.svelte",
+        "props": {
+            "value": {
+                "zh-CN": "当前选中的条目，用 bind:value 绑定。不传时为非受控，需要初始选中项时绑定一个带初始值的 $state；`bind:value={get, set}` 为完全受控。单选时是节点或节点路径，多选时可以是路径数组。",
+                "en-US": "The selected entry, bound with bind:value. Leave it out for an uncontrolled Cascader; to start with a selection, bind a $state that holds it. `bind:value={get, set}` makes it fully controlled. In single mode it is a node or a path, in multiple mode it can also be an array of paths."
+            },
+            "multiple": {
+                "zh-CN": "是否多选。它没有全局默认值。",
+                "en-US": "Whether several paths can be selected. It has no global default."
+            },
+            "treeData": {
+                "zh-CN": "节点数据，label 只接受文本，节点内容用 label snippet。原地修改 $state 数据也会被识别，内容相同的新数组不会重置展开和选中状态。",
+                "en-US": "Node data. The label is text only, use the label snippet for node content. Changes made in place to $state data are noticed, and a new array with equal content keeps the expanded and selected state."
+            },
+            "keyMaps": {
+                "zh-CN": "自定义节点中 value、label、children、disabled、isLeaf 的字段名。",
+                "en-US": "Custom field names for value, label, children, disabled and isLeaf in a node."
+            },
+            "changeOnSelect": {
+                "zh-CN": "单选时是否允许选择非叶子节点。",
+                "en-US": "Whether a non-leaf node can be selected in single mode."
+            },
+            "autoMergeValue": {
+                "zh-CN": "多选时，某个父节点被选中后，值不再包含它的子孙节点。挂载后修改不会生效；与 leafOnly 同时开启时，后者优先。",
+                "en-US": "In multiple mode, the value leaves out the descendants of a selected parent. Changes after mount are not followed; leafOnly takes precedence when both are on."
+            },
+            "leafOnly": {
+                "zh-CN": "多选时，值与展示的标签只包含叶子节点。挂载后修改不会生效。",
+                "en-US": "In multiple mode, the value and the tags shown only include leaf nodes. Changes after mount are not followed."
+            },
+            "checkRelation": {
+                "zh-CN": "多选时节点之间选中状态的关系：related 为父子联动，unRelated 为互不影响。",
+                "en-US": "In multiple mode, how the checked states of the nodes relate: related links parents and children, unRelated keeps them independent."
+            },
+            "disableStrictly": {
+                "zh-CN": "是否严格禁用。开启后，禁用的节点不会因父级或子级的选中状态变化而改变。",
+                "en-US": "Whether to disable strictly. A disabled node then does not change when its parent or children are checked or unchecked."
+            },
+            "max": {
+                "zh-CN": "多选时选中数量的上限，超出时触发 onExceed。",
+                "en-US": "In multiple mode, the most paths that can be selected; exceeding it calls onExceed."
+            },
+            "maxTagCount": {
+                "zh-CN": "多选时标签的最大展示数量，超出的部分以 +N 展示。",
+                "en-US": "In multiple mode, the most tags shown; the rest appear as +N."
+            },
+            "showRestTagsPopover": {
+                "zh-CN": "超出 maxTagCount 后，悬停 +N 时是否用 Popover 展示剩余标签。",
+                "en-US": "Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded."
+            },
+            "restTagsPopoverProps": {
+                "zh-CN": "剩余标签 Popover 的配置，可设置 position、trigger 等，参见 Popover。",
+                "en-US": "Configuration of the Popover of the remaining tags, such as position and trigger. See Popover."
+            },
+            "enableLeafClick": {
+                "zh-CN": "多选时，点击叶子节点所在的选项是否触发勾选。",
+                "en-US": "In multiple mode, whether clicking the option of a leaf node checks it."
+            },
+            "clickToSelect": {
+                "zh-CN": "多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。",
+                "en-US": "In multiple mode, clicking any node selects it. Often used with showNext set to hover: hovering expands the submenu and clicking selects the node."
+            },
+            "showNext": {
+                "zh-CN": "展开子菜单的时机：click 为点击，hover 为悬停。",
+                "en-US": "When the submenu expands: on click or on hover."
+            },
+            "loadData": {
+                "zh-CN": "异步加载数据，参数为从根到当前节点的路径，需要返回 Promise；reject 后节点不再显示加载态，可以再次展开重试。不能与搜索同时使用。",
+                "en-US": "Loads data asynchronously. It receives the path from the root to the current node and must return a Promise; after a rejection the node leaves the loading state and can be expanded again. Cannot be used with search."
+            },
+            "filterTreeNode": {
+                "zh-CN": "是否开启搜索：true 时按 treeNodeFilterProp 对应的属性值匹配输入，不区分大小写；也可以传入自定义的匹配函数。",
+                "en-US": "Whether search is on. True matches the input against the field named by treeNodeFilterProp, case-insensitively; a custom match function can be given instead."
+            },
+            "filterSorter": {
+                "zh-CN": "对筛选后的结果排序，参数为两条结果路径（从根节点到匹配节点的节点数组）与输入内容。",
+                "en-US": "Sorts the filtered results; it receives the two result paths (the node arrays from the root to the matched node) and the input."
+            },
+            "filterLeafOnly": {
+                "zh-CN": "搜索结果是否只展示叶子节点的路径。",
+                "en-US": "Whether the search results only show the paths of leaf nodes."
+            },
+            "treeNodeFilterProp": {
+                "zh-CN": "搜索时用于匹配输入的节点属性，默认 label。",
+                "en-US": "The node field matched against the search input, label by default."
+            },
+            "remote": {
+                "zh-CN": "是否开启远程搜索。开启后输入不再做本地过滤，只触发 onSearch，由使用方异步更新 treeData。",
+                "en-US": "Whether to search remotely. Input is then not filtered locally and only calls onSearch, and the caller updates treeData asynchronously."
+            },
+            "displayProp": {
+                "zh-CN": "回填选项和标签显示的节点属性，默认 label。",
+                "en-US": "The node field shown in the trigger and the tags, label by default."
+            },
+            "separator": {
+                "zh-CN": "分隔符，用于搜索结果和单选回填到触发器的路径。",
+                "en-US": "The separator of a path in the search results and in the trigger in single mode."
+            },
+            "onChangeWithObject": {
+                "zh-CN": "是否让 onChange 携带每个节点的数据而不是它的 value。开启后绑定的 value 也要传节点数据，并含有 value。这是布尔属性，不是回调。",
+                "en-US": "Whether onChange carries the data of each node instead of its value. A bound value must then be node data too, with a value. This is a boolean attribute, not a callback."
+            },
+            "placeholder": {
+                "zh-CN": "选择框的占位文字。",
+                "en-US": "Placeholder of the select box."
+            },
+            "searchPlaceholder": {
+                "zh-CN": "搜索框的占位文字，不传时使用 placeholder。",
+                "en-US": "Placeholder of the search input; placeholder is used when it is not given."
+            },
+            "searchPosition": {
+                "zh-CN": "搜索框的位置：trigger 在触发器内，custom 由使用方自定义。",
+                "en-US": "Where the search input is: trigger puts it in the trigger, custom leaves it to the caller."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。禁用后不可 Tab 到达。",
+                "en-US": "Whether the Cascader is disabled. A disabled Cascader cannot be reached with Tab."
+            },
+            "size": {
+                "zh-CN": "选择框的尺寸。",
+                "en-US": "Size of the select box."
+            },
+            "borderless": {
+                "zh-CN": "是否使用无边框模式。",
+                "en-US": "Whether to use the borderless style."
+            },
+            "validateStatus": {
+                "zh-CN": "触发器的校验状态，只影响样式。",
+                "en-US": "Validation status of the trigger; it only affects the style."
+            },
+            "insetLabelId": {
+                "zh-CN": "insetLabel 内容的 id，用于关联 combobox 的名称；不传时在使用 insetLabel snippet 时由组件生成。",
+                "en-US": "The id of the insetLabel content, used to name the combobox; the component generates one when the insetLabel snippet is used and this is not given."
+            },
+            "showClear": {
+                "zh-CN": "是否展示清除按钮。",
+                "en-US": "Whether to show the clear button."
+            },
+            "defaultOpen": {
+                "zh-CN": "是否在挂载时展开下拉。",
+                "en-US": "Whether the dropdown is open on mount."
+            },
+            "motion": {
+                "zh-CN": "是否开启下拉的弹出动画。",
+                "en-US": "Whether the dropdown animates."
+            },
+            "autoAdjustOverflow": {
+                "zh-CN": "下拉被边缘遮挡时是否自动调整展开方向。",
+                "en-US": "Whether the dropdown flips its direction when an edge covers it."
+            },
+            "position": {
+                "zh-CN": "下拉的展开方向，默认 bottomLeft，RTL 下为 bottomRight。",
+                "en-US": "Direction of the dropdown, bottomLeft by default and bottomRight in RTL."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止下拉上的点击事件冒泡。",
+                "en-US": "Whether clicks on the dropdown stop bubbling."
+            },
+            "dropdownClassName": {
+                "zh-CN": "下拉的 class。",
+                "en-US": "Class of the dropdown."
+            },
+            "dropdownStyle": {
+                "zh-CN": "下拉的样式，为 CSS 字符串。",
+                "en-US": "Style of the dropdown, as a CSS string."
+            },
+            "preventScroll": {
+                "zh-CN": "组件内的 focus 是否阻止浏览器滚动文档以显示获得焦点的元素。",
+                "en-US": "Whether focusing inside the component stops the browser scrolling the document to show the focused element."
+            },
+            "virtualizeInSearch": {
+                "zh-CN": "搜索结果的虚拟列表配置，由 height、width、itemSize 组成，用于结果很多的场景；height 缺省为 180，与下拉框高度一致。",
+                "en-US": "Virtual list configuration of the search results, made of height, width and itemSize, for large result sets; height defaults to 180, the same as the dropdown height."
+            },
+            "onChange": {
+                "zh-CN": "选中值变化时的回调。单选为所选路径，多选为各选中路径的数组；开启 onChangeWithObject 时为节点数据。",
+                "en-US": "Called when the selection changes. In single mode the selected path, in multiple mode an array of the selected paths; node data with onChangeWithObject."
+            },
+            "onSelect": {
+                "zh-CN": "选中某个节点时的回调，参数是该节点的 value；多选时只勾选了一个节点时是它的 value，勾选多个时是 value 数组。",
+                "en-US": "Called when a node is selected, with the value of the node. In multiple mode, one checked node gives its value and more give an array."
+            },
+            "onSearch": {
+                "zh-CN": "搜索输入变化时的回调，参数是输入的文本。",
+                "en-US": "Called when the search input changes, with the text."
+            },
+            "onFocus": {
+                "zh-CN": "点击或按键打开下拉时的回调，参数是那次 MouseEvent 或 KeyboardEvent。不是 DOM 焦点事件，Tab 进出不会触发。",
+                "en-US": "Called when a click or a key opens the dropdown, with that MouseEvent or KeyboardEvent. It is not a DOM focus event and Tabbing in or out does not call it."
+            },
+            "onBlur": {
+                "zh-CN": "关闭下拉时的回调：点击外部时参数为 MouseEvent，Esc 为 KeyboardEvent，通过方法 close 关闭时为 undefined。不是 DOM 失焦事件。",
+                "en-US": "Called when the dropdown closes: a MouseEvent for a click outside, a KeyboardEvent for Esc, undefined when the close method closes it. It is not a DOM blur event."
+            },
+            "onDropdownVisibleChange": {
+                "zh-CN": "下拉展开或收起时的回调，参数是是否展开。",
+                "en-US": "Called when the dropdown opens or closes, with whether it is open."
+            },
+            "onClear": {
+                "zh-CN": "点击清除按钮清空选中值时的回调。",
+                "en-US": "Called when the clear button clears the selection."
+            },
+            "onExceed": {
+                "zh-CN": "多选时选中数量超出 max 时的回调，参数是已选节点的 Entity 数组。",
+                "en-US": "Called in multiple mode when the selection goes past max, with the Entity array of the checked nodes."
+            },
+            "onLoad": {
+                "zh-CN": "节点加载完毕时的回调，参数是已加载的 key 集合与该节点的数据。",
+                "en-US": "Called when a node has loaded, with the set of loaded keys and the node data."
+            },
+            "onListScroll": {
+                "zh-CN": "滚动列视图中的某一列时的回调，参数是滚动事件与该列的信息。搜索结果的滚动不触发。",
+                "en-US": "Called when a column of the tree scrolls, with the scroll event and the column. Scrolling the search results does not call it."
+            },
+            "onKeyDown": {
+                "zh-CN": "在 Cascader 处理按键之前的回调，每次按键只调用一次；在其中调用 preventDefault 不会阻止 Cascader 的处理。除清除按钮与自定义触发器内控件上的按键外，事件在触发器的捕获阶段发出，此时调用 stopPropagation 会让搜索框收不到该键，并跳过触发器对它的处理（打开下拉、Esc 关闭），选项仍会处理该键。",
+                "en-US": "Called once per key press before the Cascader handles it; calling preventDefault there does not stop the Cascader. Except for a key on the clear button or a control inside a custom trigger, it is reported in the capture phase on the trigger, so stopPropagation there keeps the key from the search input and skips the trigger's handling of it (opening the dropdown, closing it on Esc); the options still take it."
+            },
+            "label": {
+                "zh-CN": "列视图中选项的内容，参数为 `{ item }`；搜索结果、回显和标签仍显示节点的文本。",
+                "en-US": "Content of an option in the columns, with `{ item }`; the search results, the selection and the tags still show the text of the node."
+            },
+            "display": {
+                "zh-CN": "单选时已选路径的回显，参数为 `{ labels, path }`：`labels` 是各级节点的 displayProp，`path` 是节点数据，值不在 treeData 中时为原始值；内容为空时显示 placeholder。",
+                "en-US": "The selected path shown in single mode, with `{ labels, path }`: `labels` holds the displayProp of each node and `path` the nodes, or the raw values when the value is not in treeData. Empty content shows the placeholder."
+            },
+            "tag": {
+                "zh-CN": "多选时整体替换每个标签，参数为 `{ entity, index, disabled, onClose }`，`onClose` 取消该节点的选中。",
+                "en-US": "Replaces each tag in multiple mode, with `{ entity, index, disabled, onClose }`; `onClose` unchecks the node."
+            },
+            "filterItem": {
+                "zh-CN": "替换搜索结果中的一行，参数为 `{ props, inputValue, disabled, data, checkStatus, selected, onCheck }`；`props` 要展开到行的根元素上。",
+                "en-US": "Replaces a row of the search results, with `{ props, inputValue, disabled, data, checkStatus, selected, onCheck }`; spread `props` on the root element of the row."
+            },
+            "trigger": {
+                "zh-CN": "替换整个触发器内容，参数为 `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`。",
+                "en-US": "Replaces the content of the trigger, with `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`."
+            },
+            "expandIcon": {
+                "zh-CN": "自定义展开图标；内容为空时使用默认图标。",
+                "en-US": "Custom expand icon; empty content keeps the default icon."
+            },
+            "arrowIcon": {
+                "zh-CN": "自定义右侧下拉箭头；传 null 隐藏箭头。有清除按钮可见时，悬停优先显示清除按钮。",
+                "en-US": "Custom dropdown arrow on the right; null hides the arrow. Hovering shows the clear button first when it is visible."
+            },
+            "clearIcon": {
+                "zh-CN": "自定义清除按钮的图标，showClear 为 true 时有效；内容为空时使用默认图标。",
+                "en-US": "Custom icon of the clear button, effective when showClear is true; empty content keeps the default icon."
+            },
+            "emptyContent": {
+                "zh-CN": "没有可选数据或搜索无结果时展示的内容；未提供时显示语言包中的默认文案，传 null 隐藏空状态。",
+                "en-US": "Content shown when there is no data to pick or the search has no result. The default text from the locale shows when it is not given, and null hides the empty state."
+            },
+            "prefix": {
+                "zh-CN": "前缀内容。",
+                "en-US": "Prefix content."
+            },
+            "suffix": {
+                "zh-CN": "后缀内容。",
+                "en-US": "Suffix content."
+            },
+            "insetLabel": {
+                "zh-CN": "嵌在选择框内的标签；同时提供 prefix 时不渲染。",
+                "en-US": "A label inside the select box; it is not rendered when prefix is also given."
+            },
+            "topSlot": {
+                "zh-CN": "下拉顶部的附加内容。",
+                "en-US": "Extra content at the top of the dropdown."
+            },
+            "bottomSlot": {
+                "zh-CN": "下拉底部的附加内容。",
+                "en-US": "Extra content at the bottom of the dropdown."
+            }
+        },
+        "methods": {
+            "open": { "zh-CN": "打开下拉。", "en-US": "Opens the dropdown." },
+            "close": { "zh-CN": "关闭下拉。", "en-US": "Closes the dropdown." },
+            "focus": { "zh-CN": "聚焦触发器或搜索框。", "en-US": "Focuses the trigger or the search input." },
+            "blur": { "zh-CN": "触发器或搜索框失焦。", "en-US": "Blurs the trigger or the search input." },
+            "search": {
+                "zh-CN": "按输入了该关键词来搜索，需同时设置 filterTreeNode 开启搜索。",
+                "en-US": "Searches as if the keyword were typed; filterTreeNode must be set to turn search on."
+            }
+        }
+    }
+}

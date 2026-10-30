@@ -8,6 +8,7 @@ brief: Used when the operation of the target element requires further confirmati
 import PopconfirmReactApi from './api/popconfirm.react.en-US.mdx';
 import PopconfirmVueApi from './api/popconfirm.vue.en-US.mdx';
 import PopconfirmSolidApi from './api/popconfirm.solid.en-US.mdx';
+import PopconfirmSvelteApi from './api/popconfirm.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Button, Popconfirm, Radio, RadioGroup, Space, Toast } from '@fibrae/sem
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Popconfirm } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 `Popconfirm` is based on the `Tooltip` component. Children support the same type as `Tooltip`. For details, please refer to [Tooltip Cautions](/en-US/react/show/tooltip#Cautions)
@@ -62,6 +73,12 @@ Developers can use scenario-based `okType`/`cancelType` and the `#icon` slot to 
 <Framework only="solid">
 
 Developers can use scenario-based `okType`, `cancelType` and `icon` to match different styles of bubble confirmation boxes. `icon` takes a JSX element; `null` or `false` renders no icon.
+
+</Framework>
+
+<Framework only="svelte">
+
+Developers can use scenario-based `okType`/`cancelType` and the `icon` snippet to match different styles of bubble confirmation boxes. Without `icon` the default warning icon is shown; `icon={null}` renders no icon.
 
 </Framework>
 
@@ -97,6 +114,12 @@ The `#content` slot receives `{ initialFocusRef }` as its scope. Bind it to the 
 
 </Framework>
 
+<Framework only="svelte">
+
+The `content` snippet receives `{ initialFocusRef }` as its argument. Bind it to the focusable DOM or component with `{@attach initialFocusRef}`, and it will automatically focus at this position when the panel is opened. When a button `autoFocus` and `initialFocusRef` are both given, the button wins.
+
+</Framework>
+
 <Demo id="initial-focus" />
 
 ### Use with Tooltip or Popover
@@ -128,6 +151,14 @@ When `visible` is controlled, clicking or hovering the trigger emits `update:vis
 <PopconfirmSolidApi />
 
 `class` and `style` land on the confirmation card, and the props in `okButtonProps` and `cancelButtonProps` land on their buttons (except `autoFocus`); `ref` receives the `focusTrigger` handle. Popconfirm has no root DOM element, so other undeclared native attributes and events are dropped.
+
+</Framework>
+
+<Framework only="svelte">
+
+<PopconfirmSvelteApi />
+
+`class` and `style` land on the confirmation card, and the props in `okButtonProps` and `cancelButtonProps` land on their buttons (except `autoFocus`); `bind:this` receives the `focusTrigger` handle. Popconfirm has no root DOM element, so other undeclared native attributes and events are dropped.
 
 </Framework>
 

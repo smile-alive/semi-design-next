@@ -8,6 +8,7 @@ brief: Calendar component that allows to display corresponding events in day/wee
 import CalendarReactApi from './api/calendar.react.en-US.mdx';
 import CalendarVueApi from './api/calendar.vue.en-US.mdx';
 import CalendarSolidApi from './api/calendar.solid.en-US.mdx';
+import CalendarSvelteApi from './api/calendar.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { Calendar } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Calendar } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Calendar } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -86,6 +97,12 @@ The content of an event renders the text of `children` by default. Use the `#eve
 
 </Framework>
 
+<Framework only="svelte">
+
+The content of an event defaults to the `children` text. For custom DOM use the `event` snippet; its `{ event }` argument is the original object from `events`, which may carry any custom fields. When one event is shown in several places (such as a multi-day event), the snippet is called once for each place.
+
+</Framework>
+
 <Demo id="events" />
 
 ### Custom Render
@@ -105,6 +122,12 @@ You could use the `#dateGrid="{ date, dateString }"` scoped slot to render custo
 <Framework only="solid">
 
 You could use `dateGridRender` to render customized date cell or column. Use absolute positioning for elements.
+
+</Framework>
+
+<Framework only="svelte">
+
+You could use the `dateGrid` snippet (argument `{ date, dateString }`) to render customized date cell or column. Use absolute positioning for elements.
 
 </Framework>
 
@@ -132,6 +155,12 @@ You could also use `dateGridRender` to customize date cell style, e.g. backgroun
 
 </Framework>
 
+<Framework only="svelte">
+
+You could also use the `dateGrid` snippet to customize date cell style, e.g. backgroundColor. Please notice that in Month View, the date text on the right corner has a z-index of 3. Use a larger z-index if you would like to cover the text as well.
+
+</Framework>
+
 <Demo id="custom-cell-style" />
 
 #### Customized Date Render
@@ -151,6 +180,12 @@ You could use `#dateDisplay="{ date }"` to customize the display of date
 <Framework only="solid">
 
 You could use `renderDateDisplay` to customize the display of date.
+
+</Framework>
+
+<Framework only="svelte">
+
+You could use the `dateDisplay` snippet (argument `{ date }`) to customize the display of date.
 
 </Framework>
 
@@ -181,6 +216,14 @@ You could use `renderDateDisplay` to customize the display of date.
 <CalendarSolidApi />
 
 `class`, `style`, `ref` and other native attributes (such as `id`, `data-*`) land on the root element of the current view; `aria-label` takes precedence over the default table name. `onClick`, `onClose` and `onMoreClick` are callbacks of Calendar itself and do not land on the root element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CalendarSvelteApi />
+
+`class`, `style` and other native attributes (such as `id`, `data-*`, `aria-label`) land on the root element of the current view; `aria-label` takes precedence over the default table name. `onClick`, `onClose` and `onMoreClick` are callbacks of Calendar itself and do not land on the root element.
 
 </Framework>
 
@@ -231,13 +274,26 @@ An event needs at least a start or an end time to be valid; an event with neithe
 
 </Framework>
 
+<Framework only="svelte">
+
+| Properties   | Instructions                                                              | type             | Default |
+| ------------ | ------------------------------------------------------------------------- | ---------------- | ------- |
+| allDay       | Whether it is an all-day event                                            | boolean          | false   |
+| children     | Displayed content, rendered as text without the `event` snippet           | string \| number | -       |
+| end          | End time of the event                                                     | Date             | -       |
+| key          | Required and must be unique.                                              | string           | -       |
+| start        | Start time of the event                                                   | Date             | -       |
+| Other fields | Custom fields are kept as they are for the `event` snippet (color, title) | any              | -       |
+
+</Framework>
+
 ## Accessibility
 
 ### Keyboard and Focus
 
 - The day, week and range views scroll, and the view itself is one Tab stop that the arrow keys scroll
 - In the month view, "N more" for the collapsed events is a button: `Enter` or `Space` opens the card of the day and moves focus to its close button; `Esc` or the close button closes the card and returns focus to "N more"
-- Clicks on a day cell or a time slot (`onClick` in React, `@click` in Vue) respond to the pointer only and have no keyboard equivalent
+- Clicks on a day cell or a time slot (`onClick` in React, `@click` in Vue, `onClick` in Svelte) respond to the pointer only and have no keyboard equivalent
 
 ## Content Guidelines
 

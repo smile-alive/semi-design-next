@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| customRender | 替换被 options.customRenderRule 命中的 token 的内容，snippet 参数为命中的规则 item、规则序号 index 与 token 原文 content；snippet 什么都不画时保留原文。仅在只读模式下生效。 | <ApiType detail={"Snippet\u003c[JsonViewerCustomRenderArgs]>"}>Type</ApiType> | - |
+| height | 高度，数字按 px 处理，字符串原样使用。 | `number \| string` | `400` |
+| limitSearchButtonBounds | 是否限制搜索按钮的拖动范围在组件容器内。 | `boolean` | `false` |
+| onChange | 编辑内容变化时调用，参数为编辑器当前文本。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| options | 编辑器配置，字段见 JsonViewerOptions。ariaLabel、readOnly、autoWrap 的默认值按键合并，只传部分字段时其余仍取默认值。内容按深比较变化时重建编辑器；就地修改 formatOptions、customRenderRule 等嵌套对象不会被察觉，需替换为新对象。 | `JsonViewerOptions` | - |
+| searchButton | 整体替换默认搜索按钮；defaultButton 是默认按钮的 snippet，用 `{@render defaultButton()}` 渲染，其余参数用于自建搜索界面。showSearch 为 false 时不渲染。 | <ApiType detail={"Snippet\u003c[JsonViewerSearchButtonArgs]>"}>Type</ApiType> | - |
+| showSearch | 是否显示搜索按钮。 | `boolean` | `true` |
+| value | 编辑器的文本，配合 bind:value 使用；变为与编辑器当前内容不同的值时重建编辑器，与当前内容相同的回写不会丢失光标；未传时按空文本创建。 | `string` | - |
+| width | 宽度，数字按 px 处理，字符串原样使用。 | `number \| string` | `400` |
+
+**Methods**
+
+| 方法             | 说明                                                                 | 类型                                                                                                                           |
+| ---------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| format           | 按 formatOptions 格式化当前内容。                                    | <ApiType detail={"() => void"}>Type</ApiType>                                                                                  |
+| getSearchResults | 获取当前搜索结果。                                                   | <ApiType detail={"() => ReturnType\u003cJsonViewerFoundation['getSearchResults']>"}>Type</ApiType>                             |
+| getStyle         | 返回当前的 width 与 height。                                         | <ApiType detail={"() => { width: string \u007c number; height: string \u007c number; }"}>Type</ApiType>                        |
+| getValue         | 获取编辑器当前文本。                                                 | <ApiType detail={"() => string"}>Type</ApiType>                                                                                |
+| nextSearch       | 跳转到下一个搜索结果，可选步长。                                     | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |
+| prevSearch       | 跳转到上一个搜索结果，可选步长。                                     | <ApiType detail={"(step?: number) => void"}>Type</ApiType>                                                                     |
+| replace          | 替换当前搜索匹配项；替换文本为空串时删除匹配，没有匹配时不做任何事。 | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                               |
+| replaceAll       | 替换所有搜索匹配项；替换文本为空串时删除全部匹配。                   | <ApiType detail={"(replaceText: string) => void"}>Type</ApiType>                                                               |
+| search           | 搜索文本，可选参数控制大小写敏感、全词匹配和正则表达式。             | <ApiType detail={"(searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => void"}>Type</ApiType> |

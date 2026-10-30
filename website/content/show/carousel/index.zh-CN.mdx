@@ -8,6 +8,7 @@ brief: 轮播图是一种媒体组件，可以在可视化应用中展示多张�
 import CarouselReactApi from './api/carousel.react.zh-CN.mdx';
 import CarouselVueApi from './api/carousel.vue.zh-CN.mdx';
 import CarouselSolidApi from './api/carousel.solid.zh-CN.mdx';
+import CarouselSvelteApi from './api/carousel.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,9 +40,25 @@ import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Carousel } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 基本用法
+
+<Framework only="svelte">
+
+Svelte 的幻灯片用 `items` 数据加 `slide` snippet 渲染，不接受 children 形式：`{#snippet slide({ item, index })}...{/snippet}` 写在 Carousel 标签内，每项一张；Carousel 给每张包一层带 role 与 `inert` 的元素。
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -87,6 +104,12 @@ import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `arrowProps` 的 `leftArrow.props`、`rightArrow.props` 定制箭头按钮的属性（`aria-label`、`style`、`onclick` 等）；使用方的 `onclick` 先于内置处理执行，`class` 与内置类名合并。箭头里的图标用 `leftArrow`、`rightArrow` snippet，snippet 为空时按钮内容为空。
+
+</Framework>
+
 <Demo id="custom-arrow" />
 
 ### 播放参数
@@ -115,6 +138,12 @@ import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-
 <Framework only="solid">
 
 用 `activeIndex` 绑定当前索引；`onChange(index, preIndex)` 给出新索引和上一个索引。
+
+</Framework>
+
+<Framework only="svelte">
+
+用 `bind:activeIndex` 绑定当前索引；`onChange(activeIndex, preIndex)` 另外给出新索引和上一个索引。`play`、`stop`、`goTo`、`prev`、`next` 经 `bind:this` 调用。
 
 </Framework>
 
@@ -150,6 +179,14 @@ import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-
 <CarouselSolidApi />
 
 `class`、`style`、`ref` 与原生属性（包括 `aria-label`、`aria-labelledby`）落在根元素（`role="region"`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CarouselSvelteApi />
+
+`class`、`style` 与原生属性（包括 `aria-label`、`aria-labelledby`）落在根元素（`role="region"`）上。
 
 </Framework>
 

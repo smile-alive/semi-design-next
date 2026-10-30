@@ -240,14 +240,6 @@
     "form-input-group": {
         "source": "packages/semi-ui-react/src/form/group.tsx",
         "props": {
-            "children": {
-                "zh-CN": "组内的字段。",
-                "en-US": "The fields in the group."
-            },
-            "className": {
-                "zh-CN": "组内 InputGroup 的类名。",
-                "en-US": "Class name of the InputGroup inside."
-            },
             "disabled": {
                 "zh-CN": "组内字段统一的 disabled，不传时沿用 Form 的 disabled。",
                 "en-US": "The disabled state applied to the fields in the group. Falls back to the Form's disabled when not set."
@@ -281,12 +273,8 @@
                 "en-US": "Reference to the root element of the InputGroup inside (`role=\"group\"`)."
             },
             "size": {
-                "zh-CN": "组内所有控件的尺寸，可选 `small`、`default` 或 `large`，未设置时为 `default`。",
-                "en-US": "Size of every control in the group: `small`, `default` or `large`. Defaults to `default`."
-            },
-            "style": {
-                "zh-CN": "组内 InputGroup 的内联样式。",
-                "en-US": "Inline style of the InputGroup inside."
+                "zh-CN": "组内控件的尺寸，可选 `small`、`default` 或 `large`；未自行设置 `size` 的控件取这个值。",
+                "en-US": "Size of the controls in the group: `small`, `default` or `large`; controls that set no `size` of their own take it."
             }
         }
     },

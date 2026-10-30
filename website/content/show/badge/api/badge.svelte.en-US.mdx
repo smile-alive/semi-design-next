@@ -1,0 +1,13 @@
+**Props**
+
+| Property       | Description                                                                                                             | Type                                  | Default     |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------- | ----------- |
+| children       | Snippet for the element the badge is attached to. Without it the badge stands alone.                                    | `Snippet`                             | -           |
+| count          | Badge content as a number, string or snippet. A snippet is rendered as given and removes the type and theme classes.    | `number \| string \| Snippet \| null` | -           |
+| countClassName | Class name of the count element.                                                                                        | `string`                              | -           |
+| countStyle     | Style string of the count element.                                                                                      | `string`                              | -           |
+| dot            | Shows a small dot instead of the content.                                                                               | `boolean`                             | `false`     |
+| overflowCount  | Maximum number shown; larger numbers display as `${overflowCount}+`. Applies to numbers only, and 0 counts as unset.    | `number`                              | -           |
+| position       | Badge position relative to the wrapped element. Defaults to leftTop under an RTL ConfigProvider and rightTop otherwise. | `BadgePosition`                       | -           |
+| theme          | Badge theme: solid, light or inverted.                                                                                  | `BadgeTheme`                          | `"solid"`   |
+| type           | Badge type: primary, secondary, tertiary, danger, warning or success.                                                   | `BadgeType`                           | `"primary"` |

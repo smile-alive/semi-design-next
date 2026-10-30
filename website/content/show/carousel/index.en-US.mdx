@@ -8,6 +8,7 @@ brief: Carousel is a media component that can display the effect of playing mult
 import CarouselReactApi from './api/carousel.react.en-US.mdx';
 import CarouselVueApi from './api/carousel.vue.en-US.mdx';
 import CarouselSolidApi from './api/carousel.solid.en-US.mdx';
+import CarouselSvelteApi from './api/carousel.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,9 +40,25 @@ import { Carousel, Radio, RadioGroup, Space, Typography } from '@fibrae/semi-ui-
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Carousel } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Carousel
 
 Basic carousel
+
+<Framework only="svelte">
+
+In Svelte the slides are rendered from `items` data and a `slide` snippet; the children form is not accepted. Write `{#snippet slide({ item, index })}...{/snippet}` inside the Carousel tag, one slide per item; the carousel wraps each slide in an element carrying the role and `inert`.
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -87,6 +104,12 @@ Pass the arrow icons with the `leftArrow` and `rightArrow` props; `null` leaves 
 
 </Framework>
 
+<Framework only="svelte">
+
+Customize the attributes of the arrow buttons (`aria-label`, `style`, `onclick` and so on) through `leftArrow.props` and `rightArrow.props` of `arrowProps`; your `onclick` runs before the built-in handler and your `class` is merged with the built-in classes. Use the `leftArrow` and `rightArrow` snippets for the icons; an empty snippet leaves the button empty.
+
+</Framework>
+
 <Demo id="custom-arrow" />
 
 ### Play Parameters
@@ -115,6 +138,12 @@ Bind the current index with `v-model:activeIndex`; `@change` additionally gives 
 <Framework only="solid">
 
 Bind the current index with `activeIndex`; `onChange(index, preIndex)` gives the new index and the previous one.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the current index with `bind:activeIndex`; `onChange(activeIndex, preIndex)` additionally gives the new index and the previous one. Call `play`, `stop`, `goTo`, `prev` and `next` through `bind:this`.
 
 </Framework>
 
@@ -150,6 +179,14 @@ Other native attributes, such as `aria-labelledby` and `data-*`, land on the roo
 <CarouselSolidApi />
 
 `class`, `style`, `ref` and native attributes, including `aria-label` and `aria-labelledby`, land on the root element (`role="region"`).
+
+</Framework>
+
+<Framework only="svelte">
+
+<CarouselSvelteApi />
+
+`class`, `style` and native attributes, including `aria-label` and `aria-labelledby`, land on the root element (`role="region"`).
 
 </Framework>
 

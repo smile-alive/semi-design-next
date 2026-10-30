@@ -39,11 +39,11 @@ const iconLabData = iconLabMeta.map(toIcon);
 
 const aiCategories = ['One Color', 'Two Color', 'Multiple Color'];
 
-const groupByCategory = (icons: IconMeta[]): IconGroups => {
+function groupByCategory(icons: IconMeta[]): IconGroups {
     const groups = new Map<string, IconMeta[]>();
     icons.forEach((icon) => groups.set(icon.category, [...(groups.get(icon.category) ?? []), icon]));
-    return [...groups].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-};
+    return [...groups].toSorted(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+}
 
 const aiIcons = iconData.filter((icon) => aiCategories.includes(icon.category));
 const otherIcons = iconData.filter((icon) => !aiCategories.includes(icon.category));
@@ -71,7 +71,7 @@ const itemButtonStyle = {
     height: '100%',
 };
 
-const SemiIcon = ({ name, pkgType }: { name: string; pkgType: PkgType }) => {
+function SemiIcon({ name, pkgType }: { name: string; pkgType: PkgType }) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
@@ -97,7 +97,7 @@ const SemiIcon = ({ name, pkgType }: { name: string; pkgType: PkgType }) => {
             </button>
         </li>
     );
-};
+}
 
 interface IconCategoryProps {
     groups: IconGroups;
@@ -105,7 +105,7 @@ interface IconCategoryProps {
     className?: string;
 }
 
-const IconCategory = ({ groups, pkgType, className = '' }: IconCategoryProps) => {
+function IconCategory({ groups, pkgType, className = '' }: IconCategoryProps) {
     const [categorySet, setCategorySet] = useState(() => new Set(groups.map((_g, i) => i)));
 
     const handleToggle = (i: number) => {
@@ -136,7 +136,7 @@ const IconCategory = ({ groups, pkgType, className = '' }: IconCategoryProps) =>
             </Collapsible>
         </article>
     ));
-};
+}
 
 export default function IconList({ locale }: { locale: 'zh-CN' | 'en-US' }) {
     const t = messages[locale];

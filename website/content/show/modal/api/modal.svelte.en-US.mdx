@@ -1,0 +1,52 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the dialog has fully closed. It is also called once when the dialog is unmounted while shown. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| bodyStyle | Style of the dialog body, as a string. | `string` | - |
+| cancelButtonProps | Props of the cancel button. autoFocus focuses it on open; class and style land on the button; onclick runs before the built-in cancel handling, which still runs. | `ModalButtonProps` | - |
+| cancelLoading | Whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off. | `boolean` | - |
+| cancelText | Cancel button text. Defaults to the locale entry Modal.cancel. | `string` | - |
+| centered | Whether the dialog is vertically centered. | `boolean` | `false` |
+| children | Body of the dialog, written inside the tag. | `Snippet` | - |
+| closable | Whether the close button in the corner is shown. | `boolean` | `true` |
+| closeIcon | Snippet for the icon inside the close button. | `Snippet` | - |
+| closeOnEsc | Whether Esc cancels the dialog. | `boolean` | `true` |
+| confirmLoading | Whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off. | `boolean` | - |
+| footer | Snippet that replaces the default footer buttons. An empty snippet or null renders no footer area. | `Snippet \| null` | - |
+| footerFill | Whether the two buttons of the default footer fill the row. | `boolean` | - |
+| fullScreen | Whether the dialog fills the screen. width and height are ignored. | `boolean` | `false` |
+| getPopupContainer | Parent element the dialog is rendered into. A custom container needs position: relative; this changes where the dialog sits in the DOM, not where it is shown. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| hasCancel | Whether the default footer shows the cancel button. | `boolean` | `true` |
+| header | Snippet that replaces the whole default header (icon, title and close button). An empty snippet or null renders no header area. | `Snippet \| null` | - |
+| height | Height of the dialog. A number is in pixels; a string is any valid CSS length. | `string \| number` | - |
+| icon | Snippet for the icon before the title. | `Snippet` | - |
+| keepDOM | Whether the dialog content stays mounted while closed. | `boolean` | `false` |
+| lazyRender | Used with keepDOM. When true, the dialog is not rendered until it is first shown. | `boolean` | `true` |
+| mask | Whether the mask is shown. | `boolean` | `true` |
+| maskClosable | Whether a click on the mask cancels the dialog. | `boolean` | `true` |
+| maskFixed | Whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal (aria-modal, inert page, Tab lock, body scroll lock). | `boolean` | `false` |
+| maskStyle | Style of the mask, as a string. | `string` | - |
+| modal | Snippet for custom rendering of the dialog itself. Its argument is `{ modal }`, a snippet of the role=dialog element, placed with `{@render modal()}`. | <ApiType detail={"Snippet\u003c[{ modal: Snippet }]>"}>Type</ApiType> | - |
+| modalContentClass | Class name of the dialog content element. | `string` | - |
+| motion | Whether the enter and leave animations run. | `boolean` | `true` |
+| okButtonProps | Props of the ok button. autoFocus focuses it on open; class and style land on the button; onclick runs before the built-in ok handling, which still runs. | `ModalButtonProps` | - |
+| okText | Ok button text. Defaults to the locale entry Modal.confirm. | `string` | - |
+| okType | Type of the ok button. | `OKType` | `"primary"` |
+| onCancel | Called by the cancel button, the close button, the mask and Esc; the argument is a native KeyboardEvent for Esc. A returned Promise keeps the cancel button loading; visible is written back once it fulfills, and a rejection keeps the dialog open. visible is still true while the callback runs. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => unknown"}>Type</ApiType> | - |
+| onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false. | <ApiType detail={"(event: MouseEvent) => unknown"}>Type</ApiType> | - |
+| preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | - |
+| role | role of the dialog element: dialog or alertdialog. | `'dialog' \| 'alertdialog'` | - |
+| size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `"small"` |
+| title | Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute. | `string \| Snippet` | - |
+| visible | Whether the dialog is visible, used with bind:visible. The cancel button, the close button, the mask and Esc write false once onCancel returns; ok only calls onOk and the caller sets visible to false. | `boolean` | - |
+| width | Width of the dialog. A number is in pixels; a string is any valid CSS length. When omitted, size decides. | `string \| number` | - |
+| zIndex | z-index of the outer layer. | `number` | `1000` |
+
+**Methods**
+
+| Method  | Description                                                                         | Type                                         |
+| ------- | ----------------------------------------------------------------------------------- | -------------------------------------------- |
+| getRoot | Returns the outermost element inside the portal, or null while nothing is rendered. | <ApiType detail={"() => any"}>Type</ApiType> |

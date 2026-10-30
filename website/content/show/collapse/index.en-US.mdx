@@ -11,6 +11,8 @@ import CollapseVueApi from './api/collapse.vue.en-US.mdx';
 import CollapsePanelVueApi from './api/collapse-panel.vue.en-US.mdx';
 import CollapseSolidApi from './api/collapse.solid.en-US.mdx';
 import CollapsePanelSolidApi from './api/collapse-panel.solid.en-US.mdx';
+import CollapseSvelteApi from './api/collapse.svelte.en-US.mdx';
+import CollapsePanelSvelteApi from './api/collapse-panel.svelte.en-US.mdx';
 
 ## Demos
 
@@ -46,9 +48,27 @@ import { Collapse, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Collapse, CollapsePanel } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+In Svelte, write the panel as `Collapse.Panel` or the named export `CollapsePanel`, which are the same component. The `header` and `extra` of a Panel are snippets. A Panel can only be used inside Collapse, otherwise it throws a descriptive error.
+
+</Framework>
+
 ### Basic Usage
 
 You can expand multiple panels at the same time, and use `defaultActiveKey` to set the panel to expand by default.
+
+<Framework only="svelte">
+
+Svelte has no `defaultActiveKey`: a plain `activeKey` is the initially expanded panel; use `bind:activeKey` to read and write the expanded state.
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -90,6 +110,12 @@ You can use `expandIcon` to set the expanding icon and `collapseIcon` for folded
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `expandIcon` snippet of Collapse to set the expanding icon and the `collapseIcon` snippet for the folded icon, written as `{#snippet expandIcon()}...{/snippet}` inside the Collapse tag.
+
+</Framework>
+
 The expanding icon is shown while a panel is collapsed (it can be expanded), the folded icon while it is expanded.
 
 <Demo id="custom-icon" />
@@ -117,6 +143,14 @@ Use the `#extra` slot to set extra content on the right-upper corner.
 You can use `extra` to set extra content on the right-upper corner.
 
 `header` is rendered inside the panel's toggle button, so it may only hold text, icons and other non-interactive content. `extra` sits beside the button in the same row and may hold controls such as buttons or inputs, whether `header` is a string or a JSX element.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `extra` snippet to set extra content on the right-upper corner.
+
+`header` is rendered inside the panel's toggle button, so it may only hold text, icons and other non-interactive content. `extra` sits beside the button in the same row and may hold controls such as buttons or inputs.
 
 </Framework>
 
@@ -150,6 +184,14 @@ Other native attributes (such as `id` and `aria-*`) land on the root element (`.
 
 </Framework>
 
+<Framework only="svelte">
+
+<CollapseSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id` and `aria-*`) land on the root element of Collapse (`.semi-collapse`). The first argument of `onChange` is always a `string[]`, even when `activeKey` is passed as a string.
+
+</Framework>
+
 ### Collapse.Panel
 
 <Framework only="react">
@@ -173,6 +215,14 @@ Other native attributes (such as `id` and `aria-*`) land on the root element (`.
 <CollapsePanelSolidApi />
 
 `class`, `style`, `ref` and native attributes and events land on the root element of the Panel (`.semi-collapse-item`). Panel does not read global defaults.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CollapsePanelSvelteApi />
+
+`class`, `style` and native attributes and events land on the root element of the Panel (`.semi-collapse-item`). Panel does not read global defaults, and counts as having content only when `children` is given.
 
 </Framework>
 
@@ -278,6 +328,28 @@ import { Collapse, Input } from '@fibrae/semi-ui-solid';
         </Collapse.Panel>
     </Collapse>
 );
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Collapse, CollapsePanel, Input } from '@fibrae/semi-ui-svelte';
+</script>
+
+<Collapse>
+    <CollapsePanel itemKey="1">
+        {#snippet header()}Panel header{/snippet}
+        {#snippet extra()}
+            <span onclick={(e) => e.stopPropagation()}>
+                <Input aria-label="Panel note" />
+            </span>
+        {/snippet}
+        <p>Hi, bytedance dance dance. This is the docsite of Semi UI.</p>
+    </CollapsePanel>
+</Collapse>
 ```
 
 </Framework>

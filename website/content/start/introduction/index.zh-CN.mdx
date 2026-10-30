@@ -1,9 +1,9 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 title: 介绍
 icon: doc-intro
 order: 1
-brief: Semi Design Next 是 Semi Design 的社区 fork，提供 React 19、Vue 3.5+ 与 Solid 三套组件库，共用与框架无关的 Foundation。
+brief: Semi Design Next 是 Semi Design 的社区 fork，提供 React 19、Vue 3.5+、Solid 与 Svelte 5 四套组件库，共用与框架无关的 Foundation。
 ---
 
 ## 什么是 Semi Design Next
@@ -16,7 +16,7 @@ Semi Design Next 是非官方的社区项目，与字节跳动、DouyinFE 及 Se
 
 ## 与上游的差异
 
-- React 19 与 Vue 3.5+ 两套组件库，分别是 `@fibrae/semi-ui-react` 与 `@fibrae/semi-ui-vue`，共用 `@fibrae/semi-foundation`。
+- React 19、Vue 3.5+、Solid 与 Svelte 5 四套组件库，分别是 `@fibrae/semi-ui-react`、`@fibrae/semi-ui-vue`、`@fibrae/semi-ui-solid` 与 `@fibrae/semi-ui-svelte`，共用 `@fibrae/semi-foundation`。
 - 支持 Chrome 120、Firefox 125、Safari 17.2 及以上。新浏览器走原生能力，旧版本由组件内的兼容写法和可选的 `@fibrae/semi-polyfill` 补齐。
 - 发布物只有 ESM，不提供 UMD 与 CDN 构建。
 - 无障碍按 WAI-ARIA 与 APG 的推荐做法实现，可访问名称与内置文案从语言包读取。
@@ -46,13 +46,13 @@ Semi 的全部颜色变量都自带深色取值，并能在应用运行时动态
 
 ### Foundation
 
-Foundation 包含组件交互的业务逻辑，包括 UI 行为触发后的各种计算、分支判断等，不直接操作或引用 DOM，需要 DOM 操作、驱动组件渲染更新的部分委派给 Adapter 执行。Foundation 与框架无关，不依赖 React、Vue 和 UI 包。
+Foundation 包含组件交互的业务逻辑，包括 UI 行为触发后的各种计算、分支判断等，不直接操作或引用 DOM，需要 DOM 操作、驱动组件渲染更新的部分委派给 Adapter 执行。Foundation 与框架无关，不依赖 React、Vue、Solid、Svelte 和 UI 包。
 
 ### Adapter
 
-Adapter 是一个接口，包含 Foundation 实现业务逻辑所需的全部方法，负责组件 DOM 结构声明以及与 DOM 操作、更新相关的逻辑，通常使用框架 API 完成 setState、getState、addEventListener、removeListener 等操作。React 通过 adapter 与 hook 接入，Vue 通过 composable 接入。
+Adapter 是一个接口，包含 Foundation 实现业务逻辑所需的全部方法，负责组件 DOM 结构声明以及与 DOM 操作、更新相关的逻辑，通常使用框架 API 完成 setState、getState、addEventListener、removeListener 等操作。React 通过 adapter 与 hook 接入，Vue 通过 composable 接入，Svelte 通过 runes 接入。
 
-目前有 React 与 Vue 两套实现，分别对应 `@fibrae/semi-ui-react` 与 `@fibrae/semi-ui-vue`，AI 组件在 `@fibrae/semi-ai-react` 与 `@fibrae/semi-ai-vue` 中。
+目前有 React、Vue、Solid 与 Svelte 四套实现，分别对应 `@fibrae/semi-ui-react`、`@fibrae/semi-ui-vue`、`@fibrae/semi-ui-solid` 与 `@fibrae/semi-ui-svelte`，AI 组件在 `@fibrae/semi-ai-react`、`@fibrae/semi-ai-vue`、`@fibrae/semi-ai-solid` 与 `@fibrae/semi-ai-svelte` 中。
 
 ## 兼容性
 

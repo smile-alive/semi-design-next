@@ -43,6 +43,16 @@ import { DragMove } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { dragMove } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 <Framework only="react">
@@ -60,6 +70,12 @@ Elements in the default slot will be able to change their position by dragging.
 <Framework only="solid">
 
 Elements wrapped by `DragMove` will be able to change their position by dragging.
+
+</Framework>
+
+<Framework only="svelte">
+
+In Svelte, DragMove is the `dragMove` attachment. Write `{@attach dragMove(options)}` on an element and that element can be dragged to change its position.
 
 </Framework>
 
@@ -82,6 +98,12 @@ Elements wrapped by `DragMove` will be able to change their position by dragging
 <Framework only="solid">
 
 - DragMove binds its listeners to each top-level DOM element rendered by `children`, and each top-level element is dragged on its own. Text nodes cannot be dragged, so wrap them in an element; top-level elements rendered by a custom component are bound too, and it does not need to pass props through or forward a ref
+
+</Framework>
+
+<Framework only="svelte">
+
+- `dragMove` is an attachment, not a component: it makes the element it is written on draggable, and each element needs its own attachment. It writes `position`, `top`, `left`, `cursor` and `touch-action` inline, so give the element `style:` directives rather than a reactive `style` attribute, which would overwrite them. The options are read when the attachment runs; passing a new options object runs it again and ends a drag in progress
 
 </Framework>
 
@@ -130,5 +152,27 @@ DragMove has no root element of its own, so undeclared attrs such as `class` and
 <DragMoveSolidApi />
 
 DragMove has no root element of its own, so undeclared attributes such as `class`, `style` and `ref` have nowhere to land and are dropped. Put what you need directly on the dragged element.
+
+</Framework>
+
+<Framework only="svelte">
+
+`dragMove(options?: DragMoveOptions)` returns an `Attachment<HTMLElement>`. `DragMoveOptions` is exported from `@fibrae/semi-ui-svelte`.
+
+| Property         | Description                                                                                                                                          | Type                                                      | Default    |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------- |
+| allowInputDrag   | Whether dragging is allowed when pressing on a native input or textarea.                                                                             | boolean                                                   | false      |
+| allowMove        | Function that decides whether a drag may start on pointer down; returning false prevents it.                                                         | (e: PointerEvent, element: HTMLElement) => boolean        | -          |
+| constrainer      | The element that limits the draggable range: `'parent'` for the parent element, or a function that returns it. It needs to be positioned relatively. | 'parent' \| (() => HTMLElement \| null)                   | -          |
+| customMove       | Custom position handling after dragging. When set, only the calculated position is passed back and the element's top and left are no longer written. | (element: HTMLElement, top: number, left: number) => void | -          |
+| handler          | The element that triggers dragging, or a function that returns it. Defaults to the dragged element itself.                                           | HTMLElement \| (() => HTMLElement \| null)                | -          |
+| onMouseDown      | Called when a mouse or pen pointer is pressed.                                                                                                       | (e: PointerEvent) => void                                 | -          |
+| onMouseMove      | Called when a mouse or pen pointer moves.                                                                                                            | (e: PointerEvent) => void                                 | -          |
+| onMouseUp        | Called when a mouse or pen pointer is released.                                                                                                      | (e: PointerEvent) => void                                 | -          |
+| onTouchCancel    | Called when the pointer is cancelled by the system (pointercancel).                                                                                  | (e: PointerEvent) => void                                 | -          |
+| onTouchEnd       | Called when a touch pointer is released.                                                                                                             | (e: PointerEvent) => void                                 | -          |
+| onTouchMove      | Called when a touch pointer moves.                                                                                                                   | (e: PointerEvent) => void                                 | -          |
+| onTouchStart     | Called when a touch pointer is pressed.                                                                                                              | (e: PointerEvent) => void                                 | -          |
+| positionStrategy | Positioning strategy. relative keeps the element's original layout position.                                                                         | 'absolute' \| 'relative'                                  | 'absolute' |
 
 </Framework>

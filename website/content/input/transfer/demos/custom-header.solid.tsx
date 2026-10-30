@@ -10,7 +10,7 @@ const data = Array.from({ length: 30 }, (_, i) => {
 });
 
 // the headers read their live objects in the JSX, so each renders once and follows the state
-const renderSourceHeader = (header: TransferSourceHeaderProps) => {
+function renderSourceHeader(header: TransferSourceHeaderProps) {
     return (
         <div style={{ margin: '10px 0 0 10px', height: '24px', display: 'flex', 'align-items': 'center' }}>
             <span>共 {header.num} 项</span>
@@ -21,9 +21,9 @@ const renderSourceHeader = (header: TransferSourceHeaderProps) => {
             )}
         </div>
     );
-};
+}
 
-const renderSelectedHeader = (header: TransferSelectedHeaderProps) => {
+function renderSelectedHeader(header: TransferSelectedHeaderProps) {
     return (
         <div style={{ margin: '10px 0 0 10px', height: '24px', display: 'flex', 'align-items': 'center' }}>
             <span>{header.num} 项已选</span>
@@ -34,7 +34,7 @@ const renderSelectedHeader = (header: TransferSelectedHeaderProps) => {
             )}
         </div>
     );
-};
+}
 
 export default function TransferDemo() {
     return <Transfer style={{ width: '568px', height: '416px' }} dataSource={data} renderSourceHeader={renderSourceHeader} renderSelectedHeader={renderSelectedHeader} />;

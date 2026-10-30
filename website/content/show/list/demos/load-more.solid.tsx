@@ -18,13 +18,13 @@ for (let i = 0; i < 40; i++) {
 }
 const placeholders: Book[] = [{ loading: true }, { loading: true }, { loading: true }];
 
-const fetchData = (page: number) => {
+function fetchData(page: number) {
     return new Promise<Book[]>((res) => {
         setTimeout(() => {
             res(data.slice(page * count, page * count + count));
         }, 1000);
     });
-};
+}
 
 function Placeholder() {
     return (

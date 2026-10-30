@@ -11,6 +11,8 @@ import CollapseVueApi from './api/collapse.vue.zh-CN.mdx';
 import CollapsePanelVueApi from './api/collapse-panel.vue.zh-CN.mdx';
 import CollapseSolidApi from './api/collapse.solid.zh-CN.mdx';
 import CollapsePanelSolidApi from './api/collapse-panel.solid.zh-CN.mdx';
+import CollapseSvelteApi from './api/collapse.svelte.zh-CN.mdx';
+import CollapsePanelSvelteApi from './api/collapse-panel.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -46,9 +48,27 @@ import { Collapse, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Collapse, CollapsePanel } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte 的面板写成 `Collapse.Panel` 或具名导出 `CollapsePanel`，两者是同一组件。Panel 的 `header`、`extra` 是 snippet。Panel 只能在 Collapse 内使用，否则抛出说明性错误。
+
+</Framework>
+
 ### 基本用法
 
 可以同时展开多个面板，可以通过 `defaultActiveKey` 设置默认展开的面板。
+
+<Framework only="svelte">
+
+Svelte 没有 `defaultActiveKey`：只传 `activeKey` 时作为初始展开的面板；需要读写展开状态时用 `bind:activeKey`。
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -90,6 +110,12 @@ import { Collapse, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过 Collapse 的 `expandIcon` snippet 设置展开图标，`collapseIcon` snippet 设置折叠图标，用 `{#snippet expandIcon()}...{/snippet}` 写在 Collapse 标签内。
+
+</Framework>
+
 展开图标在面板收起时显示（表示可以展开），折叠图标在面板展开时显示。
 
 <Demo id="custom-icon" />
@@ -117,6 +143,14 @@ import { Collapse, Tag } from '@fibrae/semi-ui-solid';
 通过 `extra` 设置右上角辅助区域内容。
 
 `header` 渲染在面板的切换按钮内，只能放文字、图标等非交互内容；`extra` 位于同一行、按钮之外，可以放按钮、输入框等控件，`header` 为字符串或 JSX 元素时都生效。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `extra` snippet 设置右上角辅助区域内容。
+
+`header` 渲染在面板的切换按钮内，只能放文字、图标等非交互内容；`extra` 位于同一行、按钮之外，可以放按钮、输入框等控件。
 
 </Framework>
 
@@ -150,6 +184,14 @@ import { Collapse, Tag } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<CollapseSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`）落在 Collapse 根元素（`.semi-collapse`）上。`onChange` 的第一个参数总是 `string[]`，即使 `activeKey` 传入的是字符串。
+
+</Framework>
+
 ### Collapse.Panel
 
 <Framework only="react">
@@ -173,6 +215,14 @@ import { Collapse, Tag } from '@fibrae/semi-ui-solid';
 <CollapsePanelSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在 Panel 根元素（`.semi-collapse-item`）上。Panel 不读全局默认值。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CollapsePanelSvelteApi />
+
+`class`、`style` 与原生属性和事件落在 Panel 根元素（`.semi-collapse-item`）上。Panel 不读全局默认值，按是否传入 `children` 判断有无内容。
 
 </Framework>
 
@@ -278,6 +328,28 @@ import { Collapse, Input } from '@fibrae/semi-ui-solid';
         </Collapse.Panel>
     </Collapse>
 );
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Collapse, CollapsePanel, Input } from '@fibrae/semi-ui-svelte';
+</script>
+
+<Collapse>
+    <CollapsePanel itemKey="1">
+        {#snippet header()}Panel header{/snippet}
+        {#snippet extra()}
+            <span onclick={(e) => e.stopPropagation()}>
+                <Input aria-label="面板备注" />
+            </span>
+        {/snippet}
+        <p>Hi, bytedance dance dance. This is the docsite of Semi UI.</p>
+    </CollapsePanel>
+</Collapse>
 ```
 
 </Framework>

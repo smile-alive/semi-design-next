@@ -37,7 +37,7 @@ const renderSearchOptionSingle = (props: CascaderFilterRenderProps) => (
     </li>
 );
 
-const renderSearchOptionMultiple = (props: CascaderFilterRenderProps) => {
+function renderSearchOptionMultiple(props: CascaderFilterRenderProps) {
     const label = () => props.data.map((item) => item.label).join(' / ');
     return (
         <li class={props.class} style={{ 'justify-content': 'flex-start' }} role="option" aria-label={label()} aria-selected={props.checkStatus.checked}>
@@ -48,7 +48,7 @@ const renderSearchOptionMultiple = (props: CascaderFilterRenderProps) => {
             </Checkbox>
         </li>
     );
-};
+}
 
 export default function CascaderDemo() {
     return (

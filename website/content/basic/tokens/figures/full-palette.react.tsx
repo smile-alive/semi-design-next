@@ -38,7 +38,7 @@ interface ColorBlockProps {
     theme?: Theme;
 }
 
-export const ColorBlock = ({ colorKey, colorVar, theme }: ColorBlockProps) => {
+export function ColorBlock({ colorKey, colorVar, theme }: ColorBlockProps) {
     const niceName = colorKey.replace('--semi-', '').replace(/-/g, ' ');
     const isAiGeneral = colorKey.includes('--semi-ai-general-');
     const colorName = toUpper(niceName);
@@ -82,7 +82,7 @@ export const ColorBlock = ({ colorKey, colorVar, theme }: ColorBlockProps) => {
     ) : (
         content
     );
-};
+}
 
 const columns = (obj: Record<string, string>, theme: Theme) =>
     colors.map((name) => (

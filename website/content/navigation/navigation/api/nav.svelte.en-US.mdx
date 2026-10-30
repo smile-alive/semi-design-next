@@ -1,0 +1,32 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bodyStyle | Custom style of the navigation item list. | `string` | - |
+| children | `NavItem` and `SubNav`, placed after the entries generated from items. | `Snippet` | - |
+| expandIcon | Expand arrow of a sub navigation generated from items. The parameter holds item, level, size and the class to put on the icon element. | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavExpandIconArgs]>"}>Type</ApiType> | - |
+| footer | Footer area: a config object (collapseButton, class, style, and `data-*` and `aria-*` attributes), or a snippet that holds a `NavFooter`. | `NavFooterConfig \| Snippet` | - |
+| header | Header area: a config object (text, link, linkOptions, logo, class, style, and `data-*` and `aria-*` attributes), or a snippet that holds a `NavHeader`. | `NavHeaderConfig \| Snippet` | - |
+| icon | Icon of an entry of items. The parameter holds item, level and size. The icon column always stays; empty content does not remove the icon box. | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavIconArgs]>"}>Type</ApiType> | - |
+| isCollapsed | Whether the navigation is collapsed. Applies only when mode is vertical. Bind it with `bind:isCollapsed`; a one-way value is only the initial one, and `undefined` means uncontrolled. | `boolean` | - |
+| items | Navigation item data. Each entry may carry nested items, and a string entry is both the text and the itemKey. Only the props declared by Item and Sub, class, style, onmouseenter, onmouseleave, `data-*` and `aria-*` reach the item; other fields such as path are ignored. Icons, text nodes and arrow icons use the `icon`, `text`, `toggleIcon` and `expandIcon` snippets. | `NavItems` | - |
+| limitIndent | Whether to limit indentation. When false, nested items indent by level. Applies only when mode is vertical; horizontal mode always limits indentation. | `boolean` | `true` |
+| mode | Orientation of the navigation: vertical or horizontal. | `Mode` | `"vertical"` |
+| onClick | Called when any item is clicked. The data carries text for an item, and openKeys and isOpen for a sub navigation title. domEvent is the native event. | <ApiType detail={"(data: NavClickData) => void"}>Type</ApiType> | - |
+| onCollapseChange | Called when the collapsed state changes. | <ApiType detail={"(isCollapsed: boolean) => void"}>Type</ApiType> | - |
+| onOpenChange | Called when a sub navigation opens or closes. domEvent is missing when a popup opens by hover. | <ApiType detail={"(data: NavOpenChangeData) => void"}>Type</ApiType> | - |
+| onSelect | Called when a selectable item is selected for the first time. selectedKeys holds only the key of the selected item, and domEvent is the native event. | <ApiType detail={"(data: OnSelectedData) => void"}>Type</ApiType> | - |
+| openKeys | itemKeys of the open sub navigations. Applies only when mode is vertical and the sidebar is expanded. Bind it with `bind:openKeys`; a one-way value is only the initial one, and `null` is a controlled empty value. | `ItemKey[] \| null` | - |
+| selectedKeys | itemKeys of the selected items. Bind it with `bind:selectedKeys`; a one-way value is only the initial one, and `null` is a controlled empty value. | `ItemKey[] \| null` | - |
+| subDropdownProps | Dropdown props for the sub navigations generated from items, used in horizontal mode or when the vertical navigation is collapsed. | `SubDropdownProps` | - |
+| subNavCloseDelay | Delay in milliseconds before a sub navigation popup closes. Applies when collapsed or horizontal. | `number` | `100` |
+| subNavMotion | Whether the sub navigation animates when it expands and collapses. | `boolean` | `true` |
+| subNavOpenDelay | Delay in milliseconds before a sub navigation popup opens. Applies when collapsed or horizontal. | `number` | `0` |
+| text | Text of an entry of items. The parameter holds item and level. Without it the entry's text shows. | <ApiType detail={"Snippet\u003c[NavItemRenderProps]>"}>Type</ApiType> | - |
+| toggleIcon | Icon at the toggle position of an entry of items. The parameter holds item, level and size. | <ApiType detail={"Snippet\u003c[NavItemRenderProps & NavIconArgs]>"}>Type</ApiType> | - |
+| toggleIconPosition | Position of the arrow of an item with sub navigation: left or right. | `'left' \| 'right'` | `"right"` |
+| tooltipHideDelay | Delay in milliseconds before the Tooltip hides when collapsed. | `number` | `100` |
+| tooltipShowDelay | Delay in milliseconds before the Tooltip shows when collapsed. | `number` | `0` |
+| wrapper | Wraps each item. Render the li of the item exactly once with `{@render itemElement()}`. The parameter holds itemElement, isSubNav, isInSubNav and props. | <ApiType detail={"Snippet\u003c[NavWrapperArgs]>"}>Type</ApiType> | - |

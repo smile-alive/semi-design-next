@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性              | 说明                                                                                                             | 类型                                                                                             | 默认值      |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------- |
+| avatarShape       | 组内头像标签的头像形状。                                                                                         | `AvatarShape`                                                                                    | `"square"`  |
+| maxTagCount       | 最多显示的标签数，超出的部分显示为 +N。                                                                          | `number`                                                                                         | -           |
+| onPlusNMouseEnter | 指针移入 +N 标签时调用。                                                                                         | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType>                                   | -           |
+| onTagClose        | 组内标签被关闭时调用，参数为关闭事件与该标签的 tagKey；数据项自己的 onClose 同样会调用。需在回调中更新 tagList。 | <ApiType detail={"(event: TagCloseEvent, tagKey?: string \u007c number) => void"}>Type</ApiType> | -           |
+| popoverProps      | 传给 Popover 的属性，可设置 position、trigger 等；`child` 与 `content` 由 TagGroup 固定。                        | `PopoverProps`                                                                                   | -           |
+| restCount         | +N 中显示的数量，缺省为超出 maxTagCount 的标签数。                                                               | `number`                                                                                         | -           |
+| showPopover       | 悬停在 +N 上时，是否通过 Popover 显示剩余标签。                                                                  | `boolean`                                                                                        | -           |
+| size              | 组内标签的尺寸。                                                                                                 | `TagSize`                                                                                        | `"default"` |
+| tag               | 自定义每个标签渲染的 snippet，参数为 `{ tag, index }`：标签配置与序号，序号在可见标签与 +N 弹层中连续计数。      | <ApiType detail={"Snippet\u003c[scope: { tag: TagGroupItem; index: number }]>"}>Type</ApiType>   | -           |
+| tagList           | 标签配置数组，每项为 Tag 的属性，children 为 string 或 number 的标签文字。                                       | `TagGroupItem[]`                                                                                 | -           |

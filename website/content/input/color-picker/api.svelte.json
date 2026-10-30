@@ -1,0 +1,61 @@
+{
+    "color-picker": {
+        "source": "packages/semi-ui-svelte/src/color-picker/color-picker.svelte",
+        "props": {
+            "alpha": {
+                "zh-CN": "是否开启透明度选择。",
+                "en-US": "Whether to enable transparency selection."
+            },
+            "bottomSlot": {
+                "zh-CN": "底部渲染额外元素的 snippet。",
+                "en-US": "Snippet that renders extra elements at the bottom."
+            },
+            "children": {
+                "zh-CN": "usePopover 时作为触发器的 snippet，默认是当前颜色的色块；不使用 usePopover 时不渲染。",
+                "en-US": "Snippet used as the trigger when usePopover is on, a swatch of the current color by default; not rendered without usePopover."
+            },
+            "defaultFormat": {
+                "zh-CN": "手动输入时默认使用的颜色格式，可选 `rgba`、`hex`、`hsva`。",
+                "en-US": "Color format used by default for manual input: `rgba`, `hex` or `hsva`."
+            },
+            "eyeDropper": {
+                "zh-CN": "是否开启滴管拾色器。",
+                "en-US": "Whether to enable the eyedropper color picker."
+            },
+            "height": {
+                "zh-CN": "高度，单位为像素，未设置时为 280。",
+                "en-US": "Height in pixels; 280 when not set."
+            },
+            "onChange": {
+                "zh-CN": "用户选中颜色时的回调，参数为 ColorValue，包含 hsva、hex、rgba 三种格式。",
+                "en-US": "Called with a ColorValue, holding hsva, hex and rgba, when the user picks a color."
+            },
+            "popoverProps": {
+                "zh-CN": "放入 Popover 时传给 Popover 的属性，如 `trigger`、`aria-label`、`aria-labelledby`。弹层默认以点击触发、role 为 `dialog`，名称默认取语言包；`aria-label` 或 `aria-labelledby` 优先。",
+                "en-US": "Props passed to the Popover when usePopover is on, such as `trigger`, `aria-label` and `aria-labelledby`. The popup opens on click with role `dialog` by default and takes its name from the locale; `aria-label` or `aria-labelledby` takes precedence."
+            },
+            "topSlot": {
+                "zh-CN": "顶部渲染额外元素的 snippet。",
+                "en-US": "Snippet that renders extra elements at the top."
+            },
+            "usePopover": {
+                "zh-CN": "是否放入 Popover 渲染，触发器使用 `children`，默认 false。",
+                "en-US": "Whether to render inside a Popover; the trigger is `children`. Defaults to false."
+            },
+            "value": {
+                "zh-CN": "颜色值，可 `bind:value`，是同时包含 hsva、hex、rgba 三种格式的对象。不传时由组件自行管理，初始为 `#39c5bb`；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；`null` 是受控的空值，显示默认色且只报告变化。ColorValue 按不可变值对待，更新时整体替换。",
+                "en-US": "The color, supports `bind:value`; an object holding hsva, hex and rgba. Left out, the component manages it and starts at `#39c5bb`. A one-way `value={x}` only seeds it; for a fully controlled picker use the function binding `bind:value={get, set}`. `null` is a controlled empty value: it shows the default color and only reports changes. Treat ColorValue as immutable and replace it as a whole."
+            },
+            "width": {
+                "zh-CN": "宽度，单位为像素，未设置时为 280。",
+                "en-US": "Width in pixels; 280 when not set."
+            }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回 picker 根元素；usePopover 时位于弹层内，弹层关闭时为 null。",
+                "en-US": "Returns the picker root element; inside the popup when usePopover is on, so null while the popup is closed."
+            }
+        }
+    }
+}

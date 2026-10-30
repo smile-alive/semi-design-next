@@ -8,6 +8,7 @@ brief: The Pager helps users navigate between multiple pages
 import PaginationReactApi from './api/pagination.react.en-US.mdx';
 import PaginationVueApi from './api/pagination.vue.en-US.mdx';
 import PaginationSolidApi from './api/pagination.solid.en-US.mdx';
+import PaginationSvelteApi from './api/pagination.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Pagination } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 Set the total number via `total`, set capacity per page via `pageSize`.
@@ -59,7 +70,29 @@ Use the showTotal property to control whether the total number of pages is shown
 
 ### Specify current page number
 
+<Framework only="react">
+
 You can specify the currently active page number via `defaultCurrentPage`.
+
+</Framework>
+
+<Framework only="vue">
+
+You can specify the currently active page number via `defaultCurrentPage`.
+
+</Framework>
+
+<Framework only="solid">
+
+You can specify the currently active page number via `defaultCurrentPage`.
+
+</Framework>
+
+<Framework only="svelte">
+
+There is no `defaultCurrentPage`: pass `currentPage={3}` as the initial page. After a click the page becomes a local value of the component.
+
+</Framework>
 
 <Demo id="default-current-page" />
 
@@ -94,6 +127,12 @@ Bind the page number with `v-model:currentPage` and the pager is a controlled co
 <Framework only="solid">
 
 A passed `currentPage` makes the pagination controlled: the active page is entirely determined by that value, so write the new page from `onPageChange` back into your state to change it.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the page with `bind:currentPage`; `bind:currentPage={get, set}` makes the pagination fully controlled, and the setter decides whether to accept a new page. When `currentPage` is omitted the component manages the page itself.
 
 </Framework>
 
@@ -138,6 +177,14 @@ Other native attributes (such as `id`, `aria-*`, `data-*` and `onClick`) fall th
 <PaginationSolidApi />
 
 `class`, `style`, `ref` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onClick`) land on the root `ul`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<PaginationSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `aria-*`, `data-*`, `onclick`) land on the root `ul`, for both the default and the small size; `onChange`, `onPageChange` and `onPageSizeChange` are component callbacks and do not land on the root element.
 
 </Framework>
 

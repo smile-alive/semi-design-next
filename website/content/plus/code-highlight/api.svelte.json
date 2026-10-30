@@ -1,0 +1,24 @@
+{
+    "code-highlight": {
+        "source": "packages/semi-ui-svelte/src/code-highlight/code-highlight.svelte",
+        "props": {
+            "code": {
+                "zh-CN": "代码纯文本，未传时按空字符串处理。code 变化后先显示新文本，高亮完成后再替换。",
+                "en-US": "Plain text of the code, treated as an empty string when omitted. After code changes the new text shows first and is replaced once highlighting finishes."
+            },
+            "language": {
+                "zh-CN": "语言类型，需已注册或经 languages 传入。",
+                "en-US": "Language, which must be registered or passed through languages."
+            },
+            "languages": {
+                "zh-CN": "该代码块额外使用的 Shiki 语法，加载后其他代码块也可使用。请在脚本顶层声明，不要在模板里写内联数组，否则每次渲染都会重新高亮。",
+                "en-US": "Extra Shiki grammars for this block; once loaded, other blocks can use them too. Declare it at the top level of the script, not as an inline array in the template, which would highlight again on every render."
+            },
+            "lineNumber": { "zh-CN": "是否开启行数显示。", "en-US": "Whether to show line numbers." },
+            "themes": {
+                "zh-CN": "替换该代码块亮色、暗色模式下的 Shiki 主题。",
+                "en-US": "Replaces the Shiki themes of this block for light and dark mode."
+            }
+        }
+    }
+}

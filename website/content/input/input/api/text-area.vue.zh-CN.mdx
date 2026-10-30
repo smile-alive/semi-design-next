@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | maxCount | 字数上限，设置后显示字数统计；超出时计数器标红，不截断输入。 | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
 | showCounter | 是否显示字数统计；设置 maxCount 时总是显示。 | `boolean` | `semiDefault("TextArea", "showCounter", false)` |
 | showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `semiDefault("TextArea", "showClear", false)` |
-| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("TextArea", "disabled")` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | readonly | 是否只读。 | `boolean` | `semiGlobalDefault("TextArea", "readonly")` |
 | autofocus | 挂载时自动获取焦点。 | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TextArea", "validateStatus")` |

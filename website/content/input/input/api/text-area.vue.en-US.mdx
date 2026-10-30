@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | maxCount | Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated. | `number` | `semiGlobalDefault("TextArea", "maxCount")` |
 | showCounter | Whether to show the counter; it is always shown when maxCount is set. | `boolean` | `semiDefault("TextArea", "showCounter", false)` |
 | showClear | Shows a clear button when the text area has content and the pointer or focus is inside the component. | `boolean` | `semiDefault("TextArea", "showClear", false)` |
-| disabled | Whether the text area is disabled. | `boolean` | `semiGlobalDefault("TextArea", "disabled")` |
+| disabled | Whether the text area is disabled. | `boolean` | `undefined` |
 | readonly | Whether the text area is read-only. | `boolean` | `semiGlobalDefault("TextArea", "readonly")` |
 | autofocus | Focuses the text area on mount. | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
 | validateStatus | Validation status: default, error or warning; error outputs aria-invalid. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TextArea", "validateStatus")` |

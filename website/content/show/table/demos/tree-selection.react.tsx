@@ -17,7 +17,7 @@ const childrenRecordName = 'children';
 const rowKey = 'key';
 const getKey = (record: TreeRow): RowKey => record[rowKey];
 
-const traverse = (data: TreeRow[], res: RowKey[]) => {
+function traverse(data: TreeRow[], res: RowKey[]) {
     for (let record of data) {
         const children = record?.children;
         res.push(getKey(record));
@@ -25,15 +25,15 @@ const traverse = (data: TreeRow[], res: RowKey[]) => {
             traverse(children, res);
         }
     }
-};
+}
 
-const getAllRowKeys = (data: TreeRow[]) => {
+function getAllRowKeys(data: TreeRow[]) {
     const allRowKeys: RowKey[] = [];
     traverse(data, allRowKeys);
     return allRowKeys;
-};
+}
 
-const findShouldSelectRowKeys = (record: TreeRow, selected: boolean, selectedRowKeys: RowKey[]) => {
+function findShouldSelectRowKeys(record: TreeRow, selected: boolean, selectedRowKeys: RowKey[]) {
     let shouldSelectRowKeys: RowKey[];
     const children = record.children;
     const childrenRowKeys: RowKey[] = [];
@@ -49,7 +49,7 @@ const findShouldSelectRowKeys = (record: TreeRow, selected: boolean, selectedRow
         shouldSelectRowKeys = union(selectedRowKeys, [key, ...childrenRowKeys]);
     }
     return shouldSelectRowKeys;
-};
+}
 
 export default function TableDemo() {
     const [selectedRowKeys, setSelectedRowKeys] = useState<RowKey[]>([]);

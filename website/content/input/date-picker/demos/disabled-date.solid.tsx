@@ -4,11 +4,11 @@ import { DatePicker, type DatePickerDisabledDateType, type DatePickerDisabledTim
 
 const today = () => new Date();
 
-const nextValidMonth = () => {
+function nextValidMonth() {
     const nextValidDate = today();
     nextValidDate.setMonth((nextValidDate.getMonth() + 1) % 12);
     return nextValidDate;
-};
+}
 
 const disabledTime: DatePickerDisabledTimeType = (date) =>
     // With type dateTime, date is a single Date

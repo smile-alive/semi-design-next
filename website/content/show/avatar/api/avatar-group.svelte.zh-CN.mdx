@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                       | 类型                                                                      | 默认值     |
+| ----------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- | ---------- |
+| item        | 每个头像内容的 snippet，参数为 `{ item, index }`，优先于数据项自带的 `children`。          | <ApiType detail={"Snippet\u003c[AvatarGroupItemContext]>"}>Type</ApiType> | -          |
+| items       | 组内头像的数据，每项是 Avatar 的属性；组的 `size`、`shape` 覆盖数据项自己的。              | `AvatarGroupItem[]`                                                       | `[]`       |
+| maxCount    | 显示的最大头像数，超出后显示 +N。                                                          | `number`                                                                  | -          |
+| more        | 自定义溢出标签的 snippet，参数为 `{ restNumber, restAvatars }`：剩余数量与被隐藏的数据项。 | <ApiType detail={"Snippet\u003c[AvatarGroupMoreContext]>"}>Type</ApiType> | -          |
+| overlapFrom | 头像重叠方向，可选 start 或 end。                                                          | `AvatarGroupOverlapFrom`                                                  | `"start"`  |
+| shape       | 组内头像的形状。                                                                           | `AvatarGroupShape`                                                        | `"circle"` |
+| size        | 组内头像的尺寸。                                                                           | `string`                                                                  | `"medium"` |

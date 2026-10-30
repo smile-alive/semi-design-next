@@ -8,6 +8,7 @@ brief: 根据语法高亮页面中的代码块
 import CodeHighlightReactApi from './api/code-highlight.react.zh-CN.mdx';
 import CodeHighlightVueApi from './api/code-highlight.vue.zh-CN.mdx';
 import CodeHighlightSolidApi from './api/code-highlight.solid.zh-CN.mdx';
+import CodeHighlightSvelteApi from './api/code-highlight.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -40,6 +41,16 @@ import { CodeHighlight } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { CodeHighlight } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { CodeHighlight } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -104,6 +115,22 @@ CodeHighlight.register({
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 版没有 `CodeHighlight.register`，改用具名导出 `registerCodeHighlight`，参数相同，与其他框架共用同一份注册表。
+
+```ts
+import { registerCodeHighlight } from '@fibrae/semi-ui-svelte';
+
+registerCodeHighlight({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // 可选，替换默认的 github-light 与 github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
 ### 基本用法
 
 向 `code` props 传入代码纯文本，并在 `language` 传入已注册语言的名称或别名
@@ -143,6 +170,14 @@ CodeHighlight.register({
 <CodeHighlightSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `id`、`aria-label`）落在根元素（`div`）上，高亮前后根元素保持不变。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CodeHighlightSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `id`、`aria-label`）落在根元素（`div`）上。组件没有静态方法，注册语言与主题用具名导出 `registerCodeHighlight`，见上文「注册语言与主题」。
 
 </Framework>
 

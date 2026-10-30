@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Button, Notification } from '@fibrae/semi-ui-vue';
 
-    function show() {
+    const show = () => {
         const id = Notification.open({
             title: 'Hi, Bytedance',
             content: 'ies dance dance dance',
@@ -15,7 +15,7 @@
                 id,
             });
         }, 1000);
-    }
+    };
 </script>
 
 <template>

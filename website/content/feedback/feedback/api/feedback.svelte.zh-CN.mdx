@@ -1,0 +1,69 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| afterClose | 弹层完全关闭后调用，两种模式都会调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterVisibleChange | 显示状态变化且动画结束后调用，仅 popup 模式调用。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| bodyStyle | 内容区的样式字符串，两种模式通用。 | `string` | - |
+| cancelButtonProps | 取消按钮的属性。loading 取内置的挂起态与使用方的 loading 任一为真；onclick 先于内置处理调用，不会替换内置处理。 | `FeedbackButtonProps` | - |
+| cancelLoading | 仅 modal 模式：取消按钮是否加载中；不传时跟随 onCancel 返回的 Promise，显式传入 false 关闭该行为。 | `boolean` | - |
+| cancelText | 仅 modal 模式：取消按钮文字，缺省取语言包 Modal.cancel。 | `string` | - |
+| canVerticalSetWidth | 仅 popup 模式：placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。 | `boolean` | - |
+| centered | 仅 modal 模式：是否垂直居中显示。 | `boolean` | - |
+| checkboxExtra | 自定义 checkboxGroupProps.options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackCheckboxSnippetProps]>"}>Type</ApiType> | - |
+| checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackCheckboxGroupProps` | - |
+| checkboxLabel | 自定义 checkboxGroupProps.options 中每一项文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackCheckboxSnippetProps]>"}>Type</ApiType> | - |
+| children | type 为 custom 时的反馈内容。 | `Snippet` | - |
+| closable | 是否显示右上角的关闭按钮。 | `boolean` | - |
+| closeIcon | 关闭按钮中的图标。 | `Snippet` | - |
+| closeOnEsc | 是否允许按 Esc 取消。 | `boolean` | - |
+| confirmLoading | 仅 modal 模式：确认按钮是否加载中；不传时跟随 onOk 返回的 Promise，显式传入 false 关闭该行为。 | `boolean` | - |
+| content | 包裹或替换内置内容的 snippet，任何 type 都可用，参数 `{ content }` 是内置内容，用 `{@render content()}` 放置。 | <ApiType detail={"Snippet\u003c[FeedbackContentSnippetProps]>"}>Type</ApiType> | - |
+| disableScroll | 仅 popup 模式：带遮罩且渲染在 document.body 中时是否禁止 body 滚动。 | `boolean` | - |
+| footer | 替换默认的取消、提交按钮；传入 `null` 时不渲染页脚区域。 | `Snippet \| null` | - |
+| footerFill | 仅 modal 模式：默认页脚的两个按钮是否撑满排列。 | `boolean` | - |
+| fullScreen | 仅 modal 模式：是否全屏显示，开启后 width、height 不再生效。 | `boolean` | - |
+| getPopupContainer | 指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative。 | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| hasCancel | 仅 modal 模式：默认页脚是否显示取消按钮。 | `boolean` | - |
+| header | 仅 modal 模式：完全替换默认头部，传入 `null` 时不渲染头部。 | `Snippet \| null` | - |
+| headerStyle | 仅 popup 模式：面板头部的样式字符串。 | `string` | - |
+| height | 高度，数字按像素处理，字符串为合法 CSS 长度；popup 模式仅 placement 为 top、bottom 时生效。 | `string \| number` | - |
+| icon | 仅 modal 模式：标题前的图标。 | `Snippet` | - |
+| keepDOM | 关闭时是否保留内部节点而不销毁。 | `boolean` | - |
+| lazyRender | 仅 modal 模式：配合 keepDOM 使用；为 true 时，首次显示之前不渲染对话框。 | `boolean` | - |
+| mask | 是否显示遮罩；popup 模式默认没有遮罩，页面其余部分保持可用。 | `boolean` | - |
+| maskClosable | 是否允许点击遮罩取消。 | `boolean` | - |
+| maskFixed | 仅 modal 模式：遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理。 | `boolean` | - |
+| maskStyle | 遮罩的样式字符串。 | `string` | - |
+| modal | 仅 modal 模式：自定义渲染对话框本身，参数 `{ modal }` 是 `role="dialog"` 元素，用 `{@render modal()}` 放置。 | <ApiType detail={"Snippet\u003c[{ modal: Snippet }]>"}>Type</ApiType> | - |
+| modalContentClass | 仅 modal 模式：对话框内容元素的类名。 | `string` | - |
+| mode | 展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。 | `FeedbackMode` | `"popup"` |
+| motion | 是否启用进出场动画。 | `boolean` | - |
+| okButtonProps | 提交按钮的属性。未给 disabled 时按值禁用（值为空时禁用），给出后以使用方的值为准，type 为 custom 时用它控制提交；loading 取内置的挂起态与使用方的 loading 任一为真；onclick 先于内置处理调用，不会替换内置处理。 | `FeedbackButtonProps` | - |
+| okText | 仅 modal 模式：确认按钮文字，缺省取语言包 Modal.confirm。 | `string` | - |
+| okType | 仅 modal 模式：确认按钮的类型。 | `OKType` | - |
+| onCancel | 取消按钮、关闭按钮、Esc（modal 模式另有点击遮罩）触发；按 Esc 时参数为原生 KeyboardEvent。返回后清空已填写的值并把 visible 写回 false；返回 Promise 时取消按钮保持加载，fulfill 后才清空并写回，reject 时保持打开。 | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => unknown"}>Type</ApiType> | - |
+| onOk | 点击提交按钮时调用，返回后清空已填写的值；返回 Promise 时按钮保持加载，fulfill 后才清空，reject 时保留。组件不会自行关闭，由使用方把 visible 设为 false。 | <ApiType detail={"(event: MouseEvent) => unknown"}>Type</ApiType> | - |
+| onValueChange | 反馈内容变化时调用，参数为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。 | <ApiType detail={"(value: FeedbackValue) => void"}>Type</ApiType> | - |
+| placement | 仅 popup 模式：面板滑出的位置。 | `Placement` | - |
+| preventScroll | 仅 modal 模式：组件内部调用 focus 时是否阻止浏览器滚动到被聚焦元素。 | `boolean` | - |
+| radioExtra | 自定义 radioGroupProps.options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackRadioSnippetProps]>"}>Type</ApiType> | - |
+| radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackRadioGroupProps` | - |
+| radioLabel | 自定义 radioGroupProps.options 中每一项文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackRadioSnippetProps]>"}>Type</ApiType> | - |
+| role | 仅 modal 模式：对话框的 role，可选 dialog 或 alertdialog。 | `'dialog' \| 'alertdialog'` | - |
+| size | 宽度档位：small 为 448px，medium 为 684px，large 为 920px；popup 模式仅 placement 为 left、right 时生效。 | `Size` | - |
+| style | 样式字符串；落点见下方说明。 | `string` | - |
+| textAreaProps | type 为 text 与 emoji 时多行输入框的属性；其中的 onChange 照常调用，不会替换内置处理。 | `FeedbackTextAreaProps` | - |
+| title | 标题，可以是字符串或 snippet，同时作为对话框的可访问名称。 | `string \| Snippet` | - |
+| type | 反馈内容的类型。custom 时内容写在子节点中。 | `FeedbackType` | `"emoji"` |
+| visible | 是否显示，可用 `bind:visible` 双向绑定；取消路径（取消按钮、关闭按钮、Esc，modal 模式另有遮罩）会把它写回 `false`，提交按钮不会关闭。 | `boolean` | - |
+| width | 宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 size 决定。 | `string \| number` | - |
+| zIndex | 弹层的 z-index。 | `number` | - |
+
+**Methods**
+
+| 方法    | 说明                                                         | 类型                                         |
+| ------- | ------------------------------------------------------------ | -------------------------------------------- |
+| getRoot | Portal 内 Modal 或 SideSheet 的最外层元素，未渲染时为 null。 | <ApiType detail={"() => any"}>Type</ApiType> |

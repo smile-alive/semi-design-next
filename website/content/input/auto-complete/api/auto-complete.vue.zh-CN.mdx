@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。 | `boolean` | `semiGlobalDefault("AutoComplete", "autoAdjustOverflow")` |
 | defaultActiveFirstOption | 面板打开后是否默认高亮第一个候选项，此时按 Enter 可直接选中。 | `boolean` | `semiDefault("AutoComplete", "defaultActiveFirstOption", false)` |
 | defaultOpen | 挂载时是否默认展开下拉面板。 | `boolean` | `semiGlobalDefault("AutoComplete", "defaultOpen")` |
-| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("AutoComplete", "disabled")` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | dropdownClassName | 下拉列表的类名，落在 role="listbox" 元素上。 | `string` | `semiGlobalDefault("AutoComplete", "dropdownClassName")` |
 | dropdownMatchSelectWidth | 下拉面板的最小宽度是否等于输入框宽度。 | `boolean` | `semiDefault("AutoComplete", "dropdownMatchSelectWidth", true)` |
 | dropdownStyle | 下拉列表的内联样式，落在 role="listbox" 元素上。 | `StyleValue` | `semiGlobalDefault("AutoComplete", "dropdownStyle")` |
@@ -25,7 +25,7 @@ import ApiType from '#/components/ApiType.astro';
 | position | 下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
 | renderSelectedItem | 选中候选项后输入框显示的文本，必须返回字符串；字符串或数字项收到 `{ value, label }`，对象项收到数据项本身。保留为函数 prop，因为 foundation 在渲染之外调用它。 | <ApiType detail={"((option: AutoCompleteSelectedItem\u003cT>) => string)"}>Type</ApiType> | `undefined` |
 | showClear | 有内容时是否显示清除按钮。 | `boolean` | `semiDefault("AutoComplete", "showClear", false)` |
-| size | 输入框尺寸。 | `Size` | `semiDefault("AutoComplete", "size", "default")` |
+| size | 输入框尺寸。 | `Size` | `undefined` |
 | stopPropagation | 是否阻止下拉面板上的 click、mousedown 与焦点进出事件冒泡。 | `string \| boolean` | `semiDefault("AutoComplete", "stopPropagation", true)` |
 | validateStatus | 校验状态，只影响展示样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
 

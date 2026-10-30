@@ -20,11 +20,11 @@
 
     const src = ref(playList[0].src);
 
-    function onQualityChange(quality: string) {
+    const onQualityChange = (quality: string) => {
         console.log('quality change', quality);
         const source = playList.find((item) => item.quality === quality);
         if (source) src.value = source.src;
-    }
+    };
 </script>
 
 <template>

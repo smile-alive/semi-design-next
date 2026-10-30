@@ -11,7 +11,7 @@ interface ClosestColor {
     distance: number;
 }
 
-const getClosestColors = (color: string, colors: Record<string, string>): ClosestColor[] => {
+function getClosestColors(color: string, colors: Record<string, string>): ClosestColor[] {
     const scores: { distance: number; name: string }[] = [];
     for (const name in colors) {
         const targetColor = colors[name];
@@ -24,7 +24,7 @@ const getClosestColors = (color: string, colors: Record<string, string>): Closes
     const sorted = scores.sort((a, b) => a.distance - b.distance);
     const min = sorted[0].distance;
     return sorted.filter((item) => item.distance === min).map(({ name, distance }) => ({ name, value: colors[name], distance }));
-};
+}
 
 export default function ColorConverter() {
     const [inputColor, setInputColor] = useState('');
@@ -40,7 +40,7 @@ export default function ColorConverter() {
         }
         const paletteResult = getClosestColors(inputColor, paletteColors.light);
         const cssVarsResult = getClosestColors(inputColor, functionalColors.light);
-        setResults([...cssVarsResult, ...paletteResult].sort((a, b) => a.distance - b.distance));
+        setResults([...cssVarsResult, ...paletteResult].toSorted((a, b) => a.distance - b.distance));
     };
 
     return (

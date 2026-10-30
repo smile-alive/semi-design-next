@@ -8,6 +8,7 @@ brief: Used to select an option under a multi-level classification.
 import CascaderReactApi from './api/cascader.react.en-US.mdx';
 import CascaderVueApi from './api/cascader.vue.en-US.mdx';
 import CascaderSolidApi from './api/cascader.solid.en-US.mdx';
+import CascaderSvelteApi from './api/cascader.svelte.en-US.mdx';
 
 ## Usage scenarios
 
@@ -46,6 +47,16 @@ import { Cascader } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Cascader } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 Basic usage, only leaf nodes can be selected by default.
@@ -77,6 +88,12 @@ By default, the `label` value is searched (using the includes method of the stri
 <Framework only="solid">
 
 By default, the `label` value is searched (using the includes method of the string for matching, case-insensitive). You can specify other attribute values through `treeNodeFilterProp` to search. The `label` is text only, and search still matches the `label` text when you customize the node content with `renderLabel`. To match other text, store it in another field in treeData and specify the field through `treeNodeFilterProp`.
+
+</Framework>
+
+<Framework only="svelte">
+
+By default, the `label` value is searched (using the includes method of the string for matching, case-insensitive). You can specify other attribute values through `treeNodeFilterProp` to search. The `label` is text only, and search still matches the `label` text when you customize the node content with the `label` snippet. To match other text, store it in another field in treeData and specify the field through `treeNodeFilterProp`.
 
 </Framework>
 
@@ -167,6 +184,30 @@ When the returned element is a single element, it gets the `id`, `role="option"`
 
 </Framework>
 
+<Framework only="svelte">
+
+If you want to customize the rendering options after the search, you can use the `filterItem` snippet to achieve custom rendering of the entire line. The snippet parameter has the type `CascaderFilterItemSnippetProps`:
+
+```tsx
+interface CascaderFilterItemSnippetProps {
+    props: CascaderFilterItemDomProps; // The id, role, aria-selected, class and click handler of the option, spread it on the root element of the snippet
+    inputValue: string; // Search bar search content
+    disabled: boolean; // Whether to disable
+    data: CascaderData[]; // Search result data, the nodes on this path
+    selected: boolean; // Selected state when single selection
+    checkStatus: {
+        // Checked state when multiple selection
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    onCheck: (event: CheckboxEvent) => void; // Check the option in multiple selection, bind it to the onChange of Checkbox
+}
+```
+
+Spread `props` on the root element (such as `<li {...props}>`), and clicking the row selects it in single selection. When `virtualizeInSearch` is on, `props.style` is the positioning style of the row; join your own `style` to it instead of overriding it.
+
+</Framework>
+
 The example is as follows
 
 <Demo id="filter-render" />
@@ -202,6 +243,12 @@ In a multi-selection scene, use max to limit the number of multi-selection selec
 </Framework>
 
 <Framework only="solid">
+
+In a multi-selection scene, use `max` to limit the number of multi-selection selections. After `max` is exceeded, the `onExceed` callback will be triggered.
+
+</Framework>
+
+<Framework only="svelte">
 
 In a multi-selection scene, use `max` to limit the number of multi-selection selections. After `max` is exceeded, the `onExceed` callback will be triggered.
 
@@ -251,6 +298,16 @@ When multiple selection (`multiple` is true), use `#tag="{ entity, index, disabl
 
 </Framework>
 
+<Framework only="svelte">
+
+`displayRender` is split into two snippets.
+
+When single selection (`multiple` is false), use the `display` snippet to set the displayed content. Its parameter is `{ labels, path }`, where `labels` holds the `displayProp` of each node on the path and `path` holds the nodes on the path (the raw values when the value is not in treeData, as in the parameter of `onChange` with `onChangeWithObject`); empty snippet content shows the `placeholder`.
+
+When multiple selection (`multiple` is true), use the `tag` snippet to replace each tag. Its parameter is `{ entity, index, disabled, onClose }`, where `entity` is the relevant data of the node and `onClose` unchecks the node; bind it to your own Tag when you need a close button. It works in searchable multiple selection too. The type of `entity` is `CascaderEntity`, as follows:
+
+</Framework>
+
 ```typescript
 interface Entity {
     children?: Entity[]; // children list
@@ -269,6 +326,12 @@ interface Entity {
 <Framework only="vue">
 
 The `label` of a data item is text only. To render custom content in an option of the columns, use the `#label="{ item }"` slot, where `item` is the data of the node; the search results, the selection and the tags still show the text of the node.
+
+</Framework>
+
+<Framework only="svelte">
+
+The `label` of a data item is text only. To render custom content in an option of the columns, use the `label` snippet with the parameter `{ item }`, where `item` is the data of the node; the search results, the selection and the tags still show the text of the node.
 
 </Framework>
 
@@ -326,6 +389,12 @@ We have reserved slots at the top and bottom of the cascade selector. You can se
 
 </Framework>
 
+<Framework only="svelte">
+
+We have reserved slots at the top and bottom of the cascade selector. You can set them through the `topSlot` or `bottomSlot` snippet.
+
+</Framework>
+
 <Demo id="slot" />
 
 ### Controlled Component
@@ -345,6 +414,12 @@ Bind `modelValue` with `v-model` to use Cascader as a controlled component; the 
 <Framework only="solid">
 
 You can use `value` along with `onChange` property if you want to use Cascader as a controlled component. Changes made in place to a controlled array are not noticed; pass a new array to update the selection.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind `value` with `bind:value` to use Cascader as a controlled component; `onChange` is still called. The Svelte Cascader has no `defaultValue`: to start with a selection, bind a `$state` that holds it, and leave `value` unbound for an uncontrolled Cascader; `bind:value={get, set}` makes it fully controlled.
 
 </Framework>
 
@@ -376,6 +451,12 @@ In multiple selection, you can set the value to include only leaf nodes by turni
 
 </Framework>
 
+<Framework only="svelte">
+
+In multiple selection, you can set the value to include only leaf nodes by turning on leafOnly, that is, the displayed Tag and the value of `bind:value` and `onChange` only include leaf nodes.
+
+</Framework>
+
 <Demo id="leaf-only" />
 
 ### Checked RelationShip
@@ -395,6 +476,12 @@ In multiple, `checkRelation` can be used to set the type of node selection relat
 <Framework only="solid">
 
 Replace `treeData` as a whole to update the data; a new array with equal content keeps the expanded and selected state.
+
+</Framework>
+
+<Framework only="svelte">
+
+`treeData` can be replaced as a whole or changed in place in `$state` data (such as `push`, or assigning `children`); both are noticed and recalculated, and a new array with equal content keeps the expanded and selected state.
 
 </Framework>
 
@@ -425,6 +512,12 @@ Cascader supports remote search. With `remote` enabled, search input no longer g
 <Framework only="solid">
 
 Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `onSearch` callback is fired, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
+
+</Framework>
+
+<Framework only="svelte">
+
+Cascader supports remote search. With `remote` enabled, search input no longer goes through local filtering; only the `onSearch` callback is called, and you are responsible for fetching `treeData` asynchronously based on the input. This mirrors Select's `remote` behavior.
 
 </Framework>
 
@@ -583,6 +676,45 @@ Read the parameter with its access form, such as `props.value`, and do not destr
 
 </Framework>
 
+<Framework only="svelte">
+
+If the default trigger style cannot meet your needs, you can use the `trigger` snippet to customize the display of the select box.
+
+The snippet parameter of `trigger` has the type `CascaderTriggerSnippetProps`, as follows:
+
+```typescript
+interface CascaderTriggerSnippetProps {
+    /**
+     * The hierarchical position of the selected node in treeData,
+     *  as in the following example, when "浙江省-杭州市-萧山区" is
+     *  selected, the value here is '0-0-1'; a Set<string> in multiple mode
+     */
+    value: string | Set<string> | undefined;
+    /* The search text while open; while a searchable single Cascader is closed, the display text of the selected path */
+    inputValue: string;
+    /* Placeholder of Cascader */
+    placeholder?: string;
+    /* Whether to disable Cascader */
+    disabled: boolean;
+    /**
+     * The function used to update the value of the input box. You
+     *  should call this function when the value of the Input component
+     *  customized by trigger is updated to synchronize the
+     *  state with Cascader, you need to set the filterTreeNode parameter
+     *  to non-false when use it
+     */
+    onSearch: (inputValue: string) => void;
+    /* Function to clear the value; pass the click event when it is bound to a control inside the trigger, so the click does not open the dropdown */
+    onClear: (event?: MouseEvent) => void;
+    /* Used to delete a single item, the input parameter is the hierarchical
+     * position of the node in treeData (the same format as value)
+     */
+    onRemove: (pos: string) => void;
+}
+```
+
+</Framework>
+
 <Demo id="trigger-render" />
 
 ## API reference
@@ -610,6 +742,14 @@ The Vue Cascader has no `className` prop: undeclared attributes such as `class`,
 <CascaderSolidApi />
 
 Cascader puts `class`, `style`, `ref` and undeclared native attributes on the root element (the trigger), and `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` on the current combobox (see [ARIA](#aria)). `onFocus` and `onBlur` are emitted when the dropdown opens and closes; they are not DOM focus events.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CascaderSvelteApi />
+
+Cascader puts `class`, `style` and undeclared native attributes on the root element (the trigger), and `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` on the current combobox (see [ARIA](#aria)). `onChange`, `onSelect`, `onFocus`, `onBlur` and `onKeyDown` are component callbacks and hide the native events of the same name on the root element; `onFocus` and `onBlur` are called when the dropdown opens and closes, they are not DOM focus events. `style` and `dropdownStyle` are CSS strings.
 
 </Framework>
 
@@ -651,6 +791,19 @@ Cascader puts `class`, `style`, `ref` and undeclared native attributes on the ro
 | label      | Text to be displayed (required), use `renderLabel` for custom content | string\|number | -       |
 | loading    | loading                                                               | boolean        | -       |
 | value      | Value property (required)                                             | string\|number | -       |
+
+</Framework>
+
+<Framework only="svelte">
+
+| Properties | Instructions                                                                | type           | Default |
+| ---------- | --------------------------------------------------------------------------- | -------------- | ------- |
+| children   | children node                                                               | CascaderData[] | -       |
+| disabled   | Disabled status                                                             | boolean        | -       |
+| isLeaf     | leaf node                                                                   | boolean        | -       |
+| label      | Text to be displayed (required), use the `label` snippet for custom content | string\|number | -       |
+| loading    | loading                                                                     | boolean        | -       |
+| value      | Value property (required)                                                   | string\|number | -       |
 
 </Framework>
 
@@ -698,6 +851,23 @@ Cascader exposes `open()`, `close()`, `focus()`, `blur()` and `search(value)` th
 
 </Framework>
 
+<Framework only="svelte">
+
+Cascader exposes `open()`, `close()`, `focus()`, `blur()` and `search(value)` through `export function`; call them on the instance from `bind:this`. `search` searches as if the value were typed; set `filterTreeNode` to enable search, and `searchPosition` to `custom` to customize the display search box.
+
+```svelte
+<script lang="ts">
+    import { Cascader } from '@fibrae/semi-ui-svelte';
+
+    let cascader = $state<Cascader>();
+</script>
+
+<Cascader bind:this={cascader} {treeData} />
+<button onclick={() => cascader?.open()}>Open</button>
+```
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -711,6 +881,12 @@ Cascader exposes `open()`, `close()`, `focus()`, `blur()` and `search(value)` th
 </Framework>
 
 <Framework only="solid">
+
+- These `aria-*` attributes fall on the current combobox: the root element (the trigger) without search, the search input with search, and the tag input in multiple mode when the search input is in the trigger;
+
+</Framework>
+
+<Framework only="svelte">
 
 - These `aria-*` attributes fall on the current combobox: the root element (the trigger) without search, the search input with search, and the tag input in multiple mode when the search input is in the trigger;
 
@@ -735,6 +911,12 @@ Cascader exposes `open()`, `close()`, `focus()`, `blur()` and `search(value)` th
 <Framework only="solid">
 
 - Search results are a `role="listbox"` of `option`s, with `aria-selected` for selected, or checked in a multi-choice Cascader. When `filterRender` returns a single element, that element gets an `id`, `role="option"` and these states; otherwise the component wraps the content in an `li` that has them;
+
+</Framework>
+
+<Framework only="svelte">
+
+- Search results are a `role="listbox"` of `option`s, with `aria-selected` for selected, or checked in a multi-choice Cascader. The `props` of `filterItem` carry the `id`, `role="option"` and `aria-selected` of the option, and must be spread on the root element of the snippet;
 
 </Framework>
 

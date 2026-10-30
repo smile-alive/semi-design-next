@@ -1,0 +1,8 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                                                                                                                   | 类型                                                                                        | 默认值 |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------ |
+| actionIcon | 显示在每个操作描述前的图标 snippet，参数为操作 `item`、序号 `index`、所属步骤 `step` 与步骤序号 `stepIndex`。                                                                          | <ApiType detail={"Snippet\u003c[DialogueStepWidgetActionIconSnippetProps]>"}>Type</ApiType> | -      |
+| steps      | 步骤列表。每个步骤含 summary、status 与 actions，status 为 completed 时显示完成图标，否则显示加载中；actions 只放数据（summary、description 等），步骤可点击或用 Enter、空格展开收起。 | `DialogueStep[]`                                                                            | -      |

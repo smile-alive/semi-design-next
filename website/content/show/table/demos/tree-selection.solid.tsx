@@ -13,22 +13,22 @@ type TreeRow = {
 };
 type RowKey = string | number;
 
-const traverse = (data: TreeRow[], res: RowKey[]) => {
+function traverse(data: TreeRow[], res: RowKey[]) {
     for (const record of data) {
         res.push(record.key);
         if (Array.isArray(record.children)) {
             traverse(record.children, res);
         }
     }
-};
+}
 
-const getAllRowKeys = (data: TreeRow[]) => {
+function getAllRowKeys(data: TreeRow[]) {
     const allRowKeys: RowKey[] = [];
     traverse(data, allRowKeys);
     return allRowKeys;
-};
+}
 
-const findShouldSelectRowKeys = (record: TreeRow, selected: boolean, selectedRowKeys: RowKey[]) => {
+function findShouldSelectRowKeys(record: TreeRow, selected: boolean, selectedRowKeys: RowKey[]) {
     const childrenRowKeys: RowKey[] = [];
     if (Array.isArray(record.children)) {
         traverse(record.children, childrenRowKeys);
@@ -38,7 +38,7 @@ const findShouldSelectRowKeys = (record: TreeRow, selected: boolean, selectedRow
         return pull([...selectedRowKeys], [record.key, ...childrenRowKeys]);
     }
     return union(selectedRowKeys, [record.key, ...childrenRowKeys]);
-};
+}
 
 const columns: ColumnProps<TreeRow>[] = [
     {

@@ -18,13 +18,13 @@ for (let i = 0; i < 40; i++) {
 }
 const placeholders: Book[] = [0, 1, 2].map(() => ({ loading: true }));
 
-const fetchData = (page: number) => {
+function fetchData(page: number) {
     return new Promise<Book[]>((res) => {
         setTimeout(() => {
             res(data.slice(page * count, page * count + count));
         }, 1000);
     });
-};
+}
 
 export default function ListDemo() {
     const [page, setPage] = useState(0);

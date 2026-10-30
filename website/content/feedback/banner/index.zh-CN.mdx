@@ -8,6 +8,7 @@ brief: 横幅通常用于标识全页的状态或通知等。它通常是常驻�
 import BannerReactApi from './api/banner.react.zh-CN.mdx';
 import BannerVueApi from './api/banner.vue.zh-CN.mdx';
 import BannerSolidApi from './api/banner.solid.zh-CN.mdx';
+import BannerSvelteApi from './api/banner.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Banner } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Demo id="basic" />
@@ -64,6 +75,12 @@ import { Banner } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+可以设置 `fullMode={false}` 使用非全屏模式的 banner 样式。通过 `bordered` 属性可以设置边框。`icon={null}` 与 `closeIcon={null}` 分别隐藏图标和关闭按钮。
+
+</Framework>
+
+<Framework only="svelte">
 
 可以设置 `fullMode={false}` 使用非全屏模式的 banner 样式。通过 `bordered` 属性可以设置边框。`icon={null}` 与 `closeIcon={null}` 分别隐藏图标和关闭按钮。
 
@@ -108,6 +125,12 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可以把内容直接写在 Banner 标签内（`children` snippet）自定义其他渲染内容。
+
+</Framework>
+
 <Demo id="custom-content" />
 
 ## API参考
@@ -133,6 +156,14 @@ import { Banner } from '@fibrae/semi-ui-solid';
 <BannerSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件（如 `aria-*`、`onClick`）落在根元素（`role="alert"`）上，根元素的 `role` 固定，不能被覆盖。关闭状态在组件内部，卸载后再挂载即可重新显示。
+
+</Framework>
+
+<Framework only="svelte">
+
+<BannerSvelteApi />
+
+`class`、`style`（字符串）与原生属性和事件（如 `aria-*`、`onclick`）落在根元素（`role="alert"`）上，根元素的 `role` 固定，不能被覆盖。`title` 可以是字符串或 snippet，`description`、`icon`、`closeIcon` 是 snippet。关闭状态在组件内部，没有 `bind:`，用 `{#if}` 卸载再挂载即可重新显示。
 
 </Framework>
 

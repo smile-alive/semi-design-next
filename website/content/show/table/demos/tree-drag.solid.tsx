@@ -77,7 +77,7 @@ const raw: TreeRow[] = [
 ];
 
 // Swaps two sibling records; returns undefined when the keys are not found, so the caller keeps the old tree
-const swapSiblings = (list: TreeRow[], key1: number, key2: number) => {
+function swapSiblings(list: TreeRow[], key1: number, key2: number) {
     const index1 = list.findIndex((item) => item.key === key1);
     const index2 = list.findIndex((item) => item.key === key2);
     if (index1 > -1 && index2 > -1) {
@@ -95,9 +95,9 @@ const swapSiblings = (list: TreeRow[], key1: number, key2: number) => {
         }
     }
     return undefined;
-};
+}
 
-const getSameLevelRecords = (key: number | undefined, list: TreeRow[]): TreeRow[] => {
+function getSameLevelRecords(key: number | undefined, list: TreeRow[]): TreeRow[] {
     if (key != null) {
         if (list.some((item) => item.key === key)) {
             return list;
@@ -110,7 +110,7 @@ const getSameLevelRecords = (key: number | undefined, list: TreeRow[]): TreeRow[
         }
     }
     return [];
-};
+}
 
 export default function TableDemo() {
     const [expandedRowKeys, setExpandedRowKeys] = createSignal<number[]>([1, 2]);

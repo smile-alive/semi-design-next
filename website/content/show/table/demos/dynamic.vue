@@ -135,7 +135,7 @@
         }
 
         if (typeof sorter === 'function') {
-            result = [...result].sort(sorter);
+            result = result.toSorted(sorter);
 
             if (sortOrder === 'descend') {
                 result = result.reverse();

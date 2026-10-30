@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                | 说明                                                                                                                          | 类型                                                                                | 默认值    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------- |
+| afterVisibleChange  | 显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次。  | <ApiType detail={"(isVisible: boolean) => void"}>Type</ApiType>                     | -         |
+| bodyStyle           | 面板内容区的样式，字符串。                                                                                                    | `string`                                                                            | -         |
+| canVerticalSetWidth | placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。                                                          | `boolean`                                                                           | -         |
+| children            | 面板的正文，写在标签内。                                                                                                      | `Snippet`                                                                           | -         |
+| closable            | 是否显示右上角的关闭按钮。                                                                                                    | `boolean`                                                                           | `true`    |
+| closeIcon           | 关闭按钮中图标的 snippet；隐藏按钮用 closable 为 false。                                                                      | `Snippet`                                                                           | -         |
+| closeOnEsc          | 是否允许按 Esc 关闭面板。                                                                                                     | `boolean`                                                                           | `false`   |
+| disableScroll       | 带遮罩且渲染在 document.body 中时是否禁止 body 滚动，即给 body 添加 overflow: hidden。                                        | `boolean`                                                                           | `true`    |
+| footer              | 面板底部的 snippet。内容为空时不渲染底部。                                                                                    | `Snippet`                                                                           | -         |
+| getPopupContainer   | 指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative；这会改变浮层的 DOM 位置，不改变视图位置。                    | <ApiType detail={"() => HTMLElement"}>Type</ApiType>                                | -         |
+| headerStyle         | 面板头部的样式，字符串。                                                                                                      | `string`                                                                            | -         |
+| height              | 高度，placement 为 top、bottom 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时为 448。                                | `number \| string`                                                                  | -         |
+| keepDOM             | 关闭时是否保留面板内部节点而不销毁。                                                                                          | `boolean`                                                                           | `false`   |
+| mask                | 是否显示遮罩；为 false 时允许操作外部区域。                                                                                   | `boolean`                                                                           | `true`    |
+| maskClosable        | 是否允许点击遮罩关闭面板。                                                                                                    | `boolean`                                                                           | `true`    |
+| maskStyle           | 遮罩的样式，字符串。                                                                                                          | `string`                                                                            | -         |
+| motion              | 是否开启动画。                                                                                                                | `boolean`                                                                           | `true`    |
+| onCancel            | 用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，visible 已先被写回 false；参数为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。 | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | -         |
+| placement           | 面板滑出的位置。                                                                                                              | `Placement`                                                                         | `"right"` |
+| size                | 尺寸，small 为 448px、medium 为 684px、large 为 920px，仅 placement 为 left、right 时生效。                                   | `'small' \| 'medium' \| 'large'`                                                    | `"small"` |
+| style               | 落在 role=dialog 元素上的样式，字符串。                                                                                       | `string`                                                                            | -         |
+| title               | 标题，纯文本或 snippet，同时作为对话框的可访问名称。声明为 prop，不会作为原生 title 属性落到元素上。                          | `Snippet \| string`                                                                 | -         |
+| visible             | 面板是否可见，配合 bind:visible 使用。                                                                                        | `boolean`                                                                           | -         |
+| width               | 宽度，placement 为 left、right 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时由 size 决定。                          | `number \| string`                                                                  | -         |
+| zIndex              | 弹层的 z-index。                                                                                                              | `number`                                                                            | `1000`    |
+
+**Methods**
+
+| 方法    | 说明                                                           | 类型                                                                |
+| ------- | -------------------------------------------------------------- | ------------------------------------------------------------------- |
+| getRoot | 返回 Portal 内的最外层 .semi-sidesheet 元素，未渲染时为 null。 | <ApiType detail={"() => HTMLDivElement \u007c null"}>Type</ApiType> |

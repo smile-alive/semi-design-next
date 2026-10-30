@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property         | Description                                                                                                                         | Type                                                                 | Default |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------- |
+| children         | The `NavItem` and `SubNav` entries of the sub navigation.                                                                           | `Snippet`                                                            | -       |
+| disabled         | Whether the sub navigation is disabled.                                                                                             | `boolean`                                                            | -       |
+| dropdownProps    | Props of the popup Dropdown, used in horizontal mode and when collapsed.                                                            | `SubDropdownProps`                                                   | -       |
+| dropdownStyle    | Style of the popup. Wins over the style in dropdownProps.                                                                           | `string`                                                             | -       |
+| expandIcon       | Expand arrow icon. The parameter holds size and the class to put on the icon element.                                               | <ApiType detail={"Snippet\u003c[NavExpandIconArgs]>"}>Type</ApiType> | -       |
+| icon             | Icon of the sub navigation. The parameter holds size.                                                                               | <ApiType detail={"Snippet\u003c[NavIconArgs]>"}>Type</ApiType>       | -       |
+| indent           | Whether to keep the icon's space when there is no icon. Applies to the first level only.                                            | `boolean \| number`                                                  | -       |
+| itemKey          | Unique key of the sub navigation.                                                                                                   | `ItemKey`                                                            | -       |
+| label            | Replaces the title text shown. Named `label` because `text` is already a prop.                                                      | `Snippet`                                                            | -       |
+| level            | Nesting level of the item. Determines the indentation when limitIndent is false. The SubNav above gives it, so this only overrides. | `number`                                                             | -       |
+| subDropdownProps | Props of the popup Dropdown, used when dropdownProps is not given.                                                                  | `SubDropdownProps`                                                   | -       |
+| text             | Title text of the sub navigation. The `label` snippet replaces what is shown.                                                       | `string \| number`                                                   | -       |

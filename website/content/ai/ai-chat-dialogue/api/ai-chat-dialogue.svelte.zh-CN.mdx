@@ -1,0 +1,51 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| action | 自定义消息操作栏的 snippet，参数含默认按钮数组 `defaultActions`、按名称索引的 `defaultActionsObj`、消息 `message` 与 `class`；按钮不显示时（如消息未完成）对应的键不存在。 | <ApiType detail={"Snippet\u003c[AIChatDialogueActionSnippetProps]>"}>Type</ApiType> | - |
+| align | 对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。 | `'leftRight' \| 'leftAlign'` | `"leftRight"` |
+| avatar | 自定义头像的 snippet，参数含默认头像 `defaultAvatar`、消息 `message` 与角色 `role`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueAvatarSnippetProps]>"}>Type</ApiType> | - |
+| chats | 对话消息列表，可用 `bind:chats` 双向绑定。不绑定时，组件内的增删改（如删除消息）只在组件内生效；`onChatsChange` 在每次变更时只调用一次。 | `Message[]` | - |
+| content | 自定义内容区域的 snippet，参数含默认内容 `defaultContent`、消息 `message`、角色 `role` 与 `class`。`defaultContent` 与默认渲染一致，包含引用列表与加载指示。 | <ApiType detail={"Snippet\u003c[AIChatDialogueContentSnippetProps]>"}>Type</ApiType> | - |
+| contentItem | 按内容项自定义渲染的 snippet，每个内容项都会先经过它，参数含 `item`、`type`、`message`、`index`、`parent`、默认渲染 `defaultItem` 与自定义节点应带的 `class`。snippet 的输出无法检查，不处理的项需自己用 `{@render defaultItem()}` 渲染，渲染为空时不会回落到内置渲染。 | <ApiType detail={"Snippet\u003c[AIChatDialogueContentItemSnippetProps]>"}>Type</ApiType> | - |
+| disabledFileItemClick | 是否禁用文件卡片的点击。 | `boolean` | `false` |
+| escapeHtml | 是否转义用户消息中的 HTML 标签，避免被 Markdown 解析器当作 HTML 处理而丢失内容。 | `boolean` | `true` |
+| fullDialogue | 完全自定义整条对话的 snippet，参数含 `defaultNodes`（avatar、title、content、action）、消息 `message`、角色 `role` 与 `class`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueFullDialogueSnippetProps]>"}>Type</ApiType> | - |
+| hintBox | 自定义提示项的 snippet，参数含提示文本 `content`、序号 `index` 与点击回调 `onHintClick`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueHintBoxSnippetProps]>"}>Type</ApiType> | - |
+| hintCls | 提示区最外层的类名。 | `string` | - |
+| hints | 提示信息。点击某条提示后，它成为新的用户消息，并触发 onHintClick。 | `string[]` | - |
+| hintStyle | 提示区最外层的样式字符串。 | `string` | - |
+| markdownRenderProps | 透传给每条消息所用 MarkdownRender 的属性，raw 由消息决定，不可传入；components 与内置组件合并，同名的（如 code）覆盖内置组件。 | `MarkdownRenderProps` | - |
+| messageEdit | 用户消息处于编辑状态时显示的编辑器 snippet，参数为消息转换得到的输入内容。 | <ApiType detail={"Snippet\u003c[AIChatDialogueMessageEditSnippetProps]>"}>Type</ApiType> | - |
+| messageText | 替换内容为纯文本的消息的 Markdown 渲染的 snippet，参数含文本 `text` 与消息 `message`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueMessageTextSnippetProps]>"}>Type</ApiType> | - |
+| mode | 对话模式，可选 bubble、noBubble 或 userBubble。 | `'bubble' \| 'noBubble' \| 'userBubble'` | `"bubble"` |
+| onAnnotationClick | 点击参考来源时的回调，参数为被点击消息块的注释数组。 | <ApiType detail={"(annotations: Annotation[]) => void"}>Type</ApiType> | - |
+| onChatsChange | 消息列表变化时的回调，参数为新的消息数组。 | <ApiType detail={"(chats: Message[]) => void"}>Type</ApiType> | - |
+| onFileClick | 点击文件卡片时的回调。 | <ApiType detail={"(file?: InputFile) => void"}>Type</ApiType> | - |
+| onHintClick | 点击提示词时的回调，参数为被点击的提示文本。 | <ApiType detail={"(hint: string) => void"}>Type</ApiType> | - |
+| onImageClick | 点击图片时的回调。 | <ApiType detail={"(image?: InputImage) => void"}>Type</ApiType> | - |
+| onMessageBadFeedback | 对消息点踩时的回调。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageCopy | 复制消息时的回调：文本写入剪贴板成功后才调用，复制的文本不含推理内容；没有可复制的文本时既不写入也不调用。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageDelete | 删除消息时的回调。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageEdit | 编辑消息时的回调。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageGoodFeedback | 对消息点赞时的回调。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageReset | 重置消息时的回调。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onMessageShare | 分享消息时的回调。 | <ApiType detail={"(message?: Message) => void"}>Type</ApiType> | - |
+| onReferenceClick | 点击引用按钮时的回调。参数没有 id，加入 AIChatInput 的 references 前由使用方补上；文件项没有 type。 | <ApiType detail={"(item: Partial\u003cReference>) => void"}>Type</ApiType> | - |
+| onSelect | 选中的消息变化时的回调，参数为选中消息的 id 数组。 | <ApiType detail={"(selectedIds: string[]) => void"}>Type</ApiType> | - |
+| roleConfig | 各角色（user、assistant、system 等）的名称、头像与头像颜色，必填，不读取全局默认值。 | `RoleConfig` | - |
+| selecting | 是否开启多选模式。 | `boolean` | `false` |
+| showReference | 是否在文字或文件消息中展示可被引用的图标，仅对用户消息生效。 | `boolean` | `false` |
+| showReset | 是否展示重置操作。 | `boolean` | `true` |
+| title | 自定义标题的 snippet，参数含默认标题 `defaultTitle`、消息 `message` 与角色 `role`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueTitleSnippetProps]>"}>Type</ApiType> | - |
+
+**Methods**
+
+| 方法           | 说明                                 | 类型                                                             |
+| -------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| deselectAll    | 取消全选所有消息。                   | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| scrollToBottom | 滚动到最底部，参数为 true 时带动画。 | <ApiType detail={"(animation?: boolean) => void"}>Type</ApiType> |
+| scrollToTop    | 滚动到最顶部，参数为 true 时带动画。 | <ApiType detail={"(animation?: boolean) => void"}>Type</ApiType> |
+| selectAll      | 全选所有消息。                       | <ApiType detail={"() => void"}>Type</ApiType>                    |

@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | hourStep | Interval of the hour options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "hourStep")` |
 | minuteStep | Interval of the minute options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "minuteStep")` |
 | secondStep | Interval of the second options; a positive integer. | `number` | `semiGlobalDefault("TimePicker", "secondStep")` |
-| disabled | Disables all interaction. | `boolean` | `semiDefault("TimePicker", "disabled", false)` |
+| disabled | Disables all interaction. | `boolean` | `undefined` |
 | disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"(() => number[])"}>Type</ApiType> | `undefined` |
 | disabledMinutes | Returns the minutes that cannot be selected for the selected hour. | <ApiType detail={"((selectedHour: number) => number[])"}>Type</ApiType> | `undefined` |
 | disabledSeconds | Returns the seconds that cannot be selected for the selected hour and minute. | <ApiType detail={"((selectedHour: number, selectedMinute: number) => number[])"}>Type</ApiType> | `undefined` |
@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `semiDefault("TimePicker", "hideDisabledOptions", false)` |
 | placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | `semiGlobalDefault("TimePicker", "placeholder")` |
 | rangeSeparator | Separator between the two times of a range. | `string` | <ApiType detail={"semiDefault(\"TimePicker\", \"rangeSeparator\", strings.DEFAULT_RANGE_SEPARATOR)"}>Type</ApiType> |
-| size | Size of the input. | `Size` | `semiDefault("TimePicker", "size", "default")` |
+| size | Size of the input. | `Size` | `undefined` |
 | borderless | Borderless mode. | `boolean` | `semiDefault("TimePicker", "borderless", false)` |
 | showClear | Whether to show the clear button. | `boolean` | `semiDefault("TimePicker", "showClear", true)` |
 | inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `semiDefault("TimePicker", "inputReadOnly", false)` |

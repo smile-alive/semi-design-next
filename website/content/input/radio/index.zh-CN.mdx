@@ -11,6 +11,8 @@ import RadioVueApi from './api/radio.vue.zh-CN.mdx';
 import RadioGroupVueApi from './api/radio-group.vue.zh-CN.mdx';
 import RadioSolidApi from './api/radio.solid.zh-CN.mdx';
 import RadioGroupSolidApi from './api/radio-group.solid.zh-CN.mdx';
+import RadioSvelteApi from './api/radio.svelte.zh-CN.mdx';
+import RadioGroupSvelteApi from './api/radio-group.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -47,6 +49,16 @@ import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Radio, RadioGroup } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Demo id="basic" />
@@ -68,6 +80,12 @@ import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过`extra`设置辅助文本，可以是任意 JSX
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `extra` snippet 设置辅助文本：在 Radio 标签内用 `{#snippet extra()}...{/snippet}` 定义，其余内容是文本内容，可以放入任意内容
 
 </Framework>
 
@@ -151,6 +169,14 @@ Radio 不可用
 
 </Framework>
 
+<Framework only="svelte">
+
+<RadioSvelteApi />
+
+`class`、`style`（字符串）落在根元素 label 上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 `onfocus`、`onblur` 落在内部的原生 input 上，其余原生属性与事件（如 `onmouseenter`、`onmouseleave`）落在根元素上；`onclick` 也在根元素上，但只在点击落在 input 上时调用一次。`checked` 支持 `bind:`、函数绑定、单向传值、不传四种写法，不提供 `defaultChecked`。`extra` 在 button 类型下不渲染。
+
+</Framework>
+
 ### RadioGroup
 
 单选框组合，用于包裹一组 `Radio`。
@@ -179,6 +205,14 @@ Radio 不可用
 
 </Framework>
 
+<Framework only="svelte">
+
+<RadioGroupSvelteApi />
+
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`（字符串）、`addonId`、`addonStyle`（字符串）、`addonClass`、`extraId`，没有 `onChange`；需要自定义内容时使用 `label`、`extra` snippet，参数为 `{ option, index }`，按钮型不渲染 `extra`。`class`、`style`（字符串）、`onBlur` 与原生属性落在 `role="radiogroup"` 的根元素上，`aria-required`、`aria-invalid`、`aria-errormessage` 也落在它上面；`onBlur` 只在焦点离开整个分组时触发。Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 与 `tabindex` 不输出。`value` 支持 `bind:`、函数绑定、单向传值、不传四种写法，不提供 `defaultValue`。
+
+</Framework>
+
 ## Methods
 
 ### Radio
@@ -198,6 +232,12 @@ Radio 不可用
 <Framework only="solid">
 
 `ref` 取得根元素 label，其上的 `focus()`、`blur()` 转发给内部的原生 input；`preventScroll` 作用于 `focus()`。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `bind:this` 取得 Radio 实例后调用 `focus()`、`blur()`，作用于内部的原生 input；`preventScroll` 作用于 `focus()`，说明见上方 Methods。
 
 </Framework>
 
@@ -222,6 +262,12 @@ Radio 不可用
 </Framework>
 
 <Framework only="solid">
+
+- `aria-required`、`aria-invalid`、`aria-errormessage` 只对 RadioGroup 生效，设置在 `role="radiogroup"` 的元素上；单个 Radio 的 ARIA 不支持这些属性，同时传入 `aria-invalid` 与 `aria-errormessage` 时，错误信息通过 `aria-describedby` 关联到 input
+
+</Framework>
+
+<Framework only="svelte">
 
 - `aria-required`、`aria-invalid`、`aria-errormessage` 只对 RadioGroup 生效，设置在 `role="radiogroup"` 的元素上；单个 Radio 的 ARIA 不支持这些属性，同时传入 `aria-invalid` 与 `aria-errormessage` 时，错误信息通过 `aria-describedby` 关联到 input
 

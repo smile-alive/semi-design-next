@@ -1,6 +1,6 @@
 {
     "icon": {
-        "source": "packages/semi-icons-react/src/components/Icon.tsx",
+        "source": "packages/semi-icons-react/src/components/icon.tsx",
         "props": {
             "fill": {
                 "zh-CN": "双色、多色图标的填充颜色，支持字符串或字符串数组。设置后 Icon 通过 `cloneElement` 把它传给 `svg` 元素。",

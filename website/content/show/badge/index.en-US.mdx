@@ -8,6 +8,7 @@ brief: Badge generates a small badge to give users tips.
 import BadgeReactApi from './api/badge.react.en-US.mdx';
 import BadgeVueApi from './api/badge.vue.en-US.mdx';
 import BadgeSolidApi from './api/badge.solid.en-US.mdx';
+import BadgeSvelteApi from './api/badge.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Avatar, Badge } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Badge } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 The basic type of Badge is `count`. The `dot` property changes a badge into a small dot. The two are mutually exclusive, giving priority to rendering `dot`.
@@ -58,6 +69,12 @@ When `count` is a node, the node will be rendered directly.
 <Framework only="solid">
 
 `count` accepts a number, a string or a JSX element. A number or string is shown as text; `count="5"` is a string and is likewise never cut off by `overflowCount`. A JSX element is rendered as is, and the `type` and `theme` classes are removed.
+
+</Framework>
+
+<Framework only="svelte">
+
+`count` accepts a number, a string or a snippet. Write a snippet as `{#snippet count()}...{/snippet}` inside the Badge tag; it is rendered as is, and the `type` and `theme` classes are removed. Pass numbers with `count={5}`: `count="5"` is a string and is never cut off by `overflowCount`. The element the badge is attached to goes inside the tag, as the `children` snippet.
 
 </Framework>
 
@@ -114,6 +131,14 @@ Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `
 <BadgeSolidApi />
 
 `class`, `style`, `ref`, native attributes and native events such as `id`, `aria-*`, `onClick` and `onMouseEnter` land on the root `<span>` element. `countClassName` and `countStyle` only apply to the count element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<BadgeSvelteApi />
+
+`class`, `style`, native attributes and native events (such as `id`, `aria-*` and `onclick`) land on the root `<span>` element. `countClassName` and `countStyle` only apply to the count element.
 
 </Framework>
 

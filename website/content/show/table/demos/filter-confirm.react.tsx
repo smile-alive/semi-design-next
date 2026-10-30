@@ -13,7 +13,7 @@ interface Row {
     avatarBg: 'grey' | 'red';
 }
 
-const getData = () => {
+function getData() {
     const data: Row[] = [];
     for (let i = 0; i < 20; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -28,7 +28,7 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 export default function TableDemo() {
     const [dataSource] = useState(getData);

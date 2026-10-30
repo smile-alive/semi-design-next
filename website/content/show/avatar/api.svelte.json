@@ -1,0 +1,116 @@
+{
+    "avatar": {
+        "source": "packages/semi-ui-svelte/src/avatar/avatar.svelte",
+        "props": {
+            "alt": {
+                "zh-CN": "头像图片或文字的替代文本。",
+                "en-US": "Alternative text for the avatar image or text."
+            },
+            "border": {
+                "zh-CN": "显示额外边框，可配置颜色和动画。",
+                "en-US": "Additional border, with optional color and animation."
+            },
+            "bottomSlot": {
+                "zh-CN": "底部标记的形状、背景色、文字颜色、类名和样式字符串；内容使用 bottomSlotText snippet，`render` 为 snippet 时完全自定义标记。",
+                "en-US": "Shape, background color, text color, class and style string of the bottom badge; use the bottomSlotText snippet for its content. A `render` snippet replaces the whole badge."
+            },
+            "bottomSlotText": {
+                "zh-CN": "预设底部标记中的文字或节点的 snippet。",
+                "en-US": "Snippet for the text or nodes inside the preset bottom badge."
+            },
+            "children": {
+                "zh-CN": "头像的文字或自定义内容的 snippet。",
+                "en-US": "Snippet for the avatar text or custom content."
+            },
+            "color": {
+                "zh-CN": "头像的预设背景颜色。",
+                "en-US": "Preset background color of the avatar."
+            },
+            "contentMotion": {
+                "zh-CN": "启用头像内容区域的动画。",
+                "en-US": "Enables animation in the avatar content area."
+            },
+            "gap": {
+                "zh-CN": "字符内容与头像左右两侧的间距，单位为像素。",
+                "en-US": "Space in pixels between the text and either side of the avatar."
+            },
+            "hoverMask": {
+                "zh-CN": "悬停时显示的覆盖层的 snippet，自行设置样式。",
+                "en-US": "Snippet for the overlay shown on hover, with styles supplied by the caller."
+            },
+            "imgAttr": {
+                "zh-CN": "传给内部 img 元素的原生属性。",
+                "en-US": "Native attributes applied to the inner img element."
+            },
+            "onError": {
+                "zh-CN": "图片加载失败时调用，返回 false 阻止默认回退。",
+                "en-US": "Called when the image fails to load. Return false to prevent the default fallback."
+            },
+            "onMouseEnter": {
+                "zh-CN": "指针进入头像时调用。",
+                "en-US": "Called when the pointer enters the avatar."
+            },
+            "onMouseLeave": {
+                "zh-CN": "指针离开头像时调用。",
+                "en-US": "Called when the pointer leaves the avatar."
+            },
+            "shape": {
+                "zh-CN": "头像形状，可选 circle 或 square。",
+                "en-US": "Avatar shape: circle or square."
+            },
+            "size": {
+                "zh-CN": "头像尺寸，支持预设名称或合法 CSS 尺寸。",
+                "en-US": "Avatar size, as a preset name or a valid CSS size."
+            },
+            "src": {
+                "zh-CN": "图片头像的资源地址。",
+                "en-US": "Image source URL."
+            },
+            "srcSet": {
+                "zh-CN": "图片头像的响应式资源集合。",
+                "en-US": "Responsive image sources."
+            },
+            "topSlot": {
+                "zh-CN": "顶部标记的渐变色、文字颜色、类名和样式字符串；内容使用 topSlotText snippet，`render` 为 snippet 时完全自定义标记。",
+                "en-US": "Gradient, text color, class and style string of the top badge; use the topSlotText snippet for its content. A `render` snippet replaces the whole badge."
+            },
+            "topSlotText": {
+                "zh-CN": "预设顶部标记中的文字或节点的 snippet。",
+                "en-US": "Snippet for the text or nodes inside the preset top badge."
+            }
+        }
+    },
+    "avatar-group": {
+        "source": "packages/semi-ui-svelte/src/avatar/avatar-group.svelte",
+        "props": {
+            "item": {
+                "zh-CN": "每个头像内容的 snippet，参数为 `{ item, index }`，优先于数据项自带的 `children`。",
+                "en-US": "Snippet for the content of every avatar, with the parameter `{ item, index }`; it takes precedence over the item's own `children`."
+            },
+            "items": {
+                "zh-CN": "组内头像的数据，每项是 Avatar 的属性；组的 `size`、`shape` 覆盖数据项自己的。",
+                "en-US": "Data of the avatars in the group; each item holds the props of an Avatar, and the group's `size` and `shape` override the item's own."
+            },
+            "maxCount": {
+                "zh-CN": "显示的最大头像数，超出后显示 +N。",
+                "en-US": "Maximum number of visible avatars; overflow is shown as +N."
+            },
+            "more": {
+                "zh-CN": "自定义溢出标签的 snippet，参数为 `{ restNumber, restAvatars }`：剩余数量与被隐藏的数据项。",
+                "en-US": "Snippet for a custom overflow label, with the parameter `{ restNumber, restAvatars }`: the remaining count and the hidden items."
+            },
+            "overlapFrom": {
+                "zh-CN": "头像重叠方向，可选 start 或 end。",
+                "en-US": "Avatar overlap direction: start or end."
+            },
+            "shape": {
+                "zh-CN": "组内头像的形状。",
+                "en-US": "Shape of the avatars in the group."
+            },
+            "size": {
+                "zh-CN": "组内头像的尺寸。",
+                "en-US": "Size of the avatars in the group."
+            }
+        }
+    }
+}

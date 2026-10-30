@@ -5,7 +5,7 @@ import { Button, TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-solid';
 function generateData(x = 5, y = 4, z = 3) {
     const data: TreeNodeData[] = [];
 
-    function fill(level: number, preKey: string, nodes: TreeNodeData[]) {
+    const fill = (level: number, preKey: string, nodes: TreeNodeData[]) => {
         const parents: string[] = [];
         for (let i = 0; i < x; i++) {
             const key = `${preKey}-${i}`;
@@ -22,7 +22,7 @@ function generateData(x = 5, y = 4, z = 3) {
             nodes[index].children = children;
             fill(level - 1, key, children);
         });
-    }
+    };
     fill(z, '0', data);
 
     let total = 0;
@@ -36,11 +36,11 @@ export default function TreeSelectDemo() {
     const [gData, setGData] = createSignal<TreeNodeData[]>([]);
     const [total, setTotal] = createSignal(0);
 
-    function onGen() {
+    const onGen = () => {
         const generated = generateData();
         setGData(generated.gData);
         setTotal(generated.total);
-    }
+    };
 
     return (
         <div style={{ padding: '0 20px' }}>

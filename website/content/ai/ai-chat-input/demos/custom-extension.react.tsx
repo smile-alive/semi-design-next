@@ -138,7 +138,7 @@ interface ReferSlotAttrs {
     uniqueKey: string;
 }
 
-const updatePosition = (editor: Editor, element: HTMLElement) => {
+function updatePosition(editor: Editor, element: HTMLElement) {
     const virtualElement = {
         getBoundingClientRect: () => posToDOMRect(editor.view, editor.state.selection.from, editor.state.selection.to),
     };
@@ -152,7 +152,7 @@ const updatePosition = (editor: Editor, element: HTMLElement) => {
         element.style.left = `${x}px`;
         element.style.top = `${y}px`;
     });
-};
+}
 
 type MentionSuggestion = MentionOptions['suggestion'];
 type MentionStartProps = Parameters<NonNullable<ReturnType<NonNullable<MentionSuggestion['render']>>['onStart']>>[0];
@@ -215,9 +215,9 @@ const suggestion: MentionSuggestion = {
                 updatePosition(props.editor, component.element);
             },
             onKeyDown(props) {
-                function onExit() {
+                const onExit = () => {
                     component.destroy();
-                }
+                };
                 return component.ref?.onKeyDown({ ...props, exitCb: onExit }) ?? false;
             },
             onExit() {
@@ -375,10 +375,9 @@ function MentionList({ ref, command, query, editor }: MentionListProps) {
     );
 }
 
-function isImageType(item: Attachment) {
+function isImageType({ name = '', fileInstance }: Attachment) {
     const PIC_PREFIX = 'image/';
     const PIC_SUFFIX_ARRAY = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'];
-    const { name = '', fileInstance } = item;
     const suffix = name.split('.').pop() ?? '';
     let result = false;
     const type = fileInstance?.type ?? '';
@@ -507,8 +506,7 @@ export default function AIChatInputDemo() {
         return new Map([
             [
                 'referSlot',
-                ({ attrs }: { attrs: ReferSlotAttrs }) => {
-                    const { value, info, type = 'text', uniqueKey } = attrs;
+                ({ attrs: { value, info, type = 'text', uniqueKey } }: { attrs: ReferSlotAttrs }) => {
                     return {
                         type: type,
                         value: value,

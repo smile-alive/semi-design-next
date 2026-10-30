@@ -5,7 +5,7 @@
     const value = ref<string>();
     const treeData = shallowRef<TreeNodeData[]>([]);
 
-    function onSearch(inputValue: string) {
+    const onSearch = (inputValue: string) => {
         if (!inputValue) {
             treeData.value = [];
             return;
@@ -18,7 +18,7 @@
                 { label: `${inputValue} - 结果3`, value: `${inputValue}-3`, key: `${inputValue}-3` },
             ];
         }, 500);
-    }
+    };
 </script>
 
 <template>

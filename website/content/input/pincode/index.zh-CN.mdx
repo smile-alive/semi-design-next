@@ -8,6 +8,7 @@ brief: 用于便捷直观地输入验证码
 import PinCodeReactApi from './api/pin-code.react.zh-CN.mdx';
 import PinCodeVueApi from './api/pin-code.vue.zh-CN.mdx';
 import PinCodeSolidApi from './api/pin-code.solid.zh-CN.mdx';
+import PinCodeSvelteApi from './api/pin-code.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, PinCode, TypographyText } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本使用
 
 <Demo id="basic" />
@@ -60,6 +71,12 @@ import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 使用 `value` 传入验证码字符串，配合 `onChange` 把新内容写回信号即可受控使用
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:value` 绑定验证码字符串；只传 `value` 时作为初始内容，没有 `defaultValue`
 
 </Framework>
 
@@ -104,6 +121,12 @@ import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+用 `bind:this` 取得组件实例，调用方法 `focus(index)` 与 `blur(index)`，入参为对应 Input 的序号，序号从 0 开始
+
+</Framework>
+
 <Demo id="focus" />
 
 ## API 参考
@@ -131,6 +154,14 @@ import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
 <PinCodeSolidApi />
 
 `class`、`style`、`aria-label`、`aria-labelledby`、`data-*` 落在 `role="group"` 的根元素上。`id` 落在第一个输入框上，`<label for>` 指向第一格。`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required`、`tabindex` 落在每个输入框上。`name` 被丢弃。`autofocus` 挂载时聚焦第一个输入框，默认 `false`，只在用户明确进入验证码输入步骤时开启。
+
+</Framework>
+
+<Framework only="svelte">
+
+<PinCodeSvelteApi />
+
+`class`、`style`（字符串）、`aria-label`、`aria-labelledby`、`data-*` 落在 `role="group"` 的根元素上。`id` 落在第一个输入框上，`<label for>` 指向第一格。`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required`、`tabindex` 落在每个输入框上。`name`、`insetLabel`、`insetLabelId` 被丢弃。`onFocus`、`onBlur` 按整组计。`autofocus` 挂载时聚焦第一个输入框，默认 `false`，只在用户明确进入验证码输入步骤时开启。
 
 </Framework>
 

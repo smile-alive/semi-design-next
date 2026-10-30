@@ -8,18 +8,18 @@ export default function NotificationDemo() {
         duration: 0,
     };
     const [ids, setIds] = useState<string[]>([]);
-    function show() {
+    const show = () => {
         let id = Notification.info(opts);
         setIds([...ids, id]);
-    }
-    function hide() {
+    };
+    const hide = () => {
         let idsTmp = [...ids];
         const first = idsTmp.shift();
         if (first) {
             Notification.close(first);
         }
         setIds(idsTmp);
-    }
+    };
     return (
         <>
             <Button type="primary" onClick={show}>

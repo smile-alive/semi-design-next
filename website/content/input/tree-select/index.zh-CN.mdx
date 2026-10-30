@@ -8,6 +8,7 @@ brief: 树选择器用于多层级树形数据的结构化展示 & 选取，例�
 import TreeSelectReactApi from './api/tree-select.react.zh-CN.mdx';
 import TreeSelectVueApi from './api/tree-select.vue.zh-CN.mdx';
 import TreeSelectSolidApi from './api/tree-select.solid.zh-CN.mdx';
+import TreeSelectSvelteApi from './api/tree-select.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -43,6 +44,16 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { TreeSelect } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 最简单的用法，默认为单选模式，每一级菜单项均可选择。
@@ -68,6 +79,12 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `leafOnly` 属性，可以设置只展示叶子节点，同时 onChange 的回调入参也会只有叶子节点的值。
+
+</Framework>
+
+<Framework only="svelte">
+
+多选时 `bind:value` 与 `value` 都是数组。通过 `leafOnly` 属性，可以设置只展示叶子节点，同时 `bind:value` 的值与 `onChange` 的入参也只会有叶子节点的值。
 
 </Framework>
 
@@ -104,6 +121,12 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+如果想要获取搜索结果的具体信息，可使用 `onSearch` 回调函数，函数具体参数见 API 列表。
+
+</Framework>
+
 <Demo id="searchable" />
 
 ### 远程搜索
@@ -123,6 +146,12 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过设置 `remote` 属性可启用远程搜索。开启后，输入时不会执行本地过滤，而是仅触发 `onSearch` 回调，用户可自行处理远程数据获取并更新 `treeData`。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过设置 `remote` 属性可启用远程搜索。开启后，输入时不会执行本地过滤，而是仅触发 `onSearch` 回调，用户可自行处理远程数据获取并更新 `treeData`（传入新数组才会更新）。
 
 </Framework>
 
@@ -193,6 +222,12 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `bind:value` 绑定选中值即为受控组件，选中值变化时自动回写；也可以传入 `value` 并配合 `onChange` 使用。TreeSelect 没有 `defaultValue`，单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；绑成 `undefined` 会清空选中。
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### 节点选中关系
@@ -220,6 +255,12 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 传入 `expandedKeys` 时即为展开受控组件，可以配合 `onExpand` 使用。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:expandedKeys` 绑定展开的节点即为展开受控组件，也可以传入 `expandedKeys` 并配合 `onExpand` 使用。TreeSelect 没有 `defaultExpandedKeys`。当展开受控时，如果开启 `filterTreeNode` 并进行搜索是不会再自动展开节点的，此时，节点的展开完全由 `expandedKeys` 来控制。你可以利用 `onSearch` 的入参 `filteredExpandedKeys` 来实现展开受控时的搜索展开效果。
 
 </Framework>
 
@@ -336,6 +377,31 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+如果默认的触发器样式满足不了你的需求，可以用 `trigger` snippet 自定义选择框的展示。
+
+`trigger` snippet 的参数如下，类型为 `TreeSelectTriggerSnippetProps`:
+
+```typescript
+interface TreeSelectTriggerSnippetProps {
+    componentProps: TreeSelectProps; // 所有用户传给 TreeSelect 的 props
+    disabled: boolean; // 是否禁用 TreeSelect
+    value: TreeNodeData[]; // 已选中的 node 的数据
+    inputValue: string; // 当前 input 框的输入值
+    placeholder?: string; // placeholder
+    // 用于清空值的函数；绑定在触发器内的控件上时传入点击事件，避免这次点击同时打开下拉
+    onClear: (event?: MouseEvent) => void;
+    // 删除单个 item 时调用的函数，以 item 的 key 作为入参
+    onRemove: (key: string) => void;
+    // 用于在 Input 框值更新时启动搜索，需要设置 filterTreeNode 非 false，
+    // searchPosition 为 'trigger'
+    onSearch: (inputValue: string) => void;
+}
+```
+
+</Framework>
+
 <Demo id="trigger-render" />
 
 ### 自定义渲染已选项
@@ -372,6 +438,16 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+你可以通过 `selectedItem` 和 `tag` snippet 自定义选择框中已选项的渲染结构，两个 snippet 的参数相同，类型为 `TreeSelectSelectedItemSnippetProps`：`item`（节点数据）、`index`、`disabled` 和 `onClose`（移除该标签，单选时清除选中值）。
+
+- 单选时 `selectedItem` 的内容就是选择框中显示的内容；内容为空时显示 `placeholder`
+- 多选时 `selectedItem` 的内容会放进内置的 Tag 中渲染（带有背景色以及关闭按钮）；`tag` 替换整个 Tag，优先于 `selectedItem`，需要关闭按钮时把 `onClose` 接到自己的 Tag 上（见 demo，在 Tag 的 `onClose` 里调用它）
+- 多选时两个 snippet 的内容为空，都不渲染该标签
+
+</Framework>
+
 <Demo id="render-selected-item" />
 
 ## API参考
@@ -399,6 +475,14 @@ Vue 版的 TreeSelect 没有 `className` 属性：`class`、`style` 和 `data-*`
 <TreeSelectSolidApi />
 
 `class`、`style` 与原生属性（如 `id`、`data-*`）落在根元素（触发器）上。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 与 `aria-required` 落在当前的 combobox 上：不可搜索时是根元素，搜索框在触发器内时是搜索框的 `input`。`onFocus`、`onBlur`、`onChange` 与 `onSelect` 是组件自己的回调，不会作为原生事件绑定到根元素。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TreeSelectSvelteApi />
+
+Svelte 版的 TreeSelect 没有 `className` 属性：`class`（字符串、数组或对象）、`style`（字符串）、`data-*` 与其他未声明的属性和事件处理（例如 `onclick`）落在根元素（触发器）上，`onkeydown` 在组件处理完按键之后调用。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上（见 [ARIA](#aria)）。小写的 `onchange`、`onselect`、`onload`、`onfocus`、`onblur` 不是原生透传，请使用回调 `onChange`、`onSelect`、`onLoad`、`onFocus`、`onBlur`。`dropdownStyle`、`optionListStyle` 是样式字符串。`value`、`expandedKeys`、`loadedKeys` 可绑定，没有 `defaultValue`、`defaultExpandedKeys`；`multiple` 默认值可以由全局默认值设置。
 
 </Framework>
 
@@ -461,6 +545,23 @@ Vue 版的 TreeSelect 没有 `className` 属性：`class`、`style` 和 `data-*`
 
 </Framework>
 
+<Framework only="svelte">
+
+> **不同 `TreeNodeData` 的 key 值要求必填且唯一。**`label` 允许重复。value 值非必填。此时 `bind:value`、`onChange` 及 `onChangeWithObject` 中所取的 value 属性值将改为 key 值。为了保证行为的符合预期，treeData 中的 value 值或者全部不填写，或者全部填写且唯一，不建议混写。
+
+| 属性     | 说明                                       | 类型           | 默认值 |
+| -------- | ------------------------------------------ | -------------- | ------ |
+| value    | 属性值                                     | string\|number | -      |
+| label    | 展示的文本，自定义内容使用 `label` snippet | string\|number | -      |
+| disabled | 是否禁用，多选状态下支持                   | boolean        | false  |
+| key      | required且要求唯一                         | string         | -      |
+| isLeaf   | 是否为叶子节点                             | boolean        | -      |
+| children | 子节点                                     | TreeNodeData[] | -      |
+
+节点图标使用 `icon` snippet 提供，不在数据中声明。
+
+</Framework>
+
 ## Methods
 
 <Framework only="react">
@@ -515,6 +616,23 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+TreeSelect 通过 `bind:this` 暴露 `search(value)` 和 `close()` 两个方法，类型为 `TreeSelectHandle`。`search` 按输入了该值来搜索，先打开下拉面板，需要同时设置 filterTreeNode；`close` 关闭下拉面板。如果需要在外部自定义搜索框，可以在自定义搜索框值变更时主动调用 `search`，改变筛选结果。
+
+```svelte
+<script lang="ts">
+    import { TreeSelect, type TreeSelectHandle } from '@fibrae/semi-ui-svelte';
+
+    let treeSelect = $state<TreeSelectHandle>();
+</script>
+
+<TreeSelect bind:this={treeSelect} filterTreeNode {treeData} />
+<button onclick={() => treeSelect?.close()}>关闭</button>
+```
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -544,6 +662,13 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+- `aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在当前的 combobox 上：不可搜索时是根元素，单选且搜索框在触发器内时是搜索框的 `input`，多选且搜索框在触发器内时是标签输入框。设置了 `aria-labelledby` 时，combobox 不再补默认的 `aria-label`；只有 `insetLabel` snippet 时 combobox 的 `aria-labelledby` 指向它;
+- 下拉中的节点与 [Tree](/zh-CN/react/navigation/tree#accessibility) 相同：`role="treeitem"`，带 `aria-level`、`aria-setsize`、`aria-posinset`、`aria-disabled`，可展开的节点带 `aria-expanded`；单选时用 `aria-selected`，多选时用 `aria-checked`（半选为 `mixed`）。`fullLabel` snippet 的内容由带 `id`、`role="treeitem"` 和这些状态的 `li` 包住;
+
+</Framework>
+
 - 节点前的展开箭头和多选复选框只是状态的图示，对读屏软件隐藏，也不接收焦点。
 
 ### 键盘交互
@@ -569,6 +694,12 @@ TreeSelect 按 [WAI-ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/comb
 <Framework only="vue">
 
 `#search` 插槽的参数里带有这组 ARIA 属性（`aria-activedescendant`、`aria-controls`、`aria-autocomplete`、名称；在触发器内时为整组 combobox 属性，含 `role`、`aria-expanded`），请用 `v-bind` 把整个参数对象绑定到输入框（Semi `Input`）上，否则读屏软件不会读出当前节点。参数里的 `inputRef` 也必须绑定到输入框上，点击触发器内的已选文本时才能把焦点交给它。
+
+</Framework>
+
+<Framework only="svelte">
+
+`search` snippet 的参数里带有这组 ARIA 属性（`aria-activedescendant`、`aria-controls`、`aria-autocomplete`、名称；在触发器内时为整组 combobox 属性，含 `role`、`aria-expanded`），请用 `{...props}` 把整个参数对象展开到 Semi 的 `Input` 上，否则读屏软件不会读出当前节点。组件会自己在 snippet 渲染的内容里找到文本框来聚焦，所以不需要传 ref。
 
 </Framework>
 
@@ -605,6 +736,14 @@ TreeSelect 按 [WAI-ARIA Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/comb
 
 ```jsx
 <TreeSelect aria-label="example treeSelect" treeData={treeData} />
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<TreeSelect aria-label="example treeSelect" {treeData} />
 ```
 
 </Framework>

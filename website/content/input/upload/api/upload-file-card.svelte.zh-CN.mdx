@@ -1,0 +1,29 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性                | 说明                                                                     | 类型                                                                              | 默认值   |
+| ------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | -------- |
+| disabled            | 是否禁用，禁用后不显示移除、重试和替换按钮。                             | `boolean`                                                                         | -        |
+| ellipsisTooltip     | 自定义文件名过长时的弹出内容，参数为 content 和 trigger。                | <ApiType detail={"Snippet\u003c[TypographyEllipsisTooltipProps]>"}>Type</ApiType> | -        |
+| file                | 要展示的文件，必填。                                                     | `FileItem`                                                                        | -        |
+| fileOperation       | 自定义列表项的操作区。                                                   | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| fileValidateMessage | 自定义校验信息，参数中带 validateMessage。                               | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| index               | 文件在列表中的位置。                                                     | `number`                                                                          | -        |
+| listType            | 卡片的展示类型，可选 list、picture、none；none 不渲染卡片。              | `UploadListType`                                                                  | `"list"` |
+| onPreviewClick      | 传入后卡片可点击，并显示预览按钮；是否传入会改变渲染。                   | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| onRemove            | 点击移除时调用。                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| onReplace           | 点击替换时调用。                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| onRetry             | 点击重试时调用。                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                     | -        |
+| picClose            | 自定义照片墙的关闭按钮，参数为 class 和 onRemove，只在照片墙模式下有效。 | <ApiType detail={"Snippet\u003c[UploadPicCloseSlotProps]>"}>Type</ApiType>        | -        |
+| picHeight           | 照片墙模式下图片的高度。                                                 | `string \| number`                                                                | -        |
+| picInfo             | 自定义照片墙信息，只在照片墙模式且 showPicInfo 为 true 时有效。          | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| picPreviewIcon      | 自定义照片墙悬停时的预览图标，只在照片墙模式下有效。                     | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| picWidth            | 照片墙模式下图片的宽度。                                                 | `string \| number`                                                                | -        |
+| previewFile         | 自定义预览逻辑，替换原缩略图，只在 list 模式下有效。                     | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| showPicInfo         | 是否显示图片信息，只在照片墙模式下有效。                                 | `boolean`                                                                         | -        |
+| showReplace         | 上传成功后是否展示替换按钮，文件自身的 showReplace 优先。                | `boolean`                                                                         | -        |
+| showRetry           | 上传失败时是否展示重试按钮，文件自身的 showRetry 优先。                  | `boolean`                                                                         | -        |
+| showTooltip         | 文件名过长时是否展示提示，或配置提示的类型和透传属性。                   | `boolean \| ShowTooltip`                                                          | `true`   |
+| thumbnail           | 自定义照片墙缩略图，只在照片墙模式下有效。                               | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType>        | -        |
+| validateMessage     | 校验信息，优先于文件自身的 validateMessage。                             | `string`                                                                          | -        |

@@ -77,7 +77,7 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
-const getData = () => {
+function getData() {
     const data: Row[] = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -92,7 +92,7 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 const dataSource = getData();
 

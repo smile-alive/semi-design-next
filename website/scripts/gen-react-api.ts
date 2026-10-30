@@ -10,9 +10,9 @@ const wrappers = new Set(['memo', 'forwardRef']);
 
 // The function behind an exported component: `Object.assign(memo(Button), statics)` and the like take the function as
 // their first argument.
-function componentFunction(checker: ts.TypeChecker, node: ts.Node | undefined, depth = 0): ts.FunctionLikeDeclaration | undefined {
+function componentFunction(checker: ts.TypeChecker, node?: ts.Node, depth = 0): ts.FunctionLikeDeclaration | undefined {
     if (!node || depth > 10) return undefined;
-    const next = (child: ts.Node | undefined) => componentFunction(checker, child, depth + 1);
+    const next = (child?: ts.Node) => componentFunction(checker, child, depth + 1);
     if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) return node;
     if (ts.isExportAssignment(node)) return next(node.expression);
     if (ts.isVariableDeclaration(node)) return next(node.initializer);

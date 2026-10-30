@@ -15,10 +15,10 @@ const initialList: Item[] = [
     { value: 'toutiao', label: '今日头条', type: 4 },
 ];
 
-const mockSearch = (inputValue: string): Item[] => {
+function mockSearch(inputValue: string): Item[] {
     const length = Math.ceil(Math.random() * 100);
     return Array.from({ length }, (_, i) => ({ value: inputValue + i, label: `相近业务 ${inputValue}${i}`, type: i + 1 }));
-};
+}
 
 export default function SelectDemo() {
     const [loading, setLoading] = createSignal(false);

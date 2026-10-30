@@ -11,6 +11,8 @@ import UploadVueApi from './api/upload.vue.zh-CN.mdx';
 import UploadFileCardVueApi from './api/upload-file-card.vue.zh-CN.mdx';
 import UploadSolidApi from './api/upload.solid.zh-CN.mdx';
 import UploadFileCardSolidApi from './api/upload-file-card.solid.zh-CN.mdx';
+import UploadSvelteApi from './api/upload.svelte.zh-CN.mdx';
+import UploadFileCardSvelteApi from './api/upload-file-card.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -29,6 +31,16 @@ import { Upload } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Upload } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Upload } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -65,6 +77,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 通过 `#ellipsisTooltip` 插槽可以自定义弹出层，插槽参数为 `content`（完整文件名）与 `trigger`（文件名元素，用 `<component :is="trigger" />` 放进弹出层）；`showTooltip` 传对象时可配置提示的类型与透传属性
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `ellipsisTooltip` snippet 可以自定义弹出层，参数为 `content`（完整文件名）与 `trigger`（文件名元素，用 `{@render trigger()}` 放进弹出层）；`showTooltip` 传对象时可配置提示的类型与透传属性
 
 </Framework>
 
@@ -132,6 +150,15 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+<Notice type="primary" title="注意事项">
+    <div>Upload 会在内部拦截掉不符合 accept 格式的文件，当拦截到不符合格式要求的文件时，会调用 onAcceptInvalid；</div>
+    <div>accept 使用后缀可以避免因为浏览器或者操作系统的不同导致 file.type 与 MIME 不兼容问题。</div>
+</Notice>
+
+</Framework>
+
 <Framework only="solid">
 
 <Notice type="primary" title="注意事项">
@@ -171,6 +198,13 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+通过设置 `limit` 属性可以限制最大可上传的文件数  
+当 `limit` 为1时，始终用最新上传的代替当前，并不会调用 `onExceed`
+
+</Framework>
+
 <Framework only="solid">
 
 通过设置 `limit` 属性可以限制最大可上传的文件数  
@@ -202,6 +236,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `maxSize` 和 `minSize` 属性可以自定义上传文件大小的限制，通过 `onSizeError` 可以在超出限制时得到通知。
+
+</Framework>
+
 <Framework only="solid">
 
 通过 `maxSize` 和 `minSize` 属性可以自定义上传文件大小的限制，通过设置 `onSizeError` 可以设置超出限制时的回调。
@@ -221,6 +261,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 `listType` 为 `list` 时，可以通过 `#fileOperation` 插槽自定义列表操作区，参数为 `UploadFileItemSlotProps`
+
+</Framework>
+
+<Framework only="svelte">
+
+`listType` 为 `list` 时，可以通过 `fileOperation` snippet 自定义列表操作区，参数为 `UploadFileItemSlotProps`
 
 </Framework>
 
@@ -278,6 +324,28 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+`listType` 为 `list` 时，可以自定义文件列表顶部的标题区域，分为两个 snippet：
+
+#### 只替换标题文字
+
+`fileListTitle` 仅替换标题文字，清空按钮保持默认样式：
+
+<Demo id="file-list-title" />
+
+#### 替换整个标题区
+
+`fileListHeader` 替换整个标题区域，包括清空按钮。提供该 snippet 后，即使它渲染为空也不回落到默认标题。snippet 参数如下：
+
+- `fileList`: 当前文件列表
+- `onClear`: 清空文件的函数
+- `clearText`: 清空按钮的默认文案（根据当前语言环境）
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
 <Framework only="solid">
 
 `listType` 为 `list` 时，可以通过 `fileListTitle` 自定义文件列表顶部的标题区域。支持两种形式：
@@ -320,6 +388,15 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+`listType` 为 `list` 时，可以通过 `previewFile` snippet 自定义预览逻辑，snippet 内容会替换原缩略图，渲染为空时也不回落到默认缩略图  
+例如你不需要对图片类型进行缩略图预览时，可以在 `previewFile` 中恒定渲染一个 `<IconFile />`  
+假如你希望点击图片时放大预览，则可以在 `previewFile` 中使用 Image 组件  
+或者你希望使用额外的操作区来实现点击放大预览，你也可以结合 `fileOperation` 放置一些自定义元素例如 Icon 图标实现点击放大
+
+</Framework>
+
 <Framework only="solid">
 
 `listType` 为 `list` 时，可以通过传入 `previewFile` 自定义预览逻辑  
@@ -340,6 +417,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 结合 `#fileOperation` 与 ImagePreview 的示例，以下示例点击右侧第一个 Icon 可放大图片预览
+
+</Framework>
+
+<Framework only="svelte">
+
+结合 `fileOperation` 与 ImagePreview 的示例，以下示例点击右侧第一个 Icon 可放大图片预览
 
 </Framework>
 
@@ -370,6 +453,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 使用 `v-model:fileList` 绑定文件列表，Upload 在列表变化时通过 `update:fileList` 事件回写。只用单向绑定 `:fileList` 而不回写时，列表保持传入的值。`@change` 事件仍会收到 `{ fileList, currentFile }`，其中 `currentFile` 在通过 `insert` 方法插入文件后为 `null`。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:fileList` 绑定文件列表，Upload 在列表变化时回写。只传 `fileList` 的值而不绑定时，该值作为初始列表，之后由 Upload 自己维护。`onChange` 仍会收到 `{ fileList, currentFile }`，其中 `currentFile` 在通过 `insert` 方法插入文件后为 `null`。
 
 </Framework>
 
@@ -406,6 +495,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+配合 Image 组件，通过 `thumbnail` snippet，可以实现点击图片放大预览
+
+</Framework>
+
 <Framework only="solid">
 
 配合 Image 组件，通过 `renderThumbnail` 属性，可以实现点击图片放大预览
@@ -423,6 +518,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 可以通过 `#picPreviewIcon` 插槽，`@previewClick` 事件来自定义预览图标，当显示替换图标 `showReplace` 时，不会再显示预览图标<br /> 当需要自定义预览/替换功能时，需要关闭替换功能，使用 `#picPreviewIcon` 监听图标点击事件即可。<br /> `@previewClick` 监听的是单张图片容器的点击事件。监听它会同时让文件卡片可点击，并显示预览按钮
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `picPreviewIcon` snippet、`onPreviewClick` 来自定义预览图标，当显示替换图标 `showReplace` 时，不会再显示预览图标<br /> 当需要自定义预览/替换功能时，需要关闭替换功能，使用 `onPreviewClick` 监听点击即可。<br /> `onPreviewClick` 监听的是单张图片容器的点击事件。传入它会同时让文件卡片可点击，并显示预览按钮
 
 </Framework>
 
@@ -445,6 +546,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 通过设置 picHeight, picWidth，可以统一设置图片墙元素的宽高。如果同时使用 `#thumbnail` 插槽渲染 Image 组件来实现点击放大预览，你需要同时指定 Image 组件的 width 和 height
+
+</Framework>
+
+<Framework only="svelte">
+
+通过设置 picHeight, picWidth，可以统一设置图片墙元素的宽高。如果同时使用 `thumbnail` snippet 渲染 Image 组件来实现点击放大预览，你需要同时指定 Image 组件的 width 和 height
 
 </Framework>
 
@@ -478,6 +585,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+`uploadTrigger="custom"`，选中文件后将不会自动触发上传。需要通过 `bind:this` 取得实例，调用其 `upload` 方法触发
+
+</Framework>
+
 <Framework only="solid">
 
 `uploadTrigger='custom'`，选中文件后将不会自动触发上传。需要通过 `ref` 拿到上传组件，调用其上的 `upload` 方法触发
@@ -508,6 +621,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过 `dragIcon`、`dragMainText`、`dragSubText` snippet 快捷设置拖拽区内容。`dragIcon`、`dragMainText` 渲染为空时显示默认图标和文案
+
+</Framework>
+
 <Framework only="solid">
 
 可以通过 `dragIcon`、`dragMainText`、`dragSubText` 快捷设置拖拽区内容
@@ -525,6 +644,12 @@ import { Avatar, Button, Image, ImagePreview, Radio, RadioGroup, Toast, Tooltip,
 <Framework only="vue">
 
 还可以通过默认插槽传入内容，完全自定义拖拽区的显示
+
+</Framework>
+
+<Framework only="svelte">
+
+还可以通过 `children` 传入内容，完全自定义拖拽区的显示
 
 </Framework>
 
@@ -570,6 +695,12 @@ Scss 样式如下
 
 </Framework>
 
+<Framework only="svelte">
+
+设置 `addOnPasting` 后，在页面任意位置粘贴（`paste` 事件）的文件会加入文件列表，不需要剪贴板授权。读取粘贴的文件失败时调用 `onPastingError`。
+
+</Framework>
+
 <Framework only="solid">
 
 设置 `addOnPasting` 后，在页面任意位置粘贴（`paste` 事件）的文件会加入文件列表，不需要剪贴板授权。读取粘贴的文件失败时触发 `onPastingError`。
@@ -605,6 +736,21 @@ Scss 样式如下
     fileInstance?: File,
     status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait',
     validateMessage?: string, // 文件的校验信息，需要节点时使用 #fileValidateMessage 插槽
+    shouldUpload: boolean, // 是否需要上传。默认为true，如果为false，该fileItem只会被展示在列表中，不会触发上传操作
+    autoRemove: boolean, // 是否从fileList中移除该文件，默认为false
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+// beforeUploadResult:
+{
+    fileInstance?: File,
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait',
+    validateMessage?: string, // 文件的校验信息，需要节点时使用 fileValidateMessage snippet
     shouldUpload: boolean, // 是否需要上传。默认为true，如果为false，该fileItem只会被展示在列表中，不会触发上传操作
     autoRemove: boolean, // 是否从fileList中移除该文件，默认为false
 }
@@ -666,6 +812,25 @@ resolve/reject 时可以传入 object（结构同上 beforeUploadResult）
 {
     status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
     // 文件的校验信息，需要节点时使用 #fileValidateMessage 插槽
+    validateMessage?: string;
+    // 是否从fileList中移除该文件，默认为false
+    autoRemove?: boolean;
+    // 文件的名称
+    name?: string;
+    // 预览文件的url，一般为当次上传请求中 Server 接收到文件后返回的存储地址
+    url?: string
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+// afterUploadResult:
+{
+    status?: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    // 文件的校验信息，需要节点时使用 fileValidateMessage snippet
     validateMessage?: string;
     // 是否从fileList中移除该文件，默认为false
     autoRemove?: boolean;
@@ -748,6 +913,12 @@ customRequest 包含以下入参
 
 </Framework>
 
+<Framework only="svelte">
+
+设置 `crop` 启用默认裁切配置（`crop={true}` 或布尔简写 `crop`）。
+
+</Framework>
+
 裁切前会先按 `accept` 与 `limit` 过滤，被拒绝或超出数量的图片不会进入裁切。浏览器只能编码 PNG、JPEG、WebP，其他格式（GIF、BMP、SVG）的裁切结果为 PNG，文件的 `type` 与扩展名随之变为 `image/png` 与 `.png`。
 
 <Framework only="solid">
@@ -807,6 +978,20 @@ customRequest 包含以下入参
 `Upload.FileCard` 是默认的文件卡片，用于在 `#fileItem` 等插槽中保留默认外观：`<Upload.FileCard v-bind="props" />`。`class`、`style`、`data-*`、`aria-*` 落在根元素上。
 
 <UploadFileCardVueApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+<UploadSvelteApi />
+
+`class`、`style`、`aria-*` 等未声明的属性落在根元素上，根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`。
+
+### Upload.FileCard
+
+`Upload.FileCard`（也可单独导入为 `UploadFileCard`）是默认的文件卡片，用于在 `fileItem` 等 snippet 中保留默认外观：`<Upload.FileCard {...props} />`。`class`、`style`、`data-*`、`aria-*` 落在根元素上。
+
+<UploadFileCardSvelteApi />
 
 </Framework>
 
@@ -885,6 +1070,29 @@ interface FileItem {
     uid: string; // 文件唯一标识符，如果当前文件是通过upload选中添加的，会自动生成uid。如果是defaultFileList, 需要自行保证不会重复
     url?: string;
     validateMessage?: string; // 需要节点时使用 #fileValidateMessage 插槽
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr 事件
+    fileInstance?: File; // 浏览器实际获取到的文件对象，继承自 Blob（https://developer.mozilla.org/zh-CN/docs/Web/API/File）
+    name: string;
+    percent?: number; // 上传进度百分比
+    preview?: boolean; // 是否根据url进行预览
+    response?: any; // xhr的response, 请求成功时为respoonse body，请求失败时为对应 error
+    shouldUpload?: boolean; // 是否应该继续上传
+    showReplace?: boolean; // 单独控制该file是否展示替换按钮
+    showRetry?: boolean; // 单独控制该file是否展示重试按钮
+    size: string; // 文件大小，单位kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // 文件唯一标识符，如果当前文件是通过upload选中添加的，会自动生成uid。如果是初始列表，需要自行保证不会重复
+    url?: string;
+    validateMessage?: string; // 只能是字符串，需要节点时使用 fileValidateMessage snippet
 }
 ```
 
@@ -1058,6 +1266,58 @@ interface UploadFileListHeaderSlotProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+### UploadFileItemSlotProps Interface
+
+`fileItem`、`thumbnail`、`picInfo`、`picPreviewIcon`、`fileOperation`、`previewFile`、`fileValidateMessage` 收到的参数。文件数据放在 `file` 字段中，另有文件卡片的属性。可以直接写 `<Upload.FileCard {...props} />` 渲染默认卡片。
+
+```ts
+interface UploadFileItemSlotProps {
+    file: FileItem;
+    index?: number; // 文件在列表中的位置
+    listType: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    validateMessage?: string;
+    style?: string; // 来自 itemStyle
+    onRemove: () => void; // 移除该文件
+    onRetry: () => void; // 重新上传该文件
+    onReplace: () => void; // 替换该文件
+    onPreviewClick?: () => void; // 仅在传入了 Upload 的 onPreviewClick 时存在
+}
+```
+
+### UploadPicCloseSlotProps Interface
+
+`picClose` 收到的参数：
+
+```ts
+interface UploadPicCloseSlotProps {
+    class: string;
+    onRemove: (e: MouseEvent) => void;
+}
+```
+
+### UploadFileListHeaderSlotProps Interface
+
+`fileListHeader` 收到的参数：
+
+```ts
+interface UploadFileListHeaderSlotProps {
+    fileList: FileItem[]; // 当前文件列表
+    onClear: () => void; // 清空文件的函数
+    clearText: string; // 清空按钮的默认文案（根据当前语言环境）
+}
+```
+
+</Framework>
+
 ### CropProps Interface
 
 `crop` 属性传入对象时的配置项：
@@ -1065,6 +1325,12 @@ interface UploadFileListHeaderSlotProps {
 <Framework only="vue">
 
 Vue 中该类型的导出名为 `UploadCropProps`。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 中该类型的导出名为 `UploadCropProps`。
 
 </Framework>
 
@@ -1096,6 +1362,12 @@ interface CropProps {
 <Framework only="vue">
 
 Upload 通过 `defineExpose` 暴露 `insert`、`upload`、`openFileDialog`，可以用模板引用调用，类型为 `UploadHandle`，说明见上方 Upload 的 Exposes 表。
+
+</Framework>
+
+<Framework only="svelte">
+
+Upload 通过 `export function` 暴露 `insert`、`upload`、`openFileDialog`，用 `bind:this` 取得实例后调用，类型为 `UploadHandle`，说明见上方 Upload 的 Methods 表。
 
 </Framework>
 

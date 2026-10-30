@@ -11,6 +11,7 @@ import BreadcrumbVueApi from './api/breadcrumb.vue.zh-CN.mdx';
 import BreadcrumbItemVueApi from './api/breadcrumb-item.vue.zh-CN.mdx';
 import BreadcrumbSolidApi from './api/breadcrumb.solid.zh-CN.mdx';
 import BreadcrumbItemSolidApi from './api/breadcrumb-item.solid.zh-CN.mdx';
+import BreadcrumbSvelteApi from './api/breadcrumb.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -44,6 +45,18 @@ import { Breadcrumb } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Breadcrumb } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte 没有 `Breadcrumb.Item`，每一项由 `routes` 描述。
+
+</Framework>
+
 ### 基本用法
 
 <Demo id="basic" />
@@ -61,6 +74,12 @@ import { Breadcrumb } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 图标通过 `Breadcrumb.Item` 的 `icon` 属性传入，可以是图标元素，例如 `icon={<IconHome />}`。
+
+</Framework>
+
+<Framework only="svelte">
+
+图标使用 `icon` snippet，参数带该项的 `route`、`index`，以及要传给图标的 `size` 与 `class`：`<IconHome {size} class={className} />`。图标按序号区分，没有图标的项渲染为空；只显示图标的项，`name` 写成空字符串，并给图标加 `aria-label`。
 
 </Framework>
 
@@ -88,11 +107,41 @@ import { Breadcrumb } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`separator` 属性接收文字；节点形式的分隔符使用 `separator` snippet。单个路由可以带 `separator` 字段，覆盖共享的分隔符。
+
+</Framework>
+
 <Demo id="separator" />
 
 ### 截断逻辑
 
-当级别名字溢出设定宽度后省略截断。可以通过 `showTooltip` 属性设置相关参数。默认宽度150px，鼠标悬停时显示 Tooltip 完整显示级别名称。`Breadcrumb.Item` 的子节点为数字时（含 `0`）按文字处理，同样参与截断与 Tooltip。
+当级别名字溢出设定宽度后省略截断。可以通过 `showTooltip` 属性设置相关参数。默认宽度150px，鼠标悬停时显示 Tooltip 完整显示级别名称。
+
+<Framework only="react">
+
+`Breadcrumb.Item` 的子节点为数字时（含 `0`）按文字处理，同样参与截断与 Tooltip。
+
+</Framework>
+
+<Framework only="vue">
+
+`Breadcrumb.Item` 的子节点为数字时（含 `0`）按文字处理，同样参与截断与 Tooltip。
+
+</Framework>
+
+<Framework only="solid">
+
+`Breadcrumb.Item` 的子节点为数字时（含 `0`）按文字处理，同样参与截断与 Tooltip。
+
+</Framework>
+
+<Framework only="svelte">
+
+标题来自路由的 `name`，按文字处理，参与截断与 Tooltip；`item` snippet 的内容按内联渲染，不截断。
+
+</Framework>
 
 <Demo id="truncate" />
 
@@ -121,6 +170,12 @@ import { Breadcrumb } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 如果想要为省略号区域自定义其他形式的渲染，则可以使用 `renderMore` 属性。它的参数是被折叠的项的数据：routes 写法下是路由对象，children 写法下是各 `Breadcrumb.Item` 的 props（在需要显示的位置再读取其 `children`、`icon`）；返回值渲染到省略号区域，提供时优先于 `moreType`。
+
+</Framework>
+
+<Framework only="svelte">
+
+如果想要为省略号区域自定义其他形式的渲染，则可以使用 `more` snippet。参数 `restItems` 是被折叠的项，每项为 `{ route, index }`；提供时优先于 `moreType`。
 
 </Framework>
 
@@ -159,6 +214,16 @@ Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href }` 
 
 </Framework>
 
+<Framework only="svelte">
+
+Breadcrumb 通过 `routes` 传入路由对象 `route: { name, path, href }` 或字符串组成的数组，不提供 `Breadcrumb.Item`。用 `item` snippet 自定义标题（按内联渲染，不走截断），用 `icon` snippet 提供图标，参数都带该项的 `route` 与 `index`。路由里只放数据，不支持 `routes[].onClick`，改用 Breadcrumb 的 `onClick`（它是函数 prop，传入与否决定没有 `href` 的项能否用键盘操作），第一个参数是该项的路由，字符串路由收到 `{ name }`。
+
+- name 为展示的名称，不传入时为空字符串。当 route 为字符串时，默认将字符串设置为名称。
+- path 为路由路径
+- href 为链接目的地，挂载在 a 标签上。
+
+</Framework>
+
 <Demo id="routes" />
 
 ## API 参考
@@ -189,6 +254,14 @@ Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href }` 
 
 </Framework>
 
+<Framework only="svelte">
+
+<BreadcrumbSvelteApi />
+
+`class`、`style`、`aria-label` 与其他原生属性落在根元素 `nav` 上；`onClick` 是函数 prop，不是 `nav` 的原生点击监听。
+
+</Framework>
+
 ### Breadcrumb.Item
 
 <Framework only="react">
@@ -215,7 +288,29 @@ Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href }` 
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 没有 `Breadcrumb.Item`，每一项的数据见下方 Route。
+
+</Framework>
+
+<Framework only="react">
+
 使用方给 `Breadcrumb.Item` 设置的 key 会保留，带 key 的 Item 重排后内部状态跟随 key 移动。只有 `Breadcrumb.Item` 子节点会收到 `active`、`shouldRenderSeparator`，其他元素与文本原样渲染。
+
+</Framework>
+
+<Framework only="vue">
+
+使用方给 `Breadcrumb.Item` 设置的 key 会保留，带 key 的 Item 重排后内部状态跟随 key 移动。只有 `Breadcrumb.Item` 子节点会收到 `active`、`shouldRenderSeparator`，其他元素与文本原样渲染。
+
+</Framework>
+
+<Framework only="solid">
+
+使用方给 `Breadcrumb.Item` 设置的 key 会保留，带 key 的 Item 重排后内部状态跟随 key 移动。只有 `Breadcrumb.Item` 子节点会收到 `active`、`shouldRenderSeparator`，其他元素与文本原样渲染。
+
+</Framework>
 
 ### Route
 
@@ -256,6 +351,21 @@ Breadcrumb 支持通过 routes 传入路由对象 `route: { name, path, href }` 
 | href | 链接目的地 | `string` | -      |
 | name | 路由名     | `string` | -      |
 | path | 路由路径   | `string` | -      |
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性      | 说明                                   | 类型               | 默认值 |
+| --------- | -------------------------------------- | ------------------ | ------ |
+| href      | 链接目的地                             | `string`           | -      |
+| name      | 路由名                                 | `string`           | -      |
+| path      | 路由路径                               | `string`           | -      |
+| noLink    | 移除该项 hover 和 active 的样式        | `boolean`          | -      |
+| separator | 该项的文字分隔符，可以覆盖父级的分隔符 | `string`           | -      |
+| key       | 该项的 key                             | `string \| number` | -      |
+
+路由的图标由 `icon` snippet 渲染，自定义标题由 `item` snippet 渲染；`data-*` 字段会传给对应的项。
 
 </Framework>
 

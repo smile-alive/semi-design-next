@@ -3,14 +3,14 @@ import { Input, Typography, Form, TextArea, Button } from '@fibrae/semi-ui-react
 
 export default function InputDemo() {
     const [value, setValue] = useState<string>();
-    function getValueLength(str: string) {
+    const getValueLength = (str: string) => {
         return [...new Intl.Segmenter().segment(str)].length;
-    }
+    };
 
-    function getTextAreaStrLength(str: string) {
+    const getTextAreaStrLength = (str: string) => {
         const filteredStr = str.replace(/\s/g, '');
         return filteredStr.length;
-    }
+    };
 
     return (
         <div>

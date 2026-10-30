@@ -1,8 +1,8 @@
 import { InputNumber } from '@fibrae/semi-ui-solid';
 
-const log = (v: number | string) => {
+function log(v: number | string) {
     console.log(`Changed to: [${typeof v}] ${v}`);
-};
+}
 
 export default function InputNumberDemo() {
     return (

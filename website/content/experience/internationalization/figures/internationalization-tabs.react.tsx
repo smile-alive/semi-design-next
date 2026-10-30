@@ -31,7 +31,7 @@ type Locale = 'zh-CN' | 'en-US';
 type AnchorData = { title: string; url: string }[];
 type IconRenderProps = { props?: ComponentProps<typeof IconArticle> };
 
-const makeAnchorId = (id: ReactNode) => {
+function makeAnchorId(id: ReactNode) {
     if (typeof id !== 'string' || !id) {
         return null;
     }
@@ -43,7 +43,7 @@ const makeAnchorId = (id: ReactNode) => {
         .replace(/\./g, '-')
         .replace(/&/g, '-')
         .replace(/(^[^一-龥^a-z%])/, 'n$1');
-};
+}
 
 interface ImageCardProps {
     icon?: ReactNode;
@@ -71,7 +71,7 @@ interface ColorImageCardProps extends ImageCardProps {
     color: string;
 }
 
-const ColorImageCard = ({ color, icon, title, image, description }: ColorImageCardProps) => {
+function ColorImageCard({ color, icon, title, image, description }: ColorImageCardProps) {
     return (
         <div className={`internationalization-color-image-card internationalization-color-image-card-${color}`}>
             <div className={`internationalization-color-image-card-${color}-title`}>
@@ -86,9 +86,9 @@ const ColorImageCard = ({ color, icon, title, image, description }: ColorImageCa
             </div>
         </div>
     );
-};
+}
 
-const ImageList = ({ title, image, description }: Omit<ImageCardProps, 'icon'>) => {
+function ImageList({ title, image, description }: Omit<ImageCardProps, 'icon'>) {
     return (
         <div className="internationalization-image-list">
             <div className="internationalization-image-list-image">
@@ -102,7 +102,7 @@ const ImageList = ({ title, image, description }: Omit<ImageCardProps, 'icon'>) 
             </div>
         </div>
     );
-};
+}
 
 interface TextCardProps {
     color: string;
@@ -110,7 +110,7 @@ interface TextCardProps {
     description: ReactNode[];
 }
 
-const TextCard = ({ color, title, description }: TextCardProps) => {
+function TextCard({ color, title, description }: TextCardProps) {
     return (
         <div className={`internationalization-text-card internationalization-text-card-${color}`}>
             <div className="internationalization-text-card-title">{title}</div>
@@ -121,7 +121,7 @@ const TextCard = ({ color, title, description }: TextCardProps) => {
             ))}
         </div>
     );
-};
+}
 
 interface ColorCardProps {
     color: string;
@@ -130,7 +130,7 @@ interface ColorCardProps {
     description?: ReactNode;
 }
 
-const ColorCard = ({ color, icon, title, description }: ColorCardProps) => {
+function ColorCard({ color, icon, title, description }: ColorCardProps) {
     return (
         <div className={`internationalization-color-card internationalization-color-card-${color}`}>
             <div className={`internationalization-color-card-${color}-title`}>
@@ -140,26 +140,28 @@ const ColorCard = ({ color, icon, title, description }: ColorCardProps) => {
             <div className="internationalization-color-card-description md markdown gatsby-p">{description}</div>
         </div>
     );
-};
+}
 
-const ColorList = ({ color, title, description }: Omit<ColorCardProps, 'icon'>) => {
+function ColorList({ color, title, description }: Omit<ColorCardProps, 'icon'>) {
     return (
         <div className={`internationalization-color-list internationalization-color-list-${color}`}>
             <div className={`internationalization-color-list-${color}-title`}>{title}</div>
             <div className="md markdown gatsby-p internationalization-color-list-description">{description}</div>
         </div>
     );
-};
+}
 
-const InnerAnchor = ({ data = [] }: { data?: AnchorData }) => (
-    <Anchor size="small" showTooltip scrollMotion offsetTop={200} className="category-anchor" targetOffset={100}>
-        {data.map((item) => (
-            <span key={item.title}>
-                <Anchor.Link href={'#' + makeAnchorId(item.url)} title={item.title} key={item.title} />
-            </span>
-        ))}
-    </Anchor>
-);
+function InnerAnchor({ data = [] }: { data?: AnchorData }) {
+    return (
+        <Anchor size="small" showTooltip scrollMotion offsetTop={200} className="category-anchor" targetOffset={100}>
+            {data.map((item) => (
+                <span key={item.title}>
+                    <Anchor.Link href={'#' + makeAnchorId(item.url)} title={item.title} key={item.title} />
+                </span>
+            ))}
+        </Anchor>
+    );
+}
 
 interface ChildrenProps {
     children?: ReactNode;
@@ -167,7 +169,7 @@ interface ChildrenProps {
 
 const copySuccess = { 'zh-CN': '复制成功', 'en-US': 'Copy Success' };
 
-const makeComponents = (locale: Locale) => {
+function makeComponents(locale: Locale) {
     const AnchorHeading = ({ as: Tag, children }: { as: 'h2' | 'h3'; children?: ReactNode }) => {
         const onIconLinkClick = () => {
             void navigator.clipboard.writeText(`${window.location.href.replace(window.location.hash, '')}#${window.encodeURI(String(children))}`).then(() => {
@@ -217,11 +219,11 @@ const makeComponents = (locale: Locale) => {
         ColorList: ({ color, title, description }: Omit<ColorCardProps, 'icon'>) => <ColorList color={color} title={title} description={description} />,
         ColorImageCard: ({ color, icon, title, image, description }: ColorImageCardProps) => <ColorImageCard color={color} icon={icon} title={title} image={image} description={description} />,
     };
-};
+}
 
 const components = { 'zh-CN': makeComponents('zh-CN'), 'en-US': makeComponents('en-US') };
 
-const DesignSpecificationsTabs = ({ locale }: { locale: Locale }) => {
+function DesignSpecificationsTabs({ locale }: { locale: Locale }) {
     const isChinese = locale === 'zh-CN';
     const [key, setKey] = useState('textDesignSpecification');
     const [innerAnchorData, setInnerAnchorData] = useState<AnchorData>(isChinese ? textDesignSpecificationAnchor : textDesignSpecificationAnchorEn);
@@ -275,7 +277,7 @@ const DesignSpecificationsTabs = ({ locale }: { locale: Locale }) => {
             </Tabs>
         </>
     );
-};
+}
 
 export default function InternationalizationTabs({ locale }: { locale: Locale }) {
     const isChinese = locale === 'zh-CN';

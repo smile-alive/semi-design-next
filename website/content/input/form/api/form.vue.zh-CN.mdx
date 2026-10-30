@@ -20,7 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | trigger | 统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。 | `FieldValidateTriggerType` | `semiGlobalDefault("Form", "trigger")` |
 | stopPropagation | 是否阻止 submit、reset 事件冒泡，用于嵌套 Form 时避免触发外层 Form 的事件。 | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `semiGlobalDefault("Form", "stopPropagation")` |
 | validator | Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise。设置后字段自身的 validator 与 rules 不再生效。返回空字符串或空对象表示通过，失败时返回以字段名为 key 的错误对象。 | <ApiType detail={"((values: Values) => FormValidateResult\u003cValues> \u007c Promise\u003cFormValidateResult\u003cValues>>)"}>Type</ApiType> | `undefined` |
-| form | useForm 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"(FormApi\u003cValues> & FormApiProxyInternals\u003cValues>)"}>Type</ApiType> | `undefined` |
+| form | useForm 返回的 formApi，用于在 Form 外部控制表单。 | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> | `undefined` |
 | id | form 元素的 id，同时写入 x-form-id；不传时自动生成。 | `string` | `undefined` |
 
 **Events**

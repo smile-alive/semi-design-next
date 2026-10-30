@@ -5,7 +5,7 @@ interface Row {
     key: string;
     name: string;
     nameIconSrc: string;
-    size: number | undefined;
+    size?: number;
     owner: string;
     updateTime: string;
     avatarBg: 'grey' | 'red' | 'light-blue';

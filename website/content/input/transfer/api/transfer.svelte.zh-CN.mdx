@@ -1,0 +1,39 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| dataSource | 数据源。type 为 list 时是数据项数组，groupList 时是分组数组，treeList 时是带 children 的树形数据（叶子节点写 `children: []`）。treeList 的左侧树只在传入新数组时更新，原地修改不会生效。 | `TransferDataSource` | `[]` |
+| disabled | 是否禁用。 | `boolean` | `false` |
+| draggable | 是否开启右侧已选项的拖拽排序。排序后 value 与 onChange 的数组顺序随之改变。 | `boolean` | `false` |
+| emptyLeft | 左侧没有数据时的提示。未提供时显示语言包文案，传 false 隐藏该空状态。 | `Snippet \| false` | - |
+| emptyRight | 右侧没有已选项时的提示。未提供时显示语言包文案，传 false 隐藏该空状态。 | `Snippet \| false` | - |
+| emptySearch | 搜索没有结果时的提示。未提供时显示语言包文案，传 false 隐藏该空状态。 | `Snippet \| false` | - |
+| filter | 筛选逻辑。为 false 时不显示搜索框；传入函数时自定义匹配，返回 true 表示保留该项；默认按 label 不区分大小写匹配。treeList 想自定义搜索时需设为 true，并通过 treeProps 的 filterTreeNode 传入匹配函数。 | <ApiType detail={"boolean \u007c ((searchValue: string, item: TransferDataItem) => boolean)"}>Type</ApiType> | - |
+| inputProps | 传给搜索框 Input 的属性，可配置项参考 Input；值与 onChange 由 Transfer 占用，需要外部驱动搜索时调用 search 方法。 | `TransferInputProps` | - |
+| label | 数据项的内容，同时用于左侧条目（treeList 为树行）、右侧已选条目与拖拽副本；默认显示数据项的 label。 | <ApiType detail={"Snippet\u003c[TransferLabelSnippetProps]>"}>Type</ApiType> | - |
+| loading | 左侧选项是否正在加载。 | `boolean` | - |
+| onBlur | 焦点从 Transfer 内部移到外部时调用一次，参数为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不调用，窗口失焦（relatedTarget 为空）时调用。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 已选中的值变化时调用，拖拽排序后也会调用。参数依次为 value 数组与对应的数据项数组。这是 Transfer 自己的回调，不是根元素的原生 change。 | <ApiType detail={"(values: TransferValue, items: TransferDataItem[]) => void"}>Type</ApiType> | - |
+| onDeselect | 取消勾选一项时调用，参数为该数据项。 | <ApiType detail={"(item: TransferDataItem) => void"}>Type</ApiType> | - |
+| onSearch | 搜索框输入内容变化时调用，参数为搜索值。search 方法驱动的搜索不调用。 | <ApiType detail={"(searchValue: string) => void"}>Type</ApiType> | - |
+| onSelect | 勾选一项时调用，参数为该数据项。 | <ApiType detail={"(item: TransferDataItem) => void"}>Type</ApiType> | - |
+| pagination | 左侧面板的分页配置，仅对 list 与 groupList 生效。onPageChange 在对象内。 | `TransferPagination` | - |
+| selectedHeader | 自定义右侧面板头部。 | <ApiType detail={"Snippet\u003c[TransferSelectedHeaderSnippetProps]>"}>Type</ApiType> | - |
+| selectedItem | 完全自定义右侧单个已选项。draggable 时 handle 是 `Snippet<[Snippet]>`：把拖拽图标写成一个 snippet，用 `{@render handle?.(grip)}` 包住它。treeList 且 showPath 时 fullPath 为完整路径。 | <ApiType detail={"Snippet\u003c[TransferSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| selectedPanel | 完全自定义右侧已选面板。onSortEnd 在自行实现拖拽排序结束后调用。 | <ApiType detail={"Snippet\u003c[TransferSelectedPanelSnippetProps]>"}>Type</ApiType> | - |
+| showPath | 仅 treeList 有效，控制右侧已选项是否显示从根节点到自身的选择路径。 | `boolean` | `false` |
+| sourceHeader | 自定义左侧面板头部。leafOnlyNum 仅 treeList 提供。 | <ApiType detail={"Snippet\u003c[TransferSourceHeaderSnippetProps]>"}>Type</ApiType> | - |
+| sourceItem | 完全自定义左侧单个候选项。index 是过滤与分页后可见条目中的下标，不是在 dataSource 中的位置。 | <ApiType detail={"Snippet\u003c[TransferSourceItemSnippetProps]>"}>Type</ApiType> | - |
+| sourcePanel | 完全自定义左侧候选面板，可复用 Transfer 的筛选与选择逻辑。 | <ApiType detail={"Snippet\u003c[TransferSourcePanelSnippetProps]>"}>Type</ApiType> | - |
+| treeProps | 仅 treeList 有效，传给左侧 Tree 的属性，会覆盖默认的 multiple、disableStrictly、leafOnly、filterTreeNode、defaultExpandAll。选中值、树数据由 Transfer 决定，value、onChange、keyMaps、treeData、treeDataSimpleJson、onChangeWithObject 会被忽略；Tree 的 snippet 只转发 label。 | `TransferTreeProps` | - |
+| type | 穿梭框类型，可选 list、groupList、treeList。 | `TransferType` | `"list"` |
+| value | 已选中项的 value 数组，可用 bind:value 绑定。只传值时作为初始选中项，之后由组件自己维护；`bind:value={get, set}` 使其完全受控，数组顺序就是右侧的显示顺序。 | `TransferValue` | - |
+| virtualize | 右侧已选列表虚拟化，仅在使用默认右侧面板且 draggable 为 false 时生效。height 为数字时直接生效，为字符串（如 100%）时按面板剩余高度测量。 | `TransferVirtualize` | - |
+
+**Methods**
+
+| 方法   | 说明                                  | 类型                                                       |
+| ------ | ------------------------------------- | ---------------------------------------------------------- |
+| search | 按输入了该值来搜索；不调用 onSearch。 | <ApiType detail={"(input: string) => void"}>Type</ApiType> |

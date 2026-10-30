@@ -1,0 +1,95 @@
+{
+    "side-sheet": {
+        "source": "packages/semi-ui-svelte/src/side-sheet/side-sheet.svelte",
+        "props": {
+            "afterVisibleChange": {
+                "zh-CN": "显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次。",
+                "en-US": "Called with true right after the commit that shows the sheet, without waiting for the enter animation. Called with false after the leave animation, and once with false if the sheet is unmounted while shown."
+            },
+            "bodyStyle": { "zh-CN": "面板内容区的样式，字符串。", "en-US": "Style of the panel body, as a string." },
+            "canVerticalSetWidth": {
+                "zh-CN": "placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。",
+                "en-US": "Whether width applies when placement is top or bottom. By default those sheets span the full width."
+            },
+            "closable": {
+                "zh-CN": "是否显示右上角的关闭按钮。",
+                "en-US": "Whether the close button in the corner is shown."
+            },
+            "closeOnEsc": {
+                "zh-CN": "是否允许按 Esc 关闭面板。",
+                "en-US": "Whether Esc closes the sheet."
+            },
+            "disableScroll": {
+                "zh-CN": "带遮罩且渲染在 document.body 中时是否禁止 body 滚动，即给 body 添加 overflow: hidden。",
+                "en-US": "Whether body scrolling is locked (overflow: hidden on body) while a masked sheet is rendered in document.body."
+            },
+            "getPopupContainer": {
+                "zh-CN": "指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative；这会改变浮层的 DOM 位置，不改变视图位置。",
+                "en-US": "Parent element the sheet is rendered into. A custom container needs position: relative; this changes where the sheet sits in the DOM, not where it is shown."
+            },
+            "headerStyle": { "zh-CN": "面板头部的样式，字符串。", "en-US": "Style of the panel header, as a string." },
+            "height": {
+                "zh-CN": "高度，placement 为 top、bottom 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时为 448。",
+                "en-US": "Height, used when placement is top or bottom. A number is in pixels; a string is any valid CSS length. 448 when omitted."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留面板内部节点而不销毁。",
+                "en-US": "Whether the sheet content stays mounted while closed."
+            },
+            "mask": {
+                "zh-CN": "是否显示遮罩；为 false 时允许操作外部区域。",
+                "en-US": "Whether the mask is shown. When false the content outside stays operable."
+            },
+            "maskClosable": {
+                "zh-CN": "是否允许点击遮罩关闭面板。",
+                "en-US": "Whether clicking the mask closes the sheet."
+            },
+            "maskStyle": { "zh-CN": "遮罩的样式，字符串。", "en-US": "Style of the mask, as a string." },
+            "motion": { "zh-CN": "是否开启动画。", "en-US": "Whether animation is enabled." },
+            "onCancel": {
+                "zh-CN": "用户通过关闭按钮、遮罩或 Esc 关闭面板时触发，visible 已先被写回 false；参数为原生 MouseEvent，按 Esc 时为原生 KeyboardEvent。",
+                "en-US": "Called when the user closes the sheet with the close button, the mask or Esc, after visible has been written back to false. The argument is the native MouseEvent, or the native KeyboardEvent for Esc."
+            },
+            "placement": {
+                "zh-CN": "面板滑出的位置。",
+                "en-US": "Edge the sheet slides in from."
+            },
+            "size": {
+                "zh-CN": "尺寸，small 为 448px、medium 为 684px、large 为 920px，仅 placement 为 left、right 时生效。",
+                "en-US": "Size: small is 448px, medium 684px, large 920px. Used only when placement is left or right."
+            },
+            "style": {
+                "zh-CN": "落在 role=dialog 元素上的样式，字符串。",
+                "en-US": "Style that lands on the role=dialog element, as a string."
+            },
+            "title": {
+                "zh-CN": "标题，纯文本或 snippet，同时作为对话框的可访问名称。声明为 prop，不会作为原生 title 属性落到元素上。",
+                "en-US": "Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute."
+            },
+            "visible": {
+                "zh-CN": "面板是否可见，配合 bind:visible 使用。",
+                "en-US": "Whether the sheet is visible, used with bind:visible."
+            },
+            "width": {
+                "zh-CN": "宽度，placement 为 left、right 时生效；数字按像素处理，字符串为合法 CSS 长度。未设置时由 size 决定。",
+                "en-US": "Width, used when placement is left or right. A number is in pixels; a string is any valid CSS length. Decided by size when omitted."
+            },
+            "zIndex": { "zh-CN": "弹层的 z-index。", "en-US": "z-index of the layer." },
+            "children": { "zh-CN": "面板的正文，写在标签内。", "en-US": "Body of the sheet, written inside the tag." },
+            "footer": {
+                "zh-CN": "面板底部的 snippet。内容为空时不渲染底部。",
+                "en-US": "Snippet for the footer of the sheet. Nothing is rendered when it is empty."
+            },
+            "closeIcon": {
+                "zh-CN": "关闭按钮中图标的 snippet；隐藏按钮用 closable 为 false。",
+                "en-US": "Snippet for the icon inside the close button; hide the button with closable set to false."
+            }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回 Portal 内的最外层 .semi-sidesheet 元素，未渲染时为 null。",
+                "en-US": "Returns the outer .semi-sidesheet element inside the portal, or null while nothing is rendered."
+            }
+        }
+    }
+}

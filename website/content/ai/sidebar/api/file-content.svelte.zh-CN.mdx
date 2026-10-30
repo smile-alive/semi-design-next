@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                      | 类型                                                                                  | 默认值 |
+| --------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------ |
+| activeKey | 当前展开的文件面板 key，可用 `bind:activeKey` 绑定。                                      | `string \| string[]`                                                                  | -      |
+| files     | 文件条目列表，以只读方式渲染，每项的 extensions 与 imgUploadProps 会传给其预览。          | `FileItemData[]`                                                                      | `[]`   |
+| onChange  | 通过箭头展开或收起面板时调用，参数为当前展开的 key。                                      | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>        | -      |
+| onExpand  | 点击面板头部旁的展开按钮时调用，参数为点击事件、对应条目和 file。未传入时不渲染展开按钮。 | <ApiType detail={"(event: MouseEvent, item: T, mode: string) => void"}>Type</ApiType> | -      |

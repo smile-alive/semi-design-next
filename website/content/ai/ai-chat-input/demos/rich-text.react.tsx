@@ -15,7 +15,7 @@ export default function AIChatInputDemo() {
 
     const setTemplate = useCallback(
         (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
-            const index = Number((event.target as HTMLElement).dataset.index);
+            const index = Number(event.target instanceof HTMLElement ? event.target.dataset.index : undefined);
             setActiveIndex(index);
             const content = Object.values(temp)[index];
             if (ref.current) {

@@ -1,0 +1,241 @@
+{
+    "feedback": {
+        "source": "packages/semi-ui-svelte/src/feedback/feedback.svelte",
+        "props": {
+            "afterClose": {
+                "zh-CN": "弹层完全关闭后调用，两种模式都会调用。",
+                "en-US": "Called after the panel has fully closed, in both modes."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "显示状态变化且动画结束后调用，仅 popup 模式调用。",
+                "en-US": "Called once the shown state has changed and the animation has ended. Only popup mode calls it."
+            },
+            "cancelButtonProps": {
+                "zh-CN": "取消按钮的属性。loading 取内置的挂起态与使用方的 loading 任一为真；onclick 先于内置处理调用，不会替换内置处理。",
+                "en-US": "Props of the cancel button. It is loading when either the built-in pending state or your loading says so. onclick runs before the built-in handling, which still runs."
+            },
+            "bodyStyle": {
+                "zh-CN": "内容区的样式字符串，两种模式通用。",
+                "en-US": "Style string of the body, for both modes."
+            },
+            "canVerticalSetWidth": {
+                "zh-CN": "仅 popup 模式：placement 为 top、bottom 时 width 是否生效；默认这两种位置横向铺满。",
+                "en-US": "Popup mode only: whether width applies when placement is top or bottom. By default those sheets span the full width."
+            },
+            "cancelLoading": {
+                "zh-CN": "仅 modal 模式：取消按钮是否加载中；不传时跟随 onCancel 返回的 Promise，显式传入 false 关闭该行为。",
+                "en-US": "Modal mode only: whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off."
+            },
+            "cancelText": {
+                "zh-CN": "仅 modal 模式：取消按钮文字，缺省取语言包 Modal.cancel。",
+                "en-US": "Modal mode only: cancel button text. Defaults to the locale entry Modal.cancel."
+            },
+            "centered": {
+                "zh-CN": "仅 modal 模式：是否垂直居中显示。",
+                "en-US": "Modal mode only: whether the dialog is vertically centered."
+            },
+            "closable": {
+                "zh-CN": "是否显示右上角的关闭按钮。",
+                "en-US": "Whether the close button in the corner is shown."
+            },
+            "closeOnEsc": {
+                "zh-CN": "是否允许按 Esc 取消。",
+                "en-US": "Whether Esc cancels the feedback."
+            },
+            "confirmLoading": {
+                "zh-CN": "仅 modal 模式：确认按钮是否加载中；不传时跟随 onOk 返回的 Promise，显式传入 false 关闭该行为。",
+                "en-US": "Modal mode only: whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off."
+            },
+            "disableScroll": {
+                "zh-CN": "仅 popup 模式：带遮罩且渲染在 document.body 中时是否禁止 body 滚动。",
+                "en-US": "Popup mode only: whether body scrolling is locked while a masked sheet is rendered in document.body."
+            },
+            "footerFill": {
+                "zh-CN": "仅 modal 模式：默认页脚的两个按钮是否撑满排列。",
+                "en-US": "Modal mode only: whether the two buttons of the default footer fill the row."
+            },
+            "fullScreen": {
+                "zh-CN": "仅 modal 模式：是否全屏显示，开启后 width、height 不再生效。",
+                "en-US": "Modal mode only: whether the dialog fills the screen. width and height are ignored."
+            },
+            "getPopupContainer": {
+                "zh-CN": "指定弹层渲染到的父级 DOM。自定义容器需要设置 position: relative。",
+                "en-US": "Parent element the layer is rendered into. A custom container needs position: relative."
+            },
+            "hasCancel": {
+                "zh-CN": "仅 modal 模式：默认页脚是否显示取消按钮。",
+                "en-US": "Modal mode only: whether the default footer shows the cancel button."
+            },
+            "headerStyle": {
+                "zh-CN": "仅 popup 模式：面板头部的样式字符串。",
+                "en-US": "Popup mode only: style string of the panel header."
+            },
+            "height": {
+                "zh-CN": "高度，数字按像素处理，字符串为合法 CSS 长度；popup 模式仅 placement 为 top、bottom 时生效。",
+                "en-US": "Height. A number is in pixels; a string is any valid CSS length. In popup mode it applies only when placement is top or bottom."
+            },
+            "keepDOM": {
+                "zh-CN": "关闭时是否保留内部节点而不销毁。",
+                "en-US": "Whether the content stays mounted while closed."
+            },
+            "lazyRender": {
+                "zh-CN": "仅 modal 模式：配合 keepDOM 使用；为 true 时，首次显示之前不渲染对话框。",
+                "en-US": "Modal mode only: used with keepDOM. When true, the dialog is not rendered until it is first shown."
+            },
+            "mask": {
+                "zh-CN": "是否显示遮罩；popup 模式默认没有遮罩，页面其余部分保持可用。",
+                "en-US": "Whether the mask is shown; in popup mode there is no mask by default and the rest of the page stays usable."
+            },
+            "maskClosable": {
+                "zh-CN": "是否允许点击遮罩取消。",
+                "en-US": "Whether a click on the mask cancels the feedback."
+            },
+            "maskFixed": {
+                "zh-CN": "仅 modal 模式：遮罩限定在自定义容器内时，是否仍以 fixed 定位覆盖整个视口并按模态处理。",
+                "en-US": "Modal mode only: whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal."
+            },
+            "maskStyle": {
+                "zh-CN": "遮罩的样式字符串。",
+                "en-US": "Style string of the mask."
+            },
+            "modalContentClass": {
+                "zh-CN": "仅 modal 模式：对话框内容元素的类名。",
+                "en-US": "Modal mode only: class name of the dialog content element."
+            },
+            "motion": {
+                "zh-CN": "是否启用进出场动画。",
+                "en-US": "Whether the enter and leave animations run."
+            },
+            "okText": {
+                "zh-CN": "仅 modal 模式：确认按钮文字，缺省取语言包 Modal.confirm。",
+                "en-US": "Modal mode only: ok button text. Defaults to the locale entry Modal.confirm."
+            },
+            "okType": {
+                "zh-CN": "仅 modal 模式：确认按钮的类型。",
+                "en-US": "Modal mode only: type of the ok button."
+            },
+            "placement": {
+                "zh-CN": "仅 popup 模式：面板滑出的位置。",
+                "en-US": "Popup mode only: edge the sheet slides in from."
+            },
+            "preventScroll": {
+                "zh-CN": "仅 modal 模式：组件内部调用 focus 时是否阻止浏览器滚动到被聚焦元素。",
+                "en-US": "Modal mode only: whether the focus calls made by the component avoid scrolling the focused element into view."
+            },
+            "role": {
+                "zh-CN": "仅 modal 模式：对话框的 role，可选 dialog 或 alertdialog。",
+                "en-US": "Modal mode only: role of the dialog, dialog or alertdialog."
+            },
+            "size": {
+                "zh-CN": "宽度档位：small 为 448px，medium 为 684px，large 为 920px；popup 模式仅 placement 为 left、right 时生效。",
+                "en-US": "Width preset: small is 448px, medium 684px, large 920px. In popup mode it applies only when placement is left or right."
+            },
+            "style": {
+                "zh-CN": "样式字符串；落点见下方说明。",
+                "en-US": "Style string; see the note below for where it lands."
+            },
+            "width": {
+                "zh-CN": "宽度，数字按像素处理，字符串为合法 CSS 长度；不传时由 size 决定。",
+                "en-US": "Width. A number is in pixels; a string is any valid CSS length. When omitted, size decides."
+            },
+            "zIndex": {
+                "zh-CN": "弹层的 z-index。",
+                "en-US": "z-index of the layer."
+            },
+            "checkboxExtra": {
+                "zh-CN": "自定义 checkboxGroupProps.options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。",
+                "en-US": "Snippet for the extra text of each item in checkboxGroupProps.options, with `{ option, index }` as its argument."
+            },
+            "checkboxGroupProps": {
+                "zh-CN": "type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",
+                "en-US": "Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label."
+            },
+            "checkboxLabel": {
+                "zh-CN": "自定义 checkboxGroupProps.options 中每一项文本的 snippet，参数为 `{ option, index }`。",
+                "en-US": "Snippet for the label of each item in checkboxGroupProps.options, with `{ option, index }` as its argument."
+            },
+            "children": {
+                "zh-CN": "type 为 custom 时的反馈内容。",
+                "en-US": "Feedback content for type custom."
+            },
+            "closeIcon": {
+                "zh-CN": "关闭按钮中的图标。",
+                "en-US": "Icon inside the close button."
+            },
+            "content": {
+                "zh-CN": "包裹或替换内置内容的 snippet，任何 type 都可用，参数 `{ content }` 是内置内容，用 `{@render content()}` 放置。",
+                "en-US": "Snippet that wraps or replaces the built-in content for any type. Its argument `{ content }` is the built-in content; place it with `{@render content()}`."
+            },
+            "footer": {
+                "zh-CN": "替换默认的取消、提交按钮；传入 `null` 时不渲染页脚区域。",
+                "en-US": "Replaces the default cancel and submit buttons; `null` renders no footer area."
+            },
+            "header": {
+                "zh-CN": "仅 modal 模式：完全替换默认头部，传入 `null` 时不渲染头部。",
+                "en-US": "Modal mode only: replaces the whole default header; `null` renders no header."
+            },
+            "icon": {
+                "zh-CN": "仅 modal 模式：标题前的图标。",
+                "en-US": "Modal mode only: icon before the title."
+            },
+            "modal": {
+                "zh-CN": "仅 modal 模式：自定义渲染对话框本身，参数 `{ modal }` 是 `role=\"dialog\"` 元素，用 `{@render modal()}` 放置。",
+                "en-US": "Modal mode only: custom rendering of the dialog itself. Its argument `{ modal }` is the `role=\"dialog\"` element; place it with `{@render modal()}`."
+            },
+            "mode": {
+                "zh-CN": "展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。",
+                "en-US": "Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode."
+            },
+            "okButtonProps": {
+                "zh-CN": "提交按钮的属性。未给 disabled 时按值禁用（值为空时禁用），给出后以使用方的值为准，type 为 custom 时用它控制提交；loading 取内置的挂起态与使用方的 loading 任一为真；onclick 先于内置处理调用，不会替换内置处理。",
+                "en-US": "Props of the submit button. Without disabled, it is disabled while the value is empty; a disabled you give wins, which is how the custom type controls submission. It is loading when either the built-in pending state or your loading says so. onclick runs before the built-in handling, which still runs."
+            },
+            "onCancel": {
+                "zh-CN": "取消按钮、关闭按钮、Esc（modal 模式另有点击遮罩）触发；按 Esc 时参数为原生 KeyboardEvent。返回后清空已填写的值并把 visible 写回 false；返回 Promise 时取消按钮保持加载，fulfill 后才清空并写回，reject 时保持打开。",
+                "en-US": "Called by the cancel button, the close button, Esc and, in modal mode, a click on the mask; the argument is a native KeyboardEvent for Esc. Once it returns, the filled-in value is cleared and visible is written back as false. A returned Promise keeps the cancel button loading; both happen only once it fulfills, and a rejection keeps the feedback open."
+            },
+            "onOk": {
+                "zh-CN": "点击提交按钮时调用，返回后清空已填写的值；返回 Promise 时按钮保持加载，fulfill 后才清空，reject 时保留。组件不会自行关闭，由使用方把 visible 设为 false。",
+                "en-US": "Called when the submit button is clicked; the filled-in value is cleared once it returns. A returned Promise keeps the button loading and the value is cleared only once it fulfills, and kept when it rejects. The component never closes itself on submit; the caller sets visible to false."
+            },
+            "onValueChange": {
+                "zh-CN": "反馈内容变化时调用，参数为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。",
+                "en-US": "Called when the feedback content changes, with the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox."
+            },
+            "radioExtra": {
+                "zh-CN": "自定义 radioGroupProps.options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。",
+                "en-US": "Snippet for the extra text of each item in radioGroupProps.options, with `{ option, index }` as its argument."
+            },
+            "radioGroupProps": {
+                "zh-CN": "type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",
+                "en-US": "Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label."
+            },
+            "radioLabel": {
+                "zh-CN": "自定义 radioGroupProps.options 中每一项文本的 snippet，参数为 `{ option, index }`。",
+                "en-US": "Snippet for the label of each item in radioGroupProps.options, with `{ option, index }` as its argument."
+            },
+            "textAreaProps": {
+                "zh-CN": "type 为 text 与 emoji 时多行输入框的属性；其中的 onChange 照常调用，不会替换内置处理。",
+                "en-US": "Props of the multi-line input for the text and emoji types; its onChange is called as usual and does not replace the built-in handling."
+            },
+            "title": {
+                "zh-CN": "标题，可以是字符串或 snippet，同时作为对话框的可访问名称。",
+                "en-US": "Title, a string or a snippet, which also names the dialog."
+            },
+            "type": {
+                "zh-CN": "反馈内容的类型。custom 时内容写在子节点中。",
+                "en-US": "Type of the feedback content. For custom, the content goes in the children."
+            },
+            "visible": {
+                "zh-CN": "是否显示，可用 `bind:visible` 双向绑定；取消路径（取消按钮、关闭按钮、Esc，modal 模式另有遮罩）会把它写回 `false`，提交按钮不会关闭。",
+                "en-US": "Whether the feedback is shown; bind it with `bind:visible`. A cancel path (cancel button, close button, Esc, and the mask in modal mode) writes `false` back; the submit button never closes it."
+            }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "Portal 内 Modal 或 SideSheet 的最外层元素，未渲染时为 null。",
+                "en-US": "The outermost element of the Modal or SideSheet inside the portal, or null while nothing is rendered."
+            }
+        }
+    }
+}

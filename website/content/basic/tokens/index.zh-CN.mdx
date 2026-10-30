@@ -1,5 +1,5 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 order: 18
 title: 设计变量
 icon: doc-token
@@ -246,5 +246,5 @@ Design Token 设计变量实际上是将设计中的基础元素与具体的样�
 
 - 亮色值写在 `:root` 上，暗色值写在 `[theme-mode='dark']` 上，见[暗色模式](/zh-CN/react/advanced/dark-mode)。
 - Semi 的样式位于 `@layer semi` 中，应用中不分层的 CSS 规则总是优先，可以直接覆盖某个组件的具体样式，不需要 `!important`。
-- 使用 Tailwind 时，引入 `@fibrae/semi-ui-react/tailwind.css`（Vue 为 `@fibrae/semi-ui-vue/tailwind.css`）后，这些变量会映射为 Tailwind 的主题值（如 `bg-semi-color-primary`）。
+- 使用 Tailwind 时，引入 `@fibrae/semi-ui-react/tailwind.css`（Vue 为 `@fibrae/semi-ui-vue/tailwind.css`，Solid 为 `@fibrae/semi-ui-solid/tailwind.css`，Svelte 为 `@fibrae/semi-ui-svelte/tailwind.css`）后，这些变量会映射为 Tailwind 的主题值（如 `bg-semi-color-primary`）。
 - 组件文档中的 Design Token 表列出的是组件内部的 Sass 变量，不能覆写。

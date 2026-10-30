@@ -1,0 +1,13 @@
+**Props**
+
+| 属性     | 说明                                                                    | 类型               | 默认值   |
+| -------- | ----------------------------------------------------------------------- | ------------------ | -------- |
+| align    | Label 文本的对齐方式。                                                  | `string`           | `"left"` |
+| children | Label 内容，优先于 text。                                               | `Snippet`          | -        |
+| disabled | 是否为禁用样式。                                                        | `boolean`          | -        |
+| extra    | 跟随在 label 文本后的内容。                                             | `Snippet`          | -        |
+| name     | 所标注控件的 id，写入 label 的 for 属性。                               | `string`           | -        |
+| optional | 是否在文本后追加语言包中的可选标识。为 true 时不再显示 required 的 \*。 | `boolean`          | `false`  |
+| required | 是否显示必填的 \* 号。                                                  | `boolean`          | `false`  |
+| text     | Label 文本，`children` snippet 优先。                                   | `string \| number` | -        |
+| width    | Label 宽度，数字单位为 px。                                             | `number \| string` | -        |

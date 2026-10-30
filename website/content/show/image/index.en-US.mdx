@@ -11,6 +11,8 @@ import ImageVueApi from './api/image.vue.en-US.mdx';
 import ImagePreviewVueApi from './api/image-preview.vue.en-US.mdx';
 import ImageSolidApi from './api/image.solid.en-US.mdx';
 import ImagePreviewSolidApi from './api/image-preview.solid.en-US.mdx';
+import ImageSvelteApi from './api/image.svelte.en-US.mdx';
+import ImagePreviewSvelteApi from './api/image-preview.svelte.en-US.mdx';
 
 ## Demos
 
@@ -42,6 +44,16 @@ import { Image, ImagePreview } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Image, ImagePreview } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 You can get an image with preview function by specifying the image path through `src`, and specify the width and height of the image through `width`, `height`
@@ -68,6 +80,12 @@ You can customize the placeholder for failed loading through `fallback`, which s
 
 </Framework>
 
+<Framework only="svelte">
+
+`fallback` takes a string or a snippet: a string is the URL of the image shown when loading fails, and a snippet renders custom content; without it, the default failure icon is shown
+
+</Framework>
+
 <Demo id="fallback" />
 
 ### Progressive loading
@@ -90,6 +108,12 @@ Large images can be progressively loaded through `placeholder`: the JSX element 
 
 </Framework>
 
+<Framework only="svelte">
+
+Large images can be progressively loaded through the `placeholder` snippet: what it renders is shown until the image has loaded
+
+</Framework>
+
 <Demo id="progressive" />
 
 ### Customize the preview image
@@ -101,6 +125,12 @@ You can customize the preview image by setting the `src` of the Image component 
 ### Multi-image preview
 
 Use ImagePreview to wrap Image to achieve multi-image preview
+
+<Framework only="svelte">
+
+The `src` array of ImagePreview defines the images of the group and their order; an Image does not register itself with the ImagePreview. An Image opens the preview at the position of its own `src` (or `preview.src`) in the list, and an Image whose `src` is not in the list previews on its own. Use `titles` and `alts` to set the title and alternative text of each image, one entry per `src`.
+
+</Framework>
 
 <Demo id="multiple" />
 
@@ -121,6 +151,12 @@ The preview component ImagePreview can be used alone, through `v-model:visible` 
 <Framework only="solid">
 
 The preview component ImagePreview can be used alone, through `visible` and `onVisibleChange` to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` (a JSX element) to set the title at the top of the preview
+
+</Framework>
+
+<Framework only="svelte">
+
+The preview component ImagePreview can be used alone, through `bind:visible` (or `visible` with `onVisibleChange`) to control whether to preview, `src` to pass in the image that can be previewed, and `previewTitle` (a string) to set the title at the top of the preview
 
 </Framework>
 
@@ -154,6 +190,12 @@ The bottom action area of the preview can be customized with the `#previewMenu` 
 
 </Framework>
 
+<Framework only="svelte">
+
+The bottom action area of the preview can be customized with the `previewMenu` snippet, which receives MenuProps. Images wrapped by ImagePreview use the snippet of ImagePreview; a standalone Image uses its own snippet of the same name
+
+</Framework>
+
 <Demo id="render-preview-menu" />
 
 <Framework only="react">
@@ -171,6 +213,12 @@ If you want to customize the bottom operation area based on the default one, use
 <Framework only="solid">
 
 To customize the bottom action area based on the default one, get the default JSX elements through the `menuItems` argument of `renderPreviewMenu`: an array in the order previous, page counter, next, zoom out, zoom slider, zoom in, original size / fit to page, rotate and download, which can be rendered in any position.
+
+</Framework>
+
+<Framework only="svelte">
+
+To customize the bottom action area based on the default one, render the `menuItems` snippet from the MenuProps: it renders all the default items at once, in the order previous, page counter, next, zoom out, zoom slider, zoom in, original size / fit to page, rotate and download, so custom content can be placed before or after them but not between them. The default items are separated by dividers only when no `previewMenu` is given.
 
 </Framework>
 
@@ -193,6 +241,12 @@ The `#title="{ title, index }"` slot replaces the content of the title section a
 <Framework only="solid">
 
 `renderHeader` customizes the top area of the preview; it receives the current title (a JSX element) and returns a new JSX element
+
+</Framework>
+
+<Framework only="svelte">
+
+The `title` snippet, which receives `{ title, index }`, replaces the content of the title section at the top of the preview. When there is a title, the preview dialog is named by that section through `aria-labelledby`, so its name is the text the snippet renders; without a title the name is "Preview" from the locale. Use the `closeIcon` snippet to replace the close icon, and the `leftIcon` and `rightIcon` snippets, which receive `{ index }`, to replace the arrow icons
 
 </Framework>
 
@@ -228,6 +282,14 @@ A number for `width` or `height` is in px. `class` and `style` land on the root 
 
 </Framework>
 
+<Framework only="svelte">
+
+<ImageSvelteApi />
+
+A number for `width` or `height` is in px. `class` and `style` land on the root element; other undeclared native attributes and event handlers land on the inner img. The `preview` object accepts the props and callbacks of ImagePreview (`onVisibleChange`, `onChange`, `onClose`, `onZoomIn`, `onZoomOut`, `onPrev`, `onNext`, `onRatioChange`, `onRotateLeft`, `onDownload`, `onDownloadError`), except `lazyLoad`, `lazyLoadMargin`, `class` and `style` (use `previewCls` and `previewStyle` to style the preview). Custom nodes do not go in `preview`; use the snippets of Image. When `preview.src` is an array, switching images returns to "fit to page". An Image inside an ImagePreview ignores the `title`, `previewMenu`, `leftIcon`, `rightIcon` and `closeIcon` snippets; the snippets of the ImagePreview apply.
+
+</Framework>
+
 ### ImagePreview
 
 <Framework only="react">
@@ -251,6 +313,14 @@ Other native attributes (such as `aria-label` and `aria-labelledby`) land on the
 <ImagePreviewSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `aria-label` and `aria-labelledby`) land on the group root div; with `aria-label` or `aria-labelledby` and no `role`, the root gets `role="group"`. The preview dialog is rendered into `getPopupContainer` (`document.body` by default) and is named by `previewTitle`, or by the locale when there is no title.
+
+</Framework>
+
+<Framework only="svelte">
+
+<ImagePreviewSvelteApi />
+
+`class`, `style` and native attributes (such as `aria-label` and `aria-labelledby`) land on the group root div; with `aria-label` or `aria-labelledby` and no `role`, the root gets `role="group"`. The preview dialog is rendered into `getPopupContainer` (`document.body` by default) and is named by `previewTitle`, or by the locale when there is no title.
 
 </Framework>
 
@@ -341,6 +411,34 @@ Other native attributes (such as `aria-label` and `aria-labelledby`) land on the
 | menuItems       | The default bottom operation area items as a JSX element array, which can be rendered as they are | JSX.Element[]                |
 
 The fields are read live: read `menu.disabledPrev` and the other fields directly in JSX expressions instead of destructuring the `menu` argument.
+
+</Framework>
+
+<Framework only="svelte">
+
+| Properties      | Instructions                                                                                     | Type                         |
+| --------------- | ------------------------------------------------------------------------------------------------ | ---------------------------- |
+| curPage         | Current image page subscript                                                                     | number                       |
+| disabledPrev    | Whether to disable the left toggle button                                                        | boolean                      |
+| disabledNext    | Whether to disable the right toggle button                                                       | boolean                      |
+| disabledZoomIn  | Whether the zoom is at its maximum (the zoom-in button is disabled)                              | boolean                      |
+| disabledZoomOut | Whether the zoom is at its minimum (the zoom-out button is disabled)                             | boolean                      |
+| disableDownload | Whether to disable the download button                                                           | boolean                      |
+| max             | The maximum zoom of the image (percentage)                                                       | number                       |
+| min             | The minimum zoom of the image (percentage)                                                       | number                       |
+| onDownload      | Call function when the image is downloaded                                                       | () => void                   |
+| onZoomIn        | Call function when the image is zoomed in                                                        | () => void                   |
+| onZoomOut       | Call function when the image is zoomed out                                                       | () => void                   |
+| onRatioClick    | Call function to switch between the original size and fit to page                                | () => void                   |
+| onPrev          | Call function to switch the picture forward                                                      | () => void                   |
+| onNext          | Call function to switch the picture backward                                                     | () => void                   |
+| onRotateLeft    | Call function to rotate the image counterclockwise                                               | () => void                   |
+| onRotateRight   | Call function to rotate the image clockwise                                                      | () => void                   |
+| ratio           | Original size or Fit to page button state                                                        | `"adaptation" \| "realSize"` |
+| step            | Step size of zooming (percentage)                                                                | number                       |
+| totalNum        | The total number of images that can be previewed                                                 | number                       |
+| zoom            | Current zoom of the image (percentage)                                                           | number                       |
+| menuItems       | Snippet that renders all the default bottom operation area items at once, in their default order | Snippet                      |
 
 </Framework>
 

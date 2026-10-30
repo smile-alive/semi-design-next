@@ -84,7 +84,7 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
-const getData = () => {
+function getData() {
     const data: Row[] = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -99,7 +99,7 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 // sticky needs the page as its scroll container; the demo preview box is overflow:auto, so this sits outside the panel
 export default function StickyHeaderTable() {

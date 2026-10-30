@@ -8,6 +8,7 @@ brief: 加载器组件用于告知用户内容正在加载且需要一段不确�
 import SpinReactApi from './api/spin.react.zh-CN.mdx';
 import SpinVueApi from './api/spin.vue.zh-CN.mdx';
 import SpinSolidApi from './api/spin.solid.zh-CN.mdx';
+import SpinSvelteApi from './api/spin.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { Spin } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Spin } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Spin } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -69,6 +80,12 @@ import { Spin } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `tip` snippet 可设置当 Spin 用作包裹元素时的文字，被包裹的内容写在 Spin 标签内，即 `children` snippet。
+
+</Framework>
+
 <Demo id="tip" />
 
 ### 自定义指示符
@@ -88,6 +105,12 @@ import { Spin } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 可以通过设置 `indicator` 属性自定义 Spin 的指示符样式。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `indicator` snippet 自定义 Spin 的指示符样式。
 
 </Framework>
 
@@ -129,6 +152,14 @@ import { Spin } from '@fibrae/semi-ui-solid';
 <SpinSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在根元素 `div` 上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SpinSvelteApi />
+
+`class`、`style` 与原生属性和事件落在根元素 `div` 上。
 
 </Framework>
 

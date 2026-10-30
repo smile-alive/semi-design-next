@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性              | 说明                                                                                                        | 类型                                                                              | 默认值  |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------- |
+| children          | 替换按键提示的内容，写在标签内。传了 children 就不渲染默认的按键提示，快捷键仍然有效。                      | `Snippet`                                                                         | -       |
+| content           | 显示的按键文字，缺省显示 hotKeys。                                                                          | `string[]`                                                                        | -       |
+| getListenerTarget | 返回监听 keydown 的元素；缺省或返回 null、undefined 时使用 document.body。                                  | <ApiType detail={"() => HTMLElement \u007c null \u007c undefined"}>Type</ApiType> | -       |
+| hotKeys           | 快捷键组合：任意个修饰键加一个普通键，取值参考 KeyboardEvent.key。组合不合法时在挂载或 hotKeys 变化时抛错。 | `KeyboardEvent['key'][]`                                                          | -       |
+| onHotKey          | 按下完整的快捷键组合时的回调，参数为原生 KeyboardEvent。                                                    | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType>                 | -       |
+| preventDefault    | 是否阻止快捷键的默认行为。                                                                                  | `boolean`                                                                         | `false` |

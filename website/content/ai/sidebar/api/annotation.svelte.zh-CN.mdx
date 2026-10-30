@@ -1,0 +1,30 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性               | 说明                                                                                                                                  | 类型                                                                                 | 默认值 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------ |
+| activeKey          | 当前展开的分组 key，可用 `bind:activeKey` 绑定。                                                                                      | `string \| string[]`                                                                 | -      |
+| afterVisibleChange | 显示或隐藏动画结束后调用，参数为当前是否可见。                                                                                        | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>                        | -      |
+| closeOnEsc         | 按下 Esc 键时是否调用 onCancel。                                                                                                      | `boolean`                                                                            | -      |
+| defaultSize        | 初始宽高，仅在 resizable 为 true 时生效。                                                                                             | `{ width?: number \| string; height?: number \| string }`                            | -      |
+| header             | 替换整个头部，标题与关闭按钮也由它负责。                                                                                              | `Snippet`                                                                            | -      |
+| info               | 参考来源分组列表，每组包含 header、key 与 annotations。                                                                               | `AnnotationInfo[]`                                                                   | -      |
+| infoHeader         | 分组头部图标之后的内容，参数为 item 与 index；未提供时显示 header 字段。容器的 header 已用于替换整个头部，所以分组头部叫 infoHeader。 | <ApiType detail={"Snippet\u003c[AnnotationHeaderSnippetProps]>"}>Type</ApiType>      | -      |
+| item               | 替换内置的参考来源条目，参数为 item 与 index（在分组内的位置）。                                                                      | <ApiType detail={"Snippet\u003c[AnnotationItemSnippetProps]>"}>Type</ApiType>        | -      |
+| maxWidth           | 可调整的最大宽度，仅在 resizable 为 true 时生效。                                                                                     | `number \| string`                                                                   | -      |
+| minWidth           | 可调整的最小宽度，仅在 resizable 为 true 时生效。                                                                                     | `number \| string`                                                                   | -      |
+| motion             | 显示与隐藏时是否使用展开动画。                                                                                                        | `boolean`                                                                            | -      |
+| onCancel           | 点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。                                                                               | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType>  | -      |
+| onChange           | 展开或收起分组时调用，参数为当前展开的 key。                                                                                          | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>       | -      |
+| onClick            | 点击某条参考来源时调用，参数为点击事件和对应条目；根元素的原生 click 不单独上报。                                                     | <ApiType detail={"(event: MouseEvent, item: AnnotationItem) => void"}>Type</ApiType> | -      |
+| resizable          | 宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。                                                               | `boolean`                                                                            | -      |
+| showClose          | 是否显示头部的关闭按钮。                                                                                                              | `boolean`                                                                            | -      |
+| title              | 标题，可以是纯文本或 snippet，默认使用语言包文案。                                                                                    | `Snippet \| string`                                                                  | -      |
+| visible            | 是否显示，可用 `bind:visible` 绑定。                                                                                                  | `boolean`                                                                            | -      |
+
+**Methods**
+
+| 方法    | 说明                                                      | 类型                                         |
+| ------- | --------------------------------------------------------- | -------------------------------------------- |
+| getRoot | 返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。 | <ApiType detail={"() => any"}>Type</ApiType> |

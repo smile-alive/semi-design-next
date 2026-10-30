@@ -1,0 +1,39 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| activeIndex | Index of the slide being shown; bind it with `bind:activeIndex`. Passing undefined hands control back, continuing from the last controlled index. | `number` | - |
+| animation | Transition animation: slide or fade. | `'slide' \| 'fade'` | `"slide"` |
+| arrowProps | Data for the previous and next arrow buttons: `leftArrow.props` and `rightArrow.props` hold the button attributes. `onclick` and `class` are merged with the built-in handler and classes. Use the `leftArrow` and `rightArrow` snippets for the icons. | `ArrowProps` | - |
+| arrowType | When the arrows are shown: always or hover. | `'always' \| 'hover'` | `"always"` |
+| autoPlay | Whether to play automatically, or an object with interval (milliseconds between slides, default 2000) and hoverToPause (pause while hovered, default true). | `CarouselAutoPlay` | `true` |
+| indicatorPosition | Indicator position: left, center or right. | `'left' \| 'center' \| 'right'` | `"center"` |
+| indicatorSize | Indicator size: small or medium. | `'small' \| 'medium'` | `"small"` |
+| indicatorType | Indicator type: dot, line or columnar. | `'dot' \| 'line' \| 'columnar'` | `"dot"` |
+| items | Data for the slides, one per item, rendered by the `slide` snippet; the count is known before the first render. | `readonly T[]` | - |
+| leftArrow | Snippet for the icon of the previous arrow. An empty snippet leaves the button empty. | `Snippet` | - |
+| onChange | Called when the shown slide changes, with the new index and the previous index. | <ApiType detail={"(activeIndex: number, preIndex: number) => void"}>Type</ApiType> | - |
+| onfocusin | Called when focus enters the carousel; autoplay pauses as well. | <ApiType detail={"FocusEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| onfocusout | Called when focus leaves the carousel; autoplay resumes as well. | <ApiType detail={"FocusEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| onmouseenter | Called when the pointer enters the carousel; with `hoverToPause` autoplay pauses as well. | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| onmouseleave | Called when the pointer leaves the carousel; autoplay resumes as well. | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| rightArrow | Snippet for the icon of the next arrow. An empty snippet leaves the button empty. | `Snippet` | - |
+| showArrow | Whether to show the arrows. | `boolean` | `true` |
+| showIndicator | Whether to show the indicator. | `boolean` | `true` |
+| slide | Snippet for the content of one slide, with the parameter `{ item, index }`; the carousel wraps each slide in an element carrying the classes, role and `inert`. | <ApiType detail={"Snippet\u003c[CarouselSlideContext\u003cT>]>"}>Type</ApiType> | - |
+| slideDirection | Slide direction when the animation is slide: left or right. | `'left' \| 'right'` | `"left"` |
+| speed | Transition duration in milliseconds. | `number` | `300` |
+| theme | Theme of the indicator and arrows: primary, light or dark. | `'dark' \| 'primary' \| 'light'` | `"light"` |
+| trigger | How the indicator switches slides: click or hover. | `'click' \| 'hover'` | `"click"` |
+
+**Methods**
+
+| Method | Description                                                  | Type                                                             |
+| ------ | ------------------------------------------------------------ | ---------------------------------------------------------------- |
+| goTo   | Goes to the given index; an out-of-range index wraps around. | <ApiType detail={"(targetIndex: number) => void"}>Type</ApiType> |
+| next   | Goes to the next slide.                                      | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| play   | Starts autoplay, even when autoPlay is off.                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| prev   | Goes to the previous slide.                                  | <ApiType detail={"() => void"}>Type</ApiType>                    |
+| stop   | Stops autoplay.                                              | <ApiType detail={"() => void"}>Type</ApiType>                    |

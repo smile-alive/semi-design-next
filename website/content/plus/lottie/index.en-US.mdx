@@ -8,6 +8,7 @@ brief: Display Lottie animation on the web page
 import LottieReactApi from './api/lottie.react.en-US.mdx';
 import LottieVueApi from './api/lottie.vue.en-US.mdx';
 import LottieSolidApi from './api/lottie.solid.en-US.mdx';
+import LottieSvelteApi from './api/lottie.svelte.en-US.mdx';
 
 ## When to use
 
@@ -25,6 +26,12 @@ The Lottie component can render Lottie animations conveniently and simply, and p
 <Framework only="vue">
 
 - Easier to use with Vue projects
+
+</Framework>
+
+<Framework only="svelte">
+
+- Easier to use with Svelte projects
 
 </Framework>
 
@@ -54,6 +61,16 @@ import { Lottie } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Lottie } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Lottie } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -111,6 +128,12 @@ Pass a callback to the `getAnimationInstance` prop to get the animation instance
 
 </Framework>
 
+<Framework only="svelte">
+
+Pass a callback to the `getAnimationInstance` prop to get the animation instance of the currently playing animation. The instance contains many methods for adjusting various parameters of the animation, such as playing and pausing, getting the current frame number, adjusting the playback speed, etc. It is called once per animation created, including every reload.
+
+</Framework>
+
 For more information about the methods contained in the animation instance, please refer to the `lottie-web` [documentation](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
 
 <Demo id="animation-instance" />
@@ -141,6 +164,14 @@ Listen to the `@getLottie` event to get global lottie, or use the static method 
 
 </Framework>
 
+<Framework only="svelte">
+
+Pass a callback to the `getLottie` prop to get global lottie, or use the static method `Lottie.getLottie` on the Semi Lottie component to get global lottie
+
+`lottie-web` is large, so Semi loads it on demand when an animation needs to be created. The `getLottie` prop is called once it has loaded and the animation is created, once per mount. The static method `Lottie.getLottie()` is asynchronous and returns a `Promise` that resolves to lottie (use `await` or `.then`). The component renders no animation until `lottie-web` has loaded, and if it unmounts before that, no animation is created.
+
+</Framework>
+
 For more information about the methods on the global lottie, please refer to the `lottie-web` [documentation](https://github.com/airbnb/lottie-web?tab=readme-ov-file#usage)
 
 <Demo id="get-lottie" />
@@ -168,6 +199,14 @@ Other native attributes (such as `data-*`, `onClick` and `aria-*`) land on the c
 <LottieSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the container `div`. When `params.container` is set, the component renders nothing, and these attributes do not land anywhere.
+
+</Framework>
+
+<Framework only="svelte">
+
+<LottieSvelteApi />
+
+`class`, `style` (a string) and native attributes (such as `data-*` and `aria-*`) land on the container `div`. `params` reloads whenever its content changes, mutating a `$state` in place included, and a snapshot is taken before it reaches `lottie-web`; hold large animation data in `$state.raw`. When `params.container` is set the component renders nothing, so these attributes have nowhere to land.
 
 </Framework>
 

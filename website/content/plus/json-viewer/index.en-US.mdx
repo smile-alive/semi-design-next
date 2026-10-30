@@ -8,6 +8,7 @@ brief: Used for displaying and editing JSON data
 import JsonViewerReactApi from './api/json-viewer.react.en-US.mdx';
 import JsonViewerVueApi from './api/json-viewer.vue.en-US.mdx';
 import JsonViewerSolidApi from './api/json-viewer.solid.en-US.mdx';
+import JsonViewerSvelteApi from './api/json-viewer.svelte.en-US.mdx';
 
 ## When to use
 
@@ -52,6 +53,16 @@ import { Button, Image, JsonViewer, Popover, Rating, Tag } from '@fibrae/semi-ui
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { JsonViewer } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="react">
@@ -69,6 +80,12 @@ Basic usage of JsonViewer. Pass in the `height` and `width` parameters to set th
 <Framework only="solid">
 
 Basic usage of JsonViewer. Pass `height` and `width` to set the height and width of the component, and pass the JSON string through `value` as the initial value. `onChange` is called with the editor's current text when the content changes. The editor is re-created only when `value` becomes different from the editor's current content, so writing the `onChange` text back into `value` keeps the caret; while `value` stays the same, the editor keeps what the user typed. To read the value, call `getValue()` through a ref, please refer to [Methods](#Methods) for details.
+
+</Framework>
+
+<Framework only="svelte">
+
+Basic usage of JsonViewer. Pass `height` and `width` to set the height and width of the component, and pass the JSON string through `value` as the initial value. `onChange` is called with the editor's current text when the content changes. `value` can be bound with `bind:value`; the editor is re-created only when `value` becomes different from the editor's current content, so echoing the same content back keeps the caret; without a binding the editor keeps what the user typed. To read the value, call `getValue()` through `bind:this` (type `JsonViewerHandle`), please refer to [Methods](#Methods) for details.
 
 </Framework>
 
@@ -134,6 +151,12 @@ By configuring the `options.customRenderRule` parameter, you can customize how J
 
 </Framework>
 
+<Framework only="svelte">
+
+`customRenderRule` is an array of rules that hold data only: `match` is the matching condition, and the optional `name` tells rules apart in the `customRender` snippet. The content of a matched token is drawn by `{#snippet customRender({ item, index, content })}`, where `item` is the matched rule and `index` is its position in `customRenderRule`.
+
+</Framework>
+
 - `match`: Matching condition, can be one of three types:
     - String: Exact match
     - Regular expression: Match by regex
@@ -167,6 +190,15 @@ By configuring the `options.customRenderRule` parameter, you can customize how J
 
 </Framework>
 
+<Framework only="svelte">
+
+- `name`: Optional rule name; use `item.name` in the `customRender` snippet to tell rules apart
+- `customRender` snippet: the arguments are `{ item, index, content }`
+    - `content`: Matched content. For string values, includes double quotes (e.g., `"name"`, `"Semi"`)
+    - Without the snippet, or when it draws nothing, custom rendering is skipped and the token keeps its text
+
+</Framework>
+
 <Demo id="custom-render" />
 
 ### Custom Search Button
@@ -186,6 +218,12 @@ Use the `renderSearchButton` property to customize the rendering of the search b
 <Framework only="vue">
 
 Use the `#searchButton` slot to customize the rendering of the search button, enabling fixed positioning, custom styles, and more. Providing the slot replaces the default button as a whole; `defaultButton` is the default button's VNode, rendered with `<component :is>`. When `showSearch` is `false`, neither is rendered.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `searchButton` snippet to customize the rendering of the search button, enabling fixed positioning, custom styles, and more. Providing the snippet replaces the default button as a whole; `defaultButton` is the default button's snippet, drawn with `{@render defaultButton()}`. When `showSearch` is `false`, neither is rendered.
 
 </Framework>
 
@@ -216,6 +254,14 @@ Use the `#searchButton` slot to customize the rendering of the search button, en
 <JsonViewerSolidApi />
 
 `class`, `style`, `ref` and native attributes fall on the root element. When the root has no `role` and `aria-label` or `aria-labelledby` is passed, the root gets `role="group"`; an explicit `role` wins.
+
+</Framework>
+
+<Framework only="svelte">
+
+<JsonViewerSvelteApi />
+
+`class`, `style` and native attributes fall on the root element. The editor owns the root's content, so there is no `children`. When the root has no `role` and `aria-label` or `aria-labelledby` is passed, the root gets `role="group"`; an explicit `role` wins.
 
 </Framework>
 
@@ -264,6 +310,17 @@ The type is named `JsonViewerCustomRenderRule`, and `render` returns a JSX eleme
 
 </Framework>
 
+<Framework only="svelte">
+
+The type is named `JsonViewerCustomRenderRule`. A rule holds data only; the content of a matched token is drawn by the `customRender` snippet.
+
+| Attribute | Description                                                  | Type                                                                                                                   | Default |
+| --------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ------- |
+| match     | Matching rule                                                | string \| RegExp \| (value: string \| number \| boolean \| null, path: string, tokenType: 'key' \| 'value') => boolean | -       |
+| name      | Rule name, to tell rules apart in the `customRender` snippet | string                                                                                                                 | -       |
+
+</Framework>
+
 ### FormattingOptions
 
 | Attribute    | Description                           | Type    | Default |
@@ -298,6 +355,12 @@ When using `renderSearchButton`, the second parameter `controls` contains the fo
 
 </Framework>
 
+<Framework only="svelte">
+
+With the `searchButton` snippet, the arguments (type `JsonViewerSearchButtonArgs`) contain the following properties besides `defaultButton`:
+
+</Framework>
+
 | Attribute         | Description                                 | Type                                                                                  |
 | ----------------- | ------------------------------------------- | ------------------------------------------------------------------------------------- |
 | showSearchBar     | Whether the search bar is currently visible | boolean                                                                               |
@@ -325,6 +388,12 @@ Methods exposed by the component can be called through a template ref (type `Jso
 <Framework only="solid">
 
 The root element that `ref` receives (type `JsonViewerElement`) carries the methods in the table below, which can be called directly, for example `jsonViewer?.format()`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Methods exported by the component can be called through `bind:this` (type `JsonViewerHandle`), for example `jsonviewer?.format()`.
 
 </Framework>
 

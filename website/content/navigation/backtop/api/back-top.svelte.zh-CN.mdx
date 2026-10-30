@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                                            | 类型                                                                           | 默认值                                          |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |
+| badge            | 徽章参数，同 FloatButton。                                                                                      | `FloatButtonBadge`                                                             | -                                               |
+| badgeCount       | 自定义徽章内容的 snippet，代替 badge.count。                                                                    | `Snippet`                                                                      | -                                               |
+| children         | 按钮内的静态内容，代替图标显示；不能包含可交互元素。                                                            | `Snippet`                                                                      | -                                               |
+| colorful         | 多彩按钮，同 FloatButton；未设置时取 FloatButton 的默认值。                                                     | `boolean`                                                                      | -                                               |
+| duration         | 滚动到顶部所需的毫秒数；`onclick` 按此间隔节流。                                                                | `number`                                                                       | `450`                                           |
+| icon             | 按钮图标的 snippet，默认 IconBackTop。                                                                          | `Snippet`                                                                      | -                                               |
+| onclick          | 点击时的回调，参数为原生 click 事件；按 duration 节流，调用时滚动已开始。                                       | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType>       | -                                               |
+| shape            | 形状，可选 round、square；未设置时取 FloatButton 的默认值。                                                     | `FloatButtonShape`                                                             | -                                               |
+| size             | 尺寸，可选 default、small、large；未设置时取 FloatButton 的默认值。                                             | `FloatButtonSize`                                                              | -                                               |
+| target           | 返回被监听滚动的元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载时调用，函数本身变化时重新调用。 | <ApiType detail={"() => Window \u007c HTMLElement \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
+| visibilityHeight | 出现 BackTop 需要达到的滚动高度。                                                                               | `number`                                                                       | `400`                                           |

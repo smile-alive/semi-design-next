@@ -8,6 +8,7 @@ brief: Used to play video
 import VideoPlayerReactApi from './api/video-player.react.en-US.mdx';
 import VideoPlayerVueApi from './api/video-player.vue.en-US.mdx';
 import VideoPlayerSolidApi from './api/video-player.solid.en-US.mdx';
+import VideoPlayerSvelteApi from './api/video-player.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { VideoPlayer } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 For basic usage, pass the video address through `src` and pass the video cover address through `poster`
@@ -58,6 +69,12 @@ A control shows when `controlsList` allows it and the prop it depends on is prov
 </Framework>
 
 <Framework only="solid">
+
+`onNext` is a function prop. Passing it, with `next` in `controlsList`, shows the Next button, and clicking the button calls it.
+
+</Framework>
+
+<Framework only="svelte">
 
 `onNext` is a function prop. Passing it, with `next` in `controlsList`, shows the Next button, and clicking the button calls it.
 
@@ -103,6 +120,12 @@ Use `volume` to set the initial volume, the value range is 0 - 100, set `muted` 
 
 </Framework>
 
+<Framework only="svelte">
+
+Use `volume` to set the initial volume, the value range is 0 - 100, set `muted` to `true` to play silently. `onVolumeChange` is called when the user adjusts the volume
+
+</Framework>
+
 <Demo id="volume" />
 
 ### Clarity switching
@@ -128,6 +151,14 @@ Similarly for route switching, use `routeList` to set the route selection list, 
 Use `qualityList` to set the clarity selection list, `defaultQuality` to set the initial selected clarity, and `onQualityChange` to set the `src` logic to be updated after clicking.
 
 Similarly for route switching, use `routeList` to set the route selection list, `defaultRoute` to set the initial selected route, and `onRouteChange` to set the `src` logic to be updated after clicking.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `qualityList` to set the clarity selection list, `defaultQuality` to set the initial selected clarity, and update `src` in `onQualityChange`.
+
+Similarly for route switching, use `routeList` to set the route selection list, `defaultRoute` to set the initial selected route, and update `src` in `onRouteChange`.
 
 </Framework>
 
@@ -162,6 +193,12 @@ Get the component instance through a template ref (`useTemplateRef`); its `video
 <Framework only="solid">
 
 Pass a callback to `ref`; it is called with the native video element, for more flexible control such as synchronized playback/pause of multiple videos
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the component with `bind:this` and call its `getVideo()` method, which returns the native video element, for more flexible control such as synchronized playback/pause of multiple videos. It returns `undefined` before mount
 
 </Framework>
 
@@ -201,6 +238,14 @@ Other native attributes (such as `id`, `aria-*`, `onClick`) fall through to the 
 
 </Framework>
 
+<Framework only="svelte">
+
+<VideoPlayerSvelteApi />
+
+`class` (a string, array or object) and native attributes fall through to the root `div`, `style` is a string, and a width or height in `style` overrides the `width` and `height` props. When the root has `aria-label` or `aria-labelledby` it gets `role="group"`, and a `role` you pass takes precedence. Media events (`ontimeupdate`, `onended` and so on) do not bubble to the root, so listening to them on the component is not supported; get the native element through `getVideo()` and listen on it instead.
+
+</Framework>
+
 #### Marker
 
 | Properties | Description      | Type   | Default Value |
@@ -222,6 +267,19 @@ The option type of `playbackRateList`, `qualityList` and `routeList`. The type o
 </Framework>
 
 <Framework only="solid">
+
+#### VideoPlayerOption
+
+The option type of `playbackRateList` is `VideoPlayerOption<number>`, and the option type of `qualityList` and `routeList` is `VideoPlayerOption<string>`. The type of `value` is the generic parameter.
+
+| Properties | Description                          | Type     | Default Value |
+| ---------- | ------------------------------------ | -------- | ------------- |
+| label      | Name shown in the menu               | `string` | -             |
+| value      | Option value, passed to the callback | `T`      | -             |
+
+</Framework>
+
+<Framework only="svelte">
 
 #### VideoPlayerOption
 

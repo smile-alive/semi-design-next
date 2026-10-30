@@ -11,6 +11,7 @@ import DescriptionsVueApi from './api/descriptions.vue.en-US.mdx';
 import DescriptionsItemVueApi from './api/descriptions-item.vue.en-US.mdx';
 import DescriptionsSolidApi from './api/descriptions.solid.en-US.mdx';
 import DescriptionsItemSolidApi from './api/descriptions-item.solid.en-US.mdx';
+import DescriptionsSvelteApi from './api/descriptions.svelte.en-US.mdx';
 
 ## Demos
 
@@ -44,6 +45,18 @@ import { Descriptions } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Descriptions } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte has no `Descriptions.Item`; declare data with `data` only.
+
+</Framework>
+
 ### Basic Usage
 
 Data can be passed in as an array of key-value pairs `{ key: value }` through `data`.
@@ -63,6 +76,12 @@ The key and value in `data` only accept strings or numbers. To customize the ren
 <Framework only="solid">
 
 `key` and `value` in `data` accept only strings or numbers. For custom rendering, pass `renderKey(item, index)` and `renderValue(item, index)`, where `index` is the item's position in `data` (hidden items included); they are not called for hidden items.
+
+</Framework>
+
+<Framework only="svelte">
+
+The key and value in `data` only accept strings or numbers. To customize the rendering, use the `itemKey` and `value` snippets, whose parameter is `{ item, index }`; `index` is the position of the item in `data`, including `hidden` items.
 
 </Framework>
 
@@ -95,7 +114,29 @@ Besides `data`, data can also be declared with `Descriptions.Item` as children o
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte has no `Descriptions.Item`: write the data in `data` only, and customize the content with `{#snippet itemKey({ item, index })}...{/snippet}` and `{#snippet value({ item, index })}...{/snippet}`, which gives the same result as the demo below.
+
+</Framework>
+
+<Framework only="react">
+
 Note that `Descriptions.Item` must be a direct child of `Descriptions`.
+
+</Framework>
+
+<Framework only="vue">
+
+Note that `Descriptions.Item` must be a direct child of `Descriptions`.
+
+</Framework>
+
+<Framework only="solid">
+
+Note that `Descriptions.Item` must be a direct child of `Descriptions`.
+
+</Framework>
 
 <Demo id="jsx" />
 
@@ -121,7 +162,29 @@ You can customize the style of key through `keyStyle` property, such as setting 
 
 <Demo id="key-style" />
 
+<Framework only="react">
+
 You can also use it with `Descriptions.Item`:
+
+</Framework>
+
+<Framework only="vue">
+
+You can also use it with `Descriptions.Item`:
+
+</Framework>
+
+<Framework only="solid">
+
+You can also use it with `Descriptions.Item`:
+
+</Framework>
+
+<Framework only="svelte">
+
+You can also use it with the `itemKey` and `value` snippets:
+
+</Framework>
 
 <Demo id="key-style-jsx" />
 
@@ -150,6 +213,14 @@ You can also use it with `Descriptions.Item`:
 <DescriptionsSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `data-*` and `aria-*`) land on the root `div` element of Descriptions.
+
+</Framework>
+
+<Framework only="svelte">
+
+<DescriptionsSvelteApi />
+
+`class`, `style` and native attributes (such as `id`, `data-*` and `aria-*`) land on the root `div` element of Descriptions.
 
 </Framework>
 
@@ -191,6 +262,18 @@ You can also use it with `Descriptions.Item`:
 
 </Framework>
 
+<Framework only="svelte">
+
+| Properties | Instructions                                                    | type             | Default |
+| ---------- | --------------------------------------------------------------- | ---------------- | ------- |
+| key        | Key value; use the `itemKey` snippet to customize rendering     | string \| number | -       |
+| value      | Data value; use the `value` snippet to customize rendering      | string \| number | -       |
+| hidden     | Toggle whether the data should be displayed                     | boolean          | -       |
+| span       | The number of columns the cell should span                      | number           | 1       |
+| keyStyle   | Custom style for key, can be used to set width, alignment, etc. | string           | -       |
+
+</Framework>
+
 ### Descriptions.Item
 
 <Framework only="react">
@@ -214,6 +297,12 @@ In the vertical layout, `class`, `style` and native attributes land on the outer
 <DescriptionsItemSolidApi />
 
 In the vertical layout, `class`, `style`, `ref` and native attributes land on the outer wrapper `tr`. In the horizontal layout the Item renders only its cells, so these have no element to land on.
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte has no `Descriptions.Item`; declare data items with `DataItem` in `data` only.
 
 </Framework>
 

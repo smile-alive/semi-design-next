@@ -9,6 +9,7 @@ import IconList from './figures/icon-list.react.tsx';
 import IconReactApi from './api/icon.react.zh-CN.mdx';
 import IconVueApi from './api/icon.vue.zh-CN.mdx';
 import IconSolidApi from './api/icon.solid.zh-CN.mdx';
+import IconSvelteApi from './api/icon.svelte.zh-CN.mdx';
 
 ## 图标列表
 
@@ -58,6 +59,17 @@ import { IconAvatar, IconCard } from '@fibrae/semi-icons-react/lab';
 ```jsx
 import Icon, { IconHome } from '@fibrae/semi-icons-solid';
 import { IconAvatar, IconCard } from '@fibrae/semi-icons-solid/lab';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import Icon, { IconHome } from '@fibrae/semi-icons-svelte';
+    import { IconAvatar, IconCard } from '@fibrae/semi-icons-svelte/lab';
+</script>
 ```
 
 </Framework>
@@ -122,6 +134,12 @@ Vue 使用默认插槽传入自定义 SVG。`class`、`style`、`aria-*` 和原�
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 使用 `children` snippet 传入自定义 SVG，snippet 的参数 `{ fill }` 带着 Icon 的 `fill`，需要时可传给自定义 SVG。`class`、`style`、`aria-*` 和原生事件落在外层 span；不支持 `elementType` 与 ref。
+
+</Framework>
+
 <Demo id="custom" />
 
 <Framework only="react">
@@ -154,6 +172,14 @@ import StarIcon from './star.svg';
 <IconReactApi />
 
 `className`、`style`、`onClick`、`aria-*` 等其他原生属性落在外层 span 上。`style` 与 `rotate` 生成的 `transform` 合并，同名时以 `style` 为准。
+
+</Framework>
+
+<Framework only="svelte">
+
+<IconSvelteApi />
+
+`class`、`style`、`aria-*` 与其他原生属性和事件落在外层 span 上。`style` 与 `rotate` 生成的 `transform` 合并，同名时以 `style` 为准；`style` 只接受字符串。
 
 </Framework>
 

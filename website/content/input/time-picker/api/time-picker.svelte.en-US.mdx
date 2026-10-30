@@ -1,0 +1,61 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `true` |
+| autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `false` |
+| borderless | Borderless mode. | `boolean` | `false` |
+| clearIcon | Custom clear icon; effective when showClear is true. | `Snippet` | - |
+| disabled | Disables all interaction. | `boolean` | - |
+| disabledHours | Returns the hours that cannot be selected. | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
+| disabledMinutes | Returns the minutes that cannot be selected for the selected hour. | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | - |
+| disabledSeconds | Returns the seconds that cannot be selected for the selected hour and minute. | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | - |
+| disabledTime | Range mode only: returns the disabled rules of the left and right panel from the current value and the panel. The unpicked side of value is undefined; a returned disabledHours, disabledMinutes or disabledSeconds overrides the prop of the same name, and one left out falls back to it. | <ApiType detail={"(value: (Date \u007c undefined)[], panelType: PanelType) => DisabledTimeFns"}>Type</ApiType> | - |
+| focusOnOpen | Focuses the input and selects its content once mounted, which opens the panel. | `boolean` | `false` |
+| format | Display format, following date-fns format. Defaults to a h:mm:ss with use12Hours, else HH:mm:ss. | `string` | - |
+| hideDisabledOptions | Hides the options that cannot be selected. | `boolean` | `false` |
+| hourStep | Interval of the hour options; a positive integer. | `number` | - |
+| inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `false` |
+| inputStyle | Style of the input's root element. | `string` | - |
+| insetLabel | Inset label of the input. | `Snippet` | - |
+| insetLabelId | id of the insetLabel, referenced through aria-labelledby. | `string` | - |
+| minuteStep | Interval of the minute options; a positive integer. | `number` | - |
+| motion | Whether the popup animates. | `boolean` | `true` |
+| onBlur | Called when a click outside closes the panel, with the native event of that mousedown; leaving the input does not call it. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the time changes, with (Date value, formatted string); both are arrays in range mode. Cleared, it is undefined (single) or an empty array (range); the unpicked side of a range is undefined. | <ApiType detail={"(value: Date \u007c (Date \u007c undefined)[] \u007c undefined, str: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onEnterPress | Called when Enter is pressed in the input. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onFocus | Called when the input's root element gains focus; moving focus between the input and the clear button does not call it. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onKeyDown | keydown callback of the input. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onKeyUp | keyup callback of the input. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onOpenChange | Called when the panel opens or closes. | <ApiType detail={"(open: boolean) => void"}>Type</ApiType> | - |
+| open | Whether the panel is open, used with bind:open; undefined means uncontrolled. | `boolean` | - |
+| panel | Range mode only: used as both the header and the footer of panel index, taking precedence over panelHeader and panelFooter while it has content. | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
+| panelFooter | Snippet for the content below the panel; index is the panel's position. | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
+| panelHeader | Snippet for the content above the panel; index is the panel's position (0 for time, 0 or 1 for timeRange). Without it, a range shows the locale's start and end text. | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
+| placeholder | Hint shown without a value; defaults to the locale text of type. | `string` | - |
+| popupClassName | Class name of the popup. | `ClassValue` | - |
+| popupStyle | Style of the popup, as a string. | `string` | - |
+| position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time. | `Position` | - |
+| prefix | Prefix content of the input. | `Snippet` | - |
+| preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | - |
+| rangeSeparator | Separator between the two times of a range. | `string` | `" ~ "` |
+| scrollItemProps | Props passed to the columns; only cycled, mode, motion and transform, as on the ScrollItem of ScrollList. | `TimePickerScrollItemProps` | - |
+| secondStep | Interval of the second options; a positive integer. | `number` | - |
+| showClear | Whether to show the clear button. | `boolean` | `true` |
+| size | Size of the input. | `InputSize` | - |
+| stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `true` |
+| timeZone | Time zone; falls back to the timeZone of ConfigProvider, then to the global default. | `string \| number` | - |
+| trigger | Snippet of a custom trigger that replaces the default input; a click anywhere in it opens the panel. Receives value (the unpicked side undefined), inputValue, placeholder, disabled, componentProps and onChange (updates the input text, as typing would). | <ApiType detail={"Snippet\u003c[TimePickerTriggerRenderProps]>"}>Type</ApiType> | - |
+| type | Selection type: time for a single time, timeRange for a range. | `TimePickerType` | `"time"` |
+| use12Hours | Uses the 12-hour clock. | `boolean` | `false` |
+| validateStatus | Validation status. | `ValidateStatus` | - |
+| value | Current time, used with bind:value; an array when type is timeRange. null is a controlled empty value, and undefined means uncontrolled. | `TimePickerBaseValueType \| TimePickerBaseValueType[] \| null` | - |
+
+**Methods**
+
+| Method | Description                                                                   | Type                                          |
+| ------ | ----------------------------------------------------------------------------- | --------------------------------------------- |
+| blur   | Removes focus from the input; does nothing with a custom trigger.             | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Focuses the input, which opens the panel; does nothing with a custom trigger. | <ApiType detail={"() => void"}>Type</ApiType> |

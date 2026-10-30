@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| alpha | 是否开启透明度选择。 | `boolean` | `true` |
+| bottomSlot | 底部渲染额外元素的 snippet。 | `Snippet` | - |
+| children | usePopover 时作为触发器的 snippet，默认是当前颜色的色块；不使用 usePopover 时不渲染。 | `Snippet` | - |
+| defaultFormat | 手动输入时默认使用的颜色格式，可选 `rgba`、`hex`、`hsva`。 | `ColorFormat` | `"hex"` |
+| eyeDropper | 是否开启滴管拾色器。 | `boolean` | `true` |
+| height | 高度，单位为像素，未设置时为 280。 | `number` | `280` |
+| onChange | 用户选中颜色时的回调，参数为 ColorValue，包含 hsva、hex、rgba 三种格式。 | <ApiType detail={"(value: ColorValue) => void"}>Type</ApiType> | - |
+| popoverProps | 放入 Popover 时传给 Popover 的属性，如 `trigger`、`aria-label`、`aria-labelledby`。弹层默认以点击触发、role 为 `dialog`，名称默认取语言包；`aria-label` 或 `aria-labelledby` 优先。 | `PopoverProps` | - |
+| topSlot | 顶部渲染额外元素的 snippet。 | `Snippet` | - |
+| usePopover | 是否放入 Popover 渲染，触发器使用 `children`，默认 false。 | `boolean` | `false` |
+| value | 颜色值，可 `bind:value`，是同时包含 hsva、hex、rgba 三种格式的对象。不传时由组件自行管理，初始为 `#39c5bb`；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；`null` 是受控的空值，显示默认色且只报告变化。ColorValue 按不可变值对待，更新时整体替换。 | `ColorValue \| null` | - |
+| width | 宽度，单位为像素，未设置时为 280。 | `number` | `280` |
+
+**Methods**
+
+| 方法    | 说明                                                             | 类型                                                                |
+| ------- | ---------------------------------------------------------------- | ------------------------------------------------------------------- |
+| getRoot | 返回 picker 根元素；usePopover 时位于弹层内，弹层关闭时为 null。 | <ApiType detail={"() => HTMLDivElement \u007c null"}>Type</ApiType> |

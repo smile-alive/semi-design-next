@@ -8,6 +8,7 @@ brief: Users can easily select a compliant, formatted point of time using the ti
 import TimePickerReactApi from './api/time-picker.react.en-US.mdx';
 import TimePickerVueApi from './api/time-picker.vue.en-US.mdx';
 import TimePickerSolidApi from './api/time-picker.solid.en-US.mdx';
+import TimePickerSvelteApi from './api/time-picker.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { TimePicker } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { TimePicker } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { TimePicker } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -68,6 +79,12 @@ Use `v-model` as a controlled component, and `defaultValue` for the initial valu
 <Framework only="solid">
 
 When using `value` instead of `defaultValue`, it works as a controlled component. `value` and `onChange` must be used together. Pass `null` for a controlled empty value.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:value` as a controlled component. There is no `defaultValue`; put the initial value on the bound variable. `null` is a controlled empty value, and `undefined` means uncontrolled. Cleared, the value is `undefined` (single) or an empty array (range).
 
 </Framework>
 
@@ -140,6 +157,12 @@ By default we use the `Input` component as the trigger for the `TimePicker` comp
 
 </Framework>
 
+<Framework only="svelte">
+
+By default we use the `Input` component as the trigger for the `TimePicker` component. You can customize this trigger with the `trigger` snippet. It receives `{ value, inputValue, placeholder, disabled, componentProps, onChange }`: the unpicked side of `value` is `undefined`, and `onChange` updates the input text, as typing would.
+
+</Framework>
+
 <Demo id="custom-trigger" />
 
 ## TimeZone Config
@@ -175,6 +198,16 @@ Among undeclared attributes, `class` and `style` land on the root element, and t
 <TimePickerSolidApi />
 
 `class`, `style` and `ref` land on the root element, and the other undeclared attributes (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with `triggerRender` those attributes land on no element. `ref` points to the root element, and its `focus()` and `blur()` act on the input; they do nothing with a custom trigger.
+
+</Framework>
+
+<Framework only="svelte">
+
+<TimePickerSvelteApi />
+
+Of the undeclared attributes, `class` and `style` land on the root element, and the others (`id`, `title`, `aria-*`, `data-*`, native events and so on) land on the inner input; with the `trigger` snippet they land on no element and are available through `componentProps`.
+
+Call `focus()` and `blur()` on the component instance; they do nothing with a custom trigger.
 
 </Framework>
 

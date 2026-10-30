@@ -11,6 +11,8 @@ import RadioVueApi from './api/radio.vue.en-US.mdx';
 import RadioGroupVueApi from './api/radio-group.vue.en-US.mdx';
 import RadioSolidApi from './api/radio.solid.en-US.mdx';
 import RadioGroupSolidApi from './api/radio-group.solid.en-US.mdx';
+import RadioSvelteApi from './api/radio.svelte.en-US.mdx';
+import RadioGroupSvelteApi from './api/radio-group.svelte.en-US.mdx';
 
 ## When to use
 
@@ -47,6 +49,16 @@ import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Radio, RadioGroup } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Demo id="basic" />
@@ -68,6 +80,12 @@ You can use the `#extra` slot to add extra information, which can hold any conte
 <Framework only="solid">
 
 You can use `extra` to add extra information, which can be any JSX.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can use the `extra` snippet to add extra information: define it inside the Radio tag with `{#snippet extra()}...{/snippet}`, and the rest of the content is the label. It can hold any content.
 
 </Framework>
 
@@ -149,6 +167,14 @@ You can pass an array of options to `RadioGroup` using `options` property to cre
 
 </Framework>
 
+<Framework only="svelte">
+
+<RadioSvelteApi />
+
+`class` and `style` (a string) land on the root label element. `id`, `name`, `tabindex`, `autofocus`, `aria-*`, `onfocus` and `onblur` land on the inner native input; other native attributes and events (such as `onmouseenter` and `onmouseleave`) land on the root element, and `onclick` is also on the root element but is called once, and only when the click lands on the input. `checked` supports `bind:`, a function binding, a one-way value, or nothing, and there is no `defaultChecked`. `extra` is not rendered for the button type.
+
+</Framework>
+
 ### RadioGroup
 
 <Framework only="react">
@@ -175,6 +201,14 @@ Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`st
 
 </Framework>
 
+<Framework only="svelte">
+
+<RadioGroupSvelteApi />
+
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class`, `style` (a string), `addonId`, `addonStyle` (a string), `addonClass` and `extraId`, and no `onChange`. Use the `label` and `extra` snippets, with the parameter `{ option, index }`, for custom content; a button radio does not render `extra`. `class`, `style` (a string), `onBlur` and native attributes land on the root element with `role="radiogroup"`, and so do `aria-required`, `aria-invalid` and `aria-errormessage`; `onBlur` fires only when focus leaves the whole group. The `aria-expanded`, `aria-haspopup`, `aria-controls` and `tabindex` injected by Tooltip are not rendered. `value` supports `bind:`, a function binding, a one-way value, or nothing, and there is no `defaultValue`.
+
+</Framework>
+
 ## Methods
 
 ### Radio
@@ -194,6 +228,12 @@ Call them through a template `ref` to the component instance; see Exposes above.
 <Framework only="solid">
 
 `ref` receives the root label element; its `focus()` and `blur()` are forwarded to the inner native input, and `preventScroll` applies to `focus()`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Call `focus()` and `blur()` on the Radio instance obtained with `bind:this`; they act on the inner native input, and `preventScroll` applies to `focus()`. See Methods above.
 
 </Framework>
 
@@ -218,6 +258,12 @@ Call them through a template `ref` to the component instance; see Exposes above.
 </Framework>
 
 <Framework only="solid">
+
+- `aria-required`, `aria-invalid` and `aria-errormessage` apply to RadioGroup only and are set on the `role="radiogroup"` element. ARIA does not support them on a single Radio; when both `aria-invalid` and `aria-errormessage` are passed to it, the error message is linked to the input through `aria-describedby`
+
+</Framework>
+
+<Framework only="svelte">
 
 - `aria-required`, `aria-invalid` and `aria-errormessage` apply to RadioGroup only and are set on the `role="radiogroup"` element. ARIA does not support them on a single Radio; when both `aria-invalid` and `aria-errormessage` are passed to it, the error message is linked to the input through `aria-describedby`
 

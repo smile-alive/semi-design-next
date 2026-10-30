@@ -8,6 +8,7 @@ brief: Used to play audio
 import AudioPlayerReactApi from './api/audio-player.react.en-US.mdx';
 import AudioPlayerVueApi from './api/audio-player.vue.en-US.mdx';
 import AudioPlayerSolidApi from './api/audio-player.solid.en-US.mdx';
+import AudioPlayerSvelteApi from './api/audio-player.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { AudioPlayer } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { AudioPlayer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AudioPlayer } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -90,6 +101,14 @@ Native attributes and events not listed above (such as `aria-label`, `id` and `o
 <AudioPlayerSolidApi />
 
 `class`, `style`, `ref` and native attributes and events land on the root `div`. Native media events of the `audio` element (such as `onTimeUpdate`) cannot be listened to: they do not bubble to the root, so the listener never fires.
+
+</Framework>
+
+<Framework only="svelte">
+
+<AudioPlayerSvelteApi />
+
+`class` (a string, array or object) and native attributes land on the root `div`, and `style` is a string. AudioPlayer has no callback props, and native media events of the `audio` element (such as `onended`) cannot be listened to: they do not bubble to the root, so the listener never fires.
 
 </Framework>
 

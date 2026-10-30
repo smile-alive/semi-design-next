@@ -40,9 +40,9 @@
         },
     ];
 
-    function onSearch(_inputValue: string, filteredExpandedKeys: string[]) {
+    const onSearch = (_inputValue: string, filteredExpandedKeys: string[]) => {
         expandedKeys.value = [...filteredExpandedKeys, ...expandedKeys.value];
-    }
+    };
 </script>
 
 <template>

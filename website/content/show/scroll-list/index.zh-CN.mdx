@@ -11,6 +11,8 @@ import ScrollListVueApi from './api/scroll-list.vue.zh-CN.mdx';
 import ScrollItemVueApi from './api/scroll-item.vue.zh-CN.mdx';
 import ScrollListSolidApi from './api/scroll-list.solid.zh-CN.mdx';
 import ScrollItemSolidApi from './api/scroll-item.solid.zh-CN.mdx';
+import ScrollListSvelteApi from './api/scroll-list.svelte.zh-CN.mdx';
+import ScrollItemSvelteApi from './api/scroll-item.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -42,6 +44,16 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { ScrollList, ScrollItem } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本使用
 
 滚动列表提供了一个类似于 iOS 操作系统的滚动选择模式，同时支持滚动至指定窗口位置选择与点击选择。
@@ -55,6 +67,12 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 选中项用 `selectedIndex` 与 `onSelect` 绑定，没有非受控模式；`header`、`footer` 是 JSX 元素，直接传入即可。
+
+</Framework>
+
+<Framework only="svelte">
+
+选中项用 `bind:selectedIndex` 绑定，选中时写回新索引，回调为 `onSelect`；列写成 `ScrollList.Item` 或具名导出 `ScrollItem`，两者是同一组件。`header`、`footer` 接受字符串或 snippet，传了就渲染：用 `{#snippet footer()}...{/snippet}` 定义后作为属性传入，或直接写在 ScrollList 标签内。
 
 </Framework>
 
@@ -88,6 +106,14 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<ScrollListSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `aria-*`）落在根元素上。
+
+</Framework>
+
 ### ScrollItem
 
 <Framework only="react">
@@ -111,6 +137,14 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 <ScrollItemSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `data-*`）落在根元素上；`aria-label`、`aria-labelledby` 和 `aria-describedby` 落在列表（`role="listbox"`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ScrollItemSvelteApi />
+
+`aria-label`、`aria-labelledby`、`aria-describedby` 落在列表（`role="listbox"`）上，`class`、`style`（字符串）等其余属性落在根元素上。
 
 </Framework>
 
@@ -148,6 +182,12 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 | 名称                                                     | 说明                                                                                                                        |
 | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | scrollToIndex(selectedIndex?: number, duration?: number) | 将列表滚动到当前选中项。`selectedIndex` 暂不生效，目标始终是最近一次选中的项；`duration` 为滚动动画时长，单位毫秒，默认 120 |
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 ScrollItem 的 `bind:this` 取实例调用，签名见上方 ScrollItem 的 Methods 表。
 
 </Framework>
 

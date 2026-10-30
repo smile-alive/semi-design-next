@@ -39,8 +39,8 @@ import ApiType from '#/components/ApiType.astro';
 | showLine | Shows connecting lines between nodes in the dropdown. | `boolean` | `semiDefault("TreeSelect", "showLine", false)` |
 | virtualize | List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled. | `Virtualize` | `semiGlobalDefault("TreeSelect", "virtualize")` |
 | placeholder | Placeholder of the select box. | `string` | `semiGlobalDefault("TreeSelect", "placeholder")` |
-| disabled | Whether the component is disabled. | `boolean` | `semiDefault("TreeSelect", "disabled", false)` |
-| size | Size of the select box: small, default or large. | `Size` | `semiDefault("TreeSelect", "size", "default")` |
+| disabled | Whether the component is disabled. | `boolean` | `undefined` |
+| size | Size of the select box: small, default or large. | `Size` | `undefined` |
 | borderless | Borderless mode. | `boolean` | `semiDefault("TreeSelect", "borderless", false)` |
 | validateStatus | Validation status, which only affects the style: default, warning or error. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
 | insetLabelId | The id of the element around the insetLabel slot, for aria-labelledby to point at; an internal id is used when omitted. | `string` | `undefined` |

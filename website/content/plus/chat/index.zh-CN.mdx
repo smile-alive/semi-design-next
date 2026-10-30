@@ -8,10 +8,17 @@ brief: 用于快速搭建对话内容
 import ChatReactApi from './api/chat.react.zh-CN.mdx';
 import ChatVueApi from './api/chat.vue.zh-CN.mdx';
 import ChatSolidApi from './api/chat.solid.zh-CN.mdx';
+import ChatSvelteApi from './api/chat.svelte.zh-CN.mdx';
 
 ## 使用场景
 
 Chat 组件可用于普通会话，AI 会话等场景。
+
+<Framework only="svelte">
+
+对话内容渲染基于 [MarkdownRender](/zh-CN/react/plus/markdown-render) 组件，支持 Markdown 和 MDX (注：Chat 中的 MarkdownRender 的默认 format 模式是 md，如果需要使用 MDX 格式，可通过 markdownRenderProps API 设置)，可实现图片，表格，链接，加粗，代码区等常用富文本功能。更加复杂的定制化需求通过 snippet 实现。代码区的高亮语言需先通过 [CodeHighlight](/zh-CN/react/plus/code-highlight) 的 `CodeHighlight.register` 注册。
+
+</Framework>
 
 <Framework only="react">
 
@@ -61,6 +68,16 @@ import { Chat } from '@fibrae/semi-ai-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Chat } from '@fibrae/semi-ai-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -81,6 +98,12 @@ import { Chat } from '@fibrae/semi-ai-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `bind:chats` 绑定对话列表，`onMessageSend` 监听发送实现基础对话显示和交互。发送消息、点赞、重置、清除上下文、删除时，Chat 先把新列表写回 `chats`，再触发 `onChatsChange`。列表整体替换、`push` 和最后一条消息文本的就地增长都会被跟随，其他就地修改（如深层 content 改动、单独翻转 status）会渲染但不被跟随，更新消息时建议整体替换数组。
+
+</Framework>
+
 附件支持通过点击上传按钮，输入框粘贴，拖拽文件至 Chat 区域上传。通过 `uploadProps` 设置上传参数，详情参考 [Upload](/zh-CN/react/input/upload#API%20%E5%8F%82%E8%80%83)。
 
 <Framework only="react">
@@ -98,6 +121,12 @@ import { Chat } from '@fibrae/semi-ai-solid';
 <Framework only="solid">
 
 上传按钮的提示文案可通过 `uploadTipProps` 设置，`content` 为提示文字，详情参考 [Tooltip](/zh-CN/react/show/tooltip#API%20%E5%8F%82%E8%80%83)。
+
+</Framework>
+
+<Framework only="svelte">
+
+上传按钮的提示文案通过 `uploadTip` snippet 设置，Tooltip 的其他属性通过 `uploadTipProps` 设置（不含 `content`），详情参考 [Tooltip](/zh-CN/react/show/tooltip#API%20%E5%8F%82%E8%80%83)。上传按钮本身可用 `uploadButton` snippet 替换。`uploadProps` 不含 `fileList` 与 `children`，附件列表由 Chat 管理；未设置 `action` 时不会真正上传，需要自行提供 `customRequest` 或 `action`。
 
 </Framework>
 
@@ -135,6 +164,12 @@ chats 类型为 `Message[]`， `Message` 包含对话的各种信息，如角色
 
 </Framework>
 
+<Framework only="svelte">
+
+`showStopGenerate` 参数可用于设置是否展示停止生成按钮，默认为 `false`。可以在 `onStopGenerator` 中处理停止生成逻辑。流式更新消息时，每次用新对象替换最后一项并整体替换数组，Chat 会跟随更新。
+
+</Framework>
+
 <Demo id="dynamic-update" />
 
 ### 清除上下文
@@ -154,6 +189,23 @@ chats 类型为 `Message[]`， `Message` 包含对话的各种信息，如角色
 <Framework only="solid">
 
 通过 `showClearContext` 可以开启在输入框中显示清除上下文按钮，默认为 `false`。也可以通过 ref 调用 `clearContext` 方法清除上下文。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `showClearContext` 可以开启在输入框中显示清除上下文按钮，默认为 `false`。也可以通过组件实例（`bind:this`）调用 `clearContext` 方法清除上下文，实例还提供 `resetMessage`、`scrollToBottom` 和 `sendMessage`，见 API 的 Methods。清除后的分割线可用 `divider` snippet 自定义。
+
+```svelte
+<script lang="ts">
+    import { Chat, type ChatHandle } from '@fibrae/semi-ai-svelte';
+
+    let chat = $state<ChatHandle>();
+</script>
+
+<Chat bind:this={chat} showClearContext />
+<button onclick={() => chat?.clearContext()}>清除上下文</button>
+```
 
 </Framework>
 
@@ -382,6 +434,74 @@ export interface ChatFullChatBoxSlotProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+通过同名 snippet 自定义会话框的各个部分，snippet 参数类型如下。参数里的 `class` 是该部分默认的类名，自定义的根元素需要绑定它；`default*` 是内置节点，类型是 snippet，在需要的位置用 `{@render}` 渲染。
+
+```ts
+import type { Snippet } from 'svelte';
+
+export interface ChatTitleSnippetProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultTitle: Snippet;
+}
+
+export interface ChatAvatarSnippetProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultAvatar: Snippet;
+}
+
+/* 用于没有图片 URL 的角色，渲染头像里的内容 */
+export interface ChatRoleAvatarSnippetProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+}
+
+export interface ChatContentSnippetProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultContent: Snippet;
+    class: string;
+}
+
+/* 与默认操作栏显示的按钮一致，按钮不显示时（如消息未完成）对应的键不存在 */
+export interface ChatDefaultActionNodeObj {
+    copyNode?: Snippet;
+    likeNode?: Snippet;
+    dislikeNode?: Snippet;
+    resetNode?: Snippet;
+    deleteNode?: Snippet;
+}
+
+export interface ChatActionSnippetProps {
+    message: ChatMessage;
+    defaultActions: Snippet[];
+    defaultActionsObj: ChatDefaultActionNodeObj;
+    class: string;
+}
+
+/* 每个部分都是消息默认渲染的结果，已包含 avatar、title、content、action snippet 的自定义 */
+export interface ChatFullChatBoxNodes {
+    avatar: Snippet;
+    title: Snippet;
+    content: Snippet;
+    action: Snippet;
+}
+
+export interface ChatFullChatBoxSnippetProps {
+    message: ChatMessage;
+    role: ChatMetadata;
+    defaultNodes: ChatFullChatBoxNodes;
+    class: string;
+}
+```
+
+自定义渲染头像和标题，可通过 `avatar` 和 `title` snippet 实现。提供 snippet 但渲染为空时，对应的头像或标题不显示；`roleConfig` 的 `avatar` 只接受图片 URL，需要节点头像时使用 `roleAvatar` snippet。
+
+</Framework>
+
 <Demo id="custom-avatar-title" />
 
 <Framework only="react">
@@ -399,6 +519,12 @@ export interface ChatFullChatBoxSlotProps {
 <Framework only="solid">
 
 鼠标移动到会话上，即可显示会话操作区，通过 `renderChatBoxAction` 自定义渲染操作区
+
+</Framework>
+
+<Framework only="svelte">
+
+鼠标移动到会话上，即可显示会话操作区，通过 `action` snippet 自定义渲染操作区。`defaultActions` 是默认按钮的 snippet 数组，用 `{#each}` 加 `{@render}` 渲染。
 
 </Framework>
 
@@ -422,6 +548,12 @@ export interface ChatFullChatBoxSlotProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `content` snippet 自定义内容区域，需要内置内容时用 `{@render defaultContent()}`。
+
+</Framework>
+
 <Demo id="custom-content" />
 
 <Framework only="react">
@@ -439,6 +571,12 @@ export interface ChatFullChatBoxSlotProps {
 <Framework only="solid">
 
 使用 `renderFullChatBox` 自定义渲染整个会话框
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `fullChatBox` snippet 自定义渲染整个会话框，`defaultNodes` 里的各部分用 `{@render defaultNodes.title()}` 等渲染。
 
 </Framework>
 
@@ -611,6 +749,49 @@ function CustomInputRender(props) {
 
 </Framework>
 
+<Framework only="svelte">
+
+可通过 `inputArea` snippet 自定义渲染输入框，snippet 参数如下
+
+```ts
+import type { Snippet } from 'svelte';
+
+export interface ChatInputAreaSnippetProps {
+    /* 默认节点 */
+    defaultNode: Snippet;
+    /* 清除上下文按钮 */
+    clearContextNode: Snippet;
+    /* 上传按钮，上传方式全部关闭时为 null */
+    uploadNode: Snippet | null;
+    /* 文本输入框 */
+    inputNode: Snippet;
+    /* 发送按钮 */
+    sendNode: Snippet;
+    /* 如果自定义输入框，发送消息时需调用 */
+    onSend: (content?: string, attachment?: FileItem[]) => void;
+    /* 如果自定义清除上下文按钮，点击清除上下文时需调用 */
+    onClear: () => void;
+    /* 点击触发聚焦文本输入框的处理函数 */
+    onClick: () => void;
+}
+```
+
+各部分节点的使用示例如下
+
+```svelte
+<Chat bind:chats>
+    {#snippet inputArea({ uploadNode, inputNode, sendNode, onClick })}
+        <div style="margin: 8px 16px; display: flex; flex-direction: row; align-items: flex-end; border-radius: 16px; padding: 10px; border: 1px solid var(--semi-color-border)" role="presentation" onclick={onClick}>
+            {@render uploadNode?.()}
+            {@render inputNode()}
+            {@render sendNode()}
+        </div>
+    {/snippet}
+</Chat>
+```
+
+</Framework>
+
 其他使用示例如下
 
 <Demo id="custom-input-area" />
@@ -632,6 +813,12 @@ function CustomInputRender(props) {
 <Framework only="vue">
 
 通过 `hints` 可设置提示区域内容, 点击提示内容后，提示内容将成为新的用户输入内容，并触发 `hintClick` 事件。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `hints` 可设置提示区域内容，点击提示内容后，提示内容将作为新的用户消息发送，并触发 `onHintClick` 回调。
 
 </Framework>
 
@@ -670,6 +857,20 @@ export interface ChatHintBoxSlotProps {
 ```ts
 export interface RenderHintBoxProps {
     readonly content: string;
+    index: number;
+    onHintClick: () => void;
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `hintBox` snippet 自定义提示区域内容，参数如下
+
+```ts
+export interface ChatHintBoxSnippetProps {
+    content: string;
     index: number;
     onHintClick: () => void;
 }
@@ -751,6 +952,30 @@ export interface RenderHintBoxProps {
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
 | name   | 名称                                                                                                                                                                                                                | string      | -      |
 | avatar | 头像图片 URL；其他头像内容使用 `chatBoxRenderConfig.renderRoleAvatar` 渲染                                                                                                                                          | string      | -      |
+| color  | 头像背景色，同 Avatar 组件的 color 参数, 支持 `amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow` | AvatarColor | `grey` |
+
+</Framework>
+
+<Framework only="svelte">
+
+<ChatSvelteApi />
+
+`class`、`style` 与其他未声明的属性及事件（如 `data-*`、`aria-*`、`ondragover`）落在根元素 `div` 上，`class` 与组件自身的类名合并。根元素带有 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，自动加上 `role="group"`。`ondragover`、`ondragstart`、`ondragend` 监听同样落在根元素上，Chat 自己的拖拽上传处理先于使用方的监听执行。
+
+#### RoleConfig
+
+| 属性      | 说明     | 类型         | 默认值 |
+| --------- | -------- | ------------ | ------ |
+| user      | 用户信息 | ChatMetadata | -      |
+| assistant | 助手信息 | ChatMetadata | -      |
+| system    | 系统信息 | ChatMetadata | -      |
+
+#### Metadata
+
+| 属性   | 说明                                                                                                                                                                                                                | 类型        | 默认值 |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| name   | 名称                                                                                                                                                                                                                | string      | -      |
+| avatar | 头像图片 URL。节点头像使用 `roleAvatar` snippet                                                                                                                                                                     | string      | -      |
 | color  | 头像背景色，同 Avatar 组件的 color 参数, 支持 `amber`、 `blue`、 `cyan`、 `green`、 `grey`、 `indigo`、 `light-blue`、 `light-green`、 `lime`、 `orange`、 `pink`、 `purple`、 `red`、 `teal`、 `violet`、 `yellow` | AvatarColor | `grey` |
 
 </Framework>

@@ -19,9 +19,9 @@ const cascaderModalOptions = [
     },
 ];
 
-const myCascader = (props: CascaderProps) => {
+function myCascader(props: CascaderProps) {
     return <Cascader {...props} />;
-};
+}
 
 const CustomCascader = getConfigureItem(myCascader, {
     className: 'aiChatInput-cascader-configure',

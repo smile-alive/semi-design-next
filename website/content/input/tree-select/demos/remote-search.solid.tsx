@@ -5,7 +5,7 @@ export default function TreeSelectDemo() {
     const [value, setValue] = createSignal<string | number>();
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>([]);
 
-    function handleSearch(inputValue: string) {
+    const handleSearch = (inputValue: string) => {
         if (!inputValue) {
             setTreeData([]);
             return;
@@ -19,7 +19,7 @@ export default function TreeSelectDemo() {
             ];
             setTreeData(mockData);
         }, 500);
-    }
+    };
 
     return <TreeSelect style={{ width: '300px' }} placeholder="请输入关键字进行远程搜索" treeData={treeData()} filterTreeNode remote value={value()} onChange={(next) => setValue(next)} onSearch={handleSearch} />;
 }

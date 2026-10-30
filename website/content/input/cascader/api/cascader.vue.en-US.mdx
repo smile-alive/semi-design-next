@@ -33,8 +33,8 @@ import ApiType from '#/components/ApiType.astro';
 | placeholder | Placeholder of the select box. | `string` | `semiGlobalDefault("Cascader", "placeholder")` |
 | searchPlaceholder | Placeholder of the search input; placeholder is used when it is not given. | `string` | `semiGlobalDefault("Cascader", "searchPlaceholder")` |
 | searchPosition | Where the search input is: trigger puts it in the trigger, custom leaves it to the caller, who passes the keyword with the search method. | `"trigger" \| "custom"` | <ApiType detail={"semiDefault(\"Cascader\", \"searchPosition\", strings.SEARCH_POSITION_TRIGGER)"}>Type</ApiType> |
-| disabled | Whether the Cascader is disabled. A disabled Cascader cannot be reached with Tab. | `boolean` | `semiDefault("Cascader", "disabled", false)` |
-| size | Size of the select box. | `Size` | `semiDefault("Cascader", "size", "default")` |
+| disabled | Whether the Cascader is disabled. A disabled Cascader cannot be reached with Tab. | `boolean` | `undefined` |
+| size | Size of the select box. | `Size` | `undefined` |
 | borderless | Whether to use the borderless style. | `boolean` | `semiDefault("Cascader", "borderless", false)` |
 | validateStatus | Validation status of the trigger; it only affects the style. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Cascader", "validateStatus")` |
 | insetLabelId | The id of the insetLabel content, used to name the combobox; the component generates one when the insetLabel slot is used and this is not given. | `string` | `undefined` |
@@ -57,8 +57,8 @@ import ApiType from '#/components/ApiType.astro';
 | change | Emitted when the selection changes. In single mode the selected path, in multiple mode an array of the selected paths; node data with changeWithObject. It shares its name with the native change and hides the native one that bubbles from inside the root. | <ApiType detail={"[value: ByMultiple\u003cMultiple, CascaderSimpleValue[], CascaderSimpleValue[][]>]"}>Type</ApiType> |
 | select | Emitted when a node is selected, with the value of the node. In multiple mode, one checked node gives its value and more give an array. | <ApiType detail={"[value: ByMultiple\u003cMultiple, string \u007c number, string \u007c number \u007c (string \u007c number)[]>]"}>Type</ApiType> |
 | search | Emitted when the search input changes, with the text. | `[value: string]` |
-| focus | Emitted when a click or a key opens the dropdown, with that MouseEvent or KeyboardEvent. It is not a DOM focus event and Tabbing in or out does not emit it. | `[event: MouseEvent \| KeyboardEvent]` |
-| blur | Emitted when the dropdown closes: a MouseEvent for a click outside, a KeyboardEvent for Esc, undefined when the close method closes it. It is not a DOM blur event. | `[event?: MouseEvent \| KeyboardEvent \| undefined]` |
+| focus | Emitted when a click or a key opens the dropdown, with that MouseEvent or KeyboardEvent. It is not a DOM focus event and Tabbing in or out does not emit it. | `[event: MouseEvent \| KeyboardEvent \| FocusEvent]` |
+| blur | Emitted when the dropdown closes: a MouseEvent for a click outside, a KeyboardEvent for Esc, undefined when the close method closes it. It is not a DOM blur event. | `[event?: MouseEvent \| KeyboardEvent \| FocusEvent \| undefined]` |
 | dropdownVisibleChange | Emitted when the dropdown opens or closes, with whether it is open. | `[visible: boolean]` |
 | clear | Emitted when the clear button clears the selection. | `[]` |
 | exceed | Emitted in multiple mode when the selection goes past max, with the Entity array of the checked nodes. | `[checkedItem: CascaderEntity[]]` |

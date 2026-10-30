@@ -1,7 +1,7 @@
 import { IconHandle, IconClose } from '@fibrae/semi-icons-solid';
 import { Transfer, Button, Checkbox, Avatar, type TransferDataItem, type TransferRenderSelectedItemProps, type TransferRenderSourceItemProps } from '@fibrae/semi-ui-solid';
 
-const renderSourceItem = (item: TransferRenderSourceItemProps) => {
+function renderSourceItem(item: TransferRenderSourceItemProps) {
     return (
         <div class="components-transfer-demo-source-item">
             <Checkbox
@@ -21,9 +21,9 @@ const renderSourceItem = (item: TransferRenderSourceItemProps) => {
             </Checkbox>
         </div>
     );
-};
+}
 
-const renderSelectedItem = (item: TransferRenderSelectedItemProps) => {
+function renderSelectedItem(item: TransferRenderSelectedItemProps) {
     // the handle exists only with `draggable`, which this demo sets
     const DragHandle = item.sortableHandle?.(() => <IconHandle class="semi-right-item-drag-handler" />);
     return (
@@ -39,11 +39,11 @@ const renderSelectedItem = (item: TransferRenderSelectedItemProps) => {
             <Button class="remove" theme="borderless" type="tertiary" size="small" icon={<IconClose />} aria-label={`移除 ${String(item.label)}`} onClick={() => item.onRemove?.()} />
         </div>
     );
-};
+}
 
-const customFilter = (searchValue: string, item: TransferDataItem) => {
+function customFilter(searchValue: string, item: TransferDataItem) {
     return String(item.value).includes(searchValue) || String(item.label).includes(searchValue);
-};
+}
 
 const data = [
     { label: '夏可漫', value: 'xiakeman@example.com', abbr: '夏', color: 'amber', area: 'US', key: 1 },

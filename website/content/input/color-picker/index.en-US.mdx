@@ -8,6 +8,7 @@ brief: Quickly and easily select colors, and provide a dropper tool to pick colo
 import ColorPickerReactApi from './api/color-picker.react.en-US.mdx';
 import ColorPickerVueApi from './api/color-picker.vue.en-US.mdx';
 import ColorPickerSolidApi from './api/color-picker.solid.en-US.mdx';
+import ColorPickerSvelteApi from './api/color-picker.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, ColorPicker, colorStringToValue } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Use
 
 #### In portal
@@ -64,6 +75,12 @@ The eyedropper is enabled by default and supports picking colors from the browse
 </Framework>
 
 <Framework only="solid">
+
+The eyedropper is enabled by default and supports picking colors from the browser or external software screen. Pass `eyeDropper={false}` to turn it off.
+
+</Framework>
+
+<Framework only="svelte">
 
 The eyedropper is enabled by default and supports picking colors from the browser or external software screen. Pass `eyeDropper={false}` to turn it off.
 
@@ -101,7 +118,37 @@ The defaultValue (uncontrolled) and value (controlled) you pass in should also b
 
 </Framework>
 
+<Framework only="svelte">
+
+When converting between various color representation formats, there are theoretical errors between some formats, so the value returned to you by `onChange` is an object containing color values in three formats: hsva, hex, and rgba.
+
+The `value` you pass in should also be an object containing the same three formats. Without `value` the picker manages its own color, and a one-way `value={x}` only seeds it.
+
+</Framework>
+
+<Framework only="react">
+
 We provide a static tool function `colorStringToValue` on the component to convert common color strings to this object, supporting direct passing of strings such as rgb(57,197,187) #39c5bb (the short form #3cb is also accepted) and hsv(176,71,77). A string that cannot be parsed throws an error.
+
+</Framework>
+
+<Framework only="vue">
+
+We provide a static tool function `colorStringToValue` on the component to convert common color strings to this object, supporting direct passing of strings such as rgb(57,197,187) #39c5bb (the short form #3cb is also accepted) and hsv(176,71,77). A string that cannot be parsed throws an error.
+
+</Framework>
+
+<Framework only="solid">
+
+We provide a static tool function `colorStringToValue` on the component to convert common color strings to this object, supporting direct passing of strings such as rgb(57,197,187) #39c5bb (the short form #3cb is also accepted) and hsv(176,71,77). A string that cannot be parsed throws an error.
+
+</Framework>
+
+<Framework only="svelte">
+
+We provide the tool function `colorStringToValue`, a named export of `@fibrae/semi-ui-svelte` rather than a member of the component, to convert common color strings to this object, supporting direct passing of strings such as rgb(57,197,187) #39c5bb (the short form #3cb is also accepted) and hsv(176,71,77). A string that cannot be parsed throws an error.
+
+</Framework>
 
 <Demo id="default-value" />
 
@@ -125,6 +172,12 @@ Controlled use by passing in `value`. Treat the color value as immutable and rep
 
 </Framework>
 
+<Framework only="svelte">
+
+Bind `value` with `bind:value` for controlled use; for full control use the function binding `bind:value={get, set}`. Treat the color value as immutable and replace it as a whole when updating (declare it with `$state.raw`); mutating a field such as `hsva.h` in place does not sync the text inputs.
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### Rendering additional elements at the top and bottom
@@ -144,6 +197,12 @@ Use the `#topSlot` and `#bottomSlot` slots to render additional elements at the 
 <Framework only="solid">
 
 Use `topSlot` and `bottomSlot` to render additional elements at the top and bottom
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `topSlot` and `bottomSlot` snippets to render additional elements at the top and bottom
 
 </Framework>
 
@@ -215,6 +274,28 @@ The `value`, `defaultValue` and `onChange` payload are all the same kind of obje
 #### ColorValue
 
 The `value`, `defaultValue` and `onChange` payload are all the same kind of object:
+
+| Field | Description                                                    | Type                                             |
+| ----- | -------------------------------------------------------------- | ------------------------------------------------ |
+| hsva  | HSV color and opacity; h is 0-360, s and v are 0-100, a is 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba  | RGB color and opacity; r, g and b are 0-255, a is 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex   | Hexadecimal color, `#rrggbb`, or `#rrggbbaa` with opacity      | `string`                                         |
+
+</Framework>
+
+<Framework only="svelte">
+
+#### ColorPicker
+
+<ColorPickerSvelteApi />
+
+#### Attribute placement
+
+`class` (a string, array or object), `style` (a string) and other native attributes and events land on the picker root element; with `usePopover` they land on the picker element inside the popup, not on the trigger or the dialog. When the caller passes `aria-label` or `aria-labelledby` without a `role`, the picker root gets `role="group"`.
+
+#### ColorValue
+
+The `value` and the `onChange` payload are the same kind of object:
 
 | Field | Description                                                    | Type                                             |
 | ----- | -------------------------------------------------------------- | ------------------------------------------------ |

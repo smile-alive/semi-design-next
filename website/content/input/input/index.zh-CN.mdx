@@ -11,6 +11,9 @@ import InputGroupReactApi from './api/input-group.react.zh-CN.mdx';
 import InputVueApi from './api/input.vue.zh-CN.mdx';
 import TextAreaVueApi from './api/text-area.vue.zh-CN.mdx';
 import InputGroupVueApi from './api/input-group.vue.zh-CN.mdx';
+import InputSvelteApi from './api/input.svelte.zh-CN.mdx';
+import TextAreaSvelteApi from './api/text-area.svelte.zh-CN.mdx';
+import InputGroupSvelteApi from './api/input-group.svelte.zh-CN.mdx';
 import InputSolidApi from './api/input.solid.zh-CN.mdx';
 import TextAreaSolidApi from './api/text-area.solid.zh-CN.mdx';
 import InputGroupSolidApi from './api/input-group.solid.zh-CN.mdx';
@@ -32,6 +35,16 @@ import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -81,6 +94,14 @@ import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `prefix`、`suffix` snippet 在输入框上增加前缀、后缀，内容可以是文本、图标或任意节点
+
+当 snippet 内容只有文本或者一个 Semi Icon 时，会自动带上左右间隔，若为自定义节点，则左右间隔为 0
+
+</Framework>
+
 <Framework only="solid">
 
 在输入框上增加前缀、后缀图标，可以是 JSX 元素
@@ -106,6 +127,14 @@ import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-solid';
 通过 `#addonBefore`、`#addonAfter` 插槽在输入框上增加前置/后置标签
 
 当插槽内容只有文本或者一个 Semi Icon 时，会自动带上左右间隔，若为自定义节点，则左右间隔为 0
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `addonBefore`、`addonAfter` snippet 在输入框上增加前置/后置标签
+
+当 snippet 内容只有文本或者一个 Semi Icon 时，会自动带上左右间隔，若为自定义节点，则左右间隔为 0
 
 </Framework>
 
@@ -148,6 +177,12 @@ import { Input, TextArea, InputGroup } from '@fibrae/semi-ui-solid';
 <Framework only="vue">
 
 使用 `v-model` 绑定值。若只用 `:modelValue` 单向绑定，组件不会改变自己的值：父组件不接受 `change` 带来的新值时，输入框会回到 `modelValue`。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:value` 绑定值。只传 `value={x}` 时它是初始内容，之后由组件自己维护；需要由父组件决定是否接受新值时，用 `bind:value={get, set}`，`set` 不更新状态则输入框回到 `get` 的值。
 
 </Framework>
 
@@ -224,6 +259,14 @@ TextArea 默认情况下 Enter 回车与 Shift + Enter 均可实现换行
 
 </Framework>
 
+<Framework only="svelte">
+
+- maxlength：不直接透传 maxlength 给原生 input。如果输入长度超出最大限制，则使用上一次输入的合法长度字符。
+- minlength：动态切换 minlength 的长度，emoji 按照一个长度计算。
+- maxCount：使用 getValueLength 获取的值与 maxCount 进行比较
+
+</Framework>
+
 <Framework only="solid">
 
 - maxLength：不直接透传 maxLength 给原生 input。如果输入长度超出最大限制，则使用上一次输入的合法长度字符。
@@ -251,6 +294,12 @@ TextArea 默认情况下 Enter 回车与 Shift + Enter 均可实现换行
 <Framework only="vue">
 
 通过设置 `composition` 属性为 `true`，可以开启输入法模式。在该模式下，使用输入法（如中文拼音）输入时，`change` 事件不会在输入法未确认（如拼音过程中）触发，而是在输入法确认后触发一次。适用于实时搜索等场景，避免在拼音输入过程中触发不必要的请求。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过设置 `composition` 属性为 `true`，可以开启输入法模式。在该模式下，使用输入法（如中文拼音）输入时，`onChange` 不会在输入法未确认（如拼音过程中）调用，而是在输入法确认后调用一次。适用于实时搜索等场景，避免在拼音输入过程中触发不必要的请求。
 
 </Framework>
 
@@ -286,6 +335,14 @@ Input 和 TextArea 均支持该属性。
 
 </Framework>
 
+<Framework only="svelte">
+
+> `class`、`style` 落在外层容器上；其余未声明的属性与事件（如 `aria-*`、`id`、`name`、`onclick`）与 html input 标签保持一致，落在原生 input 上。`onFocus`、`onBlur` 监听在外层元素上，焦点在输入框与组件内按钮之间移动时不触发。
+
+<InputSvelteApi />
+
+</Framework>
+
 <Framework only="solid">
 
 <InputSolidApi />
@@ -314,6 +371,14 @@ Input 和 TextArea 均支持该属性。
 
 </Framework>
 
+<Framework only="svelte">
+
+> `class`、`style` 落在外层容器上；其余未声明的属性与事件（如 `aria-*`、`id`、`name`、`onclick`）与 html textarea 标签保持一致，落在原生 textarea 上。
+
+<TextAreaSvelteApi />
+
+</Framework>
+
 <Framework only="solid">
 
 <TextAreaSolidApi />
@@ -326,19 +391,27 @@ Input 和 TextArea 均支持该属性。
 
 <Framework only="react">
 
-通用属性将设置到 InputGroup 的子级元素上，例如 size、disabled 等；子级显式设置的 disabled 优先于 InputGroup 的值。onFocus、onBlur 不会下发给子级：InputGroup 在自身根元素上监听焦点事件，子级获得或失去焦点时，InputGroup 与子级各自的处理器都会触发，互不覆盖。
+`size`、`disabled` 经 context 下发给组内任意深度的控件（包括 Button，以及 ButtonGroup 里的 Button），不要求是直接子元素。控件自己设置的值优先于组的值，含 `disabled={false}`。`data-*`、`aria-*`、`id` 等其他属性只落在 `role="group"` 的元素上，不下发给组内控件；传入的 `role`、`aria-label`、`aria-labelledby`、`id` 覆盖内置值。Select、Cascader、TreeSelect、AutoComplete、DatePicker、TimePicker、InputNumber、TagInput 内部渲染的输入框与按钮，以及它们弹层里的控件，不继承组。onFocus、onBlur 不会下发给控件：InputGroup 在自身根元素上监听焦点事件，控件获得或失去焦点时，InputGroup 与控件各自的处理器都会触发，互不覆盖。
 
 <InputGroupReactApi />
-
-`data-*`、`aria-*` 等其他属性不挂到 `role="group"` 元素上，而是下发给组内每个子元素，并覆盖子元素上的同名属性。
 
 </Framework>
 
 <Framework only="vue">
 
-通用属性（`size`、`disabled`、`data-*`、`aria-*` 等）下发给每个子节点；子级自己写的 `disabled`（含模板简写 `disabled` 和 `:disabled="false"`）优先于组的值，`size` 总是取组的值。`class`、`style` 留在 `role="group"` 的元素上。`focus`、`blur` 是组自己的事件，不下发给子级：子级获得或失去焦点时，组与子级各自的监听器都会触发，互不覆盖。`labelPosition` 也不下发。带 `label` 时，组件 ref 的 `$el` 是外层 wrapper。
+`size`、`disabled` 经 provide/inject 下发给组内任意深度的控件（包括 Button，以及 ButtonGroup 里的 Button）；控件自己设置的值优先于组的值，含模板简写 `disabled` 和 `:disabled="false"`。`class`、`style`、`data-*`、`aria-*`、`id` 等其他属性只落在 `role="group"` 的元素上，不下发给组内控件；传入的 `role`、`aria-label`、`aria-labelledby`、`id` 覆盖内置值。Select、Cascader、TreeSelect、AutoComplete、DatePicker、TimePicker、InputNumber、TagInput 内部渲染的输入框与按钮，以及它们弹层里的控件，不继承组。`focus`、`blur` 是组自己的事件，不下发给控件：控件获得或失去焦点时，组与控件各自的监听器都会触发，互不覆盖。带 `label` 时，组件 ref 的 `$el` 是外层 wrapper。
 
 <InputGroupVueApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+`size`、`disabled` 经 context 下发给组内任意深度的控件（包括 Button，以及 ButtonGroup 里的 Button）；控件自己设置的值优先于组的值，含 `disabled={false}`。`class`、`style`、`data-*`、`aria-*`、`id` 等其他属性只落在 `role="group"` 的元素上，不下发给组内控件；传入的 `role`、`aria-label`、`aria-labelledby`、`id` 覆盖内置值。Select、Cascader、TreeSelect、AutoComplete、DatePicker、TimePicker、InputNumber、TagInput 内部渲染的输入框与按钮，以及它们弹层里的控件，不继承组。`onFocus`、`onBlur` 是组自己的回调，不下发给控件：组内控件获得或失去焦点时，组与控件各自的处理器都会触发，互不覆盖。
+
+传入 `label`（文本放在 `label.text`，或用 `fieldLabel` snippet 写节点内容，附加内容用 `labelExtra` snippet）时，组外会多一层 wrapper，标签命名整个 `role="group"` 元素。
+
+<InputGroupSvelteApi />
 
 </Framework>
 
@@ -346,7 +419,7 @@ Input 和 TextArea 均支持该属性。
 
 <InputGroupSolidApi />
 
-`size` 与 `disabled` 下发给组内每个控件：控件自己设置的 `disabled` 优先，`size` 总是取组的值。其余未声明的属性（如 `data-*`、`aria-*`）同样下发，控件自己设置的属性优先。`class`、`style`、`ref` 落在 `role="group"` 的 `span` 上。`onFocus`、`onBlur` 监听在组的根元素上，组内控件获得或失去焦点时，组与控件各自的处理器都会触发，互不覆盖。
+`size` 与 `disabled` 经 context 下发给组内任意深度的控件（包括 Button，以及 ButtonGroup 里的 Button）：控件自己设置的值优先于组的值，含 `disabled={false}`。其余未声明的属性（如 `data-*`、`aria-*`、`id`）连同 `class`、`style`、`ref` 只落在 `role="group"` 的 `span` 上，不下发给组内控件；传入的 `role`、`aria-label`、`aria-labelledby`、`id` 覆盖内置值。Select、Cascader、TreeSelect、AutoComplete、DatePicker、TimePicker、InputNumber、TagInput 内部渲染的输入框与按钮，以及它们弹层里的控件，不继承组。`onFocus`、`onBlur` 监听在组的根元素上，组内控件获得或失去焦点时，组与控件各自的处理器都会触发，互不覆盖。
 
 </Framework>
 
@@ -363,6 +436,12 @@ Input 与 TextArea 的 ref 是命令式句柄（类型分别为 `InputHandle`、
 <Framework only="vue">
 
 Input 与 TextArea 的模板 ref 是命令式句柄（类型分别为 `InputHandle`、`TextAreaHandle`），成员见上方各组件的 Exposes 表。`input`、`textarea`、`nativeElement` 每次读取都返回当前挂载的节点，卸载后为 `null`。
+
+</Framework>
+
+<Framework only="svelte">
+
+Input 与 TextArea 通过 `export function` 暴露方法，用 `bind:this` 取得实例后调用，成员见上方各组件的 **Methods** 表。`getInput`、`getTextarea`、`getNativeElement` 每次调用都返回当前挂载的节点，卸载后为 `null`。
 
 </Framework>
 

@@ -1,0 +1,112 @@
+{
+    "checkbox": {
+        "source": "packages/semi-ui-svelte/src/checkbox/checkbox.svelte",
+        "props": {
+            "addonId": {
+                "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
+                "en-US": "Id of the addon node, which aria-labelledby points to. Generated when omitted."
+            },
+            "checked": {
+                "zh-CN": "是否选中，可用 `bind:checked` 双向绑定；在 CheckboxGroup 中使用时无效。`bind:checked={get, set}` 时完全受控；只传 `checked` 时作为初值，点击在组件内覆盖，父级再传新值时以父级为准。",
+                "en-US": "Whether the checkbox is checked; bind it with `bind:checked`. Ignored inside a CheckboxGroup. `bind:checked={get, set}` makes it fully controlled; a plain `checked` is the initial value, a click overrides it inside the component, and a new value from the parent wins again."
+            },
+            "children": {
+                "zh-CN": "Checkbox 的文本内容 snippet，同时是原生 input 的可访问名称；写在标签内的其余内容就是它。",
+                "en-US": "Label content snippet of the checkbox, which is also the native input's accessible name. The rest of the tag's content is this snippet."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the checkbox is disabled." },
+            "extra": {
+                "zh-CN": "辅助文本的 snippet，aria-describedby 指向它。",
+                "en-US": "Snippet of the supplementary text, which aria-describedby points to."
+            },
+            "extraId": {
+                "zh-CN": "extra 节点的 id，aria-describedby 指向这个 id；未设置时随机生成。",
+                "en-US": "Id of the extra node, which aria-describedby points to. Generated when omitted."
+            },
+            "indeterminate": {
+                "zh-CN": "半选状态，只影响外观与原生 input 的 indeterminate，不改变选中值。",
+                "en-US": "Indeterminate state. It only affects the appearance and the native input's indeterminate flag, never the checked value."
+            },
+            "name": {
+                "zh-CN": "原生 input 的 name；在 CheckboxGroup 中以组的 `name` 为准。",
+                "en-US": "The native input's name. Inside a CheckboxGroup the group's `name` applies."
+            },
+            "onChange": {
+                "zh-CN": "选中状态变化时的回调，参数的 `target` 为 `{ checked, value, name, disabled }`。",
+                "en-US": "Called when the checked state changes. The event's `target` is `{ checked, value, name, disabled }`."
+            },
+            "onclick": {
+                "zh-CN": "点击根元素时的回调，在切换之前调用。",
+                "en-US": "Called when the root element is clicked, before the toggle."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动到该元素，作用于 focus 方法。",
+                "en-US": "Whether focusing prevents the browser from scrolling the element into view; applies to the focus method."
+            },
+            "type": {
+                "zh-CN": "样式类型，可选 default、card、pureCard；在 CheckboxGroup 中以组的 type 为准。",
+                "en-US": "Style type: default, card or pureCard. Inside a CheckboxGroup the group's type applies."
+            },
+            "value": {
+                "zh-CN": "该 Checkbox 在 CheckboxGroup 中代表的值；不设置时它不属于任何分组。",
+                "en-US": "The value this checkbox stands for in a CheckboxGroup. Without it the checkbox is not part of the group."
+            }
+        },
+        "methods": {
+            "focus": { "zh-CN": "使原生 input 获得焦点。", "en-US": "Focuses the native input." },
+            "blur": { "zh-CN": "使原生 input 失去焦点。", "en-US": "Removes focus from the native input." }
+        }
+    },
+    "checkbox-group": {
+        "source": "packages/semi-ui-svelte/src/checkbox/checkbox-group.svelte",
+        "props": {
+            "children": {
+                "zh-CN": "组内的 Checkbox；设置 options 时忽略。",
+                "en-US": "Checkbox components in the group. Ignored when options is set."
+            },
+            "direction": {
+                "zh-CN": "组内布局方向，可选 horizontal 或 vertical。",
+                "en-US": "Layout direction inside the group: horizontal or vertical."
+            },
+            "disabled": { "zh-CN": "是否禁用整组。", "en-US": "Whether the whole group is disabled." },
+            "extra": {
+                "zh-CN": "自定义 options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。",
+                "en-US": "Snippet for the extra text of each item in options, with the parameter `{ option, index }`."
+            },
+            "label": {
+                "zh-CN": "自定义 options 中每一项文本的 snippet，参数为 `{ option, index }`。",
+                "en-US": "Snippet for the label of each item in options, with the parameter `{ option, index }`."
+            },
+            "name": {
+                "zh-CN": "组内所有原生 input 的 name；未设置时每组生成唯一值。",
+                "en-US": "The name of every native input in the group. A unique value is generated per group when omitted."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开整个分组时的回调，在组内 Checkbox 之间移动焦点不触发。",
+                "en-US": "Called when focus leaves the whole group; moving focus between its checkboxes does not call it."
+            },
+            "onChange": {
+                "zh-CN": "选中的值变化时的回调，参数为新的选中值数组。",
+                "en-US": "Called when the selected values change, with the new array of values."
+            },
+            "onfocusout": {
+                "zh-CN": "根元素的 focusout 事件回调，先于 onBlur 调用。",
+                "en-US": "Callback for the root element's focusout event, called before onBlur."
+            },
+            "options": {
+                "zh-CN": "以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`，其中 `style` 为字符串。",
+                "en-US": "Declares the options as data. Each item is a string or `{ label, value, disabled, extra, class, style }`, where `style` is a string."
+            },
+            "prefixCls": { "zh-CN": "CSS 类名前缀。", "en-US": "CSS class name prefix." },
+            "type": {
+                "zh-CN": "组内所有 Checkbox 的样式类型，可选 default、card、pureCard。",
+                "en-US": "Style type of every Checkbox in the group: default, card or pureCard."
+            },
+            "value": {
+                "zh-CN": "选中的值，可用 `bind:value` 双向绑定，与 Checkbox 的 value 匹配。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值。",
+                "en-US": "Selected values, matched against each Checkbox's value; bind it with `bind:value`. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value."
+            }
+        }
+    }
+}

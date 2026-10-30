@@ -18,6 +18,10 @@ import TypographyTextSolidApi from './api/typography-text.solid.en-US.mdx';
 import TypographyTitleSolidApi from './api/typography-title.solid.en-US.mdx';
 import TypographyParagraphSolidApi from './api/typography-paragraph.solid.en-US.mdx';
 import TypographyNumeralSolidApi from './api/typography-numeral.solid.en-US.mdx';
+import TypographyTextSvelteApi from './api/typography-text.svelte.en-US.mdx';
+import TypographyTitleSvelteApi from './api/typography-title.svelte.en-US.mdx';
+import TypographyParagraphSvelteApi from './api/typography-paragraph.svelte.en-US.mdx';
+import TypographyNumeralSvelteApi from './api/typography-numeral.svelte.en-US.mdx';
 
 ## When to Use
 
@@ -56,6 +60,18 @@ import { Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { TypographyNumeral, TypographyParagraph, TypographyText, TypographyTitle } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+The Svelte package uses the named exports `TypographyText`, `TypographyTitle`, `TypographyParagraph` and `TypographyNumeral`; the package root also exports `Typography`.
+
+</Framework>
+
 ### Title
 
 Use `heading` to set different levels of headint title.
@@ -81,6 +97,12 @@ You could also use the `#icon` slot to use the built-in styles for icon. Differe
 <Framework only="solid">
 
 You could also pass an icon element or an icon component to `icon` to use the built-in styles for icon. Different from putting the icon in children, using `icon` for link will have no underline in compliance with Semi Design Next principles.
+
+</Framework>
+
+<Framework only="svelte">
+
+You could also use the `icon` snippet to use the built-in styles for icon. Different from putting the icon in children, using `icon` for link will have no underline in compliance with Semi Design Next principles.
 
 </Framework>
 
@@ -117,6 +139,12 @@ The Numeral component recursively traverses Children to detect all numeric text 
 <Framework only="solid">
 
 The Numeral component only formats its direct string and number children, each one separately; element children are output as they are and the numbers inside are not converted. To convert them, wrap that element's content in its own Numeral.
+
+</Framework>
+
+<Framework only="svelte">
+
+The Numeral component recursively traverses the text nodes rendered by `children` to detect all numeric text within them for conversion, so please control the rendering structure level.
 
 </Framework>
 
@@ -182,6 +210,12 @@ You can use the `copyable.render` attribute to customize the copyable button ren
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `copyIcon` snippet for the content of the copy button, `copyTip` for its tooltip and `copySuccessTip` for the success tip; the `copyAction` snippet (argument `{ copied, copy, config }`) replaces the whole copy node, and `copy` takes the click event. The copy callback goes in the config object: `copyable={{ onCopy }}`.
+
+</Framework>
+
 <Demo id="copyable" />
 
 ### Ellipsis
@@ -235,6 +269,14 @@ Show ellipsis if text is overflowed. Refer to [Ellipsis Config](#Ellipsis-Config
 
 </Framework>
 
+<Framework only="svelte">
+
+<TypographyTextSvelteApi />
+
+The content inside the tag is `children` (a snippet). `class`, `style`, `id`, `aria-*` and other native attributes and events land on the text element.
+
+</Framework>
+
 <Framework only="vue">
 
 <TypographyTextVueApi />
@@ -258,6 +300,14 @@ Show ellipsis if text is overflowed. Refer to [Ellipsis Config](#Ellipsis-Config
 <TypographyTitleReactApi />
 
 `className`, `style` and other native attributes (such as `id`, `aria-*` and `onClick`) land on the root element. With a `link` object, its attributes land on the inner `a` element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<TypographyTitleSvelteApi />
+
+The content inside the tag is `children` (a snippet). `class`, `style`, `id`, `aria-*` and other native attributes and events land on the heading element.
 
 </Framework>
 
@@ -287,6 +337,14 @@ Show ellipsis if text is overflowed. Refer to [Ellipsis Config](#Ellipsis-Config
 
 </Framework>
 
+<Framework only="svelte">
+
+<TypographyParagraphSvelteApi />
+
+The content inside the tag is `children` (a snippet). `class`, `style`, `id`, `aria-*` and other native attributes and events land on the paragraph element.
+
+</Framework>
+
 <Framework only="vue">
 
 <TypographyParagraphVueApi />
@@ -310,6 +368,14 @@ Show ellipsis if text is overflowed. Refer to [Ellipsis Config](#Ellipsis-Config
 <TypographyNumeralReactApi />
 
 `className`, `style` and other native attributes (such as `id`, `aria-*` and `onClick`) land on the root element. With a `link` object, its attributes land on the inner `a` element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<TypographyNumeralSvelteApi />
+
+The content inside the tag is `children` (a snippet); text and elements in it are processed recursively, text inside components is not. `class`, `style`, `id`, `aria-*` and other native attributes and events land on the text element.
 
 </Framework>
 
@@ -344,6 +410,22 @@ Show ellipsis if text is overflowed. Refer to [Ellipsis Config](#Ellipsis-Config
 | showTooltip | Toggle whether to show tooltip, if passed in as object: type，type of component to show tooltip, one of `Tooltip`, `Popover`; opts, properties that will be passed directly to the component; renderTooltip, custom rendering popup layer component. While the Tooltip can show, the text is a tab stop; inside an item of a composite widget (option, treeitem, menuitem, gridcell, row) it stays out of the tab order. `showTooltip` has no effect when `expandable` is true or `expandText` is set; the two are mutually exclusive | boolean\|\{type: 'tooltip'\|'popover', opts: object, renderTooltip: ((content: ReactNode, children: ReactNode)) => ReactNode\} | false |
 | suffix | Text suffix that will not be truncated | string | - |
 | onExpand | Callback when expand or collapse | function(expanded: bool, Event: e) | - |
+
+</Framework>
+
+<Framework only="svelte">
+
+| Properties | Instructions | type | Default |
+| --- | --- | --- | --- |
+| collapseText | Displayed text to collapse | `string` | `Collapse` |
+| collapsible | Toggle whether text is collapsible | `boolean` | false |
+| expandText | Displayed text to expand | `string` | `Expand` |
+| expandable | Toggle whether text is expandable | `boolean` | false |
+| onExpand | Callback when expand or collapse, with the expanded state after the action and the click event | `(expanded: boolean, event: MouseEvent) => void` | - |
+| pos | Position to start ellipsis, one of `end`, `middle` | `'end' \| 'middle'` | `end` |
+| rows | Number of rows that should not be truncated | `number` | 1 |
+| showTooltip | Toggle whether to show tooltip, if passed in as object: type, type of component to show tooltip, one of `tooltip`, `popover`; opts, props passed through to the floating layer, where `class` lands on the layer and `style` is a string. The layer content comes from the `ellipsisContent` snippet, and a custom layer from the `ellipsisTooltip` snippet. When `expandable` is true or `expandText` is set, `showTooltip` does not take effect; the two are mutually exclusive | `boolean \| { type?: 'tooltip' \| 'popover', opts?: object }` | false |
+| suffix | Text suffix that will not be truncated | `string` | - |
 
 </Framework>
 
@@ -395,6 +477,20 @@ Expanding or collapsing emits the component event `expand(expanded, e)`, written
 | render | Custom render copy node | <ApiType detail='(copied: boolean, doCopy: (e: React.MouseEvent) => void, configs: CopyableConfig) => React.ReactNode'>function(copied, doCopy, configs)</ApiType> | - |
 | style | Style of the copy action's wrapping span | CSSProperties | - |
 | successTip | Successful tip content | React.node | - |
+
+</Framework>
+
+<Framework only="svelte">
+
+| Properties | Instructions                                                                                                                                                    | Type                                                             | Default |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------- |
+| content    | Copied content                                                                                                                                                  | `string`                                                         | -       |
+| class      | Class name of the copy action's wrapping span                                                                                                                   | `ClassValue`                                                     | -       |
+| duration   | Seconds the copied state lasts                                                                                                                                  | `number`                                                         | 3       |
+| onCopy     | Copy callback, with the click event, the copied content and whether the write succeeded; false means the write was rejected and the copied state is not entered | `(event: MouseEvent, content: string, success: boolean) => void` | -       |
+| style      | Style string of the copy action's wrapping span                                                                                                                 | `string`                                                         | -       |
+
+Use the `copyIcon`, `copyTip` and `copySuccessTip` snippets for the content of the copy button, its tooltip and the success tip; the `copyAction` snippet (argument `{ copied, copy, config }`) replaces the whole copy node, and `config` is the resolved config.
 
 </Framework>
 

@@ -14,7 +14,7 @@ const icons: Record<string, typeof IconFixedStroked> = {
     'cus-0': IconComponentStroked,
 };
 
-const findDescendantKeys = (node: TreeNodeData) => {
+function findDescendantKeys(node: TreeNodeData) {
     const res = [node.key];
     const findChild = (item?: TreeNodeData) => {
         if (!item) return;
@@ -29,7 +29,7 @@ const findDescendantKeys = (node: TreeNodeData) => {
     };
     findChild(node);
     return res;
-};
+}
 
 const treeStyle = {
     width: '260px',

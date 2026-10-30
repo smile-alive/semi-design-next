@@ -70,7 +70,7 @@ function getId() {
 }
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
-const SourceCard = ({ source }: { source: Source[] }) => {
+function SourceCard({ source }: { source: Source[] }) {
     const [open, setOpen] = useState(true);
     const onOpen = useCallback(() => {
         setOpen(false);
@@ -196,7 +196,7 @@ const SourceCard = ({ source }: { source: Source[] }) => {
             </button>
         </div>
     );
-};
+}
 
 export default function ChatDemo() {
     const [message, setMessage] = useState(defaultMessage);

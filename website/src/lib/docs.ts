@@ -8,7 +8,7 @@ export { asLocale, locales, type Locale } from '#/i18n/locales';
 export { frameworks, type Framework } from './frameworks';
 export type Doc = CollectionEntry<'docs'>;
 
-const demoFiles = Object.keys(import.meta.glob('../../content/**/demos/*.{react.tsx,vue,solid.tsx}', { eager: true, query: '?raw', import: 'default' }));
+const demoFiles = Object.keys(import.meta.glob('../../content/**/demos/*.{react.tsx,vue,solid.tsx,svelte}', { eager: true, query: '?raw', import: 'default' }));
 
 export function docFrameworks(doc: Doc): readonly Framework[] {
     const { category, page } = parseDocId(doc.id);

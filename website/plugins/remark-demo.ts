@@ -10,7 +10,7 @@ import type { VFile } from 'vfile';
 import { demoHydration, frameworkDemo, frameworks, type Framework } from '../src/lib/frameworks.ts';
 
 function estree(code: string) {
-    return parse(code, { ecmaVersion: 'latest', sourceType: 'module' }) as unknown as Program;
+    return parse(code, { ecmaVersion: 'latest', sourceType: 'module' }) as Program;
 }
 
 export function filterFrameworks(parent: Parent, target: Framework, location: string) {

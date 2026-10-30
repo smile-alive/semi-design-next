@@ -1,13 +1,13 @@
 import { useFormState, Form } from '@fibrae/semi-ui-react';
 
-const ComponentUsingFormState = () => {
+function ComponentUsingFormState() {
     const formState = useFormState();
     return (
         <pre>
             <code>{JSON.stringify(formState)}</code>
         </pre>
     );
-};
+}
 
 export default function FormDemo() {
     return (

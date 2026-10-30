@@ -1,0 +1,54 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the menu has closed and its leave animation has finished. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterOpen | Called after the menu has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not called for an open that is closed before the enter animation ends. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| aria-describedby | aria-describedby of the popup when its role is dialog. | `string` | - |
+| aria-label | aria-label of the popup when its role is dialog. | `string` | - |
+| aria-labelledby | aria-labelledby of the popup when its role is dialog. | `string` | - |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | - |
+| child | Snippet that renders the trigger element itself. Its `{ props }` argument must be spread on a focusable element, with `class` merged into your own (`class={[props.class, 'own']}`); use it for a button, a link, or the DropdownItem that is the parent in a nested menu. It wins over children. | <ApiType detail={"Snippet\u003c[{ props: DropdownTriggerProps }]>"}>Type</ApiType> | - |
+| children | The trigger, wrapped in a span that takes the trigger attributes and responds to the keyboard. | `Snippet` | - |
+| class | Class name of the popup `.semi-dropdown-wrapper`. | `string` | - |
+| clickToHide | Whether a click inside the popup closes it. | `boolean` | - |
+| clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | - |
+| closeOnEsc | Whether Esc on the trigger or in the popup closes the menu. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |
+| condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only calls onVisibleChange(false), and the popup closes once the caller writes back. | `boolean` | - |
+| content | Menu content made of DropdownMenu with DropdownItem, DropdownTitle and DropdownDivider. Once provided, even empty, it takes precedence over menu. | `Snippet` | - |
+| contentClassName | Class name of the dropdown menu root element `.semi-dropdown`. | `string` | - |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | - |
+| guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | - |
+| keepDOM | Whether the popup content stays mounted while closed. | `boolean` | - |
+| menu | Configures the menu from data, see DropdownMenuItem below. content wins when it is provided. | `DropDownMenuItem[]` | - |
+| menuIcon | Icon of each item entry of menu, with `{ item, index }` as its argument. The icon container is always rendered and is empty when the snippet outputs nothing. | <ApiType detail={"Snippet\u003c[DropdownMenuIconArgs]>"}>Type</ApiType> | - |
+| motion | Whether the popup is animated. | `boolean` | `true` |
+| mouseEnterDelay | Milliseconds before the menu shows after the pointer enters the trigger. Applies to the hover and focus triggers. | `number` | - |
+| mouseLeaveDelay | Milliseconds before the menu hides after the pointer leaves the popup. Applies to the hover and focus triggers; not less than mouseEnterDelay. | `number` | `100` |
+| onClickOutSide | Called when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom, or with clickTriggerToHide. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onEscKeyDown | Called when Esc is pressed while the menu is open and closeOnEsc is true. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onOpen | Called once per opening when the menu is shown, as its enter animation starts, before afterOpen, controlled or not; not called for a hover open withdrawn because the pointer already left. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onVisibleChange | Called when the visibility of the menu changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more. | `Position` | `"bottom"` |
+| prefixCls | Class prefix of the popup. A custom value drops the Dropdown styles. | `string` | `"semi-dropdown"` |
+| preventScroll | Whether focusing an element avoids scrolling it into view. | `boolean` | - |
+| returnFocusOnClose | Whether focus returns to the trigger after the menu closes. | `boolean` | `true` |
+| role | ARIA role of the popup container around the menu. The menu itself has role menu. | `string` | `"presentation"` |
+| selectionMode | How the items of this menu are selected; active marks the selected ones. With single the items are menuitemradio with aria-checked, with multiple menuitemcheckbox with aria-checked; unset, they are menuitemcheckbox with aria-checked when showTick is on, otherwise menuitem. It sets roles and states only: showTick alone shows the tick. Nested submenus do not inherit it. | `DropdownSelectionMode` | - |
+| showTick | Whether an active DropdownItem shows a tick on its leading side. It applies to the menu of this Dropdown only; nested submenus do not inherit it. | `boolean` | `false` |
+| spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number }` | - |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | - |
+| style | Inline style string of the popup `.semi-dropdown-wrapper`. | `string` | - |
+| trigger | What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides. | `'hover' \| 'focus' \| 'click' \| 'custom' \| 'contextMenu'` | `"hover"` |
+| visible | Whether the menu is shown. Bindable with `bind:visible` and used with trigger custom; when given, this value decides, and binding undefined returns to uncontrolled. | `boolean` | - |
+| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
+| wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |
+
+**Methods**
+
+| Method | Description | Type |
+| --- | --- | --- |
+| focusTrigger | Focuses the trigger element. Takes effect only when returnFocusOnClose is true, trigger is not custom, and the trigger is not rendered by child. | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition | Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

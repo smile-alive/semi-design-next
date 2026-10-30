@@ -43,14 +43,14 @@ const treeData: CascaderData[] = [
     },
 ];
 
-const getLabelFromValue = (value: string) => {
+function getLabelFromValue(value: string) {
     const [first, ...rest] = value.split('-').map((item) => Number(item));
     let node: CascaderData | undefined = treeData[first];
     rest.forEach((item) => {
         node = node?.children?.[item];
     });
     return node?.label as JSX.Element | undefined;
-};
+}
 
 // The clear button is a sibling of the trigger button: buttons cannot nest
 const triggerRenderSingle = (props: CascaderTriggerRenderProps) => (

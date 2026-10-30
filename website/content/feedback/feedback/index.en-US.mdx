@@ -9,6 +9,7 @@ showNew: true
 import FeedbackReactApi from './api/feedback.react.en-US.mdx';
 import FeedbackVueApi from './api/feedback.vue.en-US.mdx';
 import FeedbackSolidApi from './api/feedback.solid.en-US.mdx';
+import FeedbackSvelteApi from './api/feedback.svelte.en-US.mdx';
 
 ## Demos
 
@@ -40,6 +41,16 @@ import { Feedback } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Feedback } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 <Framework only="react">
@@ -57,6 +68,12 @@ Use `v-model:visible` to set whether to display or not. Cancel, close and Esc wr
 <Framework only="solid">
 
 Use `visible` to set whether to display or not. The component never closes itself: set `visible` to `false` in `onCancel` and `onOk` yourself. The default feedback display content is in emoji form. The currently selected content can be obtained through `onValueChange`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:visible` to set whether to display or not. Cancel, close and Esc write `false` back to it, while the submit button only calls `onOk` and the caller closes the feedback. The default feedback display content is in emoji form. The currently selected content can be obtained through `onValueChange`.
 
 </Framework>
 
@@ -97,6 +114,12 @@ Set `type` to `custom` to obtain feedback with customized content, and write the
 <Framework only="solid">
 
 Set `type` to `custom` to obtain feedback with customized content, and write the feedback content in the children. `renderContent` can wrap the feedback content. When using custom feedback, you need to control whether the submit button is disabled or not. Users can set it through `okButtonProps`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Set `type` to `custom` to obtain feedback with customized content, and write the feedback content inside the tag (`children`). When using custom feedback, you need to control whether the submit button is disabled or not. Users can set it through `okButtonProps`.
 
 </Framework>
 
@@ -141,6 +164,14 @@ Undeclared attributes go to the Modal or SideSheet of the current `mode` and lan
 <FeedbackSolidApi />
 
 `class`, `ref` and native attributes land on the root element (`.semi-sidesheet` in `popup` mode, the outermost element of the Modal, which carries `.semi-feedback`, in `modal` mode), `aria-*` attributes land on the `role="dialog"` element, and `style` lands on the content box (`.semi-sidesheet-inner` in `popup` mode, `.semi-modal` in `modal` mode).
+
+</Framework>
+
+<Framework only="svelte">
+
+<FeedbackSvelteApi />
+
+Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element; `style` lands on the `.semi-modal` dialog box in `modal` mode and on the `role="dialog"` element in `popup` mode; `class`, the other undeclared attributes and native events land on the outermost element inside the portal. `textAreaProps`, `radioGroupProps` and `checkboxGroupProps` are written as the props of the matching component, with `value` as the controlled key and `onChange` as the listener; the `bind:this` instance provides `getRoot()`.
 
 </Framework>
 

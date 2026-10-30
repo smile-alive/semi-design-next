@@ -8,6 +8,7 @@ brief: Highlight code blocks in the page according to syntax
 import CodeHighlightReactApi from './api/code-highlight.react.en-US.mdx';
 import CodeHighlightVueApi from './api/code-highlight.vue.en-US.mdx';
 import CodeHighlightSolidApi from './api/code-highlight.solid.en-US.mdx';
+import CodeHighlightSvelteApi from './api/code-highlight.svelte.en-US.mdx';
 
 ## When to use
 
@@ -39,6 +40,16 @@ import { CodeHighlight } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { CodeHighlight } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { CodeHighlight } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -103,6 +114,22 @@ CodeHighlight.register({
 
 </Framework>
 
+<Framework only="svelte">
+
+The Svelte version has no `CodeHighlight.register`: use the named export `registerCodeHighlight` instead, with the same arguments and the same registry as the other frameworks.
+
+```ts
+import { registerCodeHighlight } from '@fibrae/semi-ui-svelte';
+
+registerCodeHighlight({
+    languages: [() => import('shiki/langs/javascript.mjs'), () => import('shiki/langs/css.mjs')],
+    // Optional, replaces the default github-light and github-dark
+    themes: { light: () => import('shiki/themes/min-light.mjs'), dark: () => import('shiki/themes/nord.mjs') },
+});
+```
+
+</Framework>
+
 ### Basic usage
 
 Pass the code plain text to `code`, and the name or alias of a registered language to `language`.
@@ -142,6 +169,14 @@ Other native attributes, such as `id`, `aria-label` and `onClick`, are spread on
 <CodeHighlightSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `id` and `aria-label`) land on the root `div`, which stays the same element before and after highlighting.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CodeHighlightSvelteApi />
+
+`class`, `style` (a string) and native attributes such as `id` and `aria-label` land on the root element (`div`). The component has no static methods: register languages and themes with the named export `registerCodeHighlight`, see "Register languages and themes" above.
 
 </Framework>
 

@@ -20,6 +20,11 @@ import NavItemSolidApi from './api/nav-item.solid.zh-CN.mdx';
 import SubNavSolidApi from './api/sub-nav.solid.zh-CN.mdx';
 import NavHeaderSolidApi from './api/nav-header.solid.zh-CN.mdx';
 import NavFooterSolidApi from './api/nav-footer.solid.zh-CN.mdx';
+import NavSvelteApi from './api/nav.svelte.zh-CN.mdx';
+import NavItemSvelteApi from './api/nav-item.svelte.zh-CN.mdx';
+import SubNavSvelteApi from './api/sub-nav.svelte.zh-CN.mdx';
+import NavHeaderSvelteApi from './api/nav-header.svelte.zh-CN.mdx';
+import NavFooterSvelteApi from './api/nav-footer.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -48,6 +53,18 @@ import { Nav } from '@fibrae/semi-ui-react';
 ```jsx
 import { Nav } from '@fibrae/semi-ui-solid';
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Nav } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+`NavItem`、`SubNav`、`NavHeader`、`NavFooter` 对应 Nav.Item、Nav.Sub、Nav.Header、Nav.Footer，按名导入。
 
 </Framework>
 
@@ -87,6 +104,17 @@ import { Nav } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+每个导航项目包括：
+
+- `itemKey`：导航项目的唯一标识（必须）
+- `text`：导航文案
+
+`items` 只放数据。导航图标通过 Nav 的 `icon` snippet 提供，参数为 `{ item, level, size }`，把 `size` 传给图标：`<Icon {size} />`，你可以从 `@fibrae/semi-icons-svelte`、`@fibrae/semi-icons-svelte/lab` 中自由选择你喜欢的图标，详情可查阅 [Icon 组件文档](/zh-CN/react/basic/icon)。显示的文案、展开收起箭头同样分别由 `text`、`toggleIcon`、`expandIcon` snippet 提供。
+
+</Framework>
+
 参数含义详见 [Nav.Item](#Nav.Item) 或 [Nav.Sub](#Nav.Sub)
 
 开发者可能会经常定义 Logo 区域和收起按钮区域，Navigation 则提供了这样的容器方便开发者快速定义导航头部和底部，你仅需按要求传入 `header` 或 `footer` 即可。
@@ -102,6 +130,12 @@ import { Nav } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 `header`、`footer` 的配置对象只放数据：`logo` 是返回 Logo 的渲染函数，如 `logo: () => <IconSemiLogo />`，只在显示时调用；`text` 为字符串或数字。需要放入其他节点时，可以直接传 JSX，或使用 Nav.Header、Nav.Footer 子元素。
+
+</Framework>
+
+<Framework only="svelte">
+
+`header`、`footer` 可以是数据配置，也可以是 snippet。配置对象只放数据，`header` 的 `logo` 是 snippet；需要放入其他节点时，在 snippet 里使用 `NavHeader`、`NavFooter`（它们不会从 Nav 的 children 中提取）。
 
 </Framework>
 
@@ -131,6 +165,12 @@ import { Nav } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 的 `icon` snippet 始终保留图标列，不能用空内容去掉图标框；不需要图标时不提供 `icon` snippet。
+
+</Framework>
+
 <Demo id="text-only" />
 
 ### 定义头部和底部
@@ -148,6 +188,12 @@ import { Nav } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+通过 `header` 和 `footer` 快速定义导航头部和底部。`footer` 中的 `collapseButton` 仅在 `mode = "vertical"`（垂直导航）下生效。
+
+</Framework>
+
+<Framework only="svelte">
 
 通过 `header` 和 `footer` 快速定义导航头部和底部。`footer` 中的 `collapseButton` 仅在 `mode = "vertical"`（垂直导航）下生效。
 
@@ -172,6 +218,12 @@ Navigation 目前提供了个两个参数用于定义导航样式：`style` 和 
 <Framework only="solid">
 
 Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 用于定义导航组件最外层的样式，而 `bodyStyle` 用于定义导航列表的样式。（导航头部和导航底部则都接受各自的 `style` 参数）。
+
+</Framework>
+
+<Framework only="svelte">
+
+Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `bodyStyle`，其中 `style` 落在导航组件最外层，而 `bodyStyle` 用于定义导航列表的样式，二者都是字符串。（导航头部和导航底部则都接受各自的 `style`）。
 
 </Framework>
 
@@ -200,6 +252,14 @@ Navigation 目前提供了两个参数用于定义导航样式：`style` 和 `bo
 ### JSX 写法
 
 可以使用 JSX 写法定义导航头部、导航项以及导航底部。在 Nav 的子元素中，除了 Nav.Header、Nav.Item、Nav.Sub、Nav.Footer 外，也可以置入其他自定义的 JSX 元素，它们会被包进列表中的一个 `li`。Nav 通过 Nav.Item 与 Nav.Sub 收集带 `itemKey` 的项，用于默认选中项的祖先展开与顶层选中；自行封装的导航项返回 Nav.Item 或 Nav.Sub 即可参与，不需要声明静态属性。
+
+</Framework>
+
+<Framework only="svelte">
+
+### 子项写法
+
+可以把 `NavItem`、`SubNav` 写成 Nav 的 children，头部和底部写成 `header`、`footer` snippet，里面放 `NavHeader`、`NavFooter`。图标通过各子组件的 `icon` snippet 提供，文字 snippet 叫 `label`（对应 Vue 的 `text` 插槽，因与 `text` 属性同名而改名）。子项经 context 读取父级，这种写法不会自动展开选中项的祖先，顶层 Sub 也没有选中标记；需要这两项时使用 `items`。
 
 </Framework>
 
@@ -324,6 +384,40 @@ export default function RouterNav() {
 
 </Framework>
 
+<Framework only="svelte">
+
+为了在使用 SvelteKit 等路由时，能将导航项包裹在链接中，让用户点击导航项时触发路由跳转，我们需要自定义渲染。
+
+使用 `wrapper` snippet 在每个导航项外包裹自定义元素，`itemElement` 是导航项的 `li`，用 `{@render itemElement()}` 渲染，且只能渲染一次。
+
+```svelte
+<script lang="ts">
+    import { Nav } from '@fibrae/semi-ui-svelte';
+
+    const routerMap = {
+        Home: '/',
+        About: '/about',
+        Dashboard: '/dashboard',
+        'Nothing Here': '/nothing-here',
+    };
+    const items = [
+        { itemKey: 'Home', text: 'Home' },
+        { itemKey: 'About', text: 'About' },
+        { itemKey: 'Sub', text: 'Sub', items: ['Dashboard', 'Nothing Here'] },
+    ];
+</script>
+
+<Nav {items}>
+    {#snippet wrapper({ itemElement, props })}
+        <a href={routerMap[props.itemKey as keyof typeof routerMap]} style="text-decoration: none">
+            {@render itemElement()}
+        </a>
+    {/snippet}
+</Nav>
+```
+
+</Framework>
+
 ### 垂直与水平布局
 
 Navigation 目前提供两种方向的导航：
@@ -333,9 +427,37 @@ Navigation 目前提供两种方向的导航：
 
 特别注意的是，有一些功能（参数）仅在 `mode = "vertical"` 时有效：
 
+<Framework only="react">
+
 - `isCollapsed` （导航收起到侧边）
 - `defaultOpenKeys` | `openKeys` （指定默认的以及受控的展开子导航项 key 数组，这个参数仅在 `mode = "vertical"` 且 `isCollapsed = false` 有效）
 - `Footer` 组件的 `collapseButton` 收起侧边栏功能按钮
+
+</Framework>
+
+<Framework only="vue">
+
+- `isCollapsed` （导航收起到侧边）
+- `defaultOpenKeys` | `openKeys` （指定默认的以及受控的展开子导航项 key 数组，这个参数仅在 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+- `Footer` 组件的 `collapseButton` 收起侧边栏功能按钮
+
+</Framework>
+
+<Framework only="solid">
+
+- `isCollapsed` （导航收起到侧边）
+- `defaultOpenKeys` | `openKeys` （指定默认的以及受控的展开子导航项 key 数组，这个参数仅在 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+- `Footer` 组件的 `collapseButton` 收起侧边栏功能按钮
+
+</Framework>
+
+<Framework only="svelte">
+
+- `isCollapsed` （导航收起到侧边）
+- `openKeys` （指定初始以及受控的展开子导航项 key 数组，这个参数仅在 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+- `NavFooter` 组件的 `collapseButton` 收起侧边栏功能按钮
+
+</Framework>
 
 #### 垂直布局
 
@@ -382,6 +504,13 @@ Navigation 目前提供两种方向的导航：
 
 </Framework>
 
+<Framework only="svelte">
+
+- 当以子项方式用 `NavItem` 传入导航项时，请手动给 `NavItem` 传入 `level` 属性。
+- 以 items 方式传入导航项时，无需关心 level
+
+</Framework>
+
 <Demo id="limit-indent" />
 
 ### 非受控属性
@@ -391,6 +520,12 @@ Navigation 目前提供两种方向的导航：
 - `defaultSelectedKeys`（默认被选中的导航项 `key` 数组）
 - `defaultOpenKeys`（默认展开的导航项 `key` 数组，仅 `mode = "vertical"` 且 `isCollapsed` | `defaultIsCollapsed = false` 的情况下有效）
 - `defaultIsCollapsed`（侧边栏默认是否收起，仅 `mode = "vertical"` 时有效）
+
+<Framework only="svelte">
+
+Svelte 没有 `default*` 属性：`selectedKeys`、`openKeys`、`isCollapsed` 单向传值时只作初值，`undefined` 表示不受控。上面的 `defaultSelectedKeys`、`defaultOpenKeys`、`defaultIsCollapsed` 分别写成 `selectedKeys`、`openKeys`、`isCollapsed` 即可。
+
+</Framework>
 
 <Demo id="uncontrolled" />
 
@@ -452,6 +587,26 @@ Navigation 组件提供了几个受控属性，配合各种回调，可以很轻
 
 </Framework>
 
+<Framework only="svelte">
+
+Navigation 组件提供了几个可绑定属性，使用 `bind:` 即可轻松地控制导航，也可以配合回调使用。
+
+目前可绑定的属性为：
+
+- `bind:isCollapsed`（侧边栏是否收起，仅 `mode = "vertical"` 时生效）
+- `bind:selectedKeys`（当前选中的导航项 `key` 数组，只含被选中项自身）
+- `bind:openKeys`（当前展开的导航项数组，仅 `mode = "vertical"` 且 `isCollapsed = false` 有效）
+
+对应的回调为：
+
+- `onCollapseChange(isCollapsed: boolean): void`
+- `onSelect({ itemKey, selectedKeys, selectedItems, domEvent }): void`
+- `onOpenChange({ itemKey, openKeys, domEvent, isOpen }): void`
+
+`null` 是受控的空值。
+
+</Framework>
+
 <Demo id="controlled" />
 
 ## API 参考
@@ -507,6 +662,39 @@ Navigation 组件提供了几个受控属性，配合各种回调，可以很轻
 
 </Framework>
 
+<Framework only="svelte">
+
+<NavSvelteApi />
+
+`class`、`style` 与原生属性（如 `aria-label`）落在最外层的 `nav` 上。
+
+#### items 数据项
+
+`items` 是 `(string | NavItemConfig)[]`，字符串项同时作为 `text` 和 `itemKey`。带有非空 `items` 的项渲染为 Nav.Sub，其余渲染为 Nav.Item。数据项只放数据，节点通过 Nav 的 `icon`、`text`、`toggleIcon`、`expandIcon` snippet 提供，参数含 `{ item, level }`。
+
+| 属性             | 描述                                                       | 类型                        | 默认值 |
+| ---------------- | ---------------------------------------------------------- | --------------------------- | ------ |
+| itemKey          | 导航项目唯一标识                                           | string \| number            |        |
+| text             | 导航项目文案                                               | string \| number            |        |
+| items            | 子导航项，带有非空 `items` 时渲染为 Nav.Sub                | (string \| NavItemConfig)[] |        |
+| disabled         | 是否禁用                                                   | boolean                     |        |
+| indent           | 如果没有图标，是否保留其占位，仅对一级导航生效             | boolean \| number           |        |
+| link             | 导航项 href 链接，仅 Nav.Item 生效                         | string                      |        |
+| linkOptions      | 透传给 a 标签的参数，仅 Nav.Item 生效                      | HTMLAnchorAttributes        |        |
+| tooltipHideDelay | 此导航项 tooltip 隐藏的延迟，仅 Nav.Item 生效              | number                      |        |
+| tooltipShowDelay | 此导航项 tooltip 显示的延迟，仅 Nav.Item 生效              | number                      |        |
+| dropdownProps    | 弹出层 `dropdown` 参数配置，仅 Nav.Sub 生效                | SubDropdownProps            |        |
+| dropdownStyle    | 弹出层的 style，仅 Nav.Sub 生效                            | string                      |        |
+| class            | 导航项 `li` 的类名                                         | ClassValue                  |        |
+| style            | 导航项 `li` 的自定义样式                                   | string                      |        |
+| onmouseenter     | mouse enter 时触发                                         | (event: MouseEvent) => void |        |
+| onmouseleave     | mouse leave 时触发                                         | (event: MouseEvent) => void |        |
+| data-\*、aria-\* | `data-*` 落在 `li` 上，`aria-*` 落在获得焦点的链接或按钮上 | unknown                     |        |
+
+其余字段（如 `path`）会被忽略。
+
+</Framework>
+
 ### Nav.Item
 
 <Framework only="react">
@@ -530,6 +718,14 @@ Navigation 组件提供了几个受控属性，配合各种回调，可以很轻
 <NavItemSolidApi />
 
 `class` 替代默认的 `semi-navigation-item-normal`，`style`、`ref`、`data-*` 与原生事件（如 `onMouseEnter`）落在 `li` 上；`aria-*` 与 `tabIndex` 落在获得焦点的链接或按钮上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<NavItemSvelteApi />
+
+`aria-*` 落在获得焦点的链接或按钮上，`class`、`style`、`data-*`、`onmouseenter`、`onmouseleave` 等其余属性落在 `li` 上，传入的 `class` 替代默认的 `semi-navigation-item-normal`。`tabindex` 落在链接或按钮上。
 
 </Framework>
 
@@ -559,6 +755,14 @@ Navigation 组件提供了几个受控属性，配合各种回调，可以很轻
 
 </Framework>
 
+<Framework only="svelte">
+
+<SubNavSvelteApi />
+
+`aria-*` 落在获得焦点的标题按钮上，`class`、`style`、`data-*`、`onmouseenter`、`onmouseleave` 等其余属性落在 `li` 上。
+
+</Framework>
+
 ### Nav.Header
 
 <Framework only="react">
@@ -585,6 +789,14 @@ Navigation 组件提供了几个受控属性，配合各种回调，可以很轻
 
 </Framework>
 
+<Framework only="svelte">
+
+<NavHeaderSvelteApi />
+
+`class`、`style` 与原生属性落在最外层的 `div` 上。
+
+</Framework>
+
 ### Nav.Footer
 
 <Framework only="react">
@@ -608,6 +820,14 @@ Navigation 组件提供了几个受控属性，配合各种回调，可以很轻
 <NavFooterSolidApi />
 
 `class`、`style`、`ref` 与原生属性（含 `onClick`）落在最外层的 `div` 上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<NavFooterSvelteApi />
+
+`class`、`style` 与原生属性（含 `onclick`）落在最外层的 `div` 上。折叠态下折叠按钮的可访问名称固定取语言包。
 
 </Framework>
 
@@ -651,6 +871,12 @@ Navigation 按 WAI-ARIA APG 的 [Disclosure Navigation](https://www.w3.org/WAI/A
 <Framework only="solid">
 
 - `renderWrapper` 的返回值直接放进 `ul`，返回的不是 `li` 时列表结构不合法，请自行保证返回 `li` 或可放进 `ul` 的内容。使用 `renderWrapper` 把导航项包进路由组件的链接时，链接内仍有导航项自己的按钮，会出现嵌套的可交互元素；需要路由跳转时，优先使用 `link` 与 `linkOptions.onClick`
+
+</Framework>
+
+<Framework only="svelte">
+
+- `wrapper` snippet 的返回值直接放进 `ul`，返回的不是 `li` 时列表结构不合法，请自行保证返回 `li` 或可放进 `ul` 的内容。使用 `wrapper` 把导航项包进路由链接时，链接内仍有导航项自己的按钮，会出现嵌套的可交互元素；需要路由跳转时，优先使用 `link` 与 `linkOptions.onclick`
 
 </Framework>
 

@@ -1,5 +1,5 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 title: 快速开始
 icon: doc-gettingstarted
 order: 2
@@ -23,6 +23,12 @@ order: 2
 
 </Framework>
 
+<Framework only="svelte">
+
+`@fibrae/semi-ui-svelte` 是 Semi Design Next 的 Svelte 组件库，面向 Svelte 5 应用，服务端渲染见[服务端渲染](#服务端渲染)。
+
+</Framework>
+
 ## 环境要求
 
 <Framework only="react">
@@ -40,6 +46,12 @@ peer 依赖：`vue` ^3.5.0。
 <Framework only="solid">
 
 peer 依赖：`solid-js` ^1.9.0。
+
+</Framework>
+
+<Framework only="svelte">
+
+peer 依赖：`svelte` ^5.57.0。
 
 </Framework>
 
@@ -82,6 +94,18 @@ pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
 
 </Framework>
 
+<Framework only="svelte">
+
+```bash
+pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
+```
+
+图标包 `@fibrae/semi-icons-svelte` 是组件库的依赖，应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。插画包 `@fibrae/semi-illustrations-svelte` 不随组件库安装，用到时单独安装。
+
+Svelte 包发布的是 `.svelte` 源码与 `.d.ts`，不是编译产物：`exports` 带 `svelte` 条件，由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）按应用的目标（DOM 或服务端）编译。不识别 `svelte` 条件、也不编译 `.svelte` 的工具无法使用这些包。
+
+</Framework>
+
 使用 npm 或 yarn 时换成对应的命令。
 
 需要支持 Safari 17.4 以下时，另装 `@fibrae/semi-polyfill`，并在应用入口的第一行导入（早于任何 Semi 组件）。它只补齐 `AbortSignal.any` 与 `Element.prototype.checkVisibility`，浏览器已有原生实现时什么都不做；只用到其中一项时可以导入 `@fibrae/semi-polyfill/abort-signal-any` 或 `@fibrae/semi-polyfill/check-visibility`。
@@ -117,6 +141,30 @@ import '@fibrae/semi-ui-vue/tokens';
 ```ts
 // index.tsx，放在其他导入之前
 import '@fibrae/semi-ui-solid/tokens';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+Vite + Svelte 应用在入口文件导入：
+
+```ts
+// src/main.ts，放在其他导入之前
+import '@fibrae/semi-ui-svelte/tokens';
+```
+
+SvelteKit 没有这样的入口文件，在根布局的脚本最前面导入：
+
+```svelte
+<!-- src/routes/+layout.svelte -->
+<script lang="ts">
+    import '@fibrae/semi-ui-svelte/tokens';
+
+    let { children } = $props();
+</script>
+
+{@render children()}
 ```
 
 </Framework>
@@ -166,6 +214,25 @@ export function App() {
 ```
 
 也可以按目录深路径导入单个组件，路径写到 `/index`，如 `import Button from '@fibrae/semi-ui-solid/button/index'`。
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, Switch, Toast } from '@fibrae/semi-ui-svelte';
+
+    let checked = $state(false);
+</script>
+
+<Button theme="solid" type="primary" onclick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>
+<Switch bind:checked aria-label="开关" />
+```
+
+受控值用 `bind:checked={value}` 双向绑定；只传 `checked` 时只作初值，没有 `defaultChecked` 一类的 `default*` 属性。单向传值时组件内交互改出的值是临时的：父级传入的值变化时以父级为准；同一组件上还有展开属性（`{...rest}`）时，展开对象换成新对象也会让父级的值重新生效。要保留交互结果，用 `bind:` 或在回调（如 `onChange`）里写回自己的状态。内容型属性（React 的 ReactNode 与 render 函数）是 snippet，写在组件标签内或用 `{#snippet}` 定义；`style` 只接受字符串，原生事件用小写名（`onclick`）。
+
+也可以按目录深路径导入单个组件，路径写到 `/index`，如 `import { Button } from '@fibrae/semi-ui-svelte/button/index'`；组件文件是 `<目录>/<名>.svelte`，如 `@fibrae/semi-ui-svelte/button/button.svelte`。
 
 </Framework>
 
@@ -223,6 +290,15 @@ Solid 项目的构建配置有以下区别：
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 项目的构建配置有以下区别：
+
+- 只有 Vite 路线：Svelte 包由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）编译。`@fibrae/semi-webpack-plugin`、`@fibrae/semi-rspack-plugin` 不处理 Svelte 包，不要用于 Svelte 项目。
+- `@fibrae/semi-vite-plugin` 对 `@fibrae/semi-ui-svelte`、`@fibrae/semi-ai-svelte` 与 `@fibrae/semi-icons-svelte` 生效，`prefixCls`、`cssLayer`、`omitCss` 的含义不变，写成 `plugins: [svelte(), semi()]`；SvelteKit 见[服务端渲染](#服务端渲染)。
+
+</Framework>
+
 Semi 发布的 `.scss` 使用普通 Sass 无法解析的 `semi:` 地址，请通过构建插件或 `@fibrae/semi-scss-compile` 编译。
 
 ## 整包样式
@@ -255,6 +331,16 @@ import '@fibrae/semi-ai-vue/styles.css';
 import '@fibrae/semi-ui-solid/styles.css';
 // 使用 AI 组件时，在其后导入
 import '@fibrae/semi-ai-solid/styles.css';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+import '@fibrae/semi-ui-svelte/styles.css';
+// 使用 AI 组件时，在其后导入
+import '@fibrae/semi-ai-svelte/styles.css';
 ```
 
 </Framework>
@@ -331,6 +417,34 @@ export function HomeIcon() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { IconHome } from '@fibrae/semi-icons-svelte';
+</script>
+
+<IconHome aria-label="首页" />
+```
+
+自定义 SVG 使用默认导出 `Icon` 的 `children` snippet，参数带上 `fill`：
+
+```svelte
+<script lang="ts">
+    import Icon from '@fibrae/semi-icons-svelte';
+</script>
+
+<Icon size="large">
+    {#snippet children({ fill })}
+        <svg viewBox="0 0 24 24" {fill}><circle cx="12" cy="12" r="10" /></svg>
+    {/snippet}
+</Icon>
+```
+
+插画从 `@fibrae/semi-illustrations-svelte` 导入，如 `IllustrationNoContent`。
+
+</Framework>
+
 图标样式随图标组件加载。图标列表与用法见[图标](/zh-CN/react/basic/icon)。
 
 ## AI 组件
@@ -358,6 +472,16 @@ pnpm add @fibrae/semi-ai-vue
 ```bash
 pnpm add @fibrae/semi-ai-solid
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```bash
+pnpm add @fibrae/semi-ai-svelte
+```
+
+`@fibrae/semi-ai-svelte` 目前只完成了 AIChatDialogue，AIChatInput、Chat、Sidebar 在移植中，尚未导出。
 
 </Framework>
 
@@ -468,6 +592,28 @@ import '@fibrae/semi-ui-solid/styles.css';
 ```
 
 SolidStart 选整包样式，是因为它的 dev 服务端默认不收集 `node_modules` 内组件导入的 CSS：按组件路线在生产环境正常，dev 首屏无样式。给 `solidStart()` 传 `css: { filter: { exclude: [/^(?!.*\/node_modules\/@fibrae\/semi-).*\/node_modules\//] } }` 后 dev 也收集 Semi 包的组件 CSS，代价是多一处宿主配置，且 dev 首屏的样式略大于整包样式（约多 20%），分成数十个 `<style>`。
+
+</Framework>
+
+<Framework only="svelte">
+
+| 宿主        | 安装                                                    | 宿主配置                                    | 样式 |
+| ----------- | ------------------------------------------------------- | ------------------------------------------- | ---- |
+| SvelteKit 3 | `@fibrae/semi-ui-svelte`、`-D @fibrae/semi-vite-plugin` | `plugins: [sveltekit({ adapter }), semi()]` | 无   |
+
+```ts
+// vite.config.ts
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+// adapter 换成你使用的 SvelteKit adapter
+export default defineConfig({
+    plugins: [sveltekit({ adapter }), semi()],
+});
+```
+
+组件在 `svelte/server` 的 `render` 与 SvelteKit 中输出服务端 HTML，浏览器用 `hydrate` 注水。组件内的 id 来自 `$props.id()`，服务端与浏览器一致；`onMount` 与 `$effect` 不在服务端执行，依赖它们的状态（如测量尺寸）在注水后才出现。
 
 </Framework>
 

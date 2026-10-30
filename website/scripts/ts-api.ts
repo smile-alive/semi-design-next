@@ -186,7 +186,7 @@ function unionType(framework: Framework, checker: ts.TypeChecker, symbols: ts.Sy
     return texts.length === 1 ? texts[0] : texts.map((text) => (text.includes('=>') ? `(${text})` : text)).join(' | ');
 }
 
-function members(framework: Framework, checker: ts.TypeChecker, type: ts.Type, location: ts.Node, defaults = new Map<string, string>()): ApiMember[] {
+export function members(framework: Framework, checker: ts.TypeChecker, type: ts.Type, location: ts.Node, defaults = new Map<string, string>()): ApiMember[] {
     // Props written as a union of shapes (one per mode) document the members of every shape, a member some shape lacks
     // being optional. A shape that is another component's props (Feedback's modal mode is a Modal) adds only what the
     // component declares itself; the rest is documented on that component's page.
@@ -216,7 +216,7 @@ function members(framework: Framework, checker: ts.TypeChecker, type: ts.Type, l
 // (`noop`, a local computed at run time) means nothing to a reader and is left out, while a global such as `Infinity`
 // stays, and a constant object shared from another module prints as its literal. A spread of another defaults object
 // contributes its members.
-function readDefault(checker: ts.TypeChecker, value: ts.Expression) {
+export function readDefault(checker: ts.TypeChecker, value: ts.Expression) {
     const constant = evaluate(checker, value);
     const type = checker.getTypeAtLocation(value);
     const literal = type.isLiteral() || (type.flags & (ts.TypeFlags.BooleanLiteral | ts.TypeFlags.Null)) !== 0;
@@ -227,7 +227,7 @@ function readDefault(checker: ts.TypeChecker, value: ts.Expression) {
     return constant !== unresolved ? formatConstant(constant) : literal ? checker.typeToString(type) : internal ? undefined : value.getText();
 }
 
-function readDefaults(checker: ts.TypeChecker, file: ts.SourceFile, initializer: ts.Expression | ts.ObjectBindingPattern | undefined, defaults = new Map<string, string>()) {
+function readDefaults(checker: ts.TypeChecker, file: ts.SourceFile, initializer?: ts.Expression | ts.ObjectBindingPattern, defaults = new Map<string, string>()) {
     if (!initializer) return defaults;
     if (ts.isObjectBindingPattern(initializer)) {
         for (const element of initializer.elements) {
