@@ -105,7 +105,7 @@ describe('AudioPlayer（浏览器）', () => {
             expect(el).not.toBeNull();
             return must(el);
         });
-        await expect.poll(() => Math.round(centerX(tooltip) - centerX(dot))).toBe(0);
+        await expect.poll(() => centerX(tooltip) - centerX(dot)).toBeCloseTo(0, 0);
     });
 
     it('悬停与键盘聚焦时轨道变粗、圆点可见，离开或失焦后恢复', async () => {

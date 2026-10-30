@@ -108,7 +108,7 @@ describe('AudioPlayer（浏览器）', () => {
             expect(el).not.toBeNull();
             return el as HTMLElement;
         });
-        await expect.poll(() => Math.round(centerX(tooltip) - centerX(dot))).toBe(0);
+        await expect.poll(() => centerX(tooltip) - centerX(dot)).toBeCloseTo(0, 0);
     });
 });
 
