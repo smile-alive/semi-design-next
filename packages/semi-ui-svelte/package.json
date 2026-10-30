@@ -1,0 +1,79 @@
+{
+    "name": "@fibrae/semi-ui-svelte",
+    "version": "0.1.1",
+    "description": "Semi Design Next Svelte components",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ui-svelte"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "svelte": "./dist/index.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "svelte": "./dist/index.js",
+            "default": "./dist/index.js"
+        },
+        "./styles.css": "./dist/styles.css",
+        "./tailwind.css": "./dist/tailwind.css",
+        "./package.json": "./package.json",
+        "./*.svelte": {
+            "types": "./dist/*.svelte.d.ts",
+            "svelte": "./dist/*.svelte",
+            "default": "./dist/*.svelte"
+        },
+        "./*.svelte.js": {
+            "types": "./dist/*.svelte.d.ts",
+            "svelte": "./dist/*.svelte.js",
+            "default": "./dist/*.svelte.js"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "svelte": "./dist/*.js",
+            "default": "./dist/*.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css",
+        "*.svelte",
+        "./dist/tokens.js",
+        "./src/tokens.ts"
+    ],
+    "scripts": {
+        "build": "node ../../scripts/svelte-package.ts --bundles ui --locale"
+    },
+    "dependencies": {
+        "@dnd-kit/dom": "catalog:",
+        "@dnd-kit/svelte": "catalog:",
+        "@fibrae/semi-foundation": "workspace:*",
+        "@fibrae/semi-icons-svelte": "workspace:*",
+        "@tanstack/svelte-virtual": "catalog:",
+        "async-validator": "catalog:",
+        "date-fns": "catalog:",
+        "es-toolkit": "catalog:",
+        "scroll-into-view-if-needed": "catalog:",
+        "unified": "catalog:"
+    },
+    "peerDependencies": {
+        "svelte": "catalog:peer"
+    },
+    "devDependencies": {
+        "@sveltejs/package": "catalog:",
+        "@sveltejs/vite-plugin-svelte": "catalog:",
+        "@testing-library/svelte": "catalog:",
+        "eslint-plugin-svelte": "catalog:",
+        "svelte": "catalog:",
+        "svelte-check": "catalog:",
+        "typescript": "catalog:"
+    }
+}

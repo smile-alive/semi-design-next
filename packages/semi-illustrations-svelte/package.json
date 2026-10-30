@@ -1,0 +1,61 @@
+{
+    "name": "@fibrae/semi-illustrations-svelte",
+    "version": "0.1.1",
+    "description": "Semi illustrations as Svelte components",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-illustrations-svelte"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "svelte": "./dist/index.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "svelte": "./dist/index.js",
+            "default": "./dist/index.js"
+        },
+        "./package.json": "./package.json",
+        "./*.svelte": {
+            "types": "./dist/*.svelte.d.ts",
+            "svelte": "./dist/*.svelte",
+            "default": "./dist/*.svelte"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "svelte": "./dist/*.js",
+            "default": "./dist/*.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css"
+    ],
+    "scripts": {
+        "build:icon": "node scripts/build-illustration.ts",
+        "build": "node ../../scripts/svelte-package.ts"
+    },
+    "dependencies": {
+        "@fibrae/semi-icons-core": "workspace:*",
+        "@fibrae/semi-icons-svelte": "workspace:*"
+    },
+    "peerDependencies": {
+        "svelte": "catalog:peer"
+    },
+    "devDependencies": {
+        "@sveltejs/package": "catalog:",
+        "@sveltejs/vite-plugin-svelte": "catalog:",
+        "@testing-library/svelte": "catalog:",
+        "svelte": "catalog:",
+        "svelte-check": "catalog:",
+        "typescript": "catalog:"
+    }
+}
