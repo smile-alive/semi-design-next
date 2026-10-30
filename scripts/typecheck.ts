@@ -1,6 +1,7 @@
-// Type-checks each project in turn and prints which one is running, so a long run shows its progress
-import { spawnSync } from 'node:child_process';
+// Type-checks the projects in parallel, one per CPU, and prints each project's output as a block once it finishes
+import { spawn, spawnSync } from 'node:child_process';
 import { globSync } from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import ts from 'typescript';
 import { frameworks } from '../lint/index.ts';
@@ -21,18 +22,31 @@ if (sync.status !== 0) process.exit(sync.status ?? 1);
 const started = performance.now();
 const seconds = (since: number) => `${((performance.now() - since) / 1000).toFixed(1)}s`;
 
-for (const [index, config] of configs.entries()) {
+async function check(config: string) {
     // a framework whose files plain tsc cannot resolve declares its own checker
     const tool = frameworks.find((framework) => framework.files.some((glob) => path.matchesGlob(config, glob)))?.typecheck ?? 'tsc';
-    console.log(`[${index + 1}/${configs.length}] ${tool} -p ${config}`);
-    const start = performance.now();
     // svelte-check takes warnings (template a11y) as failures and has no -p or --noEmit
     const args = tool === 'svelte-check' ? ['--tsconfig', config, '--fail-on-warnings'] : ['-p', config, '--noEmit'];
-    const { status, error } = spawnSync(tool, args, { stdio: 'inherit' });
-    if (error) throw error;
+    const start = performance.now();
+    const child = spawn(tool, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    let output = '';
+    child.stdout.on('data', (chunk) => (output += chunk));
+    child.stderr.on('data', (chunk) => (output += chunk));
+    const status = await new Promise<number | null>((resolve, reject) => {
+        child.once('error', reject);
+        child.once('close', resolve);
+    });
     if (status !== 0) failed.push(config);
-    console.log(`${status === 0 ? 'PASS' : 'FAIL'} ${config} ${seconds(start)}`);
+    console.log(`${status === 0 ? 'PASS' : 'FAIL'} ${tool} ${config} ${seconds(start)}${output.trim() ? `\n${output.trimEnd()}` : ''}`);
 }
+
+const queue = [...configs];
+const worker = async () => {
+    for (let config = queue.shift(); config; config = queue.shift()) {
+        await check(config);
+    }
+};
+await Promise.all(Array.from({ length: Math.min(os.availableParallelism(), queue.length) }, worker));
 
 console.log(`\n${configs.length - failed.length} PASS, ${failed.length} FAIL in ${seconds(started)}`);
 if (failed.length) {

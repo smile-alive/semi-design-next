@@ -1,7 +1,11 @@
 name: CI
 
 on:
+    # Markdown feeds no build or test (the site reads .mdx), and the pre-commit hook formats it
     pull_request:
+        paths-ignore: ['**/*.md']
+    # Every push to main runs: Release and Deploy site start from a passing run of the newest commit,
+    # and a changeset is a .md file
     push:
         branches: [main]
 
@@ -12,17 +16,40 @@ concurrency:
 permissions:
     contents: read
 
+# Each job builds first: package exports point at dist, which lint, typecheck and the tests all resolve
 jobs:
-    check:
+    lint:
         runs-on: ubuntu-latest
-        timeout-minutes: 60
+        timeout-minutes: 30
+        steps:
+            - uses: actions/checkout@v5
+            - uses: jdx/mise-action@v3
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm format:check
+            - run: pnpm build
+            - run: pnpm lint
+
+    typecheck:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
             - uses: jdx/mise-action@v3
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             - run: pnpm typecheck
+
+    test:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [1, 2, 3, 4, 5, 6]
+        steps:
+            - uses: actions/checkout@v5
+            - uses: jdx/mise-action@v3
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
             # `pnpm check` also runs the browser projects; those run in browser.yml, so this job runs the jsdom and node ones
-            - run: pnpm lint
-            - run: pnpm format:check
-            - run: pnpm test
+            - run: pnpm test --shard=${{ matrix.shard }}/6

@@ -1,10 +1,13 @@
 name: Release
 
+# workflow_run only fires from this file on the default branch
 on:
-    push:
+    workflow_run:
+        workflows: [CI]
+        types: [completed]
         branches: [main]
 
-concurrency: release-${{ github.ref }}
+concurrency: release
 
 permissions:
     contents: write
@@ -13,7 +16,10 @@ permissions:
 
 jobs:
     release:
-        if: github.repository == 'smile-alive/semi-design-next'
+        # changesets/action tags and resets the version branch at github.sha, the newest main commit; when main
+        # has moved past the commit CI passed, that commit's own CI run releases it
+        if: >-
+            github.repository == 'smile-alive/semi-design-next' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5

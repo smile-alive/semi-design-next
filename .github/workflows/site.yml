@@ -1,9 +1,11 @@
 name: Deploy site
 
+# workflow_run only fires from this file on the default branch
 on:
-    push:
+    workflow_run:
+        workflows: [CI]
+        types: [completed]
         branches: [main]
-        paths: ['website/**', 'packages/**', 'pnpm-lock.yaml']
     workflow_dispatch:
 
 concurrency:
@@ -15,7 +17,12 @@ permissions:
 
 jobs:
     deploy:
-        if: github.repository == 'smile-alive/semi-design-next'
+        # When main has moved past the commit CI passed, that commit's own CI run deploys it
+        if: >-
+            github.repository == 'smile-alive/semi-design-next' && (github.event_name == 'workflow_dispatch'
+                || (github.event.workflow_run.conclusion == 'success'
+                    && github.event.workflow_run.event == 'push'
+                    && github.event.workflow_run.head_sha == github.sha))
         runs-on: ubuntu-latest
         timeout-minutes: 60
         steps:
