@@ -13,6 +13,10 @@
         { "path": "./packages/semi-ai-solid/tsconfig.json" },
         { "path": "./packages/semi-icons-solid/tsconfig.json" },
         { "path": "./packages/semi-illustrations-solid/tsconfig.json" },
+        { "path": "./packages/semi-ui-svelte/tsconfig.json" },
+        { "path": "./packages/semi-ai-svelte/tsconfig.json" },
+        { "path": "./packages/semi-icons-svelte/tsconfig.json" },
+        { "path": "./packages/semi-illustrations-svelte/tsconfig.json" },
         { "path": "./vitest/tsconfig.json" },
         { "path": "./vitest/tsconfig.browser.json" },
         { "path": "./vitest/react/tsconfig.react.json" },
@@ -21,6 +25,8 @@
         { "path": "./vitest/vue/tsconfig.vue.browser.json" },
         { "path": "./vitest/solid/tsconfig.solid.json" },
         { "path": "./vitest/solid/tsconfig.solid.browser.json" },
+        { "path": "./vitest/svelte/tsconfig.svelte.json" },
+        { "path": "./vitest/svelte/tsconfig.svelte.browser.json" },
         { "path": "./website/tsconfig.vue.json" },
         { "path": "./website/tsconfig.solid.json" }
     ]

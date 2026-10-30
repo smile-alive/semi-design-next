@@ -121,7 +121,7 @@ global.IntersectionObserver = class IntersectionObserver {
     unobserve() {}
 };
 
-global.matchMedia = function (media) {
+global.matchMedia = (media) => {
     const min = /min-width:\s*(\d+)px/.exec(media);
     const max = /max-width:\s*(\d+)px/.exec(media);
     return {
@@ -141,12 +141,8 @@ global.HTMLElement.prototype.getBoundingClientRect = function () {
     return new DOMRect(parseFloat(this.style.marginLeft) || 0, parseFloat(this.style.marginTop) || 0, parseFloat(this.style.width) || 0, parseFloat(this.style.height) || 0);
 };
 
-global.Range.prototype.getBoundingClientRect = function () {
-    return new DOMRect();
-};
-global.Range.prototype.getClientRects = function () {
-    return Object.assign([] as DOMRect[], { item: (): DOMRect | null => null });
-};
+global.Range.prototype.getBoundingClientRect = () => new DOMRect();
+global.Range.prototype.getClientRects = () => Object.assign([] as DOMRect[], { item: (): DOMRect | null => null });
 
 Object.defineProperties(global.HTMLElement.prototype, {
     offsetWidth: {

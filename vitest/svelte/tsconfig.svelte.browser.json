@@ -1,0 +1,16 @@
+{
+    "extends": "./tsconfig.svelte.json",
+    "compilerOptions": { "types": ["node", "vite/client", "@vitest/browser-playwright"] },
+    "include": [
+        "svelte.setup.ts",
+        "hydration-setup.ts",
+        "*.browser.test.ts",
+        "__probes__/**/*",
+        "../utils/browser.ts",
+        "../../packages/semi-*-svelte/**/__tests__/**/*.browser.test.ts",
+        "../../packages/semi-*-svelte/**/__tests__/**/*.svelte",
+        "../../packages/semi-*-svelte/src/*.d.ts",
+        "../../packages/semi-foundation/src/dom.d.ts"
+    ],
+    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist"]
+}

@@ -34,10 +34,11 @@ export default defineConfig({
 
 宿主配置里加上插件即可服务端渲染与 hydration。默认按组件加载样式（组件 JS 自带样式导入），不导入 `styles.css`；整包样式是可选路线：开 `omitCss` 再导入一次 `styles.css`。两条路线不混用，混用时 CSS 体积约翻倍。
 
-| 宿主                                                | 安装                                                   | 宿主配置                                                    | 样式                                                  |
-| --------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------- |
-| React Router 8 framework mode（含 `serverBundles`） | `@fibrae/semi-ui-react`、`-D @fibrae/semi-vite-plugin` | `plugins: [semi(), reactRouter()]`                          | 无                                                    |
-| SolidStart 2                                        | `@fibrae/semi-ui-solid`、`-D @fibrae/semi-vite-plugin` | `plugins: [solidStart(), nitro(), semi({ omitCss: true })]` | `app.tsx` 导入一次 `@fibrae/semi-ui-solid/styles.css` |
+| 宿主                                                | 安装                                                    | 宿主配置                                                    | 样式                                                  |
+| --------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------- |
+| React Router 8 framework mode（含 `serverBundles`） | `@fibrae/semi-ui-react`、`-D @fibrae/semi-vite-plugin`  | `plugins: [semi(), reactRouter()]`                          | 无                                                    |
+| SolidStart 2                                        | `@fibrae/semi-ui-solid`、`-D @fibrae/semi-vite-plugin`  | `plugins: [solidStart(), nitro(), semi({ omitCss: true })]` | `app.tsx` 导入一次 `@fibrae/semi-ui-solid/styles.css` |
+| SvelteKit 3                                         | `@fibrae/semi-ui-svelte`、`-D @fibrae/semi-vite-plugin` | `plugins: [sveltekit({ adapter }), semi()]`                 | 无                                                    |
 
 ```ts
 // vite.config.ts（React Router）
@@ -65,8 +66,8 @@ SolidStart 选整包样式，是因为它的 dev 服务端默认不收集 `node_
 1. 拦截 Semi 各框架包与共享包（foundation、icons-core 等）`dist` 下 `.css` 的请求，把后缀换成 `.scss`；对应的 `.scss` 存在时读取它作为源码。
 2. 通过 `semi:` Sass importer 编译，`semi:theme` 来自 `@fibrae/semi-foundation/theme/index.scss`，`$prefix` 取 `prefixCls`，再按 `cssLayer` 决定是否包 `@layer semi`。
 3. 设置 `prefixCls` 时，改写各 `env.js` 中的 `BASE_CLASS_PREFIX`；同时向 `optimizeDeps.rolldownOptions.plugins` 注册插件，使 dev 预构建（`.vite/deps`）里的 env 模块也被改写。
-4. `omitCss` 为真时，注释掉 Semi 包 `dist` 下 JS（含 Solid 包的 `.jsx`）里的 `.css` 导入，避免它们进入打包器；同样注册进 `optimizeDeps.rolldownOptions.plugins`，dev 预构建也不再注入组件 CSS。
-5. 对每个 server 环境（`consumer` 为 `server`，未设时按 Vite 的默认：除 `client` 外都是 server，覆盖 Nuxt 与 React Router `serverBundles` 的 `ssrBundle_*`）设置 `resolve.noExternal`，把 React、Vue 的 UI、AI、图标、插画包打进服务端产物，Node 不必加载它们的 `.css` 导入。foundation 默认保持 external；设置 `prefixCls` 时，foundation 与 ai-foundation 一并打进服务端产物（它们持有 `BASE_CLASS_PREFIX`，保持 external 会使服务端类名仍为 `semi-`）。vite-plugin-solid 在 dev 中把 Solid 包的非 Solid 依赖（含 foundation）写进服务端环境的 `resolve.external`，Vite 先查 `external` 再查 `noExternal`，所以设置 `prefixCls` 时插件在所有插件之后（`configEnvironment` 的 `order: 'post'`）把 foundation 从中移除。Solid 包交给 vite-plugin-solid，不在此列。
+4. `omitCss` 为真时，注释掉 Semi 包 `dist` 下 JS（含 Solid 包的 `.jsx`、Svelte 包的 `.svelte`）里的 `.css` 导入，避免它们进入打包器；同样注册进 `optimizeDeps.rolldownOptions.plugins`，dev 预构建也不再注入组件 CSS。
+5. 对每个 server 环境（`consumer` 为 `server`，未设时按 Vite 的默认：除 `client` 外都是 server，覆盖 Nuxt 与 React Router `serverBundles` 的 `ssrBundle_*`）设置 `resolve.noExternal`，把 React、Vue 的 UI、AI、图标、插画包打进服务端产物，Node 不必加载它们的 `.css` 导入。foundation 默认保持 external；设置 `prefixCls` 时，foundation 与 ai-foundation 一并打进服务端产物（它们持有 `BASE_CLASS_PREFIX`，保持 external 会使服务端类名仍为 `semi-`）。vite-plugin-solid 在 dev 中把 Solid 包的非 Solid 依赖（含 foundation）写进服务端环境的 `resolve.external`，Vite 先查 `external` 再查 `noExternal`，所以设置 `prefixCls` 时插件在所有插件之后（`configEnvironment` 的 `order: 'post'`）把 foundation 从中移除。Solid 包交给 vite-plugin-solid，Svelte 包由 vite-plugin-svelte 按 `svelte` 条件自行打进服务端产物，都不在此列。
 6. 对应用能解析到的 `@fibrae/semi-ui-solid`、`@fibrae/semi-ai-solid`，按它直接依赖的 foundation、ai-foundation，把 foundation `package.json` 中的依赖写成 `<Solid 包> > <foundation> > <依赖>`（如 `@fibrae/semi-ai-solid > @fibrae/semi-foundation > hast-util-to-jsx-runtime`）加入 `optimizeDeps.include`：vite-plugin-solid 把 Solid 包排除在预构建之外，其中的 CommonJS 依赖不预构建就无法在浏览器导入。只装 ai-solid 的 pnpm 应用解析不到 ui-solid，foundation 的依赖经 ai-solid 列入。没有根入口的依赖（如 `@tiptap/pm`）按 `exports` 中的子路径逐个加入，否则直接导入的子路径与其他预构建依赖内联的副本是两份实例。
 
 ## 常见问题

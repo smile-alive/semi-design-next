@@ -6,7 +6,8 @@ import { commentOutCssImports, compileSemiScss, replaceVariableValues, resolveFo
 import type { SemiVitePluginOptions } from './types';
 
 const SEMI_CSS_RE = /@fibrae[\\/]+semi-(ui-react|ui-vue|ui-solid|ai-react|ai-vue|ai-solid|icons-core|icons-vue|foundation|ai-foundation)[\\/]+dist[\\/]+.+\.css(\?.*)?$/;
-const SEMI_JS_RE = /@fibrae[\\/]+semi-(ui-react|ui-vue|ui-solid|ai-react|ai-vue|ai-solid|icons-react|icons-vue|icons-solid)[\\/]+dist[\\/]+.+\.jsx?(\?.*)?$/;
+// The Svelte packages ship `.svelte` sources, whose `<script>` imports the stylesheets
+const SEMI_JS_RE = /@fibrae[\\/]+semi-(?:(ui-react|ui-vue|ui-solid|ai-react|ai-vue|ai-solid|icons-react|icons-vue|icons-solid)[\\/]+dist[\\/]+.+\.jsx?|(ui|ai|icons)-svelte[\\/]+dist[\\/]+.+\.(svelte|js))(\?.*)?$/;
 const SEMI_ENV_JS_RE = /@fibrae[\\/]+semi-[^\\/]+[\\/]+.+env\.jsx?(\?.*)?$/;
 // Node cannot load the `.css` imports in Semi's JS, so server environments bundle these packages. Not anchored at the
 // start: Nuxt dev's vite-node matches absolute paths. Foundation stays external unless `prefixCls` is set, and the Solid

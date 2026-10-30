@@ -102,6 +102,7 @@ for (const file of files) {
         }
         for (const child of children(node)) visit(child);
     };
+    // oxc's Program type has no index signature, which the loosely typed Node walker relies on
     visit(program as unknown as Node);
 }
 

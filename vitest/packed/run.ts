@@ -14,6 +14,7 @@ const rootDir = path.resolve(import.meta.dirname, '../..');
 const packages = [
     'semi-ai-react',
     'semi-ai-solid',
+    'semi-ai-svelte',
     'semi-ai-vue',
     'semi-ai-foundation',
     'semi-animation',
@@ -21,14 +22,17 @@ const packages = [
     'semi-icons-core',
     'semi-icons-react',
     'semi-icons-solid',
+    'semi-icons-svelte',
     'semi-icons-vue',
     'semi-illustrations-react',
     'semi-illustrations-solid',
+    'semi-illustrations-svelte',
     'semi-illustrations-vue',
     'semi-json-viewer-core',
     'semi-scss-compile',
     'semi-ui-react',
     'semi-ui-solid',
+    'semi-ui-svelte',
     'semi-ui-vue',
     'semi-vite',
 ];
@@ -69,6 +73,9 @@ write(
                 react: '^19.3.0',
                 'react-dom': '^19.3.0',
                 'solid-js': '^1.9.17',
+                '@sveltejs/vite-plugin-svelte': '^7.3.1',
+                svelte: '^5.57.3',
+                'svelte-check': '^4.7.7',
                 typescript: '^6.0.3',
                 'unplugin-solid': '^2.0.0',
                 vite: '^8.0.0',
@@ -375,7 +382,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
             assert.ok(!(depth === 0 && /^\s*@layer base\s*\{/.test(css.slice(index + 1, index + 40))), `${file} has no top-level @layer base`);
         }
     }
-    for (const name of ['semi-ui-solid', 'semi-ai-solid']) {
+    for (const name of ['semi-ui-solid', 'semi-ai-solid', 'semi-ui-svelte', 'semi-ai-svelte']) {
         assert.ok(fs.existsSync(path.join(scope, `${name}/dist/styles.css`)), `${name} ships dist/styles.css`);
     }
     for (const name of ['semi-ui-vue', 'semi-ai-vue']) {
@@ -386,7 +393,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     // `semi-base` is how the base sub-layer is named once it cannot collide with Tailwind's `base`
     const layers = [...fullCss.matchAll(/@layer ([\w-]+)\s*\{/g)].map(([, name]) => (name === 'semi-base' ? 'base' : name));
     assert.deepStrictEqual(layers, ['semi', 'base'], 'styles.css declares the semi layer and its base sub-layer, in order');
-    for (const name of ['semi-ui-react', 'semi-ui-vue', 'semi-ui-solid']) {
+    for (const name of ['semi-ui-react', 'semi-ui-vue', 'semi-ui-solid', 'semi-ui-svelte']) {
         const tailwindTheme = fs.readFileSync(path.join(scope, `${name}/dist/tailwind.css`), 'utf-8');
         assert.ok(tailwindTheme.includes('--color-semi-color-primary: var(--semi-color-primary);'), `${name} tailwind.css maps the Semi tokens for Tailwind`);
     }
@@ -418,6 +425,48 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
             // Conditions match in key order, so `solid` must precede `default`
             assert.ok(entry?.default?.endsWith('.js') && entry.solid === entry.default.replace(/\.js$/, '.jsx') && Object.keys(entry).indexOf('solid') < Object.keys(entry).indexOf('default'), `${name} exports ${key} maps the solid condition to .jsx before default to .js`);
         }
+    }
+}
+
+{
+    // Svelte ships `.svelte` sources (compiled output would import svelte/internal, Y-H9); Svelte-aware bundlers pick them
+    // up through the `svelte` condition; the bundler checks further down build them with vite-plugin-svelte
+    const scope = path.join(appDir, 'node_modules/@fibrae');
+    for (const name of ['semi-ui-svelte', 'semi-ai-svelte', 'semi-icons-svelte', 'semi-illustrations-svelte']) {
+        const root = path.join(scope, name);
+        const { exports } = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf-8'));
+        for (const [key, entry] of Object.entries<string | Record<string, string>>(exports)) {
+            if (typeof entry === 'string') {
+                assert.ok(key === './package.json' || fs.existsSync(path.join(root, entry)), `${name} exports ${key} points at a shipped file`);
+                continue;
+            }
+            // Conditions match in key order, so `svelte` must precede `default`
+            assert.ok(entry.types && entry.svelte && Object.keys(entry).indexOf('svelte') < Object.keys(entry).indexOf('default'), `${name} exports ${key} has types, then svelte before default`);
+        }
+        assert.ok(fs.existsSync(path.join(root, exports['.'].svelte)) && fs.existsSync(path.join(root, exports['.'].types)), `${name} exports . points at files that exist`);
+        assert.deepStrictEqual(fs.globSync('**/__tests__', { cwd: path.join(root, 'dist') }), [], `${name} ships no __tests__`);
+        for (const file of fs.globSync('dist/**/*.{svelte,js,d.ts}', { cwd: root })) {
+            assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf-8'), /(?:\bfrom|\bimport)\s*['"][^'"]+\.scss['"]/, `${name}/${file} does not import a .scss file`);
+        }
+    }
+    const ui = path.join(scope, 'semi-ui-svelte');
+    assert.strictEqual(fs.globSync('*.js', { cwd: path.join(ui, 'dist/locale/source') }).length, fs.globSync('*.js', { cwd: path.join(scope, 'semi-foundation/dist/locale/source') }).length, 'semi-ui-svelte re-exports every foundation locale pack');
+    // Svelte-aware tools resolve with the `svelte` condition; plain Node and other bundlers take `default`. The AI package
+    // reaches the UI package's internals by deep path: a `.ts` module without extension, a `.svelte.ts` one as `.svelte.js`
+    const subpaths = ['hooks', 'tokens', 'locale/source/en_US', 'styles.css', 'tailwind.css', 'switch/switch.svelte', '_base/create-context', '_base/use-foundation.svelte.js'];
+    for (const condition of [[], ['--conditions=svelte']]) {
+        const resolved = execFileSync(process.execPath, [...condition, '--input-type=module', '-e', 'for (const specifier of process.argv.slice(1)) console.log(import.meta.resolve(specifier));', ...subpaths.map((subpath) => `@fibrae/semi-ui-svelte/${subpath}`)], { cwd: appDir, encoding: 'utf-8' })
+            .trim()
+            .split('\n')
+            .map((url) => {
+                assert.ok(fs.existsSync(fileURLToPath(url)), `${url} exists`);
+                return url.replace(/^.*\/@fibrae\//, '');
+            });
+        assert.deepStrictEqual(
+            resolved,
+            ['hooks.js', 'tokens.js', 'locale/source/en_US.js', 'styles.css', 'tailwind.css', 'switch/switch.svelte', '_base/create-context.js', '_base/use-foundation.svelte.js'].map((file) => `semi-ui-svelte/dist/${file}`),
+            `the semi-ui-svelte subpaths resolve ${condition.join(' ') || 'by default'}`
+        );
     }
 }
 
@@ -768,6 +817,115 @@ for (const ui of ['', 'vue-']) {
     assert.deepStrictEqual(jsx.exports, dom.exports, 'the .jsx and .js trees export the same names, module by module');
     assert.match(jsx.code, /\bssr\(/, 'the .jsx tree compiled to server rendering calls');
     assert.doesNotMatch(jsx.code, /\btemplate\(/, 'the .jsx tree compiled no DOM templates');
+}
+{
+    // A Svelte app as a user builds it: vite-plugin-svelte resolves the `svelte` condition and compiles the shipped
+    // `.svelte` sources together with the app, in the browser build and in SSR
+    write(
+        path.join(appDir, 'src/svelte-app.svelte'),
+        [
+            '<script lang="ts">',
+            "    import { Button, LocaleProvider, Switch } from '@fibrae/semi-ui-svelte';",
+            "    import en_US from '@fibrae/semi-ui-svelte/locale/source/en_US';",
+            "    import { IconHome } from '@fibrae/semi-icons-svelte';",
+            "    import { IllustrationIdle } from '@fibrae/semi-illustrations-svelte';",
+            '</script>',
+            '',
+            '<LocaleProvider locale={en_US}>',
+            '    <main>',
+            '        <Button theme="solid" type="primary">ssr-button</Button>',
+            '        <Switch aria-label="switch" />',
+            '        <IconHome aria-label="home" />',
+            '        <IllustrationIdle />',
+            '    </main>',
+            '</LocaleProvider>',
+            '',
+        ].join('\n')
+    );
+    write(
+        path.join(appDir, 'src/svelte-entry.js'),
+        ["import '@fibrae/semi-ui-svelte/tokens';", "import { mount } from 'svelte';", "import App from './svelte-app.svelte';", "export { observeResize, useClickOutside, useCopied, useLocale } from '@fibrae/semi-ui-svelte/hooks';", 'export const start = (target) => mount(App, { target });', ''].join('\n')
+    );
+    write(path.join(appDir, 'src/svelte-full-css.js'), ["import '@fibrae/semi-ui-svelte/styles.css';", "export { Button } from '@fibrae/semi-ui-svelte';", ''].join('\n'));
+    write(path.join(appDir, 'src/svelte-ssr.js'), ["import { render } from 'svelte/server';", "import App from './svelte-app.svelte';", 'export const html = () => render(App).body;', ''].join('\n'));
+    write(path.join(appDir, 'tsconfig.svelte.json'), JSON.stringify({ compilerOptions: { strict: true, skipLibCheck: false, module: 'esnext', moduleResolution: 'bundler', target: 'esnext', noEmit: true, types: [] }, include: ['src/svelte-app.svelte', 'src/types-probe-svelte.ts'] }, null, 4));
+    write(
+        path.join(appDir, 'src/types-probe-svelte.ts'),
+        [
+            "import type * as Ui from '@fibrae/semi-ui-svelte';",
+            "import type * as Hooks from '@fibrae/semi-ui-svelte/hooks';",
+            "import type * as Ai from '@fibrae/semi-ai-svelte';",
+            "import type * as Icons from '@fibrae/semi-icons-svelte';",
+            "import type * as LabIcons from '@fibrae/semi-icons-svelte/lab';",
+            "import type * as Illustrations from '@fibrae/semi-illustrations-svelte';",
+            "import type * as EnUS from '@fibrae/semi-ui-svelte/locale/source/en_US';",
+            'export type Probe = [typeof Ui, typeof Hooks, typeof Ai, typeof Icons, typeof LabIcons, typeof Illustrations, typeof EnUS];',
+            '',
+        ].join('\n')
+    );
+    // A failing svelte-check throws, so declaration errors in the published Svelte packages fail the run
+    execFileSync(process.execPath, [path.join(appDir, 'node_modules/svelte-check/bin/svelte-check'), '--workspace', appDir, '--tsconfig', path.join(appDir, 'tsconfig.svelte.json'), '--fail-on-warnings'], { cwd: appDir, stdio: 'inherit' });
+
+    const { svelte }: { svelte: () => Vite.Plugin[] } = await import(path.join(appDir, 'node_modules/@sveltejs/vite-plugin-svelte/src/index.js'));
+    async function bundleSvelte(entry: string, options: SemiVite.SemiVitePluginOptions | null) {
+        const result = (await build({
+            root: appDir,
+            logLevel: 'error',
+            plugins: [svelte(), options ? semiTheming(options) : []],
+            build: {
+                write: false,
+                cssCodeSplit: false,
+                lib: { entry, formats: ['es'] },
+                rolldownOptions: { external: [/^svelte($|\/)/] },
+            },
+        })) as Vite.Rolldown.RolldownOutput | Vite.Rolldown.RolldownOutput[];
+        const { output } = Array.isArray(result) ? result[0] : result;
+        return {
+            css: output
+                .filter((file): file is Vite.Rolldown.OutputAsset => file.fileName.endsWith('.css'))
+                .map((file) => file.source)
+                .join('\n'),
+            js: output
+                .filter((file) => file.type === 'chunk')
+                .map((file) => file.code)
+                .join('\n'),
+        };
+    }
+    const plain = await bundleSvelte('src/svelte-entry.js', null);
+    assert.match(plain.css, /--semi-color-primary\s*:/, 'the Svelte token entry brings the tokens without any plugin');
+    for (const block of ['button', 'switch', 'icon']) {
+        assert.match(plain.css, new RegExp(`\\.semi-${block}\\b`), `the Svelte ${block} brings its CSS without any plugin`);
+    }
+    assert.doesNotMatch(plain.css, /\.semi-datepicker\b/, 'unused Svelte components add no CSS');
+    assert.match(plain.js, /from\s*["']svelte(?:\/[\w/-]+)?["']/, 'svelte stays external in the Svelte bundle');
+    assert.doesNotMatch(plain.js, /from\s*["'](?:react|vue|solid-js)(?:\/|["'])/, 'Svelte packages import no other framework');
+    const themed = await bundleSvelte('src/svelte-entry.js', { prefixCls: 'xprobe' });
+    assert.match(themed.css, /\.xprobe-button\b/, 'prefixCls rewrites the CSS the Svelte components import');
+    assert.doesNotMatch(themed.css, /\.semi-(button|switch|icon)\b/, 'no default prefix left in the Svelte component CSS');
+    assert.match(themed.js, /["']xprobe["']/, 'prefixCls rewrites BASE_CLASS_PREFIX for the Svelte components');
+    const omitted = await bundleSvelte('src/svelte-entry.js', { omitCss: true });
+    assert.strictEqual(omitted.css, '', 'omitCss drops the stylesheet imports of the Svelte components and the token entry');
+    const full = await bundleSvelte('src/svelte-full-css.js', { omitCss: true });
+    const buttonRules = (css: string) => css.match(/\.semi-button\{/g)?.length ?? 0;
+    const sheet = fs.readFileSync(path.join(appDir, 'node_modules/@fibrae/semi-ui-svelte/dist/styles.css'), 'utf-8');
+    assert.ok(buttonRules(sheet) > 0 && buttonRules(full.css) === buttonRules(sheet), 'the semi-ui-svelte styles.css entry is importable and, with omitCss, the only copy of the component CSS');
+
+    const server = await createServer({
+        root: appDir,
+        logLevel: 'error',
+        plugins: [svelte(), semiTheming({ prefixCls: 'my' })],
+        server: { middlewareMode: true, ws: false },
+    });
+    try {
+        const svelteSsr = (await server.ssrLoadModule('/src/svelte-ssr.js')) as { html(): string };
+        const markup = svelteSsr.html();
+        assert.match(markup, /\bmy-button\b/, 'the Svelte Button renders with the prefixCls during SSR');
+        assert.match(markup, /\bmy-switch\b/, 'the Svelte Switch renders with the prefixCls during SSR');
+        assert.match(markup, /my-icon-home/, 'the Svelte icon renders with the prefixCls during SSR');
+        assert.doesNotMatch(markup, /\bsemi-(button|switch|icon)\b/, 'no default prefix left in the Svelte SSR output');
+    } finally {
+        await server.close();
+    }
 }
 
 execFileSync('trash', [workDir]);

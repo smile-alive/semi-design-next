@@ -16,7 +16,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                project: [react, vue, solid, common]
+                project: [react, vue, solid, svelte, common]
         steps:
             - uses: actions/checkout@v5
             - uses: jdx/mise-action@v3
