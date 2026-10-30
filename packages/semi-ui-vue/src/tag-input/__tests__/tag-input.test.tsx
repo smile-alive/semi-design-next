@@ -51,7 +51,9 @@ async function hover(target: Element) {
     hovered = target;
     await userEvent.hover(target);
 }
-// The ellipsis measurement that enables the tooltip settles asynchronously; on a loaded CI runner it outlasts waitFor's 1s default
+// The ellipsis measurement that enables the tooltip settles asynchronously; on a loaded CI runner it outlasts waitFor's 1s default.
+// Each userEvent.hover call starts a fresh pointer and fires mouseenter again, restarting the enter delay on every retry,
+// so callers render with `noEnterDelay` and the first hover after measuring opens the popup.
 const hoverUntil = (target: Element, popupSelector: string) =>
     waitFor(
         async () => {
@@ -60,6 +62,7 @@ const hoverUntil = (target: Element, popupSelector: string) =>
         },
         { timeout: 5000 }
     );
+const noEnterDelay = () => (semiGlobal.config.overrideDefaultProps = { Tooltip: { mouseEnterDelay: 0 }, Popover: { mouseEnterDelay: 0 } });
 const mouseDown = (el: Element) => dispatch(el, new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
 
 function renderWithHandle(props: Record<string, unknown> = {}) {
@@ -420,6 +423,7 @@ describe('TagInput', () => {
     it('TagInput 的 showContentTooltip', async () => {
         // jsdom has no text layout; make tag text wider than its zero-width container
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
+        noEnterDelay();
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: true });
         await hoverUntil(screen.getByText('abc').parentElement as HTMLElement, `.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`)).toHaveTextContent('abc');
@@ -427,6 +431,7 @@ describe('TagInput', () => {
 
     it('TagInput 的 showContentTooltip 对象形式', async () => {
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
+        noEnterDelay();
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: { type: 'popover', opts: { position: 'top' } } });
         await hoverUntil(screen.getByText('abc').parentElement as HTMLElement, `.${BASE_CLASS_PREFIX}-popover-wrapper`);
         const popover = document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
