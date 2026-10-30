@@ -1,4 +1,4 @@
-import type { Diagnostic } from '../service/jsonTypes';
+import type { Diagnostic } from '../service/json-types';
 import type { JsonDocument } from '../service/parse';
 
 export interface GlobalEvents {

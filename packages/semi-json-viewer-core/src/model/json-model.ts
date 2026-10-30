@@ -1,12 +1,12 @@
 import { type Emitter, getEmitter } from '../common/emitter';
-import type { GlobalEvents, IModelContentChangeEvent } from '../common/emitterEvents';
+import type { GlobalEvents, IModelContentChangeEvent } from '../common/emitter-events';
 import { type FindMatch, type SearchData, EndOfLinePreference } from '../common/model';
 import { type IRange, Range } from '../common/range';
 import { isInWorkerThread } from '../common/worker';
-import { type PieceTreeBase, DefaultEndOfLine, PieceTreeTextBufferBuilder } from '../pieceTreeTextBuffer';
-import { type JsonWorkerManager, getJsonWorkerManager } from '../worker/jsonWorkerManager';
+import { type PieceTreeBase, DefaultEndOfLine, PieceTreeTextBufferBuilder } from '../piece-tree-text-buffer';
+import { type JsonWorkerManager, getJsonWorkerManager } from '../worker/json-worker-manager';
 import { type Command, DeleteCommand, InsertCommand, MultiCommand, ReplaceCommand } from './command';
-import { SearchParams, TextModelSearch } from './textModelSearch';
+import { SearchParams, TextModelSearch } from './text-model-search';
 
 export class JSONModel {
     #pieceTree: PieceTreeBase;
@@ -272,7 +272,7 @@ export class JSONModel {
             searchRanges = [this.getFullModelRange()];
         }
 
-        searchRanges = searchRanges.sort((d1, d2) => d1.startLineNumber - d2.startLineNumber || d1.startColumn - d2.startColumn);
+        searchRanges = searchRanges.toSorted((d1, d2) => d1.startLineNumber - d2.startLineNumber || d1.startColumn - d2.startColumn);
 
         const uniqueSearchRanges: Range[] = [];
         uniqueSearchRanges.push(

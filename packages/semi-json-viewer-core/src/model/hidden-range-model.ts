@@ -1,10 +1,10 @@
 /** based on https://github.com/microsoft/vscode with modifications for custom requirements */
 import { type Emitter, getEmitter } from '../common/emitter';
-import type { GlobalEvents, IModelContentChangeEvent } from '../common/emitterEvents';
+import type { GlobalEvents, IModelContentChangeEvent } from '../common/emitter-events';
 import type { IRange } from '../common/range';
 import { countEOL } from '../common/strings';
 import { findFirstIdxMonotonousOrArrLen } from '../common/utils';
-import type { FoldingModel } from './foldingModel';
+import type { FoldingModel } from './folding-model';
 
 export class HiddenRangeModel {
     #hiddenRanges: IRange[] = [];

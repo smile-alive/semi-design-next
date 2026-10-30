@@ -1,8 +1,8 @@
 import type { FormattingOptions } from 'jsonc-parser';
-import type { IModelContentChangeEvent } from '../common/emitterEvents';
+import type { IModelContentChangeEvent } from '../common/emitter-events';
 import { createModel } from '../model';
-import type { JSONModel } from '../model/jsonModel';
-import { formatJson, getFoldingRanges, doValidate, parseJsonAst } from '../service/jsonService';
+import type { JSONModel } from '../model/json-model';
+import { formatJson, getFoldingRanges, doValidate, parseJsonAst } from '../service/json-service';
 
 export class JsonWorker {
     #model: JSONModel | null = null;

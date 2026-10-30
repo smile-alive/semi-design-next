@@ -1,6 +1,6 @@
 import type { FormattingOptions } from 'jsonc-parser';
-import type { IModelContentChangeEvent } from '../common/emitterEvents';
-import { getCurrentNameSpaceId } from '../common/nameSpace';
+import type { IModelContentChangeEvent } from '../common/emitter-events';
+import { getCurrentNameSpaceId } from '../common/name-space';
 
 type WorkerService = {
     init: { value: string };

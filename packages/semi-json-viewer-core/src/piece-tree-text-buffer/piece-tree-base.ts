@@ -1,11 +1,11 @@
 /** reference from https://github.com/microsoft/vscode */
 
-import { CharCode } from '../common/charCode';
+import { CharCode } from '../common/char-code';
 import { type ITextSnapshot, type SearchData, FindMatch } from '../common/model';
 import { Position } from '../common/position';
 import { type IRange, Range } from '../common/range';
-import { Searcher, createFindMatch, isValidMatch } from '../model/textModelSearch';
-import { NodeColor, SENTINEL, TreeNode, fixInsert, leftest, rbDelete, righttest, updateTreeMetadata } from './rbTreeBase';
+import { Searcher, createFindMatch, isValidMatch } from '../model/text-model-search';
+import { NodeColor, SENTINEL, TreeNode, fixInsert, leftest, rbDelete, righttest, updateTreeMetadata } from './rb-tree-base';
 
 const AverageBufferSize = 65535;
 

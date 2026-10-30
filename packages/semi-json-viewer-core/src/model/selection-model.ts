@@ -1,7 +1,7 @@
 import { getLineElement } from '../common/dom';
 import type { Position } from '../common/position';
 import type { View } from '../view/view';
-import type { JSONModel } from './jsonModel';
+import type { JSONModel } from './json-model';
 
 export class SelectionModel {
     #row: number;

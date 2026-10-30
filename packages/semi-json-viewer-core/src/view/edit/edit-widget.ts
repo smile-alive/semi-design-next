@@ -1,12 +1,12 @@
 import { type Edit, applyEdits } from 'jsonc-parser';
 import { type Emitter, getEmitter } from '../../common/emitter';
-import type { GlobalEvents, IModelContentChangeEvent } from '../../common/emitterEvents';
+import type { GlobalEvents, IModelContentChangeEvent } from '../../common/emitter-events';
 import { firstNonWhitespaceIndex, getLeadingWhitespace } from '../../common/strings';
-import type { JSONModel } from '../../model/jsonModel';
-import type { SelectionModel } from '../../model/selectionModel';
-import { type JsonWorkerManager, getJsonWorkerManager } from '../../worker/jsonWorkerManager';
+import type { JSONModel } from '../../model/json-model';
+import type { SelectionModel } from '../../model/selection-model';
+import { type JsonWorkerManager, getJsonWorkerManager } from '../../worker/json-worker-manager';
 import type { View } from '../view';
-import { IndentAction, processJsonEnterAction } from './getEnterAction';
+import { IndentAction, processJsonEnterAction } from './get-enter-action';
 export class EditWidget {
     #view: View;
     #selectionModel: SelectionModel;

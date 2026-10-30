@@ -1,9 +1,9 @@
 import { runWhenGlobalIdle } from '../common/async';
-import { StopWatch } from '../common/stopWatch';
+import { StopWatch } from '../common/stop-watch';
 /** reference from https://github.com/microsoft/vscode */
-import type { JSONModel } from '../model/jsonModel';
-import { OffsetRange } from './offsetRange';
-import type { IBackgroundTokenizationStore } from './tokenizationJsonModelPart';
+import type { JSONModel } from '../model/json-model';
+import { OffsetRange } from './offset-range';
+import type { IBackgroundTokenizationStore } from './tokenization-json-model-part';
 import type { JSONState, JsonTokenizationSupport } from './tokenize';
 
 export class TokenizerWithStateStore {

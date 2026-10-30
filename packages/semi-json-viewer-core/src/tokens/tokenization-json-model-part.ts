@@ -1,8 +1,8 @@
 import { type Emitter, getEmitter } from '../common/emitter';
-import type { GlobalEvents, IModelContentChangeEvent } from '../common/emitterEvents';
+import type { GlobalEvents, IModelContentChangeEvent } from '../common/emitter-events';
 /** Based on https://github.com/microsoft/vscode with modifications for custom requirements */
-import type { JSONModel } from '../model/jsonModel';
-import { JsonBackgroundTokenizer, JsonTokenizerWithStateStoreAndModel } from './jsonModelToken';
+import type { JSONModel } from '../model/json-model';
+import { JsonBackgroundTokenizer, JsonTokenizerWithStateStoreAndModel } from './json-model-token';
 import { type Token, createTokenizationSupport } from './tokenize';
 
 export interface IBackgroundTokenizationStore {

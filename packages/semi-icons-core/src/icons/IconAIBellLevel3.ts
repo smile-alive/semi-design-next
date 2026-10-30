@@ -17,14 +17,7 @@ const IconAIBellLevel3: IconData = {
             [
                 [
                     'linearGradient',
-                    {
-                        id: '{uid}__semi-ai-bell-level-3',
-                        x1: '21.9997',
-                        y1: '21.9998',
-                        x2: '-1.48859',
-                        y2: '18.6968',
-                        gradientUnits: 'userSpaceOnUse',
-                    },
+                    { id: '{uid}__semi-ai-bell-level-3', x1: '21.9997', y1: '21.9998', x2: '-1.48859', y2: '18.6968', gradientUnits: 'userSpaceOnUse' },
                     [
                         ['stop', { 'stop-color': '{fill0}' }],
                         ['stop', { offset: '0.3', 'stop-color': '{fill1}' }],

@@ -1,8 +1,8 @@
 /** Based on https://github.com/microsoft/vscode-json-languageservice with modifications for custom requirements */
 
 import { createScanner, SyntaxKind } from 'jsonc-parser';
-import { type FoldRange, FoldSource } from '../model/foldingRange';
-import type { JSONModel } from '../model/jsonModel';
+import { type FoldRange, FoldSource } from '../model/folding-range';
+import type { JSONModel } from '../model/json-model';
 
 export function getFoldingRanges(jsonModel: JSONModel) {
     const ranges: FoldRange[] = [];

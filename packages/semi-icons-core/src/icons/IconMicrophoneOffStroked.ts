@@ -14,20 +14,8 @@ const IconMicrophoneOffStroked: IconData = {
                 fill: 'currentColor',
             },
         ],
-        [
-            'path',
-            {
-                d: 'M19 10.5a1 1 0 0 1 1 1 8 8 0 0 1-11.87 7L9.62 17A6 6 0 0 0 18 11.5a1 1 0 0 1 1-1',
-                fill: 'currentColor',
-            },
-        ],
-        [
-            'path',
-            {
-                d: 'M16.5 11.5v.23a4.5 4.5 0 0 1-5.7 4.1l1.94-1.94a2.5 2.5 0 0 0 1.65-1.65l2.11-2.11v1.37',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { d: 'M19 10.5a1 1 0 0 1 1 1 8 8 0 0 1-11.87 7L9.62 17A6 6 0 0 0 18 11.5a1 1 0 0 1 1-1', fill: 'currentColor' }],
+        ['path', { d: 'M16.5 11.5v.23a4.5 4.5 0 0 1-5.7 4.1l1.94-1.94a2.5 2.5 0 0 0 1.65-1.65l2.11-2.11v1.37', fill: 'currentColor' }],
     ],
 };
 

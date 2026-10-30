@@ -1,7 +1,7 @@
 import type { IRange } from '../../common/range';
 import * as strings from '../../common/strings';
 /** based on https://github.com/microsoft/vscode with modifications for custom requirements */
-import type { JSONModel } from '../../model/jsonModel';
+import type { JSONModel } from '../../model/json-model';
 export enum IndentAction {
     None = 0,
     Indent = 1,

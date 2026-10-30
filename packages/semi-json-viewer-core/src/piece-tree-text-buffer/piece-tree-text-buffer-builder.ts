@@ -1,7 +1,7 @@
 /** reference from https://github.com/microsoft/vscode */
 
-import { CharCode } from '../common/charCode';
-import { StringBuffer, createLineStarts, createLineStartsFast, PieceTreeBase } from './pieceTreeBase';
+import { CharCode } from '../common/char-code';
+import { StringBuffer, createLineStarts, createLineStartsFast, PieceTreeBase } from './piece-tree-base';
 
 export const UTF8_BOM_CHARACTER = String.fromCharCode(CharCode.UTF8_BOM);
 

@@ -10,26 +10,8 @@ const IconPincode: IconData = {
         ['circle', { cx: '9.5', cy: '8', r: '1', fill: '#4CC3FA' }],
         ['circle', { cx: '12.5', cy: '8', r: '1', fill: '#4CC3FA' }],
         ['circle', { cx: '15.5', cy: '8', r: '1', fill: '#4CC3FA' }],
-        [
-            'path',
-            {
-                d: 'M3 7V4.5c0-.28.22-.5.5-.5H6',
-                stroke: '#F8CE27',
-                'stroke-width': '1.5',
-                'stroke-linecap': 'square',
-                'stroke-linejoin': 'round',
-            },
-        ],
-        [
-            'path',
-            {
-                d: 'M19 9v2.5a.5.5 0 0 1-.5.5H16',
-                stroke: '#F8CE27',
-                'stroke-width': '1.5',
-                'stroke-linecap': 'square',
-                'stroke-linejoin': 'round',
-            },
-        ],
+        ['path', { d: 'M3 7V4.5c0-.28.22-.5.5-.5H6', stroke: '#F8CE27', 'stroke-width': '1.5', 'stroke-linecap': 'square', 'stroke-linejoin': 'round' }],
+        ['path', { d: 'M19 9v2.5a.5.5 0 0 1-.5.5H16', stroke: '#F8CE27', 'stroke-width': '1.5', 'stroke-linecap': 'square', 'stroke-linejoin': 'round' }],
     ],
 };
 

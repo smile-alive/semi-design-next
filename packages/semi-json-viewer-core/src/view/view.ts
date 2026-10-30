@@ -1,23 +1,23 @@
 import { elt, setStyles } from '../common/dom';
 import { type Emitter, getEmitter } from '../common/emitter';
-import type { GlobalEvents } from '../common/emitterEvents';
+import type { GlobalEvents } from '../common/emitter-events';
 import type { FindMatch } from '../common/model';
-import type { CustomRenderRule, JsonViewerOptions, TokenRenderType } from '../json-viewer/jsonViewer';
-import { FoldingModel } from '../model/foldingModel';
-import type { JSONModel } from '../model/jsonModel';
-import { SelectionModel } from '../model/selectionModel';
-import type { ASTNode } from '../service/jsonTypes';
+import type { CustomRenderRule, JsonViewerOptions, TokenRenderType } from '../json-viewer/json-viewer';
+import { FoldingModel } from '../model/folding-model';
+import type { JSONModel } from '../model/json-model';
+import { SelectionModel } from '../model/selection-model';
+import type { ASTNode } from '../service/json-types';
 import { type JsonDocument, getNodePath, getPathChain, getNodeValue, parseJson } from '../service/parse';
-import { TokenizationJsonModelPart } from '../tokens/tokenizationJsonModelPart';
+import { TokenizationJsonModelPart } from '../tokens/tokenization-json-model-part';
 import { type Token, TOKEN_PROPERTY_NAME, TOKEN_VALUE_BOOLEAN, TOKEN_VALUE_NULL, TOKEN_VALUE_NUMBER, TOKEN_VALUE_STRING } from '../tokens/tokenize';
-import { CompleteWidget } from './complete/completeWidget';
-import { EditWidget } from './edit/editWidget';
-import { ErrorWidget } from './error/errorWidget';
-import { FoldWidget } from './fold/foldWidget';
-import { HoverWidget } from './hover/hoverWidget';
-import { SearchWidget } from './search/searchWidget';
-import { ViewDOMBuilder } from './viewDOMBuilder';
-import { ScalingCellSizeAndPositionManager } from './virtualized/ScalingCellSizeAndPositionManager';
+import { CompleteWidget } from './complete/complete-widget';
+import { EditWidget } from './edit/edit-widget';
+import { ErrorWidget } from './error/error-widget';
+import { FoldWidget } from './fold/fold-widget';
+import { HoverWidget } from './hover/hover-widget';
+import { SearchWidget } from './search/search-widget';
+import { ViewDOMBuilder } from './view-dom-builder';
+import { ScalingCellSizeAndPositionManager } from './virtualized/scaling-cell-size-and-position-manager';
 
 export class View {
     #jsonModel: JSONModel;

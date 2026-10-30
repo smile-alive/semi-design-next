@@ -1,10 +1,10 @@
 /** Based on https://github.com/microsoft/vscode-json-languageservice with modifications for custom requirements */
-import { CharCode } from '../common/charCode';
+import { CharCode } from '../common/char-code';
 import { FindMatch, EndOfLinePreference, SearchData } from '../common/model';
 import { Range } from '../common/range';
 import { createRegExp, getNextCodePoint } from '../common/strings';
-import { type WordCharacterClassifier, getMapForWordSeparators, WordCharacterClass } from '../common/wordCharacterClassifier';
-import type { JSONModel } from './jsonModel';
+import { type WordCharacterClassifier, getMapForWordSeparators, WordCharacterClass } from '../common/word-character-classifier';
+import type { JSONModel } from './json-model';
 
 class LineFeedCounter {
     readonly #lineFeedsOffsets: number[];

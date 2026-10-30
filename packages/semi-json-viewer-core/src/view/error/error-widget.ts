@@ -1,6 +1,6 @@
 import { type Emitter, getEmitter } from '../../common/emitter';
-import type { GlobalEvents } from '../../common/emitterEvents';
-import type { Diagnostic } from '../../service/jsonTypes';
+import type { GlobalEvents } from '../../common/emitter-events';
+import type { Diagnostic } from '../../service/json-types';
 import type { View } from '../view';
 
 export class ErrorWidget {

@@ -4,15 +4,7 @@ const IconStrikeThrough: IconData = {
     name: 'strike_through',
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M11.5 4.5c-1.79 0-3 1.44-3 2.5 0 1.07.76 2.6 3.72 3.5H6.75A5.54 5.54 0 0 1 5.5 7c0-2.94 2.79-5.5 6-5.5a8.62 8.62 0 0 1 7.2 3.6 1.5 1.5 0 0 1-2.4 1.8 5.63 5.63 0 0 0-4.8-2.4',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M11.5 4.5c-1.79 0-3 1.44-3 2.5 0 1.07.76 2.6 3.72 3.5H6.75A5.54 5.54 0 0 1 5.5 7c0-2.94 2.79-5.5 6-5.5a8.62 8.62 0 0 1 7.2 3.6 1.5 1.5 0 0 1-2.4 1.8 5.63 5.63 0 0 0-4.8-2.4', fill: 'currentColor' }],
         [
             'path',
             {
@@ -22,15 +14,7 @@ const IconStrikeThrough: IconData = {
                 fill: 'currentColor',
             },
         ],
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M2.5 10.5h19a1.5 1.5 0 0 1 0 3h-19a1.5 1.5 0 0 1 0-3',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M2.5 10.5h19a1.5 1.5 0 0 1 0 3h-19a1.5 1.5 0 0 1 0-3', fill: 'currentColor' }],
     ],
 };
 

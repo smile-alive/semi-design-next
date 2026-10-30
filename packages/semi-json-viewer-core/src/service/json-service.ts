@@ -1,7 +1,7 @@
 import { type FormattingOptions, format } from 'jsonc-parser';
-import type { JSONModel } from '../model/jsonModel';
+import type { JSONModel } from '../model/json-model';
 import { parseJson } from './parse';
-export { getFoldingRanges } from './getRange';
+export { getFoldingRanges } from './get-range';
 
 export interface FoldingRange {
     startLine: number;

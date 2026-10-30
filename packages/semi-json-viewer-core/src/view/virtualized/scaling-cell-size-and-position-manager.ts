@@ -1,5 +1,5 @@
 //reference from https://github.com/bvaughn/react-virtualized
-import { CellSizeAndPositionManager } from './CellSizeAndPositionManager';
+import { CellSizeAndPositionManager } from './cell-size-and-position-manager';
 import type { CellSizeGetter, Alignment, VisibleCellRange } from './types';
 
 type Params = {

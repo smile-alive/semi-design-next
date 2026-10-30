@@ -136,7 +136,7 @@ export class FoldingRegions {
     }
 
     static fromFoldRanges(ranges: FoldRange[]) {
-        ranges = ranges.sort((a, b) => a.startLineNumber - b.startLineNumber);
+        ranges = ranges.toSorted((a, b) => a.startLineNumber - b.startLineNumber);
         const rangesLength = ranges.length;
         const startIndexes = new Uint32Array(rangesLength);
         const endIndexes = new Uint32Array(rangesLength);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { IconData, IconNode } from '@fibrae/semi-icons-core';
 import { defaultAttrs, getFillColor, resolveValue } from '@fibrae/semi-icons-core/utils';
-import { convertIcon } from './Icon';
+import { convertIcon } from './icon';
 
 // fill-rule -> fillRule, xlink:href -> xlinkHref, mask-type -> maskType
 function camelCase(name: string) {

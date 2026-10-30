@@ -17,14 +17,7 @@ const IconAIImageLevel3: IconData = {
             [
                 [
                     'linearGradient',
-                    {
-                        id: '{uid}__semi-ai-image-level-3',
-                        x1: '22',
-                        y1: '22',
-                        x2: '-0.370122',
-                        y2: '18.8542',
-                        gradientUnits: 'userSpaceOnUse',
-                    },
+                    { id: '{uid}__semi-ai-image-level-3', x1: '22', y1: '22', x2: '-0.370122', y2: '18.8542', gradientUnits: 'userSpaceOnUse' },
                     [
                         ['stop', { 'stop-color': '{fill0}' }],
                         ['stop', { offset: '0.3', 'stop-color': '{fill1}' }],

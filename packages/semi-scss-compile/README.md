@@ -72,6 +72,6 @@ const theme = compileTailwindTheme({ foundationPath: 'node_modules/@fibrae/semi-
 ## 开发
 
 - `pnpm --filter @fibrae/semi-scss-compile build`：`vp pack` 构建 `dist/index.mjs` 与 `dist/bin.mjs`。
-- 测试位于 `__tests__/`（`ai-css.test.ts`、`icons.test.ts`（pnpm 隔离布局下的依赖解析）、`tailwindTheme.test.ts`），由根目录的 vitest 运行，直接编译 `packages/semi-foundation/src`。
+- 测试位于 `__tests__/`（`ai-css.test.ts`、`icons.test.ts`（pnpm 隔离布局下的依赖解析）、`tailwind-theme.test.ts`），由根目录的 vitest 运行，直接编译 `packages/semi-foundation/src`。
 
 通用命令见根目录 [README.md](../../README.md) 的「常用命令」。

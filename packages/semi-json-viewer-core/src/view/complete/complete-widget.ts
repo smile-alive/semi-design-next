@@ -1,11 +1,11 @@
 import { elt, setStyles } from '../../common/dom';
 import { type Emitter, getEmitter } from '../../common/emitter';
-import type { GlobalEvents, IModelContentChangeEvent } from '../../common/emitterEvents';
+import type { GlobalEvents, IModelContentChangeEvent } from '../../common/emitter-events';
 import type { IPosition } from '../../common/position';
-import type { JSONModel } from '../../model/jsonModel';
+import type { JSONModel } from '../../model/json-model';
 import { JSONCompletion } from '../../service/completion';
-import { parseJsonAst } from '../../service/jsonService';
-import type { CompletionItem } from '../../service/jsonTypes';
+import { parseJsonAst } from '../../service/json-service';
+import type { CompletionItem } from '../../service/json-types';
 import type { View } from '../view';
 
 export class CompleteWidget {

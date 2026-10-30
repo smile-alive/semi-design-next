@@ -4,13 +4,7 @@ const IconTypograph: IconData = {
     name: 'typograph',
     attrs: { viewBox: '0 0 22 22', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                d: 'm3.6 15.57.84-2.64h4.13l.85 2.64H12L8.07 4H4.95L1 15.57h2.6m1.45-4.55 1.41-4.38h.1l1.4 4.38h-2.9',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { d: 'm3.6 15.57.84-2.64h4.13l.85 2.64H12L8.07 4H4.95L1 15.57h2.6m1.45-4.55 1.41-4.38h.1l1.4 4.38h-2.9', fill: 'currentColor' }],
         [
             'path',
             {

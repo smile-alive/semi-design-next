@@ -1,5 +1,5 @@
-import type { IModelContentChangeEvent } from '../common/emitterEvents';
-import type { JSONModel } from './jsonModel';
+import type { IModelContentChangeEvent } from '../common/emitter-events';
+import type { JSONModel } from './json-model';
 
 export interface Command {
     execute(): void;

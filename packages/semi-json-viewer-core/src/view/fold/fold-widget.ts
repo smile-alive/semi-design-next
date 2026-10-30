@@ -1,5 +1,5 @@
 import { elt, setStyles } from '../../common/dom';
-import type { FoldingModel } from '../../model/foldingModel';
+import type { FoldingModel } from '../../model/folding-model';
 import type { View } from '../view';
 
 export class FoldWidget {
@@ -36,7 +36,7 @@ export class FoldWidget {
         if (this.#isMouseOver) return;
         const lineNumberElement = this.#view.lineScrollDom.children;
         for (let i = 0; i < lineNumberElement.length; i++) {
-            const element: HTMLElement = lineNumberElement[i] as HTMLElement;
+            const element = lineNumberElement[i] as HTMLElement;
             if (this.#foldingModel.isFoldable(Number(element.dataset.lineNumber))) {
                 element.appendChild(this.#createFoldingIcon(Number(element.dataset.lineNumber)));
             }

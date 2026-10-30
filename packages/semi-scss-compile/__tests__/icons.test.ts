@@ -9,10 +9,10 @@ import { resolveFoundationPath, resolveIconPath } from '../src/icons';
 // .pnpm; neither semi-icons-core nor semi-foundation is installed in the app
 let root: string;
 let app: string;
-const write = (file: string, text: string) => {
+function write(file: string, text: string) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, text);
-};
+}
 
 beforeAll(() => {
     root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'semi-icons-')));

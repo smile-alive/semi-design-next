@@ -1,6 +1,6 @@
 import { elt, setStyles } from '../../common/dom';
 import { type Emitter, getEmitter } from '../../common/emitter';
-import type { GlobalEvents } from '../../common/emitterEvents';
+import type { GlobalEvents } from '../../common/emitter-events';
 import { TOKEN_VALUE_STRING } from '../../tokens/tokenize';
 import type { View } from '../view';
 export class HoverWidget {

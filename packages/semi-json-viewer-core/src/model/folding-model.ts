@@ -1,10 +1,10 @@
 import { type Emitter, getEmitter } from '../common/emitter';
-import type { GlobalEvents } from '../common/emitterEvents';
-import { type JsonWorkerManager, getJsonWorkerManager } from '../worker/jsonWorkerManager';
-import { type FoldingRegion, type FoldRange, FoldingRegions, FoldSource } from './foldingRange';
-import { HiddenRangeModel } from './hiddenRangeModel';
+import type { GlobalEvents } from '../common/emitter-events';
+import { type JsonWorkerManager, getJsonWorkerManager } from '../worker/json-worker-manager';
+import { type FoldingRegion, type FoldRange, FoldingRegions, FoldSource } from './folding-range';
+import { HiddenRangeModel } from './hidden-range-model';
 /** based on https://github.com/microsoft/vscode with modifications for custom requirements */
-import type { JSONModel } from './jsonModel';
+import type { JSONModel } from './json-model';
 
 export class FoldingModel {
     #jsonModel: JSONModel;
@@ -88,7 +88,7 @@ export class FoldingModel {
         if (!toggledRegions.length) {
             return;
         }
-        toggledRegions = toggledRegions.sort((r1, r2) => r1.regionIndex - r2.regionIndex);
+        toggledRegions = toggledRegions.toSorted((r1, r2) => r1.regionIndex - r2.regionIndex);
         for (const region of toggledRegions) {
             const index = region.regionIndex;
             const newCollapsed = !this.#regions.isCollapsed(index);

@@ -1,5 +1,5 @@
 import { elt, setStyles } from '../common/dom';
-import type { JsonViewerOptions } from '../json-viewer/jsonViewer';
+import type { JsonViewerOptions } from '../json-viewer/json-viewer';
 
 export class ViewDOMBuilder {
     #lineHeight: number;

@@ -1,11 +1,11 @@
 import { type Emitter, disposeEmitter, getEmitter } from '../common/emitter';
-import type { GlobalEvents } from '../common/emitterEvents';
-import { setCurrentNameSpaceId } from '../common/nameSpace';
+import type { GlobalEvents } from '../common/emitter-events';
+import { setCurrentNameSpaceId } from '../common/name-space';
 import { createModel } from '../model';
-import type { JSONModel } from '../model/jsonModel';
-import type { CompletionItem } from '../service/jsonTypes';
+import type { JSONModel } from '../model/json-model';
+import type { CompletionItem } from '../service/json-types';
 import { View } from '../view/view';
-import { type JsonWorkerManager, disposeWorkerManager, getJsonWorkerManager } from '../worker/jsonWorkerManager';
+import { type JsonWorkerManager, disposeWorkerManager, getJsonWorkerManager } from '../worker/json-worker-manager';
 export interface JsonViewerOptions {
     lineHeight?: number;
     autoWrap?: boolean;

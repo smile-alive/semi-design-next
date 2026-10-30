@@ -13,13 +13,7 @@ const IconScissors: IconData = {
                 fill: 'currentColor',
             },
         ],
-        [
-            'path',
-            {
-                d: 'M15.37 12.03 18 6.46a4 4 0 0 0-.62-4.81c-.4-.41-1.06-.21-1.31.3l-3.01 6.08 2.3 4',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { d: 'M15.37 12.03 18 6.46a4 4 0 0 0-.62-4.81c-.4-.41-1.06-.21-1.31.3l-3.01 6.08 2.3 4', fill: 'currentColor' }],
     ],
 };
 

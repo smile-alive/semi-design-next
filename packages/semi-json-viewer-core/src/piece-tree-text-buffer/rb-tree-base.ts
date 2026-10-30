@@ -1,6 +1,6 @@
 /** reference from https://github.com/microsoft/vscode */
 
-import type { Piece, PieceTreeBase } from './pieceTreeBase';
+import type { Piece, PieceTreeBase } from './piece-tree-base';
 
 export class TreeNode {
     parent: TreeNode;

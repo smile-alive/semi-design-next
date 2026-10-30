@@ -1,6 +1,6 @@
-import type { IModelContentChangeEvent } from '../../common/emitterEvents';
+import type { IModelContentChangeEvent } from '../../common/emitter-events';
 import type { FindMatch } from '../../common/model';
-import type { JSONModel } from '../../model/jsonModel';
+import type { JSONModel } from '../../model/json-model';
 import type { View } from '../view';
 
 export class SearchWidget {

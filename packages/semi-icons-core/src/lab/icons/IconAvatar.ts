@@ -5,19 +5,7 @@ const IconAvatar: IconData = {
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
         ['circle', { cx: '12', cy: '12', r: '11', fill: '#FBCD2C' }],
-        [
-            'mask',
-            {
-                id: '{uid}__mask0_1_3014',
-                style: 'mask-type:alpha',
-                maskUnits: 'userSpaceOnUse',
-                x: '1',
-                y: '1',
-                width: '22',
-                height: '22',
-            },
-            [['circle', { cx: '12', cy: '12', r: '11', fill: '#A2845E' }]],
-        ],
+        ['mask', { id: '{uid}__mask0_1_3014', style: 'mask-type:alpha', maskUnits: 'userSpaceOnUse', x: '1', y: '1', width: '22', height: '22' }, [['circle', { cx: '12', cy: '12', r: '11', fill: '#A2845E' }]]],
         [
             'g',
             { mask: 'url(#{uid}__mask0_1_3014)' },

@@ -1,7 +1,7 @@
 /** reference from https://github.com/microsoft/vscode */
 
-import { CharacterClassifier } from './characterClassifier';
-import { CharCode } from './charCode';
+import { CharCode } from './char-code';
+import { CharacterClassifier } from './character-classifier';
 import { LRUCache } from './map';
 
 export const enum WordCharacterClass {

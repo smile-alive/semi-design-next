@@ -37,7 +37,7 @@ assert.strictEqual(config.plugins.length, 0, 'without options Next loads the pub
 
 const omitted = semiNext({ omitCss: true, prefixCls: 'my' })();
 const [omitRule, prefixRule] = omitted.turbopack.rules['*.js'];
-assert.match('node_modules/@fibrae/semi-icons-react/dist/components/Icon.js', omitRule.condition.path);
+assert.match('node_modules/@fibrae/semi-icons-react/dist/components/icon.js', omitRule.condition.path);
 assert.doesNotMatch('node_modules/@fibrae/semi-foundation/dist/button/foundation.js', omitRule.condition.path, 'foundation JS imports no CSS');
 assert.match('node_modules/@fibrae/semi-foundation/dist/base/env.js', prefixRule.condition.path);
 assert.deepStrictEqual(prefixRule.loaders[0].options, { replacers: { BASE_CLASS_PREFIX: 'my' } });

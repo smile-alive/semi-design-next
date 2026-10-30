@@ -3,13 +3,13 @@ import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { easings, springs } from '../index';
 
 const boxes = [];
-const box = () => {
+function box() {
     const el = document.createElement('div');
     el.style.cssText = 'width: 20px; height: 20px; background: tomato';
     document.body.append(el);
     boxes.push(el);
     return el;
-};
+}
 
 afterEach(() => {
     for (const el of boxes.splice(0)) {

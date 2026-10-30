@@ -4,13 +4,7 @@ const IconScan: IconData = {
     name: 'scan',
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                d: 'M1 12c0-.83.64-1.5 1.43-1.5h19.14c.79 0 1.43.67 1.43 1.5s-.64 1.5-1.43 1.5H2.43C1.64 13.5 1 12.83 1 12',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { d: 'M1 12c0-.83.64-1.5 1.43-1.5h19.14c.79 0 1.43.67 1.43 1.5s-.64 1.5-1.43 1.5H2.43C1.64 13.5 1 12.83 1 12', fill: 'currentColor' }],
         [
             'path',
             {

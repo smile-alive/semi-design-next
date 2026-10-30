@@ -1,6 +1,6 @@
 import type { Range } from './range';
 /** reference from https://github.com/microsoft/vscode */
-import type { WordCharacterClassifier } from './wordCharacterClassifier';
+import type { WordCharacterClassifier } from './word-character-classifier';
 export const enum EndOfLinePreference {
     /**
      * Use the end of line character identified in the text buffer.

@@ -11,13 +11,7 @@ const IconInviteStroked: IconData = {
                 fill: 'currentColor',
             },
         ],
-        [
-            'path',
-            {
-                d: 'M15 9c0 .5-.5 1-1 1h-1v1c0 .5-.5 1-1 1a1 1 0 0 1-1-1v-1h-1a1 1 0 0 1-1-1c0-.6.5-1 1-1h1V7c0-.5.5-1 1-1s1 .5 1 1v1h1c.5 0 1 .5 1 1',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { d: 'M15 9c0 .5-.5 1-1 1h-1v1c0 .5-.5 1-1 1a1 1 0 0 1-1-1v-1h-1a1 1 0 0 1-1-1c0-.6.5-1 1-1h1V7c0-.5.5-1 1-1s1 .5 1 1v1h1c.5 0 1 .5 1 1', fill: 'currentColor' }],
     ],
 };
 

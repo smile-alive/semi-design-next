@@ -13,15 +13,7 @@ const IconConfig: IconData = {
                 fill: '#DDE3E8',
             },
         ],
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0 2a6 6 0 1 0 0-12 6 6 0 0 0 0 12',
-                fill: '#AAB2BF',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8m0 2a6 6 0 1 0 0-12 6 6 0 0 0 0 12', fill: '#AAB2BF' }],
         ['circle', { cx: '12', cy: '12', r: '3', fill: '#324350' }],
     ],
 };
