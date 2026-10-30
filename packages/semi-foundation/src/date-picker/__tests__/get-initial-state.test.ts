@@ -97,6 +97,12 @@ describe('DatePickerFoundation.getInitialState', () => {
         expect(state.value).toEqual([]);
     });
 
+    it('受控的字符串 value 按 format 解析为对应的 Date', () => {
+        const state = DatePickerFoundation.getInitialState({ type: 'dateRange', value: ['2024-05-06', '2024-05-09'], format: 'yyyy-MM-dd' });
+        expect(state.value).toEqual([new Date(2024, 4, 6), new Date(2024, 4, 9)]);
+        expect(state.cachedSelectedValue).toEqual(state.value);
+    });
+
     it('无值时返回框架的初始状态', () => {
         expect(DatePickerFoundation.getInitialState({ type: 'dateRange' })).toEqual({
             value: [],

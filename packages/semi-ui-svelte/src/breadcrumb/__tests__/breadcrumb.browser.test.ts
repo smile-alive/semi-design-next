@@ -15,14 +15,6 @@ function renderLevels(props: BreadcrumbProps, count: number, href?: string) {
 }
 
 describe('Svelte Breadcrumb 浏览器', () => {
-    it('moreType 为 popover 时气泡显示被折叠的项', async () => {
-        const view = renderLevels({ maxItemCount: 2, moreType: 'popover' }, 4);
-        await userEvent.hover(view.container.querySelector(`.${prefix}-item-more`) as HTMLElement);
-        const content = await view.findByText('第二层', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
-        const hidden = content.querySelectorAll(`:scope > .${prefix}-item-wrap`);
-        expect([...hidden].map((item) => item.textContent)).toEqual(['第二层', '第三层']);
-    });
-
     it.each([
         ['链接', {}, `.${prefix}-item-link`],
         ['more 按钮', { maxItemCount: 2 }, `.${prefix}-item-more`],

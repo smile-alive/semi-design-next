@@ -270,19 +270,6 @@ describe('Svelte Cascader 单选', () => {
         expect(getColumnCount()).toBe(2);
     });
 
-    it('禁用项点击不选中，带禁用类名', async () => {
-        const onChange = vi.fn<(value: CascaderChangeValue) => void>();
-        setup({ onChange, changeOnSelect: true }, { data: treeDataWithDisabled });
-        await openDropdown();
-        await click(getOption('亚洲'));
-        const china = getOption('中国');
-        expect(china).toHaveClass(`${prefixCls}-option-disabled`);
-        expect(china).toHaveAttribute('aria-disabled', 'true');
-        await click(china);
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(getColumnCount()).toBe(2);
-    });
-
     it('disabled 时点击不打开，combobox 带 aria-disabled 且不是 Tab 停靠点', async () => {
         setup({ disabled: true });
         await openDropdown();
@@ -290,17 +277,6 @@ describe('Svelte Cascader 单选', () => {
         expect(getRoot()).toHaveAttribute('aria-disabled', 'true');
         expect(getRoot()).toHaveAttribute('tabindex', '-1');
         expect(getRoot()).toHaveClass(`${prefixCls}-disabled`);
-    });
-
-    it('点击组件外部关闭下拉', async () => {
-        const onBlur = vi.fn<(event?: MouseEvent | KeyboardEvent | FocusEvent) => void>();
-        setup({ onBlur });
-        await openDropdown();
-        expect(isOpen()).toBe(true);
-        await fireEvent.mouseDown(document.body);
-        await settle();
-        expect(isOpen()).toBe(false);
-        expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
     it('label snippet 渲染列中选项，选中文字仍是文本', async () => {
@@ -762,33 +738,21 @@ describe('Svelte Cascader loadData', () => {
 });
 
 describe('Svelte Cascader 禁用与重置', () => {
-    it('disabled 的选项点击无效，aria-disabled 为 true', async () => {
+    it.each([false, true])('changeOnSelect 为 %s 时，disabled 的选项点击无效，带禁用类名与 aria-disabled', async (changeOnSelect) => {
         const onChange = vi.fn<(value: CascaderChangeValue) => void>();
-        setup({ onChange }, { data: treeDataWithDisabled });
+        setup({ onChange, changeOnSelect }, { data: treeDataWithDisabled });
         await openDropdown();
         await click(getOption('亚洲'));
-        expect(getOption('中国')).toHaveAttribute('aria-disabled', 'true');
-        await click(getOption('中国'));
+        const callsAfterExpand = changeOnSelect ? 1 : 0;
+        expect(onChange).toHaveBeenCalledTimes(callsAfterExpand);
+        const china = getOption('中国');
+        expect(china).toHaveClass(`${prefixCls}-option-disabled`);
+        expect(china).toHaveAttribute('aria-disabled', 'true');
+        await click(china);
+        expect(onChange).toHaveBeenCalledTimes(callsAfterExpand);
         expect(getColumnCount()).toBe(2);
         await click(getOption('韩国'));
-        expect(onChange).toHaveBeenCalledWith(['Asia', 'Hanguo']);
-    });
-
-    it('disabled 的 Cascader 不能打开，也没有 tab 停靠', async () => {
-        setup({ disabled: true });
-        const root = getRoot();
-        expect(root).toHaveAttribute('tabindex', '-1');
-        expect(root).toHaveAttribute('aria-disabled', 'true');
-        await click(root);
-        expect(isOpen()).toBe(false);
-    });
-
-    it('受控值被置为 undefined 后清空选择', async () => {
-        const { store } = setup({}, { mode: 'bind', value: ['North America', 'Canada'] });
-        expect(getSelectionText()).toBe('北美洲 / 加拿大');
-        store.value = undefined;
-        await settle();
-        expect(getSelectionText()).toBe('');
+        expect(onChange).toHaveBeenLastCalledWith(['Asia', 'Hanguo']);
     });
 });
 

@@ -67,7 +67,8 @@ describe('Select（浏览器）', () => {
         const popup = (await screen.findByRole('listbox')).closest('[popover]') as HTMLElement;
         await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - trigger.getBoundingClientRect().left)).toBeLessThanOrEqual(1));
         screen.getByTestId('box').style.left = '300px';
-        await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - 300)).toBeLessThanOrEqual(1));
+        // the move is reported on the next rendering update, and headless WebKit on Linux CI has gone ~2s without one
+        await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - 300)).toBeLessThanOrEqual(1), { timeout: 5000 });
     });
 
     it('修复 #1560：新增选项时 ellipsisTrigger 重新计算剩余标签数', async () => {
@@ -133,7 +134,7 @@ function AllCaseOfBlur(props: { onBlur: (name: string) => void }) {
                 {([name, caseProps]) => (
                     <div>
                         <h5>{name}</h5>
-                        <Select style={{ width: '120px' }} data-cy={name} defaultValue="abc" onBlur={() => props.onBlur(name)} {...caseProps}>
+                        <Select style={{ width: '120px' }} data-cy={name} defaultValue={caseProps.multiple ? ['abc'] : 'abc'} onBlur={() => props.onBlur(name)} {...caseProps}>
                             <Select.Option value="abc">抖音</Select.Option>
                             <Select.Option value="ulikecam">轻颜相机</Select.Option>
                             <Select.Option disabled value="jianying">
@@ -867,7 +868,7 @@ describe('Select 与外层浮层（浏览器）', () => {
     it('点击作为触发器的 Select 弹层内部，不算点击外层 Popover 的外部', async () => {
         const onClickOutSide = vi.fn<() => void>();
         render(() => (
-            <Popover content={<div>outer popover</div>} trigger="custom" visible onClickOutSide={onClickOutSide}>
+            <Popover aria-label="Details" content={<div>outer popover</div>} trigger="custom" visible onClickOutSide={onClickOutSide}>
                 {(t) => <Select style={{ width: '160px' }} defaultOpen optionList={[{ label: 'Option A', value: 'a' }]} {...t()} />}
             </Popover>
         ));
@@ -881,7 +882,7 @@ describe('Select 与外层浮层（浏览器）', () => {
 
     it('以 Select 作为 click Popover 的触发器时可打开它', async () => {
         render(() => (
-            <Popover content={<div>select popover</div>} trigger="click">
+            <Popover aria-label="Details" content={<div>select popover</div>} trigger="click">
                 {(t) => <Select style={{ width: '160px' }} optionList={[{ label: 'Option A', value: 'a' }]} {...t()} />}
             </Popover>
         ));
@@ -893,6 +894,7 @@ describe('Select 与外层浮层（浏览器）', () => {
         const { container } = render(() => (
             <div style={{ 'padding-left': '100px' }}>
                 <Popover
+                    aria-label="Details"
                     content={
                         <div style={{ padding: '20px' }} data-testid="select-in-popover">
                             <Select style={{ width: '120px' }} defaultValue="abc">

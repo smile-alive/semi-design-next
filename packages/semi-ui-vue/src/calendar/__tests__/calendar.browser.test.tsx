@@ -369,7 +369,7 @@ describe('Calendar（浏览器，Vue）', () => {
             props: monthProps(nested),
             slots: {
                 event: ({ event }: CalendarEventSlotProps) => (
-                    <Popover motion={false} trigger="click">
+                    <Popover ariaLabel={`details ${event.children}`} motion={false} trigger="click">
                         {{
                             default: () => <button type="button">{`trigger ${event.children}`}</button>,
                             content: () => <button type="button">{`inside ${event.children}`}</button>,

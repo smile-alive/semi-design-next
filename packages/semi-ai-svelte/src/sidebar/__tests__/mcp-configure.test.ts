@@ -319,12 +319,6 @@ describe('Svelte MCPConfigure 列表与状态', () => {
         expect($('.semi-resizable-resizable')).toBeNull();
     });
 
-    it('header snippet 替换容器头部', () => {
-        setup({ options: vOptions, header: createRawSnippet(() => ({ render: () => '<div class="mcp-header">h</div>' })) });
-        expect($('.mcp-header')).toBeInTheDocument();
-        expect($('.semi-sidebar-container-header')).toBeNull();
-    });
-
     it('item snippet 替换内置项，并能获取当前模式', async () => {
         const item = createRawSnippet<[{ item: MCPConfigureOption; custom: boolean; index: number }]>((args) => ({ render: () => `<div class="my-item">${args().item.label}:${args().custom}:${args().index}</div>` }));
         setup({ options: vOptions, customOptions: vCustom, item });

@@ -112,11 +112,4 @@ describe('拖拽上传', () => {
         expect(onFileChange).toHaveBeenCalledTimes(1);
         expect(screen.getByText('drag.pdf')).toBeInTheDocument();
     });
-
-    it('draggable 自定义 children', () => {
-        renderUpload({ children: <div class="test" /> });
-        const customArea = document.querySelector(`.${BASE_CLASS_PREFIX}-upload-drag-area-custom`) as HTMLElement;
-        expect(customArea.children).toHaveLength(1);
-        expect(customArea.querySelector('.test')).not.toBeNull();
-    });
 });

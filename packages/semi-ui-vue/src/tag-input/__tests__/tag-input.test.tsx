@@ -51,7 +51,9 @@ async function hover(target: Element) {
     hovered = target;
     await userEvent.hover(target);
 }
-// The ellipsis measurement that enables the tooltip settles asynchronously; on a loaded CI runner it outlasts waitFor's 1s default
+// The ellipsis measurement that enables the tooltip settles asynchronously; on a loaded CI runner it outlasts waitFor's 1s default.
+// Each userEvent.hover call starts a fresh pointer and fires mouseenter again, restarting the enter delay on every retry,
+// so callers render with `noEnterDelay` and the first hover after measuring opens the popup.
 const hoverUntil = (target: Element, popupSelector: string) =>
     waitFor(
         async () => {
@@ -60,6 +62,7 @@ const hoverUntil = (target: Element, popupSelector: string) =>
         },
         { timeout: 5000 }
     );
+const noEnterDelay = () => (semiGlobal.config.overrideDefaultProps = { Tooltip: { mouseEnterDelay: 0 }, Popover: { mouseEnterDelay: 0 } });
 const mouseDown = (el: Element) => dispatch(el, new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
 
 function renderWithHandle(props: Record<string, unknown> = {}) {
@@ -420,6 +423,7 @@ describe('TagInput', () => {
     it('TagInput 的 showContentTooltip', async () => {
         // jsdom has no text layout; make tag text wider than its zero-width container
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
+        noEnterDelay();
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: true });
         await hoverUntil(screen.getByText('abc').parentElement as HTMLElement, `.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`)).toHaveTextContent('abc');
@@ -427,6 +431,7 @@ describe('TagInput', () => {
 
     it('TagInput 的 showContentTooltip 对象形式', async () => {
         vi.spyOn(Range.prototype, 'getBoundingClientRect').mockReturnValue({ width: 100, height: 20 } as DOMRect);
+        noEnterDelay();
         renderTagInput({ defaultValue: ['abc'], showContentTooltip: { type: 'popover', opts: { position: 'top' } } });
         await hoverUntil(screen.getByText('abc').parentElement as HTMLElement, `.${BASE_CLASS_PREFIX}-popover-wrapper`);
         const popover = document.querySelector(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
@@ -768,20 +773,6 @@ describe('TagInput', () => {
         await fireEvent.compositionStart(input);
         await fireEvent.compositionEnd(input, { target: { value: 'ab,cde' } });
         expect(onInputChange).toHaveBeenLastCalledWith('ab,cd', expect.objectContaining({ type: 'compositionend' }));
-    });
-
-    it('点击输入框后用 Tab 离开，激活状态随之结束', async () => {
-        render(() => (
-            <>
-                <TagInput defaultValue={['abc']} />
-                <button type="button">after</button>
-            </>
-        ));
-        await userEvent.click(getInput());
-        expect(getRoot()).toHaveClass(`${tagInputCls}-focus`);
-        await userEvent.tab();
-        expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
-        expect(getRoot()).not.toHaveClass(`${tagInputCls}-focus`);
     });
 
     it('输入法组合流程', async () => {
@@ -1226,16 +1217,13 @@ describe('TagInput 全局默认值与属性落点', () => {
         expect(countLiveListeners(add, remove, 'mousedown')).toBe(0);
     });
 
-    it('split 的默认值为 undefined，TagInput 与内部 TagItem 的可选 Boolean prop 都有默认值', () => {
-        type Options = Record<string, { type?: unknown; default?: unknown; required?: boolean }>;
-        const optionsOf = (component: unknown) => (component as { props: Options }).props;
-        expect(optionsOf(TagInput).split.default).toBeUndefined();
-        for (const component of [TagInput, TagItem]) {
-            const withoutDefault = Object.entries(optionsOf(component))
-                .filter(([, option]) => [option.type].flat().includes(Boolean) && !option.required && !('default' in option))
-                .map(([key]) => key);
-            expect(withoutDefault).toEqual([]);
-        }
+    // TagItem is internal and declares required Boolean props, so the shared check in _base cannot cover it
+    it('内部 TagItem 的可选 Boolean prop 都有默认值', () => {
+        const options = (TagItem as unknown as { props: Record<string, { type?: unknown; required?: boolean }> }).props;
+        const withoutDefault = Object.entries(options)
+            .filter(([, option]) => [option.type].flat().includes(Boolean) && !option.required && !('default' in option))
+            .map(([key]) => key);
+        expect(withoutDefault).toEqual([]);
     });
 });
 

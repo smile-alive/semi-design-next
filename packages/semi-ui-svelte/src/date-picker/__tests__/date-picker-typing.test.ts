@@ -13,6 +13,7 @@ describe('Svelte DatePicker 键入与 Enter', () => {
         await click(getInput());
         expect(opens(store)).toEqual(['open true']);
         expect(getContainer()).not.toBeNull();
+        expect(getInput()).toHaveAttribute('aria-expanded', 'true');
         await clickOutside();
         expect(opens(store)).toEqual(['open true', 'open false']);
         expect(getContainer()).toBeNull();

@@ -20,7 +20,7 @@ const afterButton = () => <Button>{() => 'after'}</Button>;
 describe('TagInput（浏览器）', () => {
     it('修复 #1149：被拖拽的标签绘制在所在 Popover 之上', async () => {
         render(Popover, {
-            props: { position: 'bottomLeft', trigger: 'click' },
+            props: { ariaLabel: 'TagInput', position: 'bottomLeft', trigger: 'click' },
             slots: {
                 default: () => <Button>{() => 'TagInput In Popover'}</Button>,
                 content: () => (

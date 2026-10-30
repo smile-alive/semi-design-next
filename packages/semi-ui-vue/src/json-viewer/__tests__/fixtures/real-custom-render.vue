@@ -17,7 +17,7 @@
 <template>
     <JsonViewer :height="200" :modelValue="value" :options="options" :width="700">
         <template #customRender="{ item, content }">
-            <Popover v-if="item.name === 'name'" trigger="click">
+            <Popover v-if="item.name === 'name'" ariaLabel="Name details" trigger="click">
                 <span class="name-token">{{ content }}</span>
                 <template #content>Mark details</template>
             </Popover>

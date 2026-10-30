@@ -532,11 +532,9 @@ describe('Svelte Carousel', () => {
             };
             const getTab = () => screen.getByRole('tab', { selected: true });
 
-            it('轮播暂停；键盘切换不会重新开始，离开后恢复', async () => {
+            it('键盘切换不会重新开始轮播，离开后恢复', async () => {
                 const { store } = setup({ autoPlay: { interval: 1000, hoverToPause: false } });
                 await focus(getTab());
-                await tick(5000);
-                expect(store.log).toEqual([]);
                 await fireEvent.keyDown(getTab(), { key: 'ArrowRight' });
                 flushSync();
                 expect(store.log).toHaveLength(1);

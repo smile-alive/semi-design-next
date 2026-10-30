@@ -47,12 +47,13 @@ describe('Svelte DatePicker 面板导航', () => {
     });
 
     it('上一年与下一年按钮', async () => {
-        await setup({ value: baseDate, open: true, props: { type: 'date' } });
+        const { store } = await setup({ value: baseDate, open: true, props: { type: 'date' } });
         await click(screen.getByRole('button', { name: zh_CN.DatePicker.prevYear }));
         expect(getNavTitle('left')).toBe('2018年 9月');
         await click(screen.getByRole('button', { name: zh_CN.DatePicker.nextYear }));
         await click(screen.getByRole('button', { name: zh_CN.DatePicker.nextYear }));
         expect(getNavTitle('left')).toBe('2020年 9月');
+        expect(store.log.filter((entry) => entry.startsWith('panel'))).toHaveLength(3);
     });
 
     it('切到下一月时报一次 onPanelChange', async () => {

@@ -5,7 +5,7 @@ import { strings } from '@fibrae/semi-foundation/date-picker/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import { click, getFooterButtons, getYMLists, ymd } from './date-picker-dom-utils';
-import { changes, dp, getContainer, getDay, getInput, getInputs, getSelectedDays, settle, setup, typeText, useBaseDate } from './test-utils';
+import { changes, dp, getContainer, getDay, getGrid, getInput, getInputs, getSelectedDays, settle, setup, typeText, useBaseDate } from './test-utils';
 
 useBaseDate();
 
@@ -28,7 +28,8 @@ describe('Svelte DatePicker 预设', () => {
 
     it('函数形式的预设值在点击时取值', async () => {
         const start = vi.fn<() => Date>(() => new Date(2021, 5, 1));
-        const { store } = await setup({ open: true, props: { type: 'date', presets: [{ text: 'Lazy', start }] } });
+        const { store } = await setup({ open: true, props: { type: 'date', presets: [{ text: 'Lazy', start }, () => ({ text: 'Fn', start: new Date(2021, 5, 2) })] } });
+        expect(screen.getByRole('button', { name: 'Fn' })).toBeInTheDocument();
         await click(screen.getByRole('button', { name: 'Lazy' }));
         expect(start).toHaveBeenCalled();
         expect(changes(store)).toEqual(['change 2021-06-01 00:00:00 "2021-06-01"']);
@@ -118,6 +119,7 @@ describe('Svelte DatePicker 选择的回调参数', () => {
         await click(getDay('2021-06-20'));
         expect(changes(store)).toEqual([]);
         expect(getSelectedDays()).toEqual(['2021-06-01', '2021-06-15']);
+        expect(getGrid()).toHaveAttribute('aria-multiselectable', 'true');
 
         await click(getDay('2021-06-15'));
         expect(changes(store)).toEqual(['change 2021-06-01 00:00:00 ["2021-06-01"]']);

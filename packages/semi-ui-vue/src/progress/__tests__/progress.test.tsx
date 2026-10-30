@@ -432,15 +432,4 @@ describe('Progress', () => {
         expect(container.querySelector(`.${prefixCls}-circle-text`)).toHaveTextContent(/^25%$/);
         expect(container.querySelector('circle')).toHaveAttribute('stroke-width', '8');
     });
-
-    it('Boolean prop 都有 default 键，没有 Function prop', () => {
-        const options = (Progress as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-        const offenders = Object.entries(options)
-            .filter(([, option]) => {
-                const types = [option.type].flat();
-                return (types.includes(Boolean) && !Object.hasOwn(option, 'default')) || (types.includes(Function) && option.default !== undefined);
-            })
-            .map(([name]) => name);
-        expect(offenders).toEqual([]);
-    });
 });

@@ -969,8 +969,8 @@ describe('Upload', () => {
         expect(getCardNames()).toEqual(['vigo.png', 'test.jpeg', 'inserted.png']);
     });
 
-    it('listType 为未知值时不渲染文件列表', () => {
-        renderUpload({ listType: 'unknown', defaultFileList });
+    it.each(['unknown', 'none'])('listType 为 %s 时不渲染文件列表', (listType) => {
+        renderUpload({ listType, defaultFileList });
         expect(document.querySelector(`.${prefix}-file-list`)).toBeNull();
         expect(screen.queryByText('vigo.png')).toBeNull();
         expect(document.querySelector(`.${prefix}-add`)).not.toBeNull();
@@ -1179,13 +1179,6 @@ describe('Upload', () => {
         renderUpload({ defaultFileList, showClear: true, limit: 10 });
         expect(query(`.${prefix}-file-list-title`)).toHaveTextContent('已选择文件');
         expect(screen.getByRole('button', { name: '清空' })).toBeInTheDocument();
-    });
-
-    it('listType 为 none 时不渲染文件列表', () => {
-        renderUpload({ listType: 'none', defaultFileList });
-        expect(document.querySelector(`.${prefix}-file-list`)).toBeNull();
-        expect(screen.queryByText('vigo.png')).toBeNull();
-        expect(document.querySelector(`.${prefix}-add`)).not.toBeNull();
     });
 
     it('带 preview 属性的文件', () => {
@@ -1437,12 +1430,6 @@ describe('Upload 补充覆盖', () => {
         await userEvent.click(screen.getByRole('button', { name: 'preview vigo.png' }));
         expect(onPreviewClick).toHaveBeenCalledTimes(1);
         expect(onPreviewClick.mock.calls[0][0]).toMatchObject({ uid: '1', name: 'vigo.png' });
-    });
-
-    it('图片墙达到 limit 且列表隐藏时不渲染添加按钮', () => {
-        renderUpload({ defaultFileList, listType: 'picture', showUploadList: false, limit: 2 });
-        expect(document.querySelector(`.${prefix}-picture-file-list`)).toBeNull();
-        expect(document.querySelector(`.${prefix}-add`)).toBeNull();
     });
 
     it('图片墙列表为空且隐藏列表时只渲染添加按钮', () => {

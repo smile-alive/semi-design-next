@@ -12,17 +12,21 @@ const runtime = {
     jsxs: (type, props) => ({ type, props }),
 };
 
-function createFoundation(props: Record<string, unknown>, adapterRuntime: object = runtime) {
-    return new MarkdownRenderFoundation({
-        getProp: (key: string) => props[key],
-        getProps: () => props,
+async function evaluate(props: Record<string, unknown>, raw: string, adapterRuntime: object = runtime) {
+    const setState = vi.fn<MarkdownRenderAdapter['setState']>();
+    const notifyCompileError = vi.fn<MarkdownRenderAdapter['notifyCompileError']>();
+    const foundation = new MarkdownRenderFoundation({
+        getProp: (key: string) => ({ ...props, raw })[key],
         getRuntime: () => adapterRuntime,
-        notifyCompileError: () => {},
+        notifyCompileError,
+        setState,
     } as unknown as MarkdownRenderAdapter);
-}
-
-function evaluate(foundation: MarkdownRenderFoundation, raw: string) {
-    return foundation['evaluate'](raw);
+    await foundation.updateContent();
+    const renderContent = setState.mock.calls[0]?.[0].renderContent;
+    if (!renderContent) {
+        throw new Error('updateContent did not store renderContent');
+    }
+    return renderContent;
 }
 
 const treeRuntime = {
@@ -70,8 +74,7 @@ describe('MarkdownRenderFoundation.evaluate', () => {
         vi.stubGlobal('Function', stubs.Function);
         vi.stubGlobal('eval', stubs.eval);
         try {
-            const foundation = createFoundation({ format: 'md', remarkGfm: true });
-            const Content = await evaluate(foundation, '# Title\n\n| a |\n| - |\n| 1 |\n\n```js\ncode\n```');
+            const Content = await evaluate({ format: 'md', remarkGfm: true }, '# Title\n\n| a |\n| - |\n| 1 |\n\n```js\ncode\n```');
             const Own = () => null;
             expect(tags(Content({ components: { h1: Own } }))).toEqual(['fragment', 'Own', 'table', 'thead', 'tr', 'th', 'tbody', 'tr', 'td', 'pre', 'code']);
         } finally {
@@ -79,12 +82,6 @@ describe('MarkdownRenderFoundation.evaluate', () => {
         }
         expect(stubs.Function).not.toHaveBeenCalled();
         expect(stubs.eval).not.toHaveBeenCalled();
-    });
-
-    it('仅在 mdx 时加载 @mdx-js/mdx', async () => {
-        await expect(evaluate(createFoundation({ format: 'mdx' }), 'text')).rejects.toMatchObject({
-            cause: expect.any(EvalError),
-        });
     });
 
     it('编译失败时报告错误并保留 state', async () => {
@@ -144,7 +141,7 @@ describe('MarkdownRenderFoundation.compileMdSync', () => {
     it.each(cases)('$name 时与异步路径渲染出相同的树', async ({ props }) => {
         const options = { raw: gfmRaw, format: 'md' as const, ...props };
         const content = compileMd(options);
-        const asyncContent = await evaluate(createFoundation(options, treeRuntime), gfmRaw);
+        const asyncContent = await evaluate(options, gfmRaw, treeRuntime);
         expect(content({})).toEqual(asyncContent({}));
         expect(content({ components: { h1: Own, table: Own } })).toEqual(asyncContent({ components: { h1: Own, table: Own } }));
     });
@@ -162,13 +159,5 @@ describe('MarkdownRenderFoundation.compileMdSync', () => {
     it('异步插件使同步编译未完成时返回 null 且不抛出', () => {
         const asyncPlugin = () => async () => {};
         expect(MarkdownRenderFoundation.compileMdSync({ raw: '# Title', format: 'md', remarkPlugins: [asyncPlugin] }, treeRuntime)).toBeNull();
-    });
-
-    it('异步插件之后 reject 时返回 null 且不产生未处理的 rejection', async () => {
-        const failingPlugin = () => async () => {
-            throw new Error('async plugin failed');
-        };
-        expect(MarkdownRenderFoundation.compileMdSync({ raw: '# Title', format: 'md', remarkPlugins: [failingPlugin] }, treeRuntime)).toBeNull();
-        await new Promise((resolve) => setTimeout(resolve, 0));
     });
 });

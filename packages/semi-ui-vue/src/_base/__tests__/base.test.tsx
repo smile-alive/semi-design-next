@@ -1,12 +1,16 @@
 /** @jsxImportSource vue */
-import { globSync, readFileSync } from 'node:fs';
-import path from 'node:path';
 import { Text, createCommentVNode, createTextVNode, nextTick } from 'vue';
 import { fireEvent, render } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as components from '@fibrae/semi-ui-vue';
 import slotNodes, { hasSlotContent } from '@fibrae/semi-ui-vue/_base/slot-nodes';
 import semiGlobal, { semiGlobalKey } from '@fibrae/semi-ui-vue/_utils/semi-global';
+import ConfirmModal from '../../modal/confirm-modal.vue';
+import NoticeList from '../../notification/notice-list.vue';
+import Notice from '../../notification/notice.vue';
+import NotificationList from '../../notification/notification-list.vue';
+import ToastList from '../../toast/toast-list.vue';
+import ToastItem from '../../toast/toast.vue';
 import Controlled from './fixtures/controlled.vue';
 import Defaults from './fixtures/defaults.vue';
 import Dom from './fixtures/dom.vue';
@@ -115,7 +119,7 @@ describe('semiDefault', () => {
 
     it('所有组件的 Boolean 有 default，Function 默认值为 undefined', () => {
         const violations: string[] = [];
-        for (const component of [Defaults, Controlled, Host, Dom, ...Object.values(components)]) {
+        for (const component of [Defaults, Controlled, Host, Dom, ConfirmModal, ToastItem, ToastList, Notice, NoticeList, NotificationList, ...Object.values(components)]) {
             if (!component || typeof component !== 'object' || !('props' in component)) {
                 continue;
             }
@@ -216,17 +220,5 @@ describe('slotNodes', () => {
         expect(hasSlotContent(() => [createTextVNode(' a ')])).toBe(true);
         expect(hasSlotContent(() => [<i />])).toBe(true);
         expect(hasSlotContent()).toBe(false);
-    });
-});
-
-describe('Vue JSX', () => {
-    // Repo builds pick Vue from tsconfig, but the website's @vitejs/plugin-react sets a global React importSource that
-    // only the per-file pragma overrides; no lint sees the runtime import the compiler injects
-    it('每个 .tsx 首行声明 @jsxImportSource vue', () => {
-        const root = path.resolve(import.meta.dirname, '../..');
-        const files = globSync('**/*.tsx', { cwd: root });
-        expect(files).not.toEqual([]);
-        const missing = files.filter((file) => readFileSync(path.join(root, file), 'utf8').split('\n', 1)[0] !== '/** @jsxImportSource vue */');
-        expect(missing).toEqual([]);
     });
 });

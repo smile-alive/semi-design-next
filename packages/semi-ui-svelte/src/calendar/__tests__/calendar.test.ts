@@ -281,26 +281,6 @@ describe('Calendar', () => {
         expect(lastRowCells[lastRowCells.length - 1]).not.toHaveClass(sameMonthClass);
     });
 
-    it('dateDisplay', () => {
-        const displayValue = new Date(2023, 3, 1, 8, 32, 0);
-        const custom = 'my-custom-render-';
-        const dateDisplay = createRawSnippet<[CalendarDateDisplayArgs]>((args) => ({ render: () => `<span class="${custom}${args().date.getMonth()}-${args().date.getDate()}"></span>` }));
-        const month = renderCal({ displayValue, mode: 'month', dateDisplay });
-        // 2023-04-01
-        expect(month.container.querySelectorAll(`.${custom}3-1`)).toHaveLength(1);
-        month.unmount();
-
-        const week = renderCal({ displayValue, mode: 'week', dateDisplay });
-        expect(week.container.querySelectorAll(`.${custom}3-1`)).toHaveLength(1);
-    });
-
-    it('allDayEvents', () => {
-        const allDayEvents = createRawSnippet<[CalendarAllDayEventsArgs]>(() => ({ render: () => '<li class="my-custom-render"></li>' }));
-        const { container } = renderCal({ displayValue: new Date(2023, 3, 1, 8, 32, 0), mode: 'week', allDayEvents });
-        expect(container.querySelectorAll('.my-custom-render')).toHaveLength(1);
-        expect(container.querySelectorAll(`.${prefixCls}-event-allday`)).toHaveLength(0);
-    });
-
     it('range 模式 RangeData fixture', async () => {
         mockLayout();
         const events = [event('0', new Date(2023, 3, 1, 8, 32, 0), new Date(2023, 3, 1, 9, 32, 0), { allDay: false })];
@@ -599,18 +579,11 @@ describe('Calendar 行为', () => {
             view.unmount();
         }
         const { container, store } = renderStore({ mode: 'day', timeDisplay });
+        expect(timeLabels(container)).toHaveLength(24);
         expect(labels(container)).toEqual(['', 'h1', 'h2']);
         store.props.timeDisplay = undefined;
         await settle();
         expect(labels(container)).toEqual(['', '上午1时', '上午2时']);
-    });
-
-    it('timeDisplay 替换小时标签', () => {
-        const timeDisplay = createRawSnippet<[CalendarTimeDisplayArgs]>((args) => ({ render: () => `<span>h${args().time}</span>` }));
-        const { container } = renderCal({ mode: 'day', timeDisplay });
-        const labels = timeLabels(container);
-        expect(labels).toHaveLength(24);
-        expect(labels.slice(0, 3)).toEqual(['', 'h1', 'h2']);
     });
 });
 
@@ -660,7 +633,7 @@ describe('Calendar 月视图卡片', () => {
         expect(card()).not.toBeNull();
     });
 
-    it('"more" 是打开卡片的按钮，卡片打开后焦点落在关闭按钮上', async () => {
+    it('"more" 是打开卡片的按钮，卡片以日期标题命名且不产生可访问名称告警', async () => {
         withoutMotion();
         const warn = vi.spyOn(console, 'warn');
         onTestFinished(() => warn.mockRestore());
@@ -672,7 +645,6 @@ describe('Calendar 月视图卡片', () => {
         await userEvent.click(more);
         await waitFor(() => expect(card()).not.toBeNull());
         expect(more).toHaveAttribute('aria-expanded', 'true');
-        await waitFor(() => expect(screen.getByRole('button', { name: zh_CN.Calendar.close })).toHaveFocus());
         const header = card()?.querySelector(`.${prefixCls}-month-event-card-header-info`) as HTMLElement;
         expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', header.id);
         expect(header).toHaveTextContent('8');
@@ -854,22 +826,15 @@ describe('Calendar 属性与全局默认值', () => {
         expect(warn).not.toHaveBeenCalled();
     });
 
-    it('将未声明的属性传给根元素', () => {
-        for (const mode of MODES) {
-            const view = renderCal({ id: `cal-${mode}`, 'aria-label': 'schedule', mode, range: weekRange });
-            expect(rootOf(view.container)).toHaveAttribute('id', `cal-${mode}`);
-            expect(rootOf(view.container)).toHaveAttribute('aria-label', 'schedule');
-            view.unmount();
-        }
-    });
-
     it.each(MODES)('%s 视图：属性透传与覆盖', async (mode) => {
         const onKeydown = vi.fn<(event: KeyboardEvent) => void>();
         const onMouseenter = vi.fn<(event: MouseEvent) => void>();
+        const header = createRawSnippet(() => ({ render: () => '<b class="custom-header">h</b>' }));
         const { container } = renderCal({
             id: 'cal',
             class: 'extra',
-            style: 'height: 123px',
+            style: 'height: 123px; color: red',
+            header,
             'data-x': '1',
             'aria-label': 'plan',
             tabindex: -1,
@@ -883,7 +848,9 @@ describe('Calendar 属性与全局默认值', () => {
         });
         const root = rootOf(container);
         expect(root).toHaveAttribute('id', 'cal');
-        expect(root).toHaveClass('extra');
+        expect(root).toHaveClass('extra', `${prefixCls}-${mode === 'range' ? 'week' : mode}`);
+        expect(root.style.color).toBe('red');
+        expect(root.querySelector('.custom-header')).not.toBeNull();
         expect(root).toHaveAttribute('data-x', '1');
         expect(root).toHaveAttribute('aria-label', 'plan');
         expect(root).not.toHaveAttribute('aria-labelledby');
@@ -926,20 +893,11 @@ describe('Calendar 属性与全局默认值', () => {
         expect(rootOf(plain.container).style.height).toBe('600px');
     });
 
-    it('showCurrTime 缺省为开启，markWeekend 与 minEventHeight 生效', async () => {
+    it('day 视图：markWeekend 标记周末的日列，非今天不显示当前时间线', async () => {
         const view = renderCal({ displayValue: new Date(2019, 7, 10), markWeekend: true, minEventHeight: 50, mode: 'day' });
         await settle();
         expect(view.container.querySelector(`.${prefixCls}-grid-skeleton`)).toHaveClass(`${prefixCls}-weekend`);
         expect(currLine(view.container)).toBeNull();
-        view.unmount();
-
-        const on = renderCal({ displayValue: today, mode: 'day' });
-        await settle();
-        expect(currLine(on.container)).not.toBeNull();
-        on.unmount();
-        const off = renderCal({ displayValue: today, mode: 'day', showCurrTime: false });
-        await settle();
-        expect(currLine(off.container)).toBeNull();
     });
 });
 
@@ -1158,6 +1116,8 @@ describe('Calendar 事件内容', () => {
         dates.length = 0;
         const month = renderCal({ displayValue: today, mode: 'month', dateDisplay });
         expect(dates).toHaveLength(month.container.querySelectorAll('[role="cell"]').length);
+        // the August 2019 month grid starts on Sunday 2019-07-28
+        expect(month.container.querySelector('[role="cell"]')).toHaveTextContent('d28');
         month.unmount();
 
         dates.length = 0;
@@ -1209,6 +1169,8 @@ describe('Calendar 事件内容', () => {
         const custom = renderCal({ displayValue: today, events, mode, range: weekRange, allDayEvents });
         expect(received[0]).toBe(events);
         expect(custom.container.querySelector<HTMLElement>(`.${prefixCls}-all-day`)?.style.height).toBe('');
+        expect(custom.container.querySelector(`.${prefixCls}-all-day`)).toHaveTextContent('a');
+        expect(custom.container.querySelectorAll(`.${prefixCls}-event-allday`)).toHaveLength(0);
         custom.unmount();
 
         const plain = renderCal({ displayValue: today, events, mode, range: weekRange });

@@ -600,16 +600,7 @@ describe('Steps（Vue）', () => {
         expect(Steps.Step).toBe(Step);
     });
 
-    it('Boolean prop 都有 default 键，Function prop 的 default 为 undefined', () => {
-        const offenders = [Steps, Step].flatMap((component) =>
-            Object.entries((component as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props)
-                .filter(([, option]) => {
-                    const types = [option.type].flat();
-                    return (types.includes(Boolean) && !Object.hasOwn(option, 'default')) || (types.includes(Function) && option.default !== undefined);
-                })
-                .map(([name]) => name)
-        );
-        expect(offenders).toEqual([]);
+    it('onChange 与 onUpdate:current 在 props 中声明了 default 键', () => {
         const options = (Steps as unknown as { props: Record<string, { default?: unknown }> }).props;
         expect(Object.hasOwn(options.onChange, 'default')).toBe(true);
         expect(Object.hasOwn(options['onUpdate:current'], 'default')).toBe(true);

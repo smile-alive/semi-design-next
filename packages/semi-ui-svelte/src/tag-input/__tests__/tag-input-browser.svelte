@@ -36,8 +36,10 @@
         onChange={(next) => store.changes.push(next)}
     />
 {:else if store.kind === 'popover'}
-    <Popover content={field} position="bottomLeft" trigger="click">
-        <button type="button">TagInput In Popover</button>
+    <Popover aria-label="TagInput panel" content={field} position="bottomLeft" trigger="click">
+        {#snippet child({ props })}
+            <button {...props} type="button">TagInput In Popover</button>
+        {/snippet}
     </Popover>
 {:else if store.kind === 'tooltip'}
     <Tooltip>

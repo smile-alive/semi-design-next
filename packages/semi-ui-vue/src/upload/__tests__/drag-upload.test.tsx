@@ -56,11 +56,4 @@ describe('拖拽上传', () => {
         expect(onFileChange).toHaveBeenCalledTimes(1);
         expect(screen.getByText('drag.pdf')).toBeInTheDocument();
     });
-
-    it('draggable 自定义默认插槽', () => {
-        renderDraggable({}, { default: () => <div class="test" /> });
-        const customArea = query(`.${prefix}-drag-area-custom`);
-        expect(customArea.children).toHaveLength(1);
-        expect(customArea.querySelector('.test')).not.toBeNull();
-    });
 });

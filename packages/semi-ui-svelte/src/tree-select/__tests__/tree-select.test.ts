@@ -283,13 +283,6 @@ describe('Svelte TreeSelect 单选', () => {
         await settle();
         expect(onBlur).toHaveBeenCalledTimes(1);
     });
-
-    it('点击外部关闭下拉', async () => {
-        setup();
-        await fireEvent.mouseDown(document.body);
-        await settle();
-        expect(getCombobox()).toHaveAttribute('aria-expanded', 'false');
-    });
 });
 
 describe('Svelte TreeSelect 受控写法', () => {

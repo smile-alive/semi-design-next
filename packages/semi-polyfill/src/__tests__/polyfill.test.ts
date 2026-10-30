@@ -14,11 +14,11 @@ describe('abort-signal-any', () => {
         await import('../abort-signal-any');
     });
 
-    it('installs when missing', () => {
+    it('缺失时安装', () => {
         expect(AbortSignal.any).not.toBe(original.any);
     });
 
-    it('aborts with the reason of the first source that aborts', () => {
+    it('以最先中止的来源的 reason 中止', () => {
         const [a, b] = [new AbortController(), new AbortController()];
         const signal = AbortSignal.any([a.signal, b.signal]);
         expect(signal.aborted).toBe(false);
@@ -28,7 +28,7 @@ describe('abort-signal-any', () => {
         expect(signal.reason).toBe('b');
     });
 
-    it('is aborted at once when a source already is', () => {
+    it('有来源已中止时立即中止', () => {
         const a = new AbortController();
         a.abort('done');
         const signal = AbortSignal.any([new AbortController().signal, a.signal]);
@@ -51,7 +51,7 @@ describe('check-visibility', () => {
         return { parent, child };
     };
 
-    it('does not replace a native implementation', async () => {
+    it('不替换原生实现', async () => {
         const native = vi.fn<() => boolean>(() => true);
         Element.prototype.checkVisibility = native;
         vi.resetModules();
@@ -59,7 +59,7 @@ describe('check-visibility', () => {
         expect(Element.prototype.checkVisibility).toBe(native);
     });
 
-    it('is false for a detached element or one without boxes', async () => {
+    it('脱离文档或没有盒子的元素返回 false', async () => {
         await load();
         expect(document.createElement('div').checkVisibility()).toBe(false);
         const { child } = mount();
@@ -68,7 +68,7 @@ describe('check-visibility', () => {
         expect(child.checkVisibility()).toBe(false);
     });
 
-    it('reads visibility only with checkVisibilityCSS or visibilityProperty', async () => {
+    it('仅在传入 checkVisibilityCSS 或 visibilityProperty 时读取 visibility', async () => {
         await load();
         const { parent, child } = mount();
         parent.style.visibility = 'hidden';
@@ -77,7 +77,7 @@ describe('check-visibility', () => {
         expect(child.checkVisibility({ visibilityProperty: true } as CheckVisibilityOptions)).toBe(false);
     });
 
-    it('reads opacity of the element and its ancestors only with checkOpacity or opacityProperty', async () => {
+    it('仅在传入 checkOpacity 或 opacityProperty 时读取元素及其祖先的 opacity', async () => {
         await load();
         const { parent, child } = mount();
         parent.style.opacity = '0';
@@ -86,7 +86,7 @@ describe('check-visibility', () => {
         expect(child.checkVisibility({ opacityProperty: true } as CheckVisibilityOptions)).toBe(false);
     });
 
-    it('is false below an ancestor with content-visibility: hidden', async () => {
+    it('位于 content-visibility: hidden 的祖先之下时返回 false', async () => {
         await load();
         const { parent, child } = mount();
         // jsdom's getComputedStyle does not know content-visibility

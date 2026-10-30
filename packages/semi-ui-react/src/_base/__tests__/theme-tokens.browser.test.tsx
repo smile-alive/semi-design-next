@@ -7,7 +7,16 @@ function pick(el: Element, props: string[]) {
     return Object.fromEntries(props.map((prop) => [prop, style.getPropertyValue(prop)]));
 }
 const token = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name).trim();
-const FONT = 'Inter, -apple-system, "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif';
+// Serialized by the browser under test: Chromium on macOS computes BlinkMacSystemFont as "system-ui", on Linux it keeps the name
+function computedFontFamily(fontFamily: string) {
+    const probe = document.createElement('div');
+    probe.style.fontFamily = fontFamily;
+    document.body.append(probe);
+    const value = getComputedStyle(probe).fontFamily;
+    probe.remove();
+    return value;
+}
+const FONT = computedFontFamily(`Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif`);
 const TEXT = ['font-size', 'line-height', 'font-weight', 'font-family'];
 const BOX = ['height', 'padding-inline-start', 'padding-inline-end', 'padding-block-start', 'padding-block-end'];
 

@@ -2,8 +2,13 @@
 // 1. Classes use JS `#` for private members, so the TS `private` keyword is rejected.
 // 2. Icons render a non-focusable span, so a bare `onClick` is invisible to jsx-a11y and keyboard users: it needs
 //    `role="button"` and `tabIndex`, or belongs on a Button.
+// 3. Vue .tsx files start with the `@jsxImportSource vue` pragma: the website's plugin-react sets a global React
+//    importSource that only the per-file pragma overrides, and no lint sees the runtime import the compiler injects.
+// 4. An AI package imports its UI package only by a subpath the UI package publishes, never by its root entry, which
+//    would pull in every component.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import path from 'node:path';
 import ts from 'typescript';
 import { frameworks } from '../lint/index.ts';
 
@@ -20,12 +25,45 @@ if (status !== 1) {
     failed = true;
 }
 
-const files = spawnSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', '*.tsx', ':!legacy'], {
-    encoding: 'utf8',
-})
-    .stdout.split('\n')
-    // --cached still lists files deleted in the worktree but not yet staged
-    .filter((file) => file && fs.existsSync(file));
+const listFiles = (...pathspecs: string[]) =>
+    spawnSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', ...pathspecs], {
+        encoding: 'utf8',
+    })
+        .stdout.split('\n')
+        // --cached still lists files deleted in the worktree but not yet staged
+        .filter((file) => file && fs.existsSync(file));
+
+const files = listFiles('*.tsx', ':!legacy');
+
+for (const file of files.filter((name) => /^packages\/semi-[^/]+-vue\//.test(name))) {
+    if (fs.readFileSync(file, 'utf8').split('\n', 1)[0] !== '/** @jsxImportSource vue */') {
+        console.error(`${file}:1: a Vue .tsx file must start with /** @jsxImportSource vue */`);
+        failed = true;
+    }
+}
+
+const publishedSubpath: Record<string, (subpath: string) => string | undefined> = {
+    // A bare SFC subpath does not resolve (no `.vue` in resolve.extensions), and a `.vue` one is published as
+    // `.vue.js`, which `./*` does not map
+    vue: (subpath) => (subpath.endsWith('.vue') ? undefined : ['.ts', '.tsx'].map((ext) => `${subpath}${ext}`).find((source) => fs.existsSync(path.join('packages/semi-ui-vue/src', source)))),
+    // `./*.svelte.js` maps to a rune module `<name>.svelte.ts`, `./*.svelte` to a component, and `./*` to `<name>.ts`
+    svelte: (subpath) => {
+        const source = subpath.endsWith('.svelte.js') ? `${subpath.slice(0, -3)}.ts` : subpath.endsWith('.svelte') ? subpath : `${subpath}.ts`;
+        return fs.existsSync(path.join('packages/semi-ui-svelte/src', source)) ? source : undefined;
+    },
+};
+for (const [framework, resolve] of Object.entries(publishedSubpath)) {
+    const specifiers = new RegExp(`['"]@fibrae/semi-ui-${framework}(?:/([^'"]*))?['"]`, 'g');
+    for (const file of listFiles(`packages/semi-ai-${framework}/src`).filter((name) => !name.includes('/__tests__/'))) {
+        const source = fs.readFileSync(file, 'utf8');
+        for (const { 0: specifier, 1: subpath, index } of source.matchAll(specifiers)) {
+            if (!subpath || !resolve(subpath)) {
+                console.error(`${file}:${source.slice(0, index).split('\n').length}: ${specifier} is not a published subpath of @fibrae/semi-ui-${framework}`);
+                failed = true;
+            }
+        }
+    }
+}
 
 const iconPackages = new Set(
     frameworks

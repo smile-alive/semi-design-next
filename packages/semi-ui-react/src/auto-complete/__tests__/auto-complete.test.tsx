@@ -1067,7 +1067,7 @@ describe('AutoComplete', () => {
         expect(getList()).not.toBeNull();
     });
 
-    it('【Option className 与 style】应用自定义类名与样式', () => {
+    it('【data 项 className 与 style】经 data 传入的选项应用自定义类名与样式', () => {
         const customData = [{ label: 'Styled Option', value: 'styled', className: 'custom-class', style: { color: 'red' } }];
         const props = {
             data: customData,

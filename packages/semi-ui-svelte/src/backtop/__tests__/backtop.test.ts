@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { countLiveListeners } from '@test/utils/dom/common';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import type { BackTopProps } from '../interface';
@@ -336,6 +337,7 @@ describe('Svelte BackTop', () => {
 
     it('卸载时移除滚动监听并停止动画', async () => {
         const node = createTarget();
+        const add = vi.spyOn(node, 'addEventListener');
         const remove = vi.spyOn(node, 'removeEventListener');
         const { container, unmount } = setup({ target: () => node });
         await scroll(node, 1000);
@@ -345,7 +347,7 @@ describe('Svelte BackTop', () => {
         vi.advanceTimersByTime(100);
         const position = node.scrollTop;
         unmount();
-        expect(remove).toHaveBeenCalledWith('scroll', expect.any(Function));
+        expect(countLiveListeners(add, remove, 'scroll')).toBe(0);
 
         vi.advanceTimersByTime(500);
         expect(node.scrollTop).toBe(position);
@@ -357,10 +359,10 @@ describe('Svelte BackTop', () => {
         const remove = vi.spyOn(node, 'removeEventListener');
         const { unmount } = setup({ target: () => node });
         await frame();
-        expect(add.mock.calls.length - remove.mock.calls.length).toBe(1);
+        expect(countLiveListeners(add, remove, 'scroll')).toBe(1);
 
         unmount();
-        expect(add.mock.calls.length - remove.mock.calls.length).toBe(0);
+        expect(countLiveListeners(add, remove, 'scroll')).toBe(0);
     });
 
     it('读取全局默认值，显式属性优先', async () => {

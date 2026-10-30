@@ -760,17 +760,6 @@ describe('AIChatInput', () => {
         });
     });
 
-    describe('生命周期', () => {
-        it('卸载时销毁编辑器', async () => {
-            const { editor, unmount } = await setup();
-            const instance = editor();
-            expect(instance.isDestroyed).toBe(false);
-            unmount();
-            await settle();
-            expect(instance.isDestroyed).toBe(true);
-        });
-    });
-
     describe('属性透传与无障碍', () => {
         it('把 data-* 等未声明属性传给根元素', async () => {
             const { container } = await setup({ 'data-testid': 'chat-input', id: 'input-id' });

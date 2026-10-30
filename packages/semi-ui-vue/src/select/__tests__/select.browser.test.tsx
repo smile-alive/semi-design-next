@@ -65,7 +65,8 @@ describe('Select（浏览器）', () => {
         const popup = (await screen.findByRole('listbox')).closest('[popover]') as HTMLElement;
         await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - trigger.getBoundingClientRect().left)).toBeLessThanOrEqual(1));
         screen.getByTestId('box').style.left = '300px';
-        await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - 300)).toBeLessThanOrEqual(1));
+        // the move is reported on the next rendering update, and headless WebKit on Linux CI has gone ~2s without one
+        await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - 300)).toBeLessThanOrEqual(1), { timeout: 5000 });
     });
 
     it('新增选项时 ellipsisTrigger 重新计算剩余标签数', async () => {
@@ -143,7 +144,7 @@ function renderAllCaseOfBlur(onBlur: Mock<(name: string) => void>) {
             {blurCases.map(([name, props]) => (
                 <div key={name}>
                     <h5>{name}</h5>
-                    <Select style={{ width: '120px' }} data-cy={name} defaultValue="abc" onBlur={() => onBlur(name)} {...props}>
+                    <Select style={{ width: '120px' }} data-cy={name} defaultValue={props.multiple ? ['abc'] : 'abc'} onBlur={() => onBlur(name)} {...props}>
                         {() => (
                             <>
                                 <SelectOption value="abc">{() => '抖音'}</SelectOption>

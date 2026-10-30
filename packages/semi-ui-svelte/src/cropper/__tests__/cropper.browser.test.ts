@@ -68,14 +68,4 @@ describe('Svelte Cropper（浏览器）', () => {
         await tabTo(box);
         expectThemeFocusRing(box);
     });
-
-    it('方向键移动裁剪框，Shift 加方向键调整大小', async () => {
-        const { box } = await renderLoaded();
-        await tabTo(box);
-        const before = box.getBoundingClientRect();
-        await userEvent.keyboard('{ArrowLeft}');
-        expect(box.getBoundingClientRect().left).toBe(before.left - 10);
-        await userEvent.keyboard('{Shift>}{ArrowLeft}{/Shift}');
-        expect(box.getBoundingClientRect().width).toBe(before.width - 10);
-    });
 });

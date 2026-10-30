@@ -6,7 +6,7 @@ import Select from '../../../select';
 import { FormSelect } from '../../field';
 
 export { FormCheckbox, FormInput, FormSelect, FormSwitch } from '../../field';
-export const Option = Select.Option;
+const Option = Select.Option;
 
 export const prefix = `${BASE_CLASS_PREFIX}-form`;
 export const fieldSelector = `.${prefix}-field`;

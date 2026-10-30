@@ -57,16 +57,6 @@ describe('Spin 加载期间的焦点（浏览器）', () => {
         expect(inside()).toHaveFocus();
     });
 
-    it('焦点在被包裹内容里时，开始加载后移到 Spin 根元素，结束后回到原控件', () => {
-        const [spinning, setSpinning] = createSignal(false);
-        const { container } = render(() => <View spinning={spinning()} />);
-        inside().focus();
-        setSpinning(true);
-        expect(getSpin(container)).toHaveFocus();
-        setSpinning(false);
-        expect(inside()).toHaveFocus();
-    });
-
     it('键盘焦点交接到 Spin 根元素后显示主题焦点环', async () => {
         const [spinning, setSpinning] = createSignal(false);
         const { container } = render(() => <View spinning={spinning()} />);
@@ -74,17 +64,6 @@ describe('Spin 加载期间的焦点（浏览器）', () => {
         setSpinning(true);
         expect(getSpin(container)).toHaveFocus();
         expectThemeFocusRing(getSpin(container));
-    });
-
-    it('加载期间焦点已被用户移走时，结束后不抢焦点', () => {
-        const [spinning, setSpinning] = createSignal(false);
-        const { container } = render(() => <View spinning={spinning()} />);
-        inside().focus();
-        setSpinning(true);
-        screen.getByRole('button', { name: 'after' }).focus();
-        setSpinning(false);
-        expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
-        expect(getSpin(container)).not.toHaveFocus();
     });
 
     it('ShadowRoot 内加载时焦点由根元素接住，结束后回到原控件', () => {

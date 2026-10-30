@@ -64,7 +64,7 @@ describe('Svelte Dropdown 键盘操作（浏览器）', () => {
         expect(clicks).toEqual(['Cherry']);
     });
 
-    it('Escape 关闭弹层、上报 escKeyDown，并把焦点还给触发器；closeOnEsc 为 false 时不关闭', async () => {
+    it('Escape 关闭弹层、上报 escKeyDown，并把焦点还给触发器', async () => {
         const { store, button } = setup();
         await userEvent.click(button());
         await waitFor(() => expect(item('Alpha')).toHaveFocus());

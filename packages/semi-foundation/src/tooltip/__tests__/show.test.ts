@@ -84,14 +84,6 @@ describe('show', () => {
         expect(adapter.insertPortal).toHaveBeenCalledTimes(2);
     });
 
-    it('未打开时 hide 不调用 closePopup', () => {
-        const { foundation, adapter } = createFoundation();
-
-        foundation.hide();
-
-        expect(adapter.closePopup).not.toHaveBeenCalled();
-    });
-
     it('受控 visible 为 false 时 show 只请求打开，使用方回写后打开且不重复报告', () => {
         const { foundation, adapter, setVisible } = createFoundation({ visible: false });
         foundation.show();
@@ -154,9 +146,10 @@ describe('show', () => {
         expect(adapter.notifyVisibleChange.mock.calls).toEqual([[true], [false]]);
     });
 
-    it('尚未打开时 hide 不发送关闭请求', () => {
-        const { foundation, adapter } = createFoundation({ visible: false });
+    it.each<TooltipBaseProps>([{}, { visible: false }])('尚未打开时 hide 不关闭弹层也不发送关闭请求：%o', (props) => {
+        const { foundation, adapter } = createFoundation(props);
         foundation.hide();
+        expect(adapter.closePopup).not.toHaveBeenCalled();
         expect(adapter.notifyVisibleChange).not.toHaveBeenCalled();
     });
 });

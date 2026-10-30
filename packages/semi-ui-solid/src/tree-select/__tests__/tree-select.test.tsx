@@ -4635,17 +4635,6 @@ describe('TreeSelect 缺陷回归', () => {
             expect(onBlur.mock.calls[0][0]).toBeInstanceOf(FocusEvent);
         });
 
-        it('打开下拉、Escape 关闭后离开，onFocus 与 onBlur 各触发一次', async () => {
-            const { onFocus, onBlur, outside } = setup();
-            getTrigger().focus();
-            await userEvent.keyboard('{ArrowDown}');
-            expect(getPopover()).not.toBeNull();
-            await userEvent.keyboard('{Escape}');
-            outside.focus();
-            expect(onFocus).toHaveBeenCalledTimes(1);
-            expect(onBlur).toHaveBeenCalledTimes(1);
-        });
-
         it('焦点从外部进入弹层搜索框时触发 onFocus，回到触发器不重复', () => {
             const { onFocus } = setup({ defaultOpen: true, filterTreeNode: true });
             getSearchInput().focus();

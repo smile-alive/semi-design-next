@@ -207,6 +207,7 @@ describe('Svelte DatePicker 日历网格键盘操作', () => {
         await focusGrid();
         await userEvent.keyboard('{ArrowRight}');
         await settle();
+        expect(getNavTitle()).toBe('2019年 10月');
         expect(activeDay()).toHaveAttribute('aria-label', '2019-10-01');
         await userEvent.keyboard('{PageUp}');
         await settle();

@@ -133,7 +133,7 @@ describe('Svelte DatePicker insetInput 与位置', () => {
 });
 
 describe('Svelte DatePicker autofocus', () => {
-    it('autofocus 为 true 时输入框获焦，为 false 时不获焦', async () => {
+    it('autofocus 为 true 时输入框获焦', async () => {
         await setup({ props: { autofocus: true } });
         expect(getRoot().querySelectorAll(`.${BASE_CLASS_PREFIX}-input-wrapper-focus`)).toHaveLength(1);
         expect(getInput()).toHaveFocus();

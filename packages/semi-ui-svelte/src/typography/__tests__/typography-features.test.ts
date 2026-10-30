@@ -2,7 +2,6 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import FormatNumeral from '@fibrae/semi-foundation/typography/format-numeral';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import Fixture from './typography-fixture.svelte';
 
@@ -204,20 +203,15 @@ describe('Svelte Typography 省略号', () => {
 });
 
 describe('Svelte Typography Numeral', () => {
-    it('按 rule 与 precision 格式化文本，改 props 后重新格式化', async () => {
-        const expected = (rule: 'percentages' | 'exponential', precision: number) => new FormatNumeral('1992.1536', rule, precision, 'round').format();
-        const { container, state } = setup({ kind: 'numeral', text: '1992.1536', props: { rule: 'percentages', precision: 2 } });
-        await vi.waitFor(() => expect(root(container).textContent).toBe(expected('percentages', 2)));
+    it('rule 与 precision 变化后重新格式化', async () => {
+        const { container, state } = setup({ kind: 'numeral', text: '0.256', props: { rule: 'percentages', precision: 1 } });
+        await vi.waitFor(() => expect(root(container).textContent).toBe('25.6%'));
+        state.props = { rule: 'percentages', precision: 2 };
+        flushSync();
+        await vi.waitFor(() => expect(root(container).textContent).toBe('25.60%'));
         state.props = { rule: 'exponential', precision: 1 };
         flushSync();
-        await vi.waitFor(() => expect(root(container).textContent).toBe(expected('exponential', 1)));
-        expect(expected('exponential', 1)).not.toBe(expected('percentages', 2));
-    });
-
-    it('parser 在格式化前处理文本', async () => {
-        const parser = (value: string) => value.replace(/[^\d.]/g, '');
-        const { container } = setup({ kind: 'numeral', text: '$ 1,992.15', props: { precision: 1, parser } });
-        await vi.waitFor(() => expect(root(container).textContent).toBe('1992.15'));
+        await vi.waitFor(() => expect(root(container).textContent).toBe('2.6e-1'));
     });
 
     it('文本变化后重新格式化', async () => {

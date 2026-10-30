@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vite-plus/test';
 // Guards the solid vitest project: the root config compiles JSX for React and Vue, and Node would load solid-js's
 // server build
 describe('Solid test toolchain', () => {
-    it('compiles JSX with the Solid compiler into the client runtime', () => {
+    it('JSX 由 Solid 编译器编译到客户端运行时', () => {
         const [count, setCount] = createSignal(0);
         render(() => (
             <button type="button" onClick={() => setCount((value) => value + 1)}>
@@ -17,7 +17,7 @@ describe('Solid test toolchain', () => {
         expect(button).toHaveTextContent('1');
     });
 
-    it('loads the development build, whose warnings the host relies on', () => {
+    it('加载开发构建，宿主依赖其中的告警', () => {
         expect(DEV).toBeDefined();
     });
 });

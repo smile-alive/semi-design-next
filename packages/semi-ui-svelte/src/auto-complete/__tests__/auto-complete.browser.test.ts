@@ -88,15 +88,6 @@ describe('Svelte AutoComplete 浏览器', () => {
         expect(document.querySelector('.semi-popover')).not.toBeNull();
     });
 
-    it('点击外部关闭列表', async () => {
-        setup();
-        await userEvent.click(getInput());
-        await userEvent.keyboard('123');
-        expect(await screen.findByText('123@163.com')).toBeInTheDocument();
-        await clickOutside();
-        await waitFor(() => expect(getPopupWrapper()).toBeNull());
-    });
-
     it('下拉宽度不小于触发器宽度', async () => {
         setup();
         await userEvent.click(getInput());

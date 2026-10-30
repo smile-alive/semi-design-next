@@ -9,7 +9,6 @@ import { endTransitions, render } from '@test/utils/vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';
 import Toast, { ToastFactory } from '../index';
 import type { ToastHandle, ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
-import ToastList from '../toast-list.vue';
 import ToastItem from '../toast.vue';
 import HolderInProvider from './fixtures/holder-in-provider.vue';
 import HookHost from './fixtures/hook-host.vue';
@@ -663,22 +662,6 @@ describe('Toast', () => {
             Toast.install(createApp({ render: () => null }));
         }
     });
-    it('内部组件的 Boolean prop 有 default，Function prop 的 default 为 undefined', () => {
-        const violations: string[] = [];
-        const functionProps: string[] = [];
-        for (const component of [ToastItem, ToastList]) {
-            const options = (component as { props?: Record<string, { type?: unknown; default?: unknown }> }).props;
-            for (const [name, option] of Object.entries(options ?? {})) {
-                const types = [option.type].flat();
-                if (types.includes(Function)) functionProps.push(name);
-                if (types.includes(Boolean) && !Object.hasOwn(option, 'default')) violations.push(name);
-                if (types.includes(Function) && option.default !== undefined) violations.push(name);
-            }
-        }
-        expect(violations).toEqual([]);
-        expect(functionProps).toEqual(expect.arrayContaining(['content', 'icon']));
-    });
-
     describe('读屏播报', () => {
         const getAnnouncer = () => document.querySelector(`.${prefix}-announcer`);
         it('常驻播报区先于消息存在，消息文本在之后的任务中写入，随后清空', async () => {

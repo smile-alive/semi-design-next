@@ -3,15 +3,13 @@ import { type Component, createApp, inject, nextTick, ref } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import NotificationListStore, { type ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-vue';
 import { endTransitions, render } from '@test/utils/vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';
 import Notification from '../index';
 import type { NoticeHandle, NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
-import NoticeList from '../notice-list.vue';
 import Notice from '../notice.vue';
-import NotificationList from '../notification-list.vue';
 import HolderInProvider from './fixtures/holder-in-provider.vue';
 import HookHost from './fixtures/hook-host.vue';
 import ItemRef from './fixtures/item-ref.vue';
@@ -909,25 +907,8 @@ describe('Notification', () => {
         });
     });
 
-    it('内置默认值没有 motion，config 不接受 direction', () => {
-        expect(new NotificationListStore().defaults).not.toHaveProperty('motion');
+    it('config 不接受 direction', () => {
         expectTypeOf<ConfigProps>().not.toHaveProperty('direction');
-    });
-
-    it('内部组件的 Boolean prop 有 default，Function prop 的 default 为 undefined', () => {
-        const violations: string[] = [];
-        const functionProps: string[] = [];
-        for (const component of [Notice, NoticeList, NotificationList]) {
-            const options = (component as { props?: Record<string, { type?: unknown; default?: unknown }> }).props;
-            for (const [name, option] of Object.entries(options ?? {})) {
-                const types = [option.type].flat();
-                if (types.includes(Function)) functionProps.push(name);
-                if (types.includes(Boolean) && !Object.hasOwn(option, 'default')) violations.push(name);
-                if (types.includes(Function) && option.default !== undefined) violations.push(name);
-            }
-        }
-        expect(violations).toEqual([]);
-        expect(functionProps).toEqual(expect.arrayContaining(['title', 'content', 'icon']));
     });
 
     describe('读屏播报', () => {

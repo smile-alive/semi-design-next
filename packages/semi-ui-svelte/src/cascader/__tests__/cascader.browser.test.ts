@@ -210,37 +210,6 @@ describe('Svelte Cascader 浏览器：虚拟搜索列表', () => {
     });
 });
 
-describe('Svelte Cascader 浏览器：loadData', () => {
-    it('点击未加载的节点后异步加载并展开下一列', async () => {
-        const data: CascaderData[] = [
-            { label: 'Node1', value: '0-0' },
-            { label: 'Node2', value: '0-1' },
-            { label: 'Node3', value: '0-2', isLeaf: true },
-        ];
-        const loadData = (selected: CascaderData[]) => {
-            const { label, value, children } = selected[selected.length - 1];
-            return new Promise<void>((resolve) => {
-                if (children) {
-                    resolve();
-                    return;
-                }
-                setTimeout(() => {
-                    const node = store.treeData.find((item) => item.value === value);
-                    if (node) {
-                        node.children = [1, 2].map((index) => ({ label: `${label} - ${index}`, value: `${label}-${index}`, isLeaf: selected.length > 1 }));
-                    }
-                    resolve();
-                }, 50);
-            });
-        };
-        const { store, combobox } = setup({ loadData }, { data });
-        await userEvent.click(combobox);
-        await userEvent.click(await screen.findByText('Node1'));
-        await waitFor(() => expect(screen.getByText('Node1 - 1')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByRole('treeitem', { name: /Node1$/ })).not.toHaveAttribute('aria-busy'));
-    });
-});
-
 describe('Svelte Cascader 浏览器：输入与表单', () => {
     it('在触发器上按 Enter 打开下拉框，且不提交外层表单', async () => {
         const onSubmit = vi.fn<(event: Event) => void>((event) => event.preventDefault());

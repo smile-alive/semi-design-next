@@ -5,7 +5,7 @@
 ## 位置与项目
 
 - 测试放在所属目录的 `__tests__/` 下，用 `.ts`，含 JSX 的用 `.tsx`。测试由所属项目的 tsconfig 做类型检查（框架无关的测试用 `vitest/tsconfig.json`，各框架用 `vitest/<框架>/` 下的 tsconfig），随 `pnpm typecheck` 运行。
-- 类型写法：DOM 查询用 API 自带的泛型（`querySelector<HTMLInputElement>(...)`）或 `as HTMLElement`；`vi.fn` 写类型参数（lint 规则 `vitest/require-mock-type-parameters`），传给 prop 时用 prop 类型（`vi.fn<NonNullable<SelectProps['onChange']>>()`），adapter 方法用 `XxxAdapter['method']`；只给部分字段的 adapter、props 用 `as unknown as XxxAdapter`，同一文件多处时提取带类型的工厂函数；故意传入不合法值时同样断言，并用注释说明原因。不用 `any`、`@ts-ignore`、`@ts-expect-error`。
+- 类型写法：DOM 查询用 API 自带的泛型（`querySelector<HTMLInputElement>(...)`）或 `as HTMLElement`；`vi.fn` 写类型参数（lint 规则 `vitest/require-mock-type-parameters`），传给 prop 时用 prop 类型（`vi.fn<NonNullable<SelectProps['onChange']>>()`），adapter 方法用 `XxxAdapter['method']`；只给部分字段的 adapter、props 用 `as unknown as XxxAdapter`，同一文件多处时提取带类型的工厂函数；故意传入不合法值、或断言某种写法应被类型拒绝时，用 `@ts-expect-error` 并在同一行写明原因。不用 `any`、`@ts-ignore`。
 - `common` 项目在 jsdom 中运行 foundation、图标、动画与构建工具的 `__tests__`（`*.ssr.test.*` 除外，见「服务端渲染」），各框架项目运行各框架包的 `__tests__`，样式导入被替换成空模块。Testing Library 只在 `afterEach` 是全局函数时自动注册 cleanup，各框架的 cleanup 由 `vitest/<框架>/<框架>.setup.ts` 注册，框架项目与对应的浏览器项目都加载。与框架无关的全局 setup（`vitest/setup.ts`）：
     - 时区固定为 Asia/Shanghai；
     - `Date` 冻结在 2019-08-08 12:00:00，计时器保持真实；需要时钟走动的用例自己调用 `vi.useRealTimers()`；
@@ -25,7 +25,7 @@
 
 - 测试 API（`describe`、`it`、`expect`、`vi`、钩子等）从 `vite-plus/test` 显式导入，项目不开 `globals`。Testing Library 的自动 cleanup 依赖全局 `afterEach`，因此由各项目的 setup 显式注册 `afterEach(cleanup)`。
 - `describe`、`it`、`test` 的标题和自定义失败信息用简体中文，描述被测行为；`describe` 可以只写被测符号（`Select`、`getDayofWeek`）。组件名、prop、按键、ARIA 属性等技术标识和 `%s`、`$name` 等占位保持原样，被测输入不为了标题语言改写。注释仍用英文。
-- 断言可见行为：DOM、可访问名称与角色、回调的参数。不断言内部 state，不 spy foundation 的私有成员，也不读取源文件文本或 AST 来下断言。
+- 断言可见行为：DOM、可访问名称与角色、回调的参数。不断言内部 state，不 spy foundation 的私有成员，也不读取源文件文本或 AST 来下断言。例外是覆盖守卫与编译产物：遍历包入口的导出、检查用例表或类型有无缺项的守卫可以读入口文件；验证编译器输出的用例（如 Vue 生产编译保留的 prop 运行时类型、主题与 tailwind 生成器）可以读它编译的源文件。源码写法约定（导入路径、文件首行声明）写进 `scripts/lint-*.ts`，不写成测试。
 - 行为测试覆盖以下几类（已有用例覆盖的不重复写）：
     - 受控与非受控、默认值、`semiGlobal.config.overrideDefaultProps`；
     - 各 prop 产生的 class 与 DOM 结构、`x-semi-prop` 插槽；

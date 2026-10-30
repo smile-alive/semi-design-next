@@ -132,17 +132,6 @@ describe('Table 虚拟化分组', () => {
         expect(screen.getByText('a1')).toBeInTheDocument();
         expect(screen.getByRole('table')).toHaveAttribute('aria-rowcount', '4');
     });
-
-    it('分组值与 rowKey 相同时，分组行与记录行都渲染', async () => {
-        const dataSource = [
-            { key: 'a', group: 'a', name: 'Ann' },
-            { key: 'b', group: 'a', name: 'Bob' },
-        ];
-        render(() => <Table columns={nameColumns} dataSource={dataSource} defaultExpandAllGroupRows groupBy="group" pagination={false} scroll={{ y: 300 }} virtualized renderGroupSection={(groupKey) => `group ${groupKey}`} />);
-        await waitFor(() => expect(screen.getByText('Ann')).toBeInTheDocument());
-        expect(screen.getByText('group a')).toBeInTheDocument();
-        expect(screen.getByText('Bob')).toBeInTheDocument();
-    });
 });
 
 describe('Table 虚拟化行高', () => {

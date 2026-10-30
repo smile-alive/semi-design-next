@@ -1,6 +1,6 @@
 import { Index, Show } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { IconPlus } from '@fibrae/semi-icons-solid';
@@ -11,12 +11,15 @@ const getInput = (field: string) => document.querySelector(`[x-field-id="${field
 
 describe('Form', () => {
     it('labelPosition 为 inset 时，不支持内嵌标签的字段回退 top，label 位于控件上方', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        onTestFinished(() => warn.mockRestore());
         render(() => (
             <Form labelPosition="inset">
                 <FormSwitch field="on" label="Notify" />
                 <FormInput field="name" label="Name" />
             </Form>
         ));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('has no inset label, so Field "on" is laid out with labelPosition'));
         const switchRect = screen.getByRole('switch', { name: 'Notify' }).getBoundingClientRect();
         const labelRect = screen.getByText('Notify').getBoundingClientRect();
         expect(labelRect.bottom).toBeLessThanOrEqual(switchRect.top);
