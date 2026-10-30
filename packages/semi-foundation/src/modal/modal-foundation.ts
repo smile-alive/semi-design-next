@@ -138,7 +138,7 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
         this.#debouncedCancel.cancel();
     }
 
-    handleCancel(e: CE) {
+    handleCancel = (e: CE) => {
         // the dialog stays mounted for its leave animation, and its mask and close button still take clicks
         if (!this.getProp('visible')) {
             return;
@@ -149,30 +149,30 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
         }
         this.#lastCancelTarget = target;
         this.#debouncedCancel(e);
-    }
+    };
 
-    handleOk(e: OE) {
+    handleOk = (e: OE) => {
         const target = e?.currentTarget ?? e?.target ?? null;
         if (target !== this.#lastOkTarget) {
             this.#debouncedOk.cancel();
         }
         this.#lastOkTarget = target;
         this.#debouncedOk(e);
-    }
+    };
 
-    beforeShow() {
+    beforeShow = () => {
         this._adapter.disabledBodyScroll();
-    }
+    };
 
-    afterHide() {
+    afterHide = () => {
         this._adapter.enabledBodyScroll();
-    }
+    };
 
-    afterClose() {
+    afterClose = () => {
         this._adapter.notifyClose();
-    }
+    };
 
-    toggleDisplayNone(displayNone: boolean) {
+    toggleDisplayNone = (displayNone: boolean) => {
         this._adapter.toggleDisplayNone(displayNone);
-    }
+    };
 }

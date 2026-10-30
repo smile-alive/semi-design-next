@@ -1,6 +1,6 @@
 import { isDev } from './warning';
 
-export function handlePrevent(event: any) {
+export function handlePrevent(event: Pick<Event, 'stopPropagation' | 'preventDefault'>) {
     event.stopPropagation();
     event.preventDefault();
 }

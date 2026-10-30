@@ -112,11 +112,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
     useIntersectionObserver(lazyTargets, loadLazyImages, () => ({ root: null, rootMargin: local.lazyLoadMargin }));
 
     // Images moved without remounting do not register again; the group re-reads their document order
-    useMutationObserver(
-        () => group,
-        () => foundation.syncImageOrder(),
-        { childList: true, subtree: true }
-    );
+    useMutationObserver(() => group, foundation.syncImageOrder, { childList: true, subtree: true });
 
     return (
         <PreviewContext.Provider value={context}>
@@ -124,7 +120,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
             <div {...rest} ref={untrack(() => mergeRefs(local.ref, (node: HTMLDivElement) => (group = node)))} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(`${prefixCls}-preview-group`, local.class)} style={local.style}>
                 {local.children}
             </div>
-            <PreviewInner {...inner} class={local.previewCls} style={local.previewStyle} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={(isVisible) => foundation.handleVisibleChange(isVisible)} />
+            <PreviewInner {...inner} class={local.previewCls} style={local.previewStyle} currentIndex={currentIndex()} src={list().srcList} visible={visible()} onVisibleChange={foundation.handleVisibleChange} />
         </PreviewContext.Provider>
     );
 }

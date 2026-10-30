@@ -16,10 +16,10 @@ const BOX = { width: '1000px', height: '800px' };
 const getRoot = () => document.querySelector<HTMLElement>('.semi-resizable-resizable') as HTMLElement;
 const getHandle = (dir: string) => document.querySelector<HTMLElement>(`.semi-resizable-resizableHandler-${dir}`) as HTMLElement;
 const getBackground = () => document.querySelector('.semi-resizable-background');
-const sizeOf = () => {
+function sizeOf() {
     const { width, height } = getRoot().style;
     return { width, height };
-};
+}
 
 async function renderResizable(initial: Props, wrapper?: Props) {
     const props = shallowRef(initial);

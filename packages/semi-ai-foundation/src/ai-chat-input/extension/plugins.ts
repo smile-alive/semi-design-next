@@ -1,6 +1,6 @@
 import type { ResolvedPos, Schema } from '@tiptap/pm/model';
 import { type EditorState, type Transaction, type Selection, Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
-import type { EditorView } from '@tiptap/pm/view';
+import type { EditorProps, EditorView } from '@tiptap/pm/view';
 import { strings } from '../constants';
 /**
  * Inserts or removes zero-width characters around custom slot nodes, because:
@@ -52,7 +52,7 @@ export function handleZeroWidthCharLogic(newState: EditorState) {
     if (todoPositions.length > 0) {
         // apply from the end so earlier inserts do not shift later positions
         todoPositions
-            .sort((a, b) => {
+            .toSorted((a, b) => {
                 const aOrder = Array.isArray(a) ? a[1] : a;
                 const bOrder = Array.isArray(b) ? b[1] : b;
                 return bOrder - aOrder;
@@ -96,25 +96,27 @@ function installSyntheticBackspaceGuard(view: EditorView) {
     patchedView._semiSyntheticBackspaceGuard = true;
     patchedView._semiOrigSomeProp = origSomeProp;
 
-    view.someProp = function (propName: any, f?: any) {
-        if (propName !== 'handleKeyDown' || typeof f !== 'function') {
+    function guardedSomeProp<PropName extends keyof EditorProps, Result>(propName: PropName, f: (value: NonNullable<EditorProps[PropName]>) => Result): Result | undefined;
+    function guardedSomeProp<PropName extends keyof EditorProps>(propName: PropName): NonNullable<EditorProps[PropName]> | undefined;
+    function guardedSomeProp(propName: keyof EditorProps, f?: (value: unknown) => unknown) {
+        if (!f) {
+            return origSomeProp(propName);
+        }
+        if (propName !== 'handleKeyDown') {
             return origSomeProp(propName, f);
         }
-
-        return origSomeProp(propName, (prop: any) => {
-            if (typeof prop !== 'function') {
-                return f(prop);
-            }
-
-            return f((innerView: EditorView, event: KeyboardEvent) => {
+        return origSomeProp('handleKeyDown', (prop) =>
+            f((innerView: EditorView, event: KeyboardEvent) => {
                 if (innerView.composing && innerView.state.selection.$from.parent.type.name === 'inputSlot' && isSyntheticBackspaceEvent(event)) {
                     return false;
                 }
 
                 return prop(innerView, event);
-            });
-        });
-    } as any;
+            })
+        );
+    }
+
+    view.someProp = guardedSomeProp;
 }
 
 function removeSyntheticBackspaceGuard(view: EditorView) {

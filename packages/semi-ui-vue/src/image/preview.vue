@@ -140,7 +140,7 @@
     // the default slot is the group's content, not a preview slot
     const passedSlots = () => Object.keys(slots).filter((name) => name !== 'default');
 
-    onUpdated(() => foundation.syncImageOrder());
+    onUpdated(foundation.syncImageOrder);
 
     // A lazy img gets its src from the observer. The getter reads the whole state, so every state change observes the
     // thumbnails again, which a new images list needs even when its img elements stay. The viewport is the root, so a

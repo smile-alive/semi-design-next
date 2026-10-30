@@ -1039,7 +1039,7 @@ describe('Input 行为基线', () => {
     it('ref 句柄恰好包含文档中的方法与节点', () => {
         const ref = createRef<InputHandle>();
         render(<Input ref={ref} />);
-        expect(Object.keys(ref.current).sort()).toEqual(['blur', 'focus', 'input', 'nativeElement', 'select', 'setSelectionRange'].sort());
+        expect(Object.keys(ref.current).toSorted()).toEqual(['blur', 'focus', 'input', 'nativeElement', 'select', 'setSelectionRange'].toSorted());
         for (const method of ['blur', 'focus', 'select', 'setSelectionRange']) {
             expect(typeof ref.current[method]).toBe('function');
         }
@@ -1128,7 +1128,7 @@ describe('Input 行为基线', () => {
         expect(getInput()).toHaveValue('ab');
     });
 
-    it('InputGroup 把 size、disabled 及其他属性传给每个子元素', () => {
+    it('InputGroup 向子元素下发 size、disabled，其他属性只落在分组上', () => {
         render(
             <InputGroup data-group="1" disabled size="small">
                 <Input placeholder="a" />
@@ -1138,11 +1138,13 @@ describe('Input 行为基线', () => {
         const group = screen.getByRole('group');
         expect(group).toHaveAttribute('aria-label', zh_CN.Input.group);
         expect(group).toHaveClass(`${prefixCls}-group`, `${prefixCls}-small`);
-        expect(group).not.toHaveAttribute('data-group');
-        for (const input of document.querySelectorAll('input')) {
-            expect(input).toHaveClass(`${prefixCls}-small`);
+        expect(group).toHaveAttribute('data-group', '1');
+        const [first, second] = document.querySelectorAll('input');
+        expect(first).toHaveClass(`${prefixCls}-small`);
+        expect(second).toHaveClass(`${prefixCls}-large`);
+        for (const input of [first, second]) {
             expect(input).toBeDisabled();
-            expect(input).toHaveAttribute('data-group', '1');
+            expect(input).not.toHaveAttribute('data-group');
         }
     });
 

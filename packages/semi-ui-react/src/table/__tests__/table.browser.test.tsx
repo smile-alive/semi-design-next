@@ -21,12 +21,12 @@ const getFileData = (total) =>
 const getHeaderCell = (container, title) => [...container.querySelectorAll(`.${prefix}-thead .${prefix}-row-head`)].find((th) => th.textContent === title);
 
 // Chrome's accessibility tree of the iframe the tests render in
-const getAccessibilityTree = async () => {
+async function getAccessibilityTree() {
     const { frameTree } = await cdp().send('Page.getFrameTree');
     const { frame } = frameTree.childFrames.find((child) => child.frame.name === 'vitest-iframe');
     const { nodes } = await cdp().send('Accessibility.getFullAXTree', { frameId: frame.id });
     return nodes;
-};
+}
 
 describe('Table（浏览器）', () => {
     it('修复 #247：所有列都没有宽度时，表头与表体列对齐', () => {

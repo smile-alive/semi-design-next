@@ -5,10 +5,10 @@ import { render } from '@test/utils/vue';
 import NodeCollapsible from '../node-collapsible.vue';
 
 const isOpen = () => !document.querySelector(`.${BASE_CLASS_PREFIX}-collapsible-wrapper > [x-semi-prop="children"]`)?.hasAttribute('inert');
-const flush = async () => {
+async function flush() {
     await vi.advanceTimersByTimeAsync(0);
     await nextTick();
-};
+}
 
 describe('NodeCollapsible', () => {
     beforeEach(() => {

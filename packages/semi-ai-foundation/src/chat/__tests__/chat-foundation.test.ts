@@ -44,10 +44,10 @@ describe('ChatFoundation 上传禁用', () => {
 });
 
 describe('ChatFoundation 拖拽', () => {
-    function create() {
+    const create = () => {
         const adapter = { setUploadAreaVisible: vi.fn<() => void>(), manualUpload: vi.fn<() => void>() };
         return { adapter, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
-    }
+    };
 
     it('只在拖入文件时显示放置区', () => {
         const { adapter, foundation } = create();
@@ -59,7 +59,7 @@ describe('ChatFoundation 拖拽', () => {
 
     it('放下的内容不含文件时不触发上传', () => {
         const { adapter, foundation } = create();
-        foundation.handleContainerDrop({ dataTransfer: { files: [] }, preventDefault: vi.fn<() => void>(), stopPropagation: vi.fn<() => void>() });
+        foundation.handleContainerDrop({ dataTransfer: { files: [] } as unknown as DataTransfer, preventDefault: vi.fn<() => void>(), stopPropagation: vi.fn<() => void>() });
         expect(adapter.manualUpload).not.toHaveBeenCalled();
     });
 });
@@ -74,7 +74,7 @@ describe('ChatFoundation 重新生成', () => {
 });
 
 describe('ChatFoundation 回到底部', () => {
-    function create() {
+    const create = () => {
         const element = { scrollTop: 0, scrollHeight: 1000, clientHeight: 100 };
         let backBottomVisible = false;
         const adapter = {
@@ -85,7 +85,7 @@ describe('ChatFoundation 回到底部', () => {
             }),
         };
         return { adapter, element, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
-    }
+    };
 
     it('动画结束时贴住当前底部，而不是点击时的底部', () => {
         vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'performance'] });
@@ -107,7 +107,7 @@ describe('ChatFoundation 回到底部', () => {
             const { adapter, element, foundation } = create();
             const scrollTo = (scrollTop: number) => {
                 element.scrollTop = scrollTop;
-                foundation.containerScroll({ target: element });
+                foundation.containerScroll({ target: element as unknown as EventTarget });
             };
             scrollTo(900);
             scrollTo(850);
@@ -158,17 +158,17 @@ describe('InputBoxFoundation.getDisableSend', () => {
 });
 
 describe('ChatFoundation 自动滚动', () => {
-    function create() {
+    const create = () => {
         const element = { scrollTop: 0, scrollHeight: 500, clientHeight: 100 };
         const foundation = new ChatFoundation({ getContainerRef: () => element, getStates: () => ({}), setBackBottomVisible: () => {} } as unknown as ChatAdapter);
         return { element, foundation };
-    }
+    };
 
-    function scrollTo(foundation, element, scrollTop) {
+    const scrollTo = (foundation, element, scrollTop) => {
         vi.spyOn(globalThis, 'requestAnimationFrame').mockReturnValue(0);
         element.scrollTop = scrollTop;
         foundation.containerScroll({ target: element });
-    }
+    };
 
     it.each<[string, Message[] | undefined, Message[], boolean]>([
         ['a message is added', [{ id: '1' }], [{ id: '1' }, { id: '2' }], true],
@@ -246,7 +246,7 @@ describe('ChatFoundation 自动滚动', () => {
 });
 
 describe('ChatFoundation 点赞与点踩', () => {
-    function create(chats: Partial<Message>[]) {
+    const create = (chats: Partial<Message>[]) => {
         const adapter = {
             getProp: (key: string) => ({ chats })[key],
             notifyLikeMessage: vi.fn<ChatAdapter['notifyLikeMessage']>(),
@@ -254,7 +254,7 @@ describe('ChatFoundation 点赞与点踩', () => {
             notifyChatsChange: vi.fn<ChatAdapter['notifyChatsChange']>(),
         };
         return { adapter, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
-    }
+    };
 
     it.each(['likeMessage', 'dislikeMessage'])('%s 忽略不在 chats 中的消息', (method) => {
         const { adapter, foundation } = create([{ id: '1' }]);

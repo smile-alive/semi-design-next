@@ -290,9 +290,9 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         this.#initializeImage();
     };
 
-    handleLoad = (e: { target: EventTarget }) => {
-        if (e.target) {
-            const { naturalWidth: w, naturalHeight: h } = e.target as HTMLImageElement;
+    handleLoad = (e: Pick<Event, 'target'>) => {
+        if (e.target instanceof HTMLImageElement) {
+            const { naturalWidth: w, naturalHeight: h } = e.target;
             this.#originImageHeight = h;
             this.#originImageWidth = w;
             this.#syncInitialZoomFlagWithSrc();
@@ -304,7 +304,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         this._adapter.notifyLoad(this.getProp('src'));
     };
 
-    handleError = (_e: any) => {
+    handleError = (_e: unknown) => {
         this.setState({
             loading: false,
         });
@@ -313,7 +313,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
 
     // A new src re-initializes on load, so a ratio or rotation reset arriving with it must not re-initialize (and
     // report a zoom) for the outgoing image. `zoomEvent` is the wheel event that set the zoom, if any.
-    handlePropsUpdate(prevProps: { src?: string; ratio?: string; rotation?: number; zoom?: number }, zoomEvent?: WheelEvent) {
+    handlePropsUpdate = (prevProps: { src?: string; ratio?: string; rotation?: number; zoom?: number }, zoomEvent?: WheelEvent) => {
         const { zoom, src, ratio, rotation } = this.getProps();
         const srcChange = src && src !== prevProps.src;
         if (srcChange) {
@@ -330,9 +330,9 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
                 this.handleWindowResize();
             }
         }
-    }
+    };
 
-    handleRightClickImage = (e: any) => {
+    handleRightClickImage = (e: Pick<Event, 'preventDefault' | 'stopPropagation'>) => {
         const { disableDownload } = this.getProps();
         if (disableDownload) {
             e.preventDefault();
@@ -343,12 +343,12 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         }
     };
 
-    handleImageMove(e: Pick<PointerEvent, 'buttons' | 'clientX' | 'clientY'>) {
+    handleImageMove = (e: Pick<PointerEvent, 'buttons' | 'clientX' | 'clientY'>) => {
         // touch contact reports buttons 1, like the primary mouse button
         if (e.buttons === 1) {
             this.#moveImage(e);
         }
-    }
+    };
 
     handleImagePointerDown = (e: Pick<PointerEvent, 'button' | 'clientX' | 'clientY' | 'pointerId'>) => {
         if (isSecondaryPress(e)) {

@@ -221,7 +221,7 @@ describe('NavigationFoundation 更新', () => {
 });
 
 describe('SubNavFoundation', () => {
-    function createSub(props, { openKeys = [], controlled = false } = {}) {
+    const createSub = (props, { openKeys = [], controlled = false } = {}) => {
         const adapter = {
             getProps: () => props,
             getProp: (key) => props[key],
@@ -233,7 +233,7 @@ describe('SubNavFoundation', () => {
             getIsOpen: () => openKeys.includes(props.itemKey),
         };
         return { adapter, foundation: new SubNavFoundation(adapter as unknown as SubNavAdapter) };
-    }
+    };
 
     it('上报弹层显隐变化，并同时更新展开键', () => {
         const { adapter, foundation } = createSub({ itemKey: 'a' }, { openKeys: ['b'] });

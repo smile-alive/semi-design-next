@@ -19,10 +19,10 @@ const prefix = 'semi-aiChatInput';
 type Slot = (scope: any) => VNode | VNode[] | string;
 
 // The editor is created on mount and its node views a tick later; tiptap also emits create on a 0ms timer
-const settle = async (ms = 10) => {
+async function settle(ms = 10) {
     await new Promise((resolve) => setTimeout(resolve, ms));
     await nextTick();
-};
+}
 
 async function setup(props: Record<string, unknown> = {}, slots: Record<string, Slot> = {}, options: { container?: HTMLElement; global?: Record<string, unknown> } = {}) {
     let handle: AIChatInputHandle | undefined;
@@ -45,13 +45,13 @@ async function setup(props: Record<string, unknown> = {}, slots: Record<string, 
     };
 }
 
-const query = <T extends Element = HTMLElement>(selector: string, root: ParentNode = document) => {
+function query<T extends Element = HTMLElement>(selector: string, root: ParentNode = document) {
     const found = root.querySelector<T>(selector);
     if (!found) {
         throw new Error(`missing ${selector}`);
     }
     return found;
-};
+}
 const root = (container: Element) => query(`.${prefix}`, container);
 const pm = (container: Element) => query('.ProseMirror', container);
 const sendButton = (container: Element) => query(`.${prefix}-footer-action > .${prefix}-footer-action-button`, container);

@@ -5,7 +5,7 @@
 </script>
 
 <template>
-    <InputGroup data-group="1">
+    <InputGroup>
         <Input v-for="key in keys" :key="key" :aria-label="key" />-{{ 2 }}
         <Input v-if="false" aria-label="hidden" />
         <Input aria-label="last" />

@@ -101,7 +101,7 @@ interface TooltipState {
     portalEventSet: Record<string, any>;
     isInsert: boolean;
     portalTarget: HTMLElement | ShadowRoot | null;
-    colorScheme: string | undefined;
+    colorScheme?: string;
 }
 
 const prefix = cssClasses.PREFIX;
@@ -500,7 +500,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                     portalFocus?.(e);
                     stop(e);
                 }}
-                onKeyDown={(e) => foundation.handleContainerKeydown(e)}
+                onKeyDown={foundation.handleContainerKeydown}
                 onMouseDown={stop}
                 onMouseDownCapture={(e) => {
                     runtime.pressedInside = e.nativeEvent;
@@ -652,7 +652,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     }, [isOpen, contentShown, warnsUnnamedDialog, runtime]);
 
     useEffect(() => {
-        const timer = setTimeout(() => foundation.updateStateIfCursorOnTrigger());
+        const timer = setTimeout(foundation.updateStateIfCursorOnTrigger);
         return () => clearTimeout(timer);
     }, [foundation]);
 
@@ -660,10 +660,10 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         warning(mouseLeaveDelay < mouseEnterDelay, strings.LEAVE_DELAY_WARNING);
     }, [mouseEnterDelay, mouseLeaveDelay]);
 
-    useDidUpdate(props.trigger, () => foundation.rebindEvents());
-    useDidUpdate(props.clickToHide, () => foundation.rebindEvents());
-    useDidUpdate(props.visible, () => foundation.handleVisiblePropChange());
-    useDidUpdate(props.position, () => foundation.calcPosition());
+    useDidUpdate(props.trigger, foundation.rebindEvents);
+    useDidUpdate(props.clickToHide, foundation.rebindEvents);
+    useDidUpdate(props.visible, foundation.handleVisiblePropChange);
+    useDidUpdate(props.position, foundation.calcPosition);
 
     // triggers check `condition` only before opening, so an open or pending popup is closed here
     useDidUpdate(props.condition, (condition) => {
@@ -681,10 +681,10 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     useImperativeHandle(
         props.ref,
         () => ({
-            focusTrigger: () => foundation.focusTrigger(),
+            focusTrigger: foundation.focusTrigger,
             getPopupId: () => popupId,
-            hide: () => foundation.hide(),
-            rePosition: () => foundation.calcPosition(),
+            hide: foundation.hide,
+            rePosition: foundation.calcPosition,
         }),
         [foundation, popupId]
     );

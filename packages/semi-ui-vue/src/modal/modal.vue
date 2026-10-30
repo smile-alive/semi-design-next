@@ -202,7 +202,7 @@
                 if (!shown) return;
                 closePending = true;
                 foundation.beforeShow();
-                onCleanup(() => foundation.afterHide());
+                onCleanup(foundation.afterHide);
             },
             { immediate: true, flush: 'post' }
         )
@@ -258,7 +258,7 @@
                         <Button v-if="props.hasCancel" v-bind="cancelProps" @click="cancel">
                             {{ props.cancelText || locale.locale.cancel }}
                         </Button>
-                        <Button v-bind="okProps" @click="foundation.handleOk($event)">
+                        <Button v-bind="okProps" @click="foundation.handleOk">
                             {{ props.okText || locale.locale.confirm }}
                         </Button>
                     </div>

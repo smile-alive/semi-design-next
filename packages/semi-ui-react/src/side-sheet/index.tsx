@@ -241,7 +241,7 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                                     sheetSize={SideSheetFoundation.getSheetSize(props)}
                                     size={size}
                                     wrapperExtraProps={animationEventsNeedBind}
-                                    onClose={(e) => foundation.handleCancel(e)}
+                                    onClose={foundation.handleCancel}
                                 >
                                     {children}
                                 </SideSheetContent>

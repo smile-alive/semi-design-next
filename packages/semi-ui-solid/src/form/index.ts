@@ -3,7 +3,7 @@ export { default as ArrayField } from './array-field';
 export { default as withField } from './with-field';
 export { default as useForm } from './use-form';
 export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks';
-export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTreeSelect, FormUpload } from './field';
+export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTransfer, FormTreeSelect, FormUpload } from './field';
 
 export type { ArrayFieldChildrenProps, ArrayFieldProps, ArrayFieldRow } from './array-field';
 export type { ErrorMessageProps } from './error-message';

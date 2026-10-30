@@ -26,9 +26,9 @@ function Slides(props: { labels: string[] }) {
 const five = ['1', '2', '3', '4', '5'];
 const activeTitle = () => document.querySelector(`.${prefixCls}-content-item-active h3`)?.textContent;
 // expect.poll keeps real timers, so it also waits for click updates while the component timers are faked
-const expectActive = async (title: string) => {
+async function expectActive(title: string) {
     await expect.poll(activeTitle).toBe(title);
-};
+}
 
 const tick = (ms: number) => vi.advanceTimersByTime(ms);
 

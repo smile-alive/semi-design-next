@@ -71,6 +71,20 @@ describe('Form-group', () => {
         expect(screen.getAllByRole('textbox', { name: 'Full name' })).toHaveLength(2);
     });
 
+    it('组的 size、disabled 作用于字段，字段自己的 disabled={false} 优先，data-* 只落在组根元素', () => {
+        renderFormGroup({
+            inputGroupProps: { disabled: true, size: 'large', 'data-group': '1' } as Partial<InputGroupProps>,
+            fieldBProps: { disabled: false, size: 'small' },
+        });
+        const [a, b] = screen.getAllByRole('textbox');
+        expect(a).toBeDisabled();
+        expect(a).toHaveClass('semi-input-large');
+        expect(b).toBeEnabled();
+        expect(b).toHaveClass('semi-input-small');
+        expect(document.querySelectorAll('[data-group]')).toHaveLength(1);
+        expect(document.querySelector('[data-group]')).toHaveAttribute('role', 'group');
+    });
+
     it('Form 外渲染时警告且不渲染', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const { container } = render(() => (

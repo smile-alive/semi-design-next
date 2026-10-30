@@ -242,7 +242,7 @@ describe('Tree 行为', () => {
             expect(row.getAttributeNames().filter((name) => !own.test(name))).toEqual([]);
         }
         expect(container.firstElementChild?.getAttributeNames()).toEqual(['class']);
-        expect(screen.getByRole('tree').getAttributeNames().sort()).toEqual(['aria-activedescendant', 'aria-multiselectable', 'class', 'role', 'tabindex'].sort());
+        expect(screen.getByRole('tree').getAttributeNames().toSorted()).toEqual(['aria-activedescendant', 'aria-multiselectable', 'class', 'role', 'tabindex'].toSorted());
     });
 
     it('读取 semiGlobal overrideDefaultProps 中的默认值', () => {

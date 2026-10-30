@@ -126,10 +126,10 @@
             tooltipHideDelay: props.tooltipHideDelay,
         })),
         wrapper: () => slots.wrapper,
-        toggleCollapsed: () => foundation.handleCollapseChange(),
-        updateSelectedKeys: (keys) => foundation.updateSelectedKeys(keys),
-        addOpenKey: (key) => foundation.addOpenKey(key),
-        removeOpenKey: (key) => foundation.removeOpenKey(key),
+        toggleCollapsed: foundation.handleCollapseChange,
+        updateSelectedKeys: foundation.updateSelectedKeys,
+        addOpenKey: foundation.addOpenKey,
+        removeOpenKey: foundation.removeOpenKey,
         notifySelect: (data) => {
             emit('update:selectedKeys', data.selectedKeys);
             emit('select', data);

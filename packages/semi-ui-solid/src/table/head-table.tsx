@@ -1,12 +1,10 @@
 import type { JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-// compat get falls back to the default only for undefined, not null
-import { get } from 'es-toolkit/compat';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import ColGroup from './col-group';
 import { useTableContext } from './context';
-import type { ColumnProps } from './interface';
+import type { ColumnProps, Sticky } from './interface';
 import TableHeader from './table-header';
 
 export interface HeadTableProps {
@@ -28,7 +26,7 @@ export default function HeadTable(props: HeadTableProps) {
         if (table.state().bodyHasScrollBar) {
             style['overflow-y'] = 'scroll';
         }
-        const stickyTop = get(table.props.sticky, 'top', 0);
+        const stickyTop = (table.props.sticky as Exclude<Sticky, boolean> | undefined)?.top ?? 0;
         if (typeof stickyTop === 'number') {
             style.top = toCssLength(stickyTop);
         }

@@ -50,7 +50,7 @@ function Collapse(rawProps: CollapseReactProps) {
         })
     );
 
-    useDidUpdate(props.activeKey, (activeKey) => foundation.syncActiveKey(activeKey));
+    useDidUpdate(props.activeKey, foundation.syncActiveKey);
 
     return (
         <div {...rest} ref={ref} className={clsx(cssClasses.PREFIX, className)}>
@@ -62,7 +62,7 @@ function Collapse(rawProps: CollapseReactProps) {
                     clickHeaderToExpand,
                     keepDOM,
                     expandIconPosition,
-                    onClick: (key, e) => foundation.handleChange(key, e),
+                    onClick: foundation.handleChange,
                     motion,
                     lazyRender,
                 }}

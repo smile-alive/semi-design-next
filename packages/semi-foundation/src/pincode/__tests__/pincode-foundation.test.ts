@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps } from '../foundation';
 
-const createFoundation = (format: PinCodeBaseProps['format'] = 'mixed') => {
+function createFoundation(format: PinCodeBaseProps['format'] = 'mixed') {
     const adapter = { getProp: () => format } as unknown as PinCodeAdapter;
     const foundation = new PinCodeFoundation(adapter);
     const removeCell = vi.spyOn(foundation, 'removeCell').mockImplementation(() => {});
     const completeSingleInput = vi.spyOn(foundation, 'completeSingleInput').mockResolvedValue();
     return { foundation, removeCell, completeSingleInput };
-};
+}
 
 describe('PinCodeFoundation.handleCellChange', () => {
     it('空值删除该格', () => {

@@ -1,6 +1,4 @@
 import { Show, batch, children, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
-// compat get falls back to the default only for undefined, not null
-import { get } from 'es-toolkit/compat';
 import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
 import { assignColumnKeys } from '@fibrae/semi-foundation/table/utils';
 import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
@@ -32,7 +30,7 @@ function getResizableColumns({ columns, expandedRowRender, hideExpandedColumn, r
     if (rowSelection && !selection?.hidden && !resizableColumns.some((item) => item.key === strings.DEFAULT_KEY_COLUMN_SELECTION)) {
         place(
             {
-                width: get(rowSelection, 'width', numbers.DEFAULT_WIDTH_COLUMN_SELECTION),
+                width: selection?.width ?? numbers.DEFAULT_WIDTH_COLUMN_SELECTION,
                 key: strings.DEFAULT_KEY_COLUMN_SELECTION,
                 // This placeholder overrides the selection column's own handler when the columns are merged
                 onHeaderCell: selection?.onHeaderCell,
@@ -145,6 +143,7 @@ export default function ResizableTable(props: TableProps) {
                         onResize: handleResize(key),
                         onResizeStart: handleResizeStart(key),
                         onResizeStop: handleResizeStop(key),
+                        // the cell's onResize* are Resizable's handlers, which share the name of the DOM resize event but not its signature
                     }) as unknown as OnHeaderCellReturnObject,
             };
             const colChildren = col[childrenColumnName];

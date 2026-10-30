@@ -54,7 +54,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         this.#container = null;
     }
 
-    #scrollIntoView = (link: string) => {
+    #scrollIntoView(link: string) {
         const { scrollMotion, targetOffset, scrollIntoViewOptions } = this.getProps();
         const behavior = scrollMotion ? 'smooth' : 'auto';
         if (link) {
@@ -81,7 +81,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
                 scrollIntoView(destNode, scrollOpts);
             }
         }
-    };
+    }
 
     #handleClickLink() {
         this._adapter.setState({ clickLink: false } as Pick<S, 'clickLink'>);
@@ -181,12 +181,12 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     /** Rebinds scroll listeners when `getContainer` returns a different node */
-    handleContainerChange() {
+    handleContainerChange = () => {
         if (this._adapter.getContainer() !== this.#container) {
             this.#unbind();
             this.#bind();
         }
-    }
+    };
 
     // Called after every commit, since links above the active one can move it unnoticed; an unchanged position sets no
     // state, so the call cannot re-render in a loop.

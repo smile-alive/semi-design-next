@@ -14,7 +14,7 @@ const src = silentWavUrl(DURATION);
 const poster = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="500" height="280"><rect width="500" height="280" fill="teal"/></svg>')}`;
 
 function must<T>(value?: T | null): T {
-    if (value === null || value === undefined) {
+    if (value == null) {
         throw new Error('expected a value');
     }
     return value;

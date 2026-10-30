@@ -139,7 +139,7 @@ export default function NotificationList(props: NotificationListProps) {
                     x-placement={position}
                     onFocusIn={() => setFocusedPosition(position)}
                     onFocusOut={(event) => {
-                        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
                             releaseFocus();
                         }
                     }}

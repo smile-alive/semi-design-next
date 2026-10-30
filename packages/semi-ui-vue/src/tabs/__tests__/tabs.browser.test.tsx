@@ -16,11 +16,11 @@ const activePane = (container: Element) => container.querySelector(`.${BASE_CLAS
 const tabContent = (container: Element) => container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-content`);
 const tabByDataKey = (dataKey: string) => document.querySelector(`[data-tabkey="${dataKey}"]`) as HTMLElement;
 
-const isInside = (inner: Element, outer: Element) => {
+function isInside(inner: Element, outer: Element) {
     const a = inner.getBoundingClientRect();
     const b = outer.getBoundingClientRect();
     return a.left >= b.left - 1 && a.right <= b.right + 1;
-};
+}
 
 const pane = (itemKey: string, tab: string, content: () => unknown, extra: Record<string, unknown> = {}) => (
     <TabPane key={itemKey} itemKey={itemKey} {...extra}>
@@ -136,12 +136,12 @@ const CollapseScrollIntoViewDemo = defineComponent(() => {
     );
 });
 
-const expectArrows = async (container: Element, { start, end }: { start: boolean; end: boolean }) => {
+async function expectArrows(container: Element, { start, end }: { start: boolean; end: boolean }) {
     await waitFor(() => {
         expect(arrowButton(container, 'start')).toHaveProperty('disabled', !start);
         expect(arrowButton(container, 'end')).toHaveProperty('disabled', !end);
     });
-};
+}
 
 describe('Tabs（浏览器）', () => {
     it('Fix-1456：选择标签、切换 key 并纵向滚动后，折叠箭头保持同步', async () => {

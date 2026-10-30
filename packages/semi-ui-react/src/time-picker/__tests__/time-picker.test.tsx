@@ -40,16 +40,16 @@ const waitForClosed = () =>
         endLeaveAnimations();
         expect(getPanels()).toHaveLength(0);
     });
-const focusInput = () => {
+function focusInput() {
     act(() => {
         getInput().focus();
     });
-};
-const blurInput = () => {
+}
+function blurInput() {
     act(() => {
         getInput().blur();
     });
-};
+}
 const lastCall = (spy) => spy.mock.calls[spy.mock.calls.length - 1];
 const hms = (date) => [date.getHours(), date.getMinutes(), date.getSeconds()];
 

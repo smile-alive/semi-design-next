@@ -271,13 +271,13 @@
     });
 
     defineExpose<AIChatInputHandle>({
-        changeTemplateVisible: (visible) => foundation.changeTemplateVisible(visible),
-        deleteContent: (content) => foundation.handleDeleteContent(content),
-        deleteUploadFile: (item) => foundation.handleUploadFileDelete(item),
+        changeTemplateVisible: foundation.changeTemplateVisible,
+        deleteContent: foundation.handleDeleteContent,
+        deleteUploadFile: foundation.handleUploadFileDelete,
         focusEditor,
         getEditor: () => editor,
         setContent,
-        setContentWhileSaveTool: (content) => foundation.setContentWhileSaveTool(content),
+        setContentWhileSaveTool: foundation.setContentWhileSaveTool,
     });
 </script>
 

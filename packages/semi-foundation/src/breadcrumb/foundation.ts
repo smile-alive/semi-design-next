@@ -37,21 +37,20 @@ export default class BreadcrumbFoundation<P extends object = object, S extends o
     }
 
     /** No separator after the last item, nor after one hidden behind a custom more area or the popover */
-    static shouldRenderSeparator(index: number, total: number, collapse: { collapsed: boolean; start: number; end: number; hasCustomMore: boolean; moreType?: string }) {
-        const { collapsed, start, end, hasCustomMore, moreType } = collapse;
+    static shouldRenderSeparator(index: number, total: number, { collapsed, start, end, hasCustomMore, moreType }: { collapsed: boolean; start: number; end: number; hasCustomMore: boolean; moreType?: string }) {
         const hidden = collapsed && (hasCustomMore || moreType === 'popover') && index >= start && index <= end;
         return index !== total - 1 && !hidden;
     }
 
-    handleClick(info: BreadcrumbItemInfo, event: E) {
+    handleClick = (info: BreadcrumbItemInfo, event: E) => {
         this._adapter.notifyClick(info, event);
-    }
+    };
 
-    handleExpand(clickEvent: unknown) {
+    handleExpand = (clickEvent: unknown) => {
         this._adapter.expandCollapsed(clickEvent);
-    }
+    };
 
-    handleExpandKeyDown(keyboardEvent: Pick<KeyboardEvent, 'key' | 'target' | 'preventDefault'> & { currentTarget: Node }) {
+    handleExpandKeyDown = (keyboardEvent: Pick<KeyboardEvent, 'key' | 'target' | 'preventDefault'> & { currentTarget: Node }) => {
         const { target } = keyboardEvent;
         // keys from the popover content bubble here through the React tree
         if (!(target instanceof Node && keyboardEvent.currentTarget.contains(target))) {
@@ -61,5 +60,5 @@ export default class BreadcrumbFoundation<P extends object = object, S extends o
             keyboardEvent.preventDefault(); // Space scrolls the page
             this.handleExpand(keyboardEvent);
         }
-    }
+    };
 }

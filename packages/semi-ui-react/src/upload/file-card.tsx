@@ -63,14 +63,9 @@ const defaultProps = {
     showTooltip: true,
 } satisfies Partial<FileCardProps>;
 
-function withDefaults(rawProps: FileCardProps) {
-    const props: Record<string, unknown> = { ...rawProps };
-    for (const [key, value] of Object.entries(defaultProps)) {
-        if (props[key] === undefined) {
-            props[key] = value;
-        }
-    }
-    return props as unknown as FileCardProps;
+function withDefaults(rawProps: FileCardProps): FileCardProps {
+    const missing = Object.entries(defaultProps).filter(([key]) => Reflect.get(rawProps, key) === undefined);
+    return { ...rawProps, ...Object.fromEntries(missing) };
 }
 
 function transSize(size: string | number) {

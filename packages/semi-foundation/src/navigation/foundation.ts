@@ -204,7 +204,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
      * New items or children rebuild the menu from the props, otherwise a changed (deep compared) selectedKeys or
      * openKeys is copied into state
      */
-    handlePropsUpdate(prevProps: NavigationBaseProps) {
+    handlePropsUpdate = (prevProps: NavigationBaseProps) => {
         const props = this.getProps();
         if (prevProps.items !== props.items || prevProps.children !== props.children) {
             this.#rebuild();
@@ -221,7 +221,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         } else if (prevProps.openKeys !== undefined && props.openKeys === undefined) {
             this._adapter.updateOpenKeys(NavigationFoundation.getWillOpenKeys(props, [], this.#getItemKeysMap()));
         }
-    }
+    };
 
     // The four handlers below are arrow properties: a host hands them out as context values, and a stable identity keeps
     // memoized consumers from re-rendering.

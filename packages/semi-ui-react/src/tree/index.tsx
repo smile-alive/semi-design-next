@@ -256,8 +256,8 @@ function Tree(rawProps: TreeProps) {
         rowProps: (node) => getNodeProps(node, liveView),
         hasLoadData: Boolean(loadData),
         rtl: direction === 'rtl',
-        select: (event, row) => foundation.handleNodeSelect(event, row),
-        expand: (event, row) => foundation.handleNodeExpand(event, row),
+        select: foundation.handleNodeSelect,
+        expand: foundation.handleNodeExpand,
         reveal: (key) => {
             if (listRef.current) {
                 // shortcut: a row not rendered yet is not scrolled to; revisit if virtual-tree arrow keys get lost
@@ -298,12 +298,12 @@ function Tree(rawProps: TreeProps) {
                 setKeyboardKey(treeNode.eventKey);
                 foundation.handleNodeDoubleClick(e, treeNode);
             },
-            onNodeDragStart: (e, treeNode) => foundation.handleNodeDragStart(e, treeNode),
-            onNodeDragEnter: (e, treeNode) => foundation.handleNodeDragEnter(e, treeNode),
-            onNodeDragOver: (e, treeNode) => foundation.handleNodeDragOver(e, treeNode),
-            onNodeDragLeave: (e, treeNode) => foundation.handleNodeDragLeave(e, treeNode),
-            onNodeDragEnd: (e, treeNode) => foundation.handleNodeDragEnd(e, treeNode),
-            onNodeDrop: (e, treeNode) => foundation.handleNodeDrop(e, treeNode),
+            onNodeDragStart: foundation.handleNodeDragStart,
+            onNodeDragEnter: foundation.handleNodeDragEnter,
+            onNodeDragOver: foundation.handleNodeDragOver,
+            onNodeDragLeave: foundation.handleNodeDragLeave,
+            onNodeDragEnd: foundation.handleNodeDragEnd,
+            onNodeDrop: foundation.handleNodeDrop,
             expandAction,
             directory,
             multiple,
@@ -330,7 +330,7 @@ function Tree(rawProps: TreeProps) {
 
     const handleTreeKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         // a tabbable control inside a row handles its own keys
-        if (event.target !== event.currentTarget && (event.target as HTMLElement).tabIndex >= 0) {
+        if (event.target !== event.currentTarget && (event.target instanceof HTMLElement || event.target instanceof SVGElement) && event.target.tabIndex >= 0) {
             return;
         }
         handleKeyDown(event);
@@ -375,7 +375,7 @@ function Tree(rawProps: TreeProps) {
         props.ref,
         () => ({
             search: (value: string) => foundation.handleInputChange(value),
-            scrollTo: (scrollData) => foundation.scrollTo(scrollData),
+            scrollTo: foundation.scrollTo,
         }),
         [foundation]
     );

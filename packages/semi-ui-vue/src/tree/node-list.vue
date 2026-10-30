@@ -22,7 +22,7 @@
         itemKey: undefined,
     });
 
-    defineSlots<{ default(props: { node: FlattenNode; style: CSSProperties | undefined }): unknown }>();
+    defineSlots<{ default(props: { node: FlattenNode; style?: CSSProperties }): unknown }>();
 
     const config = useConfig();
 

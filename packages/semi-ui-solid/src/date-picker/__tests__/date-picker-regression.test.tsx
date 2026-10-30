@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { addDays, format, set } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import DatePickerFoundation from '@fibrae/semi-foundation/date-picker/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { countLiveListeners } from '@test/utils/solid';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type DisabledDateType } from '..';
@@ -39,14 +38,11 @@ const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll
 const typeIn = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
 const firstInput = (container: HTMLElement) => container.querySelector('input') as HTMLInputElement;
 const getRoot = () => document.querySelector(`.${dp}`);
-// jsdom has no layout: Tooltip reports the panel visible only after a 100ms fallback timer.
-// call watchPanelVisible before opening, then await settled() so focus changes land before asserting
-const watchPanelVisible = () => {
-    const spy = vi.spyOn(DatePickerFoundation.prototype, 'handlePanelVisibleChange');
-    return {
-        settled: () => waitFor(() => expect(spy).toHaveBeenCalledWith(true)),
-        restore: () => spy.mockRestore(),
-    };
+// Tooltip reports the panel open (onOpen, where DatePicker moves focus) in a task after the popup mounts;
+// await this before asserting so that focus change cannot land afterwards
+const waitForPanelOpened = async () => {
+    await waitFor(() => expect(getPopup()).not.toBeNull());
+    await new Promise((resolve) => setTimeout(resolve));
 };
 
 afterEach(() => {
@@ -113,7 +109,6 @@ describe('DatePicker 回归用例', () => {
 
     it('fix #528 FixInputRangeFocus：受控打开的范围选择器在面板内关闭时，清除输入框焦点状态', async () => {
         const [visible, setVisible] = createSignal(false);
-        const watch = watchPanelVisible();
         const { container } = render(() => (
             <DatePicker
                 type="dateTimeRange"
@@ -130,8 +125,7 @@ describe('DatePicker 回归用例', () => {
             />
         ));
         await userEvent.click(firstInput(container));
-        await watch.settled();
-        watch.restore();
+        await waitForPanelOpened();
         expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
         await userEvent.click(getDay('2022-02-10'));
         await userEvent.click(getDay('2022-02-15'));
@@ -321,7 +315,6 @@ describe('DatePicker 回归用例', () => {
     });
 
     it('未设置 insetInput 时，面板显示不会把焦点拉回触发输入框', async () => {
-        const watch = watchPanelVisible();
         const { container } = renderDatePicker({
             type: 'dateRange',
             bottomSlot: <button type="button">slot</button>,
@@ -331,7 +324,7 @@ describe('DatePicker 回归用例', () => {
         await userEvent.click(firstInput(container));
         const slot = screen.getByRole('button', { name: 'slot' });
         await userEvent.click(slot);
-        await watch.settled();
+        await waitForPanelOpened();
         expect(document.activeElement).toBe(slot);
     });
 

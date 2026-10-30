@@ -13,10 +13,10 @@ afterEach(() => {
 const query = (container: HTMLElement, selector: string) => container.querySelector(selector) as HTMLElement;
 
 // Solid leaves empty text nodes for empty inserts, which toBeEmptyDOMElement counts
-const expectEmpty = (element: HTMLElement) => {
+function expectEmpty(element: HTMLElement) {
     expect(element.children).toHaveLength(0);
     expect(element.textContent).toBe('');
-};
+}
 
 // the same shape as an illustration component: an svg element
 const illustration = () => <svg data-testid="illustration" />;

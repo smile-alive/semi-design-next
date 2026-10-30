@@ -56,7 +56,7 @@ function mountTable(props: Record<string, unknown>, slots: Slots = {}, wrapperSt
     };
 }
 
-const getAccessibilityTree = async () => {
+async function getAccessibilityTree() {
     const { frameTree } = await cdp().send('Page.getFrameTree');
     const frame = frameTree.childFrames?.find((child) => child.frame.name === 'vitest-iframe')?.frame;
     if (!frame) {
@@ -64,7 +64,7 @@ const getAccessibilityTree = async () => {
     }
     const { nodes } = await cdp().send('Accessibility.getFullAXTree', { frameId: frame.id });
     return nodes;
-};
+}
 
 describe('Table（浏览器）', () => {
     it('修复 #247：所有列都没有宽度时，表头与表体列对齐', () => {

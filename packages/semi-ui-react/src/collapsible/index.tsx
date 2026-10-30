@@ -67,7 +67,7 @@ export default function Collapsible(rawProps: CollapsibleProps) {
 
     const transitioning = CollapsibleFoundation.isInTransition(props, next);
 
-    useDidUpdate(isOpen, () => foundation.handleOpenChange());
+    useDidUpdate(isOpen, foundation.handleOpenChange);
 
     return (
         <div

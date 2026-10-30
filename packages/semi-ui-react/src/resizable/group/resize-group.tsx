@@ -91,7 +91,7 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
     const contextValue = useMemo(() => ({ direction, ...registry }), [direction, registry]);
     const mergedRef = useMergedRef(ref, groupRef);
 
-    useDidUpdate(direction, () => foundation.handleDirectionChange());
+    useDidUpdate(direction, foundation.handleDirectionChange);
 
     // vw and vh limits change with the window even when the group keeps its size
     useEventListener(getWindow, 'resize', () => foundation.ensureConstraint());

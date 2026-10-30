@@ -17,7 +17,9 @@
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
+    import { provideInputGroupContext } from '../input/context';
     import { keepsTypedValue } from '../input/model-modifiers';
+    import useGroupLooks from '../input/use-group-looks';
     import Popover from '../popover';
     import SelectOption from '../select/option.vue';
     import Spin from '../spin';
@@ -46,7 +48,8 @@
         autoAdjustOverflow: semiGlobalDefault('AutoComplete', 'autoAdjustOverflow'),
         defaultActiveFirstOption: () => semiDefault('AutoComplete', 'defaultActiveFirstOption', false),
         defaultOpen: semiGlobalDefault('AutoComplete', 'defaultOpen'),
-        disabled: semiGlobalDefault('AutoComplete', 'disabled'),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
         dropdownClassName: semiGlobalDefault('AutoComplete', 'dropdownClassName'),
         dropdownMatchSelectWidth: () => semiDefault('AutoComplete', 'dropdownMatchSelectWidth', true),
         dropdownStyle: semiGlobalDefault('AutoComplete', 'dropdownStyle'),
@@ -60,7 +63,7 @@
         position: semiGlobalDefault('AutoComplete', 'position'),
         renderSelectedItem: undefined,
         showClear: () => semiDefault('AutoComplete', 'showClear', false),
-        size: () => semiDefault('AutoComplete', 'size', 'default'),
+        size: undefined,
         stopPropagation: () => semiDefault('AutoComplete', 'stopPropagation', true),
         validateStatus: () => semiDefault('AutoComplete', 'validateStatus', 'default'),
     });
@@ -76,6 +79,8 @@
     const listbox = useTemplateRef('listbox');
     const listId = useId();
     const controlKeys = new Set(['id', 'name', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-label', 'aria-labelledby', 'aria-required']);
+
+    const looks = useGroupLooks('AutoComplete', props, { size: 'default' });
 
     const prefix = cssClasses.PREFIX;
     const position = computed(() => props.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
@@ -113,6 +118,7 @@
         }),
         {
             props: {
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 onSelectWithObject: () => props.selectWithObject,
                 renderSelectedItem: () => renderSelectedItem.value as AutoCompleteBaseProps['renderSelectedItem'],
@@ -121,6 +127,9 @@
     );
 
     const visibleOptions = computed(() => state.value.options.filter((option) => option.show));
+
+    // the Input inside is part of this control, not a member of the group
+    provideInputGroupContext(undefined);
 
     // Typing re-renders the Input (the list opens and filters), which would write a trimmed or numbered model back over
     // the typed text, so the typed text stays while it normalises to the model.
@@ -169,18 +178,18 @@
             value: [...state.value.selection.values()],
             inputValue: shownValue(),
             placeholder: props.placeholder,
-            disabled: props.disabled,
+            disabled: looks.disabled,
             autofocus: props.autofocus,
-            size: props.size,
+            size: looks.size,
             validateStatus: props.validateStatus,
             showClear: props.showClear,
             insetLabelId: props.insetLabelId,
-            onChange: (value) => foundation.handleSearch(value),
-            onClear: () => foundation.handleClear(),
-            onFocus: (event) => foundation.handleFocus(event),
-            onBlur: (event) => foundation.handleBlur(event),
+            onChange: foundation.handleSearch,
+            onClear: foundation.handleClear,
+            onFocus: foundation.handleFocus,
+            onBlur: foundation.handleBlur,
             controlAttrs,
-            componentProps: { ...props },
+            componentProps: { ...props, ...looks },
         };
     };
 
@@ -204,10 +213,7 @@
         'pre'
     );
 
-    watch(
-        () => props.modelValue,
-        (value) => foundation.handleValueChange(value)
-    );
+    watch(() => props.modelValue, foundation.handleValueChange);
 
     useClickOutside(
         [root, listbox],
@@ -222,7 +228,7 @@
     );
 
     // The list follows the foundation state, which a cached KeepAlive subtree would keep open
-    onDeactivated(() => foundation.close());
+    onDeactivated(foundation.close);
 
     defineExpose<AutoCompleteHandle>({
         get nativeElement() {
@@ -253,11 +259,11 @@
                     : [
                           prefix,
                           {
-                              [`${prefix}-disabled`]: props.disabled,
+                              [`${prefix}-disabled`]: looks.disabled,
                           },
                       ]
             "
-            @click="foundation.handleInputClick($event)"
+            @click="foundation.handleInputClick"
             @keydown="handleKeydown"
         >
             <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />
@@ -271,18 +277,18 @@
                 :aria-expanded="state.visible"
                 aria-haspopup="listbox"
                 :autofocus="props.autofocus"
-                :disabled="props.disabled"
+                :disabled="looks.disabled"
                 :insetLabelId="prefixId()"
                 :modelValue="shownValue()"
                 :placeholder="props.placeholder"
                 role="combobox"
                 :showClear="props.showClear"
-                :size="props.size"
+                :size="looks.size"
                 :validateStatus="props.validateStatus"
-                @blur="foundation.handleBlur($event)"
+                @blur="foundation.handleBlur"
                 @change="handleSearch"
-                @clear="foundation.handleClear()"
-                @focus="foundation.handleFocus($event)"
+                @clear="foundation.handleClear"
+                @focus="foundation.handleFocus"
             >
                 <template v-if="$slots.prefix" #prefix>
                     <slot name="prefix" />

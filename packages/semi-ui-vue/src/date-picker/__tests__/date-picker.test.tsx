@@ -7,7 +7,7 @@ import { enUS, zhCN } from 'date-fns/locale';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { strings } from '@fibrae/semi-foundation/date-picker/constants';
-import DatePickerFoundation, { type DatePickerFoundationState } from '@fibrae/semi-foundation/date-picker/foundation';
+import type { DatePickerFoundationState } from '@fibrae/semi-foundation/date-picker/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
@@ -42,7 +42,7 @@ const dp = `${BASE_CLASS_PREFIX}-datepicker`;
 
 // The popup content mounts a few ticks after the popover opens
 const settle = () => new Promise((resolve) => setTimeout(resolve));
-const renderPicker = async (props: Record<string, unknown> = {}, slots: Slots = {}) => {
+async function renderPicker(props: Record<string, unknown> = {}, slots: Slots = {}) {
     const view = render(DatePicker, { props, slots: slots as never });
     await settle();
     return {
@@ -52,19 +52,19 @@ const renderPicker = async (props: Record<string, unknown> = {}, slots: Slots = 
             await settle();
         },
     };
-};
-const renderHost = async (component: unknown, props: Record<string, unknown> = {}, slots: Slots = {}) => {
+}
+async function renderHost(component: unknown, props: Record<string, unknown> = {}, slots: Slots = {}) {
     const view = render(component as never, { props: props as never, slots: slots as never });
     await settle();
     return view;
-};
-const renderNode = async (node: () => unknown) => {
+}
+async function renderNode(node: () => unknown) {
     const view = render(defineComponent({ render: node as () => never }));
     await settle();
     return view;
-};
+}
 // Testing Library re-inserts the mounted nodes, which drops the focus taken while mounting
-const mountInPlace = async (node: () => unknown) => {
+async function mountInPlace(node: () => unknown) {
     const container = document.body.appendChild(document.createElement('div'));
     const app = createApp(defineComponent({ render: node as () => never }));
     app.mount(container);
@@ -74,7 +74,7 @@ const mountInPlace = async (node: () => unknown) => {
     });
     await settle();
     return container;
-};
+}
 
 const getPopup = () => document.querySelector<HTMLElement>(popupSelector);
 // jsdom runs no CSS animations, and once the popup has been positioned it leaves with motion and waits for
@@ -84,15 +84,11 @@ const waitForClosed = () =>
         endLeaveAnimations();
         expect(getPopup()).toBeNull();
     });
-// jsdom has no layout, so Tooltip finishes positioning through a fallback timer and only then reports the panel as
-// visible. Call watchPanelVisible before opening, then await settled() so that nothing the open triggers lands
-// after the assertions; restore() puts the spy back.
-const watchPanelVisible = () => {
-    const spy = vi.spyOn(DatePickerFoundation.prototype, 'handlePanelVisibleChange');
-    return {
-        settled: () => waitFor(() => expect(spy).toHaveBeenCalledWith(true)),
-        restore: () => spy.mockRestore(),
-    };
+// Tooltip reports the panel open (where DatePicker moves focus) in a task after the popup mounts; await this so
+// nothing the open triggers lands after the assertions
+const waitForPanelOpened = async () => {
+    await waitFor(() => expect(getPopup()).not.toBeNull());
+    await settle();
 };
 const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 // day cells carry their full date (yyyy-MM-dd) as aria-label; blank cells of adjacent months have none
@@ -107,10 +103,10 @@ const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
 // year/month scroll lists in DOM order: [year, month] per panel (left first)
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
-const typeInto = async (input: HTMLInputElement, text: string) => {
+async function typeInto(input: HTMLInputElement, text: string) {
     await fireEvent.update(input, text);
     await settle();
-};
+}
 
 const yearAndMonthDefaultProps = {
     currentYear: { left: 2021, right: 2022 },
@@ -118,18 +114,18 @@ const yearAndMonthDefaultProps = {
     locale: en_US.DatePicker,
     type: 'month' as const,
 };
-const renderYearAndMonth = async (props: Record<string, unknown> = {}, slots: Slots = {}) => {
+async function renderYearAndMonth(props: Record<string, unknown> = {}, slots: Slots = {}) {
     const view = render(YearAndMonth, { props: { ...yearAndMonthDefaultProps, ...props }, slots: slots as never });
     await settle();
     return view;
-};
+}
 
-const getRandomIANATimeZone = function (): [string, number] {
+function getRandomIANATimeZone(): [string, number] {
     const TIME_ZONE = Array.from({ length: 26 }).map((_, index) => index - 11);
     const offset = Math.floor(Math.random() * TIME_ZONE.length);
     const timeZone = toIANA(TIME_ZONE[offset]);
     return [timeZone, offset];
-};
+}
 
 afterEach(() => {
     vi.useRealTimers();
@@ -4323,7 +4319,6 @@ describe(`DatePicker`, () => {
 
     it('聚焦 insetInput 的时间与日期输入框切换两侧面板', async () => {
         // the panel focuses its start date input once it is visible, which would land after the focus below
-        const watch = watchPanelVisible();
         await renderPicker({
             type: 'dateTimeRange',
             defaultValue: [new Date(2021, 5, 1, 10, 0), new Date(2021, 5, 15, 18, 0)],
@@ -4331,8 +4326,7 @@ describe(`DatePicker`, () => {
             insetInput: true,
             motion: false,
         });
-        await watch.settled();
-        watch.restore();
+        await waitForPanelOpened();
         await settle();
         const [startDate] = within(getPopup() as HTMLElement).getAllByPlaceholderText('yyyy-MM-dd');
         const [startTime] = within(getPopup() as HTMLElement).getAllByPlaceholderText('HH:mm:ss');
@@ -4576,7 +4570,6 @@ describe(`DatePicker`, () => {
 
         it('fix #528 FixInputRangeFocus：受控打开的范围选择器在面板内关闭时，清除输入框焦点状态', async () => {
             const visible = ref(false);
-            const watch = watchPanelVisible();
             const { container } = await renderNode(() => (
                 <DatePicker type="dateTimeRange" defaultPickerValue="2022-02-01" motion={false} open={visible.value} showClear onFocus={() => (visible.value = true)}>
                     {{
@@ -4585,8 +4578,7 @@ describe(`DatePicker`, () => {
                 </DatePicker>
             ));
             await userEvent.click(container.querySelector('input') as HTMLElement);
-            await watch.settled();
-            watch.restore();
+            await waitForPanelOpened();
             expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
             await userEvent.click(getDay('2022-02-10'));
             await userEvent.click(getDay('2022-02-15'));
@@ -4803,19 +4795,13 @@ describe(`DatePicker`, () => {
         });
 
         it('未设置 insetInput 时，面板显示不会把焦点拉回触发输入框', async () => {
-            const watch = watchPanelVisible();
-            try {
-                const { container } = await renderPicker({ type: 'dateRange', defaultPickerValue: '2023-04-01', motion: false }, { bottomSlot: () => <button>slot</button> });
-                await userEvent.click(container.querySelector('input') as HTMLElement);
-                await settle();
-                const slot = screen.getByRole('button', { name: 'slot' });
-                await userEvent.click(slot);
-                await watch.settled();
-                await settle();
-                expect(document.activeElement).toBe(slot);
-            } finally {
-                watch.restore();
-            }
+            const { container } = await renderPicker({ type: 'dateRange', defaultPickerValue: '2023-04-01', motion: false }, { bottomSlot: () => <button>slot</button> });
+            await userEvent.click(container.querySelector('input') as HTMLElement);
+            await settle();
+            const slot = screen.getByRole('button', { name: 'slot' });
+            await userEvent.click(slot);
+            await waitForPanelOpened();
+            expect(document.activeElement).toBe(slot);
         });
 
         it.each([
@@ -4878,7 +4864,7 @@ describe(`DatePicker`, () => {
             const { container } = await renderNode(() => (
                 <>
                     <button onClick={() => (value.value = [NaN, NaN])}>set NaN</button>
-                    <DatePicker type="dateRange" modelValue={value.value} defaultPickerValue="2024-01-01" motion={false} presets={[{ text: 'Empty' }]} onUpdate:modelValue={(v: Date | Date[] | undefined) => (value.value = v)} />
+                    <DatePicker type="dateRange" modelValue={value.value} defaultPickerValue="2024-01-01" motion={false} presets={[{ text: 'Empty' }]} onUpdate:modelValue={(v?: Date | Date[]) => (value.value = v)} />
                 </>
             ));
             const [startInput, endInput] = container.querySelectorAll('input');
@@ -6245,10 +6231,8 @@ describe('DatePicker 面板开合与焦点', () => {
 
     it('insetInput 面板打开时 expose focus、blur 作用于面板内的输入框', async () => {
         const picker = ref<DatePickerHandle>();
-        const { settled, restore } = watchPanelVisible();
         await renderNode(() => <DatePicker ref={picker} insetInput defaultOpen motion={false} />);
-        await settled();
-        restore();
+        await waitForPanelOpened();
         const inset = within(getPopup() as HTMLElement).getByRole('textbox');
         inset.blur();
         picker.value?.focus();
@@ -6261,11 +6245,9 @@ describe('DatePicker 面板开合与焦点', () => {
 
     it('单选类型开启 insetInput 时打开面板只触发一次 focus，且不带 rangeType', async () => {
         const onFocus = vi.fn<EmitFn<'focus'>>();
-        const { settled, restore } = watchPanelVisible();
         const { container } = await renderPicker({ insetInput: true, motion: false, onFocus });
         await userEvent.click(container.querySelector('input') as HTMLInputElement);
-        await settled();
-        restore();
+        await waitForPanelOpened();
         await settle();
         expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onFocus.mock.calls[0][1]).toBeUndefined();

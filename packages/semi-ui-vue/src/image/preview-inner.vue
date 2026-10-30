@@ -259,12 +259,7 @@
         });
     });
 
-    useDidUpdate(
-        () => props.src,
-        () => foundation.updateTimer(),
-        isEqual,
-        'pre'
-    );
+    useDidUpdate(() => props.src, foundation.updateTimer, isEqual, 'pre');
 
     // same render as the new src, so PreviewImage does not re-fit the leaving image
     watch(currentIndex, () => {
@@ -300,7 +295,7 @@
             @focusin="foundation.handleKeyboardActivity"
             @mousedown="foundation.handleMouseDown"
             @mousemove="foundation.handleMouseMove"
-            @mouseup="foundation.handleMouseUp($event)"
+            @mouseup="foundation.handleMouseUp"
             @wheel="foundation.handleWheel"
         >
             <PreviewHeader ref="header" :closable="props.closable" :hidden="!state.viewerVisible" :index="currentIndex" :title="title" :titleId="titleId" @close="foundation.handlePreviewClose">

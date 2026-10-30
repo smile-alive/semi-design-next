@@ -205,7 +205,7 @@ export default function Modal(rawProps: ModalProps) {
                     {local.cancelText || locale().locale.cancel}
                 </FooterButton>
             </Show>
-            <FooterButton type={local.okType} theme="solid" block={local.footerFill} loading={local.confirmLoading ?? state().onOKReturnPromiseStatus === 'pending'} own={local.okButtonProps} onPress={(e) => foundation.handleOk(e)} data-type="ok" x-semi-children-alias="okText">
+            <FooterButton type={local.okType} theme="solid" block={local.footerFill} loading={local.confirmLoading ?? state().onOKReturnPromiseStatus === 'pending'} own={local.okButtonProps} onPress={foundation.handleOk} data-type="ok" x-semi-children-alias="okText">
                 {local.okText || locale().locale.confirm}
             </FooterButton>
         </div>
@@ -228,7 +228,7 @@ export default function Modal(rawProps: ModalProps) {
             }
             closePending = true;
             foundation.beforeShow();
-            onCleanup(() => foundation.afterHide());
+            onCleanup(foundation.afterHide);
         })
     );
 

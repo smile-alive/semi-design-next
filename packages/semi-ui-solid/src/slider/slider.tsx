@@ -206,7 +206,7 @@ export default function Slider(rawProps: SliderProps) {
                         // keeps focus on the input rather than moving it to this span
                         onMouseDown={(event) => event.preventDefault()}
                         onMouseEnter={() => foundation.onHandleEnter(pos)}
-                        onMouseLeave={() => foundation.onHandleLeave()}
+                        onMouseLeave={foundation.onHandleLeave}
                         // a single slider re-checks for a hidden container whenever its tooltip would show
                         onMouseOver={props.range ? undefined : foundation.syncIsInRenderTree}
                         onPointerDown={(event) => {
@@ -249,7 +249,7 @@ export default function Slider(rawProps: SliderProps) {
                                 callHandler(local.onKeyDown, event);
                                 foundation.handleKeyDown(event, pos);
                             }}
-                            onKeyUp={(event) => foundation.handleKeyUp(event)}
+                            onKeyUp={foundation.handleKeyUp}
                         />
                         <Show when={dot()}>{(handleDot) => <div class={cssClasses.HANDLE_DOT} style={{ width: handleDot().size, height: handleDot().size, 'background-color': handleDot().color }} />}</Show>
                     </span>
@@ -287,7 +287,7 @@ export default function Slider(rawProps: SliderProps) {
             onFocusOut={(event) => {
                 callHandler(local.onFocusOut, event);
                 // moving between handles is not leaving: Form's blur validation waits for focus outside
-                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
                     callHandler(local.onBlur, event);
                 }
             }}

@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-// compat get falls back to the default only for undefined, not null
-import { get } from 'es-toolkit/compat';
 import { strings, numbers } from '@fibrae/semi-foundation/table/constants';
 import { assignColumnKeys } from '@fibrae/semi-foundation/table/utils';
 import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
@@ -49,7 +47,7 @@ function getResizableColumns({ columns, expandedRowRender, hideExpandedColumn, r
     if (rowSelection && !(rowSelection as RowSelectionProps<any>)?.hidden && !resizableColumns.some((item) => item.key === strings.DEFAULT_KEY_COLUMN_SELECTION)) {
         place(
             {
-                width: get(rowSelection, 'width', numbers.DEFAULT_WIDTH_COLUMN_SELECTION),
+                width: (rowSelection as RowSelectionProps<any>).width ?? numbers.DEFAULT_WIDTH_COLUMN_SELECTION,
                 key: strings.DEFAULT_KEY_COLUMN_SELECTION,
                 // This placeholder overrides the selection column's own handler when the columns are merged
                 onHeaderCell: (rowSelection as RowSelectionProps<any>)?.onHeaderCell,

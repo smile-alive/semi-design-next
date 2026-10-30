@@ -17,5 +17,8 @@ const TypographyWithParts: typeof Typography & {
     Numeral: TypographyNumeral,
 });
 export default TypographyWithParts;
-export { TypographyText, TypographyTitle, TypographyParagraph, TypographyNumeral };
+export { default as TypographyText } from './text.vue';
+export { default as TypographyTitle } from './title.vue';
+export { default as TypographyParagraph } from './paragraph.vue';
+export { default as TypographyNumeral } from './numeral.vue';
 export type * from './interface';

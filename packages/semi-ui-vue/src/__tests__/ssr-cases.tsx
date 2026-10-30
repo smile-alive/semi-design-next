@@ -68,6 +68,7 @@ import {
     FormTagInput,
     FormTextArea,
     FormTimePicker,
+    FormTransfer,
     FormTreeSelect,
     FormUpload,
     Highlight,
@@ -299,6 +300,7 @@ export const ssrCases: SsrCase[] = [
             'FormTagInput',
             'FormTextArea',
             'FormTimePicker',
+            'FormTransfer',
             'FormTreeSelect',
             'FormUpload',
             'withField',
@@ -325,6 +327,7 @@ export const ssrCases: SsrCase[] = [
                     <FormTagInput field="ti" />,
                     <FormTextArea field="ta" />,
                     <FormTimePicker field="tp" timeZone={8} />,
+                    <FormTransfer field="tr" dataSource={[{ label: 'Option 1', value: 1, key: '1' }]} />,
                     <FormTreeSelect field="ts" treeData={treeData} />,
                     <FormUpload field="up" action="/upload" />,
                 ]}

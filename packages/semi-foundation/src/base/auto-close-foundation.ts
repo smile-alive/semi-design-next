@@ -35,20 +35,20 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         this.clearCloseTimer();
     }
 
-    leave() {
+    leave = () => {
         this.#leaving = true;
         this.clearCloseTimer();
-    }
+    };
 
-    pauseCloseTimer() {
+    pauseCloseTimer = () => {
         this.#paused = true;
         this.clearCloseTimer();
-    }
+    };
 
-    resumeCloseTimer() {
+    resumeCloseTimer = () => {
         this.#paused = false;
         this.startCloseTimer();
-    }
+    };
 
     startCloseTimer() {
         this.clearCloseTimer();
@@ -60,7 +60,7 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         }
     }
 
-    clickClose(e: { stopPropagation: () => void }) {
+    clickClose = (e: { stopPropagation: () => void }) => {
         // the click must not reach the item's own handler, also when it is ignored
         e.stopPropagation();
         if (this.#leaving) {
@@ -68,9 +68,9 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         }
         this._adapter.notifyCloseClick?.(this.#id);
         this.close();
-    }
+    };
 
-    close(e?: { stopPropagation: () => void }) {
+    close = (e?: { stopPropagation: () => void }) => {
         e?.stopPropagation();
         // the item stays mounted until its leave animation ends, and a second click or Enter must not report again
         if (this.#leaving) {
@@ -80,7 +80,7 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         this.clearCloseTimer();
         this._adapter.notifyWrapperToRemove(this.#id);
         this._adapter.notifyClose();
-    }
+    };
 
     clearCloseTimer() {
         if (this.#timer) {
@@ -89,11 +89,11 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         }
     }
 
-    restartCloseTimer() {
+    restartCloseTimer = () => {
         this.#leaving = false;
         this.clearCloseTimer();
         if (!this.#paused) {
             this.startCloseTimer();
         }
-    }
+    };
 }

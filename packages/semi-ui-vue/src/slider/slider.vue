@@ -250,8 +250,8 @@
             ]"
             @focusin="emit('focus', $event)"
             @focusout="onFocusout"
-            @mouseenter="foundation.handleWrapperEnter()"
-            @mouseleave="foundation.handleWrapperLeave()"
+            @mouseenter="foundation.handleWrapperEnter"
+            @mouseleave="foundation.handleWrapperLeave"
         >
             <div :class="`${prefix}-rail`" :style="props.railStyle" @click="foundation.handleWrapClick" />
             <div :class="cssClasses.TRACK" :style="trackStyle" @click="foundation.handleWrapClick" />
@@ -276,7 +276,7 @@
                         :style="handleStyle(pos)"
                         @mousedown.prevent
                         @mouseenter="foundation.onHandleEnter(pos)"
-                        @mouseleave="foundation.onHandleLeave()"
+                        @mouseleave="foundation.onHandleLeave"
                         @mouseover="syncSingle"
                         @pointerdown="onHandleDown($event, pos)"
                     >
@@ -301,7 +301,7 @@
                             @focus="onInputFocus($event, pos)"
                             @input="onInput($event, pos)"
                             @keydown="foundation.handleKeyDown($event, pos)"
-                            @keyup="foundation.handleKeyUp($event)"
+                            @keyup="foundation.handleKeyUp"
                         />
                         <div v-if="handleDot(pos)" :class="cssClasses.HANDLE_DOT" :style="dotStyle(pos)" />
                     </span>

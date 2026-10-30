@@ -167,7 +167,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
             <CheckboxGroupContext
                 value={{
                     checkboxGroup: {
-                        onChange: (evt) => foundation.handleChange(evt),
+                        onChange: foundation.handleChange,
                         value: CheckboxGroupFoundation.deriveValue(props, state),
                         disabled,
                         name: name || generatedName,

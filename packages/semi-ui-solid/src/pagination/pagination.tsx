@@ -202,7 +202,7 @@ export default function Pagination(rawProps: PaginationProps) {
             <li>
                 {/* opens on hover or focus; ArrowDown moves into it */}
                 <Show when={typeof itemProps.pageKey === 'string' && !local.disabled} fallback={pageButton()}>
-                    <Popover content={<RestPages count={range().count} start={range().start} onSelect={(target) => foundation.goPage(target)} />} position={local.popoverPosition} trigger="hover">
+                    <Popover content={<RestPages count={range().count} start={range().start} onSelect={foundation.goPage} />} position={local.popoverPosition} trigger="hover">
                         {(getTriggerProps) => pageButton(getTriggerProps())}
                     </Popover>
                 </Show>
@@ -221,7 +221,7 @@ export default function Pagination(rawProps: PaginationProps) {
             <li>
                 {/* opens on hover or focus; ArrowDown moves into it */}
                 <Show when={local.hoverShowPageSelect && !local.disabled} fallback={<div class={counterClass()}>{counterText()}</div>}>
-                    <Popover content={<RestPages count={totalPageNum()} start={1} onSelect={(target) => foundation.goPage(target)} />}>
+                    <Popover content={<RestPages count={totalPageNum()} start={1} onSelect={foundation.goPage} />}>
                         {(getTriggerProps) => (
                             <button {...getTriggerProps()} type="button" class={counterClass()}>
                                 {counterText()}
@@ -267,11 +267,11 @@ export default function Pagination(rawProps: PaginationProps) {
                 <Show when={local.showTotal && !small()}>
                     <li class={`${prefixCls}-total`}>{text().total.replace('${total}', totalPageNum().toString())}</li>
                 </Show>
-                <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={() => foundation.goPrev()} />
+                <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
                 <Show when={small()} fallback={<For each={pageKeys()}>{(pageKey) => <PageItem pageKey={pageKey} />}</For>}>
                     {renderSmallCounter()}
                 </Show>
-                <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={() => foundation.goNext()} />
+                <StepButton disabled={disabledState().nextDisabled || local.disabled} kind="next" label={text().next} text={local.nextText} onClick={foundation.goNext} />
                 <Show when={sizeChangerShown()}>
                     <li class={`${prefixCls}-switch`}>
                         <Select<number>
@@ -309,8 +309,8 @@ export default function Pagination(rawProps: PaginationProps) {
                             showClear={false}
                             prefix={null}
                             suffix={null}
-                            onBlur={() => foundation.handleQuickJumpBlur()}
-                            onChange={(value) => foundation.handleQuickJumpNumberChange(value)}
+                            onBlur={foundation.handleQuickJumpBlur}
+                            onChange={foundation.handleQuickJumpNumberChange}
                             onEnterPress={(event) => foundation.handleQuickJumpEnterPress(event.currentTarget.value)}
                         />
                         <span>{text().page}</span>

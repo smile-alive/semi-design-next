@@ -118,9 +118,9 @@
             everyPanelMounted: !Array.isArray(props.tabList) && props.keepDOM,
             tabbableKey: TabsFoundation.getTabbableKey(entries.value, activeKey.value),
         })),
-        tabClick: (itemKey, event) => foundation.handleTabClick(itemKey, event),
-        handleKeyDown: (event, itemKey, closable) => foundation.handleKeyDown(event, itemKey, closable),
-        deleteTab: (itemKey) => foundation.handleTabDelete(itemKey),
+        tabClick: foundation.handleTabClick,
+        handleKeyDown: foundation.handleKeyDown,
+        deleteTab: foundation.handleTabDelete,
     });
 
     const isTablistName = (key: string) => key === 'aria-label' || key === 'aria-labelledby';
@@ -167,10 +167,7 @@
         return Array.isArray(props.tabList) && key !== null && props.tabList.some((item) => item.itemKey === key) ? { role: 'tabpanel', id: getPanelId(tabsId, key), 'aria-labelledby': getTabId(tabsId, key) } : {};
     };
 
-    watch(
-        () => props.activeKey,
-        (key) => foundation.syncActiveKey(key)
-    );
+    watch(() => props.activeKey, foundation.syncActiveKey);
 
     onMounted(() => {
         // Registered after the first render so no slot is read outside render

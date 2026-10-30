@@ -24,7 +24,7 @@ export type TabKeyEvent = Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'me
 
 /** What a pane's slide-in depends on */
 export interface PaneMotionInput {
-    itemKey: string | undefined;
+    itemKey?: string;
     activeKey: string | null;
     /** The key selected before activeKey, null on mount */
     prevActiveKey: string | null;
@@ -215,23 +215,23 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
         return { visibleState, isShowInViewport: visibles.some(Boolean), hasHidden: visibles.some((visible) => !visible) };
     }
 
-    handleTabClick(activeKey: string, event: E) {
+    handleTabClick = (activeKey: string, event: E) => {
         this.#notifyChange(activeKey);
         if (!this._isControlledComponent('activeKey')) {
             this.handleNewActiveKey(activeKey);
         }
         this._adapter.notifyTabClick(activeKey, event);
-    }
+    };
 
     // dropping a controlled activeKey later continues from the synced state
-    syncActiveKey(activeKey?: string | null) {
+    syncActiveKey = (activeKey?: string | null) => {
         if (activeKey !== undefined) {
             this.handleNewActiveKey(activeKey);
         }
-    }
+    };
 
     // panes can leave after mount: an uncontrolled key no longer among them moves to the first enabled one
-    handleTabPanesChange(panes: ReadonlyArray<TabEntry>) {
+    handleTabPanesChange = (panes: ReadonlyArray<TabEntry>) => {
         if (this._isControlledComponent('activeKey')) {
             return;
         }
@@ -239,25 +239,25 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
         if (!panes.some((pane) => pane.itemKey === activeKey)) {
             this.handleNewActiveKey(TabsFoundation.getDefaultActiveKey({}, panes));
         }
-    }
+    };
 
-    handleTabDelete(tabKey: string) {
+    handleTabDelete = (tabKey: string) => {
         this._adapter.notifyTabDelete(tabKey);
-    }
+    };
 
     handleKeyDown = (event: E & TabKeyEvent, itemKey: string, closable: boolean) => {
         // with a modifier the key is a browser or system shortcut (Alt+ArrowLeft goes back), not tab navigation
         if (event.altKey || event.ctrlKey || event.metaKey) {
             return;
         }
-        const tab = event.currentTarget as HTMLElement;
+        const tab = event.currentTarget;
         // a key pressed in a control inside the tab bubbles here but belongs to that control
-        if (event.target !== tab) {
+        if (!(tab instanceof HTMLElement) || event.target !== tab) {
             return;
         }
         const { preventScroll } = this.getProps();
-        // siblings are found through the parent, so a TabItem outside the default tab bar works as long as its tabs share one parent
-        const allTabs = [...tab.parentElement.children].filter((item) => (item.getAttribute('data-tabkey') ?? '').startsWith(TAB_DATA_KEY_PREFIX)) as HTMLElement[];
+        // siblings are found through the tablist, not the parent: a tab can be wrapped (OverflowList wraps each one)
+        const allTabs = [...tab.closest('[role="tablist"]').querySelectorAll<HTMLElement>(`[data-tabkey^="${TAB_DATA_KEY_PREFIX}"]`)];
         const tabs = allTabs.filter((item) => item.getAttribute('aria-disabled') !== 'true');
 
         switch (event.key) {

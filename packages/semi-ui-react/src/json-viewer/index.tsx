@@ -139,7 +139,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
 
     const searchControls = {
         showSearchBar: state.showSearchBar,
-        onToggleSearchBar: () => foundation.toggleSearchBar(),
+        onToggleSearchBar: foundation.toggleSearchBar,
         onSearch: (text: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => foundation.search(text, caseSensitive, wholeWord, regex),
         onPrevSearch: () => foundation.prevSearch(),
         onNextSearch: () => foundation.nextSearch(),
@@ -329,12 +329,12 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         () => ({
             getValue: () => foundation.jsonViewer.getModel().getValue(),
             format: () => foundation.jsonViewer.format(),
-            search: (searchText, caseSensitive, wholeWord, regex) => foundation.search(searchText, caseSensitive, wholeWord, regex),
-            getSearchResults: () => foundation.getSearchResults(),
-            prevSearch: (step) => foundation.prevSearch(step),
-            nextSearch: (step) => foundation.nextSearch(step),
-            replace: (replaceText) => foundation.replace(replaceText),
-            replaceAll: (replaceText) => foundation.replaceAll(replaceText),
+            search: foundation.search,
+            getSearchResults: foundation.getSearchResults,
+            prevSearch: foundation.prevSearch,
+            nextSearch: foundation.nextSearch,
+            replace: foundation.replace,
+            replaceAll: foundation.replaceAll,
             getStyle: () => ({ width: foundation.getProps().width, height: foundation.getProps().height }),
         }),
         [foundation]

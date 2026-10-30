@@ -8,6 +8,8 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';
     import Input, { type InputHandle } from '../input';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import type { InputNumberEmits, InputNumberHandle, InputNumberProps, InputNumberSlots, InputNumberState } from './interface';
     import StepButtons from './step-buttons.vue';
@@ -44,8 +46,9 @@
         keepFocus: () => semiDefault('InputNumber', 'keepFocus', false),
         innerButtons: () => semiDefault('InputNumber', 'innerButtons', false),
         hideButtons: () => semiDefault('InputNumber', 'hideButtons', false),
-        size: () => semiDefault('InputNumber', 'size', 'default'),
-        disabled: semiGlobalDefault('InputNumber', 'disabled'),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        size: undefined,
+        disabled: undefined,
         autofocus: semiGlobalDefault('InputNumber', 'autofocus'),
         preventScroll: semiGlobalDefault('InputNumber', 'preventScroll'),
         readonly: semiGlobalDefault('InputNumber', 'readonly'),
@@ -70,6 +73,8 @@
 
     const root = useTemplateRef('root');
     const inputHandle = useTemplateRef<InputHandle>('input');
+
+    const looks = useGroupLooks('InputNumber', props, { size: 'default' });
 
     const prefix = cssClasses.PREFIX;
     const formatter = computed(() => props.formatter ?? readSemiDefault(semi, 'InputNumber', 'formatter'));
@@ -98,6 +103,8 @@
         }),
         {
             props: {
+                size: () => looks.size,
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 localeCode: () => props.localeCode ?? locale.value.localeCode,
                 defaultCurrency: () => props.defaultCurrency ?? locale.value.currency,
@@ -108,8 +115,8 @@
     );
 
     const forwarded = computed(() => ({
-        size: props.size,
-        disabled: props.disabled,
+        size: looks.size,
+        disabled: looks.disabled,
         readonly: props.readonly,
         // InputNumber's own global default applies; the global Input one must not reach the inner Input
         showClear: props.showClear ?? false,
@@ -126,10 +133,13 @@
         insetLabelId: props.insetLabelId,
     }));
 
+    // the Input and buttons inside are parts of this control, not members of the group
+    provideInputGroupContext(undefined);
+
     const inputBindings = () => ({
         ...forwarded.value,
         role: 'spinbutton',
-        'aria-disabled': props.disabled,
+        'aria-disabled': looks.disabled,
         step: props.step,
         'aria-valuenow': InputNumberFoundation.getAriaValueNow(state.value.number),
         'aria-valuemin': props.min === -Infinity ? undefined : props.min,
@@ -161,19 +171,19 @@
 </script>
 
 <template>
-    <div ref="root" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :class="[`${prefix}-number`, { [`${prefix}-number-size-${props.size}`]: props.size }]" @mouseenter="foundation.handleInputMouseEnter()" @mouseleave="foundation.handleInputMouseLeave()" @mousemove="foundation.handleInputMouseMove()">
-        <Input ref="input" v-bind="inputBindings()" :modelValue="state.value ?? ''" @blur="foundation.handleInputBlur($event)" @change="(value, event) => foundation.handleInputChange(value, event)" @focus="foundation.handleInputFocus($event)" @keydown="foundation.handleInputKeyDown($event)">
+    <div ref="root" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :class="[`${prefix}-number`, { [`${prefix}-number-size-${looks.size}`]: looks.size }]" @mouseenter="foundation.handleInputMouseEnter" @mouseleave="foundation.handleInputMouseLeave" @mousemove="foundation.handleInputMouseMove">
+        <Input ref="input" v-bind="inputBindings()" :modelValue="state.value ?? ''" @blur="foundation.handleInputBlur" @change="foundation.handleInputChange" @focus="foundation.handleInputFocus" @keydown="foundation.handleInputKeyDown">
             <template v-if="showInnerButtons()" #suffix>
                 <StepButtons
-                    :disabled="Boolean(props.disabled)"
-                    :downNotAllowed="Boolean(props.disabled) || reachesBound(state.number, props.min, -1)"
+                    :disabled="Boolean(looks.disabled)"
+                    :downNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.min, -1)"
                     inner
                     :innerHover="Boolean(state.hovering && !state.focusing)"
-                    :upNotAllowed="Boolean(props.disabled) || reachesBound(state.number, props.max, 1)"
-                    @mouseDown="foundation.handleStepMouseDown($event)"
-                    @pressDown="foundation.handleDownPress($event)"
-                    @pressUp="foundation.handleUpPress($event)"
-                    @release="foundation.handlePressEnd()"
+                    :upNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.max, 1)"
+                    @mouseDown="foundation.handleStepMouseDown"
+                    @pressDown="foundation.handleDownPress"
+                    @pressUp="foundation.handleUpPress"
+                    @release="foundation.handlePressEnd"
                 />
             </template>
             <template v-else-if="$slots.suffix" #suffix>
@@ -197,15 +207,15 @@
         </Input>
         <StepButtons
             v-if="showOuterButtons()"
-            :disabled="Boolean(props.disabled)"
-            :downNotAllowed="Boolean(props.disabled) || reachesBound(state.number, props.min, -1)"
+            :disabled="Boolean(looks.disabled)"
+            :downNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.min, -1)"
             :inner="false"
             :innerHover="false"
-            :upNotAllowed="Boolean(props.disabled) || reachesBound(state.number, props.max, 1)"
-            @mouseDown="foundation.handleStepMouseDown($event)"
-            @pressDown="foundation.handleDownPress($event)"
-            @pressUp="foundation.handleUpPress($event)"
-            @release="foundation.handlePressEnd()"
+            :upNotAllowed="Boolean(looks.disabled) || reachesBound(state.number, props.max, 1)"
+            @mouseDown="foundation.handleStepMouseDown"
+            @pressDown="foundation.handleDownPress"
+            @pressUp="foundation.handleUpPress"
+            @release="foundation.handlePressEnd"
         />
     </div>
 </template>

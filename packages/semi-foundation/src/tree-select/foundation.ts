@@ -274,7 +274,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         return Boolean(inputValue) && showFilteredOnly;
     }
 
-    #notifyMultipleChange(key: string[], e: any) {
+    #notifyMultipleChange(key: string[], e?: E) {
         const { keyEntities } = this.getStates();
         const { leafOnly, checkRelation, keyMaps, autoMergeValue } = this.getProps();
         let keyList = [];
@@ -294,7 +294,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         }
     }
 
-    #notifyChange(key: any, e: any) {
+    #notifyChange(key: any, e?: E) {
         const { keyEntities } = this.getStates();
         const { keyMaps } = this.getProps();
         if (this.#isMultiple() && Array.isArray(key)) {
@@ -437,7 +437,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         });
     }
 
-    #handleSingleSelect(e: any, { selected, eventKey, data, children }: BasicTreeNodeProps) {
+    #handleSingleSelect(e: E, { selected, eventKey, data, children }: BasicTreeNodeProps) {
         let selectedKeys = [...this.getState('selectedKeys')];
         const { clickToHide } = this.getProps();
         this._adapter.notifySelect(eventKey, true, data);
@@ -460,7 +460,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         }
     }
 
-    #handleMultipleSelect(e: any, treeNode: BasicTreeNodeProps) {
+    #handleMultipleSelect(e: E, treeNode: BasicTreeNodeProps) {
         const props = this.getProps();
         const state = this.getStates();
         const result = getMultipleSelectResult(treeNode, props, state);
@@ -477,7 +477,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         }
     }
 
-    #handleNodeExpandInSearch(_e: any, { eventKey, expanded, data }: BasicTreeNodeProps) {
+    #handleNodeExpandInSearch(_e: unknown, { eventKey, expanded, data }: BasicTreeNodeProps) {
         const { treeData, filteredShownKeys, keyEntities } = this.getStates();
         const { keyMaps } = this.getProps();
         const showFilteredOnly = this.#showFilteredOnly();
@@ -699,8 +699,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     }
 
     /** The keys the trigger shows: the selection, or in multiple mode the checked keys merged as onChange reports them */
-    static getTriggerKeys(props: Pick<BasicTreeSelectProps, 'multiple' | 'checkRelation' | 'autoMergeValue' | 'leafOnly'>, state: Pick<BasicTreeSelectInnerData, 'selectedKeys' | 'checkedKeys' | 'realCheckedKeys' | 'keyEntities'>) {
-        const { checkedKeys, realCheckedKeys, keyEntities, selectedKeys } = state;
+    static getTriggerKeys(props: Pick<BasicTreeSelectProps, 'multiple' | 'checkRelation' | 'autoMergeValue' | 'leafOnly'>, { checkedKeys, realCheckedKeys, keyEntities, selectedKeys }: Pick<BasicTreeSelectInnerData, 'selectedKeys' | 'checkedKeys' | 'realCheckedKeys' | 'keyEntities'>) {
         if (!props.multiple) {
             return selectedKeys;
         }
@@ -756,22 +755,22 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     }
 
     /** Writes the state derived from new props back, so handlers read what was rendered */
-    syncDerivedState(derived: Partial<BasicTreeSelectInnerData>) {
+    syncDerivedState = (derived: Partial<BasicTreeSelectInnerData>) => {
         this._adapter.updateState(derived);
-    }
+    };
 
     /** Searches as if `value` were typed, opening the dropdown first */
-    search(value: string) {
+    search = (value: string) => {
         if (!this.getState('isOpen')) {
             this.#open();
         }
         this.#handleInputChange(value);
-    }
+    };
 
     /** Focus entering the trigger (its search input, tags, clear button) or the dropdown from outside */
-    handleTriggerFocus(e: FocusEvent) {
+    handleTriggerFocus = (e: FocusEvent) => {
         this.#notifyFocus(e);
-    }
+    };
 
     /**
      * Reports the blur once per focus: on a mousedown outside, a single pick that closes, or the focus leaving the
@@ -785,15 +784,27 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         this.#notifyBlur(e);
     }
 
+    /**
+     * The focus left the trigger and the dropdown (the component checks where it went): reports the blur, and closes
+     * an open dropdown when the focus went to another element (APG combobox). A window blur has no target and keeps
+     * the dropdown, as the native select does.
+     */
+    handleFocusLeave = (e: FocusEvent) => {
+        this.handleTriggerBlur(e);
+        if (e.relatedTarget && this.getState('isOpen')) {
+            this.close();
+        }
+    };
+
     /** A mousedown outside the trigger and the dropdown, listened to while the TreeSelect is focused or open */
-    handleClickOutside(e: MouseEvent) {
+    handleClickOutside = (e: MouseEvent) => {
         this.handleTriggerBlur(e);
         if (this.getState('isOpen')) {
             this.close();
         }
-    }
+    };
 
-    handleKeyDown(e: Pick<KeyboardEvent, 'key' | 'preventDefault'>) {
+    handleKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault'>) => {
         if (e.key === ESC_KEY) {
             const isOpen = this.getState('isOpen');
             // claim the key: closing removes the overlay layer first, and the stack would close an enclosing dialog
@@ -805,21 +816,21 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 this.close();
             }
         }
-    }
+    };
 
-    onClickSingleTriggerSearchItem() {
+    onClickSingleTriggerSearchItem = () => {
         this.#focusInput();
-    }
+    };
 
-    close() {
+    close = () => {
         this._adapter.closeMenu();
         this._adapter.notifyVisibleChange(false);
         if (this.getProp('motionExpand')) {
             this._adapter.updateState({ motionKeys: new Set([]) });
         }
-    }
+    };
 
-    handleClick(e: E & Pick<UIEvent, 'detail' | 'target' | 'currentTarget'>) {
+    handleClick = (e: E & Pick<UIEvent, 'detail' | 'target' | 'currentTarget'>) => {
         const isDisabled = this.#isDisabled();
         const { isOpen, inputValue, isFocus } = this.getStates();
         const { searchPosition, clickTriggerToHide } = this.getProps();
@@ -845,14 +856,14 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 this.#open();
             }
         }
-    }
+    };
 
     /**
      * Enter toggles the popup like a click; Down and Up open a closed one (APG combobox). Outside a text field (the
      * select-only combobox) Space toggles it like Enter, and Home and End open a closed one: the view moves to the
      * first or the last row, which lives in the view.
      */
-    handleSelectionKeyDown(e: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) {
+    handleSelectionKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) => {
         const editing = isTextEditor(e.target);
         const opensOnKey = !this.getState('isOpen') && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || (!editing && (e.key === 'Home' || e.key === 'End')));
         if (opensOnKey || isEnterPress(e) || (e.key === ' ' && !editing)) {
@@ -860,9 +871,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             e.preventDefault();
             this.handleClick(e);
         }
-    }
+    };
 
-    handleClear(e: any) {
+    // a custom trigger may clear without an event
+    handleClear = (e?: E) => {
         const { searchPosition, filterTreeNode } = this.getProps();
         const { inputValue, selectedKeys } = this.getStates();
         const isControlled = this._isControlledComponent();
@@ -890,9 +902,9 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             }
         }
         this._adapter.notifyClear(e);
-    }
+    };
 
-    removeTag(eventKey: BasicTreeNodeData['key']) {
+    removeTag = (eventKey: BasicTreeNodeData['key']) => {
         const props = this.getProps();
         const { disableStrictly, checkRelation, keyMaps } = props;
         const state = this.getStates();
@@ -919,9 +931,9 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         }
 
         this._adapter.notifySelect(eventKey, false, item);
-    }
+    };
 
-    handleNodeSelect(e: any, treeNode: BasicTreeNodeProps) {
+    handleNodeSelect = (e: E, treeNode: BasicTreeNodeProps) => {
         const isDisabled = this.#isDisabled(treeNode);
         if (isDisabled) {
             return;
@@ -931,9 +943,9 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         } else {
             this.#handleMultipleSelect(e, treeNode);
         }
-    }
+    };
 
-    handleNodeExpand(e: any, treeNode: BasicTreeNodeProps) {
+    handleNodeExpand = (e: E, treeNode: BasicTreeNodeProps) => {
         const { loadData, keyMaps } = this.getProps();
         const { inputValue, keyEntities } = this.getStates();
         const isSearching = Boolean(inputValue);
@@ -978,19 +990,19 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         if (!expanded) {
             this.#handleNodeLoad(eventKey, data);
         }
-    }
+    };
 
     // Focus moving between the trigger's search input and the clear button stays inside; it must not clear the text
-    handleInputTriggerBlur(e?: { relatedTarget: EventTarget | null }) {
+    handleInputTriggerBlur = (e?: { relatedTarget: EventTarget | null }) => {
         if (this._adapter.isInTrigger(e?.relatedTarget)) {
             return;
         }
         this._adapter.updateState({
             inputTriggerFocus: false,
         });
-    }
+    };
 
-    handleInputTriggerFocus(e?: { relatedTarget: EventTarget | null }) {
+    handleInputTriggerFocus = (e?: { relatedTarget: EventTarget | null }) => {
         if (this._adapter.isInTrigger(e?.relatedTarget)) {
             return;
         }
@@ -998,20 +1010,20 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         this._adapter.updateState({
             inputTriggerFocus: true,
         });
-    }
+    };
 
-    handlePopoverOpen() {
+    handlePopoverOpen = () => {
         const { filterTreeNode, searchAutoFocus, searchPosition } = this.getProps();
         if (filterTreeNode && searchPosition === strings.SEARCH_POSITION_DROPDOWN && searchAutoFocus) {
             this.#focusInput();
         }
-    }
+    };
 
-    handleAfterClose() {
+    handleAfterClose = () => {
         // recalculating changes the option count; doing it before the popup is fully closed makes it flicker
         const { filterTreeNode } = this.getProps();
         if (filterTreeNode) {
             this.#clearInput();
         }
-    }
+    };
 }

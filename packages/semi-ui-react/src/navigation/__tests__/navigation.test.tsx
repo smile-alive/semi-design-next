@@ -783,19 +783,19 @@ describe('Navigation 行为', () => {
     });
 
     // Tooltip re-checks `:hover` once the popup is inserted, and jsdom never matches it
-    function hover(el) {
+    const hover = (el) => {
         const realQuery = document.querySelectorAll.bind(document);
         vi.spyOn(document, 'querySelectorAll').mockImplementation((selector) =>
             // jsdom's NodeList is not constructible, an array stands in for it
             selector === ':hover' ? ([el] as unknown as NodeListOf<Element>) : realQuery(selector)
         );
         fireEvent.mouseEnter(el);
-    }
+    };
 
-    function unhover(el) {
+    const unhover = (el) => {
         vi.mocked(document.querySelectorAll).mockRestore();
         fireEvent.mouseLeave(el);
-    }
+    };
 
     it('折叠的子菜单在悬停 subNavOpenDelay 后打开 popup，在 subNavCloseDelay 后关闭', () => {
         vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });

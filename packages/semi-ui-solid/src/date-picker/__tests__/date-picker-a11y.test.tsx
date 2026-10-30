@@ -5,7 +5,6 @@ import { addDays, format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import DatePickerFoundation from '@fibrae/semi-foundation/date-picker/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type TriggerRenderProps, type YearAndMonthProps } from '..';
@@ -43,14 +42,11 @@ const getYMSelected = (root: ParentNode = document) => Array.from(root.querySele
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
 const firstInput = (container: HTMLElement) => container.querySelector('input') as HTMLInputElement;
 const typeIn = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
-// jsdom has no layout: Tooltip reports the panel visible only after a 100ms fallback timer.
-// call watchPanelVisible before opening, then await settled() so focus changes land before asserting
-const watchPanelVisible = () => {
-    const spy = vi.spyOn(DatePickerFoundation.prototype, 'handlePanelVisibleChange');
-    return {
-        settled: () => waitFor(() => expect(spy).toHaveBeenCalledWith(true)),
-        restore: () => spy.mockRestore(),
-    };
+// Tooltip reports the panel open (onOpen, where DatePicker moves focus) in a task after the popup mounts;
+// await this before asserting so that focus change cannot land afterwards
+const waitForPanelOpened = async () => {
+    await waitFor(() => expect(getPopup()).not.toBeNull());
+    await new Promise((resolve) => setTimeout(resolve));
 };
 
 afterEach(() => {
@@ -707,10 +703,8 @@ describe('DatePicker 焦点方法', () => {
 
     it('insetInput 面板打开时 ref.focus()、blur() 作用于面板内的输入框', async () => {
         let picker!: DatePickerElement;
-        const { settled, restore } = watchPanelVisible();
         render(() => <DatePicker ref={(el) => (picker = el)} defaultOpen insetInput motion={false} />);
-        await settled();
-        restore();
+        await waitForPanelOpened();
         const inset = within(getPopup() as HTMLElement).getByRole('textbox');
         inset.blur();
         picker.focus();
@@ -743,11 +737,9 @@ describe('DatePicker 焦点方法', () => {
 
     it('单选类型开启 insetInput 时打开面板只调用一次 onFocus，且不带 rangeType', async () => {
         const onFocus = vi.fn<NonNullable<DatePickerProps['onFocus']>>();
-        const { settled, restore } = watchPanelVisible();
         const { container } = render(() => <DatePicker insetInput motion={false} onFocus={onFocus} />);
         await userEvent.click(firstInput(container));
-        await settled();
-        restore();
+        await waitForPanelOpened();
         expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onFocus.mock.calls[0][1]).toBeUndefined();
     });

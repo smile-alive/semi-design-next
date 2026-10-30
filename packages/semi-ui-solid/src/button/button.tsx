@@ -14,6 +14,7 @@ import mergeStyles from '../_base/merge-styles';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import { readGlobalDefaults } from '../_utils/semi-global';
+import { useInputGroupContext } from '../input/context';
 import SpinIcon from '../spin/icon';
 import { useSpecialTrigger } from '../tooltip/context';
 import { useAddAreaControl } from '../upload/context';
@@ -68,9 +69,12 @@ export function renderButton(name: 'Button' | 'IconButton', rawProps: ButtonProp
     const layer = usePopupLayer();
 
     const inGroup = group?.layer === layer ? group : undefined;
-    // The looks read the raw props: the merged ones already hold the global value, which would hide the group's
+    const inputGroup = useInputGroupContext();
+    const inInputGroup = inputGroup?.layer === layer ? inputGroup : undefined;
+    // The looks read the raw props: the merged ones already hold the global value, which would hide the group's.
+    // A ButtonGroup already folds the InputGroup into its looks; a bare button reads the InputGroup itself.
     const global = readGlobalDefaults(name);
-    const looks = createMemo<ButtonLooks>(() => resolveButtonLooks(rawProps, inGroup?.view(), global));
+    const looks = createMemo<ButtonLooks>(() => resolveButtonLooks({ colorful: rawProps.colorful, disabled: rawProps.disabled, size: rawProps.size, theme: rawProps.theme, type: rawProps.type }, inGroup ? inGroup.view() : inInputGroup?.view(), global));
 
     const showLoading = () => local.loading && !looks().disabled;
     // children() calls zero-arity functions, which covers control flow such as <Show>, and keeps an icon component

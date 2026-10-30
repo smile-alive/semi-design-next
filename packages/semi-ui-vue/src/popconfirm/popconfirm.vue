@@ -227,7 +227,7 @@
         @clickOutSide="(...args) => emit('clickOutSide', ...args)"
         @escKeyDown="(...args) => emit('escKeyDown', ...args)"
         @open="emit('open')"
-        @visibleChange="foundation.handleVisibleChange($event)"
+        @visibleChange="foundation.handleVisibleChange"
     >
         <slot />
         <template #content="slotProps">
@@ -245,7 +245,7 @@
                                     <slot name="title">{{ props.title }}</slot>
                                 </div>
                             </div>
-                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="`${props.prefixCls}-btn-close`" size="small" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel($event)">
+                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="`${props.prefixCls}-btn-close`" size="small" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel">
                                 <template #icon>
                                     <IconClose />
                                 </template>
@@ -256,10 +256,10 @@
                         </div>
                     </template>
                     <div ref="footer" :class="`${props.prefixCls}-footer`">
-                        <Button v-bind="cancelProps" @click="foundation.handleCancel($event)">
+                        <Button v-bind="cancelProps" @click="foundation.handleCancel">
                             {{ props.cancelText || i18n.locale.cancel }}
                         </Button>
-                        <Button v-bind="okProps" @click="foundation.handleConfirm($event)">
+                        <Button v-bind="okProps" @click="foundation.handleConfirm">
                             {{ props.okText || i18n.locale.confirm }}
                         </Button>
                     </div>

@@ -10,7 +10,7 @@ export { default as withField } from './with-field';
 export { default as useForm } from './use-form';
 export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks';
 
-export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTreeSelect, FormUpload } from './field';
+export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormPinCode, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTransfer, FormTreeSelect, FormUpload } from './field';
 export type { FormCheckboxProps, FormRadioProps, FormSelectProps } from './field';
 
 export type {

@@ -89,7 +89,7 @@ export default function Body(props: BodyProps) {
             seen.set(base, count + 1);
             return count ? `${base}#${count}` : base;
         };
-        const rowKey = table.props.rowKey as never;
+        const rowKey = table.props.rowKey ?? 'key';
         const keyOf = (record: AnyRecord, index: number): BaseRowKeyType => getRecordKey(record, rowKey) ?? index;
         const groups = table.state().groups;
         const recordsByKey = groups instanceof Map ? buildRecordsByKey(dataSource(), rowKey) : new Map<BaseRowKeyType, AnyRecord>();

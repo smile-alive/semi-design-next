@@ -68,7 +68,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
 
     const forwardLabel = () => text().forward.replace('${skipDuration}', String(local.skipDuration));
 
-    const refreshButton = () => <Button style={transparentStyle} aria-label={text().refresh} icon={<IconRefresh class={iconClass} style={{ transform: 'rotateY(180deg)' }} />} onClick={() => foundation.handleRefresh()} />;
+    const refreshButton = () => <Button style={transparentStyle} aria-label={text().refresh} icon={<IconRefresh class={iconClass} style={{ transform: 'rotateY(180deg)' }} />} onClick={foundation.handleRefresh} />;
 
     const renderControl = () => (
         <div class={`${prefixCls}-control`}>
@@ -86,7 +86,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                 disabled={state().error}
                 size="large"
                 icon={state().isPlaying ? <IconPause size="large" /> : <IconPlay style={{ 'margin-left': '1px' }} size="large" />}
-                onClick={() => foundation.handleStatusClick()}
+                onClick={foundation.handleStatusClick}
             />
             <Show when={isList()}>
                 <Tooltip autoAdjustOverflow content={text().next} showArrow={false}>
@@ -117,7 +117,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                     <div class={`${prefixCls}-info-time`}>
                         <span style={{ width: '38px' }}>{formatTime(state().currentTime)}</span>
                         <div class={`${prefixCls}-slider-container`}>
-                            <AudioSlider max={state().totalTime} value={state().currentTime} getValueText={(value) => `${formatTimeText(value, text())} / ${formatTimeText(state().totalTime, text())}`} label={text().progress} theme={local.theme} onChange={(value) => foundation.handleTimeChange(value)} />
+                            <AudioSlider max={state().totalTime} value={state().currentTime} getValueText={(value) => `${formatTimeText(value, text())} / ${formatTimeText(state().totalTime, text())}`} label={text().progress} theme={local.theme} onChange={foundation.handleTimeChange} />
                         </div>
                         <span style={{ width: '38px' }}>{formatTime(state().totalTime)}</span>
                     </div>
@@ -138,11 +138,11 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
                     content={
                         <div class={clsx(`${prefixCls}-control-volume`, `${prefixCls}-control-volume-${local.theme}`)}>
                             <div class={`${prefixCls}-control-volume-title`}>{state().volume}%</div>
-                            <AudioSlider max={100} value={state().volume} getValueText={(value) => `${value}%`} height={120} label={text().volume} showTooltip={false} theme={local.theme} vertical onChange={(value) => foundation.handleVolumeChange(value)} />
+                            <AudioSlider max={100} value={state().volume} getValueText={(value) => `${value}%`} height={120} label={text().volume} showTooltip={false} theme={local.theme} vertical onChange={foundation.handleVolumeChange} />
                         </div>
                     }
                 >
-                    {(getTriggerProps) => <Button {...getTriggerProps()} style={transparentStyle} aria-label={text().volume} icon={state().volume === 0 ? <IconVolumnSilent class={iconClass} /> : <IconVolume2 class={iconClass} />} onClick={() => foundation.handleVolumeSilent()} />}
+                    {(getTriggerProps) => <Button {...getTriggerProps()} style={transparentStyle} aria-label={text().volume} icon={state().volume === 0 ? <IconVolumnSilent class={iconClass} /> : <IconVolume2 class={iconClass} />} onClick={foundation.handleVolumeSilent} />}
                 </Popover>
                 <Tooltip autoAdjustOverflow content={backwardLabel()} showArrow={false}>
                     {(getTriggerProps) => <Button {...getTriggerProps()} style={transparentStyle} aria-label={backwardLabel()} icon={<IconBackward class={iconClass} />} onClick={() => foundation.handleSeek(-1)} />}
@@ -179,7 +179,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
 
     return (
         <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as AudioPlayerProps['role']} class={clsx(prefixCls, local.class, `${prefixCls}-${local.theme}`)}>
-            <audio ref={(node) => (audio = node)} autoplay={local.autoPlay} src={info()?.src} onPause={foundation.handleAudioPause} onPlay={foundation.handleAudioPlay} onTimeUpdate={() => foundation.handleTimeUpdate()}>
+            <audio ref={(node) => (audio = node)} autoplay={local.autoPlay} src={info()?.src} onPause={foundation.handleAudioPause} onPlay={foundation.handleAudioPlay} onTimeUpdate={foundation.handleTimeUpdate}>
                 {/* satisfies media-has-caption; there is no captions file */}
                 <track kind="captions" />
             </audio>

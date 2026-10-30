@@ -46,14 +46,14 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
         }
     }
 
-    syncInputValue() {
+    syncInputValue = () => {
         this.setState({
             inputValue: DataPartFoundation.getInputValue(this.getProp('currentColor'), this.getState('format')),
         });
-    }
+    };
 
     /** Whether the text box already says `color`, so it must not overwrite what is being typed */
-    isInputValueOf(color: ColorValue) {
+    isInputValueOf = (color: ColorValue) => {
         const { format, inputValue } = this.getStates();
         const parsed = this.getValueByInputValue(inputValue);
         // a hex typed without '#' is not a match, so the sync completes it
@@ -61,9 +61,9 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
             return false;
         }
         return isEqual(ColorPickerFoundation.getColorValue(parsed, format, Boolean(this.getProp('alpha'))), color);
-    }
+    };
 
-    getValueByInputValue(value: string) {
+    getValueByInputValue = (value: string) => {
         const { format } = this.getStates();
         if (format === 'rgba' || format === 'hsva') {
             const parsed = format === 'rgba' ? split(value, 'rgba') : split(value, 'hsva');
@@ -84,7 +84,7 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
             }
         }
         return false;
-    }
+    };
 
     handlePickValueWithStraw = async () => {
         const colorPickerFoundation = this.getProps().foundation;
@@ -106,14 +106,14 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
         }
     };
 
-    handleInputValueChange(value: string) {
+    handleInputValueChange = (value: string) => {
         this._adapter.setState({ inputValue: value });
-    }
+    };
 
-    handleFormatChange(format: ColorFormat) {
+    handleFormatChange = (format: ColorFormat) => {
         this.setState({
             format,
             inputValue: DataPartFoundation.getInputValue(this.getProp('currentColor'), format),
         });
-    }
+    };
 }

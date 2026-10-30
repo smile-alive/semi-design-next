@@ -20,7 +20,7 @@ function Demo() {
 }
 
 // The option the column centres: the one whose box is closest to the middle of its scroll container
-const centredText = (outer: Element) => {
+function centredText(outer: Element) {
     const middle = outer.getBoundingClientRect().top + outer.getBoundingClientRect().height / 2;
     const options = Array.from(outer.querySelectorAll('li')).filter((li) => li.getAttribute('aria-hidden') !== 'true');
     const nearest = options.reduce(
@@ -32,7 +32,7 @@ const centredText = (outer: Element) => {
         { li: options[0], distance: Infinity }
     );
     return nearest.li.textContent;
-};
+}
 
 describe('scrollList', () => {
     it('normal 与 wheel 列不显示滚动条', () => {

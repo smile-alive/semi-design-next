@@ -8,7 +8,7 @@ describe('registerMediaQuery', () => {
     });
 
     // like a browser, where addEventListener is inherited from the prototype rather than an own property
-    function installProtoMatchMedia(matches: boolean) {
+    const installProtoMatchMedia = (matches: boolean) => {
         type Handler = (e: { matches: boolean }) => void;
         const proto = {
             handlers: [] as Handler[],
@@ -23,7 +23,7 @@ describe('registerMediaQuery', () => {
         Object.assign(list, { matches, addListener: vi.fn<() => void>(), removeListener: vi.fn<() => void>() });
         window.matchMedia = vi.fn<typeof window.matchMedia>(() => list);
         return list;
-    }
+    };
 
     it('通过继承的 addEventListener 监听，而不是已弃用的 addListener', () => {
         const list = installProtoMatchMedia(false);

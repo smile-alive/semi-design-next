@@ -45,7 +45,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
      */
     #position = { top: 0, height: 0 };
 
-    #updateBackBottomVisible = debounce(({ scrollHeight, clientHeight, scrollTop }: HTMLElement) => {
+    #syncBackBottomVisible({ scrollHeight, clientHeight, scrollTop }: HTMLElement) {
         const { backBottomVisible } = this.getStates();
         if (scrollHeight - scrollTop - clientHeight <= strings.SHOW_SCROLL_GAP) {
             if (backBottomVisible) {
@@ -54,7 +54,9 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         } else if (!backBottomVisible) {
             this._adapter.setBackBottomVisible(true);
         }
-    }, 100);
+    }
+
+    #updateBackBottomVisible = debounce((element: HTMLElement) => this.#syncBackBottomVisible(element), 100);
 
     #getChats() {
         return this.getProps().chats ?? [];
@@ -117,7 +119,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
     /**
      * Runs after a commit in which `chats` or `hints` changed (arrays normalized by the caller)
      */
-    handleListUpdate(prev: DialogueList, { chats, hints }: DialogueList) {
+    handleListUpdate = (prev: DialogueList, { chats, hints }: DialogueList) => {
         const prevChats = prev.chats;
         let shouldScroll = false;
         if (chats !== prevChats) {
@@ -149,18 +151,18 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
             }
         }
         this.#recordPosition();
-    }
+    };
 
-    handleSelectAll() {
+    handleSelectAll = () => {
         const selectedSet = new Set<string>(this.#getChats().map((chat) => chat.id));
         this._adapter.updateSelected(selectedSet);
         this._adapter.notifySelect(Array.from(selectedSet));
-    }
+    };
 
-    handleDeselectAll() {
+    handleDeselectAll = () => {
         this._adapter.updateSelected(new Set());
         this._adapter.notifySelect([]);
-    }
+    };
 
     handleSelectOrRemove = (isChecked: boolean, id: string) => {
         // messages deleted or replaced since the last change must not be reported as selected
@@ -261,12 +263,12 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         this._adapter.notifyHintClick(hint);
     };
 
-    scrollToBottomImmediately() {
+    scrollToBottomImmediately = () => {
         const element = this._adapter.getContainerRef();
         if (element) {
             element.scrollTop = element.scrollHeight;
         }
-    }
+    };
 
     scrollToBottomWithAnimation = () => {
         // the end is fixed when the animation starts; snapping at the end catches content that grew meanwhile, and the
@@ -277,19 +279,21 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         );
     };
 
-    scrollToTopImmediately() {
+    scrollToTopImmediately = () => {
         const element = this._adapter.getContainerRef();
         if (element) {
             element.scrollTop = 0;
         }
-    }
+    };
 
-    scrollToTopWithAnimation() {
+    scrollToTopWithAnimation = () => {
         this.#animateScrollTop(() => 0);
-    }
+    };
 
-    containerScroll(e: any) {
-        const { scrollTop, scrollHeight, clientHeight } = e.target;
+    containerScroll = (e: { target: EventTarget | null }) => {
+        // the scroll listener sits on the list element and scroll does not bubble, so the target is always that element
+        const target = e.target as HTMLElement;
+        const { scrollTop, scrollHeight, clientHeight } = target;
         // only the user lowers scrollTop (growth never does); a drop that still ends at the bottom is shrinking
         if (scrollHeight - scrollTop - clientHeight <= 1) {
             this.#following = true;
@@ -299,8 +303,8 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         this.#lastScrollTop = scrollTop;
         this.#position = { top: scrollTop, height: scrollHeight };
         cancelAnimationFrame(this.#scrollFrame);
-        this.#scrollFrame = requestAnimationFrame(() => this.#updateBackBottomVisible(e.target));
-    }
+        this.#scrollFrame = requestAnimationFrame(() => this.#updateBackBottomVisible(target));
+    };
 }
 
 export interface DialogueList {

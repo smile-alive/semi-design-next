@@ -64,11 +64,7 @@
             propertyName: event.propertyName,
         });
 
-    watch(
-        () => props.isOpen,
-        () => foundation.handleOpenChange(),
-        { flush: 'post' }
-    );
+    watch(() => props.isOpen, foundation.handleOpenChange, { flush: 'post' });
 </script>
 
 <template>

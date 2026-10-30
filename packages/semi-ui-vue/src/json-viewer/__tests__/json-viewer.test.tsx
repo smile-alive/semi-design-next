@@ -90,17 +90,17 @@ type CoreRule = { render: (content: string) => unknown };
 const prefixCls = 'semi-json-viewer';
 const ariaLabel = zh_CN.JsonViewer.content;
 const live = () => instances.filter((instance) => instance.dispose.mock.calls.length === 0);
-const current = () => {
+function current() {
     const instance = instances.at(-1);
     if (!instance) throw new Error('no editor was created');
     return instance;
-};
+}
 const query = (selector: string) => document.querySelector<HTMLElement>(selector);
-const get = (selector: string) => {
+function get(selector: string) {
     const element = query(selector);
     if (!element) throw new Error(`missing ${selector}`);
     return element;
-};
+}
 const trigger = () => query(`.${prefixCls}-search-bar-trigger`);
 const searchInput = () => query(`.${prefixCls}-search-bar input`);
 const replaceInput = () => query(`.${prefixCls}-replace-bar input`);
@@ -108,24 +108,24 @@ const replaceButtons = () => document.querySelectorAll<HTMLElement>(`.${prefixCl
 const optionItems = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-search-options-item`);
 const optionButton = (index: number) => optionItems()[index].querySelector('button') as HTMLElement;
 const closeButton = () => get(`.${prefixCls}-search-bar > button:last-child`);
-const emit = async (event: string, data: unknown = {}) => {
+async function emit(event: string, data: unknown = {}) {
     current().emitter.emit(event, data);
     await nextTick();
-};
+}
 const mount = (props: Props = {}) => render(JsonViewer, { props: { modelValue: '1', ...props } });
 const openBar = () => fireEvent.click(get(`.${prefixCls}-search-bar-trigger`));
-const customSpan = (map: Map<HTMLElement, unknown>, ruleIndex: number, content: string) => {
+function customSpan(map: Map<HTMLElement, unknown>, ruleIndex: number, content: string) {
     const span = document.createElement('span');
     current().container.appendChild(span);
     map.set(span, (current().options.customRenderRule as CoreRule[])[ruleIndex].render(content));
     return span;
-};
+}
 const pointer = (target: EventTarget, type: string, init: PointerEventInit) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }));
-const drag = (element: Element, pointerType: string) => {
+function drag(element: Element, pointerType: string) {
     pointer(element, 'pointerdown', { pointerId: 1, pointerType, button: 0, clientX: 0, clientY: 0 });
     pointer(document, 'pointermove', { pointerId: 1, pointerType, clientX: 30, clientY: 30 });
     pointer(document, 'pointerup', { pointerId: 1, pointerType });
-};
+}
 
 describe('JsonViewer', () => {
     beforeEach(() => {

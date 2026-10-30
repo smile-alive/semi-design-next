@@ -170,25 +170,25 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
     }
 
     /** Returns whether the list must be measured again: an item changed width, or every visible item has reported */
-    recordItemSize(key: ItemKey, width: number, maxCount: number) {
+    recordItemSize = (key: ItemKey, width: number, maxCount: number) => {
         const previous = this.#itemSizes.get(key);
         this.#itemSizes.set(key, width);
         return Boolean(previous && previous !== width) || this.#itemSizes.size === maxCount;
-    }
+    };
 
-    handleKeysChange(keys: ItemKey[]) {
+    handleKeysChange = (keys: ItemKey[]) => {
         // items that keep their key are not reported again, so only the widths of removed keys go
         const keySet = new Set(keys);
         this.#itemSizes.forEach((_, key) => keySet.has(key) || this.#itemSizes.delete(key));
         this.setState({ visibleState: new Map() });
-    }
+    };
 
-    handleIntersect(entries: Array<IntersectionObserverEntry>) {
+    handleIntersect = (entries: Array<IntersectionObserverEntry>) => {
         const visibleState: Map<string, boolean> = new Map(this.getState('visibleState'));
 
         const res: Record<string, IntersectionObserverEntry> = {};
         entries.forEach((entry) => {
-            const itemKey: string = (entry?.target as HTMLElement)?.dataset?.scrollkey;
+            const itemKey: string = entry?.target?.getAttribute('data-scrollkey') ?? undefined;
             const visible = entry.isIntersecting;
             res[itemKey] = entry;
             visibleState.set(itemKey, visible);
@@ -205,9 +205,9 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         this._adapter.updateVisibleState(visibleState);
         this.#syncScrollOverflowCache(visibleState);
         this._adapter.notifyIntersect(res);
-    }
+    };
 
-    handleCollapseOverflow() {
+    handleCollapseOverflow = () => {
         const { minVisibleItems, collapseFrom, itemKey } = this.getProps();
         const { overflowWidth, containerWidth } = this.getStates();
         const { items } = this.getProps();
@@ -250,8 +250,8 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         if (overflowed) {
             const pivot = Math.max(minVisibleItems, _pivot);
             const isCollapseFromStart = collapseFrom === Boundary.START;
-            const visible = isCollapseFromStart ? this.getReversedItems().slice(0, pivot).reverse() : items.slice(0, pivot);
-            const overflow = isCollapseFromStart ? this.getReversedItems().slice(pivot).reverse() : items.slice(pivot);
+            const visible = isCollapseFromStart ? this.getReversedItems().slice(0, pivot).toReversed() : items.slice(0, pivot);
+            const overflow = isCollapseFromStart ? this.getReversedItems().slice(pivot).toReversed() : items.slice(pivot);
             this._adapter.updateView({
                 overflowStatus: 'overflowed',
                 pivot: pivot,
@@ -261,5 +261,5 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
             this.#notifyOverflow(overflow);
             return;
         }
-    }
+    };
 }

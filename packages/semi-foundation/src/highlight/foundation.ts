@@ -59,7 +59,7 @@ function findChunks({ autoEscape, caseSensitive, searchWords, sourceString }: Ch
 
 function combineChunks({ chunks }: { chunks: Chunk[] }): Chunk[] {
     return chunks
-        .sort((first, second) => first.start - second.start)
+        .toSorted((first, second) => first.start - second.start)
         .reduce((processedChunks, nextChunk) => {
             if (processedChunks.length === 0) {
                 return [nextChunk];

@@ -35,7 +35,7 @@ describe('Spin（浏览器）', () => {
 describe('Spin 加载期间的焦点（浏览器）', () => {
     const getSpin = (container: HTMLElement) => container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-spin`);
 
-    function view(spinning: boolean) {
+    const view = (spinning: boolean) => {
         return (
             <>
                 <Spin spinning={spinning}>
@@ -44,7 +44,7 @@ describe('Spin 加载期间的焦点（浏览器）', () => {
                 <button type="button">after</button>
             </>
         );
-    }
+    };
 
     it('加载期间 Tab 不进入被包裹内容，结束后恢复', async () => {
         const { rerender } = render(view(true));

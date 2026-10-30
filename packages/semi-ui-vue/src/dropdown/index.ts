@@ -17,5 +17,8 @@ const DropdownWithParts: typeof Dropdown & {
     Title: DropdownTitle,
 });
 export default DropdownWithParts;
-export { DropdownMenu, DropdownItem, DropdownDivider, DropdownTitle };
+export { default as DropdownMenu } from './dropdown-menu.vue';
+export { default as DropdownItem } from './dropdown-item.vue';
+export { default as DropdownDivider } from './dropdown-divider.vue';
+export { default as DropdownTitle } from './dropdown-title.vue';
 export type * from './interface';

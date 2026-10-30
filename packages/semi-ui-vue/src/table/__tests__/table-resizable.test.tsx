@@ -18,13 +18,13 @@ const getFileData = (total: number) =>
 const getHandles = () => queryAll(`.${P}-thead .${P}-resize-handle`);
 const getColWidths = () => queryAll<HTMLElement>(`.${P}-col`).map((col) => col.style.width);
 const waitForHandles = (count: number) => waitFor(() => expect(getHandles()).toHaveLength(count));
-const drag = async (handle: Element, moves: number[]) => {
+async function drag(handle: Element, moves: number[]) {
     await fireEvent.pointerDown(handle, { button: 0, clientX: 0, pointerId: 1 });
     for (const clientX of moves) {
         await fireEvent.pointerMove(handle, { clientX, pointerId: 1 });
     }
     await fireEvent.lostPointerCapture(handle, { clientX: moves.at(-1), pointerId: 1 });
-};
+}
 
 describe('Table 列宽调整', () => {
     it('可调整列宽的表格', async () => {

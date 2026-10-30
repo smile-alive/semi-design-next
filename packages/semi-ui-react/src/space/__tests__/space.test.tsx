@@ -7,7 +7,7 @@ import Space, { type SpaceProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-space`;
 
-const renderSpace = (spacing: SpaceProps['spacing']) => {
+function renderSpace(spacing: SpaceProps['spacing']) {
     const { container, unmount } = render(
         <Space spacing={spacing}>
             {Array.from(Array(5)).map((_i, idx) => (
@@ -17,7 +17,7 @@ const renderSpace = (spacing: SpaceProps['spacing']) => {
     );
     const space = container.querySelector(`.${BASE_CLASS_PREFIX}-space`);
     return [space, unmount] as const;
-};
+}
 
 const getSpace = (container: HTMLElement) => container.querySelector<HTMLElement>(`.${prefixCls}`);
 

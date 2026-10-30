@@ -144,8 +144,8 @@
     );
 
     defineExpose<AIChatDialogueHandle>({
-        selectAll: () => foundation.handleSelectAll(),
-        deselectAll: () => foundation.handleDeselectAll(),
+        selectAll: foundation.handleSelectAll,
+        deselectAll: foundation.handleDeselectAll,
         scrollToBottom: (animation) => {
             if (animation) {
                 foundation.scrollToBottomWithAnimation();
@@ -165,7 +165,7 @@
 
 <template>
     <div :class="prefix" :role="groupRole(attrs)">
-        <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll($event)">
+        <div ref="list" :aria-busy="streaming" :aria-label="locale.locale.messages" :class="`${prefix}-list`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
             <component :is="dialogueNode(chat, index)" v-for="(chat, index) in chats" :key="chat.id" />
             <DialogueHint v-if="hints.length > 0" :class="props.hintCls" :hints="hints" :selecting="props.selecting" :style="props.hintStyle" @hintClick="foundation.onHintClick">
                 <template v-if="$slots.hintBox" #hintBox="slotProps">

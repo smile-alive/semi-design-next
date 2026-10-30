@@ -18,13 +18,13 @@ function expectColorClose(actual: number[], expected: number[]) {
     actual.forEach((channel, i) => expect(Math.abs(channel - expected[i])).toBeLessThanOrEqual(1));
 }
 
-const ringColor = (props: ProgressProps) => {
+function ringColor(props: ProgressProps) {
     const view = render(Progress, { props: { type: 'circle', ...props } });
     const ring = view.container.querySelector(`.${prefixCls}-circle-ring-inner`) as Element;
     const color = toRgba(getComputedStyle(ring).stroke);
     view.unmount();
     return color;
-};
+}
 
 describe('Progress stroke 颜色', () => {
     it('Semi 色板名随主题切换变色，不需要重新渲染', () => {

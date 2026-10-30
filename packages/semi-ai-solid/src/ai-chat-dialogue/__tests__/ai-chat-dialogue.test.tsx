@@ -4,7 +4,6 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, type Mock, o
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
 import type { Annotation, Step } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import CodeHighlightFoundation from '@fibrae/semi-foundation/code-highlight/index';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
@@ -446,9 +445,6 @@ describe('AIChatDialogue 内容块', () => {
     });
 
     it('代码块的子节点不是字符串时不提供复制按钮', () => {
-        // the highlighter reads a string; this case only checks the copy button, not the default code renderer
-        const highlight = vi.spyOn(CodeHighlightFoundation.prototype, 'highlightCode').mockResolvedValue();
-        onTestFinished(() => highlight.mockRestore());
         const Code = AIChatDialogue.defaultComponents.code;
         const { container } = render(() => (
             <Code class="language-js">

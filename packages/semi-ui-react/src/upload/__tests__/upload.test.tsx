@@ -101,11 +101,11 @@ function installFakeXhr() {
 
 const file = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' });
 
-const createFile = (size = 44320, name = 'semi-logo.png', type = 'image/png') => {
+function createFile(size = 44320, name = 'semi-logo.png', type = 'image/png') {
     return new File([new ArrayBuffer(size)], name, {
         type: type,
     });
-};
+}
 
 const defaultFileList: FileItem[] = [
     {
@@ -2084,11 +2084,11 @@ describe('FileCard', () => {
 
 describe('Upload 补充覆盖', () => {
     // Clipboard reads go through navigator.clipboard / navigator.permissions, which jsdom does not provide
-    function stubClipboard({ read = vi.fn<Clipboard['read']>(() => Promise.resolve([])), query }: { read?: Clipboard['read']; query?: Permissions['query'] } = {}) {
+    const stubClipboard = ({ read = vi.fn<Clipboard['read']>(() => Promise.resolve([])), query }: { read?: Clipboard['read']; query?: Permissions['query'] } = {}) => {
         Object.defineProperty(navigator, 'clipboard', { value: { read }, configurable: true });
         Object.defineProperty(navigator, 'permissions', { value: { query }, configurable: true });
         return { read };
-    }
+    };
 
     afterEach(() => {
         Reflect.deleteProperty(navigator, 'clipboard');

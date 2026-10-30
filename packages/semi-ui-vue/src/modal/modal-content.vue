@@ -165,7 +165,7 @@
             if (!shown) return;
             foundation.show();
             warnIfDialogUnnamed(dialog.value, 'Modal');
-            onCleanup(() => foundation.hide());
+            onCleanup(foundation.hide);
         },
         { flush: 'post' }
     );

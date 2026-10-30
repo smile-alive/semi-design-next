@@ -80,7 +80,7 @@ const changeInput = (value) => fireEvent.change(getInput(), { target: { value } 
 const changeAlphaInput = (value) => fireEvent.change(getAlphaInput(), { target: { value } });
 
 // the setup rect mock has no x/y, which the pickers subtract from clientX/clientY
-const mockRect = (el) => {
+function mockRect(el) {
     const width = parseFloat(el.style.width);
     const height = parseFloat(el.style.height);
     vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
@@ -94,21 +94,21 @@ const mockRect = (el) => {
         bottom: height,
     });
     return el;
-};
+}
 
 // a browser sends a captured pointer's release, then lostpointercapture, to the capturing element
-const release = (el) => {
+function release(el) {
     fireEvent.pointerUp(el);
     fireEvent.lostPointerCapture(el);
-};
+}
 
-const selectFormat = async (format) => {
+async function selectFormat(format) {
     await userEvent.click(getFormatSelect());
     const options = await screen.findAllByRole('option');
     await userEvent.click(options.find((option) => option.textContent === format));
-};
+}
 
-const createPickerFoundation = (props = {}, state = {}) => {
+function createPickerFoundation(props = {}, state = {}) {
     const notifyChange = vi.fn<ColorPickerAdapter['notifyChange']>();
     const foundation = new ColorPickerFoundation({
         getProp: (key) => props[key],
@@ -118,7 +118,7 @@ const createPickerFoundation = (props = {}, state = {}) => {
         notifyChange,
     } as unknown as ColorPickerAdapter);
     return { foundation, notifyChange };
-};
+}
 
 describe('ColorPicker 审计修复', () => {
     const greyColor = {
@@ -1277,41 +1277,44 @@ describe('ColorPicker', () => {
 
     // getDOM only returns null once the element is gone; the foundations are exercised directly for that guard
 
-    it('ColorChooseArea pickByPointer 处理 rect 为 null 的情况', () => {
+    it('ColorChooseArea 拖动时 rect 为 null 的情况', () => {
         const notifyChange = vi.fn<() => void>();
         const setState = vi.fn<() => void>();
         const foundation = new ColorChooseAreaFoundation({
             getDOM: () => null,
+            getState: () => true,
             notifyChange,
             setState,
         } as unknown as ColorChooseAreaAdapter);
-        foundation.pickByPointer({ clientX: 50, clientY: 50 });
+        foundation.handlePointerMove({ clientX: 50, clientY: 50 } as Parameters<typeof foundation.handlePointerMove>[0]);
         expect(notifyChange).not.toHaveBeenCalled();
         expect(setState).not.toHaveBeenCalled();
     });
 
-    it('ColorSlider pickByPointer 处理 rect 为 null 的情况', () => {
+    it('ColorSlider 拖动时 rect 为 null 的情况', () => {
         const handleColorChangeByHandle = vi.fn<() => void>();
         const setState = vi.fn<() => void>();
         const foundation = new ColorSliderFoundation({
             getDOM: () => null,
             getProps: () => ({ width: 100, foundation: { handleColorChangeByHandle } }),
+            getState: () => true,
             setState,
         } as unknown as ColorSliderAdapter);
-        foundation.pickByPointer({ clientX: 50 });
+        foundation.handlePointerMove({ clientX: 50 } as Parameters<typeof foundation.handlePointerMove>[0]);
         expect(handleColorChangeByHandle).not.toHaveBeenCalled();
         expect(setState).not.toHaveBeenCalled();
     });
 
-    it('AlphaSlider pickByPointer 处理 rect 为 null 的情况', () => {
+    it('AlphaSlider 拖动时 rect 为 null 的情况', () => {
         const handleAlphaChangeByHandle = vi.fn<() => void>();
         const setState = vi.fn<() => void>();
         const foundation = new AlphaSliderFoundation({
             getDOM: () => null,
             getProps: () => ({ width: 100, foundation: { handleAlphaChangeByHandle } }),
+            getState: () => true,
             setState,
         } as unknown as AlphaSliderAdapter);
-        foundation.pickByPointer({ clientX: 50 });
+        foundation.handlePointerMove({ clientX: 50 } as Parameters<typeof foundation.handlePointerMove>[0]);
         expect(handleAlphaChangeByHandle).not.toHaveBeenCalled();
         expect(setState).not.toHaveBeenCalled();
     });

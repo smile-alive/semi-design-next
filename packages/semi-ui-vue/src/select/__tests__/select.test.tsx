@@ -39,7 +39,7 @@ type SlotScope = {
 };
 type Slots = Record<string, (scope: SlotScope) => unknown>;
 const settle = () => new Promise((resolve) => setTimeout(resolve));
-const renderFixture = async (fixture: Component, props: Record<string, unknown> = {}, slots: Slots = {}) => {
+async function renderFixture(fixture: Component, props: Record<string, unknown> = {}, slots: Slots = {}) {
     let handle: SelectHandle | undefined;
     const capture = (value: unknown) => {
         if (value) handle = (value as { select: SelectHandle }).select;
@@ -56,10 +56,10 @@ const renderFixture = async (fixture: Component, props: Record<string, unknown> 
             await settle();
         },
     };
-};
+}
 const renderSelect = (props: Record<string, unknown> = {}, slots: Slots = {}) => renderFixture(Basic, props, slots);
 // Testing Library re-inserts the mounted nodes, which drops the focus autofocus gave on mount
-const mountInPlace = async (props: Record<string, unknown>) => {
+async function mountInPlace(props: Record<string, unknown>) {
     const container = document.body.appendChild(document.createElement('div'));
     const app = createApp(() => <ConfigProvider locale={en_US}>{() => <Basic {...props} />}</ConfigProvider>);
     app.mount(container);
@@ -68,11 +68,11 @@ const mountInPlace = async (props: Record<string, unknown>) => {
         container.remove();
     });
     await settle();
-};
-const act = async (run: () => unknown) => {
+}
+async function act(run: () => unknown) {
     run();
     await settle();
-};
+}
 
 const getTrigger = () => screen.getByRole('combobox');
 const getOptionList = () => screen.queryByRole('listbox');
@@ -86,18 +86,18 @@ const getPopover = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREF
 const getOptionByText = (text: string) => getOptions().find((option) => option.textContent === text);
 const getFocusedOption = () => document.querySelector(`.${prefixCls}-option-focused`);
 const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const search = async (value: string, input = getTriggerInput()) => {
+async function search(value: string, input = getTriggerInput()) {
     await fireEvent.update(input, value);
     await settle();
-};
-const keyDown = async (key: string, init: KeyboardEventInit = {}, target: Element = getTrigger()) => {
+}
+async function keyDown(key: string, init: KeyboardEventInit = {}, target: Element = getTrigger()) {
     await fireEvent.keyDown(target, { key, ...init });
     await settle();
-};
-const click = async (element: Element | null) => {
+}
+async function click(element: Element | null) {
     await userEvent.click(element as Element);
     await settle();
-};
+}
 const expectClosed = () => waitFor(() => expect(getOptionList()).toBeNull());
 
 describe('Select', async () => {
@@ -3438,18 +3438,58 @@ describe('Select', async () => {
         expect(optionList).toEqual(defaultList);
     });
 
-    it('传给 filter 的 option 对象不会被后续搜索改写', async () => {
+    it('传给 filter 的 option 与 optionList 中的条目一致，不会被后续搜索改写', async () => {
         const seen: SelectOptionProps[] = [];
         const filter = (input: string, option: SelectOptionProps) => {
             seen.push(option);
             return String(option.label).toLowerCase().includes(input);
         };
-        await renderSelect({ optionList: defaultList, filter, defaultOpen: true });
+        const optionList = defaultList.map((option) => ({ ...option }));
+        await renderSelect({ optionList, filter, defaultOpen: true });
         await search('abc');
-        const visibility = seen.map((option) => option._show);
         await search('zzz');
         expect(getOptions()).toHaveLength(0);
-        expect(seen.slice(0, visibility.length).map((option) => option._show)).toEqual(visibility);
+        expect(seen.length).toBeGreaterThan(0);
+        // the props proxy the items, so the filter sees equal objects rather than the same ones
+        seen.forEach((option) => expect(defaultList).toContainEqual({ ...option }));
+        expect(optionList).toEqual(defaultList);
+    });
+
+    it('用户回调与插槽收到的选项不带 Select 的内部键', async () => {
+        const internal = ['_show', '_selected', '_scrollIndex', '_parentGroup', '_keyInJsx', '_inputCreateOnly', '_notExist'];
+        const internalKeys = (option: object) => Object.keys(option).filter((key) => internal.includes(key));
+        const seen: object[] = [];
+        const onChange = vi.fn<(value: unknown) => void>();
+        await renderSelect(
+            {
+                multiple: true,
+                optionList: defaultList,
+                changeWithObject: true,
+                onChange,
+                defaultOpen: true,
+                filter: (_: string, option: SelectOptionProps) => {
+                    seen.push(option);
+                    return true;
+                },
+            },
+            {
+                optionItem: (scope) => {
+                    seen.push(scope);
+                    return h('div', { id: scope.id, role: 'option', 'aria-selected': String(scope.selected), onClick: scope.onClick }, String(scope.label));
+                },
+                selectedItem: (scope) => {
+                    seen.push(scope.option as object);
+                    return 'tag';
+                },
+            }
+        );
+        await search('A');
+        await fireEvent.click(screen.getByRole('option', { name: 'Abc' }));
+        await settle();
+        expect(onChange).toHaveBeenCalled();
+        seen.push(...(onChange.mock.calls[0][0] as object[]));
+        expect(seen.length).toBeGreaterThan(2);
+        expect(seen.flatMap(internalKeys)).toEqual([]);
     });
 
     it('Tab 进入多选可搜索 Select 的搜索框后，方向键与 Enter 可用', async () => {
@@ -3997,7 +4037,7 @@ describe('Select', async () => {
             const trigger = vi.fn<(scope: Record<string, unknown>) => unknown>(() => <div>custom</div>);
             await renderSelect({ placeholder: 'Pick', filter: true, defaultValue: 'abc' }, { trigger, prefix: () => 'P' });
             const scope = trigger.mock.lastCall?.[0] as Record<string, unknown>;
-            expect(Object.keys(scope).sort()).toEqual(['componentProps', 'disabled', 'inputValue', 'onClear', 'onRemove', 'onSearch', 'placeholder', 'value'].sort());
+            expect(Object.keys(scope).toSorted()).toEqual(['componentProps', 'disabled', 'inputValue', 'onClear', 'onRemove', 'onSearch', 'placeholder', 'value'].toSorted());
             expect(scope).toEqual(expect.objectContaining({ placeholder: 'Pick', disabled: false, inputValue: '' }));
             expect(scope.componentProps).toEqual(expect.objectContaining({ placeholder: 'Pick', filter: true }));
             expect(scope.componentProps).not.toHaveProperty('prefix');

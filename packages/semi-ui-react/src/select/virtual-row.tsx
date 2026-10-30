@@ -6,8 +6,7 @@ export interface VirtualRowProps {
 }
 
 // memo: a scroll renders only VirtualList, which passes the same data and a cached style to rows that stay in view
-function VirtualRow({ index, data, style }: VirtualRowProps) {
-    const { visibleOptions, renderOption } = data;
+function VirtualRow({ index, data: { visibleOptions, renderOption }, style }: VirtualRowProps) {
     const option = visibleOptions[index];
 
     return renderOption(option, index, style);

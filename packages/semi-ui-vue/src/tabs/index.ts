@@ -8,7 +8,8 @@ const TabsWithParts: typeof Tabs & { TabPane: typeof TabPane; TabItem: typeof Ta
     TabItem,
 });
 export default TabsWithParts;
-export { TabPane, TabItem };
+export { default as TabPane } from './tab-pane.vue';
+export { default as TabItem } from './tab-item.vue';
 export type {
     PlainTab,
     TabBarProps,

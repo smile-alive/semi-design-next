@@ -130,7 +130,7 @@ export default function InputBox(props: InputBoxProps) {
                 class={props.clickUpload ? clsx(`${PREFIX_INPUT_BOX}-upload`, props.uploadProps?.class) : undefined}
                 style={props.clickUpload ? props.uploadProps?.style : hiddenStyle}
                 fileList={state().attachment}
-                onChange={(changed) => foundation.onAttachmentAdd(changed)}
+                onChange={foundation.onAttachmentAdd}
             >
                 <Show when={props.clickUpload}>{uploadTrigger()}</Show>
             </Upload>
@@ -152,11 +152,11 @@ export default function InputBox(props: InputBoxProps) {
                 showClear={false}
                 showCounter={false}
                 showLineNumber={false}
-                onChange={(value) => foundation.onInputAreaChange(value)}
-                onEnterPress={(e) => foundation.onEnterPress(e)}
-                onPaste={(e) => foundation.onPaste(e)}
+                onChange={foundation.onInputAreaChange}
+                onEnterPress={foundation.onEnterPress}
+                onPaste={foundation.onPaste}
             />
-            <Attachment attachment={state().attachment} onClear={(item) => foundation.onAttachmentDelete(item)} />
+            <Attachment attachment={state().attachment} onClear={foundation.onAttachmentDelete} />
         </div>
     );
 
@@ -170,7 +170,7 @@ export default function InputBox(props: InputBoxProps) {
             disabled={InputBoxFoundation.getDisableSend(state().content, state().attachment, props.disableSend, props.canSend)}
             theme="solid"
             icon={<IconArrowUp class={`${PREFIX_INPUT_BOX}-sendButton-icon`} size="large" />}
-            onClick={(e) => foundation.onSend(e)}
+            onClick={foundation.onSend}
         />
     );
 

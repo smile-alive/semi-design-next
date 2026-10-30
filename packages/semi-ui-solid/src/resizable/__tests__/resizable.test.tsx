@@ -61,15 +61,15 @@ const nonPrimaryPresses = [
 ] as const;
 // jsdom has no pointer capture, so the moves and the release the browser would send to the pressed handle go to it
 let pressed: Element;
-const down = (target: Element, from: number[], init?: PointerEventInit) => {
+function down(target: Element, from: number[], init?: PointerEventInit) {
     pressed = target;
     fireEvent.pointerDown(target, { ...point(from), ...init });
-};
+}
 const move = (to: number[]) => fireEvent.pointerMove(pressed, point(to));
-const up = (to = [0, 0]) => {
+function up(to = [0, 0]) {
     fireEvent.pointerUp(pressed, point(to));
     fireEvent.lostPointerCapture(pressed, point(to));
-};
+}
 function drag(target: Element, from: number[], to: number[]) {
     down(target, from);
     move(to);
@@ -595,7 +595,7 @@ describe('ResizeGroup', () => {
     const widths = (container: Element) => getItems(container).map((el) => el.style.width);
     const heights = (container: Element) => getItems(container).map((el) => el.style.height);
 
-    function renderGroup({ direction, items = [{}, {}], groupProps = {} }: { direction?: 'horizontal' | 'vertical'; items?: ItemProps[]; groupProps?: ComponentProps<typeof ResizeGroup> } = {}) {
+    const renderGroup = ({ direction, items = [{}, {}], groupProps = {} }: { direction?: 'horizontal' | 'vertical'; items?: ItemProps[]; groupProps?: ComponentProps<typeof ResizeGroup> } = {}) => {
         const vertical = direction === 'vertical';
         return render(() => (
             <div style={{ width: vertical ? '500px' : '1010px', height: vertical ? '510px' : '500px' }}>
@@ -604,7 +604,7 @@ describe('ResizeGroup', () => {
                 </ResizeGroup>
             </div>
         ));
-    }
+    };
 
     const threePanes = () => (
         <>

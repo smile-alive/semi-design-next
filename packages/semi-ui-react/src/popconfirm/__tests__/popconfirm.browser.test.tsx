@@ -8,14 +8,14 @@ import { tab } from '@test/utils/browser';
 const prefix = `${BASE_CLASS_PREFIX}-popconfirm`;
 const footerButtons = () => document.querySelectorAll(`.${prefix}-footer .${BASE_CLASS_PREFIX}-button`);
 
-const deferred = () => {
+function deferred() {
     let resolve, reject;
     const promise = new Promise((res, rej) => {
         resolve = res;
         reject = rej;
     });
     return { promise, resolve, reject };
-};
+}
 
 describe('Popconfirm（浏览器）', () => {
     it('确认按钮焦点', async () => {

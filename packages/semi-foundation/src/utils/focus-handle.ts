@@ -108,8 +108,7 @@ export default class FocusTrapHandle {
      * Where a dialog puts focus on open when nothing inside has it: the element focused on the first open, the
      * autofocus element when `autofocus` is set, the footer button named by `initialFocus`, else the first focusable.
      */
-    static pickInitialFocus(dialog: HTMLElement, options: { remembered?: HTMLElement | null; footer?: Element | null; initialFocus?: string; autofocus?: boolean }): FocusableElement | undefined {
-        const { remembered, footer, initialFocus, autofocus } = options;
+    static pickInitialFocus(dialog: HTMLElement, { remembered, footer, initialFocus, autofocus }: { remembered?: HTMLElement | null; footer?: Element | null; initialFocus?: string; autofocus?: boolean }): FocusableElement | undefined {
         const button = initialFocus ? footer?.querySelector<HTMLElement>(`[data-type="${initialFocus}"]`) : null;
         return (remembered?.isConnected ? remembered : null) ?? (autofocus ? FocusTrapHandle.findAutofocus(dialog) : null) ?? button ?? FocusTrapHandle.getFocusableElements(dialog)[0];
     }

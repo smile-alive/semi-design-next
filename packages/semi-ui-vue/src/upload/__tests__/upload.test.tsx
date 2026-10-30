@@ -44,11 +44,11 @@ function renderHandle(uploadProps: Record<string, unknown> = {}) {
     };
 }
 
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
 const pasteFile = (name: string) =>
     fireEvent.paste(document.body, {
@@ -1254,11 +1254,11 @@ describe('Upload', () => {
 
 describe('Upload 补充覆盖', () => {
     // Clipboard reads go through navigator.clipboard / navigator.permissions, which jsdom does not provide
-    function stubClipboard(query: Permissions['query']) {
+    const stubClipboard = (query: Permissions['query']) => {
         const read = vi.fn<Clipboard['read']>(() => Promise.resolve([]));
         vi.stubGlobal('navigator', Object.create(navigator, { clipboard: { value: { read } }, permissions: { value: { query } } }));
         return { read };
-    }
+    };
 
     it('beforeClear 默认返回 true', async () => {
         const onChange = fn();

@@ -8,6 +8,7 @@
     import { usePopupLayer } from '../_base/popup-layer';
     import { semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import slotNodes from '../_base/slot-nodes';
+    import { useInputGroupInScope } from '../input/context';
     import { type ButtonGroupContext, provideButtonGroupContext, useButtonGroupContext } from './context';
     import type { ButtonGroupProps, ButtonGroupSlots } from './interface';
     import { resolveLooks } from './use-button';
@@ -26,11 +27,13 @@
     const layer = usePopupLayer();
     const outer = useButtonGroupContext();
 
+    const inputGroup = useInputGroupInScope();
+
     const prefix = cssClasses.PREFIX;
 
-    // A nested group inherits the outer one.
+    // A nested group inherits the outer one, and the InputGroup comes last of the groups.
     const context = computed<ButtonGroupContext>(() => ({
-        ...inheritGroupLooks(props, outer && outer.value.layer === layer ? outer.value : undefined),
+        ...inheritGroupLooks(inheritGroupLooks(props, outer && outer.value.layer === layer ? outer.value : undefined), inputGroup?.value),
         layer,
     }));
 

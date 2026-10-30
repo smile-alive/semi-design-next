@@ -1736,11 +1736,11 @@ describe('FileCard', () => {
 });
 describe('Upload 补充覆盖', () => {
     // Clipboard reads go through navigator.clipboard / navigator.permissions, which jsdom does not provide
-    function stubClipboard({ read = vi.fn<Clipboard['read']>(() => Promise.resolve([])), query: permissionQuery }: { read?: Clipboard['read']; query?: Permissions['query'] } = {}) {
+    const stubClipboard = ({ read = vi.fn<Clipboard['read']>(() => Promise.resolve([])), query: permissionQuery }: { read?: Clipboard['read']; query?: Permissions['query'] } = {}) => {
         Object.defineProperty(navigator, 'clipboard', { value: { read }, configurable: true });
         Object.defineProperty(navigator, 'permissions', { value: { query: permissionQuery }, configurable: true });
         return { read };
-    }
+    };
 
     afterEach(() => {
         Reflect.deleteProperty(navigator, 'clipboard');
@@ -2064,11 +2064,11 @@ describe('Upload 生命周期与属性', () => {
 describe('Upload 审计修复', () => {
     const cloneFile = (f: File) => new File([f], f.name, { type: f.type });
 
-    function renderWithHandle(props: Partial<UploadProps>) {
+    const renderWithHandle = (props: Partial<UploadProps>) => {
         let handle: UploadHandle | undefined;
         render(() => <Upload ref={(value: UploadHandle) => (handle = value)} action={action} {...props} />);
         return () => handle as UploadHandle;
-    }
+    };
 
     it('beforeUpload 同步返回的对象缺省 shouldUpload 时照常上传', () => {
         renderUpload({ beforeUpload: () => ({ validateMessage: 'checked' }) });

@@ -20,6 +20,7 @@ import useFoundation from '../_base/use-foundation';
 import type { VirtualListHandle } from '../_base/virtual-list';
 import { hasContent, renderTriggerPrefix, renderTriggerSuffix } from '../_utils';
 import { useConfigContext } from '../config-provider/context';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import Input, { type InputHandle } from '../input/index';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover/index';
@@ -104,8 +105,16 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     onExceed?: (checkedItem: Entity[]) => void;
     /** Renders the selected path's labels, or in multiple mode one tag per checked node */
     displayRender?: ByMultiple<Multiple, (selected: Array<ReactNode>) => ReactNode, (selected: Entity, idx: number) => ReactNode>;
-    onBlur?: (e?: MouseEvent | React.KeyboardEvent | globalThis.MouseEvent) => void;
-    onFocus?: (e: MouseEvent | React.KeyboardEvent) => void;
+    /**
+     * Once per onFocus: the mousedown outside (native), the click or key that picks and closes, or the native focusout
+     * that leaves the trigger and the dropdown
+     */
+    onBlur?: (e?: MouseEvent | React.KeyboardEvent | globalThis.MouseEvent | globalThis.FocusEvent) => void;
+    /**
+     * Focus entering the trigger or the dropdown from outside (native focusin); moving within them does not report
+     * again. A click or key that reopens after a pick closed it reports it too
+     */
+    onFocus?: (e: MouseEvent | React.KeyboardEvent | globalThis.FocusEvent) => void;
     validateStatus?: ValidateStatus;
     position?: Position;
     searchPosition?: typeof strings.SEARCH_POSITION_TRIGGER | typeof strings.SEARCH_POSITION_CUSTOM;
@@ -172,7 +181,7 @@ const defaultProps = {
 
 export default function Cascader<Multiple extends boolean | undefined = undefined>(rawProps: CascaderProps<Multiple>) {
     const bodyProps: CascaderBodyProps = rawProps;
-    const props = useDefaultProps('Cascader', bodyProps, defaultProps);
+    const props = useDefaultProps('Cascader', withInputGroup(bodyProps, useInputGroupInScope()), defaultProps);
 
     const {
         'aria-describedby': ariaDescribedby,
@@ -357,6 +366,16 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         state.isOpen
     );
 
+    // focus enters the dropdown through a field in a slot, and the dropdown is not a DOM descendant of the trigger, so
+    // containment is checked against its popup layer
+    const handleFocusLeave = (e: React.FocusEvent) => {
+        const target = e.relatedTarget;
+        const inside = target instanceof Node && (Boolean(triggerRef.current?.contains(target)) || Boolean(optionContainerEl.current?.closest('[popover]')?.contains(target)));
+        if (!inside) {
+            foundation.handleFocusLeave(e.nativeEvent);
+        }
+    };
+
     const deriveView = (s: BasicCascaderInnerData) => (multiple ? { ...s, ...CascaderFoundation.deriveMultipleState(props, s) } : s);
 
     const view = deriveView(state);
@@ -540,6 +559,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 ref={optionContainerEl}
                 className={popoverCls}
                 style={dropdownStyle}
+                onBlur={handleFocusLeave}
+                onFocus={(e) => foundation.handleFocusEnter(e.nativeEvent)}
                 onKeyDown={handleKeyDown}
                 // a press would focus the popup, which is hidden on close and drops the focus to body; the focus stays
                 // on the trigger. A text field in a slot still takes the focus.
@@ -574,10 +595,10 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                     virtualize={virtualizeInSearch}
                     virtualListRef={virtualListRef}
                     filterRender={filterRender}
-                    onItemCheckboxClick={(item) => foundation.onItemCheckboxClick(item)}
-                    onItemClick={(e, item) => foundation.handleItemClick(e, item)}
-                    onItemHover={(e, item) => foundation.handleItemHover(e, item)}
-                    onListScroll={(e, ind) => foundation.handleListScroll(e, ind)}
+                    onItemCheckboxClick={foundation.onItemCheckboxClick}
+                    onItemClick={foundation.handleItemClick}
+                    onItemHover={foundation.handleItemHover}
+                    onListScroll={foundation.handleListScroll}
                 />
                 {bottomSlot}
             </div>
@@ -738,10 +759,12 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 style={style}
                 {...triggerAriaProps}
                 tabIndex={disabled || inputIsCombobox ? -1 : 0}
+                onBlur={handleFocusLeave}
                 onClick={(e) => {
                     rest.onClick?.(e);
                     foundation.handleClick(e);
                 }}
+                onFocus={(e) => foundation.handleFocusEnter(e.nativeEvent)}
                 onKeyDown={(e) => {
                     rest.onKeyDown?.(e);
                     if (!isInnerControlKey(e)) {
@@ -772,31 +795,33 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     useImperativeHandle(
         props.ref,
         () => ({
-            open: () => foundation.open(),
-            close: () => foundation.close(undefined),
-            focus: () => foundation.focus(),
-            blur: () => foundation.blur(),
+            open: foundation.open,
+            close: foundation.close,
+            focus: foundation.focus,
+            blur: foundation.blur,
             search: (value: string) => foundation.handleInputChange(value),
         }),
         [foundation]
     );
 
     return (
-        <Popover
-            // An empty list has no columns to size it, so it matches the trigger's live width
-            style={isEmpty ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined}
-            role="presentation"
-            afterClose={() => foundation.endSearching()}
-            autoAdjustOverflow={autoAdjustOverflow}
-            content={renderContent()}
-            motion={motion}
-            position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
-            stopPropagation={stopPropagation}
-            trigger="custom"
-            visible={isOpen}
-            onOpen={() => foundation.handlePopoverOpen()}
-        >
-            {renderSelection()}
-        </Popover>
+        <InputGroupContext value={undefined}>
+            <Popover
+                // An empty list has no columns to size it, so it matches the trigger's live width
+                style={isEmpty ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined}
+                role="presentation"
+                afterClose={foundation.endSearching}
+                autoAdjustOverflow={autoAdjustOverflow}
+                content={renderContent()}
+                motion={motion}
+                position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
+                stopPropagation={stopPropagation}
+                trigger="custom"
+                visible={isOpen}
+                onOpen={foundation.handlePopoverOpen}
+            >
+                {renderSelection()}
+            </Popover>
+        </InputGroupContext>
     );
 }

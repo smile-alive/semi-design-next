@@ -74,7 +74,7 @@
         return { ...rest, disabled: props.disabled ?? formProps.value.disabled };
     };
 
-    // merged per field: InputGroup hands its attrs to every child and would overwrite each field's own references
+    // joined with each field's own references: the group's label, extra text and error message name every field in it
     const fieldAria = (node: VNode) => ({
         'aria-labelledby': joinIds(node.props?.['aria-labelledby'], attrs['aria-labelledby'], hasLabel() && labelId.value),
         'aria-describedby': joinIds(node.props?.['aria-describedby'], attrs['aria-describedby'], hasSlotContent(slots.extraText) && extraTextId),

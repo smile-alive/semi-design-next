@@ -4,11 +4,11 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import DragMove from '..';
 
-const drag = (element: Element, from: number[], to: number[], pointerType: string) => {
+function drag(element: Element, from: number[], to: number[], pointerType: string) {
     fireEvent.pointerDown(element, { pointerId: 1, pointerType, clientX: from[0], clientY: from[1] });
     fireEvent.pointerMove(document, { pointerId: 1, pointerType, clientX: to[0], clientY: to[1] });
     fireEvent.pointerUp(document, { pointerId: 1, pointerType });
-};
+}
 
 // toHaveStyle appends a probe node to the body, re-triggering waitFor's MutationObserver forever; expect.element polls.
 // The element keeps its pre-drag layout position, so the expectation is that position plus the delta.

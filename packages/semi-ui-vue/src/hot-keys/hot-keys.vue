@@ -56,7 +56,7 @@
     // compared item by item: an inline array is new on every parent render, and an in-place change keeps identity
     useDidUpdate(
         () => [...props.hotKeys],
-        () => foundation.handleHotKeysChange(),
+        foundation.handleHotKeysChange,
         (a, b) => a.length === b.length && a.every((key, index) => key === b[index])
     );
 </script>

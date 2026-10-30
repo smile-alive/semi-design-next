@@ -76,7 +76,7 @@
 
 <template>
     <div :class="[prefix, `${prefix}-${props.theme}`]" :role="groupRole($attrs)">
-        <audio ref="audio" :autoplay="props.autoPlay" :src="info?.src" @pause="foundation.handleAudioPause" @play="foundation.handleAudioPlay" @timeupdate="foundation.handleTimeUpdate()">
+        <audio ref="audio" :autoplay="props.autoPlay" :src="info?.src" @pause="foundation.handleAudioPause" @play="foundation.handleAudioPlay" @timeupdate="foundation.handleTimeUpdate">
             <track kind="captions" />
         </audio>
         <div :class="`${prefix}-control`">
@@ -88,7 +88,7 @@
                 </Button>
                 <template #content>{{ locale.prev }}</template>
             </Tooltip>
-            <Button :aria-label="state.isPlaying ? locale.pause : locale.play" :class="[`${prefix}-control-button-play`, { [`${prefix}-control-button-play-disabled`]: state.error }]" :disabled="state.error" size="large" :style="circleStyle" @click="foundation.handleStatusClick()">
+            <Button :aria-label="state.isPlaying ? locale.pause : locale.play" :class="[`${prefix}-control-button-play`, { [`${prefix}-control-button-play-disabled`]: state.error }]" :disabled="state.error" size="large" :style="circleStyle" @click="foundation.handleStatusClick">
                 <template #icon>
                     <IconPause v-if="state.isPlaying" size="large" />
                     <IconPlay v-else size="large" :style="{ marginLeft: '1px' }" />
@@ -118,7 +118,7 @@
                 <div v-if="!state.error" :class="`${prefix}-info-time`">
                     <span style="width: 38px">{{ formatTime(state.currentTime) }}</span>
                     <div :class="`${prefix}-slider-container`">
-                        <AudioSlider :getValueText="progressText" :label="locale.progress" :max="state.totalTime" :theme="props.theme" :value="state.currentTime" @change="foundation.handleTimeChange($event)" />
+                        <AudioSlider :getValueText="progressText" :label="locale.progress" :max="state.totalTime" :theme="props.theme" :value="state.currentTime" @change="foundation.handleTimeChange" />
                     </div>
                     <span style="width: 38px">{{ formatTime(state.totalTime) }}</span>
                 </div>
@@ -127,7 +127,7 @@
         <div v-if="props.showToolbar" :class="`${prefix}-control`">
             <template v-if="!state.error">
                 <Popover :ariaLabel="locale.volume" autoAdjustOverflow role="dialog">
-                    <Button :aria-label="locale.volume" :style="transparentStyle" @click="foundation.handleVolumeSilent()">
+                    <Button :aria-label="locale.volume" :style="transparentStyle" @click="foundation.handleVolumeSilent">
                         <template #icon>
                             <IconVolumnSilent v-if="state.volume === 0" :class="iconClass" />
                             <IconVolume2 v-else :class="iconClass" />
@@ -136,7 +136,7 @@
                     <template #content>
                         <div :class="[`${prefix}-control-volume`, `${prefix}-control-volume-${props.theme}`]">
                             <div :class="`${prefix}-control-volume-title`">{{ state.volume }}%</div>
-                            <AudioSlider :getValueText="volumeText" :height="120" :label="locale.volume" :max="100" :showTooltip="false" :theme="props.theme" :value="state.volume" vertical @change="foundation.handleVolumeChange($event)" />
+                            <AudioSlider :getValueText="volumeText" :height="120" :label="locale.volume" :max="100" :showTooltip="false" :theme="props.theme" :value="state.volume" vertical @change="foundation.handleVolumeChange" />
                         </div>
                     </template>
                 </Popover>
@@ -169,7 +169,7 @@
                     </template>
                 </Dropdown>
             </template>
-            <Button :aria-label="locale.refresh" :style="transparentStyle" @click="foundation.handleRefresh()">
+            <Button :aria-label="locale.refresh" :style="transparentStyle" @click="foundation.handleRefresh">
                 <template #icon>
                     <IconRefresh :class="iconClass" :style="{ transform: 'rotateY(180deg)' }" />
                 </template>

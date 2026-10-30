@@ -68,10 +68,10 @@ function renderKeptAlive(onChange: OnChange) {
     return { ...view, shown };
 }
 
-const tick = async (ms: number) => {
+async function tick(ms: number) {
     await vi.advanceTimersByTimeAsync(ms);
     await nextTick();
-};
+}
 // Renders each props variant on its own and reports which of the given class suffixes are present.
 const presentClasses = (propsList: Props[], suffixes: string[]) =>
     propsList.map((props) => {

@@ -177,8 +177,8 @@
         rowProps,
         hasLoadData: () => Boolean(loadData.value),
         rtl: () => config.value.direction === 'rtl',
-        select: (event, row) => foundation.handleNodeSelect(event, row),
-        expand: (event, row) => foundation.handleNodeExpand(event, row),
+        select: foundation.handleNodeSelect,
+        expand: foundation.handleNodeExpand,
         reveal,
     });
 
@@ -272,12 +272,12 @@
             activate(row);
             foundation.handleNodeDoubleClick(event, row);
         },
-        onNodeDragStart: (event, row) => foundation.handleNodeDragStart(event, row),
-        onNodeDragEnter: (event, row) => foundation.handleNodeDragEnter(event, row),
-        onNodeDragOver: (event, row) => foundation.handleNodeDragOver(event, row),
-        onNodeDragLeave: (event, row) => foundation.handleNodeDragLeave(event, row),
-        onNodeDragEnd: (event, row) => foundation.handleNodeDragEnd(event, row),
-        onNodeDrop: (event, row) => foundation.handleNodeDrop(event, row),
+        onNodeDragStart: foundation.handleNodeDragStart,
+        onNodeDragEnter: foundation.handleNodeDragEnter,
+        onNodeDragOver: foundation.handleNodeDragOver,
+        onNodeDragLeave: foundation.handleNodeDragLeave,
+        onNodeDragEnd: foundation.handleNodeDragEnd,
+        onNodeDrop: foundation.handleNodeDrop,
     });
 
     watch(derived, (value) => {
@@ -296,8 +296,8 @@
     );
 
     defineExpose<TreeHandle>({
-        search: (value) => foundation.handleInputChange(value),
-        scrollTo: (scrollData) => foundation.scrollTo(scrollData),
+        search: foundation.handleInputChange,
+        scrollTo: foundation.scrollTo,
     });
 </script>
 

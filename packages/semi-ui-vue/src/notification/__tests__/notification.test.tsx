@@ -21,37 +21,37 @@ const prefix = 'semi-notification';
 const noticeCls = `${prefix}-notice`;
 const hideCls = (placement = 'topRight') => `${noticeCls}-animation-hide_${placement}`;
 // The list animates each notice's root wrapper, not the notice element.
-const wrapperOf = (notice: Element | null | undefined) => notice?.parentElement;
+const wrapperOf = (notice?: Element | null) => notice?.parentElement;
 const getList = () => document.querySelector<HTMLElement>(`.${prefix}-list`);
 const getTitle = (selector: string) => document.querySelector(`${selector} .${noticeCls}-title`);
 const notices = (root: ParentNode = document) => [...root.querySelectorAll<HTMLElement>(`.${noticeCls}`)];
 const titles = (root: ParentNode = document) => [...root.querySelectorAll(`.${noticeCls}-title`)].map((title) => title.textContent);
-const show = async (method: 'open' | 'info' | 'success' | 'warning' | 'error', opts: NoticeProps) => {
+async function show(method: 'open' | 'info' | 'success' | 'warning' | 'error', opts: NoticeProps) {
     const id = Notification[method](opts);
     await nextTick();
     return id;
-};
-const advance = async (ms: number) => {
+}
+async function advance(ms: number) {
     vi.advanceTimersByTime(ms);
     await nextTick();
-};
+}
 // Vue skips a listener attached in the same millisecond as the event, so the clock moves past the mount first.
-const clickAfterMount = async (el: Element) => {
+async function clickAfterMount(el: Element) {
     vi.setSystemTime(Date.now() + 1);
     await fireEvent.click(el);
-};
+}
 // VTL's fireEvent waits on timers, so fake-timer tests dispatch directly.
-const dispatch = async (el: Element, type: string) => {
+async function dispatch(el: Element, type: string) {
     el.dispatchEvent(new Event(type));
     await nextTick();
-};
-const renderHook = (props: { reachable?: string } = {}) => {
+}
+function renderHook(props: { reachable?: string } = {}) {
     let api!: NotificationHookApi;
     const view = render(HookHost, {
         props: { ...props, onApi: (notification: NotificationHookApi) => (api = notification) },
     });
     return { api, holder: view.container.querySelector('[data-testid="holder"]') as HTMLElement };
-};
+}
 const renderNotice = (props: Record<string, unknown> = {}, attrs: Record<string, unknown> = {}) => render(Notice, { props: { placement: 'topRight', ...props }, attrs });
 
 describe('Notification', () => {

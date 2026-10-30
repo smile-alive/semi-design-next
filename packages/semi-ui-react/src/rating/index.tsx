@@ -194,10 +194,10 @@ export default function Rating(rawProps: RatingProps) {
                 preventScroll={props.preventScroll}
                 size={ind === count ? 0 : size}
                 unitOf={unitOf}
-                onClick={disabled ? noop : (e, index) => foundation.handleClick(e, index)}
-                onFocus={disabled ? noop : (e, index) => foundation.handleStarFocus(e, index)}
-                onHover={disabled ? noop : (e, index) => foundation.handleHover(e, index)}
-                onSelect={disabled ? noop : (e, index, newValue) => foundation.handleSelect(e, index, newValue)}
+                onClick={disabled ? noop : foundation.handleClick}
+                onFocus={disabled ? noop : foundation.handleStarFocus}
+                onHover={disabled ? noop : foundation.handleHover}
+                onSelect={disabled ? noop : foundation.handleSelect}
             />
         );
         if (tooltips) {
@@ -259,8 +259,8 @@ export default function Rating(rawProps: RatingProps) {
             role="radiogroup"
             tabIndex={-1}
             // focus that was inside before the rating was disabled must still be released
-            onBlur={(e) => foundation.handleBlur(e)}
-            onFocus={disabled ? noop : (e) => foundation.handleFocus(e)}
+            onBlur={foundation.handleBlur}
+            onFocus={disabled ? noop : foundation.handleFocus}
             onKeyDown={disabled ? noop : (e) => foundation.handleKeyDown(e, value)}
             // a hover that began before the rating was disabled must still end
             onMouseLeave={(e) => {

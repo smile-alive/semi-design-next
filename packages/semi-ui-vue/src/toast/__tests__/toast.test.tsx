@@ -20,31 +20,31 @@ const prefix = 'semi-toast';
 const getInfoToast = () => document.querySelector<HTMLElement>(`.${prefix}-info`);
 const texts = (selector = `.${prefix}-info`) => [...document.querySelectorAll(selector)].map((toast) => toast.textContent);
 const innerWrapper = (root: ParentNode = document) => root.querySelector(`.${prefix}-innerWrapper`) as HTMLElement;
-const show = async (opts: Omit<ToastProps, 'type'> | string) => {
+async function show(opts: Omit<ToastProps, 'type'> | string) {
     Toast.info(opts);
     await nextTick();
-};
-const advance = async (ms: number) => {
+}
+async function advance(ms: number) {
     vi.advanceTimersByTime(ms);
     await nextTick();
-};
+}
 // TransitionGroup puts the enter and leave classes on the toast's wrapper element
 const wrapperOf = (toast: Element | null) => toast?.parentElement;
 // Vue skips a listener attached in the same millisecond as the event, so move the clock past the mount first.
-const clickAfterMount = async (el: Element) => {
+async function clickAfterMount(el: Element) {
     vi.setSystemTime(Date.now() + 1);
     await fireEvent.click(el);
-};
+}
 // VTL's fireEvent waits on timers, so fake-timer tests dispatch directly.
-const dispatch = async (el: Element, type: string) => {
+async function dispatch(el: Element, type: string) {
     el.dispatchEvent(new Event(type));
     await nextTick();
-};
-const renderHook = (props: { reachable?: string } = {}) => {
+}
+function renderHook(props: { reachable?: string } = {}) {
     let api!: ToastHookApi;
     const view = render(HookHost, { props: { ...props, onApi: (toast: ToastHookApi) => (api = toast) } });
     return { api, holder: view.getByTestId('holder') };
-};
+}
 
 describe('Toast', () => {
     beforeEach(() => {

@@ -127,7 +127,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     }
 
     /** A second finger neither moves nor ends the drag; keyboard events carry no pointer */
-    #isOtherPointer(e: any) {
+    #isOtherPointer(e: { pointerId?: number }) {
         return typeof e.pointerId === 'number' && e.pointerId !== this.#pointerId;
     }
 
@@ -177,7 +177,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         this.#moveHandle(nextValue, () => this.#notifyAfterChange());
     }
 
-    #onHandleMove = (e: any) => {
+    #onHandleMove = (e: Pick<PointerEvent, 'clientX' | 'clientY' | 'pointerId' | 'stopPropagation' | 'preventDefault'>) => {
         if (this.#isOtherPointer(e)) {
             return false;
         }
@@ -201,7 +201,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         return true;
     };
 
-    #onHandleUp = (e: any) => {
+    #onHandleUp = (e: Pick<Event, 'stopPropagation' | 'preventDefault'> & { pointerId?: number }) => {
         if (this.#isOtherPointer(e)) {
             return false;
         }
@@ -484,22 +484,22 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     /**
      * Syncs a changed value prop, clamped to min and max
      */
-    handleValueChange(nextValue: SliderProps['value']) {
+    handleValueChange = (nextValue: SliderProps['value']) => {
         if (!this.valueFormatIsCorrect(nextValue)) {
             return;
         }
         this.setState({ currentValue: this.#clampToRange(nextValue) });
-    }
+    };
 
     /** A value prop back to undefined (a Form reset) returns to the default position */
-    resetValue() {
+    resetValue = () => {
         const { defaultValue, range, min } = this.getProps();
         const fallback = range ? [min, min] : min;
         this.setState({ currentValue: this.valueFormatIsCorrect(defaultValue) ? defaultValue : fallback });
         this.#checkCurrentValue();
-    }
+    };
 
-    onHandleDown(e: Pick<PointerEvent, 'pointerId' | 'pointerType' | 'button' | 'clientX' | 'clientY'> & { currentTarget: HTMLElement }, pos: 'min' | 'max') {
+    onHandleDown = (e: Pick<PointerEvent, 'pointerId' | 'pointerType' | 'button' | 'clientX' | 'clientY'> & { currentTarget: HTMLElement }, pos: 'min' | 'max') => {
         if (isSecondaryPress(e)) {
             return false;
         }
@@ -520,25 +520,25 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         // the handle must not jump to the pointer
         this.#dragOffset = pointerPos - this.#getHandleCenterPosition(vertical, e.currentTarget);
         return true;
-    }
+    };
 
-    onHandleEnter(pos: SliderState['activeHandle']) {
+    onHandleEnter = (pos: SliderState['activeHandle']) => {
         const { activeHandle } = this.getStates();
         if (!this.getProp('disabled') && !activeHandle && pos !== activeHandle) {
             this.setState({ activeHandle: pos });
         }
-    }
+    };
 
-    onHandleLeave() {
+    onHandleLeave = () => {
         if (!this.getState('isDrag')) {
             this.setState({ activeHandle: '' });
         }
-    }
+    };
 
     /**
      * Both native inputs span min to max, so a range handle is stopped at the other one here
      */
-    handleInputChange(value: number, pos: 'min' | 'max') {
+    handleInputChange = (value: number, pos: 'min' | 'max') => {
         if (this.getProp('disabled')) {
             return;
         }
@@ -553,7 +553,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
             }
             this._adapter.notifyChange(outputValue);
         }
-    }
+    };
 
     /**
      * A value key stays with the slider unless the consumer's handler already prevented it. Page, Home and End keep
@@ -561,7 +561,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
      * (Chrome follows the visual direction, Firefox not when vertical, Safari in neither case). The arrow pointing
      * towards max increases; the cross-axis arrow follows Up and Right.
      */
-    handleKeyDown(event: Pick<KeyboardEvent, 'key' | 'defaultPrevented' | 'stopPropagation' | 'preventDefault' | KeyModifiers>, pos: 'min' | 'max') {
+    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'defaultPrevented' | 'stopPropagation' | 'preventDefault' | KeyModifiers>, pos: 'min' | 'max') => {
         if (event.defaultPrevented || !VALUE_KEYS.includes(event.key) || hasModifier(event)) {
             return;
         }
@@ -582,18 +582,18 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         if (next >= min && next <= max) {
             this.handleInputChange(next, pos);
         }
-    }
+    };
 
     /**
      * Releasing a value key ends the change, like releasing the mouse
      */
-    handleKeyUp(event: Pick<KeyboardEvent, 'key' | KeyModifiers>) {
+    handleKeyUp = (event: Pick<KeyboardEvent, 'key' | KeyModifiers | 'stopPropagation' | 'preventDefault'>) => {
         if (VALUE_KEYS.includes(event.key) && !hasModifier(event)) {
             this.#onHandleUp(event);
         }
-    }
+    };
 
-    onFocus(e: { target: Element }, pos: 'min' | 'max') {
+    onFocus = (e: { target: Element }, pos: 'min' | 'max') => {
         const noTooltip = this.#noTooltip();
         if (noTooltip) {
             return;
@@ -601,15 +601,15 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         if (e.target.matches(':focus-visible')) {
             this.setState({ focusVisibleHandle: pos });
         }
-    }
+    };
 
-    onBlur(pos: 'min' | 'max') {
+    onBlur = (pos: 'min' | 'max') => {
         if (!this.#noTooltip() && this.getState('focusVisibleHandle') === pos) {
             this.setState({ focusVisibleHandle: '' });
         }
-    }
+    };
 
-    handleWrapClick = (e: any) => {
+    handleWrapClick = (e: Pick<MouseEvent, 'clientX' | 'clientY'>) => {
         if (this.getState('isDrag') || this.getProp('disabled')) {
             return;
         }
@@ -626,7 +626,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     };
 
     /** A mark label is a wide target: it selects the mark's own value, not the value under the pointer */
-    handleMarkClick(markValue: number) {
+    handleMarkClick = (markValue: number) => {
         if (this.getState('isDrag') || this.getProp('disabled')) {
             return;
         }
@@ -642,13 +642,13 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
             return;
         }
         this.#commitClick(nextValue);
-    }
+    };
 
-    handleWrapperEnter() {
+    handleWrapperEnter = () => {
         this.setState({ showBoundary: true });
-    }
+    };
 
-    handleWrapperLeave() {
+    handleWrapperLeave = () => {
         this.setState({ showBoundary: false });
-    }
+    };
 }

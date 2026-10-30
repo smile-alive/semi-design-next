@@ -14,7 +14,7 @@ const color: ColorValue = {
     hex: '#33809980',
 };
 
-const setup = (defaultValue: ColorValue = color) => {
+function setup(defaultValue: ColorValue = color) {
     const onChange = vi.fn<(value: ColorValue) => void>();
     const Host = () => <ConfigProvider locale={en_US}>{() => <ColorPicker defaultValue={defaultValue} alpha eyeDropper onChange={onChange} />}</ConfigProvider>;
     render(Host);
@@ -24,7 +24,7 @@ const setup = (defaultValue: ColorValue = color) => {
         return value.hsva;
     };
     return { onChange, last };
-};
+}
 
 const getSlider = (name: string) => screen.getByRole('slider', { name });
 

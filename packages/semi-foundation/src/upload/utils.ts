@@ -44,28 +44,28 @@ export function getFocusHandoverTarget(cards: ArrayLike<Element>, index: number,
 export class ListFocusTracker {
     #focused: { node: Node; index: number } | null = null;
 
-    track(node: Node, cards: ArrayLike<Element>) {
+    track = (node: Node, cards: ArrayLike<Element>) => {
         this.#focused = { node, index: indexOfCard(cards, node) };
-    }
+    };
 
     // Focus that left on its own must not be pulled back when the card goes away later. A control that is removed
     // while focused blurs too, but is gone by the time the microtask runs.
-    untrack(node: Node) {
+    untrack = (node: Node) => {
         queueMicrotask(() => {
             if (this.#focused?.node === node && node.isConnected) {
                 this.#focused = null;
             }
         });
-    }
+    };
 
-    restore(cards: ArrayLike<Element>, addArea: HTMLElement | null) {
+    restore = (cards: ArrayLike<Element>, addArea: HTMLElement | null) => {
         const lost = this.#focused;
         if (!lost || lost.node.isConnected) {
             return;
         }
         this.#focused = null;
         handoverFocus(lost.node as Element, getFocusHandoverTarget(cards, lost.index, addArea));
-    }
+    };
 }
 
 export function getFileSize(number: number) {

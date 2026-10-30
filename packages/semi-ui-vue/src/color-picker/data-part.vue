@@ -80,7 +80,7 @@
             </InputNumber>
             <Select :aria-label="i18n.locale.format" :class="`${cssClasses.PREFIX}-formatSelect`" :modelValue="state.format" :optionList="FORMAT_OPTIONS" size="small" @select="onSelectFormat" />
         </InputGroup>
-        <Button v-if="props.eyeDropper" :aria-label="i18n.locale.eyeDropper" size="small" theme="light" type="tertiary" @click="foundation.handlePickValueWithStraw()">
+        <Button v-if="props.eyeDropper" :aria-label="i18n.locale.eyeDropper" size="small" theme="light" type="tertiary" @click="foundation.handlePickValueWithStraw">
             <template #icon>
                 <IconEyedropper />
             </template>

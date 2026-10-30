@@ -21,7 +21,7 @@ function setup(props: CropperFoundationProps = {}) {
     };
     const foundation = new CropperFoundation(adapter as never);
     foundation.init();
-    foundation.handleImageLoad({ target: { naturalWidth: 400, naturalHeight: 200 } });
+    foundation.handleImageLoad({ target: Object.defineProperties(new Image(), { naturalWidth: { value: 400 }, naturalHeight: { value: 200 } }) });
     return {
         foundation,
         container,
@@ -31,12 +31,12 @@ function setup(props: CropperFoundationProps = {}) {
 }
 
 function press(foundation: CropperFoundation, dir: CornerDir, init: { pointerType?: string; button?: number } = {}) {
+    const corner = Object.assign(document.createElement('div'), { setPointerCapture: () => {} });
+    corner.dataset.dir = dir;
     foundation.handleCornerPointerDown({
-        currentTarget: { dataset: { dir }, setPointerCapture: () => {} },
+        currentTarget: corner,
         pointerId: 1,
-        pointerType: 'mouse',
-        button: 0,
-        ...init,
+        button: init.button ?? 0,
         preventDefault: () => {},
     });
 }

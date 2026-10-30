@@ -90,7 +90,7 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
         this.setState({ isPlaying: false });
     };
 
-    handleStatusClick() {
+    handleStatusClick = () => {
         const audio = this.#getAudioRef();
         if (!audio) return;
         if (audio.paused) {
@@ -98,15 +98,15 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
         } else {
             audio.pause();
         }
-    }
+    };
 
-    handleTimeUpdate() {
+    handleTimeUpdate = () => {
         const audio = this.#getAudioRef();
         if (!audio) return;
         this.setState({ currentTime: audio.currentTime });
-    }
+    };
 
-    handleTrackChange(direction: 'next' | 'prev') {
+    handleTrackChange = (direction: 'next' | 'prev') => {
         if (!this.#getAudioRef()) return;
         const audioUrl = this.getProp('audioUrl');
         if (Array.isArray(audioUrl)) {
@@ -119,35 +119,35 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
             });
         }
         this.#resetAudioState();
-    }
+    };
 
-    handleTimeChange(value: number) {
+    handleTimeChange = (value: number) => {
         const audio = this.#getAudioRef();
         // a live stream's Infinity duration turns a slider ratio into a non-finite value, which currentTime rejects
         if (!audio || !Number.isFinite(audio.duration) || !Number.isFinite(value)) return;
         const time = Math.min(Math.max(value, 0), audio.duration);
         audio.currentTime = time;
         this.setState({ currentTime: time });
-    }
+    };
 
-    handleSpeedChange(value: { label: string; value: number }) {
+    handleSpeedChange = (value: { label: string; value: number }) => {
         const audio = this.#getAudioRef();
         if (!audio) return;
         // a load resets playbackRate to defaultPlaybackRate, so set both
         audio.defaultPlaybackRate = audio.playbackRate = value.value;
         this.setState({ currentRate: value });
-    }
+    };
 
-    handleSeek(direction: number) {
+    handleSeek = (direction: number) => {
         const audio = this.#getAudioRef();
         if (!audio) return;
         // duration is NaN until metadata loads, and currentTime rejects non-finite values
         if (!Number.isFinite(audio.duration)) return;
         const skipDuration = this.getProp('skipDuration');
         audio.currentTime = Math.min(Math.max(audio.currentTime + direction * skipDuration, 0), audio.duration);
-    }
+    };
 
-    handleRefresh() {
+    handleRefresh = () => {
         const audio = this.#getAudioRef();
         if (!audio) return;
         if (this.getState('error')) {
@@ -156,18 +156,18 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
             audio.currentTime = 0;
             this.setState({ currentTime: 0 });
         }
-    }
+    };
 
-    handleVolumeChange(value: number) {
+    handleVolumeChange = (value: number) => {
         const audio = this.#getAudioRef();
         if (!audio) return;
         const volume = Math.floor(value);
         audio.volume = volume / 100;
         this.setState({ volume });
-    }
+    };
 
     /** Mutes, or restores half volume when muted */
-    handleVolumeSilent() {
+    handleVolumeSilent = () => {
         this.handleVolumeChange(this.getState('volume') === 0 ? 50 : 0);
-    }
+    };
 }

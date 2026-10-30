@@ -127,17 +127,17 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
     }
 
     /** After a controlled `value` is dropped, the uncontrolled state restarts from `defaultValue` */
-    resetToDefault() {
+    resetToDefault = () => {
         this._adapter.setState({ currentColor: this.getProp('defaultValue') });
-    }
+    };
 
-    handleChange(color: HsvaColor | RgbaColor | string, format: ColorFormat) {
+    handleChange = (color: HsvaColor | RgbaColor | string, format: ColorFormat) => {
         this.#commit(ColorPickerFoundation.getColorValue(color, format, Boolean(this.getProp('alpha'))));
-    }
+    };
 
-    handleAlphaChangeByHandle(newAlpha: { a: number }) {
+    handleAlphaChangeByHandle = (newAlpha: { a: number }) => {
         this.handleChangeA(this.getCurrentColor(), newAlpha.a);
-    }
+    };
 
     handleColorChangeByHandle(newHue: { h: number }) {
         this.handleChangeH(this.getCurrentColor(), newHue.h);

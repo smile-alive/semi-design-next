@@ -17,6 +17,8 @@
     import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover/popover.vue';
     import { useNestedPopups } from '../tooltip/context';
@@ -41,7 +43,8 @@
         multiple: () => semiDefault('DatePicker', 'multiple', false),
         max: semiGlobalDefault('DatePicker', 'max'),
         needConfirm: () => semiDefault('DatePicker', 'needConfirm', false),
-        disabled: () => semiDefault('DatePicker', 'disabled', false),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
         // Function-typed props cannot take a factory default; the global defaults are read in the computed below.
         disabledDate: undefined,
         disabledTime: undefined,
@@ -51,7 +54,7 @@
         endDateOffset: undefined,
         placeholder: semiGlobalDefault('DatePicker', 'placeholder'),
         rangeSeparator: () => semiDefault('DatePicker', 'rangeSeparator', strings.DEFAULT_SEPARATOR_RANGE),
-        size: () => semiDefault('DatePicker', 'size', 'default'),
+        size: undefined,
         density: () => semiDefault('DatePicker', 'density', 'default'),
         borderless: () => semiDefault('DatePicker', 'borderless', false),
         showClear: () => semiDefault('DatePicker', 'showClear', true),
@@ -102,6 +105,8 @@
     // leaves the measurement stale. Upgrade to a MutationObserver on the wrapper if such triggers need support.
     const customTriggerFocusable = shallowRef(false);
 
+    const looks = useGroupLooks('DatePicker', props, { size: 'default', disabled: false });
+
     const prefix = cssClasses.PREFIX;
     const normalized = computed(() => DatePickerFoundation.normalizeProps(props));
     const type = computed(() => normalized.value.type);
@@ -131,6 +136,9 @@
 
     // tabindex, which Tooltip adds to its child, belongs to the input, the Tab stop
     const controlKeys = ['aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required', 'tabindex'];
+
+    // the Inputs inside are parts of this control, not members of the group
+    provideInputGroupContext(undefined);
 
     const enabledDate = () => false;
 
@@ -219,6 +227,8 @@
         },
         {
             props: {
+                size: () => looks.size,
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 type: () => type.value,
                 rangeSeparator: () => rangeSeparator.value,
@@ -234,8 +244,8 @@
         }
     );
 
-    const panelShow = computed(() => DatePickerFoundation.isPanelShown({ open: props.open, disabled: props.disabled }, state.value));
-    const inputDisabled = computed(() => props.disabled || Boolean(props.insetInput && state.value.triggerDisabled));
+    const panelShow = computed(() => DatePickerFoundation.isPanelShown({ open: props.open, disabled: looks.disabled }, state.value));
+    const inputDisabled = computed(() => looks.disabled || Boolean(props.insetInput && state.value.triggerDisabled));
     const triggerName = computed(() => (state.value.value.length ? locale.value.locale.changeDate : locale.value.locale.chooseDate));
     const yearMonth = computed(() => getYearMonthFromValue(state.value.value, type.value));
     const confirmDisabled = computed(() => isRangeType(type.value) && !isRangeValueComplete(state.value.cachedSelectedValue));
@@ -278,7 +288,7 @@
             `${prefix}-input`,
             {
                 [`${prefix}-range-input`]: range,
-                [`${prefix}-range-input-${props.size}`]: range && props.size,
+                [`${prefix}-range-input-${looks.size}`]: range && looks.size,
                 [`${prefix}-range-input-active`]: range && state.value.rangeInputFocus && !inputDisabled.value,
                 [`${prefix}-range-input-disabled`]: range && inputDisabled.value,
                 [`${prefix}-range-input-${props.validateStatus}`]: range && props.validateStatus,
@@ -314,20 +324,20 @@
         inputValue: state.value.inputValue,
         placeholder: placeholder.value,
         disabled: inputDisabled.value,
-        size: props.size,
+        size: looks.size,
         inputReadOnly: props.inputReadOnly || Boolean(props.insetInput),
         rangeInputFocus: state.value.rangeInputFocus,
         type: type.value,
         format: props.format,
         multiple: props.multiple,
         autofocus: state.value.autofocus,
-        componentProps: { ...props },
+        componentProps: { ...props, ...looks },
         onChange: (inputValue) => foundation.handleInputChange(inputValue, undefined),
-        onEnterPress: (inputValue) => foundation.handleInputComplete(inputValue),
-        onClear: (event) => foundation.handleInputClear(event),
+        onEnterPress: foundation.handleInputComplete,
+        onClear: foundation.handleInputClear,
     });
 
-    useClickOutside([root, panel], (event) => foundation.handleClickOutside(event), panelShow, useNestedPopups());
+    useClickOutside([root, panel], foundation.handleClickOutside, panelShow, useNestedPopups());
 
     useDidUpdate(
         () => ({ value: props.modelValue, timeZone: timeZone.value }),
@@ -359,7 +369,7 @@
 
     // isPanelShown is already false for a disabled picker, so the check passes `disabled: false`
     watch(
-        () => props.disabled,
+        () => looks.disabled,
         (disabled) => {
             if (disabled && DatePickerFoundation.isPanelShown({ open: props.open, disabled: false }, state.value)) {
                 foundation.deactivate();
@@ -379,10 +389,10 @@
     onUpdated(measureCustomTrigger);
 
     defineExpose<DatePickerHandle>({
-        open: () => foundation.open(),
+        open: foundation.open,
         close: () => foundation.close(),
-        focus: (focusType) => foundation.focus(focusType),
-        blur: () => foundation.blur(),
+        focus: foundation.focus,
+        blur: foundation.blur,
     });
 </script>
 
@@ -398,7 +408,7 @@
             trigger="custom"
             :visible="panelShow"
             @afterClose="foundation.handlePanelVisibleChange(false)"
-            @escKeyDown="foundation.handleEscKeyDown()"
+            @escKeyDown="foundation.handleEscKeyDown"
             @open="foundation.handlePanelVisibleChange(true)"
         >
             <template #content>
@@ -412,7 +422,7 @@
                                 <slot name="topSlot" />
                             </div>
                             <!-- monthRange does not support presetPosition -->
-                            <QuickControl v-if="props.presetPosition === 'top' && type !== 'monthRange'" v-bind="quickControlProps" @presetClick="(item, event) => foundation.handlePresetClick(item, event)" />
+                            <QuickControl v-if="props.presetPosition === 'top' && type !== 'monthRange'" v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
                             <YearAndMonth
                                 v-if="isYearOrMonth"
                                 :currentMonth="yearMonth.month"
@@ -427,13 +437,13 @@
                                 :startYear="props.startYear"
                                 :type="type"
                                 :yearAndMonthOpts="props.yearAndMonthOpts"
-                                @select="foundation.handleYMSelectedChange($event)"
+                                @select="foundation.handleYMSelectedChange"
                             >
                                 <template v-if="props.insetInput" #dateInput>
-                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="focusInsetDate" @insetInputChange="foundation.handleInsetInputChange($event)" @insetTimeFocus="focusInsetTime" />
+                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="focusInsetDate" @insetInputChange="foundation.handleInsetInputChange" @insetTimeFocus="focusInsetTime" />
                                 </template>
                                 <template v-if="hasPresets" #quickControls>
-                                    <QuickControl v-bind="quickControlProps" @presetClick="(item, event) => foundation.handlePresetClick(item, event)" />
+                                    <QuickControl v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
                                 </template>
                             </YearAndMonth>
                             <MonthsGrid
@@ -450,7 +460,7 @@
                                 :endYear="props.endYear"
                                 :focusRecords="state.focusRecords"
                                 :format="props.format"
-                                :hasOtherRangeInputBeenFocused="(range) => foundation.hasOtherRangeInputBeenFocused(range)"
+                                :hasOtherRangeInputBeenFocused="foundation.hasOtherRangeInputBeenFocused"
                                 :hasPresets="hasPresets"
                                 :hideDisabledOptions="props.hideDisabledOptions"
                                 :insetInput="props.insetInput"
@@ -469,15 +479,15 @@
                                 :type="type"
                                 :weekStartsOn="props.weekStartsOn"
                                 :yearAndMonthOpts="props.yearAndMonthOpts"
-                                @change="(value, options) => foundation.handleSelectedChange(value, options)"
+                                @change="foundation.handleSelectedChange"
                                 @panelChange="(...args) => emit('panelChange', ...args)"
-                                @rangeInputFocus="foundation.handleSetRangeFocus($event)"
+                                @rangeInputFocus="foundation.handleSetRangeFocus"
                             >
                                 <template v-if="props.insetInput" #dateInput>
-                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="focusInsetDate" @insetInputChange="foundation.handleInsetInputChange($event)" @insetTimeFocus="focusInsetTime" />
+                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="focusInsetDate" @insetInputChange="foundation.handleInsetInputChange" @insetTimeFocus="focusInsetTime" />
                                 </template>
                                 <template v-if="hasPresets" #quickControls>
-                                    <QuickControl v-bind="quickControlProps" @presetClick="(item, event) => foundation.handlePresetClick(item, event)" />
+                                    <QuickControl v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
                                 </template>
                                 <template v-if="$slots.date" #date="slotProps">
                                     <slot name="date" v-bind="slotProps" />
@@ -486,7 +496,7 @@
                                     <slot name="fullDate" v-bind="slotProps" />
                                 </template>
                             </MonthsGrid>
-                            <QuickControl v-if="props.presetPosition === 'bottom' && type !== 'monthRange'" v-bind="quickControlProps" @presetClick="(item, event) => foundation.handlePresetClick(item, event)" />
+                            <QuickControl v-if="props.presetPosition === 'bottom' && type !== 'monthRange'" v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
                             <div v-if="$slots.bottomSlot" :class="`${prefix}-bottomSlot`" x-semi-prop="bottomSlot">
                                 <slot name="bottomSlot" />
                             </div>
@@ -495,21 +505,21 @@
                             <slot name="rightSlot" />
                         </div>
                     </div>
-                    <Footer v-if="confirmNeeded" :disabledConfirm="confirmDisabled" :locale="locale.locale" @cancel="foundation.handleCancel()" @confirm="foundation.handleConfirm()" />
+                    <Footer v-if="confirmNeeded" :disabledConfirm="confirmDisabled" :locale="locale.locale" @cancel="foundation.handleCancel" @confirm="foundation.handleConfirm" />
                 </div>
             </template>
             <!-- The inputs, or a focusable custom trigger, are the Tab stop; Tooltip would add tabindex 0 here. -->
             <div
                 ref="combobox"
                 :aria-describedby="isTriggerButton() ? ($attrs['aria-describedby'] as string | undefined) : undefined"
-                :aria-disabled="isTriggerButton() ? props.disabled : undefined"
+                :aria-disabled="isTriggerButton() ? looks.disabled : undefined"
                 :aria-errormessage="isTriggerButton() ? ($attrs['aria-errormessage'] as string | undefined) : undefined"
                 :aria-invalid="isTriggerButton() ? ($attrs['aria-invalid'] as boolean | undefined) : undefined"
                 :aria-label="isTriggerButton() && !$attrs['aria-labelledby'] ? triggerName : undefined"
                 :aria-labelledby="isTriggerButton() ? ($attrs['aria-labelledby'] as string | undefined) : undefined"
                 :class="comboboxClass()"
                 :role="isTriggerButton() ? 'button' : undefined"
-                :tabindex="isTriggerButton() && !props.disabled ? 0 : -1"
+                :tabindex="isTriggerButton() && !looks.disabled ? 0 : -1"
                 @click="foundation.handleTriggerClick($event, Boolean($slots.trigger))"
                 @keydown="onTriggerKeyDown"
             >
@@ -538,16 +548,16 @@
                     role="combobox"
                     :showClear="props.showClear"
                     :showClearIgnoreDisabled="Boolean(props.insetInput)"
-                    :size="props.size"
+                    :size="looks.size"
                     :type="type"
                     :validateStatus="props.validateStatus"
                     :value="state.value"
-                    @change="(input, event) => foundation.handleInputChange(input, event)"
-                    @clear="foundation.handleInputClear($event)"
-                    @enterPress="foundation.handleInputComplete($event)"
+                    @change="foundation.handleInputChange"
+                    @clear="foundation.handleInputClear"
+                    @enterPress="foundation.handleInputComplete"
                     @focus="(event, range) => foundation.handleInputFocus(event, range as RangeInput)"
-                    @rangeClear="foundation.handleRangeInputClear($event)"
-                    @rangeEndTabPress="foundation.handleRangeEndTabPress()"
+                    @rangeClear="foundation.handleRangeInputClear"
+                    @rangeEndTabPress="foundation.handleRangeEndTabPress"
                 >
                     <template v-if="$slots.prefix" #prefix>
                         <slot name="prefix" />

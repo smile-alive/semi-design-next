@@ -101,7 +101,7 @@ describe('CollapsibleFoundation 外层样式', () => {
 });
 
 describe('CollapsibleFoundation 过渡结束', () => {
-    function create(props: CollapsibleBaseProps) {
+    const create = (props: CollapsibleBaseProps) => {
         const adapter: CollapsibleAdapter = {
             getContext: () => undefined,
             getContexts: () => undefined,
@@ -116,7 +116,7 @@ describe('CollapsibleFoundation 过渡结束', () => {
             notifyMotionEnd: vi.fn<CollapsibleAdapter['notifyMotionEnd']>(),
         };
         return { adapter, foundation: new CollapsibleFoundation(adapter) };
-    }
+    };
 
     it('关闭时外层 height 过渡结束后隐藏内容并通知', () => {
         const { adapter, foundation } = create(p());

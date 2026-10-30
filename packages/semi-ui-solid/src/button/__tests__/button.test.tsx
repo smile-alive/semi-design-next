@@ -11,7 +11,9 @@ import Button, { type ButtonProps, type HtmlType, type Theme, type Type, ButtonG
 
 const prefixCls = `${BASE_CLASS_PREFIX}-button`;
 type Handler = (event: MouseEvent) => void;
-const FillProbe = (props: { fill?: IconFill }) => <span data-fill={JSON.stringify(props.fill ?? null)} data-testid="icon" />;
+function FillProbe(props: { fill?: IconFill }) {
+    return <span data-fill={JSON.stringify(props.fill ?? null)} data-testid="icon" />;
+}
 const readFill = (): unknown => JSON.parse(screen.getByTestId('icon').dataset.fill ?? 'null');
 const lines = () => document.querySelectorAll(`.${prefixCls}-group-line`);
 const multiple = [3, 2, 1, 0].map((level, i) => `var(--semi-button-colorful-multiple-fill-${i}, var(--semi-ai-general-5-${level}))`);

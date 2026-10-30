@@ -89,13 +89,15 @@ async function switchRatioAndMovePointerAway() {
     await waitFor(() => expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`)).toBeNull());
 }
 
-const Group = (props) => (
-    <ImagePreview {...props}>
-        {srcList1.map((src, index) => (
-            <Image key={index} alt={`lamp${index + 1}`} src={src} width={200} />
-        ))}
-    </ImagePreview>
-);
+function Group(props) {
+    return (
+        <ImagePreview {...props}>
+            {srcList1.map((src, index) => (
+                <Image key={index} alt={`lamp${index + 1}`} src={src} width={200} />
+            ))}
+        </ImagePreview>
+    );
+}
 
 function ControlledPreview({ src }) {
     const [visible, setVisible] = useState(false);

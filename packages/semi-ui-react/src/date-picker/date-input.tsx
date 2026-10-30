@@ -1,8 +1,6 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-// compat get falls back to the default only for undefined, not null
-import { get } from 'es-toolkit/compat';
 import { isSplitRangeInputs } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
 import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type RangeInput, type InsetInputChangeProps, type InsetInputChangeFoundationProps, type InsetInputProps } from '@fibrae/semi-foundation/date-picker/input-foundation';
@@ -223,11 +221,11 @@ export default function DateInput(rawProps: DateInputProps) {
                         onChange={(rangeEndValue, e) => foundation.handleChange(getRangeInputValue(rangeStart, rangeEndValue), e)}
                         onEnterPress={(e) => foundation.handleRangeInputEnterPress(e, getRangeInputValue(rangeStart, rangeEnd))}
                         onFocus={(e) => handleRangeInputFocus(e, 'rangeEnd')}
-                        onKeyDown={(e) => foundation.handleRangeInputEndKeyPress(e)}
+                        onKeyDown={foundation.handleRangeInputEndKeyPress}
                     />
                 </div>
                 {allowClear && (
-                    <button ref={clearHandover} type="button" className={`${prefixCls}-range-input-clearbtn`} aria-label={locale.clearRange} onClick={(e) => foundation.handleRangeInputClearClick(e)} onMouseDown={(e) => foundation.handleRangeInputClearMouseDown(e)}>
+                    <button ref={clearHandover} type="button" className={`${prefixCls}-range-input-clearbtn`} aria-label={locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
                         {clearIcon ? clearIcon : <IconClear />}
                     </button>
                 )}
@@ -244,7 +242,7 @@ export default function DateInput(rawProps: DateInputProps) {
         const { type, handleInsetDateFocus, handleInsetTimeFocus, value, insetInputValue, prefixCls, rangeInputStartRef, rangeInputEndRef, density, insetInput } = props;
 
         const newInsetInputValue = DateInputFoundation.getInsetInputValue(props, { value, insetInputValue });
-        const { dateStart, dateEnd, timeStart, timeEnd } = get(insetInput, 'placeholder', {}) as InsetInputProps['placeholder'];
+        const { dateStart, dateEnd, timeStart, timeEnd } = ((insetInput as InsetInputProps | undefined)?.placeholder ?? {}) as InsetInputProps['placeholder'];
         const { datePlaceholder, timePlaceholder } = DateInputFoundation.getInsetInputPlaceholder(props);
         const names = DateInputFoundation.getInsetNames(locale, type);
 
@@ -333,9 +331,9 @@ export default function DateInput(rawProps: DateInputProps) {
                 prefix={prefix ?? null}
                 suffix={suffix}
                 onBlur={onBlur}
-                onChange={(v, e) => foundation.handleChange(v, e)}
-                onClear={(e) => foundation.handleInputClear(e)}
-                onEnterPress={(e) => foundation.handleInputComplete(e)}
+                onChange={foundation.handleChange}
+                onClear={foundation.handleInputClear}
+                onEnterPress={foundation.handleInputComplete}
                 onFocus={onFocus}
             />
         );

@@ -114,8 +114,8 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
             );
         });
 
-    useDidUpdate(props.selectedIndex, (selectedIndex, previous) => foundation.syncSelectedIndex(selectedIndex, previous));
-    useDidUpdate(props.list.length, () => foundation.syncList());
+    useDidUpdate(props.selectedIndex, foundation.syncSelectedIndex);
+    useDidUpdate(props.list.length, foundation.syncList);
 
     useImperativeHandle(ref, () => ({ scrollToIndex: (_index, duration) => foundation.scrollToSelected(duration) }), [foundation]);
 
@@ -134,7 +134,7 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
             <div className={`${prefix}-shade ${prefix}-shade-pre`} />
             <div ref={selectorRef} className={`${prefix}-selector`} />
             <div className={`${prefix}-shade ${prefix}-shade-post`} />
-            <div ref={wrapperRef} className={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !cycled })} onScroll={() => foundation.handleScroll()}>
+            <div ref={wrapperRef} className={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !cycled })} onScroll={foundation.handleScroll}>
                 {renderListbox(
                     <>
                         {copies(state.prependCount, 'pre').toReversed().flat()}

@@ -45,10 +45,7 @@ export default function TimeInput(props: TimeInputProps) {
     };
 
     // Input writes the new text in a render effect, which runs before this one
-    useWatch(
-        () => local.value,
-        () => foundation.restoreCursor()
-    );
+    useWatch(() => local.value, foundation.restoreCursor);
 
     const requestFrame = useRaf();
 
@@ -80,9 +77,9 @@ export default function TimeInput(props: TimeInputProps) {
                 prefix={local.prefix ?? null}
                 suffix={<IconClock />}
                 validateStatus={local.invalid ? 'error' : local.validateStatus}
-                onBlur={(e) => foundation.handleBlur(e)}
-                onChange={(value) => foundation.handleChange(value)}
-                onFocus={(e) => foundation.handleFocus(e)}
+                onBlur={foundation.handleBlur}
+                onChange={foundation.handleChange}
+                onFocus={foundation.handleFocus}
             />
         </div>
     );

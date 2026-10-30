@@ -5,11 +5,11 @@ import { Select, Tooltip } from '@fibrae/semi-ui-react';
 
 declare const gc: () => void;
 
-const frames = async (count: number) => {
+async function frames(count: number) {
     for (let i = 0; i < count; i++) {
         await new Promise((resolve) => requestAnimationFrame(resolve));
     }
-};
+}
 
 describe('Tooltip around a Select', () => {
     it('exposes gc', () => {

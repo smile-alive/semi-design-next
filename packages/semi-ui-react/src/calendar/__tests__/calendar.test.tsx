@@ -1059,7 +1059,7 @@ describe('Calendar 表格语义', () => {
     const roleOf = (el) => el.parentElement.closest('[role]')?.getAttribute('role');
 
     // the chain axe requires: table -> rowgroup -> row -> cell, and a li only directly in a ul
-    function expectValidTable(container) {
+    const expectValidTable = (container) => {
         const table = container.firstChild;
         expect(table).toHaveAttribute('role', 'table');
         for (const rowgroup of container.querySelectorAll('[role="rowgroup"]')) {
@@ -1079,7 +1079,7 @@ describe('Calendar 表格语义', () => {
             expect(li.parentElement.tagName).toBe('UL');
         }
         expect(container.querySelectorAll('ul[role], li[role]')).toHaveLength(0);
-    }
+    };
 
     it.each(MODES)('%s 视图是由 rowgroup、row 与 cell 组成的表格', (mode) => {
         const { container } = render(<Calendar displayValue={today} mode={mode} range={weekRange} />);

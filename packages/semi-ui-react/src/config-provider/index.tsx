@@ -22,7 +22,7 @@ export interface ConfigProviderProps extends Omit<ContextValue, 'onBreakpoint' |
     responsiveObserve?: boolean;
 }
 
-export { defaultResponsiveMap };
+export { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
 
 export const ConfigConsumer = ConfigContext.Consumer;
 

@@ -93,6 +93,7 @@ export {
     FormTagInput,
     FormTextArea,
     FormTimePicker,
+    FormTransfer,
     FormTreeSelect,
     FormUpload,
     useFieldApi,

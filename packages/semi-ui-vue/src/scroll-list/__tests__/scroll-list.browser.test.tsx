@@ -78,7 +78,7 @@ describe('scrollList', () => {
 
         // Testing Library re-inserts the mounted nodes, which resets the scroll position set on mount, so the app
         // mounts in place
-        function mountInPlace(props: Record<string, unknown>) {
+        const mountInPlace = (props: Record<string, unknown>) => {
             const host = document.body.appendChild(document.createElement('div'));
             const app = createApp(Controlled, props);
             app.mount(host);
@@ -86,7 +86,7 @@ describe('scrollList', () => {
                 app.unmount();
                 host.remove();
             });
-        }
+        };
 
         it.each([false, true])('挂载时不为初始 selectedIndex 发出 select（循环：%s）', async (cycled) => {
             const onSelect = vi.fn<(value: number) => void>();

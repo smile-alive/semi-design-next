@@ -1264,12 +1264,12 @@ describe('Dropdown 行为', () => {
 
         const portals = () => document.querySelectorAll(el_portal_inner);
 
-        async function openOuterAndFocusParent() {
+        const openOuterAndFocusParent = async () => {
             await userEvent.click(screen.getByRole('button', { name: 'nested menu' }));
             await waitFor(() => expect(item('Alpha')).toHaveFocus());
             await userEvent.keyboard('{ArrowDown}');
             expect(item('Parent')).toHaveFocus();
-        }
+        };
 
         it('Right 打开子菜单并聚焦第一项，Left 关闭子菜单并聚焦父级选项', async () => {
             const onInner = vi.fn<() => void>();

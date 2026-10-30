@@ -5,7 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BackTop } from '@fibrae/semi-ui-react';
 import type { BackTopProps } from '../index';
 
-const renderScroller = (props: BackTopProps = {}) => {
+function renderScroller(props: BackTopProps = {}) {
     const scroller = createRef<HTMLDivElement>();
     const utils = render(
         <div>
@@ -17,7 +17,7 @@ const renderScroller = (props: BackTopProps = {}) => {
         </div>
     );
     return { ...utils, scroller: screen.getByTestId('scroller') };
-};
+}
 
 describe('BackTop', () => {
     it('位于 BackTop 位置，为 32px 圆形 FloatButton，在 RTL 下镜像', async () => {

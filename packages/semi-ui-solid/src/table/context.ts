@@ -24,7 +24,7 @@ export type TableState = Omit<TableBaseState<AnyRecord>, 'flattenColumns' | 'que
 /** Table-wide settings the parts render from; they change rarely */
 export interface TableView {
     prefixCls: string;
-    direction: Direction | undefined;
+    direction?: Direction;
     anyColumnFixed: boolean;
     /**
      * The header and the body render as separate elements (fixed header, sticky or virtualized): their common

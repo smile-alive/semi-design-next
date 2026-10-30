@@ -1,16 +1,18 @@
 import { Text, type FunctionalComponent, type VNode } from 'vue';
-import { optionListToRecords, toOptionRecord, type OptionRecordKeys } from '@fibrae/semi-foundation/select/option-foundation';
+import { optionListToRecords, toOptionRecord, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import elementType from '../_base/element-type';
 import { childSlots, normalizeVNodeProps, toVNodes as toNodes } from '../_base/read-vnode';
 import slotNodes from '../_base/slot-nodes';
 import type { SelectOptionProps } from './interface';
 
-/** An option as the Select keeps it: the record plus the foundation's `_` keys and the slot of a markup label */
-export interface OptionRecord extends SelectOptionProps, OptionRecordKeys<GroupRecord> {
+/** An option's data as the Select keeps it: its props plus the slot of a markup label */
+export interface OptionData extends SelectOptionProps {
     /** The default slot of a `SelectOption` whose content is not plain text */
     _slot?: FunctionalComponent;
 }
+
+export type OptionRecord = BaseOptionRecord<OptionData, GroupRecord>;
 
 export interface GroupRecord extends Record<string, unknown> {
     key: string;

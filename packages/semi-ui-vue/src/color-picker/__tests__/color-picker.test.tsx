@@ -59,16 +59,16 @@ const saturationBrightness = (s: number, v: number) => text.saturationBrightness
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 
 // Every render uses a non-Chinese locale, so a hard-coded Chinese name cannot pass
-const renderColorPicker = (props: Props = {}, slots: Slots = {}) => {
+function renderColorPicker(props: Props = {}, slots: Slots = {}) {
     const Host = (attrs: Props) => <ConfigProvider locale={en_US}>{() => <ColorPicker {...attrs}>{slots as never}</ColorPicker>}</ConfigProvider>;
     return render(Host, { props });
-};
+}
 
 const query = <T extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<T>(selector);
-const need = <T extends HTMLElement>(el: T | null) => {
+function need<T extends HTMLElement>(el: T | null) {
     if (!el) throw new Error('missing element');
     return el;
-};
+}
 const getPicker = () => query(`.${prefixCls}`);
 const getArea = () => need(query(`.${prefixCls}-colorChooseArea`));
 const getAreaHandle = () => need(query(`.${prefixCls}-colorChooseArea .${prefixCls}-handle`));
@@ -83,17 +83,17 @@ const getDemoBlock = () => need(query(`.${prefixCls}-colorDemoBlock`));
 const getEyeDropperButton = () => screen.getByRole('button', { name: text.eyeDropper });
 const getFormatSelect = () => screen.getByRole('combobox');
 const getDefaultTrigger = () => need(query(`.${prefixCls}-popover-defaultChildren`));
-const lastColor = (onChange: { mock: { calls: ColorValue[][] } }) => {
+function lastColor(onChange: { mock: { calls: ColorValue[][] } }) {
     const last = onChange.mock.calls.at(-1)?.[0];
     if (!last) throw new Error('onChange was not called');
     return last;
-};
+}
 
 const changeInput = (value: string) => fireEvent.update(getInput(), value);
 const changeAlphaInput = (value: string) => fireEvent.update(getAlphaInput(), value);
 
 // the setup rect mock has no x/y, which the pickers subtract from clientX/clientY
-const mockRect = (el: HTMLElement) => {
+function mockRect(el: HTMLElement) {
     const width = parseFloat(el.style.width);
     const height = parseFloat(el.style.height);
     vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
@@ -108,27 +108,27 @@ const mockRect = (el: HTMLElement) => {
         toJSON: () => ({}),
     });
     return el;
-};
+}
 
 // a browser sends a captured pointer's release, then lostpointercapture, to the capturing element
-const release = async (el: HTMLElement) => {
+async function release(el: HTMLElement) {
     await fireEvent.pointerUp(el);
     await fireEvent.lostPointerCapture(el);
-};
+}
 
-const selectFormat = async (format: string) => {
+async function selectFormat(format: string) {
     await userEvent.click(getFormatSelect());
     const options = await screen.findAllByRole('option');
     const option = options.find((candidate) => candidate.textContent === format);
     if (!option) throw new Error(`no format option ${format}`);
     await userEvent.click(option);
-};
+}
 
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
 const onChangeMock = () => vi.fn<(value: ColorValue) => void>();
 

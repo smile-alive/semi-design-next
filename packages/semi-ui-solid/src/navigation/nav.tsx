@@ -247,7 +247,7 @@ export default function Nav(rawProps: NavProps) {
     // React, which keeps rows by key; upgrade by reusing tokens per itemKey.
     // The renderItem* calls stay in the JSX attributes: compiled to getters, they run when the Item or Sub view reads
     // them in the branch that shows them, not when the tokens are made for a closed Sub.
-    function renderItems(items: NavItemType[], level: number) {
+    const renderItems = (items: NavItemType[], level: number) => {
         return items.map((item) => {
             const data: NavItemRenderProps = { item, level };
             const subItems: NavItemType[] | undefined = item.items;
@@ -268,7 +268,7 @@ export default function Nav(rawProps: NavProps) {
             }
             return <NavItem {...(pickConfigProps(item, ITEM_CONFIG_KEYS) as NavItemProps)} level={level} icon={local.renderItemIcon?.(data)} text={local.renderItemText ? local.renderItemText(data) : item.text} toggleIcon={local.renderItemToggleIcon?.(data)} />;
         });
-    }
+    };
 
     // a component created outside JSX can be an accessor, which children() resolves to the token
     const itemNodes = children(() => renderItems(formattedItems(), 0));

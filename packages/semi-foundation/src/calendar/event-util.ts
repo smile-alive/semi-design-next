@@ -189,7 +189,7 @@ export function filterEvents(events: Map<string, EventObject[]>, start: Date, en
 export function parseRangeAllDayEvent(event: EventObject[], startDate: Date, rangeStart: Date, rangeEnd: Date, parsed: Array<Array<ParsedRangeEvent>>) {
     const dateRangeLen = differenceInCalendarDays(rangeEnd, rangeStart);
     event
-        .sort((a, b) => compareAsc(a.start, b.start))
+        .toSorted((a, b) => compareAsc(a.start, b.start))
         .forEach((item) => {
             const itemInfo = { ...item };
             const { end } = item;

@@ -1200,9 +1200,9 @@ describe('Cascader', () => {
         expectTypeOf<{ itemSize: number; height: string }>().not.toExtend<Virtualize>();
     });
 
-    it('onBlur、onFocus 的参数类型包含键盘事件，onBlur 还包含原生事件与 undefined', () => {
-        expectTypeOf<Parameters<NonNullable<CascaderProps['onBlur']>>[0]>().toEqualTypeOf<React.MouseEvent | React.KeyboardEvent | globalThis.MouseEvent | undefined>();
-        expectTypeOf<Parameters<NonNullable<CascaderProps['onFocus']>>[0]>().toEqualTypeOf<React.MouseEvent | React.KeyboardEvent>();
+    it('onBlur、onFocus 的参数类型包含键盘事件与原生焦点事件，onBlur 还包含原生鼠标事件与 undefined', () => {
+        expectTypeOf<Parameters<NonNullable<CascaderProps['onBlur']>>[0]>().toEqualTypeOf<React.MouseEvent | React.KeyboardEvent | globalThis.MouseEvent | globalThis.FocusEvent | undefined>();
+        expectTypeOf<Parameters<NonNullable<CascaderProps['onFocus']>>[0]>().toEqualTypeOf<React.MouseEvent | React.KeyboardEvent | globalThis.FocusEvent>();
     });
 
     it('filterSorter 的前两个参数是两条结果路径', () => {
@@ -1462,8 +1462,11 @@ describe('Cascader', () => {
         expect(onBlur).not.toHaveBeenCalled();
 
         fireEvent.keyDown(getTrigger(), { key: 'Escape' });
-        expect(onBlur).toHaveBeenCalledTimes(1);
         expect(isDropdownOpen()).toBe(false);
+        expect(onBlur).not.toHaveBeenCalled();
+
+        await userEvent.click(document.body);
+        expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
     it('onSelect 事件', async () => {
@@ -2479,6 +2482,7 @@ describe('Cascader 行为', () => {
         const ref = createRef<CascaderHandle>();
         const onBlur = vi.fn<NonNullable<CascaderProps['onBlur']>>();
         renderCascader({ ref, onBlur });
+        await userEvent.click(getSelection());
         act(() => ref.current.open());
         act(() => ref.current.open());
         fireEvent.mouseDown(document.body);

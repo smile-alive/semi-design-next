@@ -812,7 +812,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     }
 
     /** Closes the cropper and drops the queue; the files already cropped are discarded */
-    cancelCrop() {
+    cancelCrop = () => {
         const { cropperSrc } = this.getStates();
         if (cropperSrc) {
             URL.revokeObjectURL(cropperSrc);
@@ -829,10 +829,10 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         // a remounted input fires onChange again when the same file is picked
         this._adapter.resetInput();
         this._adapter.resetReplaceInput();
-    }
+    };
 
     /** Crops the current image, then moves to the next queued one or adds every result once the queue drains */
-    async confirmCrop() {
+    confirmCrop = async () => {
         const { cropperFile, cropperSrc, pendingImageFiles, nonImageFiles, croppedFiles, isReplaceOperation } = this.getStates();
         const { crop } = this.getProps();
         try {
@@ -866,19 +866,19 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         } catch (error) {
             this._adapter.notifyCropError(error as Error);
         }
-    }
+    };
 
     /** Keep the synchronous snapshot aligned with an externally controlled fileList. */
-    syncLatestFileList(fileList: Array<BaseFileItem>) {
+    syncLatestFileList = (fileList: Array<BaseFileItem>) => {
         this.#latestFileList = fileList.slice();
-    }
+    };
 
     /** A fileList prop that goes back to undefined clears the list (a form reset) and leaves it uncontrolled */
-    handleFileListPropChange(fileList?: Array<BaseFileItem>) {
+    handleFileListPropChange = (fileList?: Array<BaseFileItem>) => {
         if (fileList === undefined) {
             this.#updateFileListInternal([]);
         }
-    }
+    };
 
     /** The list on screen: the fileList prop when controlled, otherwise the fileList state. */
     getFileList() {
@@ -894,7 +894,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     }
 
     /** Adds the files of a paste on the page; the host listens only while addOnPasting is on and not disabled */
-    handlePasting(e: ClipboardEvent) {
+    handlePasting = (e: ClipboardEvent) => {
         if (!e.clipboardData) {
             return;
         }
@@ -920,15 +920,15 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             e.preventDefault();
             this.addFiles(files);
         }
-    }
+    };
 
     /** Entry for picked, dropped and pasted files: with crop on, images are cropped before they are added */
-    addFiles(currentFileList: FileList | Array<File>) {
+    addFiles = (currentFileList: FileList | Array<File>) => {
         this.#selectFiles(Array.from(currentFileList), true);
-    }
+    };
 
     /** Entry for the file picked to replace the item `replaceUid` names; with crop on, an image is cropped first */
-    handleReplaceChange(currentFileList: FileList | Array<File>) {
+    handleReplaceChange = (currentFileList: FileList | Array<File>) => {
         const newFile = Array.from(currentFileList).pop();
         if (!newFile || !this.#acceptFiles([newFile], () => this._adapter.resetReplaceInput())) {
             return;
@@ -938,9 +938,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         } else {
             this.#replaceFile(newFile);
         }
-    }
+    };
 
-    insertFileToList(files: Array<CustomFile>, index?: number) {
+    insertFileToList = (files: Array<CustomFile>, index?: number) => {
         const { limit, uploadTrigger } = this.getProps();
         const fileList = this.getFileList();
 
@@ -980,14 +980,14 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
                 this.#startUpload(fileItemList);
             }
         });
-    }
+    };
 
-    manualUpload() {
+    manualUpload = () => {
         const waitToUploadFileList = this.#getLatestFileList().filter((item: BaseFileItem) => item.status === FILE_STATUS_WAIT_UPLOAD);
         this.#startUpload(waitToUploadFileList);
-    }
+    };
 
-    handleRemove(file: BaseFileItem) {
+    handleRemove = (file: BaseFileItem) => {
         const { disabled } = this.getProps();
         if (disabled) {
             return;
@@ -1016,9 +1016,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             },
             () => {}
         );
-    }
+    };
 
-    handleClear() {
+    handleClear = () => {
         const { disabled } = this.getProps();
         const fileList = this.getFileList();
         if (disabled) {
@@ -1037,9 +1037,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             },
             () => {}
         );
-    }
+    };
 
-    handleDragEnter(e: UploadDragEvent) {
+    handleDragEnter = (e: UploadDragEvent) => {
         e.preventDefault();
         e.stopPropagation();
         this.#dragDepth++;
@@ -1047,9 +1047,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         if (!disabled) {
             this._adapter.updateDragAreaStatus(DRAG_AREA_LEGAL);
         }
-    }
+    };
 
-    handleDrop(e: E) {
+    handleDrop = (e: E) => {
         // otherwise the browser opens the dropped file
         e.preventDefault();
         e.stopPropagation();
@@ -1066,23 +1066,23 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             this._adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
             this._adapter.notifyDrop(e, files, fileList);
         }
-    }
+    };
 
-    handleDragOver(e: UploadDragEvent) {
+    handleDragOver = (e: UploadDragEvent) => {
         e.preventDefault();
         e.stopPropagation();
-    }
+    };
 
-    handleDragLeave(e: UploadDragEvent) {
+    handleDragLeave = (e: UploadDragEvent) => {
         e.preventDefault();
         e.stopPropagation();
         this.#dragDepth = Math.max(0, this.#dragDepth - 1);
         if (this.#dragDepth === 0) {
             this._adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
         }
-    }
+    };
 
-    retry(fileItem: BaseFileItem) {
+    retry = (fileItem: BaseFileItem) => {
         if (this.getProps().disabled) {
             return;
         }
@@ -1090,9 +1090,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         if (fileItem.fileInstance) {
             this.#post(fileItem);
         }
-    }
+    };
 
-    handlePreviewClick(fileItem: BaseFileItem) {
+    handlePreviewClick = (fileItem: BaseFileItem) => {
         this._adapter.notifyPreviewClick(fileItem);
-    }
+    };
 }

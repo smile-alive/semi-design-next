@@ -21,10 +21,10 @@ const treeData: CascaderData[] = [
     },
 ];
 const center = (rect: DOMRect) => rect.top + rect.height / 2;
-const mount = (node: () => VNodeChild) => {
+function mount(node: () => VNodeChild) {
     const view = render(() => <ConfigProvider locale={en_US}>{node}</ConfigProvider>);
     return { container: view.container, unmount: () => view.unmount() };
-};
+}
 
 describe('Cascader（浏览器）', () => {
     it.each(['small', 'default', 'large'] as const)('修复 #1468：单选 Cascader 的搜索输入框在尺寸 %s 下垂直居中', async (size) => {
@@ -133,12 +133,12 @@ const zhejiangTreeData: CascaderData[] = [
 
 const getTrigger = () => document.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
-const getOption = async (label: string) => {
+async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
     return within(getPopover() as HTMLElement)
         .getByText(label)
         .closest(`.${prefixCls}-option`) as HTMLElement;
-};
+}
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
 const clickCheckbox = async (label: string) => userEvent.click((await getOption(label)).querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
 const getTagTexts = () => [...document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
@@ -537,10 +537,7 @@ describe('cascader', () => {
         expect(option().getBoundingClientRect().bottom).toBeLessThanOrEqual(listbox.getBoundingClientRect().bottom);
         await userEvent.keyboard('{Tab}');
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
-        // still open, so the next Tab would reach a focusable scroll container in it
-        expect(listbox).toBeInTheDocument();
-        await userEvent.keyboard('{Tab}');
-        expect(listbox.contains(document.activeElement)).toBe(false);
+        await waitFor(() => expect(listbox).not.toBeInTheDocument());
     });
 
     it('虚拟搜索列表按默认高度显示时，最后一项与普通列表一样带选项内边距且在下拉框内可见', async () => {
@@ -619,12 +616,13 @@ describe.each([
         expect(screen.getByRole('combobox')).toHaveFocus();
     };
 
-    it('Tab 到清除按钮再返回不发出 focus 或 blur，弹层保持关闭', async () => {
+    it('Tab 进入触发器发出一次 focus，到清除按钮再返回不重复发出也不发出 blur，弹层保持关闭', async () => {
         const { onFocus, onBlur } = renderWithSpies();
         await tabTo(screen.getByRole('combobox'));
+        expect(onFocus).toHaveBeenCalledTimes(1);
         await tabToClearAndBack();
         expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
-        expect(onFocus).not.toHaveBeenCalled();
+        expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onBlur).not.toHaveBeenCalled();
     });
 
@@ -638,7 +636,6 @@ describe.each([
         expect(onBlur).not.toHaveBeenCalled();
     });
 
-    // guards the it.fails below: a focus trap would also make that test "fail as expected"
     it('Tab 能离开 Cascader 到达下一个控件', async () => {
         renderWithSpies();
         await tabTo(screen.getByRole('combobox'));
@@ -646,11 +643,106 @@ describe.each([
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 
-    // known gap: the Cascader emits blur only when its popup closes, so Tab out of it reports nothing
-    it.fails('Tab 移出 Cascader 时只发出一次 blur', async () => {
+    it('Tab 移出 Cascader 时只发出一次 blur', async () => {
         const { onBlur } = renderWithSpies();
         await tabTo(screen.getByRole('combobox'));
         await tabTo(screen.getByRole('button', { name: 'after' }));
+        expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+
+    it('打开时按 Tab 关闭下拉并离开，blur 恰好一次', async () => {
+        const { onBlur } = renderWithSpies();
+        await tabTo(screen.getByRole('combobox'));
+        await userEvent.keyboard('{ArrowDown}');
+        await waitFor(() => expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true'));
+        await userEvent.keyboard('{ArrowDown}{ArrowRight}');
+        expect(onBlur).not.toHaveBeenCalled();
+        await tabTo(screen.getByRole('button', { name: 'after' }));
+        await waitFor(() => expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false'));
+        expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('Cascader focus 与 blur', () => {
+    const renderWithSpies = (props: Record<string, unknown> = {}) => {
+        const spies = {
+            onFocus: vi.fn<(...args: CascaderEmits['focus']) => void>(),
+            onBlur: vi.fn<(...args: CascaderEmits['blur']) => void>(),
+        };
+        mount(() => (
+            <>
+                <Cascader style={{ width: '300px' }} motion={false} treeData={treeData} {...spies} {...props} />
+                <Button>{() => 'after'}</Button>
+            </>
+        ));
+        return spies;
+    };
+    const expanded = (value: 'true' | 'false') => waitFor(() => expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', value));
+
+    it('脚本 focus 发出一次 focus，焦点移出时发出一次 blur', async () => {
+        const { onFocus, onBlur } = renderWithSpies();
+        screen.getByRole('combobox').focus();
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        expect(onBlur).not.toHaveBeenCalled();
+        await tabTo(screen.getByRole('button', { name: 'after' }));
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+
+    it('Esc 关闭下拉时焦点仍在组件内，不发出 blur', async () => {
+        const { onFocus, onBlur } = renderWithSpies();
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('true');
+        await userEvent.keyboard('{Escape}');
+        await expanded('false');
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        expect(onBlur).not.toHaveBeenCalled();
+    });
+
+    it('点击触发器收起下拉不发出 blur', async () => {
+        const { onFocus, onBlur } = renderWithSpies();
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('true');
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('false');
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        expect(onBlur).not.toHaveBeenCalled();
+    });
+
+    it('单选选中叶子后关闭下拉立即发出 blur，再次点击打开重新发出 focus', async () => {
+        const { onFocus, onBlur } = renderWithSpies();
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('true');
+        await userEvent.click(screen.getByText('浙江省'));
+        await userEvent.click(screen.getByText('杭州市'));
+        expect(onBlur).not.toHaveBeenCalled();
+        await userEvent.click(screen.getByText('西湖区'));
+        await expanded('false');
+        expect(onBlur).toHaveBeenCalledTimes(1);
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('true');
+        expect(onFocus).toHaveBeenCalledTimes(2);
+        expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+
+    it('多选选中不发出 blur', async () => {
+        const { onFocus, onBlur } = renderWithSpies({ multiple: true });
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('true');
+        await userEvent.click(screen.getByText('浙江省'));
+        await userEvent.click(screen.getByText('杭州市'));
+        await userEvent.click(screen.getByText('西湖区'));
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        expect(onBlur).not.toHaveBeenCalled();
+    });
+
+    it('在组件外按下鼠标时发出一次 blur 并关闭下拉', async () => {
+        const { onBlur } = renderWithSpies();
+        await userEvent.click(screen.getByRole('combobox'));
+        await expanded('true');
+        await userEvent.click(document.body);
+        await expanded('false');
         expect(onBlur).toHaveBeenCalledTimes(1);
     });
 });

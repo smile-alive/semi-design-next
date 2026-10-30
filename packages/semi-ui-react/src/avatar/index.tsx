@@ -33,7 +33,7 @@ const defaultProps = {
     gap: 3,
 } satisfies Partial<AvatarProps>;
 
-function Avatar(rawProps: AvatarProps) {
+export default function Avatar(rawProps: AvatarProps) {
     let own = rawProps;
 
     const { inGroup, layer, item, moreItem } = useAvatarGroupContext();
@@ -110,7 +110,7 @@ function Avatar(rawProps: AvatarProps) {
     };
 
     useReplayImageEvents(imgRef);
-    useDidUpdate(src, () => foundation.handleSrcChange());
+    useDidUpdate(src, foundation.handleSrcChange);
 
     // mount is measured by foundation.init; the text also appears when the image fails
     useDidUpdate(text, (value) => {
@@ -272,5 +272,3 @@ function Avatar(rawProps: AvatarProps) {
         </span>
     );
 }
-
-export default Avatar;

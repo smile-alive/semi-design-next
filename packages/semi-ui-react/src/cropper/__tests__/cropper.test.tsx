@@ -53,14 +53,14 @@ function loadImage(container, naturalWidth = 800, naturalHeight = 400) {
     fireEvent.load(img);
 }
 
-const imgStyle = (container) => {
+function imgStyle(container) {
     const { width, height, transform } = getImg(container).style;
     return { width, height, transform };
-};
-const boxStyle = (container) => {
+}
+function boxStyle(container) {
     const { width, height, transform } = getBox(container).style;
     return { width, height, transform };
-};
+}
 
 function renderLoaded(props = {}) {
     const result = render(<Cropper src="https://example.com/a.png" {...props} />);
@@ -639,7 +639,7 @@ describe('Cropper', () => {
     });
 
     describe('preview 节点', () => {
-        function createPreviewNode(style = '') {
+        const createPreviewNode = (style = '') => {
             const node = document.createElement('div');
             node.style.cssText = style;
             node.getBoundingClientRect = () =>
@@ -649,7 +649,7 @@ describe('Cropper', () => {
                 }) as DOMRect;
             document.body.appendChild(node);
             return node;
-        }
+        };
 
         it('图片重新加载时只保留一个预览 img，并按节点原本的尺寸重新测量', () => {
             const node = createPreviewNode();

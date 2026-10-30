@@ -12,11 +12,11 @@ function mockTrackRect(rect: DOMRect) {
     });
 }
 
-const query = (container: Element, selector: string) => {
+function query(container: Element, selector: string) {
     const found = container.querySelector<HTMLElement>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
+}
 
 describe('AudioSlider', () => {
     it('原生 range 带 max、value、名称与朗读文本', () => {

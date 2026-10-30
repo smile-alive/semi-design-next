@@ -67,7 +67,7 @@ export default function DragMove(rawProps: DragMoveProps) {
         [foundation]
     );
 
-    useDidUpdate(props.positionStrategy, () => foundation.updatePositionStrategy());
+    useDidUpdate(props.positionStrategy, foundation.updatePositionStrategy);
 
     return <Fragment ref={setFragment}>{props.children}</Fragment>;
 }

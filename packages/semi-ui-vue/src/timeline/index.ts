@@ -6,5 +6,5 @@ const TimelineWithItem: typeof Timeline & { Item: typeof TimelineItem } = Object
     Item: TimelineItem,
 });
 export default TimelineWithItem;
-export { TimelineItem };
+export { default as TimelineItem } from './timeline-item.vue';
 export type * from './interface';

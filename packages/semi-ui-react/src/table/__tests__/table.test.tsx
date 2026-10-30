@@ -1151,7 +1151,7 @@ describe(`Table`, () => {
         expect(onHeaderCellClick).toHaveBeenCalled();
     });
     it('表头合并', async () => {
-        function testHeaderMerge(container) {
+        const testHeaderMerge = (container) => {
             const rows = container.querySelectorAll('.semi-table-thead .semi-table-row');
             expect(rows).toHaveLength(2);
             const [firstRow, secondRow] = rows;
@@ -1163,7 +1163,7 @@ describe(`Table`, () => {
             expect(secondRow.children[1].colSpan).toEqual(1);
             expect(secondRow.children[2].colSpan).toEqual(1);
             expect(secondRow.children[3].colSpan).toEqual(1);
-        }
+        };
 
         const nestData = getNestData();
         const filters = [
@@ -2619,7 +2619,7 @@ describe('Table 行为基线', () => {
         expect(afterOpen).toHaveBeenCalledTimes(1);
     });
 
-    async function clickFilterOptionA(filterConfirmMode: 'immediate' | 'confirm') {
+    const clickFilterOptionA = async (filterConfirmMode: 'immediate' | 'confirm') => {
         const columns = [
             {
                 title: 'Name',
@@ -2635,7 +2635,7 @@ describe('Table 行为基线', () => {
         render(<Table columns={columns} dataSource={smallData()} pagination={false} />);
         await openFilter();
         await userEvent.click(await screen.findByText('a', { selector: `.${P}-dropdown-item *, .${P}-dropdown-item` }));
-    }
+    };
 
     it('filterConfirmMode=immediate：点击筛选项立即筛选', async () => {
         await clickFilterOptionA('immediate');
@@ -3759,7 +3759,7 @@ describe('Table 全选范围与 changedRows', () => {
     const columns = [{ title: 'Name', dataIndex: 'name', filteredValue: ['a'], onFilter: (value, record) => record.name === value }];
     const keysOf = (list: { key: string }[]) => list.map((row) => row.key);
 
-    async function selectAll(checkRelation: 'related' | 'unRelated', selectedRowKeys: string[]) {
+    const selectAll = async (checkRelation: 'related' | 'unRelated', selectedRowKeys: string[]) => {
         const onSelectAll = vi.fn<SelectAllChange>();
         render(<Table columns={columns} dataSource={rows} pagination={false} rowSelection={{ checkRelation, selectedRowKeys, onSelectAll }} />);
         await userEvent.click(getHeaderSelectionCheckbox());
@@ -3769,7 +3769,7 @@ describe('Table 全选范围与 changedRows', () => {
             selectedKeys: keysOf(selectedRows as { key: string }[]).sort(),
             changedKeys: keysOf(changedRows as { key: string }[]).sort(),
         };
-    }
+    };
 
     it.each(['related', 'unRelated'] as const)('%s：全选只报告状态真正变化的行', async (checkRelation) => {
         expect(await selectAll(checkRelation, ['1', '3'])).toEqual({

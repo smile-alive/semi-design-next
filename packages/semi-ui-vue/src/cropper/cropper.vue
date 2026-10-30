@@ -108,8 +108,8 @@
 
     // preventDefault in handleWheel must stop a pinch from zooming the page, which only works from a non-passive listener,
     // so the listener is registered explicitly as one.
-    useEventListener(root, 'wheel', (event) => foundation.handleWheel(event), { passive: false });
-    useResizeObserver(root, () => foundation.handleResize());
+    useEventListener(root, 'wheel', foundation.handleWheel, { passive: false });
+    useResizeObserver(root, foundation.handleResize);
 
     // Wheel zooming and the image load change the state too. A controlled zoom thereby undoes a zoom the parent did
     // not accept, and the preview mirrors every layout change.
@@ -122,11 +122,7 @@
         { flush: 'post' }
     );
 
-    watch(
-        () => props.aspectRatio,
-        () => foundation.applyAspectRatio(),
-        { flush: 'post' }
-    );
+    watch(() => props.aspectRatio, foundation.applyAspectRatio, { flush: 'post' });
 
     // a controlled value dropped again falls back to the default, like the other components
     watch(
@@ -157,7 +153,7 @@
         }
     });
 
-    defineExpose<CropperHandle>({ getCropperCanvas: () => foundation.getCropperCanvas() });
+    defineExpose<CropperHandle>({ getCropperCanvas: foundation.getCropperCanvas });
 </script>
 
 <template>

@@ -10,9 +10,9 @@ describe('Cascader 类型', () => {
         expectTypeOf<{ itemSize: number; height: string }>().not.toExtend<CascaderVirtualize>();
     });
 
-    it('focus 的载荷是打开下拉的点击或按键事件，blur 另有 undefined', () => {
-        expectTypeOf<CascaderEmits['focus'][0]>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
-        expectTypeOf<CascaderEmits['blur'][0]>().toEqualTypeOf<MouseEvent | KeyboardEvent | undefined>();
+    it('focus 的载荷是点击、按键或焦点进入事件，blur 另可能是 undefined', () => {
+        expectTypeOf<CascaderEmits['focus'][0]>().toEqualTypeOf<MouseEvent | KeyboardEvent | FocusEvent>();
+        expectTypeOf<CascaderEmits['blur'][0]>().toEqualTypeOf<MouseEvent | KeyboardEvent | FocusEvent | undefined>();
     });
 
     it('filterSorter 的前两个参数是两条结果路径', () => {

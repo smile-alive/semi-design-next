@@ -45,7 +45,7 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
     }
 
     #getScroll(target: Target) {
-        return target === window ? target.scrollY : (target as HTMLElement).scrollTop;
+        return 'scrollY' in target ? target.scrollY : target.scrollTop;
     }
 
     #handleScroll = () => {
@@ -72,19 +72,19 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
     }
 
     /** Rebinds the scroll listener when `target` returns a different element */
-    handleTargetChange() {
+    handleTargetChange = () => {
         if (this.getProps().target() !== this.#targetNode) {
             this.#unbind();
             this.#bind();
         }
-    }
+    };
 
     override destroy() {
         this.#unbind();
         this.#cancelAnimation?.();
     }
 
-    onClick(e: E) {
+    onClick = (e: E) => {
         const targetNode = this.#targetNode;
         if (targetNode) {
             this.#cancelAnimation?.();
@@ -101,5 +101,5 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
             });
         }
         this._adapter.notifyClick(e);
-    }
+    };
 }

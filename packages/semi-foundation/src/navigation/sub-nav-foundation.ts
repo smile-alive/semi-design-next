@@ -38,7 +38,7 @@ export interface SubNavBaseProps {
 }
 
 export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProps, S extends object = object> extends BaseFoundation<SubNavAdapter<P, S>, P, S> {
-    handleDropdownVisibleChange(visible: boolean) {
+    handleDropdownVisibleChange = (visible: boolean) => {
         const itemKey = this.getProp('itemKey');
         const rawOpenKeys = this._adapter.getOpenKeys();
         const openKeys = visible ? addKeys(rawOpenKeys, itemKey) : removeKeys(rawOpenKeys, itemKey);
@@ -47,9 +47,9 @@ export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProp
         this._adapter.updateOpen(visible);
 
         this._adapter.notifyGlobalOpenChange({ itemKey, openKeys, isOpen: visible });
-    }
+    };
 
-    handleClick(e: MouseEvent | KeyboardEvent) {
+    handleClick = (e: MouseEvent | KeyboardEvent) => {
         const { itemKey, disabled } = this.getProps();
         if (disabled) {
             return;
@@ -65,13 +65,13 @@ export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProp
         }
         this._adapter.notifyGlobalOpenChange(cbVal);
         this._adapter.notifyGlobalOnClick(cbVal);
-    }
+    };
 
     /**
      * Only reports the click: the Dropdown owns the open state and reports it through handleDropdownVisibleChange,
      * so toggling here would emit a second, possibly contradictory openChange.
      */
-    handlePopupClick(e: MouseEvent | KeyboardEvent) {
+    handlePopupClick = (e: MouseEvent | KeyboardEvent) => {
         const { itemKey, disabled } = this.getProps();
         if (disabled) {
             return;
@@ -82,5 +82,5 @@ export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProp
             isOpen: this._adapter.getIsOpen(),
             domEvent: e,
         });
-    }
+    };
 }

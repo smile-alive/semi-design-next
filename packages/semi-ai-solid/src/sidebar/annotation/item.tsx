@@ -22,9 +22,8 @@ export interface AnnotationItem {
 // shortcut: an item without url is an anchor without href, activatable by pointer only; use a button when such items
 // need keyboard access
 
-function handleItemClick(e: MouseEvent, props: AnnotationItem) {
+function handleItemClick(e: MouseEvent, { onClick, ...item }: AnnotationItem) {
     // the owner gets a plain copy of the item, without its own handler
-    const { onClick, ...item } = props;
     onClick?.(e, item);
 }
 

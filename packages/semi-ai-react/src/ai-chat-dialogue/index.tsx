@@ -128,8 +128,8 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
     useImperativeHandle(
         ref,
         () => ({
-            selectAll: () => foundation.handleSelectAll(),
-            deselectAll: () => foundation.handleDeselectAll(),
+            selectAll: foundation.handleSelectAll,
+            deselectAll: foundation.handleDeselectAll,
             scrollToBottom: (animation: boolean) => {
                 if (animation) {
                     foundation.scrollToBottomWithAnimation();
@@ -150,7 +150,7 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
 
     return (
         <div role={namedRole(rest)} {...rest} className={clsx(prefix, className)} style={style}>
-            <div ref={containerRef} className={`${prefix}-list`} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={(e) => foundation.containerScroll(e)}>
+            <div ref={containerRef} className={`${prefix}-list`} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                 {chats.map((chat, index) => (
                     <DialogueItem
                         key={chat.id}

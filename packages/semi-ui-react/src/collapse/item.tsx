@@ -77,7 +77,7 @@ function CollapsePanel({ ref, className, children, itemKey, header, extra, showA
                 onClick={(e) => {
                     // the button's click (Enter, Space, assistive tech) bubbles here;
                     // a button handler would toggle twice
-                    const target = e.target as Node;
+                    const target = e.target instanceof Node ? e.target : null;
                     // React bubbles through portals: a click inside a popup that extra or header renders is not on this header
                     if (!isEventInside(e.nativeEvent, e.currentTarget)) {
                         return;

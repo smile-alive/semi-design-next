@@ -91,7 +91,7 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
 
     const context = useMemo<BreadContextType>(
         () => ({
-            onClick: (info, e) => foundation.handleClick(info, e),
+            onClick: foundation.handleClick,
             hasOnClick: Boolean(onClick),
             showTooltip,
             compact,
@@ -176,7 +176,7 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
         const spread = (
             <span key={`more-${itemLength}`} ref={handoverFocus} className={`${clsPrefix}-collapse`}>
                 <span className={`${clsPrefix}-item-wrap`}>
-                    <span className={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={locale.expand} role="button" tabIndex={0} onClick={(e) => foundation.handleExpand(e)} onKeyDown={(e) => foundation.handleExpandKeyDown(e)}>
+                    <span className={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
                         {more}
                     </span>
                     <span className={`${clsPrefix}-separator`} x-semi-prop="separator">

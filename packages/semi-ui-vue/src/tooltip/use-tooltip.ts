@@ -177,10 +177,10 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
     const isOpen = computed(() => state.value.isInsert && state.value.transitionState !== 'leave');
 
     const handle: TooltipHandle = {
-        focusTrigger: () => foundation.focusTrigger(),
+        focusTrigger: foundation.focusTrigger,
         getPopupId: () => popupId.value,
-        hide: () => foundation.hide(),
-        rePosition: () => foundation.calcPosition(),
+        hide: foundation.hide,
+        rePosition: foundation.calcPosition,
     };
 
     const afterClose = () => {
@@ -333,29 +333,10 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         { immediate: true }
     );
 
-    watch(
-        () => props.position,
-        () => foundation.calcPosition(),
-        { flush: 'post' }
-    );
-
-    watch(
-        () => props.trigger,
-        () => foundation.rebindEvents(),
-        { flush: 'post' }
-    );
-
-    watch(
-        () => props.clickToHide,
-        () => foundation.rebindEvents(),
-        { flush: 'post' }
-    );
-
-    watch(
-        () => props.visible,
-        () => foundation.handleVisiblePropChange(),
-        { flush: 'post' }
-    );
+    watch(() => props.position, foundation.calcPosition, { flush: 'post' });
+    watch(() => props.trigger, foundation.rebindEvents, { flush: 'post' });
+    watch(() => props.clickToHide, foundation.rebindEvents, { flush: 'post' });
+    watch(() => props.visible, foundation.handleVisiblePropChange, { flush: 'post' });
 
     watch(
         () => props.condition,
@@ -367,7 +348,7 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
 
     const scheduleTimeout = useTimeout();
 
-    onMounted(() => scheduleTimeout(() => foundation.updateStateIfCursorOnTrigger()));
+    onMounted(() => scheduleTimeout(foundation.updateStateIfCursorOnTrigger));
 
     // Vue drops emits after unmount, so the final close is reported in beforeUnmount
     onBeforeUnmount(afterClose);

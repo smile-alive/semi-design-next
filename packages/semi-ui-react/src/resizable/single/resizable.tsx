@@ -192,7 +192,7 @@ export default function Resizable(rawProps: ResizableProps) {
         };
     };
 
-    useResizeObserver(resizableRef, () => foundation.updateAriaRange());
+    useResizeObserver(resizableRef, foundation.updateAriaRange);
 
     return (
         <div role={namedRole(rest)} {...rest} ref={mergedRef} className={clsx(className, prefixCls + '-resizable')} style={resizeStyle}>

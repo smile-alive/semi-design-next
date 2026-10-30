@@ -58,11 +58,11 @@ const renderViewer = () =>
         },
     });
 
-const element = (selector: string) => {
+function element(selector: string) {
     const found = document.querySelector<HTMLElement>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
+}
 const lines = () => [...element('.lines-content').children] as HTMLElement[];
 const tokenCount = (index: number) => (lines()[index].firstElementChild as HTMLElement).children.length;
 const lineNumber = (n: number) => element(`.${prefixCls}-line-number[data-line-number="${n}"]`);

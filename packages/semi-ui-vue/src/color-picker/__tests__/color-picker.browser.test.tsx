@@ -12,10 +12,10 @@ import ConfigProvider from '../../config-provider';
 const prefixCls = `${BASE_CLASS_PREFIX}-colorPicker`;
 const text = en_US.ColorPicker;
 
-const required = <T extends Element>(el: T | null) => {
+function required<T extends Element>(el: T | null) {
     if (!el) throw new Error('missing element');
     return el;
-};
+}
 
 describe('ColorPicker（浏览器）', () => {
     it('拖动色相时，指针移出滑块后仍持续跟随，松开后结束', async () => {

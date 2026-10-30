@@ -30,10 +30,10 @@ const nameFilters = [
     { text: 'Semi Pro 设计稿', value: 'Semi Pro 设计稿' },
 ];
 const menuOpen = () => document.querySelector('.semi-dropdown-wrapper-show') !== null;
-const openFilter = async (index = 0) => {
+async function openFilter(index = 0) {
     await userEvent.click(getFilterButtons()[index]);
     await waitFor(() => expect(menuOpen()).toBe(true));
-};
+}
 const clickFilterItem = (text: string) => userEvent.click(queryAll('.semi-dropdown-item').find((item) => item.textContent === text) as HTMLElement);
 const itemSelector = '.semi-dropdown-item *, .semi-dropdown-item';
 

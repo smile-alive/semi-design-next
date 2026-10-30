@@ -21,6 +21,4 @@ export interface AIChatDialogueContext {
     messageDelete: (message: Message) => void;
 }
 
-const [provideAIChatDialogueContext, useAIChatDialogueContext] = createContext<AIChatDialogueContext>('AIChatDialogue');
-
-export { useAIChatDialogueContext, provideAIChatDialogueContext };
+export const [provideAIChatDialogueContext, useAIChatDialogueContext] = createContext<AIChatDialogueContext>('AIChatDialogue');

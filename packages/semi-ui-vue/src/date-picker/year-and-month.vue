@@ -80,7 +80,7 @@
 
 <template>
     <div v-if="!props.noBackBtn" :class="`${prefix}-yearmonth-header`">
-        <IconButton :noHorizontalPadding="false" :size="buttonSize" @click="foundation.backToMain()">
+        <IconButton :noHorizontalPadding="false" :size="buttonSize" @click="foundation.backToMain">
             <template #icon>
                 <IconChevronLeft :size="iconSize" />
             </template>

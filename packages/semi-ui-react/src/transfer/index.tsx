@@ -11,6 +11,7 @@ import type { ElementProps } from '../_base/base';
 import { createContext } from '../_base/create-context';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
+import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useIsServerRender from '../_base/use-is-server-render';
 import VirtualList, { type VirtualListRowProps } from '../_base/virtual-list';
@@ -184,6 +185,7 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     onSelect?: (item: DataItem) => void;
     onDeselect?: (item: DataItem) => void;
     onSearch?: (searchValue: string) => void;
+    onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
     renderSourceItem?: (item: RenderSourceItemProps) => React.ReactNode;
     renderSelectedItem?: (item: RenderSelectedItemProps) => React.ReactNode;
     renderSourcePanel?: (sourcePanelProps: SourcePanelProps) => React.ReactNode;
@@ -283,6 +285,8 @@ export default function Transfer(rawProps: TransferProps) {
         onSelect,
         onDeselect,
         onSearch,
+        // reported by the foundation once the focus leaves the whole transfer, not on every inner focusout
+        onBlur: _onBlur,
         renderSourceItem,
         renderSelectedItem,
         renderSourcePanel,
@@ -301,7 +305,7 @@ export default function Transfer(rawProps: TransferProps) {
 
     const isServerRender = useIsServerRender();
 
-    const [foundation, state] = useFoundation<TransferFoundation<TransferProps, TransferState>, TransferAdapter<TransferProps, TransferState>, TransferProps, TransferState>(
+    const [foundation, state] = useFoundation<TransferFoundation<TransferProps, TransferState, React.FocusEvent<HTMLDivElement>>, TransferAdapter<TransferProps, TransferState, React.FocusEvent<HTMLDivElement>>, TransferProps, TransferState>(
         TransferFoundation,
         props,
         () => ({
@@ -311,6 +315,7 @@ export default function Transfer(rawProps: TransferProps) {
         }),
         (base) => ({
             updateSelected: (selectedValues) => base.setState({ selectedValues }),
+            notifyBlur: (e) => base.getProps().onBlur?.(e),
             notifyChange: (values, items) => base.getProps().onChange(values, items),
             notifySearch: (input) => base.getProps().onSearch(input),
             notifySelect: (item) => base.getProps().onSelect(item),
@@ -352,8 +357,6 @@ export default function Transfer(rawProps: TransferProps) {
     const onSelectOrRemove = (item: ResolvedDataItem) => foundation.handleSelectOrRemove(item);
 
     const onSortEnd = (sortProps: OnSortEndProps) => foundation.handleSortEnd(sortProps);
-
-    const onClear = () => foundation.handleClear();
 
     const renderHeader = (headerConfig: HeaderConfig) => {
         const { totalContent, allContent, onAllClick, num, showButton } = headerConfig;
@@ -481,7 +484,7 @@ export default function Transfer(rawProps: TransferProps) {
                 inputValue,
                 selectedItems,
                 value: values,
-                onSelect: (selectValues) => foundation.handleSelect(selectValues),
+                onSelect: foundation.handleSelect,
                 onAllClick,
                 onSearch: onInputChange,
                 onSelectOrRemove,
@@ -526,7 +529,7 @@ export default function Transfer(rawProps: TransferProps) {
                     {renderLeftList(visibleData)}
                     {pagination && totalPage > 1 && (
                         <div className={`${prefixCls}-left-pagination`}>
-                            <Pagination currentPage={currentPage} pageSize={pageSize} total={filterData.length} onPageChange={(currentPage) => foundation.handlePageChange(currentPage)} />
+                            <Pagination currentPage={currentPage} pageSize={pageSize} total={filterData.length} onPageChange={foundation.handlePageChange} />
                         </div>
                     )}
                 </>
@@ -638,7 +641,7 @@ export default function Transfer(rawProps: TransferProps) {
             return renderSelectedPanel({
                 length: selectedData.length,
                 selectedData,
-                onClear,
+                onClear: foundation.handleClear,
                 onRemove: onSelectOrRemove,
                 onSortEnd,
             });
@@ -646,7 +649,7 @@ export default function Transfer(rawProps: TransferProps) {
         const headerCom = renderHeader({
             totalContent: locale.selected.replace('${total}', `${selectedData.length}`),
             allContent: locale.clear,
-            onAllClick: onClear,
+            onAllClick: foundation.handleClear,
             type: 'right',
             showButton: selectedData.some((item) => !item.disabled),
             num: selectedData.length,
@@ -686,10 +689,16 @@ export default function Transfer(rawProps: TransferProps) {
         );
     };
 
+    useDidUpdate(value, (next, previous) => {
+        if (Array.isArray(previous) && !Array.isArray(next)) {
+            foundation.handleValueRelease();
+        }
+    });
+
     useImperativeHandle(props.ref, () => ({ search: (value: string) => foundation.handleInputChange(value, false) }), [foundation]);
 
     return (
-        <div role={namedRole(rest)} {...rest} className={transferCls} style={style}>
+        <div role={namedRole(rest)} {...rest} className={transferCls} style={style} onBlur={foundation.handleFocusOut}>
             <ListDisabledContext value={Boolean(disabled)}>
                 {renderLeft()}
                 {renderRight()}

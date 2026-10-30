@@ -51,9 +51,9 @@ export function TableSelection(props: { record?: Record<string, any>; inHeader?:
 
     const disabled = () => rowSelection()?.disabled;
 
-    const selectAll = (checked: boolean, e: any) => table.foundation.handleSelectAllRow(checked, e);
+    const selectAll = (checked: boolean, e: CheckboxEvent) => table.foundation.handleSelectAllRow(checked, e);
 
-    const selectRow = (checked: boolean, e: any) => table.foundation.handleSelectRow(key(), checked, e);
+    const selectRow = (checked: boolean, e: CheckboxEvent) => table.foundation.handleSelectRow(key(), checked, e);
 
     const getCheckboxProps = () => {
         const fn = rowSelection()?.getCheckboxProps;

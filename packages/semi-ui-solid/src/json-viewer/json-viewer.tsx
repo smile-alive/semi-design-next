@@ -211,23 +211,23 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         get showSearchBar() {
             return state().showSearchBar;
         },
-        onToggleSearchBar: () => foundation.toggleSearchBar(),
-        onSearch: (text, caseSensitive, wholeWord, regex) => foundation.search(text, caseSensitive, wholeWord, regex),
+        onToggleSearchBar: foundation.toggleSearchBar,
+        onSearch: foundation.search,
         onPrevSearch: () => foundation.prevSearch(),
         onNextSearch: () => foundation.nextSearch(),
-        onReplace: (text) => foundation.replace(text),
-        onReplaceAll: (text) => foundation.replaceAll(text),
+        onReplace: foundation.replace,
+        onReplaceAll: foundation.replaceAll,
     };
 
     const handle: JsonViewerHandle = {
         getValue: () => foundation.jsonViewer?.getModel().getValue() ?? '',
         format: () => foundation.jsonViewer?.format(),
-        search: (searchText, caseSensitive, wholeWord, regex) => foundation.search(searchText, caseSensitive, wholeWord, regex),
-        getSearchResults: () => foundation.getSearchResults(),
-        prevSearch: (step) => foundation.prevSearch(step),
-        nextSearch: (step) => foundation.nextSearch(step),
-        replace: (replaceText) => foundation.replace(replaceText),
-        replaceAll: (replaceText) => foundation.replaceAll(replaceText),
+        search: foundation.search,
+        getSearchResults: foundation.getSearchResults,
+        prevSearch: foundation.prevSearch,
+        nextSearch: foundation.nextSearch,
+        replace: foundation.replace,
+        replaceAll: foundation.replaceAll,
         getStyle: () => ({ width: local.width, height: local.height }),
     };
 

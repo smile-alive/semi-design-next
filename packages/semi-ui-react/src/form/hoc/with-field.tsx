@@ -153,6 +153,9 @@ function mergeProps(props: any) {
 }
 
 function createField<C extends React.ElementType>(Component: C, opts: WithFieldOption | undefined, insetLabel: boolean): React.ComponentType<FieldProps<React.ComponentProps<C>>> {
+    // the injected props are assembled dynamically, so they cannot be checked against the generic C
+    const Control: React.ElementType = Component;
+
     function InjectedField(props: any) {
         let { field, label, noLabel, noErrorMessage, isInInputGroup, initValue, validate, validateStatus, allowEmptyString, emptyValue, rules, required, keepState, transform, name, fieldClassName, fieldStyle, convert, helpText, extraText, pure, id, rest } = mergeProps(props);
         const { options } = mergeOptions(opts, props);
@@ -230,7 +233,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             }),
         };
 
-        const handleChange = function (newValue: any, e: any, ...other: any[]) {
+        const handleChange = (newValue: any, e: unknown, ...other: unknown[]) => {
             const fnKey = options.onKeyChangeFnName;
             fieldBridge.changeFieldValue(registration, newValue, {
                 allowEmpty,
@@ -243,7 +246,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             });
         };
 
-        const handleBlur = function (...e: any[]) {
+        const handleBlur = (...e: any[]) => {
             if (props.onBlur) {
                 props.onBlur(...e);
             }
@@ -366,7 +369,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             }
 
             if (isInInputGroup) {
-                return <Component {...(newProps as any)} />;
+                return <Control {...newProps} />;
             }
 
             if (pure) {
@@ -375,7 +378,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
                     [`${prefix}-field-${name}`]: Boolean(name),
                     [fieldClassName]: Boolean(fieldClassName),
                 });
-                return <Component {...(newProps as any)} />;
+                return <Control {...newProps} />;
             }
 
             const withCol = mergeLabelCol && mergeWrapperCol;
@@ -390,7 +393,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             const fieldMainContent = (
                 <div className={`${prefix}-field-main`}>
                     {mergeExtraPos === 'middle' && extraContent}
-                    <Component {...(newProps as any)} />
+                    <Control {...newProps} />
                     {!noErrorMessage && <ErrorMessage error={error} errorMessageId={errorMessageId} helpText={helpText} helpTextId={helpTextId} showValidateIcon={formProps.showValidateIcon} validateStatus={blockStatus} />}
                     {mergeExtraPos === 'bottom' && extraContent}
                 </div>

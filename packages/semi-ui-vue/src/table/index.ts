@@ -13,5 +13,5 @@ const TableWithParts: typeof Table & {
     DEFAULT_KEY_COLUMN_EXPAND: strings.DEFAULT_KEY_COLUMN_EXPAND,
 });
 export default TableWithParts;
-export { TableColumn };
+export { default as TableColumn } from './column';
 export type * from './interface';

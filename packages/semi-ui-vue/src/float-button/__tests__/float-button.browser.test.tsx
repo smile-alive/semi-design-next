@@ -9,10 +9,10 @@ import FloatButton from '../float-button.vue';
 const prefixCls = 'semi-floatButton';
 const groupCls = 'semi-floatButtonGroup';
 
-const rectOf = (el: Element) => {
+function rectOf(el: Element) {
     const { x, y, width, height } = el.getBoundingClientRect();
     return { x, y, width, height };
-};
+}
 const icon = () => <i>i</i>;
 
 describe('FloatButton 布局与样式', () => {

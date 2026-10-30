@@ -151,7 +151,7 @@ function Anchor(rawProps: AnchorProps) {
                         <span className={slideBarCls} style={{ top: slideBarTop }} />
                     </div>
                     {/* a narrower container wraps link titles, which moves the active link without any commit */}
-                    <ReactResizeObserver onResize={() => foundation.syncSlideBar()}>
+                    <ReactResizeObserver onResize={foundation.syncSlideBar}>
                         <div className={`${prefixCls}-link-wrapper`} role="list">
                             {children}
                         </div>

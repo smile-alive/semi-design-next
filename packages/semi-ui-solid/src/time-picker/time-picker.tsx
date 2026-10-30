@@ -1,4 +1,4 @@
-import { type JSX, type Ref, For, Show, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, splitProps } from 'solid-js';
+import { type JSX, type Ref, For, Show, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import { isEqual } from 'es-toolkit';
@@ -11,12 +11,14 @@ import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';
 import mergeRefs from '../_base/merge-refs';
+import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
 import type { InputSize, ValidateStatus } from '../input';
+import { InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import type { ScrollItemProps } from '../scroll-list';
@@ -149,10 +151,29 @@ export default function TimePicker(rawProps: TimePickerProps) {
     const defaulted = useDefaultProps('TimePicker', rawProps, defaultProps);
 
     const config = useConfig();
+    const group = useInputGroupContext();
+    const layer = usePopupLayer();
     const locale = useLocale('TimePicker');
 
-    // explicit undefined falls back too: prop, then ConfigProvider, then the global default; the locale is never a prop
+    let root: HTMLDivElement | undefined;
+    const [panel, setPanel] = createSignal<HTMLDivElement>();
+    const panelId = createUniqueId();
+
+    // only the rendered DOM tells whether a custom trigger has its own focus target
+    const [customTrigger, setCustomTrigger] = createSignal<HTMLDivElement>();
+    const [customTriggerFocusable, setCustomTriggerFocusable] = createSignal(false);
+
+    const inGroup = group?.layer === layer ? group : undefined;
+
+    // explicit undefined falls back too: prop, then ConfigProvider, then the global default; the locale is never a prop.
+    // As Input: own value, then the group's, then the global default.
     const props = mergeProps(defaulted, {
+        get size() {
+            return rawProps.size ?? inGroup?.view().size ?? defaulted.size;
+        },
+        get disabled() {
+            return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
+        },
         get timeZone() {
             return rawProps.timeZone ?? config().timeZone ?? defaulted.timeZone;
         },
@@ -219,14 +240,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
     // a triggerRender that spreads componentProps must not grab the root element
     const [, componentProps] = splitProps(props, ['ref']);
 
-    let root: HTMLDivElement | undefined;
-    const [panel, setPanel] = createSignal<HTMLDivElement>();
-    const panelId = createUniqueId();
-
-    // only the rendered DOM tells whether a custom trigger has its own focus target
-    const [customTrigger, setCustomTrigger] = createSignal<HTMLDivElement>();
-    const [customTriggerFocusable, setCustomTriggerFocusable] = createSignal(false);
-
     const registerSpecialTrigger = useSpecialTrigger(
         () => ({ disabled: local.disabled }),
         () => local.ref
@@ -253,7 +266,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
 
     const open = () => TimePickerFoundation.isPanelShown(props, state());
 
-    const markPressInside = useClickOutside([() => root, panel], (e) => foundation.handleClickOutside(e), open);
+    const markPressInside = useClickOutside([() => root, panel], foundation.handleClickOutside, open);
 
     const triggerRenderProps: TimePickerTriggerRenderProps = {
         get disabled() {
@@ -269,7 +282,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
             return state().inputValue;
         },
         componentProps: componentProps as Omit<TimePickerProps, 'ref'>,
-        onChange: (inputValue) => foundation.handleInputChange(inputValue),
+        onChange: foundation.handleInputChange,
     };
 
     const isRange = () => local.type === strings.TYPE_TIME_RANGE_PICKER;
@@ -321,7 +334,7 @@ export default function TimePicker(rawProps: TimePickerProps) {
         get 'aria-haspopup'() {
             return isTriggerButton() ? ('dialog' as const) : null;
         },
-        onClick: () => foundation.handlePanelOpen(),
+        onClick: foundation.handlePanelOpen,
         onKeyDown: (e: KeyboardEvent) => {
             if (isTriggerButton() && e.target === e.currentTarget) {
                 foundation.handleTriggerKeyDown(e);
@@ -400,9 +413,9 @@ export default function TimePicker(rawProps: TimePickerProps) {
             size={local.size}
             validateStatus={props.validateStatus}
             value={state().inputValue}
-            onBlur={() => foundation.handleInputBlur()}
-            onChange={(value) => foundation.handleInputChange(value)}
-            onFocus={(e) => foundation.handleFocus(e)}
+            onBlur={foundation.handleInputBlur}
+            onChange={foundation.handleInputChange}
+            onFocus={foundation.handleFocus}
         />
     );
 
@@ -438,34 +451,37 @@ export default function TimePicker(rawProps: TimePickerProps) {
     );
 
     return (
-        <div ref={mergeRefs(setRoot, local.ref)} class={clsx(local.prefixCls, local.class)} style={local.style} onMouseDown={markPressInside}>
-            <Popover
-                contentClassName={popupClassName()}
-                style={local.popupStyle}
-                aria-label={locale().locale.panel[local.type]}
-                autoAdjustOverflow={local.autoAdjustOverflow}
-                content={renderPanel}
-                motion={local.motion}
-                position={position()}
-                stopPropagation={local.stopPropagation}
-                trigger="custom"
-                visible={open()}
-                // the trigger is custom, so the Popover leaves closing on Esc to the TimePicker
-                onEscKeyDown={() => foundation.handleEscKeyDown()}
-            >
-                {(getTriggerProps) => (
-                    <Show
-                        when={local.triggerRender}
-                        keyed
-                        fallback={
-                            // the input is the Tab stop; Tooltip would add 0 here
-                            <span {...getTriggerProps({ class: `${local.prefixCls}-header`, tabIndex: -1 })}>{renderInput()}</span>
-                        }
-                    >
-                        {(render) => <div {...(getTriggerProps(customTriggerOwn) as JSX.HTMLAttributes<HTMLDivElement>)}>{render(triggerRenderProps)}</div>}
-                    </Show>
-                )}
-            </Popover>
-        </div>
+        // the inputs and any prefix or trigger content belong to the TimePicker, not to an enclosing InputGroup
+        <InputGroupContext.Provider value={undefined}>
+            <div ref={untrack(() => mergeRefs(setRoot, local.ref))} class={clsx(local.prefixCls, local.class)} style={local.style} onMouseDown={markPressInside}>
+                <Popover
+                    contentClassName={popupClassName()}
+                    style={local.popupStyle}
+                    aria-label={locale().locale.panel[local.type]}
+                    autoAdjustOverflow={local.autoAdjustOverflow}
+                    content={renderPanel}
+                    motion={local.motion}
+                    position={position()}
+                    stopPropagation={local.stopPropagation}
+                    trigger="custom"
+                    visible={open()}
+                    // the trigger is custom, so the Popover leaves closing on Esc to the TimePicker
+                    onEscKeyDown={foundation.handleEscKeyDown}
+                >
+                    {(getTriggerProps) => (
+                        <Show
+                            when={local.triggerRender}
+                            keyed
+                            fallback={
+                                // the input is the Tab stop; Tooltip would add 0 here
+                                <span {...getTriggerProps({ class: `${local.prefixCls}-header`, tabIndex: -1 })}>{renderInput()}</span>
+                            }
+                        >
+                            {(render) => <div {...(getTriggerProps(customTriggerOwn) as JSX.HTMLAttributes<HTMLDivElement>)}>{render(triggerRenderProps)}</div>}
+                        </Show>
+                    )}
+                </Popover>
+            </div>
+        </InputGroupContext.Provider>
     );
 }

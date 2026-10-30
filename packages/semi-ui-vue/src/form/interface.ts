@@ -1,7 +1,6 @@
 import type { IntrinsicElementAttributes, StyleValue, VNode } from 'vue';
 import type { RuleItem } from 'async-validator';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { FormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import type { AllErrors, BaseFormApi, FieldPath, FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
 import type { ColProps } from '../grid/interface';
 import type { ValidateStatus } from '../input/interface';
@@ -66,7 +65,7 @@ export interface FormProps<Values extends Record<string, any> = any> {
     /** Form-level validation; when set, it replaces the fields' own validation */
     validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
     /** The `formApi` returned by `useForm()` */
-    form?: FormApi<Values> & FormApiProxyInternals<Values>;
+    form?: FormApi<Values>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
 }

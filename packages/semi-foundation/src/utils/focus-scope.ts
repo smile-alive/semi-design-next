@@ -46,13 +46,13 @@ export default class FocusScope {
     #fallbacks: HTMLElement[] = [];
 
     /** Remembers the focused element to return to; a re-activation finds the focus already inside and keeps the first */
-    record() {
+    record = () => {
         const active = FocusTrapHandle.getDeepActiveElement();
         if (!this.#container?.contains(FocusTrapHandle.getActiveElement(this.#container))) {
             this.#previous = active;
             this.#fallbacks = popupTriggers(active);
         }
-    }
+    };
 
     /** Traps Tab in `container` and focuses it, unless an element inside already took focus */
     activate(container: HTMLElement, preventScroll?: boolean) {
@@ -74,31 +74,31 @@ export default class FocusScope {
     }
 
     /** `activate` for a modal overlay, `enter` for a non-modal one */
-    engage(container: HTMLElement, modal: boolean, preventScroll?: boolean) {
+    engage = (container: HTMLElement, modal: boolean, preventScroll?: boolean) => {
         if (modal) {
             this.activate(container, preventScroll);
         } else {
             this.enter(container, preventScroll);
         }
-    }
+    };
 
-    deactivate() {
+    deactivate = () => {
         this.#trap?.destroy();
         this.#trap = null;
-    }
+    };
 
     /** Focuses the recorded element again; call it after the inert around the overlay is released */
-    restore(preventScroll?: boolean) {
+    restore = (preventScroll?: boolean) => {
         [this.#previous, ...this.#fallbacks].find(canTakeFocus)?.focus({ preventScroll });
-    }
+    };
 
     /**
      * `restore` unless the user moved focus out of a non-modal `container` (see `FocusTrapHandle.shouldRestoreFocus`).
      * `container` is passed in rather than read from `enter`, which may not have run for this close.
      */
-    restoreIfAllowed(container: HTMLElement | null | undefined, modal: boolean, preventScroll?: boolean) {
+    restoreIfAllowed = (container: HTMLElement | null | undefined, modal: boolean, preventScroll?: boolean) => {
         if (FocusTrapHandle.shouldRestoreFocus(container, modal)) {
             this.restore(preventScroll);
         }
-    }
+    };
 }

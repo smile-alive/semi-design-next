@@ -6,5 +6,5 @@ const DescriptionsWithItem: typeof Descriptions & { Item: typeof DescriptionsIte
     Item: DescriptionsItem,
 });
 export default DescriptionsWithItem;
-export { DescriptionsItem };
+export { default as DescriptionsItem } from './descriptions-item.vue';
 export type * from './interface';

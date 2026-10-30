@@ -7,7 +7,7 @@ export interface CollapseContextType {
     collapseIcon: React.ReactNode;
     clickHeaderToExpand: boolean;
     // undefined defers to the global Collapsible default
-    keepDOM: boolean | undefined;
+    keepDOM?: boolean;
     expandIconPosition: 'left' | 'right';
     onClick: (activeKey: string, e: React.MouseEvent) => void;
     motion: boolean;

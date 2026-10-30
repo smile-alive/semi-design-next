@@ -116,7 +116,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         this._adapter.setCustomRenderMap(new Map());
     }
 
-    search(searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) {
+    search = (searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => {
         let options;
         if (caseSensitive !== undefined || wholeWord !== undefined || regex !== undefined) {
             options = {
@@ -130,53 +130,53 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         // the search input may not exist (custom UI or closed bar), so edits re-search from this record
         this.#lastSearch = { text: searchText, ...options };
         this.jsonViewer?.getSearchWidget().search(searchText, options.caseSensitive, options.wholeWord, options.regex);
-    }
+    };
 
-    prevSearch(step?: number) {
+    prevSearch = (step?: number) => {
         if (step === undefined) {
             this.jsonViewer?.getSearchWidget().navigateResults(-1);
         } else {
             this.jsonViewer?.getSearchWidget().navigateResults(-step);
         }
-    }
+    };
 
-    nextSearch(step?: number) {
+    nextSearch = (step?: number) => {
         if (step === undefined) {
             this.jsonViewer?.getSearchWidget().navigateResults(1);
         } else {
             this.jsonViewer?.getSearchWidget().navigateResults(step);
         }
-    }
+    };
 
-    replace(replaceText: string) {
+    replace = (replaceText: string) => {
         if (this.getProps().options?.readOnly) {
             return;
         }
         this.jsonViewer?.getSearchWidget().replace(replaceText);
-    }
+    };
 
-    replaceAll(replaceText: string) {
+    replaceAll = (replaceText: string) => {
         if (this.getProps().options?.readOnly) {
             return;
         }
         this.jsonViewer?.getSearchWidget().replaceAll(replaceText);
-    }
+    };
 
     /** Toggles one search option, then searches again with the input text and the new options */
-    toggleSearchOption(key: keyof SearchOptions) {
+    toggleSearchOption = (key: keyof SearchOptions) => {
         this._adapter.toggleSearchOption(key);
         this.search(this.#lastSearch?.text ?? '');
-    }
+    };
 
-    toggleSearchBar() {
+    toggleSearchBar = () => {
         // a reopened bar starts with an empty input, so old results and highlights go too
         this.#lastSearch = null;
         this.jsonViewer?.getSearchWidget().clear();
         this._adapter.toggleSearchBar();
-    }
+    };
 
     /** `null` when nothing was searched (or the bar was closed), `undefined` while there is no editor */
-    getSearchResults(): SearchResults | null | undefined {
+    getSearchResults = (): SearchResults | null | undefined => {
         return this.jsonViewer?.getSearchWidget().searchResults;
-    }
+    };
 }

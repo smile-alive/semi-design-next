@@ -108,7 +108,7 @@ export interface MenuProps {
 
 export interface ImagePreviewTitleSlotProps {
     /** The current image's previewTitle, else ImagePreview's */
-    title: string | undefined;
+    title?: string;
     index: number;
 }
 

@@ -26,7 +26,7 @@ type Foundation = MarkdownRenderFoundation<MarkdownRenderProps>;
 type Adapter = MarkdownRenderAdapter<MarkdownRenderProps>;
 
 interface Block {
-    key: string | undefined;
+    key?: string;
     node: unknown;
 }
 

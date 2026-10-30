@@ -6,11 +6,11 @@ import semiGlobal from '../../_utils/semi-global';
 
 type PointerHandler = (e: PointerEvent) => void;
 
-const drag = (element: Element, from: number[], to: number[], pointerType = 'mouse') => {
+function drag(element: Element, from: number[], to: number[], pointerType = 'mouse') {
     fireEvent.pointerDown(element, { pointerId: 1, pointerType, clientX: from[0], clientY: from[1] });
     fireEvent.pointerMove(document, { pointerId: 1, pointerType, clientX: to[0], clientY: to[1] });
     fireEvent.pointerUp(document, { pointerId: 1, pointerType });
-};
+}
 
 // jsdom has no layout, so a real ResizeObserver never reports. This one reports each observed child when flushed,
 // which render and flushResizeReports do after the DOM changed, like the browser reporting before paint.
@@ -34,17 +34,17 @@ class ReportingResizeObserver {
 
 const flushResizeReports = () => pendingReports.splice(0).forEach((report) => report());
 
-const render = (ui: () => JSX.Element) => {
+function render(ui: () => JSX.Element) {
     const result = solidRender(ui);
     flushResizeReports();
     return result;
-};
+}
 
 // jsdom has no layout; give elements the offset sizes the absolute strategy reads
-const setSize = (element: HTMLElement, width: number, height: number) => {
+function setSize(element: HTMLElement, width: number, height: number) {
     Object.defineProperty(element, 'offsetWidth', { configurable: true, value: width });
     Object.defineProperty(element, 'offsetHeight', { configurable: true, value: height });
-};
+}
 
 describe('DragMove', () => {
     beforeEach(() => {

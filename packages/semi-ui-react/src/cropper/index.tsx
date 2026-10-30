@@ -85,15 +85,15 @@ export default function Cropper(rawProps: CropperProps) {
     const { imgX, imgY, boxX, boxY, viewX, viewY } = getCropperGeometry(imgData, cropperBox);
 
     // a React onWheel listener is passive and cannot stop a pinch from zooming the page
-    useEventListener(containerRef, 'wheel', (e) => foundation.handleWheel(e), { passive: false });
-    useResizeObserver(containerRef, () => foundation.handleResize());
+    useEventListener(containerRef, 'wheel', foundation.handleWheel, { passive: false });
+    useResizeObserver(containerRef, foundation.handleResize);
 
     // every commit: wheel zoom and image load change the state too; an extra render lands before paint
     useLayoutEffect(() => {
         foundation.syncRotateAndZoom();
     });
 
-    useDidUpdate(props.aspectRatio, () => foundation.applyAspectRatio());
+    useDidUpdate(props.aspectRatio, foundation.applyAspectRatio);
 
     useDidUpdate(props.zoom, (zoom) => {
         if (zoom === undefined) foundation.syncRotateAndZoom({ zoom: 1 });
@@ -107,7 +107,7 @@ export default function Cropper(rawProps: CropperProps) {
         foundation.updatePreview();
     });
 
-    useImperativeHandle(ref, () => ({ getCropperCanvas: () => foundation.getCropperCanvas() }), [foundation]);
+    useImperativeHandle(ref, () => ({ getCropperCanvas: foundation.getCropperCanvas }), [foundation]);
 
     return (
         <div role={namedRole(rest)} {...rest} ref={containerRef} className={clsx(prefixCls, className)} style={style}>

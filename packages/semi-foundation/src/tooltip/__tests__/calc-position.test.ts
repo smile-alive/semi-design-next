@@ -5,7 +5,7 @@ const VIEWPORT = { width: 1000, height: 800 };
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
-const createFoundation = (props: TooltipBaseProps, triggerRect: DOMRect, popupSize = { width: 100, height: 40 }, trigger: Element | null = null, insetTop = '') => {
+function createFoundation(props: TooltipBaseProps, triggerRect: DOMRect, popupSize = { width: 100, height: 40 }, trigger: Element | null = null, insetTop = '') {
     const popup = document.createElement('div');
     if (insetTop) {
         popup.style.setProperty('--semi-tooltip-viewport-inset-top', insetTop);
@@ -28,7 +28,7 @@ const createFoundation = (props: TooltipBaseProps, triggerRect: DOMRect, popupSi
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
     foundation.handleShown();
     return { foundation, popup, adapter, observers };
-};
+}
 
 describe('calcPosition', () => {
     let restore: () => void;

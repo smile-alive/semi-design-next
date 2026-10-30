@@ -169,12 +169,7 @@
     );
 
     // by content: a parent rendering `new Date(...)` each time must not pull the panel back
-    useDidUpdate(
-        () => props.defaultPickerValue,
-        () => foundation.initDefaultPickerValue(),
-        isEqual,
-        'pre'
-    );
+    useDidUpdate(() => props.defaultPickerValue, foundation.initDefaultPickerValue, isEqual, 'pre');
 
     watch(
         () => (isRange.value ? Number(isYearOrTime(state.value.monthLeft)) + Number(isYearOrTime(state.value.monthRight)) : 0),
@@ -195,8 +190,8 @@
     onUpdated(applyPanelSize);
 
     defineExpose<DatePickerMonthsGridHandle>({
-        showDatePanel: (panelType) => foundation.showDatePanel(panelType),
-        showTimePicker: (panelType) => foundation.showTimePicker(panelType),
+        showDatePanel: foundation.showDatePanel,
+        showTimePicker: foundation.showTimePicker,
     });
 </script>
 
@@ -258,7 +253,7 @@
                             :selected="state.selected"
                             :weekStartsOn="props.weekStartsOn"
                             @dayClick="foundation.handleDayClick($event, panelType)"
-                            @dayHover="foundation.handleDayHover($event)"
+                            @dayHover="foundation.handleDayHover"
                             @monthSwitch="foundation[$event](panelType)"
                             @weeksRowNumChange="handleWeeksRowNumChange"
                         >

@@ -39,18 +39,18 @@ export default class PreviewFooterFoundation<P extends PreviewFooterBaseProps = 
         this.handleSlideChange.cancel();
     }
 
-    changeSliderValue(type: 'plus' | 'minus') {
+    changeSliderValue = (type: 'plus' | 'minus') => {
         const { zoom, step, min, max } = this.getProps();
         this.handleValueChange(clampZoom(type === 'plus' ? zoom + step : zoom - step, min, max));
-    }
+    };
 
-    handleRatioClick() {
+    handleRatioClick = () => {
         const { ratio } = this.getProps();
         const type = ratio === 'adaptation' ? 'realSize' : 'adaptation';
         this._adapter.notifyAdjustRatio(type);
-    }
+    };
 
-    handleRotate(direction: RotateDirection) {
+    handleRotate = (direction: RotateDirection) => {
         this._adapter.notifyRotate(direction);
-    }
+    };
 }

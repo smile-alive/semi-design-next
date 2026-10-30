@@ -9,13 +9,13 @@ import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import Transfer, { type PaginationProps, type SelectedPanelProps, type SourcePanelProps, type TransferHandle, type TransferProps } from '../index';
 
 // mock.lastCall is undefined until the first call; fail loudly instead of asserting on nothing
-const lastArg = <F extends (...args: never[]) => unknown>(spy: Mock<F>): Parameters<F>[0] => {
+function lastArg<F extends (...args: never[]) => unknown>(spy: Mock<F>): Parameters<F>[0] {
     const call = spy.mock.lastCall;
     if (!call) {
         throw new Error('the spy was never called');
     }
     return call[0];
-};
+}
 
 const prefixCls = `${BASE_CLASS_PREFIX}-transfer`;
 
@@ -705,6 +705,16 @@ describe('Transfer 行为', () => {
         expect(getRightItemTexts()).toEqual(['banana']);
         await userEvent.click(getLeftItem('apple'));
         expect(getRightItemTexts()).toEqual(['banana', 'apple']);
+    });
+
+    it('非受控选过后转为受控，value 变回 undefined 时已选清空', async () => {
+        const { rerender } = render(<Transfer dataSource={items} />);
+        await userEvent.click(getLeftItem('apple'));
+        rerender(<Transfer value={['a', 'b']} dataSource={items} />);
+        expect(getRightItemTexts()).toEqual(['apple', 'banana']);
+        rerender(<Transfer value={undefined} dataSource={items} />);
+        expect(getRightItemTexts()).toEqual([]);
+        expect(getLeftCheckedTexts()).toEqual([]);
     });
 
     it('dataSource 在挂载后到达时 defaultValue 仍生效', () => {

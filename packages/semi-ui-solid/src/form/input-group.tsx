@@ -65,7 +65,7 @@ export default function FormInputGroup(props: InputGroupProps) {
             setFields((current) => [...current, field]);
             return () => setFields((current) => current.toSpliced(current.indexOf(field), 1));
         },
-        // InputGroup hands its attributes to every control, which would overwrite each field's own references
+        // the group's own aria attributes stay on its role="group" element, so each field adds these to its own references
         aria: () => ({
             labelledby: joinIds(local['aria-labelledby'], labelId()),
             describedby: joinIds(local['aria-describedby'], hasExtraText() && extraTextId),

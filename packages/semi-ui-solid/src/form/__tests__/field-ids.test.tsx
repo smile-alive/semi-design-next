@@ -23,6 +23,7 @@ import {
     FormTagInput,
     FormTextArea,
     FormTimePicker,
+    FormTransfer,
     FormTreeSelect,
     FormUpload,
 } from '..';
@@ -231,6 +232,7 @@ describe('Form labelPosition="inset"', () => {
         FormTimePicker: (name) => <FormTimePicker field={name} fieldClassName={name} label={name} />,
         FormTreeSelect: (name) => <FormTreeSelect field={name} fieldClassName={name} label={name} treeData={treeData} />,
         FormCascader: (name) => <FormCascader field={name} fieldClassName={name} label={name} treeData={treeData} />,
+        FormTransfer: (name) => <FormTransfer dataSource={[{ label: 'One', value: 1, key: 1 }]} field={name} fieldClassName={name} label={name} />,
         FormRating: (name) => <FormRating field={name} fieldClassName={name} label={name} />,
         FormAutoComplete: (name) => <FormAutoComplete field={name} fieldClassName={name} label={name} />,
         FormUpload: (name) => <FormUpload action="/upload" field={name} fieldClassName={name} label={name} />,

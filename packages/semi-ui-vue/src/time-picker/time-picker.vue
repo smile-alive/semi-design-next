@@ -14,6 +14,8 @@
     import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover/popover.vue';
     import { useNestedPopups } from '../tooltip/context';
@@ -45,7 +47,8 @@
         hourStep: semiGlobalDefault('TimePicker', 'hourStep'),
         minuteStep: semiGlobalDefault('TimePicker', 'minuteStep'),
         secondStep: semiGlobalDefault('TimePicker', 'secondStep'),
-        disabled: () => semiDefault('TimePicker', 'disabled', false),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
 
         // Function-typed props cannot take a factory default; global defaults are read in `disabledFns`
         disabledHours: undefined,
@@ -55,7 +58,7 @@
         hideDisabledOptions: () => semiDefault('TimePicker', 'hideDisabledOptions', false),
         placeholder: semiGlobalDefault('TimePicker', 'placeholder'),
         rangeSeparator: () => semiDefault('TimePicker', 'rangeSeparator', strings.DEFAULT_RANGE_SEPARATOR),
-        size: () => semiDefault('TimePicker', 'size', 'default'),
+        size: undefined,
         borderless: () => semiDefault('TimePicker', 'borderless', false),
         showClear: () => semiDefault('TimePicker', 'showClear', true),
         inputReadOnly: () => semiDefault('TimePicker', 'inputReadOnly', false),
@@ -95,6 +98,8 @@
     // leaves the measurement stale. Upgrade to a MutationObserver on the wrapper if such triggers need support.
     const customTriggerFocusable = shallowRef(false);
 
+    const looks = useGroupLooks('TimePicker', props, { size: 'default', disabled: false });
+
     const prefix = cssClasses.PREFIX;
     const timeZone = computed(() => props.timeZone ?? config.value.timeZone ?? readSemiDefault(semi, 'TimePicker', 'timeZone'));
     const isRange = computed(() => props.type === strings.TYPE_TIME_RANGE_PICKER);
@@ -107,7 +112,7 @@
         const columnCount = [showHour, showMinute, showSecond, props.use12Hours].filter(Boolean).length;
         return [
             `${prefix}-panel`,
-            `${prefix}-panel-${props.size}`,
+            `${prefix}-panel-${looks.size}`,
             props.popupClassName,
             {
                 [`${prefix}-panel-narrow`]: (!showHour || !showMinute || !showSecond) && !props.use12Hours,
@@ -116,6 +121,9 @@
             `${prefix}-panel-column-${columnCount}`,
         ];
     });
+
+    // the Input inside is part of this control, not a member of the group
+    provideInputGroupContext(undefined);
 
     // Not computed: global defaults are not reactive
     const disabledFns = () => ({
@@ -148,6 +156,8 @@
         }),
         {
             props: {
+                size: () => looks.size,
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 timeZone: () => timeZone.value,
                 dateFnsLocale: () => locale.value.dateFnsLocale,
@@ -159,7 +169,7 @@
         }
     );
 
-    const open = computed(() => TimePickerFoundation.isPanelShown(props, state.value));
+    const open = computed(() => TimePickerFoundation.isPanelShown({ ...props, disabled: looks.disabled }, state.value));
 
     const sameTime = (a: unknown, b: unknown) => (a instanceof Date && b instanceof Date ? a.getTime() === b.getTime() : Object.is(a, b));
 
@@ -197,12 +207,12 @@
         value: state.value.value,
         inputValue: state.value.inputValue,
         placeholder: placeholder.value,
-        disabled: props.disabled,
-        componentProps: { ...props },
-        onChange: (inputValue) => foundation.handleInputChange(inputValue),
+        disabled: looks.disabled,
+        componentProps: { ...props, ...looks },
+        onChange: foundation.handleInputChange,
     });
 
-    useClickOutside([root, panel], (event) => foundation.handleClickOutside(event), open, useNestedPopups());
+    useClickOutside([root, panel], foundation.handleClickOutside, open, useNestedPopups());
 
     // A cached KeepAlive subtree would keep the panel open; just close it, with no blur or focus return.
     onDeactivated(() => {
@@ -229,14 +239,11 @@
     );
 
     // only the text changes: syncing the value again would re-zone it a second time
-    watch(
-        () => [TimePickerFoundation.getValidFormat(props), locale.value.dateFnsLocale, props.rangeSeparator],
-        () => foundation.refreshInputValue()
-    );
+    watch(() => [TimePickerFoundation.getValidFormat(props), locale.value.dateFnsLocale, props.rangeSeparator], foundation.refreshInputValue);
 
     // isPanelShown is already false for a disabled picker, so the check leaves `disabled` out
     watch(
-        () => props.disabled,
+        () => looks.disabled,
         (disabled) => {
             if (disabled && TimePickerFoundation.isPanelShown({ open: props.open }, state.value)) {
                 foundation.close();
@@ -265,7 +272,7 @@
             :style="props.popupStyle"
             trigger="custom"
             :visible="open"
-            @escKeyDown="foundation.handleEscKeyDown()"
+            @escKeyDown="foundation.handleEscKeyDown"
         >
             <template #content>
                 <div :id="panelId" ref="panel" :class="{ [cssClasses.RANGE_PANEL_LISTS]: isRange }">
@@ -304,11 +311,11 @@
                 v-if="$slots.trigger"
                 ref="trigger"
                 :aria-controls="isTriggerButton() ? panelId : undefined"
-                :aria-disabled="isTriggerButton() ? props.disabled : undefined"
+                :aria-disabled="isTriggerButton() ? looks.disabled : undefined"
                 :aria-expanded="isTriggerButton() ? open : undefined"
                 :aria-haspopup="isTriggerButton() ? 'dialog' : undefined"
                 :role="isTriggerButton() ? 'button' : undefined"
-                :tabindex="isTriggerButton() && !props.disabled ? 0 : -1"
+                :tabindex="isTriggerButton() && !looks.disabled ? 0 : -1"
                 @keydown="onTriggerKeyDown"
             >
                 <slot name="trigger" v-bind="triggerSlotProps()" />
@@ -322,7 +329,7 @@
                     aria-haspopup="dialog"
                     :autofocus="props.autofocus"
                     :borderless="props.borderless"
-                    :disabled="props.disabled"
+                    :disabled="looks.disabled"
                     :focusOnOpen="props.focusOnOpen"
                     :inputReadOnly="props.inputReadOnly"
                     :insetLabelId="props.insetLabelId"
@@ -331,13 +338,13 @@
                     :placeholder="placeholder || locale.locale.placeholder[props.type]"
                     :preventScroll="props.preventScroll"
                     role="combobox"
-                    :showClear="props.disabled ? false : props.showClear"
-                    :size="props.size"
+                    :showClear="looks.disabled ? false : props.showClear"
+                    :size="looks.size"
                     :style="props.inputStyle"
                     :validateStatus="props.validateStatus"
-                    @blur="foundation.handleInputBlur()"
-                    @focus="foundation.handleFocus($event)"
-                    @update:modelValue="foundation.handleInputChange($event)"
+                    @blur="foundation.handleInputBlur"
+                    @focus="foundation.handleFocus"
+                    @update:modelValue="foundation.handleInputChange"
                 >
                     <template v-if="$slots.prefix" #prefix>
                         <slot name="prefix" />

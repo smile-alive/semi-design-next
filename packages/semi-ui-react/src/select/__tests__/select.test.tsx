@@ -1129,7 +1129,7 @@ describe('Select', () => {
         expect(wrapper.style.minWidth).toBe('var(--semi-tooltip-trigger-width)');
     });
 
-    it('option 带 _parentGroup 时的 filter', () => {
+    it('filter 时分组名参与匹配', () => {
         renderSelect({
             filter: true,
             defaultOpen: true,
@@ -3448,18 +3448,61 @@ describe('Select 行为基线', () => {
         expect(optionList).toEqual(defaultList);
     });
 
-    it('传给 filter 的 option 对象不会被后续搜索改写', () => {
+    it('传给 filter 的 option 就是 optionList 中的条目，不会被后续搜索改写', () => {
         const seen = [];
         const filter = (input, option) => {
             seen.push(option);
             return option.label.toLowerCase().includes(input);
         };
-        renderSelect({ optionList: defaultList, filter, defaultOpen: true });
+        const optionList = defaultList.map((option) => ({ ...option }));
+        renderSelect({ optionList, filter, defaultOpen: true });
         search('abc');
-        const visibility = seen.map((option) => option._show);
         search('zzz');
         expect(getOptions()).toHaveLength(0);
-        expect(seen.slice(0, visibility.length).map((option) => option._show)).toEqual(visibility);
+        expect(seen.length).toBeGreaterThan(0);
+        seen.forEach((option) => expect(optionList).toContain(option));
+        expect(optionList).toEqual(defaultList);
+    });
+
+    it('用户回调收到的选项不带 Select 的内部键', async () => {
+        const internalKeys = (option: object) => Object.keys(option).filter((key) => key.startsWith('_'));
+        const seen: object[] = [];
+        const record = (option: object) => {
+            seen.push(option);
+            return true;
+        };
+        const onChange = vi.fn<(value: object[]) => void>();
+        renderSelect({
+            multiple: true,
+            filter: (_: string, option: object) => record(option),
+            onChangeWithObject: true,
+            onChange,
+            defaultOpen: true,
+            children: [
+                <Select.OptGroup key="g" label="Group">
+                    <Option value="a">A</Option>
+                    <Option value="b">B</Option>
+                </Select.OptGroup>,
+            ],
+            renderOptionItem: (props: optionRenderProps) => {
+                record(props);
+                return (
+                    <div id={props.id} aria-selected={props.selected} role="option" onClick={props.onClick}>
+                        {props.label}
+                    </div>
+                );
+            },
+            renderSelectedItem: (option: object) => {
+                record(option);
+                return { isRenderInTag: true, content: 'tag' };
+            },
+        });
+        search('A');
+        fireEvent.click(screen.getByRole('option', { name: 'A' }));
+        await waitFor(() => expect(onChange).toHaveBeenCalled());
+        seen.push(...onChange.mock.calls[0][0]);
+        expect(seen.length).toBeGreaterThan(2);
+        expect(seen.flatMap(internalKeys)).toEqual([]);
     });
 });
 

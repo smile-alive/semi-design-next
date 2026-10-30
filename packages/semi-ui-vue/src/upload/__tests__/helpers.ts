@@ -26,11 +26,11 @@ export const getReplaceInput = () => document.querySelector<HTMLInputElement>(`.
 export const getCardNames = () => Array.from(document.querySelectorAll(`.${prefix}-file-card-info-name`)).map((node) => node.textContent?.trim());
 export const getPicCards = () => document.querySelectorAll<HTMLElement>(`.${prefix}-picture-file-card`);
 export const getDragArea = () => document.querySelector(`.${prefix}-drag-area`) as HTMLElement;
-export const query = <E extends Element = HTMLElement>(selector: string, root: ParentNode = document) => {
+export function query<E extends Element = HTMLElement>(selector: string, root: ParentNode = document) {
     const found = root.querySelector<E>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
+}
 
 // user-event's upload() filters by `accept` and keeps one file on a non-multiple input, hiding the component's own
 // accept / limit handling, so fire the change event directly

@@ -18,16 +18,16 @@ const SRC = 'https://example.com/a.mp3';
 
 const tracks: [{ src: string; title: string; cover: string }, { src: string; title: string }, string] = [{ src: 'https://example.com/a.mp3', title: 'Track A', cover: 'https://example.com/a.png' }, { src: 'https://example.com/b.mp3', title: 'Track B' }, 'https://example.com/c.mp3'];
 
-const query = <E extends Element = HTMLElement>(container: Element | Document, selector: string) => {
+function query<E extends Element = HTMLElement>(container: Element | Document, selector: string) {
     const found = container.querySelector<E>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
-const closestButton = (container: Element, name: string) => {
+}
+function closestButton(container: Element, name: string) {
     const button = query(container, icon(name)).closest('button');
     if (!button) throw new Error(`no button around ${name}`);
     return button;
-};
+}
 const getAudio = (container: Element) => query<HTMLAudioElement>(container, 'audio');
 const timeText = (container: Element) => query(container, `.${prefixCls}-info-time`).textContent?.replace(/\s/g, '');
 
@@ -61,11 +61,11 @@ function mockSliderRect(rect: DOMRect) {
 
 const renderPlayer = (props: Partial<AudioPlayerProps> & Record<string, unknown> = {}) => render(AudioPlayer, { props: { audioUrl: SRC, ...props } });
 
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
 const withLocale = (locale: typeof en_US, props: AudioPlayerProps) => render({ render: () => <ConfigProvider locale={locale}>{() => <AudioPlayer {...props} />}</ConfigProvider> });
 

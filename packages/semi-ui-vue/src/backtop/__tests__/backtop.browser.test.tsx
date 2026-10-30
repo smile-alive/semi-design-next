@@ -6,7 +6,7 @@ import { render } from '@test/utils/vue';
 import BackTop from '../backtop.vue';
 import ScrollTarget from './fixtures/scroll-target.vue';
 
-const renderScroller = () => {
+function renderScroller() {
     const view = render(() => (
         <div>
             <button data-testid="start">start</button>
@@ -14,7 +14,7 @@ const renderScroller = () => {
         </div>
     ));
     return { view, scroller: screen.getByTestId('scroller') };
-};
+}
 
 describe('BackTop 浏览器', () => {
     it('位于 BackTop 位置，为 32px 圆形 FloatButton，在 RTL 下镜像', async () => {

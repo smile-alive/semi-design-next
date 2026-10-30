@@ -55,10 +55,7 @@
         input.checked = checked.value;
     };
 
-    watch(
-        () => props.modelValue,
-        (value) => foundation.setChecked(value)
-    );
+    watch(() => props.modelValue, foundation.setChecked);
 </script>
 
 <template>

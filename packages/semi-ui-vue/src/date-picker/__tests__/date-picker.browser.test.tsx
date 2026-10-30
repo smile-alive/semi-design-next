@@ -44,12 +44,12 @@ const clickOutside = () => userEvent.click(screen.getByTestId('outside'));
 
 // Like cy.type: click, then type at the caret. userEvent.type focuses through a CSS selector built from ancestor ids,
 // and the popup's random id can start with a digit, which is not a valid selector
-const typeInto = async (element: Element, text: string) => {
+async function typeInto(element: Element, text: string) {
     await userEvent.click(element);
     await userEvent.keyboard(text);
-};
+}
 
-const renderPicker = (props: Record<string, unknown> = {}, slots: Slots = {}) => {
+function renderPicker(props: Record<string, unknown> = {}, slots: Slots = {}) {
     const utils = render(() =>
         withOutside(
             <DatePicker motion={false} {...props}>
@@ -58,7 +58,7 @@ const renderPicker = (props: Record<string, unknown> = {}, slots: Slots = {}) =>
         )
     );
     return { ...utils, inputs: utils.container.querySelectorAll('input') };
-};
+}
 
 describe('DatePicker', () => {
     describe('FixNeedConfirm', () => {

@@ -39,17 +39,17 @@ function observeContainer() {
     return (width: number) => observer.fireLive((target) => ({ target, contentRect: { width, height: size.height } }));
 }
 
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
-const query = (container: Element, selector: string) => {
+function query(container: Element, selector: string) {
     const found = container.querySelector<HTMLElement>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
+}
 const getRoot = (container: Element) => query(container, '.semi-cropper');
 const getImg = (container: Element) => query(container, '.semi-cropper-img') as HTMLImageElement;
 const getBox = (container: Element) => query(container, '.semi-cropper-box');
@@ -72,14 +72,14 @@ async function loadImage(container: Element, naturalWidth = 800, naturalHeight =
     await fireEvent.load(img);
 }
 
-const imgStyle = (container: Element) => {
+function imgStyle(container: Element) {
     const { width, height, transform } = getImg(container).style;
     return { width, height, transform };
-};
-const boxStyle = (container: Element) => {
+}
+function boxStyle(container: Element) {
     const { width, height, transform } = getBox(container).style;
     return { width, height, transform };
-};
+}
 const offsets = (transform: string) => (transform.match(/-?[\d.e-]+(?=px)/g) ?? []).map(Number);
 
 // VTL's fireEvent does not report whether the default was prevented, so these dispatch the event themselves
@@ -761,7 +761,7 @@ describe('Cropper', () => {
 
     describe('preview', () => {
         // the node's size follows its inline style, as a real layout does
-        function createPreviewNode(style = '') {
+        const createPreviewNode = (style = '') => {
             const node = document.createElement('div');
             node.style.cssText = style;
             node.getBoundingClientRect = () =>
@@ -771,7 +771,7 @@ describe('Cropper', () => {
                 }) as DOMRect;
             document.body.append(node);
             return node;
-        }
+        };
 
         it('将裁剪区域镜像到指定节点，卸载时移除', async () => {
             const node = createPreviewNode();

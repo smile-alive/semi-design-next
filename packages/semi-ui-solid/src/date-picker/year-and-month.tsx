@@ -128,7 +128,7 @@ export default function YearAndMonth(rawProps: YearAndMonthProps) {
         <>
             <Show when={!props.noBackBtn}>
                 <div class={`${prefixCls}-yearmonth-header`}>
-                    <IconButton noHorizontalPadding={false} size={buttonSize()} icon={<IconChevronLeft size={iconSize()} />} onClick={() => foundation.backToMain()}>
+                    <IconButton noHorizontalPadding={false} size={buttonSize()} icon={<IconChevronLeft size={iconSize()} />} onClick={foundation.backToMain}>
                         <span>{props.locale.selectDate}</span>
                     </IconButton>
                 </div>

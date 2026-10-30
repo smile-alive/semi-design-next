@@ -63,7 +63,7 @@ export default function TabItem(props: TabItemProps) {
                 },
                 local.class
             )}
-            // the foundation finds the sibling tabs through this tab's parentElement and this attribute
+            // the foundation finds the sibling tabs through the closest role="tablist" and this attribute
             data-tabkey={getTabDataKey(itemKey())}
             tabIndex={local.selected || itemKey() === ctx?.view().tabbableKey ? 0 : -1}
             onClick={handleClick}

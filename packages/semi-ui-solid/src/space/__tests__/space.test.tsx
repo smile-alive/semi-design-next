@@ -7,14 +7,14 @@ import semiGlobal from '../../_utils/semi-global';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-space`;
 
-const renderSpace = (spacing: SpaceProps['spacing']) => {
+function renderSpace(spacing: SpaceProps['spacing']) {
     const { container, unmount } = render(() => (
         <Space spacing={spacing}>
             <For each={Array.from(Array(5))}>{() => <div>content</div>}</For>
         </Space>
     ));
     return [container.querySelector(`.${prefixCls}`) as HTMLElement, unmount] as const;
-};
+}
 
 const getSpace = (container: HTMLElement) => container.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
 

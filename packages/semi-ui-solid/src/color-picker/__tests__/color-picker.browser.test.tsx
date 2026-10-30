@@ -12,13 +12,13 @@ const text = en_US.ColorPicker;
 
 type OnChange = NonNullable<ColorPickerProps['onChange']>;
 
-const required = <T extends Element>(el: T | null) => {
+function required<T extends Element>(el: T | null) {
     if (!el) throw new Error('missing element');
     return el;
-};
+}
 
 // the picker next to a box below and to the right of every drag surface, where a drag ends outside
-const renderWithOutside = (props: ColorPickerProps) => {
+function renderWithOutside(props: ColorPickerProps) {
     const onChange = vi.fn<OnChange>();
     const { container } = render(() => (
         <div style={{ display: 'flex', 'align-items': 'end' }}>
@@ -30,7 +30,7 @@ const renderWithOutside = (props: ColorPickerProps) => {
     ));
     const surface = (name: string) => required(container.querySelector<HTMLElement>(`.${prefixCls}-${name}`));
     return { onChange, surface, outside: required(container.querySelector<HTMLElement>('[data-testid="outside"]')) };
-};
+}
 
 describe('ColorPicker（浏览器）', () => {
     it('拖动色相时，指针移出滑块后仍持续跟随，松开后结束', async () => {

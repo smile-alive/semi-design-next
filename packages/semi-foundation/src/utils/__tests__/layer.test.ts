@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { KEEP_INTERACTIVE_ATTRIBUTE, openLayer } from '../layer';
 
-const pressEsc = (init = {}) => {
+function pressEsc(init = {}) {
     const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, ...init });
     document.body.dispatchEvent(event);
     return event;
-};
+}
 
 function append(parent = document.body) {
     const element = document.createElement('div');

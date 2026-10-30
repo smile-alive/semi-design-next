@@ -10,7 +10,7 @@ const data: Data[] = [
 
 it.each(['vertical', 'horizontal'] as const)('descriptions/%s 布局下隐藏项的内容不在服务端创建', async (layout) => {
     const created: string[] = [];
-    const counted = (text: string | number | undefined) => {
+    const counted = (text?: string | number) => {
         created.push(String(text));
         return <b>{text}</b>;
     };

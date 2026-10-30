@@ -318,7 +318,7 @@ describe('Modal.confirm', () => {
     });
 
     it('Modal.confirm 与 useModal 的 aria 属性落在对话框上，data-* 落在外层元素上', async () => {
-        const expectLanding = (root: Element | null | undefined) => {
+        const expectLanding = (root?: Element | null) => {
             const dialog = root?.querySelector('[role="alertdialog"]');
             expect(dialog).toHaveAttribute('aria-label', 'Custom');
             expect(dialog).toHaveAttribute('aria-describedby', 'outside-desc');

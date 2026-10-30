@@ -17,6 +17,7 @@ import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { useConfigContext } from '../config-provider/context';
 import type { InputHandle } from '../input';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover/index';
 import Trigger from '../trigger';
@@ -122,7 +123,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     const { timeZone: contextTimeZone, direction } = useConfigContext();
 
     // an explicit undefined falls back like a missing prop: prop, then context, then the global default
-    const defaulted = useDefaultProps('DatePicker', { ...rawProps, timeZone: rawProps.timeZone ?? contextTimeZone, dateFnsLocale }, defaultProps);
+    const defaulted = useDefaultProps('DatePicker', withInputGroup({ ...rawProps, timeZone: rawProps.timeZone ?? contextTimeZone, dateFnsLocale }, useInputGroupInScope()), defaultProps);
     const props = { ...defaulted, ...DatePickerFoundation.normalizeProps(defaulted) };
 
     const {
@@ -343,7 +344,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         inputValue,
         value,
         defaultPickerValue,
-        onChange: (input: string, e: any) => foundation.handleInputChange(input, e),
+        onChange: foundation.handleInputChange,
         onEnterPress: (input: string) => foundation.handleInputComplete(input),
         block: true,
         inputStyle,
@@ -357,8 +358,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
         inputReadOnly: inputReadOnly || Boolean(insetInput),
         // onBlur fires when the panel closes, not on input blur
         onBlur: noop,
-        onFocus: (e: any, range?: RangeInput) => foundation.handleInputFocus(e, range),
-        onClear: (e: any) => foundation.handleInputClear(e),
+        onFocus: foundation.handleInputFocus,
+        onClear: foundation.handleInputClear,
         prefix,
         size,
         autofocus: state.autofocus,
@@ -366,15 +367,15 @@ export default function DatePicker(rawProps: DatePickerProps) {
         rangeInputFocus,
         rangeSeparator,
         rangeSeparatorNode,
-        onRangeClear: (e: any) => foundation.handleRangeInputClear(e),
-        onRangeEndTabPress: () => foundation.handleRangeEndTabPress(),
+        onRangeClear: foundation.handleRangeInputClear,
+        onRangeEndTabPress: foundation.handleRangeEndTabPress,
         rangeInputStartRef: insetInput ? triggerStartRef : rangeInputStartRef,
         rangeInputEndRef: insetInput ? triggerEndRef : rangeInputEndRef,
         inputRef,
     };
 
     // null without presets: MonthsGrid sizes the panel by whether a side column exists
-    const renderQuickControls = () => (presets?.length ? <QuickControl type={type} insetInput={insetInput} locale={locale} presetPosition={presetPosition} presets={presets} onPresetClick={(item, e) => foundation.handlePresetClick(item, e)} /> : null);
+    const renderQuickControls = () => (presets?.length ? <QuickControl type={type} insetInput={insetInput} locale={locale} presetPosition={presetPosition} presets={presets} onPresetClick={foundation.handlePresetClick} /> : null);
 
     const renderDateInput = () =>
         insetInput ? (
@@ -401,7 +402,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                     monthGridRef.current?.showTimePicker(strings.PANEL_TYPE_LEFT);
                     monthGridRef.current?.showTimePicker(strings.PANEL_TYPE_RIGHT);
                 }}
-                onInsetInputChange={(options) => foundation.handleInsetInputChange(options)}
+                onInsetInputChange={foundation.handleInsetInputChange}
             />
         ) : null;
 
@@ -422,7 +423,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             endYear={endYear}
             focusRecords={state.focusRecords}
             format={format}
-            hasOtherRangeInputBeenFocused={(currentRangeInput) => foundation.hasOtherRangeInputBeenFocused(currentRangeInput)}
+            hasOtherRangeInputBeenFocused={foundation.hasOtherRangeInputBeenFocused}
             hideDisabledOptions={hideDisabledOptions}
             insetInput={insetInput}
             isControlledComponent={!isConfirmNeeded && props.value !== undefined}
@@ -430,7 +431,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             presetPosition={presetPosition}
             rangeInputFocus={rangeInputFocus}
             selectedValue={cachedSelectedValue}
-            setRangeInputFocus={(focus) => foundation.handleSetRangeFocus(focus)}
+            setRangeInputFocus={foundation.handleSetRangeFocus}
             startDateOffset={startDateOffset}
             startYear={startYear}
             syncSwitchMonth={syncSwitchMonth}
@@ -443,7 +444,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             renderFullDate={renderFullDate}
             renderQuickControls={renderQuickControls()}
             triggerRender={triggerRender}
-            onChange={(v, options) => foundation.handleSelectedChange(v, options)}
+            onChange={foundation.handleSelectedChange}
             onPanelChange={onPanelChange}
         />
     );
@@ -466,7 +467,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 yearAndMonthOpts={yearAndMonthOpts}
                 renderDateInput={renderDateInput()}
                 renderQuickControls={renderQuickControls()}
-                onSelect={(item) => foundation.handleYMSelectedChange(item)}
+                onSelect={foundation.handleYMSelectedChange}
             />
         );
     };
@@ -475,7 +476,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         if (!isConfirmNeeded) {
             return null;
         }
-        return <Footer disabledConfirm={isRangeType(type) && !isRangeValueComplete(cachedSelectedValue)} locale={locale} prefixCls={prefixCls} onCancelClick={() => foundation.handleCancel()} onConfirmClick={() => foundation.handleConfirm()} />;
+        return <Footer disabledConfirm={isRangeType(type) && !isRangeValueComplete(cachedSelectedValue)} locale={locale} prefixCls={prefixCls} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />;
     };
 
     const panel = (
@@ -546,15 +547,15 @@ export default function DatePicker(rawProps: DatePickerProps) {
         }
     });
 
-    const markPressInside = useClickOutside([triggerElRef, panelRef], (e) => foundation.handleClickOutside(e), panelShow);
+    const markPressInside = useClickOutside([triggerElRef, panelRef], foundation.handleClickOutside, panelShow);
 
     useImperativeHandle(
         props.ref,
         () => ({
-            open: () => foundation.open(),
+            open: foundation.open,
             close: () => foundation.close(),
-            focus: (focusType) => foundation.focus(focusType),
-            blur: () => foundation.blur(),
+            focus: foundation.focus,
+            blur: foundation.blur,
         }),
         [foundation]
     );
@@ -565,64 +566,66 @@ export default function DatePicker(rawProps: DatePickerProps) {
     const isTriggerButton = typeof triggerRender === 'function' && !customTriggerFocusable;
 
     return (
-        <div
-            {...rest}
-            ref={triggerElRef}
-            className={clsx(className, prefixCls)}
-            style={style}
-            aria-labelledby={isRange ? ariaLabelledby : undefined}
-            role={isRange ? (rest.role ?? 'group') : namedRole(rest)}
-            onMouseDownCapture={(e) => {
-                rest.onMouseDownCapture?.(e);
-                markPressInside(e);
-            }}
-        >
-            <Popover
-                aria-label={locale.panel[type]}
-                afterClose={() => foundation.handlePanelVisibleChange(false)}
-                autoAdjustOverflow={autoAdjustOverflow}
-                content={panel}
-                motion={motion}
-                position={position}
-                spacing={spacing}
-                stopPropagation={stopPropagation}
-                trigger="custom"
-                visible={panelShow}
-                // custom trigger: Popover leaves Esc to the DatePicker
-                onEscKeyDown={() => foundation.handleEscKeyDown()}
-                onOpen={() => foundation.handlePanelVisibleChange(true)}
+        <InputGroupContext value={undefined}>
+            <div
+                {...rest}
+                ref={triggerElRef}
+                className={clsx(className, prefixCls)}
+                style={style}
+                aria-labelledby={isRange ? ariaLabelledby : undefined}
+                role={isRange ? (rest.role ?? 'group') : namedRole(rest)}
+                onMouseDownCapture={(e) => {
+                    rest.onMouseDownCapture?.(e);
+                    markPressInside(e);
+                }}
             >
-                <div
-                    ref={comboboxRef}
-                    className={clsx(`${cssClasses.PREFIX}-input`, {
-                        [`${cssClasses.PREFIX}-range-input`]: isRange,
-                        [`${cssClasses.PREFIX}-range-input-${size}`]: isRange && size,
-                        [`${cssClasses.PREFIX}-range-input-active`]: isRange && rangeInputFocus && !inputDisabled,
-                        [`${cssClasses.PREFIX}-range-input-disabled`]: isRange && inputDisabled,
-                        [`${cssClasses.PREFIX}-range-input-${validateStatus}`]: isRange && validateStatus,
-                        [`${cssClasses.PREFIX}-borderless`]: borderless,
-                    })}
-                    // aria-required is not supported by the button role
-                    aria-describedby={isTriggerButton ? ariaDescribedby : undefined}
-                    aria-disabled={isTriggerButton ? disabled : undefined}
-                    aria-errormessage={isTriggerButton ? ariaErrormessage : undefined}
-                    aria-invalid={isTriggerButton ? ariaInvalid : undefined}
-                    aria-label={isTriggerButton && !ariaLabelledby ? valueLabel : undefined}
-                    aria-labelledby={isTriggerButton ? ariaLabelledby : undefined}
-                    role={isTriggerButton ? 'button' : undefined}
-                    // the inputs or a focusable custom trigger are the Tab stop; Tooltip would add 0 here
-                    tabIndex={isTriggerButton && !disabled ? 0 : -1}
-                    onClick={(e) => foundation.handleTriggerClick(e, typeof triggerRender === 'function')}
-                    // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys
-                    onKeyDown={(e) => {
-                        if (!isInnerControlKey(e)) {
-                            foundation.handleTriggerKeyDown(e, isTriggerButton && e.target === e.currentTarget);
-                        }
-                    }}
+                <Popover
+                    aria-label={locale.panel[type]}
+                    afterClose={() => foundation.handlePanelVisibleChange(false)}
+                    autoAdjustOverflow={autoAdjustOverflow}
+                    content={panel}
+                    motion={motion}
+                    position={position}
+                    spacing={spacing}
+                    stopPropagation={stopPropagation}
+                    trigger="custom"
+                    visible={panelShow}
+                    // custom trigger: Popover leaves Esc to the DatePicker
+                    onEscKeyDown={foundation.handleEscKeyDown}
+                    onOpen={() => foundation.handlePanelVisibleChange(true)}
                 >
-                    {typeof triggerRender === 'function' ? <Trigger {...inputProps} componentProps={componentProps} triggerRender={triggerRender} /> : <DateInput {...inputProps} />}
-                </div>
-            </Popover>
-        </div>
+                    <div
+                        ref={comboboxRef}
+                        className={clsx(`${cssClasses.PREFIX}-input`, {
+                            [`${cssClasses.PREFIX}-range-input`]: isRange,
+                            [`${cssClasses.PREFIX}-range-input-${size}`]: isRange && size,
+                            [`${cssClasses.PREFIX}-range-input-active`]: isRange && rangeInputFocus && !inputDisabled,
+                            [`${cssClasses.PREFIX}-range-input-disabled`]: isRange && inputDisabled,
+                            [`${cssClasses.PREFIX}-range-input-${validateStatus}`]: isRange && validateStatus,
+                            [`${cssClasses.PREFIX}-borderless`]: borderless,
+                        })}
+                        // aria-required is not supported by the button role
+                        aria-describedby={isTriggerButton ? ariaDescribedby : undefined}
+                        aria-disabled={isTriggerButton ? disabled : undefined}
+                        aria-errormessage={isTriggerButton ? ariaErrormessage : undefined}
+                        aria-invalid={isTriggerButton ? ariaInvalid : undefined}
+                        aria-label={isTriggerButton && !ariaLabelledby ? valueLabel : undefined}
+                        aria-labelledby={isTriggerButton ? ariaLabelledby : undefined}
+                        role={isTriggerButton ? 'button' : undefined}
+                        // the inputs or a focusable custom trigger are the Tab stop; Tooltip would add 0 here
+                        tabIndex={isTriggerButton && !disabled ? 0 : -1}
+                        onClick={(e) => foundation.handleTriggerClick(e, typeof triggerRender === 'function')}
+                        // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys
+                        onKeyDown={(e) => {
+                            if (!isInnerControlKey(e)) {
+                                foundation.handleTriggerKeyDown(e, isTriggerButton && e.target === e.currentTarget);
+                            }
+                        }}
+                    >
+                        {typeof triggerRender === 'function' ? <Trigger {...inputProps} componentProps={componentProps} triggerRender={triggerRender} /> : <DateInput {...inputProps} />}
+                    </div>
+                </Popover>
+            </div>
+        </InputGroupContext>
     );
 }

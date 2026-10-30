@@ -1,4 +1,2 @@
-import Chat from './chat.vue';
-
-export default Chat;
+export { default } from './chat.vue';
 export type * from './interface';

@@ -158,12 +158,12 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                 content={
                     <div class={`${controlsCls}-volume`}>
                         <div class={`${controlsCls}-volume-title`}>{state().muted ? 0 : state().volume}%</div>
-                        <AudioSlider max={100} value={state().muted ? 0 : state().volume} getValueText={(value) => `${value}%`} height={120} label={text().volume} showTooltip={false} vertical onChange={(value) => foundation.handleVolumeChange(value)} />
+                        <AudioSlider max={100} value={state().muted ? 0 : state().volume} getValueText={(value) => `${value}%`} height={120} label={text().volume} showTooltip={false} vertical onChange={foundation.handleVolumeChange} />
                     </div>
                 }
                 position="top"
             >
-                {(getTriggerProps) => <Button {...getTriggerProps()} class={menuButtonClass} aria-label={text().volume} theme="borderless" icon={state().muted ? <IconMute /> : state().volume < 50 ? <IconVolume1 /> : <IconVolume2 />} onClick={() => foundation.handleVolumeSilent()} />}
+                {(getTriggerProps) => <Button {...getTriggerProps()} class={menuButtonClass} aria-label={text().volume} theme="borderless" icon={state().muted ? <IconMute /> : state().volume < 50 ? <IconVolume1 /> : <IconVolume2 />} onClick={foundation.handleVolumeSilent} />}
             </Popover>
         </Show>
     );
@@ -175,15 +175,15 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
         onCleanup(() => controller.abort());
         const handlers: Record<string, () => void> = {
             canplay: foundation.handleCanPlay,
-            durationchange: () => foundation.handleDurationChange(),
+            durationchange: foundation.handleDurationChange,
             ended: foundation.handleEnded,
-            error: () => foundation.handleError(),
+            error: foundation.handleError,
             loadstart: foundation.handleLoadStart,
             pause: foundation.handleVideoPause,
             play: foundation.handleVideoPlay,
             progress: foundation.handleProgress,
             stalled: () => foundation.handleStalled(text()),
-            timeupdate: () => foundation.handleTimeUpdate(),
+            timeupdate: foundation.handleTimeUpdate,
             waiting: () => foundation.handleWaiting(text()),
         };
         for (const [type, handler] of Object.entries(handlers)) {
@@ -257,12 +257,12 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                 </Show>
             </div>
             <div class={clsx(controlsCls, { [`${controlsCls}-hide`]: !state().showControls })}>
-                <VideoProgress max={state().totalTime} step={local.seekTime} value={state().currentTime} bufferedValue={state().bufferedValue} markers={local.markers} onChange={(value) => foundation.handleTimeChange(value)} />
+                <VideoProgress max={state().totalTime} step={local.seekTime} value={state().currentTime} bufferedValue={state().bufferedValue} markers={local.markers} onChange={foundation.handleTimeChange} />
                 <div class={`${controlsCls}-menu`}>
                     <div class={`${controlsCls}-menu-left`}>
                         {iconButton(
                             () => (state().isPlaying ? <IconPause /> : <IconPlay />),
-                            () => foundation.handlePlayOrPause(),
+                            foundation.handlePlayOrPause,
                             strings.PLAY,
                             () => (state().isPlaying ? text().pause : text().play)
                         )}
@@ -303,7 +303,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                         )}
                         {iconButton(
                             () => (state().isFullScreen ? <IconMinimize /> : <IconMaximize />),
-                            () => foundation.handleFullscreen(),
+                            foundation.handleFullscreen,
                             strings.FULLSCREEN,
                             () => (state().isFullScreen ? text().exitFullscreen : text().fullscreen)
                         )}
@@ -311,7 +311,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                             () => (
                                 <IconMiniPlayer />
                             ),
-                            () => foundation.handlePictureInPicture(),
+                            foundation.handlePictureInPicture,
                             strings.PICTURE_IN_PICTURE,
                             () => text().pictureInPicture
                         )}

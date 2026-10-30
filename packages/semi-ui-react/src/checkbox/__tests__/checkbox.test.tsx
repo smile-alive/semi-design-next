@@ -217,7 +217,7 @@ describe('checkbox', () => {
 describe('CheckboxGroup', () => {
     const { Group } = Checkbox;
 
-    function renderCheckboxGroup(props: CheckboxGroupProps = {}) {
+    const renderCheckboxGroup = (props: CheckboxGroupProps = {}) => {
         return render(
             <Group {...props}>
                 <Checkbox value="A">A</Checkbox>
@@ -225,7 +225,7 @@ describe('CheckboxGroup', () => {
                 <Checkbox value="C">C</Checkbox>
             </Group>
         );
-    }
+    };
 
     const checkedStates = () => getWrappers().map((cb) => cb.classList.contains(`${prefixCls}-checked`));
 

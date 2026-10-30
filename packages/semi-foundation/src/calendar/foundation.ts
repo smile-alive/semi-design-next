@@ -86,7 +86,7 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
     static #parseRangeEvents(events: Map<string, EventObject[]>, [start, end]: Date[]) {
         let parsed: Array<Array<ParsedRangeEvent>> = [[]];
         const filtered = filterEvents(events, start, end);
-        [...filtered.keys()].sort(compareAsc).forEach((item) => {
+        [...filtered.keys()].toSorted(compareAsc).forEach((item) => {
             const startDate = new Date(item);
             const curr = filtered.get(item).filter((event) => isSameDay(event.date, startDate));
             parsed = parseRangeAllDayEvent(curr, startDate, start, end, parsed);

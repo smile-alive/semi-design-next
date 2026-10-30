@@ -78,7 +78,7 @@
             separator: props.separator,
             hasOnClick: Boolean(props.onClick),
         })),
-        onClick: (info, e) => foundation.handleClick(info, e),
+        onClick: foundation.handleClick,
         separatorSlot: () => slots.separator?.(),
     });
 
@@ -147,7 +147,7 @@
             <template v-for="entry in view.items" :key="entry.key">
                 <span v-if="entry.kind === 'more'" :ref="handoverFocus" :class="`${prefix}-collapse`">
                     <span :class="`${prefix}-item-wrap`">
-                        <span :aria-label="locale.locale.expand" :class="[`${prefix}-item`, `${prefix}-item-more`]" role="button" tabindex="0" @click="foundation.handleExpand($event)" @keydown="foundation.handleExpandKeyDown($event as KeyboardEvent & { currentTarget: Node })">
+                        <span :aria-label="locale.locale.expand" :class="[`${prefix}-item`, `${prefix}-item-more`]" role="button" tabindex="0" @click="foundation.handleExpand" @keydown="foundation.handleExpandKeyDown($event as KeyboardEvent & { currentTarget: Node })">
                             <slot v-if="$slots.more" name="more" :restItems="restItems(view)" />
                             <IconMore v-else-if="props.moreType === 'default'" />
                             <Popover v-else showArrow :style="{ padding: '12px' }">

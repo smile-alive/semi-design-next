@@ -21,8 +21,7 @@ export default function useModal(): [ModalHookApi, Component] {
     };
 
     const Holder = createHolder('ModalHolder', () =>
-        list.value.map(({ id, config }) => {
-            const { afterClose, ...rest } = config;
+        list.value.map(({ id, config: { afterClose, ...rest } }) => {
             return (
                 <ConfirmModal
                     key={id}

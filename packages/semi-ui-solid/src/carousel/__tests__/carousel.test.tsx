@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import CarouselFoundation from '@fibrae/semi-foundation/carousel/foundation';
+import { numbers } from '@fibrae/semi-foundation/carousel/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { mockMatchMedia } from '@test/utils/solid';
 import Carousel, { type CarouselElement, type CarouselHandle, type CarouselProps } from '..';
@@ -208,18 +208,22 @@ describe('Carousel', () => {
         });
 
         it('重渲染间共享同一个防抖的鼠标处理函数', () => {
-            const { container, set } = setup({ autoPlay });
-            const handleAutoPlay = vi.spyOn(CarouselFoundation.prototype, 'handleAutoPlay');
+            const onChange = vi.fn<OnChange>();
+            const { container, set } = setup({ autoPlay, onChange });
             const root = getRoot(container);
+            const interval = autoPlay.interval + numbers.DEFAULT_SPEED;
 
             fireEvent.mouseEnter(root);
             tick(400);
             fireEvent.mouseLeave(root);
-            set({ autoPlay, class: 'rerendered' });
+            set({ autoPlay, onChange, class: 'rerendered' });
+            tick(300);
             fireEvent.mouseLeave(root);
-            tick(400);
-            expect(handleAutoPlay).toHaveBeenCalledTimes(1);
-            handleAutoPlay.mockRestore();
+            // playback resumes 400ms after the last leave, so the first slide change is one interval after that
+            tick(400 + interval - 1);
+            expect(onChange).not.toHaveBeenCalled();
+            tick(1);
+            expect(onChange).toHaveBeenCalledExactlyOnceWith(1, 0);
         });
 
         it('卸载时丢弃待执行的悬停处理函数', () => {

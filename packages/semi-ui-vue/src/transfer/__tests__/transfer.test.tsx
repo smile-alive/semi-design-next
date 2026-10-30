@@ -78,13 +78,13 @@ const getHeaderButtons = () => document.querySelectorAll<HTMLButtonElement>(`but
 const getCloseIcons = () => document.querySelectorAll<HTMLButtonElement>(`.${prefixCls}-item-close-icon`);
 const getGroupTitles = () => [...document.querySelectorAll(`.${prefixCls}-group-title`)].map((t) => t.textContent);
 
-const renderWithHandle = (props: Record<string, unknown> = {}) => {
+function renderWithHandle(props: Record<string, unknown> = {}) {
     const refFn = vi.fn<(handle: TransferHandle | null) => void>();
     const Host = (hostProps: Record<string, unknown>) => <Transfer {...hostProps} ref={(value) => refFn(value as TransferHandle | null)} />;
     const view = render(Host, { props });
     const handle = () => refFn.mock.calls[0]?.[0] as TransferHandle;
     return { ...view, handle };
-};
+}
 
 afterEach(() => {
     semiGlobal.config.overrideDefaultProps = {};
@@ -631,6 +631,16 @@ describe('Transfer 行为', () => {
         expect(getRightItemTexts()).toEqual(['banana']);
         await userEvent.click(getLeftItem('apple'));
         expect(getRightItemTexts()).toEqual(['banana', 'apple']);
+    });
+
+    it('非受控选过后转为受控，modelValue 变回 undefined 时已选清空', async () => {
+        const view = renderTransfer({ dataSource: items });
+        await userEvent.click(getLeftItem('apple'));
+        await view.rerender({ modelValue: ['a', 'b'] });
+        expect(getRightItemTexts()).toEqual(['apple', 'banana']);
+        await view.rerender({ modelValue: undefined });
+        expect(getRightItemTexts()).toEqual([]);
+        expect(getLeftCheckedTexts()).toEqual([]);
     });
 
     it('v-model 往返：点击写回父级，父级改值与置空都生效', async () => {

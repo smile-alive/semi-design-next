@@ -386,7 +386,7 @@ describe('Table rowSelection 更新', () => {
         { key: '1', name: 'Ann' },
         { key: '2', name: 'Bob' },
     ];
-    const mountRows = (rowSelection: RowSelectionProps | undefined) =>
+    const mountRows = (rowSelection?: RowSelectionProps) =>
         mountTable({
             columns: [{ title: 'Name', dataIndex: 'name' }],
             dataSource: rows,

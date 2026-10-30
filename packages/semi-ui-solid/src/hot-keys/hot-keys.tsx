@@ -56,8 +56,8 @@ function HotKeys(rawProps: HotKeysProps) {
 
     // tracked on purpose: signals read by `getListenerTarget` also move the listener. Declared after the host's init
     // effect, so the first run finds the target already bound
-    createEffect(() => foundation.handleTargetChange());
-    useWatch(hotKeys, () => foundation.handleHotKeysChange());
+    createEffect(foundation.handleTargetChange);
+    useWatch(hotKeys, foundation.handleHotKeysChange);
 
     return (
         <Show when={custom() !== null}>

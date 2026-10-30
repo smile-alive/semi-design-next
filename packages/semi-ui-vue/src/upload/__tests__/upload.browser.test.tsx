@@ -11,22 +11,22 @@ import Button from '../../button';
 const prefixCls = 'semi-upload';
 
 const action = 'https://semi.design/upload';
-const customRequest = () => {};
+function customRequest() {}
 const readme = () => new File(['# Semi Design\n'], 'README.md', { type: 'text/markdown' });
 const cardNames = (root: ParentNode = document) => [...root.querySelectorAll(`.${prefixCls}-file-card-info-name`)].map((el) => el.textContent?.trim());
 const fileInputs = () => document.querySelectorAll<HTMLInputElement>('input[type=file]');
-const query = (selector: string, root: ParentNode = document) => {
+function query(selector: string, root: ParentNode = document) {
     const found = root.querySelector<HTMLElement>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
+}
 const plus = () => <IconPlus />;
 // A file drag cannot be started by the pointer, so the drag events carry a real DataTransfer
-const dropFiles = (area: HTMLElement, files: File[]) => {
+function dropFiles(area: HTMLElement, files: File[]) {
     const dataTransfer = new DataTransfer();
     files.forEach((file) => dataTransfer.items.add(file));
     ['dragenter', 'dragover', 'drop'].forEach((type) => area.dispatchEvent(new DragEvent(type, { bubbles: true, cancelable: true, dataTransfer })));
-};
+}
 
 describe('Upload 图片卡片键盘焦点', () => {
     it('Tab 可以到达隐藏的卡片操作按钮，显示它们并绘制主题焦点环', async () => {

@@ -31,59 +31,59 @@ const getUpButton = () => document.querySelector(`.${prefixCls}-number-suffix-bt
 const getDownButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`) as HTMLElement;
 const getWrapper = () => document.querySelector(`.${prefixCls}-number`) as HTMLElement;
 
-const mount = async (props: Props = {}, attrs: Record<string, unknown> = {}) => {
+async function mount(props: Props = {}, attrs: Record<string, unknown> = {}) {
     const view = render(InputNumber, { props, attrs });
     await nextTick();
     return view;
-};
-const mountControlled = async (initValue: number | string, attrs: Record<string, unknown> = {}, onChange?: Change) => {
+}
+async function mountControlled(initValue: number | string, attrs: Record<string, unknown> = {}, onChange?: Change) {
     const view = render(Controlled, { props: { initValue, onChange }, attrs });
     await nextTick();
     return view;
-};
+}
 
 const hold = (button: Element, init: PointerEventInit = { button: numbers.MOUSE_BUTTON_LEFT }) => fireEvent.pointerDown(button, init);
 // the button captures the pointer, so the browser fires lostpointercapture on it after pointerup wherever that lands
-const release = async (button: Element) => {
+async function release(button: Element) {
     await fireEvent.pointerUp(button);
     await fireEvent.lostPointerCapture(button);
-};
-const press = async (button: Element, init?: PointerEventInit) => {
+}
+async function press(button: Element, init?: PointerEventInit) {
     await hold(button, init);
     await release(button);
-};
-const pressTimes = async (getButton: () => Element, count: number, init?: PointerEventInit) => {
+}
+async function pressTimes(getButton: () => Element, count: number, init?: PointerEventInit) {
     for (let i = 0; i < count; i++) {
         await press(getButton(), init);
     }
-};
+}
 const change = (value: string) => fireEvent.update(getInput(), value);
 const keyDown = (key: string, init: KeyboardEventInit = {}) => fireEvent.keyDown(getInput(), { key, ...init });
 // Testing Library's Vue fireEvent resolves to nothing, so the default action is read from a dispatched event
-const dispatchKey = async (key: string, input: HTMLElement = getInput()) => {
+async function dispatchKey(key: string, input: HTMLElement = getInput()) {
     const notPrevented = input.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
     await nextTick();
     return notPrevented;
-};
-const focusInput = async () => {
+}
+async function focusInput() {
     getInput().focus();
     await nextTick();
-};
-const blurInput = async () => {
+}
+async function blurInput() {
     getInput().blur();
     await nextTick();
-};
-const advance = async (ms: number) => {
+}
+async function advance(ms: number) {
     vi.advanceTimersByTime(ms);
     await nextTick();
-};
+}
 const lastArg = (spy: { mock: { calls: unknown[][] } }) => spy.mock.calls[spy.mock.calls.length - 1][0];
 
 const thousands = (value: number | string) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const removeThousands = (value: string) => value.replace(/,/g, '');
 
 // A function ref receives the handle that defineExpose builds
-const renderWithHandle = async (props: Props = {}) => {
+async function renderWithHandle(props: Props = {}) {
     let handle: InputNumberHandle | null = null;
     const view = render({
         render: () => (
@@ -97,13 +97,13 @@ const renderWithHandle = async (props: Props = {}) => {
     });
     await nextTick();
     return { ...view, handle: () => handle as unknown as InputNumberHandle };
-};
-const renderCountingUpdates = async (props: Props) => {
+}
+async function renderCountingUpdates(props: Props) {
     const updated = vi.fn<() => void>();
     render({ render: () => <InputNumber {...props} onVnodeUpdated={updated} /> });
     await nextTick();
     return updated;
-};
+}
 
 describe('InputNumber', () => {
     afterEach(() => {

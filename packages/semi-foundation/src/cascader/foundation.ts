@@ -30,7 +30,6 @@ export interface BasicEntities {
 }
 
 export interface BasicEntity {
-    _notExist?: boolean;
     children?: Array<BasicEntity>;
     data: BasicCascaderData;
     ind: number;
@@ -197,8 +196,8 @@ export interface CascaderAdapter<E = unknown, LE = unknown> extends DefaultAdapt
     notifyChange: (value: BasicValue) => void;
     notifySelect: (selected: string | number | Array<string | number>) => void;
     notifyOnSearch: (input: string) => void;
-    notifyFocus: (e: E) => void;
-    notifyBlur: (e?: E | MouseEvent) => void;
+    notifyFocus: (e: E | FocusEvent) => void;
+    notifyBlur: (e?: E | MouseEvent | FocusEvent) => void;
     notifyDropdownVisibleChange: (visible: boolean) => void;
     /**
      * Calls `loadData`. `callback` must run after the treeData update it caused is applied, since that update keeps
@@ -238,9 +237,14 @@ interface TreeItemState {
 }
 
 export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseFoundation<CascaderAdapter<E, LE>, BasicCascaderProps, BasicCascaderInnerData> {
+    // Entities standing in for a selected value treeData lacks: their path holds values, not keys. Kept by identity,
+    // since the hosts store keyEntities without copying entities, so that Entity carries no flag of its own
+    static readonly #missingEntities = new WeakSet<BasicEntity>();
     // StrictMode and React Activity replay init on this instance after destroy, over a dropdown the user may have
     // closed since: defaultOpen belongs to the first mount
     #initialized = false;
+    // whether onBlur is owed for the focus now inside the component
+    #blurPending = false;
     readonly #typeahead = new Typeahead();
 
     static #getFilteredData({ treeNodeFilterProp, filterSorter, keyMaps }: BasicCascaderProps, { filteredKeys, keyEntities, inputValue }: BasicCascaderInnerData) {
@@ -263,10 +267,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             });
         });
 
-        if (typeof filterSorter === 'function') {
-            filteredList.sort((a, b) => filterSorter(a.pathData, b.pathData, inputValue));
-        }
-        return filteredList;
+        return typeof filterSorter === 'function' ? filteredList.toSorted((a, b) => filterSorter(a.pathData, b.pathData, inputValue)) : filteredList;
     }
 
     /** Each path of a multiple-mode value, with the key it points at (undefined for an empty path) */
@@ -337,11 +338,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 },
                 key,
                 path: valuePath,
-                _notExist: true,
-            };
+            } as BasicEntity;
+            CascaderFoundation.#missingEntities.add(optionNotExist);
             updateStates.selectedKeys = new Set([key]);
             // a copy: keyEntities may be the state's own object
-            keyEntities = { ...keyEntities, [key]: optionNotExist as BasicEntity };
+            keyEntities = { ...keyEntities, [key]: optionNotExist };
         } else if (loadingKeys.size) {
             // async loading updates treeData: keep the selection and merge, since overwriting the 'not-exist-*'
             // entities would empty selectionContent when a dropdown item is clicked
@@ -400,8 +401,18 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         this._adapter.updateStates({ inputValue: '' });
     }
 
-    #notifyBlur(e?: E | MouseEvent) {
+    #notifyBlur(e?: E | MouseEvent | FocusEvent) {
+        if (!this.#blurPending) {
+            return;
+        }
+        this.#blurPending = false;
         this._adapter.notifyBlur(e);
+    }
+
+    /** A single pick closes the dropdown and reports the blur at once, so a Form with trigger="blur" validates */
+    #closeAfterPick(e: E, key?: string) {
+        this.#close(key);
+        this.#notifyBlur(e);
     }
 
     #close(key?: string) {
@@ -424,8 +435,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
     }
 
-    #notifyFocus(e: E) {
-        this._adapter.notifyFocus(e);
+    #notifyFocus(e: E | FocusEvent) {
+        if (!this.#blurPending && !this.#isDisabled()) {
+            this.#blurPending = true;
+            this._adapter.notifyFocus(e);
+        }
     }
 
     #getCacheValue(keyEntities: BasicEntities) {
@@ -437,7 +451,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (!entity) {
             return undefined;
         }
-        return entity._notExist ? entity.path : entity.valuePath;
+        return CascaderFoundation.#missingEntities.has(entity) ? entity.path : entity.valuePath;
     }
 
     /**
@@ -451,20 +465,14 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const { treeNodeFilterProp, filterTreeNode, filterLeafOnly, remote, keyMaps } = this.getProps();
         const realFilterProp = treeNodeFilterProp !== 'label' ? treeNodeFilterProp : (keyMaps?.label ?? 'label');
         keyEntities ??= this.getState('keyEntities');
-        const entities = Object.values(keyEntities);
+        const entities = Object.values(keyEntities).filter((item) => !CascaderFoundation.#missingEntities.has(item));
 
         if (remote) {
-            return entities
-                .filter((item) => !item._notExist)
-                .filter((item) => (filterTreeNode && !filterLeafOnly) || this.#isLeaf(item.data))
-                .map((item) => item.key);
+            return entities.filter((item) => (filterTreeNode && !filterLeafOnly) || this.#isLeaf(item.data)).map((item) => item.key);
         }
 
         return entities
-            .filter(({ key, _notExist, data }) => {
-                if (_notExist) {
-                    return false;
-                }
+            .filter(({ key, data }) => {
                 const filteredPath = this.getItemPropPath(key, realFilterProp, keyEntities);
                 return filter(sugInput, data, filterTreeNode, filteredPath);
             })
@@ -682,7 +690,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 if (this._isControlledComponent()) {
                     this._adapter.updateStates({ activeKeys: new Set(activeKeys) });
                     if (isLeaf || (!filterLeafOnly && isSearching)) {
-                        this.close(e);
+                        this.#closeAfterPick(e);
                     }
                     return;
                 }
@@ -692,13 +700,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                     selectedKeys: new Set(selectedKey),
                 });
 
-                if (isLeaf) {
-                    this.close(e, key);
-                } else if (!filterLeafOnly && isSearching) {
-                    this.close(e, key);
+                if (isLeaf || (!filterLeafOnly && isSearching)) {
+                    this.#closeAfterPick(e, key);
                 }
             } else {
-                this.close(e);
+                this.#closeAfterPick(e);
             }
         }
     }
@@ -987,7 +993,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             return CascaderFoundation.#getFilteredData(props, state);
         }
         return Object.values(keyEntities)
-            .filter((item) => item.parentKey === null && !item._notExist)
+            .filter((item) => item.parentKey === null && !CascaderFoundation.#missingEntities.has(item))
             .sort((a, b) => a.ind - b.ind);
     }
 
@@ -1034,7 +1040,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         let path = [];
         if (!selectedItem) {
             // do nothing
-        } else if (selectedItem._notExist) {
+        } else if (CascaderFoundation.#missingEntities.has(selectedItem)) {
             path = selectedItem.path;
         } else {
             const keyPath = selectedItem.path;
@@ -1070,16 +1076,16 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
     }
 
-    handleKeyDown(e: E & Pick<KeyboardEvent, 'key' | 'preventDefault'>) {
+    handleKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault'>) => {
         if (e.key === ESC_KEY) {
             const isOpen = this.getState('isOpen');
             // claim the key so the overlay stack does not also close an enclosing dialog
             if (isOpen) {
                 e.preventDefault();
-                this.close(e);
+                this.close();
             }
         }
-    }
+    };
 
     /**
      * Keys of the open popup (APG combobox with a tree popup, or a listbox while searching); focus stays on the
@@ -1089,7 +1095,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
      * starting with them (APG tree typeahead). In a search input Space and typed characters edit the text; while
      * searching only Up, Down and Enter navigate. Returns whether the key was used.
      */
-    handleOptionKeyDown(e: E & Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' | 'altKey' | 'preventDefault'>, { editing, rtl }: { editing: boolean; rtl: boolean }) {
+    handleOptionKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'ctrlKey' | 'metaKey' | 'altKey' | 'preventDefault'>, { editing, rtl }: { editing: boolean; rtl: boolean }) => {
         const states = this.getStates();
         const { key } = e;
         if (!states.isOpen || e.ctrlKey || e.metaKey || e.altKey || (editing && key === ' ')) {
@@ -1144,13 +1150,13 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         e.preventDefault();
         this.#moveTo(options[target].key, target);
         return true;
-    }
+    };
 
     /**
      * After an update, the host reports whether the options (treeData or keyMaps) and value changed by its own change
      * detection. Re-collecting the options also re-resolves the value.
      */
-    handleInputsChange({ optionsChanged, valueChanged }: { optionsChanged: boolean; valueChanged: boolean }, value: BasicValue) {
+    handleInputsChange = ({ optionsChanged, valueChanged }: { optionsChanged: boolean; valueChanged: boolean }, value: BasicValue) => {
         if (this.getProp('multiple')) {
             // the multiple-mode keyEntities follow treeData during render; filteredKeys are state
             if (optionsChanged) {
@@ -1163,9 +1169,9 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         } else if (valueChanged) {
             this.#handleValueChange(value);
         }
-    }
+    };
 
-    open() {
+    open = () => {
         const filterable = this.#isFilterable();
         const { multiple } = this.getProps();
         const { isSearching } = this.getStates();
@@ -1185,38 +1191,56 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             this.#reCalcActiveKeys();
         }
         this._adapter.notifyDropdownVisibleChange(true);
-    }
+    };
 
     /** Mousedown outside the trigger and dropdown while open */
-    handleClickOutside(e: MouseEvent) {
-        this.close(e);
-    }
-
-    close(e?: E | MouseEvent, key?: string) {
-        this.#close(key);
+    handleClickOutside = (e: MouseEvent) => {
         this.#notifyBlur(e);
-    }
+        this.#close();
+    };
+
+    /** Focus entered the trigger (its search input, tags, clear button) or the dropdown from outside, by any means */
+    handleFocusEnter = (e: E | FocusEvent) => {
+        this.#notifyFocus(e);
+    };
+
+    /**
+     * The focus left the trigger and the dropdown (the component checks where it went): reports the blur. An open
+     * dropdown closes when the focus went to another element (APG combobox); a window blur has no target and keeps
+     * it, as the native select does.
+     */
+    handleFocusLeave = (e: FocusEvent) => {
+        this.#notifyBlur(e);
+        if (e.relatedTarget && this.getState('isOpen')) {
+            this.#close();
+        }
+    };
+
+    /** Closes the dropdown; the focus stays in the component, so no blur */
+    close = () => {
+        this.#close();
+    };
 
     /** Closes without a blur; called when Vue KeepAlive deactivates the host */
-    deactivate() {
+    deactivate = () => {
         this.#close();
-    }
+    };
 
-    focus() {
+    focus = () => {
         this._adapter.focusCombobox();
-    }
+    };
 
-    blur() {
+    blur = () => {
         this._adapter.blurCombobox();
-    }
+    };
 
     /** Leaves search mode after the closed dropdown finishes its exit */
-    endSearching() {
+    endSearching = () => {
         this._adapter.updateStates({ isSearching: false });
-    }
+    };
 
     /** A key that opens the dropdown sets the current option before the list mounts; it is scrolled to once shown */
-    handlePopoverOpen() {
+    handlePopoverOpen = () => {
         const keyboardKey = this.getState('keyboardKey');
         if (!keyboardKey) {
             return;
@@ -1225,33 +1249,33 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (shown) {
             this._adapter.scrollToOption(keyboardKey, shown.index);
         }
-    }
+    };
 
-    handleItemClick(e: E, item: BasicEntity | BasicData) {
+    handleItemClick = (e: E, item: BasicEntity | BasicData) => {
         const isDisabled = this.#isDisabled();
         if (isDisabled) {
             return;
         }
         this.#handleSingleSelect(e, item);
-    }
+    };
 
-    handleItemHover(_e: unknown, item: BasicEntity) {
+    handleItemHover = (_e: unknown, item: BasicEntity) => {
         const isDisabled = this.#isDisabled();
         if (isDisabled) {
             return;
         }
         this.#handleShowNextByHover(item);
-    }
+    };
 
-    onItemCheckboxClick(item: BasicEntity | BasicData) {
+    onItemCheckboxClick = (item: BasicEntity | BasicData) => {
         const isDisabled = this.#isDisabled();
         if (isDisabled) {
             return;
         }
         this.#handleMultipleSelect(item);
-    }
+    };
 
-    handleClick(e: E & Pick<UIEvent, 'detail' | 'target' | 'currentTarget'>) {
+    handleClick = (e: E & Pick<UIEvent, 'detail' | 'target' | 'currentTarget'>) => {
         const isDisabled = this.#isDisabled();
         const isFilterable = this.#isFilterable();
         const { isOpen } = this.getStates();
@@ -1259,13 +1283,14 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         // handleSelectionKeyDown forwards here (detail 0) nor its click toggles the popup
         if (isDisabled || isInnerControlActivation(e)) {
             return;
-        } else if (!isOpen) {
-            this.open();
-            this.#notifyFocus(e);
-        } else if (isOpen && !isFilterable) {
-            this.close(e);
         }
-    }
+        this.#notifyFocus(e);
+        if (!isOpen) {
+            this.open();
+        } else if (!isFilterable) {
+            this.close();
+        }
+    };
 
     /**
      * Enter toggles like a click; Down and Up open a closed popup (APG combobox). Without a search input (select-only
@@ -1273,7 +1298,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
      * While open with no current option (handleOptionKeyDown left the key), Space outside a text field acts like
      * Enter, as in Select and TreeSelect. A search input keeps Space, Home and End for its text.
      */
-    handleSelectionKeyDown(keyboardEvent: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) {
+    handleSelectionKeyDown = (keyboardEvent: E & Pick<KeyboardEvent, 'key' | 'preventDefault' | 'detail' | 'target' | 'currentTarget'>) => {
         const { key } = keyboardEvent;
         const isOpen = this.getState('isOpen');
         const opensOnArrow = (key === 'ArrowDown' || key === 'ArrowUp') && !isOpen;
@@ -1291,9 +1316,9 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 this.#moveTo(column[index].key, index);
             }
         }
-    }
+    };
 
-    handleInputChange(sugInput: string) {
+    handleInputChange = (sugInput: string) => {
         const filteredKeys = this.#calcFilteredKeys(sugInput);
         this._adapter.updateStates({
             inputValue: sugInput,
@@ -1302,9 +1327,9 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             keyboardKey: null,
         });
         this._adapter.notifyOnSearch(sugInput);
-    }
+    };
 
-    handleClear() {
+    handleClear = () => {
         const { isSearching, keyEntities, inputValue } = this.getStates();
         const { multiple } = this.getProps();
         const isFilterable = this.#isFilterable();
@@ -1349,16 +1374,16 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
         this._adapter.updateStates(newState);
         this._adapter.notifyClear();
-    }
+    };
 
-    handleListScroll(e: LE, ind: number) {
+    handleListScroll = (e: LE, ind: number) => {
         const { activeKeys, keyEntities } = this.getStates();
         const lastActiveKey = [...activeKeys].at(-1);
         const data = lastActiveKey ? (keyEntities?.[lastActiveKey]?.data ?? null) : null;
         this._adapter.notifyListScroll(e, { panelIndex: ind, activeNode: data });
-    }
+    };
 
-    handleTagRemoveByKey(key: string) {
+    handleTagRemoveByKey = (key: string) => {
         const { keyEntities } = this.getStates();
         const { disabled } = this.getProps();
         if (disabled) {
@@ -1368,11 +1393,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (removedItem && !removedItem.data?.disabled) {
             this.#handleMultipleSelect(removedItem);
         }
-    }
+    };
 
-    handleTagRemoveInTrigger(pos: string) {
+    handleTagRemoveInTrigger = (pos: string) => {
         const { treeData, keyMaps } = this.getProps();
         const key = getKeyByPos(pos, treeData, keyMaps);
         this.handleTagRemoveByKey(key);
-    }
+    };
 }

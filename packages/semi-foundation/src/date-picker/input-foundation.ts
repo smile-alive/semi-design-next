@@ -257,19 +257,19 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         }
     }
 
-    handleChange(value: string, e: unknown) {
+    handleChange = (value: string, e: unknown) => {
         this._adapter.notifyChange(value, e);
-    }
+    };
 
-    handleInputComplete(e: any) {
-        if (e.key === KEY_CODE_ENTER) {
+    handleInputComplete = (e: Pick<KeyboardEvent, 'key' | 'target'>) => {
+        if (e.key === KEY_CODE_ENTER && e.target instanceof HTMLInputElement) {
             this._adapter.notifyEnter(e.target.value);
         }
-    }
+    };
 
-    handleInputClear(e: unknown) {
+    handleInputClear = (e: unknown) => {
         this._adapter.notifyClear(e);
-    }
+    };
 
     handleRangeInputClear(e: Pick<Event, 'stopPropagation'>) {
         // Keeps the clear click from counting as a click outside
@@ -278,38 +278,38 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
     }
 
     // The pointer clears on mousedown; Enter and Space fire a click with detail 0
-    handleRangeInputClearClick(e: Pick<MouseEvent, 'detail' | 'stopPropagation'>) {
+    handleRangeInputClearClick = (e: Pick<MouseEvent, 'detail' | 'stopPropagation'>) => {
         if (e.detail === 0) {
             this.handleRangeInputClear(e);
         }
-    }
+    };
 
     // The other buttons only keep the focus where it is
-    handleRangeInputClearMouseDown(e: Pick<MouseEvent, 'button' | 'preventDefault' | 'stopPropagation'>) {
+    handleRangeInputClearMouseDown = (e: Pick<MouseEvent, 'button' | 'preventDefault' | 'stopPropagation'>) => {
         if (isSecondaryPress(e)) {
             e.preventDefault();
         } else {
             this.handleRangeInputClear(e);
         }
-    }
+    };
 
-    handleRangeInputEnterPress(e: Pick<KeyboardEvent, 'key'>, rangeInputValue: string) {
+    handleRangeInputEnterPress = (e: Pick<KeyboardEvent, 'key'>, rangeInputValue: string) => {
         if (e.key === KEY_CODE_ENTER) {
             this._adapter.notifyEnter(rangeInputValue);
         }
-    }
+    };
 
-    handleRangeInputEndKeyPress(e: Pick<KeyboardEvent, 'key'>) {
+    handleRangeInputEndKeyPress = (e: Pick<KeyboardEvent, 'key'>) => {
         if (e.key === KEY_CODE_TAB) {
             this._adapter.notifyTabPress(e);
         }
-    }
+    };
 
-    handleRangeInputFocus(e: unknown, rangeType: RangeInput) {
+    handleRangeInputFocus = (e: unknown, rangeType: RangeInput) => {
         this._adapter.notifyRangeInputFocus(e, rangeType);
-    }
+    };
 
-    handleInsetInputChange({ value, panel, field, insetInputValue }: InsetInputChangeFoundationProps) {
+    handleInsetInputChange = ({ value, panel, field, insetInputValue }: InsetInputChangeFoundationProps) => {
         const props = this._adapter.getProps();
         const { format, type, rangeSeparator } = props;
         const insetFormatToken = getInsetInputFormatToken({ type, format });
@@ -334,5 +334,5 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
             format: insetFormatToken,
             insetInputStr: finalInsetInputStr,
         });
-    }
+    };
 }

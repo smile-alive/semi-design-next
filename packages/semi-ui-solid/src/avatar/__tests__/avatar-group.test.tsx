@@ -20,7 +20,9 @@ function Group(props: AvatarGroupProps) {
     );
 }
 
-const Wrap = (props: { children: JSX.Element }) => <>{props.children}</>;
+function Wrap(props: { children: JSX.Element }) {
+    return <>{props.children}</>;
+}
 
 const getAvatars = (container: HTMLElement) => container.querySelectorAll<HTMLElement>(`.${prefixCls}`);
 const getFirstAvatarOfGroups = (container: HTMLElement) => Array.from(container.querySelectorAll(`.${prefixCls}-group`), (group) => group.querySelector(`.${prefixCls}`));

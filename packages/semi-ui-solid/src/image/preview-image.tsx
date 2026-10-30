@@ -58,11 +58,7 @@ export default function PreviewImage(props: Props) {
         )
     );
 
-    useEventListener(
-        () => window,
-        'resize',
-        () => foundation.handleWindowResize()
-    );
+    useEventListener(() => window, 'resize', foundation.handleWindowResize);
 
     return (
         <div ref={(node) => (container = node)} class={preViewImgPrefixCls}>
@@ -76,12 +72,12 @@ export default function PreviewImage(props: Props) {
                         alt={props.alt ?? ''}
                         crossOrigin={props.crossOrigin}
                         src={src}
-                        onContextMenu={(e) => foundation.handleRightClickImage(e)}
+                        onContextMenu={foundation.handleRightClickImage}
                         onDragStart={(e) => e.preventDefault()}
-                        onError={(e) => foundation.handleError(e)}
-                        onLoad={(e) => foundation.handleLoad(e)}
-                        onPointerDown={(e) => foundation.handleImagePointerDown(e)}
-                        onPointerMove={(e) => foundation.handleImageMove(e)}
+                        onError={foundation.handleError}
+                        onLoad={foundation.handleLoad}
+                        onPointerDown={foundation.handleImagePointerDown}
+                        onPointerMove={foundation.handleImageMove}
                     />
                 )}
             </For>

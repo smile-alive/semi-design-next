@@ -66,7 +66,7 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
 }
 
 export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AIChatInputBaseProps, S extends AIChatInputBaseState = AIChatInputBaseState> extends BaseFoundation<AIChatInputAdapter<P, S>, P, S> {
-    #mouseDownTarget: HTMLElement | null = null;
+    #mouseDownTarget: EventTarget | null = null;
 
     #updateScrollTop(kind: 'skill' | 'suggestion', index: number) {
         const destNode = this._adapter.getOptionNode(kind, index);
@@ -167,9 +167,9 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             });
     };
 
-    handleReferenceClick(reference: Reference) {
+    handleReferenceClick = (reference: Reference) => {
         this._adapter.notifyReferenceClick(reference);
-    }
+    };
 
     setActiveSuggestionIndex = (index: number) => {
         this.setState({ activeSuggestionIndex: index });
@@ -234,10 +234,10 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         this._adapter.notifyConfigureChange(value, changedValue);
     };
 
-    showSuggestionPanel() {
+    showSuggestionPanel = () => {
         // The list may be shorter than the previous index, so the highlight starts over (APG combobox)
         this.setState({ suggestionVisible: true, activeSuggestionIndex: 0 });
-    }
+    };
 
     hideSuggestionPanel = () => {
         this.setState({ suggestionVisible: false });
@@ -284,12 +284,12 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         });
     };
 
-    setContentWhileSaveTool(content: string) {
+    setContentWhileSaveTool = (content: string) => {
         const { skill } = this.getStates();
         this._adapter.setContent(skill ? `<p>${getSkillSlotString(skill)}${content}</p>` : `<p>${content}</p>`);
-    }
+    };
 
-    handleGeneratingStart() {
+    handleGeneratingStart = () => {
         const { keepSkillAfterSend, clearContentOnGenerating } = this.getProps();
         if (clearContentOnGenerating === false) {
             return;
@@ -300,7 +300,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             this._adapter.clearContent();
         }
         this._adapter.clearAttachments();
-    }
+    };
 
     handleStopGenerate = () => {
         const { generating } = this.getProps();
@@ -338,18 +338,18 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         });
     };
 
-    handleContainerMouseDown = (e: any) => {
-        this.#mouseDownTarget = e.target as HTMLElement;
+    handleContainerMouseDown = (e: { target: EventTarget | null }) => {
+        this.#mouseDownTarget = e.target;
     };
 
-    handleContainerClick = (e: any) => {
+    handleContainerClick = (e: { target: EventTarget | null; detail: number }) => {
         const target = e.target;
         if (this.#mouseDownTarget && this.#mouseDownTarget !== e.target) {
             // A drag-selection released outside the editor must not refocus it, which would lose the selection
             return;
         }
         const richTextDiv = this._adapter.getRichTextDiv();
-        if (richTextDiv && (richTextDiv === target || richTextDiv.contains(target as Node))) {
+        if (richTextDiv && (richTextDiv === target || (target instanceof Node && richTextDiv.contains(target)))) {
             const { suggestions } = this.getProps();
             if (suggestions && suggestions.length > 0) {
                 this.showSuggestionPanel();
@@ -402,7 +402,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         return false;
     };
 
-    handleDeleteContent({ uniqueKey }: Content) {
+    handleDeleteContent = ({ uniqueKey }: Content) => {
         const editor = this._adapter.getEditor();
         // Nodes without the attribute also read undefined
         if (!editor || uniqueKey === undefined) return;
@@ -419,13 +419,13 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             });
             return found;
         });
-    }
+    };
 
-    handleFocus = (event: any) => {
+    handleFocus = (event: unknown) => {
         this._adapter.notifyFocus(event);
     };
 
-    handleBlur = (event: any) => {
+    handleBlur = (event: unknown) => {
         this._adapter.notifyBlur(event);
     };
 }

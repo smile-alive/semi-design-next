@@ -7,14 +7,14 @@ import Select from '..';
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 const getSelectionText = () => document.querySelector(`.${BASE_CLASS_PREFIX}-select-selection-text`);
 
-const renderSelect = async (props: Record<string, unknown>) => {
+async function renderSelect(props: Record<string, unknown>) {
     const view = render(Select, { props: { motion: false, ...props } });
     await settle();
     return async (next: Record<string, unknown>) => {
         await view.rerender(next);
         await settle();
     };
-};
+}
 
 describe('Select 的 optionList 与 modelValue 变化', () => {
     it('受控值不变、optionList 改了该项的 label 时，触发器显示新 label', async () => {

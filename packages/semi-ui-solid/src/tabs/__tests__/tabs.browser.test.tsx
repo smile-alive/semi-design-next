@@ -211,11 +211,11 @@ describe('Tabs（浏览器）', () => {
 const arrowButton = (container: HTMLElement, pos: string) => container.querySelector(`.${prefix}-bar-arrow-${pos} .${BASE_CLASS_PREFIX}-button`) as HTMLButtonElement;
 const scrollWrapper = (container: HTMLElement) => container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`) as HTMLElement;
 
-const isInside = (inner: Element, outer: Element) => {
+function isInside(inner: Element, outer: Element) {
     const a = inner.getBoundingClientRect();
     const b = outer.getBoundingClientRect();
     return a.left >= b.left - 1 && a.right <= b.right + 1;
-};
+}
 
 const expectArrows = (container: HTMLElement, { start, end }: { start: boolean; end: boolean }) =>
     waitFor(() => {

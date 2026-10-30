@@ -40,10 +40,10 @@ const previewImg = () => $(`.${previewCls}-image-img`) as HTMLImageElement;
 const pageInfo = () => document.querySelector(`.${previewCls}-footer-page`)?.textContent;
 const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`);
 const thumbs = () => document.querySelectorAll<HTMLImageElement>(`.${prefixCls}-img`);
-const clickMask = (x = 10, y = 10) => {
+function clickMask(x = 10, y = 10) {
     fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: x, clientY: y });
     fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: x, clientY: y });
-};
+}
 // a real key press starts at the focused element and bubbles through the document
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 

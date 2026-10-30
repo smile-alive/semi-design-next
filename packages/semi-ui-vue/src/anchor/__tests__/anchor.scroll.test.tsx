@@ -9,10 +9,10 @@ import type { AnchorProps } from '../interface';
 
 vi.mock('scroll-into-view-if-needed', () => ({ default: vi.fn<() => void>() }));
 
-const renderAnchor = (props: AnchorProps = {}) => {
+function renderAnchor(props: AnchorProps = {}) {
     render(Anchor, { props, slots: { default: () => <AnchorLink title="docs" href="#docs" /> } });
     render({ render: () => <h2 id="docs">Docs</h2> });
-};
+}
 
 // runs the behavior the anchor handed to scroll-into-view-if-needed against one scrollable container
 interface RecordedOptions {
@@ -21,11 +21,11 @@ interface RecordedOptions {
 }
 // the call is read back as the plain-object form the anchor passes
 const scrollOptions = () => vi.mocked(scrollIntoView).mock.calls.at(-1)?.[1] as unknown as RecordedOptions;
-const runBehavior = (action?: object) => {
+function runBehavior(action?: object) {
     const el = { scrollHeight: 500, clientHeight: 100, scroll: vi.fn<() => void>() };
     scrollOptions().behavior([{ el, top: 300, left: 40, ...action }]);
     return el.scroll;
-};
+}
 
 describe('Anchor scrollIntoViewOptions', () => {
     beforeEach(() => {

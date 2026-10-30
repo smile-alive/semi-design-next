@@ -38,19 +38,19 @@ function WithOutside(props: { children: JSX.Element }) {
 const clickOutside = () => userEvent.click(screen.getByTestId('outside'));
 
 // userEvent.type focuses via a selector built from ancestor ids; the popup's random id can start with a digit
-const typeInto = async (element: Element, text: string) => {
+async function typeInto(element: Element, text: string) {
     await userEvent.click(element);
     await userEvent.keyboard(text);
-};
+}
 
-const renderPicker = (props: DatePickerProps) => {
+function renderPicker(props: DatePickerProps) {
     const utils = render(() => (
         <WithOutside>
             <DatePicker motion={false} {...props} />
         </WithOutside>
     ));
     return { ...utils, inputs: Array.from(utils.container.querySelectorAll('input')) };
-};
+}
 
 describe('DatePicker（浏览器）', () => {
     describe('FixNeedConfirm', () => {

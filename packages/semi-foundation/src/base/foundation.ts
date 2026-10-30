@@ -104,8 +104,8 @@ export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Rec
         return this._adapter.setState({ ...states }, cb);
     }
 
-    getContext<K extends keyof ContextOf<T>>(key: K) {
-        return this._adapter.getContext(key as never) as ContextOf<T>[K];
+    getContext<K extends keyof ContextOf<T>>(key: K): ContextOf<T>[K] {
+        return this._adapter.getContext(key);
     }
 
     getContexts() {

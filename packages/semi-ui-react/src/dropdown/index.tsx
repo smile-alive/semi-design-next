@@ -153,17 +153,16 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
     const parentCloseAll = parentContext.closeAll;
 
     const contextValue = useMemo(() => {
-        const close = () => foundation.close();
         const closeAll = () => {
-            close();
+            foundation.close();
             parentCloseAll?.();
         };
         const getPopupId = () => tooltipRef.current?.getPopupId();
-        return { showTick, selectionMode, menuDepth: menuDepth + 1, trigger, close, closeAll, getPopupId };
+        return { showTick, selectionMode, menuDepth: menuDepth + 1, trigger, close: foundation.close, closeAll, getPopupId };
     }, [foundation, parentCloseAll, showTick, selectionMode, menuDepth, trigger]);
 
     // moves focus into the menu when Tooltip gives the popup its initial focus
-    const focusTarget = useMemo(() => ({ focus: () => foundation.handleOpened() }), [foundation]);
+    const focusTarget = useMemo(() => ({ focus: foundation.handleOpened }), [foundation]);
 
     // text or several nodes get the wrapper Tooltip would add, so onKeyDown reaches a real element
     const child = (isValidElement(children) ? children : wrapSpan(children, props.wrapperClassName)) as React.ReactElement<Record<string, any>>;
@@ -228,7 +227,7 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
             spacing={spacing ?? (isSubmenu ? numbers.NESTED_SPACING : numbers.SPACING)}
             trigger={trigger}
             wrapWhenSpecial={isItem ? false : undefined}
-            onVisibleChange={(visible) => foundation.handleVisibleChange(visible)}
+            onVisibleChange={foundation.handleVisibleChange}
             {...attr}
             ref={tooltipRef}
             content={renderPop}

@@ -1,7 +1,6 @@
 import { type Accessor, type JSX, Show, children, createComputed, createEffect, createMemo, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-// compat get resolves deep paths such as 'pagination.currentPage'
 import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/table/constants';
 import TableFoundation, { type BaseColumnProps, type BaseHeadWidth, type BasePageData, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/table/foundation';
@@ -95,7 +94,7 @@ type SelectionConfig = Pick<RowSelectionProps<AnyRecord>, 'class' | 'fixed' | 'w
 const sameSelectionConfig = (a: SelectionConfig | null, b: SelectionConfig | null) => a === b || (a !== null && b !== null && (Object.keys(a) as (keyof SelectionConfig)[]).every((key) => a[key] === b[key]));
 
 // the foundation keeps the column objects as given, typed with its own callbacks
-const toFoundationColumns = (columns: ColumnProps[]) => columns as unknown as BaseColumnProps<AnyRecord>[];
+const toFoundationColumns = (columns: ColumnProps[]) => columns as BaseColumnProps<AnyRecord>[];
 
 /** A copy of the column tree, so the keys assignColumnKeys writes and the merged inner columns stay off the user's objects */
 const copyColumns = (columns: ColumnProps[]): ColumnProps[] => columns.map((column) => (Array.isArray(column.children) && column.children.length ? { ...column, children: copyColumns(column.children) } : { ...column }));
@@ -193,7 +192,7 @@ export default function NormalTable(props: TableProps) {
                 setCachedFilteredSortedDataSource: (filteredSortedDataSource) => base.setState({ filteredSortedDataSource }),
                 setCachedFilteredSortedRowKeys: (filteredSortedRowKeys) => base.setState({ filteredSortedRowKeys, filteredSortedRowKeysSet: new Set(filteredSortedRowKeys) }),
                 setFilteredDisabledRowKeys: (filteredDisabledRowKeys) => base.setState({ filteredDisabledRowKeys, filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys) }),
-                getCurrentPage: () => get(base.getStates(), 'pagination.currentPage', 1),
+                getCurrentPage: () => base.getStates().pagination?.currentPage ?? 1,
                 getCachedFilteredSortedDataSource: () => base.getState('filteredSortedDataSource') ?? [],
                 getCachedFilteredSortedRowKeys: () => base.getState('filteredSortedRowKeys') ?? [],
                 getFilteredDisabledRowKeysSet: () => base.getState('filteredDisabledRowKeysSet') ?? new Set(),
@@ -209,7 +208,7 @@ export default function NormalTable(props: TableProps) {
                     const column = dataIndex ? base.getState('queries')?.find((query) => query.dataIndex === dataIndex) : undefined;
                     column?.onFilterDropdownVisibleChange?.(visible);
                 },
-                notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo as never),
+                notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo),
                 notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand?.(expanded, record as AnyRecord, mouseEvent),
                 notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange?.(expandedRows as AnyRecord[]),
                 notifySelect: (record, selected, selectedRows, event) => getRowSelectionFn('onSelect')?.(record, selected, selectedRows, event),
@@ -351,13 +350,13 @@ export default function NormalTable(props: TableProps) {
         'aria-describedby': local['aria-describedby'],
     }));
 
-    const paginationPosition = () => get(pagination(), 'position', 'bottom') as string;
+    const paginationPosition = () => ((pagination() as TablePaginationProps | undefined)?.position ?? 'bottom') as string;
 
     const handleBodyScroll = (e: Event) => {
-        if (e.currentTarget !== e.target) {
+        const target = e.target;
+        if (e.currentTarget !== target || !(target instanceof HTMLElement)) {
             return;
         }
-        const target = e.target as HTMLElement;
         if (target.scrollLeft !== lastScrollLeft) {
             if (target === bodyWrap && headerWrap) {
                 headerWrap.scrollLeft = target.scrollLeft;
@@ -466,10 +465,7 @@ export default function NormalTable(props: TableProps) {
         }
     });
 
-    useResizeObserver(
-        () => (anyColumnFixed() ? rootWrap : null),
-        () => foundation.syncScrollEdges()
-    );
+    useResizeObserver(() => (anyColumnFixed() ? rootWrap : null), foundation.syncScrollEdges);
 
     // content width changes without a wrapper resize (columns, data) are caught after the update
     createEffect(

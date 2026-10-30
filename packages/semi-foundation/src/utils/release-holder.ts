@@ -5,14 +5,14 @@
 export default class ReleaseHolder {
     #release: (() => void) | null = null;
 
-    hold(acquire: () => () => void) {
+    hold = (acquire: () => () => void) => {
         this.release();
         this.#release = acquire();
-    }
+    };
 
-    release() {
+    release = () => {
         const release = this.#release;
         this.#release = null;
         release?.();
-    }
+    };
 }

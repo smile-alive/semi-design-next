@@ -89,7 +89,7 @@ describe('Form-onChange', () => {
 });
 
 describe('Form 状态快照', () => {
-    function renderNestedForm(props) {
+    const renderNestedForm = (props) => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)} initValues={{ user: { name: 'a' }, address: { city: 'x' } }} {...props}>
@@ -98,7 +98,7 @@ describe('Form 状态快照', () => {
             </Form>
         );
         return formApi;
-    }
+    };
 
     it('每次变化都交出新的 values，并保留未变化的子树', () => {
         const onChange = vi.fn<(formState: FormState) => void>();

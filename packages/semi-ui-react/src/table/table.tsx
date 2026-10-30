@@ -1,7 +1,6 @@
 import React, { type ReactNode, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { isEqual, omit } from 'es-toolkit';
-// compat get resolves deep paths such as 'pagination.currentPage'
 import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/table/constants';
 import TableFoundation, { type TableAdapter, type TableBaseState, type BasePageData, type BaseRowKeyType, type BaseHeadWidth } from '@fibrae/semi-foundation/table/foundation';
@@ -87,8 +86,7 @@ function TableSelection({ record, inHeader, index }: { record?: any; inHeader?: 
     const indeterminate = hasRowSelected && !allIsSelected;
 
     if (inHeader) {
-        const selectAll = (selected: boolean, e: any) => foundation.handleSelectAllRow(selected, e);
-        const originNode = <ColumnSelection aria-label={locale.selectAllRows} disabled={disabled} indeterminate={indeterminate} selected={allIsSelected} onChange={selectAll} />;
+        const originNode = <ColumnSelection aria-label={locale.selectAllRows} disabled={disabled} indeterminate={indeterminate} selected={allIsSelected} onChange={foundation.handleSelectAllRow} />;
 
         return typeof renderCell === 'function'
             ? renderCell({
@@ -98,7 +96,7 @@ function TableSelection({ record, inHeader, index }: { record?: any; inHeader?: 
                   inHeader,
                   disabled,
                   indeterminate,
-                  selectAll,
+                  selectAll: foundation.handleSelectAllRow,
               })
             : originNode;
     }
@@ -107,7 +105,7 @@ function TableSelection({ record, inHeader, index }: { record?: any; inHeader?: 
     const selected = selectedRowKeysSet.has(key);
     const halfChecked = checkRelation === 'related' && halfCheckedRowKeysSet && halfCheckedRowKeysSet.has(key);
 
-    const selectRow = (rowSelected: boolean, e: any) => foundation.handleSelectRow(key, rowSelected, e);
+    const selectRow = (rowSelected: boolean, e?: Pick<Event, 'stopPropagation'>) => foundation.handleSelectRow(key, rowSelected, e);
 
     const originNode = <ColumnSelection aria-label={locale.selectRow} getCheckboxProps={() => (typeof getCheckboxProps === 'function' ? getCheckboxProps(record) : {})} indeterminate={halfChecked} selected={selected} onChange={selectRow} />;
 
@@ -389,7 +387,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
                         filteredDisabledRowKeys,
                         filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys),
                     }),
-                getCurrentPage: () => get(base.getStates(), 'pagination.currentPage', 1),
+                getCurrentPage: () => base.getStates().pagination?.currentPage ?? 1,
                 getCachedFilteredSortedDataSource: () => base.getState('filteredSortedDataSource'),
                 getCachedFilteredSortedRowKeys: () => base.getState('filteredSortedRowKeys'),
                 getFilteredDisabledRowKeysSet: () => base.getState('filteredDisabledRowKeysSet'),
@@ -637,7 +635,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
         }
     });
 
-    useResizeObserver(rootWrapRef, () => foundation.syncScrollEdges(), { enabled: anyColumnFixed });
+    useResizeObserver(rootWrapRef, foundation.syncScrollEdges, { enabled: anyColumnFixed });
 
     useEffect(() => {
         warning(bothColumnsGiven, '[Semi Table] columns should not given by object and children at the same time');
@@ -702,7 +700,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
             <LocaleConsumer componentName="Table">{(locale: TableLocale) => <TablePagination info={TableFoundation.formatPaginationInfo(mergedPagination, locale.pageText, (propPagination as TablePaginationProps)?.formatPageText)} pagination={mergedPagination} renderPagination={renderPagination} />}</LocaleConsumer>
         ) : null;
 
-    const paginationPosition = get(propPagination, 'position', 'bottom');
+    const paginationPosition = (propPagination as TablePaginationProps | undefined)?.position ?? 'bottom';
     const footerNode = typeof footer === 'function' ? footer(dataSource) : footer;
 
     const emptySlot =

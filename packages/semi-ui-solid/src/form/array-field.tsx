@@ -131,7 +131,7 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
             }
         });
 
-    function remove(index: number) {
+    const remove = (index: number) => {
         // a row entry kept after its row was removed has no position; toSpliced(-1) would remove the last row
         if (index < 0) {
             return;
@@ -140,7 +140,7 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
             bridge.removeArrayFieldRow(field(), index);
             setKeys((current) => current.toSpliced(index, 1));
         });
-    }
+    };
 
     const childrenProps: ArrayFieldChildrenProps = {
         get arrayFields() {

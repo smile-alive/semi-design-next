@@ -39,9 +39,9 @@ describe('tree 共享逻辑', () => {
 
     it('calcRelatedCheckedKeys 在 disableStrictly 下保留禁用的后代，并复制输入集合', () => {
         const s = state();
-        expect([...calcRelatedCheckedKeys('p', true, false, s).checkedKeys].sort()).toEqual(['a', 'b', 'c', 'p']);
+        expect([...calcRelatedCheckedKeys('p', true, false, s).checkedKeys].toSorted()).toEqual(['a', 'b', 'c', 'p']);
         const strict = calcRelatedCheckedKeys('p', true, true, s);
-        expect([...strict.checkedKeys].sort()).toEqual(['a', 'c']);
+        expect([...strict.checkedKeys].toSorted()).toEqual(['a', 'c']);
         expect([...strict.halfCheckedKeys]).toEqual(['p']);
         expect(s.checkedKeys.size).toBe(0);
         const unchecked = calcRelatedCheckedKeys('p', false, true, state(['a', 'b', 'c', 'p']));

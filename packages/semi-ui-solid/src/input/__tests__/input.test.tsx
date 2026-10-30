@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSearch } from '@fibrae/semi-icons-solid';
-import Input, { type InputChangeEvent, type InputGroupProps, type InputMode, type InputProps, InputGroup } from '..';
+import Input, { type InputChangeEvent, type InputGroupProps, type InputMode, type InputProps, InputGroup, TextArea } from '..';
 import semiGlobal from '../../_utils/semi-global';
 import Tooltip from '../../tooltip';
 
@@ -1019,14 +1019,74 @@ describe('InputGroup', () => {
         expect(left).toHaveClass(`${prefixCls}-group-wrapper-with-left-label`);
     });
 
-    it('size 替换子控件自己的 size', () => {
+    it('子控件自己的 size 优先于组的 size，没传时取组的', () => {
         render(() => (
             <InputGroup size="large">
-                <Input placeholder="Name" size="small" />
+                <Input placeholder="own" size="small" />
+                <Input placeholder="inherit" />
+                <Input placeholder="undefined" size={undefined} />
             </InputGroup>
         ));
         expect(screen.getByRole('group')).toHaveClass(`${prefixCls}-large`);
-        expect(getInput()).toHaveClass(`${prefixCls}-large`);
+        expect(screen.getByPlaceholderText('own')).toHaveClass(`${prefixCls}-small`);
+        expect(screen.getByPlaceholderText('inherit')).toHaveClass(`${prefixCls}-large`);
+        expect(screen.getByPlaceholderText('undefined')).toHaveClass(`${prefixCls}-large`);
+    });
+
+    it('包装元素内的深层 Input 与 TextArea 也接收组的 size 与 disabled', () => {
+        render(() => (
+            <InputGroup disabled size="small">
+                <div>
+                    <span>
+                        <Input placeholder="deep" />
+                        <TextArea aria-label="area" />
+                    </span>
+                </div>
+            </InputGroup>
+        ));
+        expect(screen.getByPlaceholderText('deep')).toHaveClass(`${prefixCls}-small`);
+        expect(screen.getByPlaceholderText('deep')).toBeDisabled();
+        expect(screen.getByRole('textbox', { name: 'area' })).toBeDisabled();
+    });
+
+    it('TextArea 自己的 disabled={false} 优先于组的 disabled', () => {
+        render(() => (
+            <InputGroup disabled>
+                <TextArea aria-label="own" disabled={false} />
+            </InputGroup>
+        ));
+        expect(screen.getByRole('textbox', { name: 'own' })).toBeEnabled();
+    });
+
+    it('组的 aria-*、data-*、title 只落在分组元素上，子控件不带，使用方的 role 与 aria-label 优先', () => {
+        render(() => (
+            <InputGroup aria-label="mine" data-group="1" title="grp" role="radiogroup" disabled size="small">
+                <Input placeholder="a" />
+                <Input placeholder="b" size="large" />
+            </InputGroup>
+        ));
+        const group = screen.getByRole('radiogroup', { name: 'mine' });
+        expect(group).toHaveAttribute('data-group', '1');
+        expect(group).toHaveAttribute('title', 'grp');
+        expect(group).toHaveClass(`${prefixCls}-group`, `${prefixCls}-small`);
+        for (const input of document.querySelectorAll('input')) {
+            expect(input).toBeDisabled();
+            expect(input).not.toHaveAttribute('data-group');
+            expect(input).not.toHaveAttribute('title');
+            expect(input).not.toHaveAttribute('aria-label');
+        }
+        expect(document.querySelectorAll('[data-group]')).toHaveLength(1);
+    });
+
+    it('带 label 时组的其他属性落在分组元素上，不落在外层 wrapper', () => {
+        render(() => (
+            <InputGroup data-group="1" aria-labelledby="ext" label={{ text: 'Score' }}>
+                <Input />
+            </InputGroup>
+        ));
+        expect(screen.getByRole('group')).toHaveAttribute('data-group', '1');
+        expect(screen.getByRole('group')).toHaveAttribute('aria-labelledby', 'ext');
+        expect(query(`${prefixCls}-group-wrapper`)).not.toHaveAttribute('data-group');
     });
 
     it('子节点为 null 时照常渲染其他子节点', () => {
@@ -1040,22 +1100,13 @@ describe('InputGroup', () => {
         expect(document.querySelectorAll('input')).toHaveLength(2);
     });
 
-    it('把 size、disabled 及其他属性传给每个子控件，分组元素不带其他属性', () => {
+    it('没有使用方 aria-label 时分组带内置名称', () => {
         render(() => (
-            <InputGroup data-group="1" disabled size="small">
-                <Input placeholder="a" />
-                <Input placeholder="b" size="large" />
+            <InputGroup>
+                <Input />
             </InputGroup>
         ));
-        const group = screen.getByRole('group');
-        expect(group).toHaveAttribute('aria-label', zh_CN.Input.group);
-        expect(group).toHaveClass(`${prefixCls}-group`, `${prefixCls}-small`);
-        expect(group).not.toHaveAttribute('data-group');
-        for (const input of document.querySelectorAll('input')) {
-            expect(input).toHaveClass(`${prefixCls}-small`);
-            expect(input).toBeDisabled();
-            expect(input).toHaveAttribute('data-group', '1');
-        }
+        expect(screen.getByRole('group')).toHaveAttribute('aria-label', zh_CN.Input.group);
     });
 
     it('弹层内的输入框不继承打开它的分组', async () => {

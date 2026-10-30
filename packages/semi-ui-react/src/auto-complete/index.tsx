@@ -20,6 +20,7 @@ import useFoundation from '../_base/use-foundation';
 import { hasContent, isSameNode } from '../_utils';
 import { useConfigContext } from '../config-provider/context';
 import Input from '../input';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import Popover from '../popover';
 import Option from '../select/option';
 import Spin from '../spin';
@@ -122,8 +123,8 @@ const defaultProps = {
     onKeyDown: noop,
 } satisfies Partial<AutoCompleteProps<any>>;
 
-function AutoComplete<T extends AutoCompleteItems>(rawProps: AutoCompleteProps<T>) {
-    const props = useDefaultProps('AutoComplete', rawProps, defaultProps);
+export default function AutoComplete<T extends AutoCompleteItems>(rawProps: AutoCompleteProps<T>) {
+    const props = useDefaultProps('AutoComplete', withInputGroup(rawProps, useInputGroupInScope()), defaultProps);
 
     const {
         'aria-describedby': ariaDescribedby,
@@ -234,7 +235,7 @@ function AutoComplete<T extends AutoCompleteItems>(rawProps: AutoCompleteProps<T
         placeholder,
         autoFocus,
         onChange: (v: string) => foundation.handleSearch(v),
-        onClear: () => foundation.handleClear(),
+        onClear: foundation.handleClear,
         ...nameProps,
         'aria-invalid': ariaInvalid,
         'aria-errormessage': ariaErrormessage,
@@ -263,7 +264,7 @@ function AutoComplete<T extends AutoCompleteItems>(rawProps: AutoCompleteProps<T
         }
     });
 
-    useDidUpdate(props.value, (value) => foundation.handleValueChange(value));
+    useDidUpdate(props.value, foundation.handleValueChange);
 
     useImperativeHandle(props.ref, () => triggerRef.current, []);
 
@@ -393,23 +394,23 @@ function AutoComplete<T extends AutoCompleteItems>(rawProps: AutoCompleteProps<T
     const dropdownAnchorStyle: CSSProperties | undefined = dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined;
 
     return (
-        <Popover
-            style={dropdownAnchorStyle}
-            // the listbox inside is the combobox's popup
-            role="presentation"
-            autoAdjustOverflow={autoAdjustOverflow}
-            content={optionList}
-            // the arrow keys move the highlight through aria-activedescendant, never the focus into the list
-            disableArrowKeyDown
-            motion={motion}
-            position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
-            stopPropagation={stopPropagation}
-            trigger="custom"
-            visible={visible}
-        >
-            {input}
-        </Popover>
+        <InputGroupContext value={undefined}>
+            <Popover
+                style={dropdownAnchorStyle}
+                // the listbox inside is the combobox's popup
+                role="presentation"
+                autoAdjustOverflow={autoAdjustOverflow}
+                content={optionList}
+                // the arrow keys move the highlight through aria-activedescendant, never the focus into the list
+                disableArrowKeyDown
+                motion={motion}
+                position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
+                stopPropagation={stopPropagation}
+                trigger="custom"
+                visible={visible}
+            >
+                {input}
+            </Popover>
+        </InputGroupContext>
     );
 }
-
-export default AutoComplete;

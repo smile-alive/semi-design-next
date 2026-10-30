@@ -98,10 +98,6 @@ export default function Footer(rawProps: FooterProps) {
 
     const handleRotateLeft = () => foundation.handleRotate('left');
 
-    const handleRotateRight = () => foundation.handleRotate('right');
-
-    const handleRatioClick = () => foundation.handleRatioClick();
-
     // built once: every binding inside stays live, so a custom menu that places them needs no re-render
     const menuItems = [
         <FooterButton label={props.prevTip ?? locale().locale.prevTip} showTooltip={props.showTooltip} disabled={props.disabledPrev} onClick={() => props.onPrev?.()}>
@@ -120,7 +116,7 @@ export default function Footer(rawProps: FooterProps) {
         <FooterButton label={props.zoomInTip ?? locale().locale.zoomInTip} showTooltip={props.showTooltip} disabled={disabledZoomIn()} onClick={handlePlusClick}>
             <IconPlus class={disabledZoomIn() ? disabledCls : ''} size="large" />
         </FooterButton>,
-        <FooterButton label={isAdaptation() ? (props.originTip ?? locale().locale.originTip) : (props.adaptiveTip ?? locale().locale.adaptiveTip)} showTooltip={props.showTooltip} gap onClick={handleRatioClick}>
+        <FooterButton label={isAdaptation() ? (props.originTip ?? locale().locale.originTip) : (props.adaptiveTip ?? locale().locale.adaptiveTip)} showTooltip={props.showTooltip} gap onClick={foundation.handleRatioClick}>
             {isAdaptation() ? <IconRealSizeStroked size="large" /> : <IconWindowAdaptionStroked size="large" />}
         </FooterButton>,
         <FooterButton label={props.rotateTip ?? locale().locale.rotateTip} showTooltip={props.showTooltip} onClick={handleRotateLeft}>
@@ -130,6 +126,8 @@ export default function Footer(rawProps: FooterProps) {
             <IconDownload class={props.disableDownload ? disabledCls : ''} size="large" />
         </FooterButton>,
     ];
+
+    const handleRotateRight = () => foundation.handleRotate('right');
 
     const menuProps: MenuProps = {
         get min() {
@@ -173,7 +171,7 @@ export default function Footer(rawProps: FooterProps) {
         onDownload: () => props.onDownload?.(),
         onRotateLeft: handleRotateLeft,
         onRotateRight: handleRotateRight,
-        onRatioClick: handleRatioClick,
+        onRatioClick: foundation.handleRatioClick,
         onZoomIn: handlePlusClick,
         onZoomOut: handleMinusClick,
         menuItems,

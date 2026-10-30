@@ -10,41 +10,45 @@ const { Link } = Anchor;
 
 const longTitle = '工具提示是一个有用的工具，它可以在文字缩略时展示全部内容。';
 
-const DocLinks = () => (
-    <>
-        <Link title="welcome" href="#welcome" />
-        <Link title="api too much to show" href="#api">
-            <Link title="docs" href="#docs">
-                <Link title="doc1" href="#doc1" />
-                <Link title="doc2" href="#doc2" />
+function DocLinks() {
+    return (
+        <>
+            <Link title="welcome" href="#welcome" />
+            <Link title="api too much to show" href="#api">
+                <Link title="docs" href="#docs">
+                    <Link title="doc1" href="#doc1" />
+                    <Link title="doc2" href="#doc2" />
+                </Link>
             </Link>
-        </Link>
-        <Link title="contact" href="#contact" />
-    </>
-);
+            <Link title="contact" href="#contact" />
+        </>
+    );
+}
 
-const DocSections = () => (
-    <>
-        <h1 id="welcome" style={{ height: '300px' }}>
-            Welcome
-        </h1>
-        <h1 id="api" style={{ height: '300px' }}>
-            API
-        </h1>
-        <h2 id="docs" style={{ height: '200px' }}>
-            Docs
-        </h2>
-        <h3 id="doc1" style={{ height: '100px' }}>
-            Doc1
-        </h3>
-        <h3 id="doc2" style={{ height: '100px' }}>
-            Doc2
-        </h3>
-        <h1 id="contact" style={{ height: '300px' }}>
-            Contact me
-        </h1>
-    </>
-);
+function DocSections() {
+    return (
+        <>
+            <h1 id="welcome" style={{ height: '300px' }}>
+                Welcome
+            </h1>
+            <h1 id="api" style={{ height: '300px' }}>
+                API
+            </h1>
+            <h2 id="docs" style={{ height: '200px' }}>
+                Docs
+            </h2>
+            <h3 id="doc1" style={{ height: '100px' }}>
+                Doc1
+            </h3>
+            <h3 id="doc2" style={{ height: '100px' }}>
+                Doc2
+            </h3>
+            <h1 id="contact" style={{ height: '300px' }}>
+                Contact me
+            </h1>
+        </>
+    );
+}
 
 const renderTargetOffset = () =>
     render(() => (
@@ -60,20 +64,22 @@ const renderTargetOffset = () =>
         </div>
     ));
 
-const CollapsibleLinks = () => (
-    <>
-        <Link title="1. Semi Design" href="#Semi Design">
-            <Link title="1.1 组件" href="#组件">
-                <Link title="1.1.1 Avatar" href="#头像" />
-                <Link title="1.1.2 Button" href="#按钮" />
-                <Link title="1.1.3 Icon" href="#图标" />
+function CollapsibleLinks() {
+    return (
+        <>
+            <Link title="1. Semi Design" href="#Semi Design">
+                <Link title="1.1 组件" href="#组件">
+                    <Link title="1.1.1 Avatar" href="#头像" />
+                    <Link title="1.1.2 Button" href="#按钮" />
+                    <Link title="1.1.3 Icon" href="#图标" />
+                </Link>
+                <Link title="1.2 物料" href="#物料" />
+                <Link title="1.3 主题商店" href="#主题商店" />
             </Link>
-            <Link title="1.2 物料" href="#物料" />
-            <Link title="1.3 主题商店" href="#主题商店" />
-        </Link>
-        <Link title="2. 设计语言" href="#设计语言" />
-    </>
-);
+            <Link title="2. 设计语言" href="#设计语言" />
+        </>
+    );
+}
 
 const activeTitle = () => document.querySelector(`.${BASE_CLASS_PREFIX}-anchor-link-title-active`);
 

@@ -45,14 +45,11 @@ const popupSelector = `.${BASE_CLASS_PREFIX}-popover .${BASE_CLASS_PREFIX}-datep
 const dp = `${BASE_CLASS_PREFIX}-datepicker`;
 
 const getPopup = () => document.querySelector<HTMLElement>(popupSelector);
-// jsdom has no layout: Tooltip reports the panel visible only after a 100ms fallback timer.
-// call watchPanelVisible before opening, then await settled() so focus changes land before asserting
-const watchPanelVisible = () => {
-    const spy = vi.spyOn(DatePickerFoundation.prototype, 'handlePanelVisibleChange');
-    return {
-        settled: () => waitFor(() => expect(spy).toHaveBeenCalledWith(true)),
-        restore: () => spy.mockRestore(),
-    };
+// Tooltip reports the panel open (onOpen, where DatePicker moves focus) in a task after the popup mounts;
+// await this before asserting so that focus change cannot land afterwards
+const waitForPanelOpened = async () => {
+    await waitFor(() => expect(getPopup()).not.toBeNull());
+    await act(() => new Promise((resolve) => setTimeout(resolve)));
 };
 const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`);
@@ -86,12 +83,12 @@ const yearAndMonthDefaultProps = {
 };
 const renderYearAndMonth = (props: Partial<YearAndMonthProps> = {}) => render(<YearAndMonth {...yearAndMonthDefaultProps} {...props} />);
 
-const getRandomIANATimeZone = function (): [string, number] {
+function getRandomIANATimeZone(): [string, number] {
     const TIME_ZONE = Array.from({ length: 26 }).map((_, index) => index - 11);
     const offset = Math.floor(Math.random() * TIME_ZONE.length);
     const timeZone = toIANA(TIME_ZONE[offset]);
     return [timeZone, offset];
-};
+}
 
 describe(`DatePicker`, () => {
     it(`外观`, () => {
@@ -3856,11 +3853,9 @@ describe(`DatePicker`, () => {
                 const [visible, setVisible] = useState(false);
                 return <DatePicker type="dateTimeRange" bottomSlot={<button onClick={() => setVisible(false)}>close</button>} defaultPickerValue="2022-02-01" motion={false} open={visible} showClear onFocus={() => setVisible(true)} />;
             }
-            const watch = watchPanelVisible();
             const { container } = render(<Demo />);
             await userEvent.click(container.querySelector('input'));
-            await watch.settled();
-            watch.restore();
+            await waitForPanelOpened();
             expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
             await userEvent.click(getDay('2022-02-10'));
             await userEvent.click(getDay('2022-02-15'));
@@ -4061,17 +4056,12 @@ describe(`DatePicker`, () => {
         });
 
         it('未设置 insetInput 时，面板显示不会把焦点拉回触发输入框', async () => {
-            const watch = watchPanelVisible();
-            try {
-                const { container } = render(<DatePicker type="dateRange" bottomSlot={<button>slot</button>} defaultPickerValue="2023-04-01" motion={false} />);
-                await userEvent.click(container.querySelector('input'));
-                const slot = screen.getByRole('button', { name: 'slot' });
-                await userEvent.click(slot);
-                await watch.settled();
-                expect(document.activeElement).toBe(slot);
-            } finally {
-                watch.restore();
-            }
+            const { container } = render(<DatePicker type="dateRange" bottomSlot={<button>slot</button>} defaultPickerValue="2023-04-01" motion={false} />);
+            await userEvent.click(container.querySelector('input'));
+            const slot = screen.getByRole('button', { name: 'slot' });
+            await userEvent.click(slot);
+            await waitForPanelOpened();
+            expect(document.activeElement).toBe(slot);
         });
 
         it.each([
@@ -5096,10 +5086,8 @@ describe('DatePicker 焦点方法', () => {
 
     it('insetInput 面板打开时 ref.focus()、blur() 作用于面板内的输入框', async () => {
         const ref = React.createRef<DatePickerHandle>();
-        const { settled, restore } = watchPanelVisible();
         render(<DatePicker ref={ref} defaultOpen insetInput motion={false} />);
-        await settled();
-        restore();
+        await waitForPanelOpened();
         const inset = within(getPopup()).getByRole('textbox');
         act(() => inset.blur());
         act(() => ref.current.focus());
@@ -5132,11 +5120,9 @@ describe('DatePicker 焦点方法', () => {
 
     it('单选类型开启 insetInput 时打开面板只调用一次 onFocus，且不带 rangeType', async () => {
         const onFocus = vi.fn<NonNullable<DatePickerProps['onFocus']>>();
-        const { settled, restore } = watchPanelVisible();
         const { container } = render(<DatePicker insetInput motion={false} onFocus={onFocus} />);
         await userEvent.click(container.querySelector('input'));
-        await settled();
-        restore();
+        await waitForPanelOpened();
         expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onFocus.mock.calls[0][1]).toBeUndefined();
     });

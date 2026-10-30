@@ -269,11 +269,11 @@ describe('Tree 键盘焦点', () => {
 });
 
 describe('Tree 虚拟滚动', () => {
-    function renderWithHandle(props: TreeProps) {
+    const renderWithHandle = (props: TreeProps) => {
         let handle!: TreeElement;
         render(() => <Tree ref={(h) => (handle = h)} {...props} />);
         return () => handle;
-    }
+    };
 
     it('ref 是根元素，不带 key 的 scrollTo 交给根元素的原生 scrollTo', () => {
         const native = vi.spyOn(Element.prototype, 'scrollTo');

@@ -30,11 +30,11 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
     static numberReg = /^\d*$/;
     static mixedReg = /^[0-9a-zA-Z]$/;
 
-    handleCurrentActiveIndexChange(index: number, state: 'focus' | 'blur') {
+    handleCurrentActiveIndexChange = (index: number, state: 'focus' | 'blur') => {
         if (state === 'focus') {
             void this._adapter.onCurrentActiveIndexChange(index);
         }
-    }
+    };
 
     async completeSingleInput(i: number, singleInputValue: string) {
         const isControlledComponent = this._isControlledComponent('value');
@@ -61,7 +61,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
     }
 
     /** `data` is the InputEvent or CompositionEvent data of the change, if any */
-    handleCellChange(index: number, value: string, data?: string | null) {
+    handleCellChange = (index: number, value: string, data?: string | null) => {
         if (value === '') {
             this.removeCell(index);
             return;
@@ -73,7 +73,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         if (this.validateValue(char)) {
             void this.completeSingleInput(index, char);
         }
-    }
+    };
 
     validateValue(value: string = '') {
         const format = this.getProp('format');
@@ -96,11 +96,11 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         return validateFunction(value);
     }
 
-    async updateValueList(newValueList: PinCodeBaseState['valueList']) {
+    updateValueList = async (newValueList: PinCodeBaseState['valueList']) => {
         await this._adapter.updateValueList(newValueList);
-    }
+    };
 
-    async handlePaste(e: ClipboardEvent, startInputIndex: number) {
+    handlePaste = async (e: ClipboardEvent, startInputIndex: number) => {
         // before anything else, or the browser may paste first and write twice
         e.preventDefault();
 
@@ -116,7 +116,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
                 break;
             }
         }
-    }
+    };
 
     /**
      * Removes the character and closes the gap. Also covers a cell emptied without Backspace or Delete (cut, a
@@ -128,7 +128,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         this._adapter.notifyValueChange(valueList);
     }
 
-    handleKeyDownOnSingleInput(e: KeyboardEvent, index: number) {
+    handleKeyDownOnSingleInput = (e: KeyboardEvent, index: number) => {
         const lastIndex = this.getProp('count') - 1;
         if (e.key === 'Backspace') {
             this.removeCell(index);
@@ -147,5 +147,5 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
             this._adapter.changeSpecificInputFocusState(Math.min(lastIndex, index + 1), 'focus');
             e.preventDefault();
         }
-    }
+    };
 }

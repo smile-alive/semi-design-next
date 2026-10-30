@@ -19,6 +19,8 @@
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
     import Tag, { TagGroup, type TagCloseEvent } from '../tag';
@@ -89,8 +91,9 @@
         showLine: () => semiDefault('TreeSelect', 'showLine', false),
         virtualize: semiGlobalDefault('TreeSelect', 'virtualize'),
         placeholder: semiGlobalDefault('TreeSelect', 'placeholder'),
-        disabled: () => semiDefault('TreeSelect', 'disabled', false),
-        size: () => semiDefault('TreeSelect', 'size', 'default'),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
+        size: undefined,
         borderless: () => semiDefault('TreeSelect', 'borderless', false),
         validateStatus: semiGlobalDefault('TreeSelect', 'validateStatus'),
         // A global id would repeat on every instance.
@@ -135,6 +138,8 @@
     const searchInput = shallowRef<Focusable | null>(null);
     const comboboxKeys = new Set(['aria-label', 'aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required']);
 
+    const looks = useGroupLooks('TreeSelect', props, { size: 'default', disabled: false });
+
     const prefix = cssClasses.PREFIX;
     const prefixTree = cssClasses.PREFIX_TREE;
 
@@ -144,6 +149,9 @@
     const filterTreeNode = computed(() => props.filterTreeNode ?? readSemiDefault(semi, 'TreeSelect', 'filterTreeNode', false));
     const virtualized = computed(() => Boolean(props.virtualize && Object.keys(props.virtualize).length));
     const triggerSearch = computed(() => Boolean(filterTreeNode.value) && props.searchPosition === 'trigger');
+
+    // the Input and TagInput inside are parts of this control, not members of the group
+    provideInputGroupContext(undefined);
 
     const setSearchInput = (element: Element | ComponentPublicInstance | null) => {
         searchInput.value = element as Focusable | null;
@@ -234,6 +242,8 @@
         }),
         {
             props: {
+                size: () => looks.size,
+                disabled: () => looks.disabled,
                 value: () => props.modelValue as BasicTreeSelectProps['value'],
                 onChangeWithObject: () => props.changeWithObject,
                 multiple: () => multiple.value,
@@ -251,7 +261,7 @@
 
     const context: TreeContextValue = {
         view: computed(() => ({
-            treeDisabled: props.disabled,
+            treeDisabled: looks.disabled,
             multiple: multiple.value,
             draggable: false,
             directory: false,
@@ -277,7 +287,7 @@
 
     const selectionKeys = computed(() => TreeSelectFoundation.getTriggerKeys(foundationProps.value, view.value));
     const hasValue = computed(() => TreeSelectFoundation.hasValue(foundationProps.value, view.value));
-    const clearable = computed(() => props.showClear && (hasValue.value || (props.searchPosition === 'trigger' && Boolean(view.value.inputValue))) && !props.disabled);
+    const clearable = computed(() => props.showClear && (hasValue.value || (props.searchPosition === 'trigger' && Boolean(view.value.inputValue))) && !looks.disabled);
 
     provideTreeContext(context);
 
@@ -348,9 +358,9 @@
             placeholder: '',
             showClear: false,
             autofocus: props.searchAutoFocus,
-            disabled: props.disabled,
-            onFocus: (event) => foundation.handleInputTriggerFocus(event),
-            onBlur: (event) => foundation.handleInputTriggerBlur(event),
+            disabled: looks.disabled,
+            onFocus: foundation.handleInputTriggerFocus,
+            onBlur: foundation.handleInputTriggerBlur,
         };
     };
 
@@ -384,7 +394,7 @@
 
     const rootAttrs = (inputIsCombobox: boolean) => ({
         ...splitControlAttrs(attrs, isComboboxKey).root,
-        ...(inputIsCombobox ? {} : { ...comboboxAttrs(), 'aria-disabled': props.disabled }),
+        ...(inputIsCombobox ? {} : { ...comboboxAttrs(), 'aria-disabled': looks.disabled }),
     });
 
     const rootClass = (k: ReturnType<typeof kinds>) =>
@@ -395,7 +405,7 @@
                   {
                       [`${prefix}-borderless`]: props.borderless,
                       [`${prefix}-focus`]: view.value.isFocus,
-                      [`${prefix}-disabled`]: props.disabled,
+                      [`${prefix}-disabled`]: looks.disabled,
                       [`${prefix}-single`]: !multiple.value,
                       [`${prefix}-multiple`]: multiple.value,
                       [`${prefix}-multiple-tagInput-empty`]: multiple.value && triggerSearch.value && view.value.checkedKeys.size === 0,
@@ -403,8 +413,8 @@
                       [`${prefix}-filterable`]: Boolean(filterTreeNode.value),
                       [`${prefix}-error`]: props.validateStatus === 'error',
                       [`${prefix}-warning`]: props.validateStatus === 'warning',
-                      [`${prefix}-small`]: props.size === 'small',
-                      [`${prefix}-large`]: props.size === 'large',
+                      [`${prefix}-small`]: looks.size === 'small',
+                      [`${prefix}-large`]: looks.size === 'large',
                       [`${prefix}-with-prefix`]: Boolean(k.prefix || k.insetLabel),
                       [`${prefix}-with-suffix`]: Boolean(k.suffix),
                       [`${prefix}-triggerTagWrap`]: props.triggerTagWrap && multiple.value && triggerSearch.value,
@@ -421,19 +431,19 @@
             const nodes = slots.selectedItem({
                 item,
                 index: 0,
-                disabled: props.disabled,
+                disabled: looks.disabled,
                 onClose: (event) => handleClear(event),
             });
             return { shown: hasSlotContent(() => nodes), nodes: slotNodes(nodes) };
         }
         const text = labelOf(item);
         // a number label 0 is text too
-        return { shown: text !== null && text !== undefined && text !== '', text };
+        return { shown: text != null && text !== '', text };
     };
 
-    const tagSize = () => (props.size === 'small' ? 'small' : 'large');
+    const tagSize = () => (looks.size === 'small' ? 'small' : 'large');
 
-    const isTagDisabled = (key: string, item: TreeNodeData) => Boolean(props.disabled || item[props.keyMaps?.disabled ?? 'disabled'] || (props.disableStrictly && view.value.disabledKeys.has(key)));
+    const isTagDisabled = (key: string, item: TreeNodeData) => Boolean(looks.disabled || item[props.keyMaps?.disabled ?? 'disabled'] || (props.disableStrictly && view.value.disabledKeys.has(key)));
 
     const removeTag = (key: string, event?: TagCloseEvent) => {
         // when the value does not change, the tag must not hide itself
@@ -458,7 +468,7 @@
             return hasSlotContent(() => nodes) ? { key, slotProps, whole: Boolean(slots.tag), nodes: slotNodes(nodes) } : null;
         }
         const text = labelOf(item);
-        return text === null || text === undefined ? null : { key, slotProps, whole: false, text };
+        return text == null ? null : { key, slotProps, whole: false, text };
     };
 
     const tagEntries = () => selectionKeys.value.map((key, index) => tagEntry(key, index)).filter((entry): entry is TagEntry => entry !== null);
@@ -467,11 +477,11 @@
         value: selectionKeys.value.map(getNodeData).filter((node): node is TreeNodeData => Boolean(node)),
         inputValue: view.value.inputValue,
         placeholder: props.placeholder,
-        disabled: props.disabled,
-        componentProps: { ...props } as TreeSelectProps<T, Multiple>,
+        disabled: looks.disabled,
+        componentProps: { ...props, ...looks } as TreeSelectProps<T, Multiple>,
         onSearch: search,
         onClear: (event) => handleClear(event),
-        onRemove: (key) => foundation.removeTag(key),
+        onRemove: foundation.removeTag,
     });
 
     const handleClear = (event?: MouseEvent | KeyboardEvent) => {
@@ -512,7 +522,7 @@
 
     const handleFocusOut = (event: FocusEvent) => {
         if (!isInside(event.relatedTarget)) {
-            foundation.handleTriggerBlur(event);
+            foundation.handleFocusLeave(event);
         }
     };
 
@@ -558,12 +568,7 @@
     });
 
     // blur comes from a click outside, so it is listened to while focused, not only while open
-    useClickOutside(
-        [() => triggers.value?.[0], content],
-        (event) => foundation.handleClickOutside(event),
-        () => view.value.isOpen || view.value.isFocus,
-        useNestedPopups()
-    );
+    useClickOutside([() => triggers.value?.[0], content], foundation.handleClickOutside, () => view.value.isOpen || view.value.isFocus, useNestedPopups());
 
     // A cached KeepAlive subtree would keep the dropdown open; close() neither blurs nor moves focus
     onDeactivated(() => {
@@ -576,8 +581,8 @@
     const clearHandover = useFocusHandover(() => (renderedInputIsCombobox() ? triggers.value?.[0]?.querySelector('input') : triggers.value?.[0]));
 
     defineExpose<TreeSelectHandle>({
-        search: (value) => foundation.search(value),
-        close: () => foundation.close(),
+        search: foundation.search,
+        close: foundation.close,
     });
 </script>
 
@@ -591,21 +596,11 @@
         :style="props.dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined"
         trigger="custom"
         :visible="view.isOpen"
-        @afterClose="foundation.handleAfterClose()"
+        @afterClose="foundation.handleAfterClose"
         @open="handleOpen"
     >
         <template v-for="(parts, p) in [triggerParts()]" :key="p">
-            <div
-                ref="trigger"
-                v-bind="rootAttrs(parts.inputIsCombobox)"
-                :class="rootClass(parts.kinds)"
-                :tabindex="props.disabled || parts.inputIsCombobox ? -1 : 0"
-                @click="foundation.handleClick($event)"
-                @focusin="foundation.handleTriggerFocus($event)"
-                @focusout="handleFocusOut"
-                @keydown="handleKeyDown"
-                @mousedown="handleMouseDown"
-            >
+            <div ref="trigger" v-bind="rootAttrs(parts.inputIsCombobox)" :class="rootClass(parts.kinds)" :tabindex="looks.disabled || parts.inputIsCombobox ? -1 : 0" @click="foundation.handleClick" @focusin="foundation.handleTriggerFocus" @focusout="handleFocusOut" @keydown="handleKeyDown" @mousedown="handleMouseDown">
                 <slot
                     v-if="parts.trigger"
                     :componentProps="parts.trigger.componentProps"
@@ -635,7 +630,7 @@
                             v-bind="comboboxAttrs()"
                             aria-autocomplete="list"
                             :autofocus="props.searchAutoFocus"
-                            :disabled="props.disabled"
+                            :disabled="looks.disabled"
                             :expandRestTagsOnClick="false"
                             :inputValue="view.inputValue"
                             :maxTagCount="props.maxTagCount"
@@ -644,9 +639,9 @@
                             :preventScroll="props.preventScroll"
                             :restTagsPopoverProps="props.restTagsPopoverProps"
                             :showRestTagsPopover="props.showRestTagsPopover"
-                            :size="props.size"
+                            :size="looks.size"
                             @inputChange="search($event)"
-                            @remove="foundation.removeTag($event)"
+                            @remove="foundation.removeTag"
                         >
                             <template #tag="{ value: key, index }">
                                 <!-- close via the TreeSelect only: TagInput's onClose would remove the tag again -->
@@ -654,7 +649,7 @@
                                     <template v-if="entry && entry.whole">
                                         <component :is="node" v-for="[node, nodeKey] in entry.nodes" :key="nodeKey" />
                                     </template>
-                                    <Tag v-else-if="entry" :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: props.disabled }]" :closable="!entry.slotProps.disabled" color="white" :size="tagSize()" :tagKey="key" @close="entry.slotProps.onClose($event)">
+                                    <Tag v-else-if="entry" :class="[`${prefix}-selection-tag`, { [`${prefix}-selection-tag-disabled`]: looks.disabled }]" :closable="!entry.slotProps.disabled" color="white" :size="tagSize()" :tagKey="key" @close="entry.slotProps.onClose($event)">
                                         <template v-if="entry.nodes">
                                             <component :is="node" v-for="[node, nodeKey] in entry.nodes" :key="nodeKey" />
                                         </template>
@@ -673,8 +668,8 @@
                             <template v-for="(single, s) in view.inputValue ? [] : [singleContent()]" :key="s">
                                 <span
                                     :id="singleSearchTextId"
-                                    :class="[`${prefix}-selection-TriggerSearchItem`, { [`${prefix}-selection-TriggerSearchItem-placeholder`]: (view.inputTriggerFocus || !single.shown) && !props.disabled, [`${prefix}-selection-TriggerSearchItem-disabled`]: props.disabled }]"
-                                    @click="foundation.onClickSingleTriggerSearchItem()"
+                                    :class="[`${prefix}-selection-TriggerSearchItem`, { [`${prefix}-selection-TriggerSearchItem-placeholder`]: (view.inputTriggerFocus || !single.shown) && !looks.disabled, [`${prefix}-selection-TriggerSearchItem-disabled`]: looks.disabled }]"
+                                    @click="foundation.onClickSingleTriggerSearchItem"
                                 >
                                     <template v-if="!single.shown">{{ props.placeholder }}</template>
                                     <template v-else-if="single.nodes">
@@ -729,7 +724,7 @@
             </div>
         </template>
         <template #content>
-            <div ref="content" :class="[props.dropdownClassName, `${prefix}-popover`]" :style="props.dropdownStyle" @focusin="foundation.handleTriggerFocus($event)" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
+            <div ref="content" :class="[props.dropdownClassName, `${prefix}-popover`]" :style="props.dropdownStyle" @focusin="foundation.handleTriggerFocus" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
                 <div :class="`${prefixTree}-wrapper`">
                     <slot name="outerTopSlot" />
                     <template v-if="!$slots.outerTopSlot && filterTreeNode && !triggerSearch">

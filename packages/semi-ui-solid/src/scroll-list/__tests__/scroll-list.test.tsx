@@ -75,22 +75,22 @@ const prefix = `${BASE_CLASS_PREFIX}-scrolllist`;
 const numbers = (length: number) => Array.from({ length }, (_, index) => ({ value: index }));
 
 // jsdom has no layout: items sit 36px apart in their list and every other element is 180px tall
-const mockItemLayout = () => {
+function mockItemLayout() {
     vi.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function (this: HTMLElement) {
         return this.tagName === 'LI' ? Array.prototype.indexOf.call((this.parentNode as HTMLElement).children, this) * 36 : 0;
     });
     vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function (this: HTMLElement) {
         return this.tagName === 'LI' ? 36 : 180;
     });
-};
+}
 
 // every rect at the top: a cycled column renders one copy before and one after the list
-const mockRects = () => {
+function mockRects() {
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
         const height = this.tagName === 'LI' ? 36 : 100;
         return { top: 0, bottom: height, left: 0, right: 0, width: 0, height, x: 0, y: 0, toJSON: () => ({}) };
     });
-};
+}
 
 describe(`ScrollList`, () => {
     beforeEach(() => {

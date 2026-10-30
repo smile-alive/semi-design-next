@@ -45,12 +45,12 @@ export interface SideBarOptionItemSlotProps extends SideBarOptionSlotProps {
 }
 
 export interface SideBarMainContentSlotProps {
-    activeKey: string | undefined;
+    activeKey?: string;
 }
 
 export interface SideBarDetailHeaderSlotProps {
     mode: string;
-    detailContent: SideBarDetailContent | undefined;
+    detailContent?: SideBarDetailContent;
 }
 
 export interface SideBarDetailContentSlotProps {

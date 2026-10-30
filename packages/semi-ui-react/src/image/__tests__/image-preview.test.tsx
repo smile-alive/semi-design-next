@@ -23,13 +23,15 @@ function getImagePreview(imageProps?) {
     );
 }
 
-const Group = (props) => (
-    <ImagePreview {...props}>
-        {srcList.map((src) => (
-            <Image key={src} src={src} />
-        ))}
-    </ImagePreview>
-);
+function Group(props) {
+    return (
+        <ImagePreview {...props}>
+            {srcList.map((src) => (
+                <Image key={src} src={src} />
+            ))}
+        </ImagePreview>
+    );
+}
 
 const $ = (selector) => document.querySelector(selector);
 const getPreview = () => document.querySelector(`div.${BASE_CLASS_PREFIX}-image-preview`);
@@ -37,10 +39,10 @@ const previewImg = () => $(`.${previewCls}-image-img`);
 const pageInfo = () => $(`.${previewCls}-footer-page`)?.textContent;
 const footerIcon = (name) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`);
 const thumbs = () => document.querySelectorAll(`.${prefixCls}-img`);
-const clickMask = (x = 10, y = 10) => {
+function clickMask(x = 10, y = 10) {
     fireEvent.mouseDown(getPreview(), { clientX: x, clientY: y });
     fireEvent.mouseUp(getPreview(), { clientX: x, clientY: y });
-};
+}
 // a real key press starts at the focused element and bubbles through the document
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 
@@ -78,18 +80,18 @@ function stubPreloadImage() {
     vi.stubGlobal(
         'Image',
         class {
+            #src: string;
             requested: string[];
-            _src: string;
             constructor() {
                 created.push(this);
                 this.requested = [];
             }
             set src(value) {
                 this.requested.push(value);
-                this._src = value;
+                this.#src = value;
             }
             get src() {
-                return this._src;
+                return this.#src;
             }
         }
     );
@@ -1037,18 +1039,18 @@ describe('ImagePreview 函数组件', () => {
         vi.stubGlobal(
             'Image',
             class {
+                #src: string;
                 requested: string[] = [];
-                _src: string;
                 constructor() {
                     created.push(this);
                 }
                 set src(value) {
                     this.requested.push(value);
-                    this._src = value;
+                    this.#src = value;
                 }
                 // a browser reads src back resolved against the document
                 get src() {
-                    return new URL(this._src, 'https://example.com/').href;
+                    return new URL(this.#src, 'https://example.com/').href;
                 }
             }
         );

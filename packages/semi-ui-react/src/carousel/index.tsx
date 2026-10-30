@@ -91,10 +91,10 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const getSlideId = (index: number): string => slides[index].props.id ?? `${baseId}-slide-${index}`;
 
-    useDidUpdate(props.activeIndex, (activeIndex) => foundation.syncActiveIndex(activeIndex));
+    useDidUpdate(props.activeIndex, foundation.syncActiveIndex);
 
     // a boolean, since autoPlay is often a fresh object literal on every render
-    useDidUpdate(CarouselFoundation.isAutoPlayOn(props.autoPlay), (autoPlayOn) => foundation.handleAutoPlayChange(autoPlayOn));
+    useDidUpdate(CarouselFoundation.isAutoPlayOn(props.autoPlay), foundation.handleAutoPlayChange);
     useDidUpdate(total, (count, previous) => foundation.handleSlideCountChange(previous, count));
 
     useEffect(() => {
@@ -114,9 +114,9 @@ export default function Carousel(rawProps: CarouselProps) {
             stop: () => {
                 foundation.stopByUser();
             },
-            goTo: (targetIndex) => foundation.goTo(targetIndex),
-            prev: () => foundation.prev(),
-            next: () => foundation.next(),
+            goTo: foundation.goTo,
+            prev: foundation.prev,
+            next: foundation.next,
         }),
         [foundation]
     );
@@ -202,7 +202,7 @@ export default function Carousel(rawProps: CarouselProps) {
                         onBlur={() => {
                             focusPending.current = false;
                         }}
-                        onIndicatorChange={(index) => foundation.onIndicatorChange(index)}
+                        onIndicatorChange={foundation.onIndicatorChange}
                         onKeyDown={(e) => {
                             if (foundation.handleKeyDown(e)) {
                                 focusPending.current = true;
@@ -211,7 +211,7 @@ export default function Carousel(rawProps: CarouselProps) {
                     />
                 </div>
             )}
-            {showArrow && total > 1 && <CarouselArrow type={arrowType} arrowProps={arrowProps} next={() => foundation.next()} prev={() => foundation.prev()} theme={theme} />}
+            {showArrow && total > 1 && <CarouselArrow type={arrowType} arrowProps={arrowProps} next={foundation.next} prev={foundation.prev} theme={theme} />}
         </div>
     );
 }

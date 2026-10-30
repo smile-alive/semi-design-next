@@ -5,7 +5,7 @@ import LayoutRoot from './layout.vue';
 import LayoutSider from './sider.vue';
 
 // Annotated so declaration emit refers to the SFC types instead of inlining Vue's GlobalComponents.
-const Layout: typeof LayoutRoot & {
+export const Layout: typeof LayoutRoot & {
     Header: typeof LayoutHeader;
     Footer: typeof LayoutFooter;
     Content: typeof LayoutContent;
@@ -17,5 +17,8 @@ const Layout: typeof LayoutRoot & {
     Sider: LayoutSider,
 });
 export default Layout;
-export { Layout, LayoutHeader, LayoutFooter, LayoutContent, LayoutSider };
+export { default as LayoutHeader } from './header.vue';
+export { default as LayoutFooter } from './footer.vue';
+export { default as LayoutContent } from './content.vue';
+export { default as LayoutSider } from './sider.vue';
 export type * from './interface';

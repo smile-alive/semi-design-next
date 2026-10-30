@@ -215,7 +215,7 @@ export function sameKeys(a: { key?: string }[], b: { key?: string }[]) {
  * The rows, with the ones that appear or disappear (motionKeys) in one array at the place of the first, for the
  * animated group; the array is there even when empty
  */
-export function getTransitionNodes<T extends { key?: string }>(nodes: T[], motionKeys: Set<string>, motionType: TreeMotionType | null | undefined, flattenList?: T[]) {
+export function getTransitionNodes<T extends { key?: string }>(nodes: T[], motionKeys: Set<string>, motionType?: TreeMotionType | null, flattenList?: T[]) {
     const transitionNodes: (T | T[])[] = [];
     const range: T[] = [];
     const firstKey = motionKeys.values().next().value;

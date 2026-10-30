@@ -201,7 +201,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
                     renderDate={props.renderDate}
                     renderFullDate={props.renderFullDate}
                     onDayClick={(day) => foundation.handleDayClick(day, panelType)}
-                    onDayHover={(day) => foundation.handleDayHover(day)}
+                    onDayHover={foundation.handleDayHover}
                     onMonthSwitch={(switchType) => foundation[switchType](panelType)}
                     onWeeksRowNumChange={handleWeeksRowNumChange}
                 />
@@ -321,7 +321,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
     // by content: a parent rendering `new Date(...)` each time must not pull the panel back
     useWatch(
         createMemo(() => props.defaultPickerValue, undefined, { equals: isEqual }),
-        () => foundation.initDefaultPickerValue()
+        foundation.initDefaultPickerValue
     );
 
     createEffect(() => applyPanelSize({ monthLeft: state().monthLeft, monthRight: state().monthRight }, props.insetInput));
@@ -345,8 +345,8 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
     // delivered once while created, like an element ref
     if (typeof ref === 'function') {
         ref({
-            showDatePanel: (panelType) => foundation.showDatePanel(panelType),
-            showTimePicker: (panelType) => foundation.showTimePicker(panelType),
+            showDatePanel: foundation.showDatePanel,
+            showTimePicker: foundation.showTimePicker,
         });
     }
 

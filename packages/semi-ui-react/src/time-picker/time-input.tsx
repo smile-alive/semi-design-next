@@ -81,7 +81,7 @@ export default function TimeInput(props: TimeInputProps) {
         }
     });
 
-    useDidUpdate(props.value, () => foundation.restoreCursor());
+    useDidUpdate(props.value, foundation.restoreCursor);
 
     useEffect(() => {
         const frame = requestAnimationFrame(() => focusOnMount());
@@ -105,9 +105,9 @@ export default function TimeInput(props: TimeInputProps) {
                 validateStatus={invalid ? 'error' : validateStatus}
                 prefix={rest.prefix ?? null}
                 suffix={<IconClock />}
-                onBlur={(e) => foundation.handleBlur(e)}
-                onChange={(v) => foundation.handleChange(v)}
-                onFocus={(e) => foundation.handleFocus(e)}
+                onBlur={foundation.handleBlur}
+                onChange={foundation.handleChange}
+                onFocus={foundation.handleFocus}
             />
         </div>
     );

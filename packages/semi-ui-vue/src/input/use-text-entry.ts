@@ -9,6 +9,8 @@ interface TextEntry {
     handleBlur(event: FocusEvent): void;
 }
 
+const staysInside = (event: FocusEvent) => event.currentTarget instanceof Node && event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget);
+
 interface Options {
     element: Readonly<ShallowRef<HTMLInputElement | HTMLTextAreaElement | null>>;
     /** The typed value `.lazy` holds back until the native change event; the adapter's notifyChange writes it */
@@ -46,8 +48,8 @@ export default function useTextEntry({ element, draft, props, shown, foundation,
     /** `change` hands the text to the foundation; the host decides where its own `input` emit goes around it */
     const runInput = (event: Event, change: () => void) => {
         // a composition step only reaches state.value; without this the stale draft would be patched back over the text
-        if (draft.value !== undefined) {
-            draft.value = (event.target as HTMLInputElement | HTMLTextAreaElement).value;
+        if (draft.value !== undefined && (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) {
+            draft.value = event.target.value;
         }
         change();
         // writing during an IME composition would break it; compositionend restores
@@ -71,13 +73,13 @@ export default function useTextEntry({ element, draft, props, shown, foundation,
     };
 
     const handleFocusIn = (event: FocusEvent) => {
-        if (!(event.currentTarget as Node).contains(event.relatedTarget as Node | null)) {
+        if (!staysInside(event)) {
             foundation.handleFocus(event);
         }
     };
 
     const handleFocusOut = (event: FocusEvent) => {
-        if (!(event.currentTarget as Node).contains(event.relatedTarget as Node | null)) {
+        if (!staysInside(event)) {
             foundation.handleBlur(event);
             // an edit typed back to its original text fires no change, so its draft is dropped here
             draft.value = undefined;

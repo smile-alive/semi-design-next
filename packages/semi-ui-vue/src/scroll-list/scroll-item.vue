@@ -70,7 +70,7 @@
         isWheel.value
             ? {
                   class: [`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !props.cycled }],
-                  onScroll: () => foundation.handleScroll(),
+                  onScroll: foundation.handleScroll,
               }
             : {}
     );
@@ -119,17 +119,8 @@
         }
     };
 
-    watch(
-        () => selectedIndex.value,
-        (selectedIndex, previous) => foundation.syncSelectedIndex(selectedIndex, previous),
-        { flush: 'post' }
-    );
-
-    watch(
-        () => list.value.length,
-        () => foundation.syncList(),
-        { flush: 'post' }
-    );
+    watch(() => selectedIndex.value, foundation.syncSelectedIndex, { flush: 'post' });
+    watch(() => list.value.length, foundation.syncList, { flush: 'post' });
 
     defineExpose<ScrollItemHandle>({ scrollToIndex: (_index, duration) => foundation.scrollToSelected(duration) });
 </script>

@@ -27,17 +27,17 @@ const getInputs = () => screen.getAllByRole<HTMLInputElement>('textbox');
 const getValues = () => getInputs().map((input) => input.value);
 // Vue ignores an ancestor listener attached at or after the timestamp of an event coming up from a child, and the
 // suite freezes the system clock, so time has to be moved on by hand.
-const settle = () => {
+function settle() {
     vi.setSystemTime(Date.now() + 10);
-};
+}
 // Testing Library re-inserts the mounted nodes, which drops the focus autofocus gave, so the first cell is focused
 // by hand; the autofocus cases spy on focus instead
-const renderFocused = (props: PinCodeProps & Record<string, unknown>) => {
+function renderFocused(props: PinCodeProps & Record<string, unknown>) {
     const view = render(PinCode, { props });
     getInputs()[0].focus();
     return view;
-};
-const renderWithHandle = (props: PinCodeProps = {}) => {
+}
+function renderWithHandle(props: PinCodeProps = {}) {
     let handle: PinCodeHandle | null = null;
     const view = render({
         render: () => (
@@ -50,7 +50,7 @@ const renderWithHandle = (props: PinCodeProps = {}) => {
         ),
     });
     return { ...view, handle: () => handle as unknown as PinCodeHandle };
-};
+}
 
 describe('PinCode', () => {
     afterEach(() => {

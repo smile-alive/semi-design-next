@@ -197,6 +197,7 @@ describe('Form labelPosition="inset"', () => {
         FormTimePicker: <Form.TimePicker field="FormTimePicker" />,
         FormTreeSelect: <Form.TreeSelect field="FormTreeSelect" treeData={treeData} />,
         FormCascader: <Form.Cascader field="FormCascader" treeData={treeData} />,
+        FormTransfer: <Form.Transfer dataSource={[{ label: 'One', value: 1, key: 1 }]} field="FormTransfer" />,
         FormRating: <Form.Rating field="FormRating" />,
         FormAutoComplete: <Form.AutoComplete field="FormAutoComplete" />,
         FormUpload: <Form.Upload action="/upload" field="FormUpload" />,

@@ -5,5 +5,5 @@ import CardMeta from './meta.vue';
 const CardWithParts: typeof Card & { Meta: typeof CardMeta } = Object.assign(Card, { Meta: CardMeta });
 export default CardWithParts;
 export { default as CardGroup } from './card-group.vue';
-export { CardMeta };
+export { default as CardMeta } from './meta.vue';
 export type * from './interface';

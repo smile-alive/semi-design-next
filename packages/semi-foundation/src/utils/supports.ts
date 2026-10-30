@@ -70,7 +70,7 @@ export function scrollIntoViewWithin(el: Element, scroller: HTMLElement, { behav
     const scrLeft = scrRect.left + scroller.clientLeft;
     const scrTop = scrRect.top + scroller.clientTop;
     const rtl = getComputedStyle(scroller).direction === 'rtl';
-    const flip = (align: ScrollLogicalPosition): ScrollLogicalPosition => (rtl && align !== 'center' && align !== 'nearest' ? (align === 'start' ? 'end' : 'start') : align);
+    const flip = (align: ScrollLogicalPosition) => (rtl && align !== 'center' && align !== 'nearest' ? (align === 'start' ? 'end' : 'start') : align);
     // Firefox defers a smooth scroll of an unpainted scroller until it is painted, leaving the old position readable;
     // off screen nobody sees the animation. shortcut: only checks the viewport, not clipping by scrolled ancestors
     const offscreen = scrRect.bottom <= 0 || scrRect.top >= innerHeight || scrRect.right <= 0 || scrRect.left >= innerWidth;

@@ -77,7 +77,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
     const context: BreadContextValue = {
         view: () => view,
         separator: () => local.separator,
-        onClick: (info, e) => foundation.handleClick(info, e),
+        onClick: foundation.handleClick,
     };
 
     // a spread signal object notifies every key; new route entries or item contents would remount every item
@@ -150,7 +150,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
         return render ? render(route._origin) : route.name;
     };
 
-    function renderEntry(entry: unknown) {
+    const renderEntry = (entry: unknown) => {
         const index = () => entries().indexOf(entry);
         const separator = () => hasSeparator(index());
         if (routeEntries()) {
@@ -166,12 +166,12 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
             return <ItemView {...entry.props} active={isActive(index())} shouldRenderSeparator={separator()} />;
         }
         return entry as JSX.Element;
-    }
+    };
 
     const moreArea = () => (
         <span ref={handoverFocus} class={`${clsPrefix}-collapse`}>
             <span class={`${clsPrefix}-item-wrap`}>
-                <span class={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={localeResult().locale.expand} role="button" tabIndex={0} onClick={(e) => foundation.handleExpand(e)} onKeyDown={(e) => foundation.handleExpandKeyDown(e)}>
+                <span class={`${clsPrefix}-item ${clsPrefix}-item-more`} aria-label={localeResult().locale.expand} role="button" tabIndex={0} onClick={foundation.handleExpand} onKeyDown={foundation.handleExpandKeyDown}>
                     <Switch fallback={<IconMore />}>
                         <Match when={hasRenderMore()}>
                             <Show keyed when={local.renderMore}>

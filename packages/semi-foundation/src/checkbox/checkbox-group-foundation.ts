@@ -35,7 +35,7 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
         }
     }
 
-    handleChange(evt: BasicCheckboxEvent) {
+    handleChange = (evt: BasicCheckboxEvent) => {
         const prevValue = CheckboxGroupFoundation.deriveValue(this.getProps(), this.getStates());
         const { checked, value } = evt.target;
         const newValue = checked ? [...prevValue, value] : prevValue.filter((item) => item !== value);
@@ -44,9 +44,9 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
             this._adapter.updateGroupValue(newValue);
         }
         this._adapter.notifyChange(newValue);
-    }
+    };
 
-    handlePropValueChange(newPropValue: unknown) {
+    handlePropValueChange = (newPropValue: unknown) => {
         if (Array.isArray(newPropValue)) {
             this._adapter.updateGroupValue(newPropValue);
         } else {
@@ -56,5 +56,5 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
             }
             warning(true, 'Warning: [Semi CheckboxGroup] value should be an Array');
         }
-    }
+    };
 }

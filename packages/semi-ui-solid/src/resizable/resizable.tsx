@@ -188,10 +188,7 @@ export default function Resizable(rawProps: ResizableProps) {
         };
     };
 
-    useResizeObserver(
-        () => resizable,
-        () => foundation.updateAriaRange()
-    );
+    useResizeObserver(() => resizable, foundation.updateAriaRange);
 
     onCleanup(() => {
         disposed = true;

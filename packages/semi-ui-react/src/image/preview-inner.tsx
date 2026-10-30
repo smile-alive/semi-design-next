@@ -250,7 +250,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     });
 
     // by content: a group builds a new list every render, which must not restart the delay
-    useDidUpdate(src, () => foundation.updateTimer(), isEqual);
+    useDidUpdate(src, foundation.updateTimer, isEqual);
 
     // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
     // moved elsewhere is left alone.

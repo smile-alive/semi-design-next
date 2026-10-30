@@ -12,10 +12,10 @@ const scrollItemProps = { cycled: false };
 
 const getPanel = () => document.querySelector(`.${prefixCls}-panel`);
 const getList = (unit: string, index = 0) => document.querySelectorAll<HTMLElement>(`.${prefixCls}-panel-list-${unit}`)[index];
-const clickItem = async (unit: string, text: string, index = 0) => {
+async function clickItem(unit: string, text: string, index = 0) {
     await waitFor(() => expect(getList(unit, index)).toBeDefined());
     await userEvent.click(within(getList(unit, index)).getByText(text));
-};
+}
 const selectedText = (unit: string) => getList(unit).querySelector(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)?.textContent;
 
 describe('TimePicker（浏览器）阴影', () => {

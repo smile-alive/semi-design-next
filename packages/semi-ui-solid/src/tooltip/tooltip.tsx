@@ -125,7 +125,7 @@ interface TooltipState {
     portalEventSet: Record<string, (event: Event) => void>;
     isInsert: boolean;
     portalTarget: HTMLElement | ShadowRoot | null;
-    colorScheme: string | undefined;
+    colorScheme?: string;
 }
 
 type Foundation = TooltipFoundation<TooltipProps, TooltipState>;
@@ -340,7 +340,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     // server HTML to claim
     const mounted = createMemo<boolean>((prev) => prev || Boolean(state().isInsert && state().portalTarget), false);
     const arrowChild = children(() => (mounted() ? (props.showArrow as JSX.Element) : undefined));
-    const handle: TooltipHandle = { focusTrigger: () => foundation.focusTrigger(), getPopupId: popupId, hide: () => foundation.hide(), rePosition: () => foundation.calcPosition() };
+    const handle: TooltipHandle = { focusTrigger: foundation.focusTrigger, getPopupId: popupId, hide: foundation.hide, rePosition: foundation.calcPosition };
 
     // moving between the trigger, the popup and the popups opened from its content does not leave this Tooltip;
     // checked before the handler runs, since a zero mouseLeaveDelay hides at once
@@ -573,7 +573,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                 const owner = getOwner();
                 // `:hover` is not updated yet in the mouseenter task; handleOpened's hover check runs a task later
                 const timer = setTimeout(() => {
-                    runWithOwner(owner, () => foundation.handleOpened());
+                    runWithOwner(owner, foundation.handleOpened);
                     void Promise.allSettled(entering.map((animation) => animation.finished)).then(() => {
                         // a hover popup that backed out in handleOpened, or one closed meanwhile, is leaving
                         if (!cancelled && openPending && foundation.getState('transitionState') === 'enter') {
@@ -646,7 +646,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     createEffect(
         on(
             createMemo(() => props.trigger),
-            () => foundation.rebindEvents(),
+            foundation.rebindEvents,
             { defer: true }
         )
     );
@@ -654,7 +654,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     createEffect(
         on(
             createMemo(() => props.clickToHide),
-            () => foundation.rebindEvents(),
+            foundation.rebindEvents,
             { defer: true }
         )
     );
@@ -662,15 +662,12 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     createEffect(
         on(
             createMemo(() => props.visible),
-            () => foundation.handleVisiblePropChange(),
+            foundation.handleVisiblePropChange,
             { defer: true }
         )
     );
 
-    useWatch(
-        () => props.position,
-        () => foundation.calcPosition()
-    );
+    useWatch(() => props.position, foundation.calcPosition);
 
     // triggers check `condition` only before opening, so an open or pending popup is closed here; init opens a
     // controlled popup without checking it, so a change made before init counts too
@@ -696,7 +693,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     });
 
     onMount(() => {
-        const timer = setTimeout(() => foundation.updateStateIfCursorOnTrigger());
+        const timer = setTimeout(foundation.updateStateIfCursorOnTrigger);
         onCleanup(() => clearTimeout(timer));
     });
 
@@ -771,7 +768,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                                 }
                                 stop(e);
                             }}
-                            onKeyDown={(e) => foundation.handleContainerKeydown(e)}
+                            onKeyDown={foundation.handleContainerKeydown}
                             onMouseDown={(e) => {
                                 pressedInside = e;
                                 stop(e);

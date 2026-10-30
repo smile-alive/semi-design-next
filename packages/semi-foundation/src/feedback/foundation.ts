@@ -72,47 +72,47 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
         return (result as Promise<any>).then(() => this._adapter.setValue(null));
     }
 
-    handleRadioChange(e: RadioChangeEvent) {
+    handleRadioChange = (e: RadioChangeEvent) => {
         const { value } = e.target;
         this._adapter.notifyRadioChange(e);
         this.#changeValue(value);
-    }
+    };
 
-    handleEmojiReasonChange(value: string, e?: TE) {
+    handleEmojiReasonChange = (value: string, e?: TE) => {
         this._adapter.notifyTextAreaChange(value, e);
         const oldValue = this._adapter.getState('value');
         // the emoji picked earlier; a string or checkbox value has none
         const emoji = typeof oldValue === 'object' && !Array.isArray(oldValue) ? oldValue?.emoji : undefined;
         this.#changeValue({ ...(emoji !== undefined && { emoji }), text: value });
-    }
+    };
 
-    handleTextChange(value: string, e?: TE) {
+    handleTextChange = (value: string, e?: TE) => {
         this._adapter.notifyTextAreaChange(value, e);
         this.#changeValue(value);
-    }
+    };
 
-    handleEmojiChange(emoji: string) {
+    handleEmojiChange = (emoji: string) => {
         this.#changeValue({ emoji });
-    }
+    };
 
-    handleCheckboxChange(value: CheckboxValue[]) {
+    handleCheckboxChange = (value: CheckboxValue[]) => {
         this._adapter.notifyCheckboxChange(value);
         this.#changeValue(value);
-    }
+    };
 
-    handleCancel(e: CE) {
+    handleCancel = (e: CE) => {
         this.#settlePopup(this._adapter.notifyCancel(e), (onCancelReturnPromiseStatus) => this._adapter.setState({ onCancelReturnPromiseStatus }));
-    }
+    };
 
-    handleSubmit(e: OE) {
+    handleSubmit = (e: OE) => {
         this.#settlePopup(this._adapter.notifyOk(e), (onOKReturnPromiseStatus) => this._adapter.setState({ onOKReturnPromiseStatus }));
-    }
+    };
 
-    handleModalOk(e: OE) {
+    handleModalOk = (e: OE) => {
         return this.#settleModal(this._adapter.notifyOk(e));
-    }
+    };
 
-    handleModalCancel(e: CE) {
+    handleModalCancel = (e: CE) => {
         return this.#settleModal(this._adapter.notifyCancel(e));
-    }
+    };
 }

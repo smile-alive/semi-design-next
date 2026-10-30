@@ -15,11 +15,11 @@ type Props = Record<string, unknown>;
 type PointerHandler = (e: PointerEvent) => void;
 
 const pointer = (target: EventTarget, type: string, init: PointerEventInit) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }));
-const drag = (element: Element, from: number[], to: number[], pointerType = 'mouse') => {
+function drag(element: Element, from: number[], to: number[], pointerType = 'mouse') {
     pointer(element, 'pointerdown', { pointerId: 1, pointerType, clientX: from[0], clientY: from[1] });
     pointer(document, 'pointermove', { pointerId: 1, pointerType, clientX: to[0], clientY: to[1] });
     pointer(document, 'pointerup', { pointerId: 1, pointerType });
-};
+}
 
 // jsdom has no layout, so a real ResizeObserver never reports. This one reports each observed child when flushed,
 // which the render helpers below do after mounting and updating, like the browser reporting before paint.
@@ -60,10 +60,10 @@ function renderDrag(initial: Props, children: () => VNodeChild, wrapper?: Props)
 const dragMe = () => <div>Drag me</div>;
 
 // jsdom has no layout; give elements the offset sizes the absolute strategy reads
-const setSize = (element: Element, width: number, height: number) => {
+function setSize(element: Element, width: number, height: number) {
     Object.defineProperty(element, 'offsetWidth', { configurable: true, value: width });
     Object.defineProperty(element, 'offsetHeight', { configurable: true, value: height });
-};
+}
 
 describe('DragMove', () => {
     beforeEach(() => {

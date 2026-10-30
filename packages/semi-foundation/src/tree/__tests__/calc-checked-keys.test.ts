@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { calcCheckedKeys, calcCheckedKeysForChecked, calcCheckedKeysForCheckedKeys, convertDataToEntities } from '../tree-util';
 
-const sorted = (keys: Set<string>) => [...keys].sort();
+const sorted = (keys: Set<string>) => [...keys].toSorted();
 
 const treeData = [
     {

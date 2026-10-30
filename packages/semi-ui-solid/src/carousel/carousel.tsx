@@ -125,10 +125,10 @@ export default function Carousel(rawProps: CarouselProps) {
             foundation.setForcePlay(true);
             foundation.handleAutoPlay();
         },
-        stop: () => foundation.stopByUser(),
-        goTo: (targetIndex) => foundation.goTo(targetIndex),
-        prev: () => foundation.prev(),
-        next: () => foundation.next(),
+        stop: foundation.stopByUser,
+        goTo: foundation.goTo,
+        prev: foundation.prev,
+        next: foundation.next,
     };
 
     const hasIndicator = () => local.showIndicator && total() > 1;
@@ -151,7 +151,7 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, event);
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
             foundation.handleFocusLeave();
         }
     };
@@ -203,10 +203,7 @@ export default function Carousel(rawProps: CarouselProps) {
     );
 
     // a boolean, since autoPlay is often a fresh object literal on every update
-    useWatch(
-        () => CarouselFoundation.isAutoPlayOn(local.autoPlay),
-        (autoPlayOn) => foundation.handleAutoPlayChange(autoPlayOn)
-    );
+    useWatch(() => CarouselFoundation.isAutoPlayOn(local.autoPlay), foundation.handleAutoPlayChange);
 
     createEffect(
         on(total, (count, previous) => {
@@ -270,7 +267,7 @@ export default function Carousel(rawProps: CarouselProps) {
                         onBlur={() => {
                             focusPending = false;
                         }}
-                        onIndicatorChange={(index) => foundation.onIndicatorChange(index)}
+                        onIndicatorChange={foundation.onIndicatorChange}
                         onKeyDown={(event) => {
                             // set first: the switch commits inside handleKeyDown, and the focus effect consumes the flag right then
                             focusPending = true;
@@ -282,7 +279,7 @@ export default function Carousel(rawProps: CarouselProps) {
                 </div>
             </Show>
             <Show when={local.showArrow && total() > 1}>
-                <CarouselArrow type={local.arrowType} arrowProps={local.arrowProps} leftArrow={local.leftArrow} rightArrow={local.rightArrow} next={() => foundation.next()} prev={() => foundation.prev()} theme={local.theme} />
+                <CarouselArrow type={local.arrowType} arrowProps={local.arrowProps} leftArrow={local.leftArrow} rightArrow={local.rightArrow} next={foundation.next} prev={foundation.prev} theme={local.theme} />
             </Show>
         </div>
     );

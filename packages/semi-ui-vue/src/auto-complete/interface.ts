@@ -73,14 +73,14 @@ export interface AutoCompleteItemSlotProps<T extends AutoCompleteItems = AutoCom
 export interface AutoCompleteTriggerSlotProps<T extends AutoCompleteItems = AutoCompleteItems> {
     /** The selected item, if any */
     value: AutoCompleteDataItem[];
-    inputValue: string | number | undefined;
-    placeholder: string | undefined;
-    disabled: boolean | undefined;
+    inputValue?: string | number;
+    placeholder?: string;
+    disabled?: boolean;
     autofocus: boolean;
     size: Size;
     validateStatus: ValidateStatus;
     showClear: boolean;
-    insetLabelId: string | undefined;
+    insetLabelId?: string;
     /** Updates the input text: reports `search` and `change` and opens the list */
     onChange: (value: string) => void;
     onClear: () => void;

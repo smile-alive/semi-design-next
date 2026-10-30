@@ -1,16 +1,17 @@
-import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
+import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { type FormApi, Form, FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormRadio, FormRadioGroup, FormSwitch, FormTagInput, FormTreeSelect, FormUpload } from '..';
+import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { type FormApi, Form, FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormRadio, FormRadioGroup, FormSwitch, FormTagInput, FormTransfer, FormTreeSelect, FormUpload } from '..';
 
 const leakedAttrs = ['insetlabel', 'insetlabelid', 'validatestatus'];
-const expectNoLeakedAttrs = (element: Element | null) => {
+function expectNoLeakedAttrs(element: Element | null) {
     for (const attr of leakedAttrs) {
         expect(element).not.toHaveAttribute(attr);
     }
-};
+}
 
 describe('FormSwitch', () => {
     const getSwitch = () => screen.getByRole<HTMLInputElement>('switch');
@@ -335,6 +336,76 @@ describe('FormDatePicker', () => {
         ));
         const group = screen.getByRole('group', { name: '区间' });
         expect(document.getElementById(group.getAttribute('aria-labelledby') ?? '')).not.toBeNull();
+    });
+});
+
+describe('FormTransfer', () => {
+    const dataSource = [
+        { label: 'Alice', value: 'a', key: 'a' },
+        { label: 'Bob', value: 'b', key: 'b' },
+        { label: 'Carol', value: 'c', key: 'c' },
+    ];
+    const selectedTexts = () => Array.from(document.querySelectorAll(`.${BASE_CLASS_PREFIX}-transfer-right-item-text`)).map((item) => item.textContent);
+    const pick = (name: string) => userEvent.click(within(screen.getByRole('list', { name: zh_CN.Transfer.optionList })).getByText(name));
+    const getRoot = () => document.querySelector(`.${BASE_CLASS_PREFIX}-transfer`) as HTMLElement;
+
+    it('显示 initValue 的已选项并以 label 命名，Form 的 disabled 传给 Transfer，Form 属性不进入 DOM', () => {
+        render(() => (
+            <Form disabled labelPosition="inset">
+                <FormTransfer dataSource={dataSource} field="members" initValue={['b']} label="Members" validateStatus="error" />
+            </Form>
+        ));
+        expect(selectedTexts()).toEqual(['Bob']);
+        expect(screen.getByRole('group', { name: 'Members' })).toBeInTheDocument();
+        expect(getRoot()).toHaveClass(`${BASE_CLASS_PREFIX}-transfer-disabled`);
+        expectNoLeakedAttrs(getRoot());
+    });
+
+    it('选择后 formApi 取值更新，onChange 末参是最新表单值，reset 回到 initValue', async () => {
+        let formApi: FormApi | undefined;
+        const onChange = vi.fn<(...args: unknown[]) => void>();
+        render(() => (
+            <Form getFormApi={(api) => (formApi = api)}>
+                <FormTransfer dataSource={dataSource} field="members" initValue={['a']} onChange={onChange} />
+            </Form>
+        ));
+        await pick('Carol');
+        expect(formApi?.getValue('members')).toEqual(['a', 'c']);
+        expect(selectedTexts()).toEqual(['Alice', 'Carol']);
+        expect(onChange.mock.lastCall?.at(-1)).toEqual({ members: ['a', 'c'] });
+        formApi?.setValue('members', ['b']);
+        expect(selectedTexts()).toEqual(['Bob']);
+        formApi?.reset();
+        expect(selectedTexts()).toEqual(['Alice']);
+        expect(formApi?.getValue('members')).toEqual(['a']);
+    });
+
+    it('没有 initValue 时 reset 回到空', async () => {
+        let formApi: FormApi | undefined;
+        render(() => (
+            <Form getFormApi={(api) => (formApi = api)}>
+                <FormTransfer dataSource={dataSource} field="members" />
+            </Form>
+        ));
+        await pick('Alice');
+        expect(selectedTexts()).toEqual(['Alice']);
+        formApi?.reset();
+        expect(formApi?.getValue('members')).toBeUndefined();
+        expect(selectedTexts()).toEqual([]);
+    });
+
+    it('校验失败时显示错误信息，选择后错误消失', async () => {
+        let formApi: FormApi | undefined;
+        render(() => (
+            <Form getFormApi={(api) => (formApi = api)}>
+                <FormTransfer dataSource={dataSource} field="members" label="Members" rules={[{ required: true, type: 'array', message: '请选择成员' }]} />
+            </Form>
+        ));
+        await formApi?.validate().catch(() => undefined);
+        expect(await screen.findByText('请选择成员')).toBeInTheDocument();
+        expect(screen.getByRole('group', { name: 'Members' })).toHaveAttribute('aria-invalid', 'true');
+        await pick('Alice');
+        await waitFor(() => expect(screen.queryByText('请选择成员')).toBeNull());
     });
 });
 

@@ -132,13 +132,13 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const ref = props.ref;
 
     // moves focus into the menu when Tooltip gives the popup its initial focus
-    const focusTarget = { focus: () => foundation.handleOpened() };
+    const focusTarget = { focus: foundation.handleOpened };
     const handle: DropdownHandle = { focusTrigger: () => tooltip?.focusTrigger(), rePosition: () => tooltip?.rePosition() };
     const view = createMemo(() => ({ menuDepth: (parent?.view().menuDepth ?? 0) + 1, showTick: props.showTick, selectionMode: local.selectionMode, trigger: props.trigger }));
 
     const context: DropdownContextValue = {
         view,
-        close: () => foundation.close(),
+        close: foundation.close,
         closeAll: () => {
             foundation.close();
             parent?.closeAll();
@@ -275,7 +275,7 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
             spacing={local.spacing ?? (isSubmenu() ? numbers.NESTED_SPACING : numbers.SPACING)}
             // a disabled parent item opens no submenu
             condition={disabledItem() ? false : local.condition}
-            onVisibleChange={(visible) => foundation.handleVisibleChange(visible)}
+            onVisibleChange={foundation.handleVisibleChange}
         >
             {(getTooltipProps: GetTriggerProps) => renderTrigger(getTooltipProps)}
         </Tooltip>

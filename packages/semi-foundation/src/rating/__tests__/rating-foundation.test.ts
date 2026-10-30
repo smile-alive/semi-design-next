@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import RatingFoundation, { type RatingAdapter } from '../foundation';
 
-const createFoundation = (getStarDOM: RatingAdapter['getStarDOM']) => {
+function createFoundation(getStarDOM: RatingAdapter['getStarDOM']) {
     const adapter = {
         getProps: () => ({ allowHalf: true, count: 5 }),
         getStates: () => ({ value: 0, hoverValue: undefined, clearedValue: null }),
@@ -13,7 +13,7 @@ const createFoundation = (getStarDOM: RatingAdapter['getStarDOM']) => {
         notifyClick: vi.fn<(e: unknown, index: number) => void>(),
     } as unknown as RatingAdapter;
     return { foundation: new RatingFoundation(adapter), adapter };
-};
+}
 
 describe('RatingFoundation.isRadioValue', () => {
     it('整星值始终有对应 radio，半星值只在 allowHalf 下有', () => {

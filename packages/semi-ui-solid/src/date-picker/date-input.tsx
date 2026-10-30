@@ -241,11 +241,11 @@ export default function DateInput(rawProps: DateInputProps) {
                         onChange={(value, e) => foundation.handleChange(getRangeInputValue(parts().rangeStart, value), e)}
                         onEnterPress={(e) => foundation.handleRangeInputEnterPress(e, getRangeInputValue(parts().rangeStart, parts().rangeEnd))}
                         onFocus={(e) => handleRangeInputFocus(e, 'rangeEnd')}
-                        onKeyDown={(e) => foundation.handleRangeInputEndKeyPress(e)}
+                        onKeyDown={foundation.handleRangeInputEndKeyPress}
                     />
                 </div>
                 <Show when={allowClear()}>
-                    <button ref={clearHandover} type="button" class={`${props.prefixCls}-range-input-clearbtn`} aria-label={props.locale.clearRange} onClick={(e) => foundation.handleRangeInputClearClick(e)} onMouseDown={(e) => foundation.handleRangeInputClearMouseDown(e)}>
+                    <button ref={clearHandover} type="button" class={`${props.prefixCls}-range-input-clearbtn`} aria-label={props.locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
                         <Show when={hasContent(clearIcon())} fallback={<IconClear />}>
                             {clearIcon()}
                         </Show>
@@ -346,9 +346,9 @@ export default function DateInput(rawProps: DateInputProps) {
             validateStatus={props.validateStatus}
             prefix={props.prefix ?? null}
             suffix={props.type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />}
-            onChange={(value, e) => foundation.handleChange(value, e)}
-            onClear={(e) => foundation.handleInputClear(e)}
-            onEnterPress={(e) => foundation.handleInputComplete(e)}
+            onChange={foundation.handleChange}
+            onClear={foundation.handleInputClear}
+            onEnterPress={foundation.handleInputComplete}
             onFocus={(e) => props.onFocus?.(e)}
         />
     );

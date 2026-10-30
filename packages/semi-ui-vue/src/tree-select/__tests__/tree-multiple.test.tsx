@@ -186,15 +186,15 @@ const getHighlights = () => document.querySelectorAll(`.${optionCls}-highlight`)
 const getSelection = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-selection`) as HTMLElement;
 const getTags = () => Array.from(getSelection().querySelectorAll(`.${BASE_CLASS_PREFIX}-tag`));
 const getTagTexts = () => getTags().map((tag) => tag.textContent);
-const click = async (element: Element | null) => {
+async function click(element: Element | null) {
     await userEvent.click(element as Element);
     await settle();
-};
+}
 const closeTag = (index: number) => click(getTags()[index].querySelector(`.${BASE_CLASS_PREFIX}-tag-close`));
-const searchInTrigger = async (value: string) => {
+async function searchInTrigger(value: string) {
     await fireEvent.update(getSelection().querySelector(`.${BASE_CLASS_PREFIX}-tagInput input`) as HTMLInputElement, value);
     await settle();
-};
+}
 
 describe('TreeSelect 多选', () => {
     it('defaultValue 且叶子节点已勾选', async () => {

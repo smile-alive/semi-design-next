@@ -2805,18 +2805,61 @@ describe('Select 行为基线', () => {
         expect(optionList).toEqual(defaultList);
     });
 
-    it('传给 filter 的 option 对象不会被后续搜索改写', () => {
-        const seen: { _show?: boolean }[] = [];
-        const filter = (input: string, option: { label?: unknown; _show?: boolean }) => {
+    it('传给 filter 的 option 就是 optionList 中的条目，不会被后续搜索改写', () => {
+        const seen: object[] = [];
+        const filter = (input: string, option: { label?: unknown }) => {
             seen.push(option);
             return String(option.label).toLowerCase().includes(input);
         };
-        renderSelect({ optionList: defaultList, filter, defaultOpen: true });
+        const optionList = defaultList.map((option) => ({ ...option }));
+        renderSelect({ optionList, filter, defaultOpen: true });
         search('abc');
-        const visibility = seen.map((option) => option._show);
         search('zzz');
         expect(getOptions()).toHaveLength(0);
-        expect(seen.slice(0, visibility.length).map((option) => option._show)).toEqual(visibility);
+        expect(seen.length).toBeGreaterThan(0);
+        seen.forEach((option) => expect(optionList).toContain(option));
+        expect(optionList).toEqual(defaultList);
+    });
+
+    it('用户回调收到的选项不带 Select 的内部键', async () => {
+        const internal = ['_show', '_selected', '_scrollIndex', '_parentGroup', '_keyInJsx', '_inputCreateOnly', '_notExist'];
+        const internalKeys = (option: object) => Object.keys(option).filter((key) => internal.includes(key));
+        const seen: object[] = [];
+        const onChange = vi.fn<(value: unknown) => void>();
+        renderSelect({
+            multiple: true,
+            onChangeWithObject: true,
+            onChange,
+            defaultOpen: true,
+            filter: (_: string, option: object) => {
+                seen.push(option);
+                return true;
+            },
+            children: (
+                <Select.OptGroup label="Group">
+                    <Option value="a" label="A" />
+                    <Option value="b" label="B" />
+                </Select.OptGroup>
+            ),
+            renderOptionItem: (props: OptionRenderProps) => {
+                seen.push({ ...props });
+                return (
+                    <div id={props.id} aria-selected={props.selected} role="option" onClick={(e) => props.onClick(e)}>
+                        {String(props.label)}
+                    </div>
+                );
+            },
+            renderSelectedItem: (option: object) => {
+                seen.push(option);
+                return { isRenderInTag: true, content: 'tag' };
+            },
+        });
+        search('A');
+        fireEvent.click(screen.getByRole('option', { name: 'A' }));
+        await waitFor(() => expect(onChange).toHaveBeenCalled());
+        seen.push(...(onChange.mock.calls[0][0] as object[]));
+        expect(seen.length).toBeGreaterThan(2);
+        expect(seen.flatMap(internalKeys)).toEqual([]);
     });
 });
 
@@ -3212,6 +3255,21 @@ describe('Select 回调参数与禁用、键盘细节', () => {
             </InputGroup>
         ));
         expect(getTrigger()).not.toHaveClass(`${prefixCls}-disabled`);
+    });
+
+    it('Select 自带的 size 优先于 InputGroup 的 size，没传时取组的，包装元素内也一样', () => {
+        render(() => (
+            <InputGroup size="large">
+                <div>
+                    <Select motion={false} size="small" optionList={defaultList} />
+                    <Select motion={false} optionList={defaultList} />
+                </div>
+            </InputGroup>
+        ));
+        const [own, inherit] = document.querySelectorAll(`.${prefixCls}`);
+        expect(own).toHaveClass(`${prefixCls}-small`);
+        expect(own).not.toHaveClass(`${prefixCls}-large`);
+        expect(inherit).toHaveClass(`${prefixCls}-large`);
     });
 
     it('InputGroup 内可搜索 Select 的搜索框不受分组影响', async () => {

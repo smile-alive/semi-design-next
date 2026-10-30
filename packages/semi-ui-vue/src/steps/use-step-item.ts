@@ -20,10 +20,10 @@ export function useStepItem(clickableByParent: () => boolean) {
         tabindex: () => (clickable() ? 0 : undefined),
         onKeydown: (event: KeyboardEvent) => {
             // keys typed in a focusable child (an input in the title) must not switch the step
-            if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+            if (event.target === event.currentTarget && event.currentTarget instanceof HTMLElement && (event.key === 'Enter' || event.key === ' ')) {
                 event.preventDefault(); // Space would otherwise scroll the page
                 // a real click runs the click listeners and the change exactly as a pointer does
-                (event.currentTarget as HTMLElement).click();
+                event.currentTarget.click();
             }
         },
     };

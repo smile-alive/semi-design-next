@@ -14,7 +14,7 @@ const icon = (name: string) => `.${BASE_CLASS_PREFIX}-icon-${name}`;
 const src = 'https://example.com/video.mp4';
 
 function must<T>(value?: T | null): T {
-    if (value === null || value === undefined) {
+    if (value == null) {
         throw new Error('expected a value');
     }
     return value;

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { render } from '@test/utils/vue';
 import ArrayInsert from './fixtures/array-insert.vue';
 
-const renderDemo = (props: Record<string, unknown> = {}) => {
+function renderDemo(props: Record<string, unknown> = {}) {
     const view = render(ArrayInsert, { props });
     const click = (testId: string) => fireEvent.click(view.getByTestId(testId));
     const count = () => view.getByTestId('count').textContent;
@@ -12,7 +12,7 @@ const renderDemo = (props: Record<string, unknown> = {}) => {
         return JSON.parse(view.getByTestId('form-values').textContent ?? '') as unknown[];
     };
     return { ...view, click, count, values };
-};
+}
 
 describe('ArrayField 索引插入', () => {
     it('不传 index 时 onAdd() 追加到末尾', async () => {

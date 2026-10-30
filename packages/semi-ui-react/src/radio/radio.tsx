@@ -217,8 +217,8 @@ export default function Radio(rawProps: RadioProps) {
                 isPureCardRadio={isPureCardRadio}
                 prefixCls={prefixClsProp}
                 onChange={(e) => foundation.handleChange(e.target.checked, e)}
-                onClick={(e) => foundation.handleClick(e)}
-                onKeyUp={(e) => foundation.handleKeyUp(e)}
+                onClick={foundation.handleClick}
+                onKeyUp={foundation.handleKeyUp}
             />
             {content}
         </label>

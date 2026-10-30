@@ -180,7 +180,7 @@
             if (!shown) return;
             foundation.beforeShow();
             warnIfDialogUnnamed(dialog.value, 'SideSheet');
-            onCleanup(() => foundation.afterHide());
+            onCleanup(foundation.afterHide);
         },
         { flush: 'post' }
     );

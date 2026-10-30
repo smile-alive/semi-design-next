@@ -77,8 +77,8 @@ const passthrough: GetTriggerProps = (own = {} as never) => own as never;
 
 interface FooterButtonProps {
     kind: 'cancel' | 'ok';
-    own: PopconfirmButtonProps | undefined;
-    type: ButtonType | undefined;
+    own?: PopconfirmButtonProps;
+    type?: ButtonType;
     pending: boolean;
     onPress: (event: MouseEvent) => void;
     children: JSX.Element;
@@ -332,7 +332,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
 
     return (
         <Show when={!local.disabled} fallback={disabledTrigger()}>
-            <Popover {...rest} ref={(instance) => (popover = instance)} class={cssClasses.POPOVER} aria-labelledby={labelledBy()} content={renderCard} position={local.position ?? defaultPosition()} visible={open()} onVisibleChange={(visible) => foundation.handleVisibleChange(visible)}>
+            <Popover {...rest} ref={(instance) => (popover = instance)} class={cssClasses.POPOVER} aria-labelledby={labelledBy()} content={renderCard} position={local.position ?? defaultPosition()} visible={open()} onVisibleChange={foundation.handleVisibleChange}>
                 {local.children}
             </Popover>
         </Show>

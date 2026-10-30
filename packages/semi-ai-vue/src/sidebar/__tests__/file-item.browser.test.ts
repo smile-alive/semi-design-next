@@ -7,14 +7,14 @@ import Sidebar from '..';
 
 const { FileItem } = Sidebar;
 
-const mountBar = async () => {
+async function mountBar() {
     const { container } = render(FileItem, { props: { content: '<p>text</p>' } });
     return waitFor(() => {
         const el = container.querySelector('.semi-sidebar-file-menu-bar');
         expect(el).not.toBeNull();
         return el as Element;
     });
-};
+}
 
 describe('Sidebar.FileItem', () => {
     it('Tab 遍历工具栏时每个停靠点都是按钮，标题与链接下拉没有额外的空停靠点', async () => {

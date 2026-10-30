@@ -8,10 +8,10 @@ import { expectThemeFocusRing, mouse, silentWavUrl, tabTo } from '@test/utils/br
 import AudioSlider from '../audio-slider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;
-const centerX = (el: Element) => {
+function centerX(el: Element) {
     const rect = el.getBoundingClientRect();
     return rect.left + rect.width / 2;
-};
+}
 
 // A source that loads: a load error removes the slider, and Firefox and Safari reject a WAV without samples
 const audioUrl = silentWavUrl(1);

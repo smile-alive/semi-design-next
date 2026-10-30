@@ -32,7 +32,7 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
         return Boolean(preview) && !isInGroup;
     }
 
-    handleClick = (_e: any) => {
+    handleClick = (_e: unknown) => {
         const { preview } = this.getProps();
         if (!preview) {
             return;
@@ -44,21 +44,21 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
         }
     };
 
-    handleKeyDown = (e: any) => {
-        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+    handleKeyDown = (e: Pick<KeyboardEvent, 'currentTarget' | 'key' | 'preventDefault' | 'target'>) => {
+        if (e.target === e.currentTarget && e.currentTarget instanceof HTMLElement && (e.key === 'Enter' || e.key === ' ')) {
             // Space would scroll the page
             e.preventDefault();
             // takes the route of a mouse click, so the consumer's onClick on the img is called too
-            e.currentTarget.querySelector(':scope > img').click();
+            e.currentTarget.querySelector<HTMLElement>(':scope > img')?.click();
         }
     };
 
-    handleLoaded = (e: any) => {
+    handleLoaded = (e: unknown) => {
         this._adapter.notifyLoad(e);
         this._adapter.setLoadStatus('success');
     };
 
-    handleError = (e: any) => {
+    handleError = (e: unknown) => {
         this._adapter.notifyError(e);
         this._adapter.setLoadStatus('error');
     };

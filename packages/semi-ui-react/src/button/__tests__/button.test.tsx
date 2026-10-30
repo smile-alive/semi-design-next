@@ -5,13 +5,16 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { IconEdit } from '@fibrae/semi-icons-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import IconButton from '@fibrae/semi-ui-react/icon-button';
+import InputGroup from '@fibrae/semi-ui-react/input/input-group';
 import Space from '@fibrae/semi-ui-react/space';
 import ButtonGroup from '../button-group';
 import Button, { type ButtonProps, type HtmlType } from '../index';
 import SplitButtonGroup from '../split-button-group';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-button`;
-const FillProbe = ({ fill }: { fill?: string | string[] }) => <span data-fill={JSON.stringify(fill ?? null)} data-testid="icon" />;
+function FillProbe({ fill }: { fill?: string | string[] }) {
+    return <span data-fill={JSON.stringify(fill ?? null)} data-testid="icon" />;
+}
 const readFill = () => JSON.parse(screen.getByTestId('icon').dataset.fill);
 
 describe('Button', () => {
@@ -290,6 +293,45 @@ describe('Button', () => {
         );
         const line = document.querySelector(`.${prefixCls}-group-line`);
         expect(line).toHaveClass(`${prefixCls}-group-line-solid`, `${prefixCls}-group-line-danger`, `${prefixCls}-group-line-disabled`);
+    });
+
+    it('InputGroup 里的 Button 读组的 size、disabled，自身的值优先', () => {
+        render(
+            <InputGroup disabled size="small">
+                <Button>a</Button>
+                <Button disabled={false} size="large">
+                    b
+                </Button>
+            </InputGroup>
+        );
+        const [a, b] = screen.getAllByRole('button');
+        expect(a).toBeDisabled();
+        expect(a).toHaveClass(`${prefixCls}-size-small`);
+        expect(b).toBeEnabled();
+        expect(b).toHaveClass(`${prefixCls}-size-large`);
+    });
+
+    it('InputGroup 里的 button group：ButtonGroup 自己的值优先，分隔线与按钮的 disabled 一致', () => {
+        render(
+            <InputGroup disabled size="small">
+                <ButtonGroup disabled={false}>
+                    <Button>a</Button>
+                    <Button>b</Button>
+                </ButtonGroup>
+                <ButtonGroup>
+                    <Button>c</Button>
+                    <Button>d</Button>
+                </ButtonGroup>
+            </InputGroup>
+        );
+        const buttons = screen.getAllByRole('button');
+        expect(buttons.map((button) => (button as HTMLButtonElement).disabled)).toEqual([false, false, true, true]);
+        for (const button of buttons) {
+            expect(button).toHaveClass(`${prefixCls}-size-small`);
+        }
+        const [enabledLine, disabledLine] = document.querySelectorAll(`.${prefixCls}-group-line`);
+        expect(enabledLine).not.toHaveClass(`${prefixCls}-group-line-disabled`);
+        expect(disabledLine).toHaveClass(`${prefixCls}-group-line-disabled`);
     });
 
     it('button group 在 IconButton 之后也画分隔线，outline 与末项除外', () => {

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vite-plus/test';
 import CascaderFoundation from '../foundation';
 
-const sets = (overrides: Partial<Record<string, string[]>> = {}) => {
+function sets(overrides: Partial<Record<string, string[]>> = {}) {
     const names = ['activeKeys', 'selectedKeys', 'loadedKeys', 'loadingKeys', 'checkedKeys', 'halfCheckedKeys'];
     return Object.fromEntries(names.map((name) => [name, new Set(overrides[name] ?? [])])) as Record<(typeof names)[number], Set<string>>;
-};
+}
 
 describe('CascaderFoundation.getTreeItemState', () => {
     it('shows an active and selected option as selected only', () => {

@@ -35,7 +35,7 @@ export default function TabItem({ ref, tab, size, type, icon, selected, closable
     const position = tabPosition ?? contextTabPosition;
     const handleDelete = deleteTabItem ?? contextDeleteTabItem;
 
-    // the foundation finds the sibling tabs through this tab's parentElement, so the tabs must share one parent
+    // the foundation finds the sibling tabs through the closest role="tablist", so a custom bar must render one
     const handleKey = handleKeyDown ?? contextHandleKeyDown;
 
     // outside Tabs there is no panel to point to, and with a single mounted panel only the active tab has one

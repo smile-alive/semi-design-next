@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import BackTop, { type BackTopProps } from '..';
 
-const renderScroller = (props: BackTopProps = {}) => {
+function renderScroller(props: BackTopProps = {}) {
     let scroller: HTMLDivElement | undefined;
     const utils = render(() => (
         <div>
@@ -15,7 +15,7 @@ const renderScroller = (props: BackTopProps = {}) => {
         </div>
     ));
     return { ...utils, scroller: screen.getByTestId('scroller') };
-};
+}
 
 describe('BackTop', () => {
     it('位于 BackTop 位置，为 32px 圆形 FloatButton，在 RTL 下镜像', async () => {

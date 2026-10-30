@@ -1,4 +1,4 @@
-import { type JSX, For, Show, Suspense, batch, children, createEffect, createMemo, createSignal, on, createUniqueId, lazy, onCleanup, onMount, splitProps, untrack } from 'solid-js';
+import { type JSX, For, Show, Suspense, batch, children, createEffect, createMemo, createSignal, on, createUniqueId, lazy, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
 import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagSortIds } from '@fibrae/semi-foundation/tag-input/foundation';
@@ -14,12 +14,14 @@ import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';
 import mergeRefs from '../_base/merge-refs';
+import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import type { SortableHandle } from '../_sortable/types';
 import Input, { type InputChangeEvent, type InputElementEvent } from '../input';
+import { type InputGroupContextValue, InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
 import Tag from '../tag';
@@ -127,8 +129,50 @@ function TagFocusKeeper(props: { keep: () => void; restore: () => void }) {
     return null;
 }
 
-export default function TagInput(rawProps: TagInputProps) {
-    const props = useDefaultProps('TagInput', rawProps, defaultProps);
+export default function TagInput(props: TagInputProps) {
+    const group = useInputGroupContext();
+    const layer = usePopupLayer();
+
+    // the slots resolve in the control's body, so the whole control, not only its markup, leaves the InputGroup
+    return (
+        <InputGroupContext.Provider value={undefined}>
+            <TagInputControl {...props} inGroup={group?.layer === layer ? group : undefined} />
+        </InputGroupContext.Provider>
+    );
+}
+
+function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue }) {
+    const [own, rawProps] = splitProps(all, ['inGroup']);
+    const defaulted = useDefaultProps('TagInput', rawProps, defaultProps);
+
+    const locale = useLocale('TagInput');
+    const tagLocale = useLocale('Tag');
+
+    let root: HTMLDivElement | undefined;
+    let wrapper: HTMLDivElement | undefined;
+    let input: HTMLInputElement | undefined;
+    let dragging = false;
+    let focusedTagStop = -1;
+
+    // A finished sort is recorded as a request; the sortIds memo below attaches it to the ids only once, since
+    // attaching it again on a later change of the value would move ids that already follow that sort
+    const [moveRequest, setMoveRequest] = createSignal<{ move: OnSortEndProps }>();
+
+    // a rendered inset label names the input (WCAG 2.5.3), so it needs an id even when the caller gives none
+    const generatedLabelId = createUniqueId();
+
+    // fixed for the instance's lifetime: the layer and the context value are
+    const inGroup = untrack(() => own.inGroup);
+
+    // as Input: own value, then the group's, then the global default
+    const props = mergeProps(defaulted, {
+        get size() {
+            return rawProps.size ?? inGroup?.view().size ?? defaulted.size;
+        },
+        get disabled() {
+            return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
+        },
+    });
 
     // validateStatus, insetLabel and insetLabelId are read from props: the Form-injected keys never reach the split
     const [local, rest] = splitProps(omitFormInjected(props), [
@@ -193,22 +237,6 @@ export default function TagInput(rawProps: TagInputProps) {
         'value',
     ]);
 
-    const locale = useLocale('TagInput');
-    const tagLocale = useLocale('Tag');
-
-    let root: HTMLDivElement | undefined;
-    let wrapper: HTMLDivElement | undefined;
-    let input: HTMLInputElement | undefined;
-    let dragging = false;
-    let focusedTagStop = -1;
-
-    // A finished sort is recorded as a request; the sortIds memo below attaches it to the ids only once, since
-    // attaching it again on a later change of the value would move ids that already follow that sort
-    const [moveRequest, setMoveRequest] = createSignal<{ move: OnSortEndProps }>();
-
-    // a rendered inset label names the input (WCAG 2.5.3), so it needs an id even when the caller gives none
-    const generatedLabelId = createUniqueId();
-
     const { foundation, state } = useFoundation<Foundation, Adapter, TagInputProps, TagInputState>(
         TagInputFoundation,
         props,
@@ -262,7 +290,7 @@ export default function TagInput(rawProps: TagInputProps) {
 
     const active = () => state().active;
 
-    const markInside = useClickOutside([() => root], () => foundation.deactivate(), active);
+    const markInside = useClickOutside([() => root], foundation.deactivate, active);
 
     const sortIds = createMemo<{ ids: TagSortIds; handled?: object }>(
         (previous) => {
@@ -321,10 +349,12 @@ export default function TagInput(rawProps: TagInputProps) {
         root = node;
         // the root is not the focus target, so the handle the consumer's ref reaches goes to the input
         node.focus = (options) => {
-            input?.focus({ preventScroll: props.preventScroll, ...options });
-            if (!props.disabled) {
-                foundation.handleClick();
-            }
+            untrack(() => {
+                input?.focus({ preventScroll: props.preventScroll, ...options });
+                if (!props.disabled) {
+                    foundation.handleClick();
+                }
+            });
         };
         node.blur = () => {
             const focused = FocusTrapHandle.getActiveElement(node);
@@ -465,7 +495,7 @@ export default function TagInput(rawProps: TagInputProps) {
         (uncontrolled) => uncontrolled && foundation.setState({ inputValue: '' })
     );
 
-    createEffect(on([inputValue, () => tagsArray().length === 0, () => local.placeholder, () => local.size], () => foundation.fitInputWidth()));
+    createEffect(on([inputValue, () => tagsArray().length === 0, () => local.placeholder, () => local.size], foundation.fitInputWidth));
 
     onMount(() => {
         if (!props.disabled && props.autofocus) {
@@ -500,13 +530,13 @@ export default function TagInput(rawProps: TagInputProps) {
                 if (dragging) {
                     return;
                 }
-                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
                     foundation.handleInputBlur(e);
                 }
             }}
             onFocusIn={(e) => {
                 callHandler(local.onFocusIn, e);
-                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
                     foundation.handleInputFocus(e);
                 }
             }}
@@ -528,7 +558,7 @@ export default function TagInput(rawProps: TagInputProps) {
                         [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
                     })}
                     x-semi-prop="prefix"
-                    onClick={() => foundation.handleClickPrefixOrSuffix()}
+                    onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={(e) => e.preventDefault()}
                 >
                     {prefixKind() ? prefix() : insetLabel()}
@@ -600,7 +630,7 @@ export default function TagInput(rawProps: TagInputProps) {
                         [`${prefixCls}-suffix-icon`]: suffixKind() === 'icon',
                     })}
                     x-semi-prop="suffix"
-                    onClick={() => foundation.handleClickPrefixOrSuffix()}
+                    onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={(e) => e.preventDefault()}
                 >
                     {suffix()}

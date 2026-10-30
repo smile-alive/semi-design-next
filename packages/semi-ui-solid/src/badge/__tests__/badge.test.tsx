@@ -5,10 +5,10 @@ import Badge, { type BadgeProps } from '..';
 import semiGlobal from '../../_utils/semi-global';
 import ConfigProvider from '../../config-provider';
 
-const renderBadge = (props: BadgeProps = {}) => {
+function renderBadge(props: BadgeProps = {}) {
     const attached = () => (props.children === undefined ? <span>Semi</span> : props.children);
     return render(() => <Badge {...props}>{attached()}</Badge>);
-};
+}
 
 const getRoot = (container: HTMLElement) => container.querySelector('.semi-badge') as HTMLElement;
 const getCount = (container: HTMLElement) => container.querySelector('[x-semi-prop="count"]') as HTMLElement;

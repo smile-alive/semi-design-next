@@ -117,7 +117,7 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
      * height animates between measured lengths instead and its end stands in for the transitionend. Removable, with
      * the max-height rule of collapsible.scss, once Firefox and Safari support calc-size().
      */
-    handleOpenChange() {
+    handleOpenChange = () => {
         const { isOpen, duration, collapseHeight, collapseHeightAdaptive } = this.getProps();
         const wrapper = this._adapter.getWrapper();
         if (!wrapper || !CollapsibleFoundation.hasMotion(this.getProps()) || CSS.supports('height', 'calc-size(auto, size)')) {
@@ -156,13 +156,13 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
             // cancelled by a reversal or unmount, which take over
             () => undefined
         );
-    }
+    };
 
     /**
      * `isSelf`: the event comes from the wrapper, not bubbling from the content. Only `height` is awaited: toggling
      * `isOpen` always transitions it, even when `fade` also animates `opacity`.
      */
-    handleTransitionEnd({ isSelf, propertyName }: { isSelf: boolean; propertyName: string }) {
+    handleTransitionEnd = ({ isSelf, propertyName }: { isSelf: boolean; propertyName: string }) => {
         if (!isSelf || propertyName !== 'height') {
             return;
         }
@@ -171,5 +171,5 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
         }
         this._adapter.setIsTransitioning(false);
         this._adapter.notifyMotionEnd();
-    }
+    };
 }

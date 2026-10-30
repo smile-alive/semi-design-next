@@ -231,7 +231,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         }
     }
 
-    handleKeyDown(event: Pick<KeyboardEvent, 'key' | 'preventDefault'> & Parameters<typeof isComposing>[0]) {
+    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'preventDefault'> & Parameters<typeof isComposing>[0]) => {
         // the spinner replaces the list while loading; the options still in state are the previous, hidden batch
         const listHidden = this.getProp('loading') && this.getState('visible');
         switch (isComposing(event) ? '' : event.key) {
@@ -269,22 +269,22 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
                 break;
         }
         this._adapter.notifyKeyDown(event);
-    }
+    };
 
     /** Mousedown outside the input and dropdown while shown */
-    handleClickOutside(_e: MouseEvent) {
+    handleClickOutside = (_e: MouseEvent) => {
         this.#closeDropdown();
-    }
+    };
 
     /**
      * Hides the dropdown and reports dropdownVisibleChange(false), without blurring the input or moving focus.
      * Called when Vue KeepAlive deactivates the host.
      */
-    close() {
+    close = () => {
         this.#closeDropdown();
-    }
+    };
 
-    handleInputClick(e: Pick<MouseEvent, 'detail' | 'target' | 'currentTarget'>) {
+    handleInputClick = (e: Pick<MouseEvent, 'detail' | 'target' | 'currentTarget'>) => {
         const { disabled } = this.getProps();
         // Enter/Space on a custom trigger's button synthesize a click that must not also toggle the list
         if (!disabled && !isInnerControlActivation(e)) {
@@ -294,9 +294,9 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
                 this.#openDropdown();
             }
         }
-    }
+    };
 
-    handleSearch(inputValue: string) {
+    handleSearch = (inputValue: string) => {
         this._adapter.updateInputValue(inputValue);
         this._adapter.notifySearch(inputValue);
         this._adapter.notifyChange(inputValue);
@@ -304,9 +304,9 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         if (!this.getState('visible')) {
             this.#openDropdown();
         }
-    }
+    };
 
-    handleSelect(stateOption: StateOptionItem, optionIndex?: number) {
+    handleSelect = (stateOption: StateOptionItem, optionIndex?: number) => {
         const { renderSelectedItem } = this.getProps();
         const option = AutoCompleteFoundation.#toDataItem(stateOption);
 
@@ -329,35 +329,35 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         }
         this._adapter.notifyChange(newInputValue);
         this._adapter.updateFocusIndex(optionIndex);
-    }
+    };
 
-    handleDataChange(newData: any[]) {
+    handleDataChange = (newData: any[]) => {
         const options = AutoCompleteFoundation.#generateList(newData);
         this._adapter.updateOptionList(options);
         let { inputValue } = this.getStates();
         this.#modifyFocusIndex(inputValue);
-    }
+    };
 
-    handleValueChange(selectedValue: AutoCompleteBaseProps['value']) {
+    handleValueChange = (selectedValue: AutoCompleteBaseProps['value']) => {
         const { inputValue, selection, focusIndex } = AutoCompleteFoundation.#valueStates(this.getProps(), selectedValue);
         this._adapter.updateInputValue(inputValue);
         this._adapter.updateSelection(selection);
         this._adapter.updateFocusIndex(focusIndex);
-    }
+    };
 
-    handleClear() {
+    handleClear = () => {
         this._adapter.notifyClear();
-    }
+    };
 
-    handleOptionMouseEnter(optionIndex: number) {
+    handleOptionMouseEnter = (optionIndex: number) => {
         this._adapter.updateFocusIndex(optionIndex);
-    }
+    };
 
-    handleFocus(e: FE) {
+    handleFocus = (e: FE) => {
         this._adapter.notifyFocus(e);
-    }
+    };
 
-    handleBlur(e: FE) {
+    handleBlur = (e: FE) => {
         this._adapter.notifyBlur(e);
-    }
+    };
 }

@@ -11,6 +11,7 @@ import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Input, { type InputProps, type InputHandle, type InputChangeEvent } from '../input';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import useLocale from '../locale/use-locale';
 
 export type { ScientificNotationConfig };
@@ -138,7 +139,7 @@ function createHandle(runtime: InputNumberRuntime, foundation: Foundation): Inpu
 export default function InputNumber(rawProps: InputNumberProps) {
     const { localeCode, currency } = useLocale('InputNumber');
 
-    const props = useDefaultProps('InputNumber', rawProps, { ...defaultProps, localeCode, defaultCurrency: currency });
+    const props = useDefaultProps('InputNumber', withInputGroup(rawProps, useInputGroupInScope()), { ...defaultProps, localeCode, defaultCurrency: currency });
 
     const {
         ref,
@@ -220,9 +221,9 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     [`${prefixCls}-number-button-up-disabled`]: disabled,
                     [`${prefixCls}-number-button-up-not-allowed`]: notAllowedUp,
                 })}
-                onLostPointerCapture={() => foundation.handlePressEnd()}
-                onMouseDown={(e) => foundation.handleStepMouseDown(e)}
-                onPointerDown={(e) => foundation.handleUpPress(e)}
+                onLostPointerCapture={foundation.handlePressEnd}
+                onMouseDown={foundation.handleStepMouseDown}
+                onPointerDown={foundation.handleUpPress}
             >
                 <IconChevronUp size="extra-small" />
             </span>
@@ -231,9 +232,9 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     [`${prefixCls}-number-button-down-disabled`]: disabled,
                     [`${prefixCls}-number-button-down-not-allowed`]: notAllowedDown,
                 })}
-                onLostPointerCapture={() => foundation.handlePressEnd()}
-                onMouseDown={(e) => foundation.handleStepMouseDown(e)}
-                onPointerDown={(e) => foundation.handleDownPress(e)}
+                onLostPointerCapture={foundation.handlePressEnd}
+                onMouseDown={foundation.handleStepMouseDown}
+                onPointerDown={foundation.handleDownPress}
             >
                 <IconChevronDown size="extra-small" />
             </span>
@@ -246,7 +247,7 @@ export default function InputNumber(rawProps: InputNumberProps) {
 
     const setRoot = useCallback((node: HTMLDivElement | null) => runtime.attachRoot(node), [runtime]);
 
-    useDidUpdate(props.value, (value) => foundation.handleValueChange(value));
+    useDidUpdate(props.value, foundation.handleValueChange);
 
     useImperativeHandle(props.ref, () => createHandle(runtime, foundation), [foundation, runtime]);
 
@@ -258,29 +259,32 @@ export default function InputNumber(rawProps: InputNumberProps) {
         ariaProps['aria-valuemin'] = min;
     }
 
+    // the group is read above; the inner Input and the adornment slots must not read it again
     return (
-        <div ref={setRoot} className={clsx(className, `${prefixCls}-number`, { [`${prefixCls}-number-size-${size}`]: size })} style={style} onMouseEnter={() => foundation.handleInputMouseEnter()} onMouseLeave={() => foundation.handleInputMouseLeave()} onMouseMove={() => foundation.handleInputMouseMove()}>
-            <Input
-                role="spinbutton"
-                {...ariaProps}
-                {...rest}
-                ref={setInput}
-                disabled={disabled}
-                value={value}
-                // InputNumber's own global defaults apply to the adornments and showClear; the global Input ones must not
-                addonAfter={addonAfter ?? null}
-                addonBefore={addonBefore ?? null}
-                insetLabel={insetLabel ?? null}
-                showClear={showClear ?? false}
-                size={size}
-                prefix={prefix ?? null}
-                suffix={innerButtons && !hideButtons && (hovering || focusing) ? buttons : (suffix ?? null)}
-                onBlur={(e) => foundation.handleInputBlur(e)}
-                onChange={(v, e) => foundation.handleInputChange(v, e)}
-                onFocus={(e) => foundation.handleInputFocus(e)}
-                onKeyDown={(e) => foundation.handleInputKeyDown(e)}
-            />
-            {!(hideButtons || innerButtons) && buttons}
-        </div>
+        <InputGroupContext value={undefined}>
+            <div ref={setRoot} className={clsx(className, `${prefixCls}-number`, { [`${prefixCls}-number-size-${size}`]: size })} style={style} onMouseEnter={foundation.handleInputMouseEnter} onMouseLeave={foundation.handleInputMouseLeave} onMouseMove={foundation.handleInputMouseMove}>
+                <Input
+                    role="spinbutton"
+                    {...ariaProps}
+                    {...rest}
+                    ref={setInput}
+                    disabled={disabled}
+                    value={value}
+                    // InputNumber's own global defaults apply to the adornments and showClear; the global Input ones must not
+                    addonAfter={addonAfter ?? null}
+                    addonBefore={addonBefore ?? null}
+                    insetLabel={insetLabel ?? null}
+                    showClear={showClear ?? false}
+                    size={size}
+                    prefix={prefix ?? null}
+                    suffix={innerButtons && !hideButtons && (hovering || focusing) ? buttons : (suffix ?? null)}
+                    onBlur={foundation.handleInputBlur}
+                    onChange={foundation.handleInputChange}
+                    onFocus={foundation.handleInputFocus}
+                    onKeyDown={foundation.handleInputKeyDown}
+                />
+                {!(hideButtons || innerButtons) && buttons}
+            </div>
+        </InputGroupContext>
     );
 }

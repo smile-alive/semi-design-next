@@ -24,9 +24,9 @@ const getInput = () => screen.getByRole<HTMLInputElement>('checkbox');
 const label = { default: () => 'Semi Design' };
 // Vue ignores an ancestor listener attached at or after the timestamp of an event coming up from a child, and the
 // suite freezes the system clock, so time has to be moved on by hand.
-const settle = () => {
+function settle() {
     vi.setSystemTime(Date.now() + 10);
-};
+}
 
 describe('Checkbox', () => {
     afterEach(() => {

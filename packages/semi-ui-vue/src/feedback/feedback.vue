@@ -203,21 +203,7 @@
         <slot v-if="$slots.content" :content="contentNode()" name="content" />
         <component :is="contentNode()" v-else />
     </Modal>
-    <SideSheet
-        v-else
-        ref="sheet"
-        canVerticalSetWidth
-        :class="[prefix, `${prefix}-${props.type}`]"
-        :disableScroll="false"
-        height="auto"
-        :mask="false"
-        placement="bottom"
-        :title="props.title"
-        :visible="props.visible"
-        v-bind="definedAttrs()"
-        @afterVisibleChange="onAfterVisibleChange"
-        @cancel="foundation.handleCancel($event)"
-    >
+    <SideSheet v-else ref="sheet" canVerticalSetWidth :class="[prefix, `${prefix}-${props.type}`]" :disableScroll="false" height="auto" :mask="false" placement="bottom" :title="props.title" :visible="props.visible" v-bind="definedAttrs()" @afterVisibleChange="onAfterVisibleChange" @cancel="foundation.handleCancel">
         <!-- forwarded only when given: a given #title replaces SideSheet's title prop -->
         <template v-if="$slots.title" #title>
             <slot name="title" />
@@ -228,10 +214,10 @@
         <template #footer>
             <slot v-if="$slots.footer" name="footer" />
             <div v-else :class="`${prefix}-footer`">
-                <Button type="primary" v-bind="popupButton('cancel')" @click="foundation.handleCancel($event)">
+                <Button type="primary" v-bind="popupButton('cancel')" @click="foundation.handleCancel">
                     {{ locale.locale.cancel }}
                 </Button>
-                <Button theme="solid" type="primary" v-bind="popupButton('ok')" @click="foundation.handleSubmit($event)">
+                <Button theme="solid" type="primary" v-bind="popupButton('ok')" @click="foundation.handleSubmit">
                     {{ locale.locale.submit }}
                 </Button>
             </div>

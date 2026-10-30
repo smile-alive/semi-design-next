@@ -76,12 +76,10 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
     const activatedCount = () => options().filter((option) => option.active).length + customOptions().filter((option) => option.active).length;
 
     // the adornments and showClear are set so global Input defaults cannot add them around the search icon
-    const searchInput = () => (
-        <Input class={isCustom() ? undefined : `${prefixCls}-search`} placeholder={props.placeholder ?? text().searchPlaceholder} value={state().inputValue} addonAfter={null} addonBefore={null} showClear={false} prefix={<IconSearch />} suffix={null} onChange={(value) => foundation.handleSearch(value)} />
-    );
+    const searchInput = () => <Input class={isCustom() ? undefined : `${prefixCls}-search`} placeholder={props.placeholder ?? text().searchPlaceholder} value={state().inputValue} addonAfter={null} addonBefore={null} showClear={false} prefix={<IconSearch />} suffix={null} onChange={foundation.handleSearch} />;
 
     const addButton = () => (
-        <Button type="primary" theme="solid" icon={<IconPlus />} onClick={(e) => foundation.handleAddClick(e)}>
+        <Button type="primary" theme="solid" icon={<IconPlus />} onClick={foundation.handleAddClick}>
             {text().newMcpAdd}
         </Button>
     );

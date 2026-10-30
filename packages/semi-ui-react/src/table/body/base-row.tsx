@@ -1,8 +1,6 @@
 import React, { type ReactNode, memo, useCallback } from 'react';
 import clsx from 'clsx';
 import { omit, isEqual, pick } from 'es-toolkit';
-// compat get falls back to the default only for undefined
-import { get } from 'es-toolkit/compat';
 import { strings, cssClasses } from '@fibrae/semi-foundation/table/constants';
 import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
 import { isLastLeftFixed, arrayAdd, isFixedLeft, isFixedRight, isFirstFixedRight, isInnerColumnKey, isExpandedColumn } from '@fibrae/semi-foundation/table/utils';
@@ -141,7 +139,7 @@ function TableRow({
     );
 
     const BodyRow = components.body.row;
-    const BodyCell = get(components, 'body.cell', strings.DEFAULT_COMPONENTS.body.cell);
+    const BodyCell = components.body.cell ?? strings.DEFAULT_COMPONENTS.body.cell;
     const { className: customClassName, style: customStyle, ...rowProps } = onRow?.(record, index, { disabled, selected }) || {};
     const cells: ReactNode[] = [];
     const displayExpandedColumn = rowExpandable(record);

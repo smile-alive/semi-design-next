@@ -46,24 +46,24 @@ const changeInput = (value: string) => fireEvent.input(getInput(), { target: { v
 const changeAlphaInput = (value: string) => fireEvent.input(getAlphaInput() as HTMLInputElement, { target: { value } });
 
 // the setup rect mock has no x/y, which the pickers subtract from clientX/clientY
-const mockRect = (el: HTMLElement) => {
+function mockRect(el: HTMLElement) {
     const width = parseFloat(el.style.width);
     const height = parseFloat(el.style.height);
     vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({ x: 0, y: 0, left: 0, top: 0, width, height, right: width, bottom: height } as DOMRect);
     return el;
-};
+}
 
 // a browser sends a captured pointer's release, then lostpointercapture, to the capturing element
-const release = (el: HTMLElement) => {
+function release(el: HTMLElement) {
     fireEvent.pointerUp(el);
     fireEvent.lostPointerCapture(el);
-};
+}
 
-const selectFormat = async (format: string) => {
+async function selectFormat(format: string) {
     await userEvent.click(getFormatSelect());
     const options = await screen.findAllByRole('option');
     await userEvent.click(options.find((option) => option.textContent === format) as HTMLElement);
-};
+}
 
 afterEach(() => {
     delete window.EyeDropper;

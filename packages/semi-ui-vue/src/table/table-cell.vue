@@ -22,7 +22,7 @@
         /** The output of a #cell slot */
         output: KeyedNode[] | null;
         /** The value shown without a slot */
-        text: string | number | undefined;
+        text?: string | number;
         inner: 'default' | 'selection' | 'expand' | 'slot';
     }
 

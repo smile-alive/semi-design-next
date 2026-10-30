@@ -185,14 +185,14 @@ const prefix = `${BASE_CLASS_PREFIX}-scrolllist`;
 const numbers = (length: number) => Array.from({ length }, (_, index) => ({ value: index }));
 
 // jsdom has no layout: items sit 36px apart in their list and every other element is 180px tall
-const mockItemLayout = () => {
+function mockItemLayout() {
     vi.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function () {
         return this.tagName === 'LI' ? Array.prototype.indexOf.call(this.parentNode.children, this) * 36 : 0;
     });
     vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function () {
         return this.tagName === 'LI' ? 36 : 180;
     });
-};
+}
 
 describe('ScrollList 行为', () => {
     beforeEach(() => {

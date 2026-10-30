@@ -89,7 +89,7 @@
             </Button>
         </Empty>
         <component :is="isCustom ? 'div' : SlotFragment" v-else :class="isCustom ? [`${prefix}-search`, `${prefix}-search-container`] : undefined">
-            <Input :class="isCustom ? undefined : `${prefix}-search`" :modelValue="state.inputValue" :placeholder="props.placeholder ?? text.searchPlaceholder" :showClear="false" @change="foundation.handleSearch($event)">
+            <Input :class="isCustom ? undefined : `${prefix}-search`" :modelValue="state.inputValue" :placeholder="props.placeholder ?? text.searchPlaceholder" :showClear="false" @change="foundation.handleSearch">
                 <template #prefix>
                     <IconSearch />
                 </template>

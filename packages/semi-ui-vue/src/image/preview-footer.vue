@@ -83,10 +83,6 @@
 
     const onRotateLeft = () => foundation.handleRotate('left');
 
-    const onRotateRight = () => foundation.handleRotate('right');
-
-    const onRatioClick = () => foundation.handleRatioClick();
-
     const view = computed<FooterView>(() => {
         const text = locale.value.locale;
         return {
@@ -111,7 +107,7 @@
                 ratio: {
                     label: props.ratio === 'adaptation' ? (props.originTip ?? text.originTip) : (props.adaptiveTip ?? text.adaptiveTip),
                     disabled: false,
-                    onClick: onRatioClick,
+                    onClick: foundation.handleRatioClick,
                 },
                 rotate: { label: props.rotateTip ?? text.rotateTip, disabled: false, onClick: onRotateLeft },
                 download: {
@@ -123,6 +119,8 @@
             onSlide: foundation.handleSlideChange,
         };
     });
+
+    const onRotateRight = () => foundation.handleRotate('right');
 
     const menuProps = (): MenuProps => ({
         min: props.min,
@@ -143,7 +141,7 @@
         onPrev,
         onZoomIn,
         onZoomOut,
-        onRatioClick,
+        onRatioClick: foundation.handleRatioClick,
         onRotateLeft,
         onRotateRight,
     });

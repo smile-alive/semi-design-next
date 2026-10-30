@@ -129,7 +129,7 @@ export interface DatePickerTriggerSlotProps {
     size: InputSize;
     inputReadOnly: boolean;
     /** `undefined` until a range input has been focused */
-    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    rangeInputFocus?: DatePickerRangeInput | false;
     type: DatePickerType;
     format?: string;
     multiple: boolean;

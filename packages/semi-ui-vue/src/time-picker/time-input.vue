@@ -44,11 +44,7 @@
     const prefix = cssClasses.PREFIX;
 
     // Re-formatting moves the caret to the end; post flush runs after the Input wrote the new text
-    watch(
-        () => props.modelValue,
-        () => foundation.restoreCursor(),
-        { flush: 'post' }
-    );
+    watch(() => props.modelValue, foundation.restoreCursor, { flush: 'post' });
 
     const scheduleFrame = useRaf();
 
@@ -74,9 +70,9 @@
             :preventScroll="props.preventScroll"
             :readOnly="props.inputReadOnly"
             :validateStatus="props.invalid ? 'error' : props.validateStatus"
-            @blur="foundation.handleBlur($event)"
-            @change="foundation.handleChange($event)"
-            @focus="foundation.handleFocus($event)"
+            @blur="foundation.handleBlur"
+            @change="foundation.handleChange"
+            @focus="foundation.handleFocus"
         >
             <template v-if="$slots.prefix" #prefix>
                 <slot name="prefix" />

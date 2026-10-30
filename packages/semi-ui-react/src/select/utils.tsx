@@ -1,9 +1,10 @@
 import React from 'react';
-import { toOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
+import { type OptionRecord, toOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import elementTypeOf from '../_base/element-type';
 import flattenChildren from '../_base/flatten-children';
 import type { OptionProps } from './option';
+import type { OptionGroupProps } from './option-group';
 
 function readOption(child: React.ReactElement<any>): OptionProps {
     const childProps = child.props;
@@ -11,7 +12,7 @@ function readOption(child: React.ReactElement<any>): OptionProps {
 }
 
 export function getOptionsFromGroup(selectChildren: React.ReactNode) {
-    const options: OptionProps[] = [];
+    const options: OptionRecord<OptionProps, OptionGroupProps & { key?: React.Key }>[] = [];
     let optionIndex = -1;
 
     flattenChildren(selectChildren)

@@ -87,10 +87,7 @@ export default function Switch(rawProps: SwitchProps) {
         event.currentTarget.checked = checked();
     };
 
-    useWatch(
-        () => local.checked,
-        (value) => foundation.setChecked(value)
-    );
+    useWatch(() => local.checked, foundation.setChecked);
 
     onMount(() => autofocus(control.autofocus, input));
 

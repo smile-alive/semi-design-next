@@ -138,7 +138,7 @@ export default function ToastList(props: ToastListProps) {
                 class={clsx(`${prefixCls}-innerWrapper`, { [`${prefixCls}-innerWrapper-hover`]: expanded() })}
                 onFocusIn={() => enter(setFocused)}
                 onFocusOut={(event) => {
-                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
                         leave(setFocused);
                     }
                 }}

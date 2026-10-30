@@ -24,8 +24,8 @@ import { useCheckboxGroupContext } from './context';
 // Type aliases rather than interfaces: the foundation reads the event through an index signature
 export type CheckboxEventTarget = {
     checked: boolean;
-    value: CheckboxValue | undefined;
-    name: string | undefined;
+    value?: CheckboxValue;
+    name?: string;
     disabled: boolean;
 };
 

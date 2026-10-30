@@ -27,6 +27,17 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
         });
     }
 
+    #pickByPointer(e: { clientX: number }) {
+        const rect = this._adapter.getDOM()?.getBoundingClientRect();
+        if (!rect) {
+            return;
+        }
+        const { width, foundation } = this.getProps();
+        foundation.handleColorChangeByHandle({
+            h: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 360),
+        });
+    }
+
     /** Captures the pointer from the press, so moves and release arrive outside the slider too */
     handlePointerDown = (e: DragPointerEvent) => {
         // a context menu or middle click must not pick a color
@@ -35,12 +46,12 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
         }
         e.currentTarget.setPointerCapture(e.pointerId);
         this.setState({ isHandleGrabbing: true });
-        this.pickByPointer(e);
+        this.#pickByPointer(e);
     };
 
     handlePointerMove = (e: DragPointerEvent) => {
         if (this.getState('isHandleGrabbing')) {
-            this.pickByPointer(e);
+            this.#pickByPointer(e);
         }
     };
 
@@ -50,9 +61,9 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
     };
 
     // assistive-technology increments arrive as input events on the range
-    setValue(h: number) {
+    setValue = (h: number) => {
         this.getProps().foundation.handleColorChangeByHandle({ h });
-    }
+    };
 
     handleKeyDown = (e: RangeKeyEvent) => {
         // Alt/Ctrl/Meta combinations are browser shortcuts (e.g. Alt+Left)
@@ -66,16 +77,5 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
         // the native range would step by itself: the value is controlled
         e.preventDefault();
         this.setValue(h);
-    };
-
-    pickByPointer = (e: { clientX: number }) => {
-        const rect = this._adapter.getDOM()?.getBoundingClientRect();
-        if (!rect) {
-            return;
-        }
-        const { width, foundation } = this.getProps();
-        foundation.handleColorChangeByHandle({
-            h: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 360),
-        });
     };
 }

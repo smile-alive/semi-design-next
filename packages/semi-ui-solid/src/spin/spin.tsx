@@ -65,11 +65,7 @@ export default function Spin(rawProps: SpinProps) {
 
     const blocked = () => loading() && hasContent(content());
 
-    useWatch(
-        () => local.spinning,
-        (spinning) => foundation.handleSpinningChange(spinning)
-    );
-
+    useWatch(() => local.spinning, foundation.handleSpinningChange);
     createEffect(on(blocked, (isBlocked) => foundation.handleBlockedChange(root, isBlocked)));
 
     return (

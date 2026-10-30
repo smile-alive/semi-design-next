@@ -26,7 +26,7 @@ const settle = () => new Promise((resolve) => setTimeout(resolve));
 // The popup has an animation; turned off so the tests need no waiting
 const commonProps = { motion: false };
 
-const renderWith = async (component: Component, props: Record<string, unknown> = {}, slots: Slots = {}) => {
+async function renderWith(component: Component, props: Record<string, unknown> = {}, slots: Slots = {}) {
     let handle: AutoCompleteHandle | undefined;
     const capture = (value: unknown) => {
         handle = (value ?? undefined) as AutoCompleteHandle | undefined;
@@ -42,7 +42,7 @@ const renderWith = async (component: Component, props: Record<string, unknown> =
             await settle();
         },
     };
-};
+}
 const renderAc = (props: Record<string, unknown> = {}, slots: Slots = {}) => renderWith(AutoComplete, { ...commonProps, ...props }, slots);
 
 const getInput = () => screen.getByRole<HTMLInputElement>('combobox');
@@ -53,22 +53,22 @@ const getOptionTexts = () => getOptions().map((option) => option.textContent);
 const getFocusedOption = () => document.querySelector<HTMLElement>(`.${optionCls}-focused`);
 const getPopupWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement;
-const type = async (value: string, input: HTMLInputElement = getInput()) => {
+async function type(value: string, input: HTMLInputElement = getInput()) {
     await fireEvent.update(input, value);
     await settle();
-};
-const keyDown = async (key: string, target: Element = getInput()) => {
+}
+async function keyDown(key: string, target: Element = getInput()) {
     await fireEvent.keyDown(target, { key });
     await settle();
-};
-const click = async (element: Element | null) => {
+}
+async function click(element: Element | null) {
     await userEvent.click(element as Element);
     await settle();
-};
-const mouseDown = async (element: Element) => {
+}
+async function mouseDown(element: Element) {
     await fireEvent.mouseDown(element);
     await settle();
-};
+}
 const clickClear = () => mouseDown(getClearBtn());
 const expectClosed = () => waitFor(() => expect(getList()).toBeNull());
 

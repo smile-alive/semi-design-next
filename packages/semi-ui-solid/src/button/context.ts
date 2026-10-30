@@ -9,7 +9,7 @@ export type ButtonGroupLooks = Partial<ButtonLooks>;
 export interface ButtonGroupContextValue {
     view: Accessor<ButtonGroupLooks>;
     /** Popup layer the group was rendered in; buttons inside a popup opened from the group do not inherit */
-    layer: symbol | undefined;
+    layer?: symbol;
     /**
      * Each button's rendered root (an element, or the server's markup object) -> its effective looks, so the group
      * draws a separator that matches the button

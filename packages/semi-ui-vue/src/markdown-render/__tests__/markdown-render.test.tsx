@@ -22,10 +22,10 @@ const compileCounter = () => vi.fn<() => undefined>(() => undefined);
 const settle = () => sleep(20);
 const prefix = `${BASE_CLASS_PREFIX}-markdownRender`;
 const renderMarkdown = (props: MarkdownRenderProps, attrs: Record<string, unknown> = {}) => render(MarkdownRender, { props, attrs });
-const own = (tag: string, testId: string) => {
+function own(tag: string, testId: string) {
     const Own: FunctionalComponent = (_, { slots }) => h(tag, { 'data-testid': testId }, slots.default?.());
     return Own;
-};
+}
 
 describe('MarkdownRender', () => {
     it('mdx（默认）下计算表达式，md 下保留为文本', async () => {
@@ -215,7 +215,7 @@ describe('MarkdownRender', () => {
     });
 
     it('把 Semi 组件暴露为 MarkdownRender.defaultComponents', () => {
-        expect(Object.keys(MarkdownRender.defaultComponents).sort()).toEqual(['a', 'code', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'p', 'pre', 'table'].sort());
+        expect(Object.keys(MarkdownRender.defaultComponents).toSorted()).toEqual(['a', 'code', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'p', 'pre', 'table'].toSorted());
     });
 
     it('类型：components 的值是组件，元素键也可以是自身的标签名', () => {

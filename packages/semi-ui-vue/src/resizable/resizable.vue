@@ -144,7 +144,7 @@
         foundation.onResizeStart(e, dir);
     };
 
-    useResizeObserver(root, () => foundation.updateAriaRange());
+    useResizeObserver(root, foundation.updateAriaRange);
 </script>
 
 <template>

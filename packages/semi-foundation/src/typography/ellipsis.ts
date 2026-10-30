@@ -215,30 +215,30 @@ export class EllipsisRuntime {
     #observing = false;
     #measure: () => void = () => undefined;
 
-    connect(measure: () => void) {
+    connect = (measure: () => void) => {
         this.#measure = measure;
         this.#gateFrame = requestAnimationFrame(() => {
             this.#gateTimer = setTimeout(() => {
                 this.#observing = true;
             });
         });
-    }
+    };
 
-    disconnect() {
+    disconnect = () => {
         cancelAnimationFrame(this.#frame);
         cancelAnimationFrame(this.#gateFrame);
         clearTimeout(this.#gateTimer);
         this.#observing = false;
-    }
+    };
 
-    schedule() {
+    schedule = () => {
         cancelAnimationFrame(this.#frame);
         this.#frame = requestAnimationFrame(() => this.#measure());
-    }
+    };
 
-    handleResize() {
+    handleResize = () => {
         if (this.#observing) {
             this.schedule();
         }
-    }
+    };
 }

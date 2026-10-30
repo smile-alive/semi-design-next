@@ -109,8 +109,8 @@ export default function VirtualList<T>(props: VirtualListProps<T>) {
 
     const keys = () => [...itemsByKey().keys()];
 
-    const handleScroll = (event: Event) => {
-        const offset = (event.currentTarget as HTMLDivElement).scrollTop;
+    const handleScroll = (event: Event & { currentTarget: HTMLElement }) => {
+        const offset = event.currentTarget.scrollTop;
         // a horizontal scroll keeps the vertical offset and is not reported
         if (offset !== lastScroll.offset) {
             local.onScroll?.({

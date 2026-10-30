@@ -51,7 +51,7 @@ export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: Wh
         height,
     };
 
-    useEventListener(getWindow, 'resize', () => foundation.handleWindowResize());
+    useEventListener(getWindow, 'resize', foundation.handleWindowResize);
 
     useLayoutEffect(() => {
         const prevProps = committed.current;
@@ -74,7 +74,7 @@ export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: Wh
                 onError={foundation.handleError}
                 onLoad={foundation.handleLoad}
                 onPointerDown={foundation.handleImagePointerDown}
-                onPointerMove={(e) => foundation.handleImageMove(e)}
+                onPointerMove={foundation.handleImageMove}
             />
             {loading && <Spin wrapperClassName={`${preViewImgPrefixCls}-spin`} size="large" />}
         </div>

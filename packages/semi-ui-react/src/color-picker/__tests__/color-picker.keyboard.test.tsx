@@ -12,12 +12,12 @@ const color = {
     hex: '#33809980',
 };
 
-const setup = (props = {}) => {
+function setup(props = {}) {
     const onChange = vi.fn<NonNullable<ComponentProps<typeof ColorPicker>['onChange']>>();
     render(<ColorPicker defaultValue={color} alpha eyeDropper onChange={onChange} {...props} />);
     const last = () => onChange.mock.calls[onChange.mock.calls.length - 1][0].hsva;
     return { onChange, last };
-};
+}
 
 const getSlider = (name) => screen.getByRole('slider', { name });
 

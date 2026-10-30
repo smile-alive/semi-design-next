@@ -115,7 +115,7 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     filterLeafOnly?: boolean;
     placeholder?: string;
     searchPlaceholder?: string;
-    /** An enclosing InputGroup's size replaces it */
+    /** An enclosing InputGroup's size applies when this is not set */
     size?: CascaderType;
     treeData?: Array<CascaderData>;
     treeNodeFilterProp?: string;
@@ -162,10 +162,10 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     displayRender?: ByMultiple<Multiple, (selected: Array<string | number>) => JSX.Element, (selected: Entity, idx: number) => JSX.Element>;
     /** Content of an option in the columns; the search results, the selection and the tags show the label text */
     renderLabel?: (item: CascaderData) => JSX.Element;
-    /** Not a DOM focus event: the click or key that opens the dropdown */
-    onFocus?: (e: MouseEvent | KeyboardEvent) => void;
-    /** Not a DOM blur event: closing the dropdown passes the mousedown outside or the key, nothing for the handle's `close` */
-    onBlur?: (e?: MouseEvent | KeyboardEvent) => void;
+    /** Focus entering the trigger or the dropdown from outside passes the `focusin` event; moving within them does not report again. A click or key that reopens after a pick closed it reports it too */
+    onFocus?: (e: MouseEvent | KeyboardEvent | FocusEvent) => void;
+    /** Once per focus: the mousedown outside, the click or key that picks and closes, or the `focusout` that leaves the trigger and the dropdown */
+    onBlur?: (e?: MouseEvent | KeyboardEvent | FocusEvent) => void;
     validateStatus?: ValidateStatus;
     position?: Position;
     searchPosition?: typeof strings.SEARCH_POSITION_TRIGGER | typeof strings.SEARCH_POSITION_CUSTOM;
@@ -217,7 +217,7 @@ const defaultProps = {
 } satisfies Partial<CascaderBodyProps>;
 
 export default function Cascader<Multiple extends boolean | undefined = undefined>(rawProps: CascaderProps<Multiple>) {
-    const bodyProps = rawProps as unknown as CascaderBodyProps;
+    const bodyProps = rawProps as CascaderBodyProps;
     const defaulted = useDefaultProps('Cascader', bodyProps, defaultProps);
 
     const group = useInputGroupContext();
@@ -235,10 +235,10 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     const inGroup = group?.layer === layer ? group : undefined;
 
-    // as Input: the group's size replaces this one, its disabled fills a missing one, its other attributes sit below the props
-    const props = mergeProps((inGroup?.attrs ?? {}) as Partial<CascaderBodyProps>, defaulted, {
+    // as Input: own value, then the group's, then the global default
+    const props = mergeProps(defaulted, {
         get size() {
-            return inGroup?.view().size ?? defaulted.size ?? 'default';
+            return bodyProps.size ?? inGroup?.view().size ?? defaulted.size ?? 'default';
         },
         get disabled() {
             return bodyProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled ?? false;
@@ -294,6 +294,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         'onDropdownVisibleChange',
         'onExceed',
         'onFocus',
+        'onFocusIn',
+        'onFocusOut',
         'onKeyDown',
         'onListScroll',
         'onLoad',
@@ -329,7 +331,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const [, componentProps] = splitProps(props, ['ref']);
 
     // displayRender returns nodes: the foundation would keep them as the search text, which is a string here
-    const [, foundationProps] = splitProps(props, ['ref', 'displayRender']) as unknown as [unknown, BasicCascaderProps];
+    const [, foundationProps] = splitProps(props, ['ref', 'displayRender']) as [unknown, BasicCascaderProps];
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BasicCascaderProps, BasicCascaderInnerData>(
         CascaderFoundation,
@@ -462,7 +464,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     });
 
     const triggerRenderProps: TriggerRenderProps<boolean> = {
-        componentProps: componentProps as unknown as TriggerRenderProps<boolean>['componentProps'],
+        componentProps: componentProps as TriggerRenderProps<boolean>['componentProps'],
         get disabled() {
             return Boolean(local.disabled);
         },
@@ -485,7 +487,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         },
         onSearch: (value) => handleInputChange(value),
         onClear: (e) => handleClear(e),
-        onRemove: (pos) => foundation.handleTagRemoveInTrigger(pos),
+        onRemove: foundation.handleTagRemoveInTrigger,
     };
 
     const keyboardKey = () => (view.isOpen ? CascaderFoundation.getKeyboardKey(view) : null);
@@ -608,6 +610,26 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         markPressInside(e);
     };
 
+    const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
+        callHandler(local.onFocusIn, e);
+        foundation.handleFocusEnter(e);
+    };
+
+    // focus enters the dropdown through a field in a slot, and the dropdown is not a DOM descendant of the trigger, so
+    // containment is checked against its popup layer
+    const handleFocusLeave = (e: FocusEvent) => {
+        const target = e.relatedTarget;
+        const inside = target instanceof Node && (Boolean(root?.contains(target)) || Boolean(optionContainer?.closest('[popover]')?.contains(target)));
+        if (!inside) {
+            foundation.handleFocusLeave(e);
+        }
+    };
+
+    const handleTriggerFocusOut = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
+        callHandler(local.onFocusOut, e);
+        handleFocusLeave(e);
+    };
+
     const triggerOwn = mergeProps(rest, () => (inputIsCombobox() ? {} : { ...comboboxAttrs, 'aria-disabled': local.disabled }), {
         get id() {
             return local.id;
@@ -636,6 +658,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             return local.disabled || inputIsCombobox() ? -1 : 0;
         },
         onClick: handleClick,
+        onFocusIn: handleFocusIn,
+        onFocusOut: handleTriggerFocusOut,
         onKeyDown: handleKeyDown,
         onMouseDown: handleMouseDown,
     });
@@ -668,11 +692,11 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         root = node;
         // ref.focus() focuses the combobox, as Tooltip and focus handover expect; it does not open the dropdown
         node.focus = (options) => untrack(() => focusCombobox(options));
-        node.blur = () => foundation.blur();
+        node.blur = foundation.blur;
         // React's handle methods ride on the element: a Tooltip wrapping the Cascader needs the element itself as its ref
         Object.assign(node, {
-            open: () => foundation.open(),
-            close: () => foundation.close(undefined),
+            open: foundation.open,
+            close: foundation.close,
             search: (value: string) => foundation.handleInputChange(value),
         } satisfies Omit<CascaderHandle, 'focus' | 'blur'>);
         registerTrigger(node);
@@ -779,7 +803,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             size={local.size}
             renderTagItem={(key, index) => <SelectionTag nodeKey={key} index={index} />}
             onInputChange={(value) => handleInputChange(value)}
-            onRemove={(key) => foundation.handleTagRemoveByKey(key)}
+            onRemove={foundation.handleTagRemoveByKey}
         />
     );
 
@@ -896,7 +920,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     );
 
     const renderContent = () => (
-        <div ref={setOptionContainer} class={clsx(local.dropdownClassName, `${prefixcls}-popover`)} style={local.dropdownStyle} onKeyDown={handleContentKeyDown} onMouseDown={handleContainerMouseDown}>
+        <div ref={setOptionContainer} class={clsx(local.dropdownClassName, `${prefixcls}-popover`)} style={local.dropdownStyle} onFocusIn={foundation.handleFocusEnter} onFocusOut={handleFocusLeave} onKeyDown={handleContentKeyDown} onMouseDown={handleContainerMouseDown}>
             {local.topSlot}
             <Item
                 id={popupId}
@@ -922,10 +946,10 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 virtualListRef={setVirtualList}
                 filterRender={local.filterRender}
                 renderLabel={local.renderLabel}
-                onItemCheckboxClick={(item) => foundation.onItemCheckboxClick(item)}
-                onItemClick={(e, item) => foundation.handleItemClick(e, item)}
-                onItemHover={(e, item) => foundation.handleItemHover(e, item)}
-                onListScroll={(e, ind) => foundation.handleListScroll(e, ind)}
+                onItemCheckboxClick={foundation.onItemCheckboxClick}
+                onItemClick={foundation.handleItemClick}
+                onItemHover={foundation.handleItemHover}
+                onListScroll={foundation.handleListScroll}
             />
             {local.bottomSlot}
         </div>
@@ -944,7 +968,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             // An empty list has no columns to size it, so it matches the trigger's width
             style={isEmpty() ? { 'min-width': 'var(--semi-tooltip-trigger-width)' } : undefined}
             role="presentation"
-            afterClose={() => foundation.endSearching()}
+            afterClose={foundation.endSearching}
             autoAdjustOverflow={local.autoAdjustOverflow}
             content={renderContent}
             motion={local.motion}
@@ -952,7 +976,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             stopPropagation={local.stopPropagation}
             trigger="custom"
             visible={view.isOpen}
-            onOpen={() => foundation.handlePopoverOpen()}
+            onOpen={foundation.handlePopoverOpen}
         >
             {(getTriggerProps) => (
                 <div

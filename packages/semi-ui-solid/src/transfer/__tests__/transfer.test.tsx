@@ -9,13 +9,13 @@ import semiGlobal from '../../_utils/semi-global';
 import Tooltip from '../../tooltip';
 
 // mock.lastCall is undefined until the first call; fail loudly instead of asserting on nothing
-const lastArg = <F extends (...args: never[]) => unknown>(spy: Mock<F>): Parameters<F>[0] => {
+function lastArg<F extends (...args: never[]) => unknown>(spy: Mock<F>): Parameters<F>[0] {
     const call = spy.mock.lastCall;
     if (!call) {
         throw new Error('the spy was never called');
     }
     return call[0];
-};
+}
 
 const prefixCls = `${BASE_CLASS_PREFIX}-transfer`;
 
@@ -629,6 +629,16 @@ describe('Transfer 行为', () => {
         expect(getRightItemTexts()).toEqual(['banana']);
         await userEvent.click(getLeftItem('apple'));
         expect(getRightItemTexts()).toEqual(['banana', 'apple']);
+    });
+
+    it('非受控选过后转为受控，value 变回 undefined 时已选清空', async () => {
+        const { setProps } = renderWith({ dataSource: items });
+        await userEvent.click(getLeftItem('apple'));
+        setProps({ value: ['a', 'b'], dataSource: items });
+        expect(getRightItemTexts()).toEqual(['apple', 'banana']);
+        setProps({ value: undefined, dataSource: items });
+        expect(getRightItemTexts()).toEqual([]);
+        expect(getLeftCheckedTexts()).toEqual([]);
     });
 
     it('受控 value 变为 null 后同样回到非受控的已选项，点击能更新右侧', async () => {

@@ -202,8 +202,6 @@
         replaceInput.value?.click();
     };
 
-    const clear = () => foundation.handleClear();
-
     const filesOf = (e: Event) => (e.target as HTMLInputElement).files ?? [];
 
     const rootAttrs = (a: Record<string, unknown>) => Object.fromEntries(Object.entries(a).filter(([key]) => !DROPPED_ATTRS.has(key)));
@@ -267,10 +265,7 @@
     // v-bind of an object merges listeners with the explicit ones, so keys Upload owns are dropped first
     const cropModalRest = () => omit((props.cropModalProps ?? {}) as ModalProps & UploadCropModalProps, ['style', 'bodyStyle', 'width', 'visible', 'title', 'okText', 'cancelText', 'onOk', 'onCancel']);
 
-    watch(
-        () => props.fileList,
-        (fileList) => foundation.handleFileListPropChange(fileList)
-    );
+    watch(() => props.fileList, foundation.handleFileListPropChange);
 
     onUpdated(() => listFocus.restore(cardsOf(), root.value?.querySelector<HTMLElement>(`.${prefix}-add, .${dragArea}`) ?? null));
 
@@ -288,13 +283,13 @@
         if (state.value.cropperVisible) foundation.cancelCrop();
     });
 
-    useEventListener(getBody, 'paste', (e) => foundation.handlePasting(e), {
+    useEventListener(getBody, 'paste', foundation.handlePasting, {
         enabled: () => props.addOnPasting && !props.disabled && active.value,
     });
 
     defineExpose<UploadHandle>({
-        insert: (files, index) => foundation.insertFileToList(files, index),
-        upload: () => foundation.manualUpload(),
+        insert: foundation.insertFileToList,
+        upload: foundation.manualUpload,
         openFileDialog,
     });
 </script>
@@ -383,12 +378,12 @@
         <!-- the picture wall keeps its wrappers when the list is empty, so adding the first file keeps the add button mounted and focused -->
         <div v-if="props.showUploadList && (isPicture || (props.listType === strings.FILE_LIST_DEFAULT && shownFiles.length))" ref="fileListRoot" :class="[`${prefix}-file-list`, { [`${prefix}-picture-file-list`]: isPicture }]" @focusin="trackFocus" @focusout="untrackFocus">
             <div v-if="!isPicture && props.limit !== 1" :class="`${prefix}-file-list-title`">
-                <slot v-if="$slots.fileListHeader" name="fileListHeader" v-bind="{ fileList: shownFiles, onClear: clear, clearText: i18n.locale.clear }" />
+                <slot v-if="$slots.fileListHeader" name="fileListHeader" v-bind="{ fileList: shownFiles, onClear: foundation.handleClear, clearText: i18n.locale.clear }" />
                 <template v-else>
                     <span :class="`${prefix}-file-list-title-choosen`">
                         <slot name="fileListTitle">{{ i18n.locale.selectedFiles }}</slot>
                     </span>
-                    <button v-if="props.showClear && !props.disabled" :class="`${prefix}-file-list-title-clear`" type="button" @click="clear">
+                    <button v-if="props.showClear && !props.disabled" :class="`${prefix}-file-list-title-clear`" type="button" @click="foundation.handleClear">
                         {{ i18n.locale.clear }}
                     </button>
                 </template>
@@ -444,8 +439,8 @@
             :bodyStyle="[{ height: '400px' }, props.cropModalProps?.bodyStyle]"
             :cancelText="cropConfig.modalCancelText"
             :okText="cropConfig.modalOkText"
-            :onCancel="() => foundation.cancelCrop()"
-            :onOk="() => foundation.confirmCrop()"
+            :onCancel="foundation.cancelCrop"
+            :onOk="foundation.confirmCrop"
             :style="[{ height: '500px' }, props.cropModalProps?.style]"
             :title="cropConfig.modalTitle || i18n.locale.cropTitle"
             :visible="state.cropperVisible"

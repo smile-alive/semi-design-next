@@ -557,9 +557,8 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     /** The disabled hours, minutes and seconds `disabledTime` gives the time panel of `panelType` */
-    static calcDisabledTime({ disabledTime, type }: Pick<MonthsGridFoundationProps, 'disabledTime' | 'type'>, state: Pick<MonthsGridFoundationState, 'rangeStart' | 'rangeEnd' | 'monthLeft'>, panelType: PanelType) {
+    static calcDisabledTime({ disabledTime, type }: Pick<MonthsGridFoundationProps, 'disabledTime' | 'type'>, { rangeStart, rangeEnd, monthLeft }: Pick<MonthsGridFoundationState, 'rangeStart' | 'rangeEnd' | 'monthLeft'>, panelType: PanelType) {
         if (typeof disabledTime === 'function' && panelType && isDateTimeType(type)) {
-            const { rangeStart, rangeEnd, monthLeft } = state;
             const selected = [];
             if (type === 'dateTimeRange') {
                 if (rangeStart) {
@@ -648,7 +647,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     /** Moves the panels when `defaultPickerValue` changes; the first value is applied by getInitialState */
-    initDefaultPickerValue() {
+    initDefaultPickerValue = () => {
         const { defaultPickerValue, type, format, dateFnsLocale } = this.getProps();
         if (defaultPickerValue === undefined) {
             return;
@@ -662,9 +661,9 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             this.#updatePanelDetail(strings.PANEL_TYPE_LEFT, { pickerDate: nowDate });
             this.#updatePanelDetail(strings.PANEL_TYPE_RIGHT, { pickerDate: nextDate });
         }
-    }
+    };
 
-    updateSelectedFromProps(values: (Date | null)[], refreshPicker = true) {
+    updateSelectedFromProps = (values: (Date | null)[], refreshPicker = true) => {
         const type: Type = this.getProp('type');
         const { selected, rangeStart, rangeEnd } = this.getStates();
         if (values && values?.length) {
@@ -695,30 +694,30 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                 this._adapter.setRangeEnd('');
             }
         }
-    }
+    };
 
-    toYearMonth(panelType: PanelType, target: Date) {
+    toYearMonth = (panelType: PanelType, target: Date) => {
         this.#toYear(panelType, target);
         this.#toMonth(panelType, target);
-    }
+    };
 
-    prevMonth(panelType: PanelType) {
+    prevMonth = (panelType: PanelType) => {
         this.handleSwitchMonthOrYear('prevMonth', panelType);
-    }
+    };
 
-    nextMonth(panelType: PanelType) {
+    nextMonth = (panelType: PanelType) => {
         this.handleSwitchMonthOrYear('nextMonth', panelType);
-    }
+    };
 
-    prevYear(panelType: PanelType) {
+    prevYear = (panelType: PanelType) => {
         this.handleSwitchMonthOrYear('prevYear', panelType);
-    }
+    };
 
-    nextYear(panelType: PanelType) {
+    nextYear = (panelType: PanelType) => {
         this.handleSwitchMonthOrYear('nextYear', panelType);
-    }
+    };
 
-    handleDayClick(day: MonthDayInfo, panelType: PanelType) {
+    handleDayClick = (day: MonthDayInfo, panelType: PanelType) => {
         const type = this.getProp('type');
         switch (true) {
             case type === 'date' || type === 'dateTime':
@@ -730,9 +729,9 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             default:
                 break;
         }
-    }
+    };
 
-    handleDayHover({ fullDate } = { fullDate: '' }) {
+    handleDayHover = ({ fullDate } = { fullDate: '' }) => {
         const { startDateOffset, endDateOffset, type } = this.getProps();
 
         this._adapter.setHoverDay(fullDate);
@@ -743,9 +742,9 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             this._adapter.setOffsetRangeStart(offsetRangeStart);
             this._adapter.setOffsetRangeEnd(offsetRangeEnd);
         }
-    }
+    };
 
-    handleTimeChange(newTime: { timeStampValue: number }, panelType: PanelType) {
+    handleTimeChange = (newTime: { timeStampValue: number }, panelType: PanelType) => {
         const { rangeEnd, rangeStart } = this.getStates();
         const { type, dateFnsLocale } = this.getProps();
         const { showDate } = this.#getPanelDetail(panelType);
@@ -760,20 +759,20 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             const fullDate = format(fullValidDate, strings.FORMAT_FULL_DATE);
             this.#handleDateSelected({ fullDate, fullValidDate }, panelType);
         }
-    }
+    };
 
-    showYearPicker(panelType: PanelType) {
+    showYearPicker = (panelType: PanelType) => {
         this.#updatePanelDetail(panelType, { isTimePickerOpen: false, isYearPickerOpen: true });
-    }
+    };
 
-    showTimePicker(panelType: PanelType) {
+    showTimePicker = (panelType: PanelType) => {
         if (this.getProp('disabledTimePicker')) {
             return;
         }
         this.#updatePanelDetail(panelType, { isTimePickerOpen: true, isYearPickerOpen: false });
-    }
+    };
 
-    showDatePanel(panelType: PanelType) {
+    showDatePanel = (panelType: PanelType) => {
         this.#updatePanelDetail(panelType, { isTimePickerOpen: false, isYearPickerOpen: false });
-    }
+    };
 }

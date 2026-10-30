@@ -137,7 +137,7 @@ const blurCases: [string, Record<string, unknown>][] = [
 // Testing Library's render moves the mounted nodes out of the Vue Test Utils wrapper (`replaceWith`), which drops the
 // focus autofocus just placed: Chromium reports that as a blur, Firefox and WebKit silently move focus to the body.
 // Refocusing and clearing the spy keeps the outside-click assertions about the autofocused Select meaningful everywhere.
-const renderAllCaseOfBlur = (onBlur: Mock<(name: string) => void>) => {
+function renderAllCaseOfBlur(onBlur: Mock<(name: string) => void>) {
     mount(() => (
         <div>
             {blurCases.map(([name, props]) => (
@@ -161,7 +161,7 @@ const renderAllCaseOfBlur = (onBlur: Mock<(name: string) => void>) => {
     ));
     byCy('singleAutoFocus').focus();
     onBlur.mockClear();
-};
+}
 
 async function blurByOutsideClick(onBlur: (name: string) => void, name: string, pickOption: boolean) {
     await userEvent.click(byCy(name));
@@ -386,8 +386,7 @@ describe('Select', () => {
         mount(() => (
             <Select style={{ width: '450px' }} data-cy="multiple" multiple filter maxHeight={180} optionList={optionList}>
                 {{
-                    optionItem: (scope: Record<string, unknown>) => {
-                        const { focused, label, class: className, selected, disabled, inputValue, value, ...rest } = scope;
+                    optionItem: ({ focused, label, class: className, selected, disabled, inputValue, value, ...rest }: Record<string, unknown>) => {
                         return (
                             <div {...rest} class={['custom-option-render', { 'custom-option-render-focused': focused }, className]}>
                                 {String(label)}
@@ -653,6 +652,25 @@ it('从展开的 Select 按 Tab 会关闭列表并移到清空按钮，且不发
     expect(screen.getByRole('button', { name: clearName })).toHaveFocus();
     await waitFor(() => expect(getOptionList()).toBeNull());
     expect(onBlur).not.toHaveBeenCalled();
+});
+
+it('打开时按 Tab 关闭列表并离开，blur 恰好一次', async () => {
+    const onBlur = vi.fn<() => void>();
+    mount(() => (
+        <>
+            <Select style={{ width: '200px' }} optionList={options} onBlur={onBlur} />
+            <Button>{() => 'after'}</Button>
+        </>
+    ));
+    await tabTo(screen.getByRole('combobox'));
+    await userEvent.keyboard('{ArrowDown}');
+    await screen.findByRole('listbox');
+    await userEvent.keyboard('{ArrowDown}');
+    expect(onBlur).not.toHaveBeenCalled();
+    await tab();
+    expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+    await waitFor(() => expect(getOptionList()).toBeNull());
+    expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
 it('Select 标签获得焦点时被移除，焦点交给 combobox', async () => {

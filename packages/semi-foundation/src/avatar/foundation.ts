@@ -26,26 +26,26 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
 
     override destroy() {}
 
-    handleSrcChange() {
+    handleSrcChange = () => {
         this._adapter.setImgExist(true);
-    }
+    };
 
-    handleImgLoadError() {
+    handleImgLoadError = () => {
         const errorFlag = this._adapter.notifyError();
         if (errorFlag !== false) {
             this._adapter.setImgExist(false);
         }
-    }
+    };
 
-    handleEnter(e: E) {
+    handleEnter = (e: E) => {
         this._adapter.notifyEnter(e);
-    }
+    };
 
-    handleLeave(e: E) {
+    handleLeave = (e: E) => {
         this._adapter.notifyLeave(e);
-    }
+    };
 
-    changeScale() {
+    changeScale = () => {
         const { gap } = this.getProps();
         const widths = this._adapter.getTextWidths();
         if (!widths) {
@@ -56,5 +56,5 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
             const scale = nodeWidth - gap * 2 > stringNodeWidth ? 1 : (nodeWidth - gap * 2) / stringNodeWidth;
             this._adapter.setScale(scale);
         }
-    }
+    };
 }

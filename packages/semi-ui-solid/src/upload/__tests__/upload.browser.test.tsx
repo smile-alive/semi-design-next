@@ -12,7 +12,7 @@ import { Form, FormUpload } from '../../form';
 const prefixCls = `${BASE_CLASS_PREFIX}-upload`;
 
 const action = 'https://semi.design/upload';
-const customRequest = () => {};
+function customRequest() {}
 const readme = () => new File(['# Semi Design\n'], 'README.md', { type: 'text/markdown' });
 const cardNames = (root: ParentNode = document) => [...root.querySelectorAll(`.${prefixCls}-file-card-info-name`)].map((el) => el.textContent);
 const fileInputs = () => document.querySelectorAll<HTMLInputElement>('input[type=file]');

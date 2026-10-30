@@ -72,7 +72,7 @@
         };
     });
 
-    useEventListener(getWindow, 'resize', () => foundation.handleWindowResize());
+    useEventListener(getWindow, 'resize', foundation.handleWindowResize);
     watch([() => props.src, () => props.ratio, () => props.rotation, () => props.zoom], (_, [src, ratio, rotation, zoom]) => foundation.handlePropsUpdate({ src, ratio, rotation, zoom }, props.zoomEvent), { flush: 'post' });
 </script>
 

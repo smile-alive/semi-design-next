@@ -14,6 +14,8 @@
     import useFoundation from '../_base/use-foundation';
     import type SortableComponent from '../_sortable/sortable.vue';
     import Input, { type InputHandle } from '../input';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover, { type PopoverProps } from '../popover';
     import { useNestedPopups } from '../tooltip/context';
@@ -34,7 +36,8 @@
         defaultValue: semiGlobalDefault('TagInput', 'defaultValue'),
         inputValue: semiGlobalDefault('TagInput', 'inputValue'),
         inputValueModifiers: undefined,
-        disabled: semiGlobalDefault('TagInput', 'disabled'),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
         maxLength: semiGlobalDefault('TagInput', 'maxLength'),
         max: semiGlobalDefault('TagInput', 'max'),
         maxTagCount: semiGlobalDefault('TagInput', 'maxTagCount'),
@@ -49,7 +52,7 @@
         insetLabelId: undefined,
         separator: () => semiDefault('TagInput', 'separator', ','),
         showClear: () => semiDefault('TagInput', 'showClear', false),
-        size: () => semiDefault('TagInput', 'size', 'default'),
+        size: undefined,
         split: undefined,
         validateStatus: () => semiDefault('TagInput', 'validateStatus', 'default'),
         autofocus: () => semiDefault('TagInput', 'autofocus', false),
@@ -77,6 +80,8 @@
     // injects 0) goes to the input as well.
     const controlKeys = new Set(['id', 'name', 'role', 'tabindex', 'aria-activedescendant', 'aria-autocomplete', 'aria-controls', 'aria-describedby', 'aria-errormessage', 'aria-expanded', 'aria-haspopup', 'aria-invalid', 'aria-label', 'aria-labelledby', 'aria-required']);
 
+    const looks = useGroupLooks('TagInput', props, { size: 'default' });
+
     const prefix = cssClasses.PREFIX;
     const splitFn = computed(() => props.split ?? readSemiDefault(semi, 'TagInput', 'split'));
 
@@ -87,6 +92,9 @@
         trigger: 'hover',
         ...props.restTagsPopoverProps,
     }));
+
+    // the Input inside is part of this control, not a member of the group
+    provideInputGroupContext(undefined);
 
     const focusInput = () => inputRef.value?.input?.focus({ preventScroll: props.preventScroll });
 
@@ -131,7 +139,7 @@
             notifyExceed: (value) => emit('exceed', value),
             getInput: () => inputRef.value?.input ?? null,
         }),
-        { props: { value: () => props.modelValue, split: () => splitFn.value } }
+        { props: { size: () => looks.size, disabled: () => looks.disabled, value: () => props.modelValue, split: () => splitFn.value } }
     );
 
     const tags = computed(() => TagInputFoundation.getTagsArray({ value: props.modelValue }, state.value));
@@ -144,7 +152,7 @@
     const restCount = computed(() => (!sorting.value && (!state.value.active || !props.expandRestTagsOnClick) && props.maxTagCount && props.maxTagCount < tags.value.length ? tags.value.length - props.maxTagCount : 0));
     const shownTags = computed(() => (restCount.value > 0 ? tags.value.slice(0, props.maxTagCount) : tags.value));
     const restTags = computed(() => (restCount.value > 0 ? tags.value.slice(props.maxTagCount) : []));
-    const clearable = computed(() => (inputValue.value !== '' || tags.value.length > 0) && !props.disabled);
+    const clearable = computed(() => (inputValue.value !== '' || tags.value.length > 0) && !looks.disabled);
 
     const handleSortEnd = (move: OnSortEndProps) => {
         sortIds.value = { ...sortIds.value, move };
@@ -161,7 +169,7 @@
         if (event instanceof Event) {
             event.preventDefault();
         }
-        if (props.disabled) {
+        if (looks.disabled) {
             return;
         }
         // a removed node fires no blur either, so the input takes the focus first
@@ -204,11 +212,11 @@
         prefix,
         {
             [`${prefix}-focus`]: state.value.focusing || state.value.active,
-            [`${prefix}-disabled`]: props.disabled,
+            [`${prefix}-disabled`]: looks.disabled,
             [`${prefix}-error`]: props.validateStatus === 'error',
             [`${prefix}-warning`]: props.validateStatus === 'warning',
-            [`${prefix}-small`]: props.size === 'small',
-            [`${prefix}-large`]: props.size === 'large',
+            [`${prefix}-small`]: looks.size === 'small',
+            [`${prefix}-large`]: looks.size === 'large',
             [`${prefix}-with-prefix`]: Boolean(k.prefix || k.insetLabel),
             [`${prefix}-with-suffix`]: Boolean(k.suffix),
         },
@@ -266,15 +274,10 @@
     );
 
     // mousedown: a press inside released outside makes a click on their common ancestor, which reads as outside
-    useClickOutside(
-        [root],
-        () => foundation.deactivate(),
-        () => Boolean(state.value.active),
-        useNestedPopups()
-    );
+    useClickOutside([root], foundation.deactivate, () => Boolean(state.value.active), useNestedPopups());
 
     // the placeholder shows only while there are no tags
-    watch([inputValue, () => tags.value.length === 0, () => props.placeholder, () => props.size], () => foundation.fitInputWidth(), { flush: 'post' });
+    watch([inputValue, () => tags.value.length === 0, () => props.placeholder, () => looks.size], foundation.fitInputWidth, { flush: 'post' });
 
     // A removed node fires no blur, so move focus off the clear button in a pre-flush watcher, before the patch removes it.
     watch(clearable, (now) => {
@@ -298,7 +301,7 @@
     defineExpose<TagInputHandle>({
         focus: () => {
             focusInput();
-            if (!props.disabled) {
+            if (!looks.disabled) {
                 foundation.handleClick();
             }
         },
@@ -313,14 +316,14 @@
 </script>
 
 <template>
-    <div ref="root" v-bind="splitControlAttrs($attrs, isControlKey).root" :aria-disabled="props.disabled || undefined" :class="rootClass(kinds())" role="group" @click="foundation.handleClick()" @focusin="handleFocusIn" @focusout="handleFocusOut">
+    <div ref="root" v-bind="splitControlAttrs($attrs, isControlKey).root" :aria-disabled="looks.disabled || undefined" :class="rootClass(kinds())" role="group" @click="foundation.handleClick" @focusin="handleFocusIn" @focusout="handleFocusOut">
         <template v-for="(k, i) in [kinds()]" :key="i">
             <div
                 v-if="k.prefix || k.insetLabel"
                 :id="prefixId()"
                 :class="[`${prefix}-prefix`, { [`${prefix}-inset-label`]: Boolean(k.insetLabel), [`${prefix}-prefix-text`]: (k.prefix ?? k.insetLabel) === 'text', [`${prefix}-prefix-icon`]: (k.prefix ?? k.insetLabel) === 'icon' }]"
                 x-semi-prop="prefix"
-                @click="foundation.handleClickPrefixOrSuffix()"
+                @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent
             >
                 <slot v-if="k.prefix" name="prefix" />
@@ -330,7 +333,7 @@
         <div ref="wrapper" :class="`${prefix}-wrapper`">
             <component :is="Sortable" v-if="Sortable && sorting" :class="`${prefix}-sortable-list`" :dragHandleLabel="locale.locale.dragSort" :dragOverlayClass="`${prefix}-drag-item-move`" :items="sortIds.ids" :prefix="prefix" :transition="null" @dragging="dragging = $event" @sortEnd="handleSortEnd">
                 <template #item="{ index }">
-                    <TagItem :disabled="props.disabled" draggableActive :index="index" :showContentTooltip="props.showContentTooltip" :size="props.size" :value="tags[index]" withHandle @close="handleTagClose(index, $event)">
+                    <TagItem :disabled="looks.disabled" draggableActive :index="index" :showContentTooltip="props.showContentTooltip" :size="looks.size" :value="tags[index]" withHandle @close="handleTagClose(index, $event)">
                         <template v-if="$slots.tag" #tag="tagProps">
                             <slot name="tag" v-bind="tagProps" />
                         </template>
@@ -338,22 +341,22 @@
                 </template>
             </component>
             <template v-else>
-                <TagItem v-for="(value, index) in shownTags" :key="`${index}-${value}`" :disabled="props.disabled" :draggableActive="draggableActive" :index="index" :showContentTooltip="props.showContentTooltip" :size="props.size" :value="value" :withHandle="false" @close="handleTagClose(index, $event)">
+                <TagItem v-for="(value, index) in shownTags" :key="`${index}-${value}`" :disabled="looks.disabled" :draggableActive="draggableActive" :index="index" :showContentTooltip="props.showContentTooltip" :size="looks.size" :value="value" :withHandle="false" @close="handleTagClose(index, $event)">
                     <template v-if="$slots.tag" #tag="tagProps">
                         <slot name="tag" v-bind="tagProps" />
                     </template>
                 </TagItem>
                 <Popover v-if="restCount > 0 && props.showRestTagsPopover" v-bind="popoverProps">
-                    <span :class="[`${prefix}-wrapper-n`, { [`${prefix}-wrapper-n-disabled`]: props.disabled }]">+{{ restCount }}</span>
+                    <span :class="[`${prefix}-wrapper-n`, { [`${prefix}-wrapper-n-disabled`]: looks.disabled }]">+{{ restCount }}</span>
                     <template #content>
                         <TagItem
                             v-for="(value, index) in restTags"
                             :key="`${shownTags.length + index}-${value}`"
-                            :disabled="props.disabled"
+                            :disabled="looks.disabled"
                             :draggableActive="draggableActive"
                             :index="shownTags.length + index"
                             :showContentTooltip="props.showContentTooltip"
-                            :size="props.size"
+                            :size="looks.size"
                             :value="value"
                             :withHandle="false"
                             @close="handleTagClose(shownTags.length + index, $event)"
@@ -364,7 +367,7 @@
                         </TagItem>
                     </template>
                 </Popover>
-                <span v-else-if="restCount > 0" :class="[`${prefix}-wrapper-n`, { [`${prefix}-wrapper-n-disabled`]: props.disabled }]">+{{ restCount }}</span>
+                <span v-else-if="restCount > 0" :class="[`${prefix}-wrapper-n`, { [`${prefix}-wrapper-n-disabled`]: looks.disabled }]">+{{ restCount }}</span>
             </template>
             <Input
                 ref="input"
@@ -373,15 +376,15 @@
                 :aria-label="ariaLabel()"
                 :aria-labelledby="ariaLabelledby()"
                 :autofocus="props.autofocus"
-                :class="[`${prefix}-wrapper-input`, `${prefix}-wrapper-input-${props.size}`]"
-                :disabled="props.disabled"
+                :class="[`${prefix}-wrapper-input`, `${prefix}-wrapper-input-${looks.size}`]"
+                :disabled="looks.disabled"
                 :modelModifiers="props.inputValueModifiers"
                 :modelValue="inputValue"
                 :placeholder="tags.length === 0 ? props.placeholder : ''"
                 :preventScroll="props.preventScroll"
                 :showClear="false"
-                :size="props.size"
-                @change="(value, event) => foundation.handleInputChange(value, event)"
+                :size="looks.size"
+                @change="foundation.handleInputChange"
                 @compositionend="foundation.handleInputCompositionEnd"
                 @compositionstart="foundation.handleInputCompositionStart"
                 @keydown="foundation.handleKeyDown"
@@ -396,7 +399,7 @@
             <span v-else :class="`${prefix}-clearBtn-placeholder`" />
         </template>
         <template v-for="(k, i) in [kinds()]" :key="i">
-            <div v-if="k.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: k.suffix === 'text', [`${prefix}-suffix-icon`]: k.suffix === 'icon' }]" x-semi-prop="suffix" @click="foundation.handleClickPrefixOrSuffix()" @mousedown.prevent>
+            <div v-if="k.suffix" :class="[`${prefix}-suffix`, { [`${prefix}-suffix-text`]: k.suffix === 'text', [`${prefix}-suffix-icon`]: k.suffix === 'icon' }]" x-semi-prop="suffix" @click="foundation.handleClickPrefixOrSuffix" @mousedown.prevent>
                 <slot name="suffix" />
             </div>
         </template>

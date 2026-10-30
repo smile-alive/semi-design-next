@@ -116,7 +116,7 @@ export default function Feedback(rawProps: FeedbackProps) {
         <Switch>
             <Match when={local.type === 'custom'}>{local.children}</Match>
             <Match when={local.type === 'text'}>
-                <TextArea placeholder={locale().locale.placeholder} value={textValue()} {...local.textAreaProps} onChange={(value, e) => foundation.handleTextChange(value, e)} />
+                <TextArea placeholder={locale().locale.placeholder} value={textValue()} {...local.textAreaProps} onChange={foundation.handleTextChange} />
             </Match>
             <Match when={local.type === 'emoji'}>
                 <div class={`${prefixCls}-emoji-container`} aria-label={locale().locale.rating} role="radiogroup">
@@ -132,17 +132,17 @@ export default function Feedback(rawProps: FeedbackProps) {
                     </For>
                 </div>
                 <Show when={emoji() === Emoji.bad}>
-                    <TextArea placeholder={locale().locale.placeholderOptional} {...local.textAreaProps} onChange={(value, e) => foundation.handleEmojiReasonChange(value, e)} />
+                    <TextArea placeholder={locale().locale.placeholderOptional} {...local.textAreaProps} onChange={foundation.handleEmojiReasonChange} />
                 </Show>
             </Match>
             <Match when={local.type === 'radio'}>
                 <div class={`${prefixCls}-radio-container`}>
-                    <RadioGroup value={radioValue()} direction="vertical" {...local.radioGroupProps} onChange={(e) => foundation.handleRadioChange(e)} />
+                    <RadioGroup value={radioValue()} direction="vertical" {...local.radioGroupProps} onChange={foundation.handleRadioChange} />
                 </div>
             </Match>
             <Match when={local.type === 'checkbox'}>
                 <div class={`${prefixCls}-checkbox-container`}>
-                    <CheckboxGroup value={checkboxValue()} direction="vertical" {...local.checkboxGroupProps} onChange={(value) => foundation.handleCheckboxChange(value)} />
+                    <CheckboxGroup value={checkboxValue()} direction="vertical" {...local.checkboxGroupProps} onChange={foundation.handleCheckboxChange} />
                 </div>
             </Match>
         </Switch>
@@ -204,7 +204,7 @@ export default function Feedback(rawProps: FeedbackProps) {
                     mask={false}
                     placement="bottom"
                     {...(rest as SideSheetProps)}
-                    onCancel={(e) => foundation.handleCancel(e)}
+                    onCancel={foundation.handleCancel}
                     afterVisibleChange={(visible) => {
                         local.afterVisibleChange?.(visible);
                         if (!visible) {
@@ -216,17 +216,7 @@ export default function Feedback(rawProps: FeedbackProps) {
                 </SideSheet>
             }
         >
-            <Modal
-                class={rootClass()}
-                cancelText={locale().locale.cancel}
-                okText={locale().locale.submit}
-                {...(rest as ModalProps)}
-                afterClose={local.afterClose}
-                cancelButtonProps={local.cancelButtonProps}
-                okButtonProps={modalOkButtonProps()}
-                onCancel={(e) => foundation.handleModalCancel(e)}
-                onOk={(e) => foundation.handleModalOk(e)}
-            >
+            <Modal class={rootClass()} cancelText={locale().locale.cancel} okText={locale().locale.submit} {...(rest as ModalProps)} afterClose={local.afterClose} cancelButtonProps={local.cancelButtonProps} okButtonProps={modalOkButtonProps()} onCancel={foundation.handleModalCancel} onOk={foundation.handleModalOk}>
                 {body()}
             </Modal>
         </Show>

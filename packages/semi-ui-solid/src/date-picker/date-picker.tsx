@@ -1,4 +1,4 @@
-import { type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps } from 'solid-js';
+import { type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
@@ -14,10 +14,12 @@ import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import { namedRole } from '../_base/named-role';
+import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useConfig from '../config-provider/use-config';
+import { InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import type { Position } from '../tooltip';
@@ -159,6 +161,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
     const defaulted = useDefaultProps('DatePicker', rawProps, defaultProps);
 
     const config = useConfig();
+    const group = useInputGroupContext();
+    const layer = usePopupLayer();
     const locale = useLocale('DatePicker');
 
     let root: HTMLDivElement | undefined;
@@ -169,11 +173,18 @@ export default function DatePicker(rawProps: DatePickerProps) {
     // only the rendered DOM tells whether a custom trigger has its own focus target
     const [customTriggerFocusable, setCustomTriggerFocusable] = createSignal(false);
 
+    const inGroup = group?.layer === layer ? group : undefined;
     const normalized = createMemo(() => DatePickerFoundation.normalizeProps(defaulted));
 
     // An explicit undefined timeZone falls back too: prop, then ConfigProvider, then the global default; the locale is
-    // never a prop
+    // never a prop. As Input: own value, then the group's, then the global default.
     const props = mergeProps(defaulted, {
+        get size() {
+            return rawProps.size ?? inGroup?.view().size ?? defaulted.size;
+        },
+        get disabled() {
+            return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
+        },
         get timeZone() {
             return rawProps.timeZone ?? config().timeZone ?? defaulted.timeZone;
         },
@@ -361,7 +372,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const panelShow = () => DatePickerFoundation.isPanelShown(props, state());
 
-    const markPressInside = useClickOutside([() => root, panel], (e) => foundation.handleClickOutside(e), panelShow);
+    const markPressInside = useClickOutside([() => root, panel], foundation.handleClickOutside, panelShow);
 
     const isConfirmNeeded = () => needConfirm(props);
 
@@ -510,8 +521,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
         get defaultPickerValue() {
             return local.defaultPickerValue;
         },
-        onChange: (input, e) => foundation.handleInputChange(input, e),
-        onEnterPress: (input) => foundation.handleInputComplete(input),
+        onChange: foundation.handleInputChange,
+        onEnterPress: foundation.handleInputComplete,
         block: true,
         get inputStyle() {
             return local.inputStyle;
@@ -541,7 +552,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             return local.inputReadOnly || Boolean(local.insetInput);
         },
         onFocus: (e, range) => foundation.handleInputFocus(e, range as RangeInput),
-        onClear: (e) => foundation.handleInputClear(e),
+        onClear: foundation.handleInputClear,
         get prefix() {
             return local.prefix;
         },
@@ -563,8 +574,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
         get rangeSeparatorNode() {
             return local.rangeSeparatorNode;
         },
-        onRangeClear: (e) => foundation.handleRangeInputClear(e),
-        onRangeEndTabPress: () => foundation.handleRangeEndTabPress(),
+        onRangeClear: foundation.handleRangeInputClear,
+        onRangeEndTabPress: foundation.handleRangeEndTabPress,
         rangeInputStartRef: keepInput('triggerStart'),
         rangeInputEndRef: keepInput('triggerEnd'),
         inputRef: keepInput('single'),
@@ -576,10 +587,10 @@ export default function DatePicker(rawProps: DatePickerProps) {
         root = node;
         // React's handle methods ride on the element; focus() takes the range input instead of focus options
         Object.assign(node, {
-            open: () => foundation.open(),
+            open: foundation.open,
             close: () => foundation.close(),
             focus: (focusType?: RangeInput | FocusOptions) => foundation.focus(typeof focusType === 'string' ? focusType : undefined),
-            blur: () => foundation.blur(),
+            blur: foundation.blur,
         });
         registerTrigger(node);
     };
@@ -592,7 +603,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     // null without presets: MonthsGrid sizes the panel by whether a side column exists
     const renderQuickControls = () => (
         <Show when={hasPresets()}>
-            <QuickControl type={local.type} insetInput={local.insetInput} locale={locale().locale} presetPosition={local.presetPosition} presets={local.presets} onPresetClick={(item, e) => foundation.handlePresetClick(item, e)} />
+            <QuickControl type={local.type} insetInput={local.insetInput} locale={locale().locale} presetPosition={local.presetPosition} presets={local.presets} onPresetClick={foundation.handlePresetClick} />
         </Show>
     );
 
@@ -621,7 +632,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                     monthGrid?.showTimePicker(strings.PANEL_TYPE_LEFT);
                     monthGrid?.showTimePicker(strings.PANEL_TYPE_RIGHT);
                 }}
-                onInsetInputChange={(options) => foundation.handleInsetInputChange(options)}
+                onInsetInputChange={foundation.handleInsetInputChange}
             />
         </Show>
     );
@@ -650,7 +661,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             endYear={local.endYear}
             focusRecords={state().focusRecords}
             format={local.format}
-            hasOtherRangeInputBeenFocused={(currentRangeInput) => foundation.hasOtherRangeInputBeenFocused(currentRangeInput)}
+            hasOtherRangeInputBeenFocused={foundation.hasOtherRangeInputBeenFocused}
             hasPresets={hasPresets()}
             hideDisabledOptions={local.hideDisabledOptions}
             insetInput={local.insetInput}
@@ -659,7 +670,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             presetPosition={local.presetPosition}
             rangeInputFocus={state().rangeInputFocus}
             selectedValue={state().cachedSelectedValue}
-            setRangeInputFocus={(focus) => foundation.handleSetRangeFocus(focus)}
+            setRangeInputFocus={foundation.handleSetRangeFocus}
             startDateOffset={local.startDateOffset}
             startYear={local.startYear}
             syncSwitchMonth={local.syncSwitchMonth}
@@ -671,7 +682,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
             renderDateInput={renderDateInput}
             renderFullDate={local.renderFullDate}
             renderQuickControls={renderQuickControls}
-            onChange={(v, options) => foundation.handleSelectedChange(v, options)}
+            onChange={foundation.handleSelectedChange}
             onPanelChange={local.onPanelChange}
         />
     );
@@ -694,14 +705,14 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 yearAndMonthOpts={local.yearAndMonthOpts}
                 renderDateInput={renderDateInput}
                 renderQuickControls={renderQuickControls}
-                onSelect={(item) => foundation.handleYMSelectedChange(item)}
+                onSelect={foundation.handleYMSelectedChange}
             />
         );
     };
 
     const renderFooter = () => (
         <Show when={isConfirmNeeded()}>
-            <Footer disabledConfirm={isRangeType(local.type) && !isRangeValueComplete(state().cachedSelectedValue)} locale={locale().locale} prefixCls={local.prefixCls} onCancelClick={() => foundation.handleCancel()} onConfirmClick={() => foundation.handleConfirm()} />
+            <Footer disabledConfirm={isRangeType(local.type) && !isRangeValueComplete(state().cachedSelectedValue)} locale={locale().locale} prefixCls={local.prefixCls} onCancelClick={foundation.handleCancel} onConfirmClick={foundation.handleConfirm} />
         </Show>
     );
 
@@ -797,39 +808,42 @@ export default function DatePicker(rawProps: DatePickerProps) {
     );
 
     return (
-        <div
-            {...rest}
-            // setRoot runs first and adds the handle methods, so the consumer gets a DatePickerElement
-            ref={mergeRefs<HTMLDivElement>(setRoot, local.ref as Ref<HTMLDivElement> | undefined)}
-            class={clsx(local.class, local.prefixCls)}
-            style={local.style}
-            aria-labelledby={isRange() ? local['aria-labelledby'] : undefined}
-            role={(isRange() ? (rest.role ?? 'group') : namedRole(rest.role, rest['aria-label'], undefined)) as JSX.HTMLAttributes<HTMLDivElement>['role']}
-            onMouseDown={handleMouseDown}
-        >
-            <Popover
-                aria-label={locale().locale.panel[local.type]}
-                afterClose={() => foundation.handlePanelVisibleChange(false)}
-                autoAdjustOverflow={local.autoAdjustOverflow}
-                content={renderPanel}
-                motion={local.motion}
-                position={position()}
-                spacing={local.spacing}
-                stopPropagation={local.stopPropagation}
-                trigger="custom"
-                visible={panelShow()}
-                // the trigger is custom, so the Popover leaves closing on Esc to the DatePicker
-                onEscKeyDown={() => foundation.handleEscKeyDown()}
-                onOpen={() => foundation.handlePanelVisibleChange(true)}
+        // the inputs and any trigger content belong to the DatePicker, not to an enclosing InputGroup
+        <InputGroupContext.Provider value={undefined}>
+            <div
+                {...rest}
+                // setRoot runs first and adds the handle methods, so the consumer gets a DatePickerElement
+                ref={untrack(() => mergeRefs<HTMLDivElement>(setRoot, local.ref as Ref<HTMLDivElement> | undefined))}
+                class={clsx(local.class, local.prefixCls)}
+                style={local.style}
+                aria-labelledby={isRange() ? local['aria-labelledby'] : undefined}
+                role={(isRange() ? (rest.role ?? 'group') : namedRole(rest.role, rest['aria-label'], undefined)) as JSX.HTMLAttributes<HTMLDivElement>['role']}
+                onMouseDown={handleMouseDown}
             >
-                {(getTriggerProps) => (
-                    <div {...(getTriggerProps(triggerOwn) as JSX.HTMLAttributes<HTMLDivElement>)}>
-                        <Show when={local.triggerRender} keyed fallback={<DateInput {...inputProps} />}>
-                            {(render) => render(triggerRenderProps)}
-                        </Show>
-                    </div>
-                )}
-            </Popover>
-        </div>
+                <Popover
+                    aria-label={locale().locale.panel[local.type]}
+                    afterClose={() => foundation.handlePanelVisibleChange(false)}
+                    autoAdjustOverflow={local.autoAdjustOverflow}
+                    content={renderPanel}
+                    motion={local.motion}
+                    position={position()}
+                    spacing={local.spacing}
+                    stopPropagation={local.stopPropagation}
+                    trigger="custom"
+                    visible={panelShow()}
+                    // the trigger is custom, so the Popover leaves closing on Esc to the DatePicker
+                    onEscKeyDown={foundation.handleEscKeyDown}
+                    onOpen={() => foundation.handlePanelVisibleChange(true)}
+                >
+                    {(getTriggerProps) => (
+                        <div {...(getTriggerProps(triggerOwn) as JSX.HTMLAttributes<HTMLDivElement>)}>
+                            <Show when={local.triggerRender} keyed fallback={<DateInput {...inputProps} />}>
+                                {(render) => render(triggerRenderProps)}
+                            </Show>
+                        </div>
+                    )}
+                </Popover>
+            </div>
+        </InputGroupContext.Provider>
     );
 }

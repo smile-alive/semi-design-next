@@ -49,8 +49,7 @@ export function readMarkdownData(read: () => unknown): unknown {
     }
 }
 
-function create(type: ElementType, props: Record<string, unknown>) {
-    const { className, ...rest } = props;
+function create(type: ElementType, { className, ...rest }: Record<string, unknown>) {
     // an element-valued prop is a getter that creates its nodes on each read, as in the props Solid compiles: a
     // component with function children (Tooltip) would otherwise call an element as its render function
     const live: Record<string, unknown> = {};

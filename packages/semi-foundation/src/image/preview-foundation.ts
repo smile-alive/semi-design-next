@@ -53,7 +53,10 @@ export function getGroupPreviewList<I extends PreviewGroupImage>(src: string | s
 /** Gives the imgs that entered the viewport their src; a loaded img has no data-src left and is skipped */
 export function loadLazyImages(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
     for (const entry of entries) {
-        const target = entry.target as HTMLImageElement;
+        const { target } = entry;
+        if (!(target instanceof HTMLImageElement)) {
+            continue;
+        }
         const lazySrc = target.dataset.src;
         if (entry.isIntersecting && lazySrc) {
             target.src = lazySrc;
@@ -67,7 +70,7 @@ export default class PreviewFoundation<P extends PreviewBaseProps = PreviewBaseP
     #images = new Map<Element, NonNullable<S['images']>[number]>();
 
     #syncImages() {
-        const images = [...this.#images.values()].sort(byDocumentOrder);
+        const images = [...this.#images.values()].toSorted(byDocumentOrder);
         const current = this.getState('images') ?? [];
         if (images.length !== current.length || images.some((image, i) => image !== current[i])) {
             this.setState({ images });

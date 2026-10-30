@@ -15,6 +15,7 @@ import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { hasContent, isSemiIcon, isText } from '../_utils';
 import useLocale from '../locale/use-locale';
+import { useInputGroupInScope, withInputGroup } from './context';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -144,7 +145,7 @@ function createHandle(inputRef: React.RefObject<HTMLInputElement | null>, rootRe
 }
 
 export default function Input(rawProps: InputProps) {
-    const props = useDefaultProps('Input', rawProps, defaultProps);
+    const props = useDefaultProps('Input', withInputGroup(rawProps, useInputGroupInScope()), defaultProps);
 
     const {
         ref,
@@ -277,7 +278,7 @@ export default function Input(rawProps: InputProps) {
                 [`${prefixCls}-prefix-icon`]: isSemiIcon(labelNode),
             })}
             x-semi-prop="prefix,insetLabel"
-            onClick={() => foundation.handleClickPrefixOrSuffix()}
+            onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
         >
             {labelNode}
@@ -293,7 +294,7 @@ export default function Input(rawProps: InputProps) {
                 [`${prefixCls}-suffix-hidden`]: allowClear && Boolean(hideSuffix),
             })}
             x-semi-prop="suffix"
-            onClick={() => foundation.handleClickPrefixOrSuffix()}
+            onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
         >
             {suffix}
@@ -302,7 +303,7 @@ export default function Input(rawProps: InputProps) {
 
     const modeNode =
         mode === 'password' && !disabled ? (
-            <button type="button" className={`${prefixCls}-modebtn`} aria-label={state.eyeClosed ? locale.showPassword : locale.hidePassword} onClick={() => foundation.handleClickEye()} onKeyDown={stopButtonActivationKeys} onMouseDown={(e) => e.preventDefault()}>
+            <button type="button" className={`${prefixCls}-modebtn`} aria-label={state.eyeClosed ? locale.showPassword : locale.hidePassword} onClick={foundation.handleClickEye} onKeyDown={stopButtonActivationKeys} onMouseDown={(e) => e.preventDefault()}>
                 {state.eyeClosed ? <IconEyeClosedSolid /> : <IconEyeOpened />}
             </button>
         ) : null;
@@ -317,8 +318,8 @@ export default function Input(rawProps: InputProps) {
         [foundation]
     );
 
-    useDidUpdate(props.value, (value) => foundation.handleValueChange(value));
-    useDidUpdate(props.mode, (mode) => foundation.handleModeChange(mode));
+    useDidUpdate(props.value, foundation.handleValueChange);
+    useDidUpdate(props.mode, foundation.handleModeChange);
 
     useImperativeHandle(props.ref, () => createHandle(inputRef, rootRef, foundation), [foundation]);
 
@@ -332,7 +333,7 @@ export default function Input(rawProps: InputProps) {
                     foundation.handleBlur(e);
                 }
             }}
-            onClick={(e) => foundation.handleClick(e)}
+            onClick={foundation.handleClick}
             onFocus={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget)) {
                     foundation.handleFocus(e);
@@ -371,9 +372,9 @@ export default function Input(rawProps: InputProps) {
                 onCompositionEnd={foundation.handleCompositionEnd}
                 onCompositionStart={foundation.handleCompositionStart}
                 onCompositionUpdate={foundation.handleCompositionUpdate}
-                onInput={(e) => foundation.handleInput(e)}
-                onKeyDown={(e) => foundation.handleKeyDown(e)}
-                onKeyUp={(e) => foundation.handleKeyUp(e)}
+                onInput={foundation.handleInput}
+                onKeyDown={foundation.handleKeyDown}
+                onKeyUp={foundation.handleKeyUp}
             />
             {allowClear && (
                 <button

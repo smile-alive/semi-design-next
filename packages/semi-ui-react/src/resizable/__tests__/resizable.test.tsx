@@ -58,15 +58,15 @@ const nonPrimaryPresses = [
 ] as const;
 // jsdom has no pointer capture, so the moves and the release the browser would send to the pressed handle go to it
 let pressed;
-const down = (target, from, init?) => {
+function down(target, from, init?) {
     pressed = target;
     fireEvent.pointerDown(target, { ...point(from), ...init });
-};
+}
 const move = (to) => fireEvent.pointerMove(pressed, point(to));
-const up = (to = [0, 0]) => {
+function up(to = [0, 0]) {
     fireEvent.pointerUp(pressed, point(to));
     fireEvent.lostPointerCapture(pressed, point(to));
-};
+}
 function drag(target, from, to) {
     down(target, from);
     move(to);
@@ -570,7 +570,7 @@ describe('ResizeGroup', () => {
     const widths = (container) => getItems(container).map((el) => el.style.width);
     const heights = (container) => getItems(container).map((el) => el.style.height);
 
-    function renderGroup({
+    const renderGroup = ({
         direction,
         items = [{}, {}],
         groupProps = {},
@@ -580,7 +580,7 @@ describe('ResizeGroup', () => {
         items?: ComponentProps<typeof ResizeItem>[];
         groupProps?: Record<string, unknown>;
         strict?: boolean;
-    } = {}) {
+    } = {}) => {
         const vertical = direction === 'vertical';
         const children = items.flatMap((itemProps, i) => [
             i > 0 && <ResizeHandler key={`h${i}`} />,
@@ -596,7 +596,7 @@ describe('ResizeGroup', () => {
             </div>
         );
         return render(strict ? <StrictMode>{tree}</StrictMode> : tree);
-    }
+    };
 
     it('水平 group 布局：各项等分，并减去相邻手柄宽度的一半', () => {
         const { container } = renderGroup({ groupProps: { className: 'custom', 'data-testid': 'group' } });

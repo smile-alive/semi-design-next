@@ -9,12 +9,12 @@ import Tooltip from '../../tooltip';
 import ConfigProvider, { defaultResponsiveMap } from '../index';
 import Tree from './fixtures/tree.vue';
 
-const layoutOf = (name: string) => {
+function layoutOf(name: string) {
     const root = screen.getByRole('switch', { name }).closest('.semi-switch') as HTMLElement;
     const box = root.getBoundingClientRect();
     const knob = (root.querySelector('.semi-switch-knob') as HTMLElement).getBoundingClientRect();
     return { direction: getComputedStyle(root).direction, knobOnLeft: knob.left - box.left < box.right - knob.right };
-};
+}
 
 describe('ConfigProvider（浏览器）', () => {
     it('真实 matchMedia 匹配会传给消费者，卸载后移除所有媒体监听', async () => {

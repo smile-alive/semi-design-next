@@ -40,12 +40,12 @@ const dayItems = (root: ParentNode) => [...root.querySelectorAll<HTMLElement>(`.
 const allDayItems = (root: ParentNode) => [...root.querySelectorAll<HTMLElement>(`.${prefixCls}-event-allday`)];
 const dayCols = (container: ParentNode) => [...container.querySelectorAll<HTMLElement>(`.${prefixCls}-grid`)];
 const card = () => document.querySelector<HTMLElement>(`.${prefixCls}-month-event-card`);
-const closeCard = async () => {
+async function closeCard() {
     await waitFor(() => {
         endLeaveAnimations();
         expect(card()).toBeNull();
     });
-};
+}
 
 describe('Calendar', () => {
     afterEach(() => {
@@ -1004,7 +1004,7 @@ describe('Calendar 表格语义', () => {
     const roleOf = (el: Element) => el.parentElement?.closest('[role]')?.getAttribute('role');
 
     // the chain axe requires: table -> rowgroup -> row -> cell, and a li only directly in a ul
-    function expectValidTable(container: HTMLElement) {
+    const expectValidTable = (container: HTMLElement) => {
         const table = rootOf(container);
         expect(table).toHaveAttribute('role', 'table');
         for (const rowgroup of container.querySelectorAll('[role="rowgroup"]')) {
@@ -1024,7 +1024,7 @@ describe('Calendar 表格语义', () => {
             expect(li.parentElement?.tagName).toBe('UL');
         }
         expect(container.querySelectorAll('ul[role], li[role]')).toHaveLength(0);
-    }
+    };
 
     it.each(MODES)('%s 视图是由 rowgroup、row 与 cell 组成的表格', (mode) => {
         const { container } = render(() => <Calendar displayValue={today} mode={mode} range={weekRange} />);

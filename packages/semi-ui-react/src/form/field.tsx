@@ -16,6 +16,7 @@ import Slider from '../slider/index';
 import Switch from '../switch/index';
 import TagInput from '../tag-input/index';
 import TimePicker from '../time-picker/index';
+import Transfer, { type TransferProps } from '../transfer/index';
 import TreeSelect, { type TreeSelectNodeValue, type TreeSelectProps } from '../tree-select/index';
 import Upload, { type UploadProps } from '../upload/index';
 import withField, { withTopLabelField } from './hoc/with-field';
@@ -54,6 +55,13 @@ export const FormSlider = withTopLabelField(Slider);
 export const FormTimePicker = withField(TimePicker);
 export const FormTreeSelect = withField(TreeSelect) as FormTreeSelectComponent;
 export const FormCascader = withField(Cascader) as FormCascaderComponent;
+
+// Transfer spreads unknown props onto its root div, so the validateStatus the field injects would reach the DOM
+function TransferControl({ validateStatus: _validateStatus, ...props }: TransferProps & { validateStatus?: unknown }) {
+    return <Transfer {...props} />;
+}
+
+export const FormTransfer = withTopLabelField(TransferControl);
 export const FormRating = withTopLabelField(Rating);
 export const FormAutoComplete = withField(AutoComplete, { valueKey: 'value', onKeyChangeFnName: 'onChange' });
 export const FormUpload = withTopLabelField(Upload, {

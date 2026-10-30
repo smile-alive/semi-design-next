@@ -19,9 +19,9 @@ export interface ColumnFlags {
     clickToSort: boolean;
     showSortTip: boolean;
     sortOrder: SortOrder;
-    filteredValue: unknown[] | undefined;
+    filteredValue?: unknown[];
     /** The sort and filter state of the column, when it has a dataIndex */
-    query: ColumnProps | undefined;
+    query?: ColumnProps;
 }
 
 const PLAIN_FLAGS: ColumnFlags = {

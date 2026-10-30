@@ -121,7 +121,7 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
         }));
     }
 
-    selectYear(item: YearScrollItem, panelType?: PanelType) {
+    selectYear = (item: YearScrollItem, panelType?: PanelType) => {
         const { currentYear, currentMonth } = YearAndMonthFoundation.getYearAndMonth(this.getProps());
         const { type } = this.getProps();
         const left = strings.PANEL_TYPE_LEFT;
@@ -143,9 +143,9 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
         if (type !== 'year') {
             this.#autoSelectMonth(item, panelType, year, currentMonth);
         }
-    }
+    };
 
-    selectMonth(item: MonthScrollItem, panelType?: PanelType) {
+    selectMonth = (item: MonthScrollItem, panelType?: PanelType) => {
         const { currentMonth, currentYear } = YearAndMonthFoundation.getYearAndMonth(this.getProps());
         const { type } = this.getProps();
         const left = strings.PANEL_TYPE_LEFT;
@@ -159,9 +159,9 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
         }
 
         this._adapter.notifySelect({ currentYear, currentMonth: month });
-    }
+    };
 
-    backToMain() {
+    backToMain = () => {
         this._adapter.notifyBackToMain();
-    }
+    };
 }

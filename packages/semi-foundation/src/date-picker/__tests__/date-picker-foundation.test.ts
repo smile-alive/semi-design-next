@@ -91,8 +91,9 @@ describe('DatePickerFoundation 范围输入框的聚焦记录', () => {
 
     it('点击范围触发器外层立即聚焦起始输入框，不留下卸载后才执行的定时器', () => {
         const { foundation, adapter } = createFoundation({ type: 'dateRange' });
-        foundation.handleTriggerWrapperClick({});
-        expect(adapter.notifyFocus).toHaveBeenCalledWith({}, 'rangeStart');
+        const event = { target: null, currentTarget: null };
+        foundation.handleTriggerWrapperClick(event);
+        expect(adapter.notifyFocus).toHaveBeenCalledWith(event, 'rangeStart');
         foundation.destroy();
         expect(vi.getTimerCount()).toBe(0);
     });

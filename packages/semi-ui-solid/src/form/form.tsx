@@ -2,6 +2,7 @@ import { type JSX, Match, Show, Switch, createUniqueId, onCleanup, onMount, spli
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation from '@fibrae/semi-foundation/form/foundation';
 import type { BaseFormAdapter } from '@fibrae/semi-foundation/form/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -89,7 +90,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
             notifySubmitFail: (errors, values, e) => local.onSubmitFail?.(errors, values, e),
             forceUpdate: (formState, callback) => {
                 base.setState({ formState }, callback);
-                local.form?.__updateState?.(formState);
+                getFormApiProxyInternals(local.form)?.updateState(formState);
             },
             notifyChange: (formState) => local.onChange?.(formState),
             notifyValueChange: (values, changedValues) => local.onValueChange?.(values, changedValues),
@@ -187,10 +188,10 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
         warning(Boolean(local.component) && 'children' in rawProps, '[Semi Form] You should not use <Form component> and <Form>{children}</Form> in ths same time; <Form>{children}</Form> will be ignored');
         warning(Boolean(local.render) && 'children' in rawProps, '[Semi Form] You should not use <Form render> and <Form>{children}</Form> in ths same time; <Form>{children}</Form> will be ignored');
         local.getFormApi?.(formApi);
-        local.form?.__bind?.(formApi);
+        getFormApiProxyInternals(local.form)?.bind(formApi);
         onCleanup(() => {
             foundation.destroy();
-            local.form?.__unbind?.();
+            getFormApiProxyInternals(local.form)?.unbind();
         });
     });
 

@@ -256,7 +256,7 @@ describe('Table 行为基线', () => {
 
     const filterOption = (text: string) => screen.getByText(text, { selector: `.${B}-dropdown-item *, .${B}-dropdown-item` });
 
-    async function clickFilterOptionA(filterConfirmMode: 'immediate' | 'confirm') {
+    const clickFilterOptionA = async (filterConfirmMode: 'immediate' | 'confirm') => {
         const columns: ColumnProps[] = [
             {
                 title: 'Name',
@@ -272,7 +272,7 @@ describe('Table 行为基线', () => {
         render(() => <Table columns={columns} dataSource={smallData()} pagination={false} />);
         await openFilter();
         await userEvent.click(await screen.findByText('a', { selector: `.${B}-dropdown-item *, .${B}-dropdown-item` }));
-    }
+    };
 
     it('filterConfirmMode=immediate：点击筛选项立即筛选', async () => {
         await clickFilterOptionA('immediate');
@@ -1062,14 +1062,14 @@ describe('Table 全选范围与 changedRows', () => {
     const columns: ColumnProps[] = [{ title: 'Name', dataIndex: 'name', filteredValue: ['a'], onFilter: (value, record) => record.name === value }];
     const keysOf = (list: Row[]) => list.map((row) => row.key);
 
-    async function selectAll(checkRelation: 'related' | 'unRelated', selectedRowKeys: string[]) {
+    const selectAll = async (checkRelation: 'related' | 'unRelated', selectedRowKeys: string[]) => {
         const onSelectAll = vi.fn<SelectAllChange>();
         render(() => <Table columns={columns} dataSource={rows} pagination={false} rowSelection={{ checkRelation, selectedRowKeys, onSelectAll }} />);
         await userEvent.click(getHeaderSelectionCheckbox());
         const [selected, selectedRows, changedRows] = onSelectAll.mock.lastCall ?? [];
         const sorted = (list: Row[]) => keysOf(list).toSorted((a, b) => String(a).localeCompare(String(b)));
         return { selected, selectedKeys: sorted(selectedRows ?? []), changedKeys: sorted(changedRows ?? []) };
-    }
+    };
 
     it.each(['related', 'unRelated'] as const)('%s：全选只报告状态真正变化的行', async (checkRelation) => {
         expect(await selectAll(checkRelation, ['1', '3'])).toEqual({ selected: true, selectedKeys: ['1', '2', '3'], changedKeys: ['2'] });

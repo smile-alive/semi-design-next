@@ -23,27 +23,27 @@ export default class TimeInputFoundation<P extends object = object, S extends ob
         this.#cursorIndex = null;
     }
 
-    handleFocus(e: E) {
+    handleFocus = (e: E) => {
         this.#storeCursor();
         this._adapter.notifyFocus(e);
-    }
+    };
 
-    handleChange(v: string) {
+    handleChange = (v: string) => {
         this.#storeCursor();
         this._adapter.notifyChange(v);
-    }
+    };
 
-    handleBlur(e: E) {
+    handleBlur = (e: E) => {
         this.#clearCursor();
         this._adapter.notifyBlur(e);
-    }
+    };
 
-    restoreCursor() {
+    restoreCursor = () => {
         const inputNode = this._adapter.getInputNode();
         const cursorIndex = this.#cursorIndex;
         if (inputNode && cursorIndex !== null) {
             inputNode.selectionStart = cursorIndex;
             inputNode.selectionEnd = cursorIndex;
         }
-    }
+    };
 }

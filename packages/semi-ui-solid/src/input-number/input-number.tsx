@@ -1,4 +1,4 @@
-import { type JSX, type Ref, Show, createMemo, mergeProps, splitProps } from 'solid-js';
+import { type JSX, type Ref, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/input-number/constants';
 import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/input-number/foundation';
@@ -12,7 +12,7 @@ import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import Input, { type InputChangeEvent, type InputElementEvent, type InputProps } from '../input';
-import { useInputGroupContext } from '../input/context';
+import { InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
 
@@ -98,10 +98,10 @@ export default function InputNumber(rawProps: InputNumberProps) {
 
     const inGroup = group?.layer === layer ? group : undefined;
 
-    // see Input: the group's size replaces this one, its disabled fills a missing one; the inner Input takes its other attributes
+    // see Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
         get size() {
-            return inGroup?.view().size ?? defaulted.size ?? strings.DEFAULT_SIZE;
+            return rawProps.size ?? inGroup?.view().size ?? defaulted.size ?? strings.DEFAULT_SIZE;
         },
         get disabled() {
             return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled ?? false;
@@ -197,9 +197,9 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     [`${local.prefixCls}-number-button-up-disabled`]: local.disabled,
                     [`${local.prefixCls}-number-button-up-not-allowed`]: notAllowedUp(),
                 })}
-                onLostPointerCapture={() => foundation.handlePressEnd()}
-                onMouseDown={(e) => foundation.handleStepMouseDown(e)}
-                onPointerDown={(e) => foundation.handleUpPress(e)}
+                onLostPointerCapture={foundation.handlePressEnd}
+                onMouseDown={foundation.handleStepMouseDown}
+                onPointerDown={foundation.handleUpPress}
             >
                 <IconChevronUp size="extra-small" />
             </span>
@@ -208,9 +208,9 @@ export default function InputNumber(rawProps: InputNumberProps) {
                     [`${local.prefixCls}-number-button-down-disabled`]: local.disabled,
                     [`${local.prefixCls}-number-button-down-not-allowed`]: notAllowedDown(),
                 })}
-                onLostPointerCapture={() => foundation.handlePressEnd()}
-                onMouseDown={(e) => foundation.handleStepMouseDown(e)}
-                onPointerDown={(e) => foundation.handleDownPress(e)}
+                onLostPointerCapture={foundation.handlePressEnd}
+                onMouseDown={foundation.handleStepMouseDown}
+                onPointerDown={foundation.handleDownPress}
             >
                 <IconChevronDown size="extra-small" />
             </span>
@@ -230,39 +230,43 @@ export default function InputNumber(rawProps: InputNumberProps) {
     );
 
     return (
-        <div
-            ref={mergeRefs(setRoot, local.ref)}
-            class={clsx(local.class, `${local.prefixCls}-number`, { [`${local.prefixCls}-number-size-${local.size}`]: local.size })}
-            style={local.style}
-            onMouseEnter={() => foundation.handleInputMouseEnter()}
-            onMouseLeave={() => foundation.handleInputMouseLeave()}
-            onMouseMove={() => foundation.handleInputMouseMove()}
-        >
-            <Input
-                role="spinbutton"
-                aria-disabled={local.disabled}
-                aria-valuemax={local.max === Infinity ? undefined : local.max}
-                aria-valuemin={local.min === -Infinity ? undefined : local.min}
-                aria-valuenow={InputNumberFoundation.getAriaValueNow(state().number)}
-                step={local.step}
-                {...rest}
-                inputRef={mergeRefs((node: HTMLInputElement) => (input = node), local.inputRef)}
-                disabled={local.disabled}
-                value={state().value}
-                // InputNumber's own global defaults apply to the adornments and showClear; the global Input ones must not
-                addonAfter={local.addonAfter ?? null}
-                addonBefore={local.addonBefore ?? null}
-                insetLabel={local.insetLabel ?? null}
-                showClear={local.showClear ?? false}
-                size={local.size}
-                prefix={local.prefix ?? null}
-                suffix={showInnerButtons() ? buttons() : (local.suffix ?? null)}
-                onBlur={(e) => foundation.handleInputBlur(e)}
-                onChange={(value, e) => foundation.handleInputChange(value, e)}
-                onFocus={(e) => foundation.handleInputFocus(e)}
-                onKeyDown={(e) => foundation.handleInputKeyDown(e)}
-            />
-            <Show when={!(local.hideButtons || local.innerButtons)}>{buttons()}</Show>
-        </div>
+        // the inner Input and any slot content belong to the InputNumber, not to an enclosing InputGroup
+        <InputGroupContext.Provider value={undefined}>
+            <div
+                // read once: the provider re-creates its subtree when anything read while creating it changes
+                ref={untrack(() => mergeRefs(setRoot, local.ref))}
+                class={clsx(local.class, `${local.prefixCls}-number`, { [`${local.prefixCls}-number-size-${local.size}`]: local.size })}
+                style={local.style}
+                onMouseEnter={foundation.handleInputMouseEnter}
+                onMouseLeave={foundation.handleInputMouseLeave}
+                onMouseMove={foundation.handleInputMouseMove}
+            >
+                <Input
+                    role="spinbutton"
+                    aria-disabled={local.disabled}
+                    aria-valuemax={local.max === Infinity ? undefined : local.max}
+                    aria-valuemin={local.min === -Infinity ? undefined : local.min}
+                    aria-valuenow={InputNumberFoundation.getAriaValueNow(state().number)}
+                    step={local.step}
+                    {...rest}
+                    inputRef={mergeRefs((node: HTMLInputElement) => (input = node), local.inputRef)}
+                    disabled={local.disabled}
+                    value={state().value}
+                    // InputNumber's own global defaults apply to the adornments and showClear; the global Input ones must not
+                    addonAfter={local.addonAfter ?? null}
+                    addonBefore={local.addonBefore ?? null}
+                    insetLabel={local.insetLabel ?? null}
+                    showClear={local.showClear ?? false}
+                    size={local.size}
+                    prefix={local.prefix ?? null}
+                    suffix={showInnerButtons() ? buttons() : (local.suffix ?? null)}
+                    onBlur={foundation.handleInputBlur}
+                    onChange={foundation.handleInputChange}
+                    onFocus={foundation.handleInputFocus}
+                    onKeyDown={foundation.handleInputKeyDown}
+                />
+                <Show when={!(local.hideButtons || local.innerButtons)}>{buttons()}</Show>
+            </div>
+        </InputGroupContext.Provider>
     );
 }

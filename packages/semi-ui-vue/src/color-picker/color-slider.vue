@@ -46,7 +46,7 @@
                 backgroundColor: hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),
             }"
         >
-            <input :aria-label="i18n.locale.hue" :class="`${cssClasses.PREFIX}-handleSlider`" :max="360" :min="0" type="range" :value="Math.round(props.hue)" @input="onInput" @keydown="foundation.handleKeyDown($event)" />
+            <input :aria-label="i18n.locale.hue" :class="`${cssClasses.PREFIX}-handleSlider`" :max="360" :min="0" type="range" :value="Math.round(props.hue)" @input="onInput" @keydown="foundation.handleKeyDown" />
         </div>
     </div>
 </template>

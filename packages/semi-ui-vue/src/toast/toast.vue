@@ -83,9 +83,9 @@
     useNoticeClose(foundation, list, () => props.id, announce);
 
     defineExpose<ToastHandle>({
-        restartCloseTimer: () => foundation.restartCloseTimer(),
-        pauseCloseTimer: () => foundation.pauseCloseTimer(),
-        resumeCloseTimer: () => foundation.resumeCloseTimer(),
+        restartCloseTimer: foundation.restartCloseTimer,
+        pauseCloseTimer: foundation.pauseCloseTimer,
+        resumeCloseTimer: foundation.resumeCloseTimer,
     });
 </script>
 

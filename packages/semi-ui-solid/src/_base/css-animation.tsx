@@ -21,7 +21,7 @@ export interface CSSAnimation {
 }
 
 interface Run {
-    start: string | undefined;
+    start?: string;
     replayKey: string;
     motion: boolean;
 }

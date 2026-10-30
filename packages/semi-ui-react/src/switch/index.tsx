@@ -104,7 +104,7 @@ export default function Switch(rawProps: SwitchProps) {
     const controlAria = pickBy(others, isAria);
     const rest = omitBy(others, isAria);
 
-    useDidUpdate(props.checked, (checked) => foundation.setChecked(checked));
+    useDidUpdate(props.checked, foundation.setChecked);
 
     return (
         <div {...rest} ref={ref} className={wrapperCls} style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>

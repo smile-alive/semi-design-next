@@ -63,7 +63,7 @@ export interface InputProps extends ElementProps<'input', 'onChange' | 'prefix' 
     placeholder?: string | number;
     insetLabel?: JSX.Element;
     insetLabelId?: string;
-    /** An enclosing InputGroup's size replaces it */
+    /** An enclosing InputGroup's size applies when this is not set */
     size?: InputSize;
     clearIcon?: JSX.Element;
     validateStatus?: ValidateStatus;
@@ -92,8 +92,8 @@ export interface InputProps extends ElementProps<'input', 'onChange' | 'prefix' 
 }
 
 export interface InputState {
-    value: string | number | undefined;
-    cachedValue: string | number | undefined;
+    value?: string | number;
+    cachedValue?: string | number;
     isFocus: boolean;
     eyeClosed: boolean;
 }
@@ -125,11 +125,10 @@ export default function Input(rawProps: InputProps) {
 
     const inGroup = group?.layer === layer ? group : undefined;
 
-    // The group's size replaces the control's own and its disabled only fills a missing one, as in React; its other
-    // attributes sit below the control's props, so the control's own attribute wins (React's cloneElement lets the group's win)
-    const props = mergeProps((inGroup?.attrs ?? {}) as Partial<InputProps>, defaulted, {
+    // read from rawProps: the defaulted ones already hold the global value, which would hide the group's
+    const props = mergeProps(defaulted, {
         get size() {
-            return inGroup?.view().size ?? defaulted.size ?? 'default';
+            return rawProps.size ?? inGroup?.view().size ?? defaulted.size ?? 'default';
         },
         get disabled() {
             return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled ?? false;
@@ -339,7 +338,7 @@ export default function Input(rawProps: InputProps) {
                 [`${prefixCls}-only_border`]: local.onlyBorder != null,
             })}
             style={wrapperStyle()}
-            onClick={(e) => foundation.handleClick(e)}
+            onClick={foundation.handleClick}
             onFocusIn={controlled.handleFocusIn}
             onFocusOut={controlled.handleFocusOut}
         >
@@ -363,7 +362,7 @@ export default function Input(rawProps: InputProps) {
                         [`${prefixCls}-prefix-icon`]: labelKind() === 'icon',
                     })}
                     x-semi-prop="prefix,insetLabel"
-                    onClick={() => foundation.handleClickPrefixOrSuffix()}
+                    onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={preventMouseDown}
                 >
                     {prefixKind() ? prefix() : insetLabel()}
@@ -394,11 +393,11 @@ export default function Input(rawProps: InputProps) {
                 // lowercase name is the boolean attribute, which the server omits when false
                 readonly={local.readonly || local.readOnly}
                 onCompositionEnd={controlled.handleCompositionEnd}
-                onCompositionStart={(e) => foundation.handleCompositionStart(e)}
-                onCompositionUpdate={(e) => foundation.handleCompositionUpdate(e)}
+                onCompositionStart={foundation.handleCompositionStart}
+                onCompositionUpdate={foundation.handleCompositionUpdate}
                 onInput={handleInput}
-                onKeyDown={(e) => foundation.handleKeyDown(e)}
-                onKeyUp={(e) => foundation.handleKeyUp(e)}
+                onKeyDown={foundation.handleKeyDown}
+                onKeyUp={foundation.handleKeyUp}
             />
             <Show when={allowClear()}>
                 <button ref={setClearButton} type="button" class={`${prefixCls}-clearbtn`} aria-label={locale().locale.clear} onClick={handleClearClick} onKeyDown={stopButtonActivationKeys} onMouseDown={handleClearMouseDown}>
@@ -415,14 +414,14 @@ export default function Input(rawProps: InputProps) {
                         [`${prefixCls}-suffix-hidden`]: allowClear() && Boolean(local.hideSuffix),
                     })}
                     x-semi-prop="suffix"
-                    onClick={() => foundation.handleClickPrefixOrSuffix()}
+                    onClick={foundation.handleClickPrefixOrSuffix}
                     onMouseDown={preventMouseDown}
                 >
                     {suffix()}
                 </div>
             </Show>
             <Show when={local.mode === 'password' && !local.disabled}>
-                <button type="button" class={`${prefixCls}-modebtn`} aria-label={state().eyeClosed ? locale().locale.showPassword : locale().locale.hidePassword} onClick={() => foundation.handleClickEye()} onKeyDown={stopButtonActivationKeys} onMouseDown={preventMouseDown}>
+                <button type="button" class={`${prefixCls}-modebtn`} aria-label={state().eyeClosed ? locale().locale.showPassword : locale().locale.hidePassword} onClick={foundation.handleClickEye} onKeyDown={stopButtonActivationKeys} onMouseDown={preventMouseDown}>
                     <Show when={state().eyeClosed} fallback={<IconEyeOpened />}>
                         <IconEyeClosedSolid />
                     </Show>

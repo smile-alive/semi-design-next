@@ -866,7 +866,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return { left: scrollLeft - min > 1, right: min + max - scrollLeft > 1 };
     }
 
-    static readScrollMetrics(body: HTMLElement | null | undefined): TableScrollMetrics | null {
+    static readScrollMetrics(body?: HTMLElement | null): TableScrollMetrics | null {
         return body ? { scrollLeft: body.scrollLeft, scrollWidth: body.scrollWidth, clientWidth: body.clientWidth, rtl: getComputedStyle(body).direction === 'rtl' } : null;
     }
 
@@ -919,8 +919,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const stateSortOrder = query?.sortOrder as BaseSortOrder;
         return {
             query,
-            // compat get falls back to the default only for undefined
-            sortOrder: TableFoundation.isSortOrderValid(stateSortOrder) ? stateSortOrder : (get(query, 'defaultSortOrder', false) as BaseSortOrder),
+            sortOrder: TableFoundation.isSortOrderValid(stateSortOrder) ? stateSortOrder : ((query?.defaultSortOrder ?? false) as BaseSortOrder),
             filteredValue: query?.filteredValue ? query.filteredValue : query?.defaultFilteredValue,
         };
     }
@@ -1031,14 +1030,14 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     /** Hosts call it after mount, on body scroll and when the table or its content resizes */
-    syncScrollEdges() {
+    syncScrollEdges = () => {
         // probed on first use, which hosts only reach after mount, so SSR never touches CSS
         this.#trackScrollEdges ??= !CSS.supports('container-type', 'scroll-state');
         const metrics = this.#trackScrollEdges ? this._adapter.getScrollMetrics() : null;
         if (metrics) {
             this._adapter.setScrollableEdges(TableFoundation.getScrollableEdges(metrics));
         }
-    }
+    };
 
     override init() {
         const dataSource = this.getProp('dataSource');
@@ -1070,7 +1069,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
      * @param prevProps the props of the previous commit
      * @param prevFlattenColumns the flattenColumns state of the previous commit
      */
-    handleUpdate(prevProps: P, prevFlattenColumns: S['flattenColumns']) {
+    // typed with the base shapes: an arrow field's parameters are checked contravariantly, and a host's context holds
+    // the foundation as TableFoundation<any, TableBaseProps<any>>
+    handleUpdate = (prevProps: TableBaseProps<RecordType>, prevFlattenColumns: TableBaseState<RecordType>['flattenColumns']) => {
         const props = this.getProps();
         const flattenColumns = this.getState('flattenColumns');
 
@@ -1097,7 +1098,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
         // sorting and filtering recompute in their own handlers and disabled keys in deriveState
         this.#handleDataUpdate(dataSourceChanged, recompute);
-    }
+    };
 
     initExpandedRowKeys({ groups }: { groups?: Map<string | number, Set<BaseRowKeyType>> } = {}) {
         const { defaultExpandAllRows, defaultExpandedRowKeys = [], expandedRowKeys: propExpandedRowKeys = [], dataSource = [], expandAllRows, defaultExpandAllGroupRows, expandAllGroupRows } = this.getProps();
@@ -1115,18 +1116,18 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this._adapter.setExpandedRowKeys(expandedRowKeys);
     }
 
-    getCurrentPageData(dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) {
+    getCurrentPageData = (dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) => {
         const filteredSortedDataSource = this._adapter.getCachedFilteredSortedDataSource();
         dataSource = dataSource == null ? [...filteredSortedDataSource] : dataSource;
         pagination = pagination == null ? this.getState('pagination') && { ...this.getState('pagination') } : pagination;
         queries = queries == null ? [...this.getState('queries')] : queries;
         return TableFoundation.getPageData(this.getProps(), dataSource, pagination, queries);
-    }
+    };
 
     /** Scrolls back to the first row; a pagination.onChange that takes over paging still gets the scroll */
-    resetScrollY() {
+    resetScrollY = () => {
         this._adapter.resetScrollY();
-    }
+    };
 
     setPage = (currentPage: number, currentPageSize: number) => {
         currentPage = currentPage || this._adapter.getCurrentPage();
@@ -1146,7 +1147,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#notifyChange(pagination, undefined, undefined, { changeType: 'pagination' });
     };
 
-    handleSelectRow(realKey: BaseRowKeyType, selected: boolean, e: any) {
+    handleSelectRow = (realKey: BaseRowKeyType, selected: boolean, e?: Pick<Event, 'stopPropagation'>) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean' && realKey != null) {
             const checkRelation = this._adapter.getCheckRelation();
@@ -1194,9 +1195,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 }
             }
         }
-    }
+    };
 
-    handleSelectAllRow(selected: boolean, e: any) {
+    handleSelectAllRow = (selected: boolean, e?: Pick<Event, 'stopPropagation'>) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean') {
             const checkRelation = this._adapter.getCheckRelation();
@@ -1268,9 +1269,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 this._adapter.notifySelectionChange(selectedRowKeys, selectedRows);
             }
         }
-    }
+    };
 
-    handleRowExpanded(expanded: boolean, realKey: BaseRowKeyType, domEvent: any) {
+    handleRowExpanded = (expanded: boolean, realKey: BaseRowKeyType, domEvent: any) => {
         domEvent?.stopPropagation();
 
         const expandedRowKeys = [...this.getState('expandedRowKeys')];
@@ -1306,13 +1307,13 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
         this._adapter.notifyExpand(expanded, expandedRow, domEvent);
         this._adapter.notifyExpandedRowsChange(expandedRows, [...expandedRowKeys]);
-    }
+    };
 
-    toggleShowFilter(dataIndex: string, visible: boolean) {
+    toggleShowFilter = (dataIndex: string, visible: boolean) => {
         this._adapter.notifyFilterDropdownVisibleChange(visible, dataIndex);
-    }
+    };
 
-    handleFilterSelect(dataIndex: string, data: { filteredValue?: string[] } = {}) {
+    handleFilterSelect = (dataIndex: string, data: { filteredValue?: string[] } = {}) => {
         const query: BaseColumnProps<RecordType> = { ...this.getQuery(dataIndex), filteredValue: data.filteredValue };
         const queries = this.#mergeToQueries(query, null);
         const filters = this.#getAllFilters(queries);
@@ -1326,10 +1327,10 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
 
         this.#notifyChange(pagination, filters, sorter, { changeType: 'filter' });
-    }
+    };
 
     // no stopPropagation: it would block an onHeaderCell click handler when the whole title is clickable
-    handleSort({ dataIndex }: { dataIndex?: string; sortOrder?: BaseSortOrder } = {}) {
+    handleSort = ({ dataIndex }: { dataIndex?: string; sortOrder?: BaseSortOrder } = {}) => {
         let queries = this.getState('queries');
         let curQuery = null;
 
@@ -1373,12 +1374,12 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
 
         this.#notifyChange(pagination, filters, curQuery, { changeType: 'sorter' });
-    }
+    };
 
     /**
      * Select or deselect a row by clicking it when rowSelection.clickRow is set
      */
-    handleRowClickSelection(rowKey: BaseRowKeyType, selected: boolean, e: Pick<Event, 'stopPropagation'>) {
+    handleRowClickSelection = (rowKey: BaseRowKeyType, selected: boolean, e: Pick<Event, 'stopPropagation'>) => {
         const rowSelection = this.getState('rowSelection');
 
         if (rowSelection?.clickRow && !rowSelection.disabled) {
@@ -1391,7 +1392,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
             this.handleSelectRow(rowKey, selected, e);
         }
-    }
+    };
 }
 
 export type BaseRowKeyType = string | number;

@@ -16,31 +16,31 @@ import WarnChildren from './fixtures/warn-children.vue';
 
 // jsdom does not lay out, so scroll positions are stubbed as own properties and restored afterwards
 const stubbed: [object, string, PropertyDescriptor | undefined][] = [];
-const stub = (node: object, key: string, value: unknown) => {
+function stub(node: object, key: string, value: unknown) {
     stubbed.push([node, key, Object.getOwnPropertyDescriptor(node, key)]);
     Object.defineProperty(node, key, { value, writable: true, configurable: true });
-};
-const scroll = async (node: Window | HTMLElement, top: number) => {
+}
+async function scroll(node: Window | HTMLElement, top: number) {
     stub(node, node === window ? 'scrollY' : 'scrollTop', top);
     await fireEvent.scroll(node);
-};
+}
 const targets: HTMLElement[] = [];
-const createTarget = () => {
+function createTarget() {
     const node = document.createElement('div');
     document.body.append(node);
     targets.push(node);
     return node;
-};
-const frame = async () => {
+}
+async function frame() {
     vi.advanceTimersByTime(16);
     await nextTick();
-};
+}
 const getRoot = (container: Element) => container.querySelector<HTMLElement>('.semi-backtop');
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
 describe('BackTop', () => {
     beforeEach(() => {

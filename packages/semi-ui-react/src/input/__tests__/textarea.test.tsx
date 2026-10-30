@@ -165,7 +165,7 @@ describe('TextArea', () => {
     });
 
     it('maxLength 与 truncateValue 配合', () => {
-        function truncateValue(inputValue, maxLength, getValueLength) {
+        const truncateValue = (inputValue, maxLength, getValueLength) => {
             const onChange = vi.fn<NonNullable<TextAreaProps['onChange']>>();
             const { unmount } = render(<TextArea maxLength={maxLength} getValueLength={getValueLength} onChange={onChange} />);
             fireEvent.change(getTextArea(), { target: { value: inputValue } });
@@ -173,7 +173,7 @@ describe('TextArea', () => {
             const value = getTextArea().value;
             unmount();
             return value;
-        }
+        };
 
         const testCases = [
             ['Semi', 5, getValueLength, 'Semi'],
@@ -201,7 +201,7 @@ describe('TextArea', () => {
     });
 
     it('truncateValue 函数的调用时机', () => {
-        function truncateValue(inputValue, maxLength) {
+        const truncateValue = (inputValue, maxLength) => {
             const spyGetValueLength = vi.fn<NonNullable<TextAreaProps['getValueLength']>>((str) => {
                 if (typeof str === 'string') {
                     return [...new Intl.Segmenter().segment(str)].length;
@@ -219,7 +219,7 @@ describe('TextArea', () => {
             expect(spyGetValueLength(value)).toBe(maxLength);
             unmount();
             return value;
-        }
+        };
 
         const testCases = [
             ['Semi Design', 4],
@@ -544,7 +544,7 @@ describe('TextArea', () => {
     it('ref 句柄只包含文档声明的方法与节点', () => {
         const ref = createRef<TextAreaHandle>();
         render(<TextArea ref={ref} />);
-        expect(Object.keys(ref.current).sort()).toEqual(['blur', 'focus', 'nativeElement', 'select', 'setSelectionRange', 'textarea'].sort());
+        expect(Object.keys(ref.current).toSorted()).toEqual(['blur', 'focus', 'nativeElement', 'select', 'setSelectionRange', 'textarea'].toSorted());
         for (const method of ['blur', 'focus', 'select', 'setSelectionRange']) {
             expect(typeof ref.current[method]).toBe('function');
         }

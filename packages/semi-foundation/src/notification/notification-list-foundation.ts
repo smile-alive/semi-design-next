@@ -39,23 +39,23 @@ export default class NotificationListStore {
     getSnapshot = () => this.#items.getSnapshot();
 
     /** Shows a notice, or updates the shown one with the same id */
-    add(notice: NoticeInstance) {
+    add = (notice: NoticeInstance) => {
         this.#items.add(notice);
-    }
+    };
 
-    remove(id: string) {
+    remove = (id: string) => {
         this.#items.remove(id);
-    }
+    };
 
-    finishLeave(id: string) {
+    finishLeave = (id: string) => {
         this.#items.finishLeave(id);
-    }
+    };
 
-    clear() {
+    clear = () => {
         this.#items.clear();
-    }
+    };
 
-    config(opts: ConfigProps) {
+    config = (opts: ConfigProps) => {
         for (const pos of ['top', 'left', 'bottom', 'right'] as const) {
             if (pos in opts) {
                 this.defaults[pos] = opts[pos];
@@ -73,9 +73,9 @@ export default class NotificationListStore {
         if ('stack' in opts) {
             this.defaults.stack = opts.stack;
         }
-    }
+    };
 
-    resetConfig() {
+    resetConfig = () => {
         this.defaults = { ...builtInDefaults };
-    }
+    };
 }

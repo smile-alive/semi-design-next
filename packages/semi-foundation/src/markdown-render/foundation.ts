@@ -139,7 +139,7 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
      * Compiles the current source and stores the result as `renderContent`. A failed compile keeps the last
      * content and goes to `notifyCompileError`.
      */
-    async updateContent() {
+    updateContent = async () => {
         const requestId = ++this.#requestId;
         try {
             const renderContent = await this.evaluate(this.getProp('raw'));
@@ -151,5 +151,5 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
                 this._adapter.notifyCompileError(error);
             }
         }
-    }
+    };
 }

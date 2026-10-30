@@ -53,14 +53,14 @@ function mountInput(css: string, props: Partial<HTMLInputElement>) {
 }
 
 describe('fitInputWidth', () => {
-    function stubTextWidth(width: number) {
+    const stubTextWidth = (width: number) => {
         const measured: string[] = [];
         vi.spyOn(HTMLSpanElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLSpanElement) {
             measured.push(this.textContent);
             return { width } as DOMRect;
         });
         return measured;
-    }
+    };
 
     it('宽度是文字宽度加内边距和边框', () => {
         stubTextWidth(40.2);

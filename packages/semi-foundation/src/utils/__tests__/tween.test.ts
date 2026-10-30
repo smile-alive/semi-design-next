@@ -16,7 +16,7 @@ describe('tween', () => {
         vi.advanceTimersByTime(200);
         expect(values[0]).toBe(0);
         expect(values.at(-1)).toBe(100);
-        expect(values).toEqual([...values].sort((a, b) => a - b));
+        expect(values).toEqual([...values].toSorted((a, b) => a - b));
         expect(onEnd).toHaveBeenCalledTimes(1);
     });
 

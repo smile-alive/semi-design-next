@@ -112,7 +112,7 @@ export interface TreeEmits {
 
 export interface TreeLabelSlotProps {
     item: TreeNodeData;
-    label: string | number | undefined;
+    label?: string | number;
     /** The search keyword, empty while not searching */
     searchWord: string;
 }

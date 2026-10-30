@@ -230,7 +230,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         };
     }
 
-    handlePanelChange(result: { timeStampValue: number }, index = 0) {
+    handlePanelChange = (result: { timeStampValue: number }, index = 0) => {
         const formatToken = this.getValidFormat();
         const dateFnsLocale = this.getProp('dateFnsLocale');
         const oldValue: Date[] = this.getState('value');
@@ -256,64 +256,64 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
                 this.#notifyChange(value, inputValue);
             }
         }
-    }
+    };
 
     /**
      * Derives the value, input text and validity state from a `value` prop. With `prevTimeZone`, `value` is the
      * shown value in that zone and is re-zoned into `timeZone`.
      */
-    syncValueFromProps({ value, timeZone, prevTimeZone }: { value: TimeValue | (TimeValue | undefined)[]; timeZone?: string | number; prevTimeZone?: string | number }) {
+    syncValueFromProps = ({ value, timeZone, prevTimeZone }: { value: TimeValue | (TimeValue | undefined)[]; timeZone?: string | number; prevTimeZone?: string | number }) => {
         const dates = TimePickerFoundation.#parseDates(value, this.getProps(), timeZone, prevTimeZone);
         this.setState({
             value: dates,
             invalid: this.validateDates(dates),
             inputValue: this.formatValue(dates),
         });
-    }
+    };
 
-    handleFocus(e: E) {
+    handleFocus = (e: E) => {
         this.handlePanelOpen();
         this._adapter.notifyFocus(e);
-    }
+    };
 
     /** A custom trigger without a focus target of its own is a button: Enter, Space and Down Arrow open the panel */
-    handleTriggerKeyDown(e: Pick<KeyboardEvent, 'key' | 'preventDefault'>) {
+    handleTriggerKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault'>) => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
             e.preventDefault();
             this.handlePanelOpen();
         }
-    }
+    };
 
-    refreshInputValue() {
+    refreshInputValue = () => {
         this.setState({ inputValue: this.formatValue(this.getState('value')) });
-    }
+    };
 
     /**
      * Closes the panel and reports openChange(false), without blur and without moving focus, e.g. for a picker that
      * leaves the page while open (Vue KeepAlive)
      */
-    close() {
+    close = () => {
         // a controlled `open` is only asked to close; its owner decides
         if (!this._isControlledComponent('open')) {
             this._adapter.setPanelOpen(false);
         }
         this._adapter.notifyOpenChange(false);
-    }
+    };
 
     /**
      * The panel is a custom-trigger popup, so the Popover leaves Esc to the picker. Keyboard focus in a list returns
      * to the input first: the input opens the panel on focus, which must not happen once the panel is closed. The
      * focus stays in the picker, so this is no blur.
      */
-    handleEscKeyDown() {
+    handleEscKeyDown = () => {
         if (this._adapter.isKeyboardFocusInPanel()) {
             this._adapter.setTriggerFocus();
         }
         this.close();
-    }
+    };
 
     // A click on the trigger of a shown panel is no request to open it
-    handlePanelOpen() {
+    handlePanelOpen = () => {
         if (this.getProp('disabled') || TimePickerFoundation.isPanelShown(this.getProps(), this.getStates())) {
             return;
         }
@@ -321,15 +321,15 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
             this._adapter.setPanelOpen(true);
         }
         this._adapter.notifyOpenChange(true);
-    }
+    };
 
     /** Called for a mousedown outside the trigger and the panel while the panel is shown */
-    handleClickOutside(e: MouseEvent) {
+    handleClickOutside = (e: MouseEvent) => {
         this.close();
         this._adapter.notifyBlur(e);
-    }
+    };
 
-    handleInputChange(input: string) {
+    handleInputChange = (input: string) => {
         this._adapter.setInputValue(input);
 
         const rangeSeparator = this.getProp('rangeSeparator');
@@ -362,9 +362,9 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         if (this.#hasChanged(value, oldValue)) {
             this.#notifyChange(value, input);
         }
-    }
+    };
 
-    handleInputBlur() {
+    handleInputBlur = () => {
         const inputValue = this.getState('inputValue');
         const value = this.getState('value');
 
@@ -374,5 +374,5 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         } else {
             this.setState({ inputValue: '', value: [], invalid: false });
         }
-    }
+    };
 }

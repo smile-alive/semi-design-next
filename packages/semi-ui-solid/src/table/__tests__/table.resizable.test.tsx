@@ -21,11 +21,11 @@ const getFileData = (total: number) =>
         size: (i * 1000) % 199,
     }));
 
-const drag = (handle: HTMLElement, from: number, ...moves: number[]) => {
+function drag(handle: HTMLElement, from: number, ...moves: number[]) {
     fireEvent.pointerDown(handle, { button: 0, clientX: from, pointerId: 1 });
     moves.forEach((clientX) => fireEvent.pointerMove(handle, { clientX, pointerId: 1 }));
     fireEvent.lostPointerCapture(handle, { pointerId: 1 });
-};
+}
 
 describe('Table 可调整列宽', () => {
     it('有数字 width 的列都有拖动手柄', () => {

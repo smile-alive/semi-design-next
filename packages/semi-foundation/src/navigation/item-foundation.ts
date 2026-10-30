@@ -48,7 +48,7 @@ export default class ItemFoundation<P extends ItemProps = ItemProps, S extends o
         return itemKey != null && (typeof itemKey === 'string' || typeof itemKey === 'number');
     }
 
-    handleClick(e: MouseEvent | KeyboardEvent) {
+    handleClick = (e: MouseEvent | KeyboardEvent) => {
         const { isSubNav, itemKey, text, disabled } = this.getProps();
 
         if (disabled) {
@@ -74,5 +74,5 @@ export default class ItemFoundation<P extends ItemProps = ItemProps, S extends o
             this._adapter.notifyGlobalOnClick({ itemKey, text, domEvent: e });
         }
         this._adapter.notifyClick({ itemKey, text, domEvent: e });
-    }
+    };
 }

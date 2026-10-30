@@ -276,7 +276,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         const listNode = this._adapter.getListNode();
         if (e && isElement(listNode)) {
             const targetTagName = 'li';
-            const currentTarget = e.target as Node | null;
+            const currentTarget = e.target instanceof Node ? e.target : null;
             const itemNodes = listNode.querySelectorAll(targetTagName);
             const { list } = this.getProps();
             const length = Array.isArray(list) ? list.length : 0;
@@ -395,7 +395,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     /**
      * APG single-select listbox keyboard, selection follows focus; the column scrolls once `selectedIndex` returns
      */
-    handleKeyDown(event: KeyboardEvent) {
+    handleKeyDown = (event: KeyboardEvent) => {
         const { list, selectedIndex, cycled, type } = this.getProps();
         let target = getListTargetIndex(event.key, selectedIndex, list.length, (index) => Boolean(list[index].disabled), {
             loop: cycled,
@@ -416,10 +416,10 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         if (target !== selectedIndex) {
             this._adapter.notifySelectItem({ ...list[target], type, index: target });
         }
-    }
+    };
 
     /** Click on an item in normal mode */
-    selectIndex(index: number) {
+    selectIndex = (index: number) => {
         const { type, list } = this.getProps();
         const listNode = this._adapter.getListNode();
         if (index > -1 && Array.isArray(list) && list.length && isElement(listNode)) {
@@ -435,18 +435,18 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
                 index: indexInData,
             });
         }
-    }
+    };
 
     /** Click in a wheel column: the item under the pointer is selected once scrolling settles */
-    handleWheelClick(e: Pick<Event, 'target'>) {
+    handleWheelClick = (e: Pick<Event, 'target'>) => {
         const { targetNode, infoInList } = this.#getTargetNode(e);
         if (targetNode && infoInList && !infoInList.disabled) {
             this.#select(targetNode);
         }
-    }
+    };
 
     /** Scroll of the column: in wheel mode the item at the selector is selected once scrolling settles */
-    handleScroll() {
+    handleScroll = () => {
         const info = this.#getNearestNodeInfo();
         // unmounted before a queued scroll event arrived
         if (!info) {
@@ -458,17 +458,17 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         if (!this.#isAnimating) {
             this.#select(info.nearestNode);
         }
-    }
+    };
 
     /** The list length changed */
-    syncList() {
+    syncList = () => {
         if (this.#recoverSelectedNode()) {
             this.scrollToSelected();
         }
-    }
+    };
 
     /** The owner changed `selectedIndex` */
-    syncSelectedIndex(selectedIndex: number, previous: number) {
+    syncSelectedIndex = (selectedIndex: number, previous: number) => {
         if (this.#recoverSelectedNode()) {
             this.scrollToSelected();
             return;
@@ -480,10 +480,10 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         }
         this.#cacheSelectedNode(this.#willSelectNode);
         this.scrollToSelected();
-    }
+    };
 
     /** Centres the item last selected */
-    scrollToSelected(duration: number = numbers.DEFAULT_SCROLL_DURATION) {
+    scrollToSelected = (duration: number = numbers.DEFAULT_SCROLL_DURATION) => {
         this.#scrollToNode(this.#selectedNode, duration);
-    }
+    };
 }

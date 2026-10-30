@@ -17,6 +17,7 @@
     import useLocale from '../locale/use-locale';
     import type { TextAreaEmits, TextAreaHandle, TextAreaProps, TextAreaState } from './interface';
     import { defersUpdate } from './model-modifiers';
+    import useGroupLooks from './use-group-looks';
     import useTextEntry from './use-text-entry';
 
     interface FoundationProps extends TextAreaProps {
@@ -41,7 +42,8 @@
         maxCount: semiGlobalDefault('TextArea', 'maxCount'),
         showCounter: () => semiDefault('TextArea', 'showCounter', false),
         showClear: () => semiDefault('TextArea', 'showClear', false),
-        disabled: semiGlobalDefault('TextArea', 'disabled'),
+        // resolves own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
         readonly: semiGlobalDefault('TextArea', 'readonly'),
         autofocus: semiGlobalDefault('TextArea', 'autofocus'),
         validateStatus: semiGlobalDefault('TextArea', 'validateStatus'),
@@ -70,6 +72,9 @@
 
     // see input.vue
     const draft = shallowRef<string>();
+
+    // only `looks.disabled` is used: a TextArea has no size
+    const looks = useGroupLooks('TextArea', props);
 
     const counterId = `${useId()}-counter`;
     const prefix = cssClasses.PREFIX;
@@ -130,6 +135,7 @@
         }),
         {
             props: {
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 maxLength: () => props.maxlength,
                 getValueLength: () => getLength.value,
@@ -150,7 +156,7 @@
     });
 
     const lines = computed(() => (shown.value ? shown.value.split('\n') : ['']));
-    const allowClear = computed(() => TextAreaFoundation.isAllowClear(props, shown.value));
+    const allowClear = computed(() => TextAreaFoundation.isAllowClear({ ...props, disabled: looks.disabled }, shown.value));
     const count = computed(() => TextAreaFoundation.getValueCount(shown.value, getLength.value));
     const exceeds = computed(() => Boolean(props.maxCount) && count.value > (props.maxCount ?? 0));
 
@@ -203,7 +209,7 @@
     );
 
     // the line number panel remounts the textarea
-    watch([shown, () => Boolean(props.autosize), () => props.showLineNumber], () => foundation.fitAutosize(), { flush: 'post' });
+    watch([shown, () => Boolean(props.autosize), () => props.showLineNumber], foundation.fitAutosize, { flush: 'post' });
 
     watch(
         [lineLayout, lines],
@@ -242,14 +248,14 @@
             class: [
                 `${prefix}-textarea`,
                 {
-                    [`${prefix}-textarea-disabled`]: props.disabled,
+                    [`${prefix}-textarea-disabled`]: looks.disabled,
                     [`${prefix}-textarea-readonly`]: props.readonly,
                     [`${prefix}-textarea-autosize`]: Boolean(props.autosize),
                     [`${prefix}-textarea-showClear`]: props.showClear,
                 },
             ],
             cols: props.cols,
-            disabled: props.disabled,
+            disabled: looks.disabled,
             // native maxlength counts UTF-16 units, so getValueLength enforces the limit
             maxlength: getLength.value ? undefined : props.maxlength,
             minlength: TextAreaFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength.value }, shown.value),
@@ -290,7 +296,7 @@
             `${prefix}-textarea-wrapper`,
             {
                 [`${prefix}-textarea-borderless`]: props.borderless,
-                [`${prefix}-textarea-wrapper-disabled`]: props.disabled,
+                [`${prefix}-textarea-wrapper-disabled`]: looks.disabled,
                 [`${prefix}-textarea-wrapper-readonly`]: props.readonly,
                 [`${prefix}-textarea-wrapper-${props.validateStatus}`]: Boolean(props.validateStatus),
                 [`${prefix}-textarea-wrapper-focus`]: state.isFocus,
@@ -299,7 +305,7 @@
                 [`${prefix}-textarea-wrapper-resizeY`]: isResizable(['vertical', 'both', 'block']),
             },
         ]"
-        @click="foundation.handleClick($event)"
+        @click="foundation.handleClick"
         @focusin="handleFocusIn"
         @focusout="handleFocusOut"
     >
@@ -318,7 +324,7 @@
         <button v-if="allowClear" ref="clearButton" :aria-label="locale.locale.clear" :class="`${prefix}-clearbtn`" type="button" @click="handleClearClick" @mousedown.prevent>
             <IconClear />
         </button>
-        <div v-if="hasCounter" :id="counterId" :class="[`${prefix}-textarea-counter`, { [`${prefix}-textarea-counter-exceed`]: exceeds }]" @click="foundation.handleCounterClick()">
+        <div v-if="hasCounter" :id="counterId" :class="[`${prefix}-textarea-counter`, { [`${prefix}-textarea-counter-exceed`]: exceeds }]" @click="foundation.handleCounterClick">
             {{ count }}<template v-if="props.maxCount">/{{ props.maxCount }}</template>
         </div>
     </div>
