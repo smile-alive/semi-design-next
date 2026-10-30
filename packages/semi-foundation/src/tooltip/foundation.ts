@@ -505,7 +505,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
      */
     #watchMove({ triggerRect: rect, viewport }: Layout) {
         const trigger = this.adapter.getTriggerElement();
-        const rootMargin = [rect.top, viewport.width - rect.right, viewport.height - rect.bottom, rect.left].map((inset) => `${-Math.floor(inset)}px`).join(' ');
+        const marginAround = (around: DOMRect) => [around.top, viewport.width - around.right, viewport.height - around.bottom, around.left].map((inset) => `${-Math.floor(inset)}px`).join(' ');
+        const rootMargin = marginAround(rect);
         if (this.#moveWatch?.trigger === trigger && this.#moveWatch.rootMargin === rootMargin) {
             return;
         }
@@ -519,6 +520,13 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
             const observer = new IntersectionObserver(
                 ([{ intersectionRatio }]) => {
                     if (!first) {
+                        this.calcPosition();
+                        return;
+                    }
+                    // the first report is a task after paint, so the trigger may have moved since the root was built
+                    // around it, and the ratio then describes the new place; Floating UI's autoUpdate checks the rect too
+                    const current = this.adapter.getTriggerRect();
+                    if (current && marginAround(current) !== rootMargin) {
                         this.calcPosition();
                         return;
                     }
