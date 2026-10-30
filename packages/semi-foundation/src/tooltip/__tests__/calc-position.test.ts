@@ -136,6 +136,34 @@ describe('calcPosition', () => {
         }
     });
 
+    it('位移观察的首次回调到达前触发器已移动时重新定位', () => {
+        setViewport();
+        const moveWatches: IntersectionObserverCallback[] = [];
+        const Original = globalThis.IntersectionObserver;
+        globalThis.IntersectionObserver = class extends Original {
+            constructor(callback: IntersectionObserverCallback, init?: IntersectionObserverInit) {
+                super(callback, init);
+                if (init?.threshold !== undefined) {
+                    moveWatches.push(callback);
+                }
+            }
+        };
+        const trigger = document.body.appendChild(document.createElement('span'));
+        try {
+            const rect = new DOMRect(400, 300, 80, 20);
+            const { foundation, popup } = createFoundation({ position: 'top', spacing: 8 }, rect, undefined, trigger);
+            expect(popup.style.left).toBe('390px');
+            rect.x = 200;
+            // the first report already describes the moved trigger: outside the root built around its old rect
+            moveWatches[0]([{ intersectionRatio: 0 } as IntersectionObserverEntry], null as unknown as IntersectionObserver);
+            expect(popup.style.left).toBe('190px');
+            foundation.destroy();
+        } finally {
+            globalThis.IntersectionObserver = Original;
+            trigger.remove();
+        }
+    });
+
     it('触发器所在区域滚动或视口变化时下一帧重定位，无关区域滚动不重算', async () => {
         setViewport();
         const scroller = document.createElement('div');
