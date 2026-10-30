@@ -1,0 +1,23 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| avatarShape | Shape of the avatar in an avatar tag: square or circle. | `AvatarShape` | `"square"` |
+| avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | - |
+| children | Snippet for the tag content. | `Snippet` | - |
+| closable | Whether the tag can be closed. | `boolean` | `false` |
+| color | Tag color: one of the 16 palette colors or white. | `TagColor` | `"grey"` |
+| colorful | Whether the tag is colorful. | `boolean` | `false` |
+| gradient | Whether a colorful tag uses a gradient. Requires colorful. | `boolean` | `false` |
+| onClose | Called when the tag is closed, with the close event and the tagKey: a click event for the close icon, a keydown event for Backspace or Delete. Call preventDefault on the event to keep the tag visible. | <ApiType detail={"(event: TagCloseEvent, tagKey?: string \u007c number) => void"}>Type</ApiType> | - |
+| onkeydown | Called when a key is pressed on the tag. | <ApiType detail={"KeyboardEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| prefixIcon | Snippet for the icon before the content. | `Snippet` | - |
+| shape | Tag shape: square or circle. | `TagShape` | `"square"` |
+| size | Tag size: small, default or large. | `TagSize` | `"default"` |
+| suffixIcon | Snippet for the icon after the content. | `Snippet` | - |
+| tabindex | tabindex of the tag. An interactive tag defaults to 0. | `number \| null` | - |
+| tagKey | Unique identifier of the tag, passed as the second argument of onClose. | `string \| number` | - |
+| type | Style type: light, ghost or solid. | `TagType` | `"light"` |
+| visible | Whether the tag is visible; bind it with `bind:visible`. The setter of a function binding can reject closing. Without it the tag closes itself and shows until then. | `boolean` | - |

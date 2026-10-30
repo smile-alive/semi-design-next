@@ -2,8 +2,8 @@
 
 | Property      | Description                                                                                                                                                                 | Type              | Default                                            |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------- |
-| size          | Input size: large, default or small; passed to every child.                                                                                                                 | `Size`            | `semiDefault("InputGroup", "size", "default")`     |
-| disabled      | Whether the group is disabled, passed to the children; a disabled the child sets itself takes precedence.                                                                   | `boolean`         | `semiGlobalDefault("InputGroup", "disabled")`      |
+| size          | Input size: large, default or small; controls at any depth in the group that set no size of their own take it.                                                              | `Size`            | `semiGlobalDefault("InputGroup", "size")`          |
+| disabled      | Whether the group is disabled; controls at any depth in the group take it, and a disabled a control sets itself takes precedence.                                           | `boolean`         | `semiGlobalDefault("InputGroup", "disabled")`      |
 | label         | Label configuration of the group (Form.Label props, plus id, class and style); text and extra accept only strings or numbers, use the label and labelExtra slots for nodes. | `InputGroupLabel` | `semiGlobalDefault("InputGroup", "label")`         |
 | labelPosition | Label position: top or left.                                                                                                                                                | `string`          | `semiGlobalDefault("InputGroup", "labelPosition")` |
 

@@ -17,6 +17,11 @@ import LayoutHeaderSolidApi from './api/layout-header.solid.en-US.mdx';
 import LayoutFooterSolidApi from './api/layout-footer.solid.en-US.mdx';
 import LayoutContentSolidApi from './api/layout-content.solid.en-US.mdx';
 import LayoutSiderSolidApi from './api/layout-sider.solid.en-US.mdx';
+import LayoutSvelteApi from './api/layout.svelte.en-US.mdx';
+import LayoutHeaderSvelteApi from './api/layout-header.svelte.en-US.mdx';
+import LayoutFooterSvelteApi from './api/layout-footer.svelte.en-US.mdx';
+import LayoutContentSvelteApi from './api/layout-content.svelte.en-US.mdx';
+import LayoutSiderSvelteApi from './api/layout-sider.svelte.en-US.mdx';
 
 ## Overview
 
@@ -65,6 +70,18 @@ Use the subcomponents as `Layout.Header`, `Layout.Sider`, `Layout.Content` and `
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+The subcomponents are `LayoutHeader`, `LayoutSider`, `LayoutContent` and `LayoutFooter`, which stand for `Layout.Header`, `Layout.Sider`, `Layout.Content` and `Layout.Footer` below, and are imported by name.
+
+</Framework>
+
 ### Three-section Layout
 
 <Demo id="three-rows" />
@@ -98,6 +115,12 @@ Listen to `@breakpoint` for changes in whether a breakpoint matches.
 </Framework>
 
 <Framework only="solid">
+
+Use `onBreakpoint` to call callback functions.
+
+</Framework>
+
+<Framework only="svelte">
 
 Use `onBreakpoint` to call callback functions.
 
@@ -184,6 +207,38 @@ The three share the same API. Their default tags are `header`, `footer` and `mai
 <LayoutSiderSolidApi />
 
 `class`, `style`, `ref` and native attributes and events (including `role`, `aria-*` and `onClick`) fall through to the root `aside` element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<LayoutSvelteApi />
+
+`class`, `style` and native attributes (including `role` and `aria-*`) land on the root element.
+
+### Layout.Header, Layout.Footer, Layout.Content
+
+The three share one API. Their default tags are `header`, `footer` and `main`.
+
+#### Layout.Header
+
+<LayoutHeaderSvelteApi />
+
+#### Layout.Footer
+
+<LayoutFooterSvelteApi />
+
+#### Layout.Content
+
+<LayoutContentSvelteApi />
+
+`class`, `style` and native attributes (including `role` and `aria-*`) land on each root element.
+
+### Layout.Sider
+
+<LayoutSiderSvelteApi />
+
+`class`, `style` and native attributes and events (including `role`, `aria-*` and `onclick`) land on the root `aside` element.
 
 </Framework>
 

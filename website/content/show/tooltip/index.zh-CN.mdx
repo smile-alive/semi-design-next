@@ -8,6 +8,7 @@ brief: 工具提示用于对一个元素进行标识或者附上少量辅助信�
 import TooltipReactApi from './api/tooltip.react.zh-CN.mdx';
 import TooltipVueApi from './api/tooltip.vue.zh-CN.mdx';
 import TooltipSolidApi from './api/tooltip.solid.zh-CN.mdx';
+import TooltipSvelteApi from './api/tooltip.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Tooltip } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tooltip } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 注意事项
 
 <Framework only="react">
@@ -65,6 +76,17 @@ Tooltip 需要将触发属性和事件监听器应用到触发元素上，并以
 
 1. 函数 `(trigger) => JSX`：把 `{...trigger()}` 展开到接收焦点的元素上，元素可以是真实 DOM 节点，也可以是把属性与 `ref` 传到根 DOM 节点的组件，Button、Input 等需要焦点的触发元素都应使用这种写法
 2. 真实 DOM 元素或文本等其他内容，Tooltip 会用一个 span 包裹它们作为触发元素
+
+</Framework>
+
+<Framework only="svelte">
+
+Tooltip 需要将触发属性和事件监听器应用到触发元素上，并以触发元素的真实 DOM 元素计算弹出层的定位。触发元素有两种写法：
+
+1. `child` snippet：`{#snippet child({ props })}<button {...props}>…</button>{/snippet}`，`props` 带 `data-popupid`、`tabindex`、`aria-describedby` 和取元素引用的 attachment，必须整体展开到真实 DOM 元素或能把属性落到根 DOM 元素的组件上。Button、Input 等需要焦点的触发元素都应使用这种写法
+2. 标签内的内容（`children`）：文本或其他内容会被包进 Tooltip 自己的 span（`semi-tooltip-trigger-wrapper`）作为触发元素；span 里有可聚焦元素时，span 退出 Tab 顺序，并在开发环境输出警告
+
+`content` 也是 snippet：`{#snippet content()}...{/snippet}`，写在 Tooltip 标签内即可。
 
 </Framework>
 
@@ -114,6 +136,12 @@ Tooltip 需要将触发属性和事件监听器应用到触发元素上，并以
 
 </Framework>
 
+<Framework only="svelte">
+
+当 `condition={false}` 时，Tooltip 不响应 hover/click/focus 等触发行为（`trigger="custom"` 时仍按 `visible` 显示）；condition 由 true 变为 false 时，已显示的弹出层立即关闭；`visible` 受控时只调用 `onVisibleChange(false)`，使用方回写 `visible` 后才关闭。
+
+</Framework>
+
 <Demo id="condition" />
 
 ### 覆盖特定样式
@@ -133,6 +161,12 @@ Tooltip 需要将触发属性和事件监听器应用到触发元素上，并以
 <Framework only="solid">
 
 你可以通过 `class`、`style` 为弹出层配置特定样式，例如覆盖默认的 maxWidth （240px）
+
+</Framework>
+
+<Framework only="svelte">
+
+你可以通过 `class`、`style`（字符串）为弹出层配置特定样式，例如覆盖默认的 maxWidth （240px）
 
 </Framework>
 
@@ -161,6 +195,14 @@ Tooltip、Popconfirm、Popover 都会在触发元素上绑定相关事件（mous
 Tooltip、Popconfirm、Popover 都会在触发元素上绑定相关事件（mouseenter/mouseleave/click....），并注入 `aria-describedby`、`data-popupid` 等触发属性。  
 外层以普通内容作为 children 时，会被包进外层自己的 span 里，这个 span 无法描述其中可聚焦的元素，开发环境下会输出警告。  
 需要保持各自的触发属性时，在中间加一层元素（div 或 span）作为外层的触发元素：外层用函数 children 把 `{...trigger({ tabIndex: -1 })}` 展开到它上面，内层把 `{...trigger()}` 展开到真正的触发元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+Tooltip、Popconfirm、Popover 都会在触发元素上绑定相关事件（mouseenter/mouseleave/click....），并注入 `aria-describedby`、`data-popupid` 等触发属性。  
+外层以普通内容作为 children 时，会被包进外层自己的 span 里，这个 span 无法描述其中可聚焦的元素，开发环境下会输出警告。  
+需要保持各自的触发属性时，在中间加一层元素（div 或 span）作为外层的触发元素：外层用 `child` snippet 把 `props` 展开到它上面并设 `tabindex={-1}`，内层用 `child` snippet 把 `props` 展开到真正的触发元素上。
 
 </Framework>
 
@@ -197,6 +239,14 @@ Tooltip 没有根 DOM 元素，未声明的属性不会透传到弹出层，`cla
 <TooltipSolidApi />
 
 Tooltip 没有根 DOM 元素，`class`、`style` 落在弹出层上，其他未声明的属性与事件会被丢弃；触发属性只加在触发元素上，`ref` 返回组件方法。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TooltipSvelteApi />
+
+Tooltip 没有根 DOM 元素，`class`、`style`（字符串）落在弹出层上，其他未声明的属性会被丢弃；触发属性只加在触发元素上。`visible` 可绑定，没有 `defaultVisible`。弹层只在挂载后渲染，服务端不输出。不提供 `useTooltipDescription`（弹层 id 已在 `child` 的 `props` 里）。
 
 </Framework>
 
@@ -241,6 +291,20 @@ Tooltip 没有根 DOM 元素，`class`、`style` 落在弹出层上，其他未�
 ```jsx
 // 推荐做法：给 Tooltip 的触发元素添加 aria-label 描述
 <Tooltip content={<p id="description">Edit your setting</p>}>{(trigger) => <IconSetting aria-label="Settings" {...trigger()} />}</Tooltip>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<!-- 推荐做法：给 Tooltip 的触发元素添加 aria-label 描述 -->
+<Tooltip>
+    {#snippet child({ props })}
+        <IconSetting {...props} aria-label="Settings" />
+    {/snippet}
+    {#snippet content()}<p id="description">Edit your setting</p>{/snippet}
+</Tooltip>
 ```
 
 </Framework>

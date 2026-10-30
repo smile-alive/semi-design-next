@@ -8,6 +8,7 @@ brief: Selector to quickly select a number or range of values using drag interac
 import SliderReactApi from './api/slider.react.en-US.mdx';
 import SliderVueApi from './api/slider.vue.en-US.mdx';
 import SliderSolidApi from './api/slider.solid.en-US.mdx';
+import SliderSvelteApi from './api/slider.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, InputNumber, Slider } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 Basic slider. When `range` is `true`, both ends can be dragged. When `disabled` is `true`, the slider is unavailable.
@@ -58,6 +69,12 @@ Use `tipFormatter` to format the Tooltip content, or pass `null` to hide the Too
 <Framework only="vue">
 
 Use the `#tip` slot when the tooltip needs node content; its scoped `value` is the result of `tipFormatter`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `tip` snippet when the tooltip needs node content; in its parameter `{ value, handle }`, `value` is the result of `tipFormatter` and `handle` is `min` or `max`.
 
 </Framework>
 
@@ -83,6 +100,12 @@ Use `marks` to label measures on sliders, and `value` / `defaultValue` to set th
 
 </Framework>
 
+<Framework only="svelte">
+
+Use `marks` to label measures on sliders, and `value` to set the handle position. Mark labels accept only strings or numbers; use the `mark` snippet, with the parameter `{ value, label }`, when a label needs node content. It is rendered once for the label and once for the tooltip when `tooltipOnMark` is on.
+
+</Framework>
+
 <Demo id="marks" />
 
 ### Segmented Background
@@ -105,6 +128,12 @@ To create a slider with segmented background, you could use CSS property `linear
 
 </Framework>
 
+<Framework only="svelte">
+
+To create a slider with segmented background, you could use CSS property `linear-gradient` for `railStyle` (a string) along with `bind:value` to change background dynamically.
+
+</Framework>
+
 <Demo id="segmented-background" />
 
 ### Controlled Component
@@ -124,6 +153,12 @@ Use `modelValue` with `v-model` if you want to use Slider as a controlled compon
 <Framework only="solid">
 
 You can use `value` along with `onChange` property if you want to use Slider as a controlled component. With only `value` and no write-back in `onChange`, dragging, clicking and arrow keys only fire `onChange` and the handle does not move.
+
+</Framework>
+
+<Framework only="svelte">
+
+The handle position is the Slider's `value`; keep it in sync with a `$state` variable through `bind:value`. To refuse or rewrite a drag result, use a function binding `bind:value={() => value, (next) => { ... }}`. A plain `value` without a binding is only the initial value, and a new value from the parent wins again.
 
 </Framework>
 
@@ -162,6 +197,14 @@ The `$el` of a component template ref is the outer `.semi-slider` element in hor
 <SliderSolidApi />
 
 `class`, `style`, `ref` and other native attributes (such as `data-*`) land on `.semi-slider-wrapper`, which also receives `onFocus`, `onBlur`, `onMouseEnter` and `onMouseLeave`. `id` (on the first handle only), `name`, `aria-describedby`, `aria-invalid`, `aria-errormessage` and `onKeyDown` land on each handle's native input. In `range` mode both inputs share `name` and submit two values in order. `tabIndex` and `aria-required` are not rendered.
+
+</Framework>
+
+<Framework only="svelte">
+
+<SliderSvelteApi />
+
+`class`, `style` (a string) and other native attributes (such as `data-*`) land on `.semi-slider-wrapper`; `onFocus` is its focusin, and `onBlur` is called only when focus leaves the whole Slider. `id` (on the first handle only), `name`, `autofocus`, `aria-describedby`, `aria-invalid`, `aria-errormessage` and `onKeyDown` land on each handle's native input. In `range` mode both inputs share `name` and submit two values in order. `tabindex` and `aria-required` are not rendered. `value` is bindable and there is no `defaultValue`.
 
 </Framework>
 

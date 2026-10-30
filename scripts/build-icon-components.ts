@@ -9,7 +9,11 @@ const sets = [
     ['lab/icons', 'lab'],
 ] as const;
 
-export function buildIconComponents(srcDir: string, coreSrc: string, factory: string) {
+/**
+ * `ext` svelte writes `.svelte` files: Svelte components exist only through its compiler, so the generated module cannot
+ * call a factory and `factory` names the component that renders the icon data
+ */
+export function buildIconComponents(srcDir: string, coreSrc: string, factory: string, ext: 'ts' | 'svelte' = 'ts') {
     const outDirs = sets.map(([dataDir, out]) => {
         const outDir = resolve(srcDir, out);
         if (fs.existsSync(outDir)) execFileSync('trash', [outDir]);
@@ -20,9 +24,15 @@ export function buildIconComponents(srcDir: string, coreSrc: string, factory: st
             .map((file) => basename(file, '.ts'))
             .sort();
         for (const name of names) {
-            fs.writeFileSync(resolve(outDir, `${name}.ts`), `import data from '@fibrae/semi-icons-core/${dataDir}/${name}';\nimport { createIcon } from '${factory}';\n\nexport default createIcon(data);\n`);
+            const data = `@fibrae/semi-icons-core/${dataDir}/${name}`;
+            const source =
+                ext === 'svelte'
+                    ? `<script lang="ts">\n    import data from '${data}';\n    import Icon, { type SemiIconProps } from '${factory}';\n\n    const props: SemiIconProps = $props();\n</script>\n\n<Icon {...props} {data} />\n`
+                    : `import data from '${data}';\nimport { createIcon } from '${factory}';\n\nexport default createIcon(data);\n`;
+            fs.writeFileSync(resolve(outDir, `${name}.${ext}`), source);
         }
-        fs.writeFileSync(outDir + '/index.ts', names.map((name) => `export { default as ${name} } from './${name}';\n`).join(''));
+        const suffix = ext === 'svelte' ? '.svelte' : '';
+        fs.writeFileSync(outDir + '/index.ts', names.map((name) => `export { default as ${name} } from './${name}${suffix}';\n`).join(''));
         return outDir;
     });
     const rootDir = resolve(import.meta.dirname, '..');

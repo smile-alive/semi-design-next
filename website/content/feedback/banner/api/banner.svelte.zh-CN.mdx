@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                    | 类型                                                           | 默认值   |
+| ----------- | ----------------------------------------------------------------------- | -------------------------------------------------------------- | -------- |
+| bordered    | 是否展示边框，仅在非全屏模式下有效。                                    | `boolean`                                                      | `false`  |
+| children    | 消息下方的自定义内容。                                                  | `Snippet`                                                      | -        |
+| closeIcon   | 替换关闭按钮内图标的 snippet；传入 `null` 则不显示关闭按钮。            | `Snippet \| null`                                              | -        |
+| description | 描述内容的 snippet。                                                    | `Snippet`                                                      | -        |
+| fullMode    | 是否为全屏模式。                                                        | `boolean`                                                      | `true`   |
+| icon        | 替换类型图标的 snippet；传入 `null` 则不显示图标。                      | `Snippet \| null`                                              | -        |
+| onClose     | 点击关闭按钮时的回调，参数为按钮的原生 click 事件；回调返回后横幅隐藏。 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | -        |
+| title       | 标题，可以是字符串或 snippet。                                          | `string \| Snippet`                                            | -        |
+| type        | 类型，可选 info、success、danger、warning。                             | `BannerType`                                                   | `"info"` |

@@ -8,6 +8,7 @@ brief: Modals are used to wait for the user to interact, inform the user of impo
 import ModalReactApi from './api/modal.react.en-US.mdx';
 import ModalVueApi from './api/modal.vue.en-US.mdx';
 import ModalSolidApi from './api/modal.solid.en-US.mdx';
+import ModalSvelteApi from './api/modal.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Modal } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="vue">
@@ -50,6 +61,12 @@ Use `v-model:visible` to control visibility. `v-model:visible` updates only on t
 <Framework only="solid">
 
 Use `visible` to control visibility. `onOk` and `onCancel` never close the modal by themselves; the caller sets `visible` to `false`. When either returns a Promise, the matching button stays loading until the Promise settles.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:visible` to control visibility. `bind:visible` is written back with `false` only on the cancel paths: the cancel button, the close button, the mask and Esc. When `onCancel` returns a Promise, it is written back after the Promise fulfills, and a rejection keeps the modal open. Clicking ok only calls `onOk`; the caller sets `visible` to `false`. While `onCancel` runs, `visible` is still `true`.
 
 </Framework>
 
@@ -89,6 +106,12 @@ You can set button text using `okText` and `cancelText`.
 
 </Framework>
 
+<Framework only="svelte">
+
+> A modal created with static methods is rendered outside the component tree, so it cannot read the locale from ConfigProvider or LocaleProvider. Set the texts with these two properties, or use `Modal.useModal`.
+
+</Framework>
+
 <Demo id="button-text" />
 
 ### Custom Button Properties
@@ -114,6 +137,12 @@ For more customized modal, you could use the `#header` and `#footer` slots. An e
 <Framework only="solid">
 
 For more customized modal, you could use `header` and `footer`. Set `header={null}` if you do not want header area, or `footer={null}` to remove footer area including buttons.
+
+</Framework>
+
+<Framework only="svelte">
+
+For more customized modal, you could use the `header` and `footer` snippets. An empty `header` snippet (`{#snippet header()}{/snippet}`) or `header={null}` removes the header area; likewise an empty `footer` snippet or `footer={null}` removes the footer area including buttons.
 
 </Framework>
 
@@ -145,6 +174,12 @@ By using `header`, `footer`, etc, you could create any modal to your needs.
 
 </Framework>
 
+<Framework only="svelte">
+
+By using the `header`, `footer` and other snippets, you could create any modal to your needs.
+
+</Framework>
+
 <Demo id="custom-modal" />
 
 ### Full Screen Modal
@@ -162,6 +197,12 @@ Set `fullScreen` to use full screen Modal
 </Framework>
 
 <Framework only="solid">
+
+Set `fullScreen` to use full screen Modal
+
+</Framework>
+
+<Framework only="svelte">
 
 Set `fullScreen` to use full screen Modal
 
@@ -189,6 +230,12 @@ You could use static methods to create a confirm Modal. Use `icon` to customize 
 
 </Framework>
 
+<Framework only="svelte">
+
+You could use static methods to create a confirm Modal. The `title`, `content`, `icon`, `closeIcon`, `header` and `footer` of a static call take a `ModalNode`: a string or a snippet; `icon: null` removes the icon. Any other option the Modal supports can be passed too.
+
+</Framework>
+
 <Demo id="confirm" />
 
 ### useModal Hooks
@@ -211,6 +258,12 @@ You could use `Modal.useModal` to create a `contextHolder` that could access con
 
 </Framework>
 
+<Framework only="svelte">
+
+`Modal.useModal()` returns `{ info, success, error, warning, confirm }` and has no Holder. It reads the context, ConfigProvider and locale of the component that calls it, so call it during component initialization, in the component that should supply those (usually a child of ConfigProvider). Dialogs it opened are removed when that component is destroyed.
+
+</Framework>
+
 <Demo id="use-modal" />
 
 ### Draggable Modal
@@ -230,6 +283,12 @@ The modal content is rendered customly through the `#modal="{ modal }"` slot. `m
 <Framework only="solid">
 
 The modal content is rendered customly through `modalRender`. Its argument is the `role="dialog"` element, which the returned result must contain. The draggable Modal is implemented through the DragMove component.
+
+</Framework>
+
+<Framework only="svelte">
+
+DragMove in Svelte is the `dragMove` attachment. Write `{@attach dragMove(options)}` directly on `<Modal>`; the attachment lands on the `role="dialog"` element and makes the dialog draggable. To place the dialog yourself, use the `modal` snippet (argument `{ modal }`, placed with `{@render modal()}`).
 
 </Framework>
 
@@ -262,6 +321,14 @@ The Modal component does not render `content`; put the dialog content in childre
 <ModalSolidApi />
 
 `role` and every `aria-*` attribute land on the `role="dialog"` element, `style` lands on the `.semi-modal` dialog box, and `ref`, `class` and other native attributes and events land on the outermost element inside the portal. The Modal component does not render `content`; put the dialog content in `children`. The `content` option is only for the static methods below.
+
+</Framework>
+
+<Framework only="svelte">
+
+<ModalSvelteApi />
+
+`role` and every `aria-*` attribute land on the `role="dialog"` element, `style` lands on the `.semi-modal` dialog box, and `class` and other native attributes land on the outermost element inside the portal; an `{@attach}` written on `<Modal>` lands on the `role="dialog"` element. The Modal component does not render `content`; put the dialog content inside the tag. The `content` option is only for the static methods below.
 
 </Framework>
 
@@ -392,6 +459,25 @@ modal.destroy();
 
 </Framework>
 
+<Framework only="svelte">
+
+`ModalNode` is `string | Snippet`. The options are the props of the Modal component (`ModalProps`); `title`, `content`, `icon`, `closeIcon`, `header` and `footer` take a `ModalNode`. Unlike the component, a Promise returned by `onOk` or `onCancel` closes the modal after it fulfills, and a rejection keeps it open; any other return value closes it at once.
+
+`aria-*` options land on the dialog. Creating modal with the above methods will return a reference to the instance. You could use it to update or close the modal. `update` takes the same options as the methods above (`ModalProps`) and merges them into the current config; it does not take `type`.
+
+```ts
+const modal = Modal.info({ title: 'Title' });
+
+modal.update({
+    title: 'Updated Title',
+    content: 'Updated Content',
+});
+
+modal.destroy();
+```
+
+</Framework>
+
 - `Modal.destroyAll`
 
 You could use Modal.destroyAll() to destroy Modal that created by methods above e.g. `.info()`
@@ -419,6 +505,13 @@ You could use Modal.destroyAll() to destroy Modal that created by methods above 
 
 </Framework>
 
+<Framework only="svelte">
+
+- `Modal.useModal`  
+  When you need to read context, call `const modal = Modal.useModal()` during component initialization. Modals created through `modal` can access everything at the position of the calling component (context, ConfigProvider, locale), and are removed when that component is destroyed. It has no Holder. The `modal` object shares the same methods with Modal.method.
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -435,7 +528,7 @@ WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
 
 ### Keyboard and focus
 
-- Modal automatically gets the focus when it is popped up. An element with `autoFocus` (`autofocus` in Vue) inside the dialog gets the focus first; otherwise the cancel button does by default, which can be controlled by passing autoFocus in cancelButtonProps or okButtonProps. With `keepDOM`, opening it again gives the same result; with `keepDOM` and `lazyRender={false}` that starts hidden, an `autoFocus` element cannot take focus under `display: none`, so later openings land on the default button.
+- Modal automatically gets the focus when it is popped up. An element with `autoFocus` (`autofocus` in Vue and Svelte) inside the dialog gets the focus first; otherwise the cancel button does by default, which can be controlled by passing autoFocus in cancelButtonProps or okButtonProps. With `keepDOM`, opening it again gives the same result; with `keepDOM` and `lazyRender={false}` that starts hidden, an `autoFocus` element cannot take focus under `display: none`, so later openings land on the default button.
 - When a modal dialog is closed, the focus automatically returns to the element before it was opened. Keyboard users can use the `Tab` key and `Shift + Tab` to move the focus in a loop within the Modal, including the Modal's own close button and OK cancel button. At this time, the page behind the Modal cannot be interacted with or tab-focused.
 - A non-modal dialog (`mask={false}`, or a mask confined to a custom container without `maskFixed`) also takes focus when opened, but does not lock Tab and the rest of the page stays usable. When closed, focus is returned only if it is still inside the dialog or has fallen to the body; focus the user has moved elsewhere on the page stays. A Modal in the body with `mask={false}` does not lock body scrolling.
 - Modify the default value of closeOnEsc to true, allowing users to directly close Modal through the keyboard for a better experience
@@ -484,6 +577,12 @@ WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
       <Framework only="solid">
 
     A static Modal is rendered outside the component tree and reads only the global defaults and the default locale, so it cannot read the config from ConfigProvider or LocaleProvider. You could use `Modal.useModal()` and place the returned `contextHolder` where the config should be read, or use `okText` and `cancelText` to set the texts yourself.
+
+      </Framework>
+
+      <Framework only="svelte">
+
+    A static Modal is rendered outside the component tree and reads only the global defaults and the default locale, so it cannot read the config from ConfigProvider or LocaleProvider. You could call `Modal.useModal()` in a component under that provider, or use `okText` and `cancelText` to set the texts yourself.
 
       </Framework>
 

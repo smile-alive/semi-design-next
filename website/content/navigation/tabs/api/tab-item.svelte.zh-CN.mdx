@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                            | 类型                                                                            | 默认值  |
+| ----------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------- |
+| closable    | 是否显示关闭按钮。                                                                              | `boolean`                                                                       | `false` |
+| disabled    | 是否禁用；禁用时点击、关闭按钮与 Enter、Space、Delete、Backspace 键均不生效，关闭按钮仍会显示。 | `boolean`                                                                       | `false` |
+| icon        | 标签图标的 snippet；图标容器始终渲染，即使 snippet 没有输出。                                   | `Snippet`                                                                       | -       |
+| itemKey     | 标签的唯一标识。                                                                                | `string`                                                                        | `""`    |
+| onClick     | 点击标签时调用，参数为 itemKey 与事件；禁用时不调用。在 Tabs 之内，点击本身已会选中该标签页。   | <ApiType detail={"(itemKey: string, event: MouseEvent) => void"}>Type</ApiType> | -       |
+| selected    | 是否为选中状态。                                                                                | `boolean`                                                                       | `false` |
+| size        | 尺寸，默认取所在 Tabs 的 size。                                                                 | `TabSize`                                                                       | -       |
+| tab         | 标签内容的 snippet。                                                                            | `Snippet`                                                                       | -       |
+| tabPosition | 位置，默认取所在 Tabs 的 tabPosition，在 Tabs 之外为 top。                                      | `TabPosition`                                                                   | -       |
+| type        | 样式，默认取所在 Tabs 的 type，在 Tabs 之外为 line。                                            | `TabType`                                                                       | -       |

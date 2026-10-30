@@ -32,13 +32,13 @@ const reference: Reference[] = [
     },
 ];
 
-const onContentChange = (content: Content[]) => {
+function onContentChange(content: Content[]) {
     console.log('onContentChange', content);
-};
+}
 
-const onUploadChange = (fileList: OnChangeProps) => {
+function onUploadChange(fileList: OnChangeProps) {
     console.log('onUploadChange', fileList);
-};
+}
 
 export default function AIChatInputDemo() {
     const [references, setReferences] = createSignal(reference);

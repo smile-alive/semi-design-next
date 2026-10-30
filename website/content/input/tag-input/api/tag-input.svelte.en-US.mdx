@@ -1,0 +1,50 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addOnBlur | Whether the input text becomes a tag when the focus leaves the component. | `boolean` | `false` |
+| allowDuplicates | Whether the same tag can be added more than once. | `boolean` | `true` |
+| autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `false` |
+| clearIcon | Snippet that replaces the icon in the clear button; empty content keeps the default icon. | `Snippet` | - |
+| disabled | Whether the component is disabled. | `boolean` | - |
+| draggable | Whether tags can be reordered by dragging. | `boolean` | `false` |
+| expandRestTagsOnClick | When not draggable, whether the collapsed tags expand once focus enters the component (click, Tab or the focus method). | `boolean` | `true` |
+| inputValue | Current input text, supports `bind:inputValue`. Left out, the component manages it; for a fully controlled text use the function binding `bind:inputValue={get, set}`. Binding it to `undefined` clears the text. | `string` | - |
+| insetLabel | Snippet for the inset label shown before the input; when prefix is also given, only prefix is shown. When shown, it names an input that has no aria-label or aria-labelledby. | `Snippet` | - |
+| insetLabelId | id of the inset label container, for aria-labelledby. | `string` | - |
+| max | Maximum number of tags. | `number` | - |
+| maxLength | Maximum length of one tag. | `number` | - |
+| maxTagCount | Maximum number of tags shown; the rest are shown as +N. | `number` | - |
+| onAdd | Called when tags are added, with the added tags. | <ApiType detail={"(addedValue: string[]) => void"}>Type</ApiType> | - |
+| onBlur | Called once when the focus leaves the whole component; moving inside it does not call it. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the tags change. | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onclick | Called on a click on the root element, after the component's own activation handling. | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| onExceed | Called when adding would exceed max, with the whole list before it is cut. | <ApiType detail={"(value: string[]) => void"}>Type</ApiType> | - |
+| onFocus | Called once when the focus enters from outside; moving between the input, tags and clear button does not call it. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onInputChange | Called when the input text changes. The event may be an input, keydown, focusout, click or composition event; narrow it by event.type before reading its own fields. | <ApiType detail={"(value: string, event: Event) => void"}>Type</ApiType> | - |
+| onInputExceed | Called when the input text exceeds maxLength, with the rejected input text. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onKeyDown | Called on keydown in the input after the component handled it; calling preventDefault there does not stop Enter from adding a tag. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onRemove | Called when a tag is removed, with the removed tag and its index. | <ApiType detail={"(removedValue: string, index: number) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the input while there are no tags. | `string` | - |
+| prefix | Snippet for the prefix of the input; text or an icon gets side spacing automatically. | `Snippet` | - |
+| preventScroll | Whether the focus calls inside the component stop the browser from scrolling the focused element into view. | `boolean` | - |
+| restTagsPopoverProps | Popover props of the +N popover, without content, child and children. | `RestTagsPopoverProps` | - |
+| separator | Separator(s) for adding several tags at once; null disables splitting. | `string \| string[] \| null` | `","` |
+| showClear | Whether to show the button that clears all tags and the input text. | `boolean` | `false` |
+| showContentTooltip | Whether hovering a truncated tag shows its full text in an overlay; an object picks the overlay type and the props passed to it. | `boolean \| ShowTooltip` | `true` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `true` |
+| size | Size: small, default or large. | `TagInputSize` | - |
+| split | Custom split function that returns the split strings. | <ApiType detail={"(originString: string, separators: string \u007c string[] \u007c null) => string[]"}>Type</ApiType> | - |
+| suffix | Snippet for the suffix of the input; text or an icon gets side spacing automatically. | `Snippet` | - |
+| tag | Snippet that replaces each tag as a whole, receiving `{ value, index, onClose }`; empty content renders no tag and does not fall back to the default tag. | <ApiType detail={"Snippet\u003c[TagInputTagSnippetProps]>"}>Type</ApiType> | - |
+| validateStatus | Validation status, which only affects styling; error also sets aria-invalid on the input. | `TagInputValidateStatus` | `"default"` |
+| value | Current tags, supports `bind:value`. Left out, the component manages them; `null` means controlled with no tags; a one-way `value={x}` only seeds them, and for a fully controlled input use the function binding `bind:value={get, set}`. Binding it to `undefined` clears the tags. There is no defaultValue. | `string[] \| null` | - |
+
+**Methods**
+
+| Method | Description                                                                                      | Type                                          |
+| ------ | ------------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| blur   | Removes focus from whichever element inside the component holds it (input, tag or clear button). | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus  | Focuses the input and activates the component.                                                   | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -1,0 +1,84 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| arrowIcon | Custom dropdown arrow on the right; null hides the arrow. Hovering shows the clear button first when it is visible. | `Snippet \| null` | - |
+| autoAdjustOverflow | Whether the dropdown flips its direction when an edge covers it. | `boolean` | - |
+| autoMergeValue | In multiple mode, the value leaves out the descendants of a selected parent. Changes after mount are not followed; leafOnly takes precedence when both are on. | `boolean` | `true` |
+| borderless | Whether to use the borderless style. | `boolean` | `false` |
+| bottomSlot | Extra content at the bottom of the dropdown. | `Snippet` | - |
+| changeOnSelect | Whether a non-leaf node can be selected in single mode. | `boolean` | `false` |
+| checkRelation | In multiple mode, how the checked states of the nodes relate: related links parents and children, unRelated keeps them independent. | `'related' \| 'unRelated'` | `"related"` |
+| clearIcon | Custom icon of the clear button, effective when showClear is true; empty content keeps the default icon. | `Snippet` | - |
+| clickToSelect | In multiple mode, clicking any node selects it. Often used with showNext set to hover: hovering expands the submenu and clicking selects the node. | `boolean` | `false` |
+| defaultOpen | Whether the dropdown is open on mount. | `boolean` | `false` |
+| disabled | Whether the Cascader is disabled. A disabled Cascader cannot be reached with Tab. | `boolean` | - |
+| disableStrictly | Whether to disable strictly. A disabled node then does not change when its parent or children are checked or unchecked. | `boolean` | `false` |
+| display | The selected path shown in single mode, with `{ labels, path }`: `labels` holds the displayProp of each node and `path` the nodes, or the raw values when the value is not in treeData. Empty content shows the placeholder. | <ApiType detail={"Snippet\u003c[CascaderDisplaySnippetProps]>"}>Type</ApiType> | - |
+| displayProp | The node field shown in the trigger and the tags, label by default. | `string` | `"label"` |
+| dropdownClassName | Class of the dropdown. | `string` | - |
+| dropdownStyle | Style of the dropdown, as a CSS string. | `string` | - |
+| emptyContent | Content shown when there is no data to pick or the search has no result. The default text from the locale shows when it is not given, and null hides the empty state. | `Snippet \| null` | - |
+| enableLeafClick | In multiple mode, whether clicking the option of a leaf node checks it. | `boolean` | `false` |
+| expandIcon | Custom expand icon; empty content keeps the default icon. | `Snippet` | - |
+| filterItem | Replaces a row of the search results, with `{ props, inputValue, disabled, data, checkStatus, selected, onCheck }`; spread `props` on the root element of the row. | <ApiType detail={"Snippet\u003c[CascaderFilterItemSnippetProps]>"}>Type</ApiType> | - |
+| filterLeafOnly | Whether the search results only show the paths of leaf nodes. | `boolean` | `true` |
+| filterSorter | Sorts the filtered results; it receives the two result paths (the node arrays from the root to the matched node) and the input. | <ApiType detail={"(first: CascaderData[], second: CascaderData[], inputValue: string) => number"}>Type</ApiType> | - |
+| filterTreeNode | Whether search is on. True matches the input against the field named by treeNodeFilterProp, case-insensitively; a custom match function can be given instead. | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: CascaderData) => boolean)"}>Type</ApiType> | `false` |
+| insetLabel | A label inside the select box; it is not rendered when prefix is also given. | `Snippet` | - |
+| insetLabelId | The id of the insetLabel content, used to name the combobox; the component generates one when the insetLabel snippet is used and this is not given. | `string` | - |
+| keyMaps | Custom field names for value, label, children, disabled and isLeaf in a node. | `CascaderKeyMapProps` | - |
+| label | Content of an option in the columns, with `{ item }`; the search results, the selection and the tags still show the text of the node. | <ApiType detail={"Snippet\u003c[CascaderLabelSnippetProps]>"}>Type</ApiType> | - |
+| leafOnly | In multiple mode, the value and the tags shown only include leaf nodes. Changes after mount are not followed. | `boolean` | `false` |
+| loadData | Loads data asynchronously. It receives the path from the root to the current node and must return a Promise; after a rejection the node leaves the loading state and can be expanded again. Cannot be used with search. | <ApiType detail={"(selectOptions: CascaderData[]) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| max | In multiple mode, the most paths that can be selected; exceeding it calls onExceed. | `number` | - |
+| maxTagCount | In multiple mode, the most tags shown; the rest appear as +N. | `number` | - |
+| motion | Whether the dropdown animates. | `boolean` | `true` |
+| multiple | Whether several paths can be selected. It has no global default. | `boolean` | `false` |
+| onBlur | Called when the dropdown closes: a MouseEvent for a click outside, a KeyboardEvent for Esc, undefined when the close method closes it. It is not a DOM blur event. | <ApiType detail={"(event?: MouseEvent \u007c KeyboardEvent \u007c FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the selection changes. In single mode the selected path, in multiple mode an array of the selected paths; node data with onChangeWithObject. | <ApiType detail={"(value: CascaderChangeValue) => void"}>Type</ApiType> | - |
+| onChangeWithObject | Whether onChange carries the data of each node instead of its value. A bound value must then be node data too, with a value. This is a boolean attribute, not a callback. | `boolean` | `false` |
+| onClear | Called when the clear button clears the selection. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | Called when the dropdown opens or closes, with whether it is open. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onExceed | Called in multiple mode when the selection goes past max, with the Entity array of the checked nodes. | <ApiType detail={"(checkedItem: CascaderEntity[]) => void"}>Type</ApiType> | - |
+| onFocus | Called when a click or a key opens the dropdown, with that MouseEvent or KeyboardEvent. It is not a DOM focus event and Tabbing in or out does not call it. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent \u007c FocusEvent) => void"}>Type</ApiType> | - |
+| onKeyDown | Called once per key press before the Cascader handles it; calling preventDefault there does not stop the Cascader. Except for a key on the clear button or a control inside a custom trigger, it is reported in the capture phase on the trigger, so stopPropagation there keeps the key from the search input and skips the trigger's handling of it (opening the dropdown, closing it on Esc); the options still take it. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onListScroll | Called when a column of the tree scrolls, with the scroll event and the column. Scrolling the search results does not call it. | <ApiType detail={"(event: Event, panel: CascaderScrollPanelProps) => void"}>Type</ApiType> | - |
+| onLoad | Called when a node has loaded, with the set of loaded keys and the node data. | <ApiType detail={"(newLoadedKeys: Set\u003cstring>, data: CascaderData) => void"}>Type</ApiType> | - |
+| onSearch | Called when the search input changes, with the text. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
+| onSelect | Called when a node is selected, with the value of the node. In multiple mode, one checked node gives its value and more give an array. | <ApiType detail={"(value: string \u007c number \u007c Array\u003cstring \u007c number>) => void"}>Type</ApiType> | - |
+| placeholder | Placeholder of the select box. | `string` | - |
+| position | Direction of the dropdown, bottomLeft by default and bottomRight in RTL. | `Position` | - |
+| prefix | Prefix content. | `Snippet` | - |
+| preventScroll | Whether focusing inside the component stops the browser scrolling the document to show the focused element. | `boolean` | - |
+| remote | Whether to search remotely. Input is then not filtered locally and only calls onSearch, and the caller updates treeData asynchronously. | `boolean` | `false` |
+| restTagsPopoverProps | Configuration of the Popover of the remaining tags, such as position and trigger. See Popover. | <ApiType detail={"Omit\u003cPopoverProps, 'children' \u007c 'child' \u007c 'content'>"}>Type</ApiType> | - |
+| searchPlaceholder | Placeholder of the search input; placeholder is used when it is not given. | `string` | - |
+| searchPosition | Where the search input is: trigger puts it in the trigger, custom leaves it to the caller. | `'trigger' \| 'custom'` | `"trigger"` |
+| separator | The separator of a path in the search results and in the trigger in single mode. | `string` | `" / "` |
+| showClear | Whether to show the clear button. | `boolean` | `false` |
+| showNext | When the submenu expands: on click or on hover. | `'click' \| 'hover'` | `"click"` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once maxTagCount is exceeded. | `boolean` | `false` |
+| size | Size of the select box. | `CascaderSize` | - |
+| stopPropagation | Whether clicks on the dropdown stop bubbling. | `boolean \| string` | `true` |
+| suffix | Suffix content. | `Snippet` | - |
+| tag | Replaces each tag in multiple mode, with `{ entity, index, disabled, onClose }`; `onClose` unchecks the node. | <ApiType detail={"Snippet\u003c[CascaderTagSnippetProps]>"}>Type</ApiType> | - |
+| topSlot | Extra content at the top of the dropdown. | `Snippet` | - |
+| treeData | Node data. The label is text only, use the label snippet for node content. Changes made in place to $state data are noticed, and a new array with equal content keeps the expanded and selected state. | `CascaderData[]` | `[]` |
+| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `"label"` |
+| trigger | Replaces the content of the trigger, with `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`. | <ApiType detail={"Snippet\u003c[CascaderTriggerSnippetProps]>"}>Type</ApiType> | - |
+| validateStatus | Validation status of the trigger; it only affects the style. | `ValidateStatus` | - |
+| value | The selected entry, bound with bind:value. Leave it out for an uncontrolled Cascader; to start with a selection, bind a $state that holds it. `bind:value={get, set}` makes it fully controlled. In single mode it is a node or a path, in multiple mode it can also be an array of paths. | `CascaderValue` | - |
+| virtualizeInSearch | Virtual list configuration of the search results, made of height, width and itemSize, for large result sets; height defaults to 180, the same as the dropdown height. | `CascaderVirtualize` | - |
+
+**Methods**
+
+| Method | Description                                                                          | Type                                                         |
+| ------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| blur   | Blurs the trigger or the search input.                                               | <ApiType detail={"() => void"}>Type</ApiType>                |
+| close  | Closes the dropdown.                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                |
+| focus  | Focuses the trigger or the search input.                                             | <ApiType detail={"() => void"}>Type</ApiType>                |
+| open   | Opens the dropdown.                                                                  | <ApiType detail={"() => void"}>Type</ApiType>                |
+| search | Searches as if the keyword were typed; filterTreeNode must be set to turn search on. | <ApiType detail={"(keyword: string) => void"}>Type</ApiType> |

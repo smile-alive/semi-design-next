@@ -13,7 +13,7 @@ export function pathsByEnTitle() {
     });
     const map: Record<string, string> = {};
     const available: string[] = [];
-    const demos = Object.keys(import.meta.glob('/content/**/demos/*.{react.tsx,vue,solid.tsx}', { eager: true, query: '?raw', import: 'default' }));
+    const demos = Object.keys(import.meta.glob('/content/**/demos/*.{react.tsx,vue,solid.tsx,svelte}', { eager: true, query: '?raw', import: 'default' }));
     for (const [file, frontmatter] of Object.entries(pages)) {
         const [category, page] = file.split('/').slice(-3, -1);
         map[frontmatter.title] = `${category}/${page}`;

@@ -8,6 +8,7 @@ brief: 标签输入框能够将输入的内容生成标签。
 import TagInputReactApi from './api/tag-input.react.zh-CN.mdx';
 import TagInputVueApi from './api/tag-input.vue.zh-CN.mdx';
 import TagInputSolidApi from './api/tag-input.solid.zh-CN.mdx';
+import TagInputSvelteApi from './api/tag-input.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { TagInput } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -96,6 +107,13 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过 `prefix` snippet 传入输入框前缀，通过 `suffix` snippet 传入输入框后缀，可以为文本或者图标等节点。  
+当 snippet 内容为文本或者 Icon 时，会自动带上左右间隔；若为自定义节点，则左右间隔为 0，如需可以在你传入的节点中自行设置。
+
+</Framework>
+
 <Demo id="prefix-suffix" />
 
 ### 失焦后自动创建标签
@@ -136,6 +154,14 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可使用 `max` 限制标签数量，添加后超出的部分不会成为标签，并且触发 `onExceed()` 回调。
+
+可使用 `maxLength` 限制单个标签的最大长度，超出后将不允许再输入，并且触发 `onInputExceed()` 回调。
+
+</Framework>
+
 <Demo id="limits" />
 
 ### 限制标签展示数量
@@ -164,6 +190,12 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `bind:value` 绑定标签内容来受控使用。没有 `defaultValue`：单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；把 `value` 绑成 `undefined` 会清空标签。
+
+</Framework>
+
 <Demo id="controlled-tag" />
 
 ### 输入受控
@@ -183,6 +215,12 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 可使用 `inputValue` 设置输入框内容，并配合 `onInputChange` 实现输入内容受控。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:inputValue` 绑定输入框内容来受控使用；`bind:inputValue={get, set}` 可完全受控。
 
 </Framework>
 
@@ -212,6 +250,12 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+用 `bind:this` 绑定组件后，调用其 `focus()` 和 `blur()` 方法对焦点进行管理。`focus()` 会聚焦输入框并激活组件，`blur()` 使组件内持有焦点的元素失去焦点。
+
+</Framework>
+
 <Demo id="focus" />
 
 ### 自定义标签渲染
@@ -231,6 +275,12 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 可以使用 `renderTagItem` 自定义标签渲染。`renderTagItem(value: string, index: number, onClose: () => void) => JSX.Element`，第三个参数 `onClose` 用于关闭该标签，可直接作为按钮的 `onClick`。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以使用 `tag` snippet 整体替换单个标签，参数为 `{ value, index, onClose }`。内容为空时不渲染该标签，也不回落默认标签。`onClose` 会对收到的事件调用 `preventDefault`，可直接作为按钮的 `onclick`。
 
 </Framework>
 
@@ -265,6 +315,14 @@ import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
 <TagInputSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在根元素上，但 `id`、`name`、`role`、`tabIndex` 以及描述输入框的 `aria-*`（`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-invalid`、`aria-required`、`aria-controls`、`aria-expanded`、`aria-haspopup`、`aria-autocomplete`、`aria-activedescendant`、`aria-errormessage`）落在内部输入框上。`onClick`、`onMouseDown`、`onFocusIn`、`onFocusOut` 在组件自己的处理之外也会调用你传入的函数。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TagInputSvelteApi />
+
+`class`（字符串、数组或对象）、`style`（字符串）与原生属性和事件处理落在根元素上，但 `id`、`name`、`role`、`tabindex` 以及描述输入框的 `aria-*`（`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-invalid`、`aria-required`、`aria-controls`、`aria-expanded`、`aria-haspopup`、`aria-autocomplete`、`aria-activedescendant`、`aria-errormessage`）落在内部输入框上。小写的 `onchange`、`onfocus`、`onblur`、`onkeydown` 不是原生透传，请使用上表的回调 `onChange`、`onFocus`、`onBlur`、`onKeyDown`。`onclick`、`onmousedown` 在组件自己的处理之外也会调用。
 
 </Framework>
 

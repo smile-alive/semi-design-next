@@ -9,6 +9,7 @@ import { Image } from '@fibrae/semi-ui-react';
 import DatePickerReactApi from './api/date-picker.react.en-US.mdx';
 import DatePickerVueApi from './api/date-picker.vue.en-US.mdx';
 import DatePickerSolidApi from './api/date-picker.solid.en-US.mdx';
+import DatePickerSvelteApi from './api/date-picker.svelte.en-US.mdx';
 
 ## Demos
 
@@ -27,6 +28,16 @@ import { DatePicker } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { DatePicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { DatePicker } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -81,6 +92,14 @@ Set `type` to `dateRange`, can choose the date range.
 
 <Notice type="primary" title="Note">
     <div>When you use range selection, if only one date is selected, neither change nor update:modelValue is emitted at this time. Only when both the start date and the end date are selected will they be emitted.</div>
+</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice type="primary" title="Note">
+    <div>When you use range selection, if only one date is selected, neither onChange is called nor the bound value updated at this time. Only when both the start date and the end date are selected will they happen.</div>
 </Notice>
 
 </Framework>
@@ -150,6 +169,12 @@ The `panelChange` event is emitted when the month or year of the panel is change
 
 </Framework>
 
+<Framework only="svelte">
+
+`onPanelChange` is called when the month or year of the panel is changed.
+
+</Framework>
+
 <Framework only="solid">
 
 `onPanelChange` will be called when the month or year of the panel is changed.
@@ -208,6 +233,14 @@ The following example listens to three events: `change`, `confirm` and `cancel`,
 
 </Framework>
 
+<Framework only="svelte">
+
+At the same time, the click callbacks of the "confirm" (`onConfirm`) and "cancel" (`onCancel`) buttons are supported.
+
+The following example passes three callbacks: `onChange`, `onConfirm` and `onCancel`, and you can open the console to see the difference in print information.
+
+</Framework>
+
 <Framework only="solid">
 
 At the same time, the click callbacks of the `onConfirm` and `onCancel` buttons are supported.
@@ -237,6 +270,12 @@ With `topSlot` and `bottomSlot`, you can customize the rendering of the top and 
 <Framework only="vue">
 
 With the `#topSlot` and `#bottomSlot` slots, you can customize the rendering of the top and bottom extra areas. The `#leftSlot` and `#rightSlot` slots render the left and right extra areas.
+
+</Framework>
+
+<Framework only="svelte">
+
+With the `topSlot` and `bottomSlot` snippets, you can customize the rendering of the top and bottom extra areas. The `leftSlot` and `rightSlot` snippets render the left and right extra areas.
 
 </Framework>
 
@@ -312,6 +351,16 @@ The slot props are `value`, `inputValue`, `placeholder`, `disabled`, `size`, `in
 
 </Framework>
 
+<Framework only="svelte">
+
+By default we use the `Input` component as the trigger for the `DatePicker` component. You can customize this trigger with the `trigger` snippet.
+
+The custom trigger is a complete customization of the trigger, the default clear button will not take effect, if you need clear function, please customize a clear button that calls `onClear` from the snippet parameter, or sets the bound `value` to `null`.
+
+The snippet parameter provides `value`, `inputValue`, `placeholder`, `disabled`, `size`, `inputReadOnly`, `rangeInputFocus`, `type`, `format`, `multiple`, `autofocus` and `componentProps`, plus `onChange` (sets the input text, as typing does), `onEnterPress` (commits the input text) and `onClear` (reports a click on the clear button). `inputValue` is `null` until the user types; show the formatted `value` then. The snippet parameter carries no `aria-*` attributes, so name the custom content yourself.
+
+</Framework>
+
 <Framework only="solid">
 
 By default we use the `Input` component as the trigger for the `DatePicker` component. You can customize this trigger by passing the `triggerRender` method.
@@ -353,6 +402,15 @@ The `#date="{ dayNumber, fullDate }"` scoped slot.
 
 </Framework>
 
+<Framework only="svelte">
+
+The `date` snippet receives `{ dayNumber, fullDate }`.
+
+- `dayNumber`: such as `13`.
+- `fullDate`: such as `2020-08-13`.
+
+</Framework>
+
 <Framework only="solid">
 
 `renderDate: (dayNumber?: number, fullDate?: string) => JSX.Element`
@@ -377,6 +435,12 @@ The `#date="{ dayNumber, fullDate }"` scoped slot.
 <Framework only="vue">
 
 The `#fullDate="{ dayNumber, fullDate, dayStatus }"` scoped slot replaces the whole date box; the box keeps only its base and active class names.
+
+</Framework>
+
+<Framework only="svelte">
+
+The `fullDate` snippet receives `{ dayNumber, fullDate, dayStatus }` and replaces the whole date box; the box keeps only its base and active class names.
 
 </Framework>
 
@@ -440,6 +504,21 @@ Undeclared attributes such as `class`, `style`, `id`, `title`, `data-*` and `ari
 
 </Framework>
 
+<Framework only="svelte">
+
+<DatePickerSvelteApi />
+
+`value` and `open` can be bound with `bind:`, or given a plain value as the initial state; there is no `defaultValue` or `defaultOpen`. `autofocus` is lowercase; `triggerRender`, `renderDate`, `renderFullDate` and the other ReactNode props are snippets of the same name (`trigger`, `date`, `fullDate`), and the separator is shown by the `rangeSeparatorNode` snippet. Callbacks are written `onChange` and so on, not native events. `style`, `inputStyle` and `dropdownStyle` are strings.
+
+Undeclared attributes such as `class`, `style`, `id`, `title`, `data-*` and `aria-label` land on the root element, which is `role="group"` when it has an `aria-label`. Where `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land:
+
+- A single input: all of them land on the input
+- A range type: the root element is `role="group"` and takes `aria-labelledby`; the other four land on both inputs
+- `trigger` content without a focusable element: `aria-labelledby`, `aria-describedby`, `aria-errormessage` and `aria-invalid` land on the wrapper with the role `button`; `aria-required` is not forwarded
+- `trigger` content with its own focusable element: none of them is forwarded, so set them on the snippet content
+
+</Framework>
+
 <Framework only="solid">
 
 <DatePickerSolidApi />
@@ -464,6 +543,12 @@ The handle obtained through `ref` carries the `open()`, `close()`, `focus(focusT
 <Framework only="vue">
 
 A template ref exposes `open()`, `close()`, `focus(rangeEnd?)` and `blur()`. `focus` focuses the input; a range focuses its start input unless `rangeEnd` is given, and with insetInput the focus goes to the input in the panel. `blur` blurs the input. A controlled `open` wins: `open()` and `close()` do not change the visibility of the panel then.
+
+</Framework>
+
+<Framework only="svelte">
+
+DatePicker exposes `open()`, `close()`, `focus(rangeEnd?)` and `blur()` through `export function`; get the instance with `bind:this` and call them. `focus` focuses the input; a range focuses its start input unless `rangeEnd` is given, and with insetInput the focus goes to the input in the panel. `blur` blurs the input. A bound `open` wins: `open()` and `close()` do not change the visibility of the panel then.
 
 </Framework>
 
@@ -523,6 +608,35 @@ type DatePickerTriggerSlotProps = {
     onEnterPress: (inputValue: string) => void;
     onClear: (event: MouseEvent) => void;
 };
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```typescript
+type DatePickerBaseValueType = string | number | Date;
+type DatePickerValueType = DatePickerBaseValueType | DatePickerBaseValueType[];
+type DatePickerType = 'date' | 'dateRange' | 'dateTime' | 'dateTimeRange' | 'month' | 'monthRange' | 'year';
+type DatePickerRangeInput = 'rangeStart' | 'rangeEnd';
+interface DatePickerTriggerRenderProps {
+    value: Date[];
+    inputValue: string | null;
+    placeholder: string | string[];
+    disabled: boolean;
+    size: InputSize;
+    inputReadOnly: boolean;
+    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    type: DatePickerType;
+    format?: string;
+    multiple: boolean;
+    autofocus: boolean;
+    // The declared props, without snippets, callbacks and undeclared attributes
+    componentProps: Partial<DatePickerProps>;
+    onChange: (inputValue: string) => void;
+    onEnterPress: (inputValue: string) => void;
+    onClear: (event: MouseEvent) => void;
+}
 ```
 
 </Framework>
@@ -643,6 +757,12 @@ Multiple dates or times are used by default `","` (English comma) separated.
       <Framework only="vue">
 
     `:timePickerOpts="{ scrollItemProps: { mode: 'wheel', cycled: true } }"`.
+
+      </Framework>
+
+      <Framework only="svelte">
+
+    `timePickerOpts={{ scrollItemProps: { mode: 'wheel', cycled: true } }}`.
 
       </Framework>
 

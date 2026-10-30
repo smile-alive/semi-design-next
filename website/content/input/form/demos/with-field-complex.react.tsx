@@ -14,7 +14,7 @@ interface MyComponentProps {
 }
 
 // id and aria-labelledby go on the fieldset (named by the field label); aria-required goes to each control
-const MyComponent = ({ id, onChange, value, 'aria-labelledby': labelledBy, 'aria-required': required }: MyComponentProps) => {
+function MyComponent({ id, onChange, value, 'aria-labelledby': labelledBy, 'aria-required': required }: MyComponentProps) {
     const { name, role } = value || {};
     const handleChange = (v: string | undefined, type: 'name' | 'role') => {
         const newValue = { ...value, [type === 'name' ? 'name' : 'role']: v };
@@ -37,17 +37,17 @@ const MyComponent = ({ id, onChange, value, 'aria-labelledby': labelledBy, 'aria
             />
         </fieldset>
     );
-};
+}
 const CustomField = withField(MyComponent, { valueKey: 'value', onKeyChangeFnName: 'onChange' });
 
-const ComponentUsingFormState = () => {
+function ComponentUsingFormState() {
     const formState = useFormState();
     return (
         <pre>
             <code>{JSON.stringify(formState)}</code>
         </pre>
     );
-};
+}
 
 export default function FormDemo() {
     return (

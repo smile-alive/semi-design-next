@@ -10,18 +10,18 @@ const opts = {
 export default function NotificationDemo() {
     const [ids, setIds] = createSignal<string[]>([]);
 
-    function show() {
+    const show = () => {
         const id = Notification.info(opts);
         setIds([...ids(), id]);
-    }
+    };
 
-    function hide() {
+    const hide = () => {
         const [first, ...rest] = ids();
         if (first) {
             Notification.close(first);
         }
         setIds(rest);
-    }
+    };
 
     return (
         <>

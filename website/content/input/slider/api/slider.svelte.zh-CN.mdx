@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| aria-label | 手柄的可访问名称；range 模式下两个手柄在其后分别追加语言包中的起点、终点。 | `string \| null` | - |
+| aria-labelledby | 引用标签元素的 id，作为手柄的可访问名称；range 模式下每个手柄再加上起点或终点。 | `string \| null` | - |
+| aria-valuetext | 为当前值提供用户友好的名称。 | `string \| null` | - |
+| disabled | 滑块是否禁用。 | `boolean` | `false` |
+| getAriaValueText | 为当前值提供用户友好的名称，参数为滑块的值与滑块的顺序。 | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
+| handleDot | 滑块上的圆点，单个滑块传一个对象，range 时按手柄传数组。 | `HandleDot \| HandleDot[]` | - |
+| id | 落在第一个手柄的 input 上，用于 label for 关联，点击 label 会聚焦该手柄。 | `string` | - |
+| included | marks 不为空对象时有效，true 表示刻度为包含关系，false 表示并列。 | `boolean` | `true` |
+| mark | 自定义刻度标签的 snippet，也用于 tooltipOnMark 的提示；参数为 `{ value, label }`，即刻度的 value 与 label。 | <ApiType detail={"Snippet\u003c[SliderMarkSnippetProps]>"}>Type</ApiType> | - |
+| marks | 刻度，key 为 number 且取值在闭区间 [min, max] 内，值为字符串或数字；节点内容使用 mark snippet。 | <ApiType detail={"Record\u003cnumber, string \u007c number>"}>Type</ApiType> | - |
+| max | 最大值。 | `number` | `100` |
+| min | 最小值。 | `number` | `0` |
+| onAfterChange | 值变化完成后的回调，参数为当前取值。绑定或单向传值时，每次值变化除 onChange 外也触发；不传 `value` 时拖动期间只触发 onChange，松开后触发一次。 | <ApiType detail={"(value: number \u007c number[]) => void"}>Type</ApiType> | - |
+| onBlur | 焦点离开整个 Slider 时的回调，在两个手柄之间切换不触发。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 值变化时的回调，参数为当前取值。 | <ApiType detail={"(value: number \u007c number[]) => void"}>Type</ApiType> | - |
+| onFocus | 焦点进入 Slider 时的回调，是外层的 focusin，在手柄之间切换每次都触发。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onKeyDown | 手柄 input 上的按键回调，先于 Slider 自己的处理；调用 `preventDefault()` 可阻止取值键移动手柄。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onMouseUp | 拖动滑块的指针（鼠标、触摸、触控笔）松开或被取消时，以及取值键松开时的回调。 | <ApiType detail={"(event: PointerEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| railStyle | 滑块轨道的样式，只接受字符串。 | `string` | - |
+| range | 是否支持两端同时可滑动。 | `boolean` | `false` |
+| showArrow | 提示是否带箭头。 | `boolean` | `true` |
+| showBoundary | 是否在悬停时展示最大值与最小值。 | `boolean` | `false` |
+| showMarkLabel | 是否显示刻度标签。 | `boolean` | `true` |
+| step | 步长，从 min 起计算。 | `number` | `1` |
+| tip | 自定义手柄提示内容的 snippet；参数为 `{ value, handle }`，value 为 tipFormatter 的结果，handle 为 min 或 max。 | <ApiType detail={"Snippet\u003c[SliderTipSnippetProps]>"}>Type</ApiType> | - |
+| tipFormatter | 设置提示的展示格式，每个手柄单独调用，参数为该手柄的值；默认显示当前取值，null 隐藏提示。 | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | <ApiType detail={"(tipValue: number) => tipValue"}>Type</ApiType> |
+| tooltipOnMark | 刻度上是否带有提示。 | `boolean` | `false` |
+| tooltipVisible | 是否始终显示提示。 | `boolean` | - |
+| value | 当前取值，可用 `bind:value` 双向绑定。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值，父级再传新值时以父级为准；不传时由 Slider 自己管理，初值为 min。 | `number \| number[]` | - |
+| vertical | 是否为垂直方向。 | `boolean` | `false` |
+| verticalReverse | 反转垂直方向，即上大下小。 | `boolean` | `false` |

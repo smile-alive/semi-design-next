@@ -8,6 +8,7 @@ brief: 通过鼠标或键盘，输入范围内的数值，与 Input 不同的是
 import InputNumberReactApi from './api/input-number.react.zh-CN.mdx';
 import InputNumberVueApi from './api/input-number.vue.zh-CN.mdx';
 import InputNumberSolidApi from './api/input-number.solid.zh-CN.mdx';
+import InputNumberSvelteApi from './api/input-number.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -43,7 +44,23 @@ import { InputNumber } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { InputNumber } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本输入框
+
+<Framework only="svelte">
+
+没有 `defaultValue`：只传 `value` 作为初始值，需要读写时用 `bind:value`，需要拒绝或改写时用函数绑定 `bind:value={() => value, (next) => { ... }}`。
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -64,6 +81,12 @@ import { InputNumber } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 `innerButtons` 的按钮在悬停或聚焦时临时替换 `suffix` 属性的内容，之后恢复原内容。
+
+</Framework>
+
+<Framework only="svelte">
+
+`innerButtons` 的按钮在悬停或聚焦时临时替换 `suffix` snippet 的内容，之后恢复原内容。
 
 </Framework>
 
@@ -154,6 +177,14 @@ hideButtons设为true，彻底隐藏步进器
 
 </Framework>
 
+<Framework only="svelte">
+
+<InputNumberSvelteApi />
+
+`class`、`style`（字符串）落在外层 `.semi-input-number` 上；其余未声明属性（`id`、`name`、`tabindex`、`title`、`aria-*`、`data-*`、`role`）落在原生 input。`prefix`、`suffix`、`insetLabel`、`clearIcon`、`addonBefore`、`addonAfter` 是 snippet。放在 InputGroup 里时跟随分组的 `size`、`disabled`。
+
+</Framework>
+
 ## Methods
 
 <Framework only="vue">
@@ -171,6 +202,12 @@ InputNumber 的 ref 是命令式句柄（类型为 `InputNumberHandle`），不�
 <Framework only="solid">
 
 `ref` 拿到的是根元素（`HTMLDivElement`），不是句柄。根元素的 `focus()` 与 `blur()` 作用于输入框，`focus()` 未传参数时遵循 `preventScroll` 属性。`select()`、`setSelectionRange()` 等原生方法，通过 `inputRef` 取得 `input` 元素后调用。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `bind:this` 取得组件实例后调用 `focus(options)`、`blur()`、`select()`、`setSelectionRange()`、`getInput()`、`getNativeElement()`，说明见上方 Methods；`focus()` 未传参数时遵循 `preventScroll` 属性。
 
 </Framework>
 

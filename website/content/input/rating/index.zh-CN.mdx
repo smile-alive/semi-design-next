@@ -8,6 +8,7 @@ brief: 展示评分的组件
 import RatingReactApi from './api/rating.react.zh-CN.mdx';
 import RatingVueApi from './api/rating.vue.zh-CN.mdx';
 import RatingSolidApi from './api/rating.solid.zh-CN.mdx';
+import RatingSvelteApi from './api/rating.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { Rating } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Rating } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Rating } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -88,6 +99,12 @@ import { Rating } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+自定义字符使用 `character` 属性：传字符串，或用 `{#snippet character()}...{/snippet}` 传 snippet。
+
+</Framework>
+
 <Demo id="custom" />
 
 ## API参考
@@ -117,6 +134,16 @@ import { Rating } from '@fibrae/semi-ui-solid';
 `class`、`style`、`ref` 与原生属性（如 `id`、`aria-labelledby`、`aria-invalid`、`aria-required`、`data-*` 等）落在 `role="radiogroup"` 的根 `ul` 上；`tabIndex` 与 `name` 被丢弃，列表固定为 `tabIndex={-1}`，只有选中的 radio 可以 Tab 到达。
 
 `ref` 上的 `focus()` 聚焦 Tab 会到达的 radio（与 `autofocus` 的落点相同），`blur()` 只在焦点位于评分内时生效。
+
+</Framework>
+
+<Framework only="svelte">
+
+<RatingSvelteApi />
+
+`value` 可绑定，没有 `defaultValue`：只传 `value` 作为初值，需要读写时用 `bind:value`，需要拒绝或改写时用函数绑定。`class`、`style`（字符串）与原生属性（如 `id`、`aria-labelledby`、`aria-invalid`、`aria-required`、`data-*` 等）落在 `role="radiogroup"` 的根 `ul` 上；`aria-label` 原样作为可访问名称，缺省时名称概括当前取值；`tabindex` 与 `name` 被丢弃，列表固定为 `tabindex="-1"`，只有选中的 radio 可以 Tab 到达。
+
+`focus()`、`blur()` 经 `bind:this` 调用：`focus()` 聚焦 Tab 会到达的 radio（与 `autofocus` 的落点相同），`blur()` 只在焦点位于评分内时生效。
 
 </Framework>
 

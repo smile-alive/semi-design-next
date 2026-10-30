@@ -12,6 +12,8 @@ import CheckboxVueApi from './api/checkbox.vue.zh-CN.mdx';
 import CheckboxGroupVueApi from './api/checkbox-group.vue.zh-CN.mdx';
 import CheckboxSolidApi from './api/checkbox.solid.zh-CN.mdx';
 import CheckboxGroupSolidApi from './api/checkbox-group.solid.zh-CN.mdx';
+import CheckboxSvelteApi from './api/checkbox.svelte.zh-CN.mdx';
+import CheckboxGroupSvelteApi from './api/checkbox-group.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -48,6 +50,16 @@ import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -71,6 +83,12 @@ Checkbox单个使用，可以通过`defaultChecked`、`checked`属性控制是�
 
 </Framework>
 
+<Framework only="svelte">
+
+Checkbox单个使用，只传 `checked` 时作为初始选中状态，之后由用户点击切换；需要读写选中状态时用 `bind:checked`，见「受控」。
+
+</Framework>
+
 <Demo id="basic" />
 
 <Demo id="default-checked" />
@@ -90,6 +108,12 @@ Checkbox单个使用，可以通过`defaultChecked`、`checked`属性控制是�
 <Framework only="solid">
 
 带辅助文本的checkbox。通过`extra`传入辅助文本。辅助文本会更长一些，甚至还可能换行。
+
+</Framework>
+
+<Framework only="svelte">
+
+带辅助文本的checkbox。`extra` 接受 snippet：在 Checkbox 标签内用 `{#snippet extra()}...{/snippet}` 定义，其余内容是文本内容。辅助文本会更长一些，甚至还可能换行。
 
 </Framework>
 
@@ -121,6 +145,13 @@ Checkbox单个使用，可以通过`defaultChecked`、`checked`属性控制是�
 
 通过在CheckboxGroup内部放置 Checkbox元素，可以声明Checkbox组  
 使用Checkbox组，你可以更便捷地通过CheckboxGroup的`defaultValue`、`value`属性去控制一组Checkbox的选中与否，此时Checkbox不需要再声明`defaultChecked`、`checked`属性
+
+</Framework>
+
+<Framework only="svelte">
+
+通过在CheckboxGroup内部放置 Checkbox元素，可以声明Checkbox组  
+使用Checkbox组，你可以更便捷地通过CheckboxGroup的 `value` 去控制一组Checkbox的选中与否：只传 `value` 作为初值，需要读写时用 `bind:value`，此时Checkbox不需要再声明 `checked`
 
 </Framework>
 
@@ -196,6 +227,14 @@ CheckboxGroup 内嵌 Checkbox 并与 Grid 组件一起使用，可以实现灵�
 
 </Framework>
 
+<Framework only="svelte">
+
+<CheckboxSvelteApi />
+
+`class`、`style`（字符串）落在根元素 `<span>` 上。`id`、`name`、`tabindex`、`autofocus`、`aria-*` 与 `onfocus`、`onblur` 落在内部的原生 input 上，其余原生属性与事件（如 `onmouseenter`）落在根元素上；`onclick` 在切换之前调用。`name` 在 CheckboxGroup 中以组的 `name` 为准。
+
+</Framework>
+
 ### Checkbox Group
 
 <Framework only="react">
@@ -219,6 +258,14 @@ CheckboxGroup 内嵌 Checkbox 并与 Grid 组件一起使用，可以实现灵�
 <CheckboxGroupSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在根元素 `<div>` 上；`onBlur` 在焦点离开整个分组时触发，在组内 Checkbox 之间移动焦点不触发。`aria-invalid`、`aria-errormessage` 传给组内每个 Checkbox 的原生 input，`aria-required`、`tabindex` 以及 Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 不输出。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CheckboxGroupSvelteApi />
+
+`options` 项的字段为 `label`、`value`、`disabled`、`extra`（`string | number`）、`class`、`style`（字符串），没有 `onChange`；需要自定义内容时使用 `label`、`extra` snippet，参数为 `{ option, index }`。`class`、`style`（字符串）与原生属性和事件落在根元素 `<div>` 上；`onBlur` 在焦点离开整个分组时触发，在组内 Checkbox 之间移动焦点不触发。`aria-invalid`、`aria-errormessage` 传给组内每个 Checkbox 的原生 input，`aria-required`、`tabindex` 以及 Tooltip 注入的 `aria-expanded`、`aria-haspopup`、`aria-controls` 不输出。
 
 </Framework>
 
@@ -252,6 +299,12 @@ Checkbox 提供的一些内部方法可以通过 ref 访问：
 | ------- | -------- |
 | blur()  | 移除焦点 |
 | focus() | 获取焦点 |
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `bind:this` 取得 Checkbox 实例后调用，说明见上方 Methods。
 
 </Framework>
 

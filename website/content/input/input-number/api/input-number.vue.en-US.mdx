@@ -26,8 +26,8 @@ import ApiType from '#/components/ApiType.astro';
 | keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `semiDefault("InputNumber", "keepFocus", false)` |
 | innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix slot. | `boolean` | `semiDefault("InputNumber", "innerButtons", false)` |
 | hideButtons | Hides the step buttons; with innerButtons also true, no built-in button is shown either. | `boolean` | `semiDefault("InputNumber", "hideButtons", false)` |
-| size | Input size: default, small or large. | `Size` | `semiDefault("InputNumber", "size", "default")` |
-| disabled | Whether disabled. | `boolean` | `semiGlobalDefault("InputNumber", "disabled")` |
+| size | Input size: default, small or large. | `Size` | `undefined` |
+| disabled | Whether disabled. | `boolean` | `undefined` |
 | readonly | Whether read-only. | `boolean` | `semiGlobalDefault("InputNumber", "readonly")` |
 | borderless | Borderless mode. | `boolean` | `semiGlobalDefault("InputNumber", "borderless")` |
 | showClear | Whether to show the clear button. | `boolean` | `semiGlobalDefault("InputNumber", "showClear")` |

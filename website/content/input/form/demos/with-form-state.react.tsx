@@ -1,6 +1,8 @@
 import { withFormState, Form, type FormState } from '@fibrae/semi-ui-react';
 
-const SomeComponentInsideForm = (props: { formState: FormState }) => <code>{JSON.stringify(props.formState)}</code>;
+function SomeComponentInsideForm(props: { formState: FormState }) {
+    return <code>{JSON.stringify(props.formState)}</code>;
+}
 const ComponentWithFormState = withFormState(SomeComponentInsideForm);
 
 export default function FormDemo() {

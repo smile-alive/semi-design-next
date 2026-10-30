@@ -8,6 +8,7 @@ brief: 分割线是一个呈线状的轻量化组件，用于有逻辑的组织�
 import DividerReactApi from './api/divider.react.zh-CN.mdx';
 import DividerVueApi from './api/divider.vue.zh-CN.mdx';
 import DividerSolidApi from './api/divider.solid.zh-CN.mdx';
+import DividerSvelteApi from './api/divider.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Divider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Divider } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Demo id="basic" />
@@ -57,6 +68,12 @@ import { Divider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+水平分割线的内容写在标签内（`children`）；垂直分割线不显示内容。传了内容的水平分割线，内容一律包进 `semi-divider_inner-text`，不区分纯文本与元素。
+
+</Framework>
+
 <Demo id="with-children" />
 
 ## API参考
@@ -66,6 +83,14 @@ import { Divider } from '@fibrae/semi-ui-solid';
 <DividerReactApi />
 
 `id`、`onClick`、`role`、`aria-*` 等其他原生属性落在根元素上。默认 `role` 为 `separator`，带内容时不设置，传入的 `role` 会覆盖默认值。
+
+</Framework>
+
+<Framework only="svelte">
+
+<DividerSvelteApi />
+
+`class`、`style` 与其他原生属性落在根元素上，`style` 写在 `margin` 之后，使用方的值优先。默认 `role` 为 `separator`，带内容时不设置，传入的 `role` 会覆盖默认值。
 
 </Framework>
 

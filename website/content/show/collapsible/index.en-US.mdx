@@ -8,6 +8,7 @@ brief: The collapsible component is a container component used to put long secti
 import CollapsibleReactApi from './api/collapsible.react.en-US.mdx';
 import CollapsibleVueApi from './api/collapsible.vue.en-US.mdx';
 import CollapsibleSolidApi from './api/collapsible.solid.en-US.mdx';
+import CollapsibleSvelteApi from './api/collapsible.svelte.en-US.mdx';
 
 ## When to use
 
@@ -40,6 +41,16 @@ import { Collapsible } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Collapsible } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Collapsible } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -89,6 +100,14 @@ Other native attributes (such as `aria-*`, `data-*` and `onMouseEnter`) land on 
 <CollapsibleSolidApi />
 
 `class`, `style`, `ref` and other native attributes and events land on the outer wrapper; `id` is a declared prop and lands on the inner content element. An `onTransitionEnd` from the caller runs together with the component's own handler.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CollapsibleSvelteApi />
+
+`class`, `style` and other native attributes and events land on the outer wrapper; `id` is a declared prop and lands on the inner content element, and it does not read the global default. An `ontransitionend` from the caller runs together with the component's own handler.
 
 </Framework>
 
@@ -165,6 +184,26 @@ import { Button, Collapsible } from '@fibrae/semi-ui-solid';
         </>
     );
 };
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, Collapsible } from '@fibrae/semi-ui-svelte';
+
+    const collapseId = 'myCollapsible';
+    let visible = $state(false);
+</script>
+
+<Button aria-controls={collapseId} aria-expanded={visible} onclick={() => (visible = !visible)}>
+    {visible ? 'hide' : 'show'}
+</Button>
+<Collapsible id={collapseId} isOpen={visible}>
+    <div>hide content</div>
+</Collapsible>
 ```
 
 </Framework>

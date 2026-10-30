@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                                  | 类型                                                                     | 默认值 |
+| ---------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------ |
+| error            | 错误信息。字符串直接显示，数组会合并其中的错误；true 只显示错误态容器，没有文本；false 与空值不渲染。 | `FieldError`                                                             | -      |
+| errorContent     | 自定义错误信息的渲染，参数为 `{ error }`。                                                            | <ApiType detail={"Snippet\u003c[{ error: FieldError }]>"}>Type</ApiType> | -      |
+| errorMessageId   | 错误文本元素的 id，供 aria-errormessage 引用。                                                        | `string`                                                                 | -      |
+| helpText         | 提示信息，没有错误时显示，与错误信息共用同一区块。                                                    | `Snippet`                                                                | -      |
+| helpTextId       | 提示文本元素的 id，供 aria-describedby 引用。                                                         | `string`                                                                 | -      |
+| isInInputGroup   | 是否位于 InputGroup 中；为 true 且 showValidateIcon 为 true 时，不论 validateStatus 都显示错误图标。  | `boolean`                                                                | -      |
+| showValidateIcon | 是否显示 validateStatus 对应的图标。                                                                  | `boolean`                                                                | -      |
+| validateStatus   | 信息所属的校验状态，可选 default、error、warning、success。                                           | `ValidateStatus`                                                         | -      |

@@ -8,6 +8,7 @@ brief: Through the mouse or keyboard, input the value in the range. Unlike Input
 import InputNumberReactApi from './api/input-number.react.en-US.mdx';
 import InputNumberVueApi from './api/input-number.vue.en-US.mdx';
 import InputNumberSolidApi from './api/input-number.solid.en-US.mdx';
+import InputNumberSvelteApi from './api/input-number.svelte.en-US.mdx';
 
 ## When to Use
 
@@ -43,7 +44,23 @@ import { InputNumber } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { InputNumber } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Input Box
+
+<Framework only="svelte">
+
+There is no `defaultValue`: a plain `value` is the initial value, `bind:value` reads and writes it, and a function binding `bind:value={() => value, (next) => { ... }}` can refuse or rewrite it.
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -64,6 +81,12 @@ The `innerButtons` buttons temporarily replace the `#suffix` slot while hovered 
 <Framework only="solid">
 
 The `innerButtons` buttons temporarily replace the content of the `suffix` prop while hovered or focused, and the original content comes back afterwards.
+
+</Framework>
+
+<Framework only="svelte">
+
+The `innerButtons` buttons temporarily replace the content of the `suffix` snippet while hovered or focused, and the original content comes back afterwards.
 
 </Framework>
 
@@ -154,6 +177,14 @@ There are no `prefixCls` or `className`. `class` and `style` land on the outer `
 
 </Framework>
 
+<Framework only="svelte">
+
+<InputNumberSvelteApi />
+
+`class` and `style` (a string) land on the outer `.semi-input-number`; other undeclared attributes (`id`, `name`, `tabindex`, `title`, `aria-*`, `data-*`, `role`) land on the native input. `prefix`, `suffix`, `insetLabel`, `clearIcon`, `addonBefore` and `addonAfter` are snippets. Inside an InputGroup it follows the group's `size` and `disabled`.
+
+</Framework>
+
 ## Methods
 
 <Framework only="vue">
@@ -171,6 +202,12 @@ The ref of InputNumber is an imperative handle (`InputNumberHandle`), not the na
 <Framework only="solid">
 
 `ref` gets the root element (`HTMLDivElement`), not a handle. `focus()` and `blur()` on the root act on the input, and `focus()` without arguments follows the `preventScroll` prop. Native methods such as `select()` and `setSelectionRange()` are called on the `input` element that `inputRef` receives.
+
+</Framework>
+
+<Framework only="svelte">
+
+Call `focus(options)`, `blur()`, `select()`, `setSelectionRange()`, `getInput()` and `getNativeElement()` on the instance obtained with `bind:this`; see Methods above. `focus()` without arguments follows the `preventScroll` prop.
 
 </Framework>
 

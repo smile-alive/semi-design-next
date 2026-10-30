@@ -8,6 +8,7 @@ brief: 设置组件之间的间距。
 import SpaceReactApi from './api/space.react.zh-CN.mdx';
 import SpaceVueApi from './api/space.vue.zh-CN.mdx';
 import SpaceSolidApi from './api/space.solid.zh-CN.mdx';
+import SpaceSvelteApi from './api/space.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { Space } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Space } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Space } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -82,6 +93,14 @@ Space 直接渲染默认插槽，不包裹子节点；`class`、`style` 及其�
 <SpaceSolidApi />
 
 Space 直接渲染子节点，不包裹额外元素；`class`、`style`、`ref` 及其余原生属性和事件都落在根 `div` 上。数字 `spacing` 按像素输出，`style` 中的 `column-gap`、`row-gap` 优先于数字 `spacing`。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SpaceSvelteApi />
+
+Space 直接渲染 `children`，不包裹额外元素；`class`、`style` 及其余原生属性和事件落在根 `div` 上。数字 `spacing` 按像素输出，`style` 字符串中的 `column-gap`、`row-gap` 优先于数字 `spacing`。
 
 </Framework>
 

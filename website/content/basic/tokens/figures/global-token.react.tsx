@@ -23,7 +23,7 @@ const trimDollar = (text: string) => text.replace(/^\$+|\$+$/g, '');
 
 const jumpTargets = new Set([...global.light, ...normal].map((token) => token.key));
 
-const JumpLink = ({ value, locale }: { value: string; locale: Locale }) => {
+function JumpLink({ value, locale }: { value: string; locale: Locale }) {
     const target = value.startsWith('var') ? value.slice(4, value.length - 1) : value;
     if (!jumpTargets.has(target)) {
         return <div>{value}</div>;
@@ -34,9 +34,9 @@ const JumpLink = ({ value, locale }: { value: string; locale: Locale }) => {
             {value}
         </a>
     );
-};
+}
 
-const TokenTable = ({ tokenList, locale, mode = 'light' }: { tokenList: Token[]; locale: Locale; mode?: Mode }) => {
+function TokenTable({ tokenList, locale, mode = 'light' }: { tokenList: Token[]; locale: Locale; mode?: Mode }) {
     const t = messages[locale];
     const columns: ColumnProps<Token>[] = [
         {
@@ -77,9 +77,9 @@ const TokenTable = ({ tokenList, locale, mode = 'light' }: { tokenList: Token[];
         },
     ];
     return <Table key={mode} columns={columns} dataSource={tokenList} />;
-};
+}
 
-const GlobalTokenTab = ({ reg, locale }: { reg: RegExp; locale: Locale }) => {
+function GlobalTokenTab({ reg, locale }: { reg: RegExp; locale: Locale }) {
     const [mode, setMode] = useState<Mode>('light');
     const modeTokens = globalTokens[mode].filter((token) => reg.test(token.key));
     const tokenList = [...modeTokens, ...normal.filter((token) => reg.test(token.key))].map((token) => (token.key.startsWith('--semi-color') ? { ...token, color: token.value } : token));
@@ -98,9 +98,9 @@ const GlobalTokenTab = ({ reg, locale }: { reg: RegExp; locale: Locale }) => {
             <TokenTable tokenList={tokenList} locale={locale} mode={mode} />
         </Tabs>
     );
-};
+}
 
-const GlobalAnimationToken = ({ locale }: { locale: Locale }) => {
+function GlobalAnimationToken({ locale }: { locale: Locale }) {
     const tokenMap = useMemo(() => {
         const map: Record<string, Token[]> = {};
         animation.forEach((token) => {
@@ -118,7 +118,7 @@ const GlobalAnimationToken = ({ locale }: { locale: Locale }) => {
             ))}
         </Tabs>
     );
-};
+}
 
 interface GlobalTokenProps {
     locale: Locale;

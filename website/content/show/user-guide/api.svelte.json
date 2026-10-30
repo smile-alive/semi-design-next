@@ -1,0 +1,103 @@
+{
+    "user-guide": {
+        "source": "packages/semi-ui-svelte/src/user-guide/user-guide.svelte",
+        "props": {
+            "class": {
+                "zh-CN": "popup 模式落在气泡卡片上，modal 模式落在 Modal 的最外层元素上。",
+                "en-US": "Lands on the popover card in popup mode and on the outermost element of the Modal in modal mode."
+            },
+            "current": {
+                "zh-CN": "当前步骤的索引，可用 `bind:current` 双向绑定；不传时由组件自己保存，从 0 开始。",
+                "en-US": "Index of the current step, bound with `bind:current`. Without it the component keeps the index itself, starting at 0."
+            },
+            "finishText": {
+                "zh-CN": "最后一步完成按钮的文本；为空时使用语言包中的文案。",
+                "en-US": "Text of the finish button on the last step. When empty, the text from the locale pack is used."
+            },
+            "getPopupContainer": {
+                "zh-CN": "modal 模式下弹窗渲染至该 DOM 中；popup 模式下指向 body 以外的元素时不锁定 body 滚动。气泡卡片位于 top layer，不受此属性影响。",
+                "en-US": "In modal mode the dialog is rendered into this DOM node. In popup mode body scrolling is not locked when it points to an element other than body. The popover card sits in the top layer and is not affected."
+            },
+            "mask": {
+                "zh-CN": "是否显示蒙层，可被步骤的 mask 覆盖。",
+                "en-US": "Whether to show the mask. A step's own mask overrides it."
+            },
+            "mode": {
+                "zh-CN": "引导模式：popup 为气泡卡片，modal 为弹窗。",
+                "en-US": "Guide mode: popup for a bubble card, modal for a dialog."
+            },
+            "nextButtonProps": {
+                "zh-CN": "下一步按钮的属性，onclick 先于内置处理调用，按钮文本使用 nextText snippet。",
+                "en-US": "Props of the next button. onclick is called before the built-in handling; use the nextText snippet for the button text."
+            },
+            "nextText": {
+                "zh-CN": "下一步按钮文本的 snippet，最后一步显示 finishText；不提供时使用语言包中的文案。",
+                "en-US": "Snippet for the text of the next button; the last step shows finishText. Without it the text from the locale pack is used."
+            },
+            "onChange": {
+                "zh-CN": "步骤改变时调用，参数为新的索引，晚于 current 的写回。",
+                "en-US": "Called with the new index when the step changes, after current was written."
+            },
+            "onFinish": {
+                "zh-CN": "点击最后一步的完成按钮时调用，晚于 visible 的写回。",
+                "en-US": "Called when the finish button on the last step is clicked, after visible was written."
+            },
+            "onNext": {
+                "zh-CN": "点击下一步按钮时调用，参数为新的索引；最后一步调用 onFinish。",
+                "en-US": "Called with the new index when the next button is clicked. The last step calls onFinish instead."
+            },
+            "onPrev": {
+                "zh-CN": "点击上一步按钮时调用，参数为新的索引。",
+                "en-US": "Called with the new index when the previous button is clicked."
+            },
+            "onSkip": {
+                "zh-CN": "点击跳过按钮或按 Esc 时调用，晚于 visible 的写回。",
+                "en-US": "Called when the skip button is clicked or Escape is pressed, after visible was written."
+            },
+            "position": {
+                "zh-CN": "气泡卡片相对于目标元素的位置，可被步骤的 position 覆盖。",
+                "en-US": "Position of the bubble card relative to the target element. A step's own position overrides it."
+            },
+            "prevButtonProps": {
+                "zh-CN": "上一步按钮的属性，onclick 先于内置处理调用，按钮文本使用 prevText snippet。",
+                "en-US": "Props of the previous button. onclick is called before the built-in handling; use the prevText snippet for the button text."
+            },
+            "prevText": {
+                "zh-CN": "上一步按钮文本的 snippet；不提供时使用语言包中的文案。",
+                "en-US": "Snippet for the text of the previous button. Without it the text from the locale pack is used."
+            },
+            "showPrevButton": {
+                "zh-CN": "是否显示上一步按钮，第一步不显示。",
+                "en-US": "Whether to show the previous button. It is never shown on the first step."
+            },
+            "showSkipButton": {
+                "zh-CN": "是否显示跳过按钮，最后一步不显示。",
+                "en-US": "Whether to show the skip button. It is never shown on the last step."
+            },
+            "spotlightPadding": {
+                "zh-CN": "高亮区域的外扩距离，单位为像素，可被步骤的 spotlightPadding 覆盖；都未设置时为 5。",
+                "en-US": "Extra space in pixels around the highlighted area. A step's own spotlightPadding overrides it; 5 when neither is set."
+            },
+            "steps": {
+                "zh-CN": "引导步骤的数据；标题、描述可以是字符串或 snippet，封面是 snippet，snippet 的参数为 `{ item, index }`。",
+                "en-US": "Data of the guide steps. A title or description is a string or a snippet, a cover is a snippet; a snippet receives `{ item, index }`."
+            },
+            "style": {
+                "zh-CN": "样式字符串；popup 模式落在气泡卡片上，modal 模式落在 `.semi-modal` 上。",
+                "en-US": "Style string. Lands on the popover card in popup mode and on `.semi-modal` in modal mode."
+            },
+            "theme": {
+                "zh-CN": "popup 模式的主题，可被步骤的 theme 覆盖。",
+                "en-US": "Theme of the popup mode. A step's own theme overrides it."
+            },
+            "visible": {
+                "zh-CN": "是否显示引导，可用 `bind:visible` 双向绑定；跳过、Esc 与完成会把它写回 `false`。",
+                "en-US": "Whether the guide is shown, bound with `bind:visible`. Skip, Escape and finish write `false` back."
+            },
+            "zIndex": {
+                "zh-CN": "popup 模式下遮罩的层级，modal 模式下弹窗的层级。气泡卡片位于 top layer，始终在遮罩之上。",
+                "en-US": "The z-index of the mask in popup mode and of the dialog in modal mode. The popover card sits in the top layer, always above the mask."
+            }
+        }
+    }
+}

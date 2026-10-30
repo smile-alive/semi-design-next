@@ -8,6 +8,7 @@ brief: A more intuitive and efficient multiple-selection selector, which can rev
 import TransferReactApi from './api/transfer.react.en-US.mdx';
 import TransferVueApi from './api/transfer.vue.en-US.mdx';
 import TransferSolidApi from './api/transfer.solid.en-US.mdx';
+import TransferSvelteApi from './api/transfer.svelte.en-US.mdx';
 
 ## Demos
 
@@ -26,6 +27,16 @@ import { Transfer } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Transfer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Transfer } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -72,6 +83,14 @@ Using `renderSelectedItem` you can customize the rendering structure of each sel
 Using the `#sourceItem` slot, you can customize the rendering structure of each source data on the left.  
 Using the `#selectedItem` slot you can customize the rendering structure of each selected item on the right.  
 The custom fields of an item (such as `abbr` and `color` in the demo) are all on the `item` slot parameter. To replace only the text of the rows, the `#label` slot is simpler: it applies to the source row, the selected row and the drag copy.
+
+</Framework>
+
+<Framework only="svelte">
+
+Using the `sourceItem` snippet, you can customize the rendering structure of each source data on the left.  
+Using the `selectedItem` snippet you can customize the rendering structure of each selected item on the right.  
+The custom fields of an item (such as `abbr` and `color` in the demo) are all on the `item` snippet parameter. To replace only the text of the rows, the `label` snippet is simpler: it applies to the source row, the selected row and the drag copy.
 
 </Framework>
 
@@ -167,6 +186,12 @@ Set `draggable` to true to enable the drag and drop sorting function; use the `#
 
 </Framework>
 
+<Framework only="svelte">
+
+Set `draggable` to true to enable the drag and drop sorting function; use the `selectedItem` snippet to customize the rendering of the selected items on the right; You can define the trigger as any content you want and add styles. With `draggable`, the snippet parameter `handle` is a `Snippet<[Snippet]>`: write the trigger as a snippet (such as `grip`) and wrap it with `{@render handle?.(grip)}`. Declare `grip` outside the `<Transfer>` tag; inside it, it would be taken as a prop of Transfer. Without `draggable`, `handle` is not provided.
+
+</Framework>
+
 <Framework only="solid">
 
 Set `draggable` to true to enable the drag and drop sorting function; use `renderSelectedItem` to customize the rendering of the selected items on the right. `sortableHandle` takes a component that wraps the drag icon and returns the drag handle component; render it in the returned JSX. The handle is a native `button`. Without `draggable`, `sortableHandle` is not provided.
@@ -216,6 +241,28 @@ type TransferSourceHeaderSlotProps = {
 };
 
 type TransferSelectedHeaderSlotProps = {
+    num: number; // The total number of selected data
+    showButton: boolean; // Whether to show the clear button
+    onClear: () => void; // Function that should be called after clicking the clear button
+};
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+The `sourceHeader` and `selectedHeader` snippets allow users to customize the header information of the left and right panels. The snippet parameter types are `TransferSourceHeaderSnippetProps` and `TransferSelectedHeaderSnippetProps`:
+
+```ts
+type TransferSourceHeaderSnippetProps = {
+    num: number; // The total number of data or the number of filtered results
+    showButton: boolean; // Whether to show select all/unselect all buttons
+    allChecked: boolean; // Whether the current data has been selected
+    onAllClick: () => void; // Function that should be called after clicking the select/unselect all button
+    leafOnlyNum?: number; // Only provided when type is treeList, represents the number of leaf nodes
+};
+
+type TransferSelectedHeaderSnippetProps = {
     num: number; // The total number of selected data
     showButton: boolean; // Whether to show the clear button
     onClear: () => void; // Function that should be called after clicking the clear button
@@ -317,6 +364,44 @@ The parameter type of `#selectedPanel` is `TransferSelectedPanelSlotProps`
 
 ```ts
 interface TransferSelectedPanelSlotProps {
+    length: number; // number of selected options
+    selectedData: Array<Item>; // All selected items collection
+    onClear: () => void; // The callback function that should be called when clicking to clear
+    onRemove: (item: Item) => void; // The function that should be called when deleting a single option
+    onSortEnd: (payload: { oldIndex: number; newIndex: number }) => void; // The function that should be called when reordering the results
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+Semi provides the `sourcePanel` and `selectedPanel` snippets, allowing you to completely customize the rendering structure of the left and right panels. With this function, you can directly reuse the logic capabilities inside the Transfer to implement the `Transfer` component with a highly customized style structure  
+The parameter type of `sourcePanel` is `TransferSourcePanelSnippetProps`, from which you can get data to render your Panel structure
+
+```ts
+interface TransferSourcePanelSnippetProps {
+    value: Array<string | number>; // value of all selected items
+    loading: boolean | undefined; // Whether loading
+    noMatch: boolean; // Whether there is no matching item that matches the current search value
+    filterData: Array<Item>; // items that match the current search value
+    sourceData: Array<Item>; // All items
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // The dataSource of Transfer
+    allChecked: boolean; // Whether to select all
+    showNumber: number; // Filter the number of results
+    inputValue: string; // the value of the input search box
+    selectedItems: Map<string | number, Item>; // collection of all selected items, the key of the Map is item.key
+    onSearch: (searchString: string) => void; // The function that should be called when the search box changes, the input parameter is the search value
+    onAllClick: () => void; // The function that should be called when all the buttons on the left are clicked
+    onSelectOrRemove: (item: Item) => void; // The function that should be called when selecting or deleting a single option, the input should be the current operation item
+    onSelect: (values: Array<string | number>) => void; // controlled batch selection, the input is the values of the selected items
+}
+```
+
+The parameter type of `selectedPanel` is `TransferSelectedPanelSnippetProps`
+
+```ts
+interface TransferSelectedPanelSnippetProps {
     length: number; // number of selected options
     selectedData: Array<Item>; // All selected items collection
     onClear: () => void; // The callback function that should be called when clicking to clear
@@ -527,6 +612,26 @@ The example keeps the selected values in `v-model` and writes the new order back
 
 </Framework>
 
+<Framework only="svelte">
+
+Example using dnd-kit. The core dependencies that need to be used are @dnd-kit/svelte and @dnd-kit/dom. `DragDropProvider` provides the drag and drop context, and every selected item gets a `Sortable` exported from `@dnd-kit/dom/sortable`. Its parameters are as follows
+
+```
+1. Function: Obtain the necessary information during the drag and drop process through the unique id and the current index
+2. Core input parameters:
+    - id: unique identifier, which can be a number or a string
+    - index: the current position of the item in the list; keep it up to date when the list changes
+    - element: the draggable dom node
+    - handle: optional, the drag handle element; the whole node is draggable when omitted
+3. The second argument is the DragDropManager instance; call destroy on every Sortable when the component unmounts
+```
+
+The example creates the `Sortable` of each row with `{@attach}`, destroys it in the cleanup function, and keeps the selected values in `bind:value`. The order shown during a drag is driven by the example's own `preview` state, so the `OptimisticSortingPlugin` is removed: it moves DOM nodes itself, which collides with the keyed each of Svelte.
+
+In `onDragOver` of `DragDropProvider` the preview order is adjusted from `source` and `target`; in `onDragEnd` the positions before and after the drag are worked out from the id of `event.operation.source`, then `onSortEnd` from the parameters of `selectedPanel` is called; `event.canceled` being true means the drag was canceled.
+
+</Framework>
+
 <Framework only="solid">
 
 The dnd-kit example is as follows. The core dependency is @dnd-kit/solid: `DragDropProvider` provides the drag context, and `useSortable` exported from `@dnd-kit/solid/sortable` takes `id` and `index`. Both are passed as getters, so the `index` read after the list is reordered is up to date.
@@ -585,6 +690,22 @@ The Tree's own search box is hidden with an empty `#search` slot, and the search
 
 </Framework>
 
+<Framework only="svelte">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+}
+```
+
+The Tree's own search box is hidden, and the search box of Transfer drives the filtering. Of the Tree snippets only `label` is forwarded, through the `label` snippet of Transfer, and it applies to both the tree rows on the left and the selected items on the right. A leaf node writes `children: []`.
+
+</Framework>
+
 <Framework only="solid">
 
 ```
@@ -615,6 +736,12 @@ When type is `treeList`, the `SourceHeaderProps` parameter of `renderSourceHeade
 <Framework only="vue">
 
 When type is `treeList`, the `TransferSourceHeaderSlotProps` parameter of `#sourceHeader` provides an additional `leafOnlyNum` field, which represents the number of leaf nodes. This is useful in scenarios like file selection, where you can display only the file count instead of the total including folders.
+
+</Framework>
+
+<Framework only="svelte">
+
+When type is `treeList`, the `TransferSourceHeaderSnippetProps` parameter of `sourceHeader` provides an additional `leafOnlyNum` field, which represents the number of leaf nodes. This is useful in scenarios like file selection, where you can display only the file count instead of the total including folders.
 
 </Framework>
 
@@ -690,6 +817,30 @@ An item can carry any custom fields; they appear unchanged on `item` in the slot
 
 </Framework>
 
+<Framework only="svelte">
+
+### Transfer
+
+<TransferSvelteApi />
+
+`class`, `style`, `aria-*` and other undeclared attributes land on the root element of Transfer; with `aria-label` or `aria-labelledby` and no `role`, the root element gets `role="group"`. `value` can be bound with `bind:value`, or given a plain value as the initial selection; there is no `defaultValue`. Pass the props of the search box through `inputProps`, and those of the Tree on the left of a treeList through `treeProps`.
+
+The types of the interfaces below are exported from `@fibrae/semi-ui-svelte` as: `TransferDataItem` for Item, `TransferGroupItem` for GroupItem, `TransferTreeItem` for TreeItem, `TransferVirtualize` for VirtualizeProps and `TransferPagination` for PaginationProps.
+
+### Item Interface
+
+An item can carry any custom fields; they appear unchanged on `item` in the snippet parameters and callback payloads.
+
+| props    | description                                                                                                              | data type        | default |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------- | ------- |
+| disabled | Whether to disable                                                                                                       | boolean          | false   |
+| key      | Required, unique identification of each option, no repetition is allowed                                                 | string \| number |         |
+| label    | Option display text, matched by the default filter; use the `label` snippet for other content                            | string           |         |
+| fullPath | When `type="treeList"` and `showPath` is `true`, returns the full path node array from the root node to the current node | Array\<Item\>    |         |
+| value    | The value represented by the option                                                                                      | string \| number |         |
+
+</Framework>
+
 <Framework only="solid">
 
 ### Transfer
@@ -758,6 +909,25 @@ const transferRef = useRef<TransferHandle>(null);
 <Transfer ref={transferRef} />;
 
 transferRef.current?.search('Option 1');
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+## Methods
+
+Transfer exposes `search` through `export function`; get the instance with `bind:this` and call it. Its type is `TransferHandle`.
+
+```svelte
+<script lang="ts">
+    import { Transfer, type TransferHandle } from '@fibrae/semi-ui-svelte';
+
+    let transfer = $state<TransferHandle>();
+</script>
+
+<Transfer bind:this={transfer} />
+<button onclick={() => transfer?.search('Option 1')}>Search</button>
 ```
 
 </Framework>

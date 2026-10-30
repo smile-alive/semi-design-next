@@ -8,6 +8,7 @@ brief: 用于展示用户操作的当前进度和状态，一般在操作耗时�
 import ProgressReactApi from './api/progress.react.zh-CN.mdx';
 import ProgressVueApi from './api/progress.vue.zh-CN.mdx';
 import ProgressSolidApi from './api/progress.solid.zh-CN.mdx';
+import ProgressSvelteApi from './api/progress.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { Progress } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Progress } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Progress } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -72,6 +83,12 @@ import { Progress } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过`showInfo`控制是否展示百分比数字，可以通过`format`属性传入函数格式化展示文本，函数返回的 JSX 替换默认文字
+
+</Framework>
+
+<Framework only="svelte">
+
+通过`showInfo`控制是否展示百分比数字，可以通过`format` snippet 格式化展示文本
 
 </Framework>
 
@@ -130,6 +147,13 @@ import { Progress } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+你可以通过 `format` snippet 自定义中心文字，参数为 `{ percent }`，`percent` 为当前显示的百分比，只有显示文字时才会渲染 snippet  
+如果不需要中心文本内容，你可以将 `showInfo` 设为 false，或者让 snippet 渲染为空
+
+</Framework>
+
 <Demo id="format" />
 
 ### 圆角/方角边缘
@@ -173,6 +197,14 @@ import { Progress } from '@fibrae/semi-ui-solid';
 <ProgressSolidApi />
 
 `class`、`style` 与原生属性（`id`、`aria-label`、`aria-labelledby`、`aria-valuetext` 等）经 props 展开到根元素（`role="progressbar"`）上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ProgressSvelteApi />
+
+`class`、`style`（字符串）与原生属性（`id`、`aria-label`、`aria-labelledby`、`aria-valuetext` 等）落在根元素（`role="progressbar"`）上。
 
 </Framework>
 
@@ -235,6 +267,23 @@ import { Progress } from '@fibrae/semi-ui-solid';
 
 // 使用 aria-valuetext
 <Progress aria-label='Percent of disk usage' percent={80} aria-valuetext="Step 2: Copying files... " />
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<!-- 推荐用法 -->
+<p id="progressbar-label">Disk Usage</p>
+<Progress aria-labelledby="progressbar-label" percent={80} />
+
+<!-- 推荐用法 -->
+<Progress aria-label="Percent of disk usage" percent={80} />
+<Progress aria-label="Percent of file downloaded" percent={80} />
+
+<!-- 使用 aria-valuetext -->
+<Progress aria-label="Percent of disk usage" percent={80} aria-valuetext="Step 2: Copying files... " />
 ```
 
 </Framework>

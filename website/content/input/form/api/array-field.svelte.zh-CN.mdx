@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                   | 类型                                                                      | 默认值 |
+| --------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------ |
+| children  | 各行内容，参数为 `{ arrayFields, onAdd, onAddWithInitValue }`。                        | <ApiType detail={"Snippet\u003c[ArrayFieldSnippetProps]>"}>Type</ApiType> | -      |
+| field     | 数组在 formState.values 中的路径，必填。例如各行字段为 a[0].name、a[1].name 时应传 a。 | `string`                                                                  | -      |
+| initValue | 数组的初始值，必须是数组；与 Form 的 initValues 同时配置时优先。                       | `unknown[]`                                                               | -      |

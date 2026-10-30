@@ -32,9 +32,9 @@ const referenceTemp: Reference[] = [
     },
 ];
 
-const handleReferenceClick = (item: Reference) => {
+function handleReferenceClick(item: Reference) {
     console.log('点击了引用', item);
-};
+}
 
 export default function AIChatInputDemo() {
     const [references, setReferences] = createSignal(referenceTemp);

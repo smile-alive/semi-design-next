@@ -1,0 +1,56 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the popup has closed and its leave animation has finished. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterOpen | Called after the popup has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not called for an open that is closed before the enter animation ends. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| aria-describedby | aria-describedby of the popup when its role is dialog. | `string` | - |
+| aria-label | aria-label of the popup when its role is dialog. | `string` | - |
+| aria-labelledby | aria-labelledby of the popup when its role is dialog. | `string` | - |
+| arrow | Snippet that replaces the default arrow while showArrow is true. | `Snippet` | - |
+| arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires showArrow. | `boolean` | `true` |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `true` |
+| child | Snippet that renders the trigger element itself; spread its `{ props }` on the trigger as a whole (`<button {...props}>`). It wins over children. Use it for every focusable trigger such as Button or Input. | <ApiType detail={"Snippet\u003c[{ props: TooltipTriggerProps }]>"}>Type</ApiType> | - |
+| children | The trigger, written inside the tag; it is wrapped in Tooltip's own span (`semi-tooltip-trigger-wrapper`), which suits text and content that cannot take focus. | `Snippet` | - |
+| class | Class name of the popup. | `string` | - |
+| clickToHide | Whether a click on the popup or anything inside it closes the popup. | `boolean` | - |
+| clickTriggerToHide | Whether a click on the trigger closes an open popup. | `boolean` | - |
+| closeOnEsc | Whether Esc closes the open popup. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | `true` |
+| condition | Whether the popup may be triggered. Only an explicit false disables the hover, click and focus triggers; with trigger custom, visible still shows the popup. Changing it from true to false closes an open popup at once; with a controlled visible it only calls onVisibleChange(false), and the popup closes once the caller writes back. | `boolean` | `true` |
+| content | Snippet for the popup content, with the parameter `{ initialFocusRef }`: write `{@attach initialFocusRef}` on the element that should receive focus when the popup opens. | <ApiType detail={"Snippet\u003c[RenderContentProps]>"}>Type</ApiType> | - |
+| disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the popup. | `boolean` | `false` |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | `false` |
+| guardFocus | Whether Tab cycles inside the popup while focus is in it. | `boolean` | `false` |
+| keepDOM | Whether the popup content stays mounted while closed. | `boolean` | `false` |
+| motion | Whether the popup is animated. | `boolean` | `true` |
+| mouseEnterDelay | Milliseconds before the popup shows after the pointer enters. Applies to the hover and focus triggers. | `number` | `50` |
+| mouseLeaveDelay | Milliseconds before the popup hides after the pointer leaves. Applies to the hover and focus triggers; not less than mouseEnterDelay. | `number` | `50` |
+| onClickOutSide | Called when the mouse is pressed outside of the trigger and the open popup. Only for trigger click, contextMenu or custom, or with clickTriggerToHide. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onEscKeyDown | Called when Esc is pressed while the popup is open and closeOnEsc is true. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onOpen | Called once per opening when the popup is shown, as its enter animation starts, before afterOpen, controlled or not; not called for a hover open withdrawn because the pointer already left. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onVisibleChange | Called when the visibility of the popup changes; with a controlled visible it reports only requests from user interaction, not changes the parent makes to visible. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| position | Position of the popup relative to the trigger element. | `Position` | `"top"` |
+| prefixCls | Class prefix of the popup. A custom value drops the Tooltip styles. | `string` | `"semi-tooltip"` |
+| preventScroll | Whether focusing an element avoids scrolling it into view. | `boolean` | - |
+| returnFocusOnClose | Whether focus returns to the trigger after the popup closes. | `boolean` | `false` |
+| role | ARIA role of the popup. | `string` | `"tooltip"` |
+| showArrow | Whether the arrow is shown. | `boolean` | `true` |
+| spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number }` | `8` |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | - |
+| style | Style string of the popup, written before the positioning declarations; its `background-color` also colors the arrow. | `string` | - |
+| trigger | When the popup shows. With custom, visible alone decides. | `'hover' \| 'focus' \| 'click' \| 'custom' \| 'contextMenu'` | `"hover"` |
+| visible | Whether the popup is shown; bind it with `bind:visible`. `bind:visible={get, set}` makes it fully controlled, and when given this value decides. | `boolean` | - |
+| wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
+| wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |
+| wrapWhenSpecial | Whether a disabled or loading Semi Button, Switch or Checkbox that fills the default span gets its pointer events through the span to trigger the popup; false leaves it as it is. | `boolean` | `true` |
+
+**Methods**
+
+| Method | Description | Type |
+| --- | --- | --- |
+| focusTrigger | Focuses the trigger element. Only works when returnFocusOnClose is true and trigger is not custom. | <ApiType detail={"() => void"}>Type</ApiType> |
+| getPopupId | Returns the id of the popup element. | <ApiType detail={"() => string"}>Type</ApiType> |
+| hide | Closes the popup. With a controlled visible it only calls onVisibleChange for the caller to write back. | <ApiType detail={"() => void"}>Type</ApiType> |
+| rePosition | Recomputes the popup position from the trigger's current position at once. The popup already follows scrolling, window resizing, trigger moves and size changes of the trigger or popup, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -11,6 +11,7 @@ import StepsVueApi from './api/steps.vue.en-US.mdx';
 import StepVueApi from './api/step.vue.en-US.mdx';
 import StepsSolidApi from './api/steps.solid.en-US.mdx';
 import StepSolidApi from './api/step.solid.en-US.mdx';
+import StepsSvelteApi from './api/steps.svelte.en-US.mdx';
 
 ## Demos
 
@@ -46,6 +47,18 @@ import { Steps } from '@fibrae/semi-ui-solid';
 ```
 
 Only Steps.Step takes a step position: other children, including native elements and text, are not rendered and take no number, and a development warning is logged. A Step renders nothing outside Steps.
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Steps } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte has no `Steps.Step`: steps are data items in `dataSource` (`StepData[]`), and each item can carry `status`, `title`, `description`, `icon` and `onClick`; other attributes land on the step's root element. For a custom title or description, use the `title` and `description` snippets of Steps, whose argument is `{ item, index }`; icons are set per item through its `icon` field.
 
 </Framework>
 
@@ -123,7 +136,13 @@ By setting Steps.Step's `icon` property, you can use custom icons; when the cont
 
 </Framework>
 
-By setting Steps.Step's `status` property, you can customize the status of each step.
+<Framework only="svelte">
+
+Set the `icon` snippet of a `dataSource` item to show a custom icon for that step. Steps without `icon` keep their status icon, and `icon: false` shows no icon for that step.
+
+</Framework>
+
+By setting Steps.Step's `status` property (the `status` of a `dataSource` item in Svelte), you can customize the status of each step.
 
 <Demo id="custom-icon" />
 
@@ -144,6 +163,12 @@ Listen for step changes with `@change` (`onChange` of Steps is a function prop, 
 <Framework only="solid">
 
 Listen for step changes with `onChange`. The callback receives a number, equal to initial plus the index of the selected step; it is not called when the current step is clicked. Passing `onChange` makes every step clickable.
+
+</Framework>
+
+<Framework only="svelte">
+
+Listen for step changes with `onChange`. The callback receives a number, equal to initial plus the index of the selected step; it is not called when the current step is clicked. Passing `onChange` makes every step clickable, and so is a step whose `dataSource` item has an `onClick`. `current` is not bindable: update it yourself in `onChange`.
 
 </Framework>
 
@@ -188,6 +213,14 @@ The whole step bar.
 
 </Framework>
 
+<Framework only="svelte">
+
+<StepsSvelteApi />
+
+`class`, `style` (a string) and other native attributes land on the root element of Steps.
+
+</Framework>
+
 ### Steps.Step
 
 Step in the step bar.
@@ -213,6 +246,12 @@ Step in the step bar.
 <StepSolidApi />
 
 `class`, `style`, `aria-*` and native events such as `onClick` and `onKeyDown` land on the root element of the Step (the step item). `role` follows whether the step is clickable, and a passed `role` takes precedence; `tabindex` also follows whether the step is clickable and cannot be overridden.
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte has no separate Step component; the attributes of a step go in its `dataSource` item. Attributes other than `status`, `title`, `description`, `icon` and `onClick` (`aria-label`, `role`, `class`, `style`, `onkeydown` and so on) land on the step item (the root element), and `style` only accepts a string. `role` defaults to `button` when the step is clickable, and a passed `role` takes precedence; `tabindex` follows whether the step is clickable.
 
 </Framework>
 

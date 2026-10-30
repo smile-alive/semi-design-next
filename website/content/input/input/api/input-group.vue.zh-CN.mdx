@@ -2,8 +2,8 @@
 
 | 属性          | 说明                                                                                                                              | 类型              | 默认值                                             |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------------------------------------------------- |
-| size          | 输入框大小，可选 large、default、small，下发给每个子级。                                                                          | `Size`            | `semiDefault("InputGroup", "size", "default")`     |
-| disabled      | 是否禁用，下发给子级；子级自己写的 disabled 优先。                                                                                | `boolean`         | `semiGlobalDefault("InputGroup", "disabled")`      |
+| size          | 输入框大小，可选 large、default、small；组内任意深度未自行设置 size 的控件取这个值。                                              | `Size`            | `semiGlobalDefault("InputGroup", "size")`          |
+| disabled      | 是否禁用，组内任意深度的控件取这个值；控件自己写的 disabled 优先。                                                                | `boolean`         | `semiGlobalDefault("InputGroup", "disabled")`      |
 | label         | 组的标签配置（Form.Label 的属性，另可设 id、class、style）；text、extra 只接受字符串或数字，节点内容使用 label、labelExtra 插槽。 | `InputGroupLabel` | `semiGlobalDefault("InputGroup", "label")`         |
 | labelPosition | 标签位置，可选 top 或 left。                                                                                                      | `string`          | `semiGlobalDefault("InputGroup", "labelPosition")` |
 

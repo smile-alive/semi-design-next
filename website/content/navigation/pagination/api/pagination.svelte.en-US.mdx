@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| currentPage | Current page, bound with `bind:currentPage`. When omitted the component manages the page itself; `bind:currentPage={get, set}` makes it fully controlled. | `number` | - |
+| disabled | Whether disabled. | `boolean` | `false` |
+| hideOnSinglePage | Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown. | `boolean` | `false` |
+| hoverShowPageSelect | Only for size small: the page list opens when the page text is hovered or focused. | `boolean` | - |
+| nextText | String or snippet that replaces the next page icon, named the same way as prevText. | `string \| Snippet` | - |
+| onChange | Called when the page or the page size changes, with the page and the page size. | <ApiType detail={"(currentPage: number, pageSize: number) => void"}>Type</ApiType> | - |
+| onPageChange | Called when the page changes. | <ApiType detail={"(currentPage: number) => void"}>Type</ApiType> | - |
+| onPageSizeChange | Called when the page size changes. | <ApiType detail={"(pageSize: number) => void"}>Type</ApiType> | - |
+| pageSize | Number of items per page, bound with `bind:pageSize`; the choice made in the size changer is written back. Falls back to the first item of pageSizeOpts. | `number` | - |
+| pageSizeOpts | Options of the size changer; the current page size is inserted in order when it is not among them. | `number[]` | `[10, 20, 40, 100]` |
+| popoverPosition | Position of the omitted pages popover and the size changer dropdown; not used by the small size. | `Position` | - |
+| preventPageChangeOnPageSizeChange | Keeps the current page when the page size changes; the consumer picks the page in onPageSizeChange. | `boolean` | `false` |
+| prevText | String or snippet that replaces the previous page icon. A string or a plain-text snippet names the button, and any other content (an icon, an element) keeps the locale name; an empty snippet leaves the button empty, an empty string shows the default icon. | `string \| Snippet` | - |
+| showQuickJumper | Whether to show the quick jump input; disabled when there are fewer than 2 pages. | `boolean` | `false` |
+| showSizeChanger | Whether to show the size changer; not rendered when size is small. | `boolean` | `false` |
+| showTotal | Whether to show the total number of pages; not shown when size is small. | `boolean` | `false` |
+| size | Size: default or small. | `'small' \| 'default'` | `"default"` |
+| total | Total number of items. | `number` | `1` |

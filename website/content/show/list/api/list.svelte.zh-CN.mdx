@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性         | 说明                                                                                                                                                      | 类型                                                                            | 默认值       |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------ |
+| bordered     | 是否显示边框。                                                                                                                                            | `boolean`                                                                       | `false`      |
+| children     | ListItem 子节点，写在标签内，渲染在 dataSource 各项之后。                                                                                                 | `Snippet`                                                                       | -            |
+| dataSource   | 列表数据源；每一项通过 item snippet 渲染。                                                                                                                | `T[]`                                                                           | -            |
+| emptyContent | 没有数据时展示内容的 snippet，缺省为语言包中的空文案。写了标签内的内容（children）时列表不再算空。                                                        | `Snippet`                                                                       | -            |
+| footer       | 列表底部的 snippet。                                                                                                                                      | `Snippet`                                                                       | -            |
+| grid         | 栅格配置：Row 的 align、gutter、justify、type 与 Col 的 span、offset、order、push、pull、响应式断点、class、style，class 与 style 落在每项外层的 Col 上。 | `Grid`                                                                          | -            |
+| header       | 列表头部的 snippet。                                                                                                                                      | `Snippet`                                                                       | -            |
+| item         | 渲染 dataSource 中每一项的 snippet，参数为 `{ item, index }`，通常返回一个 ListItem。                                                                     | <ApiType detail={"Snippet\u003c[ListItemSnippetProps\u003cT>]>"}>Type</ApiType> | -            |
+| layout       | 列表布局，可选 vertical 或 horizontal。                                                                                                                   | `'vertical' \| 'horizontal'`                                                    | `"vertical"` |
+| loading      | 是否处于加载中，为 true 时显示 Spin。                                                                                                                     | `boolean`                                                                       | `false`      |
+| loadMore     | 加载更多按钮的 snippet。                                                                                                                                  | `Snippet`                                                                       | -            |
+| onClick      | 列表项的点击回调，作用于每个没有自己 onClick 的项；有处理函数的项渲染为原生按钮。它是函数 prop 而不是原生 onclick，因为它的有无决定项是否渲染按钮。       | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType>                  | -            |
+| onRightClick | 列表项的右键（上下文菜单）回调，作用于每个没有自己 onRightClick 的项，这些项同样渲染为原生按钮。                                                          | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType>                  | -            |
+| size         | 列表尺寸，可选 small、default 或 large。                                                                                                                  | `Size`                                                                          | `"default"`  |
+| split        | 是否展示分割线。                                                                                                                                          | `boolean`                                                                       | `true`       |

@@ -69,7 +69,7 @@ const columns: ColumnProps<Row>[] = [
 
 const pageSize = 20; // 每次加载 20 条
 
-const getPage = (start: number) => {
+function getPage(start: number) {
     const page: Row[] = [];
     for (let i = start; i < start + pageSize; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -84,7 +84,7 @@ const getPage = (start: number) => {
         });
     }
     return page;
-};
+}
 
 export default function TableDemo() {
     const [data, setData] = useState(() => getPage(0));

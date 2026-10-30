@@ -1,0 +1,27 @@
+{
+    "lottie": {
+        "source": "packages/semi-ui-svelte/src/lottie/lottie.svelte",
+        "props": {
+            "getAnimationInstance": {
+                "zh-CN": "每创建一次动画（包括每次重新加载）调用一次的回调，参数为当前动画的 AnimationItem。",
+                "en-US": "Called once per animation created, including every reload, with the AnimationItem of the animation."
+            },
+            "getLottie": {
+                "zh-CN": "lottie-web 加载完成后，每次挂载调用一次的回调，参数为全局 Lottie。",
+                "en-US": "Called once per mount after lottie-web has loaded, with the global Lottie."
+            },
+            "height": {
+                "zh-CN": "容器高度，需带单位，如 300px。",
+                "en-US": "Container height, with a unit such as 300px."
+            },
+            "params": {
+                "zh-CN": "传给 lottie-web loadAnimation 的参数。内容变化时重新加载（原地修改 `$state` 也会）；交给 lottie-web 前会做快照，较大的动画数据用 `$state.raw` 持有。",
+                "en-US": "Options passed to lottie-web's loadAnimation. It reloads when the content changes (mutating a `$state` in place counts too); a snapshot is taken before it reaches lottie-web, and large animation data is best held in `$state.raw`."
+            },
+            "width": {
+                "zh-CN": "容器宽度，需带单位，如 300px。",
+                "en-US": "Container width, with a unit such as 300px."
+            }
+        }
+    }
+}

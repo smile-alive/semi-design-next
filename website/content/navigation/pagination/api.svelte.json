@@ -1,0 +1,70 @@
+{
+    "pagination": {
+        "source": "packages/semi-ui-svelte/src/pagination/pagination.svelte",
+        "props": {
+            "currentPage": {
+                "zh-CN": "当前页码，可用 `bind:currentPage` 双向绑定；不传时由组件自己管理页码，用 `bind:currentPage={get, set}` 完全受控。",
+                "en-US": "Current page, bound with `bind:currentPage`. When omitted the component manages the page itself; `bind:currentPage={get, set}` makes it fully controlled."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether disabled." },
+            "hideOnSinglePage": {
+                "zh-CN": "总页数小于 2 时是否隐藏分页器；每页条数选择器显示时不生效。",
+                "en-US": "Whether to hide the pagination when there are fewer than 2 pages; has no effect while the size changer is shown."
+            },
+            "hoverShowPageSelect": {
+                "zh-CN": "仅 size 为 small 时生效：悬停或聚焦页码文字时打开页码列表。",
+                "en-US": "Only for size small: the page list opens when the page text is hovered or focused."
+            },
+            "nextText": {
+                "zh-CN": "替换下一页按钮图标的字符串或 snippet，命名规则同 prevText。",
+                "en-US": "String or snippet that replaces the next page icon, named the same way as prevText."
+            },
+            "onChange": {
+                "zh-CN": "页码或每页条数变化时调用，参数为页码与每页条数。",
+                "en-US": "Called when the page or the page size changes, with the page and the page size."
+            },
+            "onPageChange": {
+                "zh-CN": "页码变化时调用。",
+                "en-US": "Called when the page changes."
+            },
+            "onPageSizeChange": {
+                "zh-CN": "每页条数变化时调用。",
+                "en-US": "Called when the page size changes."
+            },
+            "pageSize": {
+                "zh-CN": "每页条数，可用 `bind:pageSize` 绑定，选择器的选择会写回；未传时取 pageSizeOpts 的第一项。",
+                "en-US": "Number of items per page, bound with `bind:pageSize`; the choice made in the size changer is written back. Falls back to the first item of pageSizeOpts."
+            },
+            "pageSizeOpts": {
+                "zh-CN": "每页条数选择器的可选值；当前每页条数不在其中时按大小插入选项。",
+                "en-US": "Options of the size changer; the current page size is inserted in order when it is not among them."
+            },
+            "popoverPosition": {
+                "zh-CN": "省略页码浮层与每页条数下拉的位置；size 为 small 时不使用。",
+                "en-US": "Position of the omitted pages popover and the size changer dropdown; not used by the small size."
+            },
+            "preventPageChangeOnPageSizeChange": {
+                "zh-CN": "切换每页条数时保持当前页码，新页码由使用方在 onPageSizeChange 中决定。",
+                "en-US": "Keeps the current page when the page size changes; the consumer picks the page in onPageSizeChange."
+            },
+            "prevText": {
+                "zh-CN": "替换上一页按钮图标的字符串或 snippet。字符串或纯文本 snippet 作为按钮名称，其他内容（图标、元素）仍使用语言包的名称；传入空 snippet 时按钮为空，空字符串则显示默认图标。",
+                "en-US": "String or snippet that replaces the previous page icon. A string or a plain-text snippet names the button, and any other content (an icon, an element) keeps the locale name; an empty snippet leaves the button empty, an empty string shows the default icon."
+            },
+            "showQuickJumper": {
+                "zh-CN": "是否显示快速跳转输入框，总页数小于 2 时禁用。",
+                "en-US": "Whether to show the quick jump input; disabled when there are fewer than 2 pages."
+            },
+            "showSizeChanger": {
+                "zh-CN": "是否显示每页条数选择器，size 为 small 时不显示。",
+                "en-US": "Whether to show the size changer; not rendered when size is small."
+            },
+            "showTotal": {
+                "zh-CN": "是否显示总页数，size 为 small 时不显示。",
+                "en-US": "Whether to show the total number of pages; not shown when size is small."
+            },
+            "size": { "zh-CN": "尺寸，可选 default 或 small。", "en-US": "Size: default or small." },
+            "total": { "zh-CN": "总条数。", "en-US": "Total number of items." }
+        }
+    }
+}

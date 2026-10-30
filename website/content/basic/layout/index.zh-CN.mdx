@@ -17,6 +17,11 @@ import LayoutHeaderSolidApi from './api/layout-header.solid.zh-CN.mdx';
 import LayoutFooterSolidApi from './api/layout-footer.solid.zh-CN.mdx';
 import LayoutContentSolidApi from './api/layout-content.solid.zh-CN.mdx';
 import LayoutSiderSolidApi from './api/layout-sider.solid.zh-CN.mdx';
+import LayoutSvelteApi from './api/layout.svelte.zh-CN.mdx';
+import LayoutHeaderSvelteApi from './api/layout-header.svelte.zh-CN.mdx';
+import LayoutFooterSvelteApi from './api/layout-footer.svelte.zh-CN.mdx';
+import LayoutContentSvelteApi from './api/layout-content.svelte.zh-CN.mdx';
+import LayoutSiderSvelteApi from './api/layout-sider.svelte.zh-CN.mdx';
 
 ## 概述
 
@@ -65,6 +70,18 @@ import { Layout } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+子组件分别是 `LayoutHeader`、`LayoutSider`、`LayoutContent`、`LayoutFooter`，对应下文的 `Layout.Header`、`Layout.Sider`、`Layout.Content`、`Layout.Footer`，按名导入。
+
+</Framework>
+
 ### 三行布局
 
 <Demo id="three-rows" />
@@ -98,6 +115,12 @@ import { Layout } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+通过 `onBreakpoint` 调用回调函数。
+
+</Framework>
+
+<Framework only="svelte">
 
 通过 `onBreakpoint` 调用回调函数。
 
@@ -184,6 +207,38 @@ import { Layout } from '@fibrae/semi-ui-solid';
 <LayoutSiderSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件（含 `role`、`aria-*`、`onClick`）落在根元素 `aside` 上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<LayoutSvelteApi />
+
+`class`、`style` 与原生属性（含 `role`、`aria-*`）落在根元素上。
+
+### Layout.Header、Layout.Footer、Layout.Content
+
+三者的 API 相同，默认标签依次为 `header`、`footer`、`main`。
+
+#### Layout.Header
+
+<LayoutHeaderSvelteApi />
+
+#### Layout.Footer
+
+<LayoutFooterSvelteApi />
+
+#### Layout.Content
+
+<LayoutContentSvelteApi />
+
+`class`、`style` 与原生属性（含 `role`、`aria-*`）落在各自的根元素上。
+
+### Layout.Sider
+
+<LayoutSiderSvelteApi />
+
+`class`、`style` 与原生属性和事件（含 `role`、`aria-*`、`onclick`）落在根元素 `aside` 上。
 
 </Framework>
 

@@ -11,6 +11,8 @@ import RowVueApi from './api/row.vue.zh-CN.mdx';
 import ColVueApi from './api/col.vue.zh-CN.mdx';
 import RowSolidApi from './api/row.solid.zh-CN.mdx';
 import ColSolidApi from './api/col.solid.zh-CN.mdx';
+import RowSvelteApi from './api/row.svelte.zh-CN.mdx';
+import ColSvelteApi from './api/col.svelte.zh-CN.mdx';
 
 ## 概述
 
@@ -46,6 +48,16 @@ import { Col, Row } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Col, Row } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Col, Row } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -118,6 +130,14 @@ import { Col, Row } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<RowSvelteApi />
+
+`class`、`style` 与原生属性落在 Row 的根 `<div>` 上；`style` 字符串写在 gutter 变量之后，使用方的值优先。
+
+</Framework>
+
 <Framework only="vue">
 
 <RowVueApi />
@@ -141,6 +161,14 @@ import { Col, Row } from '@fibrae/semi-ui-solid';
 <ColReactApi />
 
 其他原生属性（如 `id`、`aria-*`、`data-*`）落在 Col 的根 `<div>` 上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ColSvelteApi />
+
+`class`、`style` 与原生属性落在 Col 的根 `<div>` 上。
 
 </Framework>
 

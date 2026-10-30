@@ -1,0 +1,65 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| actionArea | 自定义底部操作区域的 snippet，参数 `upload` 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）、`send` 为发送或停止按钮，均是 snippet，用 `{@render}` 渲染；`class` 为操作区域的类名。 | <ApiType detail={"Snippet\u003c[AIChatInputActionAreaSnippetProps]>"}>Type</ApiType> | - |
+| canSend | 是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。 | `boolean` | - |
+| clearContentOnGenerating | generating 从 false 变为 true 时，是否清空输入框内容和附件。设为 false 可保留输入内容（适用于无限画布等非对话场景）。 | `boolean` | `true` |
+| configureArea | 底部配置区域的 snippet，放置 `AIChatInput.Configure` 的各配置项。 | `Snippet` | - |
+| defaultContent | 输入框默认内容，支持 html string 以及 json 格式，同 Tiptap 的 Content；只在创建编辑器时读取。 | `TiptapContent` | - |
+| dropdownMatchTriggerWidth | 下拉弹出层是否与输入框宽度一致。 | `boolean` | `true` |
+| extensions | 自定义 tiptap 扩展；只在创建编辑器时读取，之后变化不生效。 | `Extensions` | - |
+| generating | 是否正在生成中。为 true 时发送按钮变为停止生成按钮。 | `boolean` | `false` |
+| keepSkillAfterSend | 发送消息后是否保留已选的技能。 | `boolean` | `false` |
+| onBlur | 富文本输入框失焦时的回调。会遮住根元素上的原生 onblur。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onConfigureChange | 配置区域发生变化时的回调，参数为全部配置值和本次变化的值；移除配置项时第二个参数为 undefined。 | <ApiType detail={"(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void"}>Type</ApiType> | - |
+| onContentChange | 输入框内容变化时的回调，参数为当前内容项列表。 | <ApiType detail={"(contents: Content[]) => void"}>Type</ApiType> | - |
+| onFocus | 富文本输入框聚焦时的回调。会遮住根元素上的原生 onfocus。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onMessageSend | 点击发送按钮时的回调，参数包含引用、上传文件、输入内容和配置区域内容。 | <ApiType detail={"(message: MessageContent) => void"}>Type</ApiType> | - |
+| onPaste | 监听输入框的粘贴事件，不阻止默认粘贴行为，可通过 event.clipboardData 获取内容。会遮住根元素上的原生 onpaste。 | <ApiType detail={"(event: ClipboardEvent) => void"}>Type</ApiType> | - |
+| onReferenceClick | 点击引用时的回调。 | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onReferenceDelete | 删除引用时的回调。引用由使用方持有，需要在回调中自行移除。 | <ApiType detail={"(reference: Reference) => void"}>Type</ApiType> | - |
+| onSkillChange | 技能切换时的回调，移除技能时参数为 undefined。 | <ApiType detail={"(skill?: Skill) => void"}>Type</ApiType> | - |
+| onStopGenerate | 点击停止生成按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onUploadChange | 上传文件列表变化时的回调。 | <ApiType detail={"(props: UploadOnChangeProps) => void"}>Type</ApiType> | - |
+| placeholder | 输入框占位符，可以是字符串，也可以是按节点返回字符串的函数。 | `PlaceholderProps` | - |
+| popoverProps | 下拉弹出层的配置参数；class 与内部类名合并，style 字符串与面板宽度合并。 | `AIChatInputPopoverProps` | - |
+| reference | 自定义渲染每个引用的 snippet，参数为 `item` 与 `index`。 | <ApiType detail={"Snippet\u003c[AIChatInputReferenceSnippetProps]>"}>Type</ApiType> | - |
+| references | 输入框的引用列表。 | `Reference[]` | - |
+| round | 底部的配置区域和操作区域按钮是否为全圆角。 | `boolean` | `true` |
+| sendHotKey | 发送输入内容的键盘快捷键。enter 表示单独按下 Enter 发送，Shift 与 Enter 同时按下仅换行；shift+enter 相反。 | `'enter' \| 'shift+enter'` | `"enter"` |
+| showPlaceholderWhenSkillOnly | 仅选中技能（无其他内容）时是否显示占位符，开启后占位符显示在技能后方；只在创建编辑器时读取。 | `boolean` | `false` |
+| showReference | 是否展示引用区域，用于配合 `topSlot` 使用。 | `boolean` | `true` |
+| showTemplateButton | 是否展示模板按钮。未设置时，根据当前选中技能的 hasTemplate 决定。 | `boolean` | `false` |
+| showUploadButton | 是否显示右侧上传按钮。设为 false 时粘贴上传仍然有效。 | `boolean` | `true` |
+| showUploadFile | 是否展示上传文件区域，用于配合 `topSlot` 使用。 | `boolean` | `true` |
+| skillHotKey | 输入框中触发技能面板的热键。 | `string` | - |
+| skillIcon | 技能面板中每个技能前的图标 snippet，参数为 `item` 与 `index`。 | <ApiType detail={"Snippet\u003c[AIChatInputSkillIconSnippetProps]>"}>Type</ApiType> | - |
+| skillItem | 自定义技能列表每一项的 snippet，参数含 `skill` 和需要展开到根元素上的 `id`、`class`、`role`、`aria-selected`、`onclick`、`onmouseenter`。 | <ApiType detail={"Snippet\u003c[AIChatInputSkillItemSnippetProps]>"}>Type</ApiType> | - |
+| skills | 技能列表。技能只含数据，图标使用 `skillIcon` snippet。 | `Skill[]` | - |
+| suggestionItem | 自定义每个建议项的 snippet，参数含 `suggestion` 和需要展开到根元素上的 `id`、`class`、`role`、`aria-selected`、`onclick`、`onmouseenter`。 | <ApiType detail={"Snippet\u003c[AIChatInputSuggestionItemSnippetProps]>"}>Type</ApiType> | - |
+| suggestions | 建议列表，每项为字符串或带 content 的对象。 | `Suggestion[]` | - |
+| template | 模板面板内容的 snippet，参数为当前技能 `skill` 与用传入内容替换输入框内容的 `onTemplateClick`。 | <ApiType detail={"Snippet\u003c[AIChatInputTemplateSnippetProps]>"}>Type</ApiType> | - |
+| templatesCls | 模板面板的类名。 | `string` | - |
+| templatesStyle | 模板面板的样式字符串。 | `string` | - |
+| topSlot | 自定义顶部区域的 snippet，参数含引用、上传内容、输入内容和删除方法（`references`、`attachments`、`content`、`onUploadFileDelete`、`onReferenceDelete`）。位置由 topSlotPosition 决定。 | <ApiType detail={"Snippet\u003c[AIChatInputTopSlotSnippetProps]>"}>Type</ApiType> | - |
+| topSlotPosition | `topSlot` 的位置，相对于引用区域与上传文件区域。 | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| transformer | 自定义扩展的转换规则，键为节点名，值为把节点转换成 onContentChange 内容项的函数。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
+| uploadButton | 自定义上传按钮内容的 snippet，上传与粘贴上传逻辑仍由组件托管；参数含 `defaultNode`（snippet）、`onOpenFileDialog`、`disabled`、`attachments`。 | <ApiType detail={"Snippet\u003c[AIChatInputUploadButtonSnippetProps]>"}>Type</ApiType> | - |
+| uploadProps | 上传文件相关配置，同 Upload，但不接受 fileList、listType 与 children；初始附件用 `defaultFileList`；onChange、onRemove 由 AIChatInput 自己调用，beforeRemove 支持 Promise。 | `AIChatInputUploadProps` | - |
+| uploadTip | 上传按钮提示内容的 snippet。 | `Snippet` | - |
+| uploadTipProps | 上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 `uploadTip` snippet。 | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child' \u007c 'arrow'>"}>Type</ApiType> | - |
+
+**Methods**
+
+| 方法                    | 说明                                                   | 类型                                                                |
+| ----------------------- | ------------------------------------------------------ | ------------------------------------------------------------------- |
+| changeTemplateVisible   | 切换模板弹出层的可见性。                               | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType>       |
+| deleteContent           | 删除富文本中的某一项，按 content 中的 uniqueKey 匹配。 | <ApiType detail={"(content: Content) => void"}>Type</ApiType>       |
+| deleteUploadFile        | 删除上传文件中的某一项。                               | <ApiType detail={"(item: Attachment) => void"}>Type</ApiType>       |
+| focusEditor             | 聚焦输入框，默认聚焦到末尾。                           | <ApiType detail={"(pos?: FocusPosition) => void"}>Type</ApiType>    |
+| getEditor               | 获取 tiptap 的 editor 实例，编辑器创建前为 undefined。 | <ApiType detail={"() => Editor \u007c undefined"}>Type</ApiType>    |
+| setContent              | 设置输入框内容。                                       | <ApiType detail={"(content: TiptapContent) => void"}>Type</ApiType> |
+| setContentWhileSaveTool | 保留技能项的同时设置输入框内容。                       | <ApiType detail={"(content: string) => void"}>Type</ApiType>        |

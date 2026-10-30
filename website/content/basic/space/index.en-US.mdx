@@ -8,6 +8,7 @@ brief: Set the spacing between components.
 import SpaceReactApi from './api/space.react.en-US.mdx';
 import SpaceVueApi from './api/space.vue.en-US.mdx';
 import SpaceSolidApi from './api/space.solid.en-US.mdx';
+import SpaceSvelteApi from './api/space.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { Space } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Space } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Space } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -68,6 +79,14 @@ When the spacing is horizontal, you can use `wrap` to set whether to wrap automa
 <Demo id="wrap" />
 
 ## API Reference
+
+<Framework only="svelte">
+
+Space renders `children` directly without wrapping them. `class`, `style` and other native attributes and listeners land on the root `div`. A numeric `spacing` is output in pixels, and `column-gap` or `row-gap` in the `style` string take precedence over it.
+
+<SpaceSvelteApi />
+
+</Framework>
 
 <Framework only="vue">
 

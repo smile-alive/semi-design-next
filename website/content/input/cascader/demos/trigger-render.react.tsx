@@ -43,14 +43,14 @@ const treeData: CascaderData[] = [
     },
 ];
 
-const getLabelFromValue = (value: string) => {
+function getLabelFromValue(value: string) {
     const [first, ...rest] = value.split('-').map((item) => Number(item));
     let node: CascaderData | undefined = treeData[first];
     rest.forEach((item) => {
         node = node?.children?.[item];
     });
     return node?.label;
-};
+}
 
 export default function CascaderDemo() {
     const triggerRenderSingle = ({ value, placeholder, onClear }: CascaderTriggerRenderProps) => {

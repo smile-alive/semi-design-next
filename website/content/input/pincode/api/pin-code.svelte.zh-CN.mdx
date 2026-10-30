@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                               | 类型                                                           | 默认值     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | ---------- |
+| autofocus      | 挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。 | `boolean`                                                      | `false`    |
+| count          | 验证码位数。                                                                                                       | `number`                                                       | `6`        |
+| disabled       | 是否禁用。                                                                                                         | `boolean`                                                      | -          |
+| format         | 单个字符的格式限制：number 只允许数字，mixed 允许数字和字母，正则或函数按字符判定。                                | `PinCodeFormat`                                                | `"number"` |
+| onBlur         | 焦点离开整个验证码时的回调。                                                                                       | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -          |
+| onChange       | 内容变化时的回调，参数为当前内容。                                                                                 | <ApiType detail={"(value: string) => void"}>Type</ApiType>     | -          |
+| onComplete     | 所有位数输入完毕时的回调，参数为当前内容。                                                                         | <ApiType detail={"(value: string) => void"}>Type</ApiType>     | -          |
+| onFocus        | 焦点进入整个验证码时的回调，在输入框之间移动不触发。                                                               | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -          |
+| size           | 输入框大小，可选 large、default、small。                                                                           | `InputSize`                                                    | -          |
+| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                                                   | `ValidateStatus`                                               | -          |
+| value          | 输入框内容，可用 `bind:value` 双向绑定。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值。              | `string`                                                       | -          |
+
+**Methods**
+
+| 方法  | 说明                                                                         | 类型                                                       |
+| ----- | ---------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| blur  | 让第 index 个输入框失焦，序号从 0 开始，超出范围时忽略。                     | <ApiType detail={"(index: number) => void"}>Type</ApiType> |
+| focus | 聚焦第 index 个输入框，序号从 0 开始，超出范围时忽略；光标放在该格字符之后。 | <ApiType detail={"(index: number) => void"}>Type</ApiType> |

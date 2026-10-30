@@ -10,6 +10,8 @@ describe('文档框架清单', () => {
         expect(availableFrameworks(['basic.react.tsx', 'basic.solid.tsx'], undefined, 'page')).toEqual(['react', 'solid']);
         expect(availableFrameworks([], ['vue', 'react'], 'page')).toEqual(['react', 'vue']);
         expect(availableFrameworks([], ['solid', 'react', 'vue'], 'page')).toEqual(['react', 'vue', 'solid']);
+        expect(availableFrameworks(['basic.react.tsx', 'basic.svelte', 'basic.vue'], undefined, 'page')).toEqual(['react', 'vue', 'svelte']);
+        expect(availableFrameworks([], ['svelte', 'react'], 'page')).toEqual(['react', 'svelte']);
         expect(() => availableFrameworks([], undefined, 'page')).toThrow('frameworks');
         expect(() => availableFrameworks([], ['react', 'react'], 'page')).toThrow('unique');
     });
@@ -38,6 +40,7 @@ describe('其他框架的无障碍基线', () => {
     it('缺少独立条目时回退到同名 React 条目', () => {
         expect(knownRules('/zh-CN/vue/basic/icon#demo-basic', { '/zh-CN/react/basic/icon#demo-basic': ['color-contrast'] })).toEqual(['color-contrast']);
         expect(knownRules('/zh-CN/solid/basic/icon#demo-basic', { '/zh-CN/react/basic/icon#demo-basic': ['color-contrast'] })).toEqual(['color-contrast']);
+        expect(knownRules('/zh-CN/svelte/basic/icon#demo-basic', { '/zh-CN/react/basic/icon#demo-basic': ['color-contrast'] })).toEqual(['color-contrast']);
         expect(knownRules('/zh-CN/vue/basic/icon#demo-custom', {})).toEqual([]);
     });
 

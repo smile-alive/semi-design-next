@@ -8,6 +8,7 @@ brief: 行为组件，是一个用于展开或折叠内容的容器。
 import CollapsibleReactApi from './api/collapsible.react.zh-CN.mdx';
 import CollapsibleVueApi from './api/collapsible.vue.zh-CN.mdx';
 import CollapsibleSolidApi from './api/collapsible.solid.zh-CN.mdx';
+import CollapsibleSvelteApi from './api/collapsible.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -40,6 +41,16 @@ import { Collapsible } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Collapsible } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Collapsible } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -89,6 +100,14 @@ import { Collapsible } from '@fibrae/semi-ui-solid';
 <CollapsibleSolidApi />
 
 `class`、`style`、`ref` 与其他原生属性和事件落在外层 wrapper 上；`id` 是组件声明的 prop，落在内层内容元素上。使用方的 `onTransitionEnd` 与组件自身的处理同时触发。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CollapsibleSvelteApi />
+
+`class`、`style` 与其他原生属性和事件落在外层 wrapper 上；`id` 是组件声明的 prop，落在内层内容元素上，且不读全局默认值。使用方的 `ontransitionend` 与组件自身的处理同时触发。
 
 </Framework>
 
@@ -165,6 +184,26 @@ import { Button, Collapsible } from '@fibrae/semi-ui-solid';
         </>
     );
 };
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, Collapsible } from '@fibrae/semi-ui-svelte';
+
+    const collapseId = 'myCollapsible';
+    let visible = $state(false);
+</script>
+
+<Button aria-controls={collapseId} aria-expanded={visible} onclick={() => (visible = !visible)}>
+    {visible ? 'hide' : 'show'}
+</Button>
+<Collapsible id={collapseId} isOpen={visible}>
+    <div>hide content</div>
+</Collapsible>
 ```
 
 </Framework>

@@ -1,0 +1,11 @@
+**Props**
+
+| 属性          | 说明                                                                                                        | 类型                | 默认值       |
+| ------------- | ----------------------------------------------------------------------------------------------------------- | ------------------- | ------------ |
+| children      | 描述下方的操作区。                                                                                          | `Snippet`           | -            |
+| darkModeImage | 暗色模式下的占位图，跟随 document.body 的 theme-mode 变化；取值同 image。                                   | `EmptyImage`        | -            |
+| description   | 描述内容。                                                                                                  | `Snippet`           | -            |
+| image         | 占位图：图片地址字符串、`{ id }` 形式的页面内 SVG sprite 符号，或任意内容的 snippet；空字符串视为没有图片。 | `EmptyImage`        | -            |
+| imageStyle    | 占位图容器的样式字符串。                                                                                    | `string`            | -            |
+| layout        | 布局模式，可选 vertical、horizontal。                                                                       | `EmptyLayout`       | `"vertical"` |
+| title         | 标题，字符串或 snippet。                                                                                    | `string \| Snippet` | -            |

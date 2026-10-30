@@ -11,6 +11,8 @@ import ListVueApi from './api/list.vue.en-US.mdx';
 import ListItemVueApi from './api/list-item.vue.en-US.mdx';
 import ListSolidApi from './api/list.solid.en-US.mdx';
 import ListItemSolidApi from './api/list-item.solid.en-US.mdx';
+import ListSvelteApi from './api/list.svelte.en-US.mdx';
+import ListItemSvelteApi from './api/list-item.svelte.en-US.mdx';
 
 ## Demos
 
@@ -44,6 +46,16 @@ import { Avatar, Button, ButtonGroup, Checkbox, CheckboxGroup, Descriptions, Inp
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { List, ListItem } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="react">
@@ -61,6 +73,12 @@ You can use `size` to size list. Supported values include `large`, `default`, `s
 <Framework only="solid">
 
 You can use `size` to size list. Supported values include `large`, `default`, `small`. Header and Footer customized.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can use `size` to size list. Supported values include `large`, `default`, `small`. Customize the header and footer with the `header` and `footer` snippets, and render each entry of `dataSource` with the `item` snippet (argument `{ item, index }`).
 
 </Framework>
 
@@ -83,6 +101,12 @@ List.Item has a built-in template provided through the `#header`, `#main` and `#
 <Framework only="solid">
 
 List.Item has a built-in template consisting of: `header`, `main`, and `extra`. The alignment of `header` and `main` set by `align` properties using one of `flex-start`(default), `flex-end`, `center`, `baseline`, and `stretch` .
+
+</Framework>
+
+<Framework only="svelte">
+
+ListItem has a built-in template provided by the `header`, `main` and `extra` snippets. The alignment of `header` and `main` set by `align` properties using one of `flex-start`(default), `flex-end`, `center`, `baseline`, and `stretch` .
 
 </Framework>
 
@@ -126,6 +150,12 @@ You can use `loadMore` to achieve loading state for more incoming contents.
 
 </Framework>
 
+<Framework only="svelte">
+
+You can use the `loadMore` snippet to achieve loading state for more incoming contents.
+
+</Framework>
+
 <Demo id="load-more" />
 
 ### Scroll to Load
@@ -148,35 +178,81 @@ You can listen to the `scroll` event of the scroll container and load the next p
 
 </Framework>
 
+<Framework only="svelte">
+
+You can listen to the `onscroll` event of the scroll container and load the next page near the bottom. Recommended interaction could be reveal a loadmore button after three scrolling loads.
+
+</Framework>
+
 <Demo id="scroll-load" />
 
 ### Scroll to Load Infinite Lists
 
-You can integrate [TanStack Virtual](https://tanstack.com/virtual) to implement infinite scrolling lists with virtualization, which renders only the visible rows and improves the performance for large amounts of data.
-
-<Demo id="virtualized" />
-
-### Drag Sort
-
 <Framework only="react">
 
-You can integrate [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) to implement drag and drop sort.
+You can integrate [TanStack Virtual](https://tanstack.com/virtual) to implement infinite scrolling lists with virtualization, which renders only the visible rows and improves the performance for large amounts of data.
 
 </Framework>
 
 <Framework only="vue">
 
-You can integrate the Vue build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/vue`) to implement drag and drop sort. The dragged element is the `li` rendered by `ListItem`; give every item returned from `#item` a `:key`, so that Vue can match the nodes to the right data after dnd-kit has reordered the DOM.
+You can integrate [TanStack Virtual](https://tanstack.com/virtual) to implement infinite scrolling lists with virtualization, which renders only the visible rows and improves the performance for large amounts of data.
 
 </Framework>
 
 <Framework only="solid">
 
-You can integrate the Solid build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/solid`) to implement drag and drop sort. The dragged element is the `li` rendered by `List.Item`.
+You can integrate [TanStack Virtual](https://tanstack.com/virtual) to implement infinite scrolling lists with virtualization, which renders only the visible rows and improves the performance for large amounts of data.
 
 </Framework>
 
+<Framework only="svelte">
+
+You can integrate [TanStack Virtual](https://tanstack.com/virtual) (`@tanstack/svelte-virtual`) to implement infinite scrolling lists with virtualization, which renders only the visible rows and improves the performance for large amounts of data. `createVirtualizer` returns a store; read it as `$virtualizer`.
+
+</Framework>
+
+<Demo id="virtualized" />
+
+<Framework only="react">
+
+### Drag Sort
+
+You can integrate [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) to implement drag and drop sort.
+
 <Demo id="drag-sort" />
+
+</Framework>
+
+<Framework only="vue">
+
+### Drag Sort
+
+You can integrate the Vue build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/vue`) to implement drag and drop sort. The dragged element is the `li` rendered by `ListItem`; give every item returned from `#item` a `:key`, so that Vue can match the nodes to the right data after dnd-kit has reordered the DOM.
+
+<Demo id="drag-sort" />
+
+</Framework>
+
+<Framework only="solid">
+
+### Drag Sort
+
+You can integrate the Solid build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/solid`) to implement drag and drop sort. The dragged element is the `li` rendered by `List.Item`.
+
+<Demo id="drag-sort" />
+
+</Framework>
+
+<Framework only="svelte">
+
+### Drag Sort
+
+You can integrate the Svelte build of [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) (`@dnd-kit/svelte`) to implement drag and drop sort. The dragged element is the `li` rendered by `ListItem`. `@dnd-kit/svelte` leaves out `OptimisticSortingPlugin` (it moves DOM nodes itself, which collides with Svelte's keyed `each`), so the order during a drag is driven by state set in `onDragOver`. Write the sortable items inside the `List` tag with `{#each ... (item.id)}`, keyed by id; the `dataSource` plus `item` snippet form is keyed by position, so after a reorder a node would be matched to other data.
+
+<Demo id="drag-sort" />
+
+</Framework>
 
 ### With Pagination
 
@@ -262,6 +338,17 @@ A List.Item with `onClick` or `onRightClick` (including those set on the List) s
 
 </Framework>
 
+<Framework only="svelte">
+
+A ListItem with `onClick` or `onRightClick` (including those set on the List) stays an `<li>` list item and renders a native `<button type="button">` inside it as its only focus target, which screen readers announce as a button.
+
+- The button wraps the content of the `header` and `main` snippets (or the content inside the tag when there are none) and its click area covers the whole row. After tabbing to it, Enter or Space triggers `onClick` and the context-menu key triggers `onRightClick`
+- `extra` is rendered outside the button on a higher layer, so buttons and links in it can be focused and clicked normally, and clicking them does not trigger the Item's `onClick`
+- When the content inside the tag is combined with `header` or `main`, it sits outside the button and is covered by the full-row button, so put interactive content in `extra`
+- A ListItem without a click callback renders no button and is not focusable
+
+</Framework>
+
 A List.Item used outside a List renders as a plain list item without `grid`. With `grid`, the Row that holds the items has `role="list"` and the Col around each item has `role="none"`, so screen readers read the items as members of that list.
 
 ## API reference
@@ -292,6 +379,14 @@ Other native attributes (such as `data-*` and `id`) land on the root element; wh
 
 </Framework>
 
+<Framework only="svelte">
+
+<ListSvelteApi />
+
+`class`, `style` and native attributes (such as `data-*`) land on the root element; when `aria-label` or `aria-labelledby` is passed without a `role`, the root element gets `role="group"`. The payload of `onClick` and `onRightClick` is the native `MouseEvent`, and they act on the items, not on the root element.
+
+</Framework>
+
 ### List grid props
 
 <Framework only="react">
@@ -309,6 +404,12 @@ Other native attributes (such as `data-*` and `id`) land on the root element; wh
 <Framework only="solid">
 
 `grid` accepts only the Row props `align`, `gutter`, `justify`, `type` and the Col props `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `class` and `style`; other attributes are not accepted. `class` and `style` land on the Col around each item. Refer to [Grid](/en-US/react/basic/grid) for their meaning.
+
+</Framework>
+
+<Framework only="svelte">
+
+`grid` accepts only the Row props `align`, `gutter`, `justify`, `type` and the Col props `span`, `offset`, `order`, `push`, `pull`, the responsive breakpoints, `class` and `style`; other attributes are not accepted. `class` and `style` land on the Col around each item, and `style` is a string. Refer to [Grid](/en-US/react/basic/grid) for their meaning.
 
 </Framework>
 
@@ -346,6 +447,14 @@ Other native attributes (such as `data-*`) land on the `li`; when clickable, `ar
 <ListItemSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `data-*`) land on the `li`, not on the outer Col in grid mode. When clickable, `aria-*` and `tabIndex` land on the inner button instead, and `ref.focus()` moves focus to that button.
+
+</Framework>
+
+<Framework only="svelte">
+
+<ListItemSvelteApi />
+
+`class`, `style` and native attributes (such as `data-*`) land on the `li`, not on the outer Col in grid mode. When clickable, `aria-*` and `tabindex` land on the inner button instead.
 
 </Framework>
 

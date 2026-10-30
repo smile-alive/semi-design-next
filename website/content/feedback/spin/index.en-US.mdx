@@ -8,6 +8,7 @@ brief: Spin is used to inform the user that the content is loading and may take 
 import SpinReactApi from './api/spin.react.en-US.mdx';
 import SpinVueApi from './api/spin.vue.en-US.mdx';
 import SpinSolidApi from './api/spin.solid.en-US.mdx';
+import SpinSvelteApi from './api/spin.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { Spin } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Spin } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Spin } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -69,6 +80,12 @@ Use `tip` to set the description texts when Spin is used as a wrapping element
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `tip` snippet to set the description texts when Spin is used as a wrapping element; the wrapped content is the `children` snippet, written inside the Spin tag.
+
+</Framework>
+
 <Demo id="tip" />
 
 ### Customized Indicator
@@ -88,6 +105,12 @@ Use the `#indicator` slot to customize Spin's indicator style.
 <Framework only="solid">
 
 Use `indicator` property to customize Spin's indicator style.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `indicator` snippet to customize Spin's indicator style.
 
 </Framework>
 
@@ -128,6 +151,14 @@ Other native attributes (such as `id`, `aria-*` and `onClick`) land on the root 
 <SpinSolidApi />
 
 `class`, `style`, `ref` and native attributes and events land on the root `div` element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<SpinSvelteApi />
+
+`class`, `style` and native attributes and events land on the root `div` element.
 
 </Framework>
 

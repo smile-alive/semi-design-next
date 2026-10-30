@@ -13,9 +13,9 @@
         itemSize: 28,
     };
 
-    function generateData(x = 5, y = 4, z = 3, data: TreeNodeData[] = []) {
+    const generateData = (x = 5, y = 4, z = 3, data: TreeNodeData[] = []) => {
         // x: nodes per level. y: nodes with children per level. z: depth (0 is one level)
-        function fill(level: number, preKey: string, nodes: TreeNodeData[]) {
+        const fill = (level: number, preKey: string, nodes: TreeNodeData[]) => {
             const parents: string[] = [];
             for (let i = 0; i < x; i++) {
                 const key = `${preKey}-${i}`;
@@ -32,7 +32,7 @@
                 nodes[index].children = children;
                 fill(level - 1, key, children);
             });
-        }
+        };
         fill(z, '0', data);
 
         let total = 0;
@@ -40,7 +40,7 @@
             total += x * y ** n;
         }
         return { gData: data, total };
-    }
+    };
 
     const gData = ref<TreeNodeData[]>([]);
     const total = ref(0);

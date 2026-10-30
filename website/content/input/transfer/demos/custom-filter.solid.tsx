@@ -11,9 +11,9 @@ const data = [
     { label: '曲晨三', value: 'quchensan@example.com', abbr: '三', color: 'blue', area: 'India', key: 6 },
 ];
 
-const customFilter = (searchValue: string, item: TransferDataItem) => {
+function customFilter(searchValue: string, item: TransferDataItem) {
     return String(item.value).includes(searchValue) || String(item.label).includes(searchValue);
-};
+}
 
 export default function TransferDemo() {
     const [searchText, setSearchText] = createSignal('');

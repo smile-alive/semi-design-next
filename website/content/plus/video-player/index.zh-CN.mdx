@@ -8,6 +8,7 @@ brief: 用于播放视频
 import VideoPlayerReactApi from './api/video-player.react.zh-CN.mdx';
 import VideoPlayerVueApi from './api/video-player.vue.zh-CN.mdx';
 import VideoPlayerSolidApi from './api/video-player.solid.zh-CN.mdx';
+import VideoPlayerSvelteApi from './api/video-player.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { VideoPlayer } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 基本使用，通过 `src` 传入视频地址， 通过 `poster` 传入视频封面地址
@@ -58,6 +69,12 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+`onNext` 是函数 prop，传入它且 `controlsList` 包含 `next` 时才显示「下一个」按钮，点击时调用该函数。
+
+</Framework>
+
+<Framework only="svelte">
 
 `onNext` 是函数 prop，传入它且 `controlsList` 包含 `next` 时才显示「下一个」按钮，点击时调用该函数。
 
@@ -103,6 +120,12 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `volume` 设置初始音量，值区间为 0 - 100， 设置 `muted` 为 `true` 可以静音播放。用户调整音量时会调用 `onVolumeChange`
+
+</Framework>
+
 <Demo id="volume" />
 
 ### 清晰度切换
@@ -128,6 +151,14 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 通过 `qualityList` 设置清晰度选择列表，`defaultQuality` 设置初始选择的清晰度，`onQualityChange` 设置点击后更新的 `src` 逻辑。
 
 线路切换同理，通过 `routeList` 设置线路选择列表，`defaultRoute` 设置初始选择的线路，`onRouteChange` 设置点击后更新的 `src` 逻辑。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `qualityList` 设置清晰度选择列表，`defaultQuality` 设置初始选择的清晰度，在 `onQualityChange` 中更新 `src`。
+
+线路切换同理，通过 `routeList` 设置线路选择列表，`defaultRoute` 设置初始选择的线路，在 `onRouteChange` 中更新 `src`。
 
 </Framework>
 
@@ -162,6 +193,12 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `ref` 传入回调函数，回调以原生 video 元素被调用，可以实现更灵活的控制，例如多个视频同步播放/暂停
+
+</Framework>
+
+<Framework only="svelte">
+
+用 `bind:this` 绑定组件后调用 `getVideo()` 方法取得原生 video 元素，可以实现更灵活的控制，例如多个视频同步播放/暂停。元素在挂载前为 `undefined`
 
 </Framework>
 
@@ -201,6 +238,14 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<VideoPlayerSvelteApi />
+
+`class`（字符串、数组或对象）与原生属性落在根元素 `div` 上，`style` 为字符串，其中的 width、height 覆盖 `width`、`height` 属性；根元素带 `aria-label` 或 `aria-labelledby` 时自动加 `role="group"`，自己传 `role` 则以传入的为准。媒体事件（`ontimeupdate`、`onended` 等）不会冒泡到根元素，因此不支持在组件上监听，需要时通过 `getVideo()` 取得原生元素后自行监听。
+
+</Framework>
+
 #### Marker
 
 | 属性  | 说明       | 类型   | 默认值 |
@@ -222,6 +267,19 @@ import { VideoPlayer } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+#### VideoPlayerOption
+
+`playbackRateList` 的选项类型为 `VideoPlayerOption<number>`，`qualityList`、`routeList` 的选项类型为 `VideoPlayerOption<string>`，`value` 的类型即泛型参数。
+
+| 属性  | 说明                 | 类型     | 默认值 |
+| ----- | -------------------- | -------- | ------ |
+| label | 菜单中显示的名称     | `string` | -      |
+| value | 选项值，回调参数取此 | `T`      | -      |
+
+</Framework>
+
+<Framework only="svelte">
 
 #### VideoPlayerOption
 

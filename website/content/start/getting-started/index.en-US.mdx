@@ -1,5 +1,5 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 title: Quick Start
 icon: doc-gettingstarted
 order: 2
@@ -23,6 +23,12 @@ order: 2
 
 </Framework>
 
+<Framework only="svelte">
+
+`@fibrae/semi-ui-svelte` is the Svelte component library of Semi Design Next, for Svelte 5 applications; for server-side rendering see [Server-side rendering](#server-side-rendering).
+
+</Framework>
+
 ## Requirements
 
 <Framework only="react">
@@ -40,6 +46,12 @@ Peer dependency: `vue` ^3.5.0.
 <Framework only="solid">
 
 Peer dependency: `solid-js` ^1.9.0.
+
+</Framework>
+
+<Framework only="svelte">
+
+Peer dependency: `svelte` ^5.57.0.
 
 </Framework>
 
@@ -82,6 +94,18 @@ The icon package `@fibrae/semi-icons-solid` is a dependency of the component lib
 
 </Framework>
 
+<Framework only="svelte">
+
+```bash
+pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
+```
+
+The icon package `@fibrae/semi-icons-svelte` is a dependency of the component library; when your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages. The illustration package `@fibrae/semi-illustrations-svelte` is not installed with the library; install it when you need it.
+
+The Svelte packages ship `.svelte` sources and `.d.ts` files, not compiled output: `exports` carries a `svelte` condition, and `@sveltejs/vite-plugin-svelte` (built into SvelteKit) compiles them for the app's target, DOM or server. Tools that do not recognise the `svelte` condition or do not compile `.svelte` cannot use these packages.
+
+</Framework>
+
 With npm or yarn, use the equivalent commands.
 
 To support Safari below 17.4, also install `@fibrae/semi-polyfill` and import it on the first line of the app entry, before any Semi component. It only adds `AbortSignal.any` and `Element.prototype.checkVisibility`, and does nothing where the browser has them natively; to add just one of them, import `@fibrae/semi-polyfill/abort-signal-any` or `@fibrae/semi-polyfill/check-visibility`.
@@ -117,6 +141,30 @@ import '@fibrae/semi-ui-vue/tokens';
 ```ts
 // index.tsx, before any other import
 import '@fibrae/semi-ui-solid/tokens';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+In a Vite + Svelte app, import it in the entry file:
+
+```ts
+// src/main.ts, before any other import
+import '@fibrae/semi-ui-svelte/tokens';
+```
+
+SvelteKit has no such entry file; import it at the top of the root layout's script:
+
+```svelte
+<!-- src/routes/+layout.svelte -->
+<script lang="ts">
+    import '@fibrae/semi-ui-svelte/tokens';
+
+    let { children } = $props();
+</script>
+
+{@render children()}
 ```
 
 </Framework>
@@ -166,6 +214,25 @@ export function App() {
 ```
 
 A single component can also be imported by its directory path, written down to `/index`, such as `import Button from '@fibrae/semi-ui-solid/button/index'`.
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, Switch, Toast } from '@fibrae/semi-ui-svelte';
+
+    let checked = $state(false);
+</script>
+
+<Button theme="solid" type="primary" onclick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>
+<Switch bind:checked aria-label="Switch" />
+```
+
+Controlled values use two-way `bind:checked={value}`; passing only `checked` sets the initial value, and there are no `default*` props such as `defaultChecked`. With a one-way value, what the user changes inside the component is temporary: when the value passed by the parent changes, the parent's value wins; when the same component also takes spread props (`{...rest}`), replacing the spread object with a new one applies the parent's value again. To keep the user's change, use `bind:` or write it back to your own state in the callback (such as `onChange`). Content props (React's ReactNode and render functions) are snippets, written inside the component tag or defined with `{#snippet}`; `style` only accepts a string, and native events use lowercase names (`onclick`).
+
+A single component can also be imported by its directory path, written down to `/index`, such as `import { Button } from '@fibrae/semi-ui-svelte/button/index'`; the component file is `<directory>/<name>.svelte`, such as `@fibrae/semi-ui-svelte/button/button.svelte`.
 
 </Framework>
 
@@ -223,6 +290,15 @@ Solid projects differ as follows:
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte projects differ as follows:
+
+- Vite only: the Svelte packages are compiled by `@sveltejs/vite-plugin-svelte` (built into SvelteKit). `@fibrae/semi-webpack-plugin` and `@fibrae/semi-rspack-plugin` do not process the Svelte packages; do not use them in a Svelte project.
+- `@fibrae/semi-vite-plugin` applies to `@fibrae/semi-ui-svelte`, `@fibrae/semi-ai-svelte` and `@fibrae/semi-icons-svelte`, and `prefixCls`, `cssLayer` and `omitCss` mean the same, as `plugins: [svelte(), semi()]`; for SvelteKit see [Server-side rendering](#server-side-rendering).
+
+</Framework>
+
 The published `.scss` files use `semi:` URLs that plain Sass cannot resolve; compile them through a build plugin or `@fibrae/semi-scss-compile`.
 
 ## Full stylesheet
@@ -255,6 +331,16 @@ import '@fibrae/semi-ai-vue/styles.css';
 import '@fibrae/semi-ui-solid/styles.css';
 // with the AI components, import theirs after it
 import '@fibrae/semi-ai-solid/styles.css';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+import '@fibrae/semi-ui-svelte/styles.css';
+// with the AI components, import theirs after it
+import '@fibrae/semi-ai-svelte/styles.css';
 ```
 
 </Framework>
@@ -331,6 +417,34 @@ Illustrations are imported from `@fibrae/semi-illustrations-solid`, such as `Ill
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { IconHome } from '@fibrae/semi-icons-svelte';
+</script>
+
+<IconHome aria-label="Home" />
+```
+
+For a custom SVG, use the `children` snippet of the default export `Icon`; its argument carries `fill`:
+
+```svelte
+<script lang="ts">
+    import Icon from '@fibrae/semi-icons-svelte';
+</script>
+
+<Icon size="large">
+    {#snippet children({ fill })}
+        <svg viewBox="0 0 24 24" {fill}><circle cx="12" cy="12" r="10" /></svg>
+    {/snippet}
+</Icon>
+```
+
+Illustrations are imported from `@fibrae/semi-illustrations-svelte`, such as `IllustrationNoContent`.
+
+</Framework>
+
 Icon styles load with the icon components. See [Icon](/en-US/react/basic/icon) for the icon list and usage.
 
 ## AI components
@@ -358,6 +472,16 @@ pnpm add @fibrae/semi-ai-vue
 ```bash
 pnpm add @fibrae/semi-ai-solid
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```bash
+pnpm add @fibrae/semi-ai-svelte
+```
+
+`@fibrae/semi-ai-svelte` currently completes only AIChatDialogue; AIChatInput, Chat and Sidebar are being ported and are not exported yet.
 
 </Framework>
 
@@ -468,6 +592,28 @@ import '@fibrae/semi-ui-solid/styles.css';
 ```
 
 SolidStart uses the full stylesheet because by default its dev server does not collect the CSS that components inside `node_modules` import: the per-component route works in production, but the first paint in dev has no styles. Passing `css: { filter: { exclude: [/^(?!.*\/node_modules\/@fibrae\/semi-).*\/node_modules\//] } }` to `solidStart()` makes dev collect the component CSS of the Semi packages too, at the cost of one more host option and a dev first paint whose styles are slightly larger than the full stylesheet (about 20% more), split into dozens of `<style>` elements.
+
+</Framework>
+
+<Framework only="svelte">
+
+| Host        | Install                                                 | Host configuration                          | Styles |
+| ----------- | ------------------------------------------------------- | ------------------------------------------- | ------ |
+| SvelteKit 3 | `@fibrae/semi-ui-svelte`, `-D @fibrae/semi-vite-plugin` | `plugins: [sveltekit({ adapter }), semi()]` | none   |
+
+```ts
+// vite.config.ts
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
+import semi from '@fibrae/semi-vite-plugin';
+
+// replace adapter with the SvelteKit adapter you use
+export default defineConfig({
+    plugins: [sveltekit({ adapter }), semi()],
+});
+```
+
+Components render server HTML through `render` from `svelte/server` and in SvelteKit, and the browser hydrates with `hydrate`. Ids inside components come from `$props.id()` and match between server and browser; `onMount` and `$effect` do not run on the server, so state that depends on them (such as measured sizes) appears after hydration.
 
 </Framework>
 

@@ -6,7 +6,7 @@
     const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
     const treeData = shallowRef<TreeNodeData[]>([]);
 
-    function add() {
+    const add = () => {
         const itemLength = Math.floor(Math.random() * 5) + 1;
         treeData.value = Array.from({ length: itemLength }, (_, i) => {
             const length = Math.floor(Math.random() * 3);
@@ -22,7 +22,7 @@
                 children,
             };
         });
-    }
+    };
 </script>
 
 <template>

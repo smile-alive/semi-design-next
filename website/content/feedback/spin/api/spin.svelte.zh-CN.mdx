@@ -1,0 +1,12 @@
+**Props**
+
+| 属性             | 说明                                                                                                  | 类型       | 默认值     |
+| ---------------- | ----------------------------------------------------------------------------------------------------- | ---------- | ---------- |
+| children         | 被包裹的内容；有内容时 Spin 作为包裹元素，加载期间带 `aria-busy`，且内容不可聚焦、不可操作（inert）。 | `Snippet`  | -          |
+| childStyle       | 内部子元素的样式字符串。                                                                              | `string`   | -          |
+| delay            | 延迟显示加载效果的时间，单位毫秒。                                                                    | `number`   | `0`        |
+| indicator        | 自定义加载指示符的 snippet。                                                                          | `Snippet`  | -          |
+| size             | 组件大小。                                                                                            | `SpinSize` | `"middle"` |
+| spinning         | 是否处于加载中的状态。                                                                                | `boolean`  | `true`     |
+| tip              | 当 Spin 作为包裹元素时，描述文字的 snippet。                                                          | `Snippet`  | -          |
+| wrapperClassName | 包裹元素的类名。                                                                                      | `string`   | -          |

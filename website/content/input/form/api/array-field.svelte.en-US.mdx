@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                              | Type                                                                      | Default |
+| --------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------- |
+| children  | Content of the rows, with `{ arrayFields, onAdd, onAddWithInitValue }`.                                  | <ApiType detail={"Snippet\u003c[ArrayFieldSnippetProps]>"}>Type</ApiType> | -       |
+| field     | Path of the array in formState.values, required. For row fields such as a[0].name and a[1].name, pass a. | `string`                                                                  | -       |
+| initValue | Initial value of the array, which must be an array; it takes precedence over the initValues of the Form. | `unknown[]`                                                               | -       |

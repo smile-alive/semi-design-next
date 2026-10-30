@@ -18,6 +18,10 @@ import DropdownSolidApi from './api/dropdown.solid.en-US.mdx';
 import DropdownMenuSolidApi from './api/dropdown-menu.solid.en-US.mdx';
 import DropdownItemSolidApi from './api/dropdown-item.solid.en-US.mdx';
 import DropdownTitleSolidApi from './api/dropdown-title.solid.en-US.mdx';
+import DropdownSvelteApi from './api/dropdown.svelte.en-US.mdx';
+import DropdownMenuSvelteApi from './api/dropdown-menu.svelte.en-US.mdx';
+import DropdownItemSvelteApi from './api/dropdown-item.svelte.en-US.mdx';
+import DropdownTitleSvelteApi from './api/dropdown-title.svelte.en-US.mdx';
 
 ## Demos
 
@@ -51,6 +55,18 @@ import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@f
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Dropdown, DropdownDivider, DropdownItem, DropdownMenu, DropdownTitle } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+`Dropdown.Menu`, `Dropdown.Item`, `Dropdown.Title` and `Dropdown.Divider` correspond to `DropdownMenu`, `DropdownItem`, `DropdownTitle` and `DropdownDivider`, imported by name.
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="react">
@@ -77,6 +93,14 @@ import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@f
 
 </Framework>
 
+<Framework only="svelte">
+
+- The Trigger is passed as the children of the Dropdown and is wrapped in a `span`. By default it is displayed on hover. You can modify it to values like `click`, `focus`, `custom`, `contextMenu`, etc. through `trigger` to specify different triggering methods. To render the trigger element yourself, use the `child` snippet and spread its `props` argument onto an element that takes focus.
+- Use the `content` snippet to specify the specific content of the dropdown box: Use `DropdownMenu` as the parent container, and use `DropdownItem`, `DropdownDivider`, and `DropdownTitle` in combination. Of course, in simple scenarios, you can also just combine `DropdownMenu` with `DropdownItem`, and the other elements are not mandatory.
+- `DropdownItem` can disable a certain option by setting `disabled`. By configuring `type`, text in different colors can be displayed. The `icon` snippet configures an icon quickly. For more complex custom structures, write them directly in the children of `DropdownItem`.
+
+</Framework>
+
 <Demo id="basic" />
 
 ### Nested Usage
@@ -96,6 +120,12 @@ Users can nested `Dropdown`, which is suitable for situations with multiple subl
 <Framework only="solid">
 
 Users can nested `Dropdown`, which is suitable for situations with multiple sublevel options. The trigger of a parent item is also a function child, which spreads `getTriggerProps` onto the `Dropdown.Item`. From the keyboard, `Right Arrow` opens a submenu and `Left Arrow` returns to the parent item, and `Enter` or `Space` calls the `onClick` of an item at any level (see [Accessibility](#accessibility)).
+
+</Framework>
+
+<Framework only="svelte">
+
+Users can nested `Dropdown`, which is suitable for situations with multiple sublevel options. The trigger of a parent item uses the `child` snippet, which spreads the `props` argument onto the `DropdownItem`. From the keyboard, `Right Arrow` opens a submenu and `Left Arrow` returns to the parent item, and `Enter` or `Space` calls the `onclick` of an item at any level (see [Accessibility](#accessibility)). A nested submenu defaults to a `spacing` of 2. `showTick`, `selectionMode` and `trigger` are not inherited from the outer menu: the submenu Dropdown's own settings apply.
 
 </Framework>
 
@@ -133,6 +163,12 @@ Click on the menu item to trigger different mouse events, support `onClick`, `on
 
 </Framework>
 
+<Framework only="svelte">
+
+Click on the menu item to trigger different mouse events, support `onclick`, `onmouseenter`, `onmouseleave` and `oncontextmenu`. The `onclick` of a top-level menu fires on click, that of a submenu fires on the left button press, and `Enter` and `Space` on the keyboard fire it as well.
+
+</Framework>
+
 <Demo id="events" />
 
 ### Json Usage
@@ -152,6 +188,12 @@ Can use the `menu` attribute to configure the Dropdown content menu. Listeners i
 <Framework only="solid">
 
 Can use the `menu` attribute, given an array, to configure the Dropdown content menu. Callbacks in an entry use camelCase names such as `onClick`, the same as the props of `Dropdown.Item`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Can use the `menu` attribute, given an array, to configure the Dropdown content menu. Listeners in an entry use lowercase native event names such as `onclick` and `onmouseenter`, and are handed to the matching `DropdownItem`. Use the `menuIcon` snippet, whose argument is `{ item, index }`, to customize the icon of each entry. `content` wins when it is provided.
 
 </Framework>
 
@@ -185,6 +227,14 @@ Dropdown has no root element of its own: `class` lands on the outer `.semi-dropd
 
 </Framework>
 
+<Framework only="svelte">
+
+<DropdownSvelteApi />
+
+Dropdown has no root element of its own: `class` lands on the outer `.semi-dropdown-wrapper` of the popup, `contentClassName` on the menu container `.semi-dropdown`, and other undeclared attributes are dropped.
+
+</Framework>
+
 ### Dropdown.Menu
 
 <Framework only="react">
@@ -208,6 +258,14 @@ Other native attributes (such as `id` and `aria-*`) land on the `ul` of the menu
 <DropdownMenuSolidApi />
 
 `class`, `style`, `ref` and native attributes land on the `ul` of the menu. `role` and `aria-orientation` can be overridden, and `onKeyDown` runs before the built-in keyboard handling.
+
+</Framework>
+
+<Framework only="svelte">
+
+<DropdownMenuSvelteApi />
+
+`class`, `style` and native attributes land on the `ul` of the menu. `role` and `aria-orientation` can be overridden, and an `onkeydown` bound on the menu runs before the built-in keyboard handling.
 
 </Framework>
 
@@ -237,6 +295,14 @@ Listen for click, pointer enter and leave, and right click with `@click`, `@mous
 
 </Framework>
 
+<Framework only="svelte">
+
+<DropdownItemSvelteApi />
+
+Listen for click, pointer enter and leave, and right click with `onclick`, `onmouseenter`, `onmouseleave` and `oncontextmenu`; the parameter is the native `MouseEvent`. `class`, `style` and other native attributes land on the `li`. A disabled Item does not respond to these four listeners.
+
+</Framework>
+
 ### Dropdown.Title
 
 <Framework only="react">
@@ -260,6 +326,14 @@ Other native attributes (such as `id` and `data-*`) land on the root `li`, and `
 <DropdownTitleSolidApi />
 
 `class`, `style`, `ref` and native attributes land on the `li`.
+
+</Framework>
+
+<Framework only="svelte">
+
+<DropdownTitleSvelteApi />
+
+`class`, `style` and native attributes land on the `li`. The divider `DropdownDivider` has no props and also receives `class`, `style` and native attributes.
 
 </Framework>
 
@@ -300,6 +374,18 @@ An entry does not accept `children`; the label comes from `name` alone.
 
 </Framework>
 
+<Framework only="svelte">
+
+| Properties                                         | Instructions                                                                               | Type                             | Default |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------- | ------- |
+| node                                               | Entry type: `title`, `item` or `divider`                                                   | `'title' \| 'item' \| 'divider'` | -       |
+| name                                               | Menu text, only on `title` and `item`                                                      | `string \| number`               | -       |
+| active, disabled, showTick, type                   | Correspond to the props of DropdownItem of the same name, only on `item`                   | -                                | -       |
+| class, style, `data-*`, `aria-*`                   | Handed to the matching DropdownTitle, DropdownItem or DropdownDivider; `style` is a string | -                                | -       |
+| onclick, onmouseenter, onmouseleave, oncontextmenu | Listeners of DropdownItem under lowercase native event names, only on `item`               | `(event: MouseEvent) => void`    | -       |
+
+</Framework>
+
 ### Methods
 
 <Framework only="react">
@@ -317,6 +403,12 @@ Call `focusTrigger()` and `rePosition()` through a template ref, see the Exposes
 <Framework only="solid">
 
 `ref` receives the `DropdownHandle` once, when the component is created. Call its `focusTrigger()` and `rePosition()` methods; see the Methods table of Dropdown above.
+
+</Framework>
+
+<Framework only="svelte">
+
+Get the instance with `bind:this` and call `focusTrigger()` and `rePosition()`, see the Methods of Dropdown above.
 
 </Framework>
 

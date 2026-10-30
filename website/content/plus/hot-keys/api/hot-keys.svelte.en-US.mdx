@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property          | Description                                                                                                                                                   | Type                                                                              | Default |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------- |
+| children          | Replaces the key hint, written inside the tag. With children the default key hint is not rendered and the hot keys stay active.                               | `Snippet`                                                                         | -       |
+| content           | Key labels to show. Defaults to hotKeys.                                                                                                                      | `string[]`                                                                        | -       |
+| getListenerTarget | Returns the element that listens for keydown. When omitted, or when it returns null or undefined, document.body is used.                                      | <ApiType detail={"() => HTMLElement \u007c null \u007c undefined"}>Type</ApiType> | -       |
+| hotKeys           | The key combination: any number of modifiers plus one other key, as KeyboardEvent.key values. An invalid combination throws on mount or when hotKeys changes. | `KeyboardEvent['key'][]`                                                          | -       |
+| onHotKey          | Called when the full key combination is pressed, with the native KeyboardEvent.                                                                               | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType>                 | -       |
+| preventDefault    | Whether the default behavior of the key combination is prevented.                                                                                             | `boolean`                                                                         | `false` |

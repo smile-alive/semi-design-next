@@ -16,7 +16,7 @@ const icons: Record<string, typeof IconFixedStroked> = {
 
 type LoopCallback = (item: TreeNodeData, ind: number, arr: TreeNodeData[]) => void;
 
-const findDescendantKeys = (node: TreeNodeData) => {
+function findDescendantKeys(node: TreeNodeData) {
     const res = [node.key];
     const findChild = (item?: TreeNodeData) => {
         if (!item) return;
@@ -31,7 +31,7 @@ const findDescendantKeys = (node: TreeNodeData) => {
     };
     findChild(node);
     return res;
-};
+}
 
 const treeStyle = {
     width: '260px',

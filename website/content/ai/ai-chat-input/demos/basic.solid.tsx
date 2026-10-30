@@ -4,13 +4,13 @@ import type { UploadOnChangeProps as OnChangeProps } from '@fibrae/semi-ui-solid
 const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: '12px' };
 
-const onContentChange = (content: Content[]) => {
+function onContentChange(content: Content[]) {
     console.log('onContentChange', content);
-};
+}
 
-const onUploadChange = (fileList: OnChangeProps) => {
+function onUploadChange(fileList: OnChangeProps) {
     console.log('onUploadChange', fileList);
-};
+}
 
 export default function AIChatInputDemo() {
     return <AIChatInput placeholder="输入内容或者上传内容..." uploadProps={uploadProps} onContentChange={onContentChange} onUploadChange={onUploadChange} style={outerStyle} />;

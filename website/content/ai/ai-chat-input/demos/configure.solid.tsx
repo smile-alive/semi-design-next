@@ -19,13 +19,13 @@ const radioButtonProps = [
     { label: '超能', value: 'super' },
 ];
 
-const onConfigureButtonClick = () => {
+function onConfigureButtonClick() {
     console.log('onConfigureButtonClick');
-};
+}
 
-const onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
+function onConfigureChange(value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) {
     console.log('onConfigureChange', value, changedValue);
-};
+}
 
 const mcpOptions = [
     { label: '飞书文档', value: 'feishu' },

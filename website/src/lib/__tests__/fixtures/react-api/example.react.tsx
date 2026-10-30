@@ -3,7 +3,7 @@ import { memo } from 'react';
 
 const strings = { SIZE: 'small' } as const;
 
-const noop = () => {};
+function noop() {}
 
 export interface ExampleHandle {
     focus: () => void;

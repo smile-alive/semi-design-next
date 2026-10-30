@@ -4,9 +4,9 @@
 
     const size = ref<NonNullable<ResizableProps['size']>>({ width: 200, height: 100 });
 
-    function grow() {
+    const grow = () => {
         size.value = { width: Number(size.value.width) + 10, height: Number(size.value.height) + 10 };
-    }
+    };
 </script>
 
 <template>

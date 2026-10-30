@@ -9,6 +9,8 @@ import LocaleProviderVueApi from './api/locale-provider.vue.zh-CN.mdx';
 import LocaleConsumerVueApi from './api/locale-consumer.vue.zh-CN.mdx';
 import LocaleProviderSolidApi from './api/locale-provider.solid.zh-CN.mdx';
 import LocaleConsumerSolidApi from './api/locale-consumer.solid.zh-CN.mdx';
+import LocaleProviderSvelteApi from './api/locale-provider.svelte.zh-CN.mdx';
+import LocaleConsumerSvelteApi from './api/locale-consumer.svelte.zh-CN.mdx';
 
 ## 目前支持语言
 
@@ -116,6 +118,24 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`LocaleProvider` 使用 context 向后代传递语言包，你只需要在应用外围包裹一次即可全局生效  
+当需要切换语言时，把 `locale` 绑定到随之变化的状态上即可，子树会自动更新。
+
+```svelte
+<script lang="ts">
+    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import { LocaleProvider } from '@fibrae/semi-ui-svelte';
+</script>
+
+<LocaleProvider locale={en_GB}>
+    <App />
+</LocaleProvider>
+```
+
+</Framework>
+
 不传 `locale` 时 LocaleProvider 继承外层 LocaleProvider 的语言，最外层都没有时回退 `zh_CN`；ConfigProvider 的 `locale` 优先于 LocaleProvider。
 
 ## 代码示例
@@ -141,6 +161,12 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 当你的自定义组件，也希望消费 Semi LocaleProvider 中的 localeCode 或者读取具体某个组件的 i18n 文本时，你可以使用 LocaleConsumer 获取：它的子节点是函数，参数依次为组件文案片段（locale）、localeCode、dateFnsLocale 与 currency。在组件体中也可以调用 `useLocale(componentName)`，它返回一个访问器，调用它即可读到同样四项。语言的优先级为 ConfigProvider、LocaleProvider、`zh_CN`。自定义命名空间（示例中的 `ComponentA`）通过 declaration merging 扩展 `Locale` 类型。
+
+</Framework>
+
+<Framework only="svelte">
+
+当你的自定义组件，也希望消费 Semi LocaleProvider 中的 localeCode 或者读取具体某个组件的 i18n 文本时，你可以使用 LocaleConsumer 获取：它的 `children` snippet 接收 `{ locale, localeCode, dateFnsLocale, currency }`。在组件初始化时也可以调用 `useLocale(componentName)`，它返回一个 getter，调用它即可读到同样四项。语言的优先级为 ConfigProvider、LocaleProvider、`zh_CN`。自定义命名空间（示例中的 `ComponentA`）通过 declaration merging 扩展 `Locale` 类型。
 
 </Framework>
 
@@ -207,6 +233,37 @@ LocaleConsumer 不渲染自己的元素，`class`、`style`、`ref` 与原生属
 ### useLocale
 
 `useLocale(componentName)` 返回 `Accessor<LocaleResult>`，调用访问器读取结果。`componentName` 可以是字符串，也可以是返回字符串的访问器。
+
+| 字段          | 说明                                                   | 类型                 |
+| ------------- | ------------------------------------------------------ | -------------------- |
+| locale        | `componentName` 对应的文案片段                         | `Locale[K]`          |
+| localeCode    | 语言代码                                               | string               |
+| dateFnsLocale | date-fns 的语言对象，缺失时由 date-fns 使用默认的 enUS | `Locale`（date-fns） |
+| currency      | 语言所在地区的 ISO 4217 货币码                         | string               |
+
+</Framework>
+
+<Framework only="svelte">
+
+## API 参考
+
+---
+
+### LocaleProvider
+
+<LocaleProviderSvelteApi />
+
+LocaleProvider 不渲染 DOM 元素，`class`、`style` 与原生属性和事件都不会落到页面上。
+
+### LocaleConsumer
+
+<LocaleConsumerSvelteApi />
+
+LocaleConsumer 不渲染自己的元素，`class`、`style` 与原生属性和事件都不会落到页面上。
+
+### useLocale
+
+`useLocale(componentName)` 返回 `() => LocaleResult`，调用返回的 getter 读取结果。`componentName` 可以是字符串，也可以是返回字符串的函数。
 
 | 字段          | 说明                                                   | 类型                 |
 | ------------- | ------------------------------------------------------ | -------------------- |

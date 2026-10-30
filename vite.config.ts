@@ -40,6 +40,9 @@ export default defineConfig({
         trailingComma: 'es5',
         singleQuote: true,
         vueIndentScriptAndStyle: true,
+        svelte: true,
+        // Svelte renders the whitespace between any two tags, so the formatter may not move it, even around block elements
+        overrides: [{ files: ['*.svelte'], options: { htmlWhitespaceSensitivity: 'strict' } }],
         sortPackageJson: false,
         sortImports: {
             newlinesBetween: false,
@@ -56,7 +59,7 @@ export default defineConfig({
                 },
                 {
                     groupName: 'framework',
-                    elementNamePattern: ['react', 'react/**', 'react-dom', 'react-dom/**', 'vue', 'vue/**', 'solid-js', 'solid-js/**', 'astro', 'astro/**', 'astro:*'],
+                    elementNamePattern: ['react', 'react/**', 'react-dom', 'react-dom/**', 'vue', 'vue/**', 'solid-js', 'solid-js/**', 'svelte', 'svelte/**', 'astro', 'astro/**', 'astro:*'],
                 },
                 {
                     groupName: 'semi-foundation',
@@ -88,6 +91,7 @@ export default defineConfig({
         // *.d.ts files are lint-ignored, so a commit touching only them must not fail on "no files to lint"
         '*.{js,jsx,ts,tsx,mjs,cjs}': ['vp lint --fix --deny-warnings --no-error-on-unmatched-pattern', 'vp fmt'],
         '*.vue': ['vp lint --fix --deny-warnings', 'eslint --fix --max-warnings 0 --no-warn-ignored', 'vp fmt'],
+        '*.svelte': ['vp lint --fix --deny-warnings', 'eslint --fix --max-warnings 0 --no-warn-ignored', 'vp fmt'],
         '*.{scss,css}': ['stylelint --fix --max-warnings 0', 'vp fmt'],
         '*.astro': 'stylelint --fix --max-warnings 0',
         // oxfmt ignores pnpm-lock.yaml, so a commit touching only it must not fail on "no target file"

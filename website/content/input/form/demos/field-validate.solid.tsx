@@ -2,14 +2,14 @@ import { Button, Form, FormInput } from '@fibrae/semi-ui-solid';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const validateName = (val?: string) => {
+function validateName(val?: string) {
     if (!val) {
         return "【sync】can't be empty";
     } else if (val.length <= 5) {
         return '【sync】must more than 5';
     }
     return '';
-};
+}
 
 const asyncValidate = (val?: string) =>
     sleep(2000).then(() => {

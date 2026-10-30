@@ -11,6 +11,7 @@ import BreadcrumbVueApi from './api/breadcrumb.vue.en-US.mdx';
 import BreadcrumbItemVueApi from './api/breadcrumb-item.vue.en-US.mdx';
 import BreadcrumbSolidApi from './api/breadcrumb.solid.en-US.mdx';
 import BreadcrumbItemSolidApi from './api/breadcrumb-item.solid.en-US.mdx';
+import BreadcrumbSvelteApi from './api/breadcrumb.svelte.en-US.mdx';
 
 ## Demos
 
@@ -44,6 +45,18 @@ import { Breadcrumb } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Breadcrumb } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte has no `Breadcrumb.Item`; each item is described by `routes`.
+
+</Framework>
+
 ### Basic Usage
 
 <Demo id="basic" />
@@ -61,6 +74,12 @@ Use the `#icon` slot of `Breadcrumb.Item` to show an icon.
 <Framework only="solid">
 
 Pass the icon with the `icon` prop of `Breadcrumb.Item`, for example `icon={<IconHome />}`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `icon` snippet. Its parameter carries the `route` and `index` of the item, plus the `size` and `class` to pass on to the icon: `<IconHome {size} class={className} />`. Pick the icon by index; an item without an icon renders nothing. For an icon-only item, set `name` to an empty string and give the icon an `aria-label`.
 
 </Framework>
 
@@ -88,11 +107,41 @@ Default separator is `/`.
 
 </Framework>
 
+<Framework only="svelte">
+
+`separator` takes text; for a separator made of nodes, use the `separator` snippet. A single route can carry a `separator` field to override the shared one.
+
+</Framework>
+
 <Demo id="separator" />
 
 ### Truncated Logic
 
-The truncation happens if the text is overflowed. Default max-width is set to 150px. You could use `showTooltip` to customize ellipsis behavior. A number as the child of `Breadcrumb.Item` (including `0`) is treated as text and takes part in truncation and the Tooltip.
+The truncation happens if the text is overflowed. Default max-width is set to 150px. You could use `showTooltip` to customize ellipsis behavior.
+
+<Framework only="react">
+
+A number as the child of `Breadcrumb.Item` (including `0`) is treated as text and takes part in truncation and the Tooltip.
+
+</Framework>
+
+<Framework only="vue">
+
+A number as the child of `Breadcrumb.Item` (including `0`) is treated as text and takes part in truncation and the Tooltip.
+
+</Framework>
+
+<Framework only="solid">
+
+A number as the child of `Breadcrumb.Item` (including `0`) is treated as text and takes part in truncation and the Tooltip.
+
+</Framework>
+
+<Framework only="svelte">
+
+The title comes from the `name` of the route and is treated as text, taking part in truncation and the Tooltip; the content of the `item` snippet renders inline and is not truncated.
+
+</Framework>
 
 <Demo id="truncate" />
 
@@ -121,6 +170,12 @@ If you want to customize other forms of rendering for the ellipsis area, use the
 <Framework only="solid">
 
 To customize the ellipsis area in another form, use the `renderMore` prop. It receives the data of the collapsed items: the route objects with `routes`, or the props of the `Breadcrumb.Item` children (read their `children` and `icon` where they are shown). It returns what the ellipsis area renders. It takes precedence over `moreType` when provided.
+
+</Framework>
+
+<Framework only="svelte">
+
+To customize the ellipsis area in another form, use the `more` snippet. Its parameter `restItems` holds the collapsed items as `{ route, index }`. It takes precedence over `moreType` when provided.
 
 </Framework>
 
@@ -159,6 +214,16 @@ Breadcrumb supports passing in an array of strings or route objects consisting o
 
 </Framework>
 
+<Framework only="svelte">
+
+Breadcrumb takes an array of strings or route objects consisting of `{ name, path, href }` through `routes`; there is no `Breadcrumb.Item`. Use the `item` snippet to render a custom title (inline, without truncation) and the `icon` snippet for icons; both receive the `route` and `index` of the item. A route holds data only, and `routes[].onClick` is not supported: use `onClick` of Breadcrumb instead (it is a function prop, and whether it is passed decides if items without `href` are keyboard operable). Its first parameter is the route of the item, and a string route arrives as `{ name }`.
+
+- `name`: Name displayed, default with an empty string. When route passed in is a string only, it is set to name property.
+- `path`: Routing path.
+- `href`: Link destination and is mounted on the `<a>` tag.
+
+</Framework>
+
 <Demo id="routes" />
 
 ## API reference
@@ -189,6 +254,14 @@ Breadcrumb supports passing in an array of strings or route objects consisting o
 
 </Framework>
 
+<Framework only="svelte">
+
+<BreadcrumbSvelteApi />
+
+`class`, `style`, `aria-label` and other native attributes land on the `nav` root; `onClick` is a function prop, not the native click listener of the `nav`.
+
+</Framework>
+
 ### Breadcrumb.Item
 
 <Framework only="react">
@@ -215,7 +288,29 @@ Breadcrumb supports passing in an array of strings or route objects consisting o
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte has no `Breadcrumb.Item`; the data of each item is described under Route below.
+
+</Framework>
+
+<Framework only="react">
+
 A key set by the caller on a `Breadcrumb.Item` is kept, so the state of a keyed Item follows its key when the items are reordered. Only `Breadcrumb.Item` children receive `active` and `shouldRenderSeparator`; other elements and text render as they are.
+
+</Framework>
+
+<Framework only="vue">
+
+A key set by the caller on a `Breadcrumb.Item` is kept, so the state of a keyed Item follows its key when the items are reordered. Only `Breadcrumb.Item` children receive `active` and `shouldRenderSeparator`; other elements and text render as they are.
+
+</Framework>
+
+<Framework only="solid">
+
+A key set by the caller on a `Breadcrumb.Item` is kept, so the state of a keyed Item follows its key when the items are reordered. Only `Breadcrumb.Item` children receive `active` and `shouldRenderSeparator`; other elements and text render as they are.
+
+</Framework>
 
 ### Route
 
@@ -256,6 +351,21 @@ A route can also carry `noLink`, `separator` and `onClick`, which work like the 
 | href       | Link destinations | `string` | -       |
 | name       | Routing name      | `string` | -       |
 | path       | Routing path      | `string` | -       |
+
+</Framework>
+
+<Framework only="svelte">
+
+| Properties | Instructions                                                  | type               | Default |
+| ---------- | ------------------------------------------------------------- | ------------------ | ------- |
+| href       | Link destinations                                             | `string`           | -       |
+| name       | Routing name                                                  | `string`           | -       |
+| path       | Routing path                                                  | `string`           | -       |
+| noLink     | To remove hover and active effect on an item                  | `boolean`          | -       |
+| separator  | Text separator of the item, used to override parent separator | `string`           | -       |
+| key        | Key of the item                                               | `string \| number` | -       |
+
+The icon of a route is rendered by the `icon` snippet, and a custom title by the `item` snippet. `data-*` fields are passed to the item.
 
 </Framework>
 

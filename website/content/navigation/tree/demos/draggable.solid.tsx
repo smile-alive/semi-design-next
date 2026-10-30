@@ -66,7 +66,7 @@ export default function TreeDemo() {
     ];
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>(initialData);
 
-    function onDrop(info: TreeOnDragProps) {
+    const onDrop = (info: TreeOnDragProps) => {
         const { dropToGap, node, dragNode } = info;
         const dropKey = node.key;
         const dragKey = dragNode.key;
@@ -111,7 +111,7 @@ export default function TreeDemo() {
             }
         }
         setTreeData(data);
-    }
+    };
 
     return <Tree treeData={treeData()} draggable onDrop={onDrop} />;
 }

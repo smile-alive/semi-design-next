@@ -8,6 +8,7 @@ brief: 用户使用时间选择器可以方便地选择某一符合要求的、�
 import TimePickerReactApi from './api/time-picker.react.zh-CN.mdx';
 import TimePickerVueApi from './api/time-picker.vue.zh-CN.mdx';
 import TimePickerSolidApi from './api/time-picker.solid.zh-CN.mdx';
+import TimePickerSvelteApi from './api/time-picker.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { TimePicker } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { TimePicker } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { TimePicker } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -68,6 +79,12 @@ import { TimePicker } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 当使用 `value` 而不是 `defaultValue` 时，作为受控组件使用。`value` 和 `onChange` 需要配合使用，传 `null` 是受控的空值。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:value` 作为受控组件，没有 `defaultValue`，初始值直接写在绑定的变量上。传 `null` 是受控的空值，`undefined` 视为非受控。清除后单选值为 `undefined`，范围值为空数组。
 
 </Framework>
 
@@ -140,6 +157,12 @@ NOTE: `format` 遵循 date-fns v4 的 `format` 格式。 https://date-fns.org/do
 
 </Framework>
 
+<Framework only="svelte">
+
+默认情况下我们使用 `Input` 组件作为 `TimePicker` 组件的触发器，通过 `trigger` snippet 你可以自定义这个触发器。参数为 `{ value, inputValue, placeholder, disabled, componentProps, onChange }`，其中 `value` 未选的一侧为 `undefined`，`onChange` 用于更新输入框文本，效果同键入。
+
+</Framework>
+
 <Demo id="custom-trigger" />
 
 ## 时区设置
@@ -175,6 +198,16 @@ Semi 所有关于时区的配置都收敛在 ConfigProvider 中，详细使用�
 <TimePickerSolidApi />
 
 `class`、`style` 与 `ref` 落在根元素上，其余未声明的属性（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `triggerRender` 自定义触发器时，这些属性不落在任何元素上。`ref` 指向根元素，其 `focus()` 与 `blur()` 作用于输入框，使用自定义触发器时无效。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TimePickerSvelteApi />
+
+未声明的属性中，`class`、`style` 落在根元素上，其余（`id`、`title`、`aria-*`、`data-*`、原生事件等）落在内部输入框上；使用 `trigger` 自定义触发器时，这些属性不落在任何元素上，可通过 `componentProps` 取用。
+
+通过组件实例调用 `focus()`、`blur()`，使用自定义触发器时无效。
 
 </Framework>
 

@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property         | Description                                                                                                                                                 | Type                                                                     | Default |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
+| error            | The error. A string is shown as it is, an array merges its errors; true only shows the error container without text; false and empty values render nothing. | `FieldError`                                                             | -       |
+| errorContent     | Custom rendering of the error, with `{ error }`.                                                                                                            | <ApiType detail={"Snippet\u003c[{ error: FieldError }]>"}>Type</ApiType> | -       |
+| errorMessageId   | The id of the error text element, for aria-errormessage to refer to.                                                                                        | `string`                                                                 | -       |
+| helpText         | Help text, shown when there is no error, in the same block as the error.                                                                                    | `Snippet`                                                                | -       |
+| helpTextId       | The id of the help text element, for aria-describedby to refer to.                                                                                          | `string`                                                                 | -       |
+| isInInputGroup   | Whether it sits in an InputGroup; with true and showValidateIcon true, the error icon shows whatever validateStatus is.                                     | `boolean`                                                                | -       |
+| showValidateIcon | Whether the icon of validateStatus shows.                                                                                                                   | `boolean`                                                                | -       |
+| validateStatus   | Validation status of the message: default, error, warning or success.                                                                                       | `ValidateStatus`                                                         | -       |

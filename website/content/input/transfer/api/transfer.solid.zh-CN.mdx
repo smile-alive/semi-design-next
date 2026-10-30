@@ -12,6 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | filter | 筛选逻辑。为 `false` 时不显示搜索框；传入函数时自定义匹配，返回 `true` 表示保留该项；默认按 `label` 不区分大小写匹配。`treeList` 想自定义搜索时需设为 `true`，并通过 `treeProps` 的 `filterTreeNode` 传入匹配函数。 | <ApiType detail={"boolean \u007c ((searchValue: string, item: DataItem) => boolean)"}>Type</ApiType> | - |
 | inputProps | 传给搜索框 Input 的属性，可配置项参考 Input；`value` 与 `onChange` 由 Transfer 占用，需要外部驱动搜索时调用 ref 上的 `search` 方法。 | `InputProps` | - |
 | loading | 左侧选项是否正在加载，加载中显示 Spin 代替列表。 | `boolean` | - |
+| onBlur | 焦点从 Transfer 内部移到外部时触发一次，参数为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不触发，窗口失焦（`relatedTarget` 为空）时触发。 | <ApiType detail={"(e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => void"}>Type</ApiType> | - |
 | onChange | 选中值变化时触发，拖拽排序后也会触发。参数依次为 value 数组与对应的数据项数组。 | <ApiType detail={"(values: Array\u003cstring \u007c number>, items: Array\u003cDataItem>) => void"}>Type</ApiType> | - |
 | onDeselect | 取消勾选一项时触发，参数为该数据项。 | <ApiType detail={"(item: DataItem) => void"}>Type</ApiType> | - |
 | onSearch | 搜索框输入内容变化时触发，参数为搜索值。通过 ref 的 `search` 方法驱动的搜索不触发。 | <ApiType detail={"(searchValue: string) => void"}>Type</ApiType> | - |

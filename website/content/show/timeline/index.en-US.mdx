@@ -11,6 +11,7 @@ import TimelineVueApi from './api/timeline.vue.en-US.mdx';
 import TimelineItemVueApi from './api/timeline-item.vue.en-US.mdx';
 import TimelineSolidApi from './api/timeline.solid.en-US.mdx';
 import TimelineItemSolidApi from './api/timeline-item.solid.en-US.mdx';
+import TimelineSvelteApi from './api/timeline.svelte.en-US.mdx';
 
 ## Demos
 
@@ -44,7 +45,23 @@ import { Timeline } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Timeline } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
+
+<Framework only="svelte">
+
+The Svelte version has no `Timeline.Item`: write every node in `dataSource`. `time`, `extra` and `content` are strings or numbers, and `type` and `color` style the dot.
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -71,6 +88,12 @@ You can use the `#dot` slot to customize icon, `color` to customize color or sty
 <Framework only="solid">
 
 You can use `dot` to customize icon, `color` to customize color or pass in `children` with style.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can use the `dot` snippet of a `dataSource` item to customize the icon of that node and `color` to customize the dot color; nodes without `dot` draw the default circle. Style the node content through the `content` snippet. Use the `time` and `extra` snippets for the time and the extra content; both take the parameter `{ item, index }`.
 
 </Framework>
 
@@ -109,6 +132,12 @@ Items alternate by the children actually rendered: a child that is not rendered 
 <Framework only="solid">
 
 `content`, `time` and `extra` of a `dataSource` item accept only strings or numbers. For custom rendering, pass `renderContent`, `renderDot`, `renderTime` and `renderExtra`, called with `(item, index)`.
+
+</Framework>
+
+<Framework only="svelte">
+
+`content`, `time` and `extra` of a `dataSource` item accept only strings or numbers. For custom rendering, use the snippets `content`, `time` and `extra`, called with `{ item, index }`; for a custom dot, set the `dot` snippet of the item, which takes no argument.
 
 </Framework>
 
@@ -170,6 +199,29 @@ Fields of a `dataSource` item:
 
 </Framework>
 
+<Framework only="svelte">
+
+<TimelineSvelteApi />
+
+`class`, `style` (a string) and native attributes such as `id` and `aria-label` are passed to the root `ul`.
+
+Fields of a `dataSource` item:
+
+| Field    | Description                                                                                        | Type                                                          | Default   |
+| -------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | --------- |
+| content  | Node content; use the `content` snippet for custom content                                         | `string \| number`                                            | -         |
+| time     | Time text; use the `time` snippet for custom content                                               | `string \| number`                                            | -         |
+| extra    | Extra content; use the `extra` snippet for custom content                                          | `string \| number`                                            | -         |
+| dot      | Custom dot; the default circle is drawn when unset                                                 | `Snippet`                                                     | -         |
+| color    | Custom color of the dot                                                                            | `string`                                                      | -         |
+| type     | Mode of the dot                                                                                    | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | `default` |
+| position | Custom position of the node, overriding the mode of TimeLine                                       | `'left' \| 'right'`                                           | -         |
+| onClick  | Called when the node is clicked, with a `MouseEvent`; clicks in the `extra` area do not trigger it | `(event: MouseEvent) => void`                                 | -         |
+| class    | Class name of the `li`                                                                             | `ClassValue`                                                  | -         |
+| style    | Style string of the `li`                                                                           | `string`                                                      | -         |
+
+</Framework>
+
 ### TimeLine.Item
 
 <Framework only="react">
@@ -193,6 +245,12 @@ Other native attributes, such as `id`, are passed to the root `li` element. `onC
 <TimelineItemSolidApi />
 
 `class`, `style`, `ref` and native attributes are passed to the `li`. Listen to clicks with `onClick`; clicks in the `extra` area do not trigger it. With `onClick`, the content area has `role="button"` and `tabindex="0"` and responds to `Enter` and `Space`. A container is not rendered when its `time` or `extra` is empty.
+
+</Framework>
+
+<Framework only="svelte">
+
+The Svelte version has no `TimeLine.Item`: a node is an item of `dataSource`, with the fields in the table above. `class`, `style` and other `li` attributes are written in the item and land on the `li`. With `onClick`, the content area has `role="button"` and `tabindex="0"` and responds to `Enter` and `Space`. A container is not rendered when its `time` or `extra` is empty.
 
 </Framework>
 
@@ -240,6 +298,23 @@ Other native attributes, such as `id`, are passed to the root `li` element. `onC
     <Timeline.Item time="2015-09-01">Accident started</Timeline.Item>
     <Timeline.Item time="2015-09-01">Process</Timeline.Item>
 </Timeline>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Timeline } from '@fibrae/semi-ui-svelte';
+
+    const dataSource = [
+        { time: '2015-09-01', content: 'Accident started' },
+        { time: '2015-09-01', content: 'Process' },
+    ];
+</script>
+
+<Timeline aria-label="Accident timeline" {dataSource} />
 ```
 
 </Framework>

@@ -8,6 +8,7 @@ brief: The input box is automatically filled.
 import AutoCompleteReactApi from './api/auto-complete.react.en-US.mdx';
 import AutoCompleteVueApi from './api/auto-complete.vue.en-US.mdx';
 import AutoCompleteSolidApi from './api/auto-complete.solid.en-US.mdx';
+import AutoCompleteSvelteApi from './api/auto-complete.svelte.en-US.mdx';
 
 ## When to use
 
@@ -33,6 +34,12 @@ The difference with the searchable Select component:
 <Framework only="solid">
 
 - Select's selected item rendering (`renderSelectedItem`) can return any JSX element, while AutoComplete's `renderSelectedItem` only returns a string
+
+</Framework>
+
+<Framework only="svelte">
+
+- Select's selected item rendering can be any snippet content, while the `renderSelectedItem` of AutoComplete may only return a string
 
 </Framework>
 
@@ -66,6 +73,16 @@ import { AutoComplete } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AutoComplete } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 <Framework only="react">
@@ -83,6 +100,12 @@ Monitor user input through `@search`, pass input suggestions through `data`, and
 <Framework only="solid">
 
 Monitor user input through `onSearch`, pass input suggestions through `data`, and keep it controlled with `value` and `onChange`, which fires when the input box changes or an input item is selected
+
+</Framework>
+
+<Framework only="svelte">
+
+Monitor user input through `onSearch`, pass input suggestions through `data`, and keep the value with `bind:value`, which updates when the input box changes or an input item is selected. There is no `defaultValue`: a one-way `value={x}` only seeds the input, and `bind:value={get, set}` makes it fully controlled
 
 </Framework>
 
@@ -109,6 +132,13 @@ When you need to customize the rendering of candidates, data can be passed in an
 
 </Framework>
 
+<Framework only="svelte">
+
+When you need to customize the rendering of candidates, data can be passed in an array of objects (each Object contains two keys, label and value; value is the value selected by the candidate, and label is the text displayed by the candidate, which falls back to value when missing)  
+The content of a candidate can be customized through the `item` snippet, which receives `{ item, index }`: `item` is the data item as given, so keep only data in the items and write the markup in the snippet
+
+</Framework>
+
 <Demo id="custom-render" />
 
 ### Remote search
@@ -128,6 +158,12 @@ Get user input value from `@search`, update `data` dynamically, update `loading`
 <Framework only="solid">
 
 Get the user input value from `onSearch` and update `data` dynamically
+
+</Framework>
+
+<Framework only="svelte">
+
+Get user input value from `onSearch`, update `data` dynamically, update `loading`
 
 </Framework>
 
@@ -214,6 +250,26 @@ Object items of `data`:
 | style    | Style of the candidate row                                       | `JSX.CSSProperties \| string` |
 
 Other fields are kept as they are and show up in the `renderItem` argument; with `onSelectWithObject` set, the object that `onSelect` receives keeps them too. Fields starting with `data-` land on the candidate row. A string or number item reaches `renderSelectedItem` as `{ value, label }`.
+
+</Framework>
+
+<Framework only="svelte">
+
+<AutoCompleteSvelteApi />
+
+`id`, `name`, and `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-label`, `aria-labelledby`, `aria-required` land on the input (`role="combobox"`), so a `<label for>` finds it. `class` (a string, array or object), `style` (a string), `data-*` and other undeclared attributes and event handlers (for example `onclick`) land on the root div, whose `tabindex` is fixed to `-1`; `onkeydown` runs after the component has handled the key. The lowercase `onfocus`, `onblur`, `onchange` and `onselect` are not native passthroughs; use the callbacks `onFocus`, `onBlur`, `onChange` and `onSelect`. With the `trigger` snippet there is no input: `id` lands on the root div, `name` lands nowhere, and the `aria-*` attributes reach the focusable element of the custom trigger through the `controlAttrs` parameter.
+
+Object items of `data`:
+
+| Field    | Description                                                                         | Type                        |
+| -------- | ----------------------------------------------------------------------------------- | --------------------------- |
+| value    | The value after picking                                                             | `string \| number`          |
+| label    | The text of the candidate, falling back to value; use the `item` snippet for markup | `string \| number`          |
+| disabled | Whether the candidate is disabled                                                   | `boolean`                   |
+| class    | Class of the candidate row                                                          | `string \| object \| array` |
+| style    | Style of the candidate row                                                          | `string`                    |
+
+Other fields are kept as they are and show up in `item` of the `item` snippet and in the payload of `onSelect` (when `onSelectWithObject` is set). Fields starting with `data-` land on the candidate row. A string or number item reaches `renderSelectedItem` as `{ value, label }`.
 
 </Framework>
 

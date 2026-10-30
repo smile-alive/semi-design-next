@@ -1,0 +1,61 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autofocus | 挂载时让输入框获得焦点，同时打开面板。 | `boolean` | `false` |
+| borderless | 无边框模式。 | `boolean` | `false` |
+| clearIcon | 自定义清除图标，showClear 为 true 时有效。 | `Snippet` | - |
+| disabled | 禁用全部操作。 | `boolean` | - |
+| disabledHours | 返回禁止选择的小时。 | <ApiType detail={"() => number[]"}>Type</ApiType> | - |
+| disabledMinutes | 按所选小时返回禁止选择的分钟。 | <ApiType detail={"(selectedHour: number) => number[]"}>Type</ApiType> | - |
+| disabledSeconds | 按所选小时和分钟返回禁止选择的秒。 | <ApiType detail={"(selectedHour: number, selectedMinute: number) => number[]"}>Type</ApiType> | - |
+| disabledTime | 仅范围模式生效：按当前值与面板位置返回左右面板各自的禁用规则。value 中未选的一侧为 undefined；返回的 disabledHours、disabledMinutes、disabledSeconds 覆盖对应的同名属性，未返回的回退到同名属性。 | <ApiType detail={"(value: (Date \u007c undefined)[], panelType: PanelType) => DisabledTimeFns"}>Type</ApiType> | - |
+| focusOnOpen | 挂载后让输入框获得焦点并选中内容，同时打开面板。 | `boolean` | `false` |
+| format | 展示的时间格式，遵循 date-fns 的 format；use12Hours 时默认为 a h:mm:ss，否则为 HH:mm:ss。 | `string` | - |
+| hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `false` |
+| hourStep | 小时选项的间隔，必须是正整数。 | `number` | - |
+| inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘。 | `boolean` | `false` |
+| inputStyle | 输入框根元素的样式。 | `string` | - |
+| insetLabel | 输入框的内嵌标签。 | `Snippet` | - |
+| insetLabelId | insetLabel 的 id，用于 aria-labelledby 关联。 | `string` | - |
+| minuteStep | 分钟选项的间隔，必须是正整数。 | `number` | - |
+| motion | 是否展示弹出层动画。 | `boolean` | `true` |
+| onBlur | 点击外部关闭面板时触发，参数为该次 mousedown 的原生事件；离开输入框不触发。 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | 时间变化时触发，参数为 (Date 值, 格式化字符串)，范围模式下两者都是数组；清除后单选为 undefined，范围为空数组，范围中未选的一侧为 undefined。 | <ApiType detail={"(value: Date \u007c (Date \u007c undefined)[] \u007c undefined, str: string \u007c string[]) => void"}>Type</ApiType> | - |
+| onEnterPress | 输入框上按下 Enter 的回调。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onFocus | 输入框根元素获得焦点时触发；焦点在输入框与清除按钮之间移动不触发。 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onKeyDown | 输入框上的 keydown 回调。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onKeyUp | 输入框上的 keyup 回调。 | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onOpenChange | 面板打开或关闭时触发。 | <ApiType detail={"(open: boolean) => void"}>Type</ApiType> | - |
+| open | 面板是否打开，配合 bind:open 使用；undefined 视为非受控。 | `boolean` | - |
+| panel | 仅范围模式：同时作为第 index 个面板的头部和底部，有内容时优先于 panelHeader 与 panelFooter。 | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
+| panelFooter | 面板底部内容的 snippet，参数 index 为面板序号。 | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
+| panelHeader | 面板头部内容的 snippet，参数 index 为面板序号（单选为 0，范围为 0 或 1）。范围模式下未提供时显示语言包的「开始时间」「结束时间」。 | <ApiType detail={"Snippet\u003c[TimePickerPanelSnippetProps]>"}>Type</ApiType> | - |
+| placeholder | 没有值时显示的提示，默认按 type 取语言包文案。 | `string` | - |
+| popupClassName | 弹出层的类名。 | `ClassValue` | - |
+| popupStyle | 弹出层的样式，字符串。 | `string` | - |
+| position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。 | `Position` | - |
+| prefix | 输入框的前缀内容。 | `Snippet` | - |
+| preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。 | `boolean` | - |
+| rangeSeparator | 时间范围的分隔符。 | `string` | `" ~ "` |
+| scrollItemProps | 传给各列的属性，只支持 cycled、mode、motion、transform，含义同 ScrollList 的 ScrollItem。 | `TimePickerScrollItemProps` | - |
+| secondStep | 秒选项的间隔，必须是正整数。 | `number` | - |
+| showClear | 是否展示清除按钮。 | `boolean` | `true` |
+| size | 输入框的大小。 | `InputSize` | - |
+| stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `true` |
+| timeZone | 时区，未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | - |
+| trigger | 自定义触发器的 snippet，替代默认的输入框，点击其中任意位置打开面板。参数含 value（未选的一侧为 undefined）、inputValue、placeholder、disabled、componentProps 与 onChange（更新输入框文本，效果同键入）。 | <ApiType detail={"Snippet\u003c[TimePickerTriggerRenderProps]>"}>Type</ApiType> | - |
+| type | 选择类型，time 为单个时间，timeRange 为时间范围。 | `TimePickerType` | `"time"` |
+| use12Hours | 使用 12 小时制。 | `boolean` | `false` |
+| validateStatus | 校验状态。 | `ValidateStatus` | - |
+| value | 当前时间，配合 bind:value 使用；type 为 timeRange 时为数组。传 null 是受控的空值，undefined 视为非受控。 | `TimePickerBaseValueType \| TimePickerBaseValueType[] \| null` | - |
+
+**Methods**
+
+| 方法  | 说明                                                 | 类型                                          |
+| ----- | ---------------------------------------------------- | --------------------------------------------- |
+| blur  | 移除输入框的焦点；自定义触发器时无效。               | <ApiType detail={"() => void"}>Type</ApiType> |
+| focus | 使输入框获得焦点，同时打开面板；自定义触发器时无效。 | <ApiType detail={"() => void"}>Type</ApiType> |

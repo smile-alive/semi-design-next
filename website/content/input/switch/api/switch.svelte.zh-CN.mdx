@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性          | 说明                                                                                                                                                  | 类型                                                                        | 默认值      |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------- |
+| checked       | 选中状态，可用 `bind:checked` 双向绑定。`bind:checked={get, set}` 时完全受控；只传 `checked` 时作为初值，点击在组件内覆盖，父级再传新值时以父级为准。 | `boolean`                                                                   | -           |
+| checkedText   | 选中时展示内容的 snippet，size 为 small 时不显示。                                                                                                    | `Snippet`                                                                   | -           |
+| disabled      | 是否禁用。                                                                                                                                            | `boolean`                                                                   | `false`     |
+| loading       | 是否处于加载中；加载中 input 仍可聚焦并带 `aria-disabled`，切换被忽略且不触发 onChange。                                                              | `boolean`                                                                   | `false`     |
+| onChange      | 切换状态时的回调，参数为新的选中状态与原生 change 事件；加载中不触发。                                                                                | <ApiType detail={"(checked: boolean, event: Event) => void"}>Type</ApiType> | -           |
+| size          | 开关尺寸，可选 large、default 或 small。                                                                                                              | `Size`                                                                      | `"default"` |
+| uncheckedText | 未选中时展示内容的 snippet，size 为 small 时不显示。                                                                                                  | `Snippet`                                                                   | -           |

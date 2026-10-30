@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | autoAdjustOverflow | Whether the dropdown flips automatically when it would be clipped. | `boolean` | `semiGlobalDefault("AutoComplete", "autoAdjustOverflow")` |
 | defaultActiveFirstOption | Whether the first candidate is highlighted when the panel opens, so that Enter picks it directly. | `boolean` | `semiDefault("AutoComplete", "defaultActiveFirstOption", false)` |
 | defaultOpen | Whether the dropdown panel is open on mount. | `boolean` | `semiGlobalDefault("AutoComplete", "defaultOpen")` |
-| disabled | Whether the component is disabled. | `boolean` | `semiGlobalDefault("AutoComplete", "disabled")` |
+| disabled | Whether the component is disabled. | `boolean` | `undefined` |
 | dropdownClassName | Class name of the dropdown list, applied to the role="listbox" element. | `string` | `semiGlobalDefault("AutoComplete", "dropdownClassName")` |
 | dropdownMatchSelectWidth | Whether the minimum width of the dropdown equals the width of the input. | `boolean` | `semiDefault("AutoComplete", "dropdownMatchSelectWidth", true)` |
 | dropdownStyle | Inline style of the dropdown list, applied to the role="listbox" element. | `StyleValue` | `semiGlobalDefault("AutoComplete", "dropdownStyle")` |
@@ -25,7 +25,7 @@ import ApiType from '#/components/ApiType.astro';
 | position | Position of the dropdown; the values are those of the Tooltip position. Unset, it is bottomLeft, or bottomRight when the ConfigProvider direction is rtl. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
 | renderSelectedItem | The text the input shows for a picked item; it must return a string. A string or number item receives `{ value, label }`, an object item the item itself. It stays a function prop because the foundation calls it outside rendering. | <ApiType detail={"((option: AutoCompleteSelectedItem\u003cT>) => string)"}>Type</ApiType> | `undefined` |
 | showClear | Whether to show the clear button when there is content. | `boolean` | `semiDefault("AutoComplete", "showClear", false)` |
-| size | Size of the input. | `Size` | `semiDefault("AutoComplete", "size", "default")` |
+| size | Size of the input. | `Size` | `undefined` |
 | stopPropagation | Whether click, mousedown and focus in/out events on the dropdown stop propagating. | `string \| boolean` | `semiDefault("AutoComplete", "stopPropagation", true)` |
 | validateStatus | Validation status; it only affects the style. | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
 

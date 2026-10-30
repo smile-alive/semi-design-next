@@ -9,8 +9,9 @@ export interface ComponentOrder {
     // Unlisted `use*` calls are opaque composables
     calls: Calls;
     // components: capitalised top-level functions; script-setup: an SFC's first <script setup>;
+    // svelte-script: a .svelte file's instance <script lang="ts"> (the one without `module`);
     // composables: top-level use* functions and defineComponent setups
-    targets: { kind: 'components' | 'script-setup' | 'composables'; pathspecs: string[] }[];
+    targets: { kind: 'components' | 'script-setup' | 'svelte-script' | 'composables'; pathspecs: string[] }[];
 }
 
 // Semi's host API and es-toolkit helpers: same name and meaning in every framework

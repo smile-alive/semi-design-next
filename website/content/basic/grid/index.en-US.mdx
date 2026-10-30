@@ -11,6 +11,8 @@ import RowVueApi from './api/row.vue.en-US.mdx';
 import ColVueApi from './api/col.vue.en-US.mdx';
 import RowSolidApi from './api/row.solid.en-US.mdx';
 import ColSolidApi from './api/col.solid.en-US.mdx';
+import RowSvelteApi from './api/row.svelte.en-US.mdx';
+import ColSvelteApi from './api/col.svelte.en-US.mdx';
 
 ## Overview
 
@@ -46,6 +48,16 @@ import { Col, Row } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Col, Row } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Col, Row } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -118,6 +130,14 @@ Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `
 
 </Framework>
 
+<Framework only="svelte">
+
+<RowSvelteApi />
+
+`class`, `style` and native attributes land on the root `<div>` of Row; the `style` string comes after the gutter variables, so your value wins.
+
+</Framework>
+
 <Framework only="vue">
 
 <RowVueApi />
@@ -141,6 +161,14 @@ Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `
 <ColReactApi />
 
 Other native attributes (such as `id`, `aria-*` and `data-*`) land on the root `<div>` of Col.
+
+</Framework>
+
+<Framework only="svelte">
+
+<ColSvelteApi />
+
+`class`, `style` and native attributes land on the root `<div>` of Col.
 
 </Framework>
 

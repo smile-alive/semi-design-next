@@ -1,0 +1,71 @@
+{
+    "name": "@fibrae/semi-ai-svelte",
+    "version": "0.1.1",
+    "description": "Semi AI components for Svelte: AIChatInput, AIChatDialogue, Chat and Sidebar.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/semi-ai-svelte"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "svelte": "./dist/index.js",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "svelte": "./dist/index.js",
+            "default": "./dist/index.js"
+        },
+        "./styles.css": "./dist/styles.css",
+        "./package.json": "./package.json",
+        "./*.svelte": {
+            "types": "./dist/*.svelte.d.ts",
+            "svelte": "./dist/*.svelte",
+            "default": "./dist/*.svelte"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "svelte": "./dist/*.js",
+            "default": "./dist/*.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.scss",
+        "*.css",
+        "*.svelte"
+    ],
+    "scripts": {
+        "build": "node ../../scripts/svelte-package.ts --bundles ai"
+    },
+    "dependencies": {
+        "@fibrae/semi-ai-foundation": "workspace:*",
+        "@fibrae/semi-foundation": "workspace:*",
+        "@fibrae/semi-icons-svelte": "workspace:*",
+        "@fibrae/semi-illustrations-svelte": "workspace:*",
+        "@fibrae/semi-ui-svelte": "workspace:*",
+        "@tiptap/core": "catalog:",
+        "@tiptap/pm": "catalog:",
+        "es-toolkit": "catalog:"
+    },
+    "peerDependencies": {
+        "svelte": "catalog:peer"
+    },
+    "devDependencies": {
+        "@sveltejs/package": "catalog:",
+        "@sveltejs/vite-plugin-svelte": "catalog:",
+        "@testing-library/svelte": "catalog:",
+        "@tiptap/extension-document": "catalog:",
+        "@tiptap/extension-paragraph": "catalog:",
+        "@tiptap/extension-text": "catalog:",
+        "svelte": "catalog:",
+        "svelte-check": "catalog:",
+        "typescript": "catalog:"
+    }
+}

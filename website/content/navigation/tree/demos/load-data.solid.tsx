@@ -35,7 +35,7 @@ function updateTreeData(list: TreeNodeData[], key: string | undefined, children:
 export default function TreeDemo() {
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>(initialData);
 
-    function onLoadData(treeNode?: TreeNodeData) {
+    const onLoadData = (treeNode?: TreeNodeData) => {
         const key = treeNode?.key;
         return new Promise<void>((resolve) => {
             if (treeNode?.children) {
@@ -58,7 +58,7 @@ export default function TreeDemo() {
                 resolve();
             }, 1000);
         });
-    }
+    };
 
     return <Tree loadData={onLoadData} treeData={treeData()} />;
 }

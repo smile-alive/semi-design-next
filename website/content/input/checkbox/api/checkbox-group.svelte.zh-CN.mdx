@@ -1,0 +1,19 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                                                           | 类型                                                                               | 默认值       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ------------ |
+| children   | 组内的 Checkbox；设置 options 时忽略。                                                                                         | `Snippet`                                                                          | -            |
+| direction  | 组内布局方向，可选 horizontal 或 vertical。                                                                                    | `CheckboxDirection`                                                                | `"vertical"` |
+| disabled   | 是否禁用整组。                                                                                                                 | `boolean`                                                                          | `false`      |
+| extra      | 自定义 options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。                                                        | <ApiType detail={"Snippet\u003c[CheckboxGroupOptionSnippetProps]>"}>Type</ApiType> | -            |
+| label      | 自定义 options 中每一项文本的 snippet，参数为 `{ option, index }`。                                                            | <ApiType detail={"Snippet\u003c[CheckboxGroupOptionSnippetProps]>"}>Type</ApiType> | -            |
+| name       | 组内所有原生 input 的 name；未设置时每组生成唯一值。                                                                           | `string`                                                                           | -            |
+| onBlur     | 焦点离开整个分组时的回调，在组内 Checkbox 之间移动焦点不触发。                                                                 | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType>                     | -            |
+| onChange   | 选中的值变化时的回调，参数为新的选中值数组。                                                                                   | <ApiType detail={"(value: CheckboxValue[]) => void"}>Type</ApiType>                | -            |
+| onfocusout | 根元素的 focusout 事件回调，先于 onBlur 调用。                                                                                 | <ApiType detail={"FocusEventHandler\u003cT> \u007c null"}>Type</ApiType>           | -            |
+| options    | 以配置形式声明选项，元素为字符串或 `{ label, value, disabled, extra, class, style }`，其中 `style` 为字符串。                  | <ApiType detail={"Array\u003cstring \u007c CheckboxOptionItem>"}>Type</ApiType>    | -            |
+| prefixCls  | CSS 类名前缀。                                                                                                                 | `string`                                                                           | -            |
+| type       | 组内所有 Checkbox 的样式类型，可选 default、card、pureCard。                                                                   | `CheckboxType`                                                                     | `"default"`  |
+| value      | 选中的值，可用 `bind:value` 双向绑定，与 Checkbox 的 value 匹配。`bind:value={get, set}` 时完全受控；只传 `value` 时作为初值。 | `CheckboxValue[]`                                                                  | -            |

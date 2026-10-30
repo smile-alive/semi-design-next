@@ -14,6 +14,7 @@ import SelectOptGroupVueApi from './api/select-opt-group.vue.zh-CN.mdx';
 import SelectSolidApi from './api/select.solid.zh-CN.mdx';
 import SelectOptionSolidApi from './api/select-option.solid.zh-CN.mdx';
 import SelectOptGroupSolidApi from './api/select-opt-group.solid.zh-CN.mdx';
+import SelectSvelteApi from './api/select.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -50,7 +51,35 @@ import { Select } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Select } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte 版没有 `Select.Option` 与 `Select.OptGroup`：子组件的数据在服务端首帧和键盘导航、过滤、全选里都读不到，选项只来自 `optionList`，分组写在条目的 `group` 字段上。
+
+</Framework>
+
+<Framework only="react">
+
 <Notice title="注意">Select的直接子元素必须为 Option 或者 OptGroup，不允许为其他Element；Fragment 会被展开</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice title="注意">Select的直接子元素必须为 Option 或者 OptGroup，不允许为其他Element；Fragment 会被展开</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice title="注意">Select的直接子元素必须为 Option 或者 OptGroup，不允许为其他Element；Fragment 会被展开</Notice>
+
+</Framework>
 
 ### 基本使用
 
@@ -72,6 +101,12 @@ import { Select } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+选项写在 `optionList` 里，每个条目必须声明 `value`，`label` 是选项的文本。单向传入 `value="douyin"` 只作初值，要读写选中值用 `bind:value`
+
+</Framework>
+
 <Demo id="basic" />
 
 ### 以数组形式传入 Option
@@ -81,6 +116,12 @@ import { Select } from '@fibrae/semi-ui-solid';
 <Framework only="vue">
 
 `label` 只接受字符串或数字；带标记的选项内容写在 `Select.Option` 的默认插槽里。
+
+</Framework>
+
+<Framework only="svelte">
+
+`label` 只接受字符串或数字；带标记的选项文字用 `optionLabel` snippet，见下文「自定义候选项渲染」。
 
 </Framework>
 
@@ -118,6 +159,12 @@ import { Select } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+配置 `max` 属性可限制最大可选的数量，超出最大限制数量后无法选中，同时会触发 `onExceed` 回调
+
+</Framework>
+
 <Demo id="multiple" />
 
 ### 分组
@@ -137,6 +184,12 @@ import { Select } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 用 `Select.OptGroup` 进行分组（分组功能仅支持通过 children 声明选项使用，不支持 optionList 方式传入）。分组标题用 `label` 属性，只接受文本
+
+</Framework>
+
+<Framework only="svelte">
+
+在 `optionList` 的条目上写 `group: { key, label }` 分组：同一组的条目必须相邻，`key` 相同的相邻条目归为一组，`label` 是分组标题，没有 `label` 的分组不渲染标题。分组渲染为 `role="group"`，以标题为名称。搜索时没有可见选项的分组整组隐藏，搜索词命中分组标题时显示该组全部选项。用 `groupLabel` snippet 定制标题内容，参数为 `{ group }`，不传时显示 `group.label`。开启 `virtualize` 时不渲染分组标题与 `role="group"`，选项按顺序平铺
 
 </Framework>
 
@@ -198,6 +251,13 @@ validateStatus: default / warning / error
 
 </Framework>
 
+<Framework only="svelte">
+
+- 可以通过 `prefix` snippet 传入选择框前缀，通过 `suffix` snippet 传入选择框后缀，可以为文本或者节点  
+  当 snippet 内容为文本或者 Icon 时，会自动带上左右间隔，若为自定义节点，则左右间隔为 0
+
+</Framework>
+
 - 通过`showClear`控制清除按钮是否展示
 - 通过`showArrow`控制右侧下拉箭头是否展示
 
@@ -211,6 +271,12 @@ validateStatus: default / warning / error
 <Framework only="vue">
 
 在 Vue 中它们是同名的具名插槽，写作 `#innerBottomSlot`、`#outerBottomSlot`、`#innerTopSlot`、`#outerTopSlot`。
+
+</Framework>
+
+<Framework only="svelte">
+
+在 Svelte 中它们是同名的 snippet，写作 `{#snippet innerBottomSlot()}...{/snippet}`，其余三个同理。
 
 </Framework>
 
@@ -243,6 +309,12 @@ validateStatus: default / warning / error
 
 </Framework>
 
+<Framework only="svelte">
+
+用 `bind:value={x}` 双向同步所选中的值；`bind:value={() => x, (next) => { ... }}` 函数绑定下 Select 完全受控，setter 可以拒绝或改写。单向 `value={x}` 只作初值。不提供 `defaultValue`。
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### 动态修改 Options
@@ -265,6 +337,12 @@ validateStatus: default / warning / error
 
 </Framework>
 
+<Framework only="svelte">
+
+如果需要动态更新 Options，应该使用 `bind:value`，或在 `onChange` 里把值写回
+
+</Framework>
+
 <Demo id="dynamic-options" />
 
 ### 联动
@@ -284,6 +362,12 @@ validateStatus: default / warning / error
 <Framework only="solid">
 
 使用受控 value，实现不同 Select 之间的联动。如果是带有层级关系的复杂联动建议直接使用`Cascader`组件
+
+</Framework>
+
+<Framework only="svelte">
+
+用 `bind:value` 或在 `onChange` 里写回，实现不同 Select 之间的联动。如果是带有层级关系的复杂联动建议直接使用`Cascader`组件
 
 </Framework>
 
@@ -325,6 +409,12 @@ validateStatus: default / warning / error
 <Framework only="solid">
 
 使用受控的 value 属性，通过 `onSearch` 获取搜索内容
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `bind:value`，通过 `onSearch` 获取搜索内容；传 `emptyContent={null}` 隐藏空状态
 
 </Framework>
 
@@ -376,6 +466,18 @@ validateStatus: default / warning / error
 
 </Framework>
 
+<Framework only="svelte">
+
+默认情况下，选中选项后会将选项的 `label` 回填到选择框中  
+但你可以通过 snippet 自定义选择框中已选项的渲染结构，参数为 `{ option, index, disabled, onClose }`
+
+- `selectedItem`：单选时替换选择框中显示的内容；多选时只替换内置标签里的内容，标签仍带有背景色以及关闭按钮
+- `tag`：多选时替换整个标签，同时提供时优先于 `selectedItem`
+- 调用 `onClose` 移除该选项，单选时清空选中值
+- 写在 `optionList` 条目上的其他字段（如示例中的 `email`、`avatar`）会随 `option` 一起传入
+
+</Framework>
+
 <Demo id="render-selected-item" />
 
 ### 自定义弹出层样式
@@ -402,6 +504,13 @@ validateStatus: default / warning / error
 </Framework>
 
 <Framework only="solid">
+
+默认情况下`onChange`只能拿到 value，如果需要拿选中节点的其他属性，可以使用`onChangeWithObject`属性  
+此时`onChange`函数的入参将会是 object，包含 option 的各种属性，例如 `onChange({ value, label, ...rest })`
+
+</Framework>
+
+<Framework only="svelte">
 
 默认情况下`onChange`只能拿到 value，如果需要拿选中节点的其他属性，可以使用`onChangeWithObject`属性  
 此时`onChange`函数的入参将会是 object，包含 option 的各种属性，例如 `onChange({ value, label, ...rest })`
@@ -438,6 +547,16 @@ validateStatus: default / warning / error
 
 </Framework>
 
+<Framework only="svelte">
+
+<Notice title='注意'>
+
+当 onChangeWithObject 置为 true 时，`value` 也应为 object，且须带有 `value`、`label` key
+
+</Notice>
+
+</Framework>
+
 <Demo id="on-change-with-object" />
 
 ### 创建条目
@@ -459,6 +578,12 @@ validateStatus: default / warning / error
 <Framework only="solid">
 
 允许通过 `renderCreateItem` 自定义创建标签时的内容显示（通过返回 JSX 元素，注意你需要自定义样式），不提供时显示语言包中的「创建」加输入内容。函数的参数为 `(inputValue, isFocus, style)`，与虚拟化结合使用时必须把 `style` 用在自定义元素上
+
+</Framework>
+
+<Framework only="svelte">
+
+允许通过 `createItem` snippet 自定义创建标签时的内容显示（注意你需要自定义样式，与虚拟化结合使用时必须把 `style` 用在自定义元素上），参数为 `{ inputValue, focus, style }`，不提供时显示语言包中的「创建」加输入内容。创建选项时触发 `onCreate`
 
 </Framework>
 
@@ -547,6 +672,27 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+如果 Select 默认的触发器样式满足不了你的需求，可以用 `trigger` snippet 自定义选择框的内容  
+如果想保留搜索筛选能力，又不希望自己渲染 Input 相关的结构，可以同时通过 searchPosition='dropdown'，将默认的搜索框置于下拉列表中
+
+`trigger` 的参数如下
+
+```typescript
+interface SelectTriggerSnippetProps {
+    value: SelectOptionProps[]; // 当前所有已选中的 option
+    inputValue: string; // 当前搜索关键字
+    placeholder?: string; // Select 的 placeholder
+    disabled: boolean; // 是否禁用 Select
+    onSearch: (inputValue: string) => void; // 更新搜索关键字，用于把自定义 Input 的值同步给 Select 内部。需同时设置 filter
+    onClear: (event?: MouseEvent) => void; // 清空已选值。绑在触发器内的控件上时传入点击事件，避免这次点击重新打开下拉列表
+    onRemove: (option: SelectOptionProps) => void; // 移除单个已选项，option 至少需带有 label、value
+}
+```
+
+</Framework>
+
 <Demo id="trigger-render" />
 
 下例是更复杂的例子：复用了 TagInput 拖拽排序能力，通过自定义触发器为 Select 增加排序
@@ -591,6 +737,19 @@ interface TriggerRenderProps {
     3. 选中(selected)、聚焦(focused)、禁用(disabled)等状态的样式需自行加上，你可以从入参中获取到相对的 boolean 值
     4. 点击选中需要把入参的 `onClick` 绑定到 wrapper dom 上
     5. 入参的 `id` 需与 `role="option"`、`aria-selected`、`aria-disabled` 一起写在 wrapper dom 上：Select 的 `aria-activedescendant` 指向该 id，读屏才能读出方向键移到的候选项；打开下拉或方向键移动时也按该 id 把候选项滚进列表可视区
+
+</Framework>
+
+<Framework only="svelte">
+
+- 简单的自定义：通过 `optionLabel` snippet 只替换选项行里的文字，参数为 `{ option }`。选中图标、行的 `role="option"`、选中与禁用状态、点击和键盘行为都保持不变，内容会自动带上内边距、背景色等样式。选项的 `label` 仍用于搜索、回填触发器和可访问名称；`optionLabel` 里的内容不会高亮搜索关键字
+- 完全自定义：通过 `optionItem` snippet，你可以完全接管列表中候选项的渲染，并且从参数中，获取到相关的状态值。实现更高自由度的结构渲染  
+  参数为 `{ id, value, label, selected, focused, disabled, inputValue, class, style, onclick, onmouseenter }`，以及写在 `optionList` 条目上的其他字段，注意事项：
+    1. 参数中的 `style` 需在 wrapper dom 上进行消费，否则在虚拟化场景下会无法正常使用
+    2. 参数中的 `class`、`onmouseenter` 需在 wrapper dom 上进行消费，否则上下键盘操作时显示会有问题
+    3. 选中(selected)、聚焦(focused)、禁用(disabled)等状态的样式需自行加上，你可以从参数中获取到相对的 boolean 值
+    4. 点击选中需要把参数中的 `onclick` 绑定到 wrapper dom 上
+    5. 参数中的 `id` 需与 `role="option"`、`aria-selected`、`aria-disabled` 一起写在 wrapper dom 上：Select 的 `aria-activedescendant` 指向该 id，读屏才能读出方向键移到的候选项；打开下拉或方向键移动时也按该 id 把候选项滚进列表可视区
 
 </Framework>
 
@@ -669,6 +828,14 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+<SelectSvelteApi />
+
+`class`、`style`、`data-*` 与原生属性和事件落在根元素上，`style` 不会传给下拉弹出层（用 `dropdownStyle`）；设置 `trigger` 后根元素不再带有 Select 自身的样式类。`aria-label`、`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 落在 combobox 上；可搜索时搜索框挂载后它就是 combobox，这些属性随之移过去。
+
+</Framework>
+
 ### Option Props
 
 ---
@@ -703,6 +870,24 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+> **选项以 value 作为标识，同一个 Select 内 value 不应重复；label 可以重复**
+
+Svelte 版的选项是 `optionList` 的条目，没有 `Select.Option` 子组件。条目的字段如下，`class`、`style`、`data-*` 落在选项行上；其他字段不会进入 DOM，随选项记录在 `onSelect`、`onDeselect`、`selectedItem`、`tag`、`optionItem` 与 `optionLabel` 中，以及开启 `onChangeWithObject` 后的 `onChange` 入参中回传。
+
+| 字段     | 说明                                                            | 类型                                                  | 默认值 |
+| -------- | --------------------------------------------------------------- | ----------------------------------------------------- | ------ |
+| value    | 选项的值，作为标识                                              | string \| number                                      | -      |
+| label    | 选项的文本，用于显示、搜索与回调                                | string \| number                                      | -      |
+| disabled | 是否禁用该选项                                                  | boolean                                               | false  |
+| showTick | 选中时是否显示勾选图标                                          | boolean                                               | true   |
+| group    | 所属分组，同一分组的条目必须相邻；没有 `label` 的分组不渲染标题 | `{ key: string \| number; label?: string \| number }` | -      |
+| class    | 选项行的类名                                                    | ClassValue                                            | -      |
+| style    | 选项行的样式，字符串                                            | string                                                | -      |
+
+</Framework>
+
 ### OptGroup Props
 
 ---
@@ -728,6 +913,12 @@ interface TriggerRenderProps {
 <SelectOptGroupSolidApi />
 
 `Select.OptGroup` 在 Select 内部只被读取，自身不渲染。`class`、`style`、`id` 与其他未声明的属性落在分组标题元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 版没有 `Select.OptGroup`，分组写在 `optionList` 条目的 `group` 字段上（见上文「分组」）；分组标题用 `groupLabel` snippet 定制，标题元素带有 `x-semi-prop="groupLabel"`。
 
 </Framework>
 
@@ -803,6 +994,34 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+Select 经 `bind:this` 取得组件实例，调用下列方法：
+
+| 方法                                 | 说明                                                                                                                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| open()                               | 手动展开下拉列表                                                                                                                                                                     |
+| close()                              | 手动关闭下拉列表                                                                                                                                                                     |
+| focus()                              | 手动聚焦：可搜索时聚焦搜索框并展开下拉列表，否则聚焦触发器，不展开                                                                                                                   |
+| clearInput()                         | 手动清空搜索框的值                                                                                                                                                                   |
+| selectAll()                          | 选中所有可见且未禁用的选项，仅多选时有效                                                                                                                                             |
+| deselectAll()                        | 清空所有已选项                                                                                                                                                                       |
+| search(value: string, event?: Event) | 按输入了该值来搜索，该值会被置给搜索框；不传事件时 `onSearch` 的第二个参数为 undefined                                                                                               |
+| rePosition()                         | 按触发器当前位置立即重新计算下拉层位置；下拉层已随滚动、窗口尺寸变化、触发器移动以及触发器或列表的尺寸变化自动重新定位，一般无需调用；跟随触发器移动会晚一帧，需要同一帧内对齐时调用 |
+
+```svelte
+<script lang="ts">
+    import { Select } from '@fibrae/semi-ui-svelte';
+
+    let select = $state<Select>();
+</script>
+
+<Select bind:this={select} />
+<button onclick={() => select?.open()}>打开</button>
+```
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -815,7 +1034,7 @@ function App() {
 - combobox 具有 aria-haspopup、aria-expanded、aria-controls 属性，表示它与弹出层的关系
 - 多选时，listbox aria-multiselectable 为 true，表示当前可以多选
 - Option 选中时，aria-selected 为 true；当 Option 禁用时，aria-disabled 为 true
-- 带 label 的 OptGroup 中的选项位于 `role="group"` 内，以分组标题为名称（`aria-labelledby`），读屏会读出选项所属的分组；虚拟列表不显示分组标题，不包分组
+- 带 label 的分组（`Select.OptGroup`，Svelte 为 `optionList` 的 `group`）中的选项位于 `role="group"` 内，以分组标题为名称（`aria-labelledby`），读屏会读出选项所属的分组；虚拟列表不显示分组标题，不包分组
 - 下拉打开时，属性 aria-activedescendant 指向键盘聚焦的 option，保证在朗读旁白时识别到当前的选择的 option；完全自定义候选项渲染时请把参数中的 `id` 写在 option 元素上(更多用法请参考[Managing Focus in Composites Using aria-activedescendant](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_activedescendant))
 
 ### 键盘和焦点

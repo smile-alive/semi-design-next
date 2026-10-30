@@ -26,7 +26,9 @@ for (const [index, config] of configs.entries()) {
     const tool = frameworks.find((framework) => framework.files.some((glob) => path.matchesGlob(config, glob)))?.typecheck ?? 'tsc';
     console.log(`[${index + 1}/${configs.length}] ${tool} -p ${config}`);
     const start = performance.now();
-    const { status, error } = spawnSync(tool, ['-p', config, '--noEmit'], { stdio: 'inherit' });
+    // svelte-check takes warnings (template a11y) as failures and has no -p or --noEmit
+    const args = tool === 'svelte-check' ? ['--tsconfig', config, '--fail-on-warnings'] : ['-p', config, '--noEmit'];
+    const { status, error } = spawnSync(tool, args, { stdio: 'inherit' });
     if (error) throw error;
     if (status !== 0) failed.push(config);
     console.log(`${status === 0 ? 'PASS' : 'FAIL'} ${config} ${seconds(start)}`);

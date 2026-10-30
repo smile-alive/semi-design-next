@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                           | Type                                                                      | Default    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------- |
+| item        | Snippet for the content of every avatar, with the parameter `{ item, index }`; it takes precedence over the item's own `children`.    | <ApiType detail={"Snippet\u003c[AvatarGroupItemContext]>"}>Type</ApiType> | -          |
+| items       | Data of the avatars in the group; each item holds the props of an Avatar, and the group's `size` and `shape` override the item's own. | `AvatarGroupItem[]`                                                       | `[]`       |
+| maxCount    | Maximum number of visible avatars; overflow is shown as +N.                                                                           | `number`                                                                  | -          |
+| more        | Snippet for a custom overflow label, with the parameter `{ restNumber, restAvatars }`: the remaining count and the hidden items.      | <ApiType detail={"Snippet\u003c[AvatarGroupMoreContext]>"}>Type</ApiType> | -          |
+| overlapFrom | Avatar overlap direction: start or end.                                                                                               | `AvatarGroupOverlapFrom`                                                  | `"start"`  |
+| shape       | Shape of the avatars in the group.                                                                                                    | `AvatarGroupShape`                                                        | `"circle"` |
+| size        | Size of the avatars in the group.                                                                                                     | `string`                                                                  | `"medium"` |

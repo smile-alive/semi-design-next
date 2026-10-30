@@ -1,0 +1,10 @@
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| components | Overrides Markdown elements and adds the custom components MDX sources refer to. Values are Svelte components or HTML tag names; an element key such as h1 takes a component or its own tag name. Merged over MarkdownRender.defaultComponents; a change only renders again, it does not compile again. Besides the `children` snippet, a component receives `node`, the compiled element. | `MarkdownRenderComponents` | - |
+| format | Format of raw: md is plain Markdown, mdx allows embedded JSX. Compiles again on change. | `'md' \| 'mdx'` | `"mdx"` |
+| raw | Markdown or MDX source text. Compiles again on change. | `string` | - |
+| rehypePlugins | Custom Rehype plugins. Compiles again when an entry changes. | `MarkdownRenderBaseProps['rehypePlugins']` | - |
+| remarkGfm | Whether to enable GitHub GFM syntax. Compiles again on change. | `boolean` | `true` |
+| remarkPlugins | Custom Remark plugins. Compiles again when an entry changes. | `MarkdownRenderBaseProps['remarkPlugins']` | - |

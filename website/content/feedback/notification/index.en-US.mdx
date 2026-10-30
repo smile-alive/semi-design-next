@@ -41,6 +41,18 @@ Static methods render outside the component tree. They read `Notification.config
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Notification } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+The static methods can only be called in the browser (calling them on the server throws); call them in event handlers. They read `Notification.config()`, the global defaults and the default locale, and do not inherit the ConfigProvider or LocaleProvider of their position; use `Notification.useNotification()` when you need those.
+
+</Framework>
+
 ### Basic Usage
 
 Close after 3 seconds.
@@ -78,6 +90,12 @@ Use with Typography to create operation links for more complicated situations.
 <Framework only="solid">
 
 `title`, `content` and `icon` accept JSX elements or functions returning JSX; the demo below builds its JSX on click, so each notification gets fresh nodes.
+
+</Framework>
+
+<Framework only="svelte">
+
+`title`, `content` and `icon` accept a string or a snippet: define it with `{#snippet}` in the component and pass it in; components such as Typography can be used directly inside the snippet.
 
 </Framework>
 
@@ -124,6 +142,12 @@ Use `Notification.useNotification()` to create a Holder that can access context.
 <Framework only="solid">
 
 Use `Notification.useNotification()` to create a `contextHolder` and place it where the context should be inherited. Call the hook below the Provider you need: notifications render where `contextHolder` is placed, inherit the context, ConfigProvider and locale there, and enter and leave with the same animations as the static methods. A function passed as `content`, `icon` or `title` is rendered inside the notification and can read the context of that position; JSX created in an event handler has no owner, so it cannot read context.
+
+</Framework>
+
+<Framework only="svelte">
+
+Call `Notification.useNotification()` during component initialization: notifications inherit the context, ConfigProvider and locale of the calling component, no Holder is needed, and they enter and leave with the same animations as the static methods. They are mounted under `document.body` and removed when the calling component is destroyed. A snippet passed as `content`, `icon` or `title` can call `getContext` to read the calling component's context.
 
 </Framework>
 
@@ -221,6 +245,32 @@ Close Manually (`id` is the return value of the display methods)
 
 </Framework>
 
+<Framework only="svelte">
+
+| Property          | Description                                                                                                                                                                                                | Type                      | Default             |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------- |
+| class             | Class name of the notification element                                                                                                                                                                     | string \| object \| array |                     |
+| content           | Content, a string or a snippet; the snippet is rendered inside the notification                                                                                                                            | string \| Snippet         | ''                  |
+| direction         | Text direction. A per-notification option only, not part of the global configuration; follows ConfigProvider when omitted                                                                                  | `ltr` \| `rtl`            |                     |
+| duration          | Automatic close delay in seconds; 0 disables auto-close                                                                                                                                                    | number                    | 3                   |
+| getPopupContainer | The parent DOM node the popup renders into; it needs `position: relative`. This changes where the popup sits in the DOM tree, not where it is shown. Only takes effect when the container is first created | () => HTMLElement         | () => document.body |
+| icon              | Icon at the top left, a string or a snippet                                                                                                                                                                | string \| Snippet         |                     |
+| id                | Custom notification id; updates the content when a notification with the same id exists                                                                                                                    | string                    |                     |
+| position          | Pop-up position, one of `top`, `bottom`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`                                                                                                                | string                    | `topRight`          |
+| showClose         | Whether to show the close button                                                                                                                                                                           | boolean                   | true                |
+| stack             | Stack the notifications at one position once there are more than this many; `true` means 3, `false` never stacks. The newest notification at the position decides                                          | boolean \| number         | false               |
+| style             | Inline style of the notification element, a string only                                                                                                                                                    | string                    |                     |
+| theme             | Style of background fill, one of `light`, `normal`                                                                                                                                                         | string                    | `normal`            |
+| title             | Title, a string or a snippet                                                                                                                                                                               | string \| Snippet         | ''                  |
+| zIndex            | Z-index value. Applied each time a notification is shown.                                                                                                                                                  | number                    | 1010                |
+| onClick           | Called when the notification is clicked; lands on the notification element                                                                                                                                 | (e: MouseEvent) => void   |                     |
+| onClose           | Called when the notification closes, automatically or manually, once per close                                                                                                                             | () => void                |                     |
+| onCloseClick      | Called when the close button is clicked                                                                                                                                                                    | (id: string) => void      |                     |
+
+`class`, `style` and native attributes and events (such as `aria-*` and `data-*`) land on the root `div` of the notification. `onClick`, `onClose` and `onCloseClick` keep their key names in the options; pass functions directly.
+
+</Framework>
+
 The global configuration is set before any method call, and takes effect only once:
 
 - `Notification.config(config)`
@@ -263,6 +313,13 @@ Hook Notification
 
 - `Notification.useNotification()`  
   Returns a tuple `[notification, contextHolder]`; place `contextHolder` in the corresponding node. Notifications created by the hook can access the context where `contextHolder` is placed. The notification object has the methods `info`, `success`, `warning`, `error`, `open` and `close`; the first five take the options without `type`, `id`, `zIndex` and `getPopupContainer` and return the notification id, and `close(id)` closes one manually. Notifications created by the hook use the built-in and global defaults and ignore `Notification.config()`; `close(id)` removes the notification after its leave animation without calling `onClose`. `contextHolder` is wrapped in a container with `data-semi-keep-interactive`, so hook notifications stay interactive while a modal layer is open.
+
+</Framework>
+
+<Framework only="svelte">
+
+- `Notification.useNotification()`  
+  Call it during component initialization; it returns the notification object. Notifications created through it can access the context of the calling component. The notification object has the methods `info`, `success`, `warning`, `error`, `open` and `close`; the first five take the options without `type`, `id`, `zIndex` and `getPopupContainer` and return the notification id, and `close(id)` closes one manually. Notifications created by the hook use the built-in defaults and ignore `Notification.config()`; `close(id)` removes the notification after its leave animation without calling `onClose`. The values of ConfigProvider and LocaleProvider cannot be read by the static `Notification`; use `useNotification()` when you need them.
 
 </Framework>
 

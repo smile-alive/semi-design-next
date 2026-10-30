@@ -18,14 +18,14 @@
         border: 'var(--semi-color-border) 1px solid',
     };
 
-    function onResizeStart() {
+    const onResizeStart = () => {
         Toast.info(opts_1);
-    }
+    };
 
-    function onResizeEnd() {
+    const onResizeEnd = () => {
         Toast.info(opts);
         text.value = 'Drag to resize';
-    }
+    };
 </script>
 
 <template>

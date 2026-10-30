@@ -1,0 +1,30 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性              | 说明                                                                                                                          | 类型                                                         | 默认值      |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------- |
+| class             | popup 模式落在气泡卡片上，modal 模式落在 Modal 的最外层元素上。                                                               | `string`                                                     | -           |
+| current           | 当前步骤的索引，可用 `bind:current` 双向绑定；不传时由组件自己保存，从 0 开始。                                               | `number`                                                     | -           |
+| finishText        | 最后一步完成按钮的文本；为空时使用语言包中的文案。                                                                            | `string`                                                     | -           |
+| getPopupContainer | modal 模式下弹窗渲染至该 DOM 中；popup 模式下指向 body 以外的元素时不锁定 body 滚动。气泡卡片位于 top layer，不受此属性影响。 | <ApiType detail={"() => HTMLElement"}>Type</ApiType>         | -           |
+| mask              | 是否显示蒙层，可被步骤的 mask 覆盖。                                                                                          | `boolean`                                                    | `true`      |
+| mode              | 引导模式：popup 为气泡卡片，modal 为弹窗。                                                                                    | `'popup' \| 'modal'`                                         | `"popup"`   |
+| nextButtonProps   | 下一步按钮的属性，onclick 先于内置处理调用，按钮文本使用 nextText snippet。                                                   | `UserGuideButtonProps`                                       | -           |
+| nextText          | 下一步按钮文本的 snippet，最后一步显示 finishText；不提供时使用语言包中的文案。                                               | `Snippet`                                                    | -           |
+| onChange          | 步骤改变时调用，参数为新的索引，晚于 current 的写回。                                                                         | <ApiType detail={"(current: number) => void"}>Type</ApiType> | -           |
+| onFinish          | 点击最后一步的完成按钮时调用，晚于 visible 的写回。                                                                           | <ApiType detail={"() => void"}>Type</ApiType>                | -           |
+| onNext            | 点击下一步按钮时调用，参数为新的索引；最后一步调用 onFinish。                                                                 | <ApiType detail={"(current: number) => void"}>Type</ApiType> | -           |
+| onPrev            | 点击上一步按钮时调用，参数为新的索引。                                                                                        | <ApiType detail={"(current: number) => void"}>Type</ApiType> | -           |
+| onSkip            | 点击跳过按钮或按 Esc 时调用，晚于 visible 的写回。                                                                            | <ApiType detail={"() => void"}>Type</ApiType>                | -           |
+| position          | 气泡卡片相对于目标元素的位置，可被步骤的 position 覆盖。                                                                      | `Position`                                                   | `"bottom"`  |
+| prevButtonProps   | 上一步按钮的属性，onclick 先于内置处理调用，按钮文本使用 prevText snippet。                                                   | `UserGuideButtonProps`                                       | -           |
+| prevText          | 上一步按钮文本的 snippet；不提供时使用语言包中的文案。                                                                        | `Snippet`                                                    | -           |
+| showPrevButton    | 是否显示上一步按钮，第一步不显示。                                                                                            | `boolean`                                                    | `true`      |
+| showSkipButton    | 是否显示跳过按钮，最后一步不显示。                                                                                            | `boolean`                                                    | `true`      |
+| spotlightPadding  | 高亮区域的外扩距离，单位为像素，可被步骤的 spotlightPadding 覆盖；都未设置时为 5。                                            | `number`                                                     | -           |
+| steps             | 引导步骤的数据；标题、描述可以是字符串或 snippet，封面是 snippet，snippet 的参数为 `{ item, index }`。                        | `UserGuideStepItem[]`                                        | `[]`        |
+| style             | 样式字符串；popup 模式落在气泡卡片上，modal 模式落在 `.semi-modal` 上。                                                       | `string`                                                     | -           |
+| theme             | popup 模式的主题，可被步骤的 theme 覆盖。                                                                                     | `'default' \| 'primary'`                                     | `"default"` |
+| visible           | 是否显示引导，可用 `bind:visible` 双向绑定；跳过、Esc 与完成会把它写回 `false`。                                              | `boolean`                                                    | -           |
+| zIndex            | popup 模式下遮罩的层级，modal 模式下弹窗的层级。气泡卡片位于 top layer，始终在遮罩之上。                                      | `number`                                                     | `1030`      |

@@ -8,6 +8,7 @@ brief: Switch is an interactive form used to switch two mutually exclusive state
 import SwitchReactApi from './api/switch.react.en-US.mdx';
 import SwitchVueApi from './api/switch.vue.en-US.mdx';
 import SwitchSolidApi from './api/switch.solid.en-US.mdx';
+import SwitchSvelteApi from './api/switch.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Switch } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="react">
@@ -58,6 +69,13 @@ Use `aria-label` to describe the specific function of the Switch
 <Framework only="solid">
 
 You can monitor state changes through `onChange`, and set the selected state through `defaultChecked` or controlled `checked`.  
+Use `aria-label` to describe the specific function of the Switch
+
+</Framework>
+
+<Framework only="svelte">
+
+You can monitor state changes through `onChange`. A plain `checked` sets the initial state, which the user then toggles; to read and write the state, use `bind:checked` (see Controlled component).  
 Use `aria-label` to describe the specific function of the Switch
 
 </Framework>
@@ -97,6 +115,13 @@ Note: This does not work with the smallest switch (size = 'small')
 
 </Framework>
 
+<Framework only="svelte">
+
+`checkedText` and `uncheckedText` take snippets: define them with `{#snippet}` and pass them as props, or write them inside the Switch tag as snippets of the same name.  
+Note: This does not work with the smallest switch (size = 'small')
+
+</Framework>
+
 <Demo id="text" />
 
 Compared to setting the embedded text through checkedText and uncheckedText, we recommend placing the text description outside the Switch
@@ -120,6 +145,12 @@ Whether the component is selected depends entirely on the incoming `modelValue`,
 <Framework only="solid">
 
 Whether the component is selected depends entirely on the incoming `checked` value, used with `onChange`. With a one-way `checked` and no write-back in the callback, a click only notifies and the passed value decides what is shown.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:checked` to keep the checked state in sync with a `$state` variable. To reject or rewrite a toggle, use a function binding `bind:checked={() => value, (next) => { ... }}`; the switch shows what the getter returns. A plain `checked` without a binding is only the initial value: a click toggles it inside the component, and a new value from the parent wins again.
 
 </Framework>
 
@@ -157,6 +188,14 @@ You can turn on the loading state by setting loading="true".
 
 </Framework>
 
+<Framework only="svelte">
+
+<SwitchSvelteApi />
+
+`class`, `style` and other native attributes and listeners (such as `onmouseenter`) land on the root element. `id`, `name`, `tabindex`, `autofocus`, `aria-*`, and `onfocus` and `onblur` land on the inner native input.
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -171,6 +210,12 @@ You can turn on the loading state by setting loading="true".
 </Framework>
 
 <Framework only="vue">
+
+- It is recommended to use `aria-label` to describe the current label function, or `aria-labelledby` to point to a visible label on the page.
+
+</Framework>
+
+<Framework only="svelte">
 
 - It is recommended to use `aria-label` to describe the current label function, or `aria-labelledby` to point to a visible label on the page.
 

@@ -8,6 +8,7 @@ brief: Divider is a linear, lightweight component used to logically organize ele
 import DividerReactApi from './api/divider.react.en-US.mdx';
 import DividerVueApi from './api/divider.vue.en-US.mdx';
 import DividerSolidApi from './api/divider.solid.en-US.mdx';
+import DividerSvelteApi from './api/divider.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Divider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Divider } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Demo id="basic" />
@@ -57,6 +68,12 @@ The content of a horizontal divider is passed through `children`; a vertical div
 
 </Framework>
 
+<Framework only="svelte">
+
+The content of a horizontal divider is written inside the tag (`children`); a vertical divider shows no content. For a horizontal divider with content, the content is always wrapped in `semi-divider_inner-text`, whether it is plain text or an element.
+
+</Framework>
+
 <Demo id="with-children" />
 
 ## API Reference
@@ -66,6 +83,14 @@ The content of a horizontal divider is passed through `children`; a vertical div
 <DividerReactApi />
 
 `id`, `onClick`, `role`, `aria-*` and other native attributes land on the root element. The default `role` is `separator`, which is not set when the divider has content; a `role` you pass overrides the default.
+
+</Framework>
+
+<Framework only="svelte">
+
+<DividerSvelteApi />
+
+`class`, `style` and other native attributes land on the root element; `style` comes after `margin`, so your value wins. The default `role` is `separator`, which is not set when the divider has content; a `role` you pass overrides the default.
 
 </Framework>
 

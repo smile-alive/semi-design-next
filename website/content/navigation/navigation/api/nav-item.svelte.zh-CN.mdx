@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性             | 说明                                                                                              | 类型                                                            | 默认值 |
+| ---------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ------ |
+| disabled         | 是否禁用。                                                                                        | `boolean`                                                       | -      |
+| icon             | 导航项图标，参数含 size。                                                                         | <ApiType detail={"Snippet\u003c[NavIconArgs]>"}>Type</ApiType>  | -      |
+| indent           | 没有图标时是否保留其占位，仅对一级导航生效。                                                      | `boolean \| number`                                             | -      |
+| isCollapsed      | 是否收起，与 Nav 的收起状态取并集。                                                               | `boolean`                                                       | -      |
+| itemKey          | 导航项的唯一标识。                                                                                | `ItemKey`                                                       | -      |
+| label            | 替换导航项显示的文案。因 `text` 已是属性而改名为 `label`。                                        | `Snippet`                                                       | -      |
+| level            | 当前项所在的嵌套层级，limitIndent 为 false 时用于确定缩进；通常由上层 SubNav 给出，这里只作覆盖。 | `number`                                                        | -      |
+| link             | 导航项的 href 链接，传入时导航项渲染为 a 标签。                                                   | `string`                                                        | -      |
+| linkOptions      | 透传给 a 标签的属性。                                                                             | `NavLinkOptions`                                                | -      |
+| onClick          | 点击导航项时调用，数据含 itemKey、text 与原生事件 domEvent；原生 `onclick` 仍落在 li 上。         | <ApiType detail={"(data: SelectedData) => void"}>Type</ApiType> | -      |
+| text             | 导航项文案，也是点击事件的载荷；显示的内容可用 `label` snippet 替换。                             | `string \| number`                                              | -      |
+| toggleIcon       | 展开收起图标位置上的图标，位置由 Nav 的 toggleIconPosition 决定，参数含 size。                    | <ApiType detail={"Snippet\u003c[NavIconArgs]>"}>Type</ApiType>  | -      |
+| tooltipHideDelay | 此导航项 Tooltip 隐藏的延迟，优先于 Nav 的同名属性，单位为毫秒。                                  | `number`                                                        | -      |
+| tooltipShowDelay | 此导航项 Tooltip 显示的延迟，优先于 Nav 的同名属性，单位为毫秒。                                  | `number`                                                        | -      |

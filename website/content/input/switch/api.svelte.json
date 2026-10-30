@@ -1,0 +1,35 @@
+{
+    "switch": {
+        "source": "packages/semi-ui-svelte/src/switch/switch.svelte",
+        "props": {
+            "checked": {
+                "zh-CN": "选中状态，可用 `bind:checked` 双向绑定。`bind:checked={get, set}` 时完全受控；只传 `checked` 时作为初值，点击在组件内覆盖，父级再传新值时以父级为准。",
+                "en-US": "Checked state; bind it with `bind:checked`. `bind:checked={get, set}` makes it fully controlled; a plain `checked` is the initial value, a click overrides it inside the component, and a new value from the parent wins again."
+            },
+            "checkedText": {
+                "zh-CN": "选中时展示内容的 snippet，size 为 small 时不显示。",
+                "en-US": "Snippet shown when checked. Not shown when size is small."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用。",
+                "en-US": "Whether the switch is disabled."
+            },
+            "loading": {
+                "zh-CN": "是否处于加载中；加载中 input 仍可聚焦并带 `aria-disabled`，切换被忽略且不触发 onChange。",
+                "en-US": "Whether the switch is loading. While loading, the input stays focusable with `aria-disabled`; toggles are ignored and onChange is not called."
+            },
+            "onChange": {
+                "zh-CN": "切换状态时的回调，参数为新的选中状态与原生 change 事件；加载中不触发。",
+                "en-US": "Called when the user toggles the switch, with the new checked state and the native change event. Not called while loading."
+            },
+            "size": {
+                "zh-CN": "开关尺寸，可选 large、default 或 small。",
+                "en-US": "Switch size: large, default or small."
+            },
+            "uncheckedText": {
+                "zh-CN": "未选中时展示内容的 snippet，size 为 small 时不显示。",
+                "en-US": "Snippet shown when unchecked. Not shown when size is small."
+            }
+        }
+    }
+}

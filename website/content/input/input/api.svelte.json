@@ -1,0 +1,281 @@
+{
+    "input": {
+        "source": "packages/semi-ui-svelte/src/input/input.svelte",
+        "props": {
+            "value": {
+                "zh-CN": "输入框内容，可用 `bind:value` 绑定。只传值时作为初始内容，之后由组件自己维护；`bind:value={get, set}` 使其完全受控。",
+                "en-US": "Content of the input; bind it with `bind:value`. A plain value is the initial content, which the input then maintains itself; `bind:value={get, set}` makes it fully controlled."
+            },
+            "size": { "zh-CN": "输入框大小，可选 large、default、small。", "en-US": "Input size: large, default or small." },
+            "type": { "zh-CN": "原生 input 的 type。", "en-US": "The type of the native input." },
+            "mode": {
+                "zh-CN": "输入框模式，可选 password，显示密码显隐按钮。",
+                "en-US": "Input mode; password shows a button that reveals or hides the text."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the input is disabled." },
+            "readonly": {
+                "zh-CN": "是否只读，同时隐藏清除按钮。",
+                "en-US": "Whether the input is read-only; it also hides the clear button."
+            },
+            "readOnly": {
+                "zh-CN": "是否只读，只锁定输入，清除按钮仍可用（选择器类组件依赖它）。",
+                "en-US": "Whether the input is read-only, locking typing only; the clear button stays (pickers rely on it)."
+            },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "showClear": {
+                "zh-CN": "有内容且悬停或焦点位于组件内时展示清除按钮。",
+                "en-US": "Shows a clear button when the input has content and the pointer or focus is inside the component."
+            },
+            "hideSuffix": {
+                "zh-CN": "清除按钮显示时隐藏后缀，默认两者并列。",
+                "en-US": "Hides the suffix while the clear button is shown; by default the two sit side by side."
+            },
+            "showClearIgnoreDisabled": {
+                "zh-CN": "内部属性，供 DatePicker 使用：禁用时仍可清除。",
+                "en-US": "Internal property used by DatePicker: the clear button stays available while disabled."
+            },
+            "composition": {
+                "zh-CN": "是否开启输入法模式，开启后输入法组合期间不调用 onChange，组合结束后调用一次。",
+                "en-US": "Whether to enable IME mode; onChange is not called during a composition and is called once after it ends."
+            },
+            "preventScroll": {
+                "zh-CN": "聚焦时是否阻止浏览器滚动文档以显示新聚焦的元素，作用于组件内的聚焦。",
+                "en-US": "Whether the browser should avoid scrolling the document to show the newly focused element, for focus inside the component."
+            },
+            "autofocus": {
+                "zh-CN": "挂载时自动获取焦点（使用 preventScroll）。",
+                "en-US": "Focuses the input on mount, using preventScroll."
+            },
+            "maxlength": {
+                "zh-CN": "最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。",
+                "en-US": "Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies."
+            },
+            "minlength": {
+                "zh-CN": "最小长度。传入 getValueLength 时按它换算，否则使用原生属性。",
+                "en-US": "Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies."
+            },
+            "placeholder": { "zh-CN": "输入框为空时显示的提示文字。", "en-US": "Hint text shown while the input is empty." },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 default、error、warning；error 时输出 aria-invalid。",
+                "en-US": "Validation status: default, error or warning; error outputs aria-invalid."
+            },
+            "inputStyle": {
+                "zh-CN": "原生 input 元素的样式字符串。",
+                "en-US": "Style string of the native input element."
+            },
+            "insetLabelId": {
+                "zh-CN": "insetLabel 所在元素的 id，供 aria-labelledby 引用。",
+                "en-US": "The id of the element around the insetLabel snippet, for aria-labelledby to point at."
+            },
+            "getValueLength": {
+                "zh-CN": "自定义计算字符串长度，搭配 maxlength、minlength 使用。",
+                "en-US": "Custom string length calculation, used with maxlength and minlength."
+            },
+            "onChange": {
+                "zh-CN": "内容变化时调用，参数为新值与事件；输入法模式下组合结束后调用一次。这是 Input 自己的回调，不是原生 change。",
+                "en-US": "Called when the content changes, with the new value and the event; in IME mode it is called once after the composition ends. This is the callback of Input, not the native change."
+            },
+            "onClear": { "zh-CN": "点击清除按钮时调用。", "en-US": "Called when the clear button is activated." },
+            "onFocus": {
+                "zh-CN": "焦点进入组件时调用；焦点在输入框与组件内按钮之间移动不调用。事件为外层元素的 focusin。",
+                "en-US": "Called when focus enters the component; moving focus between the input and its buttons does not call it. The event is the focusin of the wrapper."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开组件时调用。事件为外层元素的 focusout。",
+                "en-US": "Called when focus leaves the component. The event is the focusout of the wrapper."
+            },
+            "onInput": { "zh-CN": "原生 input 事件。", "en-US": "The native input event." },
+            "onKeyDown": { "zh-CN": "原生 keydown 事件。", "en-US": "The native keydown event." },
+            "onKeyUp": { "zh-CN": "原生 keyup 事件。", "en-US": "The native keyup event." },
+            "onEnterPress": {
+                "zh-CN": "按下回车时调用（keydown），输入法组合中的回车不调用。",
+                "en-US": "Called when Enter is pressed (keydown); the Enter that commits an IME composition does not call it."
+            },
+            "onCompositionStart": { "zh-CN": "输入法组合开始时调用。", "en-US": "Called when an IME composition starts." },
+            "onCompositionUpdate": { "zh-CN": "输入法组合更新时调用。", "en-US": "Called when an IME composition updates." },
+            "onCompositionEnd": { "zh-CN": "输入法组合结束时调用。", "en-US": "Called when an IME composition ends." },
+            "prefix": {
+                "zh-CN": "前缀。内容仅为文本或 Semi 图标时自动带上左右间隔。",
+                "en-US": "Prefix. Text or a Semi icon alone gets horizontal spacing automatically."
+            },
+            "suffix": {
+                "zh-CN": "后缀。内容仅为文本或 Semi 图标时自动带上左右间隔。",
+                "en-US": "Suffix. Text or a Semi icon alone gets horizontal spacing automatically."
+            },
+            "addonBefore": {
+                "zh-CN": "前置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。",
+                "en-US": "Addon before the input. Text or a Semi icon alone gets horizontal spacing automatically."
+            },
+            "addonAfter": {
+                "zh-CN": "后置标签。内容仅为文本或 Semi 图标时自动带上左右间隔。",
+                "en-US": "Addon after the input. Text or a Semi icon alone gets horizontal spacing automatically."
+            },
+            "insetLabel": { "zh-CN": "输入框内的标签。", "en-US": "Label inside the input." },
+            "clearIcon": {
+                "zh-CN": "自定义清除按钮的图标，showClear 为 true 时有效。",
+                "en-US": "Custom icon of the clear button, effective when showClear is true."
+            }
+        },
+        "methods": {
+            "focus": {
+                "zh-CN": "聚焦原生 input；未传 preventScroll 时使用同名属性的值。",
+                "en-US": "Focuses the native input; the preventScroll prop applies when the option is not given."
+            },
+            "blur": { "zh-CN": "移出焦点。", "en-US": "Removes focus." },
+            "select": { "zh-CN": "选中输入框中的全部文本。", "en-US": "Selects all the text in the input." },
+            "setSelectionRange": {
+                "zh-CN": "设置选区，参数同原生 setSelectionRange。",
+                "en-US": "Sets the selection, with the parameters of the native setSelectionRange."
+            },
+            "getInput": {
+                "zh-CN": "返回原生 input 元素，未渲染时为 null。",
+                "en-US": "Returns the native input element, or null while it is not rendered."
+            },
+            "getNativeElement": {
+                "zh-CN": "返回组件根元素，未渲染时为 null。",
+                "en-US": "Returns the root element of the component, or null while it is not rendered."
+            }
+        }
+    },
+    "text-area": {
+        "source": "packages/semi-ui-svelte/src/input/textarea.svelte",
+        "props": {
+            "value": {
+                "zh-CN": "文本内容，可用 `bind:value` 绑定。只传值时作为初始内容，之后由组件自己维护；`bind:value={get, set}` 使其完全受控。",
+                "en-US": "Content of the text area; bind it with `bind:value`. A plain value is the initial content, which the text area then maintains itself; `bind:value={get, set}` makes it fully controlled."
+            },
+            "autosize": {
+                "zh-CN": "高度是否随内容自适应，可传 `{ minRows, maxRows }` 限制行数。",
+                "en-US": "Whether the height follows the content; pass `{ minRows, maxRows }` to limit the rows."
+            },
+            "borderless": { "zh-CN": "无边框模式。", "en-US": "Borderless mode." },
+            "rows": { "zh-CN": "默认行数。", "en-US": "Number of visible text lines." },
+            "cols": { "zh-CN": "默认列数。", "en-US": "Visible width in average character widths." },
+            "placeholder": { "zh-CN": "输入框为空时显示的提示文字。", "en-US": "Hint text shown while the text area is empty." },
+            "maxCount": {
+                "zh-CN": "字数上限，设置后显示字数统计；超出时计数器标红，不截断输入。",
+                "en-US": "Maximum number of characters; setting it shows a counter, which turns red when exceeded. The input is not truncated."
+            },
+            "showCounter": {
+                "zh-CN": "是否显示字数统计；设置 maxCount 时总是显示。",
+                "en-US": "Whether to show the counter; it is always shown when maxCount is set."
+            },
+            "showClear": {
+                "zh-CN": "有内容且悬停或焦点位于组件内时展示清除按钮。",
+                "en-US": "Shows a clear button when the text area has content and the pointer or focus is inside the component."
+            },
+            "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the text area is disabled." },
+            "readonly": { "zh-CN": "是否只读。", "en-US": "Whether the text area is read-only." },
+            "autofocus": { "zh-CN": "挂载时自动获取焦点。", "en-US": "Focuses the text area on mount." },
+            "validateStatus": {
+                "zh-CN": "校验状态，可选 default、error、warning；error 时输出 aria-invalid。",
+                "en-US": "Validation status: default, error or warning; error outputs aria-invalid."
+            },
+            "composition": {
+                "zh-CN": "是否开启输入法模式，开启后输入法组合期间不调用 onChange，组合结束后调用一次。",
+                "en-US": "Whether to enable IME mode; onChange is not called during a composition and is called once after it ends."
+            },
+            "disabledEnterStartNewLine": {
+                "zh-CN": "内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。",
+                "en-US": "Internal property used by Chat: Enter does not start a new line, Shift + Enter does."
+            },
+            "showLineNumber": { "zh-CN": "是否展示行号。", "en-US": "Whether to show line numbers." },
+            "lineNumberStart": { "zh-CN": "行号起始值。", "en-US": "Starting line number." },
+            "lineNumberClassName": { "zh-CN": "行号区域的类名。", "en-US": "Class name of the line number area." },
+            "lineNumberStyle": { "zh-CN": "行号区域的样式字符串。", "en-US": "Style string of the line number area." },
+            "textareaStyle": {
+                "zh-CN": "内部 textarea 元素的样式字符串，可设置高度等。",
+                "en-US": "Style string of the inner textarea element, such as its height."
+            },
+            "resize": {
+                "zh-CN": "是否允许拖拽调整尺寸及方向，可选 none、both、horizontal、vertical、block、inline；仅在显式传入时生效，autosize 开启时忽略。",
+                "en-US": "Whether and in which direction the user may resize: none, both, horizontal, vertical, block or inline. It only takes effect when given and is ignored with autosize."
+            },
+            "maxlength": {
+                "zh-CN": "最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。",
+                "en-US": "Maximum length. With getValueLength the length is measured and truncated by it; otherwise the native attribute applies."
+            },
+            "minlength": {
+                "zh-CN": "最小长度。传入 getValueLength 时按它换算，否则使用原生属性。",
+                "en-US": "Minimum length. With getValueLength it is converted accordingly; otherwise the native attribute applies."
+            },
+            "getValueLength": {
+                "zh-CN": "自定义计算字符串长度，搭配 maxlength、minlength、maxCount 使用。",
+                "en-US": "Custom string length calculation, used with maxlength, minlength and maxCount."
+            },
+            "onChange": {
+                "zh-CN": "内容变化时调用，参数为新值与事件；输入法模式下组合结束后调用一次。这是 TextArea 自己的回调，不是原生 change。",
+                "en-US": "Called when the content changes, with the new value and the event; in IME mode it is called once after the composition ends. This is the callback of TextArea, not the native change."
+            },
+            "onClear": { "zh-CN": "点击清除按钮时调用。", "en-US": "Called when the clear button is activated." },
+            "onFocus": { "zh-CN": "焦点进入组件时调用。", "en-US": "Called when focus enters the component." },
+            "onBlur": { "zh-CN": "焦点离开组件时调用。", "en-US": "Called when focus leaves the component." },
+            "onInput": { "zh-CN": "原生 input 事件。", "en-US": "The native input event." },
+            "onKeyDown": { "zh-CN": "原生 keydown 事件。", "en-US": "The native keydown event." },
+            "onKeyUp": { "zh-CN": "原生 keyup 事件。", "en-US": "The native keyup event." },
+            "onEnterPress": {
+                "zh-CN": "按下回车时调用（keydown），输入法组合中的回车不调用。",
+                "en-US": "Called when Enter is pressed (keydown); the Enter that commits an IME composition does not call it."
+            },
+            "onResize": {
+                "zh-CN": "尺寸变化时调用：autosize 导致高度变化时参数为 border-box 高度；拖拽调整尺寸时为内容区的 height 与 width。",
+                "en-US": "Called when the size changes: with autosize the payload is the border-box height; when the user drags to resize it is the content-box height and width."
+            },
+            "onCompositionStart": { "zh-CN": "输入法组合开始时调用。", "en-US": "Called when an IME composition starts." },
+            "onCompositionUpdate": { "zh-CN": "输入法组合更新时调用。", "en-US": "Called when an IME composition updates." },
+            "onCompositionEnd": { "zh-CN": "输入法组合结束时调用。", "en-US": "Called when an IME composition ends." }
+        },
+        "methods": {
+            "focus": { "zh-CN": "聚焦原生 textarea。", "en-US": "Focuses the native textarea." },
+            "blur": { "zh-CN": "移出焦点。", "en-US": "Removes focus." },
+            "select": { "zh-CN": "选中输入框中的全部文本。", "en-US": "Selects all the text in the text area." },
+            "setSelectionRange": {
+                "zh-CN": "设置选区，参数同原生 setSelectionRange。",
+                "en-US": "Sets the selection, with the parameters of the native setSelectionRange."
+            },
+            "getTextarea": {
+                "zh-CN": "返回原生 textarea 元素，未渲染时为 null。",
+                "en-US": "Returns the native textarea element, or null while it is not rendered."
+            },
+            "getNativeElement": {
+                "zh-CN": "返回组件根元素，未渲染时为 null。",
+                "en-US": "Returns the root element of the component, or null while it is not rendered."
+            }
+        }
+    },
+    "input-group": {
+        "source": "packages/semi-ui-svelte/src/input/input-group.svelte",
+        "props": {
+            "size": {
+                "zh-CN": "输入框大小，可选 large、default、small；组内任意深度未自行设置 size 的控件取这个值。",
+                "en-US": "Input size: large, default or small; controls at any depth in the group that set no size of their own take it."
+            },
+            "disabled": {
+                "zh-CN": "是否禁用，组内任意深度的控件取这个值；控件自己写的 disabled 优先。",
+                "en-US": "Whether the group is disabled; controls at any depth in the group take it, and a disabled a control sets itself takes precedence."
+            },
+            "label": {
+                "zh-CN": "渲染一个命名该组的 FormLabel，配置为 Form.Label 的属性，另可设 id、class、style；`name` 会成为该组的 id。节点内容使用 fieldLabel、labelExtra snippet。",
+                "en-US": "Renders a FormLabel that names the group, configured with the Form.Label props plus id, class and style; `name` becomes the id of the group. Use the fieldLabel and labelExtra snippets for node content."
+            },
+            "labelPosition": { "zh-CN": "标签位置，可选 top 或 left。", "en-US": "Label position: top or left." },
+            "fieldLabel": {
+                "zh-CN": "标签的节点内容，替代 `label.text`。",
+                "en-US": "Node content of the label, in place of `label.text`."
+            },
+            "labelExtra": { "zh-CN": "标签的附加内容。", "en-US": "Extra content of the label." },
+            "onFocus": {
+                "zh-CN": "组内元素获得焦点时调用（focusin），焦点在子级之间移动也会调用；不下发给子级。",
+                "en-US": "Called when an element in the group gains focus (focusin), including when focus moves between children; it is not passed to the children."
+            },
+            "onBlur": {
+                "zh-CN": "组内元素失去焦点时调用（focusout），焦点在子级之间移动也会调用；不下发给子级。",
+                "en-US": "Called when an element in the group loses focus (focusout), including when focus moves between children; it is not passed to the children."
+            },
+            "children": {
+                "zh-CN": "组内的输入类组件，如 Input、InputNumber、Select、AutoComplete、TreeSelect、Cascader、DatePicker。",
+                "en-US": "The input components in the group, such as Input, InputNumber, Select, AutoComplete, TreeSelect, Cascader and DatePicker."
+            }
+        }
+    }
+}

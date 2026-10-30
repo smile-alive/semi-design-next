@@ -1,5 +1,5 @@
 ---
-frameworks: [react, vue, solid]
+frameworks: [react, vue, solid, svelte]
 order: 18
 title: Tokens
 icon: doc-token
@@ -240,5 +240,5 @@ The `--semi-*` CSS variables on this page are Semi's global customization surfac
 
 - Light values go on `:root`, dark values on `[theme-mode='dark']`; see [Dark Mode](/en-US/react/advanced/dark-mode).
 - Semi's styles sit in `@layer semi`, so your unlayered CSS rules always win and can override a component's own styles without `!important`.
-- With Tailwind, import `@fibrae/semi-ui-react/tailwind.css` (`@fibrae/semi-ui-vue/tailwind.css` for Vue) to map these variables to Tailwind theme values (e.g. `bg-semi-color-primary`).
+- With Tailwind, import `@fibrae/semi-ui-react/tailwind.css` (`@fibrae/semi-ui-vue/tailwind.css` for Vue, `@fibrae/semi-ui-solid/tailwind.css` for Solid, `@fibrae/semi-ui-svelte/tailwind.css` for Svelte) to map these variables to Tailwind theme values (e.g. `bg-semi-color-primary`).
 - The Design Token tables on the component pages list each component's internal Sass variables, which cannot be overridden.

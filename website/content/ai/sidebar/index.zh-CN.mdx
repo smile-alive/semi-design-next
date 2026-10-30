@@ -24,6 +24,15 @@ import CodeContentVueApi from './api/code-content.vue.zh-CN.mdx';
 import CodeItemVueApi from './api/code-item.vue.zh-CN.mdx';
 import FileContentVueApi from './api/file-content.vue.zh-CN.mdx';
 import FileItemVueApi from './api/file-item.vue.zh-CN.mdx';
+import ContainerSvelteApi from './api/container.svelte.zh-CN.mdx';
+import MCPConfigureSvelteApi from './api/mcp-configure.svelte.zh-CN.mdx';
+import AnnotationSvelteApi from './api/annotation.svelte.zh-CN.mdx';
+import AnnotationContentSvelteApi from './api/annotation-content.svelte.zh-CN.mdx';
+import SidebarSvelteApi from './api/sidebar.svelte.zh-CN.mdx';
+import CodeContentSvelteApi from './api/code-content.svelte.zh-CN.mdx';
+import CodeItemSvelteApi from './api/code-item.svelte.zh-CN.mdx';
+import FileContentSvelteApi from './api/file-content.svelte.zh-CN.mdx';
+import FileItemSvelteApi from './api/file-item.svelte.zh-CN.mdx';
 import ContainerSolidApi from './api/container.solid.zh-CN.mdx';
 import MCPConfigureSolidApi from './api/mcp-configure.solid.zh-CN.mdx';
 import AnnotationSolidApi from './api/annotation.solid.zh-CN.mdx';
@@ -66,6 +75,19 @@ const { AnnotationContent } = Annotation;
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-svelte';
+
+    const { Container, CodeContent, CodeItem, FileContent, FileItem } = Sidebar;
+    const { AnnotationContent } = Annotation;
+</script>
+```
+
+</Framework>
+
 <Framework only="solid">
 
 ```jsx
@@ -94,6 +116,15 @@ const { AnnotationContent } = Annotation;
 
 - `v-model:visible` 控制显示和隐藏。点击关闭按钮，或在 `closeOnEsc` 为 `true` 时按下 Esc，会先更新为 `false` 再触发 `cancel`
 - `title` 设置纯文本标题，需要自定义内容时使用 `#title` 插槽
+- `motion` 设置是否有展开动画
+- `resizable` 设置宽度是否可伸缩，为 `true` 时候可通过 `minWidth`，`maxWidth` 设置最小，最大宽度
+
+</Framework>
+
+<Framework only="svelte">
+
+- `bind:visible` 控制显示和隐藏。点击关闭按钮，或在 `closeOnEsc` 为 `true` 时按下 Esc，会先更新为 `false` 再调用 `onCancel`
+- `title` 设置标题，可传纯文本或 snippet；需要自定义整个头部时使用 `header` snippet
 - `motion` 设置是否有展开动画
 - `resizable` 设置宽度是否可伸缩，为 `true` 时候可通过 `minWidth`，`maxWidth` 设置最小，最大宽度
 
@@ -167,6 +198,33 @@ interface MCPConfigureOption {
 
 </Framework>
 
+<Framework only="svelte">
+
+- 通过 `bind:options` 和 `bind:customOptions` 绑定内置的 MCP 工具和自定义 MCP 工具，切换启用/关闭时先更新绑定值，再调用 `onStatusChange`
+- 通过 `bind:visible` 设置组件的显示和隐藏，使用 `onCancel` 监听用户的关闭行为
+- 使用 `onStatusChange` 自定义处理 MCP 工具的启用/关闭
+- 使用 `onAddClick` 处理自定义 MCP 页的点击添加按钮后的操作
+- 可通过 `onConfigureClick` 监听内置 MCP 工具的配置，通过 `onEditClick` 监听自定义 MCP 工具的配置
+- 工具项的图标和描述使用 `icon`、`desc` snippet，整行用 `item` snippet 替换；snippet 参数为 `{ item, index, custom }`
+
+其他 MCPConfigure 的 API 见 [MCPConfigure](#MCPConfigure)
+
+传入 MCP 工具项的类型如下
+
+```ts
+interface MCPConfigureOption {
+    icon?: string; // 图片地址，其他内容使用 icon snippet
+    label?: string;
+    value: string; // 必填，标识工具项，需唯一
+    desc?: string; // 纯文本，其他内容使用 desc snippet
+    active?: boolean;
+    disabled?: boolean;
+    configure?: boolean; // 是否显示配置按钮
+}
+```
+
+</Framework>
+
 <Framework only="solid">
 
 - 通过 `options` 和 `customOptions` 设置内置的 MCP 工具和自定义 MCP 工具
@@ -218,6 +276,15 @@ interface MCPConfigureOption {
 
 </Framework>
 
+<Framework only="svelte">
+
+- `bind:activeKey` 管理当前展开的项
+- `info` 设置参考来源的具体内容
+- `onClick` 在点击某条参考来源时调用，参数为事件和该条目
+- 分组标题使用 `infoHeader` snippet，条目使用 `item` snippet 替换；`header` 是整个容器头部
+
+</Framework>
+
 <Framework only="solid">
 
 - `activeKey` 配合 `onChange` 管理当前展开的项
@@ -245,6 +312,12 @@ interface MCPConfigureOption {
 
 </Framework>
 
+<Framework only="svelte">
+
+`jsonViewerProps` 中 JsonViewer 的 value 默认取 `content`，`jsonViewerProps` 与 `codeHighlightProps` 还可以带 `class`、`style`。JsonViewer 的自定义渲染与搜索按钮通过 `CodeItem` 的 `customRender`、`searchButton` snippet 使用。
+
+</Framework>
+
 <Framework only="solid">
 
 `jsonViewerProps` 与 `codeHighlightProps` 是 Solid 版 JsonViewer 与 CodeHighlight 的属性，晚于内置默认值展开，因此其中的 `value`、`width`、`height` 等会覆盖默认值，也可以带 `class`、`style`。
@@ -269,6 +342,14 @@ interface MCPConfigureOption {
 - `v-model:activeKey` 管理当前展开的面板
 - `expand` 监听面板头部的展开按钮
 - `#customRender`、`#searchButton` 转发给每个 JSON 面板中的 JsonViewer
+
+</Framework>
+
+<Framework only="svelte">
+
+- `bind:activeKey` 管理当前展开的面板
+- `onExpand` 监听面板头部的展开按钮，设置后才显示展开按钮
+- `customRender`、`searchButton` snippet 转发给每个 JSON 面板中的 JsonViewer
 
 </Framework>
 
@@ -303,6 +384,16 @@ interface MCPConfigureOption {
 
 </Framework>
 
+<Framework only="svelte">
+
+- `content`：富文本 HTML。挂载后变化会同步到编辑器，与编辑器当前内容相同时不会重置，不会打断输入也不会丢失光标，同步不调用 `onContentChange`
+- `editable`: 设置是否可编辑，挂载后变化会同步到编辑器
+- `imgUploadProps`： 设置图片上传路径以及图片上传后 src 的设置，通过 `action` 设置上传地址，通过 `getUploadImageSrc(response)` 函数根据上传响应返回图片上传后地址（未提供时，响应是字符串则直接作为地址，否则取 `response.src`），用于富文本中 img 节点的 src；Upload 的 `on` 开头回调（如 `onSuccess`）也可在这里传入。只有设置了 `action` 或 `customRequest`，工具栏才显示图片按钮
+- `extensions` 与 `imgUploadProps` 只在创建编辑器时读取，要换用新值时用 `{#key}` 重新挂载
+- `onContentChange` 在编辑后调用，参数为 HTML 字符串
+
+</Framework>
+
 <Framework only="solid">
 
 - `content`：富文本 HTML。挂载后变化会同步到编辑器，与编辑器当前内容相同时不会重置，不会打断输入也不会丢失光标，同步不触发 `onContentChange`
@@ -330,6 +421,13 @@ interface MCPConfigureOption {
 
 - `v-model:activeKey` 管理当前展开的面板
 - `expand` 监听面板头部的展开按钮
+
+</Framework>
+
+<Framework only="svelte">
+
+- `bind:activeKey` 管理当前展开的面板
+- `onExpand` 监听面板头部的展开按钮，设置后才显示展开按钮
 
 </Framework>
 
@@ -363,6 +461,16 @@ interface MCPConfigureOption {
 对于主视图的内容渲染，可通过 `#mainContent="{ activeKey }"` 插槽，根据当前选中项渲染。可使用 `Annotation` 中的 `AnnotationContent` 渲染参考来源，使用 `Sidebar` 中内置的 `FileContent` 渲染富文本, `CodeContent` 渲染代码。
 
 对于详情视图，如果是富文本或者代码，分别设置 `mode` 为 `code`、`file`，通过 `detailContent` 设置显示内容，即可通过内置的代码显示组件， 富文本编辑器进行显示；`detailContent` 的 `key` 变化时会重新挂载。如果想要自定义详情视图的展示，则通过 `#detailContent="{ mode }"` 插槽自行渲染，详情头部通过 `#detailHeader="{ mode, detailContent }"` 自定义，两者内容为空时回退到内置内容。点击详情头部的返回按钮触发 `backWard`。
+
+</Framework>
+
+<Framework only="svelte">
+
+主视图可以通过 `title` 配置标题，通过 `showClose` 决定是否展示关闭按钮，通过 `options` 设置顶部的按钮组（每项为 `{ name, key }`），`bind:activeKey` 绑定当前选中的项。按钮图标使用 `optionIcon` snippet（参数 `{ item, index }`），需要替换整个按钮时使用 `optionItem`，其参数 `onClick` 用于选中该项。
+
+对于主视图的内容渲染，可通过 `mainContent` snippet（参数 `{ activeKey }`），根据当前选中项渲染。可使用 `Annotation` 中的 `AnnotationContent` 渲染参考来源，使用 `Sidebar` 中内置的 `FileContent` 渲染富文本, `CodeContent` 渲染代码。
+
+对于详情视图，如果是富文本或者代码，分别设置 `mode` 为 `code`、`file`，通过 `detailContent` 设置显示内容，即可通过内置的代码显示组件， 富文本编辑器进行显示；`detailContent` 的 `key` 变化时会重新挂载。如果想要自定义详情视图的展示，则通过 `detailBody` snippet（参数 `{ mode }`）自行渲染，详情头部通过 `detailHeader` snippet（参数 `{ mode, detailContent }`）自定义，两者内容为空时回退到内置内容。点击详情头部的返回按钮调用 `onBackWard`。
 
 </Framework>
 
@@ -559,6 +667,97 @@ Sidebar、Annotation、MCPConfigure 与 Sidebar.Container 的模板 ref 类型�
 ### FileItem
 
 <FileItemVueApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+Sidebar、Annotation、MCPConfigure 与 Container 的 `class`、`style` 和其他未声明的属性（如 `aria-label`）落在 `.semi-sidebar-container` 元素上；根元素被命名（`aria-label` 或 `aria-labelledby`）且没有指定 `role` 时，`role` 为 `group`。CodeContent、CodeItem、FileContent、FileItem、AnnotationContent 的未声明属性落在各自的根元素上。
+
+Sidebar、Annotation、MCPConfigure 与 Sidebar.Container 通过 `export function` 暴露 `getRoot()`，用 `bind:this` 取得实例后调用，返回 `HTMLDivElement | null`，容器隐藏时为 `null`。Container 的类型为 `SidebarContainerHandle`（从 `@fibrae/semi-ai-svelte` 导出）。
+
+写在组件标签内的 snippet 按名称成为该组件的属性，所以只有 `optionIcon`、`mainContent` 等组件声明过的名称才能写在标签内；自己的辅助 snippet 要声明在组件标签之外。
+
+### Container
+
+<ContainerSvelteApi />
+
+### MCPConfigure
+
+<MCPConfigureSvelteApi />
+
+#### MCPConfigureOption
+
+| 属性      | 说明                                                                                 | 类型    | 默认值 |
+| --------- | ------------------------------------------------------------------------------------ | ------- | ------ |
+| active    | 是否处于激活状态                                                                     | boolean | false  |
+| configure | 是否显示配置按钮                                                                     | boolean | false  |
+| desc      | 描述文本，内置过滤会匹配它；其他内容使用 `desc` snippet                              | string  | -      |
+| disabled  | 是否禁用，为 true 时用户无法更改激活状态                                             | boolean | false  |
+| icon      | 图标的图片地址；其他内容使用 `icon` snippet                                          | string  | -      |
+| label     | 标签文本                                                                             | string  | -      |
+| value     | 对应的值，必填。在 `onStatusChange` 中标识选项，也作为列表项的 key，同一列表内需唯一 | string  | -      |
+
+### Annotation
+
+<AnnotationSvelteApi />
+
+### AnnotationContent
+
+<AnnotationContentSvelteApi />
+
+#### AnnotationInfo
+
+| 属性        | 说明                                                                                              | 类型                                | 默认值 |
+| ----------- | ------------------------------------------------------------------------------------------------- | ----------------------------------- | ------ |
+| annotations | 该分组下的参考来源条目                                                                            | [AnnotationItem](#AnnotationItem)[] | -      |
+| header      | 分组标题的纯文本，也可用 `infoHeader`（Annotation）或 `header`（AnnotationContent）snippet 自定义 | string                              | -      |
+| key         | 分组的唯一标识                                                                                    | string                              | -      |
+
+#### AnnotationItem
+
+| 属性     | 说明                                                                          | 类型              | 默认值 |
+| -------- | ----------------------------------------------------------------------------- | ----------------- | ------ |
+| detail   | 内容详情/补充说明（如视频简介、文本备注等）                                   | string            | -      |
+| duration | 时长（通常为视频时长，单位：秒）                                              | number            | -      |
+| img      | 图片地址（如视频封面图、文本配图地址）                                        | string            | -      |
+| logo     | 站点/内容所属平台的 logo 图片地址                                             | string            | -      |
+| order    | 引用序号（用于内容排序/标注序号展示）                                         | number            | -      |
+| siteName | 内容所属的站点/平台名称                                                       | string            | -      |
+| title    | 内容标题                                                                      | string            | -      |
+| type     | 内容类型                                                                      | 'video' \| 'text' | -      |
+| url      | 资源链接，在新标签页打开；没有 url 的条目渲染为无 href 的链接，只能用指针点击 | string            | -      |
+
+### Sidebar
+
+<SidebarSvelteApi />
+
+#### SideBarOption
+
+| 属性 | 说明                                    | 类型   | 默认值 |
+| ---- | --------------------------------------- | ------ | ------ |
+| key  | 选项的唯一标识                          | string | -      |
+| name | 选项名称，图标使用 `optionIcon` snippet | string | -      |
+
+### CodeContent
+
+`codes` 的每一项为 [CodeItem](#CodeItem) 的属性加用于标识面板的 `key`。
+
+<CodeContentSvelteApi />
+
+### CodeItem
+
+<CodeItemSvelteApi />
+
+### FileContent
+
+`files` 的每一项为 [FileItem](#FileItem) 的属性加用于标识面板的 `key`，以只读方式渲染，`extensions` 与 `imgUploadProps` 会传给其预览。
+
+<FileContentSvelteApi />
+
+### FileItem
+
+<FileItemSvelteApi />
 
 </Framework>
 

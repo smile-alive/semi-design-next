@@ -1,0 +1,69 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the panel has fully closed, in both modes. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| afterVisibleChange | Called once the shown state has changed and the animation has ended. Only popup mode calls it. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| bodyStyle | Style string of the body, for both modes. | `string` | - |
+| cancelButtonProps | Props of the cancel button. It is loading when either the built-in pending state or your loading says so. onclick runs before the built-in handling, which still runs. | `FeedbackButtonProps` | - |
+| cancelLoading | Modal mode only: whether the cancel button is loading. When omitted it follows the Promise returned by onCancel; pass false to turn that off. | `boolean` | - |
+| cancelText | Modal mode only: cancel button text. Defaults to the locale entry Modal.cancel. | `string` | - |
+| canVerticalSetWidth | Popup mode only: whether width applies when placement is top or bottom. By default those sheets span the full width. | `boolean` | - |
+| centered | Modal mode only: whether the dialog is vertically centered. | `boolean` | - |
+| checkboxExtra | Snippet for the extra text of each item in checkboxGroupProps.options, with `{ option, index }` as its argument. | <ApiType detail={"Snippet\u003c[FeedbackCheckboxSnippetProps]>"}>Type</ApiType> | - |
+| checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | `FeedbackCheckboxGroupProps` | - |
+| checkboxLabel | Snippet for the label of each item in checkboxGroupProps.options, with `{ option, index }` as its argument. | <ApiType detail={"Snippet\u003c[FeedbackCheckboxSnippetProps]>"}>Type</ApiType> | - |
+| children | Feedback content for type custom. | `Snippet` | - |
+| closable | Whether the close button in the corner is shown. | `boolean` | - |
+| closeIcon | Icon inside the close button. | `Snippet` | - |
+| closeOnEsc | Whether Esc cancels the feedback. | `boolean` | - |
+| confirmLoading | Modal mode only: whether the ok button is loading. When omitted it follows the Promise returned by onOk; pass false to turn that off. | `boolean` | - |
+| content | Snippet that wraps or replaces the built-in content for any type. Its argument `{ content }` is the built-in content; place it with `{@render content()}`. | <ApiType detail={"Snippet\u003c[FeedbackContentSnippetProps]>"}>Type</ApiType> | - |
+| disableScroll | Popup mode only: whether body scrolling is locked while a masked sheet is rendered in document.body. | `boolean` | - |
+| footer | Replaces the default cancel and submit buttons; `null` renders no footer area. | `Snippet \| null` | - |
+| footerFill | Modal mode only: whether the two buttons of the default footer fill the row. | `boolean` | - |
+| fullScreen | Modal mode only: whether the dialog fills the screen. width and height are ignored. | `boolean` | - |
+| getPopupContainer | Parent element the layer is rendered into. A custom container needs position: relative. | <ApiType detail={"() => HTMLElement"}>Type</ApiType> | - |
+| hasCancel | Modal mode only: whether the default footer shows the cancel button. | `boolean` | - |
+| header | Modal mode only: replaces the whole default header; `null` renders no header. | `Snippet \| null` | - |
+| headerStyle | Popup mode only: style string of the panel header. | `string` | - |
+| height | Height. A number is in pixels; a string is any valid CSS length. In popup mode it applies only when placement is top or bottom. | `string \| number` | - |
+| icon | Modal mode only: icon before the title. | `Snippet` | - |
+| keepDOM | Whether the content stays mounted while closed. | `boolean` | - |
+| lazyRender | Modal mode only: used with keepDOM. When true, the dialog is not rendered until it is first shown. | `boolean` | - |
+| mask | Whether the mask is shown; in popup mode there is no mask by default and the rest of the page stays usable. | `boolean` | - |
+| maskClosable | Whether a click on the mask cancels the feedback. | `boolean` | - |
+| maskFixed | Modal mode only: whether a mask confined to a custom container still covers the viewport with fixed positioning and is treated as modal. | `boolean` | - |
+| maskStyle | Style string of the mask. | `string` | - |
+| modal | Modal mode only: custom rendering of the dialog itself. Its argument `{ modal }` is the `role="dialog"` element; place it with `{@render modal()}`. | <ApiType detail={"Snippet\u003c[{ modal: Snippet }]>"}>Type</ApiType> | - |
+| modalContentClass | Modal mode only: class name of the dialog content element. | `string` | - |
+| mode | Display mode: popup is a non-modal panel at the bottom without a mask (SideSheet); modal is a modal dialog (Modal). Attributes Feedback does not declare go to the SideSheet or Modal of the current mode. | `FeedbackMode` | `"popup"` |
+| motion | Whether the enter and leave animations run. | `boolean` | - |
+| okButtonProps | Props of the submit button. Without disabled, it is disabled while the value is empty; a disabled you give wins, which is how the custom type controls submission. It is loading when either the built-in pending state or your loading says so. onclick runs before the built-in handling, which still runs. | `FeedbackButtonProps` | - |
+| okText | Modal mode only: ok button text. Defaults to the locale entry Modal.confirm. | `string` | - |
+| okType | Modal mode only: type of the ok button. | `OKType` | - |
+| onCancel | Called by the cancel button, the close button, Esc and, in modal mode, a click on the mask; the argument is a native KeyboardEvent for Esc. Once it returns, the filled-in value is cleared and visible is written back as false. A returned Promise keeps the cancel button loading; both happen only once it fulfills, and a rejection keeps the feedback open. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => unknown"}>Type</ApiType> | - |
+| onOk | Called when the submit button is clicked; the filled-in value is cleared once it returns. A returned Promise keeps the button loading and the value is cleared only once it fulfills, and kept when it rejects. The component never closes itself on submit; the caller sets visible to false. | <ApiType detail={"(event: MouseEvent) => unknown"}>Type</ApiType> | - |
+| onValueChange | Called when the feedback content changes, with the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox. | <ApiType detail={"(value: FeedbackValue) => void"}>Type</ApiType> | - |
+| placement | Popup mode only: edge the sheet slides in from. | `Placement` | - |
+| preventScroll | Modal mode only: whether the focus calls made by the component avoid scrolling the focused element into view. | `boolean` | - |
+| radioExtra | Snippet for the extra text of each item in radioGroupProps.options, with `{ option, index }` as its argument. | <ApiType detail={"Snippet\u003c[FeedbackRadioSnippetProps]>"}>Type</ApiType> | - |
+| radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | `FeedbackRadioGroupProps` | - |
+| radioLabel | Snippet for the label of each item in radioGroupProps.options, with `{ option, index }` as its argument. | <ApiType detail={"Snippet\u003c[FeedbackRadioSnippetProps]>"}>Type</ApiType> | - |
+| role | Modal mode only: role of the dialog, dialog or alertdialog. | `'dialog' \| 'alertdialog'` | - |
+| size | Width preset: small is 448px, medium 684px, large 920px. In popup mode it applies only when placement is left or right. | `Size` | - |
+| style | Style string; see the note below for where it lands. | `string` | - |
+| textAreaProps | Props of the multi-line input for the text and emoji types; its onChange is called as usual and does not replace the built-in handling. | `FeedbackTextAreaProps` | - |
+| title | Title, a string or a snippet, which also names the dialog. | `string \| Snippet` | - |
+| type | Type of the feedback content. For custom, the content goes in the children. | `FeedbackType` | `"emoji"` |
+| visible | Whether the feedback is shown; bind it with `bind:visible`. A cancel path (cancel button, close button, Esc, and the mask in modal mode) writes `false` back; the submit button never closes it. | `boolean` | - |
+| width | Width. A number is in pixels; a string is any valid CSS length. When omitted, size decides. | `string \| number` | - |
+| zIndex | z-index of the layer. | `number` | - |
+
+**Methods**
+
+| Method  | Description                                                                                           | Type                                         |
+| ------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| getRoot | The outermost element of the Modal or SideSheet inside the portal, or null while nothing is rendered. | <ApiType detail={"() => any"}>Type</ApiType> |

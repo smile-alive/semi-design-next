@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                              | 类型                                                                                 | 默认值 |
+| --------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------ |
+| activeKey | 当前展开的分组 key，可用 `bind:activeKey` 绑定。                                  | `string \| string[]`                                                                 | -      |
+| header    | 分组头部图标之后的内容，参数为 item 与 index；未提供时显示 header 字段。          | <ApiType detail={"Snippet\u003c[AnnotationHeaderSnippetProps]>"}>Type</ApiType>      | -      |
+| info      | 参考来源分组列表，每组包含 header、key 与 annotations。                           | `AnnotationInfo[]`                                                                   | `[]`   |
+| item      | 替换内置的参考来源条目，参数为 item 与 index（在分组内的位置）。                  | <ApiType detail={"Snippet\u003c[AnnotationItemSnippetProps]>"}>Type</ApiType>        | -      |
+| onChange  | 展开或收起分组时调用，参数为当前展开的 key。                                      | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>       | -      |
+| onClick   | 点击某条参考来源时调用，参数为点击事件和对应条目；根元素的原生 click 不单独上报。 | <ApiType detail={"(event: MouseEvent, item: AnnotationItem) => void"}>Type</ApiType> | -      |

@@ -39,6 +39,18 @@ import { Toast } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Toast } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+The static methods can only be called in the browser (calling them on the server throws); call them in event handlers. Use `Toast.useToast()` when you need to read context during component initialization.
+
+</Framework>
+
 ### Basic Usage
 
 Calling Toast's related methods to show timely feedback to user's operations. It is recommended to set the `stack` property to apply the stacking style to multiple Toasts on the same screen, and expand them by hovering, which can effectively prevent multiple parallel Toasts at one time.
@@ -70,6 +82,12 @@ Informational feedback
 <Framework only="vue">
 
 `content` and `icon` accept a `string`, a VNode or a function returning VNodeChild; the Typography texts below are built as VNodes with `h()`.
+
+</Framework>
+
+<Framework only="svelte">
+
+`content` and `icon` accept a string or a snippet: define it with `{#snippet}` in the component and pass it in; components such as Typography can be used directly inside the snippet.
 
 </Framework>
 
@@ -122,6 +140,14 @@ You could use `Toast.useToast()` to create a `Holder` that could access context.
 You could use `Toast.useToast()` to create a `contextHolder` that could access context. Created toast will be inserted to where `contextHolder` is placed and inherits the context, ConfigProvider and locale there. The holder is created under the owner that calls `useToast()`; place it only once.
 
 `Toast.useToast()` returns the tuple `[toast, contextHolder]`: `info`, `success`, `warning`, `error` and `open` of the toast object take the Options without `type`, `id`, `zIndex` and `getPopupContainer` and return the `toastId`; `close(toastId)` closes one manually. An element passed as `content` or `icon` is created inside an event handler, which has no owner and cannot read context; pass a function instead, which is called where the toast renders. The values of ConfigProvider and LocaleProvider cannot be read by the static `Toast`; use `useToast()` when you need them.
+
+</Framework>
+
+<Framework only="svelte">
+
+Call `Toast.useToast()` during component initialization. The toasts it opens inherit the context, ConfigProvider and locale of the calling component, and no Holder is needed. They are mounted under `document.body` and removed when the calling component is destroyed.
+
+`Toast.useToast()` returns the `toast` object: `info`, `success`, `warning`, `error` and `open` take the Options without `type`, `id`, `top`, `bottom`, `left`, `right`, `zIndex` and `getPopupContainer` and return the `toastId`; `close(toastId)` closes one manually. A snippet passed as `content` or `icon` can call `getContext` to read the calling component's context. The values of ConfigProvider and LocaleProvider cannot be read by the static `Toast`; use `useToast()` when you need them.
 
 </Framework>
 
@@ -212,6 +238,25 @@ Undeclared options such as `data-*` land on `.semi-toast`, in stack mode too.
 | motion       | Whether to animate entering and leaving                                                                                                                                     | `boolean`                            | `true`  |
 | class        | Class name                                                                                                                                                                  | `string`                             | -       |
 | style        | Inline style                                                                                                                                                                | `JSX.CSSProperties \| string`        | -       |
+
+`class`, `style` and undeclared options (such as `data-*` and `aria-*`) land on `.semi-toast`, in stack mode too.
+
+</Framework>
+
+<Framework only="svelte">
+
+| Property     | Description                                                                                         | Type                      | Default |
+| ------------ | --------------------------------------------------------------------------------------------------- | ------------------------- | ------- |
+| content      | Toast content, a string or a snippet; the snippet runs where the toast renders                      | string \| Snippet         | ''      |
+| icon         | Custom icon, a string or a snippet, replacing the icon of `type`                                    | string \| Snippet         |         |
+| showClose    | Whether to show the close button                                                                    | boolean                   | true    |
+| textMaxWidth | Maximum width of the content                                                                        | number \| string          | 450     |
+| onClose      | Callback function when the toast closes                                                             | () => void                |         |
+| stack        | Stack the toasts on screen once there are more than this many; `true` means 3, `false` never stacks | boolean \| number         | false   |
+| id           | Custom ToastId; a toast with the same id is updated                                                 | string                    |         |
+| motion       | Whether to animate entering and leaving                                                             | boolean                   | true    |
+| class        | Class name                                                                                          | string \| object \| array |         |
+| style        | Inline style, a string only                                                                         | string                    |         |
 
 `class`, `style` and undeclared options (such as `data-*` and `aria-*`) land on `.semi-toast`, in stack mode too.
 

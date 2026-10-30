@@ -69,7 +69,7 @@ interface TemplateContentProps {
     onTemplateClick: (content: string) => void;
 }
 
-const TemplateContent = ({ onTemplateClick: onTemplateClickProps }: TemplateContentProps) => {
+function TemplateContent({ onTemplateClick: onTemplateClickProps }: TemplateContentProps) {
     const [groupIndex, setGroupIndex] = useState(0);
 
     const onItemClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
@@ -108,7 +108,7 @@ const TemplateContent = ({ onTemplateClick: onTemplateClickProps }: TemplateCont
             </div>
         </div>
     );
-};
+}
 
 export default function AIChatInputDemo() {
     const ref = useRef<AIChatInputHandle>(null);

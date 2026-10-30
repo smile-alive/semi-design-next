@@ -20,7 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | trigger | When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence. | `FieldValidateTriggerType` | `semiGlobalDefault("Form", "trigger")` |
 | stopPropagation | Whether to stop the submit and reset events from bubbling, so that a nested Form does not trigger the events of the outer one. | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `semiGlobalDefault("Form", "stopPropagation")` |
 | validator | Form-level validation, called on submit and formApi.validate and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an object keyed by field name. | <ApiType detail={"((values: Values) => FormValidateResult\u003cValues> \u007c Promise\u003cFormValidateResult\u003cValues>>)"}>Type</ApiType> | `undefined` |
-| form | The formApi returned by useForm, used to control the form from outside. | <ApiType detail={"(FormApi\u003cValues> & FormApiProxyInternals\u003cValues>)"}>Type</ApiType> | `undefined` |
+| form | The formApi returned by useForm, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> | `undefined` |
 | id | The id of the form element, also written to x-form-id. Generated when omitted. | `string` | `undefined` |
 
 **Events**

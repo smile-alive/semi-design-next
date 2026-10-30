@@ -1,0 +1,8 @@
+**Props**
+
+| 属性      | 说明                                                                                                                                                                      | 类型                          | 默认值          |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | --------------- |
+| children  | Layout 的内容，可放 LayoutHeader、LayoutSider、LayoutContent、LayoutFooter 或嵌套的 Layout。                                                                              | `Snippet`                     | -               |
+| hasSider  | 表示子元素里有 Sider。直接子节点中的 Sider 会自动识别；嵌套更深的 Sider 在挂载后才登记，服务端渲染时传 true 可避免样式闪动。传 false 不能去掉 Sider 带来的 has-sider 类。 | `boolean`                     | -               |
+| prefixCls | 类名前缀。                                                                                                                                                                | `string`                      | `"semi-layout"` |
+| tagName   | 根元素的标签名。                                                                                                                                                          | `keyof HTMLElementTagNameMap` | `"section"`     |

@@ -11,6 +11,8 @@ import UploadVueApi from './api/upload.vue.en-US.mdx';
 import UploadFileCardVueApi from './api/upload-file-card.vue.en-US.mdx';
 import UploadSolidApi from './api/upload.solid.en-US.mdx';
 import UploadFileCardSolidApi from './api/upload-file-card.solid.en-US.mdx';
+import UploadSvelteApi from './api/upload.svelte.en-US.mdx';
+import UploadFileCardSvelteApi from './api/upload-file-card.svelte.en-US.mdx';
 
 ## Demos
 
@@ -29,6 +31,16 @@ import { Upload } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Upload } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Upload } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -65,6 +77,12 @@ When the type is `object`, you can customize the tooltip style.
 <Framework only="vue">
 
 Customize the popup through the `#ellipsisTooltip` slot, which receives `content` (the full file name) and `trigger` (the file name element, placed in the popup with `<component :is="trigger" />`); an object `showTooltip` configures the tooltip type and the props passed to it.
+
+</Framework>
+
+<Framework only="svelte">
+
+Customize the popup through the `ellipsisTooltip` snippet, which receives `content` (the full file name) and `trigger` (the file name element, placed in the popup with `{@render trigger()}`); an object `showTooltip` configures the tooltip type and the props passed to it.
 
 </Framework>
 
@@ -131,6 +149,15 @@ For example, only allowing users to upload PNG and PDF files, `accept` can be wr
 
 </Framework>
 
+<Framework only="svelte">
+
+<Notice type="primary" title="Notes">
+    <div>Upload will intercept files that do not meet the accept format internally. When files that do not meet the format requirements are intercepted, onAcceptInvalid will be called;</div>
+    <div>accept uses the suffix to avoid the incompatibility between file.type and MIME due to different browsers or operating systems. </div>
+</Notice>
+
+</Framework>
+
 <Framework only="solid">
 
 <Notice type="primary" title="Notes">
@@ -168,6 +195,12 @@ You can limit the maximum number of files that can be uploaded by setting the `l
 
 </Framework>
 
+<Framework only="svelte">
+
+You can limit the maximum number of files that can be uploaded by setting the `limit` property. When `limit` is 1, always replace the current one with the latest upload, and `onExceed` will not be called
+
+</Framework>
+
 <Framework only="solid">
 
 Set the `limit` property to limit the maximum number of files that can be uploaded  
@@ -199,6 +232,12 @@ The upload file size limit can be customized through the `maxSize` and `minSize`
 
 </Framework>
 
+<Framework only="svelte">
+
+The upload file size limit can be customized through the `maxSize` and `minSize` properties, and you can pass `onSizeError` to be notified when the limit is exceeded.
+
+</Framework>
+
 <Framework only="solid">
 
 Use the `maxSize` and `minSize` properties to customize the file size limits, and set `onSizeError` to get a callback when a file exceeds them.
@@ -218,6 +257,12 @@ When `listType` is `list`, you can customize the list operation area by passing 
 <Framework only="vue">
 
 When `listType` is `list`, you can customize the list operation area through the `#fileOperation` slot, which receives `UploadFileItemSlotProps`
+
+</Framework>
+
+<Framework only="svelte">
+
+When `listType` is `list`, you can customize the list operation area through the `fileOperation` snippet, which receives `UploadFileItemSlotProps`
 
 </Framework>
 
@@ -275,6 +320,28 @@ When `listType` is `list`, you can customize the title area at the top of the fi
 
 </Framework>
 
+<Framework only="svelte">
+
+When `listType` is `list`, you can customize the title area at the top of the file list through two snippets:
+
+#### Replace only the title text
+
+`fileListTitle` replaces only the title text, and the clear button retains its default style:
+
+<Demo id="file-list-title" />
+
+#### Replace the whole title area
+
+`fileListHeader` replaces the whole title area, including the clear button. Once the snippet is provided, the default title does not come back even when it renders nothing. The snippet receives the following parameters:
+
+- `fileList`: Current file list
+- `onClear`: Function to clear files
+- `clearText`: Default text for the clear button (based on current locale)
+
+<Demo id="file-list-title-function" />
+
+</Framework>
+
 <Framework only="solid">
 
 When `listType` is `list`, you can customize the title area at the top of the file list through `fileListTitle`. Two forms are supported:
@@ -317,6 +384,15 @@ Or if you want to use an additional operation area to achieve enlarged preview w
 
 </Framework>
 
+<Framework only="svelte">
+
+When `listType` is list, the preview logic can be implemented through the `previewFile` snippet. Its content replaces the thumbnail, and the default thumbnail does not come back even when the snippet renders nothing.  
+For example, when you don't need thumbnail preview for image types, you can constantly render a `<IconFile />` in `previewFile`.  
+If you want to enlarge and preview the image when clicked, you can use the `Image` component in `previewFile`.  
+Or if you want to use an additional operation area to achieve enlarged preview when clicked, you can also combine `fileOperation` to place some custom elements such as Icon to achieve enlarged preview when clicked.
+
+</Framework>
+
 <Framework only="solid">
 
 When `listType` is `list`, you can customize the preview logic through `previewFile`  
@@ -337,6 +413,12 @@ The following is an example of combining `renderFileOperation` and `ImagePreview
 <Framework only="vue">
 
 The following is an example of combining `#fileOperation` and `ImagePreview`. In this example, clicking the first Icon on the right can enlarge the image for preview.
+
+</Framework>
+
+<Framework only="svelte">
+
+The following is an example of combining the `fileOperation` snippet and `ImagePreview`. In this example, clicking the first Icon on the right can enlarge the image for preview.
 
 </Framework>
 
@@ -367,6 +449,12 @@ When `fileList` is passed in, it is used as a controlled component. Need to list
 <Framework only="vue">
 
 Bind the file list with `v-model:fileList`; Upload writes it back through the `update:fileList` event whenever the list changes. With a one-way `:fileList` binding that is never written back, the list keeps the value passed in. The `@change` event still receives `{ fileList, currentFile }`, where `currentFile` is `null` after files are added with the `insert` method.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the file list with `bind:fileList`; Upload writes it back whenever the list changes. A plain `fileList` value that is not bound is the initial list, which Upload then maintains itself. `onChange` still receives `{ fileList, currentFile }`, where `currentFile` is `null` after files are added with the `insert` method.
 
 </Framework>
 
@@ -403,6 +491,12 @@ With the Image component, through the `#thumbnail` slot, you can click on the im
 
 </Framework>
 
+<Framework only="svelte">
+
+With the Image component, through the `thumbnail` snippet, you can click on the image to enlarge the preview
+
+</Framework>
+
 <Framework only="solid">
 
 Use the Image component together with the `renderThumbnail` property to enlarge the picture when it is clicked.
@@ -420,6 +514,12 @@ You can customize the preview icon through `renderPicPreviewIcon`, `onPreviewCli
 <Framework only="vue">
 
 You can customize the preview icon through the `#picPreviewIcon` slot and the `@previewClick` event, when the replacement icon `showReplace` is displayed, the preview icon will no longer be displayed. <br /> When you need to customize the preview/replacement function, you need to turn off the replacement function and use `#picPreviewIcon` to listen for icon click events. <br /> `@previewClick` listens for the click event of the single image container. Listening to it also makes the file cards clickable and shows a preview button
+
+</Framework>
+
+<Framework only="svelte">
+
+You can customize the preview icon through the `picPreviewIcon` snippet and `onPreviewClick`, when the replacement icon `showReplace` is displayed, the preview icon will no longer be displayed. <br /> When you need to customize the preview/replacement function, you need to turn off the replacement function and use `onPreviewClick` to listen for clicks. <br /> `onPreviewClick` listens for the click event of the single image container. Passing it also makes the file cards clickable and shows a preview button
 
 </Framework>
 
@@ -442,6 +542,12 @@ By setting picHeight, picWidth, the width and height of picture wall elements ca
 <Framework only="vue">
 
 By setting picHeight, picWidth, the width and height of picture wall elements can be uniformly set. If you also render an Image component in the `#thumbnail` slot for click-to-enlarge preview, you need to specify both the width and height of the Image component
+
+</Framework>
+
+<Framework only="svelte">
+
+By setting picHeight, picWidth, the width and height of picture wall elements can be uniformly set. If you also render an Image component in the `thumbnail` snippet for click-to-enlarge preview, you need to specify both the width and height of the Image component
 
 </Framework>
 
@@ -475,6 +581,12 @@ Set `hotSpotLocation` to customize the order of click hotspots, the default is a
 
 </Framework>
 
+<Framework only="svelte">
+
+`uploadTrigger="custom"`, the upload will not be triggered automatically after the file is selected. Get the instance with `bind:this` and call its `upload` method to trigger it
+
+</Framework>
+
 <Framework only="solid">
 
 `uploadTrigger='custom'`: after files are selected, the upload will not start automatically. Get the upload component through `ref` and call its `upload` method to start it.
@@ -505,6 +617,12 @@ You can quickly set the content of the drag area through the `#dragIcon`, `#drag
 
 </Framework>
 
+<Framework only="svelte">
+
+You can quickly set the content of the drag area through the `dragIcon`, `dragMainText`, `dragSubText` snippets. `dragIcon` and `dragMainText` fall back to the default icon and text when they render nothing
+
+</Framework>
+
 <Framework only="solid">
 
 Use `dragIcon`, `dragMainText` and `dragSubText` to quickly set the content of the drag area.
@@ -522,6 +640,12 @@ You can also pass in ReactNode through `children` to completely customize the di
 <Framework only="vue">
 
 You can also pass content through the default slot to completely customize the display of the drag area
+
+</Framework>
+
+<Framework only="svelte">
+
+You can also pass content through `children` to completely customize the display of the drag area
 
 </Framework>
 
@@ -567,6 +691,12 @@ With `addOnPasting`, files pasted anywhere on the page (the `paste` event) are a
 
 </Framework>
 
+<Framework only="svelte">
+
+With `addOnPasting`, files pasted anywhere on the page (the `paste` event) are added to the file list, with no clipboard permission prompt. `onPastingError` is called when a pasted file cannot be read.
+
+</Framework>
+
 <Framework only="solid">
 
 After `addOnPasting` is set, files pasted anywhere on the page (the `paste` event) are added to the file list without clipboard permission. `onPastingError` is triggered when reading a pasted file fails.
@@ -602,6 +732,21 @@ The file status can be updated through the `beforeUpload` hook, which is to veri
      fileInstance?: File,
      status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
      validateMessage?: string, // file validation information; use the #fileValidateMessage slot for a node
+     shouldUpload: boolean, // Whether to upload. The default is true, if it is false, the fileItem will only be displayed in the list, and the upload operation will not be triggered
+     autoRemove: boolean, // Whether to remove the file from the fileList, the default is false
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+// beforeUploadResult:
+{
+     fileInstance?: File,
+     status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
+     validateMessage?: string, // file validation information; use the fileValidateMessage snippet for a node
      shouldUpload: boolean, // Whether to upload. The default is true, if it is false, the fileItem will only be displayed in the list, and the upload operation will not be triggered
      autoRemove: boolean, // Whether to remove the file from the fileList, the default is false
 }
@@ -657,6 +802,22 @@ The file status, verification information, and file name can be updated through 
 {
     status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
     validateMessage?: string, // file validation information; use the #fileValidateMessage slot for a node
+    autoRemove?: boolean, // Whether to remove the file from the fileList, the default is false
+    name?: string;
+    // The URL for previewing image file, usually the storage address returned by the Server after receiving response
+    url?: string;
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+// afterUploadResult:
+{
+    status?:'success' |'uploadFail' |'validateFail' |'validating' |'uploading' |'wait',
+    validateMessage?: string, // file validation information; use the fileValidateMessage snippet for a node
     autoRemove?: boolean, // Whether to remove the file from the fileList, the default is false
     name?: string;
     // The URL for previewing image file, usually the storage address returned by the Server after receiving response
@@ -734,6 +895,12 @@ Set `crop` to enable default cropping configuration (`:crop="true"` or the boole
 
 </Framework>
 
+<Framework only="svelte">
+
+Set `crop` to enable default cropping configuration (`crop={true}` or the boolean shorthand `crop`).
+
+</Framework>
+
 `accept` and `limit` are applied before cropping, so images that are rejected or exceed the limit are never cropped. Browsers encode only PNG, JPEG and WebP; the cropped result of any other format (GIF, BMP, SVG) is a PNG, and the file's `type` and extension become `image/png` and `.png`.
 
 <Framework only="solid">
@@ -793,6 +960,20 @@ Undeclared attrs such as `class`, `style` and `aria-*` land on the root element,
 `Upload.FileCard` is the default file card, used to keep the default look inside slots such as `#fileItem`: `<Upload.FileCard v-bind="props" />`. `class`, `style`, `data-*` and `aria-*` land on its root element.
 
 <UploadFileCardVueApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+<UploadSvelteApi />
+
+Undeclared attributes such as `class`, `style` and `aria-*` land on the root element, which gets `role="group"` automatically when it has `aria-label` or `aria-labelledby`.
+
+### Upload.FileCard
+
+`Upload.FileCard` (also importable on its own as `UploadFileCard`) is the default file card, used to keep the default look inside snippets such as `fileItem`: `<Upload.FileCard {...props} />`. `class`, `style`, `data-*` and `aria-*` land on its root element.
+
+<UploadFileCardSvelteApi />
 
 </Framework>
 
@@ -874,6 +1055,29 @@ interface FileItem {
     uid: string; // The unique identifier of the file. If the current file is selected and added by upload, the uid will be automatically generated. If it is defaultFileList, you need to ensure that it will not be repeated
     url?: string;
     validateMessage?: string; // use the #fileValidateMessage slot for a node
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```ts
+interface FileItem {
+    event?: Event; // xhr event
+    fileInstance?: File; // original File Object which extends Blob, the file object actually obtained by the browser (https://developer.mozilla.org/zh-CN/docs/Web/API/File)
+    name: string;
+    percent?: number; // upload progress percentage
+    preview?: boolean; // Whether to preview according to url
+    response?: any; // xhr's response, response body when the request is successful, and corresponding error when the request fails
+    shouldUpload?: boolean; // Should you continue to upload
+    showReplace?: boolean; // Separately control whether the file displays the replace button
+    showRetry?: boolean; // Separately control whether the file displays the retry button
+    size: string; // file size, unit kb
+    status: 'success' | 'uploadFail' | 'validateFail' | 'validating' | 'uploading' | 'wait';
+    uid: string; // The unique identifier of the file. If the current file is selected and added by upload, the uid will be automatically generated. If it is the initial list, you need to ensure that it will not be repeated
+    url?: string;
+    validateMessage?: string; // a string only; use the fileValidateMessage snippet for a node
 }
 ```
 
@@ -1047,6 +1251,58 @@ interface UploadFileListHeaderSlotProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+### UploadFileItemSlotProps Interface
+
+The parameter that the `fileItem`, `thumbnail`, `picInfo`, `picPreviewIcon`, `fileOperation`, `previewFile` and `fileValidateMessage` snippets receive. The file data sits in the `file` field, next to the file card's props. `<Upload.FileCard {...props} />` renders the default card.
+
+```ts
+interface UploadFileItemSlotProps {
+    file: FileItem;
+    index?: number; // position of the file in the list
+    listType: 'picture' | 'list' | 'none';
+    disabled?: boolean;
+    showRetry?: boolean;
+    showReplace?: boolean;
+    showPicInfo?: boolean;
+    showTooltip?: boolean | ShowTooltip;
+    picWidth?: string | number;
+    picHeight?: string | number;
+    validateMessage?: string;
+    style?: string; // from itemStyle
+    onRemove: () => void; // removes this file
+    onRetry: () => void; // uploads this file again
+    onReplace: () => void; // replaces this file
+    onPreviewClick?: () => void; // present only when Upload has an onPreviewClick
+}
+```
+
+### UploadPicCloseSlotProps Interface
+
+The parameter that `picClose` receives:
+
+```ts
+interface UploadPicCloseSlotProps {
+    class: string;
+    onRemove: (e: MouseEvent) => void;
+}
+```
+
+### UploadFileListHeaderSlotProps Interface
+
+The parameter that `fileListHeader` receives:
+
+```ts
+interface UploadFileListHeaderSlotProps {
+    fileList: FileItem[]; // Current file list
+    onClear: () => void; // Function to clear files
+    clearText: string; // Default text for the clear button (based on current locale)
+}
+```
+
+</Framework>
+
 ### CropProps Interface
 
 Configuration object accepted by the `crop` prop:
@@ -1054,6 +1310,12 @@ Configuration object accepted by the `crop` prop:
 <Framework only="vue">
 
 In Vue the type is exported as `UploadCropProps`.
+
+</Framework>
+
+<Framework only="svelte">
+
+In Svelte the type is exported as `UploadCropProps`.
 
 </Framework>
 
@@ -1083,6 +1345,12 @@ Some internal methods provided by Upload can be accessed through ref. See the **
 <Framework only="vue">
 
 Upload exposes `insert`, `upload` and `openFileDialog` through `defineExpose`. Call them through a template ref typed as `UploadHandle`; see the Exposes table of Upload above.
+
+</Framework>
+
+<Framework only="svelte">
+
+Upload exposes `insert`, `upload` and `openFileDialog` as `export function`s. Get the instance with `bind:this`, typed as `UploadHandle`; see the Methods table of Upload above.
 
 </Framework>
 

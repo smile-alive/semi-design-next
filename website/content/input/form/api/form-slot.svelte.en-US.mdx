@@ -1,0 +1,14 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property      | Description                                                                                                                            | Type                                                                     | Default |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
+| children      | The custom content to place.                                                                                                           | `Snippet`                                                                | -       |
+| error         | The error, rendered after the content; omitted when not given.                                                                         | `FieldError`                                                             | -       |
+| errorContent  | Custom rendering of the error, with `{ error }`.                                                                                       | <ApiType detail={"Snippet\u003c[{ error: FieldError }]>"}>Type</ApiType> | -       |
+| fieldLabel    | Label content, which takes precedence over the text in the label prop.                                                                 | `Snippet`                                                                | -       |
+| label         | The Label text, or a Label configuration such as text, align, width, required and optional; the `fieldLabel` snippet takes precedence. | `string \| number \| FieldLabel`                                         | -       |
+| labelExtra    | Content that follows the Label text.                                                                                                   | `Snippet`                                                                | -       |
+| labelPosition | Position of the Label, taken from the Form by default: top or left.                                                                    | `'top' \| 'left'`                                                        | -       |
+| noLabel       | Whether to leave out the Label; with both labelCol and wrapperCol set on the Form, the Label column stays.                             | `boolean`                                                                | -       |

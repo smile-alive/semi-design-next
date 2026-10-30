@@ -14,7 +14,7 @@ interface Row {
     avatarBg: 'grey' | 'red';
 }
 
-const getData = (total: number) => {
+function getData(total: number) {
     const data: Row[] = [];
     for (let i = 0; i < total; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -29,7 +29,7 @@ const getData = (total: number) => {
         });
     }
     return data;
-};
+}
 
 const dataSource = getData(46);
 
@@ -44,16 +44,16 @@ const nameFilters = [
     },
 ];
 
-const renderName = (text: string) => {
+function renderName(text: string) {
     return (
         <span>
             <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
             {text}
         </span>
     );
-};
+}
 
-const renderOwner = (text: string, record: Row) => {
+function renderOwner(text: string, record: Row) {
     return (
         <div>
             <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
@@ -62,7 +62,7 @@ const renderOwner = (text: string, record: Row) => {
             {text}
         </div>
     );
-};
+}
 
 export default function TableDemo() {
     return (

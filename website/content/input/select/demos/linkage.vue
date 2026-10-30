@@ -12,13 +12,13 @@
     const cities = computed(() => maps[province.value]);
     const city = ref<string | undefined>(cities.value[0]);
 
-    function changeProvince(newProvince?: string) {
+    const changeProvince = (newProvince?: string) => {
         if (!newProvince) {
             return;
         }
         province.value = newProvince;
         city.value = maps[newProvince][0];
-    }
+    };
 </script>
 
 <template>

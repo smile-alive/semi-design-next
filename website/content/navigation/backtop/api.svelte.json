@@ -1,0 +1,51 @@
+{
+    "back-top": {
+        "source": "packages/semi-ui-svelte/src/backtop/backtop.svelte",
+        "props": {
+            "badge": {
+                "zh-CN": "徽章参数，同 FloatButton。",
+                "en-US": "Badge props, same as FloatButton."
+            },
+            "badgeCount": {
+                "zh-CN": "自定义徽章内容的 snippet，代替 badge.count。",
+                "en-US": "Snippet for custom badge content, in place of badge.count."
+            },
+            "children": {
+                "zh-CN": "按钮内的静态内容，代替图标显示；不能包含可交互元素。",
+                "en-US": "Static content of the button, shown in place of the icon. Must not contain interactive elements."
+            },
+            "colorful": {
+                "zh-CN": "多彩按钮，同 FloatButton；未设置时取 FloatButton 的默认值。",
+                "en-US": "Colorful button, same as FloatButton. Falls back to the FloatButton default when unset."
+            },
+            "duration": {
+                "zh-CN": "滚动到顶部所需的毫秒数；`onclick` 按此间隔节流。",
+                "en-US": "Milliseconds the scroll to the top takes. `onclick` is throttled by this interval."
+            },
+            "icon": {
+                "zh-CN": "按钮图标的 snippet，默认 IconBackTop。",
+                "en-US": "Snippet for the button icon. Defaults to IconBackTop."
+            },
+            "onclick": {
+                "zh-CN": "点击时的回调，参数为原生 click 事件；按 duration 节流，调用时滚动已开始。",
+                "en-US": "Called on click with the native click event. Throttled by duration, and called once the scroll has started."
+            },
+            "shape": {
+                "zh-CN": "形状，可选 round、square；未设置时取 FloatButton 的默认值。",
+                "en-US": "Shape: round or square. Falls back to the FloatButton default when unset."
+            },
+            "size": {
+                "zh-CN": "尺寸，可选 default、small、large；未设置时取 FloatButton 的默认值。",
+                "en-US": "Size: default, small or large. Falls back to the FloatButton default when unset."
+            },
+            "target": {
+                "zh-CN": "返回被监听滚动的元素的函数，未设置时为 window；返回 null 表示节点尚不可用。挂载时调用，函数本身变化时重新调用。",
+                "en-US": "Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called on mount and again when the function itself changes."
+            },
+            "visibilityHeight": {
+                "zh-CN": "出现 BackTop 需要达到的滚动高度。",
+                "en-US": "Scroll distance after which the BackTop appears."
+            }
+        }
+    }
+}

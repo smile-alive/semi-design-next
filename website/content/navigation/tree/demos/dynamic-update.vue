@@ -16,7 +16,7 @@
         },
     ]);
 
-    function add() {
+    const add = () => {
         const itemLength = Math.floor(Math.random() * 5) + 1;
         treeData.value = Array.from({ length: itemLength }).map((_, i) => {
             const length = Math.floor(Math.random() * 3);
@@ -32,7 +32,7 @@
                 children,
             };
         });
-    }
+    };
 </script>
 
 <template>

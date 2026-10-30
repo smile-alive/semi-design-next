@@ -4,9 +4,9 @@
 
     const toastId = ref<string | null>(null);
 
-    function destroy() {
+    const destroy = () => {
         toastId.value = null;
-    }
+    };
 
     const opts = {
         content: 'Not auto close',
@@ -14,19 +14,19 @@
         onClose: destroy,
     };
 
-    function show() {
+    const show = () => {
         if (toastId.value) {
             return;
         }
         toastId.value = Toast.info(opts);
-    }
+    };
 
-    function hide() {
+    const hide = () => {
         if (toastId.value) {
             Toast.close(toastId.value);
         }
         destroy();
-    }
+    };
 </script>
 
 <template>

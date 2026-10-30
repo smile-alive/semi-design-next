@@ -1,0 +1,59 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| action | 自定义消息操作栏的 snippet，参数为 `message`、默认按钮数组 `defaultActions`（snippet 数组）、按名称索引的 `defaultActionsObj` 和类名 `class`。 | <ApiType detail={"Snippet\u003c[ChatActionSnippetProps]>"}>Type</ApiType> | - |
+| align | 对话布局方式，可选 `leftRight`（左右分布）或 `leftAlign`（左对齐）。 | `ChatAlign` | `"leftRight"` |
+| avatar | 自定义消息头像的 snippet，参数为 `message`、`role` 和默认头像 `defaultAvatar`（snippet）。提供但渲染为空时不显示头像。 | <ApiType detail={"Snippet\u003c[ChatAvatarSnippetProps]>"}>Type</ApiType> | - |
+| bottomSlot | 输入框下方内容的 snippet。 | `Snippet` | - |
+| canSend | 发送按钮是否可用。通常由内部逻辑决定，设置后以此值为准。 | `boolean` | - |
+| chats | 对话列表，可绑定：`bind:chats`。发送消息、点赞、重置、清除上下文、删除时，Chat 先把新列表写回，再触发 `onChatsChange`。列表的整体替换、`push` 和最后一条消息文本的就地增长都会被跟随，其他就地修改（如深层 content 改动、单独翻转 status）会渲染但不被跟随，建议整体替换数组。 | `ChatMessage[]` | - |
+| content | 自定义消息内容区域的 snippet，参数为 `message`、`role`、默认内容 `defaultContent`（snippet）和类名 `class`。 | <ApiType detail={"Snippet\u003c[ChatContentSnippetProps]>"}>Type</ApiType> | - |
+| customMarkDownComponents | 自定义 Markdown 渲染组件，键为元素名，传给消息内容的 MarkdownRender。 | `MarkdownRenderComponents` | - |
+| divider | 自定义清除上下文后的分割线的 snippet，参数为 `message`。 | <ApiType detail={"Snippet\u003c[ChatDividerSnippetProps]>"}>Type</ApiType> | - |
+| enableUpload | 是否启用上传。布尔值同时控制粘贴、点击和拖拽上传；传对象时分别设置 `pasteUpload`、`clickUpload`、`dragUpload`，未设置的项为 `true`。 | `boolean \| ChatEnableUploadProps` | `true` |
+| escapeHtml | 是否转义用户消息中的 HTML 标签，防止被 Markdown 解析器当作 HTML 处理导致内容丢失。 | `boolean` | `true` |
+| fullChatBox | 完全自定义整个消息框的 snippet，参数为 `message`、`role`、各部分默认节点 `defaultNodes`（snippet）和类名 `class`。 | <ApiType detail={"Snippet\u003c[ChatFullChatBoxSnippetProps]>"}>Type</ApiType> | - |
+| hintBox | 自定义提示项的 snippet，参数为 `content`、`index` 和点击处理函数 `onHintClick`。 | <ApiType detail={"Snippet\u003c[ChatHintBoxSnippetProps]>"}>Type</ApiType> | - |
+| hintCls | 提示区最外层的类名。 | `string` | - |
+| hints | 提示信息列表。点击某项后触发 `onHintClick`，并将该项作为新的用户消息。 | `string[]` | - |
+| hintStyle | 提示区最外层的样式，字符串。 | `string` | - |
+| inputArea | 自定义输入区域的 snippet，参数为 `defaultNode`、各部分节点（`clearContextNode`、`uploadNode`、`inputNode`、`sendNode`，均为 snippet）以及需要自行调用的 `onSend`、`onClear`、`onClick`。 | <ApiType detail={"Snippet\u003c[ChatInputAreaSnippetProps]>"}>Type</ApiType> | - |
+| inputBoxCls | 输入框的类名。 | `string` | - |
+| inputBoxStyle | 输入框的样式，字符串。 | `string` | - |
+| markdownRenderProps | 传给消息内容所用 MarkdownRender 的属性，默认 format 为 md。`raw` 与 `components` 不可设置，自定义渲染组件使用 `customMarkDownComponents`。 | `ChatMarkdownRenderProps` | - |
+| mode | 对话模式，可选 `bubble`、`noBubble` 或 `userBubble`。 | `ChatMode` | `"bubble"` |
+| onChatsChange | 对话列表变化时的回调，在 `chats` 写回之后触发。 | <ApiType detail={"(chats: ChatMessage[]) => void"}>Type</ApiType> | - |
+| onClear | 清除上下文时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onHintClick | 点击提示信息时的回调，参数为该提示内容。 | <ApiType detail={"(hint: string) => void"}>Type</ApiType> | - |
+| onInputChange | 输入内容或附件变化时的回调，参数为 `{ inputValue, attachment }`。 | <ApiType detail={"(props: ChatInputChangeProps) => void"}>Type</ApiType> | - |
+| onMessageBadFeedback | 消息负向反馈时的回调。 | <ApiType detail={"(message: ChatMessage) => void"}>Type</ApiType> | - |
+| onMessageCopy | 复制消息时的回调。 | <ApiType detail={"(message: ChatMessage) => void"}>Type</ApiType> | - |
+| onMessageDelete | 删除消息时的回调。 | <ApiType detail={"(message: ChatMessage) => void"}>Type</ApiType> | - |
+| onMessageGoodFeedback | 消息正向反馈时的回调。 | <ApiType detail={"(message: ChatMessage) => void"}>Type</ApiType> | - |
+| onMessageReset | 重置消息时的回调；由 `resetMessage` 方法触发时参数为 `null`。 | <ApiType detail={"(message: ChatMessage \u007c null) => void"}>Type</ApiType> | - |
+| onMessageSend | 发送消息时的回调，参数为文本内容和附件。 | <ApiType detail={"(content: string, attachment?: FileItem[]) => void"}>Type</ApiType> | - |
+| onStopGenerator | 点击停止生成按钮时的回调。 | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| placeholder | 输入框占位符。 | `string` | - |
+| roleAvatar | 没有图片 URL 的角色的头像内容 snippet，参数为 `message` 和 `role`。 | <ApiType detail={"Snippet\u003c[ChatRoleAvatarSnippetProps]>"}>Type</ApiType> | - |
+| roleConfig | 角色信息，键为消息的 role。`avatar` 只接受图片 URL，节点头像使用 `roleAvatar` snippet；`color` 传给 Avatar。 | `ChatRoleConfig` | - |
+| sendHotKey | 发送快捷键，可选 `enter` 或 `shift+enter`。`enter` 时单独按 Enter 发送，Shift+Enter 换行；`shift+enter` 相反。 | `SendHotKey` | `"enter"` |
+| showClearContext | 是否在输入框中显示清除上下文按钮。 | `boolean` | `false` |
+| showStopGenerate | 是否在最后一条消息生成中时显示停止生成按钮。生成中发送按钮不可用，点击停止按钮触发 `onStopGenerator`。 | `boolean` | `false` |
+| title | 自定义消息标题的 snippet，参数为 `message`、`role` 和默认标题 `defaultTitle`（snippet）。提供但渲染为空时不显示标题。 | <ApiType detail={"Snippet\u003c[ChatTitleSnippetProps]>"}>Type</ApiType> | - |
+| topSlot | 对话区域顶部内容的 snippet。 | `Snippet` | - |
+| uploadButton | 替换上传按钮的 snippet。 | `Snippet` | - |
+| uploadProps | 传给 Upload 的属性，`fileList` 与 `children` 由 Chat 管理，上传按钮的内容使用 `uploadButton` snippet；添加或移除附件时 Chat 自己处理 `onChange`，其余回调照常传入。未设置 `action` 时为空字符串，需要自行提供 `customRequest` 或 `action` 才会上传。 | `ChatUploadProps` | - |
+| uploadTip | 上传按钮提示文字的 snippet。 | `Snippet` | - |
+| uploadTipProps | 上传按钮提示 Tooltip 的属性，不含 `content`；提示文字使用 `uploadTip` snippet。 | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child'>"}>Type</ApiType> | - |
+
+**Methods**
+
+| 方法           | 说明                                                                              | 类型                                                                               |
+| -------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| clearContext   | 在对话末尾追加分割线以清除上下文并触发 `onClear`；末尾已是分割线时无效果。        | <ApiType detail={"() => void"}>Type</ApiType>                                      |
+| resetMessage   | 将最后一条消息重置为空内容的 loading 状态并触发 `onMessageReset`，参数为 `null`。 | <ApiType detail={"() => void"}>Type</ApiType>                                      |
+| scrollToBottom | 滚动到最底部，`animation` 为 `true` 时平滑滚动，否则直接跳转。                    | <ApiType detail={"(animation?: boolean) => void"}>Type</ApiType>                   |
+| sendMessage    | 发送消息，不传 `attachment` 时消息的 content 为字符串。                           | <ApiType detail={"(text: string, attachment?: FileItem[]) => void"}>Type</ApiType> |

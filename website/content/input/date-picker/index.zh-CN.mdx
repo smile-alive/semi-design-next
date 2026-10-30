@@ -9,6 +9,7 @@ import { Image } from '@fibrae/semi-ui-react';
 import DatePickerReactApi from './api/date-picker.react.zh-CN.mdx';
 import DatePickerVueApi from './api/date-picker.vue.zh-CN.mdx';
 import DatePickerSolidApi from './api/date-picker.solid.zh-CN.mdx';
+import DatePickerSvelteApi from './api/date-picker.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -27,6 +28,16 @@ import { DatePicker } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { DatePicker } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { DatePicker } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -81,6 +92,14 @@ import { Button, ButtonGroup, DatePicker, Space, TabPane, Tabs, Tooltip, Typogra
 
 <Notice type="primary" title="注意事项">
     <div>type=dateRange 或 dateTimeRange 时，只有开始日期和结束日期都被选择后才会触发 change 与 update:modelValue。</div>
+</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice type="primary" title="注意事项">
+    <div>type=dateRange 或 dateTimeRange 时，只有开始日期和结束日期都被选择后才会调用 onChange 并更新绑定的 value。</div>
 </Notice>
 
 </Framework>
@@ -147,6 +166,12 @@ insetInput 开启后包括以下功能：
 
 </Framework>
 
+<Framework only="svelte">
+
+`onPanelChange` 会在面板的月份或年份切换改变时调用。
+
+</Framework>
+
 <Framework only="solid">
 
 `onPanelChange` 回调函数会在面板的月份或年份切换改变时被调用。
@@ -201,6 +226,14 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 </Framework>
 
+<Framework only="svelte">
+
+同时支持 “确认”（`onConfirm`） 和 “取消”（`onCancel`） 两个按钮的点击回调。
+
+下面这个例子传入了 `onChange`、`onConfirm`、`onCancel` 三个回调，你可以打开控制台查看打印信息的区别。
+
+</Framework>
+
 <Framework only="solid">
 
 同时支持 “确认”（`onConfirm`） 和 “取消”（`onCancel`） 两个按钮的点击回调。
@@ -232,6 +265,13 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 通过 `#topSlot` 和 `#bottomSlot` 插槽可以自定义渲染顶部和底部额外区域  
 通过 `#leftSlot` 和 `#rightSlot` 插槽可以自定义渲染左侧和右侧额外区域
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `topSlot` 和 `bottomSlot` snippet 可以自定义渲染顶部和底部额外区域  
+通过 `leftSlot` 和 `rightSlot` snippet 可以自定义渲染左侧和右侧额外区域
 
 </Framework>
 
@@ -305,6 +345,16 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 </Framework>
 
+<Framework only="svelte">
+
+默认情况下我们使用 `Input` 组件作为 `DatePicker` 组件的触发器，通过 `trigger` snippet 你可以自定义这个触发器。
+
+自定义触发器是对触发器的完全自定义，默认的清除按钮将不生效，如果你需要清除功能，请自定义一个清除按钮，点击时调用 snippet 参数中的 `onClear`，或把绑定的 `value` 置为 `null`。
+
+snippet 参数提供 `value`、`inputValue`、`placeholder`、`disabled`、`size`、`inputReadOnly`、`rangeInputFocus`、`type`、`format`、`multiple`、`autofocus`、`componentProps`，以及 `onChange`（更新输入文本，与键入相同）、`onEnterPress`（提交输入文本）、`onClear`（报告清除按钮的点击）。用户键入之前 `inputValue` 为 `null`，此时显示格式化后的 `value`。snippet 参数不含 `aria-*` 属性，自定义内容需要自行设置可访问名称。
+
+</Framework>
+
 <Framework only="solid">
 
 默认情况下我们使用 `Input` 组件作为 `DatePicker` 组件的触发器，通过传递 `triggerRender` 方法你可以自定义这个触发器。
@@ -344,6 +394,15 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 
 </Framework>
 
+<Framework only="svelte">
+
+`date` snippet 的参数为 `{ dayNumber, fullDate }`，自定义日期内容。
+
+- `dayNumber`：当前日。如 `13`。
+- `fullDate`：当前日的完整日期。如 `2020-08-13`。
+
+</Framework>
+
 <Framework only="solid">
 
 `renderDate: (dayNumber?: number, fullDate?: string) => JSX.Element`，自定义日期内容。
@@ -366,6 +425,12 @@ dateRange 搭配 startDateOffset 和 endDateOffset 可以进行单击范围选�
 <Framework only="vue">
 
 `#fullDate="{ dayNumber, fullDate, dayStatus }"` 作用域插槽，自定义整个日期格子的渲染内容，日期格只保留基础类名和 active 类名。
+
+</Framework>
+
+<Framework only="svelte">
+
+`fullDate` snippet 的参数为 `{ dayNumber, fullDate, dayStatus }`，自定义整个日期格子的渲染内容，日期格只保留基础类名和 active 类名。
 
 </Framework>
 
@@ -429,6 +494,21 @@ type DayStatusType = { isToday?: boolean; // 当前日 isSelected?: boolean; // 
 
 </Framework>
 
+<Framework only="svelte">
+
+<DatePickerSvelteApi />
+
+`value` 与 `open` 可以用 `bind:` 绑定，也可以只传值作为初始状态，没有 `defaultValue`、`defaultOpen`。`autofocus` 是小写，`triggerRender`、`renderDate`、`renderFullDate` 及各 ReactNode 属性改为同名 snippet（`trigger`、`date`、`fullDate`），分隔符的展示是 `rangeSeparatorNode` snippet。回调写作 `onChange` 等，不是原生事件。`style`、`inputStyle`、`dropdownStyle` 是字符串。
+
+`class`、`style` 与 `id`、`title`、`data-*`、`aria-label` 等未声明的属性落在根元素上，带 `aria-label` 的根元素为 `role="group"`。`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-required` 的落点：
+
+- 单输入框：都落在输入框上
+- 范围类型：根元素为 `role="group"`，`aria-labelledby` 落在根元素上，其余四项落在两个输入框上
+- `trigger` 的内容没有可聚焦元素：`aria-labelledby`、`aria-describedby`、`aria-errormessage`、`aria-invalid` 落在 role 为 `button` 的外层，`aria-required` 不转发
+- `trigger` 的内容自带可聚焦元素：都不转发，在 snippet 内容上自行设置
+
+</Framework>
+
 <Framework only="solid">
 
 <DatePickerSolidApi />
@@ -453,6 +533,12 @@ type DayStatusType = { isToday?: boolean; // 当前日 isSelected?: boolean; // 
 <Framework only="vue">
 
 通过模板 ref 暴露 `open()`、`close()`、`focus(rangeEnd?)` 和 `blur()`：`focus` 聚焦输入框，范围类型默认聚焦开始框，传 `rangeEnd` 聚焦结束框，开启 insetInput 时聚焦面板内的输入框；`blur` 使输入框失焦。受控的 `open` 优先，受控时 `open()`、`close()` 不改变面板可见性。
+
+</Framework>
+
+<Framework only="svelte">
+
+DatePicker 通过 `export function` 暴露 `open()`、`close()`、`focus(rangeEnd?)` 和 `blur()`，用 `bind:this` 取得实例后调用：`focus` 聚焦输入框，范围类型默认聚焦开始框，传 `rangeEnd` 聚焦结束框，开启 insetInput 时聚焦面板内的输入框；`blur` 使输入框失焦。绑定了 `open` 时以绑定值为准，`open()`、`close()` 不改变面板可见性。
 
 </Framework>
 
@@ -512,6 +598,35 @@ type DatePickerTriggerSlotProps = {
     onEnterPress: (inputValue: string) => void;
     onClear: (event: MouseEvent) => void;
 };
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```typescript
+type DatePickerBaseValueType = string | number | Date;
+type DatePickerValueType = DatePickerBaseValueType | DatePickerBaseValueType[];
+type DatePickerType = 'date' | 'dateRange' | 'dateTime' | 'dateTimeRange' | 'month' | 'monthRange' | 'year';
+type DatePickerRangeInput = 'rangeStart' | 'rangeEnd';
+interface DatePickerTriggerRenderProps {
+    value: Date[];
+    inputValue: string | null;
+    placeholder: string | string[];
+    disabled: boolean;
+    size: InputSize;
+    inputReadOnly: boolean;
+    rangeInputFocus: DatePickerRangeInput | false | undefined;
+    type: DatePickerType;
+    format?: string;
+    multiple: boolean;
+    autofocus: boolean;
+    // 已声明的属性，不含 snippet、回调和未声明的属性
+    componentProps: Partial<DatePickerProps>;
+    onChange: (inputValue: string) => void;
+    onEnterPress: (inputValue: string) => void;
+    onClear: (event: MouseEvent) => void;
+}
 ```
 
 </Framework>
@@ -631,6 +746,12 @@ semi-ui 组件库中采用 [date-fns v4](https://date-fns.org/docs/Getting-Start
       <Framework only="vue">
 
     即 `:timePickerOpts="{ scrollItemProps: { mode: 'wheel', cycled: true } }"`。
+
+      </Framework>
+
+      <Framework only="svelte">
+
+    即 `timePickerOpts={{ scrollItemProps: { mode: 'wheel', cycled: true } }}`。
 
       </Framework>
 

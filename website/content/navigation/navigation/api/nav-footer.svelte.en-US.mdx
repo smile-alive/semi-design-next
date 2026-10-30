@@ -1,0 +1,9 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                                                                         | Type                                                                      | Default |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------- |
+| children       | Footer content. When present the collapse button does not show.                                                                                                                     | `Snippet`                                                                 | -       |
+| collapseButton | Whether to show the collapse button. Applies only when mode is vertical and the Footer has no children. A snippet replaces the built-in button and shows under the same conditions. | `boolean \| Snippet`                                                      | `false` |
+| collapseText   | Text of the built-in collapse button, with collapsed as the parameter. A text-only result also names the icon-only button.                                                          | <ApiType detail={"Snippet\u003c[{ collapsed: boolean }]>"}>Type</ApiType> | -       |

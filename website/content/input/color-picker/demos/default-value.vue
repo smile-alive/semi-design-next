@@ -3,9 +3,9 @@
 
     const defaultValue = ColorPicker.colorStringToValue('rgb(57,197,187)');
 
-    function onChange(value: ColorValue) {
+    const onChange = (value: ColorValue) => {
         console.log(value);
-    }
+    };
 </script>
 
 <template>

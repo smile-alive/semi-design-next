@@ -1,0 +1,15 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                       | Type                                                           | Default  |
+| ----------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | -------- |
+| bordered    | Whether to show a border. Only takes effect in non-full mode.                                                     | `boolean`                                                      | `false`  |
+| children    | Custom content below the message.                                                                                 | `Snippet`                                                      | -        |
+| closeIcon   | Snippet that replaces the icon in the close button. Pass `null` to remove the button.                             | `Snippet \| null`                                              | -        |
+| description | Snippet for the description content.                                                                              | `Snippet`                                                      | -        |
+| fullMode    | Whether the banner is in full mode.                                                                               | `boolean`                                                      | `true`   |
+| icon        | Snippet that replaces the icon of the type. Pass `null` to hide the icon.                                         | `Snippet \| null`                                              | -        |
+| onClose     | Called when the close button is clicked, with its native click event. The banner hides once the callback returns. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | -        |
+| title       | Title, a string or a snippet.                                                                                     | `string \| Snippet`                                            | -        |
+| type        | Type: info, success, danger or warning.                                                                           | `BannerType`                                                   | `"info"` |

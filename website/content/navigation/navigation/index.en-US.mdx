@@ -20,6 +20,11 @@ import NavItemSolidApi from './api/nav-item.solid.en-US.mdx';
 import SubNavSolidApi from './api/sub-nav.solid.en-US.mdx';
 import NavHeaderSolidApi from './api/nav-header.solid.en-US.mdx';
 import NavFooterSolidApi from './api/nav-footer.solid.en-US.mdx';
+import NavSvelteApi from './api/nav.svelte.en-US.mdx';
+import NavItemSvelteApi from './api/nav-item.svelte.en-US.mdx';
+import SubNavSvelteApi from './api/sub-nav.svelte.en-US.mdx';
+import NavHeaderSvelteApi from './api/nav-header.svelte.en-US.mdx';
+import NavFooterSvelteApi from './api/nav-footer.svelte.en-US.mdx';
 
 ## Demos
 
@@ -48,6 +53,18 @@ import { Nav } from '@fibrae/semi-ui-react';
 ```jsx
 import { Nav } from '@fibrae/semi-ui-solid';
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Nav } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+`NavItem`, `SubNav`, `NavHeader` and `NavFooter` stand for Nav.Item, Nav.Sub, Nav.Header and Nav.Footer, and are imported by name.
 
 </Framework>
 
@@ -87,6 +104,15 @@ Each navigation item includes:
 
 </Framework>
 
+<Framework only="svelte">
+
+- `itemKey`: Unique identifier of the navigation item (required)
+- `text`: Navigation copywriting
+
+`items` holds data only. Icons are provided through the `icon` snippet of Nav, whose parameter is `{ item, level, size }`; pass `size` to the icon: `<Icon {size} />`. You can pick icons from `@fibrae/semi-icons-svelte` and `@fibrae/semi-icons-svelte/lab`, see the [Icon documentation](/en-US/react/basic/icon). The shown text and the toggle and expand arrows come from the `text`, `toggleIcon` and `expandIcon` snippets in the same way.
+
+</Framework>
+
 For the meaning of the parameters, see [Nav.Item](#Nav.Item) Or [Nav.Sub](#Nav.Sub)
 
 Developers may often define the Logo area and the put away button area, while Navigation provides such a container for developers to quickly define the navigation head and bottom, and you only need to pass in the `header` or `footer` as required.
@@ -102,6 +128,12 @@ For `footer`, semi-ui extra encapsulates a pull-up feature button that developer
 <Framework only="solid">
 
 The configuration objects of `header` and `footer` hold data only: `logo` is a render function returning the logo, such as `logo: () => <IconSemiLogo />`, called only when shown, and `text` is a string or number. For other nodes, pass JSX directly or use Nav.Header and Nav.Footer children.
+
+</Framework>
+
+<Framework only="svelte">
+
+`header` and `footer` can be a data configuration or a snippet. A configuration object holds data only, and the `logo` of `header` is a snippet. For other nodes, use `NavHeader` and `NavFooter` inside a snippet (they are not picked up from the children of Nav).
 
 </Framework>
 
@@ -133,6 +165,12 @@ If `renderItemIcon` is not provided, or returns nothing for an item, the copy is
 
 </Framework>
 
+<Framework only="svelte">
+
+The `icon` snippet of Svelte always keeps the icon column, and empty content does not remove the icon box. When no icons are needed, do not provide an `icon` snippet.
+
+</Framework>
+
 <Demo id="text-only" />
 
 ### Define The Head And Bottom
@@ -150,6 +188,12 @@ Use `<Nav.Header>` and `header` to quickly define the navigation head, and `foot
 </Framework>
 
 <Framework only="solid">
+
+Use `header` and `footer` to quickly define the navigation head and bottom. `collapseButton` in `footer` takes effect only with `mode = "vertical"` (vertical navigation).
+
+</Framework>
+
+<Framework only="svelte">
 
 Use `header` and `footer` to quickly define the navigation head and bottom. `collapseButton` in `footer` takes effect only with `mode = "vertical"` (vertical navigation).
 
@@ -174,6 +218,12 @@ Navigation currently provides two ways to define navigation styles: `style` and 
 <Framework only="solid">
 
 Navigation provides two parameters to define navigation styles: `style` and `bodyStyle`. `style` defines the style of the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list. (Both the navigation head and the bottom accept their own `style` parameter.)
+
+</Framework>
+
+<Framework only="svelte">
+
+Navigation provides two parameters to define navigation styles: `style` and `bodyStyle`. `style` lands on the outermost layer of the navigation component, while `bodyStyle` defines the style of the navigation list; both are strings. (Both the navigation head and the bottom accept their own `style`.)
 
 </Framework>
 
@@ -202,6 +252,14 @@ Users can use templates to define navigation headers, navigation items, and navi
 ### JSX Writing
 
 Users can use JSX to define navigation headers, navigation items, and navigation bottoms. Besides Nav.Header, Nav.Item, Nav.Sub and Nav.Footer, the children of Nav can also hold other custom JSX elements; they are wrapped in a `li` of the list. Nav collects the items that carry `itemKey` from Nav.Item and Nav.Sub, to open the ancestors of the default selected items and mark the top-level parent as selected. A component that wraps a navigation item takes part by returning a Nav.Item or Nav.Sub; no static property is needed.
+
+</Framework>
+
+<Framework only="svelte">
+
+### Children Writing
+
+`NavItem` and `SubNav` can be written as the children of Nav, and the head and bottom as `header` and `footer` snippets that hold `NavHeader` and `NavFooter`. Icons are provided through the `icon` snippet of each child component, and the text snippet is named `label` (it corresponds to the `text` slot of Vue and is renamed because it shares its name with the `text` prop). The children read their parent through context. This form does not open the ancestors of the selected item automatically, and a top-level Sub gets no selected mark; use `items` when you need either.
 
 </Framework>
 
@@ -325,6 +383,40 @@ export default function RouterNav() {
 
 </Framework>
 
+<Framework only="svelte">
+
+To wrap navigation items in links when using a router such as SvelteKit, so that clicking an item triggers navigation, customize the rendering.
+
+Use the `wrapper` snippet to wrap each item in a custom element. `itemElement` is the `li` of the item; render it with `{@render itemElement()}`, exactly once.
+
+```svelte
+<script lang="ts">
+    import { Nav } from '@fibrae/semi-ui-svelte';
+
+    const routerMap = {
+        Home: '/',
+        About: '/about',
+        Dashboard: '/dashboard',
+        'Nothing Here': '/nothing-here',
+    };
+    const items = [
+        { itemKey: 'Home', text: 'Home' },
+        { itemKey: 'About', text: 'About' },
+        { itemKey: 'Sub', text: 'Sub', items: ['Dashboard', 'Nothing Here'] },
+    ];
+</script>
+
+<Nav {items}>
+    {#snippet wrapper({ itemElement, props })}
+        <a href={routerMap[props.itemKey as keyof typeof routerMap]} style="text-decoration: none">
+            {@render itemElement()}
+        </a>
+    {/snippet}
+</Nav>
+```
+
+</Framework>
+
 ### Navigation Direction
 
 Navigation currently offers navigation in two directions:
@@ -336,9 +428,37 @@ You can pass `mode = "vertical"` (default) or `mode = "horizontal"` to control.
 
 In particular, there are some functions (parameters) only in `mode = "vertical"` effective:
 
+<Framework only="react">
+
 - `isCollapsed` (Navigation put away to the side)
 - `defaultOpenKeys` | `openKeys` (Specifies the default and controlled array of expanded subnavigation items key, which is valid only in `mode = "vertical"`and `isCollapsed = false`)
 - `collapseButton` of `Footer`
+
+</Framework>
+
+<Framework only="vue">
+
+- `isCollapsed` (Navigation put away to the side)
+- `defaultOpenKeys` | `openKeys` (Specifies the default and controlled array of expanded subnavigation items key, which is valid only in `mode = "vertical"`and `isCollapsed = false`)
+- `collapseButton` of `Footer`
+
+</Framework>
+
+<Framework only="solid">
+
+- `isCollapsed` (Navigation put away to the side)
+- `defaultOpenKeys` | `openKeys` (Specifies the default and controlled array of expanded subnavigation items key, which is valid only in `mode = "vertical"`and `isCollapsed = false`)
+- `collapseButton` of `Footer`
+
+</Framework>
+
+<Framework only="svelte">
+
+- `isCollapsed` (Navigation put away to the side)
+- `openKeys` (Specifies the initial and controlled array of expanded subnavigation items key, which is valid only in `mode = "vertical"` and `isCollapsed = false`)
+- `collapseButton` of `NavFooter`
+
+</Framework>
 
 #### Vertical Direction
 
@@ -387,6 +507,13 @@ limitIndent only takes effect in the vertical direction.
 
 </Framework>
 
+<Framework only="svelte">
+
+- When passing navigation items with `NavItem` as children, pass the `level` prop to `NavItem` manually.
+- When passing navigation items with `items`, you do not need to care about level.
+
+</Framework>
+
 <Demo id="limit-indent" />
 
 ### Uncontrolled Properties
@@ -396,6 +523,12 @@ Including:
 - `defaultSelectedKeys` (default selected navigation item `key` array)
 - `defaultOpenKeys` (default expanded navigation item `key` array, valid only with `mode = "vertical"` and `isCollapsed = false` | `defaultIsCollapsed = false`)
 - `defaultIsCollapsed` (whether the sidebar is closed by default, valid only when `mode = "vertical"`)
+
+<Framework only="svelte">
+
+Svelte has no `default*` props: a one-way `selectedKeys`, `openKeys` or `isCollapsed` is only the initial value, and `undefined` means uncontrolled. Write `defaultSelectedKeys`, `defaultOpenKeys` and `defaultIsCollapsed` above as `selectedKeys`, `openKeys` and `isCollapsed`.
+
+</Framework>
 
 <Demo id="uncontrolled" />
 
@@ -457,6 +590,26 @@ The corresponding callbacks are:
 
 </Framework>
 
+<Framework only="svelte">
+
+The Navigation component provides several bindable properties. Use `bind:` to control the navigation easily, and combine it with callbacks if needed.
+
+The bindable properties are:
+
+- `bind:isCollapsed` (whether the sidebar is collapsed, effective only when `mode = "vertical"`)
+- `bind:selectedKeys` (currently selected navigation item `key` array, holding only the selected item itself)
+- `bind:openKeys` (currently expanded array of navigation items, valid only when `mode = "vertical"` and `isCollapsed = false`)
+
+The corresponding callbacks are:
+
+- `onCollapseChange(isCollapsed: boolean): void`
+- `onSelect({ itemKey, selectedKeys, selectedItems, domEvent }): void`
+- `onOpenChange({ itemKey, openKeys, domEvent, isOpen }): void`
+
+`null` is a controlled empty value.
+
+</Framework>
+
 <Demo id="controlled" />
 
 ## API Reference
@@ -512,6 +665,39 @@ Other fields (such as `path`) are ignored.
 
 </Framework>
 
+<Framework only="svelte">
+
+<NavSvelteApi />
+
+`class`, `style` and native attributes (such as `aria-label`) land on the outermost `nav`.
+
+#### items data entries
+
+`items` is `(string | NavItemConfig)[]`. A string entry is both the `text` and the `itemKey`. An entry with non-empty `items` renders as a Nav.Sub, any other entry as a Nav.Item. Entries hold data only; nodes are provided through the `icon`, `text`, `toggleIcon` and `expandIcon` snippets of Nav, whose parameters include `{ item, level }`.
+
+| Properties       | Description                                                                           | Type                        | Default |
+| ---------------- | ------------------------------------------------------------------------------------- | --------------------------- | ------- |
+| itemKey          | Unique item identifier                                                                | string \| number            |         |
+| text             | Navigation item copy                                                                  | string \| number            |         |
+| items            | Child entries; an entry with non-empty `items` renders as a Nav.Sub                   | (string \| NavItemConfig)[] |         |
+| disabled         | Disabled state                                                                        | boolean                     |         |
+| indent           | If there is no icon, keep its space or not. Only effective for first level navigation | boolean \| number           |         |
+| link             | Navigation item href link, Nav.Item only                                              | string                      |         |
+| linkOptions      | Parameters transparently passed to the a tag, Nav.Item only                           | HTMLAnchorAttributes        |         |
+| tooltipHideDelay | Delay for hiding the tooltip of this item, Nav.Item only                              | number                      |         |
+| tooltipShowDelay | Delay for showing the tooltip of this item, Nav.Item only                             | number                      |         |
+| dropdownProps    | Popup layer `dropdown` parameter configuration, Nav.Sub only                          | SubDropdownProps            |         |
+| dropdownStyle    | Style of dropdown layer, Nav.Sub only                                                 | string                      |         |
+| class            | Class name of the `li` of the item                                                    | ClassValue                  |         |
+| style            | Custom style of the `li` of the item                                                  | string                      |         |
+| onmouseenter     | Callback of mouse enter event                                                         | (event: MouseEvent) => void |         |
+| onmouseleave     | Callback of mouse leave event                                                         | (event: MouseEvent) => void |         |
+| data-\*, aria-\* | `data-*` land on the `li`, `aria-*` on the link or button that takes focus            | unknown                     |         |
+
+Other fields (such as `path`) are ignored.
+
+</Framework>
+
 ### Nav.Item
 
 <Framework only="react">
@@ -535,6 +721,14 @@ Other fields (such as `path`) are ignored.
 <NavItemSolidApi />
 
 `class` replaces the default `semi-navigation-item-normal`. `style`, `ref`, `data-*` and native events (such as `onMouseEnter`) land on the `li`; `aria-*` and `tabIndex` land on the link or button that takes focus.
+
+</Framework>
+
+<Framework only="svelte">
+
+<NavItemSvelteApi />
+
+`aria-*` land on the link or button that takes focus; `class`, `style`, `data-*`, `onmouseenter`, `onmouseleave` and other attributes land on the `li`, and a passed `class` replaces the default `semi-navigation-item-normal`. `tabindex` lands on the link or button.
 
 </Framework>
 
@@ -564,6 +758,14 @@ Other fields (such as `path`) are ignored.
 
 </Framework>
 
+<Framework only="svelte">
+
+<SubNavSvelteApi />
+
+`aria-*` land on the title button that takes focus; `class`, `style`, `data-*`, `onmouseenter`, `onmouseleave` and other attributes land on the `li`.
+
+</Framework>
+
 ### Nav.Header
 
 <Framework only="react">
@@ -590,6 +792,14 @@ Other native attributes (such as `id` and `aria-label`) land on the outermost `d
 
 </Framework>
 
+<Framework only="svelte">
+
+<NavHeaderSvelteApi />
+
+`class`, `style` and native attributes land on the outermost `div`.
+
+</Framework>
+
 ### Nav.Footer
 
 <Framework only="react">
@@ -613,6 +823,14 @@ Other native attributes (such as `id` and `aria-label`) land on the outermost `d
 <NavFooterSolidApi />
 
 `class`, `style`, `ref` and native attributes (including `onClick`) land on the outermost `div`.
+
+</Framework>
+
+<Framework only="svelte">
+
+<NavFooterSvelteApi />
+
+`class`, `style` and native attributes (including `onclick`) land on the outermost `div`. When collapsed, the accessible name of the collapse button always comes from the locale.
 
 </Framework>
 
@@ -656,6 +874,12 @@ Navigation follows the WAI-ARIA APG [Disclosure Navigation](https://www.w3.org/W
 <Framework only="solid">
 
 - The return value of renderWrapper is placed directly in the `ul`; when it is not a `li`, the list structure is invalid, so make sure it returns a `li` or content that is allowed in a `ul`. When renderWrapper wraps an item in the link of a router, the link contains the item's own button, which nests interactive elements. For client-side routing, prefer `link` with `linkOptions.onClick`
+
+</Framework>
+
+<Framework only="svelte">
+
+- The return value of the `wrapper` snippet is placed directly in the `ul`; when it is not a `li`, the list structure is invalid, so make sure it renders a `li` or content that is allowed in a `ul`. When `wrapper` wraps an item in a router link, the link contains the item's own button, which nests interactive elements. For client-side routing, prefer `link` with `linkOptions.onclick`
 
 </Framework>
 

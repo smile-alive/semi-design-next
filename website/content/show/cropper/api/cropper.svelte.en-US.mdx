@@ -1,0 +1,28 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aspectRatio | Fixed aspect ratio of the crop box. When it changes after loading, the box is laid out again at the new ratio. | `number` | - |
+| cropperBoxCls | Class name of the crop box. | `string` | - |
+| cropperBoxStyle | Style string of the crop box. | `string` | - |
+| defaultAspectRatio | Initial aspect ratio of the crop box, which changes while dragging. | `number` | `1` |
+| fill | Fill color of the parts of the result that are not the image. | `string` | `"rgba(0, 0, 0, 0)"` |
+| imgProps | Attributes passed to the img element being cropped. src and the layout style belong to the component; class and style are merged with its own, and onload is called after the component has handled it. alt defaults to an empty string and crossorigin to anonymous; both can be overridden. | `HTMLImgAttributes` | - |
+| maxZoom | Maximum zoom factor. | `number` | `3` |
+| minZoom | Minimum zoom factor. | `number` | `0.1` |
+| onZoomChange | Called by wheel zooming, with the new zoom. | <ApiType detail={"(zoom: number) => void"}>Type</ApiType> | - |
+| preview | Function returning the DOM element that mirrors the cropped area live. It may return null while the element is not mounted yet. | <ApiType detail={"() => HTMLElement \u007c null \u007c undefined"}>Type</ApiType> | - |
+| rotate | Image rotation angle. It is one-way: the component never changes it. | `number` | - |
+| shape | Shape of the crop box. | `CropperShape` | `"rect"` |
+| showResizeBox | Whether to show the resize handles on the corners of the crop box. | `boolean` | `true` |
+| src | Address of the image to crop. | `string` | - |
+| zoom | Zoom, applied on top of the initial scaling that fits the image into the cropper; use `bind:zoom`, a function binding or a one-way value. Wheel zooming updates the bound value and calls `onZoomChange`. | `number` | - |
+| zoomStep | Zoom change per wheel step. | `number` | `0.1` |
+
+**Methods**
+
+| Method           | Description                                                                                                                                           | Type                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| getCropperCanvas | Draws the area inside the crop box at the image's own resolution onto a new canvas and returns it. It throws when called before the image has loaded. | <ApiType detail={"() => HTMLCanvasElement"}>Type</ApiType> |

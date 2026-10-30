@@ -1,0 +1,21 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| bordered | Whether to show a border. | `boolean` | `false` |
+| children | ListItem children, written inside the tag and rendered after the items of dataSource. | `Snippet` | - |
+| dataSource | Data source of the list; each entry is rendered through the item snippet. | `T[]` | - |
+| emptyContent | Snippet for the content shown when there is no data; the locale's empty text by default. A list with content inside its tag (children) is never empty. | `Snippet` | - |
+| footer | Snippet for the list footer. | `Snippet` | - |
+| grid | Grid configuration: align, gutter, justify and type of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item. | `Grid` | - |
+| header | Snippet for the list header. | `Snippet` | - |
+| item | Snippet that renders each entry of dataSource, receiving `{ item, index }` and usually returning a ListItem. | <ApiType detail={"Snippet\u003c[ListItemSnippetProps\u003cT>]>"}>Type</ApiType> | - |
+| layout | List layout: vertical or horizontal. | `'vertical' \| 'horizontal'` | `"vertical"` |
+| loading | Whether the list is loading; a Spin is shown when true. | `boolean` | `false` |
+| loadMore | Snippet for the load-more button. | `Snippet` | - |
+| onClick | Click handler for the items that have no onClick of their own; an item with a handler renders a native button. It is a function prop rather than the native onclick because its presence decides whether an item renders a button. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onRightClick | Context-menu handler for the items that have no onRightClick of their own; those items also render a native button. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| size | List size: small, default or large. | `Size` | `"default"` |
+| split | Whether to show dividers between items. | `boolean` | `true` |

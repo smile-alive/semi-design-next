@@ -51,10 +51,9 @@
         },
     ]);
 
-    function isImageType(item: Attachment) {
+    const isImageType = ({ name = '', fileInstance }: Attachment) => {
         const PIC_PREFIX = 'image/';
         const PIC_SUFFIX_ARRAY = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'];
-        const { name = '', fileInstance } = item;
         const suffix = name.split('.').pop() ?? '';
         let result = false;
         const type = fileInstance?.type ?? '';
@@ -64,7 +63,7 @@
             result = true;
         }
         return result;
-    }
+    };
 
     const refTypeToIconMap: Record<string, Component> = {
         file: IconFile,

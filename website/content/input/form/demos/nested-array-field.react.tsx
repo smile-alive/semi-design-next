@@ -27,7 +27,7 @@ const initValue = {
     ],
 };
 
-const NestedField = (props: { field: string }) => {
+function NestedField(props: { field: string }) {
     const rowStyle = {
         marginTop: 12,
         marginLeft: 12,
@@ -69,7 +69,7 @@ const NestedField = (props: { field: string }) => {
             )}
         </ArrayField>
     );
-};
+}
 
 export default function FormDemo() {
     return (

@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Snippet that replaces the Markdown rendering of the reasoning text (`content` is already the reasoning data, so the body snippet is `children`), with `status`, `summary`, `content` and `markdownRenderProps`. | <ApiType detail={"Snippet\u003c[ReasoningWidgetContentSnippetProps]>"}>Type</ApiType> | - |
+| content | Reasoning content. When summary is empty, its texts joined by line breaks form the reasoning text. | `ReasoningPart[]` | - |
+| markdownRenderProps | Props passed to the MarkdownRender of the reasoning text; raw comes from the reasoning text. | `MarkdownRenderProps` | - |
+| status | Reasoning status. completed shows the finished title and starts collapsed; any other value shows the thinking title and starts expanded. | `string` | - |
+| summary | Reasoning summary. When it is not empty, its texts joined by line breaks form the reasoning text. | `ReasoningPart[]` | - |

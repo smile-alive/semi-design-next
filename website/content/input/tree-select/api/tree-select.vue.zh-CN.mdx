@@ -39,8 +39,8 @@ import ApiType from '#/components/ApiType.astro';
 | showLine | 下拉面板中显示节点之间的连接线。 | `boolean` | `semiDefault("TreeSelect", "showLine", false)` |
 | virtualize | 列表虚拟化，用于大量节点：height、width、itemSize（必传）。开启后动画关闭。 | `Virtualize` | `semiGlobalDefault("TreeSelect", "virtualize")` |
 | placeholder | 选择框的占位文字。 | `string` | `semiGlobalDefault("TreeSelect", "placeholder")` |
-| disabled | 是否禁用。 | `boolean` | `semiDefault("TreeSelect", "disabled", false)` |
-| size | 选择框尺寸，可选 small、default、large。 | `Size` | `semiDefault("TreeSelect", "size", "default")` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
+| size | 选择框尺寸，可选 small、default、large。 | `Size` | `undefined` |
 | borderless | 无边框模式。 | `boolean` | `semiDefault("TreeSelect", "borderless", false)` |
 | validateStatus | 校验状态，只影响样式：default、warning 或 error。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
 | insetLabelId | insetLabel 插槽外层元素的 id，供 aria-labelledby 引用；不传时使用内部生成的 id。 | `string` | `undefined` |

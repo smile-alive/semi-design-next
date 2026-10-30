@@ -8,6 +8,7 @@ brief: TreeSelector is used for structured display & selection of multi-level tr
 import TreeSelectReactApi from './api/tree-select.react.en-US.mdx';
 import TreeSelectVueApi from './api/tree-select.vue.en-US.mdx';
 import TreeSelectSolidApi from './api/tree-select.solid.en-US.mdx';
+import TreeSelectSvelteApi from './api/tree-select.svelte.en-US.mdx';
 
 ## When to Use
 
@@ -43,6 +44,16 @@ import { TreeSelect } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { TreeSelect } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 By default, TreeSelect is in single select mode and each item is selectable.
@@ -68,6 +79,12 @@ In multiple mode `v-model` and `defaultValue` are arrays. Use `leafOnly` if you 
 <Framework only="solid">
 
 Use `leafOnly` if you prefer to render leaf nodes only and the corresponding params for onChange will also be leaf nodes values.
+
+</Framework>
+
+<Framework only="svelte">
+
+In multiple mode `bind:value` and `value` are arrays. Use `leafOnly` if you prefer to render leaf nodes only, and the value of `bind:value` and the arguments of `onChange` will also hold leaf node values only.
 
 </Framework>
 
@@ -104,6 +121,12 @@ If you want to get specific information about the search results, you can use th
 
 </Framework>
 
+<Framework only="svelte">
+
+If you want to get specific information about the search results, you can use the `onSearch` callback function. See the API list for the specific parameters of the function.
+
+</Framework>
+
 <Demo id="searchable" />
 
 ### Remote Search
@@ -123,6 +146,12 @@ By setting the `remote` property, you can enable remote search. When enabled, lo
 <Framework only="solid">
 
 By setting the `remote` property, you can enable remote search. When enabled, local filtering is skipped on input, only the `onSearch` callback is triggered, allowing users to handle remote data fetching and update `treeData`.
+
+</Framework>
+
+<Framework only="svelte">
+
+By setting the `remote` property, you can enable remote search. When enabled, local filtering is skipped on input and only the `onSearch` callback is triggered, allowing users to handle remote data fetching and update `treeData` (only a new array updates it).
 
 </Framework>
 
@@ -193,6 +222,12 @@ You can use `value` along with `onChange` property if you want to use TreeSelect
 
 </Framework>
 
+<Framework only="svelte">
+
+Bind the selected value with `bind:value` to use TreeSelect as a controlled component; changes are written back automatically. You can also pass `value` along with `onChange`. TreeSelect has no `defaultValue`: a one-way `value={x}` only seeds the selection, and for a fully controlled select use the function binding `bind:value={get, set}`. Binding it to `undefined` clears the selection.
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### Checked RelationShip
@@ -220,6 +255,12 @@ Bind the expanded nodes with `v-model:expandedKeys` to make the expansion contro
 <Framework only="solid">
 
 When `expandedKeys` is passed in, it is a controlled expansion component, which can be used with `onExpand`. When the expansion is controlled, if the `filterTreeNode` is turned on and the search is performed, the node will no longer be automatically expanded. At this time, the expansion of the node is completely controlled by the `expandedKeys`. You can use the parameter `filteredExpandedKeys` of `onSearch` to realize the search expansion effect when the expansion is controlled.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the expanded nodes with `bind:expandedKeys` to make the expansion controlled; you can also pass `expandedKeys` along with `onExpand`. TreeSelect has no `defaultExpandedKeys`. When the expansion is controlled, if the `filterTreeNode` is turned on and the search is performed, the node will no longer be automatically expanded. At this time, the expansion of the node is completely controlled by the `expandedKeys`. You can use the parameter `filteredExpandedKeys` of `onSearch` to realize the search expansion effect when the expansion is controlled.
 
 </Framework>
 
@@ -338,6 +379,32 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+If the default trigger style cannot meet your needs, you can use the `trigger` snippet to customize the display of the select box.
+
+The parameters of the `trigger` snippet are as follows, typed as `TreeSelectTriggerSnippetProps`:
+
+```typescript
+interface TreeSelectTriggerSnippetProps {
+    componentProps: TreeSelectProps; // all the props given to TreeSelect
+    disabled: boolean; // whether the TreeSelect is disabled
+    value: TreeNodeData[]; // the data of the selected nodes
+    inputValue: string; // the current value of the input box
+    placeholder?: string; // placeholder
+    // Clears the value; pass the click event when bound to a control inside the trigger,
+    // so the click does not also open the dropdown
+    onClear: (event?: MouseEvent) => void;
+    // Called to remove a single item, with the key of the item
+    onRemove: (key: string) => void;
+    // Starts a search when the value of your Input changes; filterTreeNode must not be false
+    // and searchPosition must be 'trigger'
+    onSearch: (inputValue: string) => void;
+}
+```
+
+</Framework>
+
 <Demo id="trigger-render" />
 
 ### Custom Rendering Selected Item
@@ -374,6 +441,16 @@ You can use renderSelectedItem to customize the rendering structure of the selec
 
 </Framework>
 
+<Framework only="svelte">
+
+You can use the `selectedItem` and `tag` snippets to customize the rendering structure of the selected items in the selection box. Both take the same parameters, typed as `TreeSelectSelectedItemSnippetProps`: `item` (the node data), `index`, `disabled` and `onClose` (removes the tag, or clears the selection in single mode).
+
+- In single mode the content of `selectedItem` is what the select box shows; empty content shows the `placeholder`
+- In multiple mode the content of `selectedItem` is rendered inside the built-in Tag (with background color and close button); `tag` replaces the whole Tag and takes precedence over `selectedItem`, so wire `onClose` to your own Tag when it needs a close button (see the demo, which calls it from the Tag's `onClose`)
+- In multiple mode, empty content from either snippet leaves the tag out
+
+</Framework>
+
 <Demo id="render-selected-item" />
 
 ## API Reference
@@ -401,6 +478,14 @@ The Vue TreeSelect has no `className` property: undeclared attributes such as `c
 <TreeSelectSolidApi />
 
 `class`, `style` and native attributes such as `id` and `data-*` land on the root element (the trigger). `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox: the root element when the TreeSelect is not searchable, or the search input when it is in the trigger. `onFocus`, `onBlur`, `onChange` and `onSelect` are the component's own callbacks and are not bound to the root element as native events.
+
+</Framework>
+
+<Framework only="svelte">
+
+<TreeSelectSvelteApi />
+
+The Svelte TreeSelect has no `className` property: `class` (a string, an array or an object), `style` (a string), `data-*` and other undeclared attributes and event handlers (such as `onclick`) land on the root element (the trigger), and `onkeydown` is called after the component has handled the key. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox (see [ARIA](#aria)). The lowercase `onchange`, `onselect`, `onload`, `onfocus` and `onblur` are not passed through as native listeners; use the callbacks `onChange`, `onSelect`, `onLoad`, `onFocus` and `onBlur`. `dropdownStyle` and `optionListStyle` are style strings. `value`, `expandedKeys` and `loadedKeys` are bindable, and there is no `defaultValue` or `defaultExpandedKeys`; the default of `multiple` can be set through the global defaults.
 
 </Framework>
 
@@ -463,6 +548,23 @@ The icon of a node comes from the TreeSelect `icon` prop and is not declared in 
 
 </Framework>
 
+<Framework only="svelte">
+
+> **Key for `TreeNodeData` is required and must be unique**, `label` can be duplicated. Value is not required. In this case, the value property in `bind:value`, `onChange` and `onChangeWithObject` will point to key property. To ensure everything behave as expected, keep a consistency of whether to have value or not to have value.
+
+| Properties | Instructions                                                | type           | Default |
+| ---------- | ----------------------------------------------------------- | -------------- | ------- |
+| value      | Value                                                       | string\|number | -       |
+| label      | Displayed label; use the `label` snippet for custom content | string\|number | -       |
+| disabled   | Disabled, supported in multiple select mode                 | boolean        | false   |
+| key        | Required and must be unique                                 | string         | -       |
+| isLeaf     | Whether it is a leaf node                                   | boolean        | -       |
+| children   | Child nodes                                                 | TreeNodeData[] | -       |
+
+The icon of a node comes from the `icon` snippet and is not declared in the data.
+
+</Framework>
+
 ## Methods
 
 <Framework only="react">
@@ -517,6 +619,23 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+TreeSelect exposes the `search(value)` and `close()` methods through `bind:this`, typed as `TreeSelectHandle`. `search` searches as if the value were typed, opening the dropdown first, and filterTreeNode must be set; `close` closes the dropdown. If you need to customize the search box externally, call `search` when the value of the custom search box changes to change the filtering results.
+
+```svelte
+<script lang="ts">
+    import { TreeSelect, type TreeSelectHandle } from '@fibrae/semi-ui-svelte';
+
+    let treeSelect = $state<TreeSelectHandle>();
+</script>
+
+<TreeSelect bind:this={treeSelect} filterTreeNode {treeData} />
+<button onclick={() => treeSelect?.close()}>Close</button>
+```
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -546,6 +665,13 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+- `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the current combobox: the root element without search, the native `input` of the search box in a single-choice trigger search, and the tag input in a multi-choice trigger search. With `aria-labelledby` set, the combobox no longer adds the default `aria-label`; with only the `insetLabel` snippet, the combobox's `aria-labelledby` points at it;
+- The nodes in the dropdown are the same as in [Tree](/en-US/react/navigation/tree#accessibility): `role="treeitem"` with `aria-level`, `aria-setsize`, `aria-posinset` and `aria-disabled`, and `aria-expanded` on nodes that can expand; a single-choice TreeSelect uses `aria-selected`, a multi-choice one uses `aria-checked` (`mixed` when half checked). The content of the `fullLabel` snippet is wrapped in an `li` carrying the `id`, `role="treeitem"` and these states;
+
+</Framework>
+
 - The expand arrow and the checkbox in front of a node only picture its state: they are hidden from screen readers and take no focus.
 
 ### Keyboard Interaction
@@ -571,6 +697,12 @@ The props passed to a custom `searchRender` include these ARIA attributes (`aria
 <Framework only="vue">
 
 The parameters of the `#search` slot include these ARIA attributes (`aria-activedescendant`, `aria-controls`, `aria-autocomplete` and the name; on the trigger, the whole set of combobox attributes including `role` and `aria-expanded`); bind the whole parameter object onto the input (a Semi `Input`) with `v-bind`, or screen readers do not announce the current node. `inputRef` must be bound to the input too; it lets a click on the selected text inside the trigger move focus to it.
+
+</Framework>
+
+<Framework only="svelte">
+
+The parameters of the `search` snippet include these ARIA attributes (`aria-activedescendant`, `aria-controls`, `aria-autocomplete` and the name; on the trigger, the whole set of combobox attributes including `role` and `aria-expanded`); spread the whole parameter object onto a Semi `Input` with `{...props}`, or screen readers do not announce the current node. The component finds the text field inside the rendered snippet to focus it itself, so no ref is needed.
 
 </Framework>
 
@@ -607,6 +739,14 @@ Demo:
 
 ```jsx
 <TreeSelect aria-label="example treeSelect" treeData={treeData} />
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<TreeSelect aria-label="example treeSelect" {treeData} />
 ```
 
 </Framework>

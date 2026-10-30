@@ -8,6 +8,7 @@ brief: 目标元素的操作需要用户进一步的确认时使用。与 Popove
 import PopconfirmReactApi from './api/popconfirm.react.zh-CN.mdx';
 import PopconfirmVueApi from './api/popconfirm.vue.zh-CN.mdx';
 import PopconfirmSolidApi from './api/popconfirm.solid.zh-CN.mdx';
+import PopconfirmSvelteApi from './api/popconfirm.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Button, Popconfirm, Radio, RadioGroup, Space, Toast } from '@fibrae/sem
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Popconfirm } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本使用
 
 Popconfirm 底层基于 Tooltip 封装，Children 支持类型同 Tooltip，注意事项详情可查阅 [Tooltip注意事项](/zh-CN/react/show/tooltip#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
@@ -62,6 +73,12 @@ Popconfirm 底层基于 Tooltip 封装，Children 支持类型同 Tooltip，注�
 <Framework only="solid">
 
 开发者可以基于场景使用 `okType`、`cancelType` 和 `icon` 参数搭配出不同风格的气泡式确认框。`icon` 接收 JSX 元素，传入 `null` 或 `false` 时不显示图标。
+
+</Framework>
+
+<Framework only="svelte">
+
+开发者可以基于场景使用 `okType`/`cancelType` 参数和 `icon` snippet 搭配出不同风格的气泡式确认框。没有传入 `icon` 时显示默认警告图标，传入 `icon={null}` 则不渲染图标。
 
 </Framework>
 
@@ -96,6 +113,12 @@ content 支持传入函数，它的入参是一个对象，将 `initialFocusRef`
 
 </Framework>
 
+<Framework only="svelte">
+
+`content` snippet 的参数为 `{ initialFocusRef }`，用 `{@attach initialFocusRef}` 把它绑定在可聚焦 DOM 或组件上，打开面板时会自动聚焦在该位置。同时指定按钮 `autoFocus` 与 `initialFocusRef` 时，按钮优先。
+
+</Framework>
+
 <Demo id="initial-focus" />
 
 ### 搭配 Tooltip 或 Popover 使用
@@ -127,6 +150,14 @@ content 支持传入函数，它的入参是一个对象，将 `initialFocusRef`
 <PopconfirmSolidApi />
 
 `class` 与 `style` 落在确认卡片上，`okButtonProps`、`cancelButtonProps` 中的属性落在对应按钮上（`autoFocus` 除外）；`ref` 收到 `focusTrigger` 句柄。Popconfirm 没有根 DOM 元素，其他未声明的原生属性和事件会被丢弃。
+
+</Framework>
+
+<Framework only="svelte">
+
+<PopconfirmSvelteApi />
+
+`class`、`style` 落在确认卡片上，`okButtonProps`、`cancelButtonProps` 中的属性落在对应按钮上（`autoFocus` 除外）；`bind:this` 收到 `focusTrigger` 句柄。Popconfirm 没有根 DOM 元素，其他未声明的原生属性和事件会被丢弃。
 
 </Framework>
 

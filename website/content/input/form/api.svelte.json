@@ -1,0 +1,323 @@
+{
+    "form": {
+        "source": "packages/semi-ui-svelte/src/form/form.svelte",
+        "props": {
+            "initValues": {
+                "zh-CN": "表单的初始值，仅在 Form 创建时复制一次。",
+                "en-US": "Initial values of the form, copied once when the Form is created."
+            },
+            "layout": {
+                "zh-CN": "字段的排列方向，可选 vertical 或 horizontal。",
+                "en-US": "Direction the fields are laid out in, vertical or horizontal."
+            },
+            "labelPosition": {
+                "zh-CN": "统一应用在每个字段上的 label 位置，inset 仅部分字段支持，其余字段按 top 布局。字段上的同名属性优先。",
+                "en-US": "Label position applied to every field; inset is only supported by some fields, the others lay out as top. The same prop on a field takes precedence."
+            },
+            "labelWidth": {
+                "zh-CN": "统一应用在每个字段上的 label 宽度，数字单位为 px。",
+                "en-US": "Label width applied to every field; a number is in px."
+            },
+            "labelAlign": {
+                "zh-CN": "统一应用在每个字段上的 label 文本对齐方式，字段上的同名属性优先。",
+                "en-US": "Label text alignment applied to every field. The same prop on a field takes precedence."
+            },
+            "labelCol": {
+                "zh-CN": "统一应用在每个字段上的 label 栅格布局，同 Col 的 span、offset 等属性，需与 wrapperCol 一起设置。",
+                "en-US": "Label grid layout applied to every field, with the span, offset and other props of Col; set it together with wrapperCol."
+            },
+            "wrapperCol": {
+                "zh-CN": "统一应用在每个字段上的控件栅格布局，同 Col 的 span、offset 等属性，需与 labelCol 一起设置。",
+                "en-US": "Control grid layout applied to every field, with the span, offset and other props of Col; set it together with labelCol."
+            },
+            "extraTextPosition": {
+                "zh-CN": "统一应用在每个字段上的 extraText 位置，middle 在 Label 与控件之间，bottom 在控件之后。字段上的同名属性优先。",
+                "en-US": "Position of extraText applied to every field: middle puts it between the Label and the control, bottom after the control. The same prop on a field takes precedence."
+            },
+            "allowEmpty": {
+                "zh-CN": "值变为空的字段是否在 values 中保留 key。字段上的同名属性优先。",
+                "en-US": "Whether a field whose value became empty keeps its key in values. The same prop on a field takes precedence."
+            },
+            "autoScrollToError": {
+                "zh-CN": "提交或调用 formApi.validate 校验失败时，是否自动滚动到出错的字段；传对象时作为 scroll-into-view-if-needed 的选项。",
+                "en-US": "Whether to scroll to the failing field when submit or formApi.validate fails; an object is passed on as options of scroll-into-view-if-needed."
+            },
+            "showValidateIcon": {
+                "zh-CN": "校验信息前是否显示对应状态的图标。",
+                "en-US": "Whether the icon of the status shows before the validation message."
+            },
+            "disabled": {
+                "zh-CN": "统一应用在每个字段上的 disabled，字段自身的 disabled 优先。",
+                "en-US": "The disabled applied to every field; the disabled of a field takes precedence."
+            },
+            "stopValidateWithError": {
+                "zh-CN": "使用 rules 校验时，遇到第一条不通过的规则后是否不再校验后续规则。字段上的同名属性优先。",
+                "en-US": "Whether validation with rules stops at the first failing rule. The same prop on a field takes precedence."
+            },
+            "trigger": {
+                "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
+                "en-US": "When fields validate: change, blur, mount, custom or an array of them. The same prop on a field takes precedence."
+            },
+            "stopPropagation": {
+                "zh-CN": "是否阻止 submit、reset 事件冒泡，用于嵌套 Form 时避免触发外层 Form 的事件。",
+                "en-US": "Whether the submit and reset events stop bubbling, to keep a nested Form from triggering the outer Form."
+            },
+            "validator": {
+                "zh-CN": "Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise。设置后字段自身的 validator 与 rules 不再生效。返回空字符串或空对象表示通过，失败时返回以字段名为 key 的错误对象。",
+                "en-US": "Form-level validation, called by submit and formApi.validate; it may return a Promise. Once set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an error object keyed by field name."
+            },
+            "form": {
+                "zh-CN": "useForm 返回的 formApi，用于在 Form 外部控制表单。",
+                "en-US": "The formApi returned by useForm, to control the form from outside the Form."
+            },
+            "id": {
+                "zh-CN": "form 元素的 id，同时写入 x-form-id；不传时自动生成。",
+                "en-US": "The id of the form element, also written to x-form-id; generated when omitted."
+            },
+            "onSubmit": {
+                "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验通过后的回调，参数为 values 与提交事件。",
+                "en-US": "Called after the submit button or formApi.submitForm and a passing validation, with the values and the submit event."
+            },
+            "onSubmitFail": {
+                "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验失败后的回调，参数为 errors、values 与提交事件。",
+                "en-US": "Called after the submit button or formApi.submitForm and a failing validation, with the errors, the values and the submit event."
+            },
+            "onReset": {
+                "zh-CN": "点击重置按钮或调用 formApi.reset 时的回调。",
+                "en-US": "Called when the reset button or formApi.reset resets the form."
+            },
+            "onChange": {
+                "zh-CN": "表单状态更新时的回调，包括字段挂载、卸载、值变更、blur、校验状态与错误信息变更，参数为 formState。",
+                "en-US": "Called when the form state updates, including field mount, unmount, value change, blur, and changes of validation status and errors, with the formState."
+            },
+            "onValueChange": {
+                "zh-CN": "字段的值变化时的回调，参数为全部 values 与本次变化的字段值。",
+                "en-US": "Called when a field value changes, with all values and the changed field values."
+            },
+            "onErrorChange": {
+                "zh-CN": "校验状态更新时的回调，参数为全部错误和本次变化的字段错误。validate、submit、reset 等批量操作只触发一次，静默校验不触发。",
+                "en-US": "Called when the validation state updates, with all errors and the changed field errors. A batch such as validate, submit or reset calls it once, and silent validation does not call it."
+            },
+            "getFormApi": {
+                "zh-CN": "Form 挂载后的回调，参数为 formApi，用于保存 formApi 的引用。",
+                "en-US": "Called once the Form has mounted, with the formApi, to keep a reference to it."
+            },
+            "children": {
+                "zh-CN": "表单内容，参数为 `{ formState, formApi, values }`，只用于读取，修改应通过 formApi。",
+                "en-US": "Content of the form, with `{ formState, formApi, values }`, for reading only; change the form through formApi."
+            }
+        },
+        "methods": {
+            "getFormApi": {
+                "zh-CN": "返回 formApi，经 `bind:this` 取得实例后调用。",
+                "en-US": "Returns the formApi; call it on the instance from `bind:this`."
+            }
+        }
+    },
+    "array-field": {
+        "source": "packages/semi-ui-svelte/src/form/array-field.svelte",
+        "props": {
+            "field": {
+                "zh-CN": "数组在 formState.values 中的路径，必填。例如各行字段为 a[0].name、a[1].name 时应传 a。",
+                "en-US": "Path of the array in formState.values, required. For row fields such as a[0].name and a[1].name, pass a."
+            },
+            "initValue": {
+                "zh-CN": "数组的初始值，必须是数组；与 Form 的 initValues 同时配置时优先。",
+                "en-US": "Initial value of the array, which must be an array; it takes precedence over the initValues of the Form."
+            },
+            "children": {
+                "zh-CN": "各行内容，参数为 `{ arrayFields, onAdd, onAddWithInitValue }`。",
+                "en-US": "Content of the rows, with `{ arrayFields, onAdd, onAddWithInitValue }`."
+            }
+        }
+    },
+    "form-label": {
+        "source": "packages/semi-ui-svelte/src/form/label.svelte",
+        "props": {
+            "text": {
+                "zh-CN": "Label 文本，`children` snippet 优先。",
+                "en-US": "Label text; the `children` snippet takes precedence."
+            },
+            "align": {
+                "zh-CN": "Label 文本的对齐方式。",
+                "en-US": "Alignment of the Label text."
+            },
+            "disabled": {
+                "zh-CN": "是否为禁用样式。",
+                "en-US": "Whether it has the disabled style."
+            },
+            "required": {
+                "zh-CN": "是否显示必填的 * 号。",
+                "en-US": "Whether to show the required * mark."
+            },
+            "optional": {
+                "zh-CN": "是否在文本后追加语言包中的可选标识。为 true 时不再显示 required 的 *。",
+                "en-US": "Whether the optional text of the locale follows the text. The required * is then hidden."
+            },
+            "name": {
+                "zh-CN": "所标注控件的 id，写入 label 的 for 属性。",
+                "en-US": "The id of the labeled control, written to the for attribute of the label."
+            },
+            "width": {
+                "zh-CN": "Label 宽度，数字单位为 px。",
+                "en-US": "Label width; a number is in px."
+            },
+            "children": {
+                "zh-CN": "Label 内容，优先于 text。",
+                "en-US": "Label content, which takes precedence over text."
+            },
+            "extra": {
+                "zh-CN": "跟随在 label 文本后的内容。",
+                "en-US": "Content that follows the label text."
+            }
+        }
+    },
+    "form-error-message": {
+        "source": "packages/semi-ui-svelte/src/form/error-message.svelte",
+        "props": {
+            "error": {
+                "zh-CN": "错误信息。字符串直接显示，数组会合并其中的错误；true 只显示错误态容器，没有文本；false 与空值不渲染。",
+                "en-US": "The error. A string is shown as it is, an array merges its errors; true only shows the error container without text; false and empty values render nothing."
+            },
+            "showValidateIcon": {
+                "zh-CN": "是否显示 validateStatus 对应的图标。",
+                "en-US": "Whether the icon of validateStatus shows."
+            },
+            "validateStatus": {
+                "zh-CN": "信息所属的校验状态，可选 default、error、warning、success。",
+                "en-US": "Validation status of the message: default, error, warning or success."
+            },
+            "isInInputGroup": {
+                "zh-CN": "是否位于 InputGroup 中；为 true 且 showValidateIcon 为 true 时，不论 validateStatus 都显示错误图标。",
+                "en-US": "Whether it sits in an InputGroup; with true and showValidateIcon true, the error icon shows whatever validateStatus is."
+            },
+            "errorMessageId": {
+                "zh-CN": "错误文本元素的 id，供 aria-errormessage 引用。",
+                "en-US": "The id of the error text element, for aria-errormessage to refer to."
+            },
+            "helpTextId": {
+                "zh-CN": "提示文本元素的 id，供 aria-describedby 引用。",
+                "en-US": "The id of the help text element, for aria-describedby to refer to."
+            },
+            "helpText": {
+                "zh-CN": "提示信息，没有错误时显示，与错误信息共用同一区块。",
+                "en-US": "Help text, shown when there is no error, in the same block as the error."
+            },
+            "errorContent": {
+                "zh-CN": "自定义错误信息的渲染，参数为 `{ error }`。",
+                "en-US": "Custom rendering of the error, with `{ error }`."
+            }
+        }
+    },
+    "form-section": {
+        "source": "packages/semi-ui-svelte/src/form/section.svelte",
+        "props": {
+            "text": {
+                "zh-CN": "分组标题，没有内容时不渲染标题元素。",
+                "en-US": "Title of the section; without content the title element is not rendered."
+            },
+            "children": {
+                "zh-CN": "分组内的字段。",
+                "en-US": "The fields in the section."
+            }
+        }
+    },
+    "form-slot": {
+        "source": "packages/semi-ui-svelte/src/form/slot.svelte",
+        "props": {
+            "label": {
+                "zh-CN": "Label 的文本，或 text、align、width、required、optional 等 Label 配置；`fieldLabel` snippet 优先。",
+                "en-US": "The Label text, or a Label configuration such as text, align, width, required and optional; the `fieldLabel` snippet takes precedence."
+            },
+            "labelPosition": {
+                "zh-CN": "Label 的位置，默认取自 Form，可选 top 或 left。",
+                "en-US": "Position of the Label, taken from the Form by default: top or left."
+            },
+            "noLabel": {
+                "zh-CN": "是否不渲染 Label；Form 同时设置了 labelCol 与 wrapperCol 时，Label 列仍保留。",
+                "en-US": "Whether to leave out the Label; with both labelCol and wrapperCol set on the Form, the Label column stays."
+            },
+            "error": {
+                "zh-CN": "错误信息，渲染在内容之后；不传则不显示。",
+                "en-US": "The error, rendered after the content; omitted when not given."
+            },
+            "children": {
+                "zh-CN": "放置的自定义内容。",
+                "en-US": "The custom content to place."
+            },
+            "fieldLabel": {
+                "zh-CN": "Label 内容，优先于 label 属性中的文本。",
+                "en-US": "Label content, which takes precedence over the text in the label prop."
+            },
+            "labelExtra": {
+                "zh-CN": "跟随在 Label 文本后的内容。",
+                "en-US": "Content that follows the Label text."
+            },
+            "errorContent": {
+                "zh-CN": "自定义错误信息的渲染，参数为 `{ error }`。",
+                "en-US": "Custom rendering of the error, with `{ error }`."
+            }
+        }
+    },
+    "form-input-group": {
+        "source": "packages/semi-ui-svelte/src/form/input-group.svelte",
+        "props": {
+            "label": {
+                "zh-CN": "整个 Group 的 Label：字符串作为文本，对象作为 Label 配置，其中 id 用作 Label 的 id；`fieldLabel` snippet 优先。",
+                "en-US": "The Label of the whole Group: a string is the text, an object is a Label configuration whose id is the id of the Label; the `fieldLabel` snippet takes precedence."
+            },
+            "labelPosition": {
+                "zh-CN": "Label 的位置，默认取自 Form，可选 top 或 left。",
+                "en-US": "Position of the Label, taken from the Form by default: top or left."
+            },
+            "extraTextPosition": {
+                "zh-CN": "extraText 的位置，middle 在 Label 与 Group 之间，bottom 在 Group 之后。",
+                "en-US": "Position of extraText: middle puts it between the Label and the Group, bottom after the Group."
+            },
+            "size": {
+                "zh-CN": "组内控件的尺寸。",
+                "en-US": "Size of the controls in the group."
+            },
+            "onFocus": {
+                "zh-CN": "焦点进入整个 Group 时的回调。",
+                "en-US": "Called when focus enters the whole Group."
+            },
+            "onBlur": {
+                "zh-CN": "焦点离开整个 Group 时的回调。",
+                "en-US": "Called when focus leaves the whole Group."
+            },
+            "disabled": {
+                "zh-CN": "组内字段统一的 disabled，不传时沿用 Form 的 disabled。",
+                "en-US": "The disabled of the fields in the group; the disabled of the Form applies when omitted."
+            },
+            "aria-labelledby": {
+                "zh-CN": "Group 的 aria-labelledby，会与 Label 的 id 合并后写在 group 元素上。",
+                "en-US": "The aria-labelledby of the Group, merged with the id of the Label on the group element."
+            },
+            "aria-describedby": {
+                "zh-CN": "Group 的 aria-describedby，会与 extraText 的 id 合并后写在 group 元素上。",
+                "en-US": "The aria-describedby of the Group, merged with the id of extraText on the group element."
+            },
+            "aria-errormessage": {
+                "zh-CN": "不生效，错误信息的 id 由 Group 自动生成并写入。",
+                "en-US": "Has no effect; the Group generates the id of the error message itself."
+            },
+            "fieldLabel": {
+                "zh-CN": "Group 的 Label 内容，优先于 label 属性中的文本。",
+                "en-US": "Label content of the Group, which takes precedence over the text in the label prop."
+            },
+            "labelExtra": {
+                "zh-CN": "跟随在 Group Label 文本后的内容。",
+                "en-US": "Content that follows the Group Label text."
+            },
+            "extraText": {
+                "zh-CN": "额外的提示信息，常显，由组内每个控件的 aria-describedby 引用。",
+                "en-US": "Extra hint, always shown, referred to by the aria-describedby of every control in the group."
+            },
+            "children": {
+                "zh-CN": "组内的字段，只渲染设置了 field 的直接子项。",
+                "en-US": "The fields in the group; only direct children with a field are rendered."
+            }
+        }
+    }
+}

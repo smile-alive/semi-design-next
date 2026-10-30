@@ -1,0 +1,8 @@
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Content of the Layout: LayoutHeader, LayoutSider, LayoutContent, LayoutFooter or a nested Layout. | `Snippet` | - |
+| hasSider | Indicates that a Sider is inside. A Sider among the direct children is detected automatically; a deeper one registers after mount, so pass true during server rendering to avoid style flashing. Passing false cannot remove the has-sider class that a Sider adds. | `boolean` | - |
+| prefixCls | Class name prefix. | `string` | `"semi-layout"` |
+| tagName | Tag name of the root element. | `keyof HTMLElementTagNameMap` | `"section"` |

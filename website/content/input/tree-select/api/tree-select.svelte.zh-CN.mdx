@@ -1,0 +1,90 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| arrowIcon | 自定义右侧下拉箭头图标的 snippet，传 `null` 不显示箭头。`showClear` 开启且有已选值时，hover 优先显示清除图标。 | `Snippet \| null` | - |
+| autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `true` |
+| autoExpandParent | 是否自动展开父节点。 | `boolean` | `false` |
+| autoMergeValue | 是否合并值：开启后选中父节点时，值中不包含其后代节点。仅在 `leafOnly` 为 false 时生效。 | `boolean` | `true` |
+| borderless | 是否使用无边框样式。 | `boolean` | `false` |
+| checkRelation | 多选时节点选中状态的关系，可选 `related`、`unRelated`。`unRelated` 时节点之间的选中互不影响。 | `CheckRelation` | `"related"` |
+| clearIcon | 自定义清除按钮图标的 snippet，`showClear` 为 true 时有效。 | `Snippet` | - |
+| clickToHide | 选中后是否自动关闭下拉面板，仅在单选时生效。 | `boolean` | `true` |
+| clickTriggerToHide | 面板打开时，点击触发器后是否关闭面板。 | `boolean` | `true` |
+| defaultExpandAll | 初始化时是否展开全部节点。数据（`treeData`）变化后此属性不再生效，需要时使用 `expandAll`。 | `boolean` | `false` |
+| defaultOpen | 挂载时是否打开下拉面板。TreeSelect 没有受控的打开状态，需要关闭时调用 `close()`。 | `boolean` | `false` |
+| disabled | 是否禁用。 | `boolean` | - |
+| disableStrictly | 严格禁用：节点禁用时，它的选中状态不会因为父或子节点的变化而改变。 | `boolean` | `false` |
+| dropdownClassName | 下拉面板的类名。 | `string` | - |
+| dropdownMatchSelectWidth | 下拉面板的最小宽度是否与选择框相同。 | `boolean` | `true` |
+| dropdownStyle | 下拉面板的内联样式字符串。 | `string` | - |
+| emptyContent | 无数据或搜索无结果时的空状态内容的 snippet，未设置时显示语言包中的文案；传 `null` 时不显示。 | `Snippet \| null` | - |
+| expandAction | 节点的展开方式，可选 `false`（只有点击展开图标才展开）、`click`、`doubleClick`。 | `TreeSelectExpandAction` | `false` |
+| expandAll | 是否默认展开全部节点。数据（`treeData`）变化后仍受此属性影响。 | `boolean` | `false` |
+| expandedKeys | 展开的节点 key，可 `bind:expandedKeys`，展开后显示直接子节点。不传时由组件自行管理；要完全受控用函数绑定 `bind:expandedKeys={get, set}`。没有 defaultExpandedKeys。 | `string[]` | - |
+| expandIcon | 自定义展开图标的 snippet，参数含 `class`、`onClick` 与 `expanded`，用法同 Tree 的 `expandIcon`；只渲染一个元素时，组件会给它加上展开按钮的类名与点击事件。 | <ApiType detail={"Snippet\u003c[TreeExpandIconSnippetProps]>"}>Type</ApiType> | - |
+| filterTreeNode | 是否可搜索，也可以传入函数自定义搜索逻辑，函数的第三个参数为节点数据 `data`。 | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean)"}>Type</ApiType> | `false` |
+| fullLabel | 自定义整行内容的 snippet，外层仍是带 `id`、`role="treeitem"` 与状态属性的行元素，用法同 Tree 的 `fullLabel`。 | <ApiType detail={"Snippet\u003c[TreeFullLabelSnippetProps]>"}>Type</ApiType> | - |
+| icon | 自定义节点图标的 snippet，参数 `{ item, level, expanded, isLeaf, loading, selected, checked, halfChecked }`，用法同 Tree 的 `icon`。 | <ApiType detail={"Snippet\u003c[TreeIconSnippetProps]>"}>Type</ApiType> | - |
+| insetLabel | 选择框内标签的 snippet，同时作为下拉树的名称。设置 `prefix` 时不渲染，也不作为可访问名称。 | `Snippet` | - |
+| insetLabelId | `insetLabel` 外层元素的 id，供 `aria-labelledby` 引用。 | `string` | - |
+| keyMaps | 自定义节点中 key、label、value、disabled、children、isLeaf 与 icon 字段的名称。如果自定义了 label 的字段名并开启搜索，需要把 `treeNodeFilterProp` 设为 `treeData` 中的某个字段，或通过 `filterTreeNode` 传入自定义搜索函数。 | `TreeSelectKeyMapProps` | - |
+| label | 自定义节点文本的 snippet，参数 `{ item, label, searchWord }`：节点数据、原文本与搜索词，用法同 Tree 的 `label`。 | <ApiType detail={"Snippet\u003c[TreeLabelSnippetProps]>"}>Type</ApiType> | - |
+| labelEllipsis | 标签溢出时是否省略。未设置时，虚拟化模式下为 true，否则为 false。 | `boolean` | - |
+| leafOnly | 多选时是否只展示叶子节点的标签，`onChange` 的入参也只包含叶子节点的值。 | `boolean` | `false` |
+| loadData | 异步加载子节点，返回 Promise。需要在 `treeData` 中用 `isLeaf` 标明叶子节点。 | <ApiType detail={"(data: TreeNodeData) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| loadedKeys | 已加载完成的节点 key，可 `bind:loadedKeys`，与 `loadData` 配合使用。 | `string[]` | - |
+| maxTagCount | 最多显示的标签数量，超出部分以 +N 的形式展示。 | `number` | - |
+| motion | 下拉面板打开和关闭时是否带动画。 | `boolean` | `true` |
+| motionExpand | 节点展开和收起时是否带动画。 | `boolean` | `true` |
+| multiple | 是否多选。 | `boolean` | `false` |
+| onBlur | TreeSelect 失去焦点时的回调，每次 onFocus 之后触发一次。焦点离开触发器与下拉时入参为原生 FocusEvent，点击外部时为原生 MouseEvent，选中后关闭下拉时为选中的点击或按键事件。 | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent \u007c FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | 选中值变化时的回调，入参为节点的 value（多选时为数组）、节点数据与事件。关闭标签时事件为 null，键盘选中时为 KeyboardEvent，清空单选时值为 `undefined`。`onChangeWithObject` 为 true 时，值与节点都是节点数据。 | <ApiType detail={"(value: TreeSelectValue \u007c undefined, node: TreeNodeData \u007c TreeNodeData[] \u007c undefined, event: TreeSelectChangeEvent) => void"}>Type</ApiType> | - |
+| onChangeWithObject | `value` 与 `onChange` 的入参是否为节点的全部属性。为 true 时，`value` 与 `onChange` 的值和节点都是节点数据。 | `boolean` | `false` |
+| onClear | 点击清除按钮时的回调。 | <ApiType detail={"(event: TreeSelectChangeEvent) => void"}>Type</ApiType> | - |
+| onExpand | 展开或收起节点时的回调，入参为展开的 key 数组与 `{ expanded, node }`。 | <ApiType detail={"(expandedKeys: string[], info: { expanded: boolean; node: TreeNodeData }) => void"}>Type</ApiType> | - |
+| onFocus | 焦点从外部进入触发器（包括搜索框与清除按钮）或下拉面板时的回调，入参为原生 FocusEvent；在它们之间移动焦点不会再次触发。选中后关闭下拉，又通过点击或按键重新打开时，同样触发一次，入参为该点击或按键事件；挂载时 `searchAutoFocus` 聚焦的入参为 `null`。 | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent \u007c FocusEvent \u007c null) => void"}>Type</ApiType> | - |
+| onLoad | 节点加载完成时的回调。 | <ApiType detail={"(loadedKeys: Set\u003cstring>, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onSearch | 搜索值变化时的回调。入参为搜索值、`filteredExpandedKeys`（因搜索或 value 而展开的节点 key，展开受控时可用于实现搜索展开）与 `filteredNodes`（命中搜索的节点）。 | <ApiType detail={"(input: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => void"}>Type</ApiType> | - |
+| onSelect | 节点被选中或取消选中时的回调，入参为节点的 key、是否选中与节点数据。 | <ApiType detail={"(selectedKey: string, selected: boolean, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onVisibleChange | 下拉面板显示或隐藏时的回调，入参为是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| optionListStyle | 选项列表的内联样式字符串，落在 `role="tree"` 元素上。 | `string` | - |
+| outerBottomSlot | 渲染在下拉面板底部的 snippet，与选项列表同级。 | `Snippet` | - |
+| outerTopSlot | 渲染在下拉面板顶部的 snippet，与选项列表同级。开启 `filterTreeNode` 时它会替代搜索框，需要自定义搜索时可以通过 `bind:this` 的 `search` 方法实现。 | `Snippet` | - |
+| placeholder | 输入框的占位文本。 | `string` | - |
+| position | 弹出层的位置，可选值参考 Tooltip 的 position，默认 `bottomLeft`（RTL 下为 `bottomRight`）。 | `Position` | - |
+| prefix | 选择框前面内容的 snippet。 | `Snippet` | - |
+| preventScroll | 组件内部调用 `focus` 时是否阻止浏览器滚动文档以显示新聚焦的元素，不作用于用户传入的元素。 | `boolean` | - |
+| remote | 是否开启远程搜索。开启后输入时不做本地过滤，只触发 `onSearch`，由调用方获取数据并更新 `treeData`。 | `boolean` | `false` |
+| restTagsPopoverProps | 超出 `maxTagCount` 后折叠标签的 Popover 配置。 | `PopoverProps` | - |
+| search | 替换搜索框的 snippet，参数带有 ARIA 属性（`aria-activedescendant`、`aria-controls`、`aria-autocomplete`、名称；搜索框在触发器内时为整组 combobox 属性）、`class`、`value`、`placeholder`、`showClear`、`onChange(value)` 等，请用 `{...props}` 展开到 Semi 的 Input 上。传 `false` 时不渲染搜索框，`filterTreeNode` 仍会过滤。 | <ApiType detail={"Snippet\u003c[TreeSelectSearchSnippetProps]> \u007c false"}>Type</ApiType> | - |
+| searchAutoFocus | 搜索框挂载后是否自动聚焦。 | `boolean` | `false` |
+| searchPlaceholder | 下拉面板中搜索框的占位文本。 | `string` | - |
+| searchPosition | 搜索框的位置，可选 `dropdown`、`trigger`。 | `TreeSelectSearchPosition` | `"dropdown"` |
+| selectedItem | 自定义已选项的 snippet，参数 `{ item, index, disabled, onClose }`。单选时内容就是选择框中显示的内容，内容为空时显示 `placeholder`；多选时内容放进内置的 Tag 中，内容为空则不渲染该标签。`onClose` 移除该标签，单选时清除选中值。 | <ApiType detail={"Snippet\u003c[TreeSelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| showClear | 值不为空时，触发器是否显示清除按钮。 | `boolean` | `false` |
+| showFilteredOnly | 搜索时是否只展示过滤后的结果。 | `boolean` | `false` |
+| showLine | 选项面板中的节点是否显示连接线。 | `boolean` | `false` |
+| showRestTagsPopover | 标签数量超过 `maxTagCount` 后，hover 到 +N 时是否用 Popover 展示其余标签。 | `boolean` | `false` |
+| showSearchClear | 下拉面板中的搜索框是否支持清空。 | `boolean` | `true` |
+| size | 输入框的尺寸，可选 `large`、`small`、`default`。 | `TreeSelectSize` | - |
+| stopPropagation | 是否阻止下拉面板上的点击事件冒泡。 | `boolean \| string` | `true` |
+| suffix | 选择框后面内容的 snippet。 | `Snippet` | - |
+| tag | 多选时替换整个标签的 snippet，参数同 `selectedItem`，优先于 `selectedItem`。需要关闭按钮时把 `onClose` 接到自己的 Tag 上。 | <ApiType detail={"Snippet\u003c[TreeSelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| treeData | 节点数据，key 在整棵树内唯一。只有传入新数组才会更新，原地修改数组或节点不会生效。 | `TreeNodeData[]` | `[]` |
+| treeNodeFilterProp | 搜索时匹配的 `TreeNodeData` 属性。 | `string` | `"label"` |
+| treeNodeLabelProp | 显示文本所用的 `TreeNodeData` 属性。 | `string` | `"label"` |
+| trigger | 替换触发器内容的 snippet，参数含 `value`（已选节点的数据）、`inputValue`、`placeholder`、`disabled`、`componentProps`（传给 TreeSelect 的全部属性）、`onSearch`（更新搜索词，需要 `filterTreeNode` 且 `searchPosition` 为 `trigger`）、`onClear`（绑在触发器内的控件上时传入点击事件，避免同时打开下拉）与 `onRemove`（以节点 key 取消勾选）。 | <ApiType detail={"Snippet\u003c[TreeSelectTriggerSnippetProps]>"}>Type</ApiType> | - |
+| triggerTagWrap | 已选标签在触发器内是否允许换行。仅在 `multiple`、开启搜索且 `searchPosition` 为 `trigger` 时生效。 | `boolean` | `false` |
+| validateStatus | 校验状态，可选 `warning`、`error`、`default`，只影响组件的背景色。 | `ValidateStatus` | - |
+| value | 当前选中的值，可 `bind:value`；多选时为数组。不传时由组件自行管理；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；绑成 `undefined` 会清空选中。没有 defaultValue。 | `TreeSelectValue` | - |
+| virtualize | 虚拟列表配置，对象包含 `itemSize`（必传，每行的高度）、`height`（下拉高度，建议传数值）与 `width`。虚拟化时动画关闭。 | `TreeVirtualize` | - |
+
+**Methods**
+
+| 方法   | 说明                                                                | 类型                                                       |
+| ------ | ------------------------------------------------------------------- | ---------------------------------------------------------- |
+| close  | 关闭下拉面板。                                                      | <ApiType detail={"() => void"}>Type</ApiType>              |
+| search | 按输入了该值来搜索，先打开下拉面板，需要同时设置 `filterTreeNode`。 | <ApiType detail={"(input: string) => void"}>Type</ApiType> |

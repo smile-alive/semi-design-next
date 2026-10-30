@@ -18,6 +18,10 @@ import DropdownSolidApi from './api/dropdown.solid.zh-CN.mdx';
 import DropdownMenuSolidApi from './api/dropdown-menu.solid.zh-CN.mdx';
 import DropdownItemSolidApi from './api/dropdown-item.solid.zh-CN.mdx';
 import DropdownTitleSolidApi from './api/dropdown-title.solid.zh-CN.mdx';
+import DropdownSvelteApi from './api/dropdown.svelte.zh-CN.mdx';
+import DropdownMenuSvelteApi from './api/dropdown-menu.svelte.zh-CN.mdx';
+import DropdownItemSvelteApi from './api/dropdown-item.svelte.zh-CN.mdx';
+import DropdownTitleSvelteApi from './api/dropdown-title.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -51,6 +55,18 @@ import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@f
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Dropdown, DropdownDivider, DropdownItem, DropdownMenu, DropdownTitle } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+`Dropdown.Menu`、`Dropdown.Item`、`Dropdown.Title`、`Dropdown.Divider` 对应按名导入的 `DropdownMenu`、`DropdownItem`、`DropdownTitle`、`DropdownDivider`。
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -80,6 +96,15 @@ import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@f
 
 </Framework>
 
+<Framework only="svelte">
+
+- 触发器作为 Dropdown 的 children 传入，会被一个 span 包裹；默认为 hover 展示，可通过 `trigger` 修改为 `click`、`focus`、`custom`、`contextMenu` 等值指定不同触发方式。需要自己渲染触发元素时使用 `child` snippet，把参数里的 `props` 展开到可聚焦的元素上。
+- 通过 `content` snippet 指定下拉框的具体内容：使用 `DropdownMenu` 作为父容器，组合使用 `DropdownItem`、`DropdownDivider`、`DropdownTitle` 。  
+  当然简单场景你也可以仅搭配 `DropdownMenu` 与 `DropdownItem`，其他元素不是必须的。
+- `DropdownItem` 通过设置 `disabled` 可以禁用某个选项，配置 `type`，可以展示不同颜色的文本，用 `icon` snippet 可以快速配置图标。更复杂的自定义结构，直接写在 `DropdownItem` 的 children 中。
+
+</Framework>
+
 <Demo id="basic" />
 
 ### 嵌套使用
@@ -99,6 +124,12 @@ import { Button, Dropdown, HotKeys, Tag, Toast, type DropDownMenuItem } from '@f
 <Framework only="solid">
 
 用户可以对 `Dropdown` 进行嵌套使用，此类情况适合具有多个子级选项的情况。作为父项的触发元素同样使用函数 children，把 `getTriggerProps` 展开到 `Dropdown.Item` 上。键盘上 `右箭头` 打开子菜单、`左箭头` 回到父项，`Enter` 或 `Space` 触发任意层菜单项的 `onClick`（详见 [Accessibility](#accessibility)）。
+
+</Framework>
+
+<Framework only="svelte">
+
+用户可以对 `Dropdown` 进行嵌套使用，此类情况适合具有多个子级选项的情况。作为父项的触发元素使用 `child` snippet，把参数里的 `props` 展开到 `DropdownItem` 上。键盘上 `右箭头` 打开子菜单、`左箭头` 回到父项，`Enter` 或 `Space` 触发任意层菜单项的 `onclick`（详见 [Accessibility](#accessibility)）。嵌套的子菜单默认 `spacing` 为 2；`showTick`、`selectionMode` 与 `trigger` 不从外层继承，按子菜单 Dropdown 自身的设置生效。
 
 </Framework>
 
@@ -137,6 +168,12 @@ contextMenu 方式右键打开菜单后焦点会移到第一个可用项。
 
 </Framework>
 
+<Framework only="svelte">
+
+点击菜单项后可触发不同鼠标事件，支持 `onclick`，`onmouseenter`，`onmouseleave` 和 `oncontextmenu`。顶层菜单的 `onclick` 在点击时触发，子菜单的在鼠标左键按下时触发，键盘的 `Enter` 和 `Space` 同样触发。
+
+</Framework>
+
 <Demo id="events" />
 
 ### Json 用法
@@ -156,6 +193,12 @@ contextMenu 方式右键打开菜单后焦点会移到第一个可用项。
 <Framework only="solid">
 
 可以通过 `menu` 属性，传入数组快速配置出下拉框菜单。数据项的回调使用驼峰名称，如 `onClick`，与 `Dropdown.Item` 的属性相同。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `menu` 属性，传入数组快速配置出下拉框菜单。数据项的监听使用小写的原生事件名，如 `onclick`、`onmouseenter`，会交给对应的 `DropdownItem`；需要为每一项自定义图标时使用 `menuIcon` snippet，参数为 `{ item, index }`。提供 `content` 时以 `content` 为准。
 
 </Framework>
 
@@ -189,6 +232,14 @@ Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-w
 
 </Framework>
 
+<Framework only="svelte">
+
+<DropdownSvelteApi />
+
+Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-wrapper` 上，`contentClassName` 落在菜单容器 `.semi-dropdown` 上，其余未声明的属性被丢弃。
+
+</Framework>
+
 ### Dropdown.Menu
 
 <Framework only="react">
@@ -212,6 +263,14 @@ Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-w
 <DropdownMenuSolidApi />
 
 `class`、`style`、`ref` 与原生属性落在菜单的 `ul` 上；`role` 与 `aria-orientation` 可以被覆盖，`onKeyDown` 先于内置的键盘处理执行。
+
+</Framework>
+
+<Framework only="svelte">
+
+<DropdownMenuSvelteApi />
+
+`class`、`style` 与原生属性落在菜单的 `ul` 上；`role` 与 `aria-orientation` 可以被覆盖，绑定在菜单上的 `onkeydown` 先于内置的键盘处理执行。
 
 </Framework>
 
@@ -241,6 +300,14 @@ Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-w
 
 </Framework>
 
+<Framework only="svelte">
+
+<DropdownItemSvelteApi />
+
+点击、鼠标移入移出与右键使用 `onclick`、`onmouseenter`、`onmouseleave`、`oncontextmenu` 监听，参数是原生 `MouseEvent`。`class`、`style` 与其他原生属性落在 `li` 上。禁用的 Item 不响应这四个监听。
+
+</Framework>
+
 ### Dropdown.Title
 
 <Framework only="react">
@@ -264,6 +331,14 @@ Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-w
 <DropdownTitleSolidApi />
 
 `class`、`style`、`ref` 与原生属性落在 `li` 上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<DropdownTitleSvelteApi />
+
+`class`、`style` 与原生属性落在 `li` 上。分隔线 `DropdownDivider` 没有属性，同样接收 `class`、`style` 与原生属性。
 
 </Framework>
 
@@ -304,6 +379,18 @@ Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-w
 
 </Framework>
 
+<Framework only="svelte">
+
+| 属性                                               | 说明                                                                      | 类型                             | 默认值 |
+| -------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------- | ------ |
+| node                                               | 数据项类型，可选：`title`，`item`，`divider`                              | `'title' \| 'item' \| 'divider'` | -      |
+| name                                               | 菜单文本，仅 `title` 与 `item` 有                                         | `string \| number`               | -      |
+| active、disabled、showTick、type                   | 与 DropdownItem 的同名属性对应，仅 `item` 有                              | -                                | -      |
+| class、style、`data-*`、`aria-*`                   | 交给对应的 DropdownTitle、DropdownItem、DropdownDivider；`style` 为字符串 | -                                | -      |
+| onclick、onmouseenter、onmouseleave、oncontextmenu | DropdownItem 的监听，使用小写的原生事件名，仅 `item` 有                   | `(event: MouseEvent) => void`    | -      |
+
+</Framework>
+
 ### Methods
 
 <Framework only="react">
@@ -321,6 +408,12 @@ Dropdown 没有自己的根元素：`class` 落在弹层外层 `.semi-dropdown-w
 <Framework only="solid">
 
 通过 `ref` 接收 `DropdownHandle`，组件创建时调用一次，之后调用其中的 `focusTrigger()` 与 `rePosition()`，方法说明见上方 Dropdown 的 Methods 表。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `bind:this` 取得实例，调用 `focusTrigger()` 与 `rePosition()`，见上方 Dropdown 的 Methods。
 
 </Framework>
 

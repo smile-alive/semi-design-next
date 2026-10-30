@@ -7,6 +7,7 @@ icon: doc-backtop
 import BackTopReactApi from './api/back-top.react.zh-CN.mdx';
 import BackTopVueApi from './api/back-top.vue.zh-CN.mdx';
 import BackTopSolidApi from './api/back-top.solid.zh-CN.mdx';
+import BackTopSvelteApi from './api/back-top.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -38,6 +39,16 @@ import { BackTop } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { BackTop } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 BackTop 是一个 [FloatButton](/zh-CN/react/basic/float-button)，滚动超过 `visibilityHeight` 后出现，点击后把 `target` 滚动到顶部。默认显示回到顶部图标，可访问名称默认取自语言包（简体中文为「回到顶部」），可以通过 `aria-label` 覆盖。
@@ -63,6 +74,12 @@ BackTop 默认距离底部 50px、距离右侧 100px（RTL 下为左侧），可
 <Framework only="solid">
 
 外观通过 FloatButton 的 `icon`、`shape`、`size`、`colorful`、`badge` 定制。
+
+</Framework>
+
+<Framework only="svelte">
+
+外观通过 FloatButton 的 `icon` snippet 与 `shape`、`size`、`colorful`、`badge` 定制；`style` 只接受字符串。
 
 </Framework>
 
@@ -96,13 +113,23 @@ BackTop 默认距离底部 50px、距离右侧 100px（RTL 下为左侧），可
 
 </Framework>
 
+<Framework only="svelte">
+
+<BackTopSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `data-*`、`aria-*`）落在按钮上。点击回调是原生的 `onclick`，按 `duration` 节流，`overrideDefaultProps.BackTop` 不能设置它。`children` 与 `icon`、`badgeCount` 都是 snippet。
+
+`target` 在挂载后调用一次，此时读取父容器的元素引用能取到元素；稳定的 `target` 函数晚于挂载才返回元素时，需要重新挂载 BackTop。
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
 
 - BackTop 渲染为单个原生按钮 `<button type="button">`，读屏软件读作按钮
 - 可访问名称取自 `aria-label`；没有时，传入了按钮内容则取按钮内容，否则取语言包中的默认名称（简体中文为「回到顶部」）
-- `children`（Vue 中为默认插槽）是按钮内的静态内容，会成为按钮名称的一部分；按钮内不能嵌套可交互元素
+- `children`（Vue 中为默认插槽，Svelte 中为 snippet）是按钮内的静态内容，会成为按钮名称的一部分；按钮内不能嵌套可交互元素
 
 ### 键盘和焦点
 

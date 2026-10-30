@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                                  | Type                                                                                 | Default |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------- |
+| activeKey | Keys of the expanded groups; bind it with `bind:activeKey`.                                                                  | `string \| string[]`                                                                 | -       |
+| header    | Content of a group header after its icon, with item and index; the header field is shown when absent.                        | <ApiType detail={"Snippet\u003c[AnnotationHeaderSnippetProps]>"}>Type</ApiType>      | -       |
+| info      | Groups of references; each has a header, a key and its annotations.                                                          | `AnnotationInfo[]`                                                                   | `[]`    |
+| item      | Replaces the built-in reference item, with item and index (its position in the group).                                       | <ApiType detail={"Snippet\u003c[AnnotationItemSnippetProps]>"}>Type</ApiType>        | -       |
+| onChange  | Called when a group opens or closes, with the expanded keys.                                                                 | <ApiType detail={"(activeKey: string \u007c string[]) => void"}>Type</ApiType>       | -       |
+| onClick   | Called when a reference is clicked, with the event and its item; the native click of the root is not reported apart from it. | <ApiType detail={"(event: MouseEvent, item: AnnotationItem) => void"}>Type</ApiType> | -       |

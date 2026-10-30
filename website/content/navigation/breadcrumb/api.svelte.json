@@ -1,0 +1,52 @@
+{
+    "breadcrumb": {
+        "source": "packages/semi-ui-svelte/src/breadcrumb/breadcrumb.svelte",
+        "props": {
+            "activeIndex": {
+                "zh-CN": "受控使用，当前项的序号（从 0 起）；缺省时最后一项为当前项。",
+                "en-US": "Controlled index of the current item, counted from 0. The last item is current when omitted."
+            },
+            "autoCollapse": {
+                "zh-CN": "超出 maxItemCount 后是否自动折叠。",
+                "en-US": "Whether items beyond maxItemCount collapse automatically."
+            },
+            "compact": { "zh-CN": "是否使用紧凑尺寸。", "en-US": "Whether the compact size is used." },
+            "maxItemCount": {
+                "zh-CN": "超出多少个级别后自动折叠。",
+                "en-US": "Number of levels above which the breadcrumb collapses."
+            },
+            "moreType": {
+                "zh-CN": "内置省略号区域的渲染类型，可选 default、popover；提供 more snippet 时以 snippet 为准。",
+                "en-US": "Built-in rendering of the ellipsis area: default or popover. The more snippet wins when it is provided."
+            },
+            "routes": {
+                "zh-CN": "路由信息，由路由对象或字符串组成的数组。",
+                "en-US": "Route information as an array of route objects or strings."
+            },
+            "separator": {
+                "zh-CN": "分隔符，可以是文字或 snippet。",
+                "en-US": "Separator, either text or a snippet."
+            },
+            "showTooltip": {
+                "zh-CN": "是否在标题溢出时展示 Tooltip 及相关配置：width 为溢出宽度，ellipsisPos 为截断方式（从末尾或中间），opts 为传给 Tooltip 的属性，不含 content，class 与 style 落在弹层上。",
+                "en-US": "Whether a Tooltip shows for an overflowing title, with its options: width is the overflow width, ellipsisPos truncates at the end or in the middle, and opts are passed to the Tooltip without content, with class and style landing on the popup."
+            },
+            "onClick": {
+                "zh-CN": "点击时调用，收到该项的路由（字符串路由为 `{ name }`）与原生 MouseEvent。是函数 prop，不是 nav 的原生点击监听；传入后没有 href 的项也可以用 Enter 操作。",
+                "en-US": "Called on click with the route of the item (`{ name }` for a string route) and the native MouseEvent. It is a function prop, not the native click listener of the nav; passing it makes items without href operable with Enter as well."
+            },
+            "item": {
+                "zh-CN": "自定义每一项的标题，参数为该项的路由与序号；内容按内联渲染，不走截断。",
+                "en-US": "Custom title of each item, with the route and its index as parameters. It renders inline, without truncation."
+            },
+            "icon": {
+                "zh-CN": "每一项的图标，参数为该项的路由、序号、size 与 class，需要把后两者传给图标；渲染为空时该项无图标。",
+                "en-US": "Icon of each item, with the route, its index, size and class as parameters. Pass the last two to the icon. An empty result renders no icon."
+            },
+            "more": {
+                "zh-CN": "自定义省略号区域，参数 restItems 是被折叠的项（`{ route, index }`）。",
+                "en-US": "Custom ellipsis area. The parameter restItems holds the collapsed items as `{ route, index }`."
+            }
+        }
+    }
+}

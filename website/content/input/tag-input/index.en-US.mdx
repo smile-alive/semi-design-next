@@ -8,6 +8,7 @@ brief: Taginput is a input component that can add content as a tag.
 import TagInputReactApi from './api/tag-input.react.en-US.mdx';
 import TagInputVueApi from './api/tag-input.vue.en-US.mdx';
 import TagInputSolidApi from './api/tag-input.solid.en-US.mdx';
+import TagInputSvelteApi from './api/tag-input.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { TagInput } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Avatar, Button, TagInput, Toast } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -96,6 +107,13 @@ The left and right padding is automatically brought when the content passed in b
 
 </Framework>
 
+<Framework only="svelte">
+
+You can pass the input box prefix through the `prefix` snippet and the suffix through the `suffix` snippet, as text or nodes such as icons.  
+The left and right padding is added automatically when the snippet content is plain text or an Icon. For custom nodes the padding is 0; set it on the nodes you pass in if needed.
+
+</Framework>
+
 <Demo id="prefix-suffix" />
 
 ### Autocomplete
@@ -136,6 +154,14 @@ You can use `maxLength` to limit the maximum length of a single tag, and the `on
 
 </Framework>
 
+<Framework only="svelte">
+
+You can use `max` to limit the number of tags. Tags added past the limit are dropped, and the `onExceed()` callback is invoked.
+
+You can use `maxLength` to limit the maximum length of a single tag, and the `onInputExceed()` callback will be invoked when this value is exceeded.
+
+</Framework>
+
 <Demo id="limits" />
 
 ### Limit the number of tags displayed
@@ -164,6 +190,12 @@ You can use `value` to set tags, and use `onChange` to achieve control of the ta
 
 </Framework>
 
+<Framework only="svelte">
+
+Bind the tags with `bind:value` to control them. There is no `defaultValue`: a one-way `value={x}` only seeds the tags, and `bind:value={get, set}` makes the input fully controlled. Binding `value` to `undefined` clears the tags.
+
+</Framework>
+
 <Demo id="controlled-tag" />
 
 ### Controlled Input
@@ -183,6 +215,12 @@ Bind the input text with `v-model:inputValue` to control it.
 <Framework only="solid">
 
 You can use `inputValue` to set the input box, and use `onInputChange` to control the input content.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the input text with `bind:inputValue` to control it; `bind:inputValue={get, set}` makes it fully controlled.
 
 </Framework>
 
@@ -212,6 +250,12 @@ Get the root element through the component's `ref`, then call its `focus()` and 
 
 </Framework>
 
+<Framework only="svelte">
+
+Bind the component with `bind:this` and call its `focus()` and `blur()` methods to manage the focus. `focus()` focuses the input and activates the component; `blur()` removes the focus from whichever element inside the component holds it.
+
+</Framework>
+
 <Demo id="focus" />
 
 ### Custom TagInput rendering
@@ -231,6 +275,12 @@ You can use the `#tag` scoped slot to replace each tag as a whole; its scoped pr
 <Framework only="solid">
 
 You can use `renderTagItem` to customize tag rendering. `renderTagItem(value: string, index: number, onClose: () => void) => JSX.Element`; the third parameter `onClose` removes that tag and can be passed directly as a button's `onClick`.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can use the `tag` snippet to replace each tag as a whole; it receives `{ value, index, onClose }`. Empty content renders no tag and does not fall back to the default tag. `onClose` calls `preventDefault` on the event it receives, so you can pass it straight to a button's `onclick`.
 
 </Framework>
 
@@ -265,6 +315,14 @@ Among the undeclared attributes, `id`, `name`, `role` and the `aria-*` ones that
 <TagInputSolidApi />
 
 `class`, `style`, `ref`, and native attributes and events land on the root element, except `id`, `name`, `role`, `tabIndex`, and the `aria-*` attributes that describe the input (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-required`, `aria-controls`, `aria-expanded`, `aria-haspopup`, `aria-autocomplete`, `aria-activedescendant`, `aria-errormessage`), which land on the inner input. `onClick`, `onMouseDown`, `onFocusIn` and `onFocusOut` call the function you pass in addition to the component's own handling.
+
+</Framework>
+
+<Framework only="svelte">
+
+<TagInputSvelteApi />
+
+`class` (a string, array or object), `style` (a string) and native attributes and event handlers land on the root element, except `id`, `name`, `role`, `tabindex` and the `aria-*` attributes that describe the input (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-required`, `aria-controls`, `aria-expanded`, `aria-haspopup`, `aria-autocomplete`, `aria-activedescendant`, `aria-errormessage`), which land on the inner input. The lowercase listeners `onchange`, `onfocus`, `onblur` and `onkeydown` are not native passthroughs; use the callbacks `onChange`, `onFocus`, `onBlur` and `onKeyDown` above. `onclick` and `onmousedown` run in addition to the component's own handling.
 
 </Framework>
 

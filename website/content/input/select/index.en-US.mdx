@@ -14,6 +14,7 @@ import SelectOptGroupVueApi from './api/select-opt-group.vue.en-US.mdx';
 import SelectSolidApi from './api/select.solid.en-US.mdx';
 import SelectOptionSolidApi from './api/select-option.solid.en-US.mdx';
 import SelectOptGroupSolidApi from './api/select-opt-group.solid.en-US.mdx';
+import SelectSvelteApi from './api/select.svelte.en-US.mdx';
 
 ## Demos
 
@@ -50,7 +51,35 @@ Write the options as `<Select.Option>` and `<Select.OptGroup>`.
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Select } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+The Svelte version has no `Select.Option` or `Select.OptGroup`: the data of child components is not available in the first server render, in keyboard navigation, in filtering or in select all. The options come only from `optionList`, and groups are written on the `group` field of an entry.
+
+</Framework>
+
+<Framework only="react">
+
 <Notice title="Notice">The direct children of Select must be Option or OptGroup; other elements are not allowed, while a Fragment is unfolded</Notice>
+
+</Framework>
+
+<Framework only="vue">
+
+<Notice title="Notice">The direct children of Select must be Option or OptGroup; other elements are not allowed, while a Fragment is unfolded</Notice>
+
+</Framework>
+
+<Framework only="solid">
+
+<Notice title="Notice">The direct children of Select must be Option or OptGroup; other elements are not allowed, while a Fragment is unfolded</Notice>
+
+</Framework>
 
 ### Basic Usage
 
@@ -72,6 +101,12 @@ Each Option tag must declare the `value` attribute. `label` is the text of the o
 
 </Framework>
 
+<Framework only="svelte">
+
+Write the options in `optionList`. Each entry must declare `value`, and `label` is the text of the option. A one-way `value="douyin"` only seeds the selection; use `bind:value` to read and write it
+
+</Framework>
+
 <Demo id="basic" />
 
 ### Pass Option as an array
@@ -81,6 +116,12 @@ You can pass an array of objects directly through `optionList`. Each object must
 <Framework only="vue">
 
 `label` accepts a string or a number; content with markup goes in the default slot of `Select.Option`.
+
+</Framework>
+
+<Framework only="svelte">
+
+`label` accepts a string or a number; option text with markup uses the `optionLabel` snippet, see "Custom Option Render" below.
 
 </Framework>
 
@@ -118,6 +159,12 @@ Configuration `max` Properties can limit the maximum number of options and canno
 
 </Framework>
 
+<Framework only="svelte">
+
+Configuration `max` Properties can limit the maximum number of options and cannot be selected beyond the maximum limit, while triggering the `onExceed` callback
+
+</Framework>
+
 <Demo id="multiple" />
 
 ### With Group
@@ -137,6 +184,12 @@ Grouping Option with `Select.OptGroup` (only supports declaring the options in t
 <Framework only="solid">
 
 Grouping Option with `Select.OptGroup` (only supports declaring the options as children, and does not support pass in through optionList). Use the `label` prop for the group title, which takes text only
+
+</Framework>
+
+<Framework only="svelte">
+
+Group entries by writing `group: { key, label }` on the `optionList` entries. Entries of one group must be adjacent: adjacent entries with the same `key` form one group, and `label` is the group title; a group without a `label` renders no title. A group renders as `role="group"` named by its title. While searching, a group with no visible option is hidden entirely, and a keyword that matches a group title shows all options of that group. Customize the title with the `groupLabel` snippet, whose parameter is `{ group }`; without it `group.label` is shown. With `virtualize` no group titles or `role="group"` are rendered and the options are laid out flat in order
 
 </Framework>
 
@@ -197,6 +250,13 @@ validateStatus: default / warning / error
 
 </Framework>
 
+<Framework only="svelte">
+
+- You can pass the selection box prefix through the `prefix` snippet, the selection box suffix through the `suffix` snippet, for text or a node  
+  The left and right padding is automatically brought when the snippet content is text or Icon. If it is a custom node, the left and right padding is 0.
+
+</Framework>
+
 - Whether to show the clear button is displayed by `showClear`
 - Whether to show the right drop-down arrow is displayed by `showArrow`
 
@@ -210,6 +270,12 @@ Use`innerTopSlot` or `outerTopSlot` to pass the custom node, which will be rende
 <Framework only="vue">
 
 In Vue they are named slots of the same names: `#innerBottomSlot`, `#outerBottomSlot`, `#innerTopSlot` and `#outerTopSlot`.
+
+</Framework>
+
+<Framework only="svelte">
+
+In Svelte they are snippets of the same names, written as `{#snippet innerBottomSlot()}...{/snippet}`, and likewise for the other three.
 
 </Framework>
 
@@ -242,6 +308,12 @@ When `value` is passed in, Select is a controlled component, and the value selec
 
 </Framework>
 
+<Framework only="svelte">
+
+Use `bind:value={x}` to keep the selected value in sync both ways; with the function binding `bind:value={() => x, (next) => { ... }}` Select is fully controlled and the setter may reject or rewrite the value. A one-way `value={x}` only seeds the selection. There is no `defaultValue`.
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### Dynamic Modification Options
@@ -264,6 +336,12 @@ If you need to update Options dynamically, you should use a controlled `value`
 
 </Framework>
 
+<Framework only="svelte">
+
+If you need to update Options dynamically, you should use `bind:value`, or write the value back in `onChange`
+
+</Framework>
+
 <Demo id="dynamic-options" />
 
 ### Linkage Select
@@ -283,6 +361,12 @@ Use a controlled `modelValue` to link different Selects. If it is a complex link
 <Framework only="solid">
 
 Use a controlled `value` to link different Selects. If it is a complex linkage with a hierarchical relationship, it is recommended to use Cascader components directly
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:value`, or write the value back in `onChange`, to link different Selects. If it is a complex linkage with a hierarchical relationship, it is recommended to use Cascader components directly
 
 </Framework>
 
@@ -333,6 +417,12 @@ A multi-select example with remote search, request debounce, loading status.
 
 </Framework>
 
+<Framework only="svelte">
+
+- Use `bind:value`, and get the keyword from `onSearch`; pass `emptyContent={null}` to hide the empty state
+
+</Framework>
+
 <Demo id="remote-search" />
 
 ### Custom search strategy
@@ -380,6 +470,18 @@ But you can customize the rendering of the selection box through the `renderSele
 
 </Framework>
 
+<Framework only="svelte">
+
+By default, the `label` of the selected option is backfilled into the selection box.  
+But you can customize the rendering of the selection box through snippets, whose parameters are `{ option, index, disabled, onClose }`
+
+- `selectedItem`: in a single Select it replaces the content shown in the selection box; in a multiple Select it replaces only the content inside the built-in tag, which keeps its background color and close button
+- `tag`: in a multiple Select it replaces the whole tag, and takes precedence over `selectedItem` when both are given
+- Call `onClose` to remove the option; in a single Select it clears the value
+- Other fields written on the `optionList` entries (such as `email` and `avatar` in the demo) are passed in with `option`
+
+</Framework>
+
 <Demo id="render-selected-item" />
 
 ### Custom pop-up layer style
@@ -415,9 +517,23 @@ At this time, the argument of `onChange` will be object, containing various attr
 
 </Framework>
 
+<Framework only="svelte">
+
+By default, through `onChange` you can only get value attribute of selected option.  
+If you need to take other attributes of the selected option, you can use `onChangeWithObject` Properties  
+At this time, the argument of `onChange` will be object, containing various attributes of selected option, eg: `onChange({ value, label, ...rest })`
+
+</Framework>
+
 <Framework only="react">
 
 <Notice title="Notice">Note that when onChangeWithObject is set to true, `defaultValue` / `value` should also be an object and must have `value` and `label` keys</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice title="Notice">Note that when onChangeWithObject is set to true, `value` should also be an object and must have `value` and `label` keys</Notice>
 
 </Framework>
 
@@ -454,6 +570,12 @@ You can customize the content display when creating the label through the `#crea
 <Framework only="solid">
 
 You can customize the content display when creating the label through `renderCreateItem` (by returning a JSX element, note that you need to customize the style). Without it the locale text for "Create" followed by the input is shown. Its arguments are `(inputValue, isFocus, style)`, and with virtualization you must apply `style` to the custom element
+
+</Framework>
+
+<Framework only="svelte">
+
+You can customize the content display when creating the label through the `createItem` snippet (note that you need to customize the style, and with virtualization you must apply `style` to the custom element). Its parameter is `{ inputValue, focus, style }`. Without it the locale text for "Create" followed by the input is shown. `onCreate` fires when an option is created
 
 </Framework>
 
@@ -544,6 +666,28 @@ interface TriggerRenderProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+If the default layout style of the selection box does not meet your needs, you can use the `trigger` snippet to customize the content of the selection box
+
+If you want to keep the search and filter ability without rendering the Input structure yourself, you can also set searchPosition='dropdown' to put the default search box in the dropdown list
+
+The parameters of `trigger` are as follows
+
+```typescript
+interface SelectTriggerSnippetProps {
+    value: SelectOptionProps[]; // All currently selected options
+    inputValue: string; // The current search keyword
+    placeholder?: string; // Select placeholder
+    disabled: boolean; // Whether to disable Select
+    onSearch: (inputValue: string) => void; // Updates the search keyword. Call it when the value of your custom Input changes, to synchronize the state to the Select internal. filter needs to be set too
+    onClear: (event?: MouseEvent) => void; // Clears the selection. When bound to a control inside the trigger, pass the click event so that click does not reopen the dropdown
+    onRemove: (option: SelectOptionProps) => void; // Removes a single selected option, which needs at least label and value
+}
+```
+
+</Framework>
+
 <Demo id="trigger-render" />
 
 The following is a more complex example: Reusing the drag-and-sort capability of TagInput and adding sorting to Select through a custom trigger.
@@ -588,6 +732,19 @@ The following is a more complex example: Reusing the drag-and-sort capability of
     3. The styles of selected, focused, disabled, etc. state need to be added by yourself, and you can get the relative boolean value from the parameter
     4. Bind the `onClick` in the parameter to the wrapper dom so that a click selects the option
     5. Put the `id` in the parameter on the wrapper dom with `role="option"`, `aria-selected` and `aria-disabled`: the Select points `aria-activedescendant` at that id, so screen readers announce the option reached with the arrow keys; Select also uses this id to scroll the option into view when the dropdown opens or the arrow keys move
+
+</Framework>
+
+<Framework only="svelte">
+
+- Simple customization: Use the `optionLabel` snippet to replace only the text inside an option row; its parameter is `{ option }`. The tick icon, the `role="option"` of the row, its selected and disabled states, and its click and keyboard behavior stay the same, and the content automatically brings styles such as padding, background color, etc. The `label` of the option is still used for search, for the trigger text and for the accessible name; the content of `optionLabel` does not highlight the search keyword
+- Complete customization: Through the `optionItem` snippet, you can completely take over the rendering of the candidates in the list, and get the relevant state values from the snippet parameters. Achieve a higher degree of freedom of structural rendering  
+  The parameters are `{ id, value, label, selected, focused, disabled, inputValue, class, style, onclick, onmouseenter }` plus any other fields written on the `optionList` entry. Notice:
+    1. The `style` in the parameters needs to be consumed on wrapper dom, otherwise it will not be able to be used normally in virtualization scenarios
+    2. The `class` and `onmouseenter` in the parameters need to be bound on the wrapper dom, otherwise the display will be problematic when the upper and lower keyboards are operated
+    3. The styles of selected, focused, disabled, etc. state need to be added by yourself, and you can get the relative boolean value from the parameters
+    4. Bind the `onclick` in the parameters to the wrapper dom so that a click selects the option
+    5. Put the `id` in the parameters on the wrapper dom with `role="option"`, `aria-selected` and `aria-disabled`: the Select points `aria-activedescendant` at that id, so screen readers announce the option reached with the arrow keys; Select also uses this id to scroll the option into view when the dropdown opens or the arrow keys move
 
 </Framework>
 
@@ -666,6 +823,14 @@ Other native attributes (such as `data-*`) land on the trigger root element, and
 
 </Framework>
 
+<Framework only="svelte">
+
+<SelectSvelteApi />
+
+`class`, `style`, `data-*` and native attributes and listeners land on the root element, and `style` does not reach the dropdown popup (use `dropdownStyle`); with `trigger` the root no longer carries the style classes of Select itself. `aria-label`, `aria-labelledby`, `aria-describedby`, `aria-errormessage`, `aria-invalid` and `aria-required` land on the combobox; once the search input is mounted it is the combobox, and these attributes move to it.
+
+</Framework>
+
 ### Option Props
 
 <Framework only="react">
@@ -698,6 +863,24 @@ Other native attributes (such as `data-*`) land on the trigger root element, and
 
 </Framework>
 
+<Framework only="svelte">
+
+> **An option is identified by its value, which should not repeat within one Select; labels may repeat**
+
+The Svelte version has no `Select.Option` child component: an option is an `optionList` entry, with the fields below. `class`, `style` and `data-*` land on the option row; other fields never reach the DOM and travel with the option record to `onSelect`, `onDeselect`, `selectedItem`, `tag`, `optionItem` and `optionLabel`, and to `onChange` once `onChangeWithObject` is on.
+
+| Field    | Instructions                                                                                                   | Type                                                  | Default |
+| -------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------- |
+| value    | The value of the option, which identifies it                                                                   | string \| number                                      | -       |
+| label    | The text of the option, used for display, search and callbacks                                                 | string \| number                                      | -       |
+| disabled | Whether the option is disabled                                                                                 | boolean                                               | false   |
+| showTick | Whether to show the tick icon when selected                                                                    | boolean                                               | true    |
+| group    | The group of the option; entries of one group must be adjacent, and a group without a `label` renders no title | `{ key: string \| number; label?: string \| number }` | -       |
+| class    | Class of the option row                                                                                        | ClassValue                                            | -       |
+| style    | Style of the option row, a string                                                                              | string                                                | -       |
+
+</Framework>
+
 ### OptGroup Props
 
 <Framework only="react">
@@ -721,6 +904,12 @@ Attrs such as `class` and `style` land on the group title element.
 <SelectOptGroupSolidApi />
 
 `Select.OptGroup` is only read inside Select and renders nothing itself. `class`, `style`, `id` and other undeclared attributes land on the group title element.
+
+</Framework>
+
+<Framework only="svelte">
+
+The Svelte version has no `Select.OptGroup`: groups are written on the `group` field of the `optionList` entries (see "With Group" above), and the group title is customized with the `groupLabel` snippet. The title element carries `x-semi-prop="groupLabel"`.
 
 </Framework>
 
@@ -796,6 +985,34 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+Get the component instance of Select through `bind:this` and call the methods below:
+
+| Method | Instructions |
+| --- | --- |
+| open() | Manually open dropdown list |
+| close() | Manually close dropdown list |
+| focus() | Manually focus: a searchable Select focuses the search input and opens the dropdown list, otherwise it focuses the trigger without opening |
+| clearInput() | Manually clear value of the search input |
+| selectAll() | Select every shown, enabled option; multiple mode only |
+| deselectAll() | Manually clear selected options |
+| search(value: string, event?: Event) | Searches as if the value were typed into the search input, and the value is set to the input; without an event, the second parameter of `onSearch` is undefined |
+| rePosition() | Recomputes the dropdown position from the trigger's current position at once; the dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame |
+
+```svelte
+<script lang="ts">
+    import { Select } from '@fibrae/semi-ui-svelte';
+
+    let select = $state<Select>();
+</script>
+
+<Select bind:this={select} />
+<button onclick={() => select?.open()}>Open</button>
+```
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -808,7 +1025,7 @@ function App() {
 - The combobox has aria-haspopup, aria-expanded, and aria-controls properties, indicating its relationship with the popup layer
 - When multiple selections are made, listbox aria-multiselectable is true, indicating that multiple selections are currently available
 - aria-selected is true when Option is selected; aria-disabled is true when Option is disabled
-- The options of an OptGroup with a label sit in a `role="group"` named by the group title (`aria-labelledby`), so screen readers announce the group of an option; a virtualized list shows no group titles and has no groups
+- The options of a group with a label (`Select.OptGroup`, or `group` of `optionList` in Svelte) sit in a `role="group"` named by the group title (`aria-labelledby`), so screen readers announce the group of an option; a virtualized list shows no group titles and has no groups
 - While the dropdown is open, aria-activedescendant points at the option focused from the keyboard, which ensures that it is recognized when the narration is spoken; with a fully custom option rendering, put the `id` from the parameters on the option element (for more information, please refer to [Managing Focus in Composites Using aria-activedescendant](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_activedescendant))
 
 ### Keyboard and Focus

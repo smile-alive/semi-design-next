@@ -40,9 +40,9 @@
 
     const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
 
-    function onSearch(inputValue: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) {
+    const onSearch = (inputValue: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => {
         console.log('onSearch', inputValue, filteredExpandedKeys, filteredNodes);
-    }
+    };
 </script>
 
 <template>

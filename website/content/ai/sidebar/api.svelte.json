@@ -1,0 +1,517 @@
+{
+    "container": {
+        "source": "packages/semi-ai-svelte/src/sidebar/container/container.svelte",
+        "props": {
+            "visible": {
+                "zh-CN": "是否显示容器，可用 `bind:visible` 绑定。关闭按钮或 Esc 触发取消时先写入 false，再调用 onCancel。",
+                "en-US": "Whether the container is shown; bind it with `bind:visible`. When the close button or Esc cancels, false is written first, then onCancel is called."
+            },
+            "title": {
+                "zh-CN": "标题，可以是纯文本，也可以是 snippet。",
+                "en-US": "Title, either plain text or a snippet."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画。",
+                "en-US": "Whether showing and hiding use the expand animation."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "defaultSize": {
+                "zh-CN": "初始宽高，仅在 resizable 为 true 时生效。",
+                "en-US": "Initial width and height; applies only when resizable is true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮。",
+                "en-US": "Whether the header shows the close button."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否调用 onCancel，默认关闭。",
+                "en-US": "Whether pressing Esc calls onCancel; off by default."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "显示或隐藏动画结束后调用，参数为当前是否可见。",
+                "en-US": "Called after the show or hide animation ends, with whether the container is visible."
+            },
+            "header": {
+                "zh-CN": "替换整个头部，标题与关闭按钮也由它负责。",
+                "en-US": "Replaces the whole header, the title and close button included."
+            },
+            "children": { "zh-CN": "容器的内容区域。", "en-US": "The content area of the container." }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。",
+                "en-US": "Returns the `.semi-sidebar-container` root element; null while hidden."
+            }
+        }
+    },
+    "mcp-configure": {
+        "source": "packages/semi-ai-svelte/src/sidebar/mcp-configure/mcp-configure.svelte",
+        "props": {
+            "visible": {
+                "zh-CN": "是否显示，可用 `bind:visible` 绑定。",
+                "en-US": "Whether it is shown; bind it with `bind:visible`."
+            },
+            "title": {
+                "zh-CN": "标题，可以是纯文本或 snippet，默认使用语言包中的 MCP 配置。",
+                "en-US": "Title, plain text or a snippet; the locale's MCP configure text by default."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画。",
+                "en-US": "Whether showing and hiding use the expand animation."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "defaultSize": {
+                "zh-CN": "初始宽高，仅在 resizable 为 true 时生效。",
+                "en-US": "Initial width and height; applies only when resizable is true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮。",
+                "en-US": "Whether the header shows the close button."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否调用 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "显示或隐藏动画结束后调用，参数为当前是否可见。",
+                "en-US": "Called after the show or hide animation ends, with whether it is visible."
+            },
+            "header": {
+                "zh-CN": "替换整个头部，标题与关闭按钮也由它负责。",
+                "en-US": "Replaces the whole header, the title and close button included."
+            },
+            "options": {
+                "zh-CN": "内置 MCP 工具列表，可用 `bind:options` 绑定；每项的 value 必填且唯一。切换启用状态时先写回绑定，再调用 onStatusChange。",
+                "en-US": "Built-in MCP tools; bind it with `bind:options`. Each item needs a unique value. Switching a tool writes the new list back before onStatusChange is called."
+            },
+            "customOptions": {
+                "zh-CN": "自定义 MCP 工具列表，可用 `bind:customOptions` 绑定。切换启用状态时先写回绑定，再调用 onStatusChange。",
+                "en-US": "Custom MCP tools; bind it with `bind:customOptions`. Switching a tool writes the new list back before onStatusChange is called."
+            },
+            "filter": {
+                "zh-CN": "自定义搜索过滤，参数为转为小写的输入值和选项；默认按 label 与 desc 匹配。",
+                "en-US": "Custom search filter, called with the lower-cased input and an option; the label and desc are matched by default."
+            },
+            "placeholder": {
+                "zh-CN": "搜索框的占位文字，默认使用语言包文案。",
+                "en-US": "Placeholder of the search input, the locale text by default."
+            },
+            "onStatusChange": {
+                "zh-CN": "切换启用状态后调用，参数为 active 已更新的列表，以及它是否为自定义列表。",
+                "en-US": "Called after a tool is switched, with the list whose active flag changed and whether it is the custom list."
+            },
+            "onSearch": {
+                "zh-CN": "搜索输入变化时调用，参数为输入值，以及当前是否为自定义列表。",
+                "en-US": "Called when the search input changes, with the input value and whether the custom list is shown."
+            },
+            "onAddClick": {
+                "zh-CN": "点击自定义页的新增按钮时调用。",
+                "en-US": "Called when the add button of the custom page is clicked."
+            },
+            "onConfigureClick": {
+                "zh-CN": "点击内置工具的配置按钮时调用，参数为点击事件和对应选项。",
+                "en-US": "Called when the configure button is clicked, with the event and its option."
+            },
+            "onEditClick": {
+                "zh-CN": "点击自定义工具的编辑按钮时调用，参数为点击事件和对应选项。",
+                "en-US": "Called when the edit button of a custom tool is clicked, with the event and its option."
+            },
+            "icon": {
+                "zh-CN": "选项的图标，参数为 item、index 和 custom；提供后所有选项都使用它，icon 字段只在未提供时作为图片地址。",
+                "en-US": "Icon of an option, with item, index and custom. When provided it is used for every option; the icon field is an image URL only when it is absent."
+            },
+            "desc": {
+                "zh-CN": "选项的描述，参数为 item、index 和 custom；未提供时显示 desc 字段。",
+                "en-US": "Description of an option, with item, index and custom; the desc field is shown when absent."
+            },
+            "item": {
+                "zh-CN": "替换整行内置选项，参数为 item、index 和 custom。",
+                "en-US": "Replaces the whole built-in row, with item, index and custom."
+            }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。",
+                "en-US": "Returns the `.semi-sidebar-container` root element; null while hidden."
+            }
+        }
+    },
+    "annotation": {
+        "source": "packages/semi-ai-svelte/src/sidebar/annotation/annotation.svelte",
+        "props": {
+            "visible": {
+                "zh-CN": "是否显示，可用 `bind:visible` 绑定。",
+                "en-US": "Whether it is shown; bind it with `bind:visible`."
+            },
+            "title": {
+                "zh-CN": "标题，可以是纯文本或 snippet，默认使用语言包文案。",
+                "en-US": "Title, plain text or a snippet; the locale text by default."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画。",
+                "en-US": "Whether showing and hiding use the expand animation."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "defaultSize": {
+                "zh-CN": "初始宽高，仅在 resizable 为 true 时生效。",
+                "en-US": "Initial width and height; applies only when resizable is true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮。",
+                "en-US": "Whether the header shows the close button."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否调用 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "显示或隐藏动画结束后调用，参数为当前是否可见。",
+                "en-US": "Called after the show or hide animation ends, with whether it is visible."
+            },
+            "header": {
+                "zh-CN": "替换整个头部，标题与关闭按钮也由它负责。",
+                "en-US": "Replaces the whole header, the title and close button included."
+            },
+            "activeKey": {
+                "zh-CN": "当前展开的分组 key，可用 `bind:activeKey` 绑定。",
+                "en-US": "Keys of the expanded groups; bind it with `bind:activeKey`."
+            },
+            "info": {
+                "zh-CN": "参考来源分组列表，每组包含 header、key 与 annotations。",
+                "en-US": "Groups of references; each has a header, a key and its annotations."
+            },
+            "onChange": {
+                "zh-CN": "展开或收起分组时调用，参数为当前展开的 key。",
+                "en-US": "Called when a group opens or closes, with the expanded keys."
+            },
+            "onClick": {
+                "zh-CN": "点击某条参考来源时调用，参数为点击事件和对应条目；根元素的原生 click 不单独上报。",
+                "en-US": "Called when a reference is clicked, with the event and its item; the native click of the root is not reported apart from it."
+            },
+            "infoHeader": {
+                "zh-CN": "分组头部图标之后的内容，参数为 item 与 index；未提供时显示 header 字段。容器的 header 已用于替换整个头部，所以分组头部叫 infoHeader。",
+                "en-US": "Content of a group header after its icon, with item and index; the header field is shown when absent. The container's header replaces the whole header, so the group header is named infoHeader."
+            },
+            "item": {
+                "zh-CN": "替换内置的参考来源条目，参数为 item 与 index（在分组内的位置）。",
+                "en-US": "Replaces the built-in reference item, with item and index (its position in the group)."
+            }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。",
+                "en-US": "Returns the `.semi-sidebar-container` root element; null while hidden."
+            }
+        }
+    },
+    "annotation-content": {
+        "source": "packages/semi-ai-svelte/src/sidebar/annotation/annotation-content.svelte",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的分组 key，可用 `bind:activeKey` 绑定。",
+                "en-US": "Keys of the expanded groups; bind it with `bind:activeKey`."
+            },
+            "info": {
+                "zh-CN": "参考来源分组列表，每组包含 header、key 与 annotations。",
+                "en-US": "Groups of references; each has a header, a key and its annotations."
+            },
+            "onChange": {
+                "zh-CN": "展开或收起分组时调用，参数为当前展开的 key。",
+                "en-US": "Called when a group opens or closes, with the expanded keys."
+            },
+            "onClick": {
+                "zh-CN": "点击某条参考来源时调用，参数为点击事件和对应条目；根元素的原生 click 不单独上报。",
+                "en-US": "Called when a reference is clicked, with the event and its item; the native click of the root is not reported apart from it."
+            },
+            "header": {
+                "zh-CN": "分组头部图标之后的内容，参数为 item 与 index；未提供时显示 header 字段。",
+                "en-US": "Content of a group header after its icon, with item and index; the header field is shown when absent."
+            },
+            "item": {
+                "zh-CN": "替换内置的参考来源条目，参数为 item 与 index（在分组内的位置）。",
+                "en-US": "Replaces the built-in reference item, with item and index (its position in the group)."
+            }
+        }
+    },
+    "sidebar": {
+        "source": "packages/semi-ai-svelte/src/sidebar/sidebar.svelte",
+        "props": {
+            "visible": {
+                "zh-CN": "是否显示，可用 `bind:visible` 绑定。",
+                "en-US": "Whether it is shown; bind it with `bind:visible`."
+            },
+            "title": {
+                "zh-CN": "标题，可以是纯文本或 snippet。",
+                "en-US": "Title, plain text or a snippet."
+            },
+            "motion": {
+                "zh-CN": "显示与隐藏时是否使用展开动画。",
+                "en-US": "Whether showing and hiding use the expand animation."
+            },
+            "resizable": {
+                "zh-CN": "宽度是否可拖拽调整；为 true 时 minWidth、maxWidth 与 defaultSize 生效。",
+                "en-US": "Whether the width can be resized by dragging; minWidth, maxWidth and defaultSize apply only when true."
+            },
+            "minWidth": {
+                "zh-CN": "可调整的最小宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Minimum width when resizing; applies only when resizable is true."
+            },
+            "maxWidth": {
+                "zh-CN": "可调整的最大宽度，仅在 resizable 为 true 时生效。",
+                "en-US": "Maximum width when resizing; applies only when resizable is true."
+            },
+            "defaultSize": {
+                "zh-CN": "初始宽高，仅在 resizable 为 true 时生效。",
+                "en-US": "Initial width and height; applies only when resizable is true."
+            },
+            "showClose": {
+                "zh-CN": "是否显示头部的关闭按钮。",
+                "en-US": "Whether the header shows the close button."
+            },
+            "closeOnEsc": {
+                "zh-CN": "按下 Esc 键时是否调用 onCancel。",
+                "en-US": "Whether pressing Esc calls onCancel."
+            },
+            "onCancel": {
+                "zh-CN": "点击关闭按钮，或在 closeOnEsc 为 true 时按下 Esc 调用。",
+                "en-US": "Called when the close button is clicked, or when Esc is pressed while closeOnEsc is true."
+            },
+            "afterVisibleChange": {
+                "zh-CN": "显示或隐藏动画结束后调用，参数为当前是否可见。",
+                "en-US": "Called after the show or hide animation ends, with whether it is visible."
+            },
+            "mode": {
+                "zh-CN": "展示模式：main 为主视图，code 与 file 使用内置详情，其他字符串通过 detailBody snippet 自行渲染。",
+                "en-US": "Display mode: main is the main view, code and file use the built-in details, and any other string is rendered by the detailBody snippet."
+            },
+            "activeKey": {
+                "zh-CN": "主视图中当前选中的选项 key，可用 `bind:activeKey` 绑定。",
+                "en-US": "Key of the selected option in the main view; bind it with `bind:activeKey`."
+            },
+            "options": {
+                "zh-CN": "主视图顶部的选项按钮，每项包含 name 与 key；图标使用 optionIcon snippet。",
+                "en-US": "Option buttons at the top of the main view, each with a name and a key; icons use the optionIcon snippet."
+            },
+            "detailContent": {
+                "zh-CN": "code 与 file 模式显示的条目，为 CodeItem 或 FileItem 的属性加 key；key 变化时重新挂载该条目。file 模式下其中的 editable 与 imgUploadProps 不生效，由 fileEditable 与 imgUploadProps 决定。",
+                "en-US": "The item shown in code and file modes: the CodeItem or FileItem props plus a key; a new key remounts it. In file mode its editable and imgUploadProps have no effect, as fileEditable and imgUploadProps decide them."
+            },
+            "fileEditable": {
+                "zh-CN": "file 模式的富文本是否可编辑。",
+                "en-US": "Whether the rich text in file mode is editable."
+            },
+            "imgUploadProps": {
+                "zh-CN": "file 模式的图片上传配置，编辑器创建时读取，之后变化不生效。",
+                "en-US": "Image upload options of file mode, read when the editor is created; later changes have no effect."
+            },
+            "onActiveOptionChange": {
+                "zh-CN": "点击选项、activeKey 更新后调用，参数为点击事件和该选项的 key。",
+                "en-US": "Called after activeKey took the clicked option, with the event and the option's key."
+            },
+            "onBackWard": {
+                "zh-CN": "点击详情头部的返回按钮时调用，参数为点击事件和 main。",
+                "en-US": "Called when the back button of the detail header is clicked, with the event and main."
+            },
+            "onDetailContentCopy": {
+                "zh-CN": "复制按钮写入剪贴板后调用，参数为点击事件、复制的内容和是否成功。",
+                "en-US": "Called after the copy button wrote to the clipboard, with the event, the content and whether it succeeded."
+            },
+            "onFileContentChange": {
+                "zh-CN": "file 模式下编辑后调用，参数为 HTML 字符串。",
+                "en-US": "Called after an edit in file mode, with the content as HTML."
+            },
+            "customRender": {
+                "zh-CN": "转发给内置代码详情中 JsonViewer 的 customRender snippet，用于渲染 customRenderRule 匹配的内容。",
+                "en-US": "Forwarded to the customRender snippet of the JsonViewer in the built-in code detail, for the content matched by customRenderRule."
+            },
+            "searchButton": {
+                "zh-CN": "转发给内置代码详情中 JsonViewer 的 searchButton snippet，替换其搜索按钮。",
+                "en-US": "Forwarded to the searchButton snippet of the JsonViewer in the built-in code detail, replacing its search button."
+            },
+            "optionIcon": {
+                "zh-CN": "内置选项按钮的图标，参数为 item 与 index。",
+                "en-US": "Icon of the built-in option button, with item and index."
+            },
+            "optionItem": {
+                "zh-CN": "替换整个选项按钮，参数为 item、index、active 与 onClick（选中该选项）。",
+                "en-US": "Replaces the whole option button, with item, index, active and onClick (which selects the option)."
+            },
+            "mainContent": {
+                "zh-CN": "主视图中选项下方的内容，参数为 activeKey。",
+                "en-US": "Content below the options in the main view, with activeKey."
+            },
+            "detailHeader": {
+                "zh-CN": "详情模式的头部，参数为 mode 与 detailContent；内容为空时回退到内置头部。",
+                "en-US": "Header in detail modes, with mode and detailContent; empty content falls back to the built-in header."
+            },
+            "detailBody": {
+                "zh-CN": "详情模式的内容，参数为 mode；内容为空时回退到内置的代码或富文本详情。因 detailContent 已是数据属性，所以叫 detailBody。",
+                "en-US": "Content in detail modes, with mode; empty content falls back to the built-in code or file detail. detailContent is already the data prop, so this is named detailBody."
+            }
+        },
+        "methods": {
+            "getRoot": {
+                "zh-CN": "返回容器根元素 `.semi-sidebar-container`；隐藏时为 null。",
+                "en-US": "Returns the `.semi-sidebar-container` root element; null while hidden."
+            }
+        }
+    },
+    "code-content": {
+        "source": "packages/semi-ai-svelte/src/sidebar/widget/code-content.svelte",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的代码面板 key，可用 `bind:activeKey` 绑定。",
+                "en-US": "Keys of the expanded code panels; bind it with `bind:activeKey`."
+            },
+            "codes": {
+                "zh-CN": "代码条目列表，每项为 CodeItem 的属性加用于标识面板的 key。",
+                "en-US": "The code entries, each with the CodeItem props and a key identifying its panel."
+            },
+            "onChange": {
+                "zh-CN": "通过箭头展开或收起面板时调用，参数为当前展开的 key。",
+                "en-US": "Called when a panel opens or closes through its arrow, with the expanded keys."
+            },
+            "onExpand": {
+                "zh-CN": "点击面板头部旁的展开按钮时调用，参数为点击事件、对应条目和 code。未传入时不渲染展开按钮。",
+                "en-US": "Called when the expand button beside a panel header is clicked, with the event, its entry and code. Without it the button is not rendered."
+            },
+            "customRender": {
+                "zh-CN": "转发给每个 JSON 面板中 JsonViewer 的 customRender snippet。",
+                "en-US": "Forwarded to the customRender snippet of the JsonViewer in every JSON panel."
+            },
+            "searchButton": {
+                "zh-CN": "转发给每个 JSON 面板中 JsonViewer 的 searchButton snippet，替换其搜索按钮。",
+                "en-US": "Forwarded to the searchButton snippet of the JsonViewer in every JSON panel, replacing its search button."
+            }
+        }
+    },
+    "code-item": {
+        "source": "packages/semi-ai-svelte/src/sidebar/widget/code-item.svelte",
+        "props": {
+            "name": {
+                "zh-CN": "代码项名称，由 CodeContent 的面板头部和 Sidebar 的详情头部显示，CodeItem 自身不渲染。",
+                "en-US": "Name of the code item, shown by the CodeContent panel header and the Sidebar detail header; CodeItem itself does not render it."
+            },
+            "language": {
+                "zh-CN": "编程语言名称，同 CodeHighlight 的 language，需先通过 CodeHighlight.register 注册，未注册时显示纯文本。",
+                "en-US": "Language name as in the CodeHighlight language prop; register it with CodeHighlight.register first, otherwise plain text is shown."
+            },
+            "content": { "zh-CN": "代码或 JSON 字符串。", "en-US": "The code or JSON string." },
+            "isJson": {
+                "zh-CN": "为 true 时用 JsonViewer 展示，否则用 CodeHighlight。",
+                "en-US": "When true the content is shown by JsonViewer, otherwise by CodeHighlight."
+            },
+            "jsonViewerProps": {
+                "zh-CN": "传给 JsonViewer 的其他属性，以及追加的 class 与 style。value（content）、width 与 height（100%）、options（只读、自动换行）、showSearch（false）已有默认值，同名属性整体覆盖默认值。",
+                "en-US": "Other props for JsonViewer, plus an extra class and style. value (the content), width and height (100%), options (read-only, auto wrap) and showSearch (false) have defaults; a prop given here replaces its default as a whole."
+            },
+            "codeHighlightProps": {
+                "zh-CN": "传给 CodeHighlight 的其他属性，以及追加的 class 与 style。",
+                "en-US": "Other props for CodeHighlight, plus an extra class and style."
+            },
+            "customRender": {
+                "zh-CN": "JsonViewer 的 customRender snippet，用于渲染 jsonViewerProps.options.customRenderRule 匹配的内容。",
+                "en-US": "The customRender snippet of JsonViewer, for the content matched by jsonViewerProps.options.customRenderRule."
+            },
+            "searchButton": {
+                "zh-CN": "JsonViewer 的 searchButton snippet，替换其搜索按钮。",
+                "en-US": "The searchButton snippet of JsonViewer, replacing its search button."
+            }
+        }
+    },
+    "file-content": {
+        "source": "packages/semi-ai-svelte/src/sidebar/widget/file-content.svelte",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前展开的文件面板 key，可用 `bind:activeKey` 绑定。",
+                "en-US": "Keys of the expanded file panels; bind it with `bind:activeKey`."
+            },
+            "files": {
+                "zh-CN": "文件条目列表，以只读方式渲染，每项的 extensions 与 imgUploadProps 会传给其预览。",
+                "en-US": "The file entries, rendered read-only: each entry's extensions and imgUploadProps reach its preview."
+            },
+            "onChange": {
+                "zh-CN": "通过箭头展开或收起面板时调用，参数为当前展开的 key。",
+                "en-US": "Called when a panel opens or closes through its arrow, with the expanded keys."
+            },
+            "onExpand": {
+                "zh-CN": "点击面板头部旁的展开按钮时调用，参数为点击事件、对应条目和 file。未传入时不渲染展开按钮。",
+                "en-US": "Called when the expand button beside a panel header is clicked, with the event, its entry and file. Without it the button is not rendered."
+            }
+        }
+    },
+    "file-item": {
+        "source": "packages/semi-ai-svelte/src/sidebar/widget/file-item.svelte",
+        "props": {
+            "name": {
+                "zh-CN": "文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。",
+                "en-US": "File name, used as the accessible name of the editing area; later changes are synced to the editor."
+            },
+            "content": {
+                "zh-CN": "富文本 HTML。挂载后变化会同步到编辑器，与编辑器当前内容相同时不会重置，同步不调用 onContentChange。",
+                "en-US": "Rich text as HTML. Later changes are synced to the editor; content equal to the editor's is not reset, and syncing does not call onContentChange."
+            },
+            "editable": {
+                "zh-CN": "是否可编辑，挂载后变化会同步到编辑器。",
+                "en-US": "Whether it is editable; later changes are synced to the editor."
+            },
+            "extensions": {
+                "zh-CN": "追加到内置扩展之后的 tiptap 扩展，编辑器创建时读取，之后变化不生效。",
+                "en-US": "tiptap extensions appended to the built-in ones, read when the editor is created; later changes have no effect."
+            },
+            "imgUploadProps": {
+                "zh-CN": "图片上传配置，编辑器创建时读取，之后变化不生效。",
+                "en-US": "Image upload options, read when the editor is created; later changes have no effect."
+            },
+            "onContentChange": {
+                "zh-CN": "编辑后调用，参数为 HTML 字符串。",
+                "en-US": "Called after an edit, with the content as HTML."
+            }
+        }
+    }
+}

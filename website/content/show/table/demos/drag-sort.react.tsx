@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import * as dateFns from 'date-fns';
 import { Table, Avatar, type ColumnProps, type OnRowReturnObject, type TableProps } from '@fibrae/semi-ui-react';
 
-const getData = () => {
+function getData() {
     const data = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -23,14 +23,14 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 interface SortableRowProps extends ComponentProps<'tr'> {
     index: number;
     'data-row-key': string;
 }
 
-const SortableRow = (props: SortableRowProps) => {
+function SortableRow(props: SortableRowProps) {
     // index comes from the table's onRow; it must not reach the tr
     const { index, ...rowProps } = props;
     const { ref, isDragging } = useSortable({ id: props['data-row-key'], index });
@@ -42,7 +42,7 @@ const SortableRow = (props: SortableRowProps) => {
     const rowCls = clsx(props.className, { ['isDragging']: isDragging });
 
     return <tr {...rowProps} className={rowCls} ref={ref} style={style} />;
-};
+}
 
 export default function TableDemo() {
     const pageSize = 10;

@@ -5,7 +5,7 @@ interface FormValues {
     sex?: string;
 }
 
-const syncValidate = (values: FormValues) => {
+function syncValidate(values: FormValues) {
     const errors: Record<string, unknown> = {};
     if (values.name !== 'mike') {
         errors.name = 'you must name mike';
@@ -15,7 +15,7 @@ const syncValidate = (values: FormValues) => {
     }
     errors.familyName = [{ before: 'before error balabala ', after: 'after error balabala' }, 'familyName[1] error balabala'];
     return errors;
-};
+}
 
 export default function FormDemo() {
     return (

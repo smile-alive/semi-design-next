@@ -1,0 +1,61 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| afterClose | Called after the card has closed and its leave animation has finished. | `TooltipProps['afterClose']` | - |
+| afterOpen | Called after the card has opened and its enter animation has finished, or right after opening when there is no enter animation, controlled or not; not called for an open that is closed before the enter animation ends. | `TooltipProps['afterOpen']` | - |
+| aria-describedby | aria-describedby of the dialog. Defaults to the content when there are both a title and content. | `string` | - |
+| aria-label | aria-label of the dialog. When given, it takes precedence over the title. | `string` | - |
+| aria-labelledby | aria-labelledby of the dialog. Defaults to the title, or to the content without a title. | `string` | - |
+| arrowPointAtCenter | Whether the arrow points at the center of the trigger. Requires showArrow. | `boolean` | - |
+| arrowStyle | borderColor, backgroundColor and borderOpacity of the arrow. | `ArrowStyle` | - |
+| autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | - |
+| cancelButtonProps | Props of the cancel button. autoFocus focuses it on open; onclick runs before the built-in cancel handling. | `PopconfirmButtonProps` | - |
+| cancelText | Cancel button text. Defaults to the locale entry Popconfirm.cancel. | `string` | - |
+| cancelType | Type of the cancel button. | `ButtonType` | `"tertiary"` |
+| child | Snippet that renders the trigger element itself. Its argument `{ props }` must be spread whole onto the trigger; when `child` is passed, `children` has no effect. | `TooltipProps['child']` | - |
+| children | Snippet for the trigger. It is wrapped in Tooltip's own span, which receives the trigger attributes. | `TooltipProps['children']` | - |
+| class | Class name of the confirmation card. | `string` | - |
+| clickToHide | Whether a click on the popup or anything inside it closes it. | `boolean` | - |
+| closeOnEsc | Whether Esc closes the open card. With trigger custom it only calls onEscKeyDown and the caller decides whether to close. | `boolean` | - |
+| condition | Whether it may be triggered. Only an explicit false disables the hover, click and focus triggers. Changing it from true to false closes an open card at once; with a controlled visible it only calls onVisibleChange(false), and the card closes once the caller writes back. | `boolean` | - |
+| content | Snippet for the content of the card. Its argument `{ initialFocusRef }` is a callback; write `{@attach initialFocusRef}` to bind it to the element that receives focus on open. Omitted, no content area is rendered. | <ApiType detail={"Snippet\u003c[RenderContentProps]>"}>Type</ApiType> | - |
+| contentClassName | Class name of the content container. | `ClassValue` | - |
+| disableArrowKeyDown | Whether the arrow keys on the trigger are prevented from moving focus into the card. | `boolean` | - |
+| disabled | Whether it is disabled. A disabled Popconfirm renders only the trigger and never opens. | `boolean` | `false` |
+| disableFocusListener | Whether keyboard focus is ignored when trigger is hover. | `boolean` | - |
+| guardFocus | Whether Tab cycles inside the card while focus is in it. | `boolean` | - |
+| icon | Snippet for a custom icon. The default warning icon shows when omitted; `null` renders no icon. | `Snippet \| null` | - |
+| keepDOM | Whether the content stays mounted while closed. | `boolean` | - |
+| motion | Whether the popup is animated. | `boolean` | - |
+| mouseEnterDelay | Milliseconds before the card shows after the pointer enters. Applies to the hover and focus triggers. | `number` | - |
+| mouseLeaveDelay | Milliseconds before the card hides after the pointer leaves. Applies to the hover and focus triggers. | `number` | - |
+| okButtonProps | Props of the confirm button. autoFocus focuses it on open; onclick runs before the built-in confirm handling. | `PopconfirmButtonProps` | - |
+| okText | Confirm button text. Defaults to the locale entry Popconfirm.confirm. | `string` | - |
+| okType | Type of the confirm button. | `ButtonType` | `"primary"` |
+| onCancel | Called when the cancel or close button is clicked, with the button's native click event. A returned Promise keeps the button loading and closes the card once it resolves; a rejection keeps it open. | <ApiType detail={"(event: MouseEvent) => Promise\u003cunknown> \u007c void"}>Type</ApiType> | - |
+| onClickOutSide | Called when the mouse is pressed outside of the trigger and the open card. Only for trigger click, contextMenu or custom. | `TooltipProps['onClickOutSide']` | - |
+| onConfirm | Called when the confirm button is clicked, with the button's native click event. A returned Promise keeps the button loading and closes the card once it resolves; a rejection keeps it open. | <ApiType detail={"(event: MouseEvent) => Promise\u003cunknown> \u007c void"}>Type</ApiType> | - |
+| onEscKeyDown | Called when Esc is pressed while the card is open and closeOnEsc is true. | `TooltipProps['onEscKeyDown']` | - |
+| onOpen | Called once per opening when the card is shown, as its enter animation starts, before afterOpen, controlled or not; not called for a hover open withdrawn because the pointer already left. | `TooltipProps['onOpen']` | - |
+| onVisibleChange | Called when the visibility changes; with a controlled visible it reports only requests from user interaction, not changes the caller makes to visible. | `TooltipProps['onVisibleChange']` | - |
+| position | Position of the popup relative to the trigger element, in twelve directions. | `TooltipProps['position']` | - |
+| prefixCls | Class prefix of the confirmation card. | `string` | `"semi-popconfirm"` |
+| returnFocusOnClose | Whether focus returns to the trigger after closing. It also works with a controlled visible, and has no effect with trigger custom. | `boolean` | - |
+| role | ARIA role of the popup. Defaults to dialog. | `string` | `"dialog"` |
+| showArrow | Whether the arrow is shown. | `boolean` | - |
+| showCloseIcon | Whether the close button in the corner is shown. | `boolean` | `true` |
+| spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number }` | - |
+| stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean \| string` | `true` |
+| style | Style string of the confirmation card. | `string` | - |
+| title | Title, a string or a snippet, which also names the dialog. | `string \| Snippet` | - |
+| trigger | When the card shows: hover, focus, click, contextMenu or custom. With custom, visible alone decides. | `TooltipProps['trigger']` | `"click"` |
+| visible | Whether it is shown; bind it with `bind:visible`. When given, this value decides; trigger keeps its value and the trigger events still work. | `boolean` | - |
+
+**Methods**
+
+| Method       | Description                                                                                                            | Type                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| focusTrigger | Focuses the trigger. Only works when returnFocusOnClose is true and trigger is not custom; does nothing when disabled. | <ApiType detail={"() => void"}>Type</ApiType> |

@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | multiple | Whether several dates can be chosen; only for type date. | `boolean` | `semiDefault("DatePicker", "multiple", false)` |
 | max | The number of dates multiple allows; unlimited when omitted. | `number` | `semiGlobalDefault("DatePicker", "max")` |
 | needConfirm | Whether the value is written only after a confirmation; for dateTime and dateTimeRange only. | `boolean` | `semiDefault("DatePicker", "needConfirm", false)` |
-| disabled | Whether the picker is disabled. | `boolean` | `semiDefault("DatePicker", "disabled", false)` |
+| disabled | Whether the picker is disabled. | `boolean` | `undefined` |
 | disabledDate | Returns true to disable a date. The second argument carries rangeStart, rangeEnd and rangeInputFocus. When type is year, it is called with January 1 of each year, and returning true disables that year. | `DisabledDateType` | `undefined` |
 | disabledTime | Returns disabledHours, disabledMinutes and disabledSeconds for the current date and panel position. | `DisabledTimeType` | `undefined` |
 | disabledTimePicker | Whether the time selection is disabled; for dateTime and dateTimeRange only. | `boolean` | `semiDefault("DatePicker", "disabledTimePicker", false)` |
@@ -23,7 +23,7 @@ import ApiType from '#/components/ApiType.astro';
 | endDateOffset | For dateRange, the end date of a range chosen with one click. | `DateOffsetType` | `undefined` |
 | placeholder | Placeholder of the input; an array for range types. Defaults to the text of the locale for type. | `string \| string[]` | `semiGlobalDefault("DatePicker", "placeholder")` |
 | rangeSeparator | Separator between the dates of a range input, also used to parse the text. Use the rangeSeparator slot to change only how it is shown. | `string` | <ApiType detail={"semiDefault(\"DatePicker\", \"rangeSeparator\", strings.DEFAULT_SEPARATOR_RANGE)"}>Type</ApiType> |
-| size | Size of the input: small, default or large. | `Size` | `semiDefault("DatePicker", "size", "default")` |
+| size | Size of the input: small, default or large. | `Size` | `undefined` |
 | density | Size of the panel: default or compact. | `DensityType` | `semiDefault("DatePicker", "density", "default")` |
 | borderless | Removes the border of the input. | `boolean` | `semiDefault("DatePicker", "borderless", false)` |
 | showClear | Whether the clear button is shown. | `boolean` | `semiDefault("DatePicker", "showClear", true)` |

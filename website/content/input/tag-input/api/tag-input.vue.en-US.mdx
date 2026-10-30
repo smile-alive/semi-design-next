@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultValue | Initial tags when uncontrolled. | `string[]` | `semiGlobalDefault("TagInput", "defaultValue")` |
 | inputValue | Current input text, for v-model:inputValue. | `string` | `semiGlobalDefault("TagInput", "inputValue")` |
 | inputValueModifiers | The trim and number modifiers of v-model:inputValue, passed by Vue for v-model:inputValue.trim. | `ModelModifiers` | `undefined` |
-| disabled | Whether the component is disabled. | `boolean` | `semiGlobalDefault("TagInput", "disabled")` |
+| disabled | Whether the component is disabled. | `boolean` | `undefined` |
 | maxLength | Maximum length of one tag. | `number` | `semiGlobalDefault("TagInput", "maxLength")` |
 | max | Maximum number of tags. | `number` | `semiGlobalDefault("TagInput", "max")` |
 | maxTagCount | Maximum number of tags shown; the rest are shown as +N. | `number` | `semiGlobalDefault("TagInput", "maxTagCount")` |
@@ -23,7 +23,7 @@ import ApiType from '#/components/ApiType.astro';
 | insetLabelId | id of the inset label container, for aria-labelledby. | `string` | `undefined` |
 | separator | Separator(s) for adding several tags at once; null disables splitting. | `string \| string[] \| null` | `semiDefault("TagInput", "separator", ",")` |
 | showClear | Whether to show the button that clears all tags and the input text. | `boolean` | `semiDefault("TagInput", "showClear", false)` |
-| size | Size: small, default or large. | `Size` | `semiDefault("TagInput", "size", "default")` |
+| size | Size: small, default or large. | `Size` | `undefined` |
 | split | Custom split function that returns the split strings. | <ApiType detail={"((originString: string, separators: string \u007c string[] \u007c null) => string[])"}>Type</ApiType> | `undefined` |
 | validateStatus | Validation status, which only affects styling; error also sets aria-invalid on the input. | `TagInputValidateStatus` | `semiDefault("TagInput", "validateStatus", "default")` |
 | autofocus | Whether the input is focused and the component activated on mount; ignored when disabled. | `boolean` | `semiDefault("TagInput", "autofocus", false)` |

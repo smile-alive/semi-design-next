@@ -1,0 +1,89 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allowCreate | Whether options that are not in the list can be created; use it with `filter`. | `boolean` | `false` |
+| arrowIcon | Custom dropdown arrow, a snippet. | `Snippet` | - |
+| autoAdjustOverflow | Whether the dropdown layer flips automatically when it overflows the viewport. | `boolean` | `true` |
+| autoClearSearchValue | Whether the search keyword is cleared after an option is selected in multiple mode. | `boolean` | `true` |
+| autofocus | Whether to focus on mount. | `boolean` | `false` |
+| borderless | Whether the trigger has no border. | `boolean` | `false` |
+| clearIcon | Custom clear button icon, a snippet. | `Snippet` | - |
+| clickToHide | Whether the dropdown list closes after an option is clicked in multiple mode. | `boolean` | `false` |
+| createItem | Content of the row that creates an option, a snippet with `{ inputValue, focus, style }`; with virtualization apply `style` to the custom element. | <ApiType detail={"Snippet\u003c[SelectCreateItemSnippetProps]>"}>Type</ApiType> | - |
+| defaultActiveFirstOption | Whether the first enabled option is highlighted by default. | `boolean` | `true` |
+| defaultOpen | Whether the dropdown list opens on mount. Select has no controlled open state. | `boolean` | `false` |
+| disabled | Whether the component is disabled. | `boolean` | - |
+| dropdownClassName | Class name of the dropdown layer. | `string` | - |
+| dropdownMatchSelectWidth | Whether the minimum width of the dropdown layer follows the trigger width. | `boolean` | `true` |
+| dropdownStyle | Style of the dropdown layer, a string. | `string` | - |
+| ellipsisTrigger | Whether overflowing tags adapt: when the width is short the last tag is truncated. It has a performance cost and is not recommended in large forms. | `boolean` | `false` |
+| emptyContent | Content when there are no options, a snippet; `null` hides the empty state. | `Snippet \| null` | - |
+| expandRestTagsOnClick | With `maxTagCount`, whether the collapsed tags expand while the dropdown list is open. | `boolean` | `false` |
+| filter | Whether to enable search. true compares the input case-insensitively with the option label or the group title; a function customizes the match. | <ApiType detail={"boolean \u007c ((inputValue: string, option: SelectOptionProps) => boolean)"}>Type</ApiType> | `false` |
+| groupLabel | Replaces the content of a group title, a snippet with `{ group }` (`key` and `label`); without it `group.label` is shown. | <ApiType detail={"Snippet\u003c[SelectGroupLabelSnippetProps]>"}>Type</ApiType> | - |
+| id | id of the trigger; the option ids derive from it. | `string` | - |
+| innerBottomSlot | Content inside the bottom of the option list, a snippet; visible when the list is scrolled to the bottom. | `Snippet` | - |
+| innerTopSlot | Content inside the top of the option list, a snippet; visible when the list is scrolled to the top. | `Snippet` | - |
+| inputProps | Extra props of the search Input; `class` and `style` land on the Input wrapper. | `SelectInputProps` | - |
+| insetLabel | Inset label, a snippet. Rendered without a `prefix`, and the name source of the combobox. | `Snippet` | - |
+| insetLabelId | id of the inset label container, for aria-labelledby; when left out and `insetLabel` is rendered, one is generated. | `string` | - |
+| loading | Whether the options are loading; the dropdown list shows a spinner instead of the options. | `boolean` | `false` |
+| max | Maximum number of selected options in multiple mode; `onExceed` fires beyond it. | `number` | - |
+| maxHeight | Maximum height of the dropdown list. | `string \| number` | `270` |
+| maxTagCount | Maximum number of tags shown in multiple mode; the rest are shown as +N. | `number` | - |
+| motion | Whether the dropdown layer animates. | `boolean` | `true` |
+| multiple | Whether multiple options can be selected. | `boolean` | `false` |
+| onBlur | Called once when the focus leaves the Select; a press outside the open dropdown passes its mousedown event. | <ApiType detail={"(event: FocusEvent \u007c MouseEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the selection changes, with the new value (option objects with `onChangeWithObject`). | <ApiType detail={"(value: SelectValue) => void"}>Type</ApiType> | - |
+| onChangeWithObject | Whether `onChange` and `value` carry option objects instead of option values. | `boolean` | `false` |
+| onClear | Called when the clear button is clicked. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onCreate | Called when an option is created. | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onDeselect | Called when an option is deselected in multiple mode. | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onDropdownVisibleChange | Called when the dropdown list opens or closes. | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
+| onExceed | Called when the selection would exceed `max`. | <ApiType detail={"(option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| onFocus | Called once when the focus enters the Select. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onListScroll | Called when the dropdown list scrolls. | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
+| onSearch | Called when the search keyword changes; there is no event when it comes from `search()` or the `onSearch` of the `trigger` snippet. | <ApiType detail={"(value: string, event?: Event) => void"}>Type</ApiType> | - |
+| onSelect | Called when an option is selected. | <ApiType detail={"(value: string \u007c number, option: SelectOptionProps) => void"}>Type</ApiType> | - |
+| optionItem | Replaces a whole option row, a snippet. Its parameter has `id`, `value`, `label`, `selected`, `focused`, `disabled`, `inputValue`, `class`, `style`, `onclick`, `onmouseenter` and the other fields of the entry. Put `id` on the element with `role="option"`. | <ApiType detail={"Snippet\u003c[SelectOptionItemSnippetProps]>"}>Type</ApiType> | - |
+| optionLabel | Replaces only the text inside an option row, a snippet with `{ option }`. The tick icon, the `role="option"` of the row, its states and keyboard behavior stay; `label` still serves search and the accessible name, and the search keyword is not highlighted in the content. | <ApiType detail={"Snippet\u003c[SelectOptionLabelSnippetProps]>"}>Type</ApiType> | - |
+| optionList | The option data. An entry has `value`, `label`, `disabled`, `showTick`, `class`, `style` and an optional `group: { key, label }`; other fields travel with the option record. Entries of one group must be adjacent. | `SelectOptionProps[]` | - |
+| outerBottomSlot | Content at the bottom of the dropdown layer, level with the option list, a snippet; always visible while the list scrolls. | `Snippet` | - |
+| outerTopSlot | Content at the top of the dropdown layer, level with the option list, a snippet; always visible while the list scrolls. | `Snippet` | - |
+| placeholder | Placeholder while nothing is selected. | `string` | - |
+| position | Placement of the dropdown layer relative to the trigger. | `Position` | - |
+| prefix | Prefix of the selection box, a snippet. The side padding is added when the content is text or an Icon. | `Snippet` | - |
+| preventScroll | Whether focusing stops the browser from scrolling the element into view. | `boolean` | - |
+| remote | Whether the search is remote. When on, the options are not filtered locally and the caller updates `optionList`. | `boolean` | `false` |
+| restTagsPopoverProps | Popover props of the +N popover. | `PopoverProps` | - |
+| searchPlaceholder | Placeholder of the search input when it is in the dropdown list (`searchPosition="dropdown"`). | `string` | - |
+| searchPosition | Where the search input sits: `trigger` or `dropdown`. | `'trigger' \| 'dropdown'` | `"trigger"` |
+| selectedItem | The selected content, a snippet with `{ option, index, disabled, onClose }`. In single mode it replaces the selection box content, in multiple mode the content of each tag. | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| showArrow | Whether to show the dropdown arrow. | `boolean` | `true` |
+| showClear | Whether to show the clear button. | `boolean` | `false` |
+| showRestTagsPopover | Whether hovering +N shows the remaining tags in a Popover once `maxTagCount` is exceeded. | `boolean` | `false` |
+| size | Size: `small`, `default` or `large`. | `SelectSize` | - |
+| spacing | Gap between the dropdown layer and the trigger. | `number \| { x: number; y: number }` | - |
+| stopPropagation | Whether clicks inside the dropdown layer are stopped from bubbling out. | `boolean` | `true` |
+| suffix | Suffix of the selection box, a snippet. The side padding is added when the content is text or an Icon. | `Snippet` | - |
+| tag | Replaces each tag in multiple mode, a snippet with the parameters of `selectedItem`; it takes precedence over `selectedItem`. | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
+| trigger | Replaces the trigger content, a snippet with `{ value, inputValue, placeholder, disabled, onSearch, onClear, onRemove }`. | <ApiType detail={"Snippet\u003c[SelectTriggerSnippetProps]>"}>Type</ApiType> | - |
+| validateStatus | Validation status: `default`, `warning` or `error`; it only affects styles such as the background color. | `ValidateStatus` | - |
+| value | The selected value, supports `bind:value`. A single value in single mode, an array in multiple mode, and option objects with `onChangeWithObject`. Left out, the component manages it; a one-way `value={x}` only seeds it, and for a fully controlled Select use the function binding `bind:value={get, set}`. Binding it to `undefined` clears the selection. There is no defaultValue. | `SelectValue` | - |
+| virtualize | Turns on list virtualization; `itemSize` is required. Group titles and `role="group"` are not rendered with it, and the options are laid out flat in order. | `SelectVirtualize` | - |
+
+**Methods**
+
+| Method      | Description                                                                                  | Type                                                                        |
+| ----------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| clearInput  | Clears the value of the search input.                                                        | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| close       | Closes the dropdown list.                                                                    | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| deselectAll | Clears all selected options.                                                                 | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| focus       | Focuses the trigger, or the search input with the dropdown list opened when searchable.      | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| open        | Opens the dropdown list.                                                                     | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| rePosition  | Recomputes the dropdown position from the trigger's current position at once; rarely needed. | <ApiType detail={"() => void"}>Type</ApiType>                               |
+| search      | Searches as if the keyword were typed into the search input.                                 | <ApiType detail={"(keyword: string, event?: Event) => void"}>Type</ApiType> |
+| selectAll   | Selects every shown, enabled option; multiple mode only.                                     | <ApiType detail={"() => void"}>Type</ApiType>                               |

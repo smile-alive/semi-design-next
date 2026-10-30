@@ -1,0 +1,24 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                                                                         | Type                                                           | Default    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------- |
+| autofocus      | Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it. | `boolean`                                                      | `false`    |
+| count          | Number of digits.                                                                                                                                                                   | `number`                                                       | `6`        |
+| disabled       | Whether the input is disabled.                                                                                                                                                      | `boolean`                                                      | -          |
+| format         | Format limit for a single character: number allows digits only, mixed allows digits and letters, and a regular expression or function judges each character.                        | `PinCodeFormat`                                                | `"number"` |
+| onBlur         | Called when focus leaves the whole code.                                                                                                                                            | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -          |
+| onChange       | Called when the content changes, with the current content.                                                                                                                          | <ApiType detail={"(value: string) => void"}>Type</ApiType>     | -          |
+| onComplete     | Called once all digits are entered, with the current content.                                                                                                                       | <ApiType detail={"(value: string) => void"}>Type</ApiType>     | -          |
+| onFocus        | Called when focus enters the code from outside; moving between the inputs does not call it.                                                                                         | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -          |
+| size           | Input size: large, default or small.                                                                                                                                                | `InputSize`                                                    | -          |
+| validateStatus | Validation status, passed to every input; error shows the error style.                                                                                                              | `ValidateStatus`                                               | -          |
+| value          | Input content; bind it with `bind:value`. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value.                                                  | `string`                                                       | -          |
+
+**Methods**
+
+| Method | Description                                                                                                   | Type                                                       |
+| ------ | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| blur   | Blurs the input at index, counted from 0 and ignored when out of range.                                       | <ApiType detail={"(index: number) => void"}>Type</ApiType> |
+| focus  | Focuses the input at index, counted from 0 and ignored when out of range, with the caret after its character. | <ApiType detail={"(index: number) => void"}>Type</ApiType> |

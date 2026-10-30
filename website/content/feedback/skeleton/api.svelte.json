@@ -1,0 +1,96 @@
+{
+    "skeleton": {
+        "source": "packages/semi-ui-svelte/src/skeleton/skeleton.svelte",
+        "props": {
+            "active": {
+                "zh-CN": "是否展示动画效果。",
+                "en-US": "Whether to show the animated loading effect."
+            },
+            "children": {
+                "zh-CN": "加载结束后显示的内容。",
+                "en-US": "Content shown once loading ends."
+            },
+            "loading": {
+                "zh-CN": "为 true 时显示 placeholder，反之显示 children。",
+                "en-US": "When true, the placeholder is shown. Otherwise the children are shown."
+            },
+            "placeholder": {
+                "zh-CN": "加载等待时的占位元素。",
+                "en-US": "Elements shown while loading."
+            }
+        }
+    },
+    "skeleton-avatar": {
+        "source": "packages/semi-ui-svelte/src/skeleton/avatar.svelte",
+        "props": {
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 semi-skeleton。",
+                "en-US": "Class name prefix, semi-skeleton by default."
+            },
+            "shape": {
+                "zh-CN": "占位头像的形状，可选 circle 或 square。",
+                "en-US": "Shape of the avatar placeholder: circle or square."
+            },
+            "size": {
+                "zh-CN": "占位头像的大小。",
+                "en-US": "Size of the avatar placeholder."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名；不为 avatar 时 size、shape 不生效。",
+                "en-US": "Replaces the type of the block, which also names its class. Unless it is avatar, size and shape have no effect."
+            }
+        }
+    },
+    "skeleton-image": {
+        "source": "packages/semi-ui-svelte/src/skeleton/image.svelte",
+        "props": {
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 semi-skeleton。",
+                "en-US": "Class name prefix, semi-skeleton by default."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
+                "en-US": "Replaces the type of the block, which also names its class."
+            }
+        }
+    },
+    "skeleton-title": {
+        "source": "packages/semi-ui-svelte/src/skeleton/title.svelte",
+        "props": {
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 semi-skeleton。",
+                "en-US": "Class name prefix, semi-skeleton by default."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
+                "en-US": "Replaces the type of the block, which also names its class."
+            }
+        }
+    },
+    "skeleton-button": {
+        "source": "packages/semi-ui-svelte/src/skeleton/button.svelte",
+        "props": {
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 semi-skeleton。",
+                "en-US": "Class name prefix, semi-skeleton by default."
+            },
+            "type": {
+                "zh-CN": "替换占位块自带的类型，同时决定它的类名。",
+                "en-US": "Replaces the type of the block, which also names its class."
+            }
+        }
+    },
+    "skeleton-paragraph": {
+        "source": "packages/semi-ui-svelte/src/skeleton/paragraph.svelte",
+        "props": {
+            "prefixCls": {
+                "zh-CN": "类名前缀，默认为 semi-skeleton。",
+                "en-US": "Class name prefix, semi-skeleton by default."
+            },
+            "rows": {
+                "zh-CN": "占位段落的行数。",
+                "en-US": "Number of rows in the placeholder paragraph."
+            }
+        }
+    }
+}

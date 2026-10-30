@@ -8,6 +8,7 @@ brief: Click / mouse to move into the element and pop up the bubble card floatin
 import PopoverReactApi from './api/popover.react.en-US.mdx';
 import PopoverVueApi from './api/popover.vue.en-US.mdx';
 import PopoverSolidApi from './api/popover.solid.en-US.mdx';
+import PopoverSvelteApi from './api/popover.svelte.en-US.mdx';
 
 ## When to Use
 
@@ -45,6 +46,16 @@ import { Popover } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Popover } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Cautions
 
 <Framework only="react">
@@ -78,6 +89,15 @@ Popover applies the trigger attributes and event listeners to the trigger elemen
 
 </Framework>
 
+<Framework only="svelte">
+
+Popover applies the trigger attributes and event listeners to the trigger element, and uses the real DOM element of the trigger to calculate the position of the popup layer, so the trigger supports the following forms:
+
+1. The `child` snippet: spread its argument `{ props }` whole onto the element that receives focus, either a real DOM element such as span, div, p..., or a component that passes its props through to its root DOM element (such as `<Button {...props} />`)
+2. The `children` snippet (content written inside the tag): text, a component or several nodes, which Popover wraps in a span as the trigger element
+
+</Framework>
+
 <Demo id="children" />
 
 ### Basic Usage
@@ -99,6 +119,13 @@ The cautions are the same as [Tooltip](/en-US/react/show/tooltip#Cautions)
 <Framework only="solid">
 
 Wrap the trigger with Popover as `children` (the trigger is a Tag in the example below) and pass the popup content through `content`.  
+The cautions are the same as [Tooltip](/en-US/react/show/tooltip#Cautions)
+
+</Framework>
+
+<Framework only="svelte">
+
+Write the trigger inside the Popover tag (the trigger is a Tag in the example below) and pass the popup content through the `content` snippet.  
 The cautions are the same as [Tooltip](/en-US/react/show/tooltip#Cautions)
 
 </Framework>
@@ -131,6 +158,12 @@ Set `trigger="custom"`. In this scenario, Popover's display is completely at the
 
 </Framework>
 
+<Framework only="svelte">
+
+Set `trigger="custom"`. In this scenario, Popover's display is completely at the control of parameter `visible`, which can be used with `bind:visible`.
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### Conditional trigger (condition)
@@ -150,6 +183,12 @@ When `:condition="false"`, Popover will not respond to hover/click/focus trigger
 <Framework only="solid">
 
 When `condition={false}`, Popover will not respond to hover/click/focus triggers (does not affect `trigger="custom"`); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the owner sets `visible` to false.
+
+</Framework>
+
+<Framework only="svelte">
+
+When `condition={false}`, Popover will not respond to hover/click/focus triggers (with `trigger="custom"`, `visible` still decides); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the owner sets `visible` to false.
 
 </Framework>
 
@@ -195,6 +234,12 @@ Popover `content` also supports functions. Its input parameter is an object, whi
 
 </Framework>
 
+<Framework only="svelte">
+
+The `content` snippet receives `{ initialFocusRef }` as its argument. Bind it to a focusable element with `{@attach initialFocusRef}`, and it will automatically focus at this position when the panel is opened. On a component, `{@attach}` lands on the inner native control that receives `aria-*` and `tabindex` (such as the native `<input>` of Input in the example).
+
+</Framework>
+
 <Demo id="initial-focus" />
 
 ### Use with Tooltip or Popconfirm
@@ -226,6 +271,14 @@ Methods are bound to the Popover instance and can be called through ref for spec
 <PopoverSolidApi />
 
 `class` and `style` land on the popup layer, and other undeclared attributes are dropped (Popover has no root DOM element); the trigger attributes are only added to the trigger element. `ref` receives the instance methods, not a DOM element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<PopoverSvelteApi />
+
+`class` and `style` land on the popup layer, and other undeclared attributes are dropped (Popover has no root DOM element); the trigger attributes are only added to the trigger element. `bind:this` receives the instance methods, not a DOM element.
 
 </Framework>
 
@@ -281,6 +334,14 @@ Methods are bound to the Popover instance and can be called through ref for spec
       <Framework only="solid">
     1. A function: spread `trigger()` onto a real DOM element, or onto a component that passes its props through to its root DOM element
     2. Any other content (text, a component, several nodes), which Popover wraps in a span
+
+    When Semi Input with prefix is used as the trigger, even if the same width of Input and Popover content are set, the position of the floating card is still positioned relative to the input box that does not contain the prefix part. At this time, just put another div on the outer layer of the trigger to solve the problem.
+
+      </Framework>
+
+      <Framework only="svelte">
+    1. The `child` snippet: spread `props` onto a real DOM element, or onto a component that passes its props through to its root DOM element
+    2. The `children` snippet (text, a component, several nodes), which Popover wraps in a span
 
     When Semi Input with prefix is used as the trigger, even if the same width of Input and Popover content are set, the position of the floating card is still positioned relative to the input box that does not contain the prefix part. At this time, just put another div on the outer layer of the trigger to solve the problem.
 

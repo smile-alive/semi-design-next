@@ -1,0 +1,16 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                                               | Type                                                                            | Default |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------- |
+| closable    | Whether to show the close button.                                                                                                                         | `boolean`                                                                       | `false` |
+| disabled    | Whether the tab is disabled; clicks, the close button and the Enter, Space, Delete and Backspace keys have no effect, while the close button still shows. | `boolean`                                                                       | `false` |
+| icon        | Snippet for the tab icon; the icon container renders even when the snippet outputs nothing.                                                               | `Snippet`                                                                       | -       |
+| itemKey     | Unique key of the tab.                                                                                                                                    | `string`                                                                        | `""`    |
+| onClick     | Called when the tab is clicked, with the itemKey and the event; not called while disabled. Inside a Tabs the click already selects the tab.               | <ApiType detail={"(itemKey: string, event: MouseEvent) => void"}>Type</ApiType> | -       |
+| selected    | Whether the tab is selected.                                                                                                                              | `boolean`                                                                       | `false` |
+| size        | Size; defaults to the size of the enclosing Tabs.                                                                                                         | `TabSize`                                                                       | -       |
+| tab         | Snippet for the tab content.                                                                                                                              | `Snippet`                                                                       | -       |
+| tabPosition | Position; defaults to the tabPosition of the enclosing Tabs, else top.                                                                                    | `TabPosition`                                                                   | -       |
+| type        | Style; defaults to the type of the enclosing Tabs, else line.                                                                                             | `TabType`                                                                       | -       |

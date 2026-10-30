@@ -2,27 +2,27 @@ import { IconSend } from '@fibrae/semi-icons-react';
 import { Modal, Button } from '@fibrae/semi-ui-react';
 
 export default function ModalDemo() {
-    function success() {
+    const success = () => {
         Modal.success({ title: 'This is a success message', content: 'bla bla bla...' });
-    }
+    };
 
-    function info() {
+    const info = () => {
         Modal.info({ title: 'Here is some info', content: 'bla bla bla...' });
-    }
+    };
 
-    function error() {
+    const error = () => {
         Modal.error({ title: 'Unfortunately, there is an error', content: 'bla bla bla...' });
-    }
+    };
 
-    function warning() {
+    const warning = () => {
         Modal.warning({ title: 'Warning: be cautious ahead', content: 'bla bla bla...' });
-    }
+    };
 
-    function confirm() {
+    const confirm = () => {
         Modal.confirm({ title: 'Are you sure ?', content: 'bla bla bla...' });
-    }
+    };
 
-    function custom() {
+    const custom = () => {
         Modal.info({
             title: 'This is a custom modal',
             content: 'bla bla bla...',
@@ -30,7 +30,7 @@ export default function ModalDemo() {
             cancelButtonProps: { theme: 'borderless' },
             okButtonProps: { theme: 'solid' },
         });
-    }
+    };
 
     return (
         <div>

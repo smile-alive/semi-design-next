@@ -68,7 +68,7 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
-const getData = () => {
+function getData() {
     const data: Row[] = [];
     for (let i = 0; i < 46; i++) {
         const isSemiDesign = i % 2 === 0;
@@ -83,19 +83,19 @@ const getData = () => {
         });
     }
     return data;
-};
+}
 
 const dataSource = getData();
 
 const rowKey = (record: Row) => `${record.owner.toLowerCase()}-${record.name.toLowerCase()}`;
 
-const onGroupedRow = (group: { groupKey: string | number; records: Row[] }, index: number) => {
+function onGroupedRow(group: { groupKey: string | number; records: Row[] }, index: number) {
     return {
         onClick: () => {
             console.log(`Grouped row clicked: `, group, index);
         },
     };
-};
+}
 
 export default function TableDemo() {
     return (

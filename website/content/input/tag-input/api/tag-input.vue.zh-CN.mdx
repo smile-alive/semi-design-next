@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultValue | 非受控时的初始标签。 | `string[]` | `semiGlobalDefault("TagInput", "defaultValue")` |
 | inputValue | 当前输入框内容，配合 v-model:inputValue 使用。 | `string` | `semiGlobalDefault("TagInput", "inputValue")` |
 | inputValueModifiers | v-model:inputValue 的修饰符 trim 与 number，由 Vue 在使用 v-model:inputValue.trim 时传入。 | `ModelModifiers` | `undefined` |
-| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("TagInput", "disabled")` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | maxLength | 单个标签的最大长度。 | `number` | `semiGlobalDefault("TagInput", "maxLength")` |
 | max | 允许的标签最大数量。 | `number` | `semiGlobalDefault("TagInput", "max")` |
 | maxTagCount | 标签的最大展示数量，超出后以 +N 形式展示。 | `number` | `semiGlobalDefault("TagInput", "maxTagCount")` |
@@ -23,7 +23,7 @@ import ApiType from '#/components/ApiType.astro';
 | insetLabelId | 内嵌标签容器的 id，供 aria-labelledby 引用。 | `string` | `undefined` |
 | separator | 批量输入时的分隔符，可传多个；传 null 不拆分。 | `string \| string[] \| null` | `semiDefault("TagInput", "separator", ",")` |
 | showClear | 是否显示一键清除所有标签和输入内容的按钮。 | `boolean` | `semiDefault("TagInput", "showClear", false)` |
-| size | 尺寸，可选 small、default、large。 | `Size` | `semiDefault("TagInput", "size", "default")` |
+| size | 尺寸，可选 small、default、large。 | `Size` | `undefined` |
 | split | 自定义分隔符处理函数，返回拆分后的字符串数组。 | <ApiType detail={"((originString: string, separators: string \u007c string[] \u007c null) => string[])"}>Type</ApiType> | `undefined` |
 | validateStatus | 校验状态，仅影响样式；error 时输入框带 aria-invalid。 | `TagInputValidateStatus` | `semiDefault("TagInput", "validateStatus", "default")` |
 | autofocus | 挂载时是否自动聚焦输入框并激活组件，禁用时不生效。 | `boolean` | `semiDefault("TagInput", "autofocus", false)` |

@@ -17,7 +17,7 @@ const initialData: CascaderData[] = [
     },
 ];
 
-const updateTreeData = (list: CascaderData[], value: CascaderData['value'], children: CascaderData[]): CascaderData[] => {
+function updateTreeData(list: CascaderData[], value: CascaderData['value'], children: CascaderData[]): CascaderData[] {
     return list.map((node) => {
         if (node.value === value) {
             return { ...node, children };
@@ -27,7 +27,7 @@ const updateTreeData = (list: CascaderData[], value: CascaderData['value'], chil
         }
         return node;
     });
-};
+}
 
 export default function CascaderDemo() {
     const [data, setData] = createSignal<CascaderData[]>(initialData);

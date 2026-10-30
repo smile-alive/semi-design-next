@@ -8,6 +8,7 @@ brief: 用徽章来给用户提示。
 import BadgeReactApi from './api/badge.react.zh-CN.mdx';
 import BadgeVueApi from './api/badge.vue.zh-CN.mdx';
 import BadgeSolidApi from './api/badge.solid.zh-CN.mdx';
+import BadgeSvelteApi from './api/badge.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Avatar, Badge } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Badge } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，两者互斥，优先渲染小圆点。
@@ -58,6 +69,12 @@ Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，�
 <Framework only="solid">
 
 `count` 接收数字、字符串或 JSX 元素。数字和字符串按文字显示，`count="5"` 是字符串，同样不会被 `overflowCount` 截断。传入 JSX 元素时直接渲染该元素，并去掉 `type` 与 `theme` 对应的样式类。
+
+</Framework>
+
+<Framework only="svelte">
+
+`count` 接收数字、字符串或 snippet。snippet 用 `{#snippet count()}...{/snippet}` 写在 Badge 标签内，将直接渲染，并去掉 `type` 与 `theme` 对应的样式类。数字用 `count={5}` 传入：`count="5"` 是字符串，不会被 `overflowCount` 截断。Badge 依附的元素写在标签内，即 `children` snippet。
 
 </Framework>
 
@@ -114,6 +131,14 @@ Badge 的基本类型为 `count`。如果传入 `dot` 则显示为小圆点，�
 <BadgeSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`onClick`、`onMouseEnter`）落在根元素 `<span>` 上。`countClassName` 与 `countStyle` 只作用于内容区域。
+
+</Framework>
+
+<Framework only="svelte">
+
+<BadgeSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`）落在根元素 `<span>` 上。`countClassName` 与 `countStyle` 只作用于内容区域。
 
 </Framework>
 

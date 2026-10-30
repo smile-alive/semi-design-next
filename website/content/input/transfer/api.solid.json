@@ -74,6 +74,10 @@
                 "zh-CN": "搜索框输入内容变化时触发，参数为搜索值。通过 ref 的 `search` 方法驱动的搜索不触发。",
                 "en-US": "Called when the text of the search box changes, with the search value. A search driven by the ref's `search` method does not call it."
             },
+            "onBlur": {
+                "zh-CN": "焦点从 Transfer 内部移到外部时触发一次，参数为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不触发，窗口失焦（`relatedTarget` 为空）时触发。",
+                "en-US": "Called once when the focus moves from inside the Transfer to outside it, with the FocusEvent; moving between the search box, checkboxes, items, remove buttons and drag handles does not call it, and a window blur (empty `relatedTarget`) does."
+            },
             "renderLabel": {
                 "zh-CN": "自定义左右两侧每一项的内容与 treeList 中节点的内容，参数为数据项；未设置时显示 label。`showPath` 的路径仍是 label 文本。",
                 "en-US": "Renders the content of each item in both lists and of each node in treeList; it receives the data item. Without it the label shows. The path with `showPath` stays label text."

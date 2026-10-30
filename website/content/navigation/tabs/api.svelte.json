@@ -1,0 +1,158 @@
+{
+    "tabs": {
+        "source": "packages/semi-ui-svelte/src/tabs/tabs.svelte",
+        "props": {
+            "activeKey": {
+                "zh-CN": "当前激活的标签页的 itemKey，可用 `bind:activeKey` 双向绑定。传 `null` 时不激活任何标签页，仍是受控；不传或为 `undefined` 时按非受控处理，默认选中第一个启用的标签页。",
+                "en-US": "The itemKey of the active tab, bound with `bind:activeKey`. `null` activates no tab and is still controlled; omitted or `undefined` means uncontrolled, with the first enabled tab selected."
+            },
+            "arrow": {
+                "zh-CN": "替换折叠模式下每个滚动箭头的 snippet，参数为 `{ items, position, onClick, defaultNode }`：被滚出的标签页、位置、点击处理函数和默认箭头（用 `{@render defaultNode()}` 渲染）。",
+                "en-US": "Snippet that replaces each scroll arrow in collapsible mode, with `{ items, position, onClick, defaultNode }`: the scrolled-out tabs, the position, the click handler and the default arrow (render it with `{@render defaultNode()}`)."
+            },
+            "arrowPosition": {
+                "zh-CN": "折叠模式下，左右切换箭头的位置。",
+                "en-US": "Position of the scroll arrows in collapsible mode."
+            },
+            "children": {
+                "zh-CN": "没有 `panel` 时的内容区：当前标签页的内容，是以所选标签命名的单个 tabpanel。",
+                "en-US": "The content area when there is no `panel`: the content of the active tab, one tabpanel labelled by the selected tab."
+            },
+            "collapsible": {
+                "zh-CN": "是否开启滚动折叠（仅水平模式）。传 `'auto'` 时在标签溢出或换行时自动折叠，放得下时自动退出。",
+                "en-US": "Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). `'auto'` collapses when the tabs overflow or wrap and leaves the collapse once they fit."
+            },
+            "contentStyle": {
+                "zh-CN": "内容区域外层的样式字符串。",
+                "en-US": "Style string of the outer content area."
+            },
+            "dropdownProps": {
+                "zh-CN": "折叠模式下，分别透传给起始侧与末尾侧箭头下拉菜单的 Dropdown 属性。",
+                "en-US": "In collapsible mode, the Dropdown props passed to the start-side and end-side arrow menus."
+            },
+            "icon": {
+                "zh-CN": "`tabList` 中每个标签页图标的 snippet，参数为 `{ item, index }`；图标容器始终渲染，即使 snippet 没有输出。",
+                "en-US": "Snippet for the icon of each `tabList` entry, with `{ item, index }`; the icon container renders even when the snippet outputs nothing."
+            },
+            "keepDOM": {
+                "zh-CN": "使用 `panel` 时，是否渲染未激活面板的 DOM。为 false 时只渲染当前面板，没有切换动画。",
+                "en-US": "With `panel`, whether to render the DOM of inactive panels. When false only the active panel is rendered, without motion."
+            },
+            "lazyRender": {
+                "zh-CN": "懒渲染，面板被激活过才渲染进 DOM。",
+                "en-US": "Lazy rendering: a panel is rendered into the DOM only after it has been active."
+            },
+            "more": {
+                "zh-CN": "将末尾的一部分标签页收入「更多」下拉菜单。传数字表示收入菜单的标签数；传对象时 `count` 为标签数，`dropdownProps` 透传给下拉菜单。触发器与菜单内容分别用 `moreTrigger` 与 `moreContent` snippet 自定义。",
+                "en-US": "Moves the last tabs into a More dropdown. A number is the count of tabs moved; in an object, `count` is that number and `dropdownProps` is passed to the dropdown. The trigger and the menu content are customized with the `moreTrigger` and `moreContent` snippets."
+            },
+            "moreContent": {
+                "zh-CN": "替换「更多」菜单内容的 snippet，参数 `{ items }` 为收入菜单的标签页。",
+                "en-US": "Snippet that replaces the content of the More menu, with the tabs moved into it as `{ items }`."
+            },
+            "moreTrigger": {
+                "zh-CN": "替换「更多」菜单触发器的 snippet。",
+                "en-US": "Snippet that replaces the trigger of the More menu."
+            },
+            "onChange": {
+                "zh-CN": "切换标签页时调用，参数为新激活的 itemKey。",
+                "en-US": "Called when the tab changes, with the itemKey of the new active tab."
+            },
+            "onTabClick": {
+                "zh-CN": "单击，或用 Enter、Space 激活标签页时调用；用键盘激活时事件是 KeyboardEvent。",
+                "en-US": "Called when a tab is clicked or activated with Enter or Space; the event is a KeyboardEvent for keyboard activation."
+            },
+            "onTabClose": {
+                "zh-CN": "关闭标签页时调用，参数为被关闭标签页的 itemKey。标签页的移除由使用方完成。",
+                "en-US": "Called when a tab is closed, with the itemKey of the closed tab. The caller removes the tab."
+            },
+            "onVisibleTabsChange": {
+                "zh-CN": "折叠模式下溢出项的可见状态变化时调用，参数为 itemKey 到是否可见的 Map。",
+                "en-US": "In collapsible mode, called when the visibility of the tabs changes, with a Map from itemKey to whether it is visible."
+            },
+            "panel": {
+                "zh-CN": "`tabList` 中每个标签页内容的 snippet，参数为 `{ item, index, itemKey }`；传入后每个标签页都是各自的 tabpanel，`keepDOM`、`lazyRender` 与切换动画对它生效。",
+                "en-US": "Snippet for the content of each `tabList` entry, with `{ item, index, itemKey }`; it makes every entry its own tabpanel, and `keepDOM`, `lazyRender` and motion apply."
+            },
+            "preventScroll": {
+                "zh-CN": "组件内部调用 focus 时，是否阻止浏览器滚动文档以显示新聚焦的元素。",
+                "en-US": "Whether focus calls inside the component stop the browser from scrolling the document to the newly focused element."
+            },
+            "showRestInDropdown": {
+                "zh-CN": "折叠模式下，是否将被收起的标签页展示在下拉菜单中。",
+                "en-US": "In collapsible mode, whether the collapsed tabs are listed in a dropdown menu."
+            },
+            "size": {
+                "zh-CN": "标签栏尺寸，目前仅线条式（line）标签栏支持。",
+                "en-US": "Size of the tab bar; currently only the line type supports it."
+            },
+            "tab": {
+                "zh-CN": "`tabList` 中每个标签页标签的 snippet，参数为 `{ item, index }`；不提供时显示该项的 `tab` 文本。",
+                "en-US": "Snippet for the tab of each `tabList` entry, with `{ item, index }`; without it the entry's `tab` text shows."
+            },
+            "tabBar": {
+                "zh-CN": "替换整个标签栏的 snippet。参数 `{ tabBarProps, tabBar }`：`tabBarProps` 只含数据，`tabBar` 是默认标签栏，用 `{@render tabBar()}` 渲染；自定义标签栏里的 TabItem 会自行控制所在的 Tabs。",
+                "en-US": "Snippet that replaces the whole tab bar, with `{ tabBarProps, tabBar }`: `tabBarProps` holds data only and `tabBar` is the default tab bar, rendered with `{@render tabBar()}`; a TabItem inside the custom bar controls its Tabs on its own."
+            },
+            "tabBarClassName": { "zh-CN": "标签栏的类名。", "en-US": "Class name of the tab bar." },
+            "tabBarExtraContent": {
+                "zh-CN": "标签栏附加内容的 snippet，位于 tablist 之外。",
+                "en-US": "Snippet for the extra content of the tab bar, placed outside the tablist."
+            },
+            "tabBarStyle": { "zh-CN": "标签栏的样式字符串。", "en-US": "Style string of the tab bar." },
+            "tabList": {
+                "zh-CN": "标签页的数据数组，每项含 itemKey、tab、disabled、closable，只放数据；标签内的节点用 `tab` 与 `icon` snippet，内容用 `panel` snippet 或 `children`。",
+                "en-US": "An array of tab data, each with itemKey, tab, disabled and closable, data only. Tab markup goes in the `tab` and `icon` snippets, and the content in the `panel` snippet or `children`."
+            },
+            "tabPaneMotion": {
+                "zh-CN": "是否使用动画切换面板。",
+                "en-US": "Whether switching panels is animated."
+            },
+            "tabPosition": {
+                "zh-CN": "标签栏位置：top 为水平，left 为垂直。",
+                "en-US": "Position of the tab bar: top is horizontal, left is vertical."
+            },
+            "type": {
+                "zh-CN": "标签栏样式：line、card、button、slash。slash 仅支持水平模式。",
+                "en-US": "Style of the tab bar: line, card, button or slash. slash supports horizontal mode only."
+            },
+            "visibleTabsStyle": {
+                "zh-CN": "折叠模式下，整体滚动区域的样式字符串。",
+                "en-US": "In collapsible mode, the style string of the whole scrolling area."
+            }
+        }
+    },
+    "tab-item": {
+        "source": "packages/semi-ui-svelte/src/tabs/tab-item.svelte",
+        "props": {
+            "closable": { "zh-CN": "是否显示关闭按钮。", "en-US": "Whether to show the close button." },
+            "disabled": {
+                "zh-CN": "是否禁用；禁用时点击、关闭按钮与 Enter、Space、Delete、Backspace 键均不生效，关闭按钮仍会显示。",
+                "en-US": "Whether the tab is disabled; clicks, the close button and the Enter, Space, Delete and Backspace keys have no effect, while the close button still shows."
+            },
+            "icon": {
+                "zh-CN": "标签图标的 snippet；图标容器始终渲染，即使 snippet 没有输出。",
+                "en-US": "Snippet for the tab icon; the icon container renders even when the snippet outputs nothing."
+            },
+            "itemKey": { "zh-CN": "标签的唯一标识。", "en-US": "Unique key of the tab." },
+            "onClick": {
+                "zh-CN": "点击标签时调用，参数为 itemKey 与事件；禁用时不调用。在 Tabs 之内，点击本身已会选中该标签页。",
+                "en-US": "Called when the tab is clicked, with the itemKey and the event; not called while disabled. Inside a Tabs the click already selects the tab."
+            },
+            "selected": { "zh-CN": "是否为选中状态。", "en-US": "Whether the tab is selected." },
+            "size": {
+                "zh-CN": "尺寸，默认取所在 Tabs 的 size。",
+                "en-US": "Size; defaults to the size of the enclosing Tabs."
+            },
+            "tab": { "zh-CN": "标签内容的 snippet。", "en-US": "Snippet for the tab content." },
+            "tabPosition": {
+                "zh-CN": "位置，默认取所在 Tabs 的 tabPosition，在 Tabs 之外为 top。",
+                "en-US": "Position; defaults to the tabPosition of the enclosing Tabs, else top."
+            },
+            "type": {
+                "zh-CN": "样式，默认取所在 Tabs 的 type，在 Tabs 之外为 line。",
+                "en-US": "Style; defaults to the type of the enclosing Tabs, else line."
+            }
+        }
+    }
+}

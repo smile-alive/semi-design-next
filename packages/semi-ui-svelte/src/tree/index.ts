@@ -1,0 +1,22 @@
+export { default as Tree } from './tree.svelte';
+export type {
+    TreeDataSimpleJson,
+    TreeDragEnterProps,
+    TreeDragNode,
+    TreeDragProps,
+    TreeDraggingNodeSnippetProps,
+    TreeExpandIconSnippetProps,
+    TreeExpandedOtherProps,
+    TreeFullLabelSnippetProps,
+    TreeHandle,
+    TreeIconSnippetProps,
+    TreeKeyMapProps,
+    TreeLabelSnippetProps,
+    TreeNodeData,
+    TreeOnDragProps,
+    TreeProps,
+    TreeScrollData,
+    TreeSearchSnippetProps,
+    TreeValue,
+    TreeVirtualize,
+} from './interface.js';

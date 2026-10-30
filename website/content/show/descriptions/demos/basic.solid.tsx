@@ -9,7 +9,7 @@ const data: DescriptionsData[] = [
     { key: '认证状态', value: '未认证' },
 ];
 
-const renderValue = (item: DescriptionsData, index: number) => {
+function renderValue(item: DescriptionsData, index: number) {
     if (index === 1) {
         return (
             <div>
@@ -19,7 +19,7 @@ const renderValue = (item: DescriptionsData, index: number) => {
         );
     }
     return index === 3 ? <Tag style={{ margin: '0' }}>{item.value}</Tag> : item.value;
-};
+}
 
 export default function DescriptionsDemo() {
     return <Descriptions data={data} renderValue={renderValue} />;

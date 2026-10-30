@@ -21,9 +21,9 @@
         { label: '北美洲', value: '北美洲', key: '1' },
     ];
 
-    function onChange(value: unknown) {
+    const onChange = (value: unknown) => {
         console.log('onChange', value);
-    }
+    };
 </script>
 
 <template>

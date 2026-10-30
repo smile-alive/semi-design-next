@@ -88,7 +88,7 @@ const treeData = [
         ],
     },
 ];
-const I18nComponent = () => {
+function I18nComponent() {
     const [modalVisible, setModalVisible] = useState(false);
     const columns = useMemo(
         () => [
@@ -212,7 +212,7 @@ const I18nComponent = () => {
             />
         </>
     );
-};
+}
 
 export default function LocaleDemo() {
     const [current, setCurrent] = useState({ code: 'zh_CN', locale: zh_CN });

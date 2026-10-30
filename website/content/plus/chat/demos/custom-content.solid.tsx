@@ -70,7 +70,7 @@ function getId() {
 }
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
-const SourceCard = (props: { source: Source[] }) => {
+function SourceCard(props: { source: Source[] }) {
     const [open, setOpen] = createSignal(true);
 
     return (
@@ -188,7 +188,7 @@ const SourceCard = (props: { source: Source[] }) => {
             </button>
         </div>
     );
-};
+}
 
 export default function ChatDemo() {
     const [chats, setChats] = createSignal<Message[]>(defaultMessage);

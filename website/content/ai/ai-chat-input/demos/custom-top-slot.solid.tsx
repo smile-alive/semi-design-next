@@ -59,10 +59,9 @@ const refTypeToIconMap = new Map<string, Component<IconProps>>([
     ['code', IconCode],
 ]);
 
-function isImageType(item: Attachment) {
+function isImageType({ name = '', fileInstance }: Attachment) {
     const PIC_PREFIX = 'image/';
     const PIC_SUFFIX_ARRAY = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'];
-    const { name = '', fileInstance } = item;
     const suffix = name.split('.').pop() ?? '';
     let result = false;
     const type = fileInstance?.type ?? '';

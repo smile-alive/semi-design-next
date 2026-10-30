@@ -8,6 +8,7 @@ brief: 输入框自动填充。
 import AutoCompleteReactApi from './api/auto-complete.react.zh-CN.mdx';
 import AutoCompleteVueApi from './api/auto-complete.vue.zh-CN.mdx';
 import AutoCompleteSolidApi from './api/auto-complete.solid.zh-CN.mdx';
+import AutoCompleteSvelteApi from './api/auto-complete.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -33,6 +34,12 @@ import AutoCompleteSolidApi from './api/auto-complete.solid.zh-CN.mdx';
 <Framework only="solid">
 
 - Select 的已选项渲染（`renderSelectedItem`）可以返回任意 JSX 元素，而 AutoComplete 的 `renderSelectedItem` 只允许返回字符串
+
+</Framework>
+
+<Framework only="svelte">
+
+- Select 的已选项渲染可以是任意 snippet 内容，而 AutoComplete 的 `renderSelectedItem` 只允许返回字符串
 
 </Framework>
 
@@ -66,6 +73,16 @@ import { AutoComplete } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AutoComplete } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -83,6 +100,12 @@ import { AutoComplete } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `onSearch` 监听用户输入，将输入建议通过更新 `data` 传入。通过 `value` 与 `onChange` 保持受控，当输入框变化或选中输入项时会触发 `onChange`
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `onSearch` 监听用户输入，将输入建议通过更新 `data` 传入。通过 `bind:value` 保持值同步，当输入框变化或选中输入项时会更新。没有 `defaultValue`：单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`
 
 </Framework>
 
@@ -110,6 +133,13 @@ import { AutoComplete } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+需要自定义候选项渲染时，data 可以传入一个对象数组（每个 Object 含有 label、value 两个 key，value 为候选项选中的值，label 为候选项展示的文本，缺省时回落到 value）  
+通过 `item` snippet（参数为 `{ item, index }`）可以自定义候选项内容：`item` 是未经加工的数据项，数据项里只放数据，标记写在 snippet 里
+
+</Framework>
+
 <Demo id="custom-render" />
 
 ### 远程搜索
@@ -129,6 +159,12 @@ import { AutoComplete } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 从 `onSearch` 中获取用户输入值，动态更新 `data` 值
+
+</Framework>
+
+<Framework only="svelte">
+
+从 `onSearch` 中获取用户输入值，动态更新 `data`，并更新 `loading`
 
 </Framework>
 
@@ -215,6 +251,26 @@ AutoComplete 通过模板 ref 暴露下列成员，类型为 `AutoCompleteHandle
 | style    | 候选行的样式                                       | `JSX.CSSProperties \| string` |
 
 其他字段原样保留，出现在 `renderItem` 的参数里；设置 `onSelectWithObject` 时，`onSelect` 收到的数据项对象同样保留这些字段。以 `data-` 开头的字段落在候选行上。字符串和数字项在 `renderSelectedItem` 中以 `{ value, label }` 形式收到。
+
+</Framework>
+
+<Framework only="svelte">
+
+<AutoCompleteSvelteApi />
+
+`id`、`name` 以及 `aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-label`、`aria-labelledby`、`aria-required` 落在输入框（`role="combobox"`）上，因此 `<label for>` 能关联到输入框。`class`（字符串、数组或对象）、`style`（字符串）、`data-*` 与其他未声明的属性和事件处理（例如 `onclick`）落在根 div 上，根 div 的 `tabindex` 固定为 `-1`；`onkeydown` 在组件处理完按键之后调用。小写的 `onfocus`、`onblur`、`onchange`、`onselect` 不是原生透传，请使用回调 `onFocus`、`onBlur`、`onChange`、`onSelect`。使用 `trigger` snippet 时没有输入框：`id` 落在根 div 上，`name` 不落到任何元素，`aria-*` 通过 `controlAttrs` 参数交给自定义触发器的可聚焦元素。
+
+`data` 的对象项：
+
+| 字段     | 说明                                                    | 类型                        |
+| -------- | ------------------------------------------------------- | --------------------------- |
+| value    | 选中后的值                                              | `string \| number`          |
+| label    | 候选项的文本，缺省回落到 value；标记请用 `item` snippet | `string \| number`          |
+| disabled | 是否禁用该候选项                                        | `boolean`                   |
+| class    | 候选行的类名                                            | `string \| object \| array` |
+| style    | 候选行的样式                                            | `string`                    |
+
+其他字段原样保留，出现在 `item` snippet 的 `item` 里；设置 `onSelectWithObject` 时，`onSelect` 收到的数据项对象同样保留这些字段。以 `data-` 开头的字段落在候选行上。字符串和数字项在 `renderSelectedItem` 中以 `{ value, label }` 形式收到。
 
 </Framework>
 

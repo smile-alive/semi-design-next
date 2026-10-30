@@ -1,0 +1,12 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性       | 说明                                                                                                                                         | 类型                                                                                           | 默认值  |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------- |
+| badgeCount | 自定义子项徽章内容的 snippet，参数为 `{ item, index }`。                                                                                     | <ApiType detail={"Snippet\u003c[FloatButtonGroupItemSnippetArgs]>"}>Type</ApiType>             | -       |
+| content    | 自定义子项文本内容的 snippet，参数为 `{ item, index }`；缺省渲染 item.content。                                                              | <ApiType detail={"Snippet\u003c[FloatButtonGroupItemSnippetArgs]>"}>Type</ApiType>             | -       |
+| disabled   | 禁用全部子项。                                                                                                                               | `boolean`                                                                                      | `false` |
+| icon       | 子项图标的 snippet，参数为 `{ item, index }`。                                                                                               | <ApiType detail={"Snippet\u003c[FloatButtonGroupItemSnippetArgs]>"}>Type</ApiType>             | -       |
+| items      | 子项列表。                                                                                                                                   | `FloatButtonGroupItem[]`                                                                       | -       |
+| onClick    | 点击未禁用子项时触发，参数为子项的 value（未设置时为 undefined）与原生 click 事件；子项自己的 onClick 先于它调用，点击落在子项之外时不触发。 | <ApiType detail={"(value: string \u007c undefined, event: MouseEvent) => void"}>Type</ApiType> | -       |

@@ -14,6 +14,9 @@ import CardGroupVueApi from './api/card-group.vue.en-US.mdx';
 import CardSolidApi from './api/card.solid.en-US.mdx';
 import CardMetaSolidApi from './api/card-meta.solid.en-US.mdx';
 import CardGroupSolidApi from './api/card-group.solid.en-US.mdx';
+import CardSvelteApi from './api/card.svelte.en-US.mdx';
+import CardMetaSvelteApi from './api/card-meta.svelte.en-US.mdx';
+import CardGroupSvelteApi from './api/card-group.svelte.en-US.mdx';
 
 ## Demos
 
@@ -44,6 +47,18 @@ import { Card } from '@fibrae/semi-ui-react';
 ```jsx
 import { Card, CardGroup } from '@fibrae/semi-ui-solid';
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Card, CardGroup, CardMeta } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+`CardMeta` is the same component as `Card.Meta`; either form works.
 
 </Framework>
 
@@ -79,6 +94,12 @@ You can use the `#cover` slot to set the cover.
 
 </Framework>
 
+<Framework only="svelte">
+
+You can use the `cover` snippet to set the cover.
+
+</Framework>
+
 <Demo id="cover" />
 
 ### Border and line
@@ -110,6 +131,12 @@ You can use `Card.Meta` to support more flexible content, allowing you to set `t
 <Framework only="vue">
 
 You can use `CardMeta` to support more flexible content, set through the `#title` slot (or the `title` property), `#avatar` and `#description`.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can use `CardMeta` to support more flexible content, allowing you to set `title`, `avatar`, and `description`. The last two are snippets, and `title` can be a string or a snippet.
 
 </Framework>
 
@@ -165,6 +192,12 @@ Every direct child in the `#actions` slot is one action, displayed at the bottom
 
 </Framework>
 
+<Framework only="svelte">
+
+`actions` receives an array of snippets, each one is an action, displayed at the bottom of the content area with a horizontal spacing of 12px.
+
+</Framework>
+
 <Demo id="actions" />
 
 ### Card group
@@ -199,6 +232,14 @@ You can use the `type` property of `CardGroup` to set the card group to a grid t
 
 </Framework>
 
+<Framework only="svelte">
+
+<CardSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `aria-*`, `onclick`) land on the root element (`div`).
+
+</Framework>
+
 <Framework only="react">
 
 <CardReactApi />
@@ -225,6 +266,14 @@ Undeclared attributes land on the root element of the inner `Space`.
 
 </Framework>
 
+<Framework only="svelte">
+
+<CardGroupSvelteApi />
+
+`class`, `style` and native attributes and events land on the root element of the inner `Space`.
+
+</Framework>
+
 <Framework only="react">
 
 <CardGroupReactApi />
@@ -248,6 +297,14 @@ Undeclared attributes land on the root element.
 <CardMetaSolidApi />
 
 `class`, `style`, `ref` and native attributes and events land on the root element (`div`).
+
+</Framework>
+
+<Framework only="svelte">
+
+<CardMetaSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `aria-*`, `onclick`) land on the root element (`div`).
 
 </Framework>
 

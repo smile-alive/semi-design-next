@@ -2,9 +2,9 @@
     import * as dateFns from 'date-fns';
     import { DatePicker } from '@fibrae/semi-ui-vue';
 
-    function handleChange(date: Date | Date[] | undefined) {
+    const handleChange = (date: Date | Date[] | undefined) => {
         console.log('date changed', date);
-    }
+    };
 
     const startOfWeek = (date: Date) => dateFns.startOfWeek(date, { weekStartsOn: 1 });
     const endOfWeek = (date: Date) => dateFns.endOfWeek(date, { weekStartsOn: 1 });

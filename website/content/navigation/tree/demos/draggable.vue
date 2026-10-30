@@ -65,7 +65,7 @@
         },
     ]);
 
-    function onDrop(info: TreeOnDragProps) {
+    const onDrop = (info: TreeOnDragProps) => {
         const { dropToGap, node, dragNode } = info;
         const dropKey = node.key;
         const dragKey = dragNode.key;
@@ -110,7 +110,7 @@
             }
         }
         treeData.value = data;
-    }
+    };
 </script>
 
 <template>

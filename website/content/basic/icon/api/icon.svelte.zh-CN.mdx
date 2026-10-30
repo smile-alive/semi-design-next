@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性      | 说明                                                                                                    | 类型                                                                                 | 默认值      |
+| --------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------- |
+| children  | 自定义 SVG 内容的 snippet，参数为 `{ fill }`，可把 `fill` 传给自定义 SVG。                              | <ApiType detail={"Snippet\u003c[{ fill?: string \u007c string[] }]>"}>Type</ApiType> | -           |
+| fill      | 双色、多色图标的填充颜色，支持字符串或字符串数组。                                                      | `string \| string[]`                                                                 | -           |
+| prefixCls | CSS 类名前缀，可由构建插件改写。                                                                        | `string`                                                                             | `"semi"`    |
+| rotate    | 旋转角度，使用整数（单位为度）。                                                                        | `number`                                                                             | -           |
+| size      | 图标尺寸，可选 extra-small、small、default、large、extra-large 或 inherit，inherit 继承上下文字体大小。 | `IconSize`                                                                           | `"default"` |
+| spin      | 启用旋转动画。                                                                                          | `boolean`                                                                            | `false`     |
+| type      | 附加图标类型类名。                                                                                      | `string`                                                                             | -           |

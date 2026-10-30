@@ -8,12 +8,12 @@ interface Item {
     type: number;
 }
 
-const mockSearch = (inputValue: string) => {
+function mockSearch(inputValue: string) {
     const length = Math.ceil(Math.random() * 100);
     return Array.from({ length }, (_v, i) => {
         return { value: inputValue + i, label: `相近业务 ${inputValue}${i}`, type: i + 1 };
     });
-};
+}
 
 export default function SelectDemo() {
     const [loading, setLoading] = useState(false);

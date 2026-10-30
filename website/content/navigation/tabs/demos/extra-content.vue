@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Button, TabPane, Tabs } from '@fibrae/semi-ui-vue';
 
-    function onExtraClick() {
+    const onExtraClick = () => {
         alert('you have clicked me!');
-    }
+    };
 </script>
 
 <template>

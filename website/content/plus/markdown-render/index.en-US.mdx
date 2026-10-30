@@ -8,6 +8,7 @@ brief: Instantly render Markdown and MDX in web pages
 import MarkdownRenderReactApi from './api/markdown-render.react.en-US.mdx';
 import MarkdownRenderVueApi from './api/markdown-render.vue.en-US.mdx';
 import MarkdownRenderSolidApi from './api/markdown-render.solid.en-US.mdx';
+import MarkdownRenderSvelteApi from './api/markdown-render.svelte.en-US.mdx';
 
 ## When to use
 
@@ -51,6 +52,16 @@ import { MarkdownRender } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 After importing MarkdownRender, just pass in Markdown or MDX plain text directly.
@@ -76,6 +87,12 @@ You can arbitrarily replace the display effect of document elements in Markdown 
 <Framework only="solid">
 
 You can arbitrarily replace the display effect of document elements in Markdown or MDX documents. Just pass your Solid component override to the `components` prop. An element's attributes (such as `class` and `colspan`) reach the component as props, and its content arrives as `props.children`.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can arbitrarily replace the display effect of document elements in Markdown or MDX documents. Just pass your Svelte component override to the `components` prop. An element's attributes (such as `class` and `colspan`) reach the component as props, and its content is rendered by the `children` snippet. The component also receives `node`, the compiled element; destructure it out before spreading the props onto a DOM element.
 
 </Framework>
 
@@ -106,6 +123,12 @@ When the Markdown you render is just pure markdown without any JSX code, you can
 <Framework only="solid">
 
 `format="md"` renders through a [unified](https://unifiedjs.com/) pipeline: remark-parse parses the source, remark-gfm (when `remarkGfm` is true) and `remarkPlugins` run in order, remark-rehype turns it into an HTML syntax tree, `rehypePlugins` run, and hast-util-to-jsx-runtime creates the Solid elements with `components` applied. No code is generated or evaluated, so it renders under a CSP without `unsafe-eval`, and the MDX compiler is never loaded.
+
+</Framework>
+
+<Framework only="svelte">
+
+`format="md"` renders through a [unified](https://unifiedjs.com/) pipeline: remark-parse parses the source, remark-gfm (when `remarkGfm` is true) and `remarkPlugins` run in order, remark-rehype turns it into an HTML syntax tree, `rehypePlugins` run, and a node tree is created, which Svelte renders with `components` applied. No code is generated or evaluated, so it renders under a CSP without `unsafe-eval`, and the MDX compiler is never loaded.
 
 </Framework>
 
@@ -162,6 +185,21 @@ function Demo() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { MarkdownRender } from '@fibrae/semi-ui-svelte';
+    import rehypeRaw from 'rehype-raw';
+
+    const rehypePlugins = [rehypeRaw];
+</script>
+
+<MarkdownRender format="md" raw={'<span style="color:red">Red text</span>'} {rehypePlugins} />
+```
+
+</Framework>
+
 ### Add custom components
 
 <Framework only="react">
@@ -186,6 +224,14 @@ JSX attributes in MDX reach the component as props: `className` joins `class`; e
 
 </Framework>
 
+<Framework only="svelte">
+
+By passing in custom components to the `components` prop, you can write JSX directly in Markdown, and the component will be rendered to the final page, supporting JS events. The default Markdown components can be obtained from `MarkdownRender.defaultComponents` and can be used for secondary packaging.
+
+JSX attributes in MDX reach the component as props, and children are rendered by the `children` snippet. Event attributes arrive as written in the MDX (such as `onClick`) and the component binds them itself; on native elements `onClick` becomes `onclick` and a style object becomes a string. The component also receives `node`, the compiled element `{ type, props }`: pass it on when forwarding to `MarkdownRender.defaultComponents.*`, and destructure it out before spreading onto a DOM element.
+
+</Framework>
+
 <Notice type="primary" title="Note">
     <div>Try to ensure that the JSX code in the rendered Markdown is trustworthy to prevent XSS. </div>
 </Notice>
@@ -199,6 +245,18 @@ When you replace the built-in `code` component, the source of a fenced block arr
 ```ts
 import { codeText } from '@fibrae/semi-ui-vue/markdown-render/index';
 import { code, pre } from '@fibrae/semi-ui-vue/markdown-render/components/index';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+When you replace the built-in `code` component, the source of a fenced block is in `node.props.children`; the `children` snippet cannot give its text. Pass it to `codeText` to get the source as is, with the trailing newline and without trimming:
+
+```ts
+import { codeText } from '@fibrae/semi-ui-svelte';
+
+const source = codeText(node.props.children);
 ```
 
 </Framework>
@@ -263,6 +321,25 @@ function Demo(props: { raw: string }) {
 
 </Framework>
 
+<Framework only="svelte">
+
+The source compiles again when `raw`, `format`, `remarkGfm` or an entry of a plugin array changes; a `components` change only renders again. Plugin arrays are compared entry by entry. The options object of a `[plugin, options]` entry is compared by reference too: a literal that is created anew each time the source is evaluated compiles again, so define it at the top level of `<script>` to keep it stable:
+
+```svelte
+<script lang="ts">
+    import { MarkdownRender, type MarkdownRenderProps } from '@fibrae/semi-ui-svelte';
+    import remarkToc from 'remark-toc';
+
+    const { raw }: { raw: string } = $props();
+
+    const remarkPlugins: MarkdownRenderProps['remarkPlugins'] = [[remarkToc, { heading: 'Contents' }]];
+</script>
+
+<MarkdownRender format="md" {raw} {remarkPlugins} />
+```
+
+</Framework>
+
 ### Compile errors
 
 When the MDX has a syntax error or a plugin throws, the last successfully rendered content stays on the page and the error is logged with `console.error` in development; no unhandled Promise rejection is left behind.
@@ -294,6 +371,14 @@ MarkdownRender has no default slot and no events; `class`, `style`, `id`, `data-
 <MarkdownRenderSolidApi />
 
 `class`, `style`, `ref`, and native attributes and events (such as `id`, `data-*` and `onClick`) land on the root `div`.
+
+</Framework>
+
+<Framework only="svelte">
+
+<MarkdownRenderSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `data-*` and `onclick`) land on the root `div`.
 
 </Framework>
 

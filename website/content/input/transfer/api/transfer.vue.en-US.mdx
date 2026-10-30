@@ -27,6 +27,7 @@ import ApiType from '#/components/ApiType.astro';
 | select            | Emitted when an item is checked, with that item. It shadows the native event of the same name on the root element.                                                                                                                               | `[item: TransferDataItem]`                           |
 | deselect          | Emitted when an item is unchecked, with that item.                                                                                                                                                                                               | `[item: TransferDataItem]`                           |
 | search            | Emitted when the text of the search box changes, with the search value. A search driven by the search method does not emit it.                                                                                                                   | `[searchValue: string]`                              |
+| blur              | Emitted once when the focus moves from inside the Transfer to outside it, with the FocusEvent; moving between the search box, checkboxes, items, remove buttons and drag handles does not emit it, and a window blur (empty relatedTarget) does. | `[event: FocusEvent]`                                |
 
 **Slots**
 

@@ -61,7 +61,7 @@ const treeData = [
 ];
 
 // the header reads its live object in the JSX, so it renders once and follows the selection
-const renderSourceHeader = (header: TransferSourceHeaderProps) => {
+function renderSourceHeader(header: TransferSourceHeaderProps) {
     return (
         <div
             style={{
@@ -86,7 +86,7 @@ const renderSourceHeader = (header: TransferSourceHeaderProps) => {
             </Show>
         </div>
     );
-};
+}
 
 export default function TransferDemo() {
     const [value, setValue] = createSignal<Array<string | number>>([]);

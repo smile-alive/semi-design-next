@@ -18,6 +18,10 @@ import TypographyTextSolidApi from './api/typography-text.solid.zh-CN.mdx';
 import TypographyTitleSolidApi from './api/typography-title.solid.zh-CN.mdx';
 import TypographyParagraphSolidApi from './api/typography-paragraph.solid.zh-CN.mdx';
 import TypographyNumeralSolidApi from './api/typography-numeral.solid.zh-CN.mdx';
+import TypographyTextSvelteApi from './api/typography-text.svelte.zh-CN.mdx';
+import TypographyTitleSvelteApi from './api/typography-title.svelte.zh-CN.mdx';
+import TypographyParagraphSvelteApi from './api/typography-paragraph.svelte.zh-CN.mdx';
+import TypographyNumeralSvelteApi from './api/typography-numeral.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -56,6 +60,18 @@ import { Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { TypographyNumeral, TypographyParagraph, TypographyText, TypographyTitle } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+Svelte 版用具名导出 `TypographyText`、`TypographyTitle`、`TypographyParagraph`、`TypographyNumeral`；根包也导出 `Typography`。
+
+</Framework>
+
 ### 标题组件
 
 通过设置 heading 可以展示不同级别的标题。
@@ -81,6 +97,12 @@ import { Typography } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 可以通过 `icon` 属性传入图标元素或图标组件，这种方式传入的图标默认与文本有间距，同时在链接文本的情况不会出现下划线符合设计规范。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `icon` snippet 传入图标，这种方式传入的图标默认与文本有间距，同时在链接文本的情况不会出现下划线符合设计规范。
 
 </Framework>
 
@@ -118,6 +140,12 @@ Numeral 组件会递归遍历 Children 检测其中所有的数字文本进行�
 <Framework only="solid">
 
 Numeral 组件只格式化直接的字符串与数字 children，每个 children 分别格式化；元素 children 原样输出，其中的数字不会被转换，需要转换时给该元素换成自己的 Numeral；
+
+</Framework>
+
+<Framework only="svelte">
+
+Numeral 组件会递归遍历 `children` 渲染出的文本节点，检测其中所有的数字文本进行转换展示，请注意控制渲染结构层级；
 
 </Framework>
 
@@ -182,6 +210,12 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 
 </Framework>
 
+<Framework only="svelte">
+
+复制按钮的内容用 `copyIcon` snippet，提示用 `copyTip`，成功提示用 `copySuccessTip`；用 `copyAction` snippet（参数 `{ copied, copy, config }`）完全自定义复制节点的渲染，`copy` 接收点击事件。复制回调写在配置对象里：`copyable={{ onCopy }}`。
+
+</Framework>
+
 <Demo id="copyable" />
 
 ### 省略文本
@@ -235,6 +269,14 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 
 </Framework>
 
+<Framework only="svelte">
+
+<TypographyTextSvelteApi />
+
+标签内的内容是 `children`（snippet）。`class`、`style`、`id`、`aria-*` 与其他原生属性和事件落在文字元素上。
+
+</Framework>
+
 <Framework only="vue">
 
 <TypographyTextVueApi />
@@ -258,6 +300,14 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 <TypographyTitleReactApi />
 
 `className`、`style` 与其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素上；`link` 为对象时，其中的属性落在内层 `a` 元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TypographyTitleSvelteApi />
+
+标签内的内容是 `children`（snippet）。`class`、`style`、`id`、`aria-*` 与其他原生属性和事件落在标题元素上。
 
 </Framework>
 
@@ -287,6 +337,14 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 
 </Framework>
 
+<Framework only="svelte">
+
+<TypographyParagraphSvelteApi />
+
+标签内的内容是 `children`（snippet）。`class`、`style`、`id`、`aria-*` 与其他原生属性和事件落在段落元素上。
+
+</Framework>
+
 <Framework only="vue">
 
 <TypographyParagraphVueApi />
@@ -310,6 +368,14 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 <TypographyNumeralReactApi />
 
 `className`、`style` 与其他原生属性（如 `id`、`aria-*`、`onClick`）落在根元素上；`link` 为对象时，其中的属性落在内层 `a` 元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<TypographyNumeralSvelteApi />
+
+标签内的内容是 `children`（snippet），递归处理其中的文本与元素，不处理组件内部的文字。`class`、`style`、`id`、`aria-*` 与其他原生属性和事件落在文字元素上。
 
 </Framework>
 
@@ -344,6 +410,22 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 | showTooltip | 是否展示 tooltip 及相关配置: type，浮层内容承载的组件，支持 Tooltip\| Popover；opts，其他需要透传给浮层组件的属性； renderTooltip，自定义渲染弹出层组件。Tooltip 可显示时文字可用 Tab 聚焦；文字位于 option、treeitem、menuitem、gridcell、row 等组合控件条目内时不加入 Tab 顺序。`expandable` 为 true 或设置了 `expandText` 时，`showTooltip` 不生效，二者互斥 | boolean\|\{type: 'tooltip'\|'popover', opts: object, renderTooltip: (content: ReactNode, children: ReactNode) => ReactNode\} | false |
 | suffix | 始终展示的后缀 | string | - |
 | onExpand | 展开/收起的回调 | function(expanded: bool, Event: e) | - |
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| collapseText | 折叠的展示文本 | `string` | `收起` |
+| collapsible | 是否支持折叠 | `boolean` | false |
+| expandText | 展开的展示文本 | `string` | `展开` |
+| expandable | 是否支持展开 | `boolean` | false |
+| onExpand | 展开/收起的回调，参数为操作之后的展开状态和点击事件 | `(expanded: boolean, event: MouseEvent) => void` | - |
+| pos | 省略截断的位置，支持末尾和中间截断：`end`, `middle` | `'end' \| 'middle'` | `end` |
+| rows | 省略溢出行数 | `number` | 1 |
+| showTooltip | 是否展示 tooltip 及相关配置: type，浮层内容承载的组件，支持 tooltip\| popover；opts，其他需要透传给浮层组件的属性，其中 `class` 落在浮层上，`style` 是字符串。浮层内容用 `ellipsisContent` snippet，自定义浮层用 `ellipsisTooltip` snippet。`expandable` 为 true 或设置了 `expandText` 时，`showTooltip` 不生效，二者互斥 | `boolean \| { type?: 'tooltip' \| 'popover', opts?: object }` | false |
+| suffix | 始终展示的后缀 | `string` | - |
 
 </Framework>
 
@@ -395,6 +477,20 @@ Vue 模板中相邻的文字与插值合成一个文本节点并整段格式化�
 | render | 自定义渲染复制节点 | <ApiType detail='(copied: boolean, doCopy: (e: React.MouseEvent) => void, configs: CopyableConfig) => React.ReactNode'>function(copied, doCopy, configs)</ApiType> | - |
 | style | 复制操作外层 span 的样式 | CSSProperties | - |
 | successTip | 复制成功的展示内容 | React.node | - |
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性     | 说明                                                                                           | 类型                                                             | 默认值 |
+| -------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------ |
+| content  | 复制出的文本                                                                                   | `string`                                                         | -      |
+| class    | 复制操作外层 span 的类名                                                                       | `ClassValue`                                                     | -      |
+| duration | 已复制状态持续的秒数                                                                           | `number`                                                         | 3      |
+| onCopy   | 复制回调，参数为点击事件、复制的内容和是否写入成功；写入被拒绝时为 false，此时不进入已复制状态 | `(event: MouseEvent, content: string, success: boolean) => void` | -      |
+| style    | 复制操作外层 span 的样式字符串                                                                 | `string`                                                         | -      |
+
+复制按钮的内容、提示与成功提示用 `copyIcon`、`copyTip`、`copySuccessTip` snippet；用 `copyAction` snippet（参数 `{ copied, copy, config }`）自定义复制节点，`config` 是解析后的配置。
 
 </Framework>
 

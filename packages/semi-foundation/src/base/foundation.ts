@@ -39,7 +39,8 @@ export interface DirectionContext {
  * - The constructor may run more than once per mount (StrictMode discards one instance), so it has no side effects.
  * - On mount the host calls `connect()` then `init()`, after the DOM is in place and before paint (layout phase).
  *   On unmount it calls `destroy()` then `disconnect()`. Under StrictMode the kept instance goes through
- *   init -> destroy -> init.
+ *   init -> destroy -> init. `destroy()` must not rely on the DOM still being attached: Svelte removes a
+ *   component's DOM before it runs teardown.
  * - `init()` may run again after `destroy()` on state the user already changed (StrictMode, and React Activity each
  *   time it shows again), so it must be idempotent: initial values resolved from props (`default*`, `value`) belong
  *   in a static `getInitialState` the host calls when it creates the state; `init()` only subscribes and runs

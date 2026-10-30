@@ -8,6 +8,7 @@ brief: 滑动选择器，使用拖动交互快速选择数值或数值范围，�
 import SliderReactApi from './api/slider.react.zh-CN.mdx';
 import SliderVueApi from './api/slider.vue.zh-CN.mdx';
 import SliderSolidApi from './api/slider.solid.zh-CN.mdx';
+import SliderSvelteApi from './api/slider.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, InputNumber, Slider } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 基本滑动条。当 `range` 为 `true` 时，支持两侧滑动。当 `disabled` 为 `true` 时，滑块处于不可用状态。
@@ -58,6 +69,12 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 <Framework only="vue">
 
 提示需要节点内容时使用 `#tip` 插槽，作用域参数 `value` 为 `tipFormatter` 的结果。
+
+</Framework>
+
+<Framework only="svelte">
+
+提示需要节点内容时使用 `tip` snippet，参数 `{ value, handle }` 中的 `value` 为 `tipFormatter` 的结果，`handle` 为 `min` 或 `max`。
 
 </Framework>
 
@@ -83,6 +100,12 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `marks` 属性标注滑块的刻度，使用 `value` 指定滑块位置。刻度标签只接受字符串或数字，需要节点内容时使用 `mark` snippet，参数为 `{ value, label }`；开启 `tooltipOnMark` 时，标签与气泡各渲染一次。
+
+</Framework>
+
 <Demo id="marks" />
 
 ### 分段背景
@@ -105,6 +128,12 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过使用 `linear-gradient` 及 `railStyle`（字符串），配合 `bind:value` 可以实现动态的分段背景效果。
+
+</Framework>
+
 <Demo id="segmented-background" />
 
 ### 受控组件
@@ -124,6 +153,12 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 滑块位置即 `Slider` 的值由 `value` 控制，配合 `onChange` 使用。只传 `value` 而不在 `onChange` 中回写时，拖动、点击与方向键仅触发 `onChange` 通知，滑块不移动。
+
+</Framework>
+
+<Framework only="svelte">
+
+滑块位置即 `Slider` 的值由 `value` 控制，用 `bind:value` 与 `$state` 变量双向同步。需要拒绝或改写拖动结果时用函数绑定 `bind:value={() => value, (next) => { ... }}`。只传 `value` 不绑定时，它只作初值，父级再传新值时以父级为准。
 
 </Framework>
 
@@ -162,6 +197,14 @@ import { Button, InputNumber, Slider } from '@fibrae/semi-ui-solid';
 <SliderSolidApi />
 
 `class`、`style`、`ref` 与其余原生属性（如 `data-*`）落在 `.semi-slider-wrapper` 上，`onFocus`、`onBlur`、`onMouseEnter`、`onMouseLeave` 也绑在它上面。`id`（只在第一个手柄上）、`name`、`aria-describedby`、`aria-invalid`、`aria-errormessage` 与 `onKeyDown` 落在每个手柄的原生 input 上；`range` 模式下两个 input 的 `name` 相同，依次提交两个值。`tabIndex`、`aria-required` 不输出。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SliderSvelteApi />
+
+`class`、`style`（字符串）与其余原生属性（如 `data-*`）落在 `.semi-slider-wrapper` 上，`onFocus` 是它的 focusin，`onBlur` 只在焦点离开整个 Slider 时触发。`id`（只在第一个手柄上）、`name`、`autofocus`、`aria-describedby`、`aria-invalid`、`aria-errormessage` 与 `onKeyDown` 落在每个手柄的原生 input 上；`range` 模式下两个 input 的 `name` 相同，依次提交两个值。`tabindex`、`aria-required` 不输出。`value` 可绑定，没有 `defaultValue`。
 
 </Framework>
 

@@ -4,10 +4,10 @@
 
     const options = ref([1, 2, 3, 4]);
 
-    function add() {
+    const add = () => {
         const length = Math.ceil(Math.random() * 10);
         options.value = Array.from({ length }, (_, i) => i + 1);
-    }
+    };
 </script>
 
 <template>

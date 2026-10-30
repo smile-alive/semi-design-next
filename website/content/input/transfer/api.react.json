@@ -82,6 +82,10 @@
                 "zh-CN": "搜索框输入内容变化时触发，参数为搜索值。通过 ref 的 `search` 方法驱动的搜索不触发。",
                 "en-US": "Called when the text of the search box changes, with the search value. A search driven by the ref's `search` method does not call it."
             },
+            "onBlur": {
+                "zh-CN": "焦点从 Transfer 内部移到外部时触发一次，参数为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不触发，窗口失焦（`relatedTarget` 为空）时触发。",
+                "en-US": "Called once when the focus moves from inside the Transfer to outside it, with the FocusEvent; moving between the search box, checkboxes, items, remove buttons and drag handles does not call it, and a window blur (empty `relatedTarget`) does."
+            },
             "renderSourceItem": {
                 "zh-CN": "自定义左侧单个候选项的渲染，每次渲染时为每个选项调用一次。参数为数据项，另含 `checked` 与 `onChange`，`onChange` 切换该项的勾选状态。",
                 "en-US": "Renders one candidate on the left, called once per item on every render. The argument is the item plus `checked` and `onChange`, which toggles the checked state of the item."

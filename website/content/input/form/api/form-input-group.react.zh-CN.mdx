@@ -4,8 +4,6 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性              | 说明                                                                                             | 类型                                                                                   | 默认值 |
 | ----------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- | ------ |
-| children          | 组内的字段。                                                                                     | `React.ReactNode`                                                                      | -      |
-| className         | 组内 InputGroup 的类名。                                                                         | `string`                                                                               | -      |
 | disabled          | 组内字段统一的 disabled，不传时沿用 Form 的 disabled。                                           | `boolean`                                                                              | -      |
 | extraText         | 额外的提示信息，位置由 `extraTextPosition` 决定。                                                | `React.ReactNode`                                                                      | -      |
 | extraTextPosition | extraText 的位置，`middle` 在 Label 与 Group 之间，`bottom` 在 Group 之后。未设置时为 `bottom`。 | `'bottom' \| 'middle'`                                                                 | -      |
@@ -14,5 +12,4 @@ import ApiType from '#/components/ApiType.astro';
 | onBlur            | 焦点离开组内任一控件时调用，在组内控件之间移动焦点时也会调用。                                   | <ApiType detail={"(e: React.FocusEvent\u003cHTMLSpanElement>) => void"}>Type</ApiType> | -      |
 | onFocus           | 组内任一控件获得焦点时调用，从组内另一控件移入时也会调用。                                       | <ApiType detail={"(e: React.FocusEvent\u003cHTMLSpanElement>) => void"}>Type</ApiType> | -      |
 | ref               | 组内 InputGroup 的根元素（`role="group"`）的引用。                                               | <ApiType detail={"React.Ref\u003cHTMLSpanElement>"}>Type</ApiType>                     | -      |
-| size              | 组内所有控件的尺寸，可选 `small`、`default` 或 `large`，未设置时为 `default`。                   | `InputSize`                                                                            | -      |
-| style             | 组内 InputGroup 的内联样式。                                                                     | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType>                            | -      |
+| size              | 组内控件的尺寸，可选 `small`、`default` 或 `large`；未自行设置 `size` 的控件取这个值。           | `InputSize`                                                                            | -      |

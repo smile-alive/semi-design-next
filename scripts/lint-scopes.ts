@@ -20,7 +20,7 @@ const files = spawnSync('git', ['ls-files', '--cached', '--others', '--exclude-s
 })
     .stdout.split('\n')
     // --cached still lists files deleted in the worktree but not yet staged
-    .filter((file) => /\.(?:[cm]?[jt]s|[jt]sx|vue|astro)$/.test(file) && fs.existsSync(path.join(root, file)))
+    .filter((file) => /\.(?:[cm]?[jt]s|[jt]sx|vue|svelte|astro)$/.test(file) && fs.existsSync(path.join(root, file)))
     .filter((file) => !baseLint.ignorePatterns.some((glob) => path.matchesGlob(file, glob)));
 
 const matched = new Map<string, Set<string>>();

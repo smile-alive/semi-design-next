@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                       | Type                                          | Default |
+| ----------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------- | ------- |
+| children    | Snippet for the panel content; a panel counts as having content only when children is given.                      | `Snippet`                                     | -       |
+| disabled    | Whether the panel is disabled.                                                                                    | `boolean`                                     | `false` |
+| extra       | Snippet for the auxiliary content on the right of the panel header, outside the toggle button; may hold controls. | `Snippet`                                     | -       |
+| header      | Snippet for the panel header content, rendered inside the toggle button; must not contain interactive elements.   | `Snippet`                                     | -       |
+| itemKey     | Required and unique, matched against activeKey.                                                                   | `string`                                      | -       |
+| onMotionEnd | Called when the expand or collapse animation ends.                                                                | <ApiType detail={"() => void"}>Type</ApiType> | -       |
+| showArrow   | Whether to show the arrow icon.                                                                                   | `boolean`                                     | `true`  |

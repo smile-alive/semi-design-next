@@ -24,7 +24,7 @@ export interface FrameworkLint {
     // Icons whose onClick is a pointer shortcut for a keyboard path elsewhere, keyed by file (lint-private)
     iconOnClickExemptions?: Record<string, string | string[]>;
     // Type checker for this framework's tsconfigs, matched by the naming rule; tsc when absent
-    typecheck?: 'vue-tsc';
+    typecheck?: 'vue-tsc' | 'svelte-check';
 }
 
 // A file belongs to a framework by name alone: in a semi-*-<id> package, named <id>.* or *.<id>.*, or its extension

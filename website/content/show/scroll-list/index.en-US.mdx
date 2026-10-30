@@ -11,6 +11,8 @@ import ScrollListVueApi from './api/scroll-list.vue.en-US.mdx';
 import ScrollItemVueApi from './api/scroll-item.vue.en-US.mdx';
 import ScrollListSolidApi from './api/scroll-list.solid.en-US.mdx';
 import ScrollItemSolidApi from './api/scroll-item.solid.en-US.mdx';
+import ScrollListSvelteApi from './api/scroll-list.svelte.en-US.mdx';
+import ScrollItemSvelteApi from './api/scroll-item.svelte.en-US.mdx';
 
 ## Demos
 
@@ -42,6 +44,16 @@ import { ScrollList, ScrollItem } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { ScrollList, ScrollItem } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 The scrolling list provides a scrolling selection mode similar to the iOS operating system, while supporting scrolling to the specified window location selection and click selection.
@@ -55,6 +67,12 @@ Bind the selected item with `v-model:selectedIndex`; there is no uncontrolled mo
 <Framework only="solid">
 
 Bind the selected item with `selectedIndex` and `onSelect`; there is no uncontrolled mode. `header` and `footer` are JSX elements passed directly.
+
+</Framework>
+
+<Framework only="svelte">
+
+Bind the selected item with `bind:selectedIndex`, which writes the new index back on selection; the callback is `onSelect`. Write a column as `ScrollList.Item` or the named export `ScrollItem`, which are the same component. `header` and `footer` accept a string or a snippet and render whenever given: define one with `{#snippet footer()}...{/snippet}` and pass it as a prop, or write it inside the ScrollList tag.
 
 </Framework>
 
@@ -88,6 +106,14 @@ Other attributes such as `aria-*` land on the root element.
 
 </Framework>
 
+<Framework only="svelte">
+
+<ScrollListSvelteApi />
+
+`class`, `style` (a string) and native attributes such as `aria-*` land on the root element.
+
+</Framework>
+
 ### ScrollItem
 
 <Framework only="react">
@@ -111,6 +137,14 @@ Other attributes such as `aria-*` land on the root element.
 <ScrollItemSolidApi />
 
 `class`, `style`, `ref` and native attributes such as `data-*` land on the root element; `aria-label`, `aria-labelledby` and `aria-describedby` land on the list (`role="listbox"`).
+
+</Framework>
+
+<Framework only="svelte">
+
+<ScrollItemSvelteApi />
+
+`aria-label`, `aria-labelledby` and `aria-describedby` land on the list (`role="listbox"`); `class`, `style` (a string) and other attributes land on the root element.
 
 </Framework>
 
@@ -148,6 +182,12 @@ Call these through the `ref` of ScrollItem, for example to realign the selected 
 | Name                                                     | Description                                                                                                                                                                                                |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | scrollToIndex(selectedIndex?: number, duration?: number) | Scrolls the list to the current selected item. `selectedIndex` has no effect yet and the target is always the item last selected. `duration` is the scroll animation duration in milliseconds, default 120 |
+
+</Framework>
+
+<Framework only="svelte">
+
+Call these on the ScrollItem instance obtained through `bind:this`; see the Methods table of ScrollItem above for the signature.
 
 </Framework>
 

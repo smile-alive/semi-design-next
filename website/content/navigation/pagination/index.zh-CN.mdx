@@ -8,6 +8,7 @@ brief: 分页器帮助用户在多个页之间进行导航
 import PaginationReactApi from './api/pagination.react.zh-CN.mdx';
 import PaginationVueApi from './api/pagination.vue.zh-CN.mdx';
 import PaginationSolidApi from './api/pagination.solid.zh-CN.mdx';
+import PaginationSvelteApi from './api/pagination.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Pagination } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本
 
 基础分页，通过 `total` 设置总条数，`pageSize` 设置每页容量
@@ -59,7 +70,29 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 
 ### 指定当前页码
 
+<Framework only="react">
+
 可以通过 `defaultCurrentPage` 指定当前激活的页码
+
+</Framework>
+
+<Framework only="vue">
+
+可以通过 `defaultCurrentPage` 指定当前激活的页码
+
+</Framework>
+
+<Framework only="solid">
+
+可以通过 `defaultCurrentPage` 指定当前激活的页码
+
+</Framework>
+
+<Framework only="svelte">
+
+没有 `defaultCurrentPage`，直接传 `currentPage={3}` 作初始页码即可；点击翻页后页码成为组件内部的本地值。
+
+</Framework>
 
 <Demo id="default-current-page" />
 
@@ -94,6 +127,12 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 传入 `currentPage` 后分页器受控，页码由该值决定；配合 `onPageChange` 把新页码写回状态即可翻页。
+
+</Framework>
+
+<Framework only="svelte">
+
+用 `bind:currentPage` 绑定页码；用 `bind:currentPage={get, set}` 可让分页器完全受控，由 setter 决定是否接受新页码。不传 `currentPage` 时页码由组件自己管理。
 
 </Framework>
 
@@ -138,6 +177,14 @@ import { Pagination } from '@fibrae/semi-ui-solid';
 <PaginationSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onClick`）落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<PaginationSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`data-*`、`onclick`）落在根元素 `ul` 上，default 与 small 两种尺寸一致；`onChange`、`onPageChange`、`onPageSizeChange` 是组件回调，不落在根元素上。
 
 </Framework>
 

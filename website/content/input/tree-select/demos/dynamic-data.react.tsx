@@ -3,7 +3,7 @@ import { TreeSelect, Button, type TreeNodeData } from '@fibrae/semi-ui-react';
 export default function TreeSelectDemo() {
     const [treeData, setTreeData] = useState<TreeNodeData[]>([]);
 
-    function add() {
+    const add = () => {
         const itemLength = Math.floor(Math.random() * 5) + 1;
         const nextTreeData = Array.from({ length: itemLength }, (_v, i) => {
             const length = Math.floor(Math.random() * 3);
@@ -24,7 +24,7 @@ export default function TreeSelectDemo() {
             return item;
         });
         setTreeData(nextTreeData);
-    }
+    };
 
     return (
         <>

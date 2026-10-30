@@ -6,16 +6,17 @@
 //   SKIP  no component or hook the compiler would pick in infer mode
 import fs from 'node:fs';
 import path from 'node:path';
+import { groupBy } from 'es-toolkit';
 import { transformSync } from 'oxc-transform-react';
 import ts from 'typescript';
 
 type Fn = ts.FunctionDeclaration | ts.FunctionExpression | ts.ArrowFunction;
 
 const isFn = (node: ts.Node): node is Fn => ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node);
-const isHookCall = (node: ts.CallExpression) => {
+function isHookCall(node: ts.CallExpression) {
     const callee = ts.isPropertyAccessExpression(node.expression) ? node.expression.name : node.expression;
     return ts.isIdentifier(callee) && /^use([A-Z0-9]|$)/.test(callee.text);
-};
+}
 const isWrapper = (node: ts.CallExpression) => /^(React\.)?memo$/.test(node.expression.getText());
 
 // The name the compiler keys on: the function's own, else its assigned variable or property, through memo()
@@ -111,7 +112,7 @@ for (const file of args.length ? args.map((arg) => path.resolve(arg)) : defaultF
     const kind = file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
 
     // Same-named functions match in source order; the compiler only adds `_`-prefixed helpers
-    const compiled = Map.groupBy(functions(result.code, ts.ScriptKind.JS), (fn) => fn.name);
+    const compiled = groupBy(functions(result.code, ts.ScriptKind.JS), (fn) => fn.name);
     const seen = new Map<string, number>();
     const diagnostics = result.errors.map((error) => {
         const start = error.labels?.[0]?.start;
@@ -125,7 +126,7 @@ for (const file of args.length ? args.map((arg) => path.resolve(arg)) : defaultF
         const index = seen.get(fn.name) ?? 0;
         seen.set(fn.name, index + 1);
         const own = diagnostics.filter(({ start }) => start !== undefined && start >= fn.node.pos && start < fn.node.end);
-        const output = compiled.get(fn.name)?.[index]?.facts;
+        const output = compiled[fn.name]?.[index]?.facts;
         return { ...fn, own, runtime: output?.runtime ?? false, cachedHooks: output?.cachedHooks ?? [] };
     });
     const candidates = all.filter(({ name, facts }) => {

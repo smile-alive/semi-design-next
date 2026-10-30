@@ -8,6 +8,7 @@ brief: 模态对话框用于等待用户响应、告知用户重要信息或在�
 import ModalReactApi from './api/modal.react.zh-CN.mdx';
 import ModalVueApi from './api/modal.vue.zh-CN.mdx';
 import ModalSolidApi from './api/modal.solid.zh-CN.mdx';
+import ModalSvelteApi from './api/modal.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Modal } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本
 
 <Framework only="vue">
@@ -50,6 +61,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 对话框由 `visible` 控制显示。`onOk`、`onCancel` 不会自行关闭对话框，由使用方把 `visible` 设为 `false`；它们返回 Promise 时，对应按钮保持加载直到 Promise 落定。
+
+</Framework>
+
+<Framework only="svelte">
+
+对话框用 `bind:visible` 控制显示。`bind:visible` 只在取消路径写回 `false`：取消按钮、关闭按钮、遮罩和 Esc；`onCancel` 返回 Promise 时，在 fulfill 后写回，reject 则保持打开。点击确定只调用 `onOk`，由使用方把 `visible` 设为 `false`。`onCancel` 回调执行时，`visible` 仍为 `true`。
 
 </Framework>
 
@@ -89,6 +106,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+注意：命令式调用的 Modal 渲染在组件树之外，读不到 ConfigProvider、LocaleProvider 提供的语言包，需要通过这两个属性来设置文本，或者使用 `Modal.useModal`。
+
+</Framework>
+
 <Demo id="button-text" />
 
 ### 自定义按钮属性
@@ -114,6 +137,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 如果需要实现更丰富的个性化需求，可以通过 `header` 自定义头部，`footer` 自定义页脚的按钮。把 `header` 设为 `null` 时不展示头部区域；不需要显示任何按钮时，同样可以把 `footer` 设为 `null`。
+
+</Framework>
+
+<Framework only="svelte">
+
+如果需要实现更丰富的个性化需求，可以通过 `header` snippet 自定义头部，`footer` snippet 自定义页脚的按钮。写一个空的 `header` snippet（`{#snippet header()}{/snippet}`）或把 `header` 设为 `null` 时不展示头部区域；不需要显示任何按钮时，同样可以写空的 `footer` snippet 或把 `footer` 设为 `null`。
 
 </Framework>
 
@@ -145,6 +174,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过灵活使用 `header`、`footer` 等 snippet 可以实现一个完全自定义的对话框。
+
+</Framework>
+
 <Demo id="custom-modal" />
 
 ### 全屏 Modal
@@ -162,6 +197,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+使用 `fullScreen` 可以开启全屏对话框
+
+</Framework>
+
+<Framework only="svelte">
 
 使用 `fullScreen` 可以开启全屏对话框
 
@@ -189,6 +230,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `confirm()` 可以设置一个确认框。支持各种类型的信息提示。命令式调用的 `title`、`content`、`icon`、`closeIcon`、`header`、`footer` 接收 `ModalNode`：字符串，或 snippet；`icon` 传 `null` 则不显示图标。其他 Modal 支持的选项都可以传入。
+
+</Framework>
+
 <Demo id="confirm" />
 
 ### Hooks 用法
@@ -211,6 +258,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`Modal.useModal()` 返回 `{ info, success, error, warning, confirm }`，没有 Holder。它在调用时读取所在组件的 context、ConfigProvider 与语言包，所以要在组件初始化时调用，并且放在需要读取这些上下文的组件里（通常是 ConfigProvider 的子组件）；组件销毁时它打开的对话框一并移除。
+
+</Framework>
+
 <Demo id="use-modal" />
 
 ### 可拖拽 Modal
@@ -230,6 +283,12 @@ import { Modal } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 通过 `modalRender` 自定义渲染 Modal 内容，参数是 `role="dialog"` 元素，返回值必须包含它。可拖拽 Modal 通过 DragMove 组件实现。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 的 DragMove 是 attachment `dragMove`。把 `{@attach dragMove(options)}` 直接写在 `<Modal>` 上，attachment 会挂到 `role="dialog"` 元素上，对话框就能拖动。需要自己摆放对话框时，也可以用 `modal` snippet（参数 `{ modal }`，用 `{@render modal()}` 放置）。
 
 </Framework>
 
@@ -262,6 +321,14 @@ import { Modal } from '@fibrae/semi-ui-solid';
 <ModalSolidApi />
 
 `role` 与全部 `aria-*` 属性落在 `role="dialog"` 元素上，`style` 落在 `.semi-modal` 对话框盒子上，`ref`、`class` 与其他原生属性和事件落在 portal 内最外层元素上。组件版 Modal 不渲染 `content` 属性，对话框内容写在 `children` 中；`content` 选项只用于下面的命令式方法。
+
+</Framework>
+
+<Framework only="svelte">
+
+<ModalSvelteApi />
+
+`role` 与全部 `aria-*` 属性落在 `role="dialog"` 元素上，`style` 落在 `.semi-modal` 对话框盒子上，`class` 与其他原生属性落在 portal 内最外层元素上；写在 `<Modal>` 上的 `{@attach}` 落在 `role="dialog"` 元素上。组件版 Modal 没有 `content` 属性，对话框内容写在标签内；`content` 选项只用于下面的命令式方法。
 
 </Framework>
 
@@ -393,6 +460,58 @@ modal.destroy();
 
 </Framework>
 
+<Framework only="svelte">
+
+`ModalNode` 为 `string | Snippet`。
+
+| 属性              | 说明                                                                                                               | 类型                                                               | 默认值          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | --------------- |
+| afterClose        | 对话框完全关闭后的回调函数                                                                                         | () => void                                                         | -               |
+| bodyStyle         | 对话框内容的样式                                                                                                   | string                                                             | -               |
+| cancelButtonProps | 取消按钮的属性，其中的 `onclick` 先于内置处理调用，不会替换内置处理                                                | ModalButtonProps                                                   | -               |
+| cancelText        | 取消按钮的文字                                                                                                     | string                                                             | -               |
+| centered          | 是否居中显示                                                                                                       | boolean                                                            | false           |
+| class             | 可用于设置样式类名                                                                                                 | ClassValue                                                         | -               |
+| closable          | 是否显示右上角的关闭按钮                                                                                           | boolean                                                            | true            |
+| closeIcon         | 关闭按钮的 icon                                                                                                    | ModalNode                                                          | \<IconClose /\> |
+| confirmLoading    | 确认按钮 loading；未设置时跟随 onOk 返回 Promise 的 pending 状态，显式传 `false` 关闭该行为                        | boolean                                                            | -               |
+| content           | 对话框内容                                                                                                         | ModalNode                                                          | -               |
+| direction         | 文字方向。静态方法在任何 ConfigProvider 之外渲染，需要自行传入；`useModal` 的方法默认跟随所在位置的 ConfigProvider | 'ltr' \| 'rtl'                                                     | -               |
+| footer            | 对话框底部，`null` 时隐藏底部区域                                                                                  | ModalNode \| null                                                  | -               |
+| footerFill        | 底部按钮是否撑满                                                                                                   | boolean                                                            | false           |
+| header            | 对话框头部，`null` 时隐藏头部区域                                                                                  | ModalNode \| null                                                  | -               |
+| height            | 高度                                                                                                               | string \| number                                                   | -               |
+| icon              | 自定义 icon，`null` 时不显示图标                                                                                   | ModalNode \| null                                                  | -               |
+| mask              | 是否显示遮罩                                                                                                       | boolean                                                            | true            |
+| maskClosable      | 是否允许通过点击遮罩来关闭对话框                                                                                   | boolean                                                            | true            |
+| maskStyle         | 遮罩的样式                                                                                                         | string                                                             | -               |
+| modalContentClass | 可用于设置对话框内容的样式类名                                                                                     | string                                                             | -               |
+| motion            | 动画效果开关，`update` 中修改同样生效                                                                              | boolean                                                            | true            |
+| okButtonProps     | 确认按钮的属性，其中的 `onclick` 先于内置处理调用，不会替换内置处理                                                | ModalButtonProps                                                   | -               |
+| okText            | 确认按钮的文字                                                                                                     | string                                                             | -               |
+| okType            | 确认按钮的类型                                                                                                     | OKType                                                             | primary         |
+| style             | 可用于设置样式                                                                                                     | string                                                             | -               |
+| title             | 对话框的标题                                                                                                       | ModalNode                                                          | -               |
+| width             | 宽度，未设置时由 `size` 决定（`small` 为 448）                                                                     | string \| number                                                   | -               |
+| zIndex            | 遮罩的 z-index 值                                                                                                  | number                                                             | 1000            |
+| onCancel          | 取消回调，返回 Promise 时 fulfill 后自动关闭，reject 则保持打开；按 Esc 关闭时参数为原生 KeyboardEvent             | (event: MouseEvent \| KeyboardEvent) => void \| Promise\<unknown\> | -               |
+| onOk              | 点击确定回调，参数是点击事件，返回 Promise 时 fulfill 后自动关闭，reject 则保持打开                                | (event: MouseEvent) => void \| Promise\<unknown\>                  | -               |
+
+`aria-*` 与 `data-*` 选项落在对话框上。以上函数调用后，会返回一个引用，可以通过该引用更新和关闭弹窗。`update` 接收与以上函数相同的选项（`ModalConfirmProps`），合并到当前配置，不接收 `type`。
+
+```ts
+const modal = Modal.info({ title: '标题' });
+
+modal.update({
+    title: '更新的标题',
+    content: '更新的内容',
+});
+
+modal.destroy();
+```
+
+</Framework>
+
 - `Modal.destroyAll`
 
 使用 Modal.destroyAll() 可以销毁命令式及以上`.info()`等创建的弹窗。
@@ -416,6 +535,12 @@ modal.destroy();
 
 </Framework>
 
+<Framework only="svelte">
+
+- `Modal.useModal` 当你需要读取上下文时，可以在组件初始化时通过 `const modal = Modal.useModal()` 得到 modal 对象，没有 Holder 组件。通过 modal 创建的对话框将得到调用它的组件所在位置的所有上下文（context、ConfigProvider、语言包）。modal 对象拥有与 [Modal.method](<#Modal.method()>) 相同的创建方法。
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -432,7 +557,7 @@ WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
 
 ### 键盘和焦点
 
-- Modal 在弹出时自动获得焦点。对话框内带 `autoFocus`（Vue 中为 `autofocus`）的元素优先获得焦点，没有时默认聚焦到取消按钮，可通过在 cancelButtonProps 或 okButtonProps 传入 autoFocus 来控制该行为。`keepDOM` 时再次打开，结果相同；`keepDOM` 加 `lazyRender={false}` 且初始隐藏时，`autoFocus` 元素在 `display: none` 下无法获得焦点，之后的打开落到默认按钮。
+- Modal 在弹出时自动获得焦点。对话框内带 `autoFocus`（Vue、Svelte 中为 `autofocus`）的元素优先获得焦点，没有时默认聚焦到取消按钮，可通过在 cancelButtonProps 或 okButtonProps 传入 autoFocus 来控制该行为。`keepDOM` 时再次打开，结果相同；`keepDOM` 加 `lazyRender={false}` 且初始隐藏时，`autoFocus` 元素在 `display: none` 下无法获得焦点，之后的打开落到默认按钮。
 - 模态对话框关闭时，焦点自动回归到打开前元素。键盘用户可以使用 `Tab` 键和 `Shift + Tab`，将焦点在 Modal 内循环移动，包括 Modal 自带的关闭按钮和确定取消按钮，此时 Modal 背后的页面不可交互，也不可被 tab 聚焦。
 - 非模态对话框（`mask={false}`，或遮罩限定在自定义容器内且未设置 `maskFixed`）打开时同样移入焦点，但不锁定 Tab，页面其余部分保持可用。关闭时只在焦点仍在对话框内或已落到 body 时归还，用户已移到页面其他位置的焦点不动。挂载在 body 中且 `mask={false}` 的 Modal 不锁定 body 滚动。
 - 修改 closeOnEsc 默认值为 true，允许用户通过键盘直接关闭 Modal 带来更好的体验
@@ -480,6 +605,12 @@ WAI-ARIA: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
       <Framework only="solid">
 
     命令式的 Modal 渲染在组件树之外，只读取全局默认值与默认语言包，读不到 ConfigProvider、LocaleProvider 的配置，因此内置文本无法自动适配国际化。你可以通过 `okText` 和 `cancelText` 这两个属性来根据 Locale 重新设置文本，也可以通过 `Modal.useModal()` 得到 modal 对象与 contextHolder，把 `contextHolder` 放到需要读取上下文的位置，即可使 Modal 获取到对应的配置，如 ConfigProvider 或者 LocaleProvider。
+
+      </Framework>
+
+      <Framework only="svelte">
+
+    命令式的 Modal 渲染在组件树之外，读不到 ConfigProvider、LocaleProvider 的配置，因此内置文本无法自动适配国际化。你可以通过 `okText` 和 `cancelText` 这两个属性来根据 Locale 重新设置文本，也可以在组件初始化时调用 `Modal.useModal()`，让它在 ConfigProvider 或者 LocaleProvider 的子组件里创建对话框，即可使 Modal 获取到对应的配置。
 
       </Framework>
 

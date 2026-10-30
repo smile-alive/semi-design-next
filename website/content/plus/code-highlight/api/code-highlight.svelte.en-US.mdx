@@ -1,0 +1,9 @@
+**Props**
+
+| Property   | Description                                                                                                                                                                                                      | Type                  | Default |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ------- |
+| code       | Plain text of the code, treated as an empty string when omitted. After code changes the new text shows first and is replaced once highlighting finishes.                                                         | `string`              | -       |
+| language   | Language, which must be registered or passed through languages.                                                                                                                                                  | `string`              | -       |
+| languages  | Extra Shiki grammars for this block; once loaded, other blocks can use them too. Declare it at the top level of the script, not as an inline array in the template, which would highlight again on every render. | `LanguageInput[]`     | -       |
+| lineNumber | Whether to show line numbers.                                                                                                                                                                                    | `boolean`             | `true`  |
+| themes     | Replaces the Shiki themes of this block for light and dark mode.                                                                                                                                                 | `CodeHighlightThemes` | -       |

@@ -1,0 +1,18 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| current | Current step, counting from 0; a `dataSource` item can override the state with status. Not bindable: update it yourself in `onChange`. | `number` | `0` |
+| dataSource | Step data. Each item is a `StepData`: `status` (own status of the step; when omitted it follows current and status), `title`, `description` (not rendered by the nav type), `icon` (snippet for a custom icon of that step; `false` shows no icon; the status icon is used when omitted; not rendered by the nav type) and `onClick` (setting it makes that step clickable). Other attributes land on the step's root element. | `StepData[]` | `[]` |
+| description | Snippet for the description of each step, with `{ item, index }`; defaults to `item.description`. Not rendered by the nav type. | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |
+| direction | Direction: horizontal or vertical. | `StepsDirection` | `"horizontal"` |
+| hasLine | Whether the basic type shows connecting lines. | `boolean` | `true` |
+| initial | Starting index, counting from 0. | `number` | `0` |
+| onChange | Called when a step is selected by click or keyboard, with its number (initial plus index); not called for the current step. Passing it makes every step clickable. | <ApiType detail={"(current: number) => void"}>Type</ApiType> | - |
+| prefixCls | Class name prefix of the root element. | `string` | `"semi-steps"` |
+| size | Size of the basic and nav types: default or small. | `StepsSize` | `"default"` |
+| status | State of the current step: wait, process, finish, error or warning. | `StepStatus` | `"process"` |
+| title | Snippet for the title of each step, with `{ item, index }`; defaults to `item.title`. | <ApiType detail={"Snippet\u003c[StepSnippetProps]>"}>Type</ApiType> | - |
+| type | Steps type: fill, basic or nav. | `StepsType` | `"fill"` |

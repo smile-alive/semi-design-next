@@ -1,0 +1,37 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| aria-label | Accessible name of the handle. In range mode, the locale's start and end texts are appended for the two handles. | `string \| null` | - |
+| aria-labelledby | The id of the labelling element, used as the handle's accessible name. In range mode each handle adds its start or end text. | `string \| null` | - |
+| aria-valuetext | A user-friendly name for the current value. | `string \| null` | - |
+| disabled | Whether the slider is disabled. | `boolean` | `false` |
+| getAriaValueText | Provides a user-friendly name for the current value, called with the handle's value and its index. | <ApiType detail={"(value: number, index?: number) => string"}>Type</ApiType> | - |
+| handleDot | Dot on the handle: one object for a single handle, an array with one per handle for a range. | `HandleDot \| HandleDot[]` | - |
+| id | Applied to the first handle's input, so a label for focuses that handle. | `string` | - |
+| included | Takes effect when marks is not empty. true makes the marks nested, false makes them independent. | `boolean` | `true` |
+| mark | Snippet for custom mark labels, also used for the tooltipOnMark tooltip. Its parameter is `{ value, label }`, the mark's value and label. | <ApiType detail={"Snippet\u003c[SliderMarkSnippetProps]>"}>Type</ApiType> | - |
+| marks | Marks. Keys are numbers in the closed range [min, max], values are strings or numbers; use the mark snippet for node content. | <ApiType detail={"Record\u003cnumber, string \u007c number>"}>Type</ApiType> | - |
+| max | Maximum value. | `number` | `100` |
+| min | Minimum value. | `number` | `0` |
+| onAfterChange | Called after a change is complete, with the current value. With a bound or one-way `value` it is called on every change in addition to onChange; without `value`, only onChange is called while dragging and this is called once on release. | <ApiType detail={"(value: number \u007c number[]) => void"}>Type</ApiType> | - |
+| onBlur | Called when focus leaves the whole Slider; moving between the two handles does not call it. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the value changes, with the current value. | <ApiType detail={"(value: number \u007c number[]) => void"}>Type</ApiType> | - |
+| onFocus | Called when focus enters the Slider. It is the wrapper's focusin, so it is called each time focus moves between handles. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onKeyDown | Called for keys on the handle inputs, before the Slider's own handling; `preventDefault()` keeps a value key from moving the handle. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onMouseUp | Called when the pointer (mouse, touch, pen) dragging a handle is released or cancelled, and when a value key is released. | <ApiType detail={"(event: PointerEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| railStyle | Style of the slider rail. Accepts a string only. | `string` | - |
+| range | Whether both ends can be dragged. | `boolean` | `false` |
+| showArrow | Whether the tooltip has an arrow. | `boolean` | `true` |
+| showBoundary | Whether to show the maximum and minimum on hover. | `boolean` | `false` |
+| showMarkLabel | Whether to show the mark labels. | `boolean` | `true` |
+| step | Step, counted from min. | `number` | `1` |
+| tip | Snippet for custom handle tooltip content. Its parameter is `{ value, handle }`; value is the result of tipFormatter and handle is min or max. | <ApiType detail={"Snippet\u003c[SliderTipSnippetProps]>"}>Type</ApiType> | - |
+| tipFormatter | Format of the tooltip, called once per handle with that handle's value. Shows the current value by default; null hides the tooltip. | <ApiType detail={"((value: number) => string \u007c number) \u007c null"}>Type</ApiType> | <ApiType detail={"(tipValue: number) => tipValue"}>Type</ApiType> |
+| tooltipOnMark | Whether the marks on the rail have a tooltip. | `boolean` | `false` |
+| tooltipVisible | Whether the tooltip is always visible. | `boolean` | - |
+| value | Current value; bind it with `bind:value`. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value and a new value from the parent wins again; without it the Slider manages the value itself, starting at min. | `number \| number[]` | - |
+| vertical | Whether the slider is vertical. | `boolean` | `false` |
+| verticalReverse | Reverses the vertical direction, so the larger value is on top. | `boolean` | `false` |

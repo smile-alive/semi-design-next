@@ -15,6 +15,9 @@ import SplitButtonGroupVueApi from './api/split-button-group.vue.en-US.mdx';
 import ButtonSolidApi from './api/button.solid.en-US.mdx';
 import ButtonGroupSolidApi from './api/button-group.solid.en-US.mdx';
 import SplitButtonGroupSolidApi from './api/split-button-group.solid.en-US.mdx';
+import ButtonSvelteApi from './api/button.svelte.en-US.mdx';
+import ButtonGroupSvelteApi from './api/button-group.svelte.en-US.mdx';
+import SplitButtonGroupSvelteApi from './api/split-button-group.svelte.en-US.mdx';
 
 ## Demos
 
@@ -42,6 +45,16 @@ import { Button, SplitButtonGroup } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -125,6 +138,12 @@ Put the icon in the `#icon` slot; `iconPosition` decides where it goes.
 
 </Framework>
 
+<Framework only="svelte">
+
+Pass the icon through the `icon` snippet; `iconPosition` decides where it goes. The rest of the tag content is the text (`children`). Without `children` the button is treated as icon-only, so pass an `aria-label`.
+
+</Framework>
+
 <Demo id="icon" />
 
 ### Link Button
@@ -150,6 +169,12 @@ Set `colorful` to get colorful buttons. Colorful buttons support all `theme`, an
 <Framework only="solid">
 
 The gradient fill only reaches an icon passed as a component (`icon={IconAIFilledLevel1}`); an element (`icon={<IconAIFilledLevel1 />}`) is already rendered, so the button cannot fill it.
+
+</Framework>
+
+<Framework only="svelte">
+
+A colorful button gives the `icon` snippet the argument `{ fill }`, which you need to pass to the icon component: `{#snippet icon({ fill })}<IconAIFilledLevel1 {fill} />{/snippet}`.
 
 </Framework>
 
@@ -191,6 +216,14 @@ Other native attributes (such as `data-*` and `onFocus`) land on the native `<bu
 
 </Framework>
 
+<Framework only="svelte">
+
+<ButtonSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `aria-*`, `onclick` and `onmousedown`) land on the native `<button>`; `style` only accepts a string. `onclick` is not called while `loading`.
+
+</Framework>
+
 <Framework only="vue">
 
 <ButtonVueApi />
@@ -217,6 +250,14 @@ Other native attributes (such as `aria-label` and `data-*`) land on the group's 
 
 </Framework>
 
+<Framework only="svelte">
+
+<ButtonGroupSvelteApi />
+
+`class`, `style` and native attributes (such as `data-*` and `aria-*`) land on the root element of the group (`role="group"`); a `role` you pass replaces the default `group`. Any descendant Button of the group gets a separator, not only direct children; the separators are added after mounting, so the server-rendered first frame has none.
+
+</Framework>
+
 <Framework only="vue">
 
 <ButtonGroupVueApi />
@@ -240,6 +281,14 @@ Other native attributes (such as `aria-label` and `data-*`) land on the group's 
 <SplitButtonGroupReactApi />
 
 Other native attributes land on the split button group's root element (`role="group"`).
+
+</Framework>
+
+<Framework only="svelte">
+
+<SplitButtonGroupSvelteApi />
+
+`class`, `style` and native attributes (such as `aria-*`) land on the root element of the split button group (`role="group"`).
 
 </Framework>
 
@@ -312,5 +361,12 @@ Other native attributes land on the split button group's root element (`role="gr
 
 - #### Why is the icon of Button not shown?
     The icon is passed through the `#icon` slot, not an `icon` prop: `<Button><template #icon><IconCamera /></template></Button>`.
+
+</Framework>
+
+<Framework only="svelte">
+
+- #### Why is the icon of Button not shown?
+    The icon is passed through the `icon` snippet, not an `icon` component prop: `<Button>{#snippet icon()}<IconCamera />{/snippet}</Button>`.
 
 </Framework>

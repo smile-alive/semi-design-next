@@ -1,0 +1,11 @@
+**Props**
+
+| Property           | Description                                                                                                             | Type                    | Default  |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------- |
+| autoEscape         | Whether to escape regular expression characters in searchWords.                                                         | `boolean`               | `true`   |
+| caseSensitive      | Whether matching is case sensitive.                                                                                     | `boolean`               | `false`  |
+| component          | Tag name of the highlight element.                                                                                      | `string`                | `"mark"` |
+| highlightClassName | Class name of the highlight tag.                                                                                        | `string`                | -        |
+| highlightStyle     | Style object of the highlight tag; keys may be camelCase or kebab-case. Numbers get no px, so write lengths as strings. | `HighlightStyle`        | -        |
+| searchWords        | Text to highlight: a string, a string array, or an array of objects with text, class and style.                         | `string \| SearchWords` | `[]`     |
+| sourceString       | Source text.                                                                                                            | `string`                | `""`     |

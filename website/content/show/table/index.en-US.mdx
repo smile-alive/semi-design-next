@@ -11,6 +11,7 @@ import ColumnReactApi from './api/column.react.en-US.mdx';
 import TableVueApi from './api/table.vue.en-US.mdx';
 import TableSolidApi from './api/table.solid.en-US.mdx';
 import ColumnSolidApi from './api/column.solid.en-US.mdx';
+import TableSvelteApi from './api/table.svelte.en-US.mdx';
 
 ## How to Use
 
@@ -189,6 +190,62 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Table } from '@fibrae/semi-ui-svelte';
+
+    const columns = [
+        {
+            title: 'Title',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Size',
+            dataIndex: 'size',
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'owner',
+        },
+        {
+            title: 'Update',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design design draft.fig',
+            size: '2M',
+            owner: 'Jiang Pengzhi',
+            updateTime: '2020-02-02 05:13',
+        },
+        {
+            key: '2',
+            name: 'Semi Design share presentation',
+            size: '2M',
+            owner: 'Hao Xuan',
+            updateTime: '2020-01-17 05:31',
+        },
+        {
+            key: '3',
+            name: 'Design document',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+        },
+    ];
+</script>
+
+<Table {columns} dataSource={data} pagination={false} />
+```
+
+The Svelte Table has no `Table.Column`: columns are declared as `columns` data only, and the custom content of a column goes in the Table-level snippets such as `cell` and `headerCell`.
+
+</Framework>
+
 ## Demos
 
 ### Basic Table
@@ -209,6 +266,8 @@ You can also use JSX syntax definitions `columns`, note that Table only supports
     <div>When columns are written in JSX, please do not use it at the same time as the configuration method; if used at the same time, only the configuration method will take effect, and no aggregation operation will be performed.</div>
 </Notice>
 
+<Demo id="jsx" />
+
 </Framework>
 
 <Framework only="vue">
@@ -221,6 +280,8 @@ You can also define columns by writing `Table.Column` as children of Table: the 
     <div>1. Tables written with Table.Column do not support the resizable feature yet: the child columns render as usual without drag handles, and a warning is printed in development;</div>
     <div>2. Please do not pass `columns` and `Table.Column` at the same time; if both are used, only `columns` takes effect (including an empty array), and no aggregation is performed.</div>
 </Notice>
+
+<Demo id="jsx" />
 
 </Framework>
 
@@ -235,9 +296,9 @@ You can also use JSX syntax definitions `columns`, note that Table only supports
     <div>2. Please do not use JSX writing together with the configuration method; if used at the same time, only the configuration method will take effect, and no aggregation operation will be performed.</div>
 </Notice>
 
-</Framework>
-
 <Demo id="jsx" />
+
+</Framework>
 
 ### Row Selection Operation
 
@@ -273,6 +334,18 @@ This feature can be turned on by passing in `rowSelection`.
 <Notice title='Notice'>
 
 Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+
+</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice title='Notice'>
+
+1. Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
+2. If you encounter the problem of returning to the first page after clicking a row selection on the second page, please check whether `dataSource` is replaced as a whole. After the data items of `dataSource` change, the uncontrolled pager returns to the first page. Keep `dataSource` in a `$state.raw` or a top-level constant, and replace it as a whole only when needed.
+3. `rowSelection` is an object, so the `selectedRowKeys` inside it cannot be bound with `bind:`. To bind the selection, use the top-level `bind:selectedRowKeys` of Table (pass `rowSelection` as well to show the selection column), and `bind:currentPage` for the page. Use `defaultSelectedRowKeys` to set only the initial selection.
 
 </Notice>
 
@@ -330,6 +403,36 @@ With the `isHovering` parameter, you can implement interaction effects such as d
 
 </Framework>
 
+<Framework only="svelte">
+
+Users can use the `cell` snippet of Table to customize the rendering of cells, which is suitable for rendering more complex cell content. `cell` is called for every data column; tell the columns apart with `column.dataIndex` or `column.key`. Render `text` yourself in the `{:else}` branch for the columns you do not customize, otherwise their cells are empty.
+
+The parameter of `cell` is an object containing the following properties:
+
+- `text`: the value at `column.dataIndex`, or the data item itself for a column without `dataIndex`
+- `record`: the data item of the current row
+- `index`: the index of the data item among its siblings
+- `column`: the configuration of the current column
+- `expandIcon`: the expand icon as a snippet (when using tree data or expandable rows); render it where it is inserted with `{@render expandIcon?.()}`
+- `isHovering`: Whether the current row is in hover state
+- `selection`, `indentText`: the selection checkbox and the indent content as snippets, provided only when the column enables `useFullRender`, see [Fully custom rendering](#fully-custom-rendering)
+
+With the `isHovering` parameter, you can implement interaction effects such as displaying action buttons on mouse hover.
+
+```svelte
+<Table {columns} dataSource={data}>
+    {#snippet cell({ column, record, text })}
+        {#if column.dataIndex === 'name'}
+            <Avatar alt="" size="small" src={record.nameIconSrc} /> {text}
+        {:else}
+            {text}
+        {/if}
+    {/snippet}
+</Table>
+```
+
+</Framework>
+
 <Demo id="custom-render" />
 
 ### Table With Pagination
@@ -340,6 +443,12 @@ Table paging currently supports two modes: controlled and uncontrolled.
 - In uncontrolled mode, Table passes the incoming dataSource length as total to the Pagination component by default, and of course you can also pass a total field to overwrite the value of the Table component, but we do not recommend users to pass this field in uncontrolled paging mode.
 
 > Note: The custom `pagination.total` field passed in uncontrolled conditions is supported.
+
+<Framework only="svelte">
+
+To fully customize the pagination area, pass the `paginationContent` snippet. Its `pagination` argument can be spread on `Pagination` as is, and the snippet replaces both the page info text and the pager.
+
+</Framework>
 
 <Demo id="pagination" />
 
@@ -372,6 +481,14 @@ Under normal circumstances, the data is often not obtained at one time. We will 
 
 <Notice type="primary" title="Notice">
     <div>In the controlled mode, Table will not paginate dataSource. Pass the current page data to dataSource, and update `pagination.currentPage` in `onChange` or `pagination.onPageChange`</div>
+</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice type="primary" title="Notice">
+    <div>In the controlled mode, Table will not paginate dataSource. Pass the current page data to dataSource, and update `pagination.currentPage` in `onChange` (its argument holds `pagination`, `filters` and `sorter`) or `pagination.onChange`</div>
 </Notice>
 
 </Framework>
@@ -683,6 +800,12 @@ To display a filter input box in the header, pass a function returning JSX to `t
 
 </Framework>
 
+<Framework only="svelte">
+
+If you need to display the filter input box in the table header, render the column title with the `headerCell` snippet of Table and use it with `filteredValue`. The `title` of a column stays plain text; render `title` in the `{:else}` branch for the columns you do not customize.
+
+</Framework>
+
 <Demo id="custom-filter-dropdown" />
 
 ### Custom Filter Rendering
@@ -778,6 +901,37 @@ interface RenderFilterDropdownProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+Set `filterDropdown` of the column to `true`, then customize the filter panel with the `filterDropdown` snippet of Table. The snippet is called for every column whose `filterDropdown` is `true`; tell the columns apart with `column`.
+
+You can call `onTempFilteredValueChange` to store the filter value when the user enters the filter value, and call `onConfirm` to trigger the actual filtering after the filter value is entered. You can also filter directly through `onConfirm({ filteredValue })`.
+
+```typescript
+interface TableFilterDropdownSnippetProps {
+    /** The configuration of the current column */
+    column: ColumnProps;
+    /** Filter configuration items, `undefined` when the column has no `filters` */
+    filters: TableFilter[] | undefined;
+    /** Temporary filter value, the applied filter value when nothing is stored */
+    tempFilteredValue: any[] | undefined;
+    /** Set temporary filter value */
+    onTempFilteredValueChange: (value?: any[]) => void;
+    /** `onConfirm` will assign `tempFilteredValue` to `filteredValue` by default and call `onChange`. You can also set the filter value directly by passing in `filteredValue` */
+    onConfirm: (options?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** Clear filter values and temporary filter values */
+    onClear: (options?: { closeDropdown?: boolean }) => void;
+    /** Close dropdown */
+    onClose: () => void;
+    /** Restore the temporary filter value to the applied filter value */
+    onReset: () => void;
+}
+```
+
+The `onVisibleChange` in `filterDropdownProps` does not take effect; get the visibility of the filter panel through `onFilterDropdownVisibleChange` of the column.
+
+</Framework>
+
 <Demo id="custom-filter" />
 
 ### Filter Confirm Mode
@@ -839,6 +993,21 @@ Pass `renderFilterDropdownItem` in the column to customize how each filter item 
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `filterDropdownItem` snippet of Table to customize the rendering of each filter item. Once given, it replaces every default filter item; tell the columns apart with `column`. The parameters are:
+
+- `column: ColumnProps` the configuration of the current column;
+- `text: string | undefined` the text of the current filter item;
+- `value: any` the value of the current filter item;
+- `checked: boolean` whether the current filter item has been selected;
+- `filteredValue: any[]` the filter values the menu currently shows; in confirm mode these are the temporary values that have not been applied;
+- `level: number` the level of the menu the current filter item is in, `0` for the top level menu;
+- `filterMultiple: boolean` whether the current filter item is multi-select;
+- `onChange: (event: MouseEvent) => void` toggles the selection of the current filter item, bind it to the `onclick` of the item.
+
+</Framework>
+
 <Demo id="filter-item-render" />
 
 ### A Table That Can Be Expanded
@@ -867,6 +1036,12 @@ If you need to render a table that can be expanded, in addition to the `#expande
 <Framework only="solid">
 
 To render an expandable table, besides passing the `expandedRowRender` method to Table, you must also specify `rowKey` (defaults to `key`). Table uses `rowKey` to obtain the unique identifier of each row. Expanded rows can be controlled through `expandedRowKeys` and `onExpandedRowsChange`.
+
+</Framework>
+
+<Framework only="svelte">
+
+If you need to render a table that can be expanded, in addition to the `expandedRow` snippet of Table (parameters `record`, `index` and `expanded`; a row whose output is empty renders no expanded content), you must specify `rowKey`(by default `key`), Table will be based on `rowKey` Gets a row unique identifier. The expanded rows can be controlled with `bind:expandedRowKeys`; give `expandedRowKeys` an initial value to start with some rows expanded.
 
 </Framework>
 
@@ -950,6 +1125,16 @@ In principle, any attribute or event supported on tr/td/th can be defined. Retur
 
 </Framework>
 
+<Framework only="svelte">
+
+In principle, any attribute or event supported on tr/td/th can be defined. Returned objects use the native Svelte attribute names: `class`, `style` (a string), `data-*`, and lowercase events such as `onclick`, `onmouseenter`, `onmouseleave`, `ondblclick` and `oncontextmenu`; `colspan` and `rowspan` are lowercase too. For example:
+
+- The tr of the header defines `onmouseenter`/`onmouseleave`
+- The tr of the table defines `class`
+- The third row of the table defines `onclick`
+
+</Framework>
+
 <Demo id="row-cell-events" />
 
 ### Zebra Pattern Table
@@ -977,6 +1162,13 @@ In the example below, the header background color is changed by passing backgrou
 <Framework only="solid">
 
 You can return a specific style or class from Column.onHeaderCell to customize the header style.  
+The example below changes the header background color by passing in `background-color`.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can return a specific style (a string) or class from Column.onHeaderCell to customize the header style.  
 The example below changes the header background color by passing in `background-color`.
 
 </Framework>
@@ -1032,6 +1224,12 @@ Set `ellipsis.showTitle` to false to hide the default native HTML title. With th
 <Framework only="solid">
 
 Set `ellipsis.showTitle` to false to hide the default native HTML title. Use `render` together with it to customize the content tooltip.
+
+</Framework>
+
+<Framework only="svelte">
+
+Set `ellipsis.showTitle` to false to hide the default native HTML title. With the `cell` snippet you can customize the content prompt.
 
 </Framework>
 
@@ -1104,6 +1302,12 @@ Use [dnd-kit](https://github.com/clauderic/dnd-kit/tree/master) with `@dnd-kit/s
 
 </Framework>
 
+<Framework only="svelte">
+
+The Svelte `components` prop takes tag names only, so a component cannot be passed for each row and `createSortable` of `@dnd-kit/svelte` cannot be mounted in the row. The example uses native HTML5 drag and drop instead: `onRow` returns `draggable`, `ondragstart`, `ondragenter`, `ondragover` and `ondragend` for every row, and `dataSource` is reordered by row key while a row is dragged over another. Native drag and drop works with a pointer only; use a sortable library with keyboard support when rows must be sortable from the keyboard.
+
+</Framework>
+
 <Demo id="drag-sort" />
 
 ### Table Grouping
@@ -1126,6 +1330,12 @@ For tables whose data needs to be displayed in groups, pass `groupBy` to define 
 
 </Framework>
 
+<Framework only="svelte">
+
+For some tables whose data needs to be displayed in groups, you can pass in `groupBy` to define the grouping rules, and use the `groupSection` snippet (parameters `groupKey` and `group`) to define the rendering of the grouping table header; the column configuration of the only column of a group row is returned by `groupSectionColumn`.
+
+</Framework>
+
 > Note: Be sure to provide a "key" for each row of data that is different from other row values, or use the rowKey parameter to specify a property name as the primary key.
 
 <Demo id="grouping" />
@@ -1143,6 +1353,12 @@ Virtualization can be used for scenes that need to render large-scale data. You 
 <Framework only="vue">
 
 - Must pass `scroll.y` (number); the table width comes from `style.width`, or from `scroll.x` when it is not set. `style` is a style passed through to the root element, so write `width` as a string with a unit, such as `'750px'`;
+
+</Framework>
+
+<Framework only="svelte">
+
+- Must pass `scroll.y` (number); the table width comes from `style.width`, or from `scroll.x` when it is not set. `style` is a style string that lands on the root element, so write the width with a unit, such as `'width: 750px'`;
 
 </Framework>
 
@@ -1172,6 +1388,12 @@ Use `getVirtualizedListRef` to obtain the instance of the virtual list. The inst
 
 </Framework>
 
+<Framework only="svelte">
+
+Get the instance of Table (type `TableHandle`) with `bind:this` and call `scrollTo(offset)` and `scrollToItem(index, align)`, where align is `auto` (default), `smart`, `center`, `start` or `end`; calling them on a table without virtualization prints a warning in development.
+
+</Framework>
+
 The following is an example of rendering 1000 pieces of data.
 
 <Demo id="virtualized" />
@@ -1193,6 +1415,12 @@ Based on the virtualization feature, we can achieve infinite scroll loading data
 <Framework only="solid">
 
 Based on the virtualization feature, you can implement infinite scroll loading by passing `virtualized.onScroll`.
+
+</Framework>
+
+<Framework only="svelte">
+
+Based on the virtualization feature, we can achieve infinite scroll loading data by passing in `onScroll`. Its argument holds only `scrollOffset`, and it fires only when the vertical scroll offset changes; keep the previous offset yourself and compare when you need the scroll direction.
 
 </Framework>
 
@@ -1288,6 +1516,36 @@ These nodes are render functions: each call creates the node, so call one only w
 
 </Framework>
 
+<Framework only="svelte">
+
+Generally, the `cell` snippet is enough, but you can also pass `Column.useFullRender = true` to enable full custom rendering mode. At this time the output of the snippet replaces the whole cell, and the checkbox, expand button and indent nodes are passed as snippets to `headerCell` and `cell`, so you can further define the rendering of the header and cell content.
+
+The parameter of `headerCell` is:
+
+```text
+{
+    column: ColumnProps,
+    title: string | undefined, // column title
+    filter: Snippet | undefined, // Filter button
+    sorter: Snippet | undefined, // Sort button
+    selection: Snippet | undefined, // Select button
+}
+```
+
+The parts of the `cell` parameter that relate to full custom rendering are:
+
+```text
+{
+    expandIcon: Snippet | undefined, // Expand button
+    selection: Snippet | undefined, // Select button
+    indentText: Snippet | undefined, // Indentation
+}
+```
+
+Render these nodes with `{@render selection?.()}`.
+
+</Framework>
+
 > The example below renders the checkbox and content into the same cell and header.
 
 <Demo id="full-render" />
@@ -1333,6 +1591,16 @@ Users can merge table headers to group them. Header merging can be combined with
 #### Merged Header JSX Writing
 
 <Demo id="header-merge-jsx" />
+
+</Framework>
+
+<Framework only="svelte">
+
+Users can merge table headers to group them. Header merging can be combined with fixed columns, virtualization, data grouping, column resizing and other features. The Svelte Table only has the configuration-based writing, because there is no `Table.Column`.
+
+#### Merged Header Configuration Writing
+
+<Demo id="header-merge" />
 
 </Framework>
 
@@ -1387,6 +1655,19 @@ type OnCell = (record: RecordType, rowIndex: number) => JSX.TdHTMLAttributes<HTM
 
 </Framework>
 
+<Framework only="svelte">
+
+- Besides merging through `children`, a header can merge columns by setting `column.colSpan`.
+- Tables support row/column merging. `column.onCell` returns the cell attributes `colspan` or `rowspan` (lowercase); when set to 0, the cell is not rendered and `cell` is not called for it.
+
+```text
+type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
+
+// TableCellAttrs: the attributes and listeners a td supports, with colspan and rowspan in lowercase
+```
+
+</Framework>
+
 <Demo id="span" />
 
 ## API Reference
@@ -1425,6 +1706,31 @@ The fields of `virtualized` when it is an object (`TableVirtualizedProps`):
 | overscanCount | Rows rendered above and below the visible area                                                                                                             | `number`                                                                                      | `2`     |
 
 The values of `components` are tag names or Vue components. A component receives the attributes and listeners of the replaced element, and its default slot is the content of the element. The positions that can be replaced (`TableComponents`):
+
+| Position                                              | Instructions                                  |
+| ----------------------------------------------------- | --------------------------------------------- |
+| header.outer, header.wrapper, header.row, header.cell | `table`, `thead`, `tr` and `th` of the header |
+| body.outer, body.wrapper, body.row, body.cell         | `table`, `tbody`, `tr` and `td` of the body   |
+| body.colgroup.wrapper, body.colgroup.col              | `colgroup` and `col`                          |
+
+</Framework>
+
+<Framework only="svelte">
+
+<TableSvelteApi />
+
+Native attributes such as `class`, `style` (a string), `id` and `data-*` land on the outermost element; `aria-label`, `aria-labelledby` and `aria-describedby` land on the element with `role="table"`. When the table has a title and the caller passes no name, the table points to the title through `aria-labelledby`.
+
+`TableProps`, `ColumnProps`, `TableHandle` and the argument types of the snippets can all be imported from `@fibrae/semi-ui-svelte`. Their generic parameter `R` (`RecordType` below) is `Record<string, any>` by default.
+
+The fields of `virtualized` when it is an object (`TableVirtualizedProps`):
+
+| Field         | Instructions                                                                                                                                               | Type                                                                                          | Default |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------- |
+| itemSize      | Row height. When not passed, the default follows `size`: 53 for default, 45 for middle and 37 for small, and a group header row is as high as a normal row | `number \| ((index: number, row: { sectionRow?: boolean, expandedRow?: boolean }) => number)` | `53`    |
+| overscanCount | Rows rendered above and below the visible area                                                                                                             | `number`                                                                                      | `2`     |
+
+The values of `components` are tag names, and the tag replaces the default tag of that part. The positions that can be replaced (`TableComponents`):
 
 | Position                                              | Instructions                                  |
 | ----------------------------------------------------- | --------------------------------------------- |
@@ -1473,6 +1779,35 @@ Native attributes such as `class`, `style`, `id` and `data-*` land on the outerm
     <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :headerStyle="{ backgroundColor: '#F5F6F7', fontWeight: 600 }" />
 </template>
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
+
+    const columns: ColumnProps[] = [
+        { title: 'Name', dataIndex: 'name', width: 180, fixed: 'left' },
+        { title: 'Age', dataIndex: 'age', width: 120 },
+        { title: 'Address', dataIndex: 'address', width: 280 },
+        { title: 'Company', dataIndex: 'company', width: 280 },
+    ];
+
+    const dataSource = Array.from({ length: 6 }).map((_, i) => ({
+        key: i,
+        name: `Edward ${i}`,
+        age: 20 + i,
+        address: 'No. 1, Lake Park',
+        company: 'Semi Design',
+    }));
+</script>
+
+<Table {columns} {dataSource} scroll={{ x: 900 }} headerStyle="background-color: #F5F6F7; font-weight: 600" />
+```
+
+`headerStyle` is a CSS string.
 
 </Framework>
 
@@ -1633,6 +1968,47 @@ RecordType is the generic parameter `R` of Table and Column, `Record<string, any
 
 </Framework>
 
+<Framework only="svelte">
+
+The Svelte Table is not a generic component: the `columns`, `rowSelection`, `onRow` and so on passed to it read records as `Record<string, any>`. When records have a concrete type, declare `dataSource` with that type and narrow the record with `as` in snippets and callbacks:
+
+```svelte
+<script lang="ts">
+    import { Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
+
+    interface Row {
+        key: string;
+        name: string;
+        age: number;
+        address: string;
+    }
+
+    const columns: ColumnProps[] = [
+        { title: 'Name', dataIndex: 'name', width: 200 },
+        // ...
+    ];
+
+    const data: Row[] = [
+        { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
+        // ...
+    ];
+</script>
+
+<Table {columns} dataSource={data}>
+    {#snippet cell({ column, record, text })}
+        {#if column.dataIndex === 'age'}
+            {(record as Row).age} years
+        {:else}
+            {text}
+        {/if}
+    {/snippet}
+</Table>
+```
+
+The pagination configuration `TablePaginationProps` adds `position` and `formatPageText` to the props of `Pagination`, and the arguments of `onChange` are `(currentPage, pageSize)`.
+
+</Framework>
+
 ## onRow/onHeaderRow Usage
 
 > Also in `column.onCell` `column.onHeaderCell` Properties or events supported by td / th can also be returned.
@@ -1718,6 +2094,41 @@ import { Table } from '@fibrae/semi-ui-react';
 
 </Framework>
 
+<Framework only="svelte">
+
+The event listeners in the returned object are lowercase native names (`onclick`, `onmouseenter`, `onmouseleave`), use `class` for the class name, and `style` is a string. The own handling of Table and callbacks such as `onRowMouseEnter` run before the listeners returned here.
+
+```svelte
+<script lang="ts">
+    import { Table, type TableProps } from '@fibrae/semi-ui-svelte';
+
+    const onRow: TableProps['onRow'] = (record, index, rowStatus) => ({
+        onclick: () => {
+            // rowStatus.disabled indicates whether the current row is disabled
+            // rowStatus.selected indicates whether the current row is selected
+            if (rowStatus.disabled) {
+                return;
+            }
+            console.log('Clicked row', index, rowStatus);
+        },
+        onmouseenter: () => {},
+        onmouseleave: () => {},
+        class: '',
+        // Other attributes or events that can be applied to tr
+    });
+
+    const onHeaderRow: TableProps['onHeaderRow'] = (columns, index) => ({
+        onclick: () => {},
+        class: '',
+        // Other attributes or events that can be applied to tr
+    });
+</script>
+
+<Table {columns} {dataSource} {onRow} {onHeaderRow} />
+```
+
+</Framework>
+
 ## Column
 
 A column accepts only the properties below, and a misspelled property name is a type error. To carry custom fields on a column, extend the type with an intersection, such as `ColumnProps<RecordType> & { tooltip: string }`.
@@ -1797,6 +2208,55 @@ type Filter = {
 
 </Framework>
 
+<Framework only="svelte">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| align | Setting the alignment of columns, switched automatically in RTL | 'left' \| 'right' \| 'center' | 'left' |
+| children | Settings for sub-columns when the header is merged | Column[] |  |
+| class | Column style name | string |  |
+| colSpan | When header columns merge, set to 0, do not render | number |  |
+| dataIndex | The key corresponding to the column data in the data item. It is required when using sorter or filter. | string |  |
+| defaultFilteredValue | Default value of the filter, the filter state of the external control column with a value of the screened value array | any[] |  |
+| defaultSortOrder | The default value of sortOrder, one of 'ascend'\|'descend'\|false | boolean \| string | false |
+| ellipsis | Ellipsis Text, table-layout will automatically switch to fixed after it is turned on | boolean \| \{ showTitle: boolean \} | false |
+| filterChildrenRecord | Whether the child data needs to be filtered locally. If this function is enabled, if the child meets the filtering criteria, the parent will retain it even if it does not meet the criteria. | boolean |  |
+| filterDropdown | Shows the filter button when true; the content of the panel is given by the `filterDropdown` snippet of Table, which needs to write a variety of interactions | boolean |  |
+| filterDropdownProps | Props passed to Dropdown (without `visible`, `trigger`, `onVisibleChange` and the like); the trigger is always click, see more in [Dropdown API](/en-US/svelte/show/dropdown#Dropdown) | object |  |
+| filterDropdownVisible | Visible of Dropdown, see more in [Dropdown API](/en-US/svelte/show/dropdown#Dropdown) | boolean |  |
+| filterMultiple | Whether to choose more | boolean | true |
+| filterConfirmMode | Filter confirm mode. `immediate` means filter immediately when clicking option; `confirm` means filter after clicking confirm button, and the dropdown panel will show confirm and reset buttons at the bottom | 'immediate' \| 'confirm' | 'immediate' |
+| filteredValue | Controlled property of the filter, the filter state of the external control column with a value of the screened value array | any[] |  |
+| filters | Filter menu items for the header | Filter[] |  |
+| fixed | Whether the column is fixed, optional true (equivalent to left) 'left' 'right', switched automatically in RTL | boolean \| string | false |
+| key | Identifies the column for selection, sorting, filtering and widths; can be omitted when a unique dataIndex is set | string \| number |  |
+| resize | Whether to enable resize mode, this property will take effect only after Table resizable is enabled | boolean |  |
+| showSortTip | Whether to display sorting tips, If sortOrder is set and sorting is controlled, this parameter will not take effect | boolean | false |
+| sortChildrenRecord | Whether to sort child data locally | boolean |  |
+| sortOrder | The controlled property of the sorting, the sorting of this control column can be set to 'ascend'\|'descend'\|false | boolean \| string | false |
+| sorter | Sorting function, local sorting uses a function (refer to the compareFunction of Array.sort), requiring a server-side sorting can be set to true. **An independent dataIndex must be set for the sort column, and an independent key must be set for each data item in the dataSource** | boolean \| (r1: RecordType, r2: RecordType, sortOrder: 'ascend' \| 'descend') => number | true |
+| title | Plain text shown in the column header, also the content of the ellipsis Tooltip and the name of the sort button. Use the `headerCell` snippet of Table for custom content | string |  |
+| useFullRender | Whether to completely customize the rendering, see [Fully custom rendering](#fully-custom-rendering) for usage details, enabling this feature will cause a certain performance loss | boolean | false |
+| width | Column width | string \| number |  |
+| onCell | Set cell properties; `colspan` and `rowspan` in the returned object are lowercase | (record: RecordType, rowIndex: number) => object |  |
+| onFilter | Determine the running function of the filter in local mode. **An independent dataIndex must be set for the filter column, and an independent key must be set for each data item in the dataSource** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilterDropdownVisibleChange | A callback when a custom filter menu is visible | (visible: boolean) => void |  |
+| onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+
+A column is data only: there is no `Table.Column` component, and no `render`, `renderFilterDropdown`, `renderFilterDropdownItem` or `shouldCellUpdate`. Customize cells, headers, sort and filter icons and filter items with the snippets of Table: `cell`, `headerCell`, `sortIcon`, `filterIcon`, `filterDropdown` and `filterDropdownItem`; the `column` argument tells the columns apart, and the arguments are listed in the props table of Table above.
+
+Some of the type definitions used above:
+
+```typescript
+type Filter = {
+    value: any;
+    text: string;
+    children?: Filter[];
+};
+```
+
+</Framework>
+
 ## rowSelection
 
 <Framework only="vue">
@@ -1820,6 +2280,30 @@ type Filter = {
 | onSelectAll | The user manually clicks the callback of the header selection box, and all selectable rows in the current filter result (disabled rows excluded) will be selected/unselected. `changedRows` contains only the rows whose selection state changed | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], event: Event) => void |  |
 
 Customize the selection box with the `#selectionCell` slot of Table; there are no `renderCell` or `shouldCellUpdate`.
+
+</Framework>
+
+<Framework only="svelte">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| class | Style name listed | string |  |
+| checkRelation | Parent-child node selection association mode. When set to `'related'`, selecting a parent node automatically selects all child nodes, and selecting a child node affects the parent node's state (checked/half-checked/unchecked). Default is `'unRelated'`, meaning parent and child node selections are independent. | 'related' \| 'unRelated' | 'unRelated' |
+| clickRow | Whether to enable click row to select. When enabled, clicking anywhere on the row will trigger selection/deselection, including fixed columns. Disabled rows (via getCheckboxProps) cannot be selected by clicking; when `disabled` is true, clicking a row does not select it either. | boolean | false |
+| defaultSelectedRowKeys | The keys of the rows selected initially; read only on mount and ignored when selectedRowKeys is set | (string \| number)[] |  |
+| disabled | Disabled `Checkbox` in `Table` header or not; when true, `clickRow` selection does not take effect either | boolean | false |
+| fixed | Secure the selection box column to the left. | boolean | false |
+| getCheckboxProps | Default property configuration for the selection box | (record: RecordType) => object |  |
+| hidden | Hide selection column or not | boolean | false |
+| selectedRowKeys | Specifies the key array of the selected item, which needs to work with onChange | (string \| number)[] |  |
+| width | Custom list selection box width | string \| number |  |
+| onChange | A callback in the event of a change in the selected item. The first parameter will save the row keys selected last time, even if you do paging control or update the dataSource [FAQ](#faq) | (selectedRowKeys: (string \| number)[], selectedRows: RecordType[]) => void |  |
+| onCell | Set the attributes of the data cells of the selection column | (record: RecordType, rowIndex: number) => object |  |
+| onHeaderCell | Set the head cell property; `index` is the index of the header row | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+| onSelect | Callback when the user manually selects a row. `event` is the selection box's change event, or the mouse event when `clickRow` selects on a row click | (record: RecordType, selected: boolean, selectedRows: RecordType[], event: Event) => void |  |
+| onSelectAll | The user manually clicks the callback of the header selection box, and all selectable rows in the current filter result (disabled rows excluded) will be selected/unselected. `changedRows` contains only the rows whose selection state changed | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], event: Event) => void |  |
+
+Customize the selection box with the `selectionCell` snippet of Table; there are no `renderCell` or `shouldCellUpdate`.
 
 </Framework>
 
@@ -1886,6 +2370,22 @@ Note: After pagination.onChange is set, Table onChange no longer responds to pag
 | total | Total number of entries | number | 0 |
 | preventPageChangeOnPageSizeChange | Whether to prevent automatic adjustment of currentPage when pageSize changes. By default, when pageSize changes, the component automatically calculates the new currentPage to maintain the current data position. When set to true, the user controls the page change | boolean | false |
 | onChange | Called when the page number or the page size changes; once set, the `change` event of Table no longer responds to pagination changes | (currentPage: number, pageSize: number) => void |  |
+| onPageChange | Called when the page number changes | (currentPage: number) => void |  |
+| onPageSizeChange | Called when the page size changes | (pageSize: number) => void |  |
+
+</Framework>
+
+<Framework only="svelte">
+
+| Parameters | Instructions | Type | Default |
+| --- | --- | --- | --- |
+| currentPage | Current page number; once given, paging is controlled | number | - |
+| formatPageText | Page-turning area copywriting custom formatting, pass false to close copywriting display; This item affects the copy display on the left of the page turning area of the form. It is different from the `showTotal` parameter of the`Pagination` component. | boolean \| (\{ currentStart: number, currentEnd: number, total: number \}) => string | true |
+| pageSize | Number of entries per page | number | 10 |
+| position | Location | 'bottom' \| 'top' \| 'both' | 'bottom' |
+| total | Total number of entries | number | 0 |
+| preventPageChangeOnPageSizeChange | Whether to prevent automatic adjustment of currentPage when pageSize changes. By default, when pageSize changes, the component automatically calculates the new currentPage to maintain the current data position. When set to true, the user controls the page change | boolean | false |
+| onChange | Called when the page number or the page size changes; once set, the `onChange` of Table no longer responds to pagination changes | (currentPage: number, pageSize: number) => void |  |
 | onPageChange | Called when the page number changes | (currentPage: number) => void |  |
 | onPageSizeChange | Called when the page size changes | (pageSize: number) => void |  |
 
@@ -1969,6 +2469,33 @@ Access the internal methods Table provides through ref:
 
 </Framework>
 
+<Framework only="svelte">
+
+The methods exposed by Table can be accessed through `bind:this`, typed as `TableHandle`:
+
+```svelte
+<script lang="ts">
+    import { onMount } from 'svelte';
+    import { Table, type TableHandle } from '@fibrae/semi-ui-svelte';
+
+    let table = $state<TableHandle>();
+
+    onMount(() => {
+        table?.getCurrentPageData(); // => { dataSource: [/*...*/], groups: /*...*/ }
+    });
+</script>
+
+<Table bind:this={table} {columns} {dataSource} />
+```
+
+| Parameters                  | Instructions                                                                                                                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| getCurrentPageData()        | Returns the data object of the current page: \{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}, keyed by group key with the set of row keys in that group |
+| scrollTo(offset)            | Scrolls a virtualized table to the given pixel offset                                                                                                                                            |
+| scrollToItem(index, align?) | Scrolls a virtualized table to the given row, `align` is 'auto' \| 'smart' \| 'center' \| 'start' \| 'end'                                                                                       |
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -1991,6 +2518,12 @@ Table follows the [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/tabl
 <Framework only="vue">
 
 - The column filter button is a native `button`: Tab focuses it, Enter, Space or Down Arrow opens the filter menu, and it carries `aria-haspopup="menu"` and `aria-expanded`. Its name is "Filter data with this column", or "Filter this column, filter active" when a filter value is set. The `#filterIcon` slot only replaces the icon inside the button, and the name and keyboard behavior of the button stay the same
+
+</Framework>
+
+<Framework only="svelte">
+
+- The column filter button is a native `button`: Tab focuses it, Enter, Space or Down Arrow opens the filter menu, and it carries `aria-haspopup="menu"` and `aria-expanded`. Its name is "Filter data with this column", or "Filter this column, filter active" when a filter value is set. The `filterIcon` snippet only replaces the icon inside the button, and the name and keyboard behavior of the button stay the same
 
 </Framework>
 
@@ -2091,6 +2624,26 @@ Known limitations:
 
       </Framework>
 
+      <Framework only="svelte">
+
+    The Table of Svelte compares the old and new `dataSource` item by item: it is not reset when every item is still the original record, and it is reset when records are added or removed. Keep `dataSource` in a `$state.raw` and replace it as a whole only when needed; do not regenerate the record objects on every evaluation.
+
+    ```svelte
+    <script lang="ts">
+        let dataSource = $state.raw<Record<string, any>[]>([]);
+
+        // replace the whole array only when needed
+        const load = async () => {
+            dataSource = await fetchData();
+        };
+    </script>
+
+    <!-- Wrong: every evaluation creates new record objects -->
+    <Table dataSource={list.map((item) => ({ ...item }))} {columns} />
+    ```
+
+      </Framework>
+
 - **The number of filtered data is wrong?**
 
     Please check that your filter columns and data sources are configured correctly.
@@ -2122,6 +2675,12 @@ Known limitations:
       <Framework only="solid">
 
     Table updates by where props are read. Reading signals such as `columns` and `dataSource` in JSX makes them follow changes. A `columns` array defined inside the component is created only once, so column configuration that depends on signals should use getters or be read inside `render`.
+
+      </Framework>
+
+      <Framework only="svelte">
+
+    Svelte tracks changes with runes: keep `dataSource` in a `$state` or `$state.raw`, and replacing the whole array or calling `push`, `splice` and similar methods triggers an update; with `$state.raw`, changing a field of a record directly does not, so replace the whole array. The same goes for `columns`: use `$derived` when it depends on reactive data, otherwise define it at the top level of `<script>`.
 
       </Framework>
 

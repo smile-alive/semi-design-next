@@ -21,6 +21,8 @@ interface Node {
     [key: string]: unknown;
 }
 
+type Span = Pick<Node, 'start' | 'end'>;
+
 const listed = (pathspecs: string[]) =>
     execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '--', ...pathspecs], { encoding: 'utf8' })
         .split('\n')
@@ -46,7 +48,12 @@ function unwrap(node: Node) {
 function calleeName(call: Node): string | undefined {
     const callee = unwrap(call.callee as Node);
     if (callee.type === 'Identifier') return callee.name as string;
-    if (callee.type === 'MemberExpression' && !callee.computed) return (callee.property as Node).name as string;
+    if (callee.type === 'MemberExpression' && !callee.computed) {
+        const object = callee.object as Node;
+        const property = callee.property as Node;
+        // Svelte runes are `$name.variant`; the variant alone (`by`, `id`, `raw`) would collide with ordinary methods
+        return object.type === 'Identifier' && (object.name as string).startsWith('$') ? `${object.name as string}.${property.name as string}` : (property.name as string);
+    }
     return undefined;
 }
 
@@ -55,8 +62,9 @@ function classifyCall(call: Node, declared: boolean, calls: Calls): [Group, Sequ
     if (!name) return undefined;
     if (calls[name]) return calls[name];
     if (semiCalls[name]) return semiCalls[name];
-    if (/^provide[A-Z]/.test(name)) return ['provide'];
-    if (contextReaders.has(name) || /^(use|require)\w*Context$/.test(name)) return ['context'];
+    // Svelte's createContext returns [get, set], so the second name contextReaders collects is the setter
+    if (/^provide[A-Z]/.test(name) || /^set\w*Context$/.test(name)) return ['provide'];
+    if (contextReaders.has(name) || /^(use|require|get)\w*Context$/.test(name)) return ['context'];
     if (/^use[A-Z]/.test(name)) return [declared ? 'composable' : 'effect', 'opaque'];
     return undefined;
 }
@@ -90,6 +98,8 @@ function classify(node: Node, propsNames: Set<string>, calls: Calls) {
             return kind('type');
         case 'ExportNamedDeclaration': {
             const declaration = node.declaration as Node | null;
+            // a .svelte script's `export function` is the component's handle for parents
+            if (declaration?.type === 'FunctionDeclaration') return kind('expose');
             return node.exportKind === 'type' || declaration?.type === 'TSTypeAliasDeclaration' || declaration?.type === 'TSInterfaceDeclaration' ? kind('type') : barrier;
         }
         case 'FunctionDeclaration':
@@ -184,7 +194,7 @@ interface Ordered {
 }
 
 // Reorders `statements`, which sit in source[bodyStart, bodyEnd), and returns the new text of that range
-function orderBody(source: string, statements: Node[], comments: Node[], bodyStart: number, bodyEnd: number, propsNames: Set<string>, calls: Calls): Ordered | undefined {
+function orderBody(source: string, statements: Node[], comments: Span[], bodyStart: number, bodyEnd: number, propsNames: Set<string>, calls: Calls): Ordered | undefined {
     if (statements.length < 2) return undefined;
     let previous = bodyStart;
     const chunks: Chunk[] = statements.map((node) => {
@@ -273,7 +283,7 @@ function topLevelFunction(statement: Node): [string, Node] | undefined {
 }
 
 // the first parameter is a component's props, or a composable's input, which is likewise there from the start
-function bodyEdits(source: string, comments: Node[], functions: [string, Node][], calls: Calls): Edit[] {
+function bodyEdits(source: string, comments: Span[], functions: [string, Node][], calls: Calls): Edit[] {
     return functions.flatMap(([name, fn]) => {
         const body = fn.body as Node;
         if (body.type !== 'BlockStatement') return [];
@@ -313,34 +323,55 @@ function components(files: string[], calls: Calls) {
             problems.push(`${file}: parse error ${errors[0].message}`);
             continue;
         }
-        const components = (program.body as unknown as Node[]).flatMap((statement) => {
+        const components = (program.body as Node[]).flatMap((statement) => {
             const found = topLevelFunction(statement);
             return found && /^[A-Z]/.test(found[0]) ? [found] : [];
         });
-        report(file, source, bodyEdits(source, comments as unknown as Node[], components, calls));
+        report(file, source, bodyEdits(source, comments, components, calls));
     }
+}
+
+// attribute values match whole: `generic="T extends Record<string, any>"` contains `>`
+const scriptOpen = /<script\b(?:\s+[^\s=>]+(?:="[^"]*"|='[^']*'|=[^\s>]+)?)*\s*>/g;
+
+// Orders the statements of the script block that `open` starts; only that block's range is rewritten
+function orderScript(file: string, source: string, open: RegExpExecArray, name: string, calls: Calls) {
+    const start = open.index + open[0].length;
+    const end = source.indexOf('</script>', start);
+    const content = source.slice(start, end);
+    const { program, comments, errors } = parseSync(`${file}.ts`, content);
+    if (errors.length) {
+        problems.push(`${file}: parse error ${errors[0].message}`);
+        return;
+    }
+    const ordered = orderBody(content, program.body as Node[], comments, 0, content.length, new Set(), calls);
+    if (ordered) report(file, source, [{ start, end, ordered, name }]);
 }
 
 function scriptSetup(files: string[], calls: Calls) {
     for (const file of files) {
         const source = fs.readFileSync(file, 'utf8');
         if (!source.includes('<script')) continue;
-        // attribute values match whole: `generic="T extends Record<string, any>"` contains `>`
-        const open = /<script\b(?:\s+[^\s=>]+(?:="[^"]*"|='[^']*'|=[^\s>]+)?)*\s*>/.exec(source);
+        const open = new RegExp(scriptOpen).exec(source);
         if (!open || !/\ssetup\b/.test(open[0])) {
             problems.push(`${file}: the first script block must be <script setup>`);
             continue;
         }
-        const start = open.index + open[0].length;
-        const end = source.indexOf('</script>', start);
-        const content = source.slice(start, end);
-        const { program, comments, errors } = parseSync(`${file}.ts`, content);
-        if (errors.length) {
-            problems.push(`${file}: parse error ${errors[0].message}`);
+        orderScript(file, source, open, '<script setup>', calls);
+    }
+}
+
+// The instance script is the one without `module` (or Svelte 4's `context="module"`); a component without one has nothing to order
+function svelteScript(files: string[], calls: Calls) {
+    for (const file of files) {
+        const source = fs.readFileSync(file, 'utf8');
+        const open = [...source.matchAll(scriptOpen)].find((match) => !/\s(?:module|context)\b/.test(match[0]));
+        if (!open) continue;
+        if (!/\slang=["']ts["']/.test(open[0])) {
+            problems.push(`${file}: the instance script must be <script lang="ts">`);
             continue;
         }
-        const ordered = orderBody(content, program.body as unknown as Node[], comments as unknown as Node[], 0, content.length, new Set(), calls);
-        if (ordered) report(file, source, [{ start, end, ordered, name: '<script setup>' }]);
+        orderScript(file, source, open, '<script>', calls);
     }
 }
 
@@ -353,7 +384,7 @@ function composables(files: string[], calls: Calls) {
             problems.push(`${file}: parse error ${errors[0].message}`);
             continue;
         }
-        const functions = (program.body as unknown as Node[]).flatMap((statement) => {
+        const functions = (program.body as Node[]).flatMap((statement) => {
             const found = topLevelFunction(statement);
             return found && /^use[A-Z]/.test(found[0]) ? [found] : [];
         });
@@ -367,14 +398,15 @@ function composables(files: string[], calls: Calls) {
             }
             children(node).forEach(search);
         };
+        // oxc's Program type has no index signature, which the loosely typed Node walker relies on
         search(program as unknown as Node);
-        report(file, source, bodyEdits(source, comments as unknown as Node[], functions, calls));
+        report(file, source, bodyEdits(source, comments, functions, calls));
     }
 }
 
-// A framework whose component bodies fit none of these three shapes needs a new kind here; JSX frameworks whose
+// A framework whose component bodies fit none of these shapes needs a new kind here; JSX frameworks whose
 // components are capitalised functions use `components`
-const handlers = { components, 'script-setup': scriptSetup, composables };
+const handlers = { components, 'script-setup': scriptSetup, 'svelte-script': svelteScript, composables };
 
 for (const framework of frameworks) {
     for (const { kind, pathspecs } of framework.componentOrder.targets) {

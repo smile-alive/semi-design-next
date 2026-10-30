@@ -8,6 +8,7 @@ brief: 用于页面对新用户进行功能引导
 import UserGuideReactApi from './api/user-guide.react.zh-CN.mdx';
 import UserGuideVueApi from './api/user-guide.vue.zh-CN.mdx';
 import UserGuideSolidApi from './api/user-guide.solid.zh-CN.mdx';
+import UserGuideSvelteApi from './api/user-guide.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { UserGuide } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { UserGuide } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { UserGuide } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -77,6 +88,12 @@ import { UserGuide } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+按钮文本使用 `nextText`、`prevText` snippet；最后一步的按钮文本由 `finishText` 决定。
+
+</Framework>
+
 <Demo id="custom-button" />
 
 ### 受控
@@ -95,6 +112,12 @@ import { UserGuide } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+用 `bind:current` 绑定当前步骤，`bind:visible` 绑定显示状态。
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### 弹窗式引导
@@ -110,6 +133,12 @@ import { UserGuide } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 封面使用 `renderCover`，富文本描述使用 `renderDescription`，它们只为当前步骤调用。
+
+</Framework>
+
+<Framework only="svelte">
+
+封面使用步骤数据里的 `cover` snippet，富文本描述把 `description` 写成 snippet，参数为 `{ item, index }`。
 
 </Framework>
 
@@ -146,6 +175,14 @@ UserGuide 没有根元素：popup 模式下 `class`、`style` 落在气泡卡片
 <UserGuideSolidApi />
 
 UserGuide 没有根元素：popup 模式下 `class`、`style` 落在气泡卡片上；modal 模式下 `class`、`style` 交给 Modal，落点与 Modal 一致。未声明的属性（包括 `ref`、`aria-*` 与原生事件）会被丢弃。对话框的可访问名称只来自当前步骤的 `title`。
+
+</Framework>
+
+<Framework only="svelte">
+
+<UserGuideSvelteApi />
+
+UserGuide 没有根元素：popup 模式下 `class`、`style` 落在气泡卡片上；modal 模式下 `class` 落在 Modal 的最外层元素上，`style` 落在 `.semi-modal` 上。未声明的属性（包括 `aria-*` 与原生事件）会被丢弃。对话框的可访问名称只来自当前步骤的 `title`。
 
 </Framework>
 
@@ -201,6 +238,25 @@ UserGuide 没有根元素：popup 模式下 `class`、`style` 落在气泡卡片
 | spotlightPadding | 此步骤高亮区域的内边距，会覆盖全局配置                                                                     | number                                                  | -      |
 | theme            | 此步骤的主题，会覆盖全局配置                                                                               | `default` \| `primary`                                  | -      |
 | position         | 此步骤弹出层的位置，会覆盖全局配置                                                                         | Position                                                | -      |
+
+</Framework>
+
+<Framework only="svelte">
+
+`steps` 的每一项（类型 `UserGuideStepItem`）只放数据，`title`、`description` 可以是字符串或 snippet，`cover` 是 snippet，snippet 的参数为 `{ item, index }`（类型 `UserGuideStepSnippetProps`）。
+
+| 属性             | 说明                                                                                                       | 类型                                             | 默认值 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------ |
+| class            | 步骤的自定义类名                                                                                           | string                                           | -      |
+| cover            | 步骤的封面；不提供时该步骤没有封面区                                                                       | Snippet\<[UserGuideStepSnippetProps]\>           | -      |
+| target           | 目标元素，高亮区域会聚焦到这个元素上；函数形式在测量步骤时调用，目标尚未出现时可返回 `null` 或 `undefined` | Element \| (() => Element \| null \| undefined)  | -      |
+| title            | 步骤标题，字符串或 snippet                                                                                 | string \| Snippet\<[UserGuideStepSnippetProps]\> | -      |
+| description      | 步骤描述，字符串或 snippet                                                                                 | string \| Snippet\<[UserGuideStepSnippetProps]\> | -      |
+| mask             | 是否显示此步骤的蒙层，会覆盖全局配置                                                                       | boolean                                          | -      |
+| showArrow        | 是否显示箭头（仅在 mode=`popup` 时有效）                                                                   | boolean                                          | true   |
+| spotlightPadding | 此步骤高亮区域的内边距，会覆盖全局配置                                                                     | number                                           | -      |
+| theme            | 此步骤的主题，会覆盖全局配置                                                                               | `default` \| `primary`                           | -      |
+| position         | 此步骤弹出层的位置，会覆盖全局配置                                                                         | Position                                         | -      |
 
 </Framework>
 

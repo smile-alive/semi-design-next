@@ -1,15 +1,17 @@
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { ConfigProvider, ConfigConsumer } from '@fibrae/semi-ui-react';
 
-const Show = ({ title }: { title: string }) => (
-    <ConfigConsumer>
-        {({ locale, timeZone, direction }) => (
-            <div style={{ margin: 8 }}>
-                {title}：locale = {locale?.code ?? '未设置'}，timeZone = {String(timeZone)}，direction = {direction}
-            </div>
-        )}
-    </ConfigConsumer>
-);
+function Show({ title }: { title: string }) {
+    return (
+        <ConfigConsumer>
+            {({ locale, timeZone, direction }) => (
+                <div style={{ margin: 8 }}>
+                    {title}：locale = {locale?.code ?? '未设置'}，timeZone = {String(timeZone)}，direction = {direction}
+                </div>
+            )}
+        </ConfigConsumer>
+    );
+}
 
 export default function ConfigProviderDemo() {
     return (

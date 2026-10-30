@@ -8,6 +8,7 @@ brief: 高亮特定内容
 import HighlightReactApi from './api/highlight.react.zh-CN.mdx';
 import HighlightVueApi from './api/highlight.vue.zh-CN.mdx';
 import HighlightSolidApi from './api/highlight.solid.zh-CN.mdx';
+import HighlightSvelteApi from './api/highlight.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Highlight } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Highlight } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 你可以通过 `searchWords` 指定需要高亮的关键字，通过 `sourceString` 指定源文本
@@ -65,6 +76,12 @@ Vue 不会给数值样式补 `px`，`highlightStyle` 与高亮词的 `style` 中
 
 </Framework>
 
+<Framework only="svelte">
+
+`highlightStyle` 与高亮词的 `style` 是样式对象，键可用驼峰或 kebab-case；数值不会补 `px`，长度要写成 `'4px'` 这样的字符串，`fontWeight: 600` 等无单位属性不受影响。
+
+</Framework>
+
 <Demo id="highlight-style" />
 
 ### 不同文本使用差异化样式
@@ -80,6 +97,12 @@ Vue 中对象项的类名字段写作 `class`，与模板里的写法一致。
 <Framework only="solid">
 
 对象项的类名字段写作 `class`，与 JSX 中的 `class` 属性一致。
+
+</Framework>
+
+<Framework only="svelte">
+
+对象项的类名字段写作 `class`，与 Svelte 模板里的写法一致。
 
 </Framework>
 
@@ -116,5 +139,13 @@ Highlight 没有根元素，渲染的是 Fragment：`class`、`style`、`id` 等
 <HighlightSolidApi />
 
 Highlight 没有根元素，渲染的是若干行内片段，`class`、`style`、`ref` 和 `id` 等原生属性无处可落，会被丢弃。
+
+</Framework>
+
+<Framework only="svelte">
+
+<HighlightSvelteApi />
+
+Highlight 没有根元素，渲染的是若干行内片段：`class`、`style`、`id` 等未声明的属性无处可落，会被丢弃，也不能用 `bind:this` 取元素。
 
 </Framework>

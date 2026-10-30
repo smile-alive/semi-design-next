@@ -11,6 +11,7 @@ import TimelineVueApi from './api/timeline.vue.zh-CN.mdx';
 import TimelineItemVueApi from './api/timeline-item.vue.zh-CN.mdx';
 import TimelineSolidApi from './api/timeline.solid.zh-CN.mdx';
 import TimelineItemSolidApi from './api/timeline-item.solid.zh-CN.mdx';
+import TimelineSvelteApi from './api/timeline.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -44,7 +45,23 @@ import { Timeline } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Timeline } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
+
+<Framework only="svelte">
+
+Svelte 版不提供 `Timeline.Item`，节点统一写在 `dataSource` 中：`time`、`extra`、`content` 是字符串或数字，`type`、`color` 设置圆点样式。
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -71,6 +88,12 @@ import { Timeline } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 可以通过 `dot` 自定义图标，`color` 自定义圆点色值。通过设置 `children` 的样式可以自定义节点样式。
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 `dataSource` 项的 `dot` snippet 自定义该节点的图标，`color` 自定义圆点色值；未设置 `dot` 的节点画默认圆点。通过 `content` snippet 为节点内容设置样式。时间与辅助内容使用 `time`、`extra` snippet，参数都是 `{ item, index }`。
 
 </Framework>
 
@@ -109,6 +132,12 @@ import { Timeline } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 `dataSource` 项的 `content`、`time`、`extra` 只接受字符串或数字。需要自定义渲染时，传入 `renderContent`、`renderDot`、`renderTime`、`renderExtra`，参数为 `(item, index)`。
+
+</Framework>
+
+<Framework only="svelte">
+
+`dataSource` 项的 `content`、`time`、`extra` 只接受字符串或数字；自定义内容使用 snippet `content`、`time`、`extra`，参数为 `{ item, index }`；自定义圆点使用项的 `dot` snippet，无参数。
 
 </Framework>
 
@@ -170,6 +199,29 @@ import { Timeline } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<TimelineSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `id`、`aria-label`）落在根元素 `ul` 上。
+
+`dataSource` 项的字段：
+
+| 字段     | 说明                                                           | 类型                                                          | 默认值    |
+| -------- | -------------------------------------------------------------- | ------------------------------------------------------------- | --------- |
+| content  | 节点内容，自定义内容使用 `content` snippet                     | `string \| number`                                            | -         |
+| time     | 时间文本，自定义内容使用 `time` snippet                        | `string \| number`                                            | -         |
+| extra    | 辅助内容，自定义内容使用 `extra` snippet                       | `string \| number`                                            | -         |
+| dot      | 自定义圆点，未设置时画默认圆点                                 | `Snippet`                                                     | -         |
+| color    | 自定义的圆圈色值                                               | `string`                                                      | -         |
+| type     | 当前圆圈的模式                                                 | `'default' \| 'ongoing' \| 'success' \| 'warning' \| 'error'` | `default` |
+| position | 自定义节点位置，可以覆盖 TimeLine 的模式选项                   | `'left' \| 'right'`                                           | -         |
+| onClick  | 点击节点的回调，参数为 `MouseEvent`；点击 `extra` 区域不会触发 | `(event: MouseEvent) => void`                                 | -         |
+| class    | `li` 的类名                                                    | `ClassValue`                                                  | -         |
+| style    | `li` 的样式字符串                                              | `string`                                                      | -         |
+
+</Framework>
+
 ### TimeLine.Item
 
 <Framework only="react">
@@ -193,6 +245,12 @@ import { Timeline } from '@fibrae/semi-ui-solid';
 <TimelineItemSolidApi />
 
 `class`、`style`、`ref` 与原生属性落在 `li` 上。点击事件写作 `onClick`，点击 `extra` 区域不会触发。有 `onClick` 时，内容区域带 `role="button"` 与 `tabindex="0"`，支持 `Enter` 和 `Space`。`time`、`extra` 为空时不渲染对应容器。
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte 版没有 `TimeLine.Item`，节点由 `dataSource` 的项表示，字段见上方表格：`class`、`style` 与其他 `li` 属性写在项里并落在 `li` 上；有 `onClick` 时，内容区域带 `role="button"` 与 `tabindex="0"`，支持 `Enter` 和 `Space`。`time`、`extra` 为空时不渲染对应容器。
 
 </Framework>
 
@@ -244,6 +302,23 @@ import { Timeline } from '@fibrae/semi-ui-solid';
     <Timeline.Item time="2015-09-03">技术测试异常</Timeline.Item>
     <Timeline.Item time="2015-09-05">网络异常正在修复</Timeline.Item>
 </Timeline>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Timeline } from '@fibrae/semi-ui-svelte';
+
+    const dataSource = [
+        { time: '2015-09-01', content: '创建服务现场' },
+        { time: '2015-09-02', content: '初步排除网络异常' },
+    ];
+</script>
+
+<Timeline aria-label="xx事故处理过程时间线" {dataSource} />
 ```
 
 </Framework>

@@ -1,0 +1,74 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| addonAfter | Snippet of the trailing addon. | `Snippet` | - |
+| addonBefore | Snippet of the leading addon. | `Snippet` | - |
+| autofocus | Focuses the input after mount. | `boolean` | - |
+| borderless | Borderless mode. | `boolean` | - |
+| clearIcon | Snippet of the custom clear button icon; valid when showClear is true. | `Snippet` | - |
+| composition | Whether to enable composition mode. When enabled, onChange is not called during IME composition and is called once after it ends. | `boolean` | - |
+| currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `boolean \| string` | - |
+| currencyDisplay | How the currency is shown: symbol, code or name. | `'code' \| 'symbol' \| 'name'` | - |
+| defaultCurrency | Currency used when currency is true. Priority: own prop, global default, locale pack. | `string` | - |
+| disabled | Whether disabled. | `boolean` | - |
+| formatter | Format of the displayed value, usually set together with parser. Priority: own prop, global default. | <ApiType detail={"(value: number \u007c string) => string"}>Type</ApiType> | - |
+| hideButtons | Hides the step buttons; with innerButtons also true, no built-in button is shown either. | `boolean` | `false` |
+| hideSuffix | Hides the suffix while the clear button is shown; by default the two sit side by side. | `boolean` | - |
+| innerButtons | Puts the step buttons inside the input, shown on hover or focus and temporarily replacing the suffix. | `boolean` | `false` |
+| inputStyle | Style of the native input. Accepts a string only. | `string` | - |
+| insetLabel | Snippet of the inset label. | `Snippet` | - |
+| insetLabelId | The id of the inset label. | `string` | - |
+| keepFocus | Keeps the input focused when a step button is clicked. | `boolean` | `false` |
+| localeCode | Locale code used for formatting in currency mode, such as zh-CN, en-US or de-DE. Priority: own prop, global default, locale pack of LocaleProvider or ConfigProvider. | `string` | - |
+| max | Maximum value. | `number` | `Infinity` |
+| maximumFractionDigits | Maximum number of fraction digits shown, passed to Intl.NumberFormat. | `number` | - |
+| maxlength | Maximum length of the input text. | `number` | - |
+| min | Minimum value. | `number` | `-Infinity` |
+| minimumFractionDigits | Minimum number of fraction digits shown, passed to Intl.NumberFormat. | `number` | - |
+| minlength | Minimum length of the input text. | `number` | - |
+| onBlur | Called when focus leaves the input and the clear button. The event is the focusout of the Input wrapper. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onChange | Called when the value changes. The second argument is the event that caused it: typing, a step button pointerdown, an arrow or Home/End keydown, or blur. Mounting and a new value from the parent do not call it; an out-of-range value is shown as given and is corrected and reported only after a user action. | <ApiType detail={"(value: number \u007c string, event: InputNumberChangeEvent) => void"}>Type</ApiType> | - |
+| onClear | Called when the clear button is clicked. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |
+| onCompositionEnd | Called when an IME composition ends. | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType> | - |
+| onCompositionStart | Called when an IME composition starts. | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType> | - |
+| onCompositionUpdate | Called while an IME composition updates. | <ApiType detail={"(event: CompositionEvent) => void"}>Type</ApiType> | - |
+| onDownClick | Called when pressing the decrease button steps the value, once per step while it is held; the arguments are the stepped value and the pointerdown event. | <ApiType detail={"(value: string, event: PointerEvent) => void"}>Type</ApiType> | - |
+| onEnterPress | Called when Enter is pressed in the input. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onFocus | Called when focus enters the input; moving focus between the input and the clear button does not call it. The event is the focusin of the Input wrapper. | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | - |
+| onInput | Callback for the native input event. | <ApiType detail={"(event: Event) => void"}>Type</ApiType> | - |
+| onKeyDown | Called when a key is pressed in the input. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onKeyUp | Called when a key is released in the input. | <ApiType detail={"(event: KeyboardEvent) => void"}>Type</ApiType> | - |
+| onNumberChange | Called when the number changes; the event argument is as in onChange. | <ApiType detail={"(value: number, event: InputNumberChangeEvent) => void"}>Type</ApiType> | - |
+| onUpClick | Called when pressing the increase button steps the value, once per step while it is held; the arguments are the stepped value and the pointerdown event. | <ApiType detail={"(value: string, event: PointerEvent) => void"}>Type</ApiType> | - |
+| parser | Converts the text from formatter back to a number string; used together with formatter. Priority: own prop, global default. | <ApiType detail={"(value: string) => string"}>Type</ApiType> | - |
+| placeholder | Placeholder text. | `string \| number` | - |
+| precision | Numerical precision, the number of fraction digits kept. | `number` | - |
+| prefix | Snippet of the prefix content. | `Snippet` | - |
+| pressInterval | Interval in milliseconds between repeats while a step button is held. | `number` | `250` |
+| pressTimeout | Delay in milliseconds before repeating starts while a step button is held. | `number` | `250` |
+| preventScroll | Whether focusing stops the browser from scrolling the document to the input; applies to focus calls inside the component. | `boolean` | - |
+| readonly | Whether read-only. | `boolean` | - |
+| readOnly | Native `readonly`: blocks typing only and keeps the clear button; `readonly` also hides the clear button. | `boolean` | - |
+| scientificNotation | Shows scientific notation when blurred and the full number when focused. Pass `{ threshold }` to configure the threshold, 15 significant digits by default. Not supported in currency mode. | `boolean \| ScientificNotationConfig` | - |
+| shiftStep | Step of each change while Shift is held; may be a decimal. | `number` | `10` |
+| showClear | Whether to show the clear button. | `boolean` | - |
+| showCurrencySymbol | Whether to show the currency symbol, code or name; only in currency mode. | `boolean` | `true` |
+| size | Input size: default, small or large. | `InputSize` | - |
+| step | Step of each change; may be a decimal. | `number` | `1` |
+| suffix | Snippet of the suffix content; replaced while the innerButtons buttons are shown. | `Snippet` | - |
+| validateStatus | Validation status: default, error, warning or success. | `ValidateStatus` | - |
+| value | Current value; bind it with `bind:value`. A partial or invalid text is a string and a cleared input is ''. `bind:value={get, set}` makes it fully controlled; a plain `value` is the initial value. | `number \| string` | - |
+
+**Methods**
+
+| Method            | Description                                                                            | Type                                                                                                                                                   |
+| ----------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| blur              | Removes focus.                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
+| focus             | Focuses the input; preventScroll prop applies when options.preventScroll is not given. | <ApiType detail={"(options?: FocusOptions) => void"}>Type</ApiType>                                                                                    |
+| getInput          | Returns the native input element; null after unmount.                                  | <ApiType detail={"() => any"}>Type</ApiType>                                                                                                           |
+| getNativeElement  | Returns the root element of the component; null after unmount.                         | <ApiType detail={"() => HTMLDivElement \u007c undefined"}>Type</ApiType>                                                                               |
+| select            | Selects all the text in the input.                                                     | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
+| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'forward' \u007c 'backward' \u007c 'none') => void"}>Type</ApiType> |

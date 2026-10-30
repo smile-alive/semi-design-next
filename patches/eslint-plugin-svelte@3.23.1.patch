@@ -1,0 +1,13 @@
+diff --git a/lib/rules/sort-attributes.js b/lib/rules/sort-attributes.js
+index c603f87b28ea46740af6c4438ce324804182dac0..90c0ee325d39ffb0b849b53972a825bff3e5c7d3 100644
+--- a/lib/rules/sort-attributes.js
++++ b/lib/rules/sort-attributes.js
+@@ -271,7 +271,7 @@ export default createRule('sort-attributes', {
+                     }
+                     const invalidPreviousNode = validPreviousNodes.find((previousNode) => option.compare(getKeyText(previousNode), key) > 0);
+                     if (invalidPreviousNode) {
+-                        if (attr.type !== 'SvelteAttribute' || !hasSpreadAttribute(attr, invalidPreviousNode)) {
++                        if (!hasSpreadAttribute(attr, invalidPreviousNode)) {
+                             report(attr, invalidPreviousNode);
+                         }
+                         else {

@@ -14,6 +14,8 @@ import TabItemVueApi from './api/tab-item.vue.en-US.mdx';
 import TabsSolidApi from './api/tabs.solid.en-US.mdx';
 import TabPaneSolidApi from './api/tab-pane.solid.en-US.mdx';
 import TabItemSolidApi from './api/tab-item.solid.en-US.mdx';
+import TabsSvelteApi from './api/tabs.svelte.en-US.mdx';
+import TabItemSvelteApi from './api/tab-item.svelte.en-US.mdx';
 
 ## Demos
 
@@ -45,6 +47,16 @@ import { Tabs, TabPane } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tabs } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 Tabs supports four types of styles: `line`, `button`, `card`, and `slash`. By default, the first enabled tab is selected.
@@ -70,6 +82,12 @@ In Vue the text of a tab goes in the `#tab` slot of `<TabPane>` and its icon in 
 <Framework only="solid">
 
 The items of `tabList` hold data only (`itemKey`, `tab`, `disabled`, `closable`); for markup use `renderTab` and `renderIcon` of Tabs, which receive the item and its index. Without `renderTab` the `tab` text of the item is shown. The render functions are called once at each place the tab shows (the tab, a "more" menu item, the panel's name) and again only when the item's data or index changes.
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte has no `TabPane`; tabs are passed through `tabList` only. The items of `tabList` hold data only (`itemKey`, `tab`, `disabled`, `closable`); for markup use the `tab` and `icon` snippets of Tabs, which receive `{ item, index }`. Without a `tab` snippet the `tab` text of the item is shown. Write the content in the `panel` snippet, which receives `{ item, index, itemKey }`: every tab is its own tabpanel, and `keepDOM`, `lazyRender` and motion apply to it. Without `panel`, the `children` of Tabs are the content of the active tab. Bind `activeKey` with `bind:activeKey`; there is no `defaultActiveKey`, so write the initial value as `activeKey="1"`.
 
 </Framework>
 
@@ -122,6 +140,17 @@ Advanced configuration is also supported, passing the object to `more`, and it c
 
 </Framework>
 
+<Framework only="svelte">
+
+Advanced configuration is also supported, passing the object to `more`, and it can be passed in
+
+- `count`: Represents the number of Tabs in the income drop-down menu
+- `dropdownProps`: Dropdown props, passed through to the drop-down menu
+
+Customize the "More" trigger with the `moreTrigger` snippet, and the content of the drop-down menu with the `moreContent` snippet, whose `{ items }` are the tabs moved into the menu.
+
+</Framework>
+
 <Demo id="more-advanced" />
 
 ### Vertical mode
@@ -153,6 +182,12 @@ The `#arrow` scoped slot modifies the arrows in collapsible mode. It receives th
 <Framework only="solid">
 
 `renderArrow` modifies the arrows in collapsible mode. Its arguments are the overflowed `items`, the position `pos`, the click function `handleArrowClick` and `defaultNode`, which creates the default arrow: call `defaultNode()` where it is inserted. `items` are plain data; with TabPane children they have no `tab`, so use `tabList` when you need the tab text.
+
+</Framework>
+
+<Framework only="svelte">
+
+The `arrow` snippet modifies the arrows in collapsible mode. It receives `{ items, position, onClick, defaultNode }`: the overflowed tabs, the position, the click function and the default arrow `defaultNode` (render it with `{@render defaultNode()}`).
 
 </Framework>
 
@@ -201,6 +236,12 @@ Use `tabBarExtraContent` to add extra content on the right side of tabBar.
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `tabBarExtraContent` snippet to add extra content on the right side of tabBar.
+
+</Framework>
+
 <Demo id="extra-content" />
 
 ### Custom Render
@@ -224,6 +265,14 @@ When `#tabBar` replaces the bar entirely, the `aria-label` and `aria-labelledby`
 Use `renderTabBar` to customize tabBar render behavior; the same function is called once. `tabBarProps` is live, so read its fields inside the returned JSX; `DefaultTabBar` is the default tab bar component, rendered with `<DefaultTabBar {...tabBarProps} />`.
 
 When `renderTabBar` replaces the bar entirely, the `aria-label` and `aria-labelledby` of Tabs are in `tabBarProps` and do not reach your own element automatically: put the accessible name on your own `role="tablist"` element. With TabPane children, the entries of `tabBarProps.list` are plain data without `tab`; use `tabList` when you need the tab text.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `tabBar` snippet, which receives `{ tabBarProps, tabBar }`, to customize the tab bar. `tabBarProps` holds data only (see TabBarProps below) and `tabBar` is the default tab bar, rendered with `{@render tabBar()}`.
+
+When `tabBar` replaces the bar entirely, the `aria-label` and `aria-labelledby` of Tabs do not reach your own element: put the accessible name on your own `role="tablist"` element.
 
 </Framework>
 
@@ -266,6 +315,18 @@ npm install @dnd-kit/solid @dnd-kit/dom @dnd-kit/helpers
 ```
 
 </Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+Through the `tabBar` snippet, render the tabs with `TabItem` inside your own `role="tablist"` element and combine them with dragging to reorder the tab bar. Inside a Tabs a `TabItem` selects its tab on click by itself, and native attributes and listeners such as `draggable` and the drag events land on its root element. The demo uses native browser drag and drop, which supports pointer input only; when you need keyboard sorting, use a drag library with keyboard support instead.
+
+```svelte
+<script lang="ts">
+    import { TabItem } from '@fibrae/semi-ui-svelte';
+</script>
+```
 
 </Framework>
 
@@ -353,7 +414,71 @@ The `tabBarProps` of the `#tabBar` slot, the data of the default tab bar.
 
 </Framework>
 
+<Framework only="svelte">
+
+<TabsSvelteApi />
+
+`activeKey` is used with `bind:activeKey`. `aria-label` and `aria-labelledby` land on the `role="tablist"` element; `class`, `style` and other native attributes land on the root element.
+
+**PlainTab**
+
+The data item of `tabList`; it holds data only.
+
+| Property | Description                                        | Type             | Default Value |
+| -------- | -------------------------------------------------- | ---------------- | ------------- |
+| itemKey  | Unique key of the tab, matched against `activeKey` | string           | None          |
+| tab      | Tab text; the `tab` snippet takes precedence       | string \| number | None          |
+| disabled | Whether the tab is disabled                        | boolean          | None          |
+| closable | Whether the tab can be closed                      | boolean          | None          |
+
+**TabsMore**
+
+The shape of `more` when it is an object.
+
+| Property      | Description                                  | Type                  | Default Value |
+| ------------- | -------------------------------------------- | --------------------- | ------------- |
+| count         | Number of Tabs moved into the drop-down menu | number                | None          |
+| dropdownProps | Dropdown props passed through to the menu    | TabsDropdownItemProps | None          |
+
+`TabsDropdownItemProps` is the props of Dropdown plus `class`, `style` and `onVisibleChange`. The `start` and `end` of `dropdownProps` use the same type.
+
+**TabBarProps**
+
+The `tabBarProps` of the `tabBar` snippet, the data of the default tab bar.
+
+| Property           | Description                                                          | Type                                    |
+| ------------------ | -------------------------------------------------------------------- | --------------------------------------- |
+| activeKey          | The active itemKey; null for a controlled empty value                | string \| null                          |
+| list               | Tab data                                                             | PlainTab[]                              |
+| type               | Style of the tab bar                                                 | 'line' \| 'card' \| 'button' \| 'slash' |
+| size               | Size                                                                 | 'small' \| 'medium' \| 'large'          |
+| tabPosition        | Position                                                             | 'top' \| 'left'                         |
+| collapsible        | Whether collapsible                                                  | boolean \| 'auto'                       |
+| showRestInDropdown | In collapsible mode, whether collapsed tabs are listed in a dropdown | boolean                                 |
+| more               | Configuration of the More menu                                       | number \| TabsMore                      |
+| arrowPosition      | Position of the arrows in collapsible mode                           | 'both' \| 'start' \| 'end'              |
+| visibleTabsStyle   | Style of the whole scrolling area in collapsible mode                | string                                  |
+| dropdownProps      | Dropdown props of the arrow menus in collapsible mode                | TabsDropdownProps                       |
+| class              | tabBarClassName                                                      | string                                  |
+| style              | tabBarStyle                                                          | string                                  |
+
+</Framework>
+
 ### TabPane
+
+<Framework only="svelte">
+
+Svelte has no `TabPane`; provide the content of a tab with the `panel` snippet of Tabs.
+
+### TabItem
+
+A single tab inside a custom tab bar (the `tabBar` snippet). Inside a Tabs, clicking it selects its tab by itself and triggers the `onChange` and `onTabClick` callbacks of the Tabs.
+
+<TabItemSvelteApi />
+
+`class`, `style` and native attributes and events land on the root element; `role`, `id`, `aria-selected`, `aria-disabled`, `aria-controls` and `tabindex` are managed by the component and are not overridden.
+
+</Framework>
 
 <Framework only="react">
 

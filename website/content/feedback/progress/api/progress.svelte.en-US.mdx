@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property       | Description                                                                                                                             | Type                                                                   | Default        |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------- |
+| direction      | Direction of the line progress bar: horizontal or vertical.                                                                             | `ProgressDirection`                                                    | `"horizontal"` |
+| format         | Snippet for custom text. Its argument `{ percent }` is the shown number clamped to 0-100. It renders only when the text is shown.       | <ApiType detail={"Snippet\u003c[{ percent: number }]>"}>Type</ApiType> | -              |
+| indeterminate  | Whether the progress is indeterminate. When on, percent no longer controls the length, the text is hidden and aria-valuenow is omitted. | `boolean`                                                              | `false`        |
+| motion         | Whether the shown number animates to the new percent. When off it jumps to the target.                                                  | `boolean`                                                              | `true`         |
+| orbitStroke    | Fill color of the track.                                                                                                                | `string`                                                               | -              |
+| percent        | Progress percentage. Passing NaN throws an error.                                                                                       | `number`                                                               | `0`            |
+| showInfo       | Whether to show the text: in the center of a circle, or on the right of a bar.                                                          | `boolean`                                                              | `false`        |
+| size           | Size: default, small (circle only) or large (line only).                                                                                | `ProgressSize`                                                         | `"default"`    |
+| stroke         | Fill color. An array is a list of `{ percent, color }` intervals, where color is any CSS color or a Semi palette name.                  | `string \| StrokeArr`                                                  | -              |
+| strokeGradient | Whether to generate gradient colors between intervals. Requires at least one interval in stroke.                                        | `boolean`                                                              | `false`        |
+| strokeLinecap  | Line cap of the circle progress bar: round or square.                                                                                   | `'round' \| 'square'`                                                  | `"round"`      |
+| strokeWidth    | Stroke width of the circle progress bar.                                                                                                | `number`                                                               | `4`            |
+| type           | Type: line or circle.                                                                                                                   | `ProgressType`                                                         | `"line"`       |
+| width          | Diameter of the circle progress bar. Defaults to 24 when size is small and 72 otherwise.                                                | `number`                                                               | -              |

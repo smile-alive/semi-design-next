@@ -8,6 +8,7 @@ brief: 用于播放音频
 import AudioPlayerReactApi from './api/audio-player.react.zh-CN.mdx';
 import AudioPlayerVueApi from './api/audio-player.vue.zh-CN.mdx';
 import AudioPlayerSolidApi from './api/audio-player.solid.zh-CN.mdx';
+import AudioPlayerSvelteApi from './api/audio-player.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -35,6 +36,16 @@ import { AudioPlayer } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { AudioPlayer } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AudioPlayer } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -90,6 +101,14 @@ audioUrl 可以传入字符串，字符串数组，对象，对象数组， 具�
 <AudioPlayerSolidApi />
 
 `class`、`style`、`ref` 与原生属性、事件落在根元素 `div` 上。不支持监听 `audio` 元素的原生媒体事件（如 `onTimeUpdate`）：它们不会冒泡到根元素，监听不会触发。
+
+</Framework>
+
+<Framework only="svelte">
+
+<AudioPlayerSvelteApi />
+
+`class`（字符串、数组或对象）与原生属性落在根元素 `div` 上，`style` 为字符串。AudioPlayer 没有回调 props，也不支持监听 `audio` 元素的原生媒体事件（如 `onended`）：它们不会冒泡到根元素，监听不会触发。
 
 </Framework>
 

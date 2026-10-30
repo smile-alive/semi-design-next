@@ -20,13 +20,14 @@ import ApiType from '#/components/ApiType.astro';
 
 **Events**
 
-| 事件              | 说明                                                                                                                                           | 回调参数                                             |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| update:modelValue | 已选中的值变化时触发，v-model 使用。载荷是 value 数组。                                                                                        | `[values: TransferValue]`                            |
-| change            | 已选中的值变化时触发，拖拽排序后也会触发。载荷依次为 value 数组与对应的数据项数组，值与 update:modelValue 相同。会遮住根元素上同名的原生事件。 | `[values: TransferValue, items: TransferDataItem[]]` |
-| select            | 勾选一项时触发，载荷为该数据项。会遮住根元素上同名的原生事件。                                                                                 | `[item: TransferDataItem]`                           |
-| deselect          | 取消勾选一项时触发，载荷为该数据项。                                                                                                           | `[item: TransferDataItem]`                           |
-| search            | 搜索框输入内容变化时触发，载荷为搜索值。search 方法驱动的搜索不触发。                                                                          | `[searchValue: string]`                              |
+| 事件              | 说明                                                                                                                                                          | 回调参数                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| update:modelValue | 已选中的值变化时触发，v-model 使用。载荷是 value 数组。                                                                                                       | `[values: TransferValue]`                            |
+| change            | 已选中的值变化时触发，拖拽排序后也会触发。载荷依次为 value 数组与对应的数据项数组，值与 update:modelValue 相同。会遮住根元素上同名的原生事件。                | `[values: TransferValue, items: TransferDataItem[]]` |
+| select            | 勾选一项时触发，载荷为该数据项。会遮住根元素上同名的原生事件。                                                                                                | `[item: TransferDataItem]`                           |
+| deselect          | 取消勾选一项时触发，载荷为该数据项。                                                                                                                          | `[item: TransferDataItem]`                           |
+| search            | 搜索框输入内容变化时触发，载荷为搜索值。search 方法驱动的搜索不触发。                                                                                         | `[searchValue: string]`                              |
+| blur              | 焦点从 Transfer 内部移到外部时触发一次，载荷为 FocusEvent；在搜索框、复选框、列表项、移除按钮、拖拽手柄之间移动不触发，窗口失焦（relatedTarget 为空）时触发。 | `[event: FocusEvent]`                                |
 
 **Slots**
 

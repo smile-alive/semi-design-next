@@ -23,6 +23,12 @@ import SkeletonParagraphSolidApi from './api/skeleton-paragraph.solid.zh-CN.mdx'
 import SkeletonImageSolidApi from './api/skeleton-image.solid.zh-CN.mdx';
 import SkeletonTitleSolidApi from './api/skeleton-title.solid.zh-CN.mdx';
 import SkeletonButtonSolidApi from './api/skeleton-button.solid.zh-CN.mdx';
+import SkeletonSvelteApi from './api/skeleton.svelte.zh-CN.mdx';
+import SkeletonAvatarSvelteApi from './api/skeleton-avatar.svelte.zh-CN.mdx';
+import SkeletonParagraphSvelteApi from './api/skeleton-paragraph.svelte.zh-CN.mdx';
+import SkeletonImageSvelteApi from './api/skeleton-image.svelte.zh-CN.mdx';
+import SkeletonTitleSvelteApi from './api/skeleton-title.svelte.zh-CN.mdx';
+import SkeletonButtonSvelteApi from './api/skeleton-button.svelte.zh-CN.mdx';
 
 ## 概述
 
@@ -47,6 +53,12 @@ import SkeletonButtonSolidApi from './api/skeleton-button.solid.zh-CN.mdx';
 <Framework only="solid">
 
 > 注意：默认样式均可通过 `class` 或 `style` 进行自定义。
+
+</Framework>
+
+<Framework only="svelte">
+
+> 注意：默认样式均可通过 `class` 或 `style`（字符串）进行自定义。Svelte 版的占位块既是 `Skeleton.Avatar` 这类静态成员，也是同一引用的具名导出：`SkeletonAvatar`、`SkeletonImage`、`SkeletonTitle`、`SkeletonParagraph`、`SkeletonButton`。
 
 </Framework>
 
@@ -77,6 +89,25 @@ import { Skeleton } from '@fibrae/semi-ui-react';
 ```jsx
 import { Skeleton } from '@fibrae/semi-ui-solid';
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Skeleton, SkeletonAvatar, SkeletonButton, SkeletonImage, SkeletonParagraph, SkeletonTitle } from '@fibrae/semi-ui-svelte';
+</script>
+
+<Skeleton loading>
+    {#snippet placeholder()}
+        <SkeletonAvatar />
+    {/snippet}
+    <p>内容</p>
+</Skeleton>
+```
+
+加载时显示 `placeholder` snippet，加载结束后显示 `children`。
 
 </Framework>
 
@@ -141,6 +172,14 @@ import { Skeleton } from '@fibrae/semi-ui-solid';
 <SkeletonSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在占位根元素上。`loading` 为 `false` 时组件只渲染子内容，不再有根元素，这些属性随占位一起丢弃。根元素的 `aria-busy="true"` 不能被关闭。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SkeletonSvelteApi />
+
+`class`、`style`（字符串）与原生属性和事件落在占位根元素上。`loading` 为 `false` 时组件只渲染子内容，不再有根元素，这些属性随占位一起丢弃。根元素的 `aria-busy="true"` 不能被关闭。
 
 </Framework>
 
@@ -212,6 +251,30 @@ import { Skeleton } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 版下面的 `Skeleton.Avatar` 也可写成具名导出 `SkeletonAvatar`，其余同理。
+
+<SkeletonAvatarSvelteApi />
+
+`class`、`style`（字符串）与原生属性和事件落在占位块上。
+
+### Skeleton.Image
+
+<SkeletonImageSvelteApi />
+
+### Skeleton.Title
+
+<SkeletonTitleSvelteApi />
+
+### Skeleton.Button
+
+<SkeletonButtonSvelteApi />
+
+`SkeletonImage`、`SkeletonTitle`、`SkeletonButton` 没有 `size`、`shape`，`class`、`style` 与原生属性和事件落在占位块上。
+
+</Framework>
+
 ### Skeleton.Paragraph
 
 <Framework only="react">
@@ -235,6 +298,14 @@ import { Skeleton } from '@fibrae/semi-ui-solid';
 <SkeletonParagraphSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件落在 `ul` 根元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SkeletonParagraphSvelteApi />
+
+`class`、`style`（字符串）与原生属性和事件落在 `ul` 根元素上。
 
 </Framework>
 

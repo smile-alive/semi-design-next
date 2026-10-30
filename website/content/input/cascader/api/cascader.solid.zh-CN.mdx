@@ -39,13 +39,13 @@ import ApiType from '#/components/ApiType.astro';
 | maxTagCount | 多选时标签的最大展示数量，超出部分以 `+N` 展示。 | `number` | - |
 | motion | 下拉框弹出时是否有动画。 | `boolean` | `true` |
 | multiple | 是否多选。它改变 value、defaultValue、onChange、onSelect、displayRender 与 triggerRender 的类型，没有全局默认值。 | `Multiple` | `false` |
-| onBlur | 失焦或关闭下拉时的回调，不是 DOM 的 blur 事件；通过 ref 的 `close()` 关闭时不传参数。 | <ApiType detail={"(e?: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onBlur | 失焦或关闭下拉时的回调，不是 DOM 的 blur 事件；通过 ref 的 `close()` 关闭时不传参数。 | <ApiType detail={"(e?: MouseEvent \u007c KeyboardEvent \u007c FocusEvent) => void"}>Type</ApiType> | - |
 | onChange | 选中项变化时的回调。参数为选中路径的 value 数组，多选时为路径数组；`onChangeWithObject` 为 true 时参数为节点数据。 | <ApiType detail={"(value: ByMultiple\u003cMultiple, Array\u003cSimpleValueType>, Array\u003cArray\u003cSimpleValueType>>>) => void"}>Type</ApiType> | - |
 | onChangeWithObject | 为 true 时 onChange 的参数为节点数据（含 value 键），而不是 value；受控的 value 与 defaultValue 也要传节点数据。 | `boolean` | - |
 | onClear | 点击清除按钮时的回调。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | onDropdownVisibleChange | 下拉展开或收起时的回调，参数为是否可见。 | <ApiType detail={"(visible: boolean) => void"}>Type</ApiType> | - |
 | onExceed | 多选时超出 `max` 后的回调，参数为已选中的 Entity 数组。 | <ApiType detail={"(checkedItem: Entity[]) => void"}>Type</ApiType> | - |
-| onFocus | 组合框获得焦点，或下拉被鼠标、键盘打开时的回调，不是 DOM 的 focus 事件。 | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
+| onFocus | 组合框获得焦点，或下拉被鼠标、键盘打开时的回调，不是 DOM 的 focus 事件。 | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent \u007c FocusEvent) => void"}>Type</ApiType> | - |
 | onListScroll | 列视图中某一列滚动时的回调，参数为事件与 `{ panelIndex, activeNode }`；搜索结果列表的滚动不触发。 | <ApiType detail={"(e: Event, panel: ScrollPanelProps) => void"}>Type</ApiType> | - |
 | onLoad | 节点加载完毕时的回调，参数为新加载的 key 集合与该节点的数据。 | <ApiType detail={"(newLoadedKeys: Set\u003cstring>, data: CascaderData) => void"}>Type</ApiType> | - |
 | onSearch | 搜索文本变化时的回调，参数为输入的内容。 | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |

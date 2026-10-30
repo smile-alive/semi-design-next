@@ -1,0 +1,11 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| getAnimationInstance | Called once per animation created, including every reload, with the AnimationItem of the animation. | <ApiType detail={"(animation: LottieAnimation) => void"}>Type</ApiType> | - |
+| getLottie | Called once per mount after lottie-web has loaded, with the global Lottie. | <ApiType detail={"(lottie: LottieModule) => void"}>Type</ApiType> | - |
+| height | Container height, with a unit such as 300px. | `string` | - |
+| params | Options passed to lottie-web's loadAnimation. It reloads when the content changes (mutating a `$state` in place counts too); a snapshot is taken before it reaches lottie-web, and large animation data is best held in `$state.raw`. | `LottieParams` | - |
+| width | Container width, with a unit such as 300px. | `string` | - |

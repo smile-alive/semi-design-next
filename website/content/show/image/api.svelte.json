@@ -1,0 +1,190 @@
+{
+    "image": {
+        "source": "packages/semi-ui-svelte/src/image/image.svelte",
+        "props": {
+            "src": { "zh-CN": "图片获取地址。", "en-US": "Image source URL." },
+            "width": {
+                "zh-CN": "图片显示宽度，数值按 px 处理。",
+                "en-US": "Display width of the image; a number is in px."
+            },
+            "height": {
+                "zh-CN": "图片显示高度，数值按 px 处理。",
+                "en-US": "Display height of the image; a number is in px."
+            },
+            "alt": {
+                "zh-CN": "图像描述，同时作为可预览缩略图的读屏名称。",
+                "en-US": "Image description, also the accessible name of a previewable thumbnail."
+            },
+            "crossOrigin": {
+                "zh-CN": "透传给原生 img 标签的 crossorigin。",
+                "en-US": "The crossorigin attribute passed to the native img element."
+            },
+            "fallback": {
+                "zh-CN": "加载失败时显示的容错图片地址，或自定义内容的 snippet。",
+                "en-US": "Fallback image URL shown when loading fails, or a snippet for custom content."
+            },
+            "placeholder": {
+                "zh-CN": "图片未加载成功时的占位内容的 snippet。",
+                "en-US": "Snippet for the placeholder content shown until the image has loaded."
+            },
+            "preview": {
+                "zh-CN": "预览配置，为 false 时禁用预览；对象只放数据与回调，自定义内容使用 Image 的 snippet。",
+                "en-US": "Preview options; false disables preview. The object carries data and callbacks only; use the Image snippets for custom content."
+            },
+            "imgStyle": {
+                "zh-CN": "自定义样式，透传给 img 节点。",
+                "en-US": "Custom style passed to the img element."
+            },
+            "imgCls": {
+                "zh-CN": "自定义样式类名，透传给 img 节点。",
+                "en-US": "Custom class name passed to the img element."
+            },
+            "setDownloadName": {
+                "zh-CN": "设置图片下载名称。",
+                "en-US": "Sets the download file name of the image."
+            },
+            "onLoad": { "zh-CN": "图片加载成功时触发。", "en-US": "Called when the image has loaded." },
+            "onError": { "zh-CN": "图片加载失败时触发。", "en-US": "Called when the image fails to load." },
+            "title": {
+                "zh-CN": "替换预览顶部标题区的内容，有标题时对话框以 snippet 渲染出的文字命名；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。",
+                "en-US": "Replaces the content of the title section at the top of the preview; when there is a title, the dialog is named by the text the snippet renders. It applies to this Image's own preview only and has no effect inside an ImagePreview."
+            },
+            "previewMenu": {
+                "zh-CN": "自定义预览底部操作区；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。",
+                "en-US": "Custom bottom menu of the preview. It applies to this Image's own preview only and has no effect inside an ImagePreview."
+            },
+            "leftIcon": {
+                "zh-CN": "自定义向左切换图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。",
+                "en-US": "Custom previous icon. It applies to this Image's own preview only and has no effect inside an ImagePreview."
+            },
+            "rightIcon": {
+                "zh-CN": "自定义向右切换图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。",
+                "en-US": "Custom next icon. It applies to this Image's own preview only and has no effect inside an ImagePreview."
+            },
+            "closeIcon": {
+                "zh-CN": "自定义关闭图标；仅作用于该 Image 自己的预览，位于 ImagePreview 内时无效。",
+                "en-US": "Custom close icon. It applies to this Image's own preview only and has no effect inside an ImagePreview."
+            }
+        }
+    },
+    "image-preview": {
+        "source": "packages/semi-ui-svelte/src/image/preview.svelte",
+        "props": {
+            "src": {
+                "zh-CN": "要预览的图片地址列表，决定组内图片及其顺序；包裹的 Image 按自己的 src（或 preview.src）在列表中的位置打开预览，不在列表中的 Image 单独预览。",
+                "en-US": "Image URLs to preview; they define the images of the group and their order. A wrapped Image opens the preview at the position of its own src (or preview.src) in the list; an Image not in the list previews on its own."
+            },
+            "visible": {
+                "zh-CN": "是否预览，可 bind:visible；未绑定时由组件自行管理，初始关闭。",
+                "en-US": "Whether the preview is open; supports bind:visible. Unbound, the component manages it and starts closed."
+            },
+            "currentIndex": {
+                "zh-CN": "当前预览图片下标，可 bind:currentIndex；未绑定时由组件自行管理，初始为 0。",
+                "en-US": "Index of the current image; supports bind:currentIndex. Unbound, the component manages it and starts at 0."
+            },
+            "previewTitle": {
+                "zh-CN": "预览顶部标题，同时作为预览对话框的读屏名称；titles 中当前图片的标题优先。",
+                "en-US": "Title at the top of the preview and the accessible name of the dialog; the title of the current image in titles takes precedence."
+            },
+            "titles": {
+                "zh-CN": "与 src 逐项对应的预览标题数组。",
+                "en-US": "Preview titles, one per entry of src."
+            },
+            "alts": {
+                "zh-CN": "与 src 逐项对应的预览图片替代文本数组。",
+                "en-US": "Alternative texts of the preview images, one per entry of src."
+            },
+            "lazyLoad": { "zh-CN": "是否开启懒加载。", "en-US": "Whether to lazy-load the images of the group." },
+            "lazyLoadMargin": {
+                "zh-CN": "懒加载的 rootMargin，相对视口计算；滚动祖先仍会裁剪。",
+                "en-US": "The rootMargin of the lazy-load observer, relative to the viewport; scrolling ancestors still clip."
+            },
+            "maskClosable": {
+                "zh-CN": "点击遮罩是否可关闭。",
+                "en-US": "Whether clicking the mask closes the preview."
+            },
+            "closable": { "zh-CN": "是否显示关闭按钮。", "en-US": "Whether to show the close button." },
+            "closeOnEsc": { "zh-CN": "按 Esc 是否关闭预览。", "en-US": "Whether Esc closes the preview." },
+            "infinite": { "zh-CN": "是否无限循环。", "en-US": "Whether switching loops around." },
+            "showTooltip": {
+                "zh-CN": "是否展示底部操作区提示。",
+                "en-US": "Whether to show tooltips on the bottom controls."
+            },
+            "preLoad": { "zh-CN": "是否开启预加载。", "en-US": "Whether to preload neighboring images." },
+            "preLoadGap": { "zh-CN": "预加载的步长。", "en-US": "How many images ahead and behind to preload." },
+            "viewerVisibleDelay": {
+                "zh-CN": "隐藏预览操作按钮前的无操作时长，单位毫秒。",
+                "en-US": "Idle time in milliseconds before the preview controls hide."
+            },
+            "zoomStep": { "zh-CN": "每次缩小或放大的比例。", "en-US": "Zoom change per step." },
+            "maxZoom": { "zh-CN": "预览图片最大缩放倍数。", "en-US": "Maximum zoom factor." },
+            "minZoom": { "zh-CN": "预览图片最小缩放倍数。", "en-US": "Minimum zoom factor." },
+            "zIndex": { "zh-CN": "预览层层级。", "en-US": "z-index of the preview layer." },
+            "disableDownload": { "zh-CN": "是否禁用下载。", "en-US": "Whether to disable download." },
+            "initialZoom": {
+                "zh-CN": "预览图片初始缩放倍数，仅在首次打开或切换到该图片时生效一次，会被 minZoom 与 maxZoom 限制。",
+                "en-US": "Initial zoom factor of an image, applied once when it first opens or is switched to, clamped by minZoom and maxZoom."
+            },
+            "crossOrigin": {
+                "zh-CN": "透传给预览图片的原生 img 标签的 crossorigin。",
+                "en-US": "The crossorigin attribute passed to the preview img element."
+            },
+            "previewCls": { "zh-CN": "自定义预览样式类名。", "en-US": "Custom class name of the preview." },
+            "previewStyle": { "zh-CN": "自定义预览样式。", "en-US": "Custom style of the preview." },
+            "prevTip": { "zh-CN": "上一步操作按钮提示。", "en-US": "Tip of the previous button." },
+            "nextTip": { "zh-CN": "下一步操作按钮提示。", "en-US": "Tip of the next button." },
+            "zoomInTip": { "zh-CN": "放大操作按钮提示。", "en-US": "Tip of the zoom-in button." },
+            "zoomOutTip": { "zh-CN": "缩小操作按钮提示。", "en-US": "Tip of the zoom-out button." },
+            "rotateTip": { "zh-CN": "旋转操作按钮提示。", "en-US": "Tip of the rotate button." },
+            "downloadTip": { "zh-CN": "下载操作按钮提示。", "en-US": "Tip of the download button." },
+            "adaptiveTip": { "zh-CN": "适应页面操作按钮提示。", "en-US": "Tip of the fit-to-page button." },
+            "originTip": { "zh-CN": "原始尺寸操作按钮提示。", "en-US": "Tip of the original-size button." },
+            "getPopupContainer": {
+                "zh-CN": "指定预览渲染的父级 DOM。容器不是 document.body 时预览为非模态，自定义容器需要 position: relative。",
+                "en-US": "Parent DOM the preview renders into. A container other than document.body makes the preview non-modal; a custom container needs position: relative."
+            },
+            "setDownloadName": { "zh-CN": "设置图片下载名称。", "en-US": "Sets the download file name of an image." },
+            "children": {
+                "zh-CN": "要预览的 Image 组件的 snippet。",
+                "en-US": "Snippet for the Image components to preview."
+            },
+            "title": {
+                "zh-CN": "替换预览顶部标题区的内容的 snippet，参数为 `{ title, index }`。有标题时对话框经 aria-labelledby 以标题区命名，名称即 snippet 渲染出的文字；没有标题时名称来自语言包。",
+                "en-US": "Snippet that replaces the content of the title section at the top of the preview, receiving `{ title, index }`. When there is a title, the dialog is named by that section through aria-labelledby, so its name is the text the snippet renders; without a title the name comes from the locale."
+            },
+            "previewMenu": {
+                "zh-CN": "自定义预览底部操作区的 snippet，参数为 MenuProps，menuItems 是默认各项的 snippet，渲染时一次输出全部默认项。",
+                "en-US": "Snippet for the custom bottom menu, receiving MenuProps; menuItems is a snippet that renders all the default items at once."
+            },
+            "leftIcon": {
+                "zh-CN": "自定义向左切换图标的 snippet，参数为 `{ index }`。",
+                "en-US": "Snippet for the custom previous icon, receiving `{ index }`."
+            },
+            "rightIcon": {
+                "zh-CN": "自定义向右切换图标的 snippet，参数为 `{ index }`。",
+                "en-US": "Snippet for the custom next icon, receiving `{ index }`."
+            },
+            "closeIcon": { "zh-CN": "自定义关闭图标的 snippet。", "en-US": "Snippet for the custom close icon." },
+            "onVisibleChange": { "zh-CN": "可见状态变化时触发。", "en-US": "Called when visibility changes." },
+            "onChange": { "zh-CN": "切换图片时触发。", "en-US": "Called when the image switches." },
+            "onClose": {
+                "zh-CN": "点击关闭按钮或按 Esc 关闭时触发；点击遮罩关闭只触发 onVisibleChange。",
+                "en-US": "Called when closed with the close button or Esc; closing by the mask triggers onVisibleChange only."
+            },
+            "onZoomIn": { "zh-CN": "图片放大时触发。", "en-US": "Called when the image zooms in." },
+            "onZoomOut": { "zh-CN": "图片缩小时触发。", "en-US": "Called when the image zooms out." },
+            "onPrev": { "zh-CN": "向前切换图片时触发。", "en-US": "Called when switching to the previous image." },
+            "onNext": { "zh-CN": "向后切换图片时触发。", "en-US": "Called when switching to the next image." },
+            "onRatioChange": {
+                "zh-CN": "切换原始尺寸与适应页面时触发。",
+                "en-US": "Called when switching between original size and fit-to-page."
+            },
+            "onRotateLeft": {
+                "zh-CN": "逆时针旋转图片时触发。",
+                "en-US": "Called when the image rotates counterclockwise."
+            },
+            "onDownload": { "zh-CN": "下载图片时触发。", "en-US": "Called when an image is downloaded." },
+            "onDownloadError": { "zh-CN": "图片下载失败时触发。", "en-US": "Called when a download fails." }
+        }
+    }
+}

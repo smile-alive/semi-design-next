@@ -1,4 +1,4 @@
-export const frameworks = ['react', 'vue', 'solid'] as const;
+export const frameworks = ['react', 'vue', 'solid', 'svelte'] as const;
 export type Framework = (typeof frameworks)[number];
 
 // clientOnly is the renderer name Astro's client:only expects, not always the framework name
@@ -6,6 +6,7 @@ export const frameworkDemo = {
     react: { extension: 'react.tsx', language: 'tsx', clientOnly: 'react' },
     vue: { extension: 'vue', language: 'vue', clientOnly: 'vue' },
     solid: { extension: 'solid.tsx', language: 'tsx', clientOnly: 'solid-js' },
+    svelte: { extension: 'svelte', language: 'svelte', clientOnly: 'svelte' },
 } as const satisfies Record<Framework, { extension: string; language: string; clientOnly: string }>;
 
 // except lists page directories relative to website/content (e.g. 'input/select'); those pages use the opposite of mode
@@ -21,6 +22,11 @@ export const demoHydration: Record<Framework, { mode: 'only' | 'visible'; except
     },
 
     solid: {
+        mode: 'visible',
+        except: [],
+    },
+
+    svelte: {
         mode: 'visible',
         except: [],
     },

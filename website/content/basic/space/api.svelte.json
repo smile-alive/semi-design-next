@@ -1,0 +1,21 @@
+{
+    "space": {
+        "source": "packages/semi-ui-svelte/src/space/space.svelte",
+        "props": {
+            "align": {
+                "zh-CN": "对齐方式，可选 start、center、end、baseline。",
+                "en-US": "Alignment: start, center, end or baseline."
+            },
+            "children": { "zh-CN": "需要设置间距的子节点。", "en-US": "Children to space out." },
+            "spacing": {
+                "zh-CN": "间距尺寸，可选 loose、medium、tight 或数字（像素）；传入 [水平, 垂直] 数组分别设置两个方向。",
+                "en-US": "Spacing size: loose, medium, tight or a number of pixels. Pass a [horizontal, vertical] array to set each direction."
+            },
+            "vertical": { "zh-CN": "是否为垂直间距。", "en-US": "Whether the spacing is vertical." },
+            "wrap": {
+                "zh-CN": "是否自动换行，仅水平方向生效。",
+                "en-US": "Whether to wrap automatically. Only applies to horizontal spacing."
+            }
+        }
+    }
+}

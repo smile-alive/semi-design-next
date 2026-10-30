@@ -4,6 +4,7 @@ import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import solid from '@astrojs/solid-js';
+import svelte from '@astrojs/svelte';
 import vue from '@astrojs/vue';
 import { semiCssLayer, semiInlineJsonWorker, semiScssOptions, semiSourceAliases } from '../vite.semi.ts';
 import frameworkMdx from './plugins/framework-mdx.ts';
@@ -38,7 +39,8 @@ export default defineConfig({
     },
     // Compiling demos and semi-ui-react source (via semiSourceAliases) matches what consumers get with the compiler on.
     // exclude feeds compiler and Fast Refresh alike: Vue and Solid package .tsx also resolve to source; neither handles their JSX.
-    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons|illustrations)-vue\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), mdx()],
+    // Svelte package .ts resolve to source too, and the compiler would rewrite their `use*` functions into React hooks.
+    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons|illustrations)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx()],
     vite: {
         plugins: [frameworkMdx(), semiInlineJsonWorker],
         build: {
@@ -48,7 +50,7 @@ export default defineConfig({
         optimizeDeps: {
             // Astro only scans src/ but demos live in content/. Deps found late trigger a mid-session re-bundle,
             // already-loaded modules return 504 and client-side navigation breaks.
-            entries: ['content/**/*.{tsx,vue,mdx}'],
+            entries: ['content/**/*.{tsx,vue,svelte,mdx}'],
             // The scan cannot see the router modules imported by ClientRouter's script inside the astro package.
             // vite-plugin-solid makes the scan keep JSX as-is, so it never sees the runtime import that Vue JSX compiles to
             // (the React plugin adds its own runtime to include).

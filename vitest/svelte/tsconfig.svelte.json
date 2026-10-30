@@ -1,0 +1,31 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "types": ["node", "vite/client"],
+        "strict": true,
+        "strictNullChecks": true,
+        "noEmit": true,
+        "verbatimModuleSyntax": true,
+        "paths": {
+            "@test/*": ["../*"],
+            "@fibrae/semi-ui-svelte": ["../../packages/semi-ui-svelte/src/index.ts"],
+            "@fibrae/semi-ui-svelte/*": ["../../packages/semi-ui-svelte/src/*"],
+            "@fibrae/semi-icons-svelte": ["../../packages/semi-icons-svelte/src/index.ts"],
+            "@fibrae/semi-icons-svelte/*": ["../../packages/semi-icons-svelte/src/*"],
+            "@fibrae/semi-illustrations-svelte": ["../../packages/semi-illustrations-svelte/src/index.ts"],
+            "@fibrae/semi-illustrations-svelte/*": ["../../packages/semi-illustrations-svelte/src/*"],
+            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/dist/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"]
+        }
+    },
+    "include": [
+        "svelte.setup.ts",
+        "../utils/host-contract.ts",
+        "../../packages/semi-*-svelte/**/__tests__/**/*.ts",
+        "../../packages/semi-*-svelte/**/__tests__/**/*.svelte",
+        "../../packages/semi-*-svelte/src/*.d.ts",
+        "../../packages/semi-foundation/src/dom.d.ts",
+        "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
+    ],
+    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*"]
+}

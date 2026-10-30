@@ -39,6 +39,18 @@ import { Toast } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Toast } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+静态方法只能在浏览器中调用（服务端调用会抛错），在事件处理函数里调用即可；需要在组件初始化阶段读取 context 时用 `Toast.useToast()`。
+
+</Framework>
+
 ### 普通提示
 
 通过调用 Toast的相关 method 可以实现弹出提示。推荐设置 stack 属性应用堆叠样式到同屏多个 Toast，Hover 展开，可有效防止一次性弹出多个并列 Toast 对用户造成干扰。
@@ -70,6 +82,12 @@ import { Toast } from '@fibrae/semi-ui-solid';
 <Framework only="vue">
 
 `content`、`icon` 接受 `string`、VNode 或返回 VNodeChild 的函数；下面的 Typography 文本需要用 `h()` 构造 VNode。
+
+</Framework>
+
+<Framework only="svelte">
+
+`content`、`icon` 接受字符串或 snippet：用 `{#snippet}` 在组件里定义后传入，snippet 里可以直接使用 Typography 等组件。
 
 </Framework>
 
@@ -122,6 +140,14 @@ import { Toast } from '@fibrae/semi-ui-solid';
 通过 `Toast.useToast()` 创建支持读取 context 的 `contextHolder`。此时的 toast 会渲染在 `contextHolder` 所在的节点处，继承该位置的 context、ConfigProvider 和语言；`contextHolder` 在调用 `useToast()` 的 owner 下创建，只放置一次。
 
 `Toast.useToast()` 返回元组 `[toast, contextHolder]`：toast 对象的 `info`、`success`、`warning`、`error`、`open` 接收不含 `type`、`id`、`zIndex`、`getPopupContainer` 的 Options，返回 `toastId`；`close(toastId)` 手动关闭。`content`、`icon` 传元素时，元素在事件处理函数中创建，没有 owner，读不到 context；需要读取 context 时传函数，函数在 Toast 渲染处调用。ConfigProvider、LocaleProvider 的值静态 `Toast` 读不到，需要时改用 `useToast()`。
+
+</Framework>
+
+<Framework only="svelte">
+
+在组件初始化时调用 `Toast.useToast()`，得到的 toast 会读取调用它的组件所在位置的 context、ConfigProvider 和语言，不需要放置 Holder。toast 挂载在 `document.body` 下，调用组件销毁时一并移除。
+
+`Toast.useToast()` 返回 `toast` 对象：`info`、`success`、`warning`、`error`、`open` 接收不含 `type`、`id`、`top`、`bottom`、`left`、`right`、`zIndex`、`getPopupContainer` 的 Options，返回 `toastId`；`close(toastId)` 手动关闭。`content`、`icon` 传 snippet 时，snippet 里可以 `getContext` 读到调用组件的 context。ConfigProvider、LocaleProvider 的值静态 `Toast` 读不到，需要时改用 `useToast()`。
 
 </Framework>
 
@@ -214,6 +240,25 @@ import { Toast } from '@fibrae/semi-ui-solid';
 | motion       | 是否开启进出场动画                                                                                                      | `boolean`                            | `true`  |
 | class        | 类名                                                                                                                    | `string`                             | -       |
 | style        | 样式                                                                                                                    | `JSX.CSSProperties \| string`        | -       |
+
+`class`、`style` 与未声明的选项（如 `data-*`、`aria-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性         | 说明                                                         | 类型                      | 默认值 |
+| ------------ | ------------------------------------------------------------ | ------------------------- | ------ |
+| content      | 提示内容，字符串或 snippet；snippet 在 Toast 渲染处执行      | string \| Snippet         | ''     |
+| icon         | 自定义图标，字符串或 snippet，替换 `type` 对应的图标         | string \| Snippet         |        |
+| showClose    | 是否展示关闭按钮                                             | boolean                   | true   |
+| textMaxWidth | 内容的最大宽度                                               | number \| string          | 450    |
+| onClose      | toast 关闭的回调函数                                         | () => void                |        |
+| stack        | 同屏 Toast 超过多少条时堆叠展示，`true` 为 3，`false` 不堆叠 | boolean \| number         | false  |
+| id           | 自定义 ToastId，相同 id 的 Toast 会被更新                    | string                    |        |
+| motion       | 是否开启进出场动画                                           | boolean                   | true   |
+| class        | 类名                                                         | string \| object \| array |        |
+| style        | 样式，只接受字符串                                           | string                    |        |
 
 `class`、`style` 与未声明的选项（如 `data-*`、`aria-*`）落在 `.semi-toast` 上，堆叠模式下同样如此。
 

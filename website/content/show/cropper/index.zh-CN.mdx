@@ -8,6 +8,7 @@ brief: 通过设定裁切框的宽高比例，自由裁切图片
 import CropperReactApi from './api/cropper.react.zh-CN.mdx';
 import CropperVueApi from './api/cropper.vue.zh-CN.mdx';
 import CropperSolidApi from './api/cropper.solid.zh-CN.mdx';
+import CropperSvelteApi from './api/cropper.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -39,6 +40,16 @@ import { Cropper } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Cropper } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Cropper } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -79,6 +90,12 @@ import { Cropper } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `rotate` 和 `zoom` 控制图片旋转和缩放。`zoom` 可用 `bind:zoom`、函数绑定 `bind:zoom={get, set}` 或单向传值 `zoom={x}`，滚轮缩放时同时调用 `onZoomChange(zoom)`；`rotate` 只能单向传值，组件不会改变它。`zoom` 不读全局默认值。
+
+</Framework>
+
 <Demo id="rotate-zoom" />
 
 ### 裁切框设置
@@ -107,6 +124,12 @@ import { Cropper } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `preview` 指定预览容器，实时预览裁切效果。`preview` 是返回容器 DOM 的函数，容器尚未挂载时可返回 `null` 或 `undefined`。
+
+</Framework>
+
 <Demo id="preview" />
 
 ### API
@@ -132,6 +155,14 @@ import { Cropper } from '@fibrae/semi-ui-solid';
 <CropperSolidApi />
 
 `class`、`style`、`ref` 与原生属性和事件（如 `id`、`data-*`、`aria-*`、`onKeyDown`）落在根 `<div>` 上；`ref` 拿到的就是根元素，其上附加了 `getCropperCanvas` 方法。
+
+</Framework>
+
+<Framework only="svelte">
+
+<CropperSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`data-*`、`aria-*`、`onkeydown`）落在根 `<div>` 上；`role` 可被覆盖。`getCropperCanvas()` 经 `bind:this` 取得的组件实例调用。
 
 </Framework>
 

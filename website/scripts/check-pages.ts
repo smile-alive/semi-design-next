@@ -236,7 +236,7 @@ if (updateBaseline && failures.length) {
     const next = Object.fromEntries(
         Object.keys(violations)
             .sort()
-            .map((key) => [key, [...new Set(violations[key].map((v) => v.rule))].sort()])
+            .map((key) => [key, [...new Set(violations[key].map((v) => v.rule))].toSorted()])
     );
     const additions = additionsOverReact(next);
     if (additions.length) {

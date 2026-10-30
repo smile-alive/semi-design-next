@@ -45,16 +45,16 @@ const data: Row[] = [
     },
 ];
 
-const renderName = (text: string, record: Row) => {
+function renderName(text: string, record: Row) {
     return (
         <div>
             <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-right': '12px' }} />
             {text}
         </div>
     );
-};
+}
 
-const renderOwner = (text: string, record: Row) => {
+function renderOwner(text: string, record: Row) {
     return (
         <div>
             <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
@@ -63,7 +63,7 @@ const renderOwner = (text: string, record: Row) => {
             {text}
         </div>
     );
-};
+}
 
 export default function TableDemo() {
     return (

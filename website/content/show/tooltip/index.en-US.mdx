@@ -8,6 +8,7 @@ brief: Tooltip is used to identify an element or attach a small amount of auxili
 import TooltipReactApi from './api/tooltip.react.en-US.mdx';
 import TooltipVueApi from './api/tooltip.vue.en-US.mdx';
 import TooltipSolidApi from './api/tooltip.solid.en-US.mdx';
+import TooltipSvelteApi from './api/tooltip.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Tooltip } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Tooltip } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Cautions
 
 <Framework only="react">
@@ -65,6 +76,17 @@ Tooltip applies the trigger attributes and event listeners to the trigger elemen
 
 1. A function `(trigger) => JSX`: spread `{...trigger()}` on the element that takes focus. It can be an actual DOM node, or a component that passes the props and `ref` to its root DOM node. Use this form for focusable triggers such as Button and Input
 2. An actual DOM element, text or any other content, which Tooltip wraps in a span that becomes the trigger
+
+</Framework>
+
+<Framework only="svelte">
+
+Tooltip applies the trigger attributes and event listeners to the trigger element, and positions the popup against the real DOM element of that trigger. The trigger can be written in two ways:
+
+1. The `child` snippet: `{#snippet child({ props })}<button {...props}>…</button>{/snippet}`. `props` carries `data-popupid`, `tabindex`, `aria-describedby` and an attachment that hands the element to Tooltip, and must be spread as a whole on an actual DOM element or on a component that passes the attributes to its root DOM element. Use this form for focusable triggers such as Button or Input
+2. The content inside the tag (`children`): text or other content is wrapped in Tooltip's own span (`semi-tooltip-trigger-wrapper`) that becomes the trigger. When the span holds a focusable element it leaves the Tab order and a warning is logged in development
+
+`content` is a snippet too: write `{#snippet content()}...{/snippet}` inside the Tooltip tag.
 
 </Framework>
 
@@ -113,6 +135,12 @@ When `condition={false}`, Tooltip will not respond to hover/click/focus triggers
 
 </Framework>
 
+<Framework only="svelte">
+
+When `condition={false}`, Tooltip will not respond to hover/click/focus triggers (with `trigger="custom"`, `visible` still shows it); when condition changes from true to false, an open popup closes at once; with `visible` controlled it only calls `onVisibleChange(false)`, and the popup closes once the caller writes `visible` back.
+
+</Framework>
+
 <Demo id="condition" />
 
 ### Override Style
@@ -132,6 +160,12 @@ Configure specific styles for the pop-up layer through `class` and `style`, such
 <Framework only="solid">
 
 Configure specific styles for the pop-up layer through `class` and `style`, such as overriding the default maxWidth (240px)
+
+</Framework>
+
+<Framework only="svelte">
+
+Configure specific styles for the pop-up layer through `class` and `style` (a string), such as overriding the default maxWidth (240px)
 
 </Framework>
 
@@ -159,6 +193,14 @@ Add a layer of elements (div or span) in the middle as the trigger of the outer 
 Tooltip, Popconfirm, and Popover all bind related events on the trigger (mouseenter / mouseleave / click ....) and add trigger attributes such as `aria-describedby` and `data-popupid`.  
 When the outer component receives plain content as children, it is wrapped in the outer component's own span, which cannot describe the focusable element inside it, and a warning is logged in development.  
 To keep each component's own trigger attributes, add a layer of elements (div or span) in the middle as the trigger of the outer one: the outer component spreads `{...trigger({ tabIndex: -1 })}` on it through function children, and the inner one spreads `{...trigger()}` on its real trigger element.
+
+</Framework>
+
+<Framework only="svelte">
+
+Tooltip, Popconfirm, and Popover all bind related events on the trigger (mouseenter / mouseleave / click ....) and add trigger attributes such as `aria-describedby` and `data-popupid`.  
+When the outer component receives plain content as children, it is wrapped in the outer component's own span, which cannot describe the focusable element inside it, and a warning is logged in development.  
+To keep each component's own trigger attributes, add a layer of elements (div or span) in the middle as the trigger of the outer one: the outer component spreads `props` on it through the `child` snippet and sets `tabindex={-1}`, and the inner one spreads `props` on the real trigger through its own `child` snippet.
 
 </Framework>
 
@@ -195,6 +237,14 @@ Tooltip has no root DOM element: undeclared attributes are not passed to the pop
 <TooltipSolidApi />
 
 Tooltip has no root DOM element: `class` and `style` land on the popup, and other undeclared attributes and events are discarded. The trigger attributes are added to the trigger element only, and `ref` returns the component methods.
+
+</Framework>
+
+<Framework only="svelte">
+
+<TooltipSvelteApi />
+
+Tooltip has no root DOM element: `class` and `style` (a string) land on the popup, and other undeclared attributes are discarded. The trigger attributes are added to the trigger element only. `visible` is bindable and there is no `defaultVisible`. The popup renders only after mount and is not output on the server. `useTooltipDescription` is not provided (the popup id is already in the `props` of `child`).
 
 </Framework>
 
@@ -239,6 +289,20 @@ Tooltip has no root DOM element: `class` and `style` land on the popup, and othe
 ```jsx
 // Good practices, add aria-label to the tooltip trigger
 <Tooltip content={<p id="description">Edit your setting</p>}>{(trigger) => <IconSetting aria-label="Settings" {...trigger()} />}</Tooltip>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<!-- Good practices, add aria-label to the tooltip trigger -->
+<Tooltip>
+    {#snippet child({ props })}
+        <IconSetting {...props} aria-label="Settings" />
+    {/snippet}
+    {#snippet content()}<p id="description">Edit your setting</p>{/snippet}
+</Tooltip>
 ```
 
 </Framework>

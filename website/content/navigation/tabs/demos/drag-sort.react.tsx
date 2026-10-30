@@ -11,7 +11,7 @@ interface SortableTabItemProps extends Pick<TabItemProps, 'selected' | 'size' | 
     index: number;
 }
 
-const SortableTabItem = ({ item, index, selected, size, type, tabPosition, onClick }: SortableTabItemProps) => {
+function SortableTabItem({ item, index, selected, size, type, tabPosition, onClick }: SortableTabItemProps) {
     const { ref, isDragging } = useSortable({
         id: item.itemKey,
         index,
@@ -23,7 +23,7 @@ const SortableTabItem = ({ item, index, selected, size, type, tabPosition, onCli
         display: 'inline-flex',
     };
     return <Tabs.TabItem ref={ref} style={style} itemKey={item.itemKey} tab={item.tab} icon={item.icon} disabled={item.disabled} selected={selected} size={size} type={type} tabPosition={tabPosition} onClick={onClick} />;
-};
+}
 
 export default function TabsDemo() {
     const [activeKey, setActiveKey] = useState('1');

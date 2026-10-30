@@ -11,6 +11,8 @@ import AvatarVueApi from './api/avatar.vue.en-US.mdx';
 import AvatarGroupVueApi from './api/avatar-group.vue.en-US.mdx';
 import AvatarSolidApi from './api/avatar.solid.en-US.mdx';
 import AvatarGroupSolidApi from './api/avatar-group.solid.en-US.mdx';
+import AvatarSvelteApi from './api/avatar.svelte.en-US.mdx';
+import AvatarGroupSvelteApi from './api/avatar-group.svelte.en-US.mdx';
 
 ## Demos
 
@@ -38,6 +40,16 @@ import { Avatar, AvatarGroup } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Avatar, AvatarGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Avatar, AvatarGroup } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -92,6 +104,12 @@ Avatars support `onClick`, `onMouseEnter` and `onMouseLeave`. You can use the `h
 
 </Framework>
 
+<Framework only="svelte">
+
+Avatars support `onclick`, `onMouseEnter` and `onMouseLeave`; only an avatar given `onclick` becomes a focusable button. Pass hover overlay content through the `hoverMask` snippet, written as `{#snippet hoverMask()}...{/snippet}` inside the Avatar tag. The overlay has no default style.
+
+</Framework>
+
 <Demo id="hover-mask" />
 
 ### Top and Bottom Slot
@@ -105,6 +123,12 @@ Use the `topSlot` and `bottomSlot` props to configure badge appearance, and `#to
 <Framework only="solid">
 
 Use the `topSlot` and `bottomSlot` props to configure badge appearance and text. A function as `text` renders custom content (such as an icon) and is called only when the badge shows. Pass a `render` function to replace the entire badge.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `topSlot` and `bottomSlot` props to configure badge appearance, and the `topSlotText` and `bottomSlotText` snippets for badge content. A snippet as `topSlot.render` or `bottomSlot.render` replaces the entire badge; `topSlot.style` and `bottomSlot.style` are strings.
 
 </Framework>
 
@@ -132,6 +156,12 @@ Enable additional border and content animation through the `motion` field of `bo
 
 You can use `AvatarGroup` component to display avatars as a group.
 
+<Framework only="svelte">
+
+In Svelte, `AvatarGroup` takes the props of each avatar through `items` and the text inside an avatar through the `item` snippet (parameter `{ item, index }`); it does not accept `Avatar` children.
+
+</Framework>
+
 <Demo id="group" />
 
 You can set the number of avatars to display with `maxCount` property.
@@ -153,6 +183,12 @@ You can customize the more tag with `renderMore`.
 <Framework only="vue">
 
 Customize the more label with the `#more="{ restNumber, restAvatars }"` scoped slot.
+
+</Framework>
+
+<Framework only="svelte">
+
+Customize the more label with the `more` snippet, whose parameter is `{ restNumber, restAvatars }`. `restAvatars` holds the hidden items of `items` as given; the text inside an avatar comes from the `item` snippet, not from the data.
 
 </Framework>
 
@@ -192,6 +228,14 @@ Other native attributes (such as `id` and `data-*`) are applied to the avatar el
 
 </Framework>
 
+<Framework only="svelte">
+
+<AvatarSvelteApi />
+
+`class`, `style`, `id` and other native attributes are applied to the avatar `span`. With `border`, `topSlot` or `bottomSlot`, `style` goes to the outer wrapper, while `class` and the other native attributes stay on the avatar `span`. A clickable avatar applies `tabindex` and `aria-*` to its single inner focus target.
+
+</Framework>
+
 ### AvatarGroup
 
 <Framework only="react">
@@ -215,6 +259,14 @@ Attrs such as `class`, `style` and `aria-*` are applied to the group root, not t
 <AvatarGroupSolidApi />
 
 `class`, `style`, `ref` and native attributes, including `aria-*`, are applied to the group root element, not to the avatars inside it.
+
+</Framework>
+
+<Framework only="svelte">
+
+<AvatarGroupSvelteApi />
+
+`class`, `style` and native attributes, including `aria-*`, are applied to the group root element, not to the avatars inside it.
 
 </Framework>
 
@@ -288,6 +340,23 @@ import { Avatar } from '@fibrae/semi-ui-solid';
 ```
 
 Describe the avatar content with alternative text. Avoid empty text and redundant words such as "picture". Declare an action with `onClick`; the component supplies a Tab stop and activates the click on `Enter` and `Space`.
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Avatar } from '@fibrae/semi-ui-svelte';
+
+    const src = '/assets/placeholder/avatar-a.svg';
+</script>
+
+<Avatar alt="A cute cat" {src} />
+<Avatar alt="Jiang Pengzhi" {src} />
+```
+
+Describe the avatar content with alternative text. Avoid empty text and redundant words such as "picture". Declare an action with `onclick`; the component supplies a Tab stop and activates the click on `Enter` and `Space`.
 
 </Framework>
 

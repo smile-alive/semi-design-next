@@ -8,6 +8,7 @@ brief: 可从屏幕边沿滑出的浮层面板，通常用于承载二级操作�
 import SideSheetReactApi from './api/side-sheet.react.zh-CN.mdx';
 import SideSheetVueApi from './api/side-sheet.vue.zh-CN.mdx';
 import SideSheetSolidApi from './api/side-sheet.solid.zh-CN.mdx';
+import SideSheetSvelteApi from './api/side-sheet.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Radio, RadioGroup, SideSheet, TextArea, TypographyText } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本
 
 默认侧边栏从右滑出，支持点击遮罩区关闭。
@@ -52,6 +63,12 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 <Framework only="solid">
 
 用受控的 `visible` 控制显示：关闭按钮、遮罩和 Esc 关闭时先触发 `onCancel`，面板不会自行关闭，需要在 `onCancel` 中把 `visible` 设为 `false`。
+
+</Framework>
+
+<Framework only="svelte">
+
+用 `bind:visible` 控制显示：关闭按钮、遮罩和 Esc 关闭时先把 `visible` 写回 `false`，再调用 `onCancel`。只传单向的 `visible` 加 `onCancel` 时不会自行关闭，需要在 `onCancel` 中把 `visible` 设为 `false`。
 
 </Framework>
 
@@ -83,6 +100,12 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过设置 `size` 属性设置侧边栏尺寸，支持 `small`(448px)、`medium`(684px)、`large`(920px)，仅在 `placement` 为 `left` 或 `right` 时生效。若默认的尺寸不满足你的需求，你还可以通过设置 `width` 属性自行设置宽度，例如 `width={900}` / `width="800px"`
+
+</Framework>
+
 <Demo id="size" />
 
 ### 可操作的外部区域
@@ -102,6 +125,12 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 <Notice title="注意">`mask` 为 `false` 时不会锁定 body 的滚动，外部区域可以照常滚动。带遮罩且渲染在 body 中（即不传入 getPopupContainer 参数）的 SideSheet 才会在打开时自动给 body 添加 overflow: hidden 来禁止滚动，可以将 disableScroll 设为 false 允许滚动。</Notice>
 
 <Framework only="solid">
+
+当 `mask={false}` 时允许对外部区域进行操作。
+
+</Framework>
+
+<Framework only="svelte">
 
 当 `mask={false}` 时允许对外部区域进行操作。
 
@@ -141,6 +170,12 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 
 </Framework>
 
+<Framework only="svelte">
+
+可以通过 `title` 属性（纯文本或 snippet）、`footer` snippet 等创建出丰富的内容样式。
+
+</Framework>
+
 <Demo id="custom-content" />
 
 ## API 参考
@@ -166,6 +201,14 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 <SideSheetSolidApi />
 
 `aria-*` 与 `style` 落在 `role="dialog"` 的元素（`.semi-sidesheet-inner`）上；`class`、`ref` 与其他原生属性和事件落在 portal 内最外层的 `.semi-sidesheet` 元素上。
+
+</Framework>
+
+<Framework only="svelte">
+
+<SideSheetSvelteApi />
+
+`aria-*` 与 `style` 落在 `role="dialog"` 的元素（`.semi-sidesheet-inner`）上；`class` 与其他原生属性和事件落在 portal 内最外层的 `.semi-sidesheet` 元素上，`getRoot()` 返回的也是这个元素。
 
 </Framework>
 

@@ -14,7 +14,7 @@ const dailyEventStyle: JSX.CSSProperties = {
 };
 const displayValue = new Date(2019, 6, 23, 8, 32, 0);
 
-const dateRender = (dateString?: string) => {
+function dateRender(dateString?: string) {
     if (dateString === new Date(2019, 6, 23).toString()) {
         return (
             <>
@@ -25,7 +25,7 @@ const dateRender = (dateString?: string) => {
         );
     }
     return null;
-};
+}
 
 export default function CalendarDemo() {
     return <Calendar height={700} mode="week" displayValue={displayValue} dateGridRender={dateRender} />;

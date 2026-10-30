@@ -8,6 +8,7 @@ brief: 开关是用于切换两种互斥状态的交互形式
 import SwitchReactApi from './api/switch.react.zh-CN.mdx';
 import SwitchVueApi from './api/switch.vue.zh-CN.mdx';
 import SwitchSolidApi from './api/switch.solid.zh-CN.mdx';
+import SwitchSvelteApi from './api/switch.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Switch } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本
 
 <Framework only="react">
@@ -58,6 +69,13 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 你可以通过 `onChange` 监听状态变化，通过 `defaultChecked` 或受控的 `checked` 指定选中状态。  
+通过 `aria-label` 描述该 Switch 开关的具体作用
+
+</Framework>
+
+<Framework only="svelte">
+
+你可以通过 `onChange` 监听状态变化。只传 `checked` 时作为初始选中状态，之后由用户点击切换；需要读写选中状态时用 `bind:checked`，见「受控组件」。  
 通过 `aria-label` 描述该 Switch 开关的具体作用
 
 </Framework>
@@ -97,6 +115,13 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`checkedText` 与 `uncheckedText` 接受 snippet：用 `{#snippet}` 定义后作为属性传入，或直接写在 Switch 标签内作为同名 snippet。  
+注意：此项功能在最小的开关(即 size='small'时)无效
+
+</Framework>
+
 <Demo id="text" />
 
 相比于通过 checkedText 与 uncheckedText 设置内嵌的文本，我们更推荐将文本说明放置在 Switch 外部
@@ -120,6 +145,12 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 组件是否选中完全取决于传入的 `checked` 值，配合 `onChange` 回调函数使用。只传 `checked` 而不在回调中回写时，点击仅触发通知，显示由传入的值决定。
+
+</Framework>
+
+<Framework only="svelte">
+
+用 `bind:checked` 把选中状态与 `$state` 变量双向同步。需要拒绝或改写用户的切换时用函数绑定 `bind:checked={() => value, (next) => { ... }}`，组件显示 getter 返回的值。只传 `checked` 不绑定时，它只作初值：点击在组件内切换，父级再传新值时以父级为准。
 
 </Framework>
 
@@ -157,6 +188,14 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+<SwitchSvelteApi />
+
+`class`、`style` 与其他原生属性和事件（如 `onmouseenter`）落在根元素上；`id`、`name`、`tabindex`、`autofocus`、`aria-*`，以及 `onfocus`、`onblur` 落在内部的原生 input 上。
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -171,6 +210,12 @@ import { Space, Switch, Typography } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="vue">
+
+- 建议使用 `aria-label` 描述当前标签作用，或用 `aria-labelledby` 关联页面上的可见标签
+
+</Framework>
+
+<Framework only="svelte">
 
 - 建议使用 `aria-label` 描述当前标签作用，或用 `aria-labelledby` 关联页面上的可见标签
 

@@ -9,7 +9,7 @@ const dateStyle = {
     'align-items': 'center',
 };
 
-const renderDate = (dayNumber?: number) => {
+function renderDate(dayNumber?: number) {
     if (dayNumber === 1) {
         return (
             <Tooltip content="Always Day 1">
@@ -18,7 +18,7 @@ const renderDate = (dayNumber?: number) => {
         );
     }
     return dayNumber;
-};
+}
 
 export default function DatePickerDemo() {
     return <DatePicker renderDate={renderDate} />;

@@ -1,0 +1,84 @@
+{
+    "collapse": {
+        "source": "packages/semi-ui-svelte/src/collapse/collapse.svelte",
+        "props": {
+            "accordion": {
+                "zh-CN": "手风琴模式。",
+                "en-US": "Accordion mode."
+            },
+            "activeKey": {
+                "zh-CN": "当前展开面板的 key，可用 `bind:activeKey` 双向绑定；null 与空字符串表示全部收起。函数绑定 `bind:activeKey={get, set}` 时完全受控；只传 `activeKey` 时作为初值，点击在组件内覆盖。",
+                "en-US": "Key of the currently expanded panel; bind it with `bind:activeKey`. null and the empty string mean all panels are collapsed. `bind:activeKey={get, set}` makes it fully controlled; a plain `activeKey` is the initial value and a click overrides it inside the component."
+            },
+            "children": {
+                "zh-CN": "CollapsePanel 面板的 snippet。",
+                "en-US": "Snippet for the CollapsePanel panels."
+            },
+            "clickHeaderToExpand": {
+                "zh-CN": "点击面板头整行展开收起；为 false 时只响应切换按钮和箭头。",
+                "en-US": "Clicking anywhere in the header row toggles the panel; when false only the toggle button and the arrow respond."
+            },
+            "collapseIcon": {
+                "zh-CN": "面板展开时显示的图标的 snippet，默认 IconChevronUp。",
+                "en-US": "Snippet for the icon shown while a panel is expanded, IconChevronUp by default."
+            },
+            "expandIcon": {
+                "zh-CN": "面板收起时显示的图标的 snippet，默认 IconChevronDown。",
+                "en-US": "Snippet for the icon shown while a panel is collapsed, IconChevronDown by default."
+            },
+            "expandIconPosition": {
+                "zh-CN": "展开图标位置，可选 left、right。",
+                "en-US": "Position of the expand icon: left or right."
+            },
+            "keepDOM": {
+                "zh-CN": "是否保留隐藏面板的 DOM 树，默认销毁；未传时依次读 Collapse、Collapsible 的全局默认值。",
+                "en-US": "Whether to keep the DOM tree of hidden panels; destroyed by default. When omitted it reads the global default of Collapse, then that of Collapsible."
+            },
+            "lazyRender": {
+                "zh-CN": "配合 keepDOM 使用，为 true 时面板展开前不渲染内容。",
+                "en-US": "Used with keepDOM; when true, panel content is not rendered until the panel is first expanded."
+            },
+            "motion": {
+                "zh-CN": "是否开启动画，默认开启；未传时依次读 Collapse、Collapsible 的全局默认值。",
+                "en-US": "Whether to enable the animation; enabled by default. When omitted it reads the global default of Collapse, then that of Collapsible."
+            },
+            "onChange": {
+                "zh-CN": "切换面板时调用，参数为展开面板的 key 数组与原生 MouseEvent（键盘操作经原生按钮同样是 click）。",
+                "en-US": "Called when a panel is toggled, with the array of expanded keys and the native MouseEvent (keyboard use also produces a click through the native button)."
+            }
+        }
+    },
+    "collapse-panel": {
+        "source": "packages/semi-ui-svelte/src/collapse/panel.svelte",
+        "props": {
+            "children": {
+                "zh-CN": "面板内容的 snippet；传入 children 才算有内容。",
+                "en-US": "Snippet for the panel content; a panel counts as having content only when children is given."
+            },
+            "disabled": {
+                "zh-CN": "面板是否被禁用。",
+                "en-US": "Whether the panel is disabled."
+            },
+            "extra": {
+                "zh-CN": "面板头右侧辅助内容的 snippet，位于切换按钮之外，可以放控件。",
+                "en-US": "Snippet for the auxiliary content on the right of the panel header, outside the toggle button; may hold controls."
+            },
+            "header": {
+                "zh-CN": "面板头内容的 snippet，渲染在切换按钮内，不能包含交互元素。",
+                "en-US": "Snippet for the panel header content, rendered inside the toggle button; must not contain interactive elements."
+            },
+            "itemKey": {
+                "zh-CN": "必填且唯一，用于匹配 activeKey。",
+                "en-US": "Required and unique, matched against activeKey."
+            },
+            "onMotionEnd": {
+                "zh-CN": "展开或收起动画结束时调用。",
+                "en-US": "Called when the expand or collapse animation ends."
+            },
+            "showArrow": {
+                "zh-CN": "是否展示箭头。",
+                "en-US": "Whether to show the arrow icon."
+            }
+        }
+    }
+}

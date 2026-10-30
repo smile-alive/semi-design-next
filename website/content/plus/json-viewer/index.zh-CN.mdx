@@ -8,6 +8,7 @@ brief: 用于展示和编辑 JSON 数据
 import JsonViewerReactApi from './api/json-viewer.react.zh-CN.mdx';
 import JsonViewerVueApi from './api/json-viewer.vue.zh-CN.mdx';
 import JsonViewerSolidApi from './api/json-viewer.solid.zh-CN.mdx';
+import JsonViewerSvelteApi from './api/json-viewer.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -49,6 +50,16 @@ import { Button, Image, JsonViewer, Popover, Rating, Tag } from '@fibrae/semi-ui
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { JsonViewer } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 <Framework only="react">
@@ -68,6 +79,12 @@ JsonViewer 的基本用法。传入 `height` 和 `width` 参数，设置组件�
 <Framework only="solid">
 
 JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度和宽度，通过 `value` 传入 Json 字符串作为初始值。编辑内容变化时触发 `onChange`，参数为编辑器当前文本。`value` 变为与编辑器当前内容不同的值时才会重建编辑器，在 `onChange` 中把文本写回 `value` 不会丢失光标；`value` 不变时编辑器保留用户的输入。若需要获取组件的值，可以通过 ref 调用 `getValue()`，具体可参考 [Methods](#Methods)。
+
+</Framework>
+
+<Framework only="svelte">
+
+JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度和宽度，通过 `value` 传入 Json 字符串作为初始值。编辑内容变化时触发 `onChange`，参数为编辑器当前文本。`value` 可以 `bind:value`，变为与编辑器当前内容不同的值时才会重建编辑器，回写同一内容不会丢失光标；不绑定时编辑器保留用户的输入。若需要获取组件的值，可以通过 `bind:this`（类型 `JsonViewerHandle`）调用 `getValue()`，具体可参考 [Methods](#Methods)。
 
 </Framework>
 
@@ -133,6 +150,12 @@ JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度�
 
 </Framework>
 
+<Framework only="svelte">
+
+`customRenderRule` 是一个规则数组，规则只保存数据：`match` 为匹配条件，可选的 `name` 用于在 `customRender` snippet 里区分规则。命中 token 的内容由 `{#snippet customRender({ item, index, content })}` 绘制，`item` 是命中的规则，`index` 是它在 `customRenderRule` 中的序号。
+
+</Framework>
+
 - `match`: 匹配条件，可以是以下三种类型之一：
     - 字符串：精确匹配
     - 正则表达式：按正则匹配
@@ -166,6 +189,15 @@ JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度�
 
 </Framework>
 
+<Framework only="svelte">
+
+- `name`: 可选，规则名称，在 `customRender` snippet 中用 `item.name` 区分规则
+- `customRender` snippet：参数为 `{ item, index, content }`
+    - `content`: 匹配到的内容。如果是字符串类型的值，将包含双引号（如 `"name"`，`"Semi"`）
+    - 未提供 snippet 或 snippet 什么都不画时不做自定义渲染，保留 token 原文
+
+</Framework>
+
 <Demo id="custom-render" />
 
 ### 自定义搜索按钮
@@ -185,6 +217,12 @@ JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度�
 <Framework only="vue">
 
 通过 `#searchButton` 插槽，你可以自定义搜索按钮的渲染方式，实现固定位置、自定义样式等需求。提供插槽即整体替换默认按钮，`defaultButton` 是默认按钮的 VNode，用 `<component :is>` 渲染；`showSearch` 为 `false` 时两者都不渲染。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `searchButton` snippet，你可以自定义搜索按钮的渲染方式，实现固定位置、自定义样式等需求。提供 snippet 即整体替换默认按钮，`defaultButton` 是默认按钮的 snippet，用 `{@render defaultButton()}` 渲染；`showSearch` 为 `false` 时两者都不渲染。
 
 </Framework>
 
@@ -215,6 +253,14 @@ JsonViewer 的基本用法。传入 `height` 和 `width` 设置组件的高度�
 <JsonViewerSolidApi />
 
 `class`、`style`、`ref` 与原生属性落在根元素上。根元素没有 `role`、而传了 `aria-label` 或 `aria-labelledby` 时，根元素加 `role="group"`；显式传入的 `role` 优先。
+
+</Framework>
+
+<Framework only="svelte">
+
+<JsonViewerSvelteApi />
+
+`class`、`style` 与原生属性落在根元素上。编辑器自己管理根元素的内容，所以没有 `children`。根元素没有 `role`、而传了 `aria-label` 或 `aria-labelledby` 时，根元素加 `role="group"`；显式传入的 `role` 优先。
 
 </Framework>
 
@@ -263,6 +309,17 @@ Vue 中的类型名为 `JsonViewerCustomRenderRule`，规则只保存数据，�
 
 </Framework>
 
+<Framework only="svelte">
+
+类型名为 `JsonViewerCustomRenderRule`，规则只保存数据，命中 token 的内容由 `customRender` snippet 绘制。
+
+| 属性  | 说明                                           | 类型                                                                                                                   | 默认值 |
+| ----- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------ |
+| match | 匹配规则                                       | string \| RegExp \| (value: string \| number \| boolean \| null, path: string, tokenType: 'key' \| 'value') => boolean | -      |
+| name  | 规则名称，在 `customRender` snippet 中区分规则 | string                                                                                                                 | -      |
+
+</Framework>
+
 ### FormattingOptions
 
 | 属性         | 说明                 | 类型    | 默认值 |
@@ -297,6 +354,12 @@ Vue 中的类型名为 `JsonViewerCustomRenderRule`，规则只保存数据，�
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `searchButton` snippet 时，参数（类型 `JsonViewerSearchButtonArgs`）除 `defaultButton` 外还包含以下属性：
+
+</Framework>
+
 | 属性              | 说明                 | 类型                                                                                  |
 | ----------------- | -------------------- | ------------------------------------------------------------------------------------- |
 | showSearchBar     | 当前是否显示搜索栏   | boolean                                                                               |
@@ -324,6 +387,12 @@ Vue 中的类型名为 `JsonViewerCustomRenderRule`，规则只保存数据，�
 <Framework only="solid">
 
 通过 `ref` 得到的根元素（类型 `JsonViewerElement`）上挂载着下表中的方法，可以直接调用，例如 `jsonViewer?.format()`。
+
+</Framework>
+
+<Framework only="svelte">
+
+通过 `bind:this`（类型 `JsonViewerHandle`）可以调用组件导出的方法，例如 `jsonviewer?.format()`。
 
 </Framework>
 

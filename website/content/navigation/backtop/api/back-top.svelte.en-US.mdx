@@ -1,0 +1,17 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| badge | Badge props, same as FloatButton. | `FloatButtonBadge` | - |
+| badgeCount | Snippet for custom badge content, in place of badge.count. | `Snippet` | - |
+| children | Static content of the button, shown in place of the icon. Must not contain interactive elements. | `Snippet` | - |
+| colorful | Colorful button, same as FloatButton. Falls back to the FloatButton default when unset. | `boolean` | - |
+| duration | Milliseconds the scroll to the top takes. `onclick` is throttled by this interval. | `number` | `450` |
+| icon | Snippet for the button icon. Defaults to IconBackTop. | `Snippet` | - |
+| onclick | Called on click with the native click event. Throttled by duration, and called once the scroll has started. | <ApiType detail={"MouseEventHandler\u003cT> \u007c null"}>Type</ApiType> | - |
+| shape | Shape: round or square. Falls back to the FloatButton default when unset. | `FloatButtonShape` | - |
+| size | Size: default, small or large. Falls back to the FloatButton default when unset. | `FloatButtonSize` | - |
+| target | Function returning the scrolled element, the window when unset. Returning null means the node is not available yet. Called on mount and again when the function itself changes. | <ApiType detail={"() => Window \u007c HTMLElement \u007c null"}>Type</ApiType> | <ApiType detail={"() => window"}>Type</ApiType> |
+| visibilityHeight | Scroll distance after which the BackTop appears. | `number` | `400` |

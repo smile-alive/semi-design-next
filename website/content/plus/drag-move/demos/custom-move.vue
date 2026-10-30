@@ -5,7 +5,7 @@
     const container = useTemplateRef<HTMLDivElement>('container');
     let startPoint: { x: number; y: number } | null = null;
 
-    function customMove(element: HTMLElement, top: number, left: number) {
+    const customMove = (element: HTMLElement, top: number, left: number) => {
         const bounds = container.value;
         if (bounds && left + 100 > bounds.offsetWidth) {
             element.style.right = `${bounds.offsetWidth - left - element.offsetWidth}px`;
@@ -14,28 +14,28 @@
             element.style.left = left + 'px';
         }
         element.style.top = top + 'px';
-    }
+    };
 
-    function toggleWidth(element: HTMLElement) {
+    const toggleWidth = (element: HTMLElement) => {
         element.style.width = element.style.width === '60px' ? '100px' : '60px';
-    }
+    };
 
-    function onMouseDown(e: MouseEvent) {
+    const onMouseDown = (e: MouseEvent) => {
         startPoint = { x: e.clientX, y: e.clientY };
-    }
+    };
 
-    function onMouseUp(e: MouseEvent) {
+    const onMouseUp = (e: MouseEvent) => {
         if (startPoint && Math.abs(e.clientX - startPoint.x) < 5 && Math.abs(e.clientY - startPoint.y) < 5) {
             toggleWidth(e.currentTarget as HTMLElement);
         }
         startPoint = null;
-    }
+    };
 
-    function onKeyDown(e: KeyboardEvent) {
+    const onKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
             toggleWidth(e.currentTarget as HTMLElement);
         }
-    }
+    };
 </script>
 
 <template>

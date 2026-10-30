@@ -12,7 +12,7 @@ const dayStyle = {
     'border-radius': 'var(--semi-border-radius-circle)',
 };
 
-const renderFullDate = (dayNumber?: number, _fullDate?: string, dayStatus?: DayStatusType) => {
+function renderFullDate(dayNumber?: number, _fullDate?: string, dayStatus?: DayStatusType) {
     const dateCls = clsx({
         [`${prefix}-day-inrange`]: dayStatus?.isInRange,
         [`${prefix}-day-hover`]: dayStatus?.isHover,
@@ -26,7 +26,7 @@ const renderFullDate = (dayNumber?: number, _fullDate?: string, dayStatus?: DayS
             {dayNumber}
         </div>
     );
-};
+}
 
 export default function DatePickerDemo() {
     return <DatePicker style={{ width: '260px' }} type="dateRange" renderFullDate={renderFullDate} />;

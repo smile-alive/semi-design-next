@@ -8,6 +8,7 @@ brief: For easy and intuitive verification code entry
 import PinCodeReactApi from './api/pin-code.react.en-US.mdx';
 import PinCodeVueApi from './api/pin-code.vue.en-US.mdx';
 import PinCodeSolidApi from './api/pin-code.solid.en-US.mdx';
+import PinCodeSvelteApi from './api/pin-code.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Button, PinCode, Typography } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, PinCode, TypographyText } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 <Demo id="basic" />
@@ -60,6 +71,12 @@ Use `v-model` to bind the verification code string
 <Framework only="solid">
 
 Use `value` to pass in the verification code string and `onChange` to write the new content back into a signal for controlled use
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:value` to bind the verification code string; a plain `value` is the initial content, and there is no `defaultValue`
 
 </Framework>
 
@@ -104,6 +121,12 @@ Use the focus and blur methods on the template ref, and the input parameter is t
 
 </Framework>
 
+<Framework only="svelte">
+
+Get the component instance with `bind:this` and call `focus(index)` and `blur(index)`; the argument is the index of the corresponding Input, counted from 0
+
+</Framework>
+
 <Demo id="focus" />
 
 ## API Reference
@@ -131,6 +154,14 @@ Call `focus(index)` and `blur(index)` through the template ref. The index is cou
 <PinCodeSolidApi />
 
 `class`, `style`, `aria-label`, `aria-labelledby` and `data-*` land on the `role="group"` root element. `id` lands on the first input box, so `<label for>` points at the first digit. `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-required` and `tabindex` land on every input box. `name` is discarded. `autofocus` focuses the first input box on mount and defaults to `false`; turn it on only when the user has just entered the code step.
+
+</Framework>
+
+<Framework only="svelte">
+
+<PinCodeSvelteApi />
+
+`class`, `style` (a string), `aria-label`, `aria-labelledby` and `data-*` land on the `role="group"` root element. `id` lands on the first input box, so `<label for>` points at the first digit. `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-required` and `tabindex` land on every input box. `name`, `insetLabel` and `insetLabelId` are discarded. `onFocus` and `onBlur` are counted for the whole code. `autofocus` focuses the first input box on mount and defaults to `false`; turn it on only when the user has just entered the code step.
 
 </Framework>
 

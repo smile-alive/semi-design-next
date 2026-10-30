@@ -7,9 +7,9 @@
     const itemStyle = { backgroundColor: 'var(--semi-grey-1)' };
     const contentStyle = { marginLeft: '20%', padding: '5px' };
 
-    function changeDirection() {
+    const changeDirection = () => {
         direction.value = direction.value === 'horizontal' ? 'vertical' : 'horizontal';
-    }
+    };
 </script>
 
 <template>

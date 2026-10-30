@@ -11,6 +11,7 @@ import ColumnReactApi from './api/column.react.zh-CN.mdx';
 import TableVueApi from './api/table.vue.zh-CN.mdx';
 import TableSolidApi from './api/table.solid.zh-CN.mdx';
 import ColumnSolidApi from './api/column.solid.zh-CN.mdx';
+import TableSvelteApi from './api/table.svelte.zh-CN.mdx';
 
 ## 如何使用
 
@@ -196,6 +197,62 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Table } from '@fibrae/semi-ui-svelte';
+
+    const columns = [
+        {
+            title: '标题',
+            dataIndex: 'name',
+        },
+        {
+            title: '大小',
+            dataIndex: 'size',
+        },
+        {
+            title: '所有者',
+            dataIndex: 'owner',
+        },
+        {
+            title: '更新日期',
+            dataIndex: 'updateTime',
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'Semi Design 设计稿.fig',
+            size: '2M',
+            owner: '姜鹏志',
+            updateTime: '2020-02-02 05:13',
+        },
+        {
+            key: '2',
+            name: 'Semi Design 分享演示文稿',
+            size: '2M',
+            owner: '郝宣',
+            updateTime: '2020-01-17 05:31',
+        },
+        {
+            key: '3',
+            name: '设计文档',
+            size: '34KB',
+            owner: 'Zoey Edwards',
+            updateTime: '2020-01-26 11:01',
+        },
+    ];
+</script>
+
+<Table {columns} dataSource={data} pagination={false} />
+```
+
+Svelte 版没有 `Table.Column`：列只用 `columns` 数据声明，列里的自定义内容用 Table 的 `cell`、`headerCell` 等 snippet 渲染。
+
+</Framework>
+
 ## 代码演示
 
 ### 基本表格
@@ -215,6 +272,8 @@ function App() {
     <div>2. 使用 JSX 写法时，请不要与配置写法同时使用；如果同时使用，仅配置写法生效，不会进行聚合操作。</div>
 </Notice>
 
+<Demo id="jsx" />
+
 </Framework>
 
 <Framework only="vue">
@@ -227,6 +286,8 @@ function App() {
     <div>1. Table.Column 写法的表格暂时不支持 resizable 功能：子项列照常渲染，没有拖动手柄，开发环境会给出警告；</div>
     <div>2. 请不要同时传入 `columns` 与 `Table.Column`；如果同时使用，仅 `columns` 生效（包括空数组），不会进行聚合操作。</div>
 </Notice>
+
+<Demo id="jsx" />
 
 </Framework>
 
@@ -241,9 +302,9 @@ function App() {
     <div>2. 请不要与配置写法同时使用；如果同时使用，仅配置写法生效，不会进行聚合操作。</div>
 </Notice>
 
-</Framework>
-
 <Demo id="jsx" />
+
+</Framework>
 
 ### 行选择操作
 
@@ -279,6 +340,18 @@ function App() {
 <Notice title='注意事项'>
 
 请务必为 `dataSource` 中每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+
+</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice title='注意事项'>
+
+1. 请务必为 `dataSource` 中每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
+2. 如你遇见在第二页点击行选择后，回到第一页问题，请检查 `dataSource` 是否被整体替换。`dataSource` 的数据项变化后，非受控的翻页器会回到第一页。请把 `dataSource` 放在 `$state.raw` 或模块顶层常量内，并只在需要时整体替换。
+3. `rowSelection` 是一个对象，其中的 `selectedRowKeys` 不能用 `bind:` 绑定。要双向绑定选中项，用 Table 顶层的 `bind:selectedRowKeys`（同时传 `rowSelection` 才显示选择列），页码同理用 `bind:currentPage`；只想指定初始选中项时用 `defaultSelectedRowKeys`。
 
 </Notice>
 
@@ -336,6 +409,36 @@ function App() {
 
 </Framework>
 
+<Framework only="svelte">
+
+用户可以使用 Table 的 `cell` snippet 来自定义单元格的渲染，该功能适用于需要渲染较为复杂的单元格内容时。`cell` 对所有数据列调用，用 `column.dataIndex` 或 `column.key` 区分列，不需要定制的列要在 `{:else}` 分支里自己渲染 `text`，否则这些列的单元格是空的。
+
+`cell` 的参数是一个对象，包含以下属性：
+
+- `text`: `column.dataIndex` 对应的值，没有 `dataIndex` 的列为数据项本身
+- `record`: 当前行的数据项
+- `index`: 数据项在同级中的序号
+- `column`: 当前列的配置
+- `expandIcon`: 展开图标的 snippet（当使用树形数据或可展开行时），在插入处用 `{@render expandIcon?.()}` 渲染
+- `isHovering`: 当前行是否处于悬停状态
+- `selection`、`indentText`: 选择框与缩进内容的 snippet，仅在列开启 `useFullRender` 时提供，见[完全自定义渲染](#完全自定义渲染)
+
+通过 `isHovering` 参数，可以实现鼠标悬停时显示操作按钮等交互效果。
+
+```svelte
+<Table {columns} dataSource={data}>
+    {#snippet cell({ column, record, text })}
+        {#if column.dataIndex === 'name'}
+            <Avatar alt="" size="small" src={record.nameIconSrc} /> {text}
+        {:else}
+            {text}
+        {/if}
+    {/snippet}
+</Table>
+```
+
+</Framework>
+
 <Demo id="custom-render" />
 
 ### 带分页组件的表格
@@ -344,6 +447,12 @@ function App() {
 
 - 受控模式下，分页的状态完全由外部传入，依据为是否往 Table 传入了 `pagination.currentPage` 这个字段。一般情况下，受控模式适用于远程拉取数据并渲染。
 - 非受控模式下，Table 默认会将传入的 `dataSource` 长度作为 `total` 传给 Pagination 组件，当然你也可以传入一个 `total` 字段来覆盖 Table 组件的取值，不过我们并不推荐用户在非受控分页模式下传入这个字段。
+
+<Framework only="svelte">
+
+需要完全自定义分页区域时，传入 `paginationContent` snippet，它的参数 `pagination` 可以直接展开给 `Pagination`，同时替换分页信息文案与分页器。
+
+</Framework>
 
 <Demo id="pagination" />
 
@@ -373,6 +482,14 @@ function App() {
 
 <Notice type="primary" title="注意事项">
     <div>受控模式下，Table 不会对 dataSource 分页，请给 dataSource 传入当前页数据，并在 `onChange` 或 `pagination.onPageChange` 中更新 `pagination.currentPage`</div>
+</Notice>
+
+</Framework>
+
+<Framework only="svelte">
+
+<Notice type="primary" title="注意事项">
+    <div>受控模式下，Table 不会对 dataSource 分页，请给 dataSource 传入当前页数据，并在 `onChange`（参数含 `pagination`、`filters`、`sorter`）或 `pagination.onChange` 中更新 `pagination.currentPage`</div>
 </Notice>
 
 </Framework>
@@ -689,6 +806,12 @@ sorter 为函数类型时，可以通过函数的第三个参数获取 sortOrder
 
 </Framework>
 
+<Framework only="svelte">
+
+如果你需要将筛选器输入框展示在表头，可用 Table 的 `headerCell` snippet 渲染列标题，配合 `filteredValue` 使用。列的 `title` 仍是纯文本，不需要定制的列在 `{:else}` 分支里渲染 `title`。
+
+</Framework>
+
 <Demo id="custom-filter-dropdown" />
 
 ### 自定义筛选器
@@ -784,6 +907,37 @@ interface RenderFilterDropdownProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+把列的 `filterDropdown` 设为 `true`，再用 Table 的 `filterDropdown` snippet 自定义渲染筛选器面板。snippet 对所有 `filterDropdown` 为 `true` 的列调用，用 `column` 区分列。
+
+你可以在用户输入筛选值的时候调用 `onTempFilteredValueChange` 存储筛选值，在筛选值输入完毕后调用 `onConfirm` 触发真正的筛选。也可以通过 `onConfirm({ filteredValue })` 直接筛选。
+
+```typescript
+interface TableFilterDropdownSnippetProps {
+    /** 当前列的配置 */
+    column: ColumnProps;
+    /** 筛选器配置项，列没有 `filters` 时为 `undefined` */
+    filters: TableFilter[] | undefined;
+    /** 临时筛选值，没有暂存值时为已生效的筛选值 */
+    tempFilteredValue: any[] | undefined;
+    /** 设置临时筛选值 */
+    onTempFilteredValueChange: (value?: any[]) => void;
+    /** `onConfirm` 默认会将临时筛选值作为 `filteredValue` 并触发 `onChange`。你也可以通过传入 `filteredValue` 直接设置筛选值 */
+    onConfirm: (options?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
+    /** 清除筛选值、临时筛选值 */
+    onClear: (options?: { closeDropdown?: boolean }) => void;
+    /** 关闭 dropdown */
+    onClose: () => void;
+    /** 把临时筛选值还原为已生效的筛选值 */
+    onReset: () => void;
+}
+```
+
+`filterDropdownProps` 中的 `onVisibleChange` 不生效，筛选面板的开合通过列的 `onFilterDropdownVisibleChange` 获取。
+
+</Framework>
+
 <Demo id="custom-filter" />
 
 ### 筛选确认模式
@@ -842,6 +996,21 @@ interface RenderFilterDropdownProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+用 Table 的 `filterDropdownItem` snippet 自定义每个筛选项的渲染方式，传入后替换所有默认筛选项，用 `column` 区分列。参数如下：
+
+- `column: ColumnProps` 当前列的配置；
+- `text: string | undefined` 当前筛选项的文案；
+- `value: any` 当前筛选项的值；
+- `checked: boolean` 当前筛选项是否已经选中；
+- `filteredValue: any[]` 菜单当前显示的筛选值，确认模式下是尚未生效的临时值；
+- `level: number` 当前筛选项所处菜单的层级，顶层菜单为 `0`；
+- `filterMultiple: boolean` 当前筛选项是否为多选；
+- `onChange: (event: MouseEvent) => void` 切换当前筛选项的选中状态，绑定到筛选项的 `onclick`。
+
+</Framework>
+
 <Demo id="filter-item-render" />
 
 ### 可以展开的表格
@@ -868,6 +1037,12 @@ interface RenderFilterDropdownProps {
 <Framework only="solid">
 
 如果需要渲染可以展开的表格，除了需要在 Table 传 `expandedRowRender` 这个方法外，还必须要指定 `rowKey`（默认为 `key`），Table 会根据 `rowKey` 取得行唯一标识符。展开的行可以通过 `expandedRowKeys` 与 `onExpandedRowsChange` 受控。
+
+</Framework>
+
+<Framework only="svelte">
+
+如果需要渲染可以展开的表格，除了需要为 Table 提供 `expandedRow` snippet（参数 `record`、`index`、`expanded`，输出为空的行不渲染展开内容）外，还必须要指定 `rowKey`（默认为 `key`），Table 会根据 `rowKey` 取得行唯一标识符。展开的行可以用 `bind:expandedRowKeys` 受控，初始展开的行直接给 `expandedRowKeys` 赋初值。
 
 </Framework>
 
@@ -951,6 +1126,16 @@ interface RenderFilterDropdownProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+原则上 tr/td/th 上支持的属性或事件都能够被定义，返回对象使用 Svelte 的原生属性名：`class`、`style`（字符串）、`data-*` 与小写的事件 `onclick`、`onmouseenter`、`onmouseleave`、`ondblclick`、`oncontextmenu` 等，`colspan`、`rowspan` 也是小写。例如下面这个例子：
+
+- 表头的 tr 定义了 `onmouseenter`/`onmouseleave`
+- 表格的 tr 定义了 `class`
+- 表格的第三行定义了 `onclick`
+
+</Framework>
+
 <Demo id="row-cell-events" />
 
 ### 实现斑马纹样式
@@ -978,6 +1163,13 @@ interface RenderFilterDropdownProps {
 <Framework only="solid">
 
 可以通过 Column.onHeaderCell 返回特定 style 或 class，定制表头的样式  
+如下例子，通过传入 `background-color` 改变了表头背景色
+
+</Framework>
+
+<Framework only="svelte">
+
+可以通过 Column.onHeaderCell 返回特定 style（字符串）或 class，定制表头的样式  
 如下例子，通过传入 `background-color` 改变了表头背景色
 
 </Framework>
@@ -1033,6 +1225,12 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 <Framework only="solid">
 
 设置 `ellipsis.showTitle` 为 false 可以隐藏默认原生的 HTML title。配合 `render` 可以自定义内容提示。
+
+</Framework>
+
+<Framework only="svelte">
+
+设置 `ellipsis.showTitle` 为 false 可以隐藏默认原生的 HTML title。配合 `cell` snippet 可以自定义内容提示。
 
 </Framework>
 
@@ -1105,6 +1303,12 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 版的 `components` 只接受标签名，不能给每一行传入一个组件，所以不能在行里挂 `@dnd-kit/svelte` 的 `createSortable`。示例改用原生 HTML5 拖放：`onRow` 为每行返回 `draggable`、`ondragstart`、`ondragenter`、`ondragover`、`ondragend`，拖到另一行上方时按行 key 调整 `dataSource`。原生拖放只支持指针操作，需要键盘排序时请改用带键盘支持的排序库。
+
+</Framework>
+
 <Demo id="drag-sort" />
 
 ### 表格分组
@@ -1127,6 +1331,12 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 
 </Framework>
 
+<Framework only="svelte">
+
+对于一些数据需要分组展示的表格，可以传入 `groupBy` 定义分组规则，使用 `groupSection` snippet（参数 `groupKey`、`group`）来定义分组表头的渲染；分组行唯一一列的列配置由 `groupSectionColumn` 返回。
+
+</Framework>
+
 > <strong>注意：</strong>请务必为每行数据提供一个与其他行值不同的 `key`，或者使用 `rowKey` 参数指定一个作为主键的属性名。
 
 <Demo id="grouping" />
@@ -1144,6 +1354,12 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 <Framework only="vue">
 
 - 必须传递 `scroll.y`（number）；表格宽度取 `style.width`，未设置时取 `scroll.x`。`style` 是透传到根元素的样式，`width` 写成带单位的字符串，如 `'750px'`；
+
+</Framework>
+
+<Framework only="svelte">
+
+- 必须传递 `scroll.y`（number）；表格宽度取 `style.width`，未设置时取 `scroll.x`。`style` 是落在根元素上的样式字符串，`width` 写成带单位的值，如 `'width: 750px'`；
 
 </Framework>
 
@@ -1173,6 +1389,12 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `bind:this` 获取 Table 的实例（类型 `TableHandle`），调用 `scrollTo(offset)` 与 `scrollToItem(index, align)`，align 为 `auto`（默认）、`smart`、`center`、`start`、`end`；表格没有开启虚拟化时调用会在开发环境给出警告。
+
+</Framework>
+
 以下为渲染 1000 条数据的示例。
 
 <Demo id="virtualized" />
@@ -1194,6 +1416,12 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 <Framework only="solid">
 
 基于虚拟化特性，通过传入 `virtualized.onScroll` 我们可以实现无限滚动加载数据。
+
+</Framework>
+
+<Framework only="svelte">
+
+基于虚拟化特性，通过传入 `onScroll` 我们可以实现无限滚动加载数据。参数只有 `scrollOffset`，只在纵向滚动偏移变化时触发，需要滚动方向时自行记录上一次的偏移量比较。
 
 </Framework>
 
@@ -1289,6 +1517,36 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 
 </Framework>
 
+<Framework only="svelte">
+
+一般情况下，使用 `cell` snippet 即可，但是你也可以通过传递 `Column.useFullRender=true` 来开启完全自定义渲染模式，此时 snippet 的输出会替换整个单元格，复选框按钮、展开按钮、缩进等节点将会作为 snippet 传给 `headerCell` 与 `cell`，你可以进一步来定义表头和单元格的内容渲染方式。
+
+其中 `headerCell` 的参数为：
+
+```text
+{
+    column: ColumnProps,
+    title: string | undefined, // 列标题
+    filter: Snippet | undefined, // 筛选按钮
+    sorter: Snippet | undefined, // 排序按钮
+    selection: Snippet | undefined, // 选择按钮
+}
+```
+
+`cell` 的参数中与完全自定义渲染有关的部分为：
+
+```text
+{
+    expandIcon: Snippet | undefined, // 展开按钮
+    selection: Snippet | undefined, // 选择按钮
+    indentText: Snippet | undefined, // 缩进
+}
+```
+
+使用 `{@render selection?.()}` 渲染这些节点。
+
+</Framework>
+
 > 下方的例子则是将复选框与内容渲染至同一单元格和表头中。
 
 <Demo id="full-render" />
@@ -1337,6 +1595,16 @@ Table 默认为整行配置 Hover 样式，如果你需要修改相关样式可�
 
 </Framework>
 
+<Framework only="svelte">
+
+用户可以通过表头合并功能进行表头的分组，表头合并支持与固定列、虚拟化、数据分组、列伸缩等功能复合使用。Svelte 版只有配置式写法，没有 `Table.Column`。
+
+#### 合并表头配置式写法
+
+<Demo id="header-merge" />
+
+</Framework>
+
 ### 行列合并
 
 <Framework only="react">
@@ -1379,6 +1647,19 @@ type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
 
 ```text
 type OnCell = (record: RecordType, rowIndex: number) => JSX.TdHTMLAttributes<HTMLElement>;
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+- 表头除了通过 `children` 写法进行合并外，可通过设置 `column.colSpan` 进行表头的列合并。
+- 表格支持行/列合并，由 `column.onCell` 返回单元格属性 `colspan` 或者 `rowspan`（注意是小写），设值为 0 时，该单元格不会渲染，也不调用 `cell`。
+
+```text
+type OnCell = (record: RecordType, rowIndex: number) => TableCellAttrs;
+
+// TableCellAttrs：td 支持的属性与监听器，colspan 与 rowspan 为小写
 ```
 
 </Framework>
@@ -1438,6 +1719,31 @@ type OnCell = (record: RecordType, rowIndex: number) => JSX.TdHTMLAttributes<HTM
 
 </Framework>
 
+<Framework only="svelte">
+
+<TableSvelteApi />
+
+`class`、`style`（字符串）、`id`、`data-*` 等原生属性落在最外层元素；`aria-label`、`aria-labelledby`、`aria-describedby` 落在 `role="table"` 的元素上。有标题而使用方没有传名称时，表格通过 `aria-labelledby` 指向标题。
+
+`TableProps`、`ColumnProps`、`TableHandle` 与各 snippet 的参数类型都可以从 `@fibrae/semi-ui-svelte` 导入，它们的泛型参数 `R`（下文的 `RecordType`）默认为 `Record<string, any>`。
+
+`virtualized` 传对象时的字段（`TableVirtualizedProps`）：
+
+| 字段          | 说明                                                                                           | 类型                                                                                          | 默认值 |
+| ------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------ |
+| itemSize      | 每行的高度，不传时按 `size` 取默认值：default 为 53，middle 为 45，small 为 37，组头行同普通行 | `number \| ((index: number, row: { sectionRow?: boolean, expandedRow?: boolean }) => number)` | `53`   |
+| overscanCount | 可视区上下额外渲染的行数                                                                       | `number`                                                                                      | `2`    |
+
+`components` 的值是标签名，该标签替换对应位置的默认标签。可以替换的位置（`TableComponents`）：
+
+| 位置                                                  | 说明                                |
+| ----------------------------------------------------- | ----------------------------------- |
+| header.outer、header.wrapper、header.row、header.cell | 表头的 `table`、`thead`、`tr`、`th` |
+| body.outer、body.wrapper、body.row、body.cell         | 表体的 `table`、`tbody`、`tr`、`td` |
+| body.colgroup.wrapper、body.colgroup.col              | `colgroup` 与 `col`                 |
+
+</Framework>
+
 ### headerStyle 示例
 
 `headerStyle` 会应用到所有表头 `<th>` 元素，包括 fixed 表头。
@@ -1469,6 +1775,35 @@ type OnCell = (record: RecordType, rowIndex: number) => JSX.TdHTMLAttributes<HTM
     <Table :columns="columns" :dataSource="dataSource" :scroll="{ x: 900 }" :headerStyle="{ backgroundColor: '#F5F6F7', fontWeight: 600 }" />
 </template>
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
+
+    const columns: ColumnProps[] = [
+        { title: '姓名', dataIndex: 'name', width: 180, fixed: 'left' },
+        { title: '年龄', dataIndex: 'age', width: 120 },
+        { title: '地址', dataIndex: 'address', width: 280 },
+        { title: '公司', dataIndex: 'company', width: 280 },
+    ];
+
+    const dataSource = Array.from({ length: 6 }).map((_, i) => ({
+        key: i,
+        name: `Edward ${i}`,
+        age: 20 + i,
+        address: '西湖区湖底公园 1 号',
+        company: 'Semi Design',
+    }));
+</script>
+
+<Table {columns} {dataSource} scroll={{ x: 900 }} headerStyle="background-color: #F5F6F7; font-weight: 600" />
+```
+
+`headerStyle` 是 CSS 字符串。
 
 </Framework>
 
@@ -1635,6 +1970,47 @@ RecordType 为 Table 和 Column 的泛型参数 `R`，默认为 `Record<string, 
 
 </Framework>
 
+<Framework only="svelte">
+
+Svelte 版的 Table 不是泛型组件，传给它的 `columns`、`rowSelection`、`onRow` 等都按 `Record<string, any>` 取记录。记录有具体类型时，把 `dataSource` 声明成该类型，在 snippet 和回调里用 `as` 收窄：
+
+```svelte
+<script lang="ts">
+    import { Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
+
+    interface Row {
+        key: string;
+        name: string;
+        age: number;
+        address: string;
+    }
+
+    const columns: ColumnProps[] = [
+        { title: 'Name', dataIndex: 'name', width: 200 },
+        // ...
+    ];
+
+    const data: Row[] = [
+        { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
+        // ...
+    ];
+</script>
+
+<Table {columns} dataSource={data}>
+    {#snippet cell({ column, record, text })}
+        {#if column.dataIndex === 'age'}
+            {(record as Row).age} 岁
+        {:else}
+            {text}
+        {/if}
+    {/snippet}
+</Table>
+```
+
+分页配置 `TablePaginationProps` 在 `Pagination` 的属性上增加 `position` 与 `formatPageText`，`onChange` 的参数是 `(currentPage, pageSize)`。
+
+</Framework>
+
 ## onHeaderRow / onRow 用法
 
 `onHeaderRow` 中可以返回 th 支持的属性或者事件 `onRow` 中可以返回 tr 支持的属性或者事件
@@ -1720,6 +2096,41 @@ import { Table } from '@fibrae/semi-ui-react';
 
 </Framework>
 
+<Framework only="svelte">
+
+返回对象里的事件监听是小写的原生名（`onclick`、`onmouseenter`、`onmouseleave`），样式类用 `class`，`style` 是字符串。Table 自己的处理、`onRowMouseEnter` 等回调先于这里返回的监听器调用。
+
+```svelte
+<script lang="ts">
+    import { Table, type TableProps } from '@fibrae/semi-ui-svelte';
+
+    const onRow: TableProps['onRow'] = (record, index, rowStatus) => ({
+        onclick: () => {
+            // rowStatus.disabled 表示当前行是否被禁用
+            // rowStatus.selected 表示当前行是否被选中
+            if (rowStatus.disabled) {
+                return;
+            }
+            console.log('点击行', index, rowStatus);
+        },
+        onmouseenter: () => {}, // 鼠标移入行
+        onmouseleave: () => {}, // 鼠标移出行
+        class: '',
+        // 其他可以作用于 tr 的属性或事件
+    });
+
+    const onHeaderRow: TableProps['onHeaderRow'] = (columns, index) => ({
+        onclick: () => {}, // 点击表头行
+        class: '',
+        // 其他可以作用于 tr 的属性或事件
+    });
+</script>
+
+<Table {columns} {dataSource} {onRow} {onHeaderRow} />
+```
+
+</Framework>
+
 ## Column
 
 列配置只接受下表的属性，拼错的属性名会报类型错误。需要在列上携带自定义字段时，用交叉类型扩展，如 `ColumnProps<RecordType> & { tooltip: string }`。
@@ -1797,6 +2208,55 @@ type Filter = {
 
 </Framework>
 
+<Framework only="svelte">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| align | 设置列的对齐方式，在 RTL 时会自动切换 | 'left' \| 'right' \| 'center' | 'left' |
+| class | 列样式名 | string |  |
+| children | 表头合并时用于子列的设置 | Column[] |  |
+| colSpan | 表头列合并，设置为 0 时，不渲染 | number |  |
+| dataIndex | 列数据在数据项中对应的 key，使用排序或筛选时必传，且需要保持不重复 | string |  |
+| defaultFilteredValue | 筛选的默认值，值为已筛选的 value 数组 | any[] |  |
+| defaultSortOrder | 排序的默认值，可设置为 'ascend'\|'descend'\|false | boolean \| string | false |
+| ellipsis | 文本缩略，开启后 table-layout 会自动切换为 fixed | boolean \| \{ showTitle: boolean \} | false |
+| filterChildrenRecord | 是否需要对子级数据进行本地过滤，开启该功能后如果子级符合过滤标准，父级即使不符合仍然会保留 | boolean |  |
+| filterDropdown | 为 true 时显示筛选按钮，面板内容由 Table 的 `filterDropdown` snippet 提供，需要自行编写各种交互 | boolean |  |
+| filterDropdownProps | 透传给 Dropdown 的属性（不含 `visible`、`trigger`、`onVisibleChange` 等），触发方式固定为点击，详情点击[Dropdown API](/zh-CN/svelte/show/dropdown#Dropdown) | object |  |
+| filterDropdownVisible | 控制 Dropdown 的 visible，详情点击[Dropdown API](/zh-CN/svelte/show/dropdown#Dropdown) | boolean |  |
+| filterMultiple | 是否多选 | boolean | true |
+| filterConfirmMode | 筛选确认模式。`immediate` 为点击筛选项立即生效；`confirm` 为点击筛选项后需点击确定按钮才生效，此时下拉面板底部会显示确定和重置按钮 | 'immediate' \| 'confirm' | 'immediate' |
+| filteredValue | 筛选的受控属性，外界可用此控制列的筛选状态，值为已筛选的 value 数组 | any[] |  |
+| filters | 表头的筛选菜单项。 | Filter[] |  |
+| fixed | 列是否固定，可选 true(等效于 left) 'left' 'right'，在 RTL 时会自动切换 | boolean \| string | false |
+| key | 列的标识，用于选择、排序、筛选与列宽；已设置唯一的 dataIndex 时可以省略 | string \| number |  |
+| resize | 是否开启 resize 模式，只有 Table resizable 开启后此属性才会生效 | boolean |  |
+| showSortTip | 是否展示排序提示，如果设置了 sortOrder，排序受控，则该参数不会生效 | boolean | false |
+| sortChildrenRecord | 是否对子级数据进行本地排序 | boolean |  |
+| sortOrder | 排序的受控属性，外界可用此控制列的排序，可设置为 'ascend'\|'descend'\|false | boolean \| string | false |
+| sorter | 排序函数，本地排序使用一个函数 (参考 Array.sort 的 compareFunction)，需要服务端排序可设为 true。**必须给排序列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | boolean \| (r1: RecordType, r2: RecordType, sortOrder: 'ascend' \| 'descend') => number | true |
+| title | 列头显示的纯文本，同时是省略时的 Tooltip 内容和排序按钮的名称。需要自定义内容时用 Table 的 `headerCell` snippet | string |  |
+| useFullRender | 是否完全自定义渲染，用法详见[完全自定义渲染](#完全自定义渲染)，开启此功能会造成一定的性能损耗 | boolean | false |
+| width | 列宽度 | string \| number |  |
+| onCell | 设置单元格属性，返回的 `colspan`、`rowspan` 为小写 | (record: RecordType, rowIndex: number) => object |  |
+| onFilter | 本地模式下，确定筛选的运行函数。**必须给筛选列设置一个独立的 dataIndex，必须为 dataSource 里面的每条数据项设置独立的 key** | (filteredValue: any, record: RecordType) => boolean |  |
+| onFilterDropdownVisibleChange | 自定义筛选菜单可见变化时回调 | (visible: boolean) => void |  |
+| onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+
+`Column` 只是数据，没有 `Table.Column` 组件，也没有 `render`、`renderFilterDropdown`、`renderFilterDropdownItem`、`shouldCellUpdate`。单元格、表头、排序与筛选图标和筛选项的自定义渲染用 Table 的 snippet：`cell`、`headerCell`、`sortIcon`、`filterIcon`、`filterDropdown`、`filterDropdownItem`，参数里的 `column` 用来区分列，参数见上文 Table 的属性表。
+
+一些上面用到的类型定义：
+
+```typescript
+type Filter = {
+    value: any;
+    text: string;
+    children?: Filter[];
+};
+```
+
+</Framework>
+
 ## Column.onCell / onHeaderCell 用法
 
 与 `onRow`、`onHeaderRow类似`，在 `column.onCell` `column.onHeaderCell` 中也能返回 td/th 支持的属性或事件
@@ -1824,6 +2284,30 @@ type Filter = {
 | onSelectAll | 用户手动点击表头选择框的回调，会选中/取消选中当前筛选结果里的所有可选行（不含禁用行），`changedRows` 只包含选中状态发生变化的行 | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], event: Event) => void |  |
 
 自定义选择框用 Table 的 `#selectionCell` 插槽，不再有 `renderCell` 和 `shouldCellUpdate`。
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| class | 所处列样式名 | string |  |
+| checkRelation | 父子节点选择关联模式。设置为 `'related'` 时，选中父节点会自动选中所有子节点，选中子节点会影响父节点的状态（全选/半选/未选）；默认为 `'unRelated'` 即父子节点选择互不影响 | 'related' \| 'unRelated' | 'unRelated' |
+| clickRow | 是否启用点击行选择功能。开启后，点击行任意位置（包括固定列）都会触发行选择/取消选择。被禁用的行（通过 getCheckboxProps 设置）无法通过点击选中；`disabled` 为 true 时点击行也不会选中 | boolean | false |
+| defaultSelectedRowKeys | 初始选中项的 key 数组，只在挂载时读取，传了 selectedRowKeys 时不生效 | (string \| number)[] |  |
+| disabled | 表头的 `Checkbox` 是否禁用；为 true 时 `clickRow` 点击行选择也不生效 | boolean | false |
+| fixed | 把选择框列固定在左边 | boolean | false |
+| getCheckboxProps | 选择框的默认属性配置 | (record: RecordType) => object |  |
+| hidden | 是否隐藏选择列 | boolean | false |
+| selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | (string \| number)[] |  |
+| width | 自定义列表选择框宽度 | string \| number |  |
+| onChange | 选中项发生变化时的回调。第一个参数会保存上次选中的 row keys，即使你做了分页受控或更新了 dataSource [FAQ](#faq) | (selectedRowKeys: (string \| number)[], selectedRows: RecordType[]) => void |  |
+| onCell | 设置选择列数据单元格的属性 | (record: RecordType, rowIndex: number) => object |  |
+| onHeaderCell | 设置头部单元格属性，`index` 为表头行的序号 | (column: [Column](#Column), columnIndex: number, index: number) => object |  |
+| onSelect | 用户手动选择某行的回调。`event` 为选择框的 change 事件；`clickRow` 点击行时为鼠标事件 | (record: RecordType, selected: boolean, selectedRows: RecordType[], event: Event) => void |  |
+| onSelectAll | 用户手动点击表头选择框的回调，会选中/取消选中当前筛选结果里的所有可选行（不含禁用行），`changedRows` 只包含选中状态发生变化的行 | (selected: boolean, selectedRows: RecordType[], changedRows: RecordType[], event: Event) => void |  |
+
+自定义选择框用 Table 的 `selectionCell` snippet，不再有 `renderCell` 和 `shouldCellUpdate`。
 
 </Framework>
 
@@ -1890,6 +2374,22 @@ type Filter = {
 | total                             | 数据总数                                                                                                                                                        | number                                                                               | 0        |
 | preventPageChangeOnPageSizeChange | 切换 pageSize 时是否阻止自动调整 currentPage。默认情况下，切换 pageSize 时组件会自动计算新的 currentPage 以保持当前数据位置，设为 true 后由用户自行控制页码变化 | boolean                                                                              | false    |
 | onChange                          | 页码或每页条数变化时的回调，设置后 Table 的 `change` 事件不再响应分页器变化                                                                                     | (currentPage: number, pageSize: number) => void                                      |          |
+| onPageChange                      | 页码变化时的回调                                                                                                                                                | (currentPage: number) => void                                                        |          |
+| onPageSizeChange                  | 每页条数变化时的回调                                                                                                                                            | (pageSize: number) => void                                                           |          |
+
+</Framework>
+
+<Framework only="svelte">
+
+| 属性                              | 说明                                                                                                                                                            | 类型                                                                                 | 默认值   |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | -------- |
+| currentPage                       | 当前页码，传入后分页受控                                                                                                                                        | number                                                                               | -        |
+| formatPageText                    | 翻页区域文案自定义格式化，传 false 关闭文案显示；该项影响表格翻页区域左侧文案显示，不同于 `Pagination` 组件的 `showTotal` 参数，请注意甄别。                    | boolean \| (\{ currentStart: number, currentEnd: number, total: number \}) => string | true     |
+| pageSize                          | 每页条数                                                                                                                                                        | number                                                                               | 10       |
+| position                          | 位置                                                                                                                                                            | 'bottom' \| 'top' \| 'both'                                                          | 'bottom' |
+| total                             | 数据总数                                                                                                                                                        | number                                                                               | 0        |
+| preventPageChangeOnPageSizeChange | 切换 pageSize 时是否阻止自动调整 currentPage。默认情况下，切换 pageSize 时组件会自动计算新的 currentPage 以保持当前数据位置，设为 true 后由用户自行控制页码变化 | boolean                                                                              | false    |
+| onChange                          | 页码或每页条数变化时的回调，设置后 Table 的 `onChange` 不再响应分页器变化                                                                                       | (currentPage: number, pageSize: number) => void                                      |          |
 | onPageChange                      | 页码变化时的回调                                                                                                                                                | (currentPage: number) => void                                                        |          |
 | onPageSizeChange                  | 每页条数变化时的回调                                                                                                                                            | (pageSize: number) => void                                                           |          |
 
@@ -1973,6 +2473,33 @@ function Demo() {
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `bind:this` 可以访问到 Table 暴露的方法，类型为 `TableHandle`：
+
+```svelte
+<script lang="ts">
+    import { onMount } from 'svelte';
+    import { Table, type TableHandle } from '@fibrae/semi-ui-svelte';
+
+    let table = $state<TableHandle>();
+
+    onMount(() => {
+        table?.getCurrentPageData(); // => { dataSource: [/*...*/], groups: /*...*/ }
+    });
+</script>
+
+<Table bind:this={table} {columns} {dataSource} />
+```
+
+| 名称                        | 描述                                                                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| getCurrentPageData()        | 返回当前页的数据对象：\{ dataSource: RecordType[], groups: Map\<string \| number, Set\<string \| number\>\> \}，groups 的键是分组键，值是该组的行键集合 |
+| scrollTo(offset)            | 虚拟化表格滚动到指定的像素偏移                                                                                                                          |
+| scrollToItem(index, align?) | 虚拟化表格滚动到指定的行，`align` 为 'auto' \| 'smart' \| 'center' \| 'start' \| 'end'                                                                  |
+
+</Framework>
+
 ## Accessibility
 
 ### ARIA
@@ -1993,6 +2520,12 @@ Table 按 [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/) 输�
 <Framework only="vue">
 
 - 列筛选按钮是原生 `button`，可用 Tab 聚焦，Enter、Space 或下箭头打开筛选菜单，并带有 `aria-haspopup="menu"` 与 `aria-expanded`；名称为「筛选此列数据」，有筛选值时为「筛选此列数据，筛选已生效」。`#filterIcon` 插槽只替换按钮内的图标，按钮的名称和键盘操作不变
+
+</Framework>
+
+<Framework only="svelte">
+
+- 列筛选按钮是原生 `button`，可用 Tab 聚焦，Enter、Space 或下箭头打开筛选菜单，并带有 `aria-haspopup="menu"` 与 `aria-expanded`；名称为「筛选此列数据」，有筛选值时为「筛选此列数据，筛选已生效」。`filterIcon` snippet 只替换按钮内的图标，按钮的名称和键盘操作不变
 
 </Framework>
 
@@ -2096,6 +2629,26 @@ Table 按 [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/) 输�
 
       </Framework>
 
+      <Framework only="svelte">
+
+    Svelte 的 Table 逐项比较新旧 `dataSource`，每一项都是原来的记录时不会重置，新增或删除记录会重置。`dataSource` 用 `$state.raw` 保存并在需要时整体替换，不要在每次求值时重新生成记录对象。
+
+    ```svelte
+    <script lang="ts">
+        let dataSource = $state.raw<Record<string, any>[]>([]);
+
+        // 只在需要时整体替换
+        const load = async () => {
+            dataSource = await fetchData();
+        };
+    </script>
+
+    <!-- 错误：每次求值都会生成新的记录对象 -->
+    <Table dataSource={list.map((item) => ({ ...item }))} {columns} />
+    ```
+
+      </Framework>
+
 - **筛选后的数据条数不对？**
 
     请检查你的筛选列和数据源是否配置正确。
@@ -2126,6 +2679,12 @@ Table 按 [WAI-ARIA Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/) 输�
       <Framework only="solid">
 
     Table 按 props 的读取位置更新，`columns`、`dataSource` 等在 JSX 中读取 signal 即可跟随变化。`columns` 数组定义在组件内部时只会创建一次，依赖 signal 的列配置请使用 getter 或在 `render` 中读取。
+
+      </Framework>
+
+      <Framework only="svelte">
+
+    Svelte 通过 rune 追踪变化：`dataSource` 用 `$state` 或 `$state.raw` 保存，替换整个数组或调用 `push`、`splice` 等方法都会触发更新；`$state.raw` 下直接修改某条记录的字段不会触发，需要整体替换数组。`columns` 同理，依赖响应式数据时用 `$derived`，不依赖时定义在 `<script>` 顶层。
 
       </Framework>
 

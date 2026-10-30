@@ -8,6 +8,7 @@ brief: Used to guide new users through pages
 import UserGuideReactApi from './api/user-guide.react.en-US.mdx';
 import UserGuideVueApi from './api/user-guide.vue.en-US.mdx';
 import UserGuideSolidApi from './api/user-guide.solid.en-US.mdx';
+import UserGuideSvelteApi from './api/user-guide.svelte.en-US.mdx';
 
 ## Demos
 
@@ -35,6 +36,16 @@ import { UserGuide } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { UserGuide } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { UserGuide } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -77,6 +88,12 @@ Set the button text with `children` in `nextButtonProps` and `prevButtonProps`. 
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `nextText` and `prevText` snippets for the button text. The text of the button on the last step is set by `finishText`.
+
+</Framework>
+
 <Demo id="custom-button" />
 
 ### Controlled
@@ -95,6 +112,12 @@ Bind the current step with `current` and write it back in `onChange`; bind the v
 
 </Framework>
 
+<Framework only="svelte">
+
+Bind the current step with `bind:current` and the visibility with `bind:visible`.
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### Modal guide
@@ -110,6 +133,12 @@ Use the `cover` slot for the cover and the `description` slot for rich-text desc
 <Framework only="solid">
 
 Use `renderCover` for the cover and `renderDescription` for rich-text descriptions; they are called for the current step only.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use the `cover` snippet in the step data for the cover, and write `description` as a snippet for rich-text descriptions; a snippet receives `{ item, index }`.
 
 </Framework>
 
@@ -146,6 +175,14 @@ UserGuide has no root element. In popup mode `class` and `style` land on the pop
 <UserGuideSolidApi />
 
 UserGuide has no root element. In popup mode `class` and `style` land on the popover card; in modal mode they are handed to Modal and land where Modal puts them. Undeclared attributes such as `ref`, `aria-*` and native events are dropped. The dialog's accessible name comes only from the `title` of the current step.
+
+</Framework>
+
+<Framework only="svelte">
+
+<UserGuideSvelteApi />
+
+UserGuide has no root element. In popup mode `class` and `style` land on the popover card; in modal mode `class` lands on the outermost element of the Modal and `style` on `.semi-modal`. Undeclared attributes such as `aria-*` and native events are dropped. The dialog's accessible name comes only from the `title` of the current step.
 
 </Framework>
 
@@ -201,6 +238,25 @@ Each item of `steps` (type `UserGuideStepItem`) holds data only. Custom content 
 | spotlightPadding | The inner padding of the highlight area of this step, it will override the global configuration                                                                                          | number                                                  | -       |
 | theme            | The theme of this step, it will override the global configuration                                                                                                                        | `default` \| `primary`                                  | -       |
 | position         | The position of the pop-up layer of this step, it will override the global configuration                                                                                                 | Position                                                | -       |
+
+</Framework>
+
+<Framework only="svelte">
+
+Each item of `steps` (type `UserGuideStepItem`) holds data only. `title` and `description` are strings or snippets and `cover` is a snippet; a snippet receives `{ item, index }` (type `UserGuideStepSnippetProps`).
+
+| Property         | Description                                                                                                                                                                              | Type                                             | Default |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------- |
+| class            | Custom class name of the step                                                                                                                                                            | string                                           | -       |
+| cover            | Cover of the step; without it the step has no cover area                                                                                                                                 | Snippet\<[UserGuideStepSnippetProps]\>           | -       |
+| target           | The target element, the highlight area will focus on this element. The function form is called when the step is measured and may return `null` or `undefined` while the target is absent | Element \| (() => Element \| null \| undefined)  | -       |
+| title            | Title of the step, a string or a snippet                                                                                                                                                 | string \| Snippet\<[UserGuideStepSnippetProps]\> | -       |
+| description      | Description of the step, a string or a snippet                                                                                                                                           | string \| Snippet\<[UserGuideStepSnippetProps]\> | -       |
+| mask             | Whether to display the mask of this step, it will override the global configuration                                                                                                      | boolean                                          | -       |
+| showArrow        | Whether to display the arrow (only valid when mode=`popup`)                                                                                                                              | boolean                                          | true    |
+| spotlightPadding | The inner padding of the highlight area of this step, it will override the global configuration                                                                                          | number                                           | -       |
+| theme            | The theme of this step, it will override the global configuration                                                                                                                        | `default` \| `primary`                           | -       |
+| position         | The position of the pop-up layer of this step, it will override the global configuration                                                                                                 | Position                                         | -       |
 
 </Framework>
 

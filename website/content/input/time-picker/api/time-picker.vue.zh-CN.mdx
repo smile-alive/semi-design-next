@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | hourStep | 小时选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "hourStep")` |
 | minuteStep | 分钟选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "minuteStep")` |
 | secondStep | 秒选项的间隔，必须是正整数。 | `number` | `semiGlobalDefault("TimePicker", "secondStep")` |
-| disabled | 禁用全部操作。 | `boolean` | `semiDefault("TimePicker", "disabled", false)` |
+| disabled | 禁用全部操作。 | `boolean` | `undefined` |
 | disabledHours | 返回禁止选择的小时。 | <ApiType detail={"(() => number[])"}>Type</ApiType> | `undefined` |
 | disabledMinutes | 按所选小时返回禁止选择的分钟。 | <ApiType detail={"((selectedHour: number) => number[])"}>Type</ApiType> | `undefined` |
 | disabledSeconds | 按所选小时和分钟返回禁止选择的秒。 | <ApiType detail={"((selectedHour: number, selectedMinute: number) => number[])"}>Type</ApiType> | `undefined` |
@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | hideDisabledOptions | 隐藏禁止选择的选项。 | `boolean` | `semiDefault("TimePicker", "hideDisabledOptions", false)` |
 | placeholder | 没有值时显示的提示，默认按 type 取语言包文案。 | `string` | `semiGlobalDefault("TimePicker", "placeholder")` |
 | rangeSeparator | 时间范围的分隔符。 | `string` | <ApiType detail={"semiDefault(\"TimePicker\", \"rangeSeparator\", strings.DEFAULT_RANGE_SEPARATOR)"}>Type</ApiType> |
-| size | 输入框的大小。 | `Size` | `semiDefault("TimePicker", "size", "default")` |
+| size | 输入框的大小。 | `Size` | `undefined` |
 | borderless | 无边框模式。 | `boolean` | `semiDefault("TimePicker", "borderless", false)` |
 | showClear | 是否展示清除按钮。 | `boolean` | `semiDefault("TimePicker", "showClear", true)` |
 | inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘。 | `boolean` | `semiDefault("TimePicker", "inputReadOnly", false)` |

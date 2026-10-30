@@ -1,0 +1,27 @@
+{
+    "timeline": {
+        "source": "packages/semi-ui-svelte/src/timeline/timeline.svelte",
+        "props": {
+            "content": {
+                "zh-CN": "dataSource 每一项内容的 snippet，参数 `{ item, index }`，缺省渲染 item.content。",
+                "en-US": "Snippet for the content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.content."
+            },
+            "dataSource": {
+                "zh-CN": "数据数组，按数据渲染各节点；项的字段见下表，其中 `dot` 为该节点自定义圆点的 snippet，未设置时画默认圆点。",
+                "en-US": "Data array the items are rendered from. See the item fields below; `dot` is the snippet of a custom dot for that item, and the default circle is drawn when unset."
+            },
+            "extra": {
+                "zh-CN": "dataSource 每一项辅助说明的 snippet，参数 `{ item, index }`，缺省渲染 item.extra。",
+                "en-US": "Snippet for the extra content of each dataSource item, with the parameter `{ item, index }`. Defaults to item.extra."
+            },
+            "mode": {
+                "zh-CN": "时间轴与内容的相对位置，可选 left、right、center、alternate。",
+                "en-US": "Position of the timeline relative to the content: left, right, center or alternate."
+            },
+            "time": {
+                "zh-CN": "dataSource 每一项时间的 snippet，参数 `{ item, index }`，缺省渲染 item.time。",
+                "en-US": "Snippet for the time of each dataSource item, with the parameter `{ item, index }`. Defaults to item.time."
+            }
+        }
+    }
+}

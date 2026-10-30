@@ -8,6 +8,7 @@ brief: 快速便捷地选择颜色，并提供滴管工具取色
 import ColorPickerReactApi from './api/color-picker.react.zh-CN.mdx';
 import ColorPickerVueApi from './api/color-picker.vue.zh-CN.mdx';
 import ColorPickerSolidApi from './api/color-picker.solid.zh-CN.mdx';
+import ColorPickerSvelteApi from './api/color-picker.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +40,16 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Button, ColorPicker, colorStringToValue } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### 基本用法
 
 #### 放在弹层
@@ -64,6 +75,12 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 </Framework>
 
 <Framework only="solid">
+
+滴管功能默认开启，支持从浏览器内或外部软件屏幕取色。传入 `eyeDropper={false}` 可关闭。
+
+</Framework>
+
+<Framework only="svelte">
 
 滴管功能默认开启，支持从浏览器内或外部软件屏幕取色。传入 `eyeDropper={false}` 可关闭。
 
@@ -101,7 +118,37 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+在进行各种颜色表示格式之间相互转换时，部分格式之间存在理论误差，因此 `onChange` 返回给你的值是同时包含了 hsva hex rgba 三种格式的色值的对象。
+
+你传入的 `value` 也应当是同样包含三种格式的对象。不传 `value` 时由组件自行管理颜色，单向 `value={x}` 只作初值。
+
+</Framework>
+
+<Framework only="react">
+
 我们在组件上提供了静态工具函数 `colorStringToValue`，用于将常见颜色字符串转换为该对象，支持 rgb(57,197,187) #39c5bb（也支持 #3cb 这样的简写）hsv(176,71,77) 等字符串直接传入，无法解析的字符串会抛出错误。
+
+</Framework>
+
+<Framework only="vue">
+
+我们在组件上提供了静态工具函数 `colorStringToValue`，用于将常见颜色字符串转换为该对象，支持 rgb(57,197,187) #39c5bb（也支持 #3cb 这样的简写）hsv(176,71,77) 等字符串直接传入，无法解析的字符串会抛出错误。
+
+</Framework>
+
+<Framework only="solid">
+
+我们在组件上提供了静态工具函数 `colorStringToValue`，用于将常见颜色字符串转换为该对象，支持 rgb(57,197,187) #39c5bb（也支持 #3cb 这样的简写）hsv(176,71,77) 等字符串直接传入，无法解析的字符串会抛出错误。
+
+</Framework>
+
+<Framework only="svelte">
+
+我们提供了工具函数 `colorStringToValue`，它是 `@fibrae/semi-ui-svelte` 的具名导出，不挂在组件上，用于将常见颜色字符串转换为该对象，支持 rgb(57,197,187) #39c5bb（也支持 #3cb 这样的简写）hsv(176,71,77) 等字符串直接传入，无法解析的字符串会抛出错误。
+
+</Framework>
 
 <Demo id="default-value" />
 
@@ -125,6 +172,12 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 `bind:value` 绑定 `value` 来受控使用；要完全受控用函数绑定 `bind:value={get, set}`。色值按不可变对象对待，更新时整体替换（用 `$state.raw` 声明），不要原地修改 `hsva.h` 之类的字段，否则文本框不会同步。
+
+</Framework>
+
 <Demo id="controlled" />
 
 ### 顶部和底部渲染额外元素
@@ -144,6 +197,12 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 <Framework only="solid">
 
 使用 `topSlot` 和 `bottomSlot` 在顶部和底部渲染额外元素
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `topSlot` 和 `bottomSlot` snippet 在顶部和底部渲染额外元素
 
 </Framework>
 
@@ -215,6 +274,28 @@ import { Button, ColorPicker } from '@fibrae/semi-ui-solid';
 #### ColorValue
 
 `value`、`defaultValue` 与 `onChange` 的参数都是同一种对象：
+
+| 字段 | 说明                                                  | 类型                                             |
+| ---- | ----------------------------------------------------- | ------------------------------------------------ |
+| hsva | HSV 色值与透明度，h 为 0-360，s、v 为 0-100，a 为 0-1 | `{ h: number; s: number; v: number; a: number }` |
+| rgba | RGB 色值与透明度，r、g、b 为 0-255，a 为 0-1          | `{ r: number; g: number; b: number; a: number }` |
+| hex  | 十六进制色值，`#rrggbb` 或带透明度的 `#rrggbbaa`      | `string`                                         |
+
+</Framework>
+
+<Framework only="svelte">
+
+#### ColorPicker
+
+<ColorPickerSvelteApi />
+
+#### 属性落点
+
+`class`（字符串、数组或对象）、`style`（字符串）与其他原生属性和事件落在 picker 根元素上；使用 `usePopover` 时落在弹层内的 picker 元素上，不落在触发器与对话框上。使用方传入 `aria-label` 或 `aria-labelledby` 且未传 `role` 时，picker 根元素加 `role="group"`。
+
+#### ColorValue
+
+`value` 与 `onChange` 的参数是同一种对象：
 
 | 字段 | 说明                                                  | 类型                                             |
 | ---- | ----------------------------------------------------- | ------------------------------------------------ |

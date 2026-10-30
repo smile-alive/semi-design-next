@@ -3,13 +3,15 @@ import { IconExpand } from '@fibrae/semi-icons-react';
 import { Resizable } from '@fibrae/semi-ui-react';
 import '../compare.scss';
 
-const Handle = () => (
-    <div className="handle">
-        <div className="knob">
-            <IconExpand />
+function Handle() {
+    return (
+        <div className="handle">
+            <div className="knob">
+                <IconExpand />
+            </div>
         </div>
-    </div>
-);
+    );
+}
 
 interface CompareProps {
     dark: string;

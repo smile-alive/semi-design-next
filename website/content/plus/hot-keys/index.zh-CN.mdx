@@ -8,6 +8,7 @@ brief: 用于方便用户自定义快捷键及相关操作
 import HotKeysReactApi from './api/hot-keys.react.zh-CN.mdx';
 import HotKeysVueApi from './api/hot-keys.vue.zh-CN.mdx';
 import HotKeysSolidApi from './api/hot-keys.solid.zh-CN.mdx';
+import HotKeysSvelteApi from './api/hot-keys.svelte.zh-CN.mdx';
 
 ## 使用场景
 
@@ -39,6 +40,16 @@ import { HotKeys } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { HotKeys } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { HotKeys } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -87,6 +98,12 @@ import { HotKeys } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+通过 `children` snippet（写在 HotKeys 标签内）传入代替渲染的元素，传了就不再渲染默认的按键提示，快捷键仍然有效。
+
+</Framework>
+
 <Demo id="render" />
 
 ### 阻止默认事件
@@ -126,6 +143,14 @@ import { HotKeys } from '@fibrae/semi-ui-solid';
 <HotKeysSolidApi />
 
 `class`、`style`、`ref` 与原生属性（如 `id`、`aria-*`、`onClick`）落在根元素（`div`）上。`render` 为 `null` 或返回 `null` 时不渲染根元素，这些属性无处可落。
+
+</Framework>
+
+<Framework only="svelte">
+
+<HotKeysSvelteApi />
+
+`class`、`style`（字符串）与原生属性（如 `id`、`aria-*`、`onclick`）落在根元素（`div`）上。`HotKeys.Keys` 保留，用法同其他框架。
 
 </Framework>
 

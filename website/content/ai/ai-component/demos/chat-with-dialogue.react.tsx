@@ -17,7 +17,7 @@ const { Configure } = AIChatInput;
 
 type SideBarContent = { type?: undefined; value?: undefined } | { type: 'annotation'; value: AnnotationItemProps[] } | { type: 'resource'; value: { name: string } };
 
-const simpleIsEqual = (a: unknown, b: unknown) => {
+function simpleIsEqual(a: unknown, b: unknown) {
     if (a === b) {
         return true;
     }
@@ -38,7 +38,7 @@ const simpleIsEqual = (a: unknown, b: unknown) => {
         return false;
     }
     for (const key of keysA) {
-        if (!Object.prototype.hasOwnProperty.call(b, key)) {
+        if (!Object.hasOwn(b, key)) {
             return false;
         }
         if (!simpleIsEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) {
@@ -46,7 +46,7 @@ const simpleIsEqual = (a: unknown, b: unknown) => {
         }
     }
     return true;
-};
+}
 
 const inputOuterStyle = { margin: '12px', minHeight: 150, maxHeight: 300, flexShrink: 0 };
 const editingInputOuterStyle = { margin: '12px 0px', maxHeight: 300, flexShrink: 0 };

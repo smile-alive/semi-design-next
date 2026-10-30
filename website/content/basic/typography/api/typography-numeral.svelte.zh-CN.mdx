@@ -1,0 +1,26 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                                                      | 类型                                                                         | 默认值    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------- |
+| code           | 是否被 code 元素包裹。                                                                                                                    | `boolean`                                                                    | -         |
+| component      | 自定义渲染元素的标签名，默认 span；内容含 p 等块级元素时使用 div。                                                                        | `string`                                                                     | `'span'`  |
+| copyable       | 是否可复制；传对象时见 Copyable Config。                                                                                                  | `TypographyCopyableConfig \| boolean`                                        | -         |
+| copyAction     | 完全自定义复制节点的 snippet，参数为 `{ copied, copy, config }`，`copy` 接收点击事件。                                                    | <ApiType detail={"Snippet\u003c[TypographyCopyActionProps]>"}>Type</ApiType> | -         |
+| copyIcon       | 复制按钮内容的 snippet；内容为单个节点且带 aria-label 时以它作为按钮的可访问名称，否则用语言包的「复制」。                                | `Snippet`                                                                    | -         |
+| copySuccessTip | 复制成功后展示内容的 snippet。                                                                                                            | `Snippet`                                                                    | -         |
+| copyTip        | 复制图标提示内容的 snippet。                                                                                                              | `Snippet`                                                                    | -         |
+| delete         | 添加删除线样式。                                                                                                                          | `boolean`                                                                    | -         |
+| disabled       | 禁用文本。                                                                                                                                | `boolean`                                                                    | -         |
+| icon           | 前缀图标的 snippet；Semi 图标按 size 自动设为 small 或 default。                                                                          | `Snippet`                                                                    | -         |
+| link           | 是否为链接；传对象时，其中的属性（href、target、class、style、onclick 等）挂在 a 元素上。                                                 | `LinkType`                                                                   | -         |
+| mark           | 添加标记样式。                                                                                                                            | `boolean`                                                                    | -         |
+| parser         | 自定义数值解析函数。                                                                                                                      | <ApiType detail={"(value: string) => string"}>Type</ApiType>                 | -         |
+| precision      | 小数点后保留的位数。                                                                                                                      | `number`                                                                     | `0`       |
+| rule           | 解析规则：text 仅取整，numbers 过滤非数字字符，bytes-decimal、bytes-binary 换算字节单位，percentages 转百分比，exponential 转科学计数法。 | `TypographyBaseRule`                                                         | `"text"`  |
+| size           | 文本大小，inherit 继承外层 Text 或 Paragraph 的尺寸。                                                                                     | `TypographyBaseSize`                                                         | -         |
+| strong         | 是否加粗。                                                                                                                                | `boolean`                                                                    | -         |
+| truncate       | 小数点后保留位的取整方式，对应 Math.round、Math.ceil、Math.floor。                                                                        | `TypographyBaseTruncate`                                                     | `"round"` |
+| type           | 文本类型。                                                                                                                                | `TypographyBaseType`                                                         | -         |
+| underline      | 添加下划线样式。                                                                                                                          | `boolean`                                                                    | -         |

@@ -12,6 +12,8 @@ import CheckboxVueApi from './api/checkbox.vue.en-US.mdx';
 import CheckboxGroupVueApi from './api/checkbox-group.vue.en-US.mdx';
 import CheckboxSolidApi from './api/checkbox.solid.en-US.mdx';
 import CheckboxGroupSolidApi from './api/checkbox-group.solid.en-US.mdx';
+import CheckboxSvelteApi from './api/checkbox.svelte.en-US.mdx';
+import CheckboxGroupSvelteApi from './api/checkbox-group.svelte.en-US.mdx';
 
 ## When to use
 
@@ -48,6 +50,16 @@ import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 <Framework only="react">
@@ -65,6 +77,12 @@ When the Checkbox is used individually, you can control whether to check it thro
 <Framework only="solid">
 
 When the Checkbox is used individually, you can control whether to check it through the `defaultChecked` and `checked` attributes. When `checked` is passed in, it is controlled component.
+
+</Framework>
+
+<Framework only="svelte">
+
+When the Checkbox is used individually, a plain `checked` is only the initial checked state and the user's clicks toggle it afterwards. Use `bind:checked` to read and write the state; see "Controlled".
 
 </Framework>
 
@@ -87,6 +105,12 @@ You can use the `#extra` slot to add extra information. The extra information us
 <Framework only="solid">
 
 You can use `extra` to add extra information. The extra information usually is longer and even has line changes.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can use `extra` to add extra information. It takes a snippet: define it inside the Checkbox tag with `{#snippet extra()}...{/snippet}`, and the rest of the content is the label. The extra information usually is longer and even has line changes.
 
 </Framework>
 
@@ -113,6 +137,12 @@ By placing the Checkbox element inside the CheckboxGroup, you can declare the Ch
 <Framework only="solid">
 
 By placing the Checkbox element inside the CheckboxGroup, you can declare the Checkbox group. Using the Checkbox group, you can more conveniently control the selection of a group of Checkboxes through the `defaultValue` and `value` properties of the CheckboxGroup. At this time, Checkbox does not need to declare `defaultChecked` and `checked` attributes.
+
+</Framework>
+
+<Framework only="svelte">
+
+By placing the Checkbox element inside the CheckboxGroup, you can declare the Checkbox group. Using the Checkbox group, you can more conveniently control the selection of a group of Checkboxes through the `value` of the CheckboxGroup: a plain `value` is the initial value, and `bind:value` reads and writes it. At this time, Checkbox does not need to declare `checked`.
 
 </Framework>
 
@@ -188,6 +218,14 @@ Use `CheckboxGroup` with `Grid` to achieve flexible layouts.
 
 </Framework>
 
+<Framework only="svelte">
+
+<CheckboxSvelteApi />
+
+`class` and `style` (a string) land on the root `<span>`. `id`, `name`, `tabindex`, `autofocus`, `aria-*`, `onfocus` and `onblur` land on the inner native input; other native attributes and events (such as `onmouseenter`) land on the root element, and `onclick` is called before the toggle. Inside a CheckboxGroup the group's `name` wins.
+
+</Framework>
+
 ### CheckboxGroup
 
 <Framework only="react">
@@ -211,6 +249,14 @@ Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`st
 <CheckboxGroupSolidApi />
 
 `class`, `style`, `ref` and native attributes and events land on the root `<div>`; `onBlur` is called when focus leaves the whole group, not when it moves between the checkboxes inside. `aria-invalid` and `aria-errormessage` are passed to the native input of every Checkbox in the group; `aria-required`, `tabindex` and the `aria-expanded`, `aria-haspopup`, `aria-controls` injected by Tooltip are not rendered.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CheckboxGroupSvelteApi />
+
+Each item in `options` has the fields `label`, `value`, `disabled`, `extra` (`string | number`), `class` and `style` (a string), and no `onChange`. Use the `label` and `extra` snippets, with the parameter `{ option, index }`, for custom content. `class`, `style` (a string), native attributes and events land on the root `<div>`; `onBlur` is called when focus leaves the whole group, not when it moves between the checkboxes inside. `aria-invalid` and `aria-errormessage` are passed to the native input of every Checkbox in the group; `aria-required`, `tabindex` and the `aria-expanded`, `aria-haspopup`, `aria-controls` injected by Tooltip are not rendered.
 
 </Framework>
 
@@ -244,6 +290,12 @@ Call them through a template `ref` to the component instance; see Exposes above.
 | ------- | ------------ |
 | blur()  | Remove focus |
 | focus() | Get focus    |
+
+</Framework>
+
+<Framework only="svelte">
+
+Call them on the Checkbox instance obtained with `bind:this`; see Methods above.
 
 </Framework>
 

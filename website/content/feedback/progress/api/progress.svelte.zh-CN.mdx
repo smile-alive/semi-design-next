@@ -1,0 +1,20 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性           | 说明                                                                                                            | 类型                                                                   | 默认值         |
+| -------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------- |
+| direction      | 条状进度条的方向，可选 horizontal、vertical。                                                                   | `ProgressDirection`                                                    | `"horizontal"` |
+| format         | 自定义显示文字的 snippet，参数 `{ percent }`，percent 为当前显示的数字（限制在 0 到 100）；只在显示文字时渲染。 | <ApiType detail={"Snippet\u003c[{ percent: number }]>"}>Type</ApiType> | -              |
+| indeterminate  | 是否为不确定状态。开启后 percent 不再控制进度长度，且不展示文字，aria-valuenow 省略。                           | `boolean`                                                              | `false`        |
+| motion         | 文字数字是否以动画过渡到新的 percent；关闭后直接跳到目标值。                                                    | `boolean`                                                              | `true`         |
+| orbitStroke    | 进度条轨道的填充色。                                                                                            | `string`                                                               | -              |
+| percent        | 进度百分比；传入 NaN 会抛出错误。                                                                               | `number`                                                               | `0`            |
+| showInfo       | 是否显示文字：环形显示在中间，条状显示在右侧。                                                                  | `boolean`                                                              | `false`        |
+| size           | 尺寸，可选 default、small（仅 type 为 circle 时生效）、large（仅 type 为 line 时生效）。                        | `ProgressSize`                                                         | `"default"`    |
+| stroke         | 填充色。数组形式为 `{ percent, color }` 的区间列表，color 可为任意 CSS 颜色或 Semi 色板名。                     | `string \| StrokeArr`                                                  | -              |
+| strokeGradient | 是否自动生成渐变色补齐区间颜色，需要 stroke 至少设置一个颜色区间。                                              | `boolean`                                                              | `false`        |
+| strokeLinecap  | 环形进度条端点形状，可选 round、square。                                                                        | `'round' \| 'square'`                                                  | `"round"`      |
+| strokeWidth    | 环形进度条的线宽。                                                                                              | `number`                                                               | `4`            |
+| type           | 类型，可选 line、circle。                                                                                       | `ProgressType`                                                         | `"line"`       |
+| width          | 环形进度条的直径；缺省时 size 为 small 时为 24，其他为 72。                                                     | `number`                                                               | -              |

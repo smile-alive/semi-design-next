@@ -8,6 +8,7 @@ brief: Placeholder component when the page is empty.
 import EmptyReactApi from './api/empty.react.en-US.mdx';
 import EmptyVueApi from './api/empty.vue.en-US.mdx';
 import EmptySolidApi from './api/empty.solid.en-US.mdx';
+import EmptySvelteApi from './api/empty.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Empty } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Empty } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic usage
 
 <Framework only="react">
@@ -60,6 +71,14 @@ A series of dark mode illustrations are added, and the illustrations that need t
 <Framework only="solid">
 
 By setting a placeholder image with `image`, you can manually import the corresponding illustration from `@fibrae/semi-illustrations-solid` (the default width and height of the illustration is 200x200), or pass in a custom JSX element. `image` also accepts an image URL string, or an SVG sprite symbol as `{ id }`.
+
+A series of dark mode illustrations are added, and the illustrations that need to be used in dark mode can be passed in through `darkModeImage` to better adapt to the dark mode.
+
+</Framework>
+
+<Framework only="svelte">
+
+By setting a placeholder image with `image`, you can manually import the corresponding illustration from `@fibrae/semi-illustrations-svelte` (the default width and height of the illustration is 200x200) and pass it as a snippet, or pass a snippet with any custom content. `image` also accepts an image URL string, or an SVG sprite symbol as `{ id }`.
 
 A series of dark mode illustrations are added, and the illustrations that need to be used in dark mode can be passed in through `darkModeImage` to better adapt to the dark mode.
 
@@ -89,6 +108,12 @@ Description content goes in the `description` prop, and `children` is the action
 
 </Framework>
 
+<Framework only="svelte">
+
+Description content goes in the `description` snippet, and `children` is the actions area below it.
+
+</Framework>
+
 <Demo id="custom" />
 
 It is not necessary to use pictures.
@@ -103,7 +128,7 @@ Two types of layouts are supported: `vertical`, `horizontal`. The default is `ve
 
 ### Placeholder illustration (under construction)
 
-Currently the following illustrations are supported in `@fibrae/semi-illustrations-react` (`@fibrae/semi-illustrations-vue` for Vue).
+Currently the following illustrations are supported in `@fibrae/semi-illustrations-react` (`@fibrae/semi-illustrations-vue` for Vue, `@fibrae/semi-illustrations-svelte` for Svelte).
 
 <Demo id="illustrations" />
 
@@ -130,6 +155,14 @@ Other native attributes (such as `id` and `aria-*`) land on the root `div` eleme
 <EmptySolidApi />
 
 `class`, `style`, `ref` and native attributes land on the root `div` element. `title`, `description`, `image`, `darkModeImage`, `imageStyle` and `layout` are component props and do not land on the root element.
+
+</Framework>
+
+<Framework only="svelte">
+
+<EmptySvelteApi />
+
+`class`, `style` and native attributes land on the root `div` element. `title`, `description`, `image`, `darkModeImage`, `imageStyle` and `layout` are component props and do not land on the root element. In dark mode, only an Empty given a `darkModeImage` observes the `theme-mode` of `document.body` after mount; server rendering and hydration use the light image.
 
 </Framework>
 

@@ -1,0 +1,31 @@
+{
+    "hot-keys": {
+        "source": "packages/semi-ui-svelte/src/hot-keys/hot-keys.svelte",
+        "props": {
+            "children": {
+                "zh-CN": "替换按键提示的内容，写在标签内。传了 children 就不渲染默认的按键提示，快捷键仍然有效。",
+                "en-US": "Replaces the key hint, written inside the tag. With children the default key hint is not rendered and the hot keys stay active."
+            },
+            "content": {
+                "zh-CN": "显示的按键文字，缺省显示 hotKeys。",
+                "en-US": "Key labels to show. Defaults to hotKeys."
+            },
+            "getListenerTarget": {
+                "zh-CN": "返回监听 keydown 的元素；缺省或返回 null、undefined 时使用 document.body。",
+                "en-US": "Returns the element that listens for keydown. When omitted, or when it returns null or undefined, document.body is used."
+            },
+            "hotKeys": {
+                "zh-CN": "快捷键组合：任意个修饰键加一个普通键，取值参考 KeyboardEvent.key。组合不合法时在挂载或 hotKeys 变化时抛错。",
+                "en-US": "The key combination: any number of modifiers plus one other key, as KeyboardEvent.key values. An invalid combination throws on mount or when hotKeys changes."
+            },
+            "onHotKey": {
+                "zh-CN": "按下完整的快捷键组合时的回调，参数为原生 KeyboardEvent。",
+                "en-US": "Called when the full key combination is pressed, with the native KeyboardEvent."
+            },
+            "preventDefault": {
+                "zh-CN": "是否阻止快捷键的默认行为。",
+                "en-US": "Whether the default behavior of the key combination is prevented."
+            }
+        }
+    }
+}

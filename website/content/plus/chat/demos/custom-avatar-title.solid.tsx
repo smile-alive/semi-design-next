@@ -61,12 +61,12 @@ function getId() {
 }
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
-const formatTime = (createAt?: number) => {
+function formatTime(createAt?: number) {
     const date = new Date(createAt ?? Date.now());
     const hours = ('0' + date.getHours()).slice(-2);
     const minutes = ('0' + date.getMinutes()).slice(-2);
     return `${hours}:${minutes}`;
-};
+}
 
 export default function ChatDemo() {
     const [title, setTitle] = createSignal('null');

@@ -11,6 +11,7 @@ import AnchorVueApi from './api/anchor.vue.en-US.mdx';
 import AnchorLinkVueApi from './api/anchor-link.vue.en-US.mdx';
 import AnchorSolidApi from './api/anchor.solid.en-US.mdx';
 import AnchorLinkSolidApi from './api/anchor-link.solid.en-US.mdx';
+import AnchorSvelteApi from './api/anchor.svelte.en-US.mdx';
 
 ## Demos
 
@@ -44,9 +45,27 @@ import { Anchor } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+There is no `Anchor.Link`; pass the links through the `links` data prop.
+
+</Framework>
+
 ### Basic Usage
 
 Use `Link` to create an anchor, click it to jump to the hash tag location.
+
+<Framework only="svelte">
+
+Write the links as a `links` array of `{ href, title, disabled, children }`, where `children` nests the next level; use the `title` snippet, with the parameter `{ item, level }`, for custom titles.
+
+</Framework>
 
 <Demo id="basic" />
 
@@ -156,6 +175,37 @@ function AnchorExample() {
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-svelte';
+
+    const links = [
+        { href: '#Basic_Usage', title: 'Fixed Anchor' },
+        { href: '#Integrated_Usage', title: 'Integrated Usage' },
+        { href: '#Size', title: 'Size' },
+        { href: '#Rail_Theme', title: 'Rail Theme' },
+        { href: '#Auto_Collapse', title: 'Auto Collapse' },
+        { href: '#Show_Tooltip', title: 'Show Tooltip' },
+        { href: '#Tooltip_Position', title: 'Tooltip Position' },
+        {
+            href: '#API_Reference',
+            title: 'API Reference',
+            children: [
+                { href: '#Anchor', title: 'Anchor' },
+                { href: '#Anchor.Link', title: 'Anchor.Link' },
+            ],
+        },
+    ];
+</script>
+
+<span>See the fixed Anchor on the right </span>
+<Anchor {links} offsetTop={100} style="position: fixed; right: 20px; top: 100px; width: 200px; z-index: 3" targetOffset={100} />
+```
+
+</Framework>
+
 ### Size
 
 You can change Anchor size with `size` property.
@@ -231,6 +281,14 @@ You can change the Tooltip position with `position` property. It only works when
 
 </Framework>
 
+<Framework only="svelte">
+
+<AnchorSvelteApi />
+
+`class`, `style` (a string) and native attributes (such as `data-*` and `aria-*`) land on the root element (`role="navigation"`); the `max-width` and `max-height` in `style` win over `maxWidth` and `maxHeight`. `onClick` and `onChange` are component callbacks, and `onClick` is only called when a link is activated. The first server-rendered frame carries all links, and the `autoCollapse` folding is correct from the first frame; an item without child links renders no empty `role="list"`.
+
+</Framework>
+
 ### Anchor.Link
 
 <Framework only="react">
@@ -254,6 +312,12 @@ You can change the Tooltip position with `position` property. It only works when
 <AnchorLinkSolidApi />
 
 `class`, `style`, `ref` and native attributes (such as `data-*`) land on the outermost `div` (`role="listitem"`) of the link.
+
+</Framework>
+
+<Framework only="svelte">
+
+Svelte has no separate `Anchor.Link` component; each link is an item of the `links` data, with the fields described for `links` above.
 
 </Framework>
 
@@ -330,6 +394,21 @@ function App() {
         </Anchor>
     );
 }
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```text
+<script lang="ts">
+    import { Anchor } from '@fibrae/semi-ui-svelte';
+
+    // This is the container of the document content, not of Anchor: the current id is computed against it
+    const getContainer = () => document.querySelector<HTMLElement>('.my-container');
+</script>
+
+<Anchor {getContainer} {links} />
 ```
 
 </Framework>

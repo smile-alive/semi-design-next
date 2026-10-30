@@ -1,0 +1,13 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property  | Description                                                                                                  | Type                                                                                 | Default     |
+| --------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ----------- |
+| children  | Snippet for custom SVG content, with the argument `{ fill }`, so a custom SVG can apply `fill`.              | <ApiType detail={"Snippet\u003c[{ fill?: string \u007c string[] }]>"}>Type</ApiType> | -           |
+| fill      | Fill colors for bicolor and multicolor icons, as a string or an array of strings.                            | `string \| string[]`                                                                 | -           |
+| prefixCls | CSS class prefix; build plugins can replace it.                                                              | `string`                                                                             | `"semi"`    |
+| rotate    | Rotation angle in integer degrees.                                                                           | `number`                                                                             | -           |
+| size      | Icon size: extra-small, small, default, large, extra-large or inherit, which uses the surrounding font size. | `IconSize`                                                                           | `"default"` |
+| spin      | Enables the spinning animation.                                                                              | `boolean`                                                                            | `false`     |
+| type      | Adds an icon type class name.                                                                                | `string`                                                                             | -           |

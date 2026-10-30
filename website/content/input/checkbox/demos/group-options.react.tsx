@@ -1,9 +1,9 @@
 import { CheckboxGroup, type CheckboxValue } from '@fibrae/semi-ui-react';
 
 export default function CheckboxDemo() {
-    function onChange(checkedValues: CheckboxValue[]) {
+    const onChange = (checkedValues: CheckboxValue[]) => {
         console.log('checked = ', checkedValues);
-    }
+    };
 
     const plainOptions = ['Semi UI', 'Semi DSM', 'Semi D2C'];
 

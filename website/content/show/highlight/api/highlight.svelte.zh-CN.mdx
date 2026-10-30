@@ -1,0 +1,11 @@
+**Props**
+
+| 属性               | 说明                                                                         | 类型                    | 默认值   |
+| ------------------ | ---------------------------------------------------------------------------- | ----------------------- | -------- |
+| autoEscape         | 是否自动转义 searchWords 中的正则特殊字符。                                  | `boolean`               | `true`   |
+| caseSensitive      | 是否区分大小写。                                                             | `boolean`               | `false`  |
+| component          | 高亮标签名。                                                                 | `string`                | `"mark"` |
+| highlightClassName | 高亮标签的类名。                                                             | `string`                | -        |
+| highlightStyle     | 高亮标签的样式对象，键可用驼峰或 kebab-case；数值不补 px，长度要写成字符串。 | `HighlightStyle`        | -        |
+| searchWords        | 需要高亮的文本：字符串、字符串数组，或带 text、class、style 的对象数组。     | `string \| SearchWords` | `[]`     |
+| sourceString       | 源文本。                                                                     | `string`                | `""`     |

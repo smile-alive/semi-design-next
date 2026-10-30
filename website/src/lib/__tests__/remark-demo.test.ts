@@ -15,7 +15,7 @@ function demo(id: string): MdxJsxFlowElement {
 }
 
 describe('文档框架编译', () => {
-    it.each(['react', 'vue', 'solid'] as const)('只保留 %s 条件块的标题，顺序与公共标题一致', (target) => {
+    it.each(['react', 'vue', 'solid', 'svelte'] as const)('只保留 %s 条件块的标题，顺序与公共标题一致', (target) => {
         const heading = (value: string): Heading => ({
             type: 'heading',
             depth: 2,
@@ -27,21 +27,22 @@ describe('文档框架编译', () => {
             attributes: [{ type: 'mdxJsxAttribute', name: 'only', value: only }],
             children: [heading(only)],
         });
-        const tree: Root = { type: 'root', children: [heading('公共'), block('react'), block('vue'), block('solid'), heading('结尾')] };
+        const tree: Root = { type: 'root', children: [heading('公共'), block('react'), block('vue'), block('solid'), block('svelte'), heading('结尾')] };
         filterFrameworks(tree, target, 'page');
         expect(tree.children).toEqual([heading('公共'), heading(target), heading('结尾')]);
     });
 
     it.each([
-        ['react', 'icon', 'basic', 'basic.react.tsx', 'react'],
-        ['vue', 'icon', 'basic', 'basic.vue', 'vue'],
-        ['solid', 'button', 'types', 'types.solid.tsx', 'solid-js'],
+        ['react', 'basic/icon', 'basic', 'basic.react.tsx', 'react'],
+        ['vue', 'basic/icon', 'basic', 'basic.vue', 'vue'],
+        ['solid', 'basic/button', 'types', 'types.solid.tsx', 'solid-js'],
+        ['svelte', 'input/switch', 'basic', 'basic.svelte', 'svelte'],
     ] as const)('%s 只静态导入当前框架 demo，并交给对应渲染器', (framework, page, id, demoFile, renderer) => {
         const tree: Root = { type: 'root', children: [demo(id)] };
-        const file = path.resolve(import.meta.dirname, `../../../content/basic/${page}/index.zh-CN.mdx`) + (framework === 'react' ? '' : `.${framework}.mdx`);
+        const file = path.resolve(import.meta.dirname, `../../../content/${page}/index.zh-CN.mdx`) + (framework === 'react' ? '' : `.${framework}.mdx`);
         // Only client:only names the renderer; the configured hydration modes are covered below
         const only = { mode: 'only' as const, except: [] };
-        remarkDemo({ hydration: { react: only, vue: only, solid: only } })(tree, new VFile({ path: file }));
+        remarkDemo({ hydration: { react: only, vue: only, solid: only, svelte: only } })(tree, new VFile({ path: file }));
         expect(tree.children[0]).toMatchObject({
             type: 'mdxjsEsm',
             value: `import Demo0 from './demos/${demoFile}';\nimport Demo0Source from './demos/${demoFile}?raw';`,
@@ -52,6 +53,7 @@ describe('文档框架编译', () => {
     it.each([
         ['vue', 'missing-infra-demo.vue'],
         ['solid', 'missing-infra-demo.solid.tsx'],
+        ['svelte', 'missing-infra-demo.svelte'],
     ])('缺失 %s demo 在编译阶段失败', (framework, expected) => {
         const tree: Root = { type: 'root', children: [demo('missing-infra-demo')] };
         const file = path.resolve(import.meta.dirname, `../../../content/basic/icon/index.zh-CN.mdx.${framework}.mdx`);
@@ -63,7 +65,7 @@ describe('文档框架编译', () => {
             const tree: Root = { type: 'root', children: [demo(page === 'basic/icon' ? 'basic' : 'block')] };
             const file = path.resolve(import.meta.dirname, `../../../content/${page}/index.zh-CN.mdx.vue.mdx`);
             const config = { mode, except };
-            remarkDemo({ hydration: { react: config, vue: config, solid: config } })(tree, new VFile({ path: file }));
+            remarkDemo({ hydration: { react: config, vue: config, solid: config, svelte: config } })(tree, new VFile({ path: file }));
             return (tree.children[1] as MdxJsxFlowElement).children[0] as MdxJsxFlowElement;
         };
 
@@ -83,7 +85,7 @@ describe('文档框架编译', () => {
 
         it('例外页不存在时在创建插件时失败', () => {
             const none = { mode: 'only' as const, except: [] };
-            expect(() => remarkDemo({ hydration: { react: none, vue: { mode: 'only', except: ['basic/missing'] }, solid: none } })).toThrow('demoHydration.vue.except: page "basic/missing"');
+            expect(() => remarkDemo({ hydration: { react: none, vue: { mode: 'only', except: ['basic/missing'] }, solid: none, svelte: none } })).toThrow('demoHydration.vue.except: page "basic/missing"');
         });
     });
 
@@ -92,6 +94,6 @@ describe('文档框架编译', () => {
             type: 'root',
             children: [{ type: 'mdxJsxFlowElement', name: 'Framework', attributes: [], children: [] }],
         };
-        expect(() => filterFrameworks(tree, 'vue', 'page')).toThrow('only="react" or only="vue" or only="solid"');
+        expect(() => filterFrameworks(tree, 'vue', 'page')).toThrow('only="react" or only="vue" or only="solid" or only="svelte"');
     });
 });

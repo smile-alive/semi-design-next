@@ -12,6 +12,7 @@ import AIChatInputVueApi from './api/ai-chat-input.vue.en-US.mdx';
 import McpVueApi from './api/mcp.vue.en-US.mdx';
 import AIChatInputSolidApi from './api/ai-chat-input.solid.en-US.mdx';
 import McpSolidApi from './api/mcp.solid.en-US.mdx';
+import AIChatInputSvelteApi from './api/ai-chat-input.svelte.en-US.mdx';
 
 ## Usage Scenarios
 
@@ -45,6 +46,16 @@ import { AIChatInput } from '@fibrae/semi-ai-react';
 
 ```jsx
 import { AIChatInput, getConfigureItem } from '@fibrae/semi-ai-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { AIChatInput } from '@fibrae/semi-ai-svelte';
+</script>
 ```
 
 </Framework>
@@ -86,6 +97,17 @@ Supports text input and file upload. You can configure the following parameters 
 
 </Framework>
 
+<Framework only="svelte">
+
+- `uploadProps`: Configure parameters related to file upload. It takes the props of [Upload](/en-US/react/input/upload#API) except `fileList`, `listType` and `children`; seed the attachments with `uploadProps.defaultFileList`
+- `onUploadChange`: Called when file upload changes
+- When deleting uploaded files, `uploadProps.onRemove` will be called, and `uploadProps.beforeRemove` will be respected (Promise supported)
+- `placeholder`: Placeholder for the input box
+- `defaultContent`: Default content for the input box
+- `onContentChange`: Called when the content of the input box changes; the argument is the current content
+
+</Framework>
+
 <Demo id="basic" />
 
 ### Message Sending
@@ -120,6 +142,16 @@ Clicking the stop button triggers `onStopGenerate`, where you can handle logic s
 
 </Framework>
 
+<Framework only="svelte">
+
+When there is content in the input box (text entry or uploaded content), sending messages is allowed. Clicking the send message button calls `onMessageSend`; the argument is the input content, including text, reference content, uploaded files, and configuration area content. References do not count towards whether sending is allowed; `canSend` can also set it directly.
+
+You can manage generating status with `generating`. If `generating` is `true`, AIChatInput will show a stop-generating button instead of the send button and clear the input area as well as uploaded files. References require manual handling.
+
+Clicking the stop button calls `onStopGenerate`, where you can handle logic such as setting `generating` to `false`.
+
+</Framework>
+
 <Demo id="send-message" />
 
 ### Rich Text Input
@@ -145,6 +177,12 @@ You can set input content with the `setContent` method of the component instance
 <Framework only="solid">
 
 You can set input content with the `setContent` method of the ref handle and focus the editor with `focusEditor`.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can set input content with the `setContent` method of the component instance (`bind:this`) and focus the editor with `focusEditor`.
 
 </Framework>
 
@@ -175,6 +213,14 @@ You can pass in references via the `references`, which will display at the top o
 - `renderReference`: Custom renderer for an individual reference.
 - `onReferenceDelete`: Callback for deleting a reference.
 - `onReferenceClick`: Callback for clicking a reference.
+
+</Framework>
+
+<Framework only="svelte">
+
+- `reference` snippet: Custom renderer for an individual reference, with the parameters `{ item, index }`.
+- `onReferenceDelete`: Called when a reference is deleted.
+- `onReferenceClick`: Called when a reference is clicked.
 
 </Framework>
 
@@ -214,6 +260,17 @@ You can also use `getConfigureItem` to adapt your custom components.
 AIChatInput manages the state and fires `onConfigureChange` (make sure to set the unique `field`). For initial values, use `initValue`.
 
 You can also use `getConfigureItem` to adapt your custom components.
+
+</Framework>
+
+<Framework only="svelte">
+
+- `configureArea` snippet: Custom content for config area buttons.
+- Use `AIChatInput.Configure` components such as `Select`, `Button`, `Mcp`, `RadioButton`, etc.
+
+AIChatInput manages the state and calls `onConfigureChange` (make sure to set the unique `field`). For initial values, use `initValue`. The value change of a single item is also available through its `onChange`, with the new value as the argument.
+
+You can also use `AIChatInput.Configure.Item` to adapt your custom components.
 
 </Framework>
 
@@ -307,6 +364,37 @@ The returned component checks its props against the wrapped component's props: `
 
 </Framework>
 
+<Framework only="svelte">
+
+```ts
+interface ConfigureItemProps {
+    // the component the item wraps: it receives the field's value and reports changes
+    component: Component<any>;
+    // the key of this item in the AIChatInput configure value, required
+    field: string;
+    // seeds the field when the item is mounted
+    initValue?: unknown;
+    // the prop that receives the value, value by default
+    valueKey?: string;
+    // the prop that takes the change callback, onChange by default
+    changeKey?: string;
+    // where the value sits in the first argument of the change callback, the argument itself by default
+    valuePath?: string;
+    // the base class of the item, merged with class
+    baseClass?: ClassValue;
+    // default props of the wrapped component, overridden by the other props
+    defaultProps?: Record<string, unknown>;
+    // called with the new value when the item's value changes
+    onChange?: (value: any) => void;
+    // the other props are passed on to the wrapped component as they are
+    [key: string]: unknown;
+}
+```
+
+`<AIChatInput.Configure.Item component={Cascader} field="model" />` turns any component that takes a value and a change callback into a configure item. The wrapped component's own `onChange` is not called; the item's value changes reach the `onChange` of `Configure.Item`.
+
+</Framework>
+
 Demo:
 
 <Demo id="configure-item" />
@@ -346,6 +434,22 @@ The lower right corner is the action area. Use `renderActionArea` to customize b
 ```ts
 interface ActionAreaProps {
     menuItem: JSX.Element[];
+    class: string;
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+The lower right corner is the action area. Use the `actionArea` snippet to customize buttons (e.g. for deleting or other operations). `upload` is the upload node (a hidden Upload when `showUploadButton` is `false`; it must still be rendered for pasted files to upload) and `send` is the send or stop button; both are snippets, rendered with `{@render}`.
+
+```ts
+import type { Snippet } from 'svelte';
+
+interface AIChatInputActionAreaSnippetProps {
+    upload: Snippet;
+    send: Snippet;
     class: string;
 }
 ```
@@ -399,6 +503,26 @@ interface RenderUploadButtonProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+By default, an upload button is rendered on the left side of the footer action area. Use the `uploadButton` snippet for **UI-only** customization (e.g. icon-only button, tooltip, etc.).
+
+Note: This does not affect upload / paste-upload behavior (`Upload` is still managed internally). A click that reaches Upload opens the file chooser by itself; call `onOpenFileDialog` only when your content stops the click from bubbling.
+
+```ts
+import type { Snippet } from 'svelte';
+
+interface AIChatInputUploadButtonSnippetProps {
+    // the built-in button content, a snippet rendered with {@render defaultNode()}
+    defaultNode: Snippet;
+    onOpenFileDialog: () => void;
+    disabled: boolean;
+    attachments: Attachment[];
+}
+```
+
+</Framework>
+
 <Demo id="custom-upload-button" />
 
 ### Button Shape
@@ -428,6 +552,12 @@ You can customize rendering using the `#suggestionItem` slot; bind the scope par
 <Framework only="solid">
 
 You can customize rendering using `renderSuggestionItem`; spread `id`, `class`, `role`, `aria-selected` and the event handlers of its argument onto the root element.
+
+</Framework>
+
+<Framework only="svelte">
+
+You can customize rendering using the `suggestionItem` snippet; spread the parameters other than `suggestion`, that is `id`, `class`, `role`, `aria-selected`, `onclick` and `onmouseenter`, onto the root element.
 
 </Framework>
 
@@ -515,6 +645,31 @@ renderTemplate?: (
 
 </Framework>
 
+<Framework only="svelte">
+
+```ts
+interface Skill {
+    label?: string;
+    value?: string;
+    // If this skill has a template, set hasTemplate to true, affects the display of template display buttons
+    hasTemplate?: boolean;
+}
+```
+
+A skill holds data only. The icon before a skill goes through the `skillIcon` snippet, with the parameters `{ item, index }`, and the whole item can be customized with the `skillItem` snippet (bound like a suggestion item).
+
+Because templates can be displayed in a variety of ways, we don't provide a default display method. Users can customize the template display through the `template` snippet. The template panel can be displayed and closed by clicking the template button.
+
+```ts
+interface AIChatInputTemplateSnippetProps {
+    skill: Skill | undefined;
+    // called when a template is clicked, which replaces the input content with the template content
+    onTemplateClick: (content: string) => void;
+}
+```
+
+</Framework>
+
 Usage examples are as follows:
 
 <Demo id="skill-template" />
@@ -573,6 +728,24 @@ interface TopSlotProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+Users can customize the top rendering area using the `topSlot` snippet, rendering references, uploaded content, and configuration items. This can be combined with the `showReference` and `showUploadFile` APIs to control whether references and uploaded files are displayed. Additionally, the `topSlotPosition` API allows you to configure the relative position of customized rendered content relative to the reference and upload display areas.
+
+```ts
+interface AIChatInputTopSlotSnippetProps {
+    references: Reference[];
+    attachments: Attachment[];
+    // User input into the input box
+    content: Content[];
+    onUploadFileDelete: (attachment: Attachment) => void;
+    // Calls onReferenceDelete; the caller owns the references and removes the item in the callback
+    onReferenceDelete: (reference: Reference) => void;
+}
+```
+
+</Framework>
+
 Usage examples are as follows:
 
 <Demo id="custom-top-slot" />
@@ -596,6 +769,12 @@ Render the view of a custom node with `VueNodeViewRenderer` of `@tiptap/vue-3`. 
 <Framework only="solid">
 
 If you add a custom extension, you must configure the corresponding transformation rules in `transformer` to ensure that the data returned in `onContentChange` matches your expectations. The node views in the example are plain DOM (tiptap's `addNodeView`), and the candidate panel mounts a Solid component with `render` from `solid-js/web`.
+
+</Framework>
+
+<Framework only="svelte">
+
+If you add a custom extension, you must configure the corresponding transformation rules in `transformer` to ensure that the data returned in `onContentChange` matches your expectations. The node views in the example are plain DOM (tiptap's `addNodeView`), and the candidate panel is rendered with Svelte and mounted in `body`.
 
 </Framework>
 
@@ -710,6 +889,46 @@ interface MessageContent {
 
 </Framework>
 
+<Framework only="svelte">
+
+<AIChatInputSvelteApi />
+
+`class`, `style` and undeclared attributes and events (such as `onclick`) land on the root element. `onFocus`, `onBlur` and `onPaste` come from the rich text input, so they shadow the native `onfocus`, `onblur` and `onpaste` on the root element.
+
+Data item types:
+
+```ts
+type Suggestion = string | { content: string; [key: string]: any };
+
+interface Reference {
+    type?: string;
+    id: string;
+    [key: string]: any;
+}
+
+interface Content {
+    type: string;
+    [key: string]: any;
+}
+
+interface MessageContent {
+    references?: Reference[];
+    attachments?: Attachment[];
+    inputContents?: Content[];
+    setup?: Setup;
+}
+```
+
+AIChatInput owns the value of `Configure.Select`, `Configure.Button` and `Configure.RadioButton`: they take no `value`, `field` is required, `initValue` sets the initial value, and `onChange` receives the item's new value.
+
+| Property  | Description                                           | Type                                  | Default |
+| --------- | ----------------------------------------------------- | ------------------------------------- | ------- |
+| field     | The key of this item in the configure value, required | string                                | -       |
+| initValue | Initial value                                         | Same as the wrapped component's value | -       |
+| onChange  | Called when the item's value changes, with the value  | (value: unknown) => void              | -       |
+
+</Framework>
+
 ### Configure.Select
 
 Other props are the same as [SelectProps](/en-US/react/input/select)
@@ -731,6 +950,12 @@ Other props are the same as [ButtonProps](/en-US/react/basic/button#Button), and
 <Framework only="solid">
 
 Other props are the same as [ButtonProps](/en-US/react/basic/button#Button). The value is a boolean toggled on click, and `onClick` receives the toggled value: `(value: boolean) => void`
+
+</Framework>
+
+<Framework only="svelte">
+
+Other props are the same as [ButtonProps](/en-US/react/basic/button#Button), and the icon goes through the `icon` snippet. The value is a boolean toggled on click, `onClick` receives the toggled value `(value: boolean) => void`, and `aria-pressed` is rendered
 
 </Framework>
 
@@ -782,6 +1007,36 @@ interface McpOption {
     [key: string]: unknown;
 }
 ```
+
+</Framework>
+
+<Framework only="svelte">
+
+| Property               | Description                                                                 | Type                                   | Default |
+| ---------------------- | --------------------------------------------------------------------------- | -------------------------------------- | ------- |
+| options                | MCP options. An option holds data only; its icon goes through `optionIcon`  | `McpOption[]`                          | -       |
+| num                    | The count shown on the trigger and in the header; options.length by default | `number`                               | -       |
+| showConfigure          | Whether the configure button is shown                                       | `boolean`                              | `true`  |
+| onConfigureButtonClick | Called when the configure button is clicked                                 | `() => void`                           | -       |
+| optionIcon             | Snippet for the icon of each option, with the parameters `{ item, index }`  | `Snippet<[McpOptionIconSnippetProps]>` | -       |
+| children               | Snippet that replaces the built-in menu below the header                    | `Snippet`                              | -       |
+
+Undeclared attributes (the Dropdown props, `class` and `style`) fall through to the inner Dropdown and land where they do on Dropdown.
+
+An option holds data only; its icon goes through the `optionIcon` snippet:
+
+```ts
+interface McpOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+    [key: string]: unknown;
+}
+```
+
+### Configure.Item
+
+Turns any component that takes a value and a change callback into a configure item; see `ConfigureItemProps` in the Configuration Area section.
 
 </Framework>
 

@@ -32,7 +32,7 @@ export default function ListDemo() {
                     className="component-list-demo-booklist"
                     dataSource={list}
                     split={false}
-                    header={<Input onCompositionEnd={(v) => onSearch((v.target as HTMLInputElement).value)} onChange={(v) => (!v ? onSearch() : null)} placeholder="搜索" prefix={<IconSearch />} />}
+                    header={<Input onCompositionEnd={(v) => v.target instanceof HTMLInputElement && onSearch(v.target.value)} onChange={(v) => (!v ? onSearch() : null)} placeholder="搜索" prefix={<IconSearch />} />}
                     size="small"
                     style={{ flexBasis: '100%', flexShrink: 0, borderBottom: '1px solid var(--semi-color-border)' }}
                     renderItem={(item) => <List.Item className="list-item">{item}</List.Item>}

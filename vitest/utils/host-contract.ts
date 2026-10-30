@@ -81,16 +81,17 @@ const lifecycle = (log: string[]) => log.filter((entry) => entry.startsWith('ini
 
 /**
  * Registers the host contract documented on `BaseFoundation` (`semi-foundation/base/foundation.ts`) against one
- * framework host. A new host passes these cases before any component is ported to it.
+ * framework host. A new host passes these cases before any component is ported to it. `detachedOnDestroy` marks a
+ * host whose framework removes the DOM before it runs teardown (Svelte), so `destroy()` sees the DOM detached.
  */
-export function defineHostContract(mount: (options?: ContractMountOptions) => Promise<ContractHost>, features: { strictMode: boolean }) {
-    it('挂载后 init 一次、卸载时 destroy 一次；destroy 时 DOM 仍挂载、signal 未 abort，卸载后 abort', async () => {
+export function defineHostContract(mount: (options?: ContractMountOptions) => Promise<ContractHost>, features: { strictMode: boolean; detachedOnDestroy?: boolean }) {
+    it(`挂载后 init 一次、卸载时 destroy 一次；destroy 时 DOM ${features.detachedOnDestroy ? '已移除' : '仍挂载'}、signal 未 abort，卸载后 abort`, async () => {
         const host = await mount();
         expect(lifecycle(host.log)).toEqual(['init state=0']);
         const foundation = host.foundation();
         expect(foundation.signals.map((signal) => signal.aborted)).toEqual([false]);
         await host.unmount();
-        expect(lifecycle(host.log)).toEqual(['init state=0', 'destroy attached=true aborted=false']);
+        expect(lifecycle(host.log)).toEqual(['init state=0', `destroy attached=${!features.detachedOnDestroy} aborted=false`]);
         expect(foundation.signals.map((signal) => signal.aborted)).toEqual([true]);
     });
 

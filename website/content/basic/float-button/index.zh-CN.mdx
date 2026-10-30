@@ -12,6 +12,8 @@ import FloatButtonVueApi from './api/float-button.vue.zh-CN.mdx';
 import FloatButtonGroupVueApi from './api/float-button-group.vue.zh-CN.mdx';
 import FloatButtonSolidApi from './api/float-button.solid.zh-CN.mdx';
 import FloatButtonGroupSolidApi from './api/float-button-group.solid.zh-CN.mdx';
+import FloatButtonSvelteApi from './api/float-button.svelte.zh-CN.mdx';
+import FloatButtonGroupSvelteApi from './api/float-button-group.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -39,6 +41,16 @@ import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -95,9 +107,50 @@ import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+可通过 `items` 传入子项，图标用 `icon` snippet 提供，参数为 `{ item, index }`。每个子项与单个 FloatButton 一样渲染为原生按钮或链接，各自的 `href`、`target`、`rel`、`disabled`、`onClick` 均生效；点击子项时先调用子项的 `onClick(event)`，再调用 FloatButtonGroup 的 `onClick(value, event)`。FloatButtonGroup 的 `disabled` 会禁用全部子项。
+
+</Framework>
+
 <Demo id="group" />
 
 ## API参考
+
+<Framework only="svelte">
+
+### FloatButton
+
+<FloatButtonSvelteApi />
+
+`class`、`style` 与原生属性和事件（如 `id`、`aria-*`、`onclick`）落在根元素上：设置 `href` 时为 `<a>`，否则为 `<button>`。点击回调是原生 `onclick`，参数为事件，禁用时不触发。`style` 只接受字符串，数字不会自动补 px。不支持 ref。
+
+### FloatButtonGroupItem
+
+在 FloatButton 的 props 基础上增加以下参数。子项的 `href`、`target`、`rel`、`disabled`、`class`、`style` 与 FloatButton 含义相同，`onClick` 等监听器写在数据里；`shape`、`size`、`colorful` 与单个 FloatButton 的同名属性效果相同，设置 `size` 时子项为该尺寸的固定宽高。不支持子项的 `ref`。
+
+| 属性          | 说明                                              | 类型                        | 默认值 |
+| ------------- | ------------------------------------------------- | --------------------------- | ------ |
+| aria-label    | 子项的可访问名称，只有图标没有文本时必须传        | string                      | -      |
+| class         | 类名                                              | string                      | -      |
+| content       | 文本内容，更丰富的内容用 `content` snippet        | string \| number            | -      |
+| data-\*       | 自定义数据属性                                    | string                      | -      |
+| id            | 元素 id                                           | string                      | -      |
+| onClick       | 点击回调，先于 FloatButtonGroup 的 `onClick` 调用 | (event: MouseEvent) => void | -      |
+| oncontextmenu | 右键菜单回调                                      | (event: MouseEvent) => void | -      |
+| onmouseenter  | 指针进入回调                                      | (event: MouseEvent) => void | -      |
+| onmouseleave  | 指针离开回调                                      | (event: MouseEvent) => void | -      |
+| style         | 样式字符串                                        | string                      | -      |
+| title         | 原生 title 属性                                   | string                      | -      |
+| value         | item 的标识，作为 `onClick` 的第一个参数          | string                      | -      |
+
+### FloatButtonGroup
+
+<FloatButtonGroupSvelteApi />
+
+`class`、`style` 与原生属性（如 `aria-*`）落在根元素（`role="group"`）上。`items` 中的 `icon`、节点型 `content` 与节点型 `badge.count` 分别用 `icon`、`content`、`badgeCount` snippet 提供，参数为 `{ item, index }`。
+
+</Framework>
 
 <Framework only="react">
 

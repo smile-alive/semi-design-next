@@ -8,6 +8,7 @@ brief: Freely crop pictures
 import CropperReactApi from './api/cropper.react.en-US.mdx';
 import CropperVueApi from './api/cropper.vue.en-US.mdx';
 import CropperSolidApi from './api/cropper.solid.en-US.mdx';
+import CropperSvelteApi from './api/cropper.svelte.en-US.mdx';
 
 ## When to use
 
@@ -39,6 +40,16 @@ import { Cropper } from '@fibrae/semi-ui-react';
 
 ```jsx
 import { Cropper } from '@fibrae/semi-ui-solid';
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Cropper } from '@fibrae/semi-ui-svelte';
+</script>
 ```
 
 </Framework>
@@ -79,6 +90,12 @@ Control image rotation and zoom through `rotate` and `zoom`, and get the latest 
 
 </Framework>
 
+<Framework only="svelte">
+
+Control image rotation and zoom through `rotate` and `zoom`. `zoom` can be bound with `bind:zoom`, a function binding `bind:zoom={get, set}`, or passed one-way as `zoom={x}`; wheel zooming also calls `onZoomChange(zoom)`. `rotate` is one-way only: the component never changes it. `zoom` does not read the global default.
+
+</Framework>
+
 <Demo id="rotate-zoom" />
 
 ### Crop box settings
@@ -107,6 +124,12 @@ Use `preview` to specify a container that previews the crop result in real time.
 
 </Framework>
 
+<Framework only="svelte">
+
+Use `preview` to specify a container that previews the crop result in real time. `preview` is a function returning the container DOM; it may return `null` or `undefined` while the container is not mounted yet.
+
+</Framework>
+
 <Demo id="preview" />
 
 ### API
@@ -132,6 +155,14 @@ Native attributes that the component does not declare (such as `id`, `data-*`, `
 <CropperSolidApi />
 
 `class`, `style`, `ref` and native attributes and events (such as `id`, `data-*`, `aria-*` and `onKeyDown`) land on the root `<div>`; `ref` gets the root element itself, with the `getCropperCanvas` method attached to it.
+
+</Framework>
+
+<Framework only="svelte">
+
+<CropperSvelteApi />
+
+`class`, `style` and native attributes and events (such as `id`, `data-*`, `aria-*` and `onkeydown`) land on the root `<div>`; `role` can be overridden. Call `getCropperCanvas()` on the component instance obtained through `bind:this`.
 
 </Framework>
 

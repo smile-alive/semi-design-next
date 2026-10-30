@@ -1,0 +1,67 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| autoExpandParent | Whether the parents of the nodes in expandedKeys expand automatically when expandedKeys changes; they always do on mount. When on, a controlled tree collapses a parent only after its expanded children are collapsed. | `boolean` | `false` |
+| autoExpandWhenDragEnter | Whether dragging over a collapsed node expands it. | `boolean` | `true` |
+| autoMergeValue | When a parent is selected the value leaves out its descendants; applies when leafOnly is false. | `boolean` | `true` |
+| blockNode | Shows each node as a whole row, highlighting the row on hover and selection; when off only the label is highlighted. | `boolean` | `true` |
+| checkRelation | How the checked states of nodes relate in a multiple tree: related links parents and children, unRelated keeps them independent. | `CheckRelation` | `"related"` |
+| defaultExpandAll | Expands every node on mount. Later changes of treeData or treeDataSimpleJson do not affect it; use expandAll for that. | `boolean` | `false` |
+| directory | Directory mode with built-in folder icons, which the icon snippet can replace. | `boolean` | `false` |
+| disabled | Disables the whole tree. A node with disabled: false does not lift it. | `boolean` | `false` |
+| disableStrictly | Strict disabling: a disabled node cannot change state through the selection of its parent or children. | `boolean` | `false` |
+| draggable | Whether nodes can be dragged, used together with onDrop. It cannot be combined with virtualize. | `boolean` | `false` |
+| emptyContent | Content shown when there are no nodes, or when the search finds none with showFilteredOnly on. | `Snippet` | - |
+| expandAction | How a node expands: false only through the arrow, click on a click, doubleClick on a double click. The keyboard does not use it. | `ExpandAction` | `false` |
+| expandAll | Expands every node, and keeps doing so when the data changes. | `boolean` | `false` |
+| expandedKeys | Expanded nodes, bindable with `bind:expandedKeys`. Unbound, the given value is only the initially expanded nodes, showing their direct children. `bind:expandedKeys={get, set}` makes expansion fully controlled. | `string[]` | - |
+| expandIcon | The expand icon, with `{ onClick, class, expanded }` as its argument; put `class` and `onclick` on the element it renders. | <ApiType detail={"Snippet\u003c[TreeExpandIconSnippetProps]>"}>Type</ApiType> | - |
+| filterTreeNode | Whether search is on. true matches by treeNodeFilterProp; a function customizes the match, with data as the node. | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: TreeNodeData) => boolean)"}>Type</ApiType> | `false` |
+| fullLabel | Content of the whole row. Its argument holds `class`, `data`, `level`, `expandIcon`, `checkStatus`, `expandStatus`, `filtered`, `searchWord` and `onClick`, `onCheck`, `onExpand`, `onContextmenu`, `onDblclick`. Tree provides the row element carrying the id, role and state, and virtualized positioning; the snippet holds only what is inside. | <ApiType detail={"Snippet\u003c[TreeFullLabelSnippetProps]>"}>Type</ApiType> | - |
+| hideDraggingNode | Hides the drag image of the node being dragged. | `boolean` | `false` |
+| icon | A node's icon. Its argument holds `item`, `level`, `expanded`, `isLeaf`, `loading`, `selected`, `checked` and `halfChecked`, so it can differ by node; empty output keeps the directory icon. | <ApiType detail={"Snippet\u003c[TreeIconSnippetProps]>"}>Type</ApiType> | - |
+| keyMaps | Custom field names for key, label and value in a node. When label is mapped and search is on, set treeNodeFilterProp to one of the keys in treeData or provide filterTreeNode. | `TreeKeyMapProps` | - |
+| label | Content of a node's label, with `{ item, label, searchWord }` as its argument. Search still matches the label text in treeData. | <ApiType detail={"Snippet\u003c[TreeLabelSnippetProps]>"}>Type</ApiType> | - |
+| labelEllipsis | Whether an overflowing label is truncated; on by default for a virtualized tree. | `boolean` | - |
+| leafOnly | In a multiple tree, the value and the payload of onChange hold leaf nodes only. | `boolean` | `false` |
+| loadData | Loads the children of a node and returns a Promise. Mark leaves with isLeaf in the data; a node without isLeaf shows the expand arrow while this is set. | <ApiType detail={"(treeNode?: TreeNodeData) => Promise\u003cvoid>"}>Type</ApiType> | - |
+| loadedKeys | Nodes already loaded, used with loadData and bindable with `bind:loadedKeys`. | `string[]` | - |
+| motion | Whether expanding and collapsing are animated; animation is off for a virtualized tree. | `boolean` | `true` |
+| multiple | Whether several nodes can be selected. A parent is checked automatically once all its children are. | `boolean` | `false` |
+| onChange | Called when the selection changes, with the current value. | <ApiType detail={"(value: TreeValue) => void"}>Type</ApiType> | - |
+| onChangeWithObject | When true the argument of onChange is the node object with value, label and other fields instead of the value; a controlled value must then be objects with a value. | `boolean` | `false` |
+| onContextMenu | Called on a right click on a node, with the event and the node data. | <ApiType detail={"(event: MouseEvent, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onDoubleClick | Called on a double click on a node, with the event and the node data. | <ApiType detail={"(event: MouseEvent, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onDragEnd | Called when a drag ends. | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDragEnter | Called when a drag enters a node; the argument holds expandedKeys when that expanded a collapsed node. | <ApiType detail={"(info: TreeDragEnterProps) => void"}>Type</ApiType> | - |
+| onDragLeave | Called when a drag leaves a node. | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDragOver | Called while a drag is over a node. | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDragStart | Called when a node starts to be dragged. | <ApiType detail={"(info: TreeDragProps) => void"}>Type</ApiType> | - |
+| onDrop | Called when a node is dropped; the argument holds node, dragNode, dragNodesKeys, dropPosition and dropToGap. | <ApiType detail={"(info: TreeOnDragProps) => void"}>Type</ApiType> | - |
+| onExpand | Called when a node expands or collapses, with the array of expanded keys and an info object holding expanded and node. | <ApiType detail={"(expandedKeys: string[], info: TreeExpandedOtherProps) => void"}>Type</ApiType> | - |
+| onLoad | Called when a node has loaded, with the set of loaded nodes and the node just loaded. | <ApiType detail={"(loadedKeys: Set\u003cstring>, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| onSearch | Called when the search input changes; filteredExpandedKeys are the nodes expanded by the search or by value, which controlled expansion can use to show the results. | <ApiType detail={"(input: string, filteredExpandedKeys: string[]) => void"}>Type</ApiType> | - |
+| onSelect | Called when a node is selected or deselected, with its key, whether it is selected and its data. | <ApiType detail={"(selectedKey: string, selected: boolean, node: TreeNodeData) => void"}>Type</ApiType> | - |
+| renderDraggingNode | The element the browser shows while a node is dragged, with the node element nodeInstance and the node data node as arguments; on dragstart the snippet is rendered into a detached container and used as the drag image, so only app-level context reaches it. | <ApiType detail={"Snippet\u003c[TreeDraggingNodeSnippetProps]>"}>Type</ApiType> | - |
+| search | Replaces the search box, with `class`, `value`, `placeholder`, `showClear` and `onChange` as its argument; false hides the box while filterTreeNode still filters. | <ApiType detail={"Snippet\u003c[TreeSearchSnippetProps]> \u007c false"}>Type</ApiType> | - |
+| searchClassName | Class of the search box container. | `string` | - |
+| searchPlaceholder | Placeholder of the search box. | `string` | - |
+| searchStyle | Style string of the search box container. | `string` | - |
+| showClear | Whether the search box shows a clear button. | `boolean` | `true` |
+| showFilteredOnly | Shows only the filtered nodes while searching. | `boolean` | `false` |
+| showLine | Shows connecting lines between nodes. | `boolean` | `false` |
+| treeData | Node data; keys are unique across the tree. Only a new array updates the tree, changes made in place are not seen. A node's icon is drawn by the icon snippet, and its label is a string or number. | `TreeNodeData[]` | - |
+| treeDataSimpleJson | Node data as a plain JSON object; the value is a JSON object holding the selected nodes. | `TreeDataSimpleJson` | - |
+| treeNodeFilterProp | The node field matched against the search input, label by default. | `string` | `"label"` |
+| value | Value of the selected node (its key when it has no value), bindable with `bind:value`; an array when multiple. Unbound, the given value is only the initial selection; `bind:value={get, set}` makes it fully controlled. | `TreeValue` | - |
+| virtualize | List virtualization for many nodes: height, width and itemSize (required). Animation is off once enabled. | `TreeVirtualize` | - |
+
+**Methods**
+
+| Method   | Description                                                                            | Type                                                                    |
+| -------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| scrollTo | In a virtualized tree, scrolls an expanded node into view; align is center by default. | <ApiType detail={"(scrollData: TreeScrollData) => void"}>Type</ApiType> |
+| search   | Searches as if the value were typed into the search box; filterTreeNode must be set.   | <ApiType detail={"(input: string) => void"}>Type</ApiType>              |

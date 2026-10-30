@@ -9,6 +9,8 @@ import LocaleProviderVueApi from './api/locale-provider.vue.en-US.mdx';
 import LocaleConsumerVueApi from './api/locale-consumer.vue.en-US.mdx';
 import LocaleProviderSolidApi from './api/locale-provider.solid.en-US.mdx';
 import LocaleConsumerSolidApi from './api/locale-consumer.solid.en-US.mdx';
+import LocaleProviderSvelteApi from './api/locale-provider.svelte.en-US.mdx';
+import LocaleConsumerSvelteApi from './api/locale-consumer.svelte.en-US.mdx';
 
 ## Languages supported
 
@@ -114,6 +116,24 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid';
 
 </Framework>
 
+<Framework only="svelte">
+
+`LocaleProvider` passes the locale pack to its descendants through context, and you only need to wrap the periphery of the application once to take effect globally.  
+When you need to switch the language, bind `locale` to state that changes; the subtree updates automatically.
+
+```svelte
+<script lang="ts">
+    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import { LocaleProvider } from '@fibrae/semi-ui-svelte';
+</script>
+
+<LocaleProvider locale={en_GB}>
+    <App />
+</LocaleProvider>
+```
+
+</Framework>
+
 When `locale` is omitted, LocaleProvider inherits the language of the outer LocaleProvider; without any outer provider, `zh_CN` is used. The `locale` of ConfigProvider takes precedence over LocaleProvider.
 
 ## Code example
@@ -139,6 +159,12 @@ When your custom component also wants to consume the localeCode in the Semi Loca
 <Framework only="solid">
 
 When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its child is a function receiving the namespace text (`locale`), `localeCode`, `dateFnsLocale` and `currency`, in that order. Inside a component body, you can also call `useLocale(componentName)`, which returns an accessor; call it to read the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
+
+</Framework>
+
+<Framework only="svelte">
+
+When your custom component also wants to consume the localeCode in the Semi LocaleProvider or read the i18n text of a specific component, use LocaleConsumer. Its `children` snippet receives `{ locale, localeCode, dateFnsLocale, currency }`. During component initialisation, you can also call `useLocale(componentName)`, which returns a getter; call it to read the same four fields. The language priority is ConfigProvider, LocaleProvider, then `zh_CN`. Custom namespaces (`ComponentA` in the example) extend the `Locale` type through declaration merging.
 
 </Framework>
 
@@ -205,6 +231,37 @@ LocaleConsumer renders no element of its own, so `class`, `style`, `ref` and nat
 ### useLocale
 
 `useLocale(componentName)` returns an `Accessor<LocaleResult>`; call the accessor to read the result. `componentName` can be a string or an accessor that returns a string.
+
+| Field         | Description                                                               | Type                |
+| ------------- | ------------------------------------------------------------------------- | ------------------- |
+| locale        | Text of the namespace named by `componentName`                            | `Locale[K]`         |
+| localeCode    | Language code                                                             | string              |
+| dateFnsLocale | date-fns locale object; date-fns uses its default enUS when it is missing | `Locale` (date-fns) |
+| currency      | ISO 4217 currency code of the language's region                           | string              |
+
+</Framework>
+
+<Framework only="svelte">
+
+## API Reference
+
+---
+
+### LocaleProvider
+
+<LocaleProviderSvelteApi />
+
+LocaleProvider renders no DOM element, so `class`, `style` and native attributes and events are not applied to the page.
+
+### LocaleConsumer
+
+<LocaleConsumerSvelteApi />
+
+LocaleConsumer renders no element of its own, so `class`, `style` and native attributes and events are not applied to the page.
+
+### useLocale
+
+`useLocale(componentName)` returns a `() => LocaleResult` getter; call it to read the result. `componentName` can be a string or a function that returns a string.
 
 | Field         | Description                                                               | Type                |
 | ------------- | ------------------------------------------------------------------------- | ------------------- |

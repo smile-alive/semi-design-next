@@ -11,7 +11,7 @@ const iconOnClickExemptions: Record<string, string | string[]> = Object.assign({
 
 let failed = false;
 
-const { status } = spawnSync('git', ['grep', '--untracked', '-nE', '^[[:space:]]*private[[:space:]]', '--', '*.ts', '*.tsx', '*.vue', ':!legacy'], {
+const { status } = spawnSync('git', ['grep', '--untracked', '-nE', '^[[:space:]]*private[[:space:]]', '--', '*.ts', '*.tsx', '*.vue', '*.svelte', ':!legacy'], {
     stdio: 'inherit',
 });
 // git grep exits 1 when nothing matches; anything else is a match (0) or a git error

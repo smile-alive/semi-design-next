@@ -8,6 +8,7 @@ brief: An overlay panel that slides out from the edge of the screen, typically u
 import SideSheetReactApi from './api/side-sheet.react.en-US.mdx';
 import SideSheetVueApi from './api/side-sheet.vue.en-US.mdx';
 import SideSheetSolidApi from './api/side-sheet.solid.en-US.mdx';
+import SideSheetSvelteApi from './api/side-sheet.svelte.en-US.mdx';
 
 ## Demos
 
@@ -39,6 +40,16 @@ import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSe
 
 </Framework>
 
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Radio, RadioGroup, SideSheet, TextArea, TypographyText } from '@fibrae/semi-ui-svelte';
+</script>
+```
+
+</Framework>
+
 ### Basic Usage
 
 By default, SideSheet slides from the right side of the screen and could be closed by clicking on the mask.
@@ -52,6 +63,12 @@ Use `v-model:visible` to control visibility: the close button, the mask and Esc 
 <Framework only="solid">
 
 Control visibility with the controlled `visible` prop: the close button, the mask and Esc trigger `onCancel` first, and the sheet does not close by itself; set `visible` to `false` in the `onCancel` handler.
+
+</Framework>
+
+<Framework only="svelte">
+
+Use `bind:visible` to control visibility: the close button, the mask and Esc write `false` back to `visible` first, then call `onCancel`. With a one-way `visible` and `onCancel` only, the sheet does not close by itself; set `visible` to `false` in the `onCancel` handler.
 
 </Framework>
 
@@ -83,6 +100,12 @@ You could use `size` to set the size of SideSheet, supporting one of `small`(448
 
 </Framework>
 
+<Framework only="svelte">
+
+You could use `size` to set the size of SideSheet, supporting one of `small`(448px), `medium`(684px), and `large`(920px). Only takes effects when `placement` is set to `left` or `right`. If the default size does not meet your needs, you can also set the width by setting the `width` property, for example `width={900}` / `width="800px"`
+
+</Framework>
+
 <Demo id="size" />
 
 ### Non-blocking Workflow
@@ -106,6 +129,12 @@ With `mask` set to `false` the body scroll is not locked, so the area outside Si
 </Notice>
 
 <Framework only="solid">
+
+You could set `mask={false}` to continue working on the area outside SideSheet.
+
+</Framework>
+
+<Framework only="svelte">
 
 You could set `mask={false}` to continue working on the area outside SideSheet.
 
@@ -145,6 +174,12 @@ Use the `title`, `footer` and other props, which take JSX elements, together wit
 
 </Framework>
 
+<Framework only="svelte">
+
+Use the `title` prop (plain text or a snippet), the `footer` snippet and other Semi Components to create customized information display layers.
+
+</Framework>
+
 <Demo id="custom-content" />
 
 ## API Reference
@@ -170,6 +205,14 @@ Use the `title`, `footer` and other props, which take JSX elements, together wit
 <SideSheetSolidApi />
 
 `aria-*` attributes and `style` land on the `role="dialog"` element (`.semi-sidesheet-inner`); `class`, `ref` and other native attributes and events land on the outermost `.semi-sidesheet` element inside the portal.
+
+</Framework>
+
+<Framework only="svelte">
+
+<SideSheetSvelteApi />
+
+`aria-*` attributes and `style` land on the `role="dialog"` element (`.semi-sidesheet-inner`); `class` and other native attributes and events land on the outermost `.semi-sidesheet` element inside the portal, which is also what `getRoot()` returns.
 
 </Framework>
 

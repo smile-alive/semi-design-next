@@ -8,6 +8,7 @@ brief: 一个更直观高效的多选选择器，可以露出更多选项的信�
 import TransferReactApi from './api/transfer.react.zh-CN.mdx';
 import TransferVueApi from './api/transfer.vue.zh-CN.mdx';
 import TransferSolidApi from './api/transfer.solid.zh-CN.mdx';
+import TransferSvelteApi from './api/transfer.svelte.zh-CN.mdx';
 
 ## 代码演示
 
@@ -26,6 +27,16 @@ import { Transfer } from '@fibrae/semi-ui-react';
 ```vue
 <script setup lang="ts">
     import { Transfer } from '@fibrae/semi-ui-vue';
+</script>
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+```svelte
+<script lang="ts">
+    import { Transfer } from '@fibrae/semi-ui-svelte';
 </script>
 ```
 
@@ -72,6 +83,14 @@ import { Avatar, Button, ButtonGroup, Checkbox, Highlight, Input, Spin, Transfer
 使用 `#sourceItem` 插槽，你可以自定义左侧每一条源数据的渲染结构。例如结合 Highlight 组件高亮搜索匹配文本  
 使用 `#selectedItem` 插槽你可以自定义右侧每一条已选项的渲染结构。  
 数据项自带的字段（如 demo 中的 `abbr`、`color`）都在插槽参数 `item` 上；只需要替换条目文本时，用 `#label` 插槽更简单，它同时作用于左侧条目、右侧已选条目和拖拽副本。
+
+</Framework>
+
+<Framework only="svelte">
+
+使用 `sourceItem` snippet，你可以自定义左侧每一条源数据的渲染结构。例如结合 Highlight 组件高亮搜索匹配文本  
+使用 `selectedItem` snippet 你可以自定义右侧每一条已选项的渲染结构。  
+数据项自带的字段（如 demo 中的 `abbr`、`color`）都在 snippet 参数 `item` 上；只需要替换条目文本时，用 `label` snippet 更简单，它同时作用于左侧条目、右侧已选条目和拖拽副本。
 
 </Framework>
 
@@ -169,6 +188,13 @@ import { Avatar, Button, ButtonGroup, Checkbox, Highlight, Input, Spin, Transfer
 
 </Framework>
 
+<Framework only="svelte">
+
+将 `draggable` 设为 true，开启拖拽排序功能；使用 `selectedItem` snippet 自定义右侧已选项渲染；  
+你可以将触发器定义为任意你想要的内容，并且添加样式。`draggable` 时 snippet 参数 `handle` 的类型是 `Snippet<[Snippet]>`：把触发器写成一个 snippet（如 `grip`），用 `{@render handle?.(grip)}` 包住它即可。`grip` 要声明在 `<Transfer>` 标签之外，写在标签内会被当成 Transfer 的属性。`draggable` 为 false 时不提供 `handle`。
+
+</Framework>
+
 <Framework only="solid">
 
 将 `draggable` 设为 true，开启拖拽排序功能；使用 `renderSelectedItem` 自定义右侧已选项的渲染。`sortableHandle` 接收一个包裹拖拽图标的组件，返回拖拽手柄组件，在返回的 JSX 中渲染它即可；手柄是原生 `button`。`draggable` 为 false 时不提供 `sortableHandle`。
@@ -218,6 +244,28 @@ type TransferSourceHeaderSlotProps = {
 };
 
 type TransferSelectedHeaderSlotProps = {
+    num: number; // 已选中数据总数
+    showButton: boolean; // 是否展示清空按钮
+    onClear: () => void; // 点击清空按钮后应调用的函数
+};
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+`sourceHeader`、`selectedHeader` snippet 允许用户自定义渲染左右两个面板的头部信息，snippet 参数类型分别为 `TransferSourceHeaderSnippetProps`、`TransferSelectedHeaderSnippetProps`：
+
+```ts
+type TransferSourceHeaderSnippetProps = {
+    num: number; // 数据总数或筛选结果数目
+    showButton: boolean; // 是否展示全选/取消全选按钮
+    allChecked: boolean; // 当前数据是否已全选
+    onAllClick: () => void; // 点击全选/取消全选按钮后应调用的函数
+    leafOnlyNum?: number; // 仅在 type 为 treeList 时提供，表示叶子节点数量
+};
+
+type TransferSelectedHeaderSnippetProps = {
     num: number; // 已选中数据总数
     showButton: boolean; // 是否展示清空按钮
     onClear: () => void; // 点击清空按钮后应调用的函数
@@ -323,6 +371,45 @@ interface TransferSourcePanelSlotProps {
 
 ```ts
 interface TransferSelectedPanelSlotProps {
+    length: number; // 已选项的数量
+    selectedData: Array<Item>; // 所有已选项集合
+    onClear: () => void; // 点击清空时应调用的回调函数
+    onRemove: (item: Item) => void; // 删除单个选项时应调用的函数
+    onSortEnd: (payload: { oldIndex: number; newIndex: number }) => void; // 对结果重新排序时应调用的函数
+}
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+Semi 提供了 `sourcePanel`、`selectedPanel` snippet，允许你完全自定义左右侧两个面板的渲染结构  
+通过该功能，你可以直接复用 Transfer 内部的逻辑能力，实现高度自定义样式结构的`Transfer`组件  
+`sourcePanel` 的参数类型为 `TransferSourcePanelSnippetProps`，你可以从中获取数据来渲染出你的 Panel 结构
+
+```ts
+interface TransferSourcePanelSnippetProps {
+    value: Array<string | number>; // 所有选中项的 value
+    loading: boolean | undefined; // 是否加载中
+    noMatch: boolean; // 是否没有符合当前搜索值匹配的项
+    filterData: Array<Item>; // 匹配当前搜索值的项
+    sourceData: Array<Item>; // 所有项
+    propsDataSource: Array<Item> | Array<GroupItem> | Array<TreeItem>; // Transfer 的 dataSource
+    allChecked: boolean; // 是否全部选中
+    showNumber: number; // 筛选结果数量
+    inputValue: string; // input搜索框的值
+    selectedItems: Map<string | number, Item>; // 所有已选项的集合，Map 的键是 item.key
+    onSearch: (searchString: string) => void; // 搜索框变化时应调用的函数，入参为搜索值
+    onAllClick: () => void; // 左侧全部按钮点击时应调用的函数
+    onSelectOrRemove: (item: Item) => void; // 选择、删除单个选项时应调用的函数，入参应为当前操作item
+    onSelect: (values: Array<string | number>) => void; // 受控批量选中，入参为选中项的 value
+}
+```
+
+`selectedPanel` 的参数类型为 `TransferSelectedPanelSnippetProps`
+
+```ts
+interface TransferSelectedPanelSnippetProps {
     length: number; // 已选项的数量
     selectedData: Array<Item>; // 所有已选项集合
     onClear: () => void; // 点击清空时应调用的回调函数
@@ -533,6 +620,26 @@ interface SelectedPanelProps {
 
 </Framework>
 
+<Framework only="svelte">
+
+使用 dnd-kit 的示例如下，需要用到的核心依赖有 @dnd-kit/svelte 与 @dnd-kit/dom：`DragDropProvider` 提供拖拽上下文，每个已选项对应一个 `@dnd-kit/dom/sortable` 导出的 `Sortable`，参数如下
+
+```
+1. 作用：通过唯一标志 id 与当前位置 index 获取拖拽过程中必要信息
+2. 核心输入参数：
+    - id: 唯一标识，数字或者字符串
+    - index: 该项在列表中的当前位置，列表变化后需同步更新
+    - element: 可拖拽的 dom 节点
+    - handle: 可选，拖拽手柄的元素，不传时整个节点都可拖拽
+3. 第二个参数是 DragDropManager 实例，卸载组件时需要调用各 Sortable 的 destroy
+```
+
+示例用 `{@attach}` 在每一行上创建 `Sortable` 并在清理函数中销毁，用 `bind:value` 保存已选值。拖拽过程中的顺序由示例自己的 `preview` 状态驱动，所以去掉了 `OptimisticSortingPlugin`：它会自己移动 DOM 节点，与 Svelte 的 keyed each 冲突。
+
+`DragDropProvider` 的 `onDragOver` 里按 `source` 与 `target` 调整预览顺序；`onDragEnd` 里用 `event.operation.source` 的 id 算出拖拽前后的位置，再调用 `#selectedPanel` 参数里的 `onSortEnd`；`event.canceled` 为 true 表示拖拽已取消。
+
+</Framework>
+
 <Framework only="solid">
 
 使用 dnd-kit 的示例如下，需要用到的核心依赖有 @dnd-kit/solid：`DragDropProvider` 提供拖拽上下文，`@dnd-kit/solid/sortable` 导出的 `useSortable` 接收 `id` 与 `index`，两者都以 getter 传入，列表重排后读取到的 `index` 随之更新。
@@ -591,6 +698,22 @@ Tree 自带的搜索框已用空的 `#search` 插槽隐藏，由 Transfer 自己
 
 </Framework>
 
+<Framework only="svelte">
+
+```
+{
+    multiple:true,
+    disableStrictly:true,
+    leafOnly:true,
+    filterTreeNode:true,
+    defaultExpandAll:true,
+}
+```
+
+Tree 自带的搜索框已隐藏，由 Transfer 自己的搜索框驱动过滤。Tree 的 snippet 中只有 `label` 经 Transfer 的 `label` snippet 转发，同时用于左侧树行和右侧已选项。叶子节点写 `children: []`。
+
+</Framework>
+
 <Framework only="solid">
 
 ```
@@ -621,6 +744,12 @@ Tree 自带的搜索框由 `searchRender` 为 `false` 隐藏，由 Transfer 自�
 <Framework only="vue">
 
 当 type 为 `treeList` 时，`#sourceHeader` 的 `TransferSourceHeaderSlotProps` 参数中会额外提供 `leafOnlyNum` 字段，表示叶子节点的数量。这在文件选择等场景中非常有用，可以在头部只显示文件数量而不是包含文件夹的总数。
+
+</Framework>
+
+<Framework only="svelte">
+
+当 type 为 `treeList` 时，`sourceHeader` 的 `TransferSourceHeaderSnippetProps` 参数中会额外提供 `leafOnlyNum` 字段，表示叶子节点的数量。这在文件选择等场景中非常有用，可以在头部只显示文件数量而不是包含文件夹的总数。
 
 </Framework>
 
@@ -696,6 +825,30 @@ Tree 自带的搜索框由 `searchRender` 为 `false` 隐藏，由 Transfer 自�
 
 </Framework>
 
+<Framework only="svelte">
+
+### Transfer
+
+<TransferSvelteApi />
+
+`class`、`style`、`aria-*` 等未声明的属性落在 Transfer 根元素上；根元素带 `aria-label` 或 `aria-labelledby` 且未指定 `role` 时为 `role="group"`。`value` 可以用 `bind:value` 绑定，也可以只传值作为初始选中项，没有 `defaultValue`。搜索框的属性用 `inputProps` 传入，treeList 左侧 Tree 的属性用 `treeProps` 传入。
+
+下文各接口在 `@fibrae/semi-ui-svelte` 中导出的类型名为：Item 对应 `TransferDataItem`，GroupItem 对应 `TransferGroupItem`，TreeItem 对应 `TransferTreeItem`，VirtualizeProps 对应 `TransferVirtualize`，PaginationProps 对应 `TransferPagination`。
+
+### Item Interface
+
+数据项还可以带任意自定义字段，它们会原样出现在 snippet 参数与回调载荷的 `item` 上。
+
+| 属性     | 说明                                                                                          | 类型             | 默认值 |
+| -------- | --------------------------------------------------------------------------------------------- | ---------------- | ------ |
+| disabled | 是否禁用                                                                                      | boolean          | false  |
+| key      | 必填，每个选项的唯一标识，不允许重复                                                          | string \| number |        |
+| label    | 选项展示文本，默认过滤按它匹配；需要其他内容时用 `label` snippet                              | string           |        |
+| fullPath | 当 `type="treeList"` 且 `showPath` 为 `true` 时，返回当前节点从根节点到自身的完整路径节点数组 | Array\<Item\>    |        |
+| value    | 选项代表的值                                                                                  | string \| number |        |
+
+</Framework>
+
 <Framework only="solid">
 
 ### Transfer
@@ -764,6 +917,25 @@ const transferRef = useRef<TransferHandle>(null);
 <Transfer ref={transferRef} />;
 
 transferRef.current?.search('选项名称 1');
+```
+
+</Framework>
+
+<Framework only="svelte">
+
+## Methods
+
+Transfer 通过 `export function` 暴露 `search`，用 `bind:this` 取得实例后调用，类型为 `TransferHandle`。
+
+```svelte
+<script lang="ts">
+    import { Transfer, type TransferHandle } from '@fibrae/semi-ui-svelte';
+
+    let transfer = $state<TransferHandle>();
+</script>
+
+<Transfer bind:this={transfer} />
+<button onclick={() => transfer?.search('选项名称 1')}>搜索</button>
 ```
 
 </Framework>

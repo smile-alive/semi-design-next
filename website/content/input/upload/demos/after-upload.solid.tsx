@@ -1,7 +1,7 @@
 import { IconUpload } from '@fibrae/semi-icons-solid';
 import { type AfterUploadProps, Button, Upload } from '@fibrae/semi-ui-solid';
 
-const afterUpload = ({ response }: AfterUploadProps) => {
+function afterUpload({ response }: AfterUploadProps) {
     if (response.status_code === 200) {
         return {
             autoRemove: false,
@@ -12,7 +12,7 @@ const afterUpload = ({ response }: AfterUploadProps) => {
         };
     }
     return {};
-};
+}
 
 export default function UploadDemo() {
     return (

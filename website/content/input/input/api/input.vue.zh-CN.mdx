@@ -7,10 +7,10 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | 输入框内容，用于 v-model。 | `string \| number` | `undefined` |
 | modelModifiers | v-model 修饰符 trim、number 与 lazy，由 Vue 在使用对应修饰符时传入。lazy 时输入过程中不更新绑定值，原生 change（失焦或按 Enter）时才发出 update:modelValue；change 事件仍在每次输入时触发。 | `InputModelModifiers` | `undefined` |
 | defaultValue | 非受控时的初始内容。 | `string \| number` | `semiGlobalDefault("Input", "defaultValue")` |
-| size | 输入框大小，可选 large、default、small。 | `Size` | `semiDefault("Input", "size", "default")` |
+| size | 输入框大小，可选 large、default、small。 | `Size` | `undefined` |
 | type | 原生 input 的 type。 | `string` | `semiDefault("Input", "type", "text")` |
 | mode | 输入框模式，可选 password，显示密码显隐按钮。 | `"password"` | `semiGlobalDefault("Input", "mode")` |
-| disabled | 是否禁用。 | `boolean` | `semiGlobalDefault("Input", "disabled")` |
+| disabled | 是否禁用。 | `boolean` | `undefined` |
 | readonly | 是否只读。 | `boolean` | `semiDefault("Input", "readonly", false)` |
 | borderless | 无边框模式。 | `boolean` | `semiDefault("Input", "borderless", false)` |
 | showClear | 有内容且悬停或焦点位于组件内时展示清除按钮。 | `boolean` | `semiDefault("Input", "showClear", false)` |
