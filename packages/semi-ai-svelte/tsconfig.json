@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "rootDir": "src",
+        "strict": true,
+        "strictNullChecks": true,
+        "erasableSyntaxOnly": true,
+        "verbatimModuleSyntax": true,
+        "types": []
+    },
+    "include": ["src/**/*.ts", "src/**/*.svelte"],
+    "exclude": ["src/**/__tests__/**"]
+}
