@@ -285,16 +285,16 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     /**
      * Re-runs initSpace the first time the group is measurable (#3336); later resizes must not, or the drag is lost.
      */
-    handleGroupResize() {
+    handleGroupResize = () => {
         if (!this.#sizeInitialized && this.#groupSize > 0) {
             this.#initSpace();
         }
-    }
+    };
 
     /**
      * Moves each item's inline size to the new axis, where the handlers take a different length
      */
-    handleDirectionChange() {
+    handleDirectionChange = () => {
         const [stale, current] = this.#direction === 'horizontal' ? ['height', 'width'] : ['width', 'height'];
         this.#measureHandlerRoom();
         for (let i = 0; i < this._adapter.getItemCount(); i++) {
@@ -303,13 +303,13 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             item.style[current] = `calc(${this.#itemPercentMap.get(i)}% - ${this.#itemMinusMap.get(i)}px)`;
         }
         this.#syncAria();
-    }
+    };
 
     /**
      * Keyboard resize, reported like a drag: arrows move 1% of the group (Shift: 10%), Home and End go to the
      * limits. Returns whether the key was handled.
      */
-    resizeByKey(handlerIndex: number, e: KeyboardEvent) {
+    resizeByKey = (handlerIndex: number, e: KeyboardEvent) => {
         // Alt/Ctrl/Meta plus an arrow is a browser or OS shortcut
         if (e.altKey || e.ctrlKey || e.metaKey) {
             return false;
@@ -331,9 +331,9 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             this.#notifyResizeEnd(handlerIndex, e);
         }
         return true;
-    }
+    };
 
-    onResizeStart(handlerIndex: number, e: PointerEvent) {
+    onResizeStart = (handlerIndex: number, e: PointerEvent) => {
         if (isSecondaryPress(e) || !this.#notifyResizeStart(handlerIndex, e)) {
             return;
         }
@@ -343,13 +343,14 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             originalPosition: this.#measure(handlerIndex, e.clientX, e.clientY),
             backgroundStyle: {
                 ...states.backgroundStyle,
-                cursor: this.#window.getComputedStyle(e.target as HTMLElement).cursor || 'auto',
+                // the target is the handle; instanceof against the global Element fails when the group lives in an iframe
+                cursor: this.#window.getComputedStyle(e.target as Element).cursor || 'auto',
             },
             curHandler: handlerIndex,
         });
-    }
+    };
 
-    onResizing(e: PointerEvent) {
+    onResizing = (e: PointerEvent) => {
         const state = this.getStates();
         if (!state.isResizing) {
             return;
@@ -357,9 +358,9 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         const { curHandler, originalPosition } = state;
         const delta = this.#direction === 'horizontal' ? e.clientX - originalPosition.x : e.clientY - originalPosition.y;
         this.#applyDelta(curHandler, originalPosition, delta, e);
-    }
+    };
 
-    onResizeEnd(e: PointerEvent) {
+    onResizeEnd = (e: PointerEvent) => {
         const { isResizing, curHandler } = this.getStates();
         if (!isResizing) {
             return;
@@ -369,7 +370,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             isResizing: false,
             curHandler: null,
         });
-    }
+    };
 
     ensureConstraint = debounce(() => {
         // a hidden group measures 0, and percentages computed against it are Infinity

@@ -56,9 +56,11 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
         return [...menu.querySelectorAll<HTMLElement>(ITEM_SELECTOR)].filter((item) => item.closest('[role="menu"]') === menu && item.getAttribute('aria-disabled') !== 'true');
     }
 
-    onMenuKeydown(event: any) {
-        const menu: Element = event.currentTarget;
-        const target: HTMLElement = event.target;
+    onMenuKeydown = (event: Pick<KeyboardEvent, 'altKey' | 'ctrlKey' | 'currentTarget' | 'defaultPrevented' | 'key' | 'metaKey' | 'preventDefault' | 'stopPropagation' | 'target'>) => {
+        const { currentTarget: menu, target } = event;
+        if (!(menu instanceof Element) || !(target instanceof HTMLElement)) {
+            return;
+        }
         // a submenu's keys were handled by the submenu and its own popup; the parent menu must not act on them again.
         // Escape goes on to the document, where the overlay stack closes the submenu.
         if (target.closest('[role="menu"]') !== menu) {
@@ -136,5 +138,5 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
                 }
                 break;
         }
-    }
+    };
 }

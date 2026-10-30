@@ -5,12 +5,14 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants'
 import TransferFoundation, { type TransferAdapter } from '@fibrae/semi-foundation/transfer/foundation';
 import '@fibrae/semi-foundation/transfer/transfer.scss';
 import { IconClose, IconHandle, IconSearch } from '@fibrae/semi-icons-solid';
+import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import mergeStyles from '../_base/merge-styles';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
+import useWatch from '../_base/use-watch';
 import VirtualList from '../_base/virtual-list';
 import type { SortableHandle } from '../_sortable/types';
 import Button from '../button';
@@ -27,8 +29,9 @@ import { type DataItem, type RenderSelectedItemProps, type ResolvedDataItem, typ
 // dnd-kit is only needed once a draggable Transfer has a selection
 const Sortable = lazy(() => import('../_sortable').then((module) => ({ default: module.Sortable })));
 
-type Foundation = TransferFoundation<TransferProps, TransferState>;
-type Adapter = TransferAdapter<TransferProps, TransferState>;
+type BlurEvent = Parameters<NonNullable<TransferProps['onBlur']>>[0];
+type Foundation = TransferFoundation<TransferProps, TransferState, BlurEvent>;
+type Adapter = TransferAdapter<TransferProps, TransferState, BlurEvent>;
 type ItemKey = string | number;
 
 const prefixCls = cssClasses.PREFIX;
@@ -69,6 +72,8 @@ export default function Transfer(rawProps: TransferProps) {
         'onSelect',
         'onDeselect',
         'onSearch',
+        'onBlur',
+        'onFocusOut',
         'renderLabel',
         'renderSourceItem',
         'renderSelectedItem',
@@ -102,6 +107,7 @@ export default function Transfer(rawProps: TransferProps) {
         }),
         (base) => ({
             updateSelected: (selectedValues) => base.setState({ selectedValues }),
+            notifyBlur: (e) => local.onBlur?.(e),
             notifyChange: (values, items) => local.onChange?.(values, items as DataItem[]),
             notifySearch: (input) => local.onSearch?.(input),
             notifySelect: (item) => local.onSelect?.(item as DataItem),
@@ -181,10 +187,10 @@ export default function Transfer(rawProps: TransferProps) {
         get selectedItems() {
             return selectedItems();
         },
-        onSelect: (selectValues) => foundation.handleSelect(selectValues),
+        onSelect: foundation.handleSelect,
         onAllClick: () => foundation.handleAll(leftContainsNotInSelected()),
         onSearch: (input) => foundation.handleInputChange(input, true),
-        onSelectOrRemove: (item) => foundation.handleSelectOrRemove(item),
+        onSelectOrRemove: foundation.handleSelectOrRemove,
     };
 
     const sourceHeaderProps: SourceHeaderProps = {
@@ -210,9 +216,9 @@ export default function Transfer(rawProps: TransferProps) {
         get selectedData() {
             return selectedData();
         },
-        onClear: () => foundation.handleClear(),
+        onClear: foundation.handleClear,
         onRemove: sourcePanelProps.onSelectOrRemove,
-        onSortEnd: (move) => foundation.handleSortEnd(move),
+        onSortEnd: foundation.handleSortEnd,
     };
 
     const selectedHeaderProps: SelectedHeaderProps = {
@@ -359,7 +365,7 @@ export default function Transfer(rawProps: TransferProps) {
             treeData={local.dataSource as TreeNodeData[]}
             searchRender={false}
             renderLabel={local.renderLabel ? (_label, node) => local.renderLabel?.(node as DataItem) : undefined}
-            onChange={(treeValue) => foundation.handleSelect(treeValue)}
+            onChange={foundation.handleSelect}
             {...treeRest()}
             style={treeStyle()}
         />
@@ -385,7 +391,7 @@ export default function Transfer(rawProps: TransferProps) {
                 <SourceList />
                 <Show when={local.pagination && totalPage() > 1}>
                     <div class={`${prefixCls}-left-pagination`}>
-                        <Pagination currentPage={currentPage()} pageSize={pageSize()} total={filterData().length} onPageChange={(page) => foundation.handlePageChange(page)} />
+                        <Pagination currentPage={currentPage()} pageSize={pageSize()} total={filterData().length} onPageChange={foundation.handlePageChange} />
                     </div>
                 </Show>
             </Match>
@@ -545,6 +551,15 @@ export default function Transfer(rawProps: TransferProps) {
         </Show>
     );
 
+    useWatch(
+        () => local.value,
+        (next, previous) => {
+            if (Array.isArray(previous) && !Array.isArray(next)) {
+                foundation.handleValueRelease();
+            }
+        }
+    );
+
     createEffect(
         on(treeHandle, (handle) => {
             const keyword = foundation.getState('inputValue');
@@ -564,6 +579,10 @@ export default function Transfer(rawProps: TransferProps) {
                 [`${prefixCls}-custom-panel`]: local.renderSelectedPanel && local.renderSourcePanel,
             })}
             style={local.style}
+            onFocusOut={(e) => {
+                callHandler(local.onFocusOut, e);
+                foundation.handleFocusOut(e);
+            }}
         >
             <SourcePanel />
             <SelectedPanel />

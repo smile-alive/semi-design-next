@@ -47,16 +47,16 @@ export default class BreadcrumbItemFoundation<P extends object = object, S exten
         return !active && !hasHref && !noLink && hasOnClick;
     }
 
-    handleClick(item: BreadcrumbItemInfo, e: E) {
+    handleClick = (item: BreadcrumbItemInfo, e: E) => {
         this._adapter.notifyClick(item, e);
         this._adapter.notifyParent(item, e);
-    }
+    };
 
     /** Enter goes through a real click so handlers keep receiving a MouseEvent */
-    handleKeyDown(e: Pick<KeyboardEvent, 'key' | 'preventDefault'> & { currentTarget: { click: () => void } }, isKeyboardLink: boolean) {
+    handleKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault'> & { currentTarget: { click: () => void } }, isKeyboardLink: boolean) => {
         if (isKeyboardLink && e.key === 'Enter') {
             e.preventDefault();
             e.currentTarget.click();
         }
-    }
+    };
 }

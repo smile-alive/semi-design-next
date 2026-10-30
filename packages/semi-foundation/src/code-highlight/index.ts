@@ -29,7 +29,7 @@ export default class CodeHighlightFoundation<P extends CodeHighlightBaseProps = 
         this.#requestId++;
     }
 
-    async highlightCode() {
+    highlightCode = async () => {
         const { code = '', language, languages, themes } = this.getProps();
         const requestId = ++this.#requestId;
         const { highlight } = await import('./highlighter');
@@ -38,5 +38,5 @@ export default class CodeHighlightFoundation<P extends CodeHighlightBaseProps = 
         if (requestId === this.#requestId) {
             this._adapter.setHtml(html, code);
         }
-    }
+    };
 }

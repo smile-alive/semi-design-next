@@ -27,10 +27,10 @@ function List({ locale }: { locale: Locale }) {
     );
 }
 
-const instructions = () => {
+function instructions() {
     const id = screen.getAllByRole('button', { name: 'drag' })[0].getAttribute('aria-describedby');
     return id ? document.getElementById(id)?.textContent : undefined;
-};
+}
 
 describe('Sortable', () => {
     it('切换语言后，拖拽手柄的键盘说明随之更新', async () => {

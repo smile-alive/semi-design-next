@@ -94,7 +94,7 @@ export default function Cropper(rawProps: CropperProps) {
     );
 
     const geometry = createMemo(() => getCropperGeometry(state().imgData, state().cropperBox));
-    const handle: CropperHandle = { getCropperCanvas: () => foundation.getCropperCanvas() };
+    const handle: CropperHandle = { getCropperCanvas: foundation.getCropperCanvas };
 
     const imgLayout = (x: number, y: number): JSX.CSSProperties => ({
         width: `${state().imgData.width}px`,
@@ -103,18 +103,10 @@ export default function Cropper(rawProps: CropperProps) {
         transform: `translate(${x}px, ${y}px) rotate(${state().rotate}deg)`,
     });
 
-    useResizeObserver(
-        () => root,
-        () => foundation.handleResize()
-    );
+    useResizeObserver(() => root, foundation.handleResize);
 
     // preventDefault must stop a pinch from zooming the page, which only a non-passive listener can do
-    useEventListener(
-        () => root,
-        'wheel',
-        (event) => foundation.handleWheel(event),
-        { passive: false }
-    );
+    useEventListener(() => root, 'wheel', foundation.handleWheel, { passive: false });
 
     // Wheel zooming and the image load change the state too, so a controlled zoom undoes a zoom the parent did not
     // accept; the foundation compares with Object.is, so the writes settle
@@ -123,10 +115,7 @@ export default function Cropper(rawProps: CropperProps) {
         foundation.syncRotateAndZoom();
     });
 
-    useWatch(
-        () => local.aspectRatio,
-        () => foundation.applyAspectRatio()
-    );
+    useWatch(() => local.aspectRatio, foundation.applyAspectRatio);
 
     // a controlled value dropped again falls back to the default, like the other components
     useWatch(

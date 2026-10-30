@@ -41,22 +41,22 @@ const queryAll = (suffix: string) => [...document.querySelectorAll<HTMLElement>(
 // A key on a native range changes its value; jsdom runs no such default action, so the input event is fired directly.
 const changeTo = (input: HTMLInputElement, value: number) => fireEvent.update(input, String(value));
 // Focus an input the way a Tab press does: jsdom's :focus-visible heuristic needs a key press first.
-const tabTo = async (el: HTMLElement) => {
+async function tabTo(el: HTMLElement) {
     await fireEvent.keyDown(document.body, { key: 'Tab' });
     el.focus();
     await nextTick();
-};
+}
 const SIZED = { width: '100px', height: '32px' };
 const VERTICAL = { width: '4px', height: '400px', marginLeft: '20px', marginTop: '40px' };
 const expectValues = (...values: number[]) => expect(getInputs().map((input) => input.value)).toEqual(values.map(String));
 const renderSlider = (props: Props = {}, style?: Props, attrs: Props = {}) => render(Slider, { props, attrs: style ? { ...attrs, style } : attrs });
 const renderRtl = (props: Props, style: StyleValue = {}) => render({ render: () => <ConfigProvider direction="rtl">{() => <Slider {...props} style={style} />}</ConfigProvider> });
 // fireEvent resolves to nothing, so checks of the default action dispatch the event themselves
-const dispatch = async (target: EventTarget, event: Event) => {
+async function dispatch(target: EventTarget, event: Event) {
     target.dispatchEvent(event);
     await nextTick();
     return event;
-};
+}
 
 describe('Slider', () => {
     afterEach(() => {

@@ -612,6 +612,25 @@ it('从展开的 Select 按 Tab 会关闭列表并移到清空按钮，且不触
     expect(onBlur).not.toHaveBeenCalled();
 });
 
+it('打开时按 Tab 关闭列表并离开，onBlur 恰好一次', async () => {
+    const onBlur = vi.fn<() => void>();
+    render(() => (
+        <>
+            <Select style={{ width: '200px' }} optionList={options} onBlur={onBlur} />
+            <Button>after</Button>
+        </>
+    ));
+    await tabTo(screen.getByRole('combobox'));
+    await userEvent.keyboard('{ArrowDown}');
+    await screen.findByRole('listbox');
+    await userEvent.keyboard('{ArrowDown}');
+    expect(onBlur).not.toHaveBeenCalled();
+    await tab();
+    expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+    await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull());
+    expect(onBlur).toHaveBeenCalledTimes(1);
+});
+
 it('Select 标签获得焦点时被移除，焦点交给 combobox', async () => {
     const onBlur = vi.fn<() => void>();
     render(() => (

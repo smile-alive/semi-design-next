@@ -48,6 +48,9 @@ export function reachesBound(number: number | null | undefined, bound: number | 
 /** The members of a keyboard event the foundation reads; DOM events and React synthetic events both satisfy it */
 export type InputNumberKeyEvent = Pick<KeyboardEvent, 'key' | 'preventDefault' | 'shiftKey' | 'altKey' | 'ctrlKey' | 'metaKey'> & Parameters<typeof isComposing>[0];
 
+/** The members of a step button's pointerdown the foundation reads, which it keeps for the repeats while the button is held */
+export type InputNumberPressEvent = Pick<PointerEvent, 'button' | 'currentTarget' | 'pointerId' | 'shiftKey' | 'stopPropagation'>;
+
 /** FE and KE are the host's focus and keydown events, which the foundation passes on to the callbacks */
 export interface InputNumberAdapter<P extends InputNumberBaseProps = InputNumberBaseProps, S extends BaseInputNumberState = BaseInputNumberState, FE = unknown, KE = unknown> extends DefaultAdapter<P, S> {
     setValue: (value: string, cb?: () => void) => void;
@@ -108,7 +111,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
     }
 
     /** Commits the formatted text a step produced */
-    #commitStep(v = '', event: any = null, updateCb: () => void = null) {
+    #commitStep(v = '', event: unknown = null, updateCb: () => void = null) {
         const parsed = this.doParse(v, false);
         const isValidNumber = !isNaN(parsed);
 
@@ -293,7 +296,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         return shown;
     }
 
-    #step(direction: 1 | -1, event: any) {
+    #step(direction: 1 | -1, event: InputNumberPressEvent) {
         const value = direction > 0 ? this.add(null, event) : this.minus(null, event);
         this.#commitStep(value, event);
         if (direction > 0) {
@@ -308,12 +311,13 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         return !readonly && !disabled && !reachesBound(this.getState('number'), direction > 0 ? max : min, direction);
     }
 
-    #press(direction: 1 | -1, event: any) {
-        if (isSecondaryPress(event) || !this.#canStep(direction)) {
+    #press(direction: 1 | -1, event: InputNumberPressEvent) {
+        const { currentTarget } = event;
+        if (!(currentTarget instanceof Element) || isSecondaryPress(event) || !this.#canStep(direction)) {
             return;
         }
         this.#lastChangeWasStep = true;
-        event.currentTarget.setPointerCapture(event.pointerId);
+        currentTarget.setPointerCapture(event.pointerId);
         event.stopPropagation();
         this.#step(direction, event);
         this.#registerTimer(() => {
@@ -327,7 +331,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         });
     }
 
-    #notifyChange(value: string | number | null, e: any) {
+    #notifyChange(value: string | number | null, e: unknown) {
         if (value == null || value === '') {
             this._adapter.notifyChange('', e);
         } else {
@@ -342,7 +346,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         }
     }
 
-    #notifyNumberChange(value: number, e: any) {
+    #notifyNumberChange(value: number, e: unknown) {
         const { number } = this.getStates();
         if (this.isValidNumber(value) && value !== number) {
             this._adapter.notifyNumberChange(value, e);
@@ -358,7 +362,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         return currency === true || (typeof currency === 'string' && currency.trim() !== '');
     }
 
-    protected add(step?: number, event?: any): string {
+    protected add(step?: number, event?: Pick<KeyboardEvent, 'shiftKey'>): string {
         const pressShift = event && event.shiftKey;
         const propStep = pressShift ? this.getProp('shiftStep') : this.getProp('step');
         step = step == null ? propStep : Number(step);
@@ -384,7 +388,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         return this.#formatStep(curNum);
     }
 
-    protected minus(step?: number, event?: any): string {
+    protected minus(step?: number, event?: Pick<KeyboardEvent, 'shiftKey'>): string {
         const pressShift = event && event.shiftKey;
         const propStep = pressShift ? this.getProp('shiftStep') : this.getProp('step');
         step = step == null ? propStep : Number(step);
@@ -477,8 +481,9 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         const parser = this.getProp('parser');
 
         if (typeof parser === 'function') {
-            const parsedValue = parser(value) as unknown;
-            value = typeof parsedValue === 'number' ? toString(parsedValue) : (parsedValue as string);
+            // a JS user's parser may return a number although the type says string
+            const parsedValue: string | number = parser(value);
+            value = typeof parsedValue === 'number' ? toString(parsedValue) : parsedValue;
         }
 
         if (typeof value === 'string' && SCIENTIFIC_NOTATION.test(value.trim())) {
@@ -534,8 +539,8 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
             }
 
             if (typeof parser === 'function') {
-                const parsedValue = parser(toString(value)) as unknown;
-                value = typeof parsedValue === 'number' ? toString(parsedValue) : (parsedValue as string);
+                const parsedValue: string | number = parser(toString(value));
+                value = typeof parsedValue === 'number' ? toString(parsedValue) : parsedValue;
             }
             if (needAdjustPrec) {
                 value = this.#adjustPrec(value);
@@ -582,7 +587,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         this.#unregisterTimer();
     }
 
-    handleInputFocus(e: FE) {
+    handleInputFocus = (e: FE) => {
         const value = this.getState('value');
 
         if (value !== '') {
@@ -603,9 +608,9 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         this._adapter.setFocusing(true);
         this.#lastChangeWasStep = false;
         this._adapter.notifyFocus(e);
-    }
+    };
 
-    handleInputChange(value: string, event: unknown) {
+    handleInputChange = (value: string, event: unknown) => {
         this.#lastChangeWasStep = false;
         const parsedNum = this.doParse(value, true, true, true);
         const toNum = this.doParse(value, false, false, false);
@@ -654,9 +659,9 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         this._adapter.setValue(this.isControlled() && !this.isCurrency() ? formattedNum : this.doFormat(valueAfterParser, false), () => {
             this.#restoreCaret();
         });
-    }
+    };
 
-    handleInputKeyDown(event: KE) {
+    handleInputKeyDown = (event: KE) => {
         if (this.getProp('readonly')) {
             this._adapter.notifyKeyDown(event);
             return;
@@ -684,9 +689,9 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         }
 
         this._adapter.notifyKeyDown(event);
-    }
+    };
 
-    handleInputBlur(e: FE) {
+    handleInputBlur = (e: FE) => {
         const currentValue = toString(this.getState('value'));
         let currentNumber = this.getState('number');
 
@@ -754,46 +759,46 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         }
         this._adapter.setFocusing(false);
         this._adapter.notifyBlur(e);
-    }
+    };
 
-    handleInputMouseEnter() {
+    handleInputMouseEnter = () => {
         this._adapter.setHovering(true);
-    }
+    };
 
-    handleInputMouseLeave() {
+    handleInputMouseLeave = () => {
         this._adapter.setHovering(false);
-    }
+    };
 
-    handleInputMouseMove() {
+    handleInputMouseMove = () => {
         if (!this.getState('hovering')) {
             this._adapter.setHovering(true);
         }
-    }
+    };
 
     /** Ends the repeat of a held button; follows pointerup and pointercancel */
-    handlePressEnd() {
+    handlePressEnd = () => {
         this.#unregisterInterval();
         this.#unregisterTimer();
-    }
+    };
 
     /**
      * Under keepFocus or innerButtons a press on a step button never blurs the input, even when it steps nothing. This
      * belongs on mousedown: cancelling pointerdown would also suppress the mousedown that outside-click listeners of
      * other open popups wait for.
      */
-    handleStepMouseDown(event: Pick<Event, 'preventDefault'>) {
+    handleStepMouseDown = (event: Pick<Event, 'preventDefault'>) => {
         if (this.getProp('keepFocus') || this.getProp('innerButtons')) {
             event.preventDefault();
         }
-    }
+    };
 
-    handleUpPress(event: any) {
+    handleUpPress = (event: InputNumberPressEvent) => {
         this.#press(1, event);
-    }
+    };
 
-    handleDownPress(event: any) {
+    handleDownPress = (event: InputNumberPressEvent) => {
         this.#press(-1, event);
-    }
+    };
 
     /**
      * A changed controlled `value`, after the commit that received it. It never notifies: the parent already holds
@@ -803,7 +808,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
      * be on blur (and the text right after a step), an unparsable value replaces the text. Otherwise the value is
      * formatted like on blur, except that it is not clamped, and an unparsable one empties it.
      */
-    handleValueChange(value: number | string) {
+    handleValueChange = (value: number | string) => {
         let states: BaseInputNumberState;
         let callback: () => void;
 
@@ -835,5 +840,5 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         }
 
         this.setState(states, callback);
-    }
+    };
 }

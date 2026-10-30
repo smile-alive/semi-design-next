@@ -45,47 +45,47 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
     };
 
     /** Called when the dialog is shown: joins the overlay stack and moves focus into the dialog */
-    show() {
+    show = () => {
         this._adapter.openLayer(this.#handleEscape);
         this._adapter.trapFocus();
-    }
+    };
 
     /**
      * The reverse of `show`. The layer goes first: it releases the page's inert, and an inert element cannot take
      * the focus back.
      */
-    hide() {
+    hide = () => {
         this._adapter.closeLayer();
         this._adapter.releaseFocus();
         clearTimeout(this.#mouseUpTimer);
         this.#dialogMouseDown = false;
         this.restoreFocus();
-    }
+    };
 
-    handleDialogMouseDown() {
+    handleDialogMouseDown = () => {
         this.#dialogMouseDown = true;
-    }
+    };
 
-    handleMaskMouseUp() {
+    handleMaskMouseUp = () => {
         if (this.#dialogMouseDown) {
             // the click that ends the press follows this mouseup; clearing at once would close on it
             this.#mouseUpTimer = setTimeout(() => {
                 this.#dialogMouseDown = false;
             }, 0);
         }
-    }
+    };
 
-    handleMaskClick(e: E) {
+    handleMaskClick = (e: E) => {
         if (e.target === e.currentTarget && !this.#dialogMouseDown) {
             this.close(e);
         }
-    }
+    };
 
-    close(e: E | KeyboardEvent) {
+    close = (e: E | KeyboardEvent) => {
         this._adapter.notifyClose(e);
-    }
+    };
 
-    restoreFocus() {
+    restoreFocus = () => {
         this._adapter.restoreFocus();
-    }
+    };
 }

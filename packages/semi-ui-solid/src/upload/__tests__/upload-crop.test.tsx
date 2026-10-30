@@ -71,15 +71,15 @@ describe('Upload 裁剪', () => {
 
     // Modal drops a second OK click on the same button within 100ms as a double click, and the OK button stays the
     // same element while its loading toggles; confirming the next image is a separate click, so wait the guard out
-    function pastDoubleClickGuard() {
+    const pastDoubleClickGuard = () => {
         return new Promise((resolve) => setTimeout(resolve, 100));
-    }
+    };
 
     // jsdom has no canvas implementation; give the cropper a canvas that yields a blob
-    function mockCropperCanvas() {
+    const mockCropperCanvas = () => {
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => new Proxy({} as Record<PropertyKey, unknown>, { get: (target, key) => target[key] ?? (() => {}), set: () => true }) as unknown as RenderingContext);
         vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => callback(new Blob(['cropped'], { type: 'image/png' })));
-    }
+    };
 
     it('开启 crop 时对图片文件打开裁剪器', async () => {
         const onFileChange = vi.fn<UploadCallback<'onFileChange'>>();

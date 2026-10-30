@@ -138,7 +138,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
 
     const context: RadioGroupContextValue = {
         view,
-        onChange: (event) => foundation.handleChange(event),
+        onChange: foundation.handleChange,
         register: (sync) => {
             syncs.add(sync);
             return () => syncs.delete(sync);
@@ -149,7 +149,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     // Form's blur validation waits until focus leaves the group
     const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, event);
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
             callHandler(local.onBlur, event);
         }
     };
@@ -178,7 +178,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
                     {(options) => (
                         <Index each={options()}>
                             {(option, index) => {
-                                const item = (): OptionItem => {
+                                const item = () => {
                                     const current = option();
                                     return typeof current === 'string' ? { label: current, value: current } : current;
                                 };

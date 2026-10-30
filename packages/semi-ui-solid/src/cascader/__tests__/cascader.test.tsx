@@ -10,6 +10,7 @@ import Cascader, { type CascaderData, type CascaderElement, type CascaderProps, 
 import semiGlobal from '../../_utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import { type FormApi, Form, FormCascader } from '../../form';
+import { InputGroup } from '../../input';
 import Popover from '../../popover';
 import Tag from '../../tag';
 
@@ -1226,9 +1227,9 @@ describe('Cascader', () => {
         expectTypeOf<CascaderProps>().not.toHaveProperty('children');
     });
 
-    it('onBlur、onFocus 的参数类型包含键盘事件，onBlur 还包含 undefined', () => {
-        expectTypeOf<Parameters<NonNullable<CascaderProps['onBlur']>>[0]>().toEqualTypeOf<MouseEvent | KeyboardEvent | undefined>();
-        expectTypeOf<Parameters<NonNullable<CascaderProps['onFocus']>>[0]>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
+    it('onBlur、onFocus 的参数类型包含键盘与焦点事件，onBlur 还可能是 undefined', () => {
+        expectTypeOf<Parameters<NonNullable<CascaderProps['onBlur']>>[0]>().toEqualTypeOf<MouseEvent | KeyboardEvent | FocusEvent | undefined>();
+        expectTypeOf<Parameters<NonNullable<CascaderProps['onFocus']>>[0]>().toEqualTypeOf<MouseEvent | KeyboardEvent | FocusEvent>();
     });
 
     it('filterSorter 的前两个参数是两条结果路径', () => {
@@ -1490,8 +1491,11 @@ describe('Cascader', () => {
         expect(onBlur).not.toHaveBeenCalled();
 
         fireEvent.keyDown(getTrigger(), { key: 'Escape' });
-        expect(onBlur).toHaveBeenCalledTimes(1);
         await expectClosed();
+        expect(onBlur).not.toHaveBeenCalled();
+
+        await userEvent.click(document.body);
+        expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
     it('onSelect 事件', async () => {
@@ -2531,6 +2535,7 @@ describe('Cascader 行为', () => {
         let ref: CascaderElement | undefined;
         const onBlur = vi.fn<NonNullable<CascaderProps['onBlur']>>();
         renderCascader({ ref: (el: CascaderElement) => (ref = el), onBlur });
+        await userEvent.click(getSelection());
         ref?.open();
         ref?.open();
         fireEvent.mouseDown(document.body);
@@ -3311,5 +3316,38 @@ describe('触发器搜索框', () => {
         expect(getSelectionInput()).toHaveValue('');
         await userEvent.keyboard('北');
         expect(getSelectionInput()).toHaveValue('北');
+    });
+});
+
+describe('Cascader 在 InputGroup 内', () => {
+    it('自带的 size 优先于组的 size，没传时取组的，包装元素内也一样', () => {
+        render(() => (
+            <InputGroup size="large">
+                <div>
+                    <Cascader motion={false} size="small" treeData={treeData} />
+                    <Cascader motion={false} treeData={treeData} />
+                </div>
+            </InputGroup>
+        ));
+        const [own, inherit] = document.querySelectorAll(`.${prefixCls}`);
+        expect(own).toHaveClass(`${prefixCls}-small`);
+        expect(own).not.toHaveClass(`${prefixCls}-large`);
+        expect(inherit).toHaveClass(`${prefixCls}-large`);
+    });
+
+    it('组的 disabled 作用于未设置的控件，自身 disabled={false} 优先', () => {
+        const { unmount } = render(() => (
+            <InputGroup disabled>
+                <Cascader motion={false} treeData={treeData} />
+            </InputGroup>
+        ));
+        expect(getTrigger()).toHaveClass(`${prefixCls}-disabled`);
+        unmount();
+        render(() => (
+            <InputGroup disabled>
+                <Cascader motion={false} disabled={false} treeData={treeData} />
+            </InputGroup>
+        ));
+        expect(getTrigger()).not.toHaveClass(`${prefixCls}-disabled`);
     });
 });

@@ -94,7 +94,7 @@
     });
 
     // a narrower container wraps link titles, which moves the active link without any update
-    useResizeObserver(linkWrapper, () => foundation.syncSlideBar());
+    useResizeObserver(linkWrapper, foundation.syncSlideBar);
 
     watch(
         () => getContainer.value(),

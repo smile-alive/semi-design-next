@@ -12,7 +12,7 @@ import LocaleProvider from '../../locale/locale-provider';
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;
 const icon = (name: string) => `.${BASE_CLASS_PREFIX}-icon-${name}`;
 function must<T>(value?: T | null): T {
-    if (value === null || value === undefined) {
+    if (value == null) {
         throw new Error('expected a value');
     }
     return value;

@@ -20,7 +20,7 @@ export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps, S e
     }
 
     /** Shows the spinner after `delay`; stopping hides it at once and drops a pending show */
-    handleSpinningChange(spinning: boolean) {
+    handleSpinningChange = (spinning: boolean) => {
         this.#clearTimer();
         const { delay } = this.getProps();
         if (spinning && delay) {
@@ -31,14 +31,14 @@ export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps, S e
         } else {
             this._adapter.setLoading(spinning);
         }
-    }
+    };
 
     /**
      * Called when the content under `root` becomes inert (`blocked`) or interactive again. inert drops focus to <body> on
      * the next frame, which would restart keyboard users from the top of the page; the root holds it meanwhile and hands
      * it back afterwards.
      */
-    handleBlockedChange(root: HTMLElement, blocked: boolean) {
+    handleBlockedChange = (root: HTMLElement, blocked: boolean) => {
         if (blocked) {
             const active = FocusTrapHandle.getActiveElement(root);
             if (active instanceof HTMLElement && active !== root && root.contains(active)) {
@@ -53,7 +53,7 @@ export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps, S e
                 held.focus();
             }
         }
-    }
+    };
 
     override destroy() {
         this.#clearTimer();

@@ -6,5 +6,5 @@ const CheckboxWithGroup: typeof Checkbox & { Group: typeof CheckboxGroup } = Obj
     Group: CheckboxGroup,
 });
 export default CheckboxWithGroup;
-export { CheckboxGroup };
+export { default as CheckboxGroup } from './checkbox-group.vue';
 export type * from './interface';

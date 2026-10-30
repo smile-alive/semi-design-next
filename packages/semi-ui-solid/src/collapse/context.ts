@@ -5,8 +5,8 @@ export interface CollapseView {
     activeSet: Set<string>;
     clickHeaderToExpand: boolean;
     /** undefined defers to the global Collapsible default */
-    keepDOM: boolean | undefined;
-    motion: boolean | undefined;
+    keepDOM?: boolean;
+    motion?: boolean;
     lazyRender: boolean;
     expandIconPosition: 'left' | 'right';
 }

@@ -20,5 +20,9 @@ const SkeletonWithParts: typeof Skeleton & {
     Image: SkeletonImage,
 });
 export default SkeletonWithParts;
-export { SkeletonAvatar, SkeletonImage, SkeletonTitle, SkeletonButton, SkeletonParagraph };
+export { default as SkeletonAvatar } from './avatar.vue';
+export { default as SkeletonImage } from './image.vue';
+export { default as SkeletonTitle } from './title.vue';
+export { default as SkeletonButton } from './button.vue';
+export { default as SkeletonParagraph } from './paragraph.vue';
 export type * from './interface';

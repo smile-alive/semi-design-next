@@ -1,4 +1,4 @@
-import type { JSX } from 'solid-js';
+import { type JSX, createComponent, splitProps } from 'solid-js';
 import AutoComplete, { type AutoCompleteItems, type AutoCompleteProps } from '../auto-complete';
 import Cascader, { type CascaderProps } from '../cascader';
 import Checkbox, { type CheckboxProps, CheckboxGroup } from '../checkbox';
@@ -13,6 +13,7 @@ import Slider from '../slider';
 import Switch from '../switch';
 import TagInput from '../tag-input';
 import TimePicker from '../time-picker';
+import Transfer, { type TransferProps } from '../transfer';
 import TreeSelect, { type TreeSelectNodeValue, type TreeSelectProps } from '../tree-select';
 import Upload, { type UploadProps } from '../upload';
 import type { FieldProps, OptionalFieldProps } from './interface';
@@ -33,7 +34,7 @@ export const FormInput = withField(Input);
 export const FormInputNumber = withField(InputNumber);
 export const FormTextArea = withTopLabelField(TextArea);
 // Select collects its children as tokens, so its own Option and OptGroup are reused
-export const FormSelect = Object.assign(withField(Select) as unknown as FormSelectComponent, {
+export const FormSelect = Object.assign(withField(Select) as FormSelectComponent, {
     Option: Select.Option,
     OptGroup: Select.OptGroup,
 });
@@ -42,24 +43,32 @@ export const FormCheckbox = withTopLabelField(Checkbox, {
     valueKey: 'checked',
     valuePath: 'target.checked',
     shouldInject: false,
-}) as unknown as (props: FormCheckboxProps) => JSX.Element;
+}) as (props: FormCheckboxProps) => JSX.Element;
 export const FormRadioGroup = withTopLabelField(RadioGroup, { valuePath: 'target.value' });
 export const FormRadio = withTopLabelField(Radio, {
     valueKey: 'checked',
     valuePath: 'target.checked',
     shouldInject: false,
-}) as unknown as (props: FormRadioProps) => JSX.Element;
+}) as (props: FormRadioProps) => JSX.Element;
 export const FormDatePicker = withField(DatePicker);
 export const FormSwitch = withTopLabelField(Switch, { valueKey: 'checked' });
 export const FormSlider = withTopLabelField(Slider);
 export const FormTimePicker = withField(TimePicker);
-export const FormTreeSelect = withField(TreeSelect) as unknown as FormTreeSelectComponent;
-export const FormCascader = withField(Cascader) as unknown as FormCascaderComponent;
+export const FormTreeSelect = withField(TreeSelect) as FormTreeSelectComponent;
+export const FormCascader = withField(Cascader) as FormCascaderComponent;
+
+// Transfer spreads unknown props onto its root div, so the validateStatus the field injects would reach the DOM
+function TransferControl(props: TransferProps & { validateStatus?: unknown }) {
+    const [, rest] = splitProps(props, ['validateStatus']);
+    return createComponent(Transfer, rest);
+}
+
+export const FormTransfer = withTopLabelField(TransferControl);
 export const FormRating = withTopLabelField(Rating);
-export const FormAutoComplete = withField(AutoComplete) as unknown as FormAutoCompleteComponent;
+export const FormAutoComplete = withField(AutoComplete) as FormAutoCompleteComponent;
 export const FormUpload = withTopLabelField(Upload, {
     valueKey: 'fileList',
     valuePath: 'fileList',
-}) as unknown as (props: FormUploadProps) => JSX.Element;
+}) as (props: FormUploadProps) => JSX.Element;
 export const FormTagInput = withField(TagInput);
 export const FormPinCode = withTopLabelField(PinCode);

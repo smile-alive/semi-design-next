@@ -1,6 +1,7 @@
 import React, { useEffectEvent, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/form/foundation';
 import type { FieldBridge } from '@fibrae/semi-foundation/form/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
@@ -12,7 +13,7 @@ import { cloneDeep } from '../_utils/index';
 import Row from '../grid/row';
 import { FormStateContext, FormApiContext, FieldBridgeContext } from './context';
 import ErrorMessage from './error-message';
-import { FormInput, FormInputNumber, FormTextArea, FormSelect, FormCheckboxGroup, FormCheckbox, FormRadioGroup, FormRadio, FormDatePicker, FormSwitch, FormSlider, FormTimePicker, FormTreeSelect, FormCascader, FormRating, FormAutoComplete, FormUpload, FormTagInput, FormPinCode } from './field';
+import { FormInput, FormInputNumber, FormTextArea, FormSelect, FormCheckboxGroup, FormCheckbox, FormRadioGroup, FormRadio, FormDatePicker, FormSwitch, FormSlider, FormTimePicker, FormTreeSelect, FormCascader, FormTransfer, FormRating, FormAutoComplete, FormUpload, FormTagInput, FormPinCode } from './field';
 import FormInputGroup from './group';
 import useForm from './hooks/use-form';
 import type { BaseFormProps, FormState, FormApi } from './interface';
@@ -98,10 +99,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
             notifySubmitFail: (errors, values, e) => base.getProps().onSubmitFail(errors, values, e),
             forceUpdate: (formState, callback) => {
                 base.setState({ formState }, callback);
-                const { form } = base.getProps();
-                if (form && typeof form.__updateState === 'function') {
-                    form.__updateState(formState);
-                }
+                getFormApiProxyInternals(base.getProps().form)?.updateState(formState);
             },
             notifyChange: (formState) => base.getProps().onChange(formState),
             notifyValueChange: (values, changedValues) => base.getProps().onValueChange(values, changedValues),
@@ -115,7 +113,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
 
     const [initialFormState] = useState(() => foundation.getFormState());
     const [formApi] = useState(() => foundation.getFormApi() as FormApi<Values>);
-    const [foundationBridge] = useState(() => foundation.getFieldBridge());
+    const [foundationBridge] = useState(foundation.getFieldBridge);
 
     const formState = state.formState ?? initialFormState;
 
@@ -134,15 +132,11 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
         if (props.getFormApi) {
             props.getFormApi(formApi);
         }
-        if (props.form && typeof props.form.__bind === 'function') {
-            props.form.__bind(formApi);
-        }
+        getFormApiProxyInternals(props.form)?.bind(formApi);
     });
 
     const unmount = useEffectEvent(() => {
-        if (props.form && typeof props.form.__unbind === 'function') {
-            props.form.__unbind();
-        }
+        getFormApiProxyInternals(props.form)?.unbind();
     });
 
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -213,6 +207,7 @@ export default Object.assign(Form, {
     Slider: FormSlider,
     TreeSelect: FormTreeSelect,
     Cascader: FormCascader,
+    Transfer: FormTransfer,
     Rating: FormRating,
     AutoComplete: FormAutoComplete,
     Upload: FormUpload,

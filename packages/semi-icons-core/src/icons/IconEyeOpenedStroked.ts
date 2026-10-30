@@ -4,15 +4,7 @@ const IconEyeOpenedStroked: IconData = {
     name: 'eye_opened_stroked',
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8m0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8m0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4', fill: 'currentColor' }],
         [
             'path',
             {

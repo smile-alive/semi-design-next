@@ -1,7 +1,6 @@
 import { type JSX, createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import CodeHighlightFoundation from '@fibrae/semi-foundation/code-highlight/index';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import semiGlobal from '@fibrae/semi-ui-solid/_utils/semi-global';
@@ -1206,8 +1205,6 @@ describe('Chat', () => {
         });
 
         it('代码块的子节点不是字符串时不提供复制按钮', () => {
-            const highlight = vi.spyOn(CodeHighlightFoundation.prototype, 'highlightCode').mockResolvedValue();
-            onTestFinished(() => highlight.mockRestore());
             const { container } = render(() => (
                 <Code class="language-js">
                     <span>const a = 1;</span>

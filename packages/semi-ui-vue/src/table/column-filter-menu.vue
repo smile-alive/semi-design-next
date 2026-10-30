@@ -19,7 +19,7 @@
         confirmMode: boolean;
         filteredValue: any[];
         /** The value picked and not applied yet, in confirm mode */
-        tempFilteredValue: any[] | undefined;
+        tempFilteredValue?: any[];
         filterDropdownProps: ColumnProps['filterDropdownProps'];
         setTemp: (value: any[]) => void;
         select: (value: any[]) => void;

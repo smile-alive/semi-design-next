@@ -17,12 +17,12 @@ const SCENARIOS = {
 };
 
 const styles: HTMLStyleElement[] = [];
-const addStyle = (css: string) => {
+function addStyle(css: string) {
     const style = document.createElement('style');
     style.textContent = css;
     document.head.append(style);
     styles.push(style);
-};
+}
 
 describe('组件级 CSS 变量的三种写法（CSS-051）', () => {
     afterEach(() => {

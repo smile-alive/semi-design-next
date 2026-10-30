@@ -19,7 +19,7 @@ export function useStepItem({ role, onChange, onClick, onKeyDown }: StepItemOpti
         onClick: (e: React.MouseEvent<HTMLDivElement>) => {
             onClick?.(e);
             // a click on a control inside title or description is that control's own, not a step switch
-            if ((e.target as Element).closest(focusableSelector) === e.currentTarget) {
+            if (e.target instanceof Element && e.target.closest(focusableSelector) === e.currentTarget) {
                 onChange?.();
             }
         },

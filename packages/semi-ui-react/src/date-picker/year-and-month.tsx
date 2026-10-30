@@ -106,7 +106,7 @@ export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
         <>
             {!noBackBtn && (
                 <div className={`${prefixCls}-yearmonth-header`}>
-                    <IconButton noHorizontalPadding={false} size={buttonSize} icon={<IconChevronLeft size={iconSize} />} onClick={() => foundation.backToMain()}>
+                    <IconButton noHorizontalPadding={false} size={buttonSize} icon={<IconChevronLeft size={iconSize} />} onClick={foundation.backToMain}>
                         <span>{locale.selectDate}</span>
                     </IconButton>
                 </div>

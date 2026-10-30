@@ -155,7 +155,7 @@
                 :disabled="disabledState.prevDisabled || props.disabled"
                 type="button"
                 x-semi-prop="prevText"
-                @click="foundation.goPrev()"
+                @click="foundation.goPrev"
             >
                 <template v-if="prev.hasContent">
                     <component :is="node" v-for="[node, key] in prev.nodes" :key="key" />
@@ -167,7 +167,7 @@
             <Popover v-if="props.hoverShowPageSelect && !props.disabled">
                 <button :class="[`${prefix}-item`, `${prefix}-item-small`]" type="button">{{ smallText }}</button>
                 <template #content>
-                    <RestPages :count="totalPageNum" :start="1" @select="foundation.goPage($event)" />
+                    <RestPages :count="totalPageNum" :start="1" @select="foundation.goPage" />
                 </template>
             </Popover>
             <div v-else :class="[`${prefix}-item`, `${prefix}-item-small`, { [`${prefix}-item-all-disabled`]: props.disabled }]">
@@ -195,7 +195,7 @@
                         {{ page }}
                     </button>
                     <template v-if="isRest(page)" #content>
-                        <RestPages v-bind="i < 3 ? pageData.restLeftRange : pageData.restRightRange" @select="foundation.goPage($event)" />
+                        <RestPages v-bind="i < 3 ? pageData.restLeftRange : pageData.restRightRange" @select="foundation.goPage" />
                     </template>
                 </component>
             </li>
@@ -207,7 +207,7 @@
                 :disabled="disabledState.nextDisabled || props.disabled"
                 type="button"
                 x-semi-prop="nextText"
-                @click="foundation.goNext()"
+                @click="foundation.goNext"
             >
                 <template v-if="next.hasContent">
                     <component :is="node" v-for="[node, key] in next.nodes" :key="key" />
@@ -220,7 +220,7 @@
         </li>
         <li v-if="props.showQuickJumper" :class="[`${prefix}-quickjump`, { [`${prefix}-quickjump-disabled`]: quickJumpDisabled }]">
             <span>{{ text.jumpTo }}</span>
-            <InputNumber :aria-label="text.jumpTo" :class="`${prefix}-quickjump-input-number`" :disabled="quickJumpDisabled" hideButtons :modelValue="state.quickJumpPage" :showClear="false" @blur="foundation.handleQuickJumpBlur()" @change="foundation.handleQuickJumpNumberChange($event)" @keydown="onQuickJumpKeydown" />
+            <InputNumber :aria-label="text.jumpTo" :class="`${prefix}-quickjump-input-number`" :disabled="quickJumpDisabled" hideButtons :modelValue="state.quickJumpPage" :showClear="false" @blur="foundation.handleQuickJumpBlur" @change="foundation.handleQuickJumpNumberChange" @keydown="onQuickJumpKeydown" />
             <span>{{ text.page }}</span>
         </li>
     </ul>

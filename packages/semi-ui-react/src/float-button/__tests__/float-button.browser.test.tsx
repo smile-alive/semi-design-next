@@ -6,10 +6,10 @@ import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-react';
 const prefixCls = 'semi-floatButton';
 const groupCls = 'semi-floatButtonGroup';
 
-const rectOf = (el) => {
+function rectOf(el) {
     const { x, y, width, height } = el.getBoundingClientRect();
     return { x, y, width, height };
-};
+}
 
 describe('FloatButton 布局与样式', () => {
     it('在所有尺寸下，无论是否有 badge，主体都填满根元素', () => {

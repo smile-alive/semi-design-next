@@ -32,7 +32,7 @@
     interface LeftGroup {
         /** The group's position among the non-empty groups of the dataSource, which search and paging keep */
         index: number;
-        parent: Omit<TransferGroupItem, 'children'> | undefined;
+        parent?: Omit<TransferGroupItem, 'children'>;
         items: { item: ResolvedItem; index: number }[];
     }
 
@@ -82,6 +82,7 @@
         }),
         (base) => ({
             updateSelected: (selectedValues) => base.setState({ selectedValues }),
+            notifyBlur: (event) => emit('blur', event),
             notifyChange: (values, items) => {
                 emit('update:modelValue', values);
                 emit('change', values, items as TransferDataItem[]);
@@ -164,10 +165,6 @@
 
     const onAllClick = () => foundation.handleAll(leftContainsNotInSelected.value);
 
-    const onClear = () => foundation.handleClear();
-
-    const onSortEnd: TransferSelectedPanelSlotProps['onSortEnd'] = (payload) => foundation.handleSortEnd(payload);
-
     const sourcePanelProps = (): TransferSourcePanelSlotProps => ({
         value: values.value,
         loading: props.loading,
@@ -179,7 +176,7 @@
         showNumber: showNumber.value,
         inputValue: state.value.inputValue,
         selectedItems: selectedItems.value,
-        onSelect: (selectValues) => foundation.handleSelect(selectValues),
+        onSelect: foundation.handleSelect,
         onAllClick,
         onSearch: onInputChange,
         onSelectOrRemove,
@@ -188,14 +185,23 @@
     const selectedPanelProps = (): TransferSelectedPanelSlotProps => ({
         length: selectedData.value.length,
         selectedData: selectedData.value,
-        onClear,
+        onClear: foundation.handleClear,
         onRemove: onSelectOrRemove,
-        onSortEnd,
+        onSortEnd: foundation.handleSortEnd,
     });
 
     const showsEmpty = (slot?: () => unknown) => !slot || hasSlotContent(slot as Parameters<typeof hasSlotContent>[0]);
 
     const groupTitleId = (index: number) => `${uid}-group-${index}`;
+
+    watch(
+        () => props.modelValue,
+        (next, previous) => {
+            if (Array.isArray(previous) && !Array.isArray(next)) {
+                foundation.handleValueRelease();
+            }
+        }
+    );
 
     watch(
         () => props.draggable,
@@ -227,7 +233,7 @@
 </script>
 
 <template>
-    <div :class="[prefixCls, { [`${prefixCls}-disabled`]: props.disabled, [`${prefixCls}-custom-panel`]: $slots.sourcePanel && $slots.selectedPanel }]" :role="groupRole($attrs)" v-bind="splitAttrs($attrs).root">
+    <div :class="[prefixCls, { [`${prefixCls}-disabled`]: props.disabled, [`${prefixCls}-custom-panel`]: $slots.sourcePanel && $slots.selectedPanel }]" :role="groupRole($attrs)" v-bind="splitAttrs($attrs).root" @focusout="foundation.handleFocusOut">
         <slot v-if="$slots.sourcePanel" name="sourcePanel" v-bind="sourcePanelProps()" />
         <section v-else :class="`${prefixCls}-left`">
             <SearchLandmark v-if="filter !== false" :aria-label="locale.locale.filter" :class="`${prefixCls}-filter`">
@@ -294,16 +300,16 @@
                     </component>
                 </div>
                 <div v-if="isList && props.pagination && totalPage > 1" :class="`${prefixCls}-left-pagination`">
-                    <Pagination :currentPage="currentPage" :pageSize="pageSize" :total="filterData.length" @pageChange="foundation.handlePageChange($event)" />
+                    <Pagination :currentPage="currentPage" :pageSize="pageSize" :total="filterData.length" @pageChange="foundation.handlePageChange" />
                 </div>
             </template>
         </section>
         <slot v-if="$slots.selectedPanel" name="selectedPanel" v-bind="selectedPanelProps()" />
         <section v-else :class="`${prefixCls}-right`">
-            <slot v-if="$slots.selectedHeader" name="selectedHeader" :num="selectedData.length" :onClear="onClear" :showButton="selectedData.some((item) => !item.disabled)" />
+            <slot v-if="$slots.selectedHeader" name="selectedHeader" :num="selectedData.length" :onClear="foundation.handleClear" :showButton="selectedData.some((item) => !item.disabled)" />
             <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-right-header`]">
                 <span :class="`${prefixCls}-header-total`">{{ locale.locale.selected.replace('${total}', String(selectedData.length)) }}</span>
-                <Button v-if="selectedData.some((item) => !item.disabled)" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="onClear">{{ locale.locale.clear }}</Button>
+                <Button v-if="selectedData.some((item) => !item.disabled)" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="foundation.handleClear">{{ locale.locale.clear }}</Button>
             </div>
             <template v-if="selectedData.length === 0">
                 <div v-if="showsEmpty($slots.emptyRight)" :class="[`${prefixCls}-empty`, `${prefixCls}-right-empty`]">
@@ -322,7 +328,7 @@
                 :prefix="`${prefixCls}-right-item`"
                 role="list"
                 :style="{ overflow: 'auto' }"
-                @sortEnd="onSortEnd"
+                @sortEnd="foundation.handleSortEnd"
             >
                 <template #item="{ index }">
                     <TransferSelectedItem draggable :index="index" :item="selectedData[index]" :pathLabel="pathLabel(selectedData[index])" sortable @remove="onSelectOrRemove(selectedData[index])">

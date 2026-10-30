@@ -25,7 +25,7 @@ beforeEach(() => {
     vi.stubGlobal('URL', Object.assign(class extends URL {}, { createObjectURL: () => 'blob:', revokeObjectURL() {} }));
 });
 
-const mount = async (props: Partial<JsonViewerBaseProps> = {}) => {
+async function mount(props: Partial<JsonViewerBaseProps> = {}) {
     const editor = document.createElement('div');
     editor.style.width = '400px';
     editor.style.height = '400px';
@@ -55,7 +55,7 @@ const mount = async (props: Partial<JsonViewerBaseProps> = {}) => {
     if (!viewer) throw new Error('the editor was not created');
     await new Promise((resolve) => setTimeout(resolve));
     return { foundation, adapter, viewer, editor, getValue: () => viewer.getModel().getValue() };
-};
+}
 
 const insertAtStart = (viewer: NonNullable<JsonViewerFoundation['jsonViewer']>, text: string) =>
     viewer.getModel().applyOperation({

@@ -244,13 +244,13 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const templateSkill = createMemo(() => state().skill);
 
     const handle: AIChatInputHandle = {
-        changeTemplateVisible: (visible) => foundation.changeTemplateVisible(visible),
-        deleteContent: (content) => foundation.handleDeleteContent(content),
-        deleteUploadFile: (item) => foundation.handleUploadFileDelete(item),
+        changeTemplateVisible: foundation.changeTemplateVisible,
+        deleteContent: foundation.handleDeleteContent,
+        deleteUploadFile: foundation.handleUploadFileDelete,
         focusEditor: focus,
         getEditor: () => editor,
         setContent,
-        setContentWhileSaveTool: (content) => foundation.setContentWhileSaveTool(content),
+        setContentWhileSaveTool: foundation.setContentWhileSaveTool,
     };
 
     const openFileDialog = () => upload?.openFileDialog();
@@ -267,7 +267,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         get content() {
             return transformedContent();
         },
-        handleUploadFileDelete: (attachment) => foundation.handleUploadFileDelete(attachment),
+        handleUploadFileDelete: foundation.handleUploadFileDelete,
         handleReferenceDelete: (reference) => local.onReferenceDelete?.(reference),
     };
 
@@ -355,7 +355,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
             style={local.showUploadButton ? local.uploadProps?.style : hiddenStyle}
             fileList={state().attachments}
             listType="none"
-            onChange={(changed) => foundation.onUploadChange(changed)}
+            onChange={foundation.onUploadChange}
         >
             <Show when={local.showUploadButton}>{uploadTrigger()}</Show>
         </Upload>
@@ -382,15 +382,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                     {/* value is optional and may repeat, so rows follow the position */}
                     <Index each={local.skills}>
                         {(item, index) => (
-                            <SkillItem
-                                id={getOptionId(skillListId, index)}
-                                active={state().activeSkillIndex === index}
-                                skill={item()}
-                                renderSkillIcon={local.renderSkillIcon}
-                                renderSkillItem={local.renderSkillItem}
-                                onClick={(skill) => foundation.handleSkillSelect(skill)}
-                                onMouseEnter={() => foundation.setActiveSkillIndex(index)}
-                            />
+                            <SkillItem id={getOptionId(skillListId, index)} active={state().activeSkillIndex === index} skill={item()} renderSkillIcon={local.renderSkillIcon} renderSkillItem={local.renderSkillItem} onClick={foundation.handleSkillSelect} onMouseEnter={() => foundation.setActiveSkillIndex(index)} />
                         )}
                     </Index>
                 </div>
@@ -400,14 +392,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                     {/* suggestions may repeat and carry no id, so rows follow the position */}
                     <Index each={local.suggestions}>
                         {(item, index) => (
-                            <SuggestionItem
-                                id={getOptionId(suggestionListId, index)}
-                                active={state().activeSuggestionIndex === index}
-                                suggestion={item()}
-                                renderSuggestionItem={local.renderSuggestionItem}
-                                onClick={(suggestion) => foundation.handleSuggestionSelect(suggestion)}
-                                onMouseEnter={() => foundation.setActiveSuggestionIndex(index)}
-                            />
+                            <SuggestionItem id={getOptionId(suggestionListId, index)} active={state().activeSuggestionIndex === index} suggestion={item()} renderSuggestionItem={local.renderSuggestionItem} onClick={foundation.handleSuggestionSelect} onMouseEnter={() => foundation.setActiveSuggestionIndex(index)} />
                         )}
                     </Index>
                 </div>
@@ -561,18 +546,18 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                         showPlaceholderWhenSkillOnly={local.showPlaceholderWhenSkillOnly}
                         ref={(element) => (richText = element)}
                         onReady={(instance) => (editor = instance)}
-                        onCreate={() => foundation.handleCreate()}
-                        handleKeyDown={(view, event) => foundation.handleRichTextAreaKeyDown(view, event)}
-                        onBlur={(e) => foundation.handleBlur(e)}
-                        onChange={(text) => foundation.handleContentChange(text)}
-                        onFocus={(e) => foundation.handleFocus(e)}
-                        onKeyDown={(e) => foundation.handleKeyDown(e)}
-                        onPasteFiles={(files) => foundation.handlePaste(files)}
+                        onCreate={foundation.handleCreate}
+                        handleKeyDown={foundation.handleRichTextAreaKeyDown}
+                        onBlur={foundation.handleBlur}
+                        onChange={foundation.handleContentChange}
+                        onFocus={foundation.handleFocus}
+                        onKeyDown={foundation.handleKeyDown}
+                        onPasteFiles={foundation.handlePaste}
                         onPaste={(e) => local.onPaste?.(e)}
                     />
                     <div class={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-round`]: local.round })}>
                         <div class={`${prefixCls}-footer-configure`}>
-                            <Configure ref={(instance) => (configure = instance)} onChange={(value, changedValue) => foundation.onConfigureChange(value, changedValue)}>
+                            <Configure ref={(instance) => (configure = instance)} onChange={foundation.onConfigureChange}>
                                 <Show when={local.renderConfigureArea} keyed>
                                     {(render) => render()}
                                 </Show>

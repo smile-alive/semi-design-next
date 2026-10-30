@@ -170,8 +170,8 @@ export default function Image(rawProps: ImageProps) {
                     height={local.height}
                     src={group?.view().lazyLoad ? undefined : local.src}
                     width={local.width}
-                    onError={(e) => foundation.handleError(e)}
-                    onLoad={(e) => foundation.handleLoaded(e)}
+                    onError={foundation.handleError}
+                    onLoad={foundation.handleLoaded}
                 />
                 <Show when={loadStatus() !== 'success'}>
                     <div class={`${prefixCls}-overlay`}>
@@ -188,7 +188,7 @@ export default function Image(rawProps: ImageProps) {
             </div>
             {/* a sibling: clicks inside the portal bubble through the component tree and would reopen the thumbnail */}
             <Show when={canPreview()}>
-                <PreviewInner {...previewInnerProps()} alt={local.alt} crossOrigin={local.crossOrigin ?? previewObject()?.crossOrigin} setDownloadName={local.setDownloadName} src={previewSrc()} visible={previewVisible()} onVisibleChange={(visible) => foundation.handlePreviewVisibleChange(visible)} />
+                <PreviewInner {...previewInnerProps()} alt={local.alt} crossOrigin={local.crossOrigin ?? previewObject()?.crossOrigin} setDownloadName={local.setDownloadName} src={previewSrc()} visible={previewVisible()} onVisibleChange={foundation.handlePreviewVisibleChange} />
             </Show>
         </>
     );

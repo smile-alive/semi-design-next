@@ -116,7 +116,7 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
     createEffect(
         on(
             createMemo(() => props.direction),
-            () => foundation.handleDirectionChange(),
+            foundation.handleDirectionChange,
             { defer: true }
         )
     );

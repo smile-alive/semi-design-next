@@ -21,11 +21,11 @@ const items: FloatButtonGroupItem[] = [
 ];
 const iconSlot = ({ item }: { item: FloatButtonGroupItem }) => <i data-testid={`icon-${item.value}`} />;
 const firstChild = (container: Element) => container.firstElementChild as HTMLElement;
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
 describe('FloatButton', () => {
     it('默认在根元素与 body 上渲染 round 与 default 尺寸类名', () => {

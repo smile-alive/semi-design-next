@@ -1,7 +1,5 @@
 import { memo } from 'react';
 import clsx from 'clsx';
-// compat get falls back to the default only for undefined, not null
-import { get } from 'es-toolkit/compat';
 import ColGroup from './col-group';
 import type { TableComponents, Scroll, BodyScrollEvent, ColumnProps, OnHeaderRow, Sticky } from './interface';
 import TableHeader from './table-header';
@@ -43,7 +41,7 @@ function HeadTable({ ref, scroll, prefixCls, handleBodyScroll, columns, componen
         [`${prefixCls}-header-hidden`]: !showHeader,
     });
 
-    const stickyTop = get(sticky, 'top', 0);
+    const stickyTop = (sticky as Exclude<Sticky, boolean> | undefined)?.top ?? 0;
 
     if (typeof stickyTop === 'number') {
         headStyle.top = stickyTop;

@@ -8,8 +8,6 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import TimePickerFoundation from '@fibrae/semi-foundation/time-picker/foundation';
-import TimeInputFoundation from '@fibrae/semi-foundation/time-picker/input-foundation';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import TimePicker, { type TimePickerEmits, type TimePickerHandle, type TimePickerProps, type TimePickerSlots, type TimePickerTriggerSlotProps } from '..';
 import semiGlobal from '../../_utils/semi-global';
@@ -32,7 +30,7 @@ const scrollListCls = `${BASE_CLASS_PREFIX}-scrolllist`;
 const normalList = { scrollItemProps: { cycled: false, mode: 'normal' as const } };
 
 const settle = () => new Promise((resolve) => setTimeout(resolve));
-const renderTimePicker = async (props: Record<string, unknown> = {}, slots: Slots = {}) => {
+async function renderTimePicker(props: Record<string, unknown> = {}, slots: Slots = {}) {
     const view = render(TimePicker, { props, slots: slots as never });
     await settle();
     return {
@@ -42,14 +40,14 @@ const renderTimePicker = async (props: Record<string, unknown> = {}, slots: Slot
             await settle();
         },
     };
-};
-const renderNode = async (node: () => unknown) => {
+}
+async function renderNode(node: () => unknown) {
     const view = render(defineComponent({ render: node as () => never }));
     await settle();
     return view;
-};
+}
 // Testing Library re-inserts the mounted nodes, which drops the focus taken while mounting
-const mountInPlace = async (node: () => unknown) => {
+async function mountInPlace(node: () => unknown) {
     const container = document.body.appendChild(document.createElement('div'));
     const app = createApp(defineComponent({ render: node as () => never }));
     app.mount(container);
@@ -58,7 +56,7 @@ const mountInPlace = async (node: () => unknown) => {
         container.remove();
     });
     await settle();
-};
+}
 
 const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
 const getInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls} input`) as HTMLInputElement;
@@ -66,37 +64,37 @@ const getPanels = () => Array.from(document.querySelectorAll<HTMLElement>(`.${sc
 const getList = (type: string, panel: ParentNode = document) => panel.querySelector<HTMLElement>(`.${prefixCls}-panel-list-${type}`) as HTMLElement;
 const getItems = (type: string, panel?: ParentNode) => Array.from(getList(type, panel).querySelectorAll('li'));
 const getSelectedText = (type: string, panel?: ParentNode) => getList(type, panel).querySelector(`.${scrollListCls}-item-sel`)?.textContent;
-const clickItem = async (type: string, index: number, panel?: ParentNode) => {
+async function clickItem(type: string, index: number, panel?: ParentNode) {
     await fireEvent.click(getItems(type, panel)[index]);
     await settle();
-};
-const clickOutside = async () => {
+}
+async function clickOutside() {
     await fireEvent.mouseDown(document.body);
     await settle();
-};
+}
 // jsdom runs no CSS animations, so end the leave animation the way a browser would
 const waitForClosed = () =>
     waitFor(() => {
         endLeaveAnimations();
         expect(getPanels()).toHaveLength(0);
     });
-const focusInput = async () => {
+async function focusInput() {
     getInput().focus();
     await settle();
-};
-const blurInput = async () => {
+}
+async function blurInput() {
     getInput().blur();
     await settle();
-};
-const typeText = async (value: string) => {
+}
+async function typeText(value: string) {
     await fireEvent.update(getInput(), value);
     await settle();
-};
+}
 const lastCall = <T extends (...args: never[]) => unknown>(spy: { mock: { calls: Parameters<T>[] } }) => spy.mock.calls[spy.mock.calls.length - 1];
-const hms = (date: unknown) => {
+function hms(date: unknown) {
     const d = date as Date;
     return [d.getHours(), d.getMinutes(), d.getSeconds()];
-};
+}
 const dates = (value: unknown) => value as Date[];
 
 describe('TimePicker', () => {
@@ -1905,11 +1903,6 @@ describe('TimePicker Vue 写法', () => {
         const shown = ref(true);
         const onOpenChange = vi.fn<OpenChangeFn>();
         const onBlur = vi.fn<BlurFn>();
-        const close = vi.spyOn(TimePickerFoundation.prototype, 'close');
-        const escape = vi.spyOn(TimePickerFoundation.prototype, 'handleEscKeyDown');
-        onTestFinished(() => {
-            vi.restoreAllMocks();
-        });
         const Other = defineComponent({ render: () => <div>other</div> });
         await renderNode(() => (
             <KeepAlive>
@@ -1923,8 +1916,6 @@ describe('TimePicker Vue 写法', () => {
         await settle();
         await waitForClosed();
         expect(onOpenChange.mock.calls).toEqual([[false]]);
-        expect(close).toHaveBeenCalledTimes(1);
-        expect(escape).not.toHaveBeenCalled();
         shown.value = true;
         await settle();
         expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
@@ -1987,11 +1978,13 @@ describe('TimePicker Vue 写法', () => {
         expectTypeOf<TimePickerEmits['update:modelValue'][0]>().toExtend<TimePickerProps['defaultValue']>();
     });
 
-    it('restoreCursor 随受控值的变化调用', async () => {
-        const restore = vi.spyOn(TimeInputFoundation.prototype, 'restoreCursor');
+    it('面板未打开时受控值变化，光标也留在原处', async () => {
         const view = await renderTimePicker({ modelValue: '10:23:15' });
+        getInput().setSelectionRange(2, 2);
+        await focusInput();
         await view.rerender({ modelValue: '11:30:00' });
-        expect(restore).toHaveBeenCalled();
+        expect(getInput()).toHaveValue('11:30:00');
+        expect(getInput().selectionStart).toBe(2);
     });
 
     it('nextTick 前不访问面板：未打开时不渲染列', async () => {

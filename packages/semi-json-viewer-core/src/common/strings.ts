@@ -1,6 +1,6 @@
 /** reference from https://github.com/microsoft/vscode */
 
-import { CharCode } from './charCode';
+import { CharCode } from './char-code';
 
 export function escapeRegExpCharacters(value: string) {
     return value.replace(/[\\{}*+?|^$.[\]()]/g, '\\$&');

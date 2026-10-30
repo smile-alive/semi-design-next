@@ -30,7 +30,7 @@ export interface TreeKeyboard {
     keyboardKey: string | null;
     setKeyboardKey: (key: string | null) => void;
     activeIndex: number;
-    activeKey: string | undefined;
+    activeKey?: string;
     /** Returns whether the key was handled */
     handleKeyDown: (event: React.KeyboardEvent) => boolean;
 }

@@ -100,10 +100,10 @@ async function renderWith<Handle>(component: Component, props: Record<string, un
 }
 const renderCascader = (props: Record<string, unknown> = {}, slots: Slots = {}) => renderWith<CascaderHandle>(Cascader as Component, { treeData, ...commonProps, ...props }, slots);
 const renderStateful = (props: Record<string, unknown> = {}, slots: Slots = {}) => renderWith<{ value: CascaderValue | undefined; data: CascaderData[] }>(Stateful, { initialData: treeData, ...props }, slots);
-const act = async (run: () => unknown) => {
+async function act(run: () => unknown) {
     run();
     await settle();
-};
+}
 
 const getTrigger = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
 const getSelection = () => document.querySelector(`.${prefixCls}-selection`) as HTMLElement;
@@ -116,22 +116,22 @@ const getCheckbox = (label: string) => getOption(label).querySelector(`.${BASE_C
 const getHighlights = () => document.querySelectorAll(`.${prefixCls}-option-label-highlight`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((node) => node.textContent);
 const focus = (element: HTMLElement) => act(() => element.focus());
-const click = async (element: Element | null) => {
+async function click(element: Element | null) {
     await userEvent.click(element as Element);
     await settle();
-};
-const type = async (text: string, input: HTMLElement = getSelectionInput()) => {
+}
+async function type(text: string, input: HTMLElement = getSelectionInput()) {
     await userEvent.type(input, text);
     await settle();
-};
-const keyboard = async (keys: string) => {
+}
+async function keyboard(keys: string) {
     await userEvent.keyboard(keys);
     await settle();
-};
-const mouseEnter = async (element: Element) => {
+}
+async function mouseEnter(element: Element) {
     await fireEvent.mouseEnter(element);
     await settle();
-};
+}
 const activeLabel = (host: Element) => document.getElementById(host.getAttribute('aria-activedescendant') ?? '')?.querySelector(`.${prefixCls}-option-label`)?.textContent;
 const isDropdownOpen = () => document.querySelector(`.${prefixCls}-option-lists`) !== null;
 
@@ -150,7 +150,7 @@ const addChildren = (list: CascaderData[], value: unknown, children: CascaderDat
     });
 
 // Like the docs' loadData demo, the loaded children are put into treeData before the promise resolves
-const loadTwo = (target: CascaderData, append: (children: CascaderData[]) => void) => {
+function loadTwo(target: CascaderData, append: (children: CascaderData[]) => void) {
     if (!target.children) {
         append([
             { label: `${target.label} - 1`, value: `${target.label}-1`, isLeaf: true },
@@ -158,7 +158,7 @@ const loadTwo = (target: CascaderData, append: (children: CascaderData[]) => voi
         ]);
     }
     return Promise.resolve();
-};
+}
 
 describe('Cascader', () => {
     afterEach(() => {
@@ -1365,8 +1365,11 @@ describe('Cascader', () => {
 
         await fireEvent.keyDown(getTrigger(), { key: 'Escape' });
         await settle();
-        expect(onBlur).toHaveBeenCalledTimes(1);
         expect(isDropdownOpen()).toBe(false);
+        expect(onBlur).not.toHaveBeenCalled();
+
+        await click(document.body);
+        expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
     it('select 事件', async () => {
@@ -2264,6 +2267,7 @@ describe('Cascader 行为', () => {
     it('打开两次后仍只保留一个外部点击监听', async () => {
         const onBlur = spy<'blur'>();
         const { handle } = await renderCascader({ onBlur });
+        await click(getSelection());
         await act(() => handle().open());
         await act(() => handle().open());
         await fireEvent.mouseDown(document.body);
@@ -2900,16 +2904,16 @@ describe('Cascader Vue', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
-    it('V7 focus 与 blur 只在打开、关闭时各发一次，Tab 进出不发', async () => {
+    it('V7 focus 在焦点进入时发一次，blur 在选中后关闭时发一次，之后 Tab 移出不再发', async () => {
         const onFocus = spy<'focus'>();
         const onBlur = spy<'blur'>();
         await renderCascader({ onFocus, onBlur });
         await userEvent.tab();
         expect(getTrigger()).toHaveFocus();
-        expect(onFocus).not.toHaveBeenCalled();
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        expect(onFocus.mock.calls[0][0]).toBeInstanceOf(FocusEvent);
         await keyboard('{Enter}');
         expect(onFocus).toHaveBeenCalledTimes(1);
-        expect(onFocus.mock.calls[0][0]).toBeInstanceOf(KeyboardEvent);
         await keyboard('{ArrowDown}{End}{ArrowRight}{ArrowRight}{Enter}');
         expect(isDropdownOpen()).toBe(false);
         expect(onFocus).toHaveBeenCalledTimes(1);

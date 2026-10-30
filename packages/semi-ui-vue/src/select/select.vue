@@ -4,7 +4,7 @@
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/select/constants';
     import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/select/foundation';
-    import { getOptionRuns, type BasicOptionProps } from '@fibrae/semi-foundation/select/option-foundation';
+    import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
     import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/tag/constants';
     import { isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -23,6 +23,8 @@
     import VirtualList from '../_base/virtual-list.vue';
     import useConfig from '../config-provider/use-config';
     import Input, { type InputHandle } from '../input';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import OverflowList from '../overflow-list';
     import Popover from '../popover';
@@ -34,7 +36,7 @@
     import type { BasicSelectValue, SelectChangeValue, SelectCreateItemSlotProps, SelectEmits, SelectHandle, SelectOptionItemSlotProps, SelectOptionProps, SelectProps, SelectSelectedItemSlotProps, SelectSlots, SelectTriggerSlotProps } from './interface';
     import SelectOptGroup from './option-group.vue';
     import SelectOption from './option.vue';
-    import { readOptions, type GroupRecord, type OptionRecord } from './utils';
+    import { readOptions, type GroupRecord, type OptionData, type OptionRecord } from './utils';
 
     interface SelectState extends SelectBaseState {
         isFocusInContainer: boolean;
@@ -69,8 +71,9 @@
         restTagsPopoverProps: semiGlobalDefault('Select', 'restTagsPopoverProps'),
         expandRestTagsOnClick: () => semiDefault('Select', 'expandRestTagsOnClick', false),
         ellipsisTrigger: () => semiDefault('Select', 'ellipsisTrigger', false),
-        size: semiGlobalDefault('Select', 'size'),
-        disabled: () => semiDefault('Select', 'disabled', false),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        size: undefined,
+        disabled: undefined,
         borderless: () => semiDefault('Select', 'borderless', false),
         validateStatus: semiGlobalDefault('Select', 'validateStatus'),
         placeholder: semiGlobalDefault('Select', 'placeholder'),
@@ -116,6 +119,7 @@
     const selectionTextId = useId();
     const comboboxKeys = new Set(['aria-label', 'aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required']);
 
+    const looks = useGroupLooks('Select', props, { disabled: false });
     const slotVersion = useSlotVersion(slots);
 
     const prefix = cssClasses.PREFIX;
@@ -140,7 +144,7 @@
             showInput: false,
             isFocusInContainer: false,
             isFullTags: false,
-            ...SelectFoundation.getInitialState(view, collectedOptions.value as BasicOptionProps[]),
+            ...SelectFoundation.getInitialState(view, collectedOptions.value as BaseOptionRecord[]),
         }),
         (base) => ({
             updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
@@ -151,7 +155,7 @@
             notifyMaxLimit: (option) => emit('exceed', plain(option)),
             getMaxLimit: () => props.max as number,
             notifyDeselect: (value, option) => emit('deselect', value as string | number, plain(option)),
-            getOptionsFromChildren: () => collectedOptions.value as BasicOptionProps[],
+            getOptionsFromChildren: () => collectedOptions.value as BaseOptionRecord[],
             updateOptions: (options) => base.setState({ options }),
             openMenu: (cb) => base.setState({ isOpen: true }, cb),
             closeMenu: () => base.setState({ isOpen: false }),
@@ -198,6 +202,7 @@
         }),
         {
             props: {
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 onChangeWithObject: () => props.changeWithObject,
                 autoFocus: () => props.autofocus,
@@ -208,6 +213,9 @@
 
     const position = computed(() => props.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
     const searchInTrigger = computed(() => props.searchPosition === strings.SEARCH_POSITION_TRIGGER);
+
+    // the Inputs inside are parts of this control, not members of the group
+    provideInputGroupContext(undefined);
 
     // A ref in inputProps would replace the Select's own vnode ref, so the Select sets both
     const setInputRef = (own: ShallowRef<InputHandle | null>) => (input: unknown) => {
@@ -226,8 +234,7 @@
     // a function in the record compares by presence: markup labels live only in an option's slot
     const sameOptions = (a: OptionRecord[], b: OptionRecord[]) => isEqualWith(a, b, (x, y) => (typeof x === 'function' && typeof y === 'function' ? true : undefined));
 
-    const plain = (option: BasicOptionProps | SelectOptionProps) => {
-        const { _slot, ...rest } = option;
+    const plain = ({ _slot, ...rest }: BasicOptionProps | SelectOptionProps) => {
         return rest as SelectOptionProps;
     };
 
@@ -235,8 +242,8 @@
 
     const optionId = (index: number) => `${selectId()}-option-${index}`;
 
-    const visibleOptions = computed(() => (state.value.options as OptionRecord[]).filter((option) => option._show));
-    const selectedItems = computed((): OptionRecord[] => [...state.value.selections.values()]);
+    const visibleOptions = computed(() => (state.value.options as OptionRecord[]).filter((option) => option.show));
+    const selectedItems = computed((): OptionData[] => [...state.value.selections.values()]);
 
     const activeDescendant = computed(() => {
         const { isOpen, focusIndex } = state.value;
@@ -244,7 +251,7 @@
         return isOpen && !props.loading && focusIndex !== -1 && focusIndex < visibleOptions.value.length ? optionId(focusIndex) : undefined;
     });
 
-    const clearable = computed(() => props.showClear && Boolean(state.value.selections.size || state.value.inputValue) && !props.disabled);
+    const clearable = computed(() => props.showClear && Boolean(state.value.selections.size || state.value.inputValue) && !looks.disabled);
     const optionRuns = computed(() => getOptionRuns(visibleOptions.value));
 
     const inputId = () => (props.inputProps?.id as string | undefined) ?? `${selectId()}-input`;
@@ -275,7 +282,7 @@
 
     const rootAttrs = () => ({
         ...splitControlAttrs(attrs, isComboboxKey).root,
-        ...(inputIsCombobox() ? {} : { ...comboboxAttrs(), 'aria-disabled': props.disabled }),
+        ...(inputIsCombobox() ? {} : { ...comboboxAttrs(), 'aria-disabled': looks.disabled }),
     });
 
     const kinds = () => ({
@@ -293,12 +300,12 @@
                       [`${prefix}-borderless`]: props.borderless,
                       [`${prefix}-open`]: state.value.isOpen,
                       [`${prefix}-focus`]: state.value.isFocus,
-                      [`${prefix}-disabled`]: props.disabled,
+                      [`${prefix}-disabled`]: looks.disabled,
                       [`${prefix}-single`]: !props.multiple,
                       [`${prefix}-multiple`]: props.multiple,
                       [`${prefix}-filterable`]: filterable.value,
-                      [`${prefix}-small`]: props.size === 'small',
-                      [`${prefix}-large`]: props.size === 'large',
+                      [`${prefix}-small`]: looks.size === 'small',
+                      [`${prefix}-large`]: looks.size === 'large',
                       [`${prefix}-error`]: props.validateStatus === 'error',
                       [`${prefix}-warning`]: props.validateStatus === 'warning',
                       [`${prefix}-no-arrow`]: !props.showArrow,
@@ -351,9 +358,9 @@
         if (props.virtualize && state.value.focusIndex !== -1) {
             virtualList.value?.scrollToItem(state.value.focusIndex, 'center');
         } else if (props.virtualize) {
-            const indexes = selectedItems.value.map((option) => option._scrollIndex).filter((index): index is number => typeof index === 'number' && index >= 0);
-            if (indexes.length) {
-                virtualList.value?.scrollToItem(Math.min(...indexes), 'center');
+            const first = state.value.options.find((option) => option.selected && option.index >= 0);
+            if (first) {
+                virtualList.value?.scrollToItem(first.index, 'center');
             }
         } else {
             foundation.updateScrollTop();
@@ -367,9 +374,9 @@
         // the single-select text sits beside the input, which is empty until the user types, so the combobox has no
         // value of its own; the text is exposed as the description
         'aria-describedby': joinIds(attrs['aria-describedby'], props.multiple || state.value.inputValue ? undefined : selectionTextId),
-        size: props.size,
+        size: looks.size,
         modelValue: state.value.inputValue,
-        disabled: props.disabled,
+        disabled: looks.disabled,
         onChange: handleInputChange,
         // the trigger draws its own clear button: a global Input default must not add one
         showClear: false,
@@ -387,7 +394,7 @@
                 'aria-controls': listboxId,
                 ...nameAttrs(),
                 modelValue: state.value.inputValue,
-                disabled: props.disabled,
+                disabled: looks.disabled,
                 placeholder: props.searchPlaceholder,
                 showClear: true,
                 onChange: handleInputChange,
@@ -400,25 +407,25 @@
         );
 
     // the option as kept in state, the same object Enter selects; a row's own copy drops class, style and its props
-    const handleSelect = (option: OptionRecord, index: number, event: MouseEvent) => foundation.onSelect(option as BasicOptionProps, index, event);
+    const handleSelect = (option: OptionRecord, index: number, event: MouseEvent) => foundation.onSelect(option as BaseOptionRecord, index, event);
 
     const optionRowProps = (option: OptionRecord, index: number, rowStyle?: StyleValue) => {
         // a `key` field would become the vnode key; the events read the option from state, which keeps it
-        const { key: _key, style, ...rest } = option;
+        const { key: _key, style, ...rest } = option.data;
         return {
             showTick: true,
             ...rest,
             style: [rowStyle, style] as StyleValue,
             focused: index === state.value.focusIndex,
             inputValue: state.value.inputValue,
-            selected: Boolean(option._selected),
+            selected: option.selected,
             semiOptionId: optionId(index),
         };
     };
 
     const optionItemProps = (option: OptionRecord, index: number, rowStyle?: StyleValue): SelectOptionItemSlotProps => {
-        const { key: _key, class: className, style, label, value, disabled, showTick: _showTick, ...rest } = option;
-        const selected = Boolean(option._selected);
+        const { key: _key, class: className, style, label, value, disabled, showTick: _showTick, ...rest } = option.data;
+        const { selected } = option;
         return {
             id: optionId(index),
             disabled,
@@ -440,13 +447,13 @@
     };
 
     const createItemProps = (option: OptionRecord, index: number, rowStyle?: StyleValue): SelectCreateItemSlotProps => ({
-        inputValue: String(option.value),
+        inputValue: String(option.data.value),
         focus: index === state.value.focusIndex,
         style: rowStyle,
     });
 
-    // _scrollIndex, not the visible index: a row that filtering moves up keeps its node
-    const rowKey = (option: OptionRecord) => String(option.key ?? option._keyInJsx ?? `${option.label}${option.value}${option._scrollIndex}`);
+    // the record's index, not the visible index: a row that filtering moves up keeps its node
+    const rowKey = ({ data, childKey, index }: OptionRecord) => String(data.key ?? childKey ?? `${data.label}${data.value}${index}`);
 
     const hasTitle = (group?: GroupRecord): group is GroupRecord => Boolean(group && (group._labelSlot || group.label || group.label === 0));
 
@@ -454,16 +461,13 @@
 
     const groupWrapperAttrs = (group: GroupRecord | undefined, first: number) => (hasTitle(group) ? { 'aria-labelledby': groupTitleId(group, first), class: `${prefix}-group-wrapper`, role: 'group' } : {});
 
-    const groupTitleProps = (group: GroupRecord) => {
-        const { key: _key, _labelSlot, ...rest } = group;
-        return rest;
-    };
+    const groupTitleProps = ({ key: _key, _labelSlot, ...rest }: GroupRecord) => rest;
 
     const emptyHidden = () => Boolean(slots.emptyContent) && !hasSlotContent(slots.emptyContent);
 
-    const singleItem = () => selectedItems.value[0] as OptionRecord | undefined;
+    const singleItem = () => selectedItems.value[0] as OptionData | undefined;
 
-    const hasSingleContent = (option?: OptionRecord): option is OptionRecord => Boolean(option && (slots.selectedItem || option._slot || option.label || option.label === 0));
+    const hasSingleContent = (option?: OptionData): option is OptionData => Boolean(option && (slots.selectedItem || option._slot || option.label || option.label === 0));
 
     const singleTextClass = (shown: boolean) => {
         const searching = state.value.showInput && searchInTrigger.value;
@@ -477,7 +481,7 @@
         ];
     };
 
-    const removeTag = (option: OptionRecord, event?: TagCloseEvent) => {
+    const removeTag = (option: OptionData, event?: TagCloseEvent) => {
         // keeps the Tag from hiding itself in controlled mode
         event?.preventDefault();
         // as with the clear button, a tag going while it has the focus hands the focus to the combobox
@@ -488,15 +492,15 @@
         foundation.removeTag(option as BasicOptionProps);
     };
 
-    const selectedItemProps = (option: OptionRecord, index: number): SelectSelectedItemSlotProps => ({
+    const selectedItemProps = (option: OptionData, index: number): SelectSelectedItemSlotProps => ({
         option,
         index,
-        disabled: Boolean(option.disabled || props.disabled),
+        disabled: Boolean(option.disabled || looks.disabled),
         onClose: (event) => removeTag(option, event),
     });
 
     // the same size mapping as TreeSelect, Cascader and TagInput: a default-size trigger holds large tags
-    const tagSize = () => (props.size === 'small' ? 'small' : 'large');
+    const tagSize = () => (looks.size === 'small' ? 'small' : 'large');
 
     const collapsedTags = () => {
         const count = props.maxTagCount ?? 0;
@@ -504,7 +508,7 @@
     };
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: OptionRecord[]) => {
+    const handleOverflow = (items: OptionData[]) => {
         const { size } = state.value.selections;
         const hiddenByMaxTagCount = size - Math.min(size, props.maxTagCount ?? 0);
         const count = hiddenByMaxTagCount + Math.max(items.length - 1, 0);
@@ -535,8 +539,8 @@
         value: selectedItems.value.map(plain),
         inputValue: state.value.inputValue,
         placeholder: props.placeholder,
-        disabled: props.disabled,
-        componentProps: { ...props },
+        disabled: looks.disabled,
+        componentProps: { ...props, ...looks },
         onSearch: (value) => handleInputChange(value),
         // bound to a click inside the trigger: stopped so the trigger does not reopen the list
         onClear: (event) => handleClear(event),
@@ -556,12 +560,7 @@
         );
     });
 
-    useClickOutside(
-        [trigger, optionContainer],
-        (event) => foundation.handleClickOutside(event),
-        () => state.value.isOpen,
-        useNestedPopups()
-    );
+    useClickOutside([trigger, optionContainer], foundation.handleClickOutside, () => state.value.isOpen, useNestedPopups());
 
     // The clear button goes with the value. A removed node fires no blur, so a focused button would drop the focus to
     // the body while the Select stays focused; this pre-flush watcher runs before the patch removes the button.
@@ -579,9 +578,9 @@
         open: () => foundation.open(),
         focus: () => foundation.focus(),
         clearInput: () => foundation.clearInput(),
-        selectAll: () => foundation.selectAll(),
-        deselectAll: () => foundation.clearSelected(),
-        search: (value, event) => foundation.handleInputChange(value, event),
+        selectAll: foundation.selectAll,
+        deselectAll: foundation.clearSelected,
+        search: foundation.handleInputChange,
         rePosition: () => popover.value?.rePosition(),
     });
 </script>
@@ -599,10 +598,10 @@
         :style="props.dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined"
         trigger="custom"
         :visible="state.isOpen"
-        @afterClose="foundation.handlePopoverClose()"
+        @afterClose="foundation.handlePopoverClose"
         @open="scrollToSelection"
     >
-        <div :id="selectId()" ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="props.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick($event)" @focusin="handleFocusIn" @focusout="handleFocusOut" @keydown="handleKeyDown">
+        <div :id="selectId()" ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="looks.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick" @focusin="handleFocusIn" @focusout="handleFocusOut" @keydown="handleKeyDown">
             <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />
             <template v-for="(k, i) in $slots.trigger ? [] : [kinds()]" v-else :key="i">
                 <div
@@ -700,7 +699,7 @@
                                 :showPopover="props.showRestTagsPopover"
                                 :size="tagSize()"
                                 :tagList="groupTags().map((item) => ({ tagKey: item.value }))"
-                                @plusNMouseEnter="foundation.updateIsFullTags()"
+                                @plusNMouseEnter="foundation.updateIsFullTags"
                             >
                                 <template #tag="{ index }">
                                     <template v-for="item in [selectedItems[index]]" :key="item.value">
@@ -721,7 +720,7 @@
                         <template v-for="option in [singleItem()]" :key="String(option?.value)">
                             <span :id="selectionTextId" :class="singleTextClass(hasSingleContent(option))" x-semi-prop="placeholder">
                                 <template v-if="hasSingleContent(option)">
-                                    <slot v-if="$slots.selectedItem" :disabled="props.disabled" :index="0" name="selectedItem" :onClose="() => handleClear()" :option="option" />
+                                    <slot v-if="$slots.selectedItem" :disabled="looks.disabled" :index="0" name="selectedItem" :onClose="() => handleClear()" :option="option" />
                                     <component :is="option._slot" v-else-if="option._slot" />
                                     <template v-else>{{ option.label }}</template>
                                 </template>
@@ -769,10 +768,10 @@
                     props.dropdownClassName,
                 ]"
                 :style="props.dropdownStyle"
-                @keydown="foundation.handleContainerKeyDown($event)"
+                @keydown="foundation.handleContainerKeyDown"
                 @mousedown="keepFocusOnPress"
             >
-                <div v-if="$slots.outerTopSlot" :class="`${prefix}-option-list-outer-top-slot`" @mouseenter="foundation.handleSlotMouseEnter()">
+                <div v-if="$slots.outerTopSlot" :class="`${prefix}-option-list-outer-top-slot`" @mouseenter="foundation.handleSlotMouseEnter">
                     <slot name="outerTopSlot" />
                 </div>
                 <div v-if="!searchInTrigger && filterable" :class="`${prefix}-dropdown-search-wrapper`">
@@ -783,8 +782,8 @@
                     </Input>
                 </div>
                 <!-- scroll.capture: with virtualize the scrolling element is the VirtualList inside, and scroll does not bubble -->
-                <div :id="listboxId" v-bind="nameAttrs()" :aria-multiselectable="props.multiple" :class="[`${prefix}-option-list`, { [`${prefix}-option-list-chosen`]: state.selections.size }]" role="listbox" :style="{ maxHeight: toCssLength(props.maxHeight) }" @scroll.capture="foundation.handleListScroll($event)">
-                    <div v-if="$slots.innerTopSlot" :class="`${prefix}-option-list-inner-top-slot`" @mouseenter="foundation.handleSlotMouseEnter()">
+                <div :id="listboxId" v-bind="nameAttrs()" :aria-multiselectable="props.multiple" :class="[`${prefix}-option-list`, { [`${prefix}-option-list-chosen`]: state.selections.size }]" role="listbox" :style="{ maxHeight: toCssLength(props.maxHeight) }" @scroll.capture="foundation.handleListScroll">
+                    <div v-if="$slots.innerTopSlot" :class="`${prefix}-option-list-inner-top-slot`" @mouseenter="foundation.handleSlotMouseEnter">
                         <slot name="innerTopSlot" />
                     </div>
                     <div v-if="props.loading" :class="`${prefix}-loading-wrapper`">
@@ -799,17 +798,17 @@
                     <VirtualList v-else-if="props.virtualize" ref="virtualList" :height="props.virtualize.height || numbers.LIST_HEIGHT" :itemCount="visibleOptions.length" :itemSize="props.virtualize.itemSize" :style="{ direction: config.direction }" :tabindex="-1" :width="props.virtualize.width || '100%'">
                         <template #default="{ index, style: rowStyle }">
                             <template v-for="option in [visibleOptions[index]]" :key="rowKey(option)">
-                                <div v-if="option._inputCreateOnly && $slots.createItem" :id="optionId(index)" aria-selected="false" role="option" @click="handleSelect(option, index, $event)">
+                                <div v-if="option.create && $slots.createItem" :id="optionId(index)" aria-selected="false" role="option" @click="handleSelect(option, index, $event)">
                                     <slot name="createItem" v-bind="createItemProps(option, index, rowStyle)" />
                                 </div>
-                                <slot v-else-if="!option._inputCreateOnly && $slots.optionItem" name="optionItem" v-bind="optionItemProps(option, index, rowStyle)" />
+                                <slot v-else-if="!option.create && $slots.optionItem" name="optionItem" v-bind="optionItemProps(option, index, rowStyle)" />
                                 <SelectOption v-else v-bind="optionRowProps(option, index, rowStyle)" @mouseenter="foundation.handleOptionMouseEnter(index)" @select="(_, event) => handleSelect(option, index, event)">
-                                    <template v-if="option._inputCreateOnly">
+                                    <template v-if="option.create">
                                         <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span
-                                        >{{ option.value }}
+                                        >{{ option.data.value }}
                                     </template>
-                                    <component :is="option._slot" v-else-if="option._slot" />
-                                    <template v-else>{{ option.label }}</template>
+                                    <component :is="option.data._slot" v-else-if="option.data._slot" />
+                                    <template v-else>{{ option.data.label }}</template>
                                 </SelectOption>
                             </template>
                         </template>
@@ -822,26 +821,26 @@
                                 </template>
                             </SelectOptGroup>
                             <template v-for="{ option, index } in run.rows" :key="rowKey(option)">
-                                <div v-if="option._inputCreateOnly && $slots.createItem" :id="optionId(index)" aria-selected="false" role="option" @click="handleSelect(option, index, $event)">
+                                <div v-if="option.create && $slots.createItem" :id="optionId(index)" aria-selected="false" role="option" @click="handleSelect(option, index, $event)">
                                     <slot name="createItem" v-bind="createItemProps(option, index)" />
                                 </div>
-                                <slot v-else-if="!option._inputCreateOnly && $slots.optionItem" name="optionItem" v-bind="optionItemProps(option, index)" />
+                                <slot v-else-if="!option.create && $slots.optionItem" name="optionItem" v-bind="optionItemProps(option, index)" />
                                 <SelectOption v-else v-bind="optionRowProps(option, index)" @mouseenter="foundation.handleOptionMouseEnter(index)" @select="(_, event) => handleSelect(option, index, event)">
-                                    <template v-if="option._inputCreateOnly">
+                                    <template v-if="option.create">
                                         <span :class="`${prefix}-create-tips`">{{ locale.locale.createText }}</span
-                                        >{{ option.value }}
+                                        >{{ option.data.value }}
                                     </template>
-                                    <component :is="option._slot" v-else-if="option._slot" />
-                                    <template v-else>{{ option.label }}</template>
+                                    <component :is="option.data._slot" v-else-if="option.data._slot" />
+                                    <template v-else>{{ option.data.label }}</template>
                                 </SelectOption>
                             </template>
                         </component>
                     </template>
-                    <div v-if="$slots.innerBottomSlot" :class="`${prefix}-option-list-inner-bottom-slot`" @mouseenter="foundation.handleSlotMouseEnter()">
+                    <div v-if="$slots.innerBottomSlot" :class="`${prefix}-option-list-inner-bottom-slot`" @mouseenter="foundation.handleSlotMouseEnter">
                         <slot name="innerBottomSlot" />
                     </div>
                 </div>
-                <div v-if="$slots.outerBottomSlot" :class="`${prefix}-option-list-outer-bottom-slot`" @mouseenter="foundation.handleSlotMouseEnter()">
+                <div v-if="$slots.outerBottomSlot" :class="`${prefix}-option-list-outer-bottom-slot`" @mouseenter="foundation.handleSlotMouseEnter">
                     <slot name="outerBottomSlot" />
                 </div>
             </div>

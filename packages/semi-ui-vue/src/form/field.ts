@@ -14,6 +14,7 @@ import Slider from '../slider';
 import Switch from '../switch';
 import TagInput from '../tag-input';
 import TimePicker from '../time-picker';
+import Transfer from '../transfer';
 import TreeSelect, { type TreeSelectEmits, type TreeSelectHandle, type TreeSelectProps, type TreeSelectSlots, type TreeSelectValue } from '../tree-select';
 import Upload from '../upload';
 import type { FieldComponent, FieldHandle, FieldProps, FieldShellSlots } from './interface';
@@ -87,6 +88,7 @@ export const FormSlider: FieldComponent<typeof Slider> = withField(Slider);
 export const FormTimePicker: FieldComponent<typeof TimePicker> = withField(TimePicker);
 export const FormTreeSelect = withField(TreeSelect) as unknown as FormTreeSelectComponent;
 export const FormCascader = withField(Cascader) as unknown as FormCascaderComponent;
+export const FormTransfer: FieldComponent<typeof Transfer> = withField(Transfer);
 export const FormRating: FieldComponent<typeof Rating> = withField(Rating);
 export const FormAutoComplete = withField(AutoComplete) as unknown as FormAutoCompleteComponent;
 export const FormUpload: FieldComponent<typeof Upload, 'fileList'> = withField(Upload, {

@@ -20,15 +20,15 @@ const prefixCls = `${BASE_CLASS_PREFIX}-radio`;
 const getRadio = () => screen.getByRole<HTMLInputElement>('radio');
 // Vue ignores an ancestor listener attached at or after the timestamp of an event coming up from a child, and the
 // suite freezes the system clock, so time has to be moved on by hand.
-const settle = () => {
+function settle() {
     vi.setSystemTime(Date.now() + 10);
-};
+}
 const getLabel = () => document.querySelector<HTMLLabelElement>('label') as HTMLLabelElement;
-const handleOf = (props: Record<string, unknown> = {}) => {
+function handleOf(props: Record<string, unknown> = {}) {
     const holder: { current?: RadioHandle } = {};
     render(Handle, { props: { ...props, onReady: (handle: RadioHandle) => (holder.current = handle) } });
     return holder;
-};
+}
 
 describe('Radio', () => {
     afterEach(() => {

@@ -316,7 +316,7 @@ describe('Sidebar.FileItem', () => {
             names.add(node.type.name);
             node.marks.forEach((mark) => names.add(mark.type.name));
         });
-        expect([...names].sort((a, b) => a.localeCompare(b))).toEqual(['blockquote', 'bold', 'bulletList', 'code', 'codeBlock', 'heading', 'horizontalRule', 'italic', 'link', 'listItem', 'orderedList', 'paragraph', 'strike', 'text'].sort());
+        expect([...names].toSorted((a, b) => a.localeCompare(b))).toEqual(['blockquote', 'bold', 'bulletList', 'code', 'codeBlock', 'heading', 'horizontalRule', 'italic', 'link', 'listItem', 'orderedList', 'paragraph', 'strike', 'text'].toSorted());
     });
 
     it('为选区添加链接并显示 Toast', async () => {

@@ -47,9 +47,11 @@ export interface MCPConfigureContentAdapter<E = unknown> extends DefaultAdapter<
 }
 
 export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoundation<MCPConfigureContentAdapter<E>, MCPConfigureContentProps, MCPConfigureContentState> {
-    #updateQuery = throttle((value: string) => {
+    #setQuery(value: string) {
         this.setState({ query: value });
-    }, 300);
+    }
+
+    #updateQuery = throttle((value: string) => this.#setQuery(value), 300);
 
     override destroy() {
         this.#updateQuery.cancel();
@@ -67,15 +69,15 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
         this.setState({ mode, query: this.getState('inputValue') });
     };
 
-    onConfigureButtonClick(e: E, option: MCPOption) {
+    onConfigureButtonClick = (e: E, option: MCPOption) => {
         this._adapter.notifyConfigureClick(e, option);
-    }
+    };
 
-    onEditButtonClick(e: E, option: MCPOption) {
+    onEditButtonClick = (e: E, option: MCPOption) => {
         this._adapter.notifyEditClick(e, option);
-    }
+    };
 
-    handleStatusChange(item: MCPOption, checked: boolean) {
+    handleStatusChange = (item: MCPOption, checked: boolean) => {
         const { options = [], customOptions = [] } = this.getProps();
         let newOptions = [];
         const mode = this.getState('mode');
@@ -85,7 +87,7 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
             newOptions = customOptions.map((option) => (option.value === item.value ? { ...option, active: checked } : option));
         }
         this._adapter.notifyStatusChange(newOptions, mode === strings.MCP_MODE.CUSTOM);
-    }
+    };
 
     handleAddClick = (e: E) => {
         this._adapter.notifyAddClick(e);

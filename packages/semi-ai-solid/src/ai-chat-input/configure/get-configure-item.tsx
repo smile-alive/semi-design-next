@@ -63,7 +63,7 @@ export default function getConfigureItem<P extends object, VK extends keyof P = 
                 },
                 [onKeyChangeFnName as string]: onItemChange,
             }
-        ) as unknown as P;
+        ) as P;
 
         // not `<Item />`: solid-refresh hoists that JSX out of this closure in development and loses the parameter
         return createComponent(Item, componentProps);

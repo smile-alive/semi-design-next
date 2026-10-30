@@ -4,7 +4,7 @@ import { isEqual } from 'es-toolkit';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/select/constants';
 import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/select/foundation';
-import { getOptionRuns, type BasicOptionProps } from '@fibrae/semi-foundation/select/option-foundation';
+import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/tag/constants';
 import { isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -41,7 +41,7 @@ import type { Position, TooltipProps } from '../tooltip';
 import { useSpecialTrigger } from '../tooltip/context';
 import Text from '../typography/text';
 import { type OptionProps, OptionView } from './option';
-import { type GroupRecord, type OptionRecord, plain, readOptions } from './utils';
+import { type GroupRecord, type OptionData, type OptionRecord, plain, readOptions } from './utils';
 
 const prefix = cssClasses.PREFIX;
 
@@ -74,11 +74,7 @@ export interface OptionRenderProps {
     onClick: (e: MouseEvent) => void;
 }
 
-export interface SelectedItemProps extends OptionProps {
-    _show?: boolean;
-    _selected?: boolean;
-    _scrollIndex?: number;
-}
+export type SelectedItemProps = OptionProps;
 
 export interface TriggerRenderProps {
     value: SelectedItemProps[];
@@ -152,7 +148,7 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     max?: number;
     maxTagCount?: number;
     maxHeight?: string | number;
-    /** An enclosing InputGroup's size replaces it */
+    /** An enclosing InputGroup's size applies when this is not set */
     size?: SelectSize;
     /** An InputGroup's `disabled` applies when this is not set */
     disabled?: boolean;
@@ -266,7 +262,7 @@ const defaultProps = {
     ellipsisTrigger: false,
 } satisfies Partial<SelectBodyProps>;
 
-function labelOf(option: OptionRecord) {
+function labelOf(option: OptionData) {
     return option._slot ? option._slot() : option.label;
 }
 
@@ -274,13 +270,11 @@ function hasTitle(group?: GroupRecord): group is GroupRecord {
     return Boolean(group && (group.label || group.label === 0));
 }
 
-function titleAttrs(group: GroupRecord) {
-    const { key: _key, label: _label, class: _class, style: _style, id: _id, ...rest } = group;
+function titleAttrs({ key: _key, label: _label, class: _class, style: _style, id: _id, ...rest }: GroupRecord) {
     return rest;
 }
 
-function optionItemRest(option: OptionRecord) {
-    const { key: _key, class: _class, style: _style, label: _label, value: _value, disabled: _disabled, showTick: _showTick, _slot, ...rest } = option;
+function optionItemRest({ key: _key, class: _class, style: _style, label: _label, value: _value, disabled: _disabled, showTick: _showTick, _slot, ...rest }: OptionData) {
     return rest;
 }
 
@@ -290,7 +284,7 @@ function renderCreate(render: RenderCreateItem, value: OptionProps['value'], foc
 }
 
 export default function Select<T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(rawProps: SelectProps<T, Multiple>) {
-    const bodyProps = rawProps as unknown as SelectBodyProps;
+    const bodyProps = rawProps as SelectBodyProps;
     const defaulted = useDefaultProps('Select', bodyProps, defaultProps);
 
     const group = useInputGroupContext();
@@ -311,10 +305,10 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
 
     const inGroup = group?.layer === layer ? group : undefined;
 
-    // as Input: the group's size replaces this one, its disabled fills a missing one, its other attributes sit below the props
-    const props = mergeProps((inGroup?.attrs ?? {}) as Partial<SelectBodyProps>, defaulted, {
+    // as Input: own value, then the group's, then the global default
+    const props = mergeProps(defaulted, {
         get size() {
-            return inGroup?.view().size ?? defaulted.size ?? 'default';
+            return bodyProps.size ?? inGroup?.view().size ?? defaulted.size ?? 'default';
         },
         get disabled() {
             return bodyProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled ?? false;
@@ -411,7 +405,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         get autoFocus() {
             return props.autofocus;
         },
-    }) as unknown as FoundationProps;
+    }) as FoundationProps;
 
     const options = children(() => local.children);
     const records = createMemo(() => readOptions(options.toArray(), local.optionList));
@@ -426,7 +420,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
             showInput: false,
             isFocusInContainer: false,
             isFullTags: false,
-            ...SelectFoundation.getInitialState(view, untrack(records) as BasicOptionProps[]),
+            ...SelectFoundation.getInitialState(view, untrack(records) as BaseOptionRecord[]),
         }),
         (base) => ({
             updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
@@ -434,23 +428,23 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
             toggleInputShow: (showInput, cb) => base.setState({ showInput }, cb),
             focusInput: () => triggerInput?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput?.focus({ preventScroll: props.preventScroll }),
-            notifyMaxLimit: (option) => props.onExceed?.(plain(option as OptionRecord)),
+            notifyMaxLimit: (option) => props.onExceed?.(plain(option as OptionData)),
             getMaxLimit: () => props.max as number,
-            notifyDeselect: (value, option) => props.onDeselect?.(value, plain(option as OptionRecord)),
-            getOptionsFromChildren: () => records() as BasicOptionProps[],
+            notifyDeselect: (value, option) => props.onDeselect?.(value, plain(option as OptionData)),
+            getOptionsFromChildren: () => records() as BaseOptionRecord[],
             updateOptions: (next) => base.setState({ options: next }),
             openMenu: (cb) => base.setState({ isOpen: true }, cb),
             closeMenu: () => base.setState({ isOpen: false }),
             updateSelection: (selections) => base.setState({ selections }),
             getSelections: () => new Map(base.getState('selections')),
             notifyChange: (value) => {
-                const object = (item: unknown) => (typeof item === 'object' && item !== null ? plain(item as OptionRecord) : item);
+                const object = (item: unknown) => (typeof item === 'object' && item !== null ? plain(item as OptionData) : item);
                 props.onChange?.(props.onChangeWithObject ? (Array.isArray(value) ? value.map(object) : object(value)) : value);
             },
-            notifySelect: (value, option) => props.onSelect?.(value, plain(option as OptionRecord)),
+            notifySelect: (value, option) => props.onSelect?.(value, plain(option as OptionData)),
             notifyDropdownVisibleChange: (visible) => props.onDropdownVisibleChange?.(visible),
             notifySearch: (inputValue, event) => props.onSearch?.(inputValue, event),
-            notifyCreate: (option) => props.onCreate?.(plain(option as OptionRecord)),
+            notifyCreate: (option) => props.onCreate?.(plain(option as OptionData)),
             // onMouseEnter and onMouseLeave reach the root as native listeners through the rest props
             notifyMouseEnter: () => undefined,
             notifyMouseLeave: () => undefined,
@@ -481,11 +475,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         })
     );
 
-    const markPressInside = useClickOutside(
-        [() => root, () => optionContainer],
-        (e) => foundation.handleClickOutside(e),
-        () => state().isOpen
-    );
+    const markPressInside = useClickOutside([() => root, () => optionContainer], foundation.handleClickOutside, () => state().isOpen);
 
     // a removed node fires no blur: focus on the clear button goes to the combobox instead of dropping to the body
     const handover = useFocusHandover<HTMLButtonElement>(() => triggerInput ?? root);
@@ -506,8 +496,8 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
 
     const optionId = (index: number) => `${selectId()}-option-${index}`;
 
-    const visibleOptions = createMemo(() => (state().options as OptionRecord[]).filter((option) => option._show));
-    const selectedItems = createMemo(() => [...state().selections.values()] as OptionRecord[]);
+    const visibleOptions = createMemo(() => (state().options as OptionRecord[]).filter((option) => option.show));
+    const selectedItems = createMemo(() => [...state().selections.values()] as OptionData[]);
 
     const triggerRenderProps: TriggerRenderProps = {
         get value() {
@@ -534,8 +524,8 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
 
     const position = () => local.position ?? (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
 
-    // _scrollIndex, not the visible index: a row that filtering moves up keeps its node
-    const rowKey = (option: OptionRecord) => String(option.key ?? option._keyInJsx ?? `${String(option.label)}${option.value}${option._scrollIndex}`);
+    // the record's index, not the visible index: a row that filtering moves up keeps its node
+    const rowKey = ({ data, childKey, index }: OptionRecord) => String(data.key ?? childKey ?? `${String(data.label)}${data.value}${index}`);
 
     const rows = createMemo(() => new Map(visibleOptions().map((option, index) => [rowKey(option), { option, index }])));
 
@@ -645,7 +635,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
             if (triggerInput && e.target === triggerInput) {
                 foundation.handleInputBlur();
             }
-            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+            if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
                 foundation.handleTriggerBlur(e);
             }
         });
@@ -703,7 +693,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         foundation.handleKeyDown(e);
     };
 
-    const removeTagOnClose = (option: OptionRecord, e?: Event) => {
+    const removeTagOnClose = (option: OptionData, e?: Event) => {
         // keeps the Tag from hiding itself in controlled mode
         e?.preventDefault();
         const tag = e?.currentTarget instanceof Element ? e.currentTarget.closest(`.${tagCssClasses.PREFIX}`) : null;
@@ -732,11 +722,9 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         if (local.virtualize && focusIndex !== -1) {
             virtualList?.scrollToItem(focusIndex, 'center');
         } else if (local.virtualize) {
-            const indexes = selectedItems()
-                .map((option) => option._scrollIndex)
-                .filter((index): index is number => typeof index === 'number' && index >= 0);
-            if (indexes.length) {
-                virtualList?.scrollToItem(Math.min(...indexes), 'center');
+            const first = state().options.find((option) => option.selected && option.index >= 0);
+            if (first) {
+                virtualList?.scrollToItem(first.index, 'center');
             }
         } else {
             foundation.updateScrollTop();
@@ -755,9 +743,9 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
             open: () => foundation.open(),
             close: () => foundation.close(),
             clearInput: () => foundation.clearInput(),
-            selectAll: () => foundation.selectAll(),
-            deselectAll: () => foundation.clearSelected(),
-            search: (value, event) => foundation.handleInputChange(value, event),
+            selectAll: foundation.selectAll,
+            deselectAll: foundation.clearSelected,
+            search: foundation.handleInputChange,
             rePosition: () => popover?.rePosition(),
         } satisfies SelectHandle);
         registerTrigger(node);
@@ -798,7 +786,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
     // capture: with virtualize the scrolling element is the virtual list inside, and scroll does not bubble
     const setListbox = (node: HTMLDivElement) => {
         const controller = new AbortController();
-        node.addEventListener('scroll', (e) => foundation.handleListScroll(e), { capture: true, signal: controller.signal });
+        node.addEventListener('scroll', foundation.handleListScroll, { capture: true, signal: controller.signal });
         onCleanup(() => controller.abort());
     };
 
@@ -861,7 +849,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         </div>
     );
 
-    const SelectedTag = (tag: { option: OptionRecord; index: number; collapsed?: boolean; inTagGroup?: boolean }) => {
+    const SelectedTag = (tag: { option: OptionData; index: number; collapsed?: boolean; inTagGroup?: boolean }) => {
         const tagDisabled = () => Boolean(tag.option.disabled || local.disabled);
         const onClose = (_content: JSX.Element, e?: Event) => removeTagOnClose(tag.option, e);
         const rendered = createMemo(() => {
@@ -905,13 +893,13 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         return (
             <div class={`${prefix}-content-wrapper-collapse`}>
                 <OverflowList
-                    itemKey={(item) => (item as OptionRecord).value as string | number}
+                    itemKey={(item) => (item as OptionData).value as string | number}
                     items={items()}
                     overflowRenderer={(overflowItems: OverflowItem[]) => {
-                        const first = overflowItems[0] as OptionRecord | undefined;
+                        const first = overflowItems[0] as OptionData | undefined;
                         return first ? <SelectedTag option={first} index={items().indexOf(first)} collapsed /> : null;
                     }}
-                    visibleItemRenderer={(item, index) => <SelectedTag option={item as OptionRecord} index={index} />}
+                    visibleItemRenderer={(item, index) => <SelectedTag option={item as OptionData} index={index} />}
                     onOverflow={handleOverflow}
                 />
                 <Show when={state().overflowItemCount > 0}>
@@ -962,7 +950,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                             <CollapsedTags />
                         </Match>
                         <Match when={local.showRestTagsPopover}>
-                            <TagGroup maxTagCount={limited()} popoverProps={local.restTagsPopoverProps} restCount={state().isFullTags ? undefined : restCount()} showPopover size={tagSize()} tagList={groupTagList(true)} renderTag={renderGroupTag} onPlusNMouseEnter={() => foundation.updateIsFullTags()} />
+                            <TagGroup maxTagCount={limited()} popoverProps={local.restTagsPopoverProps} restCount={state().isFullTags ? undefined : restCount()} showPopover size={tagSize()} tagList={groupTagList(true)} renderTag={renderGroupTag} onPlusNMouseEnter={foundation.updateIsFullTags} />
                         </Match>
                         <Match when={true}>
                             <TagGroup maxTagCount={limited()} restCount={restCount()} size={tagSize()} tagList={groupTagList(false)} renderTag={renderGroupTag} />
@@ -1057,7 +1045,8 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         </InputGroupContext.Provider>
     );
 
-    const optionItemProps = (option: Accessor<OptionRecord>, index: Accessor<number>, select: (e: MouseEvent) => void, rowStyle?: Accessor<JSX.CSSProperties>) => {
+    const optionItemProps = (record: Accessor<OptionRecord>, index: Accessor<number>, select: (e: MouseEvent) => void, rowStyle?: Accessor<JSX.CSSProperties>) => {
+        const option = () => record().data;
         const merged = mergeProps(() => optionItemRest(option()), {
             get id() {
                 return optionId(index());
@@ -1069,7 +1058,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                 return index() === state().focusIndex;
             },
             get selected() {
-                return Boolean(option()._selected);
+                return record().selected;
             },
             get style() {
                 return mergeStyles(rowStyle?.(), option().style);
@@ -1084,7 +1073,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                 return state().inputValue;
             },
             get class() {
-                return clsx(option().class, `${prefix}-option-custom`, { [`${prefix}-option-custom-selected`]: option()._selected });
+                return clsx(option().class, `${prefix}-option-custom`, { [`${prefix}-option-custom-selected`]: record().selected });
             },
             onMouseEnter: () => foundation.handleOptionMouseEnter(index()),
             onClick: (e: MouseEvent) => {
@@ -1096,10 +1085,11 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         return merged as OptionRenderProps;
     };
 
-    const renderRow = (option: Accessor<OptionRecord>, index: Accessor<number>, rowStyle?: Accessor<JSX.CSSProperties>) => {
+    const renderRow = (record: Accessor<OptionRecord>, index: Accessor<number>, rowStyle?: Accessor<JSX.CSSProperties>) => {
+        const option = () => record().data;
         const focused = () => index() === state().focusIndex;
         // the option as kept in state, the same object Enter selects
-        const select = (e: MouseEvent) => foundation.onSelect(option() as BasicOptionProps, index(), e);
+        const select = (e: MouseEvent) => foundation.onSelect(record() as BaseOptionRecord, index(), e);
         // the children are created again only when the options are read again, not when a row's flags change
         const slot = createMemo(() => option()._slot);
         return (
@@ -1112,14 +1102,14 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                         class={option().class}
                         style={mergeStyles(rowStyle?.(), option().style)}
                         focused={focused()}
-                        inputValue={option()._inputCreateOnly ? undefined : state().inputValue}
-                        selected={Boolean(option()._selected)}
+                        inputValue={record().create ? undefined : state().inputValue}
+                        selected={record().selected}
                         semiOptionId={optionId(index())}
                         onMouseEnter={() => foundation.handleOptionMouseEnter(index())}
                         onSelect={select}
                     >
                         <Show
-                            when={!option()._inputCreateOnly}
+                            when={!record().create}
                             fallback={
                                 <>
                                     <span class={`${prefix}-create-tips`}>{locale().locale.createText}</span>
@@ -1134,15 +1124,15 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                     </OptionView>
                 }
             >
-                <Match when={option()._inputCreateOnly && local.renderCreateItem}>
+                <Match when={record().create && local.renderCreateItem}>
                     {(render) => (
                         <div id={optionId(index())} aria-selected="false" role="option" onClick={select}>
                             {renderCreate(render(), option().value, focused(), rowStyle?.())}
                         </div>
                     )}
                 </Match>
-                <Match when={!option()._inputCreateOnly && local.renderOptionItem} keyed>
-                    {(render) => render(optionItemProps(option, index, select, rowStyle))}
+                <Match when={!record().create && local.renderOptionItem} keyed>
+                    {(render) => render(optionItemProps(record, index, select, rowStyle))}
                 </Match>
             </Switch>
         );
@@ -1190,7 +1180,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
         const isEmpty = () => visibleOptions().length === 0;
         const slot = (node: Accessor<ResolvedChildren>, slotName: string) => (
             <Show when={hasContent(node())}>
-                <div class={`${prefix}-option-list-${slotName}-slot`} onMouseEnter={() => foundation.handleSlotMouseEnter()}>
+                <div class={`${prefix}-option-list-${slotName}-slot`} onMouseEnter={foundation.handleSlotMouseEnter}>
                     {node()}
                 </div>
             </Show>
@@ -1206,7 +1196,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                     local.dropdownClassName
                 )}
                 style={local.dropdownStyle}
-                onKeyDown={(e) => foundation.handleContainerKeyDown(e)}
+                onKeyDown={foundation.handleContainerKeyDown}
                 onMouseDown={handleContainerMouseDown}
             >
                 {slot(outerTop, 'outer-top')}
@@ -1270,7 +1260,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
             ref={(handle) => (popover = handle)}
             style={local.dropdownMatchSelectWidth ? { 'min-width': 'var(--semi-tooltip-trigger-width)' } : undefined}
             role="presentation"
-            afterClose={() => foundation.handlePopoverClose()}
+            afterClose={foundation.handlePopoverClose}
             autoAdjustOverflow={local.autoAdjustOverflow}
             content={renderOptions}
             disableArrowKeyDown

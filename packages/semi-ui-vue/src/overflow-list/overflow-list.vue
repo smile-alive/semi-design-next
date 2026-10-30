@@ -189,11 +189,7 @@
     onUpdated(afterRender);
 
     // After afterRender, whose mounted run assigns the nodes first: the observer then starts within the mount.
-    useIntersectionObserver(
-        scrollNodes,
-        (entries) => foundation.handleIntersect(entries),
-        () => ({ threshold: props.threshold })
-    );
+    useIntersectionObserver(scrollNodes, foundation.handleIntersect, () => ({ threshold: props.threshold }));
 </script>
 
 <template>

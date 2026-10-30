@@ -114,13 +114,13 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
 
     const context: CheckboxGroupContextValue = {
         view,
-        onChange: (event) => foundation.handleChange(event),
+        onChange: foundation.handleChange,
     };
 
     // moving between the boxes is not leaving the group: Form's blur validation waits until focus is outside
     const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, event);
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
             callHandler(local.onBlur, event);
         }
     };
@@ -128,7 +128,7 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     // deep comparison: Tree and TreeSelect pass a new array on every render
     useWatch(
         createMemo(() => local.value, undefined, { equals: isEqual }),
-        (value) => foundation.handlePropValueChange(value)
+        foundation.handlePropValueChange
     );
 
     return (

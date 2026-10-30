@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>">
     import { computed, onBeforeUnmount, onMounted, shallowRef, useId, useTemplateRef, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+    import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/form/foundation';
     import type { BaseFormAdapter, FormState } from '@fibrae/semi-foundation/form/interface';
     import '@fibrae/semi-foundation/form/form.scss';
@@ -88,7 +89,7 @@
                             afterUpdateTick.value++;
                         })
                 );
-                props.form?.__updateState?.(formState);
+                getFormApiProxyInternals(props.form)?.updateState(formState);
             },
             notifyChange: (formState) => emit('change', formState),
             notifyValueChange: (values, changedValues) => emit('valueChange', values, changedValues),
@@ -124,10 +125,10 @@
 
     onMounted(() => {
         emit('getFormApi', formApi);
-        props.form?.__bind?.(formApi);
+        getFormApiProxyInternals(props.form)?.bind(formApi);
     });
 
-    onBeforeUnmount(() => props.form?.__unbind?.());
+    onBeforeUnmount(() => getFormApiProxyInternals(props.form)?.unbind());
 
     defineExpose<FormHandle<Values>>({ formApi });
 </script>

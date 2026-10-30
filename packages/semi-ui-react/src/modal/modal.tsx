@@ -97,7 +97,7 @@ function footerButtonProps(custom: ButtonProps | undefined, handle: (e: React.Mo
 }
 
 /** `ref` is attached to the outer div inside the portal; null while nothing is rendered */
-function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTMLDivElement> }): React.ReactNode {
+export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTMLDivElement> }) {
     const props = useDefaultProps('Modal', rawProps, defaultProps);
 
     const {
@@ -240,7 +240,7 @@ function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTMLDivElement> }):
         }
         runtime.markShown();
         foundation.beforeShow();
-        return () => foundation.afterHide();
+        return foundation.afterHide;
     }, [hidden, foundation, runtime]);
 
     useDidUpdate(hidden, (isHidden) => {
@@ -308,5 +308,3 @@ function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTMLDivElement> }):
         </CSSAnimation>
     );
 }
-
-export default Modal;

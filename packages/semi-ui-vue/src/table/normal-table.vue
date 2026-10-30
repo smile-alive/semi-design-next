@@ -159,7 +159,8 @@
     // The wrapper width gives the width of section and expanded rows and the fixed column shadows. It goes to a CSS
     // variable rather than state: a window drag resizes the table every frame, and state would re-render every cell
     const needSyncTableWidth = computed(() => anyColumnFixed.value || (props.showHeader && fixedHeader.value));
-    const paginationPosition = computed(() => get(props.pagination, 'position', 'bottom') as string);
+    const paginationPosition = computed(() => (props.pagination as TablePaginationProps | undefined)?.position ?? 'bottom');
+    const formatPageText = computed(() => (props.pagination as TablePaginationProps | undefined)?.formatPageText);
 
     const toFoundationColumns = (columns: ColumnProps[]) => columns as unknown as FoundationColumn[];
 
@@ -263,7 +264,7 @@
             setCachedFilteredSortedDataSource: (filteredSortedDataSource) => base.setState({ filteredSortedDataSource }),
             setCachedFilteredSortedRowKeys: (filteredSortedRowKeys) => base.setState({ filteredSortedRowKeys, filteredSortedRowKeysSet: new Set(filteredSortedRowKeys) }),
             setFilteredDisabledRowKeys: (filteredDisabledRowKeys) => base.setState({ filteredDisabledRowKeys, filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys) }),
-            getCurrentPage: () => get(base.getStates(), 'pagination.currentPage', 1),
+            getCurrentPage: () => base.getStates().pagination?.currentPage ?? 1,
             getCachedFilteredSortedDataSource: () => base.getState('filteredSortedDataSource') ?? [],
             getCachedFilteredSortedRowKeys: () => base.getState('filteredSortedRowKeys') ?? [],
             getFilteredDisabledRowKeysSet: () => base.getState('filteredDisabledRowKeysSet') ?? new Set(),
@@ -363,7 +364,7 @@
         rowKey: rowKey.value,
     }));
 
-    const mergedPagination = computed(() => (props.pagination ? mergePagination(view.value.pagination as TablePaginationProps | undefined, Boolean(props.scroll?.scrollToFirstRowOnChange), foundation.setPage, () => foundation.resetScrollY()) : null));
+    const mergedPagination = computed(() => (props.pagination ? mergePagination(view.value.pagination as TablePaginationProps | undefined, Boolean(props.scroll?.scrollToFirstRowOnChange), foundation.setPage, foundation.resetScrollY) : null));
 
     const setHeadWidths = (widths: BaseHeadWidth[], index = 0) => {
         const prev = foundation.getState('headWidths') ?? [];
@@ -483,10 +484,7 @@
         () => scheduleWidthSync(syncTableWidth)
     );
 
-    useResizeObserver(
-        () => (anyColumnFixed.value ? (roots.value?.[0] ?? null) : null),
-        () => foundation.syncScrollEdges()
-    );
+    useResizeObserver(() => (anyColumnFixed.value ? (roots.value?.[0] ?? null) : null), foundation.syncScrollEdges);
 
     // content width changes without a wrapper resize (columns, data) are caught after the patch
     onUpdated(() => {
@@ -534,7 +532,7 @@
                         [`${props.prefixCls}-fixed-header`]: Boolean(props.scroll?.y),
                     }"
                 >
-                    <TablePagination v-if="mergedPagination && (paginationPosition === 'top' || paginationPosition === 'both')" :formatPageText="get(props.pagination, 'formatPageText')" :pagination="mergedPagination" />
+                    <TablePagination v-if="mergedPagination && (paginationPosition === 'top' || paginationPosition === 'both')" :formatPageText="formatPageText" :pagination="mergedPagination" />
                     <div v-if="frame.title" :id="titleId" :class="`${props.prefixCls}-title`" x-semi-prop="title">
                         <template v-if="typeof frame.title === 'string'">{{ frame.title }}</template>
                         <component :is="node" v-for="[node, key] in frame.title" v-else :key="key" />
@@ -567,7 +565,7 @@
                             <component :is="node" v-for="[node, key] in frame.footer" v-else :key="key" />
                         </div>
                     </div>
-                    <TablePagination v-if="mergedPagination && (paginationPosition === 'bottom' || paginationPosition === 'both')" :formatPageText="get(props.pagination, 'formatPageText')" :pagination="mergedPagination" />
+                    <TablePagination v-if="mergedPagination && (paginationPosition === 'bottom' || paginationPosition === 'both')" :formatPageText="formatPageText" :pagination="mergedPagination" />
                 </div>
             </Spin>
         </div>

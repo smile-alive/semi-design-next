@@ -213,12 +213,12 @@ export default function Rating(rawProps: RatingProps) {
             // focus that was inside before the rating was disabled must still be released
             onFocusOut={(event) => {
                 callHandler(local.onFocusOut, event);
-                foundation.handleBlur(event as unknown as RatingFocusEvent);
+                foundation.handleBlur(event as RatingFocusEvent);
             }}
             onFocusIn={(event) => {
                 callHandler(local.onFocusIn, event);
                 if (!props.disabled) {
-                    foundation.handleFocus(event as unknown as RatingFocusEvent);
+                    foundation.handleFocus(event as RatingFocusEvent);
                 }
             }}
             onKeyDown={(event) => !props.disabled && foundation.handleKeyDown(event, value())}
@@ -245,10 +245,10 @@ export default function Rating(rawProps: RatingProps) {
                             prefixCls={`${props.prefixCls}-star`}
                             size={index === props.count ? 0 : props.size}
                             unitOf={unitOf}
-                            onClick={(event, starIndex) => foundation.handleClick(event, starIndex)}
+                            onClick={foundation.handleClick}
                             onFocus={(event, starIndex) => !props.disabled && foundation.handleStarFocus(event, starIndex)}
-                            onHover={(event, starIndex) => foundation.handleHover(event, starIndex)}
-                            onSelect={(event, starIndex, newValue) => foundation.handleSelect(event, starIndex, newValue)}
+                            onHover={foundation.handleHover}
+                            onSelect={foundation.handleSelect}
                         />
                     );
                     return (

@@ -1,6 +1,4 @@
 import React from 'react';
-// compat get falls back to the default only for undefined, not null
-import { get } from 'es-toolkit/compat';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import Button from '../button';
 
@@ -16,10 +14,10 @@ export default function Footer({ prefixCls, locale, onCancelClick, onConfirmClic
     return (
         <div className={`${prefixCls}-footer`}>
             <Button theme="borderless" onClick={onCancelClick}>
-                {get(locale, 'footer.cancel', '')}
+                {locale?.footer?.cancel ?? ''}
             </Button>
             <Button disabled={disabledConfirm} theme="solid" onClick={onConfirmClick}>
-                {get(locale, 'footer.confirm', '')}
+                {locale?.footer?.confirm ?? ''}
             </Button>
         </div>
     );

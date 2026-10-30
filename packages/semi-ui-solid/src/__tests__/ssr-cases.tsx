@@ -60,6 +60,7 @@ import {
     FormTagInput,
     FormTextArea,
     FormTimePicker,
+    FormTransfer,
     FormTreeSelect,
     FormUpload,
     Highlight,
@@ -632,6 +633,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
             'FormTagInput',
             'FormTextArea',
             'FormTimePicker',
+            'FormTransfer',
             'FormTreeSelect',
             'FormUpload',
         ],
@@ -667,6 +669,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
                     <FormSlider field="range" label="Range" initValue={10} />
                     <FormSwitch field="enabled" label="Enabled" />
                     <FormRating field="rating" label="Rating" initValue={2} />
+                    <FormTransfer field="picked" label="Picked" dataSource={[{ label: 'Option 1', value: 1, key: '1' }]} initValue={[1]} />
                     <FormUpload field="files" label="Files" action="https://example.com/upload">
                         <Button icon={<IconUpload />}>Upload</Button>
                     </FormUpload>

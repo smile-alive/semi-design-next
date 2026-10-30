@@ -2,6 +2,7 @@
 import { defineComponent, nextTick, type StyleValue } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
+import { escapeRegExp } from 'es-toolkit';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi, type Mock } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSetting } from '@fibrae/semi-icons-vue';
@@ -1005,7 +1006,7 @@ describe('Typography 行为基线', () => {
         cases.forEach(([props, input, output]) => {
             const view = render(Numeral, { props, slots: textSlot(input) });
             expect(root(view.container).tagName).toBe('SPAN');
-            expect(root(view.container)).toHaveTextContent(new RegExp(`^${RegExp.escape(output)}$`));
+            expect(root(view.container)).toHaveTextContent(new RegExp(`^${escapeRegExp(output)}$`));
             view.unmount();
         });
 

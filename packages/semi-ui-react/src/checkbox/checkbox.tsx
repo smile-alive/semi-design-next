@@ -197,7 +197,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
             role={role}
             onClick={(e) => {
                 onClick?.(e);
-                if (CheckboxFoundation.isInnerInteractiveClick(e.target as Element, e.currentTarget, inputRef.current)) {
+                if (e.target instanceof Element && CheckboxFoundation.isInnerInteractiveClick(e.target, e.currentTarget, inputRef.current)) {
                     return;
                 }
                 foundation.handleChange(e);

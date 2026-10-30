@@ -43,7 +43,7 @@ export default class Announcer {
      * `read` runs at write time, when the message elements are in the document. Messages queued together are read as one;
      * a later call with the same `key` replaces the earlier one, so an in-place update is announced once.
      */
-    announce(key: string, read: () => string) {
+    announce = (key: string, read: () => string) => {
         this.#pending.set(key, read);
         clearTimeout(this.#timer);
         this.#timer = setTimeout(() => {
@@ -54,10 +54,10 @@ export default class Announcer {
             this.#write(text);
             this.#timer = setTimeout(() => this.#write(''), ANNOUNCE_HOLD);
         }, ANNOUNCE_DELAY);
-    }
+    };
 
-    dispose() {
+    dispose = () => {
         clearTimeout(this.#timer);
         this.#pending.clear();
-    }
+    };
 }

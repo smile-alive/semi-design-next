@@ -109,7 +109,7 @@
             selectionMode: props.selectionMode,
             trigger: props.trigger,
         })),
-        close: () => foundation.close(),
+        close: foundation.close,
         closeAll: () => {
             foundation.close();
             parent?.closeAll();
@@ -118,7 +118,7 @@
     };
 
     // Moves focus into the menu when Tooltip gives the popup its initial focus.
-    const focusTarget: FocusTarget = { focus: () => foundation.handleOpened() };
+    const focusTarget: FocusTarget = { focus: foundation.handleOpened };
 
     const bindFocusTarget = (focusRef: ShallowRef<FocusTarget | null>) => {
         focusRef.value = focusTarget;
@@ -181,7 +181,7 @@
         @clickOutSide="(...args) => emit('clickOutSide', ...args)"
         @escKeyDown="(...args) => emit('escKeyDown', ...args)"
         @open="emit('open')"
-        @visibleChange="foundation.handleVisibleChange($event)"
+        @visibleChange="foundation.handleVisibleChange"
     >
         <template v-for="(nodes, i) in [triggerNodes()]" :key="i">
             <span v-if="wrapsTrigger(nodes)" :class="[`${tooltipClasses.PREFIX}-trigger-wrapper`, props.wrapperClassName, showingClass()]" :style="{ display: nodes.length > 1 ? 'inline-block' : undefined }" @keydown="foundation.handleKeyDown($event, false)">

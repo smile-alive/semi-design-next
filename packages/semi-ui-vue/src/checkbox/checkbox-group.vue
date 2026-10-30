@@ -90,7 +90,7 @@
             ariaInvalid: aria.value.invalid,
             ariaErrormessage: aria.value.errormessage,
         })),
-        onChange: (event) => foundation.handleChange(event),
+        onChange: foundation.handleChange,
     });
 
     const rootAttrs = (a: Record<string, unknown>) => Object.fromEntries(Object.entries(a).filter(([key]) => !DROPPED_ATTRS.has(key)));
@@ -103,12 +103,7 @@
     };
 
     // Deep comparison: Tree and TreeSelect pass a new array on every render.
-    useDidUpdate(
-        () => props.modelValue,
-        (value) => foundation.handlePropValueChange(value),
-        isEqual,
-        'pre'
-    );
+    useDidUpdate(() => props.modelValue, foundation.handlePropValueChange, isEqual, 'pre');
 
     onBeforeUpdate(() => {
         const next = pickAria();

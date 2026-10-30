@@ -139,7 +139,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         return firstLargerIndex === -1 ? [...pageSizeOpts, pageSize] : pageSizeOpts.toSpliced(firstLargerIndex, 0, pageSize);
     }
 
-    goPage(targetPageIndex: number | '...') {
+    goPage = (targetPageIndex: number | '...') => {
         if (targetPageIndex === '...') {
             return;
         }
@@ -152,10 +152,10 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         }
         this._adapter.notifyPageChange(targetPageIndex);
         this._adapter.notifyChange(targetPageIndex, pageSize);
-    }
+    };
 
     // undefined means page 1: an uncontrolled pager restarts when its total or pageSize prop changes
-    updatePage(targetPageIndex = 1, pageSize?: number) {
+    updatePage = (targetPageIndex = 1, pageSize?: number) => {
         const { currentPage, pageSize: currentPageSize } = this.getStates();
         const newPageSize = pageSize ?? currentPageSize;
         if (targetPageIndex !== currentPage) {
@@ -164,23 +164,23 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         if (newPageSize !== currentPageSize) {
             this._adapter.updatePageSize(newPageSize);
         }
-    }
+    };
 
-    goPrev() {
+    goPrev = () => {
         const { currentPage } = this.getStates();
         if (currentPage > 1) {
             this.goPage(currentPage - 1);
         }
-    }
+    };
 
-    goNext() {
+    goNext = () => {
         const { currentPage, pageSize } = this.getStates();
         if (currentPage <= PaginationFoundation.getTotalPageNumber(this.getProp('total'), pageSize) - 1) {
             this.goPage(currentPage + 1);
         }
-    }
+    };
 
-    changePageSize(newPageSize: number) {
+    changePageSize = (newPageSize: number) => {
         const { pageSize, currentPage } = this.getStates();
         this._adapter.updatePageSize(newPageSize);
         this._adapter.notifyPageSizeChange(newPageSize);
@@ -198,21 +198,21 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
             this._adapter.notifyPageChange(newCurrentPage);
         }
         this._adapter.notifyChange(newCurrentPage, newPageSize);
-    }
+    };
 
-    handleQuickJumpNumberChange(targetPage: string | number) {
+    handleQuickJumpNumberChange = (targetPage: string | number) => {
         this._adapter.updateQuickJumpPage(targetPage);
-    }
+    };
 
-    handleQuickJumpBlur() {
+    handleQuickJumpBlur = () => {
         const { quickJumpPage } = this.getStates();
 
         if ((typeof quickJumpPage === 'string' && quickJumpPage) || typeof quickJumpPage === 'number') {
             this.#handleQuickJump(quickJumpPage);
         }
-    }
+    };
 
-    handleQuickJumpEnterPress(targetPage: string) {
+    handleQuickJumpEnterPress = (targetPage: string) => {
         this.#handleQuickJump(targetPage);
-    }
+    };
 }

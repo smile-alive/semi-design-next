@@ -213,13 +213,13 @@ export default function Tabs(rawProps: TabsProps) {
         get renderIcon() {
             return isTabListMode() ? local.renderIcon : paneIcon;
         },
-        onTabClick: (key, event) => foundation.handleTabClick(key, event),
+        onTabClick: foundation.handleTabClick,
         deleteTabItem,
         handleKeyDown: foundation.handleKeyDown,
     };
 
     // called only from the For callback, so the For item owns the pane and everything it renders
-    function renderPane(token: Token<TabPaneProps>) {
+    const renderPane = (token: Token<TabPaneProps>) => {
         const [pane, paneRest] = splitProps(token.props, ['children', 'class', 'closable', 'disabled', 'icon', 'itemKey', 'tab', 'tabIndex']);
         const key = () => pane.itemKey ?? '';
         const active = () => activeKey() === pane.itemKey;
@@ -270,12 +270,9 @@ export default function Tabs(rawProps: TabsProps) {
                 </div>
             </div>
         );
-    }
+    };
 
-    useWatch(
-        () => local.activeKey,
-        (key) => foundation.syncActiveKey(key)
-    );
+    useWatch(() => local.activeKey, foundation.syncActiveKey);
 
     // panes can leave after mount: an uncontrolled key no longer among them moves to the first enabled one
     useWatch(paneKeys, () => foundation.handleTabPanesChange(panes()));

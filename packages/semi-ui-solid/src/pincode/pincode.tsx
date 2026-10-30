@@ -101,13 +101,13 @@ export default function PinCode(rawProps: PinCodeProps) {
             .replace('${count}', String(local.count));
 
     const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement }) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
             local.onFocus?.(e);
         }
     };
 
     const handleFocusOut = (e: FocusEvent & { currentTarget: HTMLDivElement }) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
             local.onBlur?.(e);
         }
     };

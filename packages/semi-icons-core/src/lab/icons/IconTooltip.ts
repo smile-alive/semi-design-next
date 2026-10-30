@@ -4,15 +4,7 @@ const IconTooltip: IconData = {
     name: 'tooltip',
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M3.3 3.87A2.3 2.3 0 0 0 1.23 6.4l1.2 11.46a2.3 2.3 0 0 0 2.54 2.05l4.1-.43 3.46 2.8c.25.2.61.16.81-.08l2.8-3.47 4.3-.45a2.3 2.3 0 0 0 2.05-2.53L21.3 4.29a2.3 2.3 0 0 0-2.54-2.05L3.29 3.87',
-                fill: '#6A6F7F',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M3.3 3.87A2.3 2.3 0 0 0 1.23 6.4l1.2 11.46a2.3 2.3 0 0 0 2.54 2.05l4.1-.43 3.46 2.8c.25.2.61.16.81-.08l2.8-3.47 4.3-.45a2.3 2.3 0 0 0 2.05-2.53L21.3 4.29a2.3 2.3 0 0 0-2.54-2.05L3.29 3.87', fill: '#6A6F7F' }],
         [
             'path',
             {

@@ -7,11 +7,11 @@ import DragMove from '..';
 import Swap from './fixtures/swap.vue';
 
 const pointer = (target: EventTarget, type: string, init: PointerEventInit) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }));
-const drag = (element: Element, from: number[], to: number[], pointerType: string) => {
+function drag(element: Element, from: number[], to: number[], pointerType: string) {
     pointer(element, 'pointerdown', { pointerId: 1, pointerType, clientX: from[0], clientY: from[1] });
     pointer(document, 'pointermove', { pointerId: 1, pointerType, clientX: to[0], clientY: to[1] });
     pointer(document, 'pointerup', { pointerId: 1, pointerType });
-};
+}
 
 // toHaveStyle appends a probe node to the body, which would re-trigger waitFor's MutationObserver forever;
 // expect.element polls on a timer instead.

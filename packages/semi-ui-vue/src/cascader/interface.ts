@@ -107,13 +107,16 @@ export interface CascaderEmits<Multiple extends boolean | undefined = undefined>
     /** In multiple mode a single checked node gives its value, more give an array */
     select: [value: ByMultiple<Multiple, string | number, string | number | Array<string | number>>];
     search: [value: string];
-    /** Not a DOM focus event: a click or key that opens the dropdown passes its event */
-    focus: [event: MouseEvent | KeyboardEvent];
     /**
-     * Not a DOM blur event: closing the dropdown passes the mousedown outside or the key, `undefined` for the
-     * handle's `close`
+     * Focus entering the trigger or the dropdown from outside passes the `focusin` event; moving within them does not
+     * report again. A click or key that reopens after a pick closed it reports it too
      */
-    blur: [event?: MouseEvent | KeyboardEvent];
+    focus: [event: MouseEvent | KeyboardEvent | FocusEvent];
+    /**
+     * Once per focus: the mousedown outside, the click or key that picks and closes, or the `focusout` that leaves the
+     * trigger and the dropdown
+     */
+    blur: [event?: MouseEvent | KeyboardEvent | FocusEvent];
     dropdownVisibleChange: [visible: boolean];
     clear: [];
     exceed: [checkedItem: CascaderEntity[]];

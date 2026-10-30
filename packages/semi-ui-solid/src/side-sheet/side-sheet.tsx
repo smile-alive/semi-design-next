@@ -227,7 +227,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
             foundation.beforeShow();
             warnIfDialogUnnamed(element, 'SideSheet');
         });
-        onCleanup(() => foundation.afterHide());
+        onCleanup(foundation.afterHide);
     });
 
     useWatch(hidden, (isHidden) => {

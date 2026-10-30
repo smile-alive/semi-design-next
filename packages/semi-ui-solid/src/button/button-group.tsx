@@ -6,6 +6,7 @@ import '@fibrae/semi-foundation/button/button.scss';
 import type { ElementProps } from '../_base/element-props';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
+import { useInputGroupContext } from '../input/context';
 import type { Size, Theme, Type } from './button';
 import { type ButtonGroupContextValue, type ButtonLooks, ButtonGroupContext, useButtonGroupContext } from './context';
 
@@ -50,12 +51,14 @@ export default function ButtonGroup(rawProps: ButtonGroupProps) {
     const [local, rest] = splitProps(props, ['children', 'class', 'colorful', 'disabled', 'size', 'theme', 'type']);
 
     const outer = useButtonGroupContext();
+    const inputGroupContext = useInputGroupContext();
     const layer = usePopupLayer();
 
     const parent = outer?.layer === layer ? outer : undefined;
+    const inputGroup = inputGroupContext?.layer === layer ? inputGroupContext : undefined;
 
-    // A nested group inherits the outer one
-    const view = createMemo(() => inheritGroupLooks(local, parent?.view()));
+    // Own value, then the outer ButtonGroup, then the InputGroup
+    const view = createMemo(() => inheritGroupLooks(local, parent ? parent.view() : inputGroup?.view()));
     const context: ButtonGroupContextValue = { view, layer, buttons: new WeakMap() };
 
     return (

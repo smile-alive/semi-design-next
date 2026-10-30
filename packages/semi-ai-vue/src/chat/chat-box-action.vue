@@ -103,7 +103,7 @@
     };
 
     // a cached chat keeps its state, and a confirmation left open would show again on return
-    onDeactivated(() => foundation.hideDeletePopup());
+    onDeactivated(foundation.hideDeletePopup);
 </script>
 
 <template>

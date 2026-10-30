@@ -22,7 +22,7 @@ import {
     normalizeKeyList,
 } from '../tree-util';
 
-const sorted = (keys: Iterable<string>) => [...keys].sort();
+const sorted = (keys: Iterable<string>) => [...keys].toSorted();
 
 const treeData = [
     {

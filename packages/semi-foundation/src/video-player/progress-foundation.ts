@@ -164,7 +164,7 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
     };
 
     /** Tracks the pointer over the bar for the tooltip; `seek` also moves the playhead while dragging or on the press. */
-    handlePointerPosition(e: ProgressPointerEvent, { seek }: { seek: boolean }) {
+    handlePointerPosition = (e: ProgressPointerEvent, { seek }: { seek: boolean }) => {
         const { isDragging } = this.getStates();
         const { max } = this.getProps();
         const sliderRef = this._adapter.getSliderRef();
@@ -184,5 +184,5 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
             offset: offset - rect.width / 2,
             value,
         });
-    }
+    };
 }

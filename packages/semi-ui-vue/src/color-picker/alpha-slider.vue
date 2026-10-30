@@ -53,7 +53,7 @@
                     backgroundColor: hsvaToRgbaString(props.hsva),
                 }"
             >
-                <input :aria-label="i18n.locale.alpha" :aria-valuetext="`${round(props.hsva.a * 100)}%`" :class="`${cssClasses.PREFIX}-handleSlider`" :max="100" :min="0" type="range" :value="round(props.hsva.a * 100)" @input="onInput" @keydown="foundation.handleKeyDown($event)" />
+                <input :aria-label="i18n.locale.alpha" :aria-valuetext="`${round(props.hsva.a * 100)}%`" :class="`${cssClasses.PREFIX}-handleSlider`" :max="100" :min="0" type="range" :value="round(props.hsva.a * 100)" @input="onInput" @keydown="foundation.handleKeyDown" />
             </div>
         </div>
     </div>

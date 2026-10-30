@@ -13,11 +13,10 @@ const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
 type Props = ProgressProps & Record<string, unknown>;
 type FormatSlot = NonNullable<ProgressSlots['format']>;
 
-const renderProgress = (props: Props = {}, slots: ProgressSlots = {}) => {
-    const { class: className, style, ...rest } = props;
+function renderProgress({ class: className, style, ...rest }: Props = {}, slots: ProgressSlots = {}) {
     const view = render(Progress, { props: rest, attrs: { class: className, style }, slots });
     return { ...view, rerender: (next: Props) => view.rerender(next) };
-};
+}
 const getProgressbar = () => screen.getByRole('progressbar');
 
 describe('Progress', () => {

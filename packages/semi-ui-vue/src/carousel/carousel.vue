@@ -96,10 +96,6 @@
 
     const tabId = (index: number) => `${baseId}-tab-${index}`;
 
-    const onMouseenter = () => foundation.handlePointerEnter();
-
-    const onMouseleave = () => foundation.handlePointerLeave();
-
     // Only keyboard focus pauses: a mouse click on an arrow focuses it too.
     const onFocusin = (event: FocusEvent) => {
         if ((event.target as Element).matches(':focus-visible')) {
@@ -189,10 +185,7 @@
     );
 
     // a boolean, since autoPlay is often a fresh object literal on every render
-    watch(
-        () => CarouselFoundation.isAutoPlayOn(props.autoPlay),
-        (autoPlayOn) => foundation.handleAutoPlayChange(autoPlayOn)
-    );
+    watch(() => CarouselFoundation.isAutoPlayOn(props.autoPlay), foundation.handleAutoPlayChange);
 
     watch(
         () => CarouselFoundation.deriveActiveIndex(props, state.value, slideCount),
@@ -240,14 +233,14 @@
         stop: () => {
             foundation.stopByUser();
         },
-        goTo: (targetIndex) => foundation.goTo(targetIndex),
-        prev: () => foundation.prev(),
-        next: () => foundation.next(),
+        goTo: foundation.goTo,
+        prev: foundation.prev,
+        next: foundation.next,
     });
 </script>
 
 <template>
-    <div ref="root" :aria-roledescription="i18n.locale.carousel" :class="cssClasses.CAROUSEL" role="region" @focusin="onFocusin" @focusout="onFocusout" @mouseenter="onMouseenter" @mouseleave="onMouseleave">
+    <div ref="root" :aria-roledescription="i18n.locale.carousel" :class="cssClasses.CAROUSEL" role="region" @focusin="onFocusin" @focusout="onFocusout" @mouseenter="foundation.handlePointerEnter" @mouseleave="foundation.handlePointerLeave">
         <template v-for="(slides, n) in [collectSlides()]" :key="n">
             <!-- announce a slide the user switched to, never one that rotation brought -->
             <div :aria-live="state.rotating ? 'off' : 'polite'" :class="[`${content}-${props.animation}`, content, { [`${content}-reverse`]: props.slideDirection === 'left' ? state.isReverse : !state.isReverse }]" x-semi-prop="children">
@@ -276,11 +269,11 @@
             </div>
             <div v-if="props.showArrow && slides.length > 1" :class="[arrow, `${arrow}-${props.theme}`, { [`${arrow}-hover`]: props.arrowType === 'hover' }]">
                 <!-- arrowProps goes after the built-in aria-label so that its name wins; class and onClick merge -->
-                <button :aria-label="arrowLabel($slots.leftArrow, i18n.locale.prev)" :class="[`${arrow}-prev`, `${arrow}-${props.theme}`]" type="button" v-bind="props.arrowProps?.leftArrow?.props" x-semi-prop="leftArrow" @click="foundation.prev()">
+                <button :aria-label="arrowLabel($slots.leftArrow, i18n.locale.prev)" :class="[`${arrow}-prev`, `${arrow}-${props.theme}`]" type="button" v-bind="props.arrowProps?.leftArrow?.props" x-semi-prop="leftArrow" @click="foundation.prev">
                     <slot v-if="$slots.leftArrow" name="leftArrow" />
                     <IconChevronLeft v-else size="inherit" />
                 </button>
-                <button :aria-label="arrowLabel($slots.rightArrow, i18n.locale.next)" :class="[`${arrow}-next`, `${arrow}-${props.theme}`]" type="button" v-bind="props.arrowProps?.rightArrow?.props" x-semi-prop="rightArrow" @click="foundation.next()">
+                <button :aria-label="arrowLabel($slots.rightArrow, i18n.locale.next)" :class="[`${arrow}-next`, `${arrow}-${props.theme}`]" type="button" v-bind="props.arrowProps?.rightArrow?.props" x-semi-prop="rightArrow" @click="foundation.next">
                     <slot v-if="$slots.rightArrow" name="rightArrow" />
                     <IconChevronRight v-else size="inherit" />
                 </button>

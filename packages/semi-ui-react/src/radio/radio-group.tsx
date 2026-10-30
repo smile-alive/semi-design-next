@@ -130,7 +130,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     });
 
     // Object.is treats NaN as unchanged, so a NaN value does not loop
-    useDidUpdate(props.value, (value) => foundation.handlePropValueChange(value));
+    useDidUpdate(props.value, foundation.handlePropValueChange);
 
     if (options) {
         inner = options.map((option, index) =>
@@ -165,7 +165,7 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
             <RadioGroupContext
                 value={{
                     radioGroup: {
-                        onChange: (evt) => foundation.handleChange(evt),
+                        onChange: foundation.handleChange,
                         value: valueProp === undefined ? state.value : valueProp,
                         disabled,
                         name: name || generatedName,

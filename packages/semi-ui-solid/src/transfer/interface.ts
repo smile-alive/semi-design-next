@@ -138,7 +138,7 @@ export type TransferElement = HTMLDivElement & TransferHandle;
 // data shapes would make a check throw
 export const TRANSFER_OWNED_TREE_PROPS = ['value', 'ref', 'onChange', 'keyMaps', 'treeData', 'treeDataSimpleJson', 'onChangeWithObject'] as const;
 
-export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onChange' | 'onSelect' | 'ref'> {
+export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onChange' | 'onSelect' | 'onBlur' | 'ref'> {
     disabled?: boolean;
     dataSource?: DataSource;
     filter?: boolean | ((searchValue: string, item: DataItem) => boolean);
@@ -159,6 +159,7 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     onSelect?: (item: DataItem) => void;
     onDeselect?: (item: DataItem) => void;
     onSearch?: (searchValue: string) => void;
+    onBlur?: (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => void;
     /** Content of an item in both lists and of a node in treeList; the path with `showPath` stays text */
     renderLabel?: (item: DataItem) => JSX.Element;
     /** Called once per item */

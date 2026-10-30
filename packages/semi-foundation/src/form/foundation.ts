@@ -1,3 +1,4 @@
+import type { ValidateError } from 'async-validator';
 import { isPlainObject } from 'es-toolkit';
 import { toPath } from 'es-toolkit/compat';
 import scrollIntoViewIfNeeded, { type Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
@@ -356,9 +357,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         }
     }
 
-    #getField = (field: string): FieldRegistration | undefined => {
-        const targetField = this.#fields.get(field);
-        return targetField;
+    #getField = (field: string) => {
+        return this.#fields.get(field);
     };
 
     /**
@@ -408,7 +408,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                     }
                     const { errors, fields } = err;
                     if (errors && fields) {
-                        let messages = errors.map((e: any) => e.message);
+                        let messages = errors.map((e: ValidateError) => e.message);
                         if (messages.length === 1) {
                             messages = messages[0];
                         }
@@ -687,10 +687,10 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return this.#registeredArrayField.get(arrayField);
     };
 
-    #updateArrayField = (arrayField: string, updateValue: any) => {
+    #updateArrayField(arrayField: string, updateValue: any) {
         const mergeVal = { ...this.#registeredArrayField.get(arrayField), ...updateValue };
         this.#registeredArrayField.set(arrayField, mergeVal);
-    };
+    }
 
     #validate(fieldPaths?: Array<string> | ValidateOptions) {
         const { validator } = this.getProps();
@@ -729,7 +729,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return opts?.needClone ? this._adapter.cloneDeep(value) : value;
     };
 
-    #setValues = (values: any, { isOverride = false }) => {
+    #setValues(values: any, { isOverride = false }) {
         const _values = this._adapter.cloneDeep(values);
         this.#fields.forEach((field) => {
             const value = ObjectUtil.get(_values, field.field);
@@ -756,7 +756,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this._adapter.notifyChange(this.#data);
         this._adapter.notifyValueChange(this.#data.values, { ...values });
         this.#forceUpdate();
-    };
+    }
 
     #updateStateValue = (field: string, value: any, opts: CallOpts, callback?: () => void) => {
         const skipNotify = opts && opts.skipNotify;
@@ -820,12 +820,11 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         }
     };
 
-    #setFieldError = (registration: FieldRegistration, error: any, opts?: CallOpts) => {
+    #setFieldError = ({ store, field }: FieldRegistration, error: any, opts?: CallOpts) => {
         // Silent validation only returns a result; publishing it would desynchronize the field and form snapshots.
         if (opts?.silent) {
             return;
         }
-        const { store, field } = registration;
         this.#batch(() => {
             if (opts?.status) {
                 this.#updateField(store, { status: opts.status });
@@ -900,9 +899,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         };
     }
 
-    #getFieldExist = (field: string) => {
+    #getFieldExist(field: string) {
         return Boolean(this.#fields.has(field));
-    };
+    }
 
     // Queried from the form element rather than document, so a Form inside a ShadowRoot finds its fields (F13)
     #getFieldDOM(field: string) {
@@ -921,15 +920,15 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return errorDOM && errorField(errorDOM);
     }
 
-    #scrollToField = (field: string, scrollOpts: ScrollIntoViewOptions = { behavior: 'smooth', block: 'start' }) => {
+    #scrollToField(field: string, scrollOpts: ScrollIntoViewOptions = { behavior: 'smooth', block: 'start' }) {
         // a pure field or one inside Form.InputGroup has no field root
         const fieldDOM = this.#getFieldExist(field) ? this.#getFieldDOM(field) : null;
         if (fieldDOM) {
             scrollIntoView(fieldDOM, scrollOpts);
         }
-    };
+    }
 
-    #scrollToError = (config?: ScrollToErrorOpts) => {
+    #scrollToError(config?: ScrollToErrorOpts) {
         const { field, index, scrollOpts = { behavior: 'smooth', block: 'start' } } = config ?? {};
         let fieldDOM: Element | null | undefined;
         if (typeof index === 'number') {
@@ -942,7 +941,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         if (fieldDOM) {
             scrollIntoView(fieldDOM, scrollOpts);
         }
-    };
+    }
 
     protected getInitValues(): any {
         return this._adapter.getInitValues();
@@ -968,7 +967,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#destroyed = true;
     }
 
-    submit(e?: E) {
+    submit = (e?: E) => {
         const epoch = this.#epoch;
         // then(onResolved, onRejected) rather than .catch: an error thrown by the user's onSubmit must surface instead
         // of being reported as a validation failure
@@ -989,9 +988,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 this._adapter.notifySubmitFail(_errors, _values, e);
             }
         );
-    }
+    };
 
-    reset(fieldPaths?: Array<string>) {
+    reset = (fieldPaths?: Array<string>) => {
         const targetFields = this.#getOperateFieldMap(fieldPaths);
         if (fieldPaths === undefined) {
             this.#epoch += 1;
@@ -1017,9 +1016,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#notifyErrorChange(prevErrors, targetFields.keys());
         this.#forceUpdate();
         this._adapter.notifyReset();
-    }
+    };
 
-    getFieldBridge() {
+    getFieldBridge = () => {
         return {
             register: this.#register,
             unRegister: this.#unRegister,
@@ -1041,9 +1040,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             addArrayFieldRowWithValue: this.#addArrayFieldRowWithValue,
             removeArrayFieldRow: this.#removeArrayFieldRow,
         };
-    }
+    };
 
-    getFormApi() {
+    getFormApi = () => {
         const fieldSetterApi = this.#getFieldSetterApi();
         return {
             ...fieldSetterApi,
@@ -1063,7 +1062,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             scrollToField: (field: string, scrollOpts?: ScrollIntoViewOptions) => this.#scrollToField(field, scrollOpts),
             scrollToError: (opts?: ScrollToErrorOpts) => this.#scrollToError(opts),
         };
-    }
+    };
 
     getFormState = (needClone = false): FormState => {
         // Every write replaces this.#data, but some forceUpdates carry no state change (such as unregistering a

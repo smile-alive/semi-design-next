@@ -59,7 +59,7 @@ export default function useControlledInput({ element, text, foundation, state, a
 
     // the handover after a removed clear button comes in with no relatedTarget, so the focus state tells it apart
     const handleFocusIn = (e: FocusHandlerEvent) => {
-        if (!state().isFocus && !e.currentTarget.contains(e.relatedTarget as Node | null)) {
+        if (!state().isFocus && !(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
             foundation.handleFocus(e);
         }
     };
@@ -70,7 +70,7 @@ export default function useControlledInput({ element, text, foundation, state, a
         if (e.target === clearButton() && !allowClear()) {
             return;
         }
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+        if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
             foundation.handleBlur(e);
             afterBlur?.();
         }

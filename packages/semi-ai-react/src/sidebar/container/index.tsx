@@ -101,7 +101,7 @@ export default function Container(props: ContainerReactProps) {
         }
         foundation.beforeShow();
         // Focus is not restored here: StrictMode's simulated unmount runs this cleanup and must not move focus
-        return () => foundation.closeLayer();
+        return foundation.closeLayer;
     }, [visible, foundation]);
 
     // React refocuses the pre-commit element after the cleanup, while it is still mounted for the leave animation;
@@ -113,7 +113,7 @@ export default function Container(props: ContainerReactProps) {
     });
 
     // Focused content unmounts with the sidebar and would leave focus on the body
-    useRealUnmount(() => foundation.restoreFocus());
+    useRealUnmount(foundation.restoreFocus);
     useDidUpdate(displayNone, (isHidden) => foundation.onVisibleChange(!isHidden));
 
     return (

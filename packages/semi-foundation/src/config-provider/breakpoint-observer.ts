@@ -105,11 +105,11 @@ export default class BreakpointObserver {
         });
     }
 
-    sync(props: ObserveProps) {
+    sync = (props: ObserveProps) => {
         this.#props = props;
-    }
+    };
 
-    commit() {
+    commit = () => {
         const prev = this.#committed;
         const props = this.#props;
         const prevScreens = this.#screens;
@@ -137,13 +137,13 @@ export default class BreakpointObserver {
                 }
             });
         }
-    }
+    };
 
-    destroy() {
+    destroy = () => {
         this.#unregister();
         this.#screensListeners.clear();
         this.#changeListeners.clear();
-    }
+    };
 
     subscribe: {
         (callback: OnBreakpointScreensCallback): () => void;

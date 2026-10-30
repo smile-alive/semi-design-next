@@ -159,6 +159,24 @@ describe('Form-group', () => {
         expect(textbox).toHaveAccessibleDescription('Hint');
     });
 
+    it('size、disabled 经 InputGroup 下发给字段，字段自己的值优先；其他属性只落在分组上', () => {
+        const { container } = renderFormGroup({ inputGroupProps: { disabled: true, size: 'small', 'data-group': '1' }, fieldBProps: { disabled: false, size: 'large' } });
+        const [a, b] = screen.getAllByRole('textbox');
+        expect(a).toBeDisabled();
+        expect(a).toHaveClass('semi-input-small');
+        expect(b).toBeEnabled();
+        expect(b).toHaveClass('semi-input-large');
+        expect(container.querySelectorAll('[data-group]')).toHaveLength(1);
+        expect(container.querySelector('.semi-input-group')).toHaveAttribute('data-group', '1');
+    });
+
+    it('Form 级 disabled 下字段显式传 disabled={false} 优先于 InputGroup', () => {
+        renderFormGroup({ formProps: { disabled: true }, fieldAProps: { disabled: false } });
+        const [a, b] = screen.getAllByRole('textbox');
+        expect(a).toBeEnabled();
+        expect(b).toBeDisabled();
+    });
+
     it('没有 label 时外层不设置 role="group"', () => {
         const { container } = renderFormGroup();
         expect(container.querySelector('.semi-form-field-group')).not.toHaveAttribute('role');

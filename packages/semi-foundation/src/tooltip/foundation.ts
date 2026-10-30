@@ -1,3 +1,4 @@
+import type { FocusableElement } from 'tabbable';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import FocusTrapHandle from '../utils/focus-handle';
 import type { ArrayElement } from '../utils/type';
@@ -57,14 +58,14 @@ type Layout = { placement: Position; style: PositionStyle; triggerRect: DOMRect;
 const readViewport = (): Viewport => ({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight });
 
 // composed ancestors: a trigger in a shadow root still moves when the page around its host scrolls
-const isInside = (node: Node, target: EventTarget | null) => {
+function isInside(node: Node, target: EventTarget | null) {
     for (let current: Node | null = node; current; current = current instanceof ShadowRoot ? current.host : current.parentNode) {
         if (current === target) {
             return true;
         }
     }
     return false;
-};
+}
 
 /** The props the foundation reads with getProp */
 export interface TooltipBaseProps {
@@ -296,7 +297,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         }
     }
 
-    #handleTriggerKeydown(event: any) {
+    #handleTriggerKeydown(event: Pick<KeyboardEvent, 'key' | 'preventDefault'>) {
         const key = event?.key;
         if (this.getProp('disableArrowKeyDown') || (key !== 'ArrowUp' && key !== 'ArrowDown')) {
             return;
@@ -317,7 +318,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         return FocusTrapHandle.getActiveElement(this._adapter.getPortalContainer() ?? this._adapter.getTriggerNode());
     }
 
-    #handleContainerTabKeyDown(focusableElements: any[], event: any) {
+    #handleContainerTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
         const { preventScroll } = this.getProps();
         const activeElement = this.#getActiveElement();
         const isLastCurrentFocus = focusableElements.at(-1) === activeElement;
@@ -327,7 +328,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         }
     }
 
-    #handleContainerShiftTabKeyDown(focusableElements: any[], event: any) {
+    #handleContainerShiftTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
         const { preventScroll } = this.getProps();
         const activeElement = this.#getActiveElement();
         const isFirstCurrentFocus = focusableElements[0] === activeElement;
@@ -337,13 +338,13 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         }
     }
 
-    #handleTriggerArrowDownKeydown(focusableElements: any[], event: any) {
+    #handleTriggerArrowDownKeydown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
         const { preventScroll } = this.getProps();
         focusableElements[0].focus({ preventScroll });
         event.preventDefault();
     }
 
-    #handleTriggerArrowUpKeydown(focusableElements: any[], event: any) {
+    #handleTriggerArrowUpKeydown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
         const { preventScroll } = this.getProps();
         focusableElements.at(-1).focus({ preventScroll });
         event.preventDefault();
@@ -714,17 +715,17 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     }
 
     /** Regenerates the trigger and popup handlers, which depend on `trigger` and `clickToHide` */
-    rebindEvents() {
+    rebindEvents = () => {
         this.#clearDelayTimer();
         this.#bindEvent();
-    }
+    };
 
-    removePortal() {
+    removePortal = () => {
         this._adapter.removePortal();
-    }
+    };
 
     /** Hosts call this when the `visible` prop changes */
-    handleVisiblePropChange() {
+    handleVisiblePropChange = () => {
         const visible = this.getProp('visible');
         // Known limit: a rejected request is only dropped by the next prop change, so an owner that later sets the
         // requested value on its own also skips the delay. Upgrade once owners need their own hover delay there.
@@ -742,14 +743,14 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         } else {
             this.hide();
         }
-    }
+    };
 
-    updateStateIfCursorOnTrigger() {
+    updateStateIfCursorOnTrigger = () => {
         if (this._adapter.isTriggerHovered()) {
             const triggerEventSet = this.getState('triggerEventSet');
             triggerEventSet[eventNames.mouseEnter]?.();
         }
-    }
+    };
 
     delayShow() {
         const mouseEnterDelay: number = this.getProp('mouseEnterDelay');
@@ -787,7 +788,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
 
     /** Called once `showPopover()` has been issued for this opening (by the layout effect that reacts to the
      * mount `insertPortal` requested); a hover popup can still back out here if the pointer already left. */
-    handleOpened() {
+    handleOpened = () => {
         if (!this.#open) {
             return;
         }
@@ -808,20 +809,20 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         this._adapter.setInitialFocus();
         this._adapter.notifyOpen();
         this.#reportVisibleChange(true);
-    }
+    };
 
     /** Hosts call this right after `showPopover()`: positions the popup and keeps it beside the trigger until it closes */
-    handleShown() {
+    handleShown = () => {
         if (!this.#stopTracking) {
             this.#startTracking();
         }
         this.calcPosition();
-    }
+    };
 
     /** Positions an open popup beside its trigger at once, without waiting for a frame */
-    calcPosition() {
+    calcPosition = () => {
         this.#apply(this.#measure(readViewport()));
-    }
+    };
 
     delayHide() {
         const mouseLeaveDelay = this.getProp('mouseLeaveDelay');
@@ -879,7 +880,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         return true;
     };
 
-    handleContainerKeydown(event: Pick<KeyboardEvent, 'key' | 'shiftKey' | 'preventDefault'>) {
+    handleContainerKeydown = (event: Pick<KeyboardEvent, 'key' | 'shiftKey' | 'preventDefault'>) => {
         const { guardFocus } = this.getProps();
         switch (event && event.key) {
             case 'Tab':
@@ -900,13 +901,13 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
             default:
                 break;
         }
-    }
+    };
 
     /**
      * Focus the trigger. A 'focus' or 'hover' trigger binds onFocus to show the popup, so focusing it
      * reopens the popup; callers hide the popup right after.
      */
-    focusTrigger() {
+    focusTrigger = () => {
         const { trigger, returnFocusOnClose, preventScroll } = this.getProps();
         if (!returnFocusOnClose || trigger === 'custom') {
             return;
@@ -919,5 +920,5 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         if (active !== before && active?.tabIndex < 0) {
             FocusTrapHandle.getFocusableElements(active)[0]?.focus({ preventScroll });
         }
-    }
+    };
 }

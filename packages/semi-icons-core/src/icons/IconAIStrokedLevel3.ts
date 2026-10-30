@@ -17,14 +17,7 @@ const IconAIStrokedLevel3: IconData = {
             [
                 [
                     'linearGradient',
-                    {
-                        id: '{uid}__semi-ai-stroked-level-3',
-                        x1: '23.0001',
-                        y1: '22.0012',
-                        x2: '-0.488689',
-                        y2: '18.6982',
-                        gradientUnits: 'userSpaceOnUse',
-                    },
+                    { id: '{uid}__semi-ai-stroked-level-3', x1: '23.0001', y1: '22.0012', x2: '-0.488689', y2: '18.6982', gradientUnits: 'userSpaceOnUse' },
                     [
                         ['stop', { 'stop-color': '{fill0}' }],
                         ['stop', { offset: '0.3', 'stop-color': '{fill1}' }],

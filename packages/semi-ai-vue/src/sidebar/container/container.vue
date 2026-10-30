@@ -106,7 +106,7 @@
         (shown, _, onCleanup) => {
             if (!shown) return;
             foundation.beforeShow();
-            onCleanup(() => foundation.afterHide());
+            onCleanup(foundation.afterHide);
         },
         { flush: 'post' }
     );
@@ -121,7 +121,7 @@
         { flush: 'post' }
     );
 
-    watch(displayed, (shown) => foundation.onVisibleChange(shown), { flush: 'post' });
+    watch(displayed, foundation.onVisibleChange, { flush: 'post' });
 
     onDeactivated(() => {
         active.value = false;

@@ -13,7 +13,7 @@ const prefixcls = cssClasses.PREFIX;
 const wrapperCls = `${prefixcls}-auto-wrapper`;
 
 /** Passes a pixel height to its children: `defaultHeight` when it is a number, else the parent's content height */
-function AutoSizer({ children, defaultWidth = '100%', defaultHeight = '100%' }: AutoSizerProps) {
+export default function AutoSizer({ children, defaultWidth = '100%', defaultHeight = '100%' }: AutoSizerProps) {
     const [height, setHeight] = useState<number | string>(defaultHeight || 0);
 
     // no children before the first measurement, as in https://github.com/bvaughn/react-virtualized-auto-sizer
@@ -21,8 +21,8 @@ function AutoSizer({ children, defaultWidth = '100%', defaultHeight = '100%' }: 
 
     const onResize = (entries: ResizeEntry[]) => {
         // ResizeObserver delivers only changed targets, so the parent's position in entries is not fixed
-        const target = entries?.find((entry) => !(entry.target as HTMLElement).classList.contains(wrapperCls))?.target as HTMLElement;
-        if (target) {
+        const target = entries?.find((entry) => !entry.target.classList.contains(wrapperCls))?.target;
+        if (target instanceof HTMLElement) {
             const style = window.getComputedStyle(target);
             const paddingTop = parseInt(style.paddingTop, 10) || 0;
             const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
@@ -38,5 +38,3 @@ function AutoSizer({ children, defaultWidth = '100%', defaultHeight = '100%' }: 
         </ReactResizeObserver>
     );
 }
-
-export default AutoSizer;

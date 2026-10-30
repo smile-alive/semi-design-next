@@ -43,19 +43,19 @@ describe('BackTop', () => {
 
 // jsdom does not lay out, so scroll positions are stubbed as own properties and restored afterwards
 const stubbed = [];
-const stub = (node, key, value) => {
+function stub(node, key, value) {
     stubbed.push([node, key, Object.getOwnPropertyDescriptor(node, key)]);
     Object.defineProperty(node, key, { value, writable: true, configurable: true });
-};
-const scroll = (node, top) => {
+}
+function scroll(node, top) {
     stub(node, node === window ? 'scrollY' : 'scrollTop', top);
     fireEvent.scroll(node);
-};
-const createTarget = () => {
+}
+function createTarget() {
     const node = document.createElement('div');
     document.body.append(node);
     return node;
-};
+}
 
 describe('BackTop 行为', () => {
     beforeEach(() => {

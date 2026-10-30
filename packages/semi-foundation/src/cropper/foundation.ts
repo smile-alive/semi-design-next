@@ -566,7 +566,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.handleCornerLostPointerCapture();
     }
 
-    handleCornerPointerMove = (e: any) => {
+    handleCornerPointerMove = (e: Pick<PointerEvent, 'clientX' | 'clientY' | 'preventDefault'>) => {
         if (!this.#resizeDir) {
             return;
         }
@@ -585,7 +585,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#resizeVector = { paramX: 0, paramY: 0 };
     };
 
-    handleCropperBoxPointerMove = ({ clientX, clientY }: any) => {
+    handleCropperBoxPointerMove = ({ clientX, clientY }: Pick<PointerEvent, 'clientX' | 'clientY'>) => {
         if (!this.#cropperBoxMoveStart) {
             return;
         }
@@ -600,7 +600,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#cropperBoxMoveStart = null;
     };
 
-    handleMaskPointerMove = ({ clientX, clientY }: any) => {
+    handleMaskPointerMove = ({ clientX, clientY }: Pick<PointerEvent, 'clientX' | 'clientY'>) => {
         if (!this.#imgMoveStart) {
             return;
         }
@@ -643,7 +643,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#removePreview();
     }
 
-    handleResize() {
+    handleResize = () => {
         const { loaded } = this.getStates();
         if (!loaded) {
             return;
@@ -672,13 +672,13 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             imgData: newImgData,
             cropperBox: newCropperBox,
         });
-    }
+    };
 
     /**
      * Refits the crop box to a changed `aspectRatio`: height stays, width follows, and a box too big for the
      * container shrinks. It stays centered, moved only as far as the container edges require.
      */
-    applyAspectRatio() {
+    applyAspectRatio = () => {
         const { aspectRatio } = this.getProps();
         const { cropperBox, loaded } = this.getStates();
         const { width: containerWidth, height: containerHeight } = this.#containerData;
@@ -705,22 +705,25 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
                 },
             },
         });
-    }
+    };
 
-    handleImageLoad(e: any) {
-        const { naturalWidth, naturalHeight } = e.target;
+    handleImageLoad = ({ target }: Pick<Event, 'target'>) => {
+        if (!(target instanceof HTMLImageElement)) {
+            return;
+        }
+        const { naturalWidth, naturalHeight } = target;
         this.#containerData = this.#readContainerSize();
         this.#imgData.originalWidth = naturalWidth;
         this.#imgData.originalHeight = naturalHeight;
         this.#layoutImage();
         this.#renderPreview();
-    }
+    };
 
     /**
      * Brings the state to the `rotate` and `zoom` props once the image has loaded; a controlled zoom also undoes
      * wheel zooming the parent does not accept. Turns and scales around the cropper box center.
      */
-    syncRotateAndZoom({ rotate: newRotate, zoom: newZoom }: { rotate?: number; zoom?: number } = this.getProps()) {
+    syncRotateAndZoom = ({ rotate: newRotate, zoom: newZoom }: { rotate?: number; zoom?: number } = this.getProps()) => {
         const { rotate, zoom, imgData, cropperBox, loaded } = this.getStates();
         // Object.is: a NaN prop would never match and re-render forever
         const rotateChanged = newRotate !== undefined && !Object.is(newRotate, rotate);
@@ -752,9 +755,9 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             zoom: zoomChanged ? newZoom : zoom,
             imgData: { width, height, centerPoint: { x: imgCenter.x, y: -imgCenter.y } },
         });
-    }
+    };
 
-    handleWheel = (e: any) => {
+    handleWheel = (e: Pick<WheelEvent, 'clientX' | 'clientY' | 'deltaY' | 'preventDefault'>) => {
         // a two-finger pinch would zoom the page
         e.preventDefault();
         // before the load a zoom would outlive the fit
@@ -802,7 +805,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this._adapter.notifyZoomChange(_zoom);
     };
 
-    updatePreview() {
+    updatePreview = () => {
         if (!this.#previewImg) {
             return;
         }
@@ -838,12 +841,12 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#previewImg.style.transformOrigin = 'center';
         this.#previewContainer.style.width = `${previewWidth}px`;
         this.#previewContainer.style.height = `${previewHeight}px`;
-    }
+    };
 
     // each drag surface captures the pointer so moves and release arrive outside it too
-    handleCornerPointerDown = (e: any) => {
+    handleCornerPointerDown = (e: Pick<PointerEvent, 'button' | 'currentTarget' | 'pointerId' | 'preventDefault'>) => {
         const currentTarget = e.currentTarget;
-        if (!currentTarget || isSecondaryPress(e)) {
+        if (!(currentTarget instanceof HTMLElement) || isSecondaryPress(e)) {
             return;
         }
         e.preventDefault();
@@ -851,15 +854,16 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#startCornerResize(currentTarget.dataset.dir as CornerDir);
     };
 
-    handleCropperBoxPointerDown = (e: any) => {
-        if (e.target.dataset.dir) {
+    handleCropperBoxPointerDown = (e: Pick<PointerEvent, 'button' | 'clientX' | 'clientY' | 'currentTarget' | 'pointerId' | 'target'>) => {
+        if (e.target instanceof HTMLElement && e.target.dataset.dir) {
             // a press on a resize handle belongs to the handle
             return;
         }
-        if (isSecondaryPress(e)) {
+        const { currentTarget } = e;
+        if (!(currentTarget instanceof Element) || isSecondaryPress(e)) {
             return;
         }
-        e.currentTarget.setPointerCapture(e.pointerId);
+        currentTarget.setPointerCapture(e.pointerId);
         this.#cropperBoxMoveStart = {
             x: e.clientX,
             y: e.clientY,
@@ -872,7 +876,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
      * the drag path, so the box keeps to the container and the aspect ratio. Only with resize handles shown, as
      * with a pointer.
      */
-    handleCropperBoxKeyDown = (e: any) => {
+    handleCropperBoxKeyDown = (e: Pick<KeyboardEvent, 'altKey' | 'ctrlKey' | 'key' | 'metaKey' | 'preventDefault' | 'shiftKey'>) => {
         // Alt/Ctrl/Meta plus an arrow is a browser or OS shortcut
         if (e.altKey || e.ctrlKey || e.metaKey) {
             return;
@@ -897,18 +901,19 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         }
     };
 
-    handleMaskPointerDown = (e: any) => {
-        if (e.currentTarget !== e.target || isSecondaryPress(e)) {
+    handleMaskPointerDown = (e: Pick<PointerEvent, 'button' | 'clientX' | 'clientY' | 'currentTarget' | 'pointerId' | 'target'>) => {
+        const { currentTarget } = e;
+        if (!(currentTarget instanceof Element) || currentTarget !== e.target || isSecondaryPress(e)) {
             return;
         }
-        e.currentTarget.setPointerCapture(e.pointerId);
+        currentTarget.setPointerCapture(e.pointerId);
         this.#imgMoveStart = {
             x: e.clientX,
             y: e.clientY,
         };
     };
 
-    getCropperCanvas() {
+    getCropperCanvas = () => {
         if (!this.getStates().loaded) {
             throw new Error('[Semi] Cropper: getCropperCanvas called before the image loaded');
         }
@@ -1000,5 +1005,5 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         const imgDataResult = ctx.getImageData(realLeft, realTop, realWidth, realHeight);
         ctx2.putImageData(imgDataResult, relativeCropLeft < 0 ? -relativeCropLeft : 0, relativeCropTop < 0 ? -relativeCropTop : 0);
         return canvas2;
-    }
+    };
 }

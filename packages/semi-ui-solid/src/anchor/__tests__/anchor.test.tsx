@@ -35,10 +35,10 @@ const linkTitles = (container: HTMLElement) => [...container.querySelectorAll(`.
 const setTop = (id: string, top: number) => vi.spyOn(document.getElementById(id) as HTMLElement, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, top, 100, 100));
 
 // the scroll handler is throttled (leading call) and the end of a scroll is debounced, both at 100ms
-const scroll = (target: Window | Element = window) => {
+function scroll(target: Window | Element = window) {
     fireEvent.scroll(target);
     vi.advanceTimersByTime(200);
-};
+}
 
 const scrollListeners = (spy: { mock: { calls: unknown[][] } }) => spy.mock.calls.filter(([type]) => type === 'scroll').length;
 

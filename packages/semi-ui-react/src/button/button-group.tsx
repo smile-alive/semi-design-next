@@ -11,7 +11,7 @@ import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import type { Type, Size, ButtonProps, Theme } from './button';
-import { type ButtonGroupLooks, ButtonGroupContext, useButtonGroupLooks } from './context';
+import { type ButtonGroupLooks, ButtonGroupContext, useInheritedButtonLooks } from './context';
 
 export type { Theme };
 
@@ -60,9 +60,9 @@ export default function ButtonGroup(rawProps: ButtonGroupProps) {
 
     const layer = usePopupLayer();
 
-    const parent = useButtonGroupLooks();
+    const parent = useInheritedButtonLooks();
 
-    // A nested group inherits the outer one
+    // A nested group inherits the outer one, then an InputGroup
     const looks: ButtonGroupLooks = inheritGroupLooks({ disabled, size, type, theme, colorful }, parent);
 
     return (

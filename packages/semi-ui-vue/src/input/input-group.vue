@@ -1,18 +1,19 @@
 <script setup lang="ts">
-    import { Text, computed, useAttrs, useId, type VNode } from 'vue';
+    import { computed, useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/input/constants';
     import '@fibrae/semi-foundation/input/input.scss';
-    import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
-    import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
-    import slotNodes from '../_base/slot-nodes';
+    import type { ElementProps, EmitHandlers } from '../_base/element-props';
+    import { usePopupLayer } from '../_base/popup-layer';
+    import { semiGlobalDefault } from '../_base/semi-default';
     import FormLabel from '../form/label.vue';
     import useLocale from '../locale/use-locale';
+    import { type InputGroupContext, provideInputGroupContext } from './context';
     import type { InputGroupEmits, InputGroupProps, InputGroupSlots } from './interface';
 
     defineOptions({ inheritAttrs: false });
 
-    const props = withDefaults(defineProps<InputGroupProps>(), {
-        size: () => semiDefault('InputGroup', 'size', 'default'),
+    const props = withDefaults(defineProps<InputGroupProps & /* @vue-ignore */ ElementProps<'span', keyof InputGroupProps | EmitHandlers<InputGroupEmits>>>(), {
+        size: semiGlobalDefault('InputGroup', 'size'),
         disabled: semiGlobalDefault('InputGroup', 'disabled'),
         label: semiGlobalDefault('InputGroup', 'label'),
         labelPosition: semiGlobalDefault('InputGroup', 'labelPosition'),
@@ -20,9 +21,9 @@
 
     const emit = defineEmits<InputGroupEmits>();
     const slots = defineSlots<InputGroupSlots>();
-    const attrs = useAttrs();
 
     const locale = useLocale('Input');
+    const layer = usePopupLayer();
 
     const id = useId();
 
@@ -31,20 +32,11 @@
 
     // the group span is not labelable, so `for` would point nowhere; aria-labelledby names it instead
     const labelProps = computed(() => ({ ...props.label, name: undefined, id: labelId.value }));
-    const groupClass = computed(() => [`${prefix}-group`, { [`${prefix}-${props.size}`]: props.size !== 'default' }]);
+    const groupClass = computed(() => [`${prefix}-group`, { [`${prefix}-${props.size}`]: props.size !== undefined && props.size !== 'default' }]);
+
+    provideInputGroupContext(computed<InputGroupContext>(() => ({ size: props.size, disabled: props.disabled, layer })));
 
     const hasLabel = () => Boolean(slots.label) || (props.label?.text !== undefined && props.label.text !== '');
-
-    const childProps = (node: VNode) => {
-        if (node.type === Text) return {};
-        // a boolean shorthand reaches vnode props as ''
-        const ownsDisabled = typeof node.props?.disabled === 'boolean' || node.props?.disabled === '';
-        return {
-            ...splitControlAttrs(attrs, isNotClassOrStyle).control,
-            size: props.size,
-            ...(!ownsDisabled && { disabled: props.disabled }),
-        };
-    };
 </script>
 
 <template>
@@ -66,11 +58,11 @@
                 <slot name="labelExtra" />
             </template>
         </FormLabel>
-        <span :id="props.label?.name || `${id}-group`" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :aria-labelledby="labelId" :class="groupClass" role="group" @focusin="emit('focus', $event)" @focusout="emit('blur', $event)">
-            <component :is="node" v-for="[node, key] in slotNodes($slots.default?.() ?? [])" :key="key" v-bind="childProps(node)" />
+        <span :id="props.label?.name || `${id}-group`" :aria-labelledby="labelId" :class="groupClass" role="group" v-bind="$attrs" @focusin="emit('focus', $event)" @focusout="emit('blur', $event)">
+            <slot />
         </span>
     </div>
-    <span v-else v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :aria-label="locale.locale.group" :class="groupClass" role="group" @focusin="emit('focus', $event)" @focusout="emit('blur', $event)">
-        <component :is="node" v-for="[node, key] in slotNodes($slots.default?.() ?? [])" :key="key" v-bind="childProps(node)" />
+    <span v-else :aria-label="locale.locale.group" :class="groupClass" role="group" v-bind="$attrs" @focusin="emit('focus', $event)" @focusout="emit('blur', $event)">
+        <slot />
     </span>
 </template>

@@ -280,7 +280,7 @@ export interface TableCellSlotProps<R extends Record<string, any> = Record<strin
 
 export interface TableHeaderCellSlotProps<R extends Record<string, any> = Record<string, any>> {
     column: ColumnProps<R>;
-    title: string | undefined;
+    title?: string;
     /** With `useFullRender` only */
     sorter: VNode | null;
     filter: VNode | null;
@@ -316,9 +316,9 @@ export interface TableFilterIconSlotProps<R extends Record<string, any> = Record
 
 export interface TableFilterDropdownSlotProps<R extends Record<string, any> = Record<string, any>> {
     column: ColumnProps<R>;
-    filters: TableFilter[] | undefined;
+    filters?: TableFilter[];
     /** The value picked in the panel and not applied yet, else the applied one */
-    tempFilteredValue: any[] | undefined;
+    tempFilteredValue?: any[];
     onTempFilteredValueChange: (value?: any[]) => void;
     /** Applies the temporary value, or the given one */
     onConfirm: (options?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
@@ -332,7 +332,7 @@ export interface TableFilterDropdownSlotProps<R extends Record<string, any> = Re
 export interface TableFilterDropdownItemSlotProps<R extends Record<string, any> = Record<string, any>> {
     column: ColumnProps<R>;
     value: any;
-    text: string | undefined;
+    text?: string;
     checked: boolean;
     /** The value the menu shows: the temporary one in confirm mode */
     filteredValue: any[];
@@ -346,10 +346,10 @@ export interface TableFilterDropdownItemSlotProps<R extends Record<string, any> 
 export interface TableSelectionCellSlotProps<R extends Record<string, any> = Record<string, any>> {
     selected: boolean;
     /** Absent in the header */
-    record: R | undefined;
-    index: number | undefined;
+    record?: R;
+    index?: number;
     inHeader: boolean;
-    disabled: boolean | undefined;
+    disabled?: boolean;
     indeterminate: boolean;
     /** The default checkbox */
     originNode: VNode;

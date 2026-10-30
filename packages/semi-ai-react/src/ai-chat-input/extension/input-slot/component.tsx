@@ -56,7 +56,7 @@ export default function InputSlotComponent({ editor, node, getPos }: NodeViewPro
             <span ref={placeholderRef} className="input-slot-placeholder" style={{ display: shouldShowPlaceholder ? undefined : 'none' }} data-placeholder contentEditable={false}>
                 {placeholder}
             </span>
-            <NodeViewContent as={'span' as any} className="content" />
+            <NodeViewContent<'span'> as="span" className="content" />
         </NodeViewWrapper>
     );
 }

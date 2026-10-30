@@ -6,8 +6,8 @@ export interface PopconfirmAdapter<P extends PopconfirmBaseProps = PopconfirmBas
     updateConfirmLoading: (loading: boolean) => void;
     updateCancelLoading: (loading: boolean) => void;
     // only a returned promise is awaited, so any other value is accepted, such as a setter's
-    notifyConfirm: (e: any) => unknown;
-    notifyCancel: (e: any) => unknown;
+    notifyConfirm: (e: MouseEvent) => unknown;
+    notifyCancel: (e: MouseEvent) => unknown;
     notifyVisibleChange: (visible: boolean) => void;
     focusCancelButton: () => void;
     focusOkButton: () => void;
@@ -46,13 +46,13 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
         }
     }
 
-    handleCancel(e: any) {
+    handleCancel = (e: MouseEvent) => {
         // the close icon has no loading state of its own, so a pending onCancel is guarded here for every entry point
         if (this.getStates().cancelLoading) {
             return;
         }
         const closeCountAtStart = this.#closeCount;
-        const maybePromise = this._adapter.notifyCancel(e) as Promise<any>;
+        const maybePromise = this._adapter.notifyCancel(e);
         if (isPromise(maybePromise)) {
             this._adapter.updateCancelLoading(true);
             maybePromise.then(
@@ -67,11 +67,11 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
         } else {
             this.handleVisibleChange(false);
         }
-    }
+    };
 
-    handleConfirm(e: any) {
+    handleConfirm = (e: MouseEvent) => {
         const closeCountAtStart = this.#closeCount;
-        const maybePromise = this._adapter.notifyConfirm(e) as Promise<any>;
+        const maybePromise = this._adapter.notifyConfirm(e);
         if (isPromise(maybePromise)) {
             this._adapter.updateConfirmLoading(true);
             maybePromise.then(
@@ -86,9 +86,9 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
         } else {
             this.handleVisibleChange(false);
         }
-    }
+    };
 
-    handleVisibleChange(visible: boolean) {
+    handleVisibleChange = (visible: boolean) => {
         // a controlled close is recorded so dropping control cannot revive it; a controlled open is not, the parent
         // may have declined it
         if (!this._isControlledComponent('visible') || !visible) {
@@ -99,23 +99,23 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
             this.#closeCount++;
         }
         this._adapter.notifyVisibleChange(visible);
-    }
+    };
 
     /** Hosts call this when the popup really opens, whoever set `visible` */
-    handlePopupOpen() {
+    handlePopupOpen = () => {
         const { cancelButtonProps, okButtonProps } = this._adapter.getProps();
         if (cancelButtonProps?.autoFocus && !cancelButtonProps.disabled) {
             this._adapter.focusCancelButton();
         } else if (okButtonProps?.autoFocus && !okButtonProps.disabled) {
             this._adapter.focusOkButton();
         }
-    }
+    };
 
     /** Hosts call this when the popup really closes, whoever set `visible`; the card is still mounted */
-    handlePopupClose() {
+    handlePopupClose = () => {
         // recorded like a requested close, so dropping control cannot revive it
         this._adapter.setVisible(false);
         this.#closeCount++;
         this._adapter.focusPrevFocusElement();
-    }
+    };
 }

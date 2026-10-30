@@ -97,7 +97,7 @@ describe('Resizable 边界（浏览器）', () => {
 });
 
 describe('ResizeGroup 键盘（浏览器）', () => {
-    function renderGroup() {
+    const renderGroup = () => {
         const { container } = render({
             render: () => (
                 <div style={{ width: '1010px', height: '200px' }}>
@@ -117,7 +117,7 @@ describe('ResizeGroup 键盘（浏览器）', () => {
             handler: query(container, '[role="separator"]'),
             items: [...container.querySelectorAll<HTMLElement>('.semi-resizable-item')],
         };
-    }
+    };
 
     it('Tab 可以到达分隔条，并显示主题焦点环', async () => {
         const { handler } = renderGroup();
@@ -139,7 +139,7 @@ describe('ResizeGroup 键盘（浏览器）', () => {
 });
 
 describe('Resizable 键盘（浏览器）', () => {
-    function renderBox() {
+    const renderBox = () => {
         const { container } = render({
             render: () => (
                 <div style={{ width: '1000px', height: '800px' }}>
@@ -151,7 +151,7 @@ describe('Resizable 键盘（浏览器）', () => {
             root: query(container, '.semi-resizable-resizable'),
             right: query(container, '.semi-resizable-resizableHandler-right'),
         };
-    }
+    };
 
     it('Tab 可以到达右侧手柄，并显示主题焦点环', async () => {
         const { right } = renderBox();

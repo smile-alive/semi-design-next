@@ -3,12 +3,12 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { Modal, Switch, Tooltip } from '@fibrae/semi-ui-react';
 import ConfigProvider from '../index';
 
-const layoutOf = (name: string) => {
+function layoutOf(name: string) {
     const root = screen.getByRole('switch', { name }).closest('.semi-switch') as HTMLElement;
     const box = root.getBoundingClientRect();
     const knob = (root.querySelector('.semi-switch-knob') as HTMLElement).getBoundingClientRect();
     return { direction: getComputedStyle(root).direction, knobOnLeft: knob.left - box.left < box.right - knob.right };
-};
+}
 
 describe('ConfigProvider 方向（浏览器）', () => {
     it('rtl 内嵌套 direction="ltr" 的 ConfigProvider 时，内层组件按 ltr 渲染', () => {

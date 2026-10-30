@@ -82,41 +82,41 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         return mask ? { dialogWidth: sheetWidth, dialogHeight } : { rootWidth: sheetWidth, dialogWidth: '100%', dialogHeight };
     }
 
-    handleCancel(e: any) {
+    handleCancel = (e: unknown) => {
         // the sheet stays mounted for its leave animation, and its mask and close button still take clicks
         if (!this.getProp('visible')) {
             return;
         }
         this._adapter.notifyCancel(e);
-    }
+    };
 
-    beforeShow() {
+    beforeShow = () => {
         const allowDisable = this.getProp('disableScroll');
         if (allowDisable) {
             this._adapter.disabledBodyScroll();
         }
         this._adapter.openLayer(this.#handleEscape);
         this._adapter.trapFocus();
-    }
+    };
 
     // the layer closes before focus returns: it releases the page's inert, and an inert element cannot take focus
-    afterHide() {
+    afterHide = () => {
         // unconditional: disableScroll may have changed since the lock was taken
         this._adapter.enabledBodyScroll();
         this._adapter.closeLayer();
         this._adapter.releaseFocus();
         this.restoreFocus();
-    }
+    };
 
-    restoreFocus() {
+    restoreFocus = () => {
         this._adapter.restoreFocus();
-    }
+    };
 
-    onVisibleChange(visible: boolean) {
+    onVisibleChange = (visible: boolean) => {
         this._adapter.notifyVisibleChange(visible);
-    }
+    };
 
-    toggleDisplayNone(displayNone: boolean) {
+    toggleDisplayNone = (displayNone: boolean) => {
         this._adapter.toggleDisplayNone(displayNone);
-    }
+    };
 }

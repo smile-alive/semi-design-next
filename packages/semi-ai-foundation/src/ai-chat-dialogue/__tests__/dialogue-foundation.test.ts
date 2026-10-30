@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import DialogueFoundation, { type DialogueAdapter, type Message } from '../foundation';
 
 describe('DialogueFoundation 点赞与点踩', () => {
-    function create(chats: Partial<Message>[]) {
+    const create = (chats: Partial<Message>[]) => {
         const adapter = {
             getProps: () => ({ chats }),
             notifyLikeMessage: vi.fn<DialogueAdapter['notifyLikeMessage']>(),
@@ -10,7 +10,7 @@ describe('DialogueFoundation 点赞与点踩', () => {
             notifyChatsChange: vi.fn<DialogueAdapter['notifyChatsChange']>(),
         };
         return { adapter, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
-    }
+    };
 
     it.each(['likeMessage', 'dislikeMessage'])('%s 忽略不在 chats 中的消息', (method) => {
         const { adapter, foundation } = create([{ id: '1' }]);
@@ -26,7 +26,7 @@ describe('DialogueFoundation 点赞与点踩', () => {
 });
 
 describe('DialogueFoundation 重新生成与选择', () => {
-    function create(chats: Partial<Message>[], selectedIds = new Set<string>()) {
+    const create = (chats: Partial<Message>[], selectedIds = new Set<string>()) => {
         const adapter = {
             getProps: () => ({ chats }),
             getStates: () => ({ selectedIds }),
@@ -36,7 +36,7 @@ describe('DialogueFoundation 重新生成与选择', () => {
             notifySelect: vi.fn<DialogueAdapter['notifySelect']>(),
         };
         return { adapter, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
-    }
+    };
 
     it('重新生成清除旧回答的反馈、输出和引用，保留自定义字段', () => {
         const last = { id: 'a', role: 'assistant', like: true, dislike: true, output_text: 'old', error: { message: 'x' }, references: [{ name: 'r' }], custom: 1 } as unknown as Message;
@@ -58,7 +58,7 @@ describe('DialogueFoundation 重新生成与选择', () => {
 });
 
 describe('DialogueFoundation 滚动', () => {
-    function create() {
+    const create = () => {
         const element = { scrollTop: 0, scrollHeight: 1000, clientHeight: 100 };
         let backBottomVisible = false;
         const adapter = {
@@ -70,7 +70,7 @@ describe('DialogueFoundation 滚动', () => {
             notifyChatsChange: vi.fn<() => void>(),
         };
         return { adapter, element, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
-    }
+    };
 
     it('回到底部的动画结束时贴住当前底部，而不是点击时的底部', () => {
         vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'performance'] });
@@ -92,7 +92,7 @@ describe('DialogueFoundation 滚动', () => {
             const { adapter, element, foundation } = create();
             const scrollTo = (scrollTop: number) => {
                 element.scrollTop = scrollTop;
-                foundation.containerScroll({ target: element });
+                foundation.containerScroll({ target: element as unknown as EventTarget });
             };
             scrollTo(900);
             scrollTo(850);

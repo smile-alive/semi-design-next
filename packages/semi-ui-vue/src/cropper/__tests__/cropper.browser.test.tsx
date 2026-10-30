@@ -6,11 +6,11 @@ import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import Cropper, { type CropperProps } from '..';
 
-const query = (container: Element, selector: string) => {
+function query(container: Element, selector: string) {
     const found = container.querySelector<HTMLElement>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
+}
 
 // a real image, so the box is laid out from its natural size the way a page sees it
 const src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect width="800" height="400" fill="teal"/></svg>');

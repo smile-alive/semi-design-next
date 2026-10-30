@@ -48,14 +48,14 @@ export interface TableContextView {
     bodyHasScrollbar: boolean;
     /** The sort and filter state of the columns */
     queries: ColumnProps[];
-    scroll: TableScroll | undefined;
-    sticky: TableSticky | undefined;
+    scroll?: TableScroll;
+    sticky?: TableSticky;
     showHeader: boolean;
-    virtualizedProps: TableVirtualizedProps | undefined;
+    virtualizedProps?: TableVirtualizedProps;
     childrenRecordName: string;
     indentSize: number;
     hideExpandedColumn: boolean;
-    expandIcon: boolean | undefined;
+    expandIcon?: boolean;
     expandRowByClick: boolean;
     keepDOM: boolean;
     clickGroupedRowToExpand: boolean;
@@ -69,13 +69,13 @@ export interface TableContextView {
 
 /** The selection and expansion state that selection cells and expand buttons read */
 export interface TableRowState {
-    rowSelection: TableBaseStateRowSelection<AnyRecord> | undefined;
+    rowSelection?: TableBaseStateRowSelection<AnyRecord>;
     filteredDisabledRowKeysSet: Set<BaseRowKeyType>;
     halfCheckedRowKeysSet: Set<BaseRowKeyType>;
     filteredSortedRowKeys: BaseRowKeyType[];
     filteredSortedRowKeysSet: Set<BaseRowKeyType>;
     expandedRowKeys: BaseRowKeyType[];
-    expandIcon: boolean | undefined;
+    expandIcon?: boolean;
     /** Resolved, `'key'` by default */
     rowKey: TableRowKey;
 }

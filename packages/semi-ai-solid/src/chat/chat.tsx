@@ -166,10 +166,10 @@ export default function Chat(rawProps: ChatProps) {
         view,
         toast,
         container,
-        likeMessage: (message) => foundation.likeMessage(message),
-        dislikeMessage: (message) => foundation.dislikeMessage(message),
-        resetMessage: (message) => foundation.resetMessage(message),
-        deleteMessage: (message) => foundation.deleteMessage(message),
+        likeMessage: foundation.likeMessage,
+        dislikeMessage: foundation.dislikeMessage,
+        resetMessage: foundation.resetMessage,
+        deleteMessage: foundation.deleteMessage,
         copyMessage: (message) => local.onMessageCopy?.(message),
     };
 
@@ -183,7 +183,7 @@ export default function Chat(rawProps: ChatProps) {
                 foundation.scrollToBottomImmediately();
             }
         },
-        sendMessage: (content, attachment) => foundation.onMessageSend(content, attachment),
+        sendMessage: foundation.onMessageSend,
     };
 
     const handleDragOver = (e: RootDragEvent) => {
@@ -246,7 +246,7 @@ export default function Chat(rawProps: ChatProps) {
         (hints, previous) => foundation.handleHintsChange(hints ?? [], previous ?? [])
     );
 
-    useResizeObserver(container, () => foundation.handleScrollContainerResize());
+    useResizeObserver(container, foundation.handleScrollContainerResize);
 
     return (
         <div
@@ -260,19 +260,19 @@ export default function Chat(rawProps: ChatProps) {
             onDragStart={handleDragStart}
         >
             <Show when={upload().dragUpload && state().uploadAreaVisible}>
-                <div ref={(node) => (dropArea = node)} class={`${prefixCls}-dropArea`} onDragLeave={(e) => foundation.handleContainerDragLeave(e)} onDragOver={(e) => foundation.handleContainerDragOver(e)} onDrop={(e) => foundation.handleContainerDrop(e)}>
+                <div ref={(node) => (dropArea = node)} class={`${prefixCls}-dropArea`} onDragLeave={foundation.handleContainerDragLeave} onDragOver={foundation.handleContainerDragOver} onDrop={foundation.handleContainerDrop}>
                     <span class={`${prefixCls}-dropArea-text`}>{locale().locale.dropAreaText}</span>
                 </div>
             </Show>
             <div class={`${prefixCls}-inner`}>
                 {local.topSlot}
                 <div class={`${prefixCls}-content`}>
-                    <div ref={setContainer} class={`${prefixCls}-container`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={(e) => foundation.containerScroll(e)}>
+                    <div ref={setContainer} class={`${prefixCls}-container`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                         <ChatContext.Provider value={context}>
                             <For each={keys()}>{renderRow}</For>
                         </ChatContext.Provider>
                         <Show when={local.hints?.length}>
-                            <Hint class={local.hintCls} style={local.hintStyle} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={(hint) => foundation.onHintClick(hint)} />
+                            <Hint class={local.hintCls} style={local.hintStyle} value={local.hints ?? []} renderHintBox={local.renderHintBox} onHintClick={foundation.onHintClick} />
                         </Show>
                     </div>
                     {/* outside the log: a toast inside it would be announced as one more log entry */}
@@ -280,12 +280,12 @@ export default function Chat(rawProps: ChatProps) {
                 </div>
                 <Show when={state().backBottomVisible && !generating()}>
                     <span ref={handoverActionFocus} class={`${prefixCls}-action`}>
-                        <Button type="tertiary" class={`${prefixCls}-action-content ${prefixCls}-action-backBottom`} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={() => foundation.scrollToBottomWithAnimation()} />
+                        <Button type="tertiary" class={`${prefixCls}-action-content ${prefixCls}-action-backBottom`} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
                     </span>
                 </Show>
                 <Show when={generating()}>
                     <span ref={handoverActionFocus} class={`${prefixCls}-action`}>
-                        <Button type="tertiary" class={`${prefixCls}-action-content ${prefixCls}-action-stop`} icon={<IconDisc size="extra-large" />} onClick={(e) => foundation.stopGenerate(e)}>
+                        <Button type="tertiary" class={`${prefixCls}-action-content ${prefixCls}-action-stop`} icon={<IconDisc size="extra-large" />} onClick={foundation.stopGenerate}>
                             {locale().locale.stop}
                         </Button>
                     </span>
@@ -305,9 +305,9 @@ export default function Chat(rawProps: ChatProps) {
                     uploadProps={local.uploadProps}
                     uploadTipProps={local.uploadTipProps}
                     renderInputArea={local.renderInputArea}
-                    onClearContext={(e) => foundation.clearContext(e)}
-                    onInputChange={(value) => foundation.onInputChange(value)}
-                    onSend={(content, attachment) => foundation.onMessageSend(content, attachment)}
+                    onClearContext={foundation.clearContext}
+                    onInputChange={foundation.onInputChange}
+                    onSend={foundation.onMessageSend}
                 />
                 {local.bottomSlot}
             </div>

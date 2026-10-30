@@ -198,7 +198,7 @@ export function placeInnerColumns<T extends { key?: unknown; fixed?: unknown }>(
 }
 
 /** The measured widths of the columns in order; a column not measured yet is skipped */
-export function getCellWidths(headWidths: BaseHeadWidth[][] | undefined, columns: { key?: unknown }[] | undefined) {
+export function getCellWidths(headWidths?: BaseHeadWidth[][], columns?: { key?: unknown }[]) {
     if (!columns?.length || !headWidths?.length) {
         return [];
     }

@@ -135,7 +135,7 @@ export function SubView(props: SubNavProps) {
     // inside a popup menu the title is the menuitem that opens a submenu
     const menuTitle = () => isPopup() && nested();
 
-    const content = () => local.children as unknown as unknown[];
+    const content = () => local.children as unknown[];
 
     const rotateClass = () => (!view().isCollapsed && !horizontal() && view().subNavMotion ? `${prefix}-icon-rotate-${isOpen() ? '180' : '0'}` : undefined);
 

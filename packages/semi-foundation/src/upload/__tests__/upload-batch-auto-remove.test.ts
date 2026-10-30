@@ -7,7 +7,7 @@ import UploadFoundation, { type BaseFileItem, type UploadAdapter } from '../foun
  * until the synchronous batch finishes.
  */
 describe('Upload foundation 批量 autoRemove (#3335)', () => {
-    function createFoundation({ initialFileList, beforeUpload, ...uploadProps }) {
+    const createFoundation = ({ initialFileList, beforeUpload, ...uploadProps }) => {
         let committedFileList = initialFileList.slice();
         // pending (batched) update; not visible via getState until flushed
         let pendingFileList = null;
@@ -49,7 +49,7 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
             pendingFileList = null;
         };
         return { foundation, flush, setCommittedFileList, getChanges: () => changes };
-    }
+    };
 
     const makeFile = (uid: string) => ({ uid, name: `${uid}.png`, size: '10KB', status: 'wait', fileInstance: { uid } }) as unknown as BaseFileItem;
 

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, within } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { render } from '@test/utils/vue';
 import {
     FormAutoComplete,
@@ -23,6 +24,7 @@ import {
     FormTagInput,
     FormTextArea,
     FormTimePicker,
+    FormTransfer,
     FormTreeSelect,
     FormUpload,
     type FieldHandle,
@@ -34,10 +36,10 @@ import { renderForm } from './fixtures/fields';
 import SelectOptions from './fixtures/select-options.vue';
 
 const settle = () => new Promise((resolve) => setTimeout(resolve));
-const act = async (run: () => unknown) => {
+async function act(run: () => unknown) {
     await run();
     await settle();
-};
+}
 const click = (element: Element | null) => act(() => userEvent.click(element as Element));
 const typeInto = (element: Element, text: string) => act(() => userEvent.type(element, text));
 const update = (element: Element, text: string) => act(() => fireEvent.update(element, text));
@@ -50,6 +52,11 @@ const treeData = [
     { label: 'A', value: 'a', key: 'a' },
     { label: 'B', value: 'b', key: 'b' },
 ];
+const transferData = [
+    { label: 'A', value: 'a', key: 'a' },
+    { label: 'B', value: 'b', key: 'b' },
+];
+const pickTransferItem = (name: string) => click(within(screen.getByRole('list', { name: zh_CN.Transfer.optionList })).getByText(name));
 const file = () => new File(['semi'], 'semi.txt', { type: 'text/plain' });
 const uploaded = { uid: '1', name: 'init.txt', status: 'success', url: '' };
 
@@ -175,6 +182,13 @@ const cases: Record<string, FieldCase> = {
         },
         value: ['b'],
     },
+    FormTransfer: {
+        component: FormTransfer,
+        props: { dataSource: transferData },
+        init: ['a'],
+        change: () => pickTransferItem('B'),
+        value: ['b'],
+    },
     FormRating: {
         component: FormRating,
         init: 1,
@@ -272,7 +286,23 @@ describe('Form 字段', () => {
         expect(shown(field())).toBe(before);
     });
 
-    it('19 个字段的 DOM 上都没有 validatestatus、insetlabelid 属性；不支持内嵌标签的字段按 top 布局并警告', async () => {
+    it('FormTransfer 显示 initValue 的已选项并以 label 命名；校验失败显示错误，选择后消失；继承 Form 的 disabled', async () => {
+        const { api } = renderForm({ disabled: true }, () => <FormTransfer field="members" label="Members" dataSource={transferData} initValue={['b']} rules={[{ required: true, type: 'array', message: '请选择成员' }]} />);
+        await settle();
+        expect(screen.getByRole('group', { name: 'Members' })).toBeInTheDocument();
+        expect([...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-transfer-right-item-text`)].map((item) => item.textContent)).toEqual(['B']);
+        expect(byClass('transfer')).toHaveClass(`${BASE_CLASS_PREFIX}-transfer-disabled`);
+        await act(() => api().setValue('members', []));
+        await act(() =>
+            api()
+                .validate()
+                .catch(() => undefined)
+        );
+        expect(document.querySelector(`.${BASE_CLASS_PREFIX}-form-field-error-message`)).toHaveTextContent('请选择成员');
+        expect(screen.getByRole('group', { name: 'Members' })).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('20 个字段的 DOM 上都没有 validatestatus、insetlabelid 属性；不支持内嵌标签的字段按 top 布局并警告', async () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         renderForm({ labelPosition: 'inset' }, () =>
             names.map((name) =>

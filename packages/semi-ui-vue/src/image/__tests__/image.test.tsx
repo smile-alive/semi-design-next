@@ -17,23 +17,23 @@ const thumb = (container: Element) => container.querySelector(`.${prefixCls}-img
 const root = (container: Element) => container.firstElementChild as HTMLElement;
 
 const renderImage = (props: Record<string, unknown> = {}, slots: Record<string, () => unknown> = {}) => render(Image, { props: { src, ...props }, slots });
-const loaded = async (props: Record<string, unknown> = {}) => {
+async function loaded(props: Record<string, unknown> = {}) {
     const view = renderImage(props);
     await fireEvent.load(thumb(view.container));
     return view;
-};
-const clickMask = async () => {
+}
+async function clickMask() {
     await fireEvent.mouseDown(preview() as HTMLElement, { clientX: 10, clientY: 10 });
     await fireEvent.mouseUp(preview() as HTMLElement, { clientX: 10, clientY: 10 });
-};
+}
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 // VTL's fireEvent does not return whether the default was prevented
-const dispatchKey = async (target: Element, key: string) => {
+async function dispatchKey(target: Element, key: string) {
     const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
     target.dispatchEvent(event);
     await nextTick();
     return event;
-};
+}
 
 afterEach(() => {
     semiGlobal.config.overrideDefaultProps = {};

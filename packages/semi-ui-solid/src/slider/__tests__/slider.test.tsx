@@ -35,10 +35,10 @@ const getInputs = () => screen.getAllByRole<HTMLInputElement>('slider');
 // jsdom runs no key default action on a native range, so the input is fired directly
 const changeTo = (input: HTMLInputElement, value: number) => fireEvent.input(input, { target: { value: String(value) } });
 // jsdom's :focus-visible heuristic misses focus moving between two inputs, so Tab is dispatched from the body
-const tabTo = (element: HTMLElement) => {
+function tabTo(element: HTMLElement) {
     fireEvent.keyDown(document.body, { key: 'Tab' });
     element.focus();
-};
+}
 const query = (container: ParentNode, suffix: string) => container.querySelector(`.${prefix}-${suffix}`) as HTMLElement;
 const queryAll = (container: ParentNode, suffix: string) => container.querySelectorAll(`.${prefix}-${suffix}`);
 const getWrapper = () => query(document, 'wrapper');

@@ -201,7 +201,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                     renderDate={renderDate}
                     renderFullDate={renderFullDate}
                     onDayClick={(day) => foundation.handleDayClick(day, panelType)}
-                    onDayHover={(day) => foundation.handleDayHover(day)}
+                    onDayHover={foundation.handleDayHover}
                     onMonthSwitch={(switchType) => foundation[switchType](panelType)}
                     onWeeksRowNumChange={handleWeeksRowNumChange}
                 />
@@ -318,7 +318,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     useDidUpdate(selectedValue, (value) => foundation.updateSelectedFromProps(value));
 
     // by content: a parent rendering `new Date(...)` each time must not pull the panel back
-    useDidUpdate(defaultPickerValue, () => foundation.initDefaultPickerValue(), isEqual);
+    useDidUpdate(defaultPickerValue, foundation.initDefaultPickerValue, isEqual);
 
     useLayoutEffect(() => {
         nodes.applyPanelSize(state, insetInput);
@@ -337,8 +337,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     useImperativeHandle(
         ref,
         () => ({
-            showDatePanel: (panelType) => foundation.showDatePanel(panelType),
-            showTimePicker: (panelType) => foundation.showTimePicker(panelType),
+            showDatePanel: foundation.showDatePanel,
+            showTimePicker: foundation.showTimePicker,
         }),
         [foundation]
     );

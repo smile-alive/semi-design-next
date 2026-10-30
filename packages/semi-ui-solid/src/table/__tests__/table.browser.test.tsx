@@ -35,13 +35,13 @@ interface AXNode {
 }
 
 // Chrome's accessibility tree of the iframe the tests render in
-const getAccessibilityTree = async () => {
+async function getAccessibilityTree() {
     const { frameTree } = await cdp().send('Page.getFrameTree');
     const frame = frameTree?.childFrames?.find((child) => child.frame.name === 'vitest-iframe')?.frame;
     if (!frame) throw new Error('vitest-iframe frame not found');
     const { nodes } = await cdp().send('Accessibility.getFullAXTree', { frameId: frame.id });
     return nodes as AXNode[];
-};
+}
 
 const fixedBothSideColumns: ColumnProps[] = [
     { title: 'Name', dataIndex: 'name', fixed: 'left', width: 150 },

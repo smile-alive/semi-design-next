@@ -184,7 +184,7 @@
                 foundation.scrollToBottomImmediately();
             }
         },
-        sendMessage: (content, attachment) => foundation.onMessageSend(content, attachment),
+        sendMessage: foundation.onMessageSend,
     });
 </script>
 
@@ -196,7 +196,7 @@
         <div :class="`${PREFIX}-inner`">
             <slot name="topSlot" />
             <div :class="`${PREFIX}-content`">
-                <div ref="container" :aria-busy="streaming" :aria-label="i18n.locale.messages" :class="`${PREFIX}-container`" role="log" tabindex="-1" @scroll="foundation.containerScroll($event)">
+                <div ref="container" :aria-busy="streaming" :aria-label="i18n.locale.messages" :class="`${PREFIX}-container`" role="log" tabindex="-1" @scroll="foundation.containerScroll">
                     <template v-for="(item, index) in chats" :key="item.id">
                         <template v-if="item.role === ROLE.DIVIDER">
                             <slot v-if="$slots.divider" :message="item" name="divider" />

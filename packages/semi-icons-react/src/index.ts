@@ -1,5 +1,3 @@
-import Icon from './components/Icon';
-
-export * from './components/Icon';
+export * from './components/icon';
 export * from './icons';
-export default Icon;
+export { default } from './components/icon';

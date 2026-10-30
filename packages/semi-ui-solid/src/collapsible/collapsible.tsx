@@ -90,10 +90,7 @@ export default function Collapsible(rawProps: CollapsibleProps) {
         foundation.handleTransitionEnd({ isSelf: event.target === event.currentTarget, propertyName: event.propertyName });
     };
 
-    useWatch(
-        () => local.isOpen,
-        () => foundation.handleOpenChange()
-    );
+    useWatch(() => local.isOpen, foundation.handleOpenChange);
 
     return (
         <div {...rest} ref={mergeRefs(local.ref, (node: HTMLDivElement) => (wrapper = node))} class={clsx(`${cssClasses.PREFIX}-wrapper`, { [`${cssClasses.PREFIX}-transition`]: transitioning() }, local.class)} style={wrapperStyle()} onTransitionEnd={handleTransitionEnd}>

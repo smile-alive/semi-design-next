@@ -144,78 +144,78 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
     }
 
-    setForcePlay(forcePlay: boolean) {
+    setForcePlay = (forcePlay: boolean) => {
         this.#forcePlay = forcePlay;
         if (forcePlay) {
             this.#stoppedByUser = false;
         }
-    }
+    };
 
-    stopByUser() {
+    stopByUser = () => {
         this.#forcePlay = false;
         this.#stoppedByUser = true;
         this.stop();
-    }
+    };
 
-    stop() {
+    stop = () => {
         this.#pausedByHover = false;
         this.#resumeOnFocusLeave = false;
         this.#unregisterInterval();
-    }
+    };
 
-    handleAutoPlayChange(autoPlayOn: boolean) {
+    handleAutoPlayChange = (autoPlayOn: boolean) => {
         if (!autoPlayOn && !this.#forcePlay) {
             this.stop();
         }
-    }
+    };
 
-    handlePointerEnter() {
+    handlePointerEnter = () => {
         this.#pointerInside = true;
         this.#hoverEnter();
-    }
+    };
 
-    handlePointerLeave() {
+    handlePointerLeave = () => {
         this.#pointerInside = false;
         this.#hoverLeave();
-    }
+    };
 
     // mouseleave never arrives for a carousel taken out of the page, so its pending hover is dropped
-    resetPointer() {
+    resetPointer = () => {
         this.#hoverEnter.cancel();
         this.#hoverLeave.cancel();
         this.#pointerInside = false;
-    }
+    };
 
     // Slides arriving after mount start autoplay like a mount with them; a controlled carousel waits for its first
     // switch, and a pointer under hoverToPause keeps the pause
-    handleSlideCountChange(previous: number, count: number) {
+    handleSlideCountChange = (previous: number, count: number) => {
         if (previous <= 1 && count > 1 && !this.getIsControlledComponent()) {
             this.handleAutoPlay();
             if (this.#pointerInside) {
                 this.#pauseForHover();
             }
         }
-    }
+    };
 
     // APG carousel pattern: focus inside pauses rotation regardless of hoverToPause
-    handleKeyboardFocus() {
+    handleKeyboardFocus = () => {
         this.#keyboardFocusWithin = true;
         if (this.#interval) {
             this.#unregisterInterval();
             this.#resumeOnFocusLeave = true;
         }
-    }
+    };
 
-    handleFocusLeave() {
+    handleFocusLeave = () => {
         this.#keyboardFocusWithin = false;
         if (this.#resumeOnFocusLeave) {
             this.#resumeOnFocusLeave = false;
             this.handleAutoPlay();
         }
-    }
+    };
 
     // unlike next/prev (called by the timer, which re-arm it), a jump keeps the running timer's schedule
-    goTo(activeIndex: number) {
+    goTo = (activeIndex: number) => {
         const stateActiveIndex = this.#getActiveIndex();
         const targetIndex = this.getValidIndex(activeIndex);
         this._adapter.setIsReverse(stateActiveIndex > targetIndex);
@@ -223,9 +223,9 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
         }
-    }
+    };
 
-    next() {
+    next = () => {
         this.#unregisterInterval();
         const targetIndex = this.getValidIndex(this.#getActiveIndex() + 1);
         this._adapter.setIsReverse(false);
@@ -234,9 +234,9 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
             this.handleNewActiveIndex(targetIndex);
         }
         this.#restartAfterManualSwitch();
-    }
+    };
 
-    prev() {
+    prev = () => {
         this.#unregisterInterval();
         const targetIndex = this.getValidIndex(this.#getActiveIndex() - 1);
         this._adapter.setIsReverse(true);
@@ -245,7 +245,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
             this.handleNewActiveIndex(targetIndex);
         }
         this.#restartAfterManualSwitch();
-    }
+    };
 
     // the debounces are only cancelled: React StrictMode runs init -> destroy -> init on one instance
     override destroy() {
@@ -255,7 +255,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         this.#interval = null;
     }
 
-    handleAutoPlay() {
+    handleAutoPlay = () => {
         const { autoPlay } = this.getProps();
         if (this.#stoppedByUser) {
             return;
@@ -270,10 +270,10 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
                 this.#play(this.getSwitchingTime());
             }
         }
-    }
+    };
 
     // APG tabs keys for the indicator tablist; returns whether the key was handled
-    handleKeyDown(event: Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'preventDefault'>) {
+    handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'preventDefault'>) => {
         // browser and OS shortcuts such as Alt+Left (history back) stay theirs
         if (event.altKey || event.ctrlKey || event.metaKey) {
             return false;
@@ -299,20 +299,20 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
         event.preventDefault();
         return true;
-    }
+    };
 
-    onIndicatorChange(activeIndex: number) {
+    onIndicatorChange = (activeIndex: number) => {
         this._adapter.setIsReverse(this.#getActiveIndex() > activeIndex);
         this.#notifyChange(activeIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(activeIndex);
         }
-    }
+    };
 
     // dropping the prop later continues from the last controlled index
-    syncActiveIndex(activeIndex: number) {
+    syncActiveIndex = (activeIndex: number) => {
         if (activeIndex !== undefined && activeIndex !== this.getStates().activeIndex) {
             this._adapter.setNewActiveIndex(activeIndex);
         }
-    }
+    };
 }

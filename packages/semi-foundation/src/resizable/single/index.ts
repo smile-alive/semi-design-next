@@ -491,7 +491,8 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
             isResizing: true,
             backgroundStyle: {
                 ...states.backgroundStyle,
-                cursor: this.#window.getComputedStyle(e.target as HTMLElement).cursor || 'auto',
+                // the target is the handle; instanceof against the global Element fails when the resizable lives in an iframe
+                cursor: this.#window.getComputedStyle(e.target as Element).cursor || 'auto',
             },
             direction,
             flexBasis,
@@ -529,7 +530,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
      * Reads the size and limits for aria-valuenow, -valuemin and -valuemax. A change of the limits alone goes
      * unnoticed until the next resize.
      */
-    updateAriaRange() {
+    updateAriaRange = () => {
         // the boundary snapshot is taken when the drag starts; the box growing under the pointer must not move it
         if (this.getStates().isResizing) {
             return;
@@ -549,13 +550,13 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
         if (!isEqual(ariaRange, this.getStates().ariaRange)) {
             this.setState({ ariaRange });
         }
-    }
+    };
 
     /**
      * Keyboard resize along the axis of the edge, KEYBOARD_STEP px per press, reported like a drag.
      * Returns whether the key was handled.
      */
-    resizeByKey(direction: Direction, e: KeyboardEvent) {
+    resizeByKey = (direction: Direction, e: KeyboardEvent) => {
         // Alt/Ctrl/Meta plus an arrow is a browser or OS shortcut
         if (e.altKey || e.ctrlKey || e.metaKey) {
             return false;
@@ -584,7 +585,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
             this.#endResize(e, this.#changedSize ?? this.#size);
         }
         return true;
-    }
+    };
 
     onResizeStart = (e: PointerEvent, direction: Direction) => {
         if (!isSecondaryPress(e)) {

@@ -114,7 +114,7 @@ type Adapter = OverflowListAdapter<OverflowListBaseProps, OverflowListBaseState>
 
 // reference to https://github.com/palantir/blueprint/blob/1aa71605/packages/core/src/components/overflow-list/overflowList.tsx#L34
 export default function OverflowList<T = OverflowItem>(rawProps: OverflowListProps<T>) {
-    const props = useDefaultProps('OverflowList', rawProps as unknown as InternalProps, defaultProps);
+    const props = useDefaultProps('OverflowList', rawProps as InternalProps, defaultProps);
 
     const [local, rest] = splitProps(props, [
         'collapseFrom',
@@ -241,11 +241,11 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
         }
     });
 
-    createEffect(on(keys, (current) => foundation.handleKeysChange(current), { defer: true }));
+    createEffect(on(keys, foundation.handleKeysChange, { defer: true }));
 
     createEffect(() => {
         if (!isScroll() && view().overflowStatus === 'calculating') {
-            untrack(() => foundation.handleCollapseOverflow());
+            untrack(foundation.handleCollapseOverflow);
         }
     });
 
@@ -259,11 +259,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
 
     // no root: the foundation and Tabs rely on viewport visibility to tell a list scrolled out of the page from one
     // whose items are all hidden
-    useIntersectionObserver(
-        scrollTargets,
-        (observed) => foundation.handleIntersect(observed),
-        () => ({ threshold: threshold() })
-    );
+    useIntersectionObserver(scrollTargets, foundation.handleIntersect, () => ({ threshold: threshold() }));
 
     return (
         <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} ref={mergeRefs(local.ref, (node: HTMLDivElement) => setRoot(node))} class={clsx(prefixCls, local.class)} style={rootStyle()}>

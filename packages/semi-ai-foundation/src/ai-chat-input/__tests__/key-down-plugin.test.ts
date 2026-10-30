@@ -249,11 +249,11 @@ describe('输入与输入法', () => {
 });
 
 describe('handleZeroWidthCharLogic', () => {
-    function applyTransform(root: PMNode) {
+    const applyTransform = (root: PMNode) => {
         const state = EditorState.create({ doc: root });
         const tr = handleZeroWidthCharLogic(state);
         return tr ? tr.doc.toString().replaceAll(ZWC, 'Z') : null;
-    }
+    };
 
     it('以 slot 开头和结尾的段落两端补 ZWC', () => {
         expect(applyTransform(doc(p(slot())))).toBe('doc(paragraph("Z", customSlot, "Z"))');

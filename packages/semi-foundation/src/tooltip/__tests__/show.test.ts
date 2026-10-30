@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '../foundation';
 
-const createFoundation = (initialProps: TooltipBaseProps = {}) => {
+function createFoundation(initialProps: TooltipBaseProps = {}) {
     const props: TooltipBaseProps = { trigger: 'click', ...initialProps };
     let state: TooltipBaseState = { isInsert: false, transitionState: '', triggerEventSet: {}, visible: false };
     // what the host's window mousedown listener would call
@@ -39,7 +39,7 @@ const createFoundation = (initialProps: TooltipBaseProps = {}) => {
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
     foundation.init();
     // the owner applies a new `visible`, as a host's prop watcher does
-    const setVisible = (visible: boolean | undefined) => {
+    const setVisible = (visible?: boolean) => {
         props.visible = visible;
         foundation.handleVisiblePropChange();
     };
@@ -49,7 +49,7 @@ const createFoundation = (initialProps: TooltipBaseProps = {}) => {
         return event;
     };
     return { foundation, adapter, setVisible, pressOutside };
-};
+}
 
 describe('show', () => {
     it('已经打开时再次 show 不会重复打开', () => {

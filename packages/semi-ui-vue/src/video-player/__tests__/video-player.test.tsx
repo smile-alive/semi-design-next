@@ -17,16 +17,16 @@ const prefixCls = 'semi-videoPlayer';
 const icon = (name: string) => `.semi-icon-${name}`;
 const src = 'https://example.com/video.mp4';
 
-const query = <E extends Element = HTMLElement>(container: Element | Document, selector: string) => {
+function query<E extends Element = HTMLElement>(container: Element | Document, selector: string) {
     const found = container.querySelector<E>(selector);
     if (!found) throw new Error(`missing ${selector}`);
     return found;
-};
-const buttonWith = (container: Element, name: string) => {
+}
+function buttonWith(container: Element, name: string) {
     const button = query(container, icon(name)).closest('button');
     if (!button) throw new Error(`no button around ${name}`);
     return button;
-};
+}
 const getVideo = (container: Element) => query<HTMLVideoElement>(container, 'video');
 const getRoot = (container: Element) => query(container, `.${prefixCls}`);
 const notification = (container: Element) => container.querySelector(`.${prefixCls}-notification`);
@@ -78,11 +78,11 @@ function mockVolumeTrack() {
 
 const renderPlayer = (props: Partial<VideoPlayerProps> & Record<string, unknown> = {}) => render(VideoPlayer, { props: { src, ...props } });
 
-const globalWith = (overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) => {
+function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultProps']) {
     const semi = new SemiGlobal();
     semi.config.overrideDefaultProps = overrideDefaultProps;
     return { provide: { [semiGlobalKey]: semi } };
-};
+}
 
 const menuTexts = (container: Element) => [...container.querySelectorAll(`.${prefixCls}-controls-popup`)].map((item) => item.textContent?.trim());
 

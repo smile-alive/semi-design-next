@@ -74,7 +74,7 @@ export default function BackTop(rawProps: BackTopProps) {
         foundation.handleTargetChange();
     }, [foundation]);
 
-    useDidUpdate(props.target, () => foundation.handleTargetChange());
+    useDidUpdate(props.target, foundation.handleTargetChange);
     useEffect(() => () => handleClick.cancel(), [handleClick]);
 
     useEffect(() => {

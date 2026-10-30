@@ -268,10 +268,10 @@ async function mountInPlace(props: Record<string, unknown>, slots: Slots = {}) {
     });
     await settle();
 }
-const act = async (run: () => unknown) => {
+async function act(run: () => unknown) {
     run();
     await settle();
-};
+}
 
 const getTrigger = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select`) as HTMLElement;
 const getPopover = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-popover`);
@@ -293,16 +293,16 @@ const getTagTexts = () => getTags().map((tag) => tag.textContent);
 const getTagClose = (index = 0) => getTags()[index].querySelector(`.${BASE_CLASS_PREFIX}-tag-close`);
 const getClearButton = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-clearbtn`);
 const getExpandIcon = (label: string) => getNode(label).querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option-expand-icon`);
-const click = async (element: Element | null) => {
+async function click(element: Element | null) {
     await userEvent.click(element as Element);
     await settle();
-};
+}
 const clickExpandIcon = (label: string) => click(getExpandIcon(label));
 const isChecked = (label: string) => getNode(label).getAttribute('aria-checked') === 'true';
-const search = async (value: string, input: HTMLElement = getSearchInput()) => {
+async function search(value: string, input: HTMLElement = getSearchInput()) {
     await fireEvent.update(input, value);
     await settle();
-};
+}
 // A loadData rejection is rethrown to the caller by design; catch it so it does not fail the test
 async function ignoringRejections(run: () => Promise<void>) {
     const onRejection = () => {};

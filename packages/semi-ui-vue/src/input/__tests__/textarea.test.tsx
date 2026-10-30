@@ -20,19 +20,19 @@ const getCounter = () => document.querySelector<HTMLElement>(`.${prefixCls}-text
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Testing Library's Vue fireEvent resolves to nothing, so read defaultPrevented from a dispatched event
-const keyDownPrevented = (el: Element, init: KeyboardEventInit) => {
+function keyDownPrevented(el: Element, init: KeyboardEventInit) {
     const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, ...init });
     el.dispatchEvent(event);
     return event.defaultPrevented;
-};
+}
 // A function ref receives the handle that defineExpose builds
-const renderWithHandle = (props: TextAreaProps & Record<string, unknown> = {}) => {
+function renderWithHandle(props: TextAreaProps & Record<string, unknown> = {}) {
     const refFn = vi.fn<(handle: TextAreaHandle | null) => void>();
     const Host = (hostProps: Record<string, unknown>) => <TextArea {...hostProps} ref={(value) => refFn(value as TextAreaHandle | null)} />;
     const view = render(Host, { props });
     const handle = () => refFn.mock.calls[0]?.[0] as TextAreaHandle;
     return { ...view, refFn, handle };
-};
+}
 const resizeEntry = (target: Element, width: number, height: number) => ({ contentRect: { width, height }, target });
 
 describe('TextArea', () => {
@@ -557,7 +557,7 @@ describe('TextArea', () => {
 
     it('句柄只包含文档声明的方法与节点', () => {
         const { handle } = renderWithHandle();
-        expect(Object.keys(handle()).sort()).toEqual(['blur', 'focus', 'nativeElement', 'select', 'setSelectionRange', 'textarea'].sort());
+        expect(Object.keys(handle()).toSorted()).toEqual(['blur', 'focus', 'nativeElement', 'select', 'setSelectionRange', 'textarea'].toSorted());
         for (const method of ['blur', 'focus', 'select', 'setSelectionRange'] as const) {
             expect(typeof handle()[method]).toBe('function');
         }

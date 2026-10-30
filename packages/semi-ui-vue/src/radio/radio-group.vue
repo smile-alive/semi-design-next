@@ -78,7 +78,7 @@
             buttonSize: props.buttonSize,
             mode: props.mode,
         })),
-        onChange: (event) => foundation.handleChange(event),
+        onChange: foundation.handleChange,
         register: (sync) => {
             syncs.add(sync);
             return () => void syncs.delete(sync);

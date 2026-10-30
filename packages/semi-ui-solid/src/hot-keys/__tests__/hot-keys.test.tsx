@@ -13,11 +13,11 @@ const press = (target: Element, init: KeyboardEventInit) => fireEvent.keyDown(ta
 
 type HotKeyHandler = (e: KeyboardEvent) => void;
 
-const createTarget = () => {
+function createTarget() {
     const node = document.createElement('input');
     document.body.append(node);
     return node;
-};
+}
 
 describe('HotKeys', () => {
     afterEach(() => {

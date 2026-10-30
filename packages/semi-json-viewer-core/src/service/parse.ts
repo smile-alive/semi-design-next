@@ -1,8 +1,7 @@
 /** Based on https://github.com/microsoft/vscode-json-languageservice with modifications for custom requirements */
 import * as Json from 'jsonc-parser';
-import { isObject, isNumber } from '../common/utils';
-import type { JSONModel } from '../model/jsonModel';
-import { type ArrayASTNode, type ASTNode, type BooleanASTNode, type NullASTNode, type NumberASTNode, type ObjectASTNode, type PropertyASTNode, type StringASTNode, Diagnostic, ErrorCode, ErrRange } from './jsonTypes';
+import type { JSONModel } from '../model/json-model';
+import { type ArrayASTNode, type ASTNode, type BooleanASTNode, type NullASTNode, type NumberASTNode, type ObjectASTNode, type PropertyASTNode, type StringASTNode, Diagnostic, ErrorCode, ErrRange } from './json-types';
 export function getNodeValue(node: ASTNode) {
     return Json.getNodeValue(node);
 }
@@ -320,7 +319,7 @@ export function parseJson(jsonModel: JSONModel) {
             const seen = keysSeen[key.value];
             if (seen) {
                 _errorAtRange('Duplicate object key', ErrorCode.DuplicateKey, node.keyNode.offset, node.keyNode.offset + node.keyNode.length);
-                if (isObject(seen)) {
+                if (typeof seen === 'object') {
                     _errorAtRange('Duplicate object key', ErrorCode.DuplicateKey, seen.keyNode.offset, seen.keyNode.offset + seen.keyNode.length);
                 }
                 keysSeen[key.value] = true; // avoid reporting the same duplicate again
@@ -409,7 +408,7 @@ export function parseJson(jsonModel: JSONModel) {
             const tokenValue = scanner.getTokenValue();
             try {
                 const numberValue = JSON.parse(tokenValue);
-                if (!isNumber(numberValue)) {
+                if (typeof numberValue !== 'number') {
                     return _error('Invalid number format.', ErrorCode.Undefined, node);
                 }
                 node.value = numberValue;

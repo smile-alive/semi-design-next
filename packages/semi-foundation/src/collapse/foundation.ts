@@ -62,16 +62,16 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
     }
 
     // a later uncontrolled click continues from the last controlled panels
-    syncActiveKey(activeKey: CollapseProps['activeKey']) {
+    syncActiveKey = (activeKey: CollapseProps['activeKey']) => {
         if (activeKey !== undefined) {
             const newSet = toSet(activeKey);
             if (!isEqual(newSet, this.getStates().activeSet)) {
                 this._adapter.setActiveSet(newSet);
             }
         }
-    }
+    };
 
-    handleChange(newKey: string, e: E) {
+    handleChange = (newKey: string, e: E) => {
         const { activeKey, accordion } = this.getProps();
         let newSet = new Set(CollapseFoundation.deriveActiveSet(this.getProps(), this.getStates()));
         if (newSet.has(newKey)) {
@@ -85,5 +85,5 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
         if (typeof activeKey === 'undefined') {
             this._adapter.setActiveSet(newSet);
         }
-    }
+    };
 }

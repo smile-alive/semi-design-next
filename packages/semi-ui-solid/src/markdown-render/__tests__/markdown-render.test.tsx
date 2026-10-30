@@ -233,7 +233,7 @@ describe('MarkdownRender', () => {
     });
 
     it('把 Semi 组件暴露为 MarkdownRender.defaultComponents', () => {
-        expect(Object.keys(MarkdownRender.defaultComponents).sort()).toEqual(['a', 'code', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'p', 'pre', 'table'].sort());
+        expect(Object.keys(MarkdownRender.defaultComponents).toSorted()).toEqual(['a', 'code', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'p', 'pre', 'table'].toSorted());
         expectTypeOf<Parameters<typeof MarkdownRender.defaultComponents.p>[0]>().toEqualTypeOf<ParagraphProps>();
     });
 

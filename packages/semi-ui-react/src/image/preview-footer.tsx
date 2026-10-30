@@ -48,8 +48,6 @@ export default function Footer(props: FooterProps) {
 
     const handleRotateRight = () => foundation.handleRotate('right');
 
-    const handleRatioClick = () => foundation.handleRatioClick();
-
     // a disabled button stays focusable (aria-disabled) so focus is not lost at the last image or zoom limit
     const getButton = (key: string, label: string, icon: ReactNode, onClick: () => void, disabled = false, gap = false) => {
         const button = (
@@ -87,7 +85,7 @@ export default function Footer(props: FooterProps) {
             getButton('minus', zoomOutTip ?? locale.zoomOutTip, <IconMinus className={disabledZoomOut ? disabledCls : ''} size="large" />, handleMinusClick, disabledZoomOut),
             <Slider key="slider" aria-label={locale.zoom} max={max} min={min} step={step} value={zoom} getAriaValueText={tipFormatter} tipFormatter={tipFormatter} tooltipVisible={showTooltip ? undefined : false} onChange={foundation.handleSlideChange} />,
             getButton('plus', zoomInTip ?? locale.zoomInTip, <IconPlus className={disabledZoomIn ? disabledCls : ''} size="large" />, handlePlusClick, disabledZoomIn),
-            getButton('ratio', ratio === 'adaptation' ? (originTip ?? locale.originTip) : (adaptiveTip ?? locale.adaptiveTip), ratioIcon, handleRatioClick, false, true),
+            getButton('ratio', ratio === 'adaptation' ? (originTip ?? locale.originTip) : (adaptiveTip ?? locale.adaptiveTip), ratioIcon, foundation.handleRatioClick, false, true),
             getButton('rotate', rotateTip ?? locale.rotateTip, <IconRotate size="large" />, handleRotateLeft),
             getButton('download', downloadTip ?? locale.downloadTip, <IconDownload className={disableDownload ? disabledCls : ''} size="large" />, onDownload, disableDownload, true),
         ];
@@ -112,7 +110,7 @@ export default function Footer(props: FooterProps) {
             onRotateRight: handleRotateRight,
             disabledZoomIn,
             disabledZoomOut,
-            onRatioClick: handleRatioClick,
+            onRatioClick: foundation.handleRatioClick,
             onZoomIn: handlePlusClick,
             onZoomOut: handleMinusClick,
             menuItems: getMenu(),

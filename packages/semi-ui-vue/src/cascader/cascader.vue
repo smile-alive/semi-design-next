@@ -20,6 +20,8 @@
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';
     import Input, { type InputHandle } from '../input';
+    import { provideInputGroupContext } from '../input/context';
+    import useGroupLooks from '../input/use-group-looks';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover';
     import Tag, { type TagCloseEvent } from '../tag';
@@ -66,8 +68,9 @@
         placeholder: semiGlobalDefault('Cascader', 'placeholder'),
         searchPlaceholder: semiGlobalDefault('Cascader', 'searchPlaceholder'),
         searchPosition: () => semiDefault('Cascader', 'searchPosition', strings.SEARCH_POSITION_TRIGGER),
-        disabled: () => semiDefault('Cascader', 'disabled', false),
-        size: () => semiDefault('Cascader', 'size', 'default'),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        disabled: undefined,
+        size: undefined,
         borderless: () => semiDefault('Cascader', 'borderless', false),
         validateStatus: semiGlobalDefault('Cascader', 'validateStatus'),
         // A global id would repeat on every instance.
@@ -110,6 +113,8 @@
     // A key is reported once: in the capture phase if the options may take it, in the bubble phase for inner controls
     const reported = new WeakSet<KeyboardEvent>();
 
+    const looks = useGroupLooks('Cascader', props, { size: 'default', disabled: false });
+
     const prefix = cssClasses.PREFIX;
 
     // The generic Multiple has no runtime type, so a valueless `multiple` attribute arrives as ''
@@ -121,6 +126,9 @@
     const triggerSearch = computed(() => Boolean(filterTreeNode.value) && props.searchPosition === strings.SEARCH_POSITION_TRIGGER);
     const position = computed(() => props.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
     const inputPlaceholder = computed(() => props.searchPlaceholder || props.placeholder);
+
+    // the Input and TagInput inside are parts of this control, not members of the group
+    provideInputGroupContext(undefined);
 
     const combobox = () => searchInputs.value?.[0] ?? tagInputs.value?.[0];
 
@@ -143,7 +151,7 @@
         suffix: slotKind(slots.suffix),
     });
 
-    const tagSize = () => (props.size === 'default' ? 'large' : props.size);
+    const tagSize = () => (looks.size === 'default' ? 'large' : looks.size);
 
     const isShownTag = (index: number) => typeof props.maxTagCount !== 'number' || props.maxTagCount >= index + 1;
 
@@ -244,6 +252,8 @@
         }),
         {
             props: {
+                size: () => looks.size,
+                disabled: () => looks.disabled,
                 value: () => props.modelValue as BasicCascaderProps['value'],
                 onChangeWithObject: () => props.changeWithObject,
                 multiple: () => multiple.value,
@@ -264,7 +274,7 @@
     const keyboardKey = computed(() => (view.value.isOpen ? CascaderFoundation.getKeyboardKey(view.value) : null));
 
     // multiple mode keeps no selectedKeys beyond the one getInitialState writes; its value also holds controlled paths without tags
-    const clearable = computed(() => props.showClear && Boolean(view.value.inputValue || (multiple.value ? CascaderFoundation.hasMultipleValue(foundationProps.value, view.value) : view.value.selectedKeys.size)) && !props.disabled);
+    const clearable = computed(() => props.showClear && Boolean(view.value.inputValue || (multiple.value ? CascaderFoundation.hasMultipleValue(foundationProps.value, view.value) : view.value.selectedKeys.size)) && !looks.disabled);
 
     // ARIA 1.2: the search input is the combobox while mounted, otherwise the trigger is a select-only combobox
     const inputIsCombobox = () => triggerSearch.value && !slots.trigger && (multiple.value || view.value.showInput);
@@ -281,7 +291,7 @@
 
     const rootAttrs = () => ({
         ...splitControlAttrs(attrs, isComboboxKey).root,
-        ...(inputIsCombobox() ? {} : { ...comboboxAttrs(), 'aria-disabled': props.disabled }),
+        ...(inputIsCombobox() ? {} : { ...comboboxAttrs(), 'aria-disabled': looks.disabled }),
     });
 
     const rootClass = (k: ReturnType<typeof kinds>) =>
@@ -292,13 +302,13 @@
                   {
                       [`${prefix}-borderless`]: props.borderless,
                       [`${prefix}-focus`]: view.value.isOpen,
-                      [`${prefix}-disabled`]: props.disabled,
+                      [`${prefix}-disabled`]: looks.disabled,
                       [`${prefix}-single`]: true,
                       [`${prefix}-filterable`]: Boolean(filterTreeNode.value),
                       [`${prefix}-error`]: props.validateStatus === 'error',
                       [`${prefix}-warning`]: props.validateStatus === 'warning',
-                      [`${prefix}-small`]: props.size === 'small',
-                      [`${prefix}-large`]: props.size === 'large',
+                      [`${prefix}-small`]: looks.size === 'small',
+                      [`${prefix}-large`]: looks.size === 'large',
                       [`${prefix}-with-prefix`]: Boolean(k.prefix || k.insetLabel),
                       [`${prefix}-with-suffix`]: Boolean(k.suffix),
                   },
@@ -337,7 +347,7 @@
 
     const entityOf = (key: string) => view.value.keyEntities[key] as CascaderEntity | undefined;
 
-    const isTagDisabled = (key: string) => Boolean(props.disabled || entityOf(key)?.data.disabled || (props.disableStrictly && view.value.disabledKeys?.has(key)));
+    const isTagDisabled = (key: string) => Boolean(looks.disabled || entityOf(key)?.data.disabled || (props.disableStrictly && view.value.disabledKeys?.has(key)));
 
     const removeTag = (key: string, event?: TagCloseEvent) => {
         // when the value does not change, the tag must not hide itself
@@ -361,11 +371,11 @@
             value: value as CascaderTriggerSlotProps<Multiple>['value'],
             inputValue: view.value.inputValue,
             placeholder: inputPlaceholder.value,
-            disabled: props.disabled,
-            componentProps: { ...props },
-            onSearch: (value) => foundation.handleInputChange(value),
+            disabled: looks.disabled,
+            componentProps: { ...props, ...looks },
+            onSearch: foundation.handleInputChange,
             onClear: (event) => handleClear(event),
-            onRemove: (pos) => foundation.handleTagRemoveInTrigger(pos),
+            onRemove: foundation.handleTagRemoveInTrigger,
         };
     };
 
@@ -408,6 +418,16 @@
         foundation.handleKeyDown(event);
     };
 
+    // Focus enters the dropdown through a field in a slot, and the dropdown is not a DOM descendant of the trigger, so
+    // containment is checked against its popup layer
+    const handleFocusOut = (event: FocusEvent) => {
+        const target = event.relatedTarget;
+        const inside = target instanceof Node && (Boolean(trigger.value?.contains(target)) || Boolean(content.value?.closest('[popover]')?.contains(target)));
+        if (!inside) {
+            foundation.handleFocusLeave(event);
+        }
+    };
+
     const handleContentKeyDown = (event: KeyboardEvent) => {
         handleOptionKeyDown(event);
         foundation.handleKeyDown(event);
@@ -446,11 +466,11 @@
     const clearHandover = useFocusHandover(() => (inputIsCombobox() ? trigger.value?.querySelector('input') : trigger.value));
 
     defineExpose<CascaderHandle>({
-        open: () => foundation.open(),
-        close: () => foundation.close(),
-        focus: () => foundation.focus(),
-        blur: () => foundation.blur(),
-        search: (value) => foundation.handleInputChange(value),
+        open: foundation.open,
+        close: foundation.close,
+        focus: foundation.focus,
+        blur: foundation.blur,
+        search: foundation.handleInputChange,
     });
 </script>
 
@@ -465,11 +485,11 @@
         :style="isEmpty ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined"
         trigger="custom"
         :visible="view.isOpen"
-        @afterClose="foundation.endSearching()"
-        @open="foundation.handlePopoverOpen()"
+        @afterClose="foundation.endSearching"
+        @open="foundation.handlePopoverOpen"
     >
         <!-- the combobox is the Tab stop -->
-        <div ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="props.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick($event)" @keydown="handleKeyDown" @keydown.capture="handleKeyDownCapture">
+        <div ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="looks.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick" @focusin="foundation.handleFocusEnter" @focusout="handleFocusOut" @keydown="handleKeyDown" @keydown.capture="handleKeyDownCapture">
             <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />
             <template v-else>
                 <template v-for="(k, i) in [kinds()]" :key="i">
@@ -483,7 +503,7 @@
                         <slot v-else name="insetLabel" />
                     </div>
                     <div :class="[`${prefix}-selection`, { [`${prefix}-selection-multiple`]: multiple && view.checkedKeys.size > 0 }]">
-                        <div v-if="triggerSearch && !multiple" :class="[`${prefix}-search-wrapper`, { [`${prefix}-search-wrapper-${props.size}`]: props.size !== 'default' }]">
+                        <div v-if="triggerSearch && !multiple" :class="[`${prefix}-search-wrapper`, { [`${prefix}-search-wrapper-${looks.size}`]: looks.size !== 'default' }]">
                             <template v-for="(display, d) in [displayContent()]" :key="d">
                                 <span :id="selectionTextId" :class="singleTextClass(display.shown)">
                                     <template v-if="!display.shown">{{ inputPlaceholder }}</template>
@@ -493,7 +513,7 @@
                                     <template v-else>{{ display.text }}</template>
                                 </span>
                             </template>
-                            <Input v-if="view.showInput" ref="searchInput" v-bind="searchInputBindings()" :class="`${prefix}-input`" :disabled="props.disabled" :modelValue="view.inputValue" :size="props.size" @change="foundation.handleInputChange($event)" />
+                            <Input v-if="view.showInput" ref="searchInput" v-bind="searchInputBindings()" :class="`${prefix}-input`" :disabled="looks.disabled" :modelValue="view.inputValue" :size="looks.size" @change="foundation.handleInputChange" />
                         </div>
                         <TagInput
                             v-else-if="triggerSearch"
@@ -501,7 +521,7 @@
                             v-bind="comboboxAttrs()"
                             aria-autocomplete="list"
                             :class="`${prefix}-tagInput-wrapper`"
-                            :disabled="props.disabled"
+                            :disabled="looks.disabled"
                             :expandRestTagsOnClick="false"
                             :inputValue="view.inputValue"
                             :maxTagCount="props.maxTagCount"
@@ -510,9 +530,9 @@
                             :preventScroll="props.preventScroll"
                             :restTagsPopoverProps="props.restTagsPopoverProps"
                             :showRestTagsPopover="props.showRestTagsPopover"
-                            :size="props.size"
-                            @inputChange="foundation.handleInputChange($event)"
-                            @remove="foundation.handleTagRemoveByKey($event)"
+                            :size="looks.size"
+                            @inputChange="foundation.handleInputChange"
+                            @remove="foundation.handleTagRemoveByKey"
                         >
                             <template #tag="{ value: key, index }">
                                 <template v-if="entityOf(key)">
@@ -530,7 +550,7 @@
                                 </template>
                             </template>
                             <component :is="props.showRestTagsPopover ? Popover : SlotFragment" v-if="view.checkedKeys.size > 0 && !isShownTag(realKeys.size - 1)" v-bind="props.showRestTagsPopover ? restPopoverBindings() : {}">
-                                <span :class="[`${prefix}-selection-n`, { [`${prefix}-selection-n-disabled`]: props.disabled }]">+{{ realKeys.size - (props.maxTagCount ?? 0) }}</span>
+                                <span :class="[`${prefix}-selection-n`, { [`${prefix}-selection-n-disabled`]: looks.disabled }]">+{{ realKeys.size - (props.maxTagCount ?? 0) }}</span>
                                 <template #content>
                                     <template v-for="(key, index) in [...realKeys]" :key="`tag-${key}-${index}`">
                                         <template v-if="!isShownTag(index) && entityOf(key)">
@@ -570,7 +590,7 @@
             </template>
         </div>
         <template #content>
-            <div ref="content" :class="[props.dropdownClassName, `${prefix}-popover`]" :style="props.dropdownStyle" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
+            <div ref="content" :class="[props.dropdownClassName, `${prefix}-popover`]" :style="props.dropdownStyle" @focusin="foundation.handleFocusEnter" @focusout="handleFocusOut" @keydown="handleContentKeyDown" @mousedown="keepFocusOnPress">
                 <slot name="topSlot" />
                 <Item
                     :id="popupId"
@@ -593,10 +613,10 @@
                     :separator="props.separator"
                     :showNext="props.showNext"
                     :virtualize="props.virtualizeInSearch"
-                    @itemCheckboxClick="foundation.onItemCheckboxClick($event)"
-                    @itemClick="(event, option) => foundation.handleItemClick(event, option)"
-                    @itemHover="(event, option) => foundation.handleItemHover(event, option)"
-                    @listScroll="(event, level) => foundation.handleListScroll(event, level)"
+                    @itemCheckboxClick="foundation.onItemCheckboxClick"
+                    @itemClick="foundation.handleItemClick"
+                    @itemHover="foundation.handleItemHover"
+                    @listScroll="foundation.handleListScroll"
                 >
                     <template v-if="$slots.label" #label="labelProps">
                         <slot name="label" v-bind="labelProps" />

@@ -5,12 +5,11 @@ import { isEqual, isEqualWith } from 'es-toolkit';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/select/constants';
 import SelectFoundation, { type SelectAdapter } from '@fibrae/semi-foundation/select/foundation';
-import { type OptionRecordKeys, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/select/option-foundation';
+import { type OptionRecord, getOptionRuns, optionListToRecords } from '@fibrae/semi-foundation/select/option-foundation';
 import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/tag/constants';
 import { isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-// InputGroup recognises an unset onFocus/onBlur by the function name 'noop'
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/select/select.scss';
@@ -24,6 +23,7 @@ import useMergedRef from '../_base/use-merged-ref';
 import VirtualList, { type VirtualListHandle } from '../_base/virtual-list';
 import { hasContent, isSameNode, renderTriggerPrefix, renderTriggerSuffix } from '../_utils';
 import { useConfigContext } from '../config-provider/context';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import Input, { type InputProps, type InputHandle, type InputChangeEvent } from '../input/index';
 import useLocale from '../locale/use-locale';
 import OverflowList from '../overflow-list/index';
@@ -55,8 +55,8 @@ type ExcludeInputType = {
 
 type OnChangeValueType = string | number | Record<string, any>;
 
-/** An option read from a Select.OptGroup carries that group's props and key */
-type GroupedOption = OptionProps & OptionRecordKeys<OptionGroupProps & { key?: React.Key }>;
+/** A collected option; one read from a Select.OptGroup carries that group's props and key */
+type OptionRow = OptionRecord<OptionProps, OptionGroupProps & { key?: React.Key }>;
 
 export type BasicSelectValue = string | number | Record<string, any>;
 
@@ -87,9 +87,6 @@ export interface optionRenderProps {
 export interface SelectedItemProps {
     value: OptionProps['value'];
     label: OptionProps['label'];
-    _show?: boolean;
-    _selected: boolean;
-    _scrollIndex?: number;
 }
 
 export interface TriggerRenderProps {
@@ -118,7 +115,7 @@ export interface SelectHandle {
     /** clears every selection */
     deselectAll: () => void;
     /** searches as if `value` were typed into the search input */
-    search: (value: string, event?: any) => void;
+    search: (value: string, event?: unknown) => void;
     /** Repositions the open dropdown at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
     rePosition: () => void;
 }
@@ -234,7 +231,7 @@ interface SelectBodyProps<T> extends Omit<SelectProps<T, boolean>, 'onChange'> {
 export interface SelectState {
     isOpen: boolean;
     isFocus: boolean;
-    options: Array<OptionProps>;
+    options: OptionRow[];
     selections: Map<OptionProps['value'], any>;
     inputValue: string;
     showInput: boolean;
@@ -294,7 +291,7 @@ function collectOptions({ optionList, children }: Pick<SelectBodyProps<unknown>,
 
 function Select<T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(rawProps: SelectProps<T, Multiple>) {
     const bodyProps: SelectBodyProps<T> = rawProps;
-    const props = useDefaultProps('Select', bodyProps, defaultProps);
+    const props = useDefaultProps('Select', withInputGroup(bodyProps, useInputGroupInScope()), defaultProps);
 
     const {
         'aria-label': ariaLabel,
@@ -408,7 +405,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 isFocusInContainer: false,
                 isFullTags: false,
                 ...initial,
-                options: initial.options as OptionProps[],
+                options: initial.options as OptionRow[],
             };
         },
         (base) => ({
@@ -421,7 +418,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             getMaxLimit: () => base.getProp('max'),
             notifyDeselect: (value, option) => base.getProps().onDeselect(value, option),
             getOptionsFromChildren: () => collectOptions(base.getProps()),
-            updateOptions: (options) => base.setState({ options: options as OptionProps[] }),
+            updateOptions: (options) => base.setState({ options: options as OptionRow[] }),
             openMenu: (cb) => base.setState({ isOpen: true }, cb),
             closeMenu: () => base.setState({ isOpen: false }),
             updateSelection: (selections) => base.setState({ selections }),
@@ -474,13 +471,13 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const lagOptions = useDeferredValue(options);
     const lagInputValue = useDeferredValue(inputValue);
     const keywordSettled = lagInputValue === inputValue;
-    const liveVisibleOptions = useMemo(() => options.filter((item) => item._show), [options]);
-    const lagVisibleOptions = useMemo(() => lagOptions.filter((item) => item._show), [lagOptions]);
+    const liveVisibleOptions = useMemo(() => options.filter((item) => item.show), [options]);
+    const lagVisibleOptions = useMemo(() => lagOptions.filter((item) => item.show), [lagOptions]);
     const visibleOptions = keywordSettled ? liveVisibleOptions : lagVisibleOptions;
 
     // focusIndex indexes the live list; while rows lag behind, the highlight follows that option or none
     const liveFocusedOption = liveVisibleOptions[focusIndex];
-    const deferredFocusIndex = keywordSettled ? focusIndex : visibleOptions.findIndex((option) => liveFocusedOption && option.value === liveFocusedOption.value);
+    const deferredFocusIndex = keywordSettled ? focusIndex : visibleOptions.findIndex((option) => liveFocusedOption && option.data.value === liveFocusedOption.data.value);
     const selectID = id || generatedId;
 
     // A removed node fires no blur: hand its focus to the combobox instead of dropping it to the body
@@ -505,7 +502,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         foundation.handleInputsChange({ optionsChanged, valueChanged: !isEqual(prev.value, props.value) }, props.value);
     });
 
-    const markPressInside = useClickOutside([triggerRef, optionContainerEl], (e) => foundation.handleClickOutside(e), isOpen);
+    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen);
 
     useImperativeHandle(
         props.ref,
@@ -514,9 +511,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             open: () => foundation.open(),
             focus: () => foundation.focus(),
             clearInput: () => foundation.clearInput(),
-            selectAll: () => foundation.selectAll(),
-            deselectAll: () => foundation.clearSelected(),
-            search: (value, event) => foundation.handleInputChange(value, event),
+            selectAll: foundation.selectAll,
+            deselectAll: foundation.clearSelected,
+            search: foundation.handleInputChange,
             rePosition: () => popoverRef.current?.rePosition(),
         }),
         [foundation]
@@ -561,11 +558,11 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const optionHandlers = useMemo(
         () =>
             visibleOptions.map((option, optionIndex) => {
-                const liveIndex = () => (keywordSettled ? optionIndex : liveVisibleOptions.findIndex((item) => item.value === option.value));
+                const liveIndex = () => (keywordSettled ? optionIndex : liveVisibleOptions.findIndex((item) => item.data.value === option.data.value));
                 return {
                     onMouseEnter: () => foundation.handleOptionMouseEnter(liveIndex()),
                     // the option as kept in state, the same object Enter selects; Option's own copy drops its props
-                    onSelect: (_: OptionProps, e: any) => foundation.onSelect(option, liveIndex(), e),
+                    onSelect: (_: OptionProps, e: unknown) => foundation.onSelect(option, liveIndex(), e),
                 };
             }),
         [visibleOptions, keywordSettled, liveVisibleOptions, foundation]
@@ -602,7 +599,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
 
     const handleClear = (e?: React.MouseEvent) => {
         e?.nativeEvent.stopImmediatePropagation();
-        foundation.handleClearClick(e as any);
+        foundation.handleClearClick(e);
     };
 
     const renderTriggerInput = () => {
@@ -647,7 +644,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 aria-describedby={joinIds(ariaDescribedby, multiple || inputValue ? undefined : selectionTextId)}
                 size={size}
                 onFocus={(e) => {
-                    foundation.handleInputFocus(e as any);
+                    foundation.handleInputFocus(e);
                     // prevent event bubbling which will fire trigger onFocus event
                     e.stopPropagation();
                 }}
@@ -683,7 +680,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             // the popup is not a DOM descendant of the trigger div, so keydown does not bubble to it
             onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
                 inputProps?.onKeyDown?.(e);
-                foundation.handleKeyDown(e as any);
+                foundation.handleKeyDown(e);
             },
         };
 
@@ -714,22 +711,23 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         );
     };
 
-    const renderOption = (option: OptionProps, optionIndex: number, rowStyle?: React.CSSProperties) => {
+    const renderOption = (record: OptionRow, optionIndex: number, rowStyle?: React.CSSProperties) => {
+        const { data: option } = record;
         const isFocused = optionIndex === deferredFocusIndex;
         const optionStyle = option.style ? { ...rowStyle, ...option.style } : (rowStyle ?? noStyle);
-        if (option._inputCreateOnly) {
+        if (record.create) {
             return renderCreateOption(option, isFocused, optionIndex, rowStyle);
         }
         return (
             <Option
                 showTick
                 {...option}
-                // _scrollIndex, not the visible index: a row that filtering moves up keeps its node
-                key={option.key || option._keyInJsx || (option.label as string) + option.value + option._scrollIndex}
+                // the record's index, not the visible index: a row that filtering moves up keeps its node
+                key={option.key || record.childKey || (option.label as string) + option.value + record.index}
                 style={optionStyle}
                 focused={isFocused}
                 inputValue={inputValue}
-                selected={option._selected}
+                selected={record.selected}
                 semiOptionId={`${selectID}-option-${optionIndex}`}
                 renderOptionItem={renderOptionItem}
                 {...optionHandlers[optionIndex]}
@@ -739,8 +737,8 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         );
     };
 
-    const renderWithGroup = (visibleOptions: OptionProps[]) => {
-        return getOptionRuns<GroupedOption>(visibleOptions).flatMap(({ group, first, rows }) => {
+    const renderWithGroup = (visibleOptions: OptionRow[]) => {
+        return getOptionRuns(visibleOptions).flatMap(({ group, first, rows }) => {
             const nodes = rows.map(({ option, index }) => renderOption(option, index));
             // OptionGroup renders no title without a label, and a group needs one for its name
             if (!group || (!group.label && typeof group.label !== 'number')) {
@@ -779,7 +777,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         }
         const renderSlot = (slot: React.ReactNode, name: string) =>
             slot ? (
-                <div className={`${prefixcls}-option-list-${name}-slot`} onMouseEnter={() => foundation.handleSlotMouseEnter()}>
+                <div className={`${prefixcls}-option-list-${name}-slot`} onMouseEnter={foundation.handleSlotMouseEnter}>
                     {slot}
                 </div>
             ) : null;
@@ -795,7 +793,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                     dropdownClassName
                 )}
                 style={dropdownStyle}
-                onKeyDown={(e) => foundation.handleContainerKeyDown(e)}
+                onKeyDown={foundation.handleContainerKeyDown}
                 // A press would move the focus to the popup container, where the keys never reach the combobox; it
                 // stays on the trigger or the dropdown search input. A text field in a slot still takes the focus.
                 onMouseDown={(e) => {
@@ -819,7 +817,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                     aria-multiselectable={multiple}
                     role="listbox"
                     // capture: with virtualize the scrolling element is the VirtualList inside, and scroll does not bubble
-                    onScrollCapture={(e) => foundation.handleListScroll(e)}
+                    onScrollCapture={foundation.handleListScroll}
                 >
                     {renderSlot(innerTopSlot, 'inner-top')}
                     {body}
@@ -973,7 +971,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                     showPopover={showRestTagsPopover}
                     size={tagSize}
                     tagList={mapItems.map((item, i) => renderTag(item, i, { inTagGroup: true }))}
-                    onPlusNMouseEnter={() => foundation.updateIsFullTags()}
+                    onPlusNMouseEnter={foundation.updateIsFullTags}
                 />
             );
         }
@@ -1022,15 +1020,9 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         if (virtualize && focusIndex !== -1) {
             virtualizeListRef.current?.scrollToItem(focusIndex, 'center');
         } else if (virtualize) {
-            let minItemIndex = -1;
-            selections.forEach((item) => {
-                const itemIndex = item?._scrollIndex;
-                if (typeof itemIndex === 'number' && itemIndex >= 0) {
-                    minItemIndex = minItemIndex !== -1 && minItemIndex < itemIndex ? minItemIndex : itemIndex;
-                }
-            });
-            if (minItemIndex !== -1) {
-                virtualizeListRef.current?.scrollToItem(minItemIndex, 'center');
+            const first = options.find((option) => option.selected && option.index >= 0);
+            if (first) {
+                virtualizeListRef.current?.scrollToItem(first.index, 'center');
             }
         } else {
             foundation.updateScrollTop();
@@ -1041,7 +1033,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         // a triggerRender that spreads componentProps must not grab the Select's ref
         const componentProps = { ...props };
         delete componentProps.ref;
-        inner = <Trigger disabled={disabled} placeholder={placeholder} value={Array.from(selections.values())} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={(item) => foundation.removeTag(item)} onSearch={handleInputChange} />;
+        inner = <Trigger disabled={disabled} placeholder={placeholder} value={Array.from(selections.values())} componentProps={componentProps} inputValue={inputValue} triggerRender={triggerRender} onClear={handleClear} onRemove={foundation.removeTag} onSearch={handleInputChange} />;
     } else {
         inner = (
             <>
@@ -1067,54 +1059,56 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const dropdownAnchorStyle: CSSProperties | undefined = dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined;
 
     return (
-        <Popover
-            ref={popoverRef}
-            style={dropdownAnchorStyle}
-            role="presentation"
-            afterClose={() => foundation.handlePopoverClose()}
-            autoAdjustOverflow={autoAdjustOverflow}
-            content={renderOptions}
-            disableArrowKeyDown
-            motion={motion}
-            position={position}
-            spacing={spacing}
-            stopPropagation={stopPropagation}
-            trigger="custom"
-            visible={isOpen}
-            onOpen={scrollToSelection}
-        >
-            <div
-                {...rest}
-                ref={triggerRef}
-                id={selectID}
-                className={selectionCls}
-                style={style}
-                {...triggerAriaProps}
-                tabIndex={disabled || inputIsCombobox ? -1 : 0}
-                onBlur={(e) => {
-                    if (!e.currentTarget.contains(e.relatedTarget)) {
-                        foundation.handleTriggerBlur(e as any);
-                    }
-                }}
-                onClick={(e) => {
-                    rest.onClick?.(e);
-                    foundation.handleClick(e);
-                }}
-                onFocus={(e) => foundation.handleTriggerFocus(e as any)}
-                onKeyDown={(e) => {
-                    rest.onKeyDown?.(e);
-                    foundation.handleKeyDown(e as any);
-                }}
-                onMouseDownCapture={(e) => {
-                    rest.onMouseDownCapture?.(e);
-                    markPressInside(e);
-                }}
-                onMouseEnter={(e) => foundation.handleMouseEnter(e as any)}
-                onMouseLeave={(e) => foundation.handleMouseLeave(e as any)}
+        <InputGroupContext value={undefined}>
+            <Popover
+                ref={popoverRef}
+                style={dropdownAnchorStyle}
+                role="presentation"
+                afterClose={foundation.handlePopoverClose}
+                autoAdjustOverflow={autoAdjustOverflow}
+                content={renderOptions}
+                disableArrowKeyDown
+                motion={motion}
+                position={position}
+                spacing={spacing}
+                stopPropagation={stopPropagation}
+                trigger="custom"
+                visible={isOpen}
+                onOpen={scrollToSelection}
             >
-                {inner}
-            </div>
-        </Popover>
+                <div
+                    {...rest}
+                    ref={triggerRef}
+                    id={selectID}
+                    className={selectionCls}
+                    style={style}
+                    {...triggerAriaProps}
+                    tabIndex={disabled || inputIsCombobox ? -1 : 0}
+                    onBlur={(e) => {
+                        if (!e.currentTarget.contains(e.relatedTarget)) {
+                            foundation.handleTriggerBlur(e);
+                        }
+                    }}
+                    onClick={(e) => {
+                        rest.onClick?.(e);
+                        foundation.handleClick(e);
+                    }}
+                    onFocus={foundation.handleTriggerFocus}
+                    onKeyDown={(e) => {
+                        rest.onKeyDown?.(e);
+                        foundation.handleKeyDown(e);
+                    }}
+                    onMouseDownCapture={(e) => {
+                        rest.onMouseDownCapture?.(e);
+                        markPressInside(e);
+                    }}
+                    onMouseEnter={foundation.handleMouseEnter}
+                    onMouseLeave={foundation.handleMouseLeave}
+                >
+                    {inner}
+                </div>
+            </Popover>
+        </InputGroupContext>
     );
 }
 

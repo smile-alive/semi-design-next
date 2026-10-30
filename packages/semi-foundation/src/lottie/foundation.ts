@@ -92,11 +92,11 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
         void this.#load();
     }
 
-    handleParamsUpdate() {
+    handleParamsUpdate = () => {
         this.#animation?.destroy();
         this.#animation = null;
         void this.#load();
-    }
+    };
 
     override destroy() {
         super.destroy();

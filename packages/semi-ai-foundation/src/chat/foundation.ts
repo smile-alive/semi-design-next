@@ -55,7 +55,7 @@ export interface ChatAdapter<P = Record<string, any>, S = Record<string, any>> e
     notifyStopGenerate: (e: any) => void;
     notifyHintClick: (hint: string) => void;
     setUploadAreaVisible: (visible: boolean) => void;
-    manualUpload: (e: any) => void;
+    manualUpload: (files: File[]) => void;
     getDropAreaElement: () => HTMLDivElement;
 }
 
@@ -116,7 +116,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         }
     }
 
-    #updateBackBottomVisible = debounce((target: any) => {
+    #syncBackBottomVisible(target: Pick<HTMLElement, 'scrollHeight' | 'clientHeight' | 'scrollTop'>) {
         const scrollHeight = target.scrollHeight;
         const clientHeight = target.clientHeight;
         const scrollTop = target.scrollTop;
@@ -130,7 +130,9 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
                 this._adapter.setBackBottomVisible(true);
             }
         }
-    }, 100);
+    }
+
+    #updateBackBottomVisible = debounce((target: Pick<HTMLElement, 'scrollHeight' | 'clientHeight' | 'scrollTop'>) => this.#syncBackBottomVisible(target), 100);
 
     /** What the content class names depend on; `bubble` also covers the user's own message in userBubble mode */
     static getContentFlags(role?: string, status?: string, mode?: string) {
@@ -170,7 +172,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     }
 
     /** Follows a new or still generating last message */
-    handleChatsChange(chats: Message[], prevChats: Message[]) {
+    handleChatsChange = (chats: Message[], prevChats: Message[]) => {
         const oldChats = prevChats ?? [];
         if (!Array.isArray(chats) || !Array.isArray(oldChats)) {
             return;
@@ -184,22 +186,22 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         }
         this.#followOrRefresh(added || updated);
         this.#recordPosition();
-    }
+    };
 
-    handleHintsChange(hints: string[], prevHints: string[]) {
+    handleHintsChange = (hints: string[], prevHints: string[]) => {
         this.#followOrRefresh((hints ?? []).length > (prevHints ?? []).length);
-    }
+    };
 
-    stopGenerate = (e: any) => {
+    stopGenerate = (e: unknown) => {
         this._adapter.notifyStopGenerate(e);
     };
 
-    scrollToBottomImmediately() {
+    scrollToBottomImmediately = () => {
         const element = this._adapter.getContainerRef();
         if (element) {
             element.scrollTop = element.scrollHeight;
         }
-    }
+    };
 
     scrollToBottomWithAnimation = () => {
         const duration = SCROLL_ANIMATION_TIME;
@@ -222,7 +224,9 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         });
     };
 
-    containerScroll({ target }: any) {
+    containerScroll = (e: { target: EventTarget | null }) => {
+        // the scroll listener sits on the container and scroll does not bubble, so the target is always that element
+        const target = e.target as HTMLElement;
         const { scrollTop, scrollHeight, clientHeight } = target;
         // only the user lowers scrollTop (growth never does); a drop that still ends at the bottom is shrinking
         if (scrollHeight - scrollTop - clientHeight <= 1) {
@@ -234,13 +238,13 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         this.#position = { top: scrollTop, height: scrollHeight };
         cancelAnimationFrame(this.#scrollFrame);
         this.#scrollFrame = requestAnimationFrame(() => this.#updateBackBottomVisible(target));
-    }
+    };
 
     handleScrollContainerResize = () => {
         this.#updateBackBottomVisible(this._adapter.getContainerRef());
     };
 
-    clearContext = (_e: any) => {
+    clearContext = (_e: unknown) => {
         const chats = this.#getChats();
         if (chats.at(-1)?.role === ROLE.DIVIDER) {
             return;
@@ -389,24 +393,24 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         this.#dragStartedInside = false;
     };
 
-    handleContainerDragOver = (e: any) => {
+    handleContainerDragOver = (e: Pick<DragEvent, 'stopPropagation' | 'preventDefault'>) => {
         handlePrevent(e);
     };
 
-    handleContainerDrop = (e) => {
+    handleContainerDrop = (e: Pick<DragEvent, 'dataTransfer' | 'stopPropagation' | 'preventDefault'>) => {
         this._adapter.setUploadAreaVisible(false);
-        const files = e?.dataTransfer?.files;
+        const files = e.dataTransfer?.files;
         if (files?.length) {
-            this._adapter.manualUpload(files);
+            this._adapter.manualUpload(Array.from(files));
         }
         handlePrevent(e);
     };
 
-    handleContainerDragLeave = (e: any) => {
+    handleContainerDragLeave = (e: Pick<DragEvent, 'stopPropagation' | 'preventDefault' | 'relatedTarget'>) => {
         handlePrevent(e);
         const dropAreaElement = this._adapter.getDropAreaElement();
         const enterTarget = e.relatedTarget;
-        if (dropAreaElement.contains(enterTarget)) {
+        if (enterTarget instanceof Node && dropAreaElement.contains(enterTarget)) {
             return;
         }
         // deferred so the parent's mouseOver cannot fire in between and keep the area visible

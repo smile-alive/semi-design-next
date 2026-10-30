@@ -186,14 +186,14 @@ export default function UserGuide(rawProps: UserGuideProps) {
             return undefined;
         }
         foundation.beforeShow();
-        return () => foundation.releaseScroll();
+        return foundation.releaseScroll;
     }, [locksScroll, foundation]);
 
     useLayoutEffect(() => {
         if (!visible) {
             return undefined;
         }
-        return () => foundation.afterHide();
+        return foundation.afterHide;
     }, [visible, foundation]);
 
     // modal mode gets this from Modal
@@ -253,7 +253,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 visible={visible}
                 zIndex={zIndex}
                 // Escape skips like the skip button; only the last step's button finishes
-                onCancel={() => foundation.handleSkip()}
+                onCancel={foundation.handleSkip}
             >
                 {cover && (
                     <>
@@ -374,7 +374,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 showArrow={step.showArrow !== false}
                 trigger="custom"
                 visible={visible}
-                onEscKeyDown={() => foundation.handleSkip()}
+                onEscKeyDown={foundation.handleSkip}
             >
                 {/* Tooltip would make the anchor a Tab stop */}
                 <div

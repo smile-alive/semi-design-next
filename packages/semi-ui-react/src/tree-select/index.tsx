@@ -21,6 +21,7 @@ import useFoundation from '../_base/use-foundation';
 import VirtualList, { type VirtualListHandle } from '../_base/virtual-list';
 import { hasContent, renderTriggerPrefix, renderTriggerSuffix } from '../_utils';
 import { useConfigContext } from '../config-provider/context';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import Input, { type InputProps, type InputHandle } from '../input/index';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover/index';
@@ -213,7 +214,7 @@ const NO_MOTION_KEYS: Set<string> = new Set();
 
 export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(rawProps: TreeSelectProps<T, Multiple, WithObject>) {
     const bodyProps: TreeSelectBodyProps = rawProps;
-    const props = useDefaultProps('TreeSelect', bodyProps, defaultProps);
+    const props = useDefaultProps('TreeSelect', withInputGroup(bodyProps, useInputGroupInScope()), defaultProps);
 
     const {
         ref,
@@ -402,7 +403,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     }, [derived, foundation]);
 
     // blur comes from a click outside, so it is listened to while focused, not only while open
-    const markPressInside = useClickOutside([triggerRef, optionContainerEl], (e) => foundation.handleClickOutside(e), isOpen || isFocus);
+    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen || isFocus);
 
     const {
         keyboardKey,
@@ -418,8 +419,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         hasLoadData: Boolean(loadData),
         rtl: direction === 'rtl',
         editing: (event) => isTextEditor(event.target),
-        select: (event, row) => foundation.handleNodeSelect(event, row),
-        expand: (event, row) => foundation.handleNodeExpand(event, row),
+        select: foundation.handleNodeSelect,
+        expand: foundation.handleNodeExpand,
         reveal: scrollToRow,
     });
 
@@ -427,7 +428,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         props.ref,
         () => ({
             search: (value: string) => foundation.search(value),
-            close: () => foundation.close(),
+            close: foundation.close,
         }),
         [foundation]
     );
@@ -520,7 +521,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         const target = e.relatedTarget;
         const inside = target instanceof Node && (Boolean(triggerRef.current?.contains(target)) || Boolean(optionContainerEl.current?.closest('[popover]')?.contains(target)));
         if (!inside) {
-            foundation.handleTriggerBlur(e.nativeEvent);
+            foundation.handleFocusLeave(e.nativeEvent);
         }
     };
 
@@ -711,7 +712,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             [`${prefixcls}-selection-TriggerSearchItem-disabled`]: disabled,
         });
         return (
-            <span id={singleSearchTextId} className={spanCls} onClick={() => foundation.onClickSingleTriggerSearchItem()}>
+            <span id={singleSearchTextId} className={spanCls} onClick={foundation.onClickSingleTriggerSearchItem}>
                 {shown ? renderText : placeholder}
             </span>
         );
@@ -975,25 +976,27 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     );
 
     return (
-        <Popover
-            style={dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined}
-            role="presentation"
-            afterClose={() => foundation.handleAfterClose()}
-            autoAdjustOverflow={autoAdjustOverflow}
-            content={content}
-            motion={motion}
-            position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
-            stopPropagation={stopPropagation}
-            trigger="custom"
-            visible={isOpen}
-            onOpen={() => {
-                foundation.handlePopoverOpen();
-                if (activeKey !== undefined) {
-                    scrollToRow(activeKey);
-                }
-            }}
-        >
-            {renderSelection()}
-        </Popover>
+        <InputGroupContext value={undefined}>
+            <Popover
+                style={dropdownMatchSelectWidth ? { minWidth: 'var(--semi-tooltip-trigger-width)' } : undefined}
+                role="presentation"
+                afterClose={foundation.handleAfterClose}
+                autoAdjustOverflow={autoAdjustOverflow}
+                content={content}
+                motion={motion}
+                position={position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft')}
+                stopPropagation={stopPropagation}
+                trigger="custom"
+                visible={isOpen}
+                onOpen={() => {
+                    foundation.handlePopoverOpen();
+                    if (activeKey !== undefined) {
+                        scrollToRow(activeKey);
+                    }
+                }}
+            >
+                {renderSelection()}
+            </Popover>
+        </InputGroupContext>
     );
 }

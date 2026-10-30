@@ -6,11 +6,11 @@ import { flush, FormInput } from './fixtures/fields';
 
 const toTop = { behavior: 'auto', block: 'start' } as const;
 
-const expectInViewport = (element: Element) => {
+function expectInViewport(element: Element) {
     const { top } = element.getBoundingClientRect();
     expect(top).toBeGreaterThanOrEqual(0);
     expect(top).toBeLessThan(window.innerHeight);
-};
+}
 
 describe('Form（ShadowRoot）', () => {
     it('open ShadowRoot 内 autoScrollToError、scrollToError 与 scrollToField 滚动到字段', async () => {

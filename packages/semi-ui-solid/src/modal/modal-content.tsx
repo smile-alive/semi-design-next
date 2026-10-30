@@ -194,7 +194,7 @@ export default function ModalContent(props: ModalContentProps) {
 
     const closer = () => (
         <Show when={local.closable}>
-            <IconButton type="tertiary" class={`${prefix}-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={hasContent(closeIcon()) ? closeIcon() : <IconClose x-semi-prop="closeIcon" />} onClick={(e) => foundation.close(e)} />
+            <IconButton type="tertiary" class={`${prefix}-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={hasContent(closeIcon()) ? closeIcon() : <IconClose x-semi-prop="closeIcon" />} onClick={foundation.close} />
         </Show>
     );
 
@@ -321,7 +321,7 @@ export default function ModalContent(props: ModalContentProps) {
             }
             foundation.show();
             warnIfDialogUnnamed(dialog ?? null, 'Modal');
-            onCleanup(() => foundation.hide());
+            onCleanup(foundation.hide);
         })
     );
 

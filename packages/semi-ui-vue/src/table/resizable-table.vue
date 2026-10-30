@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, normalizeClass, onMounted, shallowReactive, useTemplateRef, watch } from 'vue';
     import { cloneDeep } from 'es-toolkit';
-    import { get } from 'es-toolkit/compat';
     import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
     import { assignColumnKeys, findColumn } from '@fibrae/semi-foundation/table/utils';
     import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
@@ -75,7 +74,7 @@
         if (rowSelection && !(typeof rowSelection === 'object' && rowSelection.hidden) && !columns.some((column) => column.key === strings.DEFAULT_KEY_COLUMN_SELECTION)) {
             place(
                 {
-                    width: get(rowSelection, 'width', numbers.DEFAULT_WIDTH_COLUMN_SELECTION),
+                    width: (typeof rowSelection === 'object' ? rowSelection.width : undefined) ?? numbers.DEFAULT_WIDTH_COLUMN_SELECTION,
                     key: strings.DEFAULT_KEY_COLUMN_SELECTION,
                     onHeaderCell: typeof rowSelection === 'object' ? rowSelection.onHeaderCell : undefined,
                 },

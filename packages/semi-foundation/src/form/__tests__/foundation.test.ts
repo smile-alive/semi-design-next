@@ -30,7 +30,7 @@ function createHost(props: Record<string, unknown> = {}) {
     const api = foundation.getFormApi();
 
     // The host creates an instance snapshot before mounting, then registers it after committing.
-    function addField(field: string, validation: Partial<ReturnType<FieldRegistration['getValidateOptions']>> = {}) {
+    const addField = (field: string, validation: Partial<ReturnType<FieldRegistration['getValidateOptions']>> = {}) => {
         const registration: FieldRegistration = {
             id: field,
             field,
@@ -42,7 +42,7 @@ function createHost(props: Record<string, unknown> = {}) {
         };
         fieldBridge.register(field, registration);
         return registration;
-    }
+    };
 
     return { adapter, foundation, fieldBridge, api, addField };
 }
@@ -299,11 +299,11 @@ describe('FormFoundation 契约', () => {
 
 describe('FormFoundation 校验结算', () => {
     const settle = () => new Promise((resolve) => setTimeout(resolve));
-    function pendingValidate() {
+    const pendingValidate = () => {
         const resolvers: Array<(error?: string) => void> = [];
         const validate = () => new Promise<string | undefined>((resolve) => resolvers.push(resolve));
         return { resolvers, validate };
-    }
+    };
 
     it('rules 的 message 为空串时校验失败：validate 与静默校验都 reject，字段状态为 error', async () => {
         const { adapter, api, addField } = createHost();

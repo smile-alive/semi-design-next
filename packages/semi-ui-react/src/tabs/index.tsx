@@ -207,7 +207,7 @@ function Tabs(rawProps: TabsProps) {
 
     const tabBar = renderTabBar ? renderTabBar(tabBarProps, TabBar) : <TabBar {...tabBarProps} />;
 
-    useDidUpdate(propsActiveKey, (key) => foundation.syncActiveKey(key));
+    useDidUpdate(propsActiveKey, foundation.syncActiveKey);
 
     useDidUpdate(
         childKeys,

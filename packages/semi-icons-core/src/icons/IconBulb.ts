@@ -13,15 +13,7 @@ const IconBulb: IconData = {
                 fill: 'currentColor',
             },
         ],
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M15 20v1a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1h6',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M15 20v1a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1h6', fill: 'currentColor' }],
     ],
 };
 

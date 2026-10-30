@@ -9,13 +9,13 @@ import StatefulSibling from './fixtures/stateful-sibling.vue';
 
 const prefixCls = 'semi-space';
 
-const renderSpace = (spacing: SpaceProps['spacing']) => {
+function renderSpace(spacing: SpaceProps['spacing']) {
     const view = render(Space, {
         props: { spacing },
         slots: { default: () => Array.from({ length: 5 }, () => 'content') },
     });
     return view;
-};
+}
 
 const getSpace = (container: Element) => container.querySelector<HTMLElement>(`.${prefixCls}`);
 

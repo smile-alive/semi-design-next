@@ -268,7 +268,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
             content={renderConfirmPopCard}
             position={position}
             visible={open}
-            onVisibleChange={(visible) => foundation.handleVisibleChange(visible)}
+            onVisibleChange={foundation.handleVisibleChange}
         >
             {children}
         </Popover>

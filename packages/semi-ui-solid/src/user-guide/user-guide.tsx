@@ -217,7 +217,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 visible
                 zIndex={local.zIndex}
                 // Escape skips like the skip button; only the last step's button finishes
-                onCancel={() => foundation.handleSkip()}
+                onCancel={foundation.handleSkip}
             >
                 <Show when={hasContent(cover())}>
                     <div class={`${modalPrefixCls}-cover`}>{cover()}</div>
@@ -242,17 +242,17 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 </Show>
                 <div class={`${modalPrefixCls}-footer`}>
                     <Show when={local.showSkipButton && !isLast()}>
-                        <Button type="tertiary" onClick={() => foundation.handleSkip()}>
+                        <Button type="tertiary" onClick={foundation.handleSkip}>
                             {locale().locale.skip}
                         </Button>
                     </Show>
                     <Show when={local.showPrevButton && !isFirst()}>
-                        <FooterButton type="tertiary" own={local.prevButtonProps} onPress={() => foundation.handlePrev()}>
+                        <FooterButton type="tertiary" own={local.prevButtonProps} onPress={foundation.handlePrev}>
                             {prevText()}
                         </FooterButton>
                     </Show>
                     {/* Modal's focus trap otherwise lands on the first control, which is Skip */}
-                    <FooterButton autofocus theme="solid" own={local.nextButtonProps} onPress={() => foundation.handleNext()}>
+                    <FooterButton autofocus theme="solid" own={local.nextButtonProps} onPress={foundation.handleNext}>
                         {nextText()}
                     </FooterButton>
                 </div>
@@ -285,17 +285,17 @@ export default function UserGuide(rawProps: UserGuideProps) {
                         </Show>
                         <div class={`${popupPrefixCls}-buttons`}>
                             <Show when={local.showSkipButton && !isLast()}>
-                                <Button {...secondary()} style={isPrimaryTheme() ? { 'background-color': 'var(--semi-color-fill-2)' } : undefined} onClick={() => foundation.handleSkip()}>
+                                <Button {...secondary()} style={isPrimaryTheme() ? { 'background-color': 'var(--semi-color-fill-2)' } : undefined} onClick={foundation.handleSkip}>
                                     {locale().locale.skip}
                                 </Button>
                             </Show>
                             <Show when={local.showPrevButton && !isFirst()}>
-                                <FooterButton {...secondary()} own={local.prevButtonProps} baseStyle={isPrimaryTheme() ? { 'background-color': 'var(--semi-color-fill-2)' } : undefined} onPress={() => foundation.handlePrev()}>
+                                <FooterButton {...secondary()} own={local.prevButtonProps} baseStyle={isPrimaryTheme() ? { 'background-color': 'var(--semi-color-fill-2)' } : undefined} onPress={foundation.handlePrev}>
                                     {prevText()}
                                 </FooterButton>
                             </Show>
                             {/* a non-modal step is reached after the whole page, so the card focuses its primary button */}
-                            <FooterButton autofocus type="primary" theme={isPrimaryTheme() ? 'borderless' : 'solid'} own={local.nextButtonProps} baseStyle={isPrimaryTheme() ? { 'background-color': 'var(--semi-color-white)' } : undefined} onPress={() => foundation.handleNext()}>
+                            <FooterButton autofocus type="primary" theme={isPrimaryTheme() ? 'borderless' : 'solid'} own={local.nextButtonProps} baseStyle={isPrimaryTheme() ? { 'background-color': 'var(--semi-color-white)' } : undefined} onPress={foundation.handleNext}>
                                 {nextText()}
                             </FooterButton>
                         </div>
@@ -313,7 +313,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 showArrow={item().showArrow !== false}
                 trigger="custom"
                 visible
-                onEscKeyDown={() => foundation.handleSkip()}
+                onEscKeyDown={foundation.handleSkip}
             >
                 {/* Tooltip would make the anchor a Tab stop */}
                 {(t) => <div {...t({ tabIndex: -1, ref: (node: HTMLDivElement) => (anchor = node) })} style={{ position: 'fixed', left: `${rect().x}px`, top: `${rect().y}px`, width: `${rect().width}px`, height: `${rect().height}px`, 'pointer-events': 'none' }} />}
@@ -345,14 +345,14 @@ export default function UserGuide(rawProps: UserGuideProps) {
                 return;
             }
             foundation.beforeShow();
-            onCleanup(() => foundation.releaseScroll());
+            onCleanup(foundation.releaseScroll);
         })
     );
 
     createEffect(
         on(visible, (isVisible) => {
             if (isVisible) {
-                onCleanup(() => foundation.afterHide());
+                onCleanup(foundation.afterHide);
             }
         })
     );

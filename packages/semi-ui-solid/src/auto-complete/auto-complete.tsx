@@ -15,11 +15,13 @@ import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
+import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
+import { type InputGroupContextValue, InputGroupContext, useInputGroupContext } from '../input/context';
 import Input, { type ValidateStatus } from '../input/input';
 import Popover from '../popover';
 import { OptionView } from '../select/option';
@@ -53,7 +55,7 @@ type ComboboxAria = Pick<JSX.AriaAttributes, 'aria-label' | 'aria-labelledby' | 
 export interface AutoCompleteTriggerRenderProps<T extends AutoCompleteItems = AutoCompleteItems> extends ComboboxAria {
     /** The selected item, if any */
     value: BaseDataItem[];
-    inputValue: string | number | undefined;
+    inputValue?: string | number;
     disabled?: boolean;
     placeholder?: string;
     autofocus?: boolean;
@@ -145,8 +147,41 @@ const defaultProps = {
     emptyContent: null,
 } satisfies Partial<AutoCompleteProps>;
 
-export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteItems>(rawProps: AutoCompleteProps<T>) {
-    const props = useDefaultProps('AutoComplete', rawProps, defaultProps);
+export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteItems>(props: AutoCompleteProps<T>) {
+    const group = useInputGroupContext();
+    const layer = usePopupLayer();
+
+    // the slots resolve in the control's body, so the whole control, not only its markup, leaves the InputGroup
+    return (
+        <InputGroupContext.Provider value={undefined}>
+            <AutoCompleteControl {...props} inGroup={group?.layer === layer ? group : undefined} />
+        </InputGroupContext.Provider>
+    );
+}
+
+function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(all: AutoCompleteProps<T> & { inGroup?: InputGroupContextValue }) {
+    const [own, rawProps] = splitProps(all, ['inGroup']);
+    const defaulted = useDefaultProps('AutoComplete', rawProps, defaultProps);
+
+    const config = useConfig();
+
+    const listboxId = createUniqueId();
+    let root: HTMLDivElement | undefined;
+    let input: HTMLInputElement | undefined;
+    let listbox: HTMLDivElement | undefined;
+
+    // fixed for the instance's lifetime: the layer and the context value are
+    const inGroup = untrack(() => own.inGroup);
+
+    // as Input: own value, then the group's, then the global default
+    const props = mergeProps(defaulted, {
+        get size() {
+            return rawProps.size ?? inGroup?.view().size ?? defaulted.size;
+        },
+        get disabled() {
+            return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
+        },
+    });
 
     // validateStatus, insetLabel and insetLabelId are read from props: the Form-injected keys never reach the split
     const [local, rest] = splitProps(omitFormInjected(props), [
@@ -197,13 +232,6 @@ export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteI
     // aria-*, name and an outer Tooltip's tabIndex name and focus the combobox input; the rest lands on the root
     const [control, rootAttrs] = splitControlAttrs(rest, isNativeInputKey);
     const [, componentProps] = splitProps(props, ['ref']);
-
-    const config = useConfig();
-
-    const listboxId = createUniqueId();
-    let root: HTMLDivElement | undefined;
-    let input: HTMLInputElement | undefined;
-    let listbox: HTMLDivElement | undefined;
 
     const { foundation, state } = useFoundation<Foundation, Adapter, AutoCompleteBaseProps, AutoCompleteState>(
         AutoCompleteFoundation,
@@ -314,10 +342,10 @@ export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteI
         get 'aria-required'() {
             return control['aria-required'];
         },
-        onChange: (inputValue) => foundation.handleSearch(inputValue),
-        onClear: () => foundation.handleClear(),
-        onFocus: (e) => foundation.handleFocus(e),
-        onBlur: (e) => foundation.handleBlur(e),
+        onChange: foundation.handleSearch,
+        onClear: foundation.handleClear,
+        onFocus: foundation.handleFocus,
+        onBlur: foundation.handleBlur,
         componentProps: componentProps as Omit<AutoCompleteProps<T>, 'ref'>,
     };
 
@@ -437,10 +465,10 @@ export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteI
             insetLabelId={prefixId()}
             addonBefore={null}
             addonAfter={null}
-            onChange={(inputValue) => foundation.handleSearch(inputValue)}
-            onClear={() => foundation.handleClear()}
-            onFocus={(e) => foundation.handleFocus(e)}
-            onBlur={(e) => foundation.handleBlur(e)}
+            onChange={foundation.handleSearch}
+            onClear={foundation.handleClear}
+            onFocus={foundation.handleFocus}
+            onBlur={foundation.handleBlur}
         />
     );
 
@@ -484,11 +512,7 @@ export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteI
     );
 
     useWatch(data, (next) => foundation.handleDataChange(next ?? []));
-
-    useWatch(
-        () => local.value,
-        (next) => foundation.handleValueChange(next)
-    );
+    useWatch(() => local.value, foundation.handleValueChange);
 
     return (
         <Popover

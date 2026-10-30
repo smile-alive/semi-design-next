@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import FocusTrapHandle from '../focus-handle';
 
-const mount = (html: string) => {
+function mount(html: string) {
     document.body.innerHTML = html;
     return document.getElementById('dialog') as HTMLElement;
-};
+}
 
 afterEach(() => {
     document.body.innerHTML = '';

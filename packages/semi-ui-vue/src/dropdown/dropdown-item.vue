@@ -31,8 +31,7 @@
         }
     };
 
-    const passthrough = (all: Record<string, unknown>) => {
-        const { onClick: _click, onMousedown: _mousedown, ...rest } = all;
+    const passthrough = ({ onClick: _click, onMousedown: _mousedown, ...rest }: Record<string, unknown>) => {
         if (!props.disabled) return rest;
         const { onMouseenter: _enter, onMouseleave: _leave, onContextmenu: _menu, ...enabledOnly } = rest;
         return Object.fromEntries(Object.entries(enabledOnly).filter(([key]) => !isClickListenerKey(key)));

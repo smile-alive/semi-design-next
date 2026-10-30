@@ -133,7 +133,7 @@ export default function Toast(rawProps: ToastItemProps) {
                     </span>
                     <Show when={local.showClose}>
                         <div class={`${prefixCls}-close-button`}>
-                            <IconButton type="tertiary" aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose x-semi-prop="icon" />} onClick={(e) => foundation.close(e)} />
+                            <IconButton type="tertiary" aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose x-semi-prop="icon" />} onClick={foundation.close} />
                         </div>
                     </Show>
                 </div>

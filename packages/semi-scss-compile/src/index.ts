@@ -22,7 +22,7 @@ function componentStylesheets(foundationPath: string, iconPath: string) {
     // theme/ is loaded through semi:theme, its tokens through the entry's semi:theme/global and semi:theme/animation
     const folders = [...new Set(fs.globSync('*/*.scss', { cwd: foundationPath, exclude: ['theme/**'] }).map((file) => path.dirname(file)))];
     return [
-        ...folders.sort().map((folder) => path.join(foundationPath, folder, fileOf[folder] ?? `${folder}.scss`)),
+        ...folders.toSorted().map((folder) => path.join(foundationPath, folder, fileOf[folder] ?? `${folder}.scss`)),
         path.join(iconPath, 'styles', 'icons.scss'),
         // second stylesheets of a component folder
         path.join(foundationPath, 'button', 'icon-button.scss'),
@@ -64,7 +64,7 @@ export function compileSemiAiCss({ aiFoundationPath, foundationPath = resolveFou
     return compileStylesheets(
         { ...options, foundationPath },
         [],
-        [...folders].sort().map((folder) => path.join(aiFoundationPath, folder, `${folder}.scss`))
+        [...folders].toSorted().map((folder) => path.join(aiFoundationPath, folder, `${folder}.scss`))
     );
 }
 

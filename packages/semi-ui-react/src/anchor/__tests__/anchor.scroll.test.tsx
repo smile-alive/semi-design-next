@@ -8,7 +8,7 @@ vi.mock('scroll-into-view-if-needed', () => ({ default: vi.fn<() => void>() }));
 
 const { Link } = Anchor;
 
-const renderAnchor = (props: AnchorProps = {}) => {
+function renderAnchor(props: AnchorProps = {}) {
     render(
         <>
             <Anchor {...props}>
@@ -17,18 +17,18 @@ const renderAnchor = (props: AnchorProps = {}) => {
             <h2 id="docs">Docs</h2>
         </>
     );
-};
+}
 
 interface RecordedOptions {
     block?: string;
     behavior: (actions: object[]) => void;
 }
 const scrollOptions = () => vi.mocked(scrollIntoView).mock.calls.at(-1)[1] as unknown as RecordedOptions;
-const runBehavior = (action?: object) => {
+function runBehavior(action?: object) {
     const el = { scrollHeight: 500, clientHeight: 100, scroll: vi.fn<() => void>() };
     scrollOptions().behavior([{ el, top: 300, left: 40, ...action }]);
     return el.scroll;
-};
+}
 
 describe('Anchor scrollIntoViewOptions', () => {
     beforeEach(() => {

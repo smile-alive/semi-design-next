@@ -9,10 +9,10 @@ import AudioPlayer from '..';
 import AudioSlider from '../audio-slider.vue';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;
-const centerX = (el: Element) => {
+function centerX(el: Element) {
     const rect = el.getBoundingClientRect();
     return rect.left + rect.width / 2;
-};
+}
 const query = <E extends Element = HTMLElement>(container: Element, selector: string) => container.querySelector<E>(selector) as E;
 
 // A source that loads: a load error removes the slider, and Firefox and Safari reject a WAV without samples

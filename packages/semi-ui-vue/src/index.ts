@@ -475,6 +475,7 @@ export {
     FormTagInput,
     FormTextArea,
     FormTimePicker,
+    FormTransfer,
     FormTreeSelect,
     FormUpload,
 } from './form';

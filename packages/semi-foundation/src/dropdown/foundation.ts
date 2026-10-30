@@ -14,6 +14,9 @@ export interface DropdownAdapter<P extends DropdownBaseProps = DropdownBaseProps
     hidePopup(): void;
 }
 
+/** The members of a keyboard event the foundation reads; DOM events and React synthetic events both satisfy it */
+type DropdownKeyEvent = Pick<KeyboardEvent, 'defaultPrevented' | 'key' | 'preventDefault' | 'stopPropagation' | 'target'>;
+
 const { ITEM_SELECTOR } = strings;
 // elements the browser clicks on both Enter and Space
 const NATIVE_KEY_CLICK_SELECTOR = 'button, summary, input[type="button"], input[type="submit"], input[type="reset"]';
@@ -53,7 +56,8 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     }
 
     // a Dropdown inside a menu is a submenu and its trigger is the parent item
-    #handleParentItemKeyDown(event: any, popup: HTMLElement | null) {
+    #handleParentItemKeyDown(event: DropdownKeyEvent, popup: HTMLElement | null) {
+        const { target } = event;
         const popVisible = this.#isOpen();
         const openKey = this._adapter.getContext('direction') === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
         // a trigger that handled the key itself (Tag, Avatar) has already clicked and prevented the default
@@ -70,14 +74,14 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
                     this.#focusOnOpen = 'first';
                     const trigger = this.getProp('trigger');
                     if (trigger === 'click') {
-                        if (!handled) {
-                            event.target.click();
+                        if (!handled && target instanceof HTMLElement) {
+                            target.click();
                         }
-                    } else if (trigger === 'hover' || trigger === 'focus') {
+                    } else if ((trigger === 'hover' || trigger === 'focus') && target instanceof HTMLElement) {
                         // a hover or focus submenu opens on focus, which the item already has after Left or Escape
                         // closed the submenu, so the focus is given again
-                        event.target.blur();
-                        event.target.focus();
+                        target.blur();
+                        target.focus();
                     }
                 }
                 break;
@@ -93,12 +97,12 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     }
 
     /** Closes the menu without moving focus */
-    close() {
+    close = () => {
         this._adapter.hidePopup();
-    }
+    };
 
     /** Tooltip's onVisibleChange: an actual change when uncontrolled, only a request to the owner when controlled */
-    handleVisibleChange(visible: boolean) {
+    handleVisibleChange = (visible: boolean) => {
         if (this.getProp('visible') === undefined) {
             this._adapter.setPopVisible(visible);
         }
@@ -106,13 +110,13 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
             this.#focusOnOpen = null;
         }
         this._adapter.notifyVisibleChange(visible);
-    }
+    };
 
     /**
      * Tooltip's initial focus of each opening, right after the popup is shown, controlled or not. Not deferred to
      * afterOpen: a keyboard user would wait out the enter animation.
      */
-    handleOpened() {
+    handleOpened = () => {
         const popup = this._adapter.getPopup();
         const trigger = popup && getMenuButton(popup.id, popup.getRootNode() as ParentNode);
         // a key press that did not open the menu (disableFocusListener) must not pull focus away when the pointer
@@ -123,12 +127,13 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
             this.#focusEdgeItem(popup, focusOnOpen ?? 'first');
         }
         this.#focusOnOpen = null;
-    }
+    };
 
     /**
      * @param isMenuButton whether the trigger is a menu button: only then Up and Down open a closed menu
      */
-    handleKeyDown(event: any, isMenuButton = false) {
+    handleKeyDown = (event: DropdownKeyEvent, isMenuButton = false) => {
+        const { target } = event;
         const popup = this._adapter.getPopup();
         // the trigger is an item of another menu, so this Dropdown opens a submenu
         const isSubmenu = this._adapter.getContext('menuDepth') > 0;
@@ -141,13 +146,13 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
             case ' ':
             case 'Enter':
                 // in a text field a space is text and Enter submits its form; neither activates the trigger
-                if (isTextEditor(event.target)) {
+                if (isTextEditor(target)) {
                     break;
                 }
                 // the browser already turns these keys into a click on a button; clicking here too runs its handlers twice.
                 // A trigger that handled the key itself (Tag, Avatar) has already clicked and prevented the default.
-                if (!event.defaultPrevented && !event.target.matches(NATIVE_KEY_CLICK_SELECTOR)) {
-                    event.target.click();
+                if (!event.defaultPrevented && target instanceof HTMLElement && !target.matches(NATIVE_KEY_CLICK_SELECTOR)) {
+                    target.click();
                     // otherwise the same Enter also presses a button the click moved focus to
                     event.preventDefault();
                 }
@@ -174,11 +179,13 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
                     handlePrevent(event);
                     this.#focusOnOpen = edge;
                     // a hover or focus trigger opens when it receives focus
-                    if (trigger === 'click') {
-                        event.target.click();
-                    } else {
-                        event.target.blur();
-                        event.target.focus();
+                    if (target instanceof HTMLElement) {
+                        if (trigger === 'click') {
+                            target.click();
+                        } else {
+                            target.blur();
+                            target.focus();
+                        }
                     }
                 }
                 break;
@@ -193,5 +200,5 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
             default:
                 break;
         }
-    }
+    };
 }

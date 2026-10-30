@@ -19,14 +19,14 @@ const top = (el: HTMLElement) => el.getBoundingClientRect().top;
 const wrapperOf = (notice: HTMLElement) => notice.parentElement as HTMLElement;
 // Vue drops the enter and leave classes on animationend, or on a timeout when the animations finished before it started
 // listening; until then a finished slide still holds the wrapper's height
-const finishAnimations = async (notices: HTMLElement[]) => {
+async function finishAnimations(notices: HTMLElement[]) {
     notices.forEach((notice) =>
         wrapperOf(notice)
             .getAnimations({ subtree: true })
             .forEach((a) => a.finish())
     );
     await waitFor(() => expect(notices.filter((notice) => /-animation-(show|hide)_/.test(wrapperOf(notice).className))).toEqual([]));
-};
+}
 
 function renderHook(reachable?: string) {
     let api!: NotificationHookApi;

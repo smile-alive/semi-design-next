@@ -76,10 +76,7 @@ export default function BackTop(rawProps: BackTopProps) {
 
     const hasChildren = () => hasContent(content());
 
-    useWatch(
-        () => local.target,
-        () => foundation.handleTargetChange()
-    );
+    useWatch(() => local.target, foundation.handleTargetChange);
 
     createEffect(() => {
         if (hasChildren() && state().visible) {

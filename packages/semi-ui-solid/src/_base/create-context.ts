@@ -17,13 +17,13 @@ export function createContext<T>(name: string, options: { optional?: true; defau
     const Context = createSolidContext<T | undefined>(options.defaultValue);
     const required = !options.optional && !('defaultValue' in options);
 
-    function useValue(caller = 'This component') {
+    const useValue = (caller = 'This component') => {
         const value = useContext(Context);
         if (value === undefined && required) {
             throw new Error(`${caller} must be used inside ${name}`);
         }
         return value;
-    }
+    };
 
     return [Context, useValue] as const;
 }

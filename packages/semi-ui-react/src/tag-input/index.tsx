@@ -18,6 +18,7 @@ import type { RenderItemProps } from '../_sortable';
 import type { SortableHandle } from '../_sortable/types';
 import { hasContent, isSemiIcon, isText } from '../_utils';
 import Input, { type InputHandle } from '../input';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
 import Tag from '../tag';
@@ -182,7 +183,7 @@ function TagFocusKeeper({ runtime }: { runtime: TagInputRuntime }) {
 }
 
 export default function TagInput(rawProps: TagInputProps) {
-    const props = useDefaultProps('TagInput', rawProps, defaultProps);
+    const props = useDefaultProps('TagInput', withInputGroup(rawProps, useInputGroupInScope()), defaultProps);
 
     const {
         ref,
@@ -531,7 +532,7 @@ export default function TagInput(rawProps: TagInputProps) {
                 [`${prefixCls}-prefix-icon`]: isSemiIcon(labelNode),
             })}
             x-semi-prop="prefix"
-            onClick={() => foundation.handleClickPrefixOrSuffix()}
+            onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
         >
             {labelNode}
@@ -545,7 +546,7 @@ export default function TagInput(rawProps: TagInputProps) {
                 [`${prefixCls}-suffix-icon`]: isSemiIcon(suffix),
             })}
             x-semi-prop="suffix"
-            onClick={() => foundation.handleClickPrefixOrSuffix()}
+            onClick={foundation.handleClickPrefixOrSuffix}
             onMouseDown={(e) => e.preventDefault()}
         >
             {suffix}
@@ -586,77 +587,79 @@ export default function TagInput(rawProps: TagInputProps) {
     });
 
     return (
-        <div
-            {...rootRest}
-            ref={setRoot}
-            className={tagInputCls}
-            style={style}
-            // the input, tags and clear button form one control, so the group carries its disabled state as a whole
-            aria-disabled={disabled || undefined}
-            role="group"
-            // focus moving between the input, the tags and the clear button stays inside the TagInput
-            onBlur={(e) => {
-                // Chromium blurs the picked-up handle when dnd-kit moves it; that is not the focus leaving, and ending
-                // the active state would unmount the list under the drag
-                if (runtime.dragging) {
-                    return;
-                }
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleInputBlur(e);
-                }
-            }}
-            onClick={(e) => {
-                rootRest.onClick?.(e);
-                foundation.handleClick();
-            }}
-            onFocus={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleInputFocus(e);
-                }
-            }}
-        >
-            {prefixNode}
-            <div ref={setWrapper} className={`${prefixCls}-wrapper`}>
-                {tagsNode}
-                <Input
-                    ref={setInput}
-                    id={id}
-                    name={name}
-                    className={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`)}
-                    aria-activedescendant={ariaActivedescendant}
-                    aria-autocomplete={ariaAutocomplete}
-                    aria-controls={ariaControls}
-                    aria-describedby={ariaDescribedby}
-                    aria-errormessage={ariaErrormessage}
-                    aria-expanded={ariaExpanded}
-                    aria-haspopup={ariaHaspopup}
-                    // the value under validation is the text field's, and group does not support aria-invalid
-                    aria-invalid={ariaInvalid ?? (validateStatus === 'error' ? true : undefined)}
-                    // a Form label reaches the input through `id`; without any name source it would have no name
-                    aria-label={ariaLabel ?? (ariaLabelledby || id || insetNameId ? undefined : locale.input)}
-                    aria-labelledby={ariaLabelledby ?? (ariaLabel ? undefined : insetNameId)}
-                    aria-required={ariaRequired}
-                    role={role}
-                    tabIndex={tabIndex}
-                    disabled={disabled}
-                    placeholder={tagsArray.length === 0 ? placeholder : ''}
-                    value={inputValue}
-                    // the wrapper draws the label, clear button and suffix: global Input defaults must not add them
-                    addonAfter={null}
-                    addonBefore={null}
-                    insetLabel={null}
-                    showClear={false}
-                    size={size}
-                    prefix={null}
-                    suffix={null}
-                    onChange={(v, e) => foundation.handleInputChange(v, e)}
-                    onCompositionEnd={foundation.handleInputCompositionEnd}
-                    onCompositionStart={foundation.handleInputCompositionStart}
-                    onKeyDown={foundation.handleKeyDown}
-                />
+        <InputGroupContext value={undefined}>
+            <div
+                {...rootRest}
+                ref={setRoot}
+                className={tagInputCls}
+                style={style}
+                // the input, tags and clear button form one control, so the group carries its disabled state as a whole
+                aria-disabled={disabled || undefined}
+                role="group"
+                // focus moving between the input, the tags and the clear button stays inside the TagInput
+                onBlur={(e) => {
+                    // Chromium blurs the picked-up handle when dnd-kit moves it; that is not the focus leaving, and ending
+                    // the active state would unmount the list under the drag
+                    if (runtime.dragging) {
+                        return;
+                    }
+                    if (!e.currentTarget.contains(e.relatedTarget)) {
+                        foundation.handleInputBlur(e);
+                    }
+                }}
+                onClick={(e) => {
+                    rootRest.onClick?.(e);
+                    foundation.handleClick();
+                }}
+                onFocus={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget)) {
+                        foundation.handleInputFocus(e);
+                    }
+                }}
+            >
+                {prefixNode}
+                <div ref={setWrapper} className={`${prefixCls}-wrapper`}>
+                    {tagsNode}
+                    <Input
+                        ref={setInput}
+                        id={id}
+                        name={name}
+                        className={clsx(`${prefixCls}-wrapper-input`, `${prefixCls}-wrapper-input-${size}`)}
+                        aria-activedescendant={ariaActivedescendant}
+                        aria-autocomplete={ariaAutocomplete}
+                        aria-controls={ariaControls}
+                        aria-describedby={ariaDescribedby}
+                        aria-errormessage={ariaErrormessage}
+                        aria-expanded={ariaExpanded}
+                        aria-haspopup={ariaHaspopup}
+                        // the value under validation is the text field's, and group does not support aria-invalid
+                        aria-invalid={ariaInvalid ?? (validateStatus === 'error' ? true : undefined)}
+                        // a Form label reaches the input through `id`; without any name source it would have no name
+                        aria-label={ariaLabel ?? (ariaLabelledby || id || insetNameId ? undefined : locale.input)}
+                        aria-labelledby={ariaLabelledby ?? (ariaLabel ? undefined : insetNameId)}
+                        aria-required={ariaRequired}
+                        role={role}
+                        tabIndex={tabIndex}
+                        disabled={disabled}
+                        placeholder={tagsArray.length === 0 ? placeholder : ''}
+                        value={inputValue}
+                        // the wrapper draws the label, clear button and suffix: global Input defaults must not add them
+                        addonAfter={null}
+                        addonBefore={null}
+                        insetLabel={null}
+                        showClear={false}
+                        size={size}
+                        prefix={null}
+                        suffix={null}
+                        onChange={foundation.handleInputChange}
+                        onCompositionEnd={foundation.handleInputCompositionEnd}
+                        onCompositionStart={foundation.handleInputCompositionStart}
+                        onKeyDown={foundation.handleKeyDown}
+                    />
+                </div>
+                {clearNode}
+                {suffixNode}
             </div>
-            {clearNode}
-            {suffixNode}
-        </div>
+        </InputGroupContext>
     );
 }

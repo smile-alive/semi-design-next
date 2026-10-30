@@ -12,5 +12,8 @@ const NavWithParts: typeof Nav & {
     Footer: typeof NavFooter;
 } = Object.assign(Nav, { Item: NavItem, Sub: SubNav, Header: NavHeader, Footer: NavFooter });
 export default NavWithParts;
-export { NavItem, SubNav, NavHeader, NavFooter };
+export { default as NavItem } from './nav-item.vue';
+export { default as SubNav } from './sub-nav.vue';
+export { default as NavHeader } from './nav-header.vue';
+export { default as NavFooter } from './nav-footer.vue';
 export type * from './interface';

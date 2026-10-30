@@ -16,13 +16,13 @@ export function createContext<T>(name: string, options: { optional?: true; defau
     const required = !options.optional && !('defaultValue' in options);
 
     // The Compiler's infer mode skips this hook (its only call is use()); it holds nothing to memoize, so that costs nothing
-    function useValue(caller = 'This component') {
+    const useValue = (caller = 'This component') => {
         const value = use(Context);
         if (value === undefined && required) {
             throw new Error(`${caller} must be used inside ${name}`);
         }
         return value;
-    }
+    };
 
     return [Context, useValue] as const;
 }

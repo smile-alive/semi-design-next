@@ -71,7 +71,7 @@ export default function Container(rawProps: ContainerSolidProps) {
     const animation = useCSSAnimation({
         startClassName: () => (visible() ? `${prefixCls}-animation-content_show` : `${prefixCls}-animation-content_hide`),
         motion: () => local.motion,
-        onAnimationEnd: () => foundation.handleAnimationEnd(),
+        onAnimationEnd: foundation.handleAnimationEnd,
     });
 
     const customHeader = children(() => local.renderHeader?.());
@@ -120,7 +120,7 @@ export default function Container(rawProps: ContainerSolidProps) {
             return;
         }
         foundation.beforeShow();
-        onCleanup(() => foundation.closeLayer());
+        onCleanup(foundation.closeLayer);
     });
 
     useWatch(visible, (isVisible) => {
@@ -133,7 +133,7 @@ export default function Container(rawProps: ContainerSolidProps) {
 
     // focused content unmounts with the sidebar and would leave focus on the body; registered on mount, since a server
     // render disposes without one
-    onMount(() => onCleanup(() => foundation.restoreFocus()));
+    onMount(() => onCleanup(foundation.restoreFocus));
 
     return (
         <Show when={mounted()}>

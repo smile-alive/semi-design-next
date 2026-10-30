@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import '@fibrae/semi-foundation/base/tokens.scss';
 
-const collectNames = (rules: CSSRuleList, names: Set<string>) => {
+function collectNames(rules: CSSRuleList, names: Set<string>) {
     for (const rule of rules) {
         if (rule instanceof CSSStyleRule) {
             for (const prop of rule.style) {
@@ -12,15 +12,15 @@ const collectNames = (rules: CSSRuleList, names: Set<string>) => {
         if ('cssRules' in rule) collectNames((rule as CSSGroupingRule).cssRules, names);
     }
     return names;
-};
-const tokenNames = () => {
+}
+function tokenNames() {
     const names = new Set<string>();
     for (const sheet of document.styleSheets) collectNames(sheet.cssRules, names);
-    return [...names].sort();
-};
+    return [...names].toSorted();
+}
 
 // Chrome serializes computed colors as rgb()/rgba(), or color(srgb ...) for relative color syntax
-const channels = (color: string) => {
+function channels(color: string) {
     const numbers = color.match(/-?[\d.]+/g)?.map(Number) ?? [];
     if (color.startsWith('color(srgb')) {
         const [r, g, b, a = 1] = numbers;
@@ -31,12 +31,12 @@ const channels = (color: string) => {
         return [r, g, b, Math.round(a * 100) / 100];
     }
     throw new Error(`未识别的颜色格式：${color}`);
-};
+}
 
-const resolve = (el: Element) => {
+function resolve(el: Element) {
     const raw = getComputedStyle(el).getPropertyValue('--probe').trim();
     return raw.startsWith('linear-gradient') ? getComputedStyle(el).backgroundImage : channels(getComputedStyle(el).color);
-};
+}
 
 const snapshot = (host: Element, names: string[]) =>
     Object.fromEntries(

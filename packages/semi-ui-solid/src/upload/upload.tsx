@@ -345,8 +345,8 @@ export default function Upload(rawProps: UploadProps) {
     };
 
     const handle: UploadHandle = {
-        insert: (files, index) => foundation.insertFileToList(files, index),
-        upload: () => foundation.manualUpload(),
+        insert: foundation.insertFileToList,
+        upload: foundation.manualUpload,
         openFileDialog,
     };
 
@@ -358,8 +358,6 @@ export default function Upload(rawProps: UploadProps) {
         replaceInput?.click();
     };
 
-    const clear = () => foundation.handleClear();
-
     const cards = () => root.querySelector(`.${prefixCls}-${isPicture() ? 'picture-list' : 'file-list-main'}`)?.children ?? [];
 
     const trackFocus = (e: FocusEvent & { target: Element }) => listFocus.track(e.target, cards());
@@ -370,7 +368,7 @@ export default function Upload(rawProps: UploadProps) {
     // the Upload, and a form validates on blur
     const handleFocusOut = (e: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, e);
-        if (e.currentTarget.contains(e.target) && !e.currentTarget.contains(e.relatedTarget as Node | null)) {
+        if (e.currentTarget.contains(e.target) && !(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {
             callHandler(local.onBlur, e);
         }
     };
@@ -545,7 +543,7 @@ export default function Upload(rawProps: UploadProps) {
             get fileList() {
                 return fileList();
             },
-            onClear: clear,
+            onClear: foundation.handleClear,
             get clearText() {
                 return locale().locale.clear;
             },
@@ -558,7 +556,7 @@ export default function Upload(rawProps: UploadProps) {
                     <>
                         <span class={`${prefixCls}-file-list-title-choosen`}>{hasContent(title()) ? title() : locale().locale.selectedFiles}</span>
                         <Show when={local.showClear && !local.disabled}>
-                            <button type="button" class={`${prefixCls}-file-list-title-clear`} onClick={clear}>
+                            <button type="button" class={`${prefixCls}-file-list-title-clear`} onClick={foundation.handleClear}>
                                 {locale().locale.clear}
                             </button>
                         </Show>
@@ -579,19 +577,9 @@ export default function Upload(rawProps: UploadProps) {
         }
     });
 
-    useWatch(
-        () => local.fileList,
-        (value) => foundation.handleFileListPropChange(value)
-    );
-
+    useWatch(() => local.fileList, foundation.handleFileListPropChange);
     createEffect(on([fileList, () => local.disabled], () => listFocus.restore(cards(), addArea?.isConnected ? addArea : null)));
-
-    useEventListener(
-        () => document.body,
-        'paste',
-        (e) => foundation.handlePasting(e),
-        { enabled: () => Boolean(local.addOnPasting) && !local.disabled }
-    );
+    useEventListener(() => document.body, 'paste', foundation.handlePasting, { enabled: () => Boolean(local.addOnPasting) && !local.disabled });
 
     return (
         <div
@@ -685,8 +673,8 @@ export default function Upload(rawProps: UploadProps) {
                 okText={cropConfig().modalOkText}
                 visible={state().cropperVisible}
                 width={local.cropModalProps?.width ?? 600}
-                onCancel={() => foundation.cancelCrop()}
-                onOk={() => foundation.confirmCrop()}
+                onCancel={foundation.cancelCrop}
+                onOk={foundation.confirmCrop}
             >
                 {/* a new image mounts a new Cropper: a reused one would keep the zoom of the previous image */}
                 <Show keyed when={state().cropperSrc || undefined}>

@@ -110,9 +110,9 @@
     useNoticeClose(foundation, list, () => props.id, announce);
 
     defineExpose<NoticeHandle>({
-        restartCloseTimer: () => foundation.restartCloseTimer(),
-        pauseCloseTimer: () => foundation.pauseCloseTimer(),
-        resumeCloseTimer: () => foundation.resumeCloseTimer(),
+        restartCloseTimer: foundation.restartCloseTimer,
+        pauseCloseTimer: foundation.pauseCloseTimer,
+        resumeCloseTimer: foundation.resumeCloseTimer,
     });
 </script>
 

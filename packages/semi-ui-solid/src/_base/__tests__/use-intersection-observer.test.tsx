@@ -5,7 +5,7 @@ import useIntersectionObserver from '../use-intersection-observer';
 
 interface FakeObserver {
     callback: IntersectionObserverCallback;
-    init: IntersectionObserverInit | undefined;
+    init?: IntersectionObserverInit;
     targets: Element[];
     disconnected: boolean;
 }

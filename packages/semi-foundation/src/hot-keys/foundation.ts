@@ -94,17 +94,17 @@ export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseP
     }
 
     /** Applies the same check as mounting, so an invalid combination set later fails just as loudly */
-    handleHotKeysChange() {
+    handleHotKeysChange = () => {
         this.#validate();
-    }
+    };
 
     /** Moves the keydown listener when `getListenerTarget` now returns a different element */
-    handleTargetChange() {
+    handleTargetChange = () => {
         if (this.#getTarget() !== this.#target) {
             this.#unbind();
             this.#bind();
         }
-    }
+    };
 
     override destroy() {
         this.#unbind();

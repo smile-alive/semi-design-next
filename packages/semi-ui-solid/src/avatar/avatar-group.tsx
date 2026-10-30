@@ -20,7 +20,7 @@ const defaultProps = {
 
 interface GroupItemsProps {
     children: JSX.Element;
-    maxCount: number | undefined;
+    maxCount?: number;
     renderMore: AvatarGroupProps['renderMore'];
     item: AvatarGroupItem;
     setOrder: (order: readonly unknown[]) => void;

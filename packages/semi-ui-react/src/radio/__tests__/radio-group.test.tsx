@@ -14,7 +14,7 @@ describe('RadioGroup', () => {
     // data-* attributes are only typed on JSX attributes, not on a props object
     type GroupTestProps = RadioGroupProps & { 'data-test'?: string };
 
-    function createRadioGroup(props: GroupTestProps = {}) {
+    const createRadioGroup = (props: GroupTestProps = {}) => {
         return (
             <RadioGroup {...props}>
                 <Radio value="A">A</Radio>
@@ -22,9 +22,9 @@ describe('RadioGroup', () => {
                 <Radio value="C">C</Radio>
             </RadioGroup>
         );
-    }
+    };
 
-    function createRadioGroupByOption(props: RadioGroupProps = {}) {
+    const createRadioGroupByOption = (props: RadioGroupProps = {}) => {
         const options = [
             { label: 'A', value: 'A' },
             { label: 'B', value: 'B' },
@@ -32,7 +32,7 @@ describe('RadioGroup', () => {
         ];
 
         return <RadioGroup {...props} options={options} />;
-    }
+    };
 
     const getRadio = (name) => screen.getByRole('radio', { name });
 

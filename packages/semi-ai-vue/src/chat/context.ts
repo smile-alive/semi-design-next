@@ -16,6 +16,4 @@ export interface ChatContext {
     copyMessage: (message: ChatMessage) => void;
 }
 
-const [provideChatContext, useChatContext] = createContext<ChatContext>('Chat');
-
-export { useChatContext, provideChatContext };
+export const [provideChatContext, useChatContext] = createContext<ChatContext>('Chat');

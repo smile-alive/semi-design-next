@@ -92,7 +92,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         return typeof getValueLength === 'function' ? getValueLength(value) : value.length;
     }
 
-    handleChange(value: string, e: unknown) {
+    handleChange = (value: string, e: unknown) => {
         const { composition } = this.getProps();
         let nextValue = value;
         // composing: state must still follow, controlled or not, so the element shows the composing text
@@ -104,7 +104,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
             nextValue = this.getNextValue(nextValue);
         }
         this.changeValue(nextValue, e);
-    }
+    };
 
     handleCompositionStart = (e: CE) => {
         this.#compositionEnter = true;
@@ -112,9 +112,9 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         this._adapter.notifyCompositionStart(e);
     };
 
-    handleCompositionEnd = (e: any) => {
+    handleCompositionEnd = (e: CE & Pick<Event, 'target'>) => {
         const { composition } = this.getProps();
-        const value: string = e.target.value;
+        const value = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement ? e.target.value : '';
         this.#compositionEnter = false;
         this._adapter.notifyCompositionEnd(e);
         if (composition) {
@@ -141,10 +141,10 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         this._adapter.notifyCompositionUpdate(e);
     };
 
-    handleFocus(e: unknown) {
+    handleFocus = (e: unknown) => {
         const { value } = this.getStates();
         this.#composedSinceFocus = false;
         this._adapter.toggleFocusing(true);
         this._adapter.notifyFocus(value, e);
-    }
+    };
 }

@@ -17,7 +17,7 @@ export interface RadioGroupBaseState {
 }
 
 export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioGroupBaseProps, S extends RadioGroupBaseState = RadioGroupBaseState> extends BaseFoundation<RadioGroupAdapter<P, S>, P, S> {
-    handleChange(evt: RadioChangeEvent) {
+    handleChange = (evt: RadioChangeEvent) => {
         const mode = this.getProp('mode');
         const lastValue = this.getState('value');
         const { checked, value } = evt.target;
@@ -46,9 +46,9 @@ export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioG
         if (mode === 'advanced' || lastValue !== value) {
             this._adapter.notifyChange(cbValue);
         }
-    }
+    };
 
-    handlePropValueChange(propValue: string | number | boolean) {
+    handlePropValueChange = (propValue: string | number | boolean) => {
         this._adapter.setValue(propValue);
-    }
+    };
 }

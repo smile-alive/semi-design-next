@@ -102,30 +102,30 @@ const triggerTreeData: TreeNodeData[] = [
 
 type Emits = TreeSelectEmits<unknown, boolean>;
 const spy = <K extends keyof Emits>() => vi.fn<(...args: Emits[K]) => void>();
-const mount = (node: () => VNodeChild) => {
+function mount(node: () => VNodeChild) {
     const view = render(() => <ConfigProvider locale={en_US}>{node}</ConfigProvider>);
     return { container: view.container, unmount: () => view.unmount() };
-};
+}
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 const getOptions = () => document.querySelectorAll<HTMLElement>(`.${optionCls}`);
 const getRoot = (root: ParentNode = document) => root.querySelector(`.${prefixCls}`) as HTMLElement;
 const getSelection = (root: ParentNode = document) => root.querySelector(`.${prefixCls}-selection`) as HTMLElement;
-const getOption = async (label: string) => {
+async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
     return within(getPopover() as HTMLElement)
         .getByText(label)
         .closest(`.${optionCls}`) as HTMLElement;
-};
+}
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
 const getTagTexts = (root: ParentNode = document) => [...root.querySelectorAll(`.${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
 const expandIconOf = (root: ParentNode) => root.querySelector(`.${BASE_CLASS_PREFIX}-icon-tree_triangle_down`) as HTMLElement;
 const outside = () => screen.getByRole('button', { name: 'outside' });
 const outsideButton = () => <Button style={{ position: 'fixed', right: 0, bottom: 0 }}>{() => 'outside'}</Button>;
 // Playwright's type() only focuses, but the trigger opens and takes focus on click
-const clickAndType = async (input: Element, text: string) => {
+async function clickAndType(input: Element, text: string) {
     await userEvent.click(input);
     await userEvent.keyboard(text);
-};
+}
 
 const LoadDataTreeSelect = defineComponent({
     setup() {
@@ -753,6 +753,25 @@ describe.each([
         expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onBlur).toHaveBeenCalledTimes(1);
     });
+});
+
+it('打开时按 Tab 关闭下拉并离开，blur 恰好一次', async () => {
+    const onBlur = spy<'blur'>();
+    mount(() => (
+        <>
+            <TreeSelect style={{ width: '300px' }} treeData={regionTreeData} onBlur={onBlur} />
+            <Button>{() => 'after'}</Button>
+        </>
+    ));
+    await tabTo(screen.getByRole('combobox'));
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(getPopover()).not.toBeNull());
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    expect(onBlur).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Tab}');
+    expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+    await waitFor(() => expect(getPopover()).toBeNull());
+    expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
 it('焦点在弹层搜索框时按 Escape 关闭，焦点回到触发器，不额外触发 blur 与 focus', async () => {

@@ -210,14 +210,14 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
     }
 
     /** Re-fits the inline input width without field-sizing; hosts call it when the typed text changes */
-    fitInputWidth() {
+    fitInputWidth = () => {
         const input = this.#fitInline ? this._adapter.getInput() : null;
         if (input) {
             fitInputWidth(input);
         }
-    }
+    };
 
-    handleInputChange(value: string, e: E) {
+    handleInputChange = (value: string, e: E) => {
         const { entering } = this.getStates();
         if (entering) {
             // IME text is not final: handleInputCompositionEnd validates the committed result
@@ -225,9 +225,9 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         } else if (this.#checkInputChangeValid(value)) {
             this.#onInputChange(value, e);
         }
-    }
+    };
 
-    handleInputCompositionStart = (_e: any) => {
+    handleInputCompositionStart = (_e: unknown) => {
         const { maxLength } = this.getProps();
         if (typeof maxLength !== 'number') {
             return;
@@ -284,7 +284,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this._adapter.notifyKeyDown(e);
     };
 
-    handleInputBlur(e: TagInputCursorEvent) {
+    handleInputBlur = (e: TagInputCursorEvent) => {
         const { addOnBlur } = this._adapter.getProps();
         if (addOnBlur === true && this.#current().inputValue !== '') {
             this.#handleAddTags(e);
@@ -294,16 +294,16 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.deactivate();
         this._adapter.setFocusing(false);
         this._adapter.notifyBlur(e);
-    }
+    };
 
-    handleInputFocus(e: TagInputCursorEvent) {
+    handleInputFocus = (e: TagInputCursorEvent) => {
         // Tab entry gets the same state as a click
         this.handleClick();
         this._adapter.setFocusing(true);
         this._adapter.notifyFocus(e);
-    }
+    };
 
-    handleClearBtn(e: TagInputMouseEvent) {
+    handleClearBtn = (e: TagInputMouseEvent) => {
         const { inputValue, tagsArray } = this.#current();
         if (tagsArray.length > 0) {
             if (!this._isControlledComponent()) {
@@ -316,17 +316,17 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         }
         // keeps the click from reaching the TagInput root
         e.stopPropagation();
-    }
+    };
 
-    handleTagClose(index: number) {
+    handleTagClose = (index: number) => {
         const { tagsArray } = this.#current();
         const newTagList = [...tagsArray];
         newTagList.splice(index, 1);
         const removedTag = tagsArray[index];
         this.#onRemove(newTagList, removedTag, index);
-    }
+    };
 
-    handleClick() {
+    handleClick = () => {
         const { disabled } = this.getProps();
         if (disabled) {
             return;
@@ -334,27 +334,27 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         if (!this.getState('active')) {
             this._adapter.setActive(true);
         }
-    }
+    };
 
     /** Ends the active session started by a click: on a mousedown outside the TagInput, or on blur() */
-    deactivate() {
+    deactivate = () => {
         this._adapter.setActive(false);
-    }
+    };
 
-    handleClickPrefixOrSuffix() {
+    handleClickPrefixOrSuffix = () => {
         const { disabled } = this._adapter.getProps();
         const { focusing } = this._adapter.getStates();
         if (!disabled && !focusing) {
             this._adapter.toggleFocusing(true);
         }
-    }
+    };
 
-    handleSortEnd({ oldIndex, newIndex }: OnSortEndProps) {
+    handleSortEnd = ({ oldIndex, newIndex }: OnSortEndProps) => {
         const { tagsArray } = this.#current();
         const newTagsArray = arrayMove(tagsArray, oldIndex, newIndex);
         if (!this._isControlledComponent()) {
             this._adapter.setTagsArray(newTagsArray);
         }
         this._adapter.notifyTagChange(newTagsArray);
-    }
+    };
 }

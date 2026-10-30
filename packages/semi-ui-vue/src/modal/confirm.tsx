@@ -42,11 +42,10 @@ export default function confirm(props: ConfirmProps) {
         }
     };
 
-    const mount = (config: ConfirmProps) => {
+    const mount = ({ afterClose, ...rest }: ConfirmProps) => {
         if (destroyed) {
             return;
         }
-        const { afterClose, ...rest } = config;
         const vnode = (
             <ConfirmModal
                 {...rest}

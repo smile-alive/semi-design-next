@@ -134,7 +134,7 @@ export default function ModalContent(props: ModalContentReactProps) {
     // destructured so the runtime itself never sits in a ref position (the Compiler would treat it as a ref)
     const { attachRoot, attachDialog } = runtime;
     const rootRef = useMergedRef(ref, attachRoot);
-    const closer = closable ? <Button key="close-btn" type="tertiary" className={`${cssClasses.DIALOG}-close`} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose x-semi-prop="closeIcon" />} onClick={(e) => foundation.close(e)} /> : null;
+    const closer = closable ? <Button key="close-btn" type="tertiary" className={`${cssClasses.DIALOG}-close`} aria-label={locale.close} size="small" theme="borderless" icon={closeIcon || <IconClose x-semi-prop="closeIcon" />} onClick={foundation.close} /> : null;
 
     const iconNode = icon ? (
         <span className={`${cssClasses.DIALOG}-icon-wrapper`} x-semi-prop="icon">
@@ -163,7 +163,7 @@ export default function ModalContent(props: ModalContentReactProps) {
             return undefined;
         }
         foundation.show();
-        return () => foundation.hide();
+        return foundation.hide;
     }, [open, foundation]);
 
     // after the mutation-phase cleanup React refocuses the previously focused element if still in the document

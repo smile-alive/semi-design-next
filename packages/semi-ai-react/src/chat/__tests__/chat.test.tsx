@@ -1,8 +1,7 @@
 import { createRef, StrictMode, type SubmitEvent, type ReactNode } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
+import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { Message } from '@fibrae/semi-ai-foundation/chat/foundation';
-import CodeHighlightFoundation from '@fibrae/semi-foundation/code-highlight/index';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-react/upload/index';
@@ -1386,8 +1385,6 @@ describe('Chat 操作与消息渲染', () => {
     });
 
     it('代码块的子节点不是字符串时不提供复制按钮', () => {
-        const highlight = vi.spyOn(CodeHighlightFoundation.prototype, 'highlightCode').mockResolvedValue();
-        onTestFinished(() => highlight.mockRestore());
         const { container } = render(
             <Code className="language-js">
                 <span>const a = 1;</span>

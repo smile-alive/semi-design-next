@@ -43,7 +43,7 @@
     const semi = useSemiGlobal();
 
     const root = useTemplateRef('root');
-    const load = shallowRef<{ src: string | undefined; status: ImageLoadStatus }>({ src: props.src, status: 'loading' });
+    const load = shallowRef<{ src?: string; status: ImageLoadStatus }>({ src: props.src, status: 'loading' });
 
     const prefixCls = cssClasses.PREFIX;
     const statusCls = `${prefixCls}-status`;

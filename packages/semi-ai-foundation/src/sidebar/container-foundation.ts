@@ -48,27 +48,27 @@ export default class ContainerFoundation extends BaseFoundation<ContainerAdapter
 
     override init() {}
 
-    beforeShow() {
+    beforeShow = () => {
         this._adapter.openLayer(this.#handleEscape);
-    }
+    };
 
-    closeLayer() {
+    closeLayer = () => {
         this._adapter.closeLayer();
-    }
+    };
 
     // focused content unmounts with the sidebar, which would leave focus on the body
-    afterHide() {
+    afterHide = () => {
         this.closeLayer();
         this.restoreFocus();
-    }
+    };
 
-    restoreFocus() {
+    restoreFocus = () => {
         this._adapter.restoreFocus();
-    }
+    };
 
-    onVisibleChange(visible: boolean) {
+    onVisibleChange = (visible: boolean) => {
         this._adapter.notifyVisibleChange(visible);
-    }
+    };
 
     handleAnimationEnd = () => {
         const { visible } = this.getProps();

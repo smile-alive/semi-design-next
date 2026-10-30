@@ -354,7 +354,7 @@ function Upload(rawProps: UploadProps) {
     // Blur bubbles, also from the crop dialog rendered in a portal; moving between the controls inside is not leaving
     // the Upload, and a form validates on blur
     const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
-        if (e.currentTarget.contains(e.target as Node) && !e.currentTarget.contains(e.relatedTarget)) {
+        if (e.target instanceof Node && e.currentTarget.contains(e.target) && !e.currentTarget.contains(e.relatedTarget)) {
             onBlur?.(e);
         }
     };
@@ -446,8 +446,6 @@ function Upload(rawProps: UploadProps) {
         foundation.setState({ replaceUid: file.uid });
         runtime.replaceInput?.click();
     };
-
-    const clear = () => foundation.handleClear();
 
     const renderFile = (file: FileItem, index: number): ReactNode => {
         const { name: fileName, status, validateMessage: fileValidateMessage, _sizeInvalid, uid } = file;
@@ -548,13 +546,13 @@ function Upload(rawProps: UploadProps) {
         const showTitle = limit !== 1 && fileList.length;
         let titleContent: ReactNode;
         if (typeof fileListTitle === 'function') {
-            titleContent = fileListTitle({ fileList, onClear: clear, clearText: locale.clear });
+            titleContent = fileListTitle({ fileList, onClear: foundation.handleClear, clearText: locale.clear });
         } else {
             titleContent = (
                 <>
                     <span className={`${titleCls}-choosen`}>{fileListTitle || locale.selectedFiles}</span>
                     {showClear && !disabled && (
-                        <button type="button" className={`${titleCls}-clear`} onClick={clear}>
+                        <button type="button" className={`${titleCls}-clear`} onClick={foundation.handleClear}>
                             {locale.clear}
                         </button>
                     )}
@@ -608,14 +606,14 @@ function Upload(rawProps: UploadProps) {
         }
     });
 
-    useDidUpdate(props.fileList, (fileList) => foundation.handleFileListPropChange(fileList));
-    useEventListener(getBody, 'paste', (e) => foundation.handlePasting(e), { enabled: addOnPasting && !disabled });
+    useDidUpdate(props.fileList, foundation.handleFileListPropChange);
+    useEventListener(getBody, 'paste', foundation.handlePasting, { enabled: addOnPasting && !disabled });
 
     useImperativeHandle(
         props.ref,
         () => ({
-            insert: (files, index) => foundation.insertFileToList(files, index),
-            upload: () => foundation.manualUpload(),
+            insert: foundation.insertFileToList,
+            upload: foundation.manualUpload,
             openFileDialog: () => openDialog(foundation, runtime.input),
         }),
         [foundation, runtime]
@@ -683,8 +681,8 @@ function Upload(rawProps: UploadProps) {
                 okText={cropConfig.modalOkText}
                 visible={state.cropperVisible}
                 width={restModalProps.width ?? 600}
-                onCancel={() => foundation.cancelCrop()}
-                onOk={() => foundation.confirmCrop()}
+                onCancel={foundation.cancelCrop}
+                onOk={foundation.confirmCrop}
             >
                 {/* a new image mounts a new Cropper: a reused one would keep the zoom of the previous image */}
                 {state.cropperSrc && (

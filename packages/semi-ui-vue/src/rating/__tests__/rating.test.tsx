@@ -16,7 +16,7 @@ import Model from './fixtures/model.vue';
 
 type Props = Record<string, unknown>;
 type OnValue = (value: number) => void;
-type OnHover = (value: number | undefined) => void;
+type OnHover = (value?: number) => void;
 type OnClick = (event: MouseEvent | KeyboardEvent, index: number) => void;
 type OnFocus = (event: FocusEvent) => void;
 
@@ -30,7 +30,7 @@ const getFullStars = () => document.querySelectorAll(`.${prefixCls}-star-full`);
 const getHalfStars = () => document.querySelectorAll(`.${prefixCls}-star-half`);
 const expectValue = (value: number, count = 5) => expect(getList()).toHaveAttribute('aria-label', `Rating: ${value} of ${count} star${value === 1 ? '' : 's'},`);
 
-const renderRating = (props: Props = {}, provider: Props = {}) => {
+function renderRating(props: Props = {}, provider: Props = {}) {
     const state = reactive({ ...props });
     const handle = ref<RatingHandle>();
     const view = render({
@@ -41,7 +41,7 @@ const renderRating = (props: Props = {}, provider: Props = {}) => {
         ),
     });
     return { ...view, state, handle: () => handle.value as RatingHandle };
-};
+}
 const keyOnList = (key: string) => fireEvent.keyDown(getList(), { key });
 
 describe('Rating 审计修复', () => {

@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { IconActivity, IconAIBellLevel2, IconAILoading, IconAlarm } from '../src';
-import Icon from '../src/components/Icon';
+import Icon from '../src/components/icon';
 
 describe('semi-icons-react', () => {
     it('图标数据的 DOM 属性名渲染为对应的 SVG 属性', () => {

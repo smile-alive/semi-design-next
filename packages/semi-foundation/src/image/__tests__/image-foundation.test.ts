@@ -30,9 +30,9 @@ describe('ImageFoundation.canPreview', () => {
 });
 
 describe('loadLazyImages', () => {
-    function entry(img: Element, isIntersecting: boolean) {
+    const entry = (img: Element, isIntersecting: boolean) => {
         return { target: img, isIntersecting } as IntersectionObserverEntry;
-    }
+    };
 
     it('进入视口的 img 取得 src 并停止观察', () => {
         const img = document.createElement('img');

@@ -147,13 +147,13 @@
         type: primary.value ? 'primary' : 'tertiary',
     });
 
-    const popupPrevBind = () => buttonBind(secondaryBind(), props.prevButtonProps, () => foundation.handlePrev());
+    const popupPrevBind = () => buttonBind(secondaryBind(), props.prevButtonProps, foundation.handlePrev);
 
-    const popupNextBind = () => buttonBind(primary.value ? { type: 'primary', theme: 'borderless', style: { backgroundColor: 'var(--semi-color-white)' } } : { type: 'primary', theme: 'solid' }, props.nextButtonProps, () => foundation.handleNext());
+    const popupNextBind = () => buttonBind(primary.value ? { type: 'primary', theme: 'borderless', style: { backgroundColor: 'var(--semi-color-white)' } } : { type: 'primary', theme: 'solid' }, props.nextButtonProps, foundation.handleNext);
 
-    const modalPrevBind = () => buttonBind({ type: 'tertiary' }, props.prevButtonProps, () => foundation.handlePrev());
+    const modalPrevBind = () => buttonBind({ type: 'tertiary' }, props.prevButtonProps, foundation.handlePrev);
 
-    const modalNextBind = () => buttonBind({ theme: 'solid' }, props.nextButtonProps, () => foundation.handleNext());
+    const modalNextBind = () => buttonBind({ theme: 'solid' }, props.nextButtonProps, foundation.handleNext);
 
     onDeactivated(() => {
         active.value = false;
@@ -194,14 +194,14 @@
             ([isShown], _, onCleanup) => {
                 if (!isShown) return;
                 foundation.beforeShow();
-                onCleanup(() => foundation.releaseScroll());
+                onCleanup(foundation.releaseScroll);
             },
             { immediate: true, flush: 'post' }
         );
         watch(
             () => props.visible,
             (visible, _, onCleanup) => {
-                if (visible) onCleanup(() => foundation.afterHide());
+                if (visible) onCleanup(foundation.afterHide);
             },
             { immediate: true, flush: 'post' }
         );
@@ -231,7 +231,7 @@
                 :getPopupContainer="getContainer"
                 :mask="showMask"
                 :maskClosable="false"
-                :onCancel="() => foundation.handleSkip()"
+                :onCancel="foundation.handleSkip"
                 :style="$attrs.style as never"
                 :visible="props.visible"
                 :zIndex="props.zIndex"
@@ -254,7 +254,7 @@
                     </div>
                 </div>
                 <div :class="`${modalPrefix}-footer`">
-                    <Button v-if="props.showSkipButton && !isLast" type="tertiary" @click="foundation.handleSkip()">
+                    <Button v-if="props.showSkipButton && !isLast" type="tertiary" @click="foundation.handleSkip">
                         {{ locale.locale.skip }}
                     </Button>
                     <Button v-if="props.showPrevButton && !isFirst" v-bind="modalPrevBind()">
@@ -282,7 +282,7 @@
                     ]"
                     trigger="custom"
                     :visible="props.visible && active"
-                    @escKeyDown="foundation.handleSkip()"
+                    @escKeyDown="foundation.handleSkip"
                 >
                     <!-- tabindex: Tooltip would add 0, an invisible Tab stop -->
                     <div :style="anchorStyle(state.spotlightRect)" tabindex="-1" />
@@ -301,7 +301,7 @@
                                 <div :class="`${popupPrefix}-footer`">
                                     <div v-if="props.steps.length > 1" :class="`${popupPrefix}-indicator`">{{ current + 1 }}/{{ props.steps.length }}</div>
                                     <div :class="`${popupPrefix}-buttons`">
-                                        <Button v-if="props.showSkipButton && !isLast" v-bind="secondaryBind()" @click="foundation.handleSkip()">
+                                        <Button v-if="props.showSkipButton && !isLast" v-bind="secondaryBind()" @click="foundation.handleSkip">
                                             {{ locale.locale.skip }}
                                         </Button>
                                         <Button v-if="props.showPrevButton && !isFirst" v-bind="popupPrevBind()">

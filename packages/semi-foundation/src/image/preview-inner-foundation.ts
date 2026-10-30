@@ -96,7 +96,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         }
     };
 
-    #mouseMoveHandler: ThrottledFunction<(e: any) => void> = throttle((e: any) => {
+    #mouseMoveHandler: ThrottledFunction<(e: unknown) => void> = throttle((e: unknown) => {
         const { viewerVisible } = this.getStates();
         const isValidTarget = this._adapter.isValidTarget(e);
         if (isValidTarget) {
@@ -188,14 +188,14 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         return infinite || (direction === 'prev' ? currentIndex > 0 : currentIndex < total - 1);
     }
 
-    beforeShow() {
+    beforeShow = () => {
         this._adapter.registerKeyDownListener();
         this._adapter.openLayer(this.#handleEscape);
         this._adapter.disabledBodyScroll();
         this.updateTimer();
-    }
+    };
 
-    afterHide() {
+    afterHide = () => {
         this._adapter.unregisterKeyDownListener();
         this._adapter.closeLayer();
         this._adapter.enabledBodyScroll();
@@ -206,18 +206,18 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
             preloadAfterVisibleChange: true,
         });
         this._adapter.setRatio('adaptation');
-    }
+    };
 
     override destroy() {
         this.#mouseMoveHandler.cancel();
     }
 
-    handleMouseMove = (e) => {
+    handleMouseMove = (e: unknown) => {
         this.#mouseMoveHandler(e);
     };
 
     // hidden operations stay focusable, so keyboard activity shows them
-    handleKeyboardActivity = (e: any) => {
+    handleKeyboardActivity = (e: unknown) => {
         if (!this.getState('viewerVisible')) {
             this.setState({
                 viewerVisible: true,
@@ -230,21 +230,21 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         }
     };
 
-    updateTimer() {
+    updateTimer = () => {
         const { viewerVisibleDelay, visible } = this.getProps();
         this.#clearTimer();
         // a timer on a hidden preview would hide the operations on its next show
         if (visible) {
             this.#timer = setTimeout(this.#handleViewVisibleChange, viewerVisibleDelay);
         }
-    }
+    };
 
     handleWheel = (e: WheelEvent) => {
         this.#onWheel(e);
         handlePrevent(e);
     };
 
-    handleMouseUp(e: MouseEvent) {
+    handleMouseUp = (e: MouseEvent) => {
         // a context menu or middle click is not a click on the mask
         if (e.button !== 0) {
             return;
@@ -260,7 +260,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         if (couldClose && maskClosable) {
             this._adapter.notifyVisibleChange(false);
         }
-    }
+    };
 
     handleMouseDown = ({ button, clientX, clientY }: Pick<MouseEvent, 'button' | 'clientX' | 'clientY'>) => {
         if (button !== 0) {
@@ -270,7 +270,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     };
 
     // an Escape that closes the preview reaches it through the overlay stack instead
-    handleKeyDown(e: KeyboardEvent) {
+    handleKeyDown = (e: KeyboardEvent) => {
         // the listener is on window: keys typed in a control outside the preview, such as a page button or a Modal above
         // a non-modal preview, are not meant for it
         if (!this._adapter.isEventInPreview(e)) {
@@ -292,9 +292,9 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
             e.preventDefault();
             this.handleSwitchImage(direction);
         }
-    }
+    };
 
-    handleSwitchImage(direction: SwitchDirection) {
+    handleSwitchImage = (direction: SwitchDirection) => {
         const step = direction === 'prev' ? -1 : 1;
         const srcLength = this.#getImgSrc().length;
         const newIndex = (this.#getCurrentIndex() + step + srcLength) % srcLength;
@@ -312,7 +312,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
             direction,
             rotation: 0,
         });
-    }
+    };
 
     handleDownload = () => {
         const currentIndex = this.#getCurrentIndex();
@@ -326,7 +326,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         this._adapter.notifyDownload(downloadSrc, currentIndex);
     };
 
-    handlePreviewClose = (e: any) => {
+    handlePreviewClose = (e: Pick<Event, 'preventDefault' | 'stopPropagation'>) => {
         this._adapter.notifyVisibleChange(false);
         this._adapter.notifyClose();
         handlePrevent(e);

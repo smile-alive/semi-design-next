@@ -57,11 +57,11 @@ function drop(files) {
     fireEvent.drop(getDragArea(), { dataTransfer: { files, effectAllowed: 'none' } });
 }
 
-const createFile = (size = 1024, name = 'semi-logo.png', type = 'image/png') => {
+function createFile(size = 1024, name = 'semi-logo.png', type = 'image/png') {
     return new File([new ArrayBuffer(size)], name, {
         type: type,
     });
-};
+}
 
 describe('拖拽上传', () => {
     let requests: ReturnType<typeof installFakeXhr>;

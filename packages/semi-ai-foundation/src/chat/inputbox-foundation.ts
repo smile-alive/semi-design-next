@@ -65,7 +65,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         });
     };
 
-    onSend = (_e: any) => {
+    onSend = (_e: unknown) => {
         const { content, attachment } = this.getStates();
         const { disableSend, canSend } = this.getProps();
         if (InputBoxFoundation.getDisableSend(content, attachment, disableSend, canSend)) {
@@ -76,7 +76,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         this._adapter.notifySend(content, attachment);
     };
 
-    onEnterPress = (e: any) => {
+    onEnterPress = (e: Pick<KeyboardEvent, 'shiftKey' | 'stopPropagation' | 'preventDefault'>) => {
         const { sendHotKey } = this.getProps();
         if (sendHotKey === SEND_HOT_KEY.SHIFT_PLUS_ENTER && e.shiftKey === false) {
             return;
@@ -87,7 +87,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         this.onSend(e);
     };
 
-    onPaste = (e: any) => {
+    onPaste = (e: Pick<ClipboardEvent, 'clipboardData' | 'stopPropagation' | 'preventDefault'>) => {
         const items = e.clipboardData?.items;
         const { pasteUpload } = this.getProps();
         let files = [];

@@ -7,10 +7,10 @@ import Progress, { type ProgressProps } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
 
-const renderProgress = (props = {}) => {
+function renderProgress(props = {}) {
     const result = render(<Progress {...props} />);
     return { ...result, rerender: (nextProps) => result.rerender(<Progress {...nextProps} />) };
-};
+}
 const getProgressbar = () => screen.getByRole('progressbar');
 
 describe('Progress', () => {
@@ -24,9 +24,9 @@ describe('Progress', () => {
         const silence = (e) => e.preventDefault();
         window.addEventListener('error', silence);
         const { rerender } = renderProgress({ percent: 30 });
-        function testNaN() {
+        const testNaN = () => {
             rerender({ percent: NaN });
-        }
+        };
         expect(testNaN).toThrow('[Semi Progress]:percent can not be NaN');
         window.removeEventListener('error', silence);
     });

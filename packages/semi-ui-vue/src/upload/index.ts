@@ -6,5 +6,5 @@ const UploadWithParts: typeof Upload & { FileCard: typeof UploadFileCard } = Obj
     FileCard: UploadFileCard,
 });
 export default UploadWithParts;
-export { UploadFileCard };
+export { default as UploadFileCard } from './file-card.vue';
 export type * from './interface';

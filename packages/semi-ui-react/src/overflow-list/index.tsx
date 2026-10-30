@@ -174,12 +174,7 @@ export default function OverflowList(rawProps: OverflowListProps) {
 
     // no root: the foundation and Tabs rely on viewport visibility to tell a list scrolled out of the page from one
     // whose items are all hidden
-    useIntersectionObserver(
-        () => (scrollKeys === null ? [] : [...itemNodes.values()].filter(isHTMLElement)),
-        (entries) => foundation.handleIntersect(entries),
-        { threshold },
-        scrollKeys
-    );
+    useIntersectionObserver(() => (scrollKeys === null ? [] : [...itemNodes.values()].filter(isHTMLElement)), foundation.handleIntersect, { threshold }, scrollKeys);
 
     // narrowed on props: the destructured renderer does not follow the renderMode check
     if (props.renderMode === RenderMode.SCROLL) {

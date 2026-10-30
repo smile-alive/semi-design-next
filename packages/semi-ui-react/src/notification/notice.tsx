@@ -105,10 +105,10 @@ export default function Notice(rawProps: NoticeReactProps) {
     useImperativeHandle(
         props.ref,
         () => ({
-            restartCloseTimer: () => foundation.restartCloseTimer(),
-            pauseCloseTimer: () => foundation.pauseCloseTimer(),
-            resumeCloseTimer: () => foundation.resumeCloseTimer(),
-            leave: () => foundation.leave(),
+            restartCloseTimer: foundation.restartCloseTimer,
+            pauseCloseTimer: foundation.pauseCloseTimer,
+            resumeCloseTimer: foundation.resumeCloseTimer,
+            leave: foundation.leave,
             element: () => noticeRef.current,
             announcement: () => readNoticeText(noticeRef.current, prefixCls),
         }),
@@ -153,7 +153,7 @@ export default function Notice(rawProps: NoticeReactProps) {
                         </div>
                     )}
                 </div>
-                {showClose && <Button type="tertiary" className={`${prefixCls}-icon-close`} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={(e) => foundation.clickClose(e)} />}
+                {showClose && <Button type="tertiary" className={`${prefixCls}-icon-close`} aria-label={locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={foundation.clickClose} />}
             </div>
         </div>
     );

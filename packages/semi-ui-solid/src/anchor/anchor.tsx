@@ -77,7 +77,7 @@ export default function Anchor(rawProps: AnchorProps) {
     const rootStyle = () => mergeStyles(local.style, { 'max-width': toCssLength(local.maxWidth), 'max-height': toCssLength(local.maxHeight) });
 
     // getContainer runs inside the effect, so a signal it reads moves the scroll listeners
-    createEffect(() => foundation.handleContainerChange());
+    createEffect(foundation.handleContainerChange);
 
     // links above the active one can move it without the active link changing
     createEffect(
@@ -87,7 +87,7 @@ export default function Anchor(rawProps: AnchorProps) {
     );
 
     // a narrower container wraps link titles, which moves the active link without any commit
-    useResizeObserver(linkWrapper, () => foundation.syncSlideBar());
+    useResizeObserver(linkWrapper, foundation.syncSlideBar);
 
     return (
         <AnchorContext.Provider value={{ view, onClick: foundation.handleClick, addLink: foundation.addLink, removeLink: foundation.removeLink }}>

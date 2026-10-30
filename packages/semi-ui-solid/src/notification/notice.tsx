@@ -140,7 +140,7 @@ export default function Notice(rawProps: NoticeProps) {
                     </Show>
                 </div>
                 <Show when={local.showClose}>
-                    <IconButton type="tertiary" class={`${prefixCls}-icon-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={(e) => foundation.clickClose(e)} />
+                    <IconButton type="tertiary" class={`${prefixCls}-icon-close`} aria-label={locale().locale.close} size="small" theme="borderless" icon={<IconClose />} onClick={foundation.clickClose} />
                 </Show>
             </div>
         </div>

@@ -409,11 +409,12 @@ export const ssrCases: SsrCase[] = [
         name: 'input/输入框组',
         covers: ['InputGroup'],
         element: () => (
-            <InputGroup>
+            <InputGroup disabled size="small">
                 <Input />
                 <Input />
             </InputGroup>
         ),
+        html: ['semi-input-wrapper-small', 'disabled=""'],
     },
     { name: 'input/文本域', covers: ['TextArea'], element: () => <TextArea value="multi" autosize />, html: ['multi'] },
     { name: 'input-number/受控值', covers: ['InputNumber'], element: () => <InputNumber value={1234.5} formatter={(value) => `${value}%`} parser={(value) => value.replace('%', '')} />, html: ['value="1234.5%"'] },

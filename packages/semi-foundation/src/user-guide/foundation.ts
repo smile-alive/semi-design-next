@@ -78,19 +78,19 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         this._adapter.enabledBodyScroll();
     }
 
-    beforeShow() {
+    beforeShow = () => {
         this._adapter.disabledBodyScroll();
-    }
+    };
 
     // the scroll lock follows whether a step is on screen, which can end while the guide is still visible
-    releaseScroll() {
+    releaseScroll = () => {
         this._adapter.enabledBodyScroll();
-    }
+    };
 
-    afterHide() {
+    afterHide = () => {
         this.releaseScroll();
         this._adapter.setCurrent(numbers.DEFAULT_CURRENT);
-    }
+    };
 
     handlePrev = () => {
         const newCurrent = this.#getCurrent() - 1;

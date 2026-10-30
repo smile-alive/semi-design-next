@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { AutoComplete, Cascader, Checkbox, ColorPicker, Cropper, DatePicker, Form, PinCode, Radio, Rating, Select, Slider, Switch, TagInput, TimePicker, Transfer, TreeSelect, Upload } from '@fibrae/semi-ui-react';
+import { AutoComplete, Cascader, Checkbox, ColorPicker, Cropper, DatePicker, Form, InputGroup, PinCode, Radio, Rating, Select, Slider, Switch, TagInput, TimePicker, Transfer, TreeSelect, Upload } from '@fibrae/semi-ui-react';
 
 // Literal JSX attributes on purpose: spread props skip the excess-property check (F6 type half); runtime checks F2.
 const onKeyDown = vi.fn<() => void>();
@@ -14,6 +14,7 @@ const cases: [string, () => ReactElement, string][] = [
     ['ColorPicker', () => <ColorPicker id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'colorPicker'],
     ['Cropper', () => <Cropper id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'cropper'],
     ['DatePicker', () => <DatePicker id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'datepicker'],
+    ['InputGroup', () => <InputGroup id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'input-group'],
     ['PinCode', () => <PinCode id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'pincode-wrapper'],
     ['Radio', () => <Radio id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'radio'],
     ['Radio.Group', () => <Radio.Group id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'radioGroup'],

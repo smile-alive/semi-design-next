@@ -18,7 +18,7 @@
         /** The filter options: the column's query, or the column itself when it has no dataIndex */
         query: ColumnProps;
         /** The applied value */
-        filteredValue: any[] | undefined;
+        filteredValue?: any[];
     }>();
 
     const table = useTableContext();

@@ -17,7 +17,7 @@ const mediumText = 'A modern, comprehensive, flexible design system that gives y
 const longText =
     'Semi Design is a design system designed, developed and maintained by the Douyin front-end team and the MED product design team. As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution, it is refined from the complex scenes of Bytedance various business lines, supports nearly a thousand platform products, and serves 100,000+ internal and external users. After nearly two years of iteration, Semi Design has become a cross-departmental infrastructure after various types of business landing verification, and has formed a rich tool chain and ecology around the component library. In order to allow the increasingly mature design system to serve more users and to further explore the usage scenarios, we decided to open source Semi and use the power of the community to continuously improve and expand the capability boundary.';
 
-const renderAutosizeTextAreas = () => {
+function renderAutosizeTextAreas() {
     render({
         render: () => (
             <div style={{ width: '200px' }}>
@@ -31,15 +31,15 @@ const renderAutosizeTextAreas = () => {
         ),
     });
     return screen.getAllByRole<HTMLTextAreaElement>('textbox');
-};
+}
 const renderInBox = (width: number, child: () => VNode) => render({ render: () => <div style={{ width: `${width}px` }}>{child()}</div> });
 const styleOf = (el: Element) => getComputedStyle(el);
 const fitsContent = (el: Element) => expect(el.scrollHeight).toBe(el.clientHeight);
 // Firefox computes a textarea's own overflow as visible and scrolls an inner box, so the scrolling itself is checked
-const expectScrollable = (el: Element) => {
+function expectScrollable(el: Element) {
     el.scrollTop = el.scrollHeight;
     expect(el.scrollTop).toBeGreaterThan(0);
-};
+}
 const lineNumberPanel = () => document.querySelector<HTMLElement>(`.${prefix}-textarea-lineNumber`) as HTMLElement;
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

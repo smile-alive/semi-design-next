@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import CarouselFoundation from '@fibrae/semi-foundation/carousel/foundation';
+import { numbers } from '@fibrae/semi-foundation/carousel/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Carousel, ConfigProvider } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
@@ -252,22 +252,26 @@ describe('Carousel', () => {
         });
 
         it('重渲染间共享同一个防抖的鼠标处理函数', () => {
-            const { container, rerender } = render(getCarousel({ autoPlay }));
-            const handleAutoPlay = vi.spyOn(CarouselFoundation.prototype, 'handleAutoPlay');
+            const onChange = vi.fn<OnChange>();
+            const { container, rerender } = render(getCarousel({ autoPlay, onChange }));
             const root = container.querySelector(`.${BASE_CLASS_PREFIX}-carousel`);
+            const tick = (ms: number) =>
+                act(() => {
+                    vi.advanceTimersByTime(ms);
+                });
+            const interval = autoPlay.interval + numbers.DEFAULT_SPEED;
 
             fireEvent.mouseEnter(root);
-            act(() => {
-                vi.advanceTimersByTime(400);
-            });
+            tick(400);
             fireEvent.mouseLeave(root);
-            rerender(getCarousel({ autoPlay, className: 'rerendered' }));
+            rerender(getCarousel({ autoPlay, onChange, className: 'rerendered' }));
+            tick(300);
             fireEvent.mouseLeave(root);
-            act(() => {
-                vi.advanceTimersByTime(400);
-            });
-            expect(handleAutoPlay).toHaveBeenCalledTimes(1);
-            handleAutoPlay.mockRestore();
+            // playback resumes 400ms after the last leave, so the first slide change is one interval after that
+            tick(400 + interval - 1);
+            expect(onChange).not.toHaveBeenCalled();
+            tick(1);
+            expect(onChange).toHaveBeenCalledExactlyOnceWith(1, 0);
         });
 
         it('卸载时丢弃待执行的悬停处理函数', () => {

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { type FormApi, ArrayField, Form, FormInput } from '..';
 
 describe('ArrayField 索引插入', () => {
-    function renderDemo(initValues: Record<string, any> = { tasks: [{ name: 'task-0' }, { name: 'task-1' }, { name: 'task-2' }] }) {
+    const renderDemo = (initValues: Record<string, any> = { tasks: [{ name: 'task-0' }, { name: 'task-1' }, { name: 'task-2' }] }) => {
         let formApi: FormApi | undefined;
         render(() => (
             <Form getFormApi={(api) => (formApi = api)} initValues={initValues}>
@@ -52,7 +52,7 @@ describe('ArrayField 索引插入', () => {
             </Form>
         ));
         return { values: () => formApi?.getValue('tasks') as unknown[] };
-    }
+    };
 
     const click = (testId: string) => fireEvent.click(screen.getByTestId(testId));
     const count = () => screen.getByTestId('count').textContent;

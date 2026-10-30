@@ -34,15 +34,15 @@ const pressEnter = () => fireEvent.keyDown(getInput(), { key: 'Enter' });
 const pressBackspace = () => fireEvent.keyDown(getInput(), { key: 'Backspace' });
 const renderTagInput = (props: Record<string, unknown> = {}, slots: Slots = {}) => render(TagInput, { props, slots });
 // Testing Library's Vue fireEvent resolves to nothing, so read defaultPrevented from a dispatched event
-const dispatch = (el: Element, event: Event) => {
+function dispatch(el: Element, event: Event) {
     el.dispatchEvent(event);
     return event;
-};
+}
 // jsdom keeps no hover state; Tooltip re-checks `:hover` on its trigger right after opening and closes otherwise.
 // Spying on a spied method returns the same spy, so the spy is set once per test and reads the latest target.
 const nativeMatches = Object.getOwnPropertyDescriptor(Element.prototype, 'matches')?.value as Element['matches'];
 let hovered: Element | null = null;
-const hover = async (target: Element) => {
+async function hover(target: Element) {
     if (!hovered) {
         vi.spyOn(Element.prototype, 'matches').mockImplementation(function (this: Element, selector: string) {
             return selector === ':hover' ? Boolean(hovered && this.contains(hovered)) : nativeMatches.call(this, selector);
@@ -50,7 +50,7 @@ const hover = async (target: Element) => {
     }
     hovered = target;
     await userEvent.hover(target);
-};
+}
 // The ellipsis measurement that enables the tooltip settles asynchronously; on a loaded CI runner it outlasts waitFor's 1s default
 const hoverUntil = (target: Element, popupSelector: string) =>
     waitFor(
@@ -62,13 +62,13 @@ const hoverUntil = (target: Element, popupSelector: string) =>
     );
 const mouseDown = (el: Element) => dispatch(el, new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
 
-const renderWithHandle = (props: Record<string, unknown> = {}) => {
+function renderWithHandle(props: Record<string, unknown> = {}) {
     const refFn = vi.fn<(handle: TagInputHandle | null) => void>();
     const Host = (hostProps: Record<string, unknown>) => <TagInput {...hostProps} ref={(value) => refFn(value as TagInputHandle | null)} />;
     const view = render(Host, { props });
     const handle = () => refFn.mock.calls[0]?.[0] as TagInputHandle;
     return { ...view, handle };
-};
+}
 
 afterEach(() => {
     semiGlobal.config.overrideDefaultProps = {};

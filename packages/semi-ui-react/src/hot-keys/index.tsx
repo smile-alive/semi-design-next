@@ -61,8 +61,8 @@ function HotKeys(rawProps: HotKeysProps) {
         foundation.handleTargetChange();
     }, [foundation]);
 
-    useDidUpdate(props.getListenerTarget, () => foundation.handleTargetChange());
-    useDidUpdate(props.hotKeys, () => foundation.handleHotKeysChange());
+    useDidUpdate(props.getListenerTarget, foundation.handleTargetChange);
+    useDidUpdate(props.hotKeys, foundation.handleHotKeysChange);
 
     if (render !== undefined && custom === null) {
         return null;

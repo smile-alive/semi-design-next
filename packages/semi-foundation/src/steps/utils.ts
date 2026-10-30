@@ -2,7 +2,7 @@ export type StepStatus = 'wait' | 'process' | 'finish' | 'error' | 'warning';
 
 export interface StepState {
     /** Undefined when the step has its own status */
-    status: StepStatus | undefined;
+    status?: StepStatus;
     active: boolean;
     done: boolean;
     /** The step before the current one while the flow is in error */

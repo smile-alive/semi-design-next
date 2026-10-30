@@ -85,7 +85,7 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
     #allowMove(e: PointerEvent) {
         const { allowMove, allowInputDrag } = this.getProps();
         if (!allowInputDrag) {
-            const target = (e.target as HTMLElement).tagName.toLowerCase();
+            const target = e.target instanceof Element ? e.target.tagName.toLowerCase() : '';
             if (target === 'input' || target === 'textarea') {
                 return false;
             }
@@ -190,9 +190,12 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
         if (isSecondaryPress(e)) {
             return;
         }
-        const element = e.currentTarget as HTMLElement;
+        const element = e.currentTarget;
+        if (!(element instanceof HTMLElement)) {
+            return;
+        }
         const handler = this.#getHandler(element);
-        if (!handler.contains(e.target as Node)) {
+        if (!(e.target instanceof Node && handler.contains(e.target))) {
             return;
         }
         this.#element = element;
@@ -226,7 +229,7 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
      * Prepares host children as they appear: the position strategy, a move cursor on the handler, and
      * `touch-action: none` so a touch drag is not taken over by scrolling.
      */
-    prepareElements(elements: Element[]) {
+    prepareElements = (elements: Element[]) => {
         for (const element of this.#elements) {
             if (!element.isConnected) {
                 this.#elements.delete(element);
@@ -243,13 +246,13 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
             this.#handlerObserver.observe(element, { childList: true, subtree: true });
         }
         this.#prepareHandlers();
-    }
+    };
 
-    updatePositionStrategy() {
+    updatePositionStrategy = () => {
         for (const element of this.#elements) {
             this.#applyPositionStrategy(element);
         }
-    }
+    };
 
     override destroy() {
         this.#stopDrag();

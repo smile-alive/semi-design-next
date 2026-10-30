@@ -7,11 +7,11 @@ import type { DragMoveProps } from '../index';
 
 type PointerHandler = (e: PointerEvent) => void;
 
-const drag = (element, from, to, pointerType = 'mouse') => {
+function drag(element, from, to, pointerType = 'mouse') {
     fireEvent.pointerDown(element, { pointerId: 1, pointerType, clientX: from[0], clientY: from[1] });
     fireEvent.pointerMove(document, { pointerId: 1, pointerType, clientX: to[0], clientY: to[1] });
     fireEvent.pointerUp(document, { pointerId: 1, pointerType });
-};
+}
 
 // jsdom has no layout, so a real ResizeObserver never reports. This one reports each observed child when flushed,
 // which render and rerender below do after committing, like the browser reporting before paint.
@@ -35,7 +35,7 @@ class ReportingResizeObserver {
 
 const flushResizeReports = () => act(() => pendingReports.splice(0).forEach((report) => report()));
 
-const render = (ui) => {
+function render(ui) {
     const result = rtlRender(ui);
     flushResizeReports();
     return {
@@ -45,13 +45,13 @@ const render = (ui) => {
             flushResizeReports();
         },
     };
-};
+}
 
 // jsdom has no layout; give elements the offset sizes the absolute strategy reads
-const setSize = (element, width, height) => {
+function setSize(element, width, height) {
     Object.defineProperty(element, 'offsetWidth', { configurable: true, value: width });
     Object.defineProperty(element, 'offsetHeight', { configurable: true, value: height });
-};
+}
 
 describe('DragMove', () => {
     beforeEach(() => {

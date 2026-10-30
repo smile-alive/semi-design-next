@@ -18,10 +18,10 @@
         key: string | number;
         column: ColumnProps;
         attrs: Record<string, unknown>;
-        sortTip: string | undefined;
+        sortTip?: string;
         /** Sorting, filtering or full render: ColumnTitle composes the title */
         needsTitle: boolean;
-        title: KeyedNode[] | string | undefined;
+        title?: KeyedNode[] | string;
     }
 
     const props = defineProps<{

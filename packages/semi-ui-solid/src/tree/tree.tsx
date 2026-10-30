@@ -185,7 +185,7 @@ export default function Tree(rawProps: TreeProps) {
         get value() {
             return state().inputValue;
         },
-        onChange: (value) => foundation.handleInputChange(value),
+        onChange: foundation.handleInputChange,
         get prefix() {
             return <IconSearch />;
         },
@@ -229,8 +229,8 @@ export default function Tree(rawProps: TreeProps) {
         rowProps,
         hasLoadData: () => Boolean(local.loadData),
         rtl: () => config().direction === 'rtl',
-        select: (e, row) => foundation.handleNodeSelect(e, row),
-        expand: (e, row) => foundation.handleNodeExpand(e, row),
+        select: foundation.handleNodeSelect,
+        expand: foundation.handleNodeExpand,
         reveal,
     });
 
@@ -261,12 +261,12 @@ export default function Tree(rawProps: TreeProps) {
         onNodeCheck: (e, row) => activate(row, () => foundation.handleNodeSelect(e, row)),
         onNodeRightClick: (e, row) => activate(row, () => foundation.handleNodeRightClick(e, row)),
         onNodeDoubleClick: (e, row) => activate(row, () => foundation.handleNodeDoubleClick(e, row)),
-        onNodeDragStart: (e, row) => foundation.handleNodeDragStart(e, row),
-        onNodeDragEnter: (e, row) => foundation.handleNodeDragEnter(e, row),
-        onNodeDragOver: (e, row) => foundation.handleNodeDragOver(e, row),
-        onNodeDragLeave: (e, row) => foundation.handleNodeDragLeave(e, row),
-        onNodeDragEnd: (e, row) => foundation.handleNodeDragEnd(e, row),
-        onNodeDrop: (e, row) => foundation.handleNodeDrop(e, row),
+        onNodeDragStart: foundation.handleNodeDragStart,
+        onNodeDragEnter: foundation.handleNodeDragEnter,
+        onNodeDragOver: foundation.handleNodeDragOver,
+        onNodeDragLeave: foundation.handleNodeDragLeave,
+        onNodeDragEnd: foundation.handleNodeDragEnd,
+        onNodeDrop: foundation.handleNodeDrop,
     };
 
     const renderRow = (node: Accessor<FlattenNode | undefined>, style?: Accessor<JSX.CSSProperties>) => {
@@ -283,7 +283,7 @@ export default function Tree(rawProps: TreeProps) {
 
     const handleTreeKeyDown = (event: KeyboardEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         // a tabbable control inside a row handles its own keys
-        if (event.target !== event.currentTarget && (event.target as HTMLElement).tabIndex >= 0) {
+        if (event.target !== event.currentTarget && event.target instanceof HTMLElement && event.target.tabIndex >= 0) {
             return;
         }
         handleKeyDown(event);
@@ -294,7 +294,7 @@ export default function Tree(rawProps: TreeProps) {
         if (event.target !== tree) {
             // a click focuses the tabindex=-1 element it lands on (the virtual scroller, a row's checkbox); the tree
             // takes focus back, so aria-activedescendant and the row's focus ring keep working
-            if ((event.target as HTMLElement).tabIndex < 0) {
+            if (event.target instanceof HTMLElement && event.target.tabIndex < 0) {
                 tree.focus({ preventScroll: true });
             }
             return;

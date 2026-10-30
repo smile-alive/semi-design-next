@@ -6,5 +6,5 @@ const CollapseWithPanel: typeof Collapse & { Panel: typeof CollapsePanel } = Obj
     Panel: CollapsePanel,
 });
 export default CollapseWithPanel;
-export { CollapsePanel };
+export { default as CollapsePanel } from './panel.vue';
 export type * from './interface';

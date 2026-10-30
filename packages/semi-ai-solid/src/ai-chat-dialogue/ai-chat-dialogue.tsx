@@ -137,26 +137,26 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
     );
 
     const handle: AIChatDialogueHandle = {
-        selectAll: () => foundation.handleSelectAll(),
-        deselectAll: () => foundation.handleDeselectAll(),
+        selectAll: foundation.handleSelectAll,
+        deselectAll: foundation.handleDeselectAll,
         scrollToBottom: (animation) => (animation ? foundation.scrollToBottomWithAnimation() : foundation.scrollToBottomImmediately()),
         scrollToTop: (animation) => (animation ? foundation.scrollToTopWithAnimation() : foundation.scrollToTopImmediately()),
     };
 
     const context: AIChatDialogueContextValue = {
         view,
-        selectChange: (checked, id) => foundation.handleSelectOrRemove(checked, id),
+        selectChange: foundation.handleSelectOrRemove,
         annotationClick: (annotations) => local.onAnnotationClick?.(annotations),
         fileClick: (file) => local.onFileClick?.(file),
         imageClick: (image) => local.onImageClick?.(image),
         referenceClick: (item) => local.onReferenceClick?.(item),
         messageCopy: (message) => local.onMessageCopy?.(message),
         messageShare: (message) => local.onMessageShare?.(message),
-        messageGoodFeedback: (message) => foundation.likeMessage(message),
-        messageBadFeedback: (message) => foundation.dislikeMessage(message),
-        messageReset: (message) => foundation.resetMessage(message),
-        messageEdit: (message) => foundation.editMessage(message),
-        messageDelete: (message) => foundation.deleteMessage(message),
+        messageGoodFeedback: foundation.likeMessage,
+        messageBadFeedback: foundation.dislikeMessage,
+        messageReset: foundation.resetMessage,
+        messageEdit: foundation.editMessage,
+        messageDelete: foundation.deleteMessage,
     };
 
     // a busy log defers announcements, so a streamed reply is read once it settles, not chunk by chunk
@@ -174,7 +174,7 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
 
     return (
         <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(prefix, local.class)} style={local.style}>
-            <div ref={(node) => (list = node)} class={`${prefix}-list`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={(e) => foundation.containerScroll(e)}>
+            <div ref={(node) => (list = node)} class={`${prefix}-list`} aria-busy={streaming()} aria-label={locale().locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                 <AIChatDialogueContext.Provider value={context}>
                     <For each={chatIds()}>
                         {(id, index) => {
@@ -184,13 +184,13 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
                         }}
                     </For>
                     <Show when={hints().length > 0}>
-                        <Hint class={local.hintCls} style={local.hintStyle} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={(hint) => foundation.onHintClick(hint)} />
+                        <Hint class={local.hintCls} style={local.hintStyle} hints={hints()} selecting={local.selecting} renderHintBox={local.renderHintBox} onHintClick={foundation.onHintClick} />
                     </Show>
                 </AIChatDialogueContext.Provider>
             </div>
             <Show when={state().backBottomVisible}>
                 <span ref={handoverBackBottomFocus} class={`${prefix}-backBottom`}>
-                    <Button type="tertiary" class={`${prefix}-backBottom-button`} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={() => foundation.scrollToBottomWithAnimation()} />
+                    <Button type="tertiary" class={`${prefix}-backBottom-button`} aria-label={locale().locale.backToBottom} icon={<IconChevronDown size="extra-large" />} onClick={foundation.scrollToBottomWithAnimation} />
                 </span>
             </Show>
         </div>

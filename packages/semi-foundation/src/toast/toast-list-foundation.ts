@@ -31,31 +31,31 @@ export default class ToastListStore {
     getSnapshot = () => this.#items.getSnapshot();
 
     /** Shows a toast at the end, or updates the shown one with the same id in place */
-    add(toast: ToastInstance) {
+    add = (toast: ToastInstance) => {
         this.#items.add(toast);
-    }
+    };
 
-    remove(id: string) {
+    remove = (id: string) => {
         this.#items.remove(id);
-    }
+    };
 
-    finishLeave(id: string) {
+    finishLeave = (id: string) => {
         this.#items.finishLeave(id);
-    }
+    };
 
-    clear() {
+    clear = () => {
         this.#items.clear();
-    }
+    };
 
-    setStack(option?: boolean | number) {
+    setStack = (option?: boolean | number) => {
         const stack = option === true ? numbers.stackThreshold : typeof option === 'number' ? Math.max(option, 0) : 0;
         const { stack: current, updatedItems } = this.#items.getSnapshot();
         if (stack !== current) {
             this.#items.set({ stack, updatedItems });
         }
-    }
+    };
 
-    config(opts: ConfigProps) {
+    config = (opts: ConfigProps) => {
         for (const pos of positions) {
             if (pos in opts) {
                 this.defaults[pos] = opts[pos];
@@ -73,12 +73,12 @@ export default class ToastListStore {
         if (typeof opts.getPopupContainer === 'function') {
             this.defaults.getPopupContainer = opts.getPopupContainer;
         }
-    }
+    };
 
-    resetConfig() {
+    resetConfig = () => {
         this.defaults = { ...builtInOpts };
         if (this.#initialConfig) {
             this.config(this.#initialConfig);
         }
-    }
+    };
 }

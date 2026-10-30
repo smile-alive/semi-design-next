@@ -206,7 +206,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         )
     );
 
-    useWatch(srcList, () => foundation.updateTimer());
+    useWatch(srcList, foundation.updateTimer);
 
     // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
     // moved elsewhere is left alone.
@@ -239,15 +239,15 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                     aria-modal={inBody() ? 'true' : undefined}
                     role="dialog"
                     tabIndex={-1}
-                    onFocusIn={(e) => foundation.handleKeyboardActivity(e)}
-                    onMouseDown={(e) => foundation.handleMouseDown(e)}
-                    onMouseMove={(e) => foundation.handleMouseMove(e)}
-                    onMouseUp={(e) => foundation.handleMouseUp(e)}
+                    onFocusIn={foundation.handleKeyboardActivity}
+                    onMouseDown={foundation.handleMouseDown}
+                    onMouseMove={foundation.handleMouseMove}
+                    onMouseUp={foundation.handleMouseUp}
                     // not delegated, so a native listener on an element: not passive, and the trackpad pinch can be
                     // kept from zooming the page
-                    onWheel={(e) => foundation.handleWheel(e)}
+                    onWheel={foundation.handleWheel}
                 >
-                    <Header ref={(node) => (header = node)} class={hideCls()} title={title()} closable={props.closable} titleId={titleId} renderCloseIcon={props.renderCloseIcon} renderHeader={props.renderHeader} onClose={(e) => foundation.handlePreviewClose(e)} />
+                    <Header ref={(node) => (header = node)} class={hideCls()} title={title()} closable={props.closable} titleId={titleId} renderCloseIcon={props.renderCloseIcon} renderHeader={props.renderHeader} onClose={foundation.handlePreviewClose} />
                     <PreviewImage
                         alt={previewContext?.view().alts[currentIndex()] ?? props.alt}
                         crossOrigin={props.crossOrigin}
@@ -260,8 +260,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                         src={srcList()[currentIndex()]}
                         zoom={state().zoom}
                         zoomEvent={state().zoomEvent}
-                        onError={() => foundation.preloadSingleImage()}
-                        onLoad={(src) => foundation.onImageLoad(src)}
+                        onError={foundation.preloadSingleImage}
+                        onLoad={foundation.onImageLoad}
                         onZoom={(zoom, reportToUser) => foundation.handleZoomImage(zoom, reportToUser)}
                     />
                     <Show when={showPrev()}>
@@ -297,11 +297,11 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                         zoomInTip={props.zoomInTip}
                         zoomOutTip={props.zoomOutTip}
                         renderPreviewMenu={props.renderPreviewMenu}
-                        onAdjustRatio={(type) => foundation.handleAdjustRatio(type)}
-                        onDownload={() => foundation.handleDownload()}
+                        onAdjustRatio={foundation.handleAdjustRatio}
+                        onDownload={foundation.handleDownload}
                         onNext={handleNext}
                         onPrev={handlePrev}
-                        onRotate={(direction) => foundation.handleRotateImage(direction)}
+                        onRotate={foundation.handleRotateImage}
                         onZoomIn={(zoom) => foundation.handleZoomImage(zoom)}
                         onZoomOut={(zoom) => foundation.handleZoomImage(zoom)}
                     />

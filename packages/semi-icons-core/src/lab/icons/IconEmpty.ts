@@ -8,30 +8,8 @@ const IconEmpty: IconData = {
         ['path', { d: 'M6.73 11.32a1 1 0 0 1 .9-.58h8.73a1 1 0 0 1 .91.58L19 15H5l1.73-3.68', fill: '#6A6F7F' }],
         ['path', { d: 'M2 16a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5', fill: '#DDE3E8' }],
         ['rect', { x: '11', y: '1', width: '2', height: '5', rx: '1', fill: '#AAB2BF' }],
-        [
-            'rect',
-            {
-                x: '3.879',
-                y: '4.293',
-                width: '2',
-                height: '4.3448',
-                rx: '1',
-                transform: 'rotate(-45 3.87866 4.29285)',
-                fill: '#AAB2BF',
-            },
-        ],
-        [
-            'rect',
-            {
-                x: '18.573',
-                y: '2.879',
-                width: '2',
-                height: '4.2175',
-                rx: '1',
-                transform: 'rotate(45 18.5731 2.87866)',
-                fill: '#AAB2BF',
-            },
-        ],
+        ['rect', { x: '3.879', y: '4.293', width: '2', height: '4.3448', rx: '1', transform: 'rotate(-45 3.87866 4.29285)', fill: '#AAB2BF' }],
+        ['rect', { x: '18.573', y: '2.879', width: '2', height: '4.2175', rx: '1', transform: 'rotate(45 18.5731 2.87866)', fill: '#AAB2BF' }],
         ['circle', { cx: '12', cy: '18.5', r: '1.5', fill: '#AAB2BF' }],
     ],
 };

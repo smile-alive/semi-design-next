@@ -7,7 +7,9 @@ import OverflowList, { type OverflowItem, type OverflowListProps } from '..';
 const items = ['alarm', 'bookmark', 'camera', 'duration', 'edit', 'folder'].map((key) => ({ key }));
 const prefixCls = `${BASE_CLASS_PREFIX}-overflow-list`;
 // Stands in for Tag: a fixed-size inline box, since no theme is loaded
-const Chip = (props: { width?: number; marginRight?: number; children: unknown }) => <span style={{ display: 'inline-block', flex: '0 0 auto', width: `${props.width ?? 60}px`, 'margin-right': props.marginRight ? `${props.marginRight}px` : undefined }}>{props.children as string}</span>;
+function Chip(props: { width?: number; marginRight?: number; children: unknown }) {
+    return <span style={{ display: 'inline-block', flex: '0 0 auto', width: `${props.width ?? 60}px`, 'margin-right': props.marginRight ? `${props.marginRight}px` : undefined }}>{props.children as string}</span>;
+}
 
 describe('OverflowList（浏览器）', () => {
     it('第一项本身宽于容器时仍报告溢出', async () => {

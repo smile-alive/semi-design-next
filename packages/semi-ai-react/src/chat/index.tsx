@@ -159,8 +159,8 @@ export default function Chat(rawProps: ChatProps) {
         onDragEnd?.(e);
     };
 
-    useDidUpdate(props.chats, (chats, prevChats) => foundation.handleChatsChange(chats, prevChats));
-    useDidUpdate(props.hints, (hints, prevHints) => foundation.handleHintsChange(hints, prevHints));
+    useDidUpdate(props.chats, foundation.handleChatsChange);
+    useDidUpdate(props.hints, foundation.handleHintsChange);
 
     useImperativeHandle(
         props.ref,
@@ -174,7 +174,7 @@ export default function Chat(rawProps: ChatProps) {
                     foundation.scrollToBottomImmediately();
                 }
             },
-            sendMessage: (content, attachment) => foundation.onMessageSend(content, attachment),
+            sendMessage: foundation.onMessageSend,
         }),
         [foundation]
     );
@@ -192,7 +192,7 @@ export default function Chat(rawProps: ChatProps) {
                 {topSlot}
                 <div className={`${prefixCls}-content`}>
                     <ReactResizeObserver onResize={foundation.handleScrollContainerResize}>
-                        <div ref={containerRef} className={`${prefixCls}-container`} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={(e) => foundation.containerScroll(e)}>
+                        <div ref={containerRef} className={`${prefixCls}-container`} aria-busy={streaming} aria-label={locale.messages} role="log" tabIndex={-1} onScroll={foundation.containerScroll}>
                             <ChatContent
                                 align={align}
                                 chatBoxRenderConfig={chatBoxRenderConfig}

@@ -143,21 +143,14 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
                     foundation.handleWheelClick(event);
                 }
             }}
-            onKeyDown={(event) => foundation.handleKeyDown(event)}
+            onKeyDown={foundation.handleKeyDown}
         >
             <For each={keys()}>{(key) => renderOption(key)}</For>
         </ul>
     );
 
-    useWatch(
-        () => local.selectedIndex,
-        (selectedIndex, previous) => foundation.syncSelectedIndex(selectedIndex, previous)
-    );
-
-    useWatch(
-        () => local.list.length,
-        () => foundation.syncList()
-    );
+    useWatch(() => local.selectedIndex, foundation.syncSelectedIndex);
+    useWatch(() => local.list.length, foundation.syncList);
 
     return (
         <div {...rest} ref={(node) => mergeRefs(local.ref)((root = Object.assign(node, handle)))} class={clsx(isWheel() ? `${prefix}-item-wheel` : `${prefix}-item`, local.class)}>
@@ -165,7 +158,7 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
                 <div class={`${prefix}-shade ${prefix}-shade-pre`} />
                 <div ref={(node) => (selector = node)} class={`${prefix}-selector`} />
                 <div class={`${prefix}-shade ${prefix}-shade-post`} />
-                <div ref={(node) => (outer = node)} class={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !local.cycled })} onScroll={() => foundation.handleScroll()}>
+                <div ref={(node) => (outer = node)} class={clsx(`${prefix}-list-outer`, { [`${prefix}-list-outer-nocycle`]: !local.cycled })} onScroll={foundation.handleScroll}>
                     {renderListbox()}
                 </div>
             </Show>

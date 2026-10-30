@@ -58,16 +58,11 @@
             expandIconPosition: props.expandIconPosition,
         })),
         slots,
-        onClick: (itemKey, event) => foundation.handleChange(itemKey, event),
+        onClick: foundation.handleChange,
     });
 
     // an inline activeKey array is a new reference on every parent render
-    useDidUpdate(
-        () => props.activeKey,
-        (activeKey) => foundation.syncActiveKey(activeKey),
-        isEqual,
-        'pre'
-    );
+    useDidUpdate(() => props.activeKey, foundation.syncActiveKey, isEqual, 'pre');
 </script>
 
 <template>

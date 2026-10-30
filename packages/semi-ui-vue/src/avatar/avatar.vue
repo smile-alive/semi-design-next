@@ -89,7 +89,7 @@
     const image = computed(() => {
         if (!isImg.value) return undefined;
         // imgAttr.alt replaces alt even when it is explicitly undefined; mergeProps runs both onError listeners.
-        return mergeProps({ src: props.src, srcset: props.srcSet, alt: props.alt }, { ...props.imgAttr }, { onError: () => foundation.handleImgLoadError() });
+        return mergeProps({ src: props.src, srcset: props.srcSet, alt: props.alt }, { ...props.imgAttr }, { onError: foundation.handleImgLoadError });
     });
 
     const isPresetSize = computed(() => strings.SIZE.some((preset) => preset === size.value));
@@ -143,12 +143,8 @@
         };
     };
 
-    watch(
-        () => props.src,
-        () => foundation.handleSrcChange()
-    );
-
-    watch(content, () => foundation.changeScale(), { flush: 'post' });
+    watch(() => props.src, foundation.handleSrcChange);
+    watch(content, foundation.changeScale, { flush: 'post' });
 
     onUpdated(() => {
         const value = content.value?.getText();
@@ -160,7 +156,7 @@
 </script>
 
 <template>
-    <span v-if="wrapped()" :class="`${prefix}-wrapper`" :style="[sizeStyle, $attrs.style as StyleValue]" @mouseenter="foundation.handleEnter($event)" @mouseleave="foundation.handleLeave($event)">
+    <span v-if="wrapped()" :class="`${prefix}-wrapper`" :style="[sizeStyle, $attrs.style as StyleValue]" @mouseenter="foundation.handleEnter" @mouseleave="foundation.handleLeave">
         <div v-if="props.border" :style="[{ position: 'relative' }, sizeStyle]">
             <AvatarContent ref="content" v-bind="contentBinding()">
                 <slot /> <template v-if="$slots.hoverMask" #hoverMask><slot name="hoverMask" /></template>
@@ -197,7 +193,7 @@
             </slot>
         </template>
     </span>
-    <AvatarContent v-else ref="content" v-bind="contentBinding()" :style="[sizeStyle, $attrs.style as StyleValue]" @mouseenter="foundation.handleEnter($event)" @mouseleave="foundation.handleLeave($event)">
+    <AvatarContent v-else ref="content" v-bind="contentBinding()" :style="[sizeStyle, $attrs.style as StyleValue]" @mouseenter="foundation.handleEnter" @mouseleave="foundation.handleLeave">
         <slot /> <template v-if="$slots.hoverMask" #hoverMask><slot name="hoverMask" /></template>
     </AvatarContent>
 </template>

@@ -248,16 +248,13 @@ function AvatarView(rawProps: AvatarProps) {
         </Show>
     );
 
-    useWatch(
-        () => local.src,
-        () => foundation.handleSrcChange()
-    );
+    useWatch(() => local.src, foundation.handleSrcChange);
 
     // Watches the text, which also appears when the image fails. A parent's onMount write queues the text insert
     // behind this watch and behind foundation.init's measurement; an effect created here runs after the insert
     useWatch(text, (value) => {
         if (value !== undefined) {
-            createEffect(() => untrack(() => foundation.changeScale()));
+            createEffect(() => untrack(foundation.changeScale));
         }
     });
 

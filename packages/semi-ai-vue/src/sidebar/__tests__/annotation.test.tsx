@@ -38,11 +38,11 @@ const info: AnnotationInfo[] = [
 const sidebarContainer = (container: Element) => container.querySelector<HTMLElement>('.semi-sidebar-container');
 
 // jsdom does not navigate, so the default is cancelled up front to keep it from logging
-const click = (el: Element | null) => {
+function click(el: Element | null) {
     const event = createEvent.click(el as Element);
     event.preventDefault();
     return fireEvent(el as Element, event);
-};
+}
 
 describe('Annotation', () => {
     afterEach(() => {

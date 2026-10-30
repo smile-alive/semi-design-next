@@ -62,7 +62,7 @@ export default function Spin(rawProps: SpinProps) {
     const blocked = loading && hasContent(children);
     const mergedRef = useMergedRef(ref, rootRef);
 
-    useDidUpdate(props.spinning, (spinning) => foundation.handleSpinningChange(spinning));
+    useDidUpdate(props.spinning, foundation.handleSpinningChange);
     useLayoutEffect(() => foundation.handleBlockedChange(rootRef.current, blocked), [blocked, foundation]);
 
     return (

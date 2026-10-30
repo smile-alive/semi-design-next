@@ -17,6 +17,7 @@ import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { useConfigContext } from '../config-provider/context';
 import type { InputSize } from '../input';
+import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import type { ScrollItemProps } from '../scroll-list/scroll-item';
@@ -165,7 +166,7 @@ function getPanelSlots({ panels, panelFooter, panelHeader, locale, type }: TimeP
 }
 
 function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHandle> }) {
-    const withDefaults = useDefaultProps('TimePicker', rawProps, defaultProps);
+    const withDefaults = useDefaultProps('TimePicker', withInputGroup(rawProps, useInputGroupInScope()), defaultProps);
 
     const { locale, localeCode, dateFnsLocale } = useLocale('TimePicker');
     const { timeZone: contextTimeZone, direction } = useConfigContext();
@@ -309,7 +310,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
 
     const open = TimePickerFoundation.isPanelShown(props, state);
 
-    const markPressInside = useClickOutside([rootRef, panelRef], (e) => foundation.handleClickOutside(e), open);
+    const markPressInside = useClickOutside([rootRef, panelRef], foundation.handleClickOutside, open);
 
     const panelContent = (
         <div ref={panelRef} id={panelId} className={clsx({ [cssClasses.RANGE_PANEL_LISTS]: isRange })}>
@@ -368,7 +369,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
     delete componentProps.ref;
 
     const isTriggerButton = useCustomTrigger && !customTriggerFocusable;
-    const outerProps = useCustomTrigger ? { onClick: () => foundation.handlePanelOpen() } : {};
+    const outerProps = useCustomTrigger ? { onClick: foundation.handlePanelOpen } : {};
 
     const buttonProps = isTriggerButton
         ? {
@@ -387,66 +388,68 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         : {};
 
     return (
-        <div ref={rootRef} className={clsx(prefixCls, className)} style={style} {...outerProps} {...buttonProps} onMouseDownCapture={markPressInside}>
-            <Popover
-                contentClassName={popupClassName}
-                style={popupStyle}
-                aria-label={locale.panel[type]}
-                autoAdjustOverflow={autoAdjustOverflow}
-                content={panelContent}
-                motion={motion}
-                position={position}
-                stopPropagation={stopPropagation}
-                trigger="custom"
-                visible={open}
-                // the trigger is custom, so the Popover leaves closing on Esc to the TimePicker
-                onEscKeyDown={() => foundation.handleEscKeyDown()}
-            >
-                {useCustomTrigger ? (
-                    <Trigger disabled={disabled} placeholder={placeholder} value={state.value} componentProps={componentProps} inputValue={state.inputValue} triggerRender={triggerRender} onChange={(v: string) => foundation.handleInputChange(v)} />
-                ) : (
-                    // the input is the Tab stop; Tooltip would add 0 here
-                    <span className={`${prefixCls}-header`} tabIndex={-1}>
-                        <TimeInput
-                            {...rest}
-                            id={id}
-                            type={type}
-                            style={inputStyle}
-                            aria-controls={panelId}
-                            aria-describedby={ariaDescribedby}
-                            aria-errormessage={ariaErrormessage}
-                            aria-expanded={open}
-                            aria-haspopup="dialog"
-                            aria-invalid={ariaInvalid}
-                            aria-labelledby={ariaLabelledby}
-                            aria-required={ariaRequired}
-                            autoFocus={autoFocus}
-                            // APG combobox: the input opens the panel of lists and carries its state
-                            role="combobox"
-                            disabled={disabled}
-                            placeholder={placeholder}
-                            value={state.inputValue}
-                            borderless={borderless}
-                            clearIcon={clearIcon}
-                            focusOnOpen={focusOnOpen}
-                            inputReadOnly={inputReadOnly}
-                            insetLabel={insetLabel}
-                            insetLabelId={insetLabelId}
-                            invalid={state.invalid}
-                            locale={locale}
-                            prefixCls={prefixCls}
-                            preventScroll={preventScroll}
-                            showClear={disabled ? false : showClear}
-                            size={size}
-                            validateStatus={validateStatus}
-                            onBlur={() => foundation.handleInputBlur()}
-                            onChange={(v) => foundation.handleInputChange(v)}
-                            onFocus={(e) => foundation.handleFocus(e)}
-                        />
-                    </span>
-                )}
-            </Popover>
-        </div>
+        <InputGroupContext value={undefined}>
+            <div ref={rootRef} className={clsx(prefixCls, className)} style={style} {...outerProps} {...buttonProps} onMouseDownCapture={markPressInside}>
+                <Popover
+                    contentClassName={popupClassName}
+                    style={popupStyle}
+                    aria-label={locale.panel[type]}
+                    autoAdjustOverflow={autoAdjustOverflow}
+                    content={panelContent}
+                    motion={motion}
+                    position={position}
+                    stopPropagation={stopPropagation}
+                    trigger="custom"
+                    visible={open}
+                    // the trigger is custom, so the Popover leaves closing on Esc to the TimePicker
+                    onEscKeyDown={foundation.handleEscKeyDown}
+                >
+                    {useCustomTrigger ? (
+                        <Trigger disabled={disabled} placeholder={placeholder} value={state.value} componentProps={componentProps} inputValue={state.inputValue} triggerRender={triggerRender} onChange={(v: string) => foundation.handleInputChange(v)} />
+                    ) : (
+                        // the input is the Tab stop; Tooltip would add 0 here
+                        <span className={`${prefixCls}-header`} tabIndex={-1}>
+                            <TimeInput
+                                {...rest}
+                                id={id}
+                                type={type}
+                                style={inputStyle}
+                                aria-controls={panelId}
+                                aria-describedby={ariaDescribedby}
+                                aria-errormessage={ariaErrormessage}
+                                aria-expanded={open}
+                                aria-haspopup="dialog"
+                                aria-invalid={ariaInvalid}
+                                aria-labelledby={ariaLabelledby}
+                                aria-required={ariaRequired}
+                                autoFocus={autoFocus}
+                                // APG combobox: the input opens the panel of lists and carries its state
+                                role="combobox"
+                                disabled={disabled}
+                                placeholder={placeholder}
+                                value={state.inputValue}
+                                borderless={borderless}
+                                clearIcon={clearIcon}
+                                focusOnOpen={focusOnOpen}
+                                inputReadOnly={inputReadOnly}
+                                insetLabel={insetLabel}
+                                insetLabelId={insetLabelId}
+                                invalid={state.invalid}
+                                locale={locale}
+                                prefixCls={prefixCls}
+                                preventScroll={preventScroll}
+                                showClear={disabled ? false : showClear}
+                                size={size}
+                                validateStatus={validateStatus}
+                                onBlur={foundation.handleInputBlur}
+                                onChange={foundation.handleInputChange}
+                                onFocus={foundation.handleFocus}
+                            />
+                        </span>
+                    )}
+                </Popover>
+            </div>
+        </InputGroupContext>
     );
 }
 

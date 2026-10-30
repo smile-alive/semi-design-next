@@ -89,11 +89,11 @@ const optionItems = () => document.querySelectorAll(`.${prefixCls}-search-option
 const closeButton = () => document.querySelector(`.${prefixCls}-search-bar > button:last-child`) as HTMLElement;
 const optionButton = (item: Element) => item.querySelector('button') as HTMLButtonElement;
 const pointer = (target: EventTarget, type: string, init: PointerEventInit) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }));
-const drag = (element: Element, pointerType: string) => {
+function drag(element: Element, pointerType: string) {
     pointer(element, 'pointerdown', { pointerId: 1, pointerType, button: 0, clientX: 0, clientY: 0 });
     pointer(document, 'pointermove', { pointerId: 1, pointerType, clientX: 30, clientY: 30 });
     pointer(document, 'pointerup', { pointerId: 1, pointerType });
-};
+}
 const root = (container: HTMLElement) => container.firstElementChild as HTMLElement;
 
 describe('JsonViewer', () => {

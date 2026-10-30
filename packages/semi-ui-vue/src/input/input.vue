@@ -13,6 +13,7 @@
     import useLocale from '../locale/use-locale';
     import type { InputEmits, InputHandle, InputProps, InputSlots, InputState } from './interface';
     import { defersUpdate } from './model-modifiers';
+    import useGroupLooks from './use-group-looks';
     import useTextEntry from './use-text-entry';
 
     interface FoundationProps extends InputProps {
@@ -30,10 +31,11 @@
         modelValue: undefined,
         modelModifiers: undefined,
         defaultValue: semiGlobalDefault('Input', 'defaultValue'),
-        size: () => semiDefault('Input', 'size', 'default'),
+        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
+        size: undefined,
         type: () => semiDefault('Input', 'type', 'text'),
         mode: semiGlobalDefault('Input', 'mode'),
-        disabled: semiGlobalDefault('Input', 'disabled'),
+        disabled: undefined,
         readonly: () => semiDefault('Input', 'readonly', false),
         borderless: () => semiDefault('Input', 'borderless', false),
         showClear: () => semiDefault('Input', 'showClear', false),
@@ -63,6 +65,8 @@
     // The typed value `.lazy` holds back until the native change event. Reactive so that any re-render keeps showing it
     // instead of patching the input back to modelValue.
     const draft = shallowRef<string>();
+
+    const looks = useGroupLooks('Input', props, { size: 'default' });
 
     const prefix = cssClasses.PREFIX;
     const getLength = computed(() => props.getValueLength ?? readSemiDefault(semi, 'Input', 'getValueLength'));
@@ -106,6 +110,8 @@
         }),
         {
             props: {
+                size: () => looks.size,
+                disabled: () => looks.disabled,
                 value: () => props.modelValue,
                 maxLength: () => props.maxlength,
                 minLength: () => props.minlength,
@@ -126,7 +132,7 @@
         emitUpdate: (value) => emit('update:modelValue', value),
     });
 
-    const allowClear = computed(() => InputFoundation.isAllowClear(props, shown.value));
+    const allowClear = computed(() => InputFoundation.isAllowClear({ ...props, disabled: looks.disabled }, shown.value));
 
     const handleInput = (event: Event) =>
         runInput(event, () => {
@@ -175,14 +181,14 @@
                 [`${wrapper}__with-append-only`]: Boolean(k.addonBefore && !k.addonAfter),
                 [`${wrapper}__with-prepend-only`]: Boolean(!k.addonBefore && k.addonAfter),
                 [`${wrapper}-readonly`]: props.readonly,
-                [`${wrapper}-disabled`]: props.disabled,
+                [`${wrapper}-disabled`]: looks.disabled,
                 [`${wrapper}-warning`]: props.validateStatus === 'warning',
                 [`${wrapper}-error`]: props.validateStatus === 'error',
                 [`${wrapper}-focus`]: state.value.isFocus,
                 [`${wrapper}-clearable`]: props.showClear,
                 [`${wrapper}-modebtn`]: props.mode === 'password',
                 [`${wrapper}-hidden`]: props.type === 'hidden',
-                [`${wrapper}-${props.size}`]: Boolean(props.size),
+                [`${wrapper}-${looks.size}`]: Boolean(looks.size),
                 [`${prefix}-borderless`]: props.borderless,
             },
         ];
@@ -230,7 +236,7 @@
 </script>
 
 <template>
-    <div ref="root" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :class="wrapperClass(kinds())" @click="foundation.handleClick($event)" @focusin="handleFocusIn" @focusout="handleFocusOut">
+    <div ref="root" v-bind="splitControlAttrs($attrs, isNotClassOrStyle).root" :class="wrapperClass(kinds())" @click="foundation.handleClick" @focusin="handleFocusIn" @focusout="handleFocusOut">
         <template v-for="(k, i) in [kinds()]" :key="i">
             <div
                 v-if="k.addonBefore"
@@ -257,7 +263,7 @@
                     },
                 ]"
                 x-semi-prop="prefix,insetLabel"
-                @click="foundation.handleClickPrefixOrSuffix()"
+                @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent
             >
                 <slot v-if="k.prefix" name="prefix" />
@@ -273,13 +279,13 @@
             :class="[
                 prefix,
                 {
-                    [`${prefix}-${props.size}`]: Boolean(props.size),
-                    [`${prefix}-disabled`]: props.disabled,
+                    [`${prefix}-${looks.size}`]: Boolean(looks.size),
+                    [`${prefix}-disabled`]: looks.disabled,
                     [`${prefix}-sibling-clearbtn`]: allowClear,
                     [`${prefix}-sibling-modebtn`]: props.mode === 'password',
                 },
             ]"
-            :disabled="props.disabled"
+            :disabled="looks.disabled"
             :maxlength="getLength ? undefined : props.maxlength"
             :minlength="InputFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength }, shown)"
             :placeholder="props.placeholder?.toString()"
@@ -292,8 +298,8 @@
             @compositionstart="foundation.handleCompositionStart"
             @compositionupdate="foundation.handleCompositionUpdate"
             @input="handleInput"
-            @keydown="foundation.handleKeyDown($event)"
-            @keyup="foundation.handleKeyUp($event)"
+            @keydown="foundation.handleKeyDown"
+            @keyup="foundation.handleKeyUp"
         />
         <!-- .stop: a host key handler (AutoComplete picks an option on Enter) must not take the keys that press the button;
              mousedown clears (issue 1203) without moving focus -->
@@ -314,12 +320,12 @@
                     },
                 ]"
                 x-semi-prop="suffix"
-                @click="foundation.handleClickPrefixOrSuffix()"
+                @click="foundation.handleClickPrefixOrSuffix"
                 @mousedown.prevent
             >
                 <slot name="suffix" />
             </div>
-            <button v-if="props.mode === 'password' && !props.disabled" :aria-label="state.eyeClosed ? locale.locale.showPassword : locale.locale.hidePassword" :class="`${prefix}-modebtn`" type="button" @click="foundation.handleClickEye()" @keydown.enter.space.stop @mousedown.prevent>
+            <button v-if="props.mode === 'password' && !looks.disabled" :aria-label="state.eyeClosed ? locale.locale.showPassword : locale.locale.hidePassword" :class="`${prefix}-modebtn`" type="button" @click="foundation.handleClickEye" @keydown.enter.space.stop @mousedown.prevent>
                 <IconEyeClosedSolid v-if="state.eyeClosed" />
                 <IconEyeOpened v-else />
             </button>

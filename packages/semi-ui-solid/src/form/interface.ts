@@ -1,5 +1,4 @@
 import type { JSX } from 'solid-js';
-import type { FormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import type { AllErrors, BaseFormApi, BasicFieldError, FieldPath, FieldValidateOptions, FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
 import type { ElementProps } from '../_base/element-props';
 import type { ColProps } from '../grid';
@@ -122,7 +121,7 @@ export interface FormProps<Values extends Record<string, any> = any> extends Ele
     /** Called once when the Form mounts, to save the formApi reference */
     getFormApi?: (formApi: FormApi<Values>) => void;
     /** The formApi created by `Form.useForm()` */
-    form?: FormApi<Values> & FormApiProxyInternals<Values>;
+    form?: FormApi<Values>;
     extraTextPosition?: 'middle' | 'bottom';
     layout?: 'horizontal' | 'vertical';
     labelPosition?: 'top' | 'left' | 'inset';

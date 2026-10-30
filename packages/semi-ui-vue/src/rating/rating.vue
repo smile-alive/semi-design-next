@@ -143,9 +143,6 @@
         }
     };
 
-    // a hover that began before the rating was disabled must still end
-    const onMouseleave = () => foundation.handleMouseLeave();
-
     watch(
         () => props.modelValue,
         (modelValue) => {
@@ -171,8 +168,9 @@
 </script>
 
 <template>
-    <ul ref="list" v-bind="rootAttrs($attrs)" :aria-label="groupLabel(customUnit())" :class="[props.prefixCls, { [`${props.prefixCls}-disabled`]: props.disabled }]" role="radiogroup" tabindex="-1" @focusin="onFocusin" @focusout="onFocusout" @keydown="onKeydown" @mouseleave="onMouseleave">
+    <ul ref="list" v-bind="rootAttrs($attrs)" :aria-label="groupLabel(customUnit())" :class="[props.prefixCls, { [`${props.prefixCls}-disabled`]: props.disabled }]" role="radiogroup" tabindex="-1" @focusin="onFocusin" @focusout="onFocusout" @keydown="onKeydown" @mouseleave="foundation.handleMouseLeave">
         <!--
+            mouseleave ignores disabled: a hover that began before the rating was disabled must still end.
             Item hands Tooltip's aria-describedby to its radios and drops the injected tabindex. customUnit() runs once
             per star because a single-element v-for to cache it would be rejected by vue/valid-v-for. Escape cannot hide
             the tip the rating drives, so closeOnEsc is off and the key goes on to the layer below.

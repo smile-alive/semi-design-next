@@ -7,7 +7,7 @@ export interface BreadcrumbView {
     compact: boolean;
     // onClick below always routes through the Breadcrumb; only a handler the user gave makes plain-text items keyboard stops
     hasOnClick: boolean;
-    showTooltip: boolean | showToolTipProps | undefined;
+    showTooltip?: boolean | showToolTipProps;
 }
 
 export interface BreadContextValue {

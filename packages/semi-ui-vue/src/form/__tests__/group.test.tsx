@@ -167,6 +167,19 @@ describe('Form-group', () => {
         container.querySelectorAll('input').forEach((input) => expect(input).toBeDisabled());
     });
 
+    it('组的 disabled 作用于组内字段，字段自己的 disabled 优先', () => {
+        const { container } = renderFormGroup({ inputGroupProps: { disabled: true }, fieldBProps: { disabled: false } });
+        const [a, b] = container.querySelectorAll('input');
+        expect(a).toBeDisabled();
+        expect(b).toBeEnabled();
+    });
+
+    it('未声明属性落在 semi-input-group 上，不传给组内字段', () => {
+        const { container } = renderFormGroup({ inputGroupProps: { 'data-part': 'g' } });
+        expect(container.querySelector('.semi-input-group')).toHaveAttribute('data-part', 'g');
+        expect(container.querySelectorAll('input[data-part], .semi-input-wrapper[data-part]')).toHaveLength(0);
+    });
+
     it('在 Form 之外渲染时警告且不渲染', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const { container } = render(FormInputGroup, { props: { label: 'semi' } });

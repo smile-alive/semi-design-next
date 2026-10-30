@@ -187,28 +187,28 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
     }
 
     /** A value prop that goes back to undefined (a form reset) returns to defaultValue, like Slider (Switch and Checkbox become unchecked) */
-    resetValue() {
+    resetValue = () => {
         this._adapter.setValue(this.getProps().defaultValue);
-    }
+    };
 
-    handleHover(event: Pick<MouseEvent, 'pageX'>, index: number) {
+    handleHover = (event: Pick<MouseEvent, 'pageX'>, index: number) => {
         const currValue = this.getStarValue(index, event.pageX);
         const { clearedValue, hoverValue } = this.getStates();
         if (currValue !== hoverValue && currValue !== clearedValue) {
             this.#changeHover(currValue, null);
         }
-    }
+    };
 
-    handleMouseLeave() {
+    handleMouseLeave = () => {
         this.#changeHover(undefined, null);
-    }
+    };
 
-    handleClick(event: CE & Pick<MouseEvent, 'pageX'>, index: number) {
+    handleClick = (event: CE & Pick<MouseEvent, 'pageX'>, index: number) => {
         this.handleSelect(event, index, this.getStarValue(index, event.pageX));
-    }
+    };
 
     /** Commits `newValue` for the star at `index`; selecting the current value clears it when allowClear is on */
-    handleSelect(event: CE, index: number, newValue: number) {
+    handleSelect = (event: CE, index: number, newValue: number) => {
         const { allowClear } = this.getProps();
         const value = RatingFoundation.deriveValue(this.getProps(), this.getStates());
         const isReset = allowClear ? newValue === value : false;
@@ -219,30 +219,30 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
             this._adapter.setClearedValue(null);
         }
         this._adapter.notifyClick(event, index);
-    }
+    };
 
-    handleFocus(e: FE) {
+    handleFocus = (e: FE) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
             this._adapter.notifyFocus(e);
         }
-    }
+    };
 
     /** A radio of the star at `index` got focus; index === count is the empty star */
-    handleStarFocus(e: { target: Element }, index: number) {
+    handleStarFocus = (e: { target: Element }, index: number) => {
         // an arrow key moves focus between stars before the browser reports :focus-visible for the new one
         if (e.target.matches(':focus-visible') || this.getStates().focusVisibleStar !== undefined) {
             this._adapter.setFocusVisibleStar(index);
         }
-    }
+    };
 
-    handleBlur(e: FE) {
+    handleBlur = (e: FE) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
             this._adapter.notifyBlur(e);
             this._adapter.setFocusVisibleStar(undefined);
         }
-    }
+    };
 
-    handleKeyDown(event: KE, value: number) {
+    handleKeyDown = (event: KE, value: number) => {
         // Alt, Ctrl and Meta combinations are browser shortcuts (Alt+ArrowLeft goes back), not value changes
         if (event.altKey || event.ctrlKey || event.metaKey) {
             return;
@@ -282,5 +282,5 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
             event.preventDefault();
             this.#changeHover(undefined, null);
         }
-    }
+    };
 }

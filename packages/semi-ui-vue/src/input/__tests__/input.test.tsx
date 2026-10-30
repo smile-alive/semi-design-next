@@ -23,19 +23,19 @@ const query = (cls: string) => document.querySelector<HTMLElement>(`.${cls}`) as
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const getModeBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-modebtn`);
 // Testing Library's Vue fireEvent resolves to nothing, so read defaultPrevented from a dispatched event
-const expectMouseDownPrevented = (el: Element) => {
+function expectMouseDownPrevented(el: Element) {
     const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
     el.dispatchEvent(event);
     expect(event.defaultPrevented).toBe(true);
-};
+}
 // A function ref receives the handle that defineExpose builds
-const renderWithHandle = (props: InputProps & Record<string, unknown> = {}) => {
+function renderWithHandle(props: InputProps & Record<string, unknown> = {}) {
     const refFn = vi.fn<(handle: InputHandle | null) => void>();
     const Host = (hostProps: Record<string, unknown>) => <Input {...hostProps} ref={(value) => refFn(value as InputHandle | null)} />;
     const view = render(Host, { props });
     const handle = () => refFn.mock.calls[0]?.[0] as InputHandle;
     return { ...view, refFn, handle };
-};
+}
 
 describe('Input', () => {
     afterEach(() => {
@@ -843,7 +843,7 @@ describe('Input 行为基线', () => {
 
     it('句柄恰好包含文档中的方法与节点', () => {
         const { handle } = renderWithHandle();
-        expect(Object.keys(handle()).sort()).toEqual(['blur', 'focus', 'input', 'nativeElement', 'select', 'setSelectionRange'].sort());
+        expect(Object.keys(handle()).toSorted()).toEqual(['blur', 'focus', 'input', 'nativeElement', 'select', 'setSelectionRange'].toSorted());
         for (const method of ['blur', 'focus', 'select', 'setSelectionRange'] as const) {
             expect(typeof handle()[method]).toBe('function');
         }

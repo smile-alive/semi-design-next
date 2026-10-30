@@ -125,7 +125,7 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         return Boolean(interactive && interactive !== input && root.contains(interactive));
     }
 
-    handleChange(e: CheckboxSourceEvent) {
+    handleChange = (e: CheckboxSourceEvent) => {
         const disabled = this.getProp('disabled');
 
         if (disabled) {
@@ -153,11 +153,11 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
             this.setChecked(newChecked);
             this.#notifyChange(newChecked, e);
         }
-    }
+    };
 
-    setChecked(checked: boolean) {
+    setChecked = (checked: boolean) => {
         this._adapter.setChecked(checked);
-    }
+    };
 }
 
 export interface BaseCheckboxProps {

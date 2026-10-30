@@ -78,11 +78,7 @@
 
     const trackRef = (key: string) => (ref: Element | ComponentPublicInstance | null) => track(key, ref);
 
-    watch(
-        () => props.positionStrategy,
-        () => foundation.updatePositionStrategy(),
-        { flush: 'post' }
-    );
+    watch(() => props.positionStrategy, foundation.updatePositionStrategy, { flush: 'post' });
 
     onBeforeUnmount(() => observer?.disconnect());
 </script>

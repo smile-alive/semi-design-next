@@ -33,11 +33,11 @@ export default class SwitchFoundation<P extends SwitchBaseProps = SwitchBaseProp
     }
 
     // mirrors `checked`, so a form reset to undefined leaves the switch unchecked
-    setChecked(checked?: boolean) {
+    setChecked = (checked?: boolean) => {
         this._adapter.setChecked(checked);
-    }
+    };
 
-    handleChange(checked: boolean, e: E) {
+    handleChange = (checked: boolean, e: E) => {
         if (this.getProp('loading')) {
             return;
         }
@@ -45,5 +45,5 @@ export default class SwitchFoundation<P extends SwitchBaseProps = SwitchBaseProp
             this.setChecked(checked);
         }
         this._adapter.notifyChange(checked, e);
-    }
+    };
 }

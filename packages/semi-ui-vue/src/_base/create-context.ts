@@ -12,18 +12,18 @@ export function createContext<T>(name: string, options?: ContextOptions & { opti
 export function createContext<T>(name: string, { optional = false }: ContextOptions = {}): Context<T, T | undefined> {
     const key: InjectionKey<T> = Symbol(name);
 
-    function useProvider(value: T) {
+    const useProvider = (value: T) => {
         provide(key, value);
-    }
+    };
 
     // `caller` names the child in the error, e.g. useCollapseContext('Collapse.Panel')
-    function useContext(caller = 'This component') {
+    const useContext = (caller = 'This component') => {
         const ctx = inject(key, undefined);
         if (ctx === undefined && !optional) {
             throw new Error(`${caller} must be used inside ${name}`);
         }
         return ctx;
-    }
+    };
 
     return [useProvider, useContext] as const;
 }

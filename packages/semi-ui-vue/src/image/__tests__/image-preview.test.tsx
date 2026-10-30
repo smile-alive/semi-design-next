@@ -27,30 +27,30 @@ const pageInfo = () => $(`.${previewCls}-footer-page`)?.textContent?.trim();
 const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`) as HTMLElement;
 const thumbs = () => document.querySelectorAll<HTMLImageElement>(`.${prefixCls}-img`);
 const arrow = (side: 'prev' | 'next') => $(`.${previewCls}-${side}`) as HTMLElement;
-const clickMask = async (x = 10, y = 10) => {
+async function clickMask(x = 10, y = 10) {
     await fireEvent.mouseDown(getPreview() as HTMLElement, { clientX: x, clientY: y });
     await fireEvent.mouseUp(getPreview() as HTMLElement, { clientX: x, clientY: y });
-};
+}
 // a real key press starts at the focused element and bubbles through the document
 const pressEsc = () => fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
 // VTL's fireEvent waits on timers and does not return whether the default was prevented
-const dispatch = async <E extends Event>(target: EventTarget, event: E) => {
+async function dispatch<E extends Event>(target: EventTarget, event: E) {
     target.dispatchEvent(event);
     await nextTick();
     return event;
-};
+}
 const press = (key: string, init: KeyboardEventInit = {}, target: EventTarget = document.activeElement ?? window) => dispatch(target, new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init }));
 const click = (el: Element) => dispatch(el, new MouseEvent('click', { bubbles: true, cancelable: true }));
-const advance = async (ms: number) => {
+async function advance(ms: number) {
     vi.advanceTimersByTime(ms);
     await nextTick();
-};
+}
 
-const renderPreview = async (props: Props = {}, slots: Slots = {}) => {
+async function renderPreview(props: Props = {}, slots: Slots = {}) {
     const view = render(ImagePreview, { props: { src: srcList, visible: true, ...props }, slots });
     await nextTick();
     return view;
-};
+}
 const renderGroup = (props: Props = {}, images: (ImageProps & { key?: string })[] = srcList.map((src) => ({ src }))) => render(Group, { props: { images, ...props } });
 const withLocale = (locale: typeof en_US, node: () => VNode) => render(ConfigProvider, { props: { locale }, slots: { default: node } });
 

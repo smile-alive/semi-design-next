@@ -55,11 +55,7 @@ export default function DialogueAction(props: DialogueActionProps) {
         })
     );
 
-    const markPressInside = useClickOutside(
-        [trigger],
-        () => foundation.hideMoreDropdown(),
-        () => state().visible
-    );
+    const markPressInside = useClickOutside([trigger], foundation.hideMoreDropdown, () => state().visible);
 
     // memos: a new message object (a like, a streamed chunk) must not recreate the buttons a custom bar received
     const flags = () => getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: context.view().showReset });
@@ -83,18 +79,18 @@ export default function DialogueAction(props: DialogueActionProps) {
         Modal.warning({
             title: locale().locale.deleteConfirm,
             content: locale().locale.deleteContent,
-            onOk: () => foundation.deleteMessage(),
+            onOk: foundation.deleteMessage,
             // the deleted message took the more button along; the list takes the focus the modal gives up
             afterClose: () => triggerNode && handoverFocus(triggerNode, list),
         });
         foundation.hideMoreDropdown();
     };
 
-    const copyNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={() => foundation.copyMessage()} />;
+    const copyNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={foundation.copyMessage} />;
 
-    const resetNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.regenerate} theme="borderless" icon={<IconRedoStroked class={`${PREFIX_ACTION}-icon-redo`} />} onClick={() => foundation.resetMessage()} />;
+    const resetNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.regenerate} theme="borderless" icon={<IconRedoStroked class={`${PREFIX_ACTION}-icon-redo`} />} onClick={foundation.resetMessage} />;
 
-    const likeNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.like} aria-pressed={Boolean(props.message.like)} theme="borderless" icon={props.message.like ? <IconLikeThumb /> : <IconThumbUpStroked />} onClick={() => foundation.likeMessage()} />;
+    const likeNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.like} aria-pressed={Boolean(props.message.like)} theme="borderless" icon={props.message.like ? <IconLikeThumb /> : <IconThumbUpStroked />} onClick={foundation.likeMessage} />;
 
     const dislikeNode = () => (
         <Button
@@ -104,13 +100,13 @@ export default function DialogueAction(props: DialogueActionProps) {
             aria-pressed={Boolean(props.message.dislike)}
             theme="borderless"
             icon={props.message.dislike ? <IconLikeThumb class={`${PREFIX_ACTION}-icon-flip`} /> : <IconThumbUpStroked class={`${PREFIX_ACTION}-icon-flip`} />}
-            onClick={() => foundation.dislikeMessage()}
+            onClick={foundation.dislikeMessage}
         />
     );
 
-    const shareNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.share} theme="borderless" icon={<IconShareStroked />} onClick={() => foundation.shareMessage()} />;
+    const shareNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.share} theme="borderless" icon={<IconShareStroked />} onClick={foundation.shareMessage} />;
 
-    const editNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.edit} theme="borderless" icon={<IconEditStroked />} onClick={() => foundation.editMessage()} />;
+    const editNode = () => <Button type="tertiary" class={`${PREFIX_ACTION}-btn`} aria-label={locale().locale.edit} theme="borderless" icon={<IconEditStroked />} onClick={foundation.editMessage} />;
 
     const moreNode = () => (
         <Dropdown
@@ -127,9 +123,9 @@ export default function DialogueAction(props: DialogueActionProps) {
             stopPropagation
             trigger="custom"
             visible={state().visible}
-            onEscKeyDown={() => foundation.hideMoreDropdown()}
+            onEscKeyDown={foundation.hideMoreDropdown}
         >
-            {(getTriggerProps) => <Button {...getTriggerProps({ ref: setTrigger })} type="tertiary" aria-label={locale().locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={() => foundation.showMoreDropdown()} />}
+            {(getTriggerProps) => <Button {...getTriggerProps({ ref: setTrigger })} type="tertiary" aria-label={locale().locale.more} theme="borderless" icon={<IconMoreStroked />} onClick={foundation.showMoreDropdown} />}
         </Dropdown>
     );
 

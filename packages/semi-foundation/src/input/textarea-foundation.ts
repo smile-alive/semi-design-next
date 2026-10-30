@@ -68,7 +68,7 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
     }
 
     /** Re-fits the inline height without field-sizing; hosts call it when the value, `autosize` or the node changes */
-    fitAutosize() {
+    fitAutosize = () => {
         const textarea = this.#fitInline ? this._adapter.getTextarea() : null;
         if (!textarea) {
             return;
@@ -96,13 +96,13 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
             this.#observed = textarea;
             this.#lastWidth = NaN;
         }
-    }
+    };
 
-    handleValueChange(value: string) {
+    handleValueChange = (value: string) => {
         this._adapter.setState({ value, cachedValue: value });
-    }
+    };
 
-    handleBlur(e: unknown) {
+    handleBlur = (e: unknown) => {
         const { value } = this.getStates();
         const { maxLength } = this.getProps();
         let realValue = value;
@@ -119,9 +119,9 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         }
         this._adapter.toggleFocusing(false);
         this._adapter.notifyBlur(realValue, e);
-    }
+    };
 
-    handleKeyDown(e: KE) {
+    handleKeyDown = (e: KE) => {
         const { disabledEnterStartNewLine } = this.getProps();
         if (disabledEnterStartNewLine && e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -130,7 +130,7 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         if (e.key === ENTER_KEY && !isComposing(e)) {
             this._adapter.notifyEnterPress(e);
         }
-    }
+    };
 
     // ResizeObserver reports once on observe, which is not a resize. Autosize reports the border-box height and ignores
     // width-only changes; native resize reports the content box.
@@ -160,16 +160,16 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         this._adapter.notifyResize({ height, width });
     };
 
-    handleClear(e: Pick<Event, 'stopPropagation'>) {
+    handleClear = (e: Pick<Event, 'stopPropagation'>) => {
         if (!this._isControlledComponent('value')) {
             this._adapter.setValue('');
         }
         this._adapter.notifyChange('', e);
         this._adapter.notifyClear(e);
         e.stopPropagation();
-    }
+    };
 
-    handleClick(e: Pick<Event, 'target' | 'currentTarget'>) {
+    handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
         const { disabled, readonly } = this._adapter.getProps();
         const { isFocus } = this._adapter.getStates();
         if (disabled || readonly || isFocus) {
@@ -179,9 +179,9 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
             this._adapter.focusInput();
             this._adapter.toggleFocusing(true);
         }
-    }
+    };
 
-    handleCounterClick() {
+    handleCounterClick = () => {
         const { disabled, readonly } = this._adapter.getProps();
         const { isFocus } = this._adapter.getStates();
         if (disabled || readonly || isFocus) {
@@ -189,5 +189,5 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         }
         this._adapter.focusInput();
         this._adapter.toggleFocusing(true);
-    }
+    };
 }

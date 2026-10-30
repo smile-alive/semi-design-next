@@ -2,10 +2,10 @@ import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { Button, Input, Table } from '@fibrae/semi-ui-react';
 
-const pick = (el: Element, props: string[]) => {
+function pick(el: Element, props: string[]) {
     const style = getComputedStyle(el);
     return Object.fromEntries(props.map((prop) => [prop, style.getPropertyValue(prop)]));
-};
+}
 const token = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name).trim();
 const FONT = 'Inter, -apple-system, "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif';
 const TEXT = ['font-size', 'line-height', 'font-weight', 'font-family'];

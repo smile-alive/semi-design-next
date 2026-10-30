@@ -28,11 +28,23 @@ export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProp
         });
     }
 
+    #pickByPointer(e: { clientX: number; clientY: number }) {
+        const rect = this._adapter.getDOM()?.getBoundingClientRect();
+        if (!rect) {
+            return;
+        }
+        const { width, height } = this.getProps();
+        this._adapter.notifyChange({
+            s: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 100),
+            v: Math.round(100 - clamp((e.clientY - rect.y) / height, 0, 1) * 100),
+        });
+    }
+
     // assistive-technology increments arrive as input events on the range
-    setValue(axis: 's' | 'v', value: number) {
+    setValue = (axis: 's' | 'v', value: number) => {
         const { hsva } = this.getProps();
         this._adapter.notifyChange({ s: hsva.s, v: hsva.v, [axis]: value });
-    }
+    };
 
     // two-dimensional: keys follow the screen whichever range has focus (Left/Right saturation, Up/Down/page keys
     // brightness); Home and End act on the focused axis
@@ -64,29 +76,17 @@ export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProp
         }
         e.currentTarget.setPointerCapture(e.pointerId);
         this.setState({ isHandleGrabbing: true });
-        this.pickByPointer(e);
+        this.#pickByPointer(e);
     };
 
     handlePointerMove = (e: DragPointerEvent) => {
         if (this.getState('isHandleGrabbing')) {
-            this.pickByPointer(e);
+            this.#pickByPointer(e);
         }
     };
 
     /** Follows pointerup and pointercancel; also fires when the area leaves the page mid-drag */
     handleLostPointerCapture = () => {
         this.setState({ isHandleGrabbing: false });
-    };
-
-    pickByPointer = (e: { clientX: number; clientY: number }) => {
-        const rect = this._adapter.getDOM()?.getBoundingClientRect();
-        if (!rect) {
-            return;
-        }
-        const { width, height } = this.getProps();
-        this._adapter.notifyChange({
-            s: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 100),
-            v: Math.round(100 - clamp((e.clientY - rect.y) / height, 0, 1) * 100),
-        });
     };
 }

@@ -96,7 +96,7 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
         if (typeof column.clickToSort === 'function') {
             const { onClick } = cellAttrs;
             cellAttrs.onClick = onClick
-                ? (e: any) => {
+                ? (e: React.MouseEvent<HTMLElement>) => {
                       onClick(e);
                       column.clickToSort(e);
                   }

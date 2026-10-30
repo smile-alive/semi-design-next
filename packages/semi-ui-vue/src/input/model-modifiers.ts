@@ -1,9 +1,9 @@
 import type { InputModelModifiers, ModelModifiers } from './interface';
 
-const looseToNumber = (text: string) => {
+function looseToNumber(text: string) {
     const number = parseFloat(text);
     return Number.isNaN(number) ? text : number;
-};
+}
 
 // Typing (input, IME composition end) is held back under .lazy; the clear button and blur truncation still apply at once.
 export const defersUpdate = (event: unknown, modifiers?: InputModelModifiers) => Boolean(modifiers?.lazy) && ['input', 'compositionend'].includes((event as Event).type);

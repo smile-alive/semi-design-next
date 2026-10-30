@@ -23,23 +23,23 @@ const slides = (labels: string[]) =>
 
 const activeTitle = () => document.querySelector(`.${prefixCls}-content-item-active h3`)?.textContent;
 // expect.poll keeps real timers, so it also waits for click updates while the component timers are faked
-const expectActive = async (title: string) => {
+async function expectActive(title: string) {
     await expect.poll(activeTitle).toBe(title);
-};
+}
 
-const tick = async (ms: number) => {
+async function tick(ms: number) {
     vi.advanceTimersByTime(ms);
     await nextTick();
-};
+}
 
 // Vue drops a listener call whose event timestamp (Date.now) is not later than the listener's attach time. The
 // Button's capture listener stamps the click first, so with a frozen fake Date its onClick would be ignored until
 // the clock moves.
-const renderDemo = async (options?: Parameters<typeof render>[1]) => {
+async function renderDemo(options?: Parameters<typeof render>[1]) {
     const result = render(RefDemo, options);
     await tick(1);
     return result;
-};
+}
 
 describe('Carousel', () => {
     describe('使用假定时器', () => {

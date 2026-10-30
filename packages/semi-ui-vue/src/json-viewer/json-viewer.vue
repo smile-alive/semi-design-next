@@ -105,10 +105,10 @@
         search: (text) => foundation.search(text),
         prevSearch: () => foundation.prevSearch(),
         nextSearch: () => foundation.nextSearch(),
-        replace: (text) => foundation.replace(text),
-        replaceAll: (text) => foundation.replaceAll(text),
-        toggleSearchOption: (key) => foundation.toggleSearchOption(key),
-        toggleSearchBar: () => foundation.toggleSearchBar(),
+        replace: foundation.replace,
+        replaceAll: foundation.replaceAll,
+        toggleSearchOption: foundation.toggleSearchOption,
+        toggleSearchBar: foundation.toggleSearchBar,
     });
 
     const sizeStyle = () => ({ width: toCssLength(props.width), height: toCssLength(props.height) });
@@ -116,12 +116,12 @@
     const searchButtonProps = (): JsonViewerSearchButtonSlotProps => ({
         defaultButton: h(SearchButton),
         showSearchBar: state.value.showSearchBar,
-        onToggleSearchBar: () => foundation.toggleSearchBar(),
-        onSearch: (text, caseSensitive, wholeWord, regex) => foundation.search(text, caseSensitive, wholeWord, regex),
+        onToggleSearchBar: foundation.toggleSearchBar,
+        onSearch: foundation.search,
         onPrevSearch: () => foundation.prevSearch(),
         onNextSearch: () => foundation.nextSearch(),
-        onReplace: (text) => foundation.replace(text),
-        onReplaceAll: (text) => foundation.replaceAll(text),
+        onReplace: foundation.replace,
+        onReplaceAll: foundation.replaceAll,
     });
 
     // A value equal to the editor's own text is the echo of a v-model edit: re-creating would drop the caret.
@@ -140,12 +140,12 @@
     defineExpose<JsonViewerHandle>({
         getValue: () => foundation.jsonViewer?.getModel().getValue() ?? '',
         format: () => foundation.jsonViewer?.format(),
-        search: (searchText, caseSensitive, wholeWord, regex) => foundation.search(searchText, caseSensitive, wholeWord, regex),
-        getSearchResults: () => foundation.getSearchResults(),
-        prevSearch: (step) => foundation.prevSearch(step),
-        nextSearch: (step) => foundation.nextSearch(step),
-        replace: (replaceText) => foundation.replace(replaceText),
-        replaceAll: (replaceText) => foundation.replaceAll(replaceText),
+        search: foundation.search,
+        getSearchResults: foundation.getSearchResults,
+        prevSearch: foundation.prevSearch,
+        nextSearch: foundation.nextSearch,
+        replace: foundation.replace,
+        replaceAll: foundation.replaceAll,
         getStyle: () => ({ width: props.width, height: props.height }),
     });
 </script>

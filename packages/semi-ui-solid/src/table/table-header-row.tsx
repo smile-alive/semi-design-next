@@ -205,21 +205,26 @@ function HeaderCellView(props: { cell: HeaderCell; cellIndex: number; rowIndex: 
 
     const showSortTip = () => clickToSort() && flags.showSortTip();
 
+    const textAlign = () => {
+        const align = column().align;
+        return align ? getRTLAlign(align, direction()) : undefined;
+    };
+
     const style = () => {
         const sticky = getHeaderStickyOffset(column(), props.slicedColumns, props.headWidths, isRTL());
         const position: JSX.CSSProperties | undefined = sticky ? { position: 'sticky', [sticky.side]: toCssLength(sticky.offset) } : undefined;
-        const align = column().align ? { 'text-align': getRTLAlign(column().align as never, direction()) } : undefined;
+        const align = textAlign() ? { 'text-align': textAlign() } : undefined;
         // headerStyle is the default for every header cell; the column's onHeaderCell style overrides it
         return mergeStyles(table.props.headerStyle, custom().style, align, position);
     };
 
     const cls = () => {
-        const textAlign = column().align ? getRTLAlign(column().align as never, direction()) : undefined;
+        const align = textAlign();
         const [fixedLeft, fixedRight, fixedLeftLast, fixedRightFirst] = isRTL()
             ? [isFixedRight(column()), isFixedLeft(column()), isFirstFixedRight(props.slicedColumns, column()), isLastLeftFixed(props.slicedColumns, column())]
             : [isFixedLeft(column()), isFixedRight(column()), isLastLeftFixed(props.slicedColumns, column()), isFirstFixedRight(props.slicedColumns, column())];
         return clsx(`${prefixCls()}-row-head`, column().class, custom().class, {
-            [`${prefixCls()}-align-${textAlign}`]: Boolean(textAlign),
+            [`${prefixCls()}-align-${align}`]: Boolean(align),
             [`${prefixCls()}-cell-fixed-left`]: fixedLeft,
             [`${prefixCls()}-cell-fixed-left-last`]: fixedLeftLast,
             [`${prefixCls()}-cell-fixed-right`]: fixedRight,

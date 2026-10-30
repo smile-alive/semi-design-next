@@ -198,10 +198,10 @@
                 @change="changeRangeEnd"
                 @enterPress="foundation.handleRangeInputEnterPress($event, rangeValue(rangeParts.start, rangeParts.end))"
                 @focus="focusRange($event, 'rangeEnd')"
-                @keydown="foundation.handleRangeInputEndKeyPress($event)"
+                @keydown="foundation.handleRangeInputEndKeyPress"
             />
         </div>
-        <button v-if="allowRangeClear" :ref="clearHandover" :aria-label="locale.locale.clearRange" :class="`${prefix}-range-input-clearbtn`" type="button" @click="foundation.handleRangeInputClearClick($event)" @mousedown="foundation.handleRangeInputClearMouseDown($event)">
+        <button v-if="allowRangeClear" :ref="clearHandover" :aria-label="locale.locale.clearRange" :class="`${prefix}-range-input-clearbtn`" type="button" @click="foundation.handleRangeInputClearClick" @mousedown="foundation.handleRangeInputClearMouseDown">
             <slot name="clearIcon">
                 <IconClear />
             </slot>
@@ -230,8 +230,8 @@
         :style="props.inputStyle"
         :validateStatus="props.validateStatus"
         @change="changeSingle"
-        @clear="foundation.handleInputClear($event)"
-        @enterPress="foundation.handleInputComplete($event)"
+        @clear="foundation.handleInputClear"
+        @enterPress="foundation.handleInputComplete"
         @focus="emit('focus', $event)"
     >
         <template v-if="$slots.prefix" #prefix>

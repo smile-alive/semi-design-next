@@ -24,11 +24,11 @@ vi.mock('@fibrae/semi-foundation/code-highlight/highlighter', async (importOrigi
 });
 
 const waitForShiki = (container: Element) => waitFor(() => expect(container.querySelector('pre.shiki')).not.toBeNull(), { timeout: 5000 });
-const getRoot = (container: Element) => {
+function getRoot(container: Element) {
     const root = container.querySelector<HTMLElement>('.semi-codeHighlight');
     if (!root) throw new Error('missing .semi-codeHighlight');
     return root;
-};
+}
 
 describe('CodeHighlight', () => {
     beforeAll(() => {

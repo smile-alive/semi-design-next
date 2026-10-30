@@ -88,7 +88,7 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     if (type === 'custom') {
         content = children;
     } else if (type === 'text') {
-        content = <TextArea placeholder={locale.placeholder} value={typeof value === 'string' ? value : ''} onChange={(value, e) => foundation.handleTextChange(value, e)} {...textAreaRest} />;
+        content = <TextArea placeholder={locale.placeholder} value={typeof value === 'string' ? value : ''} onChange={foundation.handleTextChange} {...textAreaRest} />;
     } else if (type === 'emoji') {
         const { emoji } = (value ?? {}) as EmojiResult;
         content = (
@@ -109,19 +109,19 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
                         </label>
                     ))}
                 </div>
-                {emoji === Emoji.bad && <TextArea placeholder={locale.placeholderOptional} onChange={(value, e) => foundation.handleEmojiReasonChange(value, e)} {...textAreaRest} />}
+                {emoji === Emoji.bad && <TextArea placeholder={locale.placeholderOptional} onChange={foundation.handleEmojiReasonChange} {...textAreaRest} />}
             </>
         );
     } else if (type === 'radio') {
         content = (
             <div className={`${prefixCls}-radio-container`}>
-                <RadioGroup value={typeof value === 'object' ? undefined : value} direction="vertical" onChange={(e) => foundation.handleRadioChange(e)} {...omit(radioGroupProps ?? {}, ['onChange'])} />
+                <RadioGroup value={typeof value === 'object' ? undefined : value} direction="vertical" onChange={foundation.handleRadioChange} {...omit(radioGroupProps ?? {}, ['onChange'])} />
             </div>
         );
     } else if (type === 'checkbox') {
         content = (
             <div className={`${prefixCls}-checkbox-container`}>
-                <CheckboxGroup value={Array.isArray(value) ? value : []} direction="vertical" onChange={(value) => foundation.handleCheckboxChange(value)} {...omit(checkboxGroupProps ?? {}, ['onChange'])} />
+                <CheckboxGroup value={Array.isArray(value) ? value : []} direction="vertical" onChange={foundation.handleCheckboxChange} {...omit(checkboxGroupProps ?? {}, ['onChange'])} />
             </div>
         );
     }
@@ -142,8 +142,8 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
                 okButtonProps={{ ...modalOkButtonProps, disabled: modalOkButtonProps?.disabled ?? disabledOkButton }}
                 okText={locale.submit}
                 {...modalRest}
-                onCancel={(e) => foundation.handleModalCancel(e)}
-                onOk={(e) => foundation.handleModalOk(e)}
+                onCancel={foundation.handleModalCancel}
+                onOk={foundation.handleModalOk}
             >
                 {content}
             </Modal>
@@ -189,7 +189,7 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
             height="auto"
             mask={false}
             placement="bottom"
-            onCancel={(e) => foundation.handleCancel(e)}
+            onCancel={foundation.handleCancel}
             {...sideSheetRest}
             afterVisibleChange={(visible) => {
                 afterVisibleChange?.(visible);

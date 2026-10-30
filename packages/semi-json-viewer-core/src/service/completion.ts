@@ -2,10 +2,10 @@ import * as Json from 'jsonc-parser';
 /** Based on https://github.com/microsoft/vscode-json-languageservice with modifications for custom requirements */
 import type { IPosition } from '../common/position';
 import { Range } from '../common/range';
-import type { CompletionOptions } from '../json-viewer/jsonViewer';
-import type { JSONModel } from '../model/jsonModel';
+import type { CompletionOptions } from '../json-viewer/json-viewer';
+import type { JSONModel } from '../model/json-model';
 import type { CompletionsCollector, JSONCompletionItem } from './contribution';
-import { type ASTNode, type CompletionList, type ObjectASTNode, type PropertyASTNode, CompletionItem, CompletionItemKind, InsertTextFormat, TextEdit } from './jsonTypes';
+import { type ASTNode, type CompletionList, type ObjectASTNode, type PropertyASTNode, CompletionItem, CompletionItemKind, InsertTextFormat, TextEdit } from './json-types';
 import type { JsonDocument } from './parse';
 import * as Parser from './parse';
 

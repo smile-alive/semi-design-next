@@ -4,15 +4,7 @@ const IconH9: IconData = {
     name: 'h9',
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M3.5 2.5C4.33 2.5 5 3.17 5 4v6.5h6V4a1.5 1.5 0 0 1 3 0v16a1.5 1.5 0 0 1-3 0v-6.5H5V20a1.5 1.5 0 0 1-3 0V4c0-.83.67-1.5 1.5-1.5',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M3.5 2.5C4.33 2.5 5 3.17 5 4v6.5h6V4a1.5 1.5 0 0 1 3 0v16a1.5 1.5 0 0 1-3 0v-6.5H5V20a1.5 1.5 0 0 1-3 0V4c0-.83.67-1.5 1.5-1.5', fill: 'currentColor' }],
         [
             'path',
             {

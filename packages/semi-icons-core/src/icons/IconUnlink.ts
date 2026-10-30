@@ -13,28 +13,8 @@ const IconUnlink: IconData = {
                 fill: 'currentColor',
             },
         ],
-        [
-            'rect',
-            {
-                x: '5.379',
-                y: '7.5',
-                width: '2',
-                height: '3.85',
-                transform: 'rotate(-45 5.37866 7.5)',
-                fill: 'currentColor',
-            },
-        ],
-        [
-            'rect',
-            {
-                x: '13.779',
-                y: '15.9',
-                width: '2',
-                height: '3.84773',
-                transform: 'rotate(-45 13.7793 15.9005)',
-                fill: 'currentColor',
-            },
-        ],
+        ['rect', { x: '5.379', y: '7.5', width: '2', height: '3.85', transform: 'rotate(-45 5.37866 7.5)', fill: 'currentColor' }],
+        ['rect', { x: '13.779', y: '15.9', width: '2', height: '3.84773', transform: 'rotate(-45 13.7793 15.9005)', fill: 'currentColor' }],
     ],
 };
 

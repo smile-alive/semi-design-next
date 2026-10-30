@@ -94,11 +94,7 @@
         notifyKeyDown: (handler, e) => handlers.includes(handler) && foundation.resizeByKey(handlers.indexOf(handler), e),
     });
 
-    watch(
-        () => props.direction,
-        () => foundation.handleDirectionChange(),
-        { flush: 'post' }
-    );
+    watch(() => props.direction, foundation.handleDirectionChange, { flush: 'post' });
 
     // vw and vh limits change with the window even when the group keeps its size
     useEventListener(getWindow, 'resize', () => foundation.ensureConstraint());

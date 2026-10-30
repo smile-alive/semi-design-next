@@ -1,1 +1,1 @@
-export * from './json-viewer/jsonViewer';
+export * from './json-viewer/json-viewer';

@@ -82,10 +82,7 @@ export default function DragMove(rawProps: DragMoveProps) {
         }
     });
 
-    useWatch(
-        () => props.positionStrategy,
-        () => foundation.updatePositionStrategy()
-    );
+    useWatch(() => props.positionStrategy, foundation.updatePositionStrategy);
 
     onCleanup(() => {
         for (const element of bound) {

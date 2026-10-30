@@ -11,7 +11,7 @@
     import type { SpinProps, SpinSlots } from './interface';
 
     interface SpinState {
-        loading: boolean | undefined;
+        loading?: boolean;
     }
 
     type Foundation = SpinFoundation<SpinProps, SpinState>;

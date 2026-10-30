@@ -20,9 +20,9 @@ const slides = (labels) =>
 
 const activeTitle = () => document.querySelector(`.${prefixCls}-content-item-active h3`).textContent;
 // expect.poll keeps real timers, so it also waits for click updates while the component timers are faked
-const expectActive = async (title) => {
+async function expectActive(title) {
     await expect.poll(activeTitle).toBe(title);
-};
+}
 
 const tick = (ms) =>
     act(() => {

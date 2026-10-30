@@ -59,6 +59,7 @@ describe('TabsFoundation.handleKeyDown', () => {
     it('按住 Alt、Ctrl 或 Meta 的按键交给浏览器，不移动焦点也不阻止默认行为', () => {
         const foundation = new TabsFoundation({ getProps: () => ({}), getContext: () => undefined } as unknown as TabsAdapter<TabsBaseProps>);
         const parent = document.createElement('div');
+        parent.setAttribute('role', 'tablist');
         const [first, second] = ['a', 'b'].map((key) => {
             const tab = document.createElement('div');
             tab.tabIndex = -1;
@@ -81,6 +82,34 @@ describe('TabsFoundation.handleKeyDown', () => {
         parent.remove();
     });
 
+    it('每个页签被额外包裹一层时，方向键、Home、End 仍在整个 tablist 内移动', () => {
+        const foundation = new TabsFoundation({ getProps: () => ({}), getContext: () => undefined } as unknown as TabsAdapter<TabsBaseProps>);
+        const list = document.createElement('div');
+        list.setAttribute('role', 'tablist');
+        const tabs = ['a', 'b', 'c'].map((key) => {
+            const wrapper = document.createElement('span');
+            const tab = document.createElement('div');
+            tab.tabIndex = -1;
+            tab.setAttribute('role', 'tab');
+            tab.setAttribute('data-tabkey', `semiTab${key}`);
+            wrapper.append(tab);
+            list.append(wrapper);
+            return tab;
+        });
+        document.body.append(list);
+        const press = (from: HTMLElement, key: string) => foundation.handleKeyDown({ key, target: from, currentTarget: from, preventDefault: () => {}, stopPropagation: () => {} } as never, 'x', false);
+        press(tabs[0], 'ArrowRight');
+        expect(document.activeElement).toBe(tabs[1]);
+        press(tabs[1], 'End');
+        expect(document.activeElement).toBe(tabs[2]);
+        press(tabs[2], 'ArrowRight');
+        expect(document.activeElement).toBe(tabs[0]);
+        press(tabs[0], 'End');
+        press(tabs[2], 'Home');
+        expect(document.activeElement).toBe(tabs[0]);
+        list.remove();
+    });
+
     it.each(['Delete', 'Backspace'])('%s 关闭可关闭的页签并阻止默认行为，不关闭禁用的页签', (key) => {
         const notifyTabDelete = vi.fn<TabsAdapter['notifyTabDelete']>();
         const foundation = new TabsFoundation({
@@ -89,6 +118,7 @@ describe('TabsFoundation.handleKeyDown', () => {
         } as unknown as TabsAdapter<TabsBaseProps>);
         const press = (disabled: boolean) => {
             const parent = document.createElement('div');
+            parent.setAttribute('role', 'tablist');
             const tab = document.createElement('div');
             tab.setAttribute('data-tabkey', 'semiTabb');
             tab.setAttribute('aria-disabled', String(disabled));

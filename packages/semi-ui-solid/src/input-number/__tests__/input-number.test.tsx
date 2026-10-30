@@ -23,20 +23,20 @@ const getWrapper = () => document.querySelector(`.${prefixCls}-number`) as HTMLE
 
 const hold = (button: Element, init: PointerEventInit = { button: numbers.MOUSE_BUTTON_LEFT }) => fireEvent.pointerDown(button, init);
 // the button captures the pointer, so the browser fires lostpointercapture on it after pointerup wherever that lands
-const release = (button: Element) => {
+function release(button: Element) {
     fireEvent.pointerUp(button);
     fireEvent.lostPointerCapture(button);
-};
+}
 // a full press: releasing ends the press-and-hold auto repeat that pointerdown arms
-const press = (button: Element, init?: PointerEventInit) => {
+function press(button: Element, init?: PointerEventInit) {
     hold(button, init);
     release(button);
-};
-const pressTimes = (button: Element, count: number, init?: PointerEventInit) => {
+}
+function pressTimes(button: Element, count: number, init?: PointerEventInit) {
     for (let i = 0; i < count; i++) {
         press(button, init);
     }
-};
+}
 const change = (value: string) => fireEvent.input(getInput(), { target: { value } });
 const keyDown = (key: string, init: KeyboardEventInit = {}) => fireEvent.keyDown(getInput(), { key, ...init });
 const focusInput = () => getInput().focus();

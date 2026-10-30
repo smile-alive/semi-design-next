@@ -6,12 +6,12 @@ import { expectThemeFocusRing, mouse, silentWavUrl, tabTo } from '@test/utils/br
 import AudioPlayer from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;
-const centerX = (el: Element) => {
+function centerX(el: Element) {
     const rect = el.getBoundingClientRect();
     return rect.left + rect.width / 2;
-};
+}
 function must<T>(value?: T | null): T {
-    if (value === null || value === undefined) {
+    if (value == null) {
         throw new Error('expected a value');
     }
     return value;

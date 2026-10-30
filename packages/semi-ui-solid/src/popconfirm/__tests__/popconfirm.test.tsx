@@ -29,10 +29,10 @@ async function openByClick(onVisibleChange: ReturnType<typeof vi.fn>) {
 }
 
 // A plain spread, unlike JSX attributes, lets an explicit `undefined` replace the default title
-const renderPopconfirm = (props: PopconfirmProps & Record<string, unknown> = {}) => {
+function renderPopconfirm(props: PopconfirmProps & Record<string, unknown> = {}) {
     const all: PopconfirmProps = { title: '确定是否要保存此修改？', content: '此修改将不可逆', position: 'bottomLeft', trigger: 'click', ...props };
     return render(() => <Popconfirm {...all}>{(t) => <Button {...t()}>Save</Button>}</Popconfirm>);
-};
+}
 
 describe('Popconfirm', () => {
     it('外观', async () => {

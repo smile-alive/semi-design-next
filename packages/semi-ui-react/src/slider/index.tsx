@@ -168,7 +168,7 @@ export default function Slider(rawProps: SliderProps) {
                     // keeps focus on the input rather than moving it to this span
                     onMouseDown={(e) => e.preventDefault()}
                     onMouseEnter={() => foundation.onHandleEnter(pos)}
-                    onMouseLeave={() => foundation.onHandleLeave()}
+                    onMouseLeave={foundation.onHandleLeave}
                     // a single slider re-checks for a hidden container whenever its tooltip would show
                     onMouseOver={range ? undefined : foundation.syncIsInRenderTree}
                     onPointerDown={(e) => {
@@ -209,7 +209,7 @@ export default function Slider(rawProps: SliderProps) {
                             onKeyDown?.(e);
                             foundation.handleKeyDown(e, pos);
                         }}
-                        onKeyUp={(e) => foundation.handleKeyUp(e)}
+                        onKeyUp={foundation.handleKeyUp}
                     />
                     {dot && (
                         <div
@@ -247,8 +247,8 @@ export default function Slider(rawProps: SliderProps) {
                     onBlur?.(e);
                 }
             }}
-            onMouseEnter={() => foundation.handleWrapperEnter()}
-            onMouseLeave={() => foundation.handleWrapperLeave()}
+            onMouseEnter={foundation.handleWrapperEnter}
+            onMouseLeave={foundation.handleWrapperLeave}
         >
             <div className={`${prefixCls}-rail`} style={railStyle} onClick={foundation.handleWrapClick} />
             <div className={cssClasses.TRACK} style={trackStyle} onClick={foundation.handleWrapClick} />

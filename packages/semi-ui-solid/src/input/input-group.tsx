@@ -14,9 +14,9 @@ import type { InputSize } from './input';
 
 const prefixCls = cssClasses.PREFIX;
 
-/** `class`, `style` and `ref` go to the role="group" span; other attributes go to every control in the group */
+/** `class`, `style`, `ref` and other attributes go to the role="group" span */
 export interface InputGroupProps extends ElementProps<'span', 'onFocus' | 'onBlur'> {
-    /** Replaces the size of every control in the group */
+    /** Applies to the controls that set no `size` of their own */
     size?: InputSize;
     /** Fires as focus leaves any control in the group, also for a move to another control in it */
     onBlur?: (e: FocusEvent) => void;
@@ -29,13 +29,10 @@ export interface InputGroupProps extends ElementProps<'span', 'onFocus' | 'onBlu
     disabled?: boolean;
 }
 
-const defaultProps = {
-    size: 'default',
-} satisfies Partial<InputGroupProps>;
-
 export default function InputGroup(rawProps: InputGroupProps) {
-    const props = useDefaultProps('InputGroup', rawProps, defaultProps);
-    const [local, attrs] = splitProps(props, ['children', 'class', 'disabled', 'label', 'labelPosition', 'onBlur', 'onFocus', 'ref', 'size', 'style']);
+    // size has no built-in default: an unset one must leave the controls to their global defaults
+    const props = useDefaultProps('InputGroup', rawProps, {});
+    const [local, rest] = splitProps(props, ['children', 'class', 'disabled', 'label', 'labelPosition', 'onBlur', 'onFocus', 'ref', 'size', 'style']);
 
     const locale = useLocale('Input');
     const layer = usePopupLayer();
@@ -46,7 +43,7 @@ export default function InputGroup(rawProps: InputGroupProps) {
     const label = createMemo(() => local.label);
     const labelText = children(() => label()?.text);
     const view = createMemo(() => ({ size: local.size, disabled: local.disabled }));
-    const context: InputGroupContextValue = { view, attrs, layer };
+    const context: InputGroupContextValue = { view, layer };
 
     const labelId = () => label()?.id ?? `${generatedId}-label`;
 
@@ -55,15 +52,16 @@ export default function InputGroup(rawProps: InputGroupProps) {
     // a label toggling on or off remounts the controls, as the extra wrapper does in React
     const group = (labelled: boolean) => (
         <span
-            // called inside Show, whose memo would track this read; a spread props signal would recreate the controls
-            ref={untrack(() => mergeRefs(local.ref))}
             // a span is not labelable, so aria-labelledby names the group rather than the label's `for`
             id={labelled ? (label()?.name ?? `${generatedId}-group`) : undefined}
-            class={clsx(`${prefixCls}-group`, { [`${prefixCls}-${local.size}`]: local.size !== 'default' }, local.class)}
-            style={local.style}
             role="group"
             aria-label={labelled ? undefined : locale().locale.group}
             aria-labelledby={labelled ? labelId() : undefined}
+            {...rest}
+            // called inside Show, whose memo would track this read; a spread props signal would recreate the controls
+            ref={untrack(() => mergeRefs(local.ref))}
+            class={clsx(`${prefixCls}-group`, { [`${prefixCls}-${local.size}`]: local.size && local.size !== 'default' }, local.class)}
+            style={local.style}
             onFocusIn={(e) => local.onFocus?.(e)}
             onFocusOut={(e) => local.onBlur?.(e)}
         >

@@ -181,7 +181,7 @@ export default function Pagination(rawProps: PaginationProps) {
                     aria-label={hasTextContent(prevText) ? undefined : locale.prev}
                     disabled={isDisabled}
                     x-semi-prop="prevText"
-                    onClick={() => foundation.goPrev()}
+                    onClick={foundation.goPrev}
                 >
                     {hasContent(prevText) ? prevText : <IconChevronLeft size="large" />}
                 </button>
@@ -193,7 +193,7 @@ export default function Pagination(rawProps: PaginationProps) {
         const isDisabled = nextDisabled || disabled;
         return (
             <li>
-                <button type="button" className={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: isDisabled }, `${prefixCls}-next`)} aria-label={hasTextContent(nextText) ? undefined : locale.next} disabled={isDisabled} x-semi-prop="nextText" onClick={() => foundation.goNext()}>
+                <button type="button" className={clsx(`${prefixCls}-item`, { [`${prefixCls}-item-disabled`]: isDisabled }, `${prefixCls}-next`)} aria-label={hasTextContent(nextText) ? undefined : locale.next} disabled={isDisabled} x-semi-prop="nextText" onClick={foundation.goNext}>
                     {hasContent(nextText) ? nextText : <IconChevronRight size="large" />}
                 </button>
             </li>
@@ -243,9 +243,9 @@ export default function Pagination(rawProps: PaginationProps) {
                     showClear={false}
                     prefix={null}
                     suffix={null}
-                    onBlur={() => foundation.handleQuickJumpBlur()}
-                    onChange={(v) => foundation.handleQuickJumpNumberChange(v)}
-                    onEnterPress={(e) => foundation.handleQuickJumpEnterPress((e.target as HTMLInputElement).value)}
+                    onBlur={foundation.handleQuickJumpBlur}
+                    onChange={foundation.handleQuickJumpNumberChange}
+                    onEnterPress={(e) => foundation.handleQuickJumpEnterPress(e.currentTarget.value)}
                 />
                 <span>{locale.page}</span>
             </li>
@@ -286,7 +286,7 @@ export default function Pagination(rawProps: PaginationProps) {
         const pageSizeToken = locale.pageSize;
         return (
             <li className={`${prefixCls}-switch`}>
-                <Select dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={locale.pageSizeSelector} disabled={disabled} value={pageSize} clickToHide position={switchPosition || 'bottomRight'} onChange={(newPageSize) => foundation.changePageSize(newPageSize)}>
+                <Select dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={locale.pageSizeSelector} disabled={disabled} value={pageSize} clickToHide position={switchPosition || 'bottomRight'} onChange={foundation.changePageSize}>
                     {PaginationFoundation.getPageSizeOpts(pageSizeOpts, pageSize).map((option) => (
                         <Option key={option} value={option}>
                             <span>{pageSizeToken.replace('${pageSize}', option.toString())}</span>

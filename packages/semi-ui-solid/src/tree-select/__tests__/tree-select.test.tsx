@@ -10,6 +10,7 @@ import TreeSelect, { type SearchRenderProps, type TreeSelectElement, type TreeSe
 import semiGlobal from '../../_utils/semi-global';
 import { CheckboxGroup } from '../../checkbox';
 import ConfigProvider from '../../config-provider';
+import { InputGroup } from '../../input';
 import Popover from '../../popover';
 import Tag from '../../tag';
 import type { TreeNodeData } from '../../tree';
@@ -4471,6 +4472,51 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
         focus(getTrigger());
         await userEvent.keyboard('{ArrowDown}');
         expect(activeLabel(getTrigger())).toBe('Shanghai');
+    });
+});
+
+describe('TreeSelect 在 InputGroup 内', () => {
+    const cls = `${BASE_CLASS_PREFIX}-tree-select`;
+
+    it('自带的 size 优先于组的 size，没传时取组的，包装元素内也一样', () => {
+        render(() => (
+            <InputGroup size="large">
+                <div>
+                    <TreeSelect motion={false} size="small" treeData={treeData} />
+                    <TreeSelect motion={false} treeData={treeData} />
+                </div>
+            </InputGroup>
+        ));
+        const [own, inherit] = document.querySelectorAll(`.${cls}`);
+        expect(own).toHaveClass(`${cls}-small`);
+        expect(own).not.toHaveClass(`${cls}-large`);
+        expect(inherit).toHaveClass(`${cls}-large`);
+    });
+
+    it('组的 disabled 作用于未设置的控件，自身 disabled={false} 优先', () => {
+        const { unmount } = render(() => (
+            <InputGroup disabled>
+                <TreeSelect motion={false} treeData={treeData} />
+            </InputGroup>
+        ));
+        expect(getTrigger()).toHaveClass(`${cls}-disabled`);
+        unmount();
+        render(() => (
+            <InputGroup disabled>
+                <TreeSelect motion={false} disabled={false} treeData={treeData} />
+            </InputGroup>
+        ));
+        expect(getTrigger()).not.toHaveClass(`${cls}-disabled`);
+    });
+
+    it('触发器内的搜索框不受组影响', () => {
+        render(() => (
+            <InputGroup size="large" disabled>
+                <TreeSelect motion={false} disabled={false} filterTreeNode searchPosition="trigger" treeData={treeData} />
+            </InputGroup>
+        ));
+        expect(getTriggerInput()).not.toBeDisabled();
+        expect(getTriggerInput().closest(`.${BASE_CLASS_PREFIX}-input-wrapper`)).not.toHaveClass(`${BASE_CLASS_PREFIX}-input-wrapper-large`);
     });
 });
 

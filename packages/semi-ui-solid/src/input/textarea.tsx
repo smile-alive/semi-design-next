@@ -1,4 +1,4 @@
-import { type JSX, type Ref, Index, Show, createEffect, createRenderEffect, createSignal, createUniqueId, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
+import { type JSX, type Ref, Index, Show, createEffect, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/input/constants';
@@ -13,6 +13,7 @@ import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';
 import mergeRefs from '../_base/merge-refs';
+import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
 import useFoundation from '../_base/use-foundation';
@@ -21,6 +22,7 @@ import useResizeObserver from '../_base/use-resize-observer';
 import useWatch from '../_base/use-watch';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
+import { useInputGroupContext } from './context';
 import type { ValidateStatus } from './input';
 import useControlledInput from './use-controlled-input';
 
@@ -49,6 +51,7 @@ export interface TextAreaProps extends ElementProps<'textarea', 'onChange' | 'on
     maxCount?: number;
     validateStatus?: ValidateStatus;
     defaultValue?: string;
+    /** An enclosing InputGroup's `disabled` applies when this is not set */
     disabled?: boolean;
     /** Locks typing and hides the clear button; the native `readOnly` locks typing only */
     readonly?: boolean;
@@ -89,7 +92,7 @@ export interface TextAreaProps extends ElementProps<'textarea', 'onChange' | 'on
 }
 
 export interface TextAreaState {
-    value: string | undefined;
+    value?: string;
     isFocus: boolean;
     cachedValue?: string;
 }
@@ -110,7 +113,25 @@ const defaultProps = {
 } satisfies Partial<TextAreaProps>;
 
 export default function TextArea(rawProps: TextAreaProps) {
-    const props = useDefaultProps('TextArea', rawProps, defaultProps);
+    const defaulted = useDefaultProps('TextArea', rawProps, defaultProps);
+
+    const group = useInputGroupContext();
+    const layer = usePopupLayer();
+    const locale = useLocale('Input');
+
+    const [textarea, setTextarea] = createSignal<HTMLTextAreaElement>();
+    const [lineLayout, setLineLayout] = createSignal({ width: 0, height: 0 });
+    let lineNumberPanel: HTMLDivElement | undefined;
+    let clearButton: HTMLButtonElement | undefined;
+
+    const inGroup = group?.layer === layer ? group : undefined;
+
+    // own value, then the enclosing InputGroup's, then the global default
+    const props = mergeProps(defaulted, {
+        get disabled() {
+            return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
+        },
+    });
 
     const [local, rest] = splitProps(omitFormInjected(props), [
         'autofocus',
@@ -152,13 +173,6 @@ export default function TextArea(rawProps: TextAreaProps) {
         'textareaStyle',
         'value',
     ]);
-
-    const locale = useLocale('Input');
-
-    const [textarea, setTextarea] = createSignal<HTMLTextAreaElement>();
-    const [lineLayout, setLineLayout] = createSignal({ width: 0, height: 0 });
-    let lineNumberPanel: HTMLDivElement | undefined;
-    let clearButton: HTMLButtonElement | undefined;
 
     const counterId = `${createUniqueId()}-counter`;
 
@@ -317,10 +331,10 @@ export default function TextArea(rawProps: TextAreaProps) {
             // boolean attribute, which the server omits when false
             readonly={local.readonly || local.readOnly}
             onCompositionEnd={controlled.handleCompositionEnd}
-            onCompositionStart={(e) => foundation.handleCompositionStart(e)}
-            onCompositionUpdate={(e) => foundation.handleCompositionUpdate(e)}
+            onCompositionStart={foundation.handleCompositionStart}
+            onCompositionUpdate={foundation.handleCompositionUpdate}
             onInput={handleInput}
-            onKeyDown={(e) => foundation.handleKeyDown(e)}
+            onKeyDown={foundation.handleKeyDown}
             onScroll={handleScroll}
         />
     );
@@ -340,7 +354,7 @@ export default function TextArea(rawProps: TextAreaProps) {
     });
 
     // also tracks the node, which the line number panel remounts
-    createEffect(on([value, textarea, () => local.autosize], () => foundation.fitAutosize()));
+    createEffect(on([value, textarea, () => local.autosize], foundation.fitAutosize));
 
     onMount(() => {
         if (local.disabled) {
@@ -380,7 +394,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                 [`${prefixCls}-textarea-wrapper-resizeY`]: resizableIn(['vertical', 'both', 'block']),
             })}
             style={local.style}
-            onClick={(e) => foundation.handleClick(e)}
+            onClick={foundation.handleClick}
             onFocusIn={controlled.handleFocusIn}
             onFocusOut={handleFocusOut}
         >
@@ -406,7 +420,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                 </button>
             </Show>
             <Show when={hasCounter()}>
-                <div id={counterId} class={clsx(`${prefixCls}-textarea-counter`, { [`${prefixCls}-textarea-counter-exceed`]: exceeds() })} onClick={() => foundation.handleCounterClick()}>
+                <div id={counterId} class={clsx(`${prefixCls}-textarea-counter`, { [`${prefixCls}-textarea-counter-exceed`]: exceeds() })} onClick={foundation.handleCounterClick}>
                     {count()}
                     <Show when={local.maxCount}>/{local.maxCount}</Show>
                 </div>

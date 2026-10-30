@@ -32,9 +32,9 @@ function selectFiles(files) {
     fireEvent.change(getInput(), { target: { files } });
 }
 
-const createFile = (size = 100, name = 'avatar.png', type = 'image/png') => {
+function createFile(size = 100, name = 'avatar.png', type = 'image/png') {
     return new File([new ArrayBuffer(size)], name, { type });
-};
+}
 
 class FakeXMLHttpRequest {
     withCredentials = false;
@@ -129,15 +129,15 @@ describe('Upload 裁剪', () => {
 
     // Modal drops a second OK click on the same button within 100ms as a double click, and the OK button stays the
     // same element while its loading toggles; confirming the next image is a separate click, so wait the guard out
-    function pastDoubleClickGuard() {
+    const pastDoubleClickGuard = () => {
         return new Promise((resolve) => setTimeout(resolve, 100));
-    }
+    };
 
     // jsdom has no canvas implementation; give the cropper a canvas that yields a blob
-    function mockCropperCanvas() {
+    const mockCropperCanvas = () => {
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => new Proxy({}, { get: (target, key) => target[key] ?? (() => {}), set: () => true }) as RenderingContext);
         vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => callback(new Blob(['cropped'], { type: 'image/png' })));
-    }
+    };
 
     it('accept 拒绝的图片不打开裁剪器，只触发 onAcceptInvalid', async () => {
         const onAcceptInvalid = vi.fn<UploadCallback<'onAcceptInvalid'>>();

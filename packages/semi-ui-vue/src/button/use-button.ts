@@ -3,6 +3,7 @@ import { resolveButtonLooks } from '@fibrae/semi-foundation/button/utils';
 import { usePopupLayer } from '../_base/popup-layer';
 import { useSemiGlobal } from '../_base/semi-default';
 import type { SemiGlobal } from '../_utils/semi-global';
+import { useInputGroupInScope } from '../input/context';
 import { type ButtonGroupContext, useButtonGroupContext } from './context';
 import type { Size, Theme, Type } from './interface';
 
@@ -26,5 +27,8 @@ export default function useButtonLooks(props: Record<string, unknown>, name: 'Bu
     const layer = usePopupLayer();
     const semi = useSemiGlobal();
 
-    return computed(() => resolveLooks(props, group && group.value.layer === layer ? group.value : undefined, semi, name));
+    const inputGroup = useInputGroupInScope();
+
+    // a ButtonGroup in scope has already folded the InputGroup into its context
+    return computed(() => resolveLooks(props, group && group.value.layer === layer ? group.value : inputGroup?.value, semi, name));
 }

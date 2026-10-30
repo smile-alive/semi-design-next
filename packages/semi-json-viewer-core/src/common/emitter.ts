@@ -1,5 +1,5 @@
-import type { GlobalEvents } from './emitterEvents';
-import { getCurrentNameSpaceId } from './nameSpace';
+import type { GlobalEvents } from './emitter-events';
+import { getCurrentNameSpaceId } from './name-space';
 
 type EventHandler<T> = (event: T) => void;
 

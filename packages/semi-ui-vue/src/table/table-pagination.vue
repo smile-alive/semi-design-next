@@ -15,7 +15,7 @@
     const props = defineProps<{
         /** The pagination state with the page change handler */
         pagination: TablePaginationProps;
-        formatPageText: FormatPageText | undefined;
+        formatPageText?: FormatPageText;
     }>();
 
     const table = useTableContext();

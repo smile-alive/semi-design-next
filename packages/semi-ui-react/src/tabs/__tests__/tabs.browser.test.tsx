@@ -12,11 +12,11 @@ import type { TabsProps } from '../interface';
 const arrowButton = (container, pos) => container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar-arrow-${pos} .${BASE_CLASS_PREFIX}-button`);
 const scrollWrapper = (container) => container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`);
 
-const isInside = (inner, outer) => {
+function isInside(inner, outer) {
     const a = inner.getBoundingClientRect();
     const b = outer.getBoundingClientRect();
     return a.left >= b.left - 1 && a.right <= b.right + 1;
-};
+}
 
 const renderCollapsibleTabs = (keys, props = {}) => (
     <Tabs type="card" style={{ width: 300 }} collapsible {...props}>
@@ -117,12 +117,12 @@ function CollapseScrollIntoViewDemo() {
     );
 }
 
-const expectArrows = async (container, { start, end }) => {
+async function expectArrows(container, { start, end }) {
     await waitFor(() => {
         expect(arrowButton(container, 'start')).toHaveProperty('disabled', !start);
         expect(arrowButton(container, 'end')).toHaveProperty('disabled', !end);
     });
-};
+}
 
 describe('Tabs（浏览器）', () => {
     it('Fix-1456：选择标签、切换 key 并纵向滚动后，折叠箭头保持同步', async () => {

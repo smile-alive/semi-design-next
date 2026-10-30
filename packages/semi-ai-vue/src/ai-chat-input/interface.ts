@@ -142,7 +142,7 @@ export interface AIChatInputSkillIconSlotProps {
 }
 
 export interface AIChatInputTemplateSlotProps {
-    skill: Skill | undefined;
+    skill?: Skill;
     /** Replaces the editor content */
     onTemplateClick: (content: string) => void;
 }

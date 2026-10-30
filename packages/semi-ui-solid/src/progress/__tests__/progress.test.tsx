@@ -7,11 +7,11 @@ import semiGlobal from '../../_utils/semi-global';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
 
-const renderProgress = (initial: ProgressProps = {}) => {
+function renderProgress(initial: ProgressProps = {}) {
     const [props, setProps] = createSignal<ProgressProps>(initial);
     const result = render(() => <Progress {...props()} />);
     return { ...result, rerender: setProps };
-};
+}
 const getProgressbar = () => screen.getByRole('progressbar');
 const text = (container: HTMLElement, name: 'line' | 'circle') => container.querySelector(`.${prefixCls}-${name}-text`);
 const inner = (container: HTMLElement) => container.querySelector(`.${prefixCls}-circle-ring-inner`);

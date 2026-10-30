@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import { type OptionRecordKeys, optionListToRecords, toOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
+import { type OptionRecord as BaseOptionRecord, optionListToRecords, toOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { isToken } from '../_base/token';
 import { OPTION, type OptionProps } from './option';
@@ -11,11 +11,13 @@ export interface GroupRecord {
     label?: string | number;
 }
 
-/** An option as the Select keeps it: the record plus the foundation's `_` keys and the reader of its children */
-export interface OptionRecord extends OptionProps, OptionRecordKeys<GroupRecord> {
+/** An option's data as the Select keeps it: its props plus the reader of its children */
+export interface OptionData extends OptionProps {
     /** Reads the Option's children where they render, so each place creates its own nodes */
     _slot?: () => JSX.Element;
 }
+
+export type OptionRecord = BaseOptionRecord<OptionData, GroupRecord>;
 
 function resolve(node: unknown): unknown[] {
     if (typeof node === 'function' && node.length === 0) {
@@ -73,7 +75,6 @@ export function readOptions(nodes: unknown[], optionList?: OptionProps[]) {
 }
 
 /** The option without the label reader, as callbacks receive it */
-export function plain(option: OptionRecord): OptionProps {
-    const { _slot, ...rest } = option;
+export function plain({ _slot, ...rest }: OptionData): OptionProps {
     return rest;
 }

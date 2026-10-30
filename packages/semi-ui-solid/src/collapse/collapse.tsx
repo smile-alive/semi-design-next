@@ -58,14 +58,11 @@ export default function Collapse(rawProps: CollapseProps) {
         view,
         expandIcon: () => local.expandIcon,
         collapseIcon: () => local.collapseIcon,
-        onClick: (itemKey, event) => foundation.handleChange(itemKey, event),
+        onClick: foundation.handleChange,
     };
 
     // a controlled array that is new on every parent update is compared by content inside the foundation
-    useWatch(
-        () => local.activeKey,
-        (activeKey) => foundation.syncActiveKey(activeKey)
-    );
+    useWatch(() => local.activeKey, foundation.syncActiveKey);
 
     return (
         <div {...rest} class={clsx(cssClasses.PREFIX, local.class)}>

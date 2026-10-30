@@ -45,7 +45,7 @@ export class SortableAnnouncer {
         });
     }
 
-    update(locale: SortableLocale, total: number) {
+    update = (locale: SortableLocale, total: number) => {
         if (locale.instructions !== this.#instructions.draggable) {
             this.#instructions.draggable = locale.instructions;
             const description = document.getElementById(`${descriptionPrefix}-${this.#id}`);
@@ -55,5 +55,5 @@ export class SortableAnnouncer {
         }
         this.#locale = locale;
         this.#total = total;
-    }
+    };
 }

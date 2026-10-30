@@ -40,6 +40,7 @@ export type BasicFilter = boolean | ((searchValue: string, item: BasicDataItem) 
 /** The props the foundation reads with getProp */
 export interface TransferBaseProps {
     dataSource?: Array<object>;
+    defaultValue?: Array<number | string>;
     disabled?: boolean;
     filter?: BasicFilter;
     pagination?: { currentPage?: number };
@@ -56,7 +57,9 @@ export interface TransferBaseState {
     selectedValues: Array<number | string>;
 }
 
-export interface TransferAdapter<P extends TransferBaseProps = TransferBaseProps, S extends TransferBaseState = TransferBaseState> extends DefaultAdapter<P, S> {
+/** E is the host's focusout event, passed on to notifyBlur */
+export interface TransferAdapter<P extends TransferBaseProps = TransferBaseProps, S extends TransferBaseState = TransferBaseState, E = FocusEvent> extends DefaultAdapter<P, S> {
+    notifyBlur: (e: E) => void;
     updateSelected: (values: Array<number | string>) => void;
     notifyChange: (values: Array<number | string>, items: Array<BasicDataItem>) => void;
     notifySearch: (searchValue: string) => void;
@@ -68,7 +71,7 @@ export interface TransferAdapter<P extends TransferBaseProps = TransferBaseProps
     notifyPageChange: (currentPage: number) => void;
 }
 
-export default class TransferFoundation<P extends TransferBaseProps = TransferBaseProps, S extends TransferBaseState = TransferBaseState> extends BaseFoundation<TransferAdapter<P, S>, P, S> {
+export default class TransferFoundation<P extends TransferBaseProps = TransferBaseProps, S extends TransferBaseState = TransferBaseState, E = FocusEvent> extends BaseFoundation<TransferAdapter<P, S, E>, P, S> {
     #getData() {
         const { dataSource, type } = this.getProps();
         return TransferFoundation.getData(dataSource, type);
@@ -204,7 +207,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         return _path.map((p) => p.label).join(' > ');
     }
 
-    handleInputChange(inputVal: string, notify: boolean) {
+    handleInputChange = (inputVal: string, notify: boolean) => {
         if (this.getProp('type') === strings.TYPE_TREE_TO_LIST) {
             this._adapter.searchTree(inputVal);
         }
@@ -216,9 +219,9 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         if (TransferFoundation.getPageNumber(this.getProp('pagination'), this.getState('leftCurrentPage')) !== 1) {
             this.handlePageChange(1);
         }
-    }
+    };
 
-    handleAll(wantAllChecked: boolean) {
+    handleAll = (wantAllChecked: boolean) => {
         const { disabled, type, filter } = this.getProps();
         if (disabled) {
             return;
@@ -241,9 +244,9 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
             }
         }
         this.#updateSelected(selectedItems);
-    }
+    };
 
-    handleClear() {
+    handleClear = () => {
         if (this.getProp('disabled')) {
             return;
         }
@@ -255,9 +258,9 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
             }
         }
         this.#updateSelected(selectedItems);
-    }
+    };
 
-    handleSelectOrRemove(item: BasicResolvedDataItem) {
+    handleSelectOrRemove = (item: BasicResolvedDataItem) => {
         if (this.getProp('disabled') || item.disabled) {
             return;
         }
@@ -271,9 +274,9 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
             this._adapter.notifySelect(changedItem);
         }
         this.#updateSelected(selectedItems);
-    }
+    };
 
-    handleSelect(values: BasicTreeValue) {
+    handleSelect = (values: BasicTreeValue) => {
         if (this.getProp('disabled')) {
             return;
         }
@@ -288,18 +291,37 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
             }
         });
         this.#updateSelected(nextSelectedItemsMap);
-    }
+    };
 
-    handleSortEnd({ oldIndex, newIndex }: OnSortEndProps) {
+    /**
+     * `value` went back to a non-array (a form reset). The state still holds what was selected before `value` took
+     * over, since a controlled selection never writes it, so it returns to the initial selection.
+     */
+    handleValueRelease = () => {
+        this._adapter.updateSelected([...(this.getProp('defaultValue') ?? [])]);
+    };
+
+    /**
+     * A focusout from the root or anything inside it: reports the blur once the focus has left the whole transfer.
+     * A window blur has no relatedTarget and counts as leaving, as in TreeSelect.
+     */
+    handleFocusOut = (e: E & Pick<FocusEvent, 'currentTarget' | 'relatedTarget'>) => {
+        const { currentTarget, relatedTarget } = e;
+        if (!(currentTarget instanceof Node && relatedTarget instanceof Node && currentTarget.contains(relatedTarget))) {
+            this._adapter.notifyBlur(e);
+        }
+    };
+
+    handleSortEnd = ({ oldIndex, newIndex }: OnSortEndProps) => {
         if (this.getProp('disabled')) {
             return;
         }
         const selectedArr = arrayMove([...this.#getSelected(this.#getData()).values()], oldIndex, newIndex);
         this.#updateSelected(new Map(selectedArr.map((option) => [option.key, option])));
-    }
+    };
 
-    handlePageChange(currentPage: number) {
+    handlePageChange = (currentPage: number) => {
         this._adapter.updateCurrentPage(currentPage);
         this._adapter.notifyPageChange(currentPage);
-    }
+    };
 }

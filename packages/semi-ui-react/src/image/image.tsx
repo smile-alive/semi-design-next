@@ -22,7 +22,7 @@ const defaultProps = {
     preview: true,
 } satisfies Partial<ImageProps>;
 
-function Image(rawProps: ImageProps) {
+export default function Image(rawProps: ImageProps) {
     const props = useDefaultProps('Image', rawProps, defaultProps);
     const { ref, src, width, height, alt, style, className, crossOrigin, preview, fallback, placeholder, setDownloadName, imgCls, imgStyle, children, onLoad, onError, ...restProps } = props;
 
@@ -160,5 +160,3 @@ function Image(rawProps: ImageProps) {
         </>
     );
 }
-
-export default Image;

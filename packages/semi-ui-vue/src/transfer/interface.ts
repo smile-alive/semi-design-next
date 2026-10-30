@@ -90,6 +90,8 @@ export interface TransferEmits {
     deselect: [item: TransferDataItem];
     /** Typing in the search box; the `search` method does not fire it */
     search: [searchValue: string];
+    /** The focus moved from inside the transfer to somewhere outside it; moves between its own controls do not fire it */
+    blur: [event: FocusEvent];
 }
 
 export interface TransferHandle {
@@ -136,7 +138,7 @@ export interface TransferSelectedHeaderSlotProps {
 export interface TransferSourcePanelSlotProps {
     /** The values of the selected items */
     value: TransferValue;
-    loading: boolean | undefined;
+    loading?: boolean;
     /** Whether a search is on and matches nothing */
     noMatch: boolean;
     /** The items that match the search */

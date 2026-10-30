@@ -1,6 +1,6 @@
 import type { FormattingOptions } from 'jsonc-parser';
-import type { IModelContentChangeEvent } from '../common/emitterEvents';
-import { JsonWorker } from './jsonWorker';
+import type { IModelContentChangeEvent } from '../common/emitter-events';
+import { JsonWorker } from './json-worker';
 
 let jsonWorker: JsonWorker | null = null;
 

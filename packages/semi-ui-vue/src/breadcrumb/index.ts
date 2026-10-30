@@ -6,5 +6,5 @@ const BreadcrumbWithItem: typeof Breadcrumb & { Item: typeof BreadcrumbItem } = 
     Item: BreadcrumbItem,
 });
 export default BreadcrumbWithItem;
-export { BreadcrumbItem };
+export { default as BreadcrumbItem } from './breadcrumb-item.vue';
 export type * from './interface';

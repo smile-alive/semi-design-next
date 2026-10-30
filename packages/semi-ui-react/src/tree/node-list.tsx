@@ -4,7 +4,7 @@ import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/tree/share
 import type { NodeListProps, NodeListState } from './interface';
 import NodeCollapsible from './node-collapsible';
 
-function NodeList({ flattenNodes = [], motionKeys, motionType, flattenList, searchTargetIsDeep, renderTreeNode }: NodeListProps): ReactNode {
+export default function NodeList({ flattenNodes = [], motionKeys, motionType, flattenList, searchTargetIsDeep, renderTreeNode }: NodeListProps): ReactNode {
     const [motion, setMotion] = useState<NodeListState>({ transitionNodes: [] });
 
     // derived in render: the animated group must replace the rows in the same commit
@@ -40,5 +40,3 @@ function NodeList({ flattenNodes = [], motionKeys, motionType, flattenList, sear
         );
     });
 }
-
-export default NodeList;

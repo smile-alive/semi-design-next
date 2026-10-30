@@ -17,6 +17,7 @@ import useFoundation from '../_base/use-foundation';
 import useResizeObserver from '../_base/use-resize-observer';
 import useLocale from '../locale/use-locale';
 import ReactResizeObserver from '../resize-observer';
+import { useInputGroupInScope, withInputGroupDisabled } from './context';
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -143,7 +144,7 @@ function createHandle(textareaRef: React.RefObject<HTMLTextAreaElement | null>, 
 }
 
 export default function TextArea(rawProps: TextAreaProps) {
-    const props = useDefaultProps('TextArea', rawProps, defaultProps);
+    const props = useDefaultProps('TextArea', withInputGroupDisabled(rawProps, useInputGroupInScope()), defaultProps);
 
     const {
         ref,
@@ -256,7 +257,7 @@ export default function TextArea(rawProps: TextAreaProps) {
     };
 
     useEffect(() => () => throttledResize.cancel(), [throttledResize]);
-    useDidUpdate(props.value, (next) => foundation.handleValueChange(next));
+    useDidUpdate(props.value, foundation.handleValueChange);
 
     useResizeObserver(
         textareaRef,
@@ -371,7 +372,7 @@ export default function TextArea(rawProps: TextAreaProps) {
             onCompositionEnd={foundation.handleCompositionEnd}
             onCompositionStart={foundation.handleCompositionStart}
             onCompositionUpdate={foundation.handleCompositionUpdate}
-            onKeyDown={(e) => foundation.handleKeyDown(e)}
+            onKeyDown={foundation.handleKeyDown}
             onScroll={handleTextAreaScroll}
         />
     );
@@ -392,7 +393,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                 className={clsx(`${prefixCls}-textarea-counter`, {
                     [`${prefixCls}-textarea-counter-exceed`]: exceeds,
                 })}
-                onClick={() => foundation.handleCounterClick()}
+                onClick={foundation.handleCounterClick}
             >
                 {current}
                 {Boolean(total) && '/'}
@@ -411,7 +412,7 @@ export default function TextArea(rawProps: TextAreaProps) {
                     foundation.handleBlur(e.nativeEvent);
                 }
             }}
-            onClick={(e) => foundation.handleClick(e)}
+            onClick={foundation.handleClick}
             onFocus={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget)) {
                     foundation.handleFocus(e);

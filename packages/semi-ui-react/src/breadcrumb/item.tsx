@@ -83,7 +83,7 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
         inner = (
             <>
                 {iconNode}
-                {children !== undefined && children !== null && children !== false && children !== '' && <span className={`${clsPrefix}-item-title ${clsPrefix}-item-title-inline`}>{children}</span>}
+                {children != null && children !== false && children !== '' && <span className={`${clsPrefix}-item-title ${clsPrefix}-item-title-inline`}>{children}</span>}
             </>
         );
     }

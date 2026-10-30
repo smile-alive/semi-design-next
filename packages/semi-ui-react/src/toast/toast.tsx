@@ -97,10 +97,10 @@ export default function Toast(rawProps: ToastReactProps) {
     useImperativeHandle(
         ref,
         () => ({
-            restartCloseTimer: () => foundation.restartCloseTimer(),
-            pauseCloseTimer: () => foundation.pauseCloseTimer(),
-            resumeCloseTimer: () => foundation.resumeCloseTimer(),
-            leave: () => foundation.leave(),
+            restartCloseTimer: foundation.restartCloseTimer,
+            pauseCloseTimer: foundation.pauseCloseTimer,
+            resumeCloseTimer: foundation.resumeCloseTimer,
+            leave: foundation.leave,
             announcement: () => toastRef.current?.textContent ?? '',
             element: () => toastRef.current,
         }),
@@ -144,7 +144,7 @@ export default function Toast(rawProps: ToastReactProps) {
                 </span>
                 {showClose && (
                     <div className={`${prefixCls}-close-button`}>
-                        <Button type="tertiary" aria-label={locale.close} size="small" theme="borderless" icon={<IconClose x-semi-prop="icon" />} onClick={(e) => foundation.close(e)} />
+                        <Button type="tertiary" aria-label={locale.close} size="small" theme="borderless" icon={<IconClose x-semi-prop="icon" />} onClick={foundation.close} />
                     </div>
                 )}
             </div>

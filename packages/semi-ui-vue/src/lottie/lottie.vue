@@ -57,7 +57,7 @@
     // shallow snapshot of `params` if that use becomes common.
     useDidUpdate(
         () => props.params,
-        () => foundation.handleParamsUpdate(),
+        foundation.handleParamsUpdate,
         (a, b) => isEqual(toRaw(a), toRaw(b))
     );
 </script>

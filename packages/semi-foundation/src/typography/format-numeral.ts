@@ -79,7 +79,7 @@ export default class FormatNumeral {
         return cTruncated.toString();
     }
 
-    format() {
+    format = () => {
         if (this.#parser !== undefined) {
             return this.#parser(this.#content);
         }
@@ -97,7 +97,7 @@ export default class FormatNumeral {
         return extractNumbers(this.#content)
             .map((item) => (checkIsNumeral(item) ? this.#ruleMethods[this.#rule](Number(item)) : item))
             .join('');
-    }
+    };
 }
 
 // Multiplies by 10^places on the decimal exponent, so 0.58 * 100 is 58 rather than 57.99999999999999

@@ -37,10 +37,10 @@ const getInputs = () => screen.getAllByRole<HTMLInputElement>('slider');
 // jsdom runs no key default action on a native range, so the change is fired directly
 const changeTo = (input, value) => fireEvent.change(input, { target: { value: String(value) } });
 // jsdom's :focus-visible heuristic misses focus moving between two inputs, so Tab is dispatched from the body
-const tabTo = (el) => {
+function tabTo(el) {
     fireEvent.keyDown(document.body, { key: 'Tab' });
     void act(() => el.focus());
-};
+}
 const query = (container, suffix) => container.querySelector(`.${prefix}-${suffix}`);
 const queryAll = (container, suffix) => container.querySelectorAll(`.${prefix}-${suffix}`);
 // rects derive from inline width/height/margin: with width 100 and no margin, clientX equals the value

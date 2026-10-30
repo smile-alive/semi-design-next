@@ -59,8 +59,8 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
     const customRender = createMemo(() => props.customRenderFunc);
 
     const actionNodes: Record<ActionKey, () => JSX.Element> = {
-        copyNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={() => foundation.copyMessage()} />,
-        likeNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.like} aria-pressed={Boolean(props.message.like)} theme="borderless" icon={props.message.like ? <IconLikeThumb /> : <IconThumbUpStroked />} onClick={() => foundation.likeMessage()} />,
+        copyNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={foundation.copyMessage} />,
+        likeNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.like} aria-pressed={Boolean(props.message.like)} theme="borderless" icon={props.message.like ? <IconLikeThumb /> : <IconThumbUpStroked />} onClick={foundation.likeMessage} />,
         dislikeNode: () => (
             <Button
                 type="tertiary"
@@ -69,30 +69,30 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
                 aria-pressed={Boolean(props.message.dislike)}
                 theme="borderless"
                 icon={props.message.dislike ? <IconLikeThumb class={`${PREFIX_CHAT_BOX_ACTION}-icon-flip`} /> : <IconThumbUpStroked class={`${PREFIX_CHAT_BOX_ACTION}-icon-flip`} />}
-                onClick={() => foundation.dislikeMessage()}
+                onClick={foundation.dislikeMessage}
             />
         ),
-        resetNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.regenerate} theme="borderless" icon={<IconRedoStroked class={`${PREFIX_CHAT_BOX_ACTION}-icon-redo`} />} onClick={() => foundation.resetMessage()} />,
+        resetNode: () => <Button type="tertiary" class={btnCls} aria-label={locale().locale.regenerate} theme="borderless" icon={<IconRedoStroked class={`${PREFIX_CHAT_BOX_ACTION}-icon-redo`} />} onClick={foundation.resetMessage} />,
         deleteNode: () => (
             <Popconfirm
                 title={locale().locale.deleteConfirm}
                 position="top"
                 trigger="custom"
                 visible={state().visible}
-                onClickOutSide={() => foundation.hideDeletePopup()}
+                onClickOutSide={foundation.hideDeletePopup}
                 // trigger="custom" ignores Esc, and confirm or cancel only report through onVisibleChange
                 onConfirm={() => {
                     confirmed = true;
                     foundation.deleteMessage();
                 }}
-                onEscKeyDown={() => foundation.hideDeletePopup()}
+                onEscKeyDown={foundation.hideDeletePopup}
                 onVisibleChange={(isVisible) => {
                     if (!isVisible) {
                         foundation.hideDeletePopup();
                     }
                 }}
             >
-                {(getTriggerProps) => <Button {...getTriggerProps({ ref: (node: HTMLButtonElement) => (trigger = node) })} type="tertiary" class={btnCls} aria-label={locale().locale.delete} theme="borderless" icon={<IconDeleteStroked />} onClick={() => foundation.showDeletePopup()} />}
+                {(getTriggerProps) => <Button {...getTriggerProps({ ref: (node: HTMLButtonElement) => (trigger = node) })} type="tertiary" class={btnCls} aria-label={locale().locale.delete} theme="borderless" icon={<IconDeleteStroked />} onClick={foundation.showDeletePopup} />}
             </Popconfirm>
         ),
     };

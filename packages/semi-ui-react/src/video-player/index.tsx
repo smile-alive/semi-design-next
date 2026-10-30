@@ -249,7 +249,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                 content={
                     <div className={`${controlsCls}-volume`}>
                         <div className={`${controlsCls}-volume-title`}>{muted ? 0 : volume}%</div>
-                        <AudioSlider max={100} value={muted ? 0 : volume} getValueText={(value) => `${value}%`} height={120} label={locale.volume} showTooltip={false} vertical onChange={(value) => foundation.handleVolumeChange(value)} />
+                        <AudioSlider max={100} value={muted ? 0 : volume} getValueText={(value) => `${value}%`} height={120} label={locale.volume} showTooltip={false} vertical onChange={foundation.handleVolumeChange} />
                     </div>
                 }
                 position="top"
@@ -284,15 +284,15 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                     src={src}
                     onCanPlay={foundation.handleCanPlay}
                     onClick={clickToPlay ? () => foundation.handlePlayOrPause() : undefined}
-                    onDurationChange={() => foundation.handleDurationChange()}
+                    onDurationChange={foundation.handleDurationChange}
                     onEnded={foundation.handleEnded}
-                    onError={() => foundation.handleError()}
+                    onError={foundation.handleError}
                     onLoadStart={foundation.handleLoadStart}
                     onPause={foundation.handleVideoPause}
                     onPlay={foundation.handleVideoPlay}
                     onProgress={foundation.handleProgress}
                     onStalled={() => foundation.handleStalled(locale)}
-                    onTimeUpdate={() => foundation.handleTimeUpdate()}
+                    onTimeUpdate={foundation.handleTimeUpdate}
                     onWaiting={() => foundation.handleWaiting(locale)}
                 >
                     {/* without default the text track stays disabled and, with no caption switch, never shows */}
@@ -325,10 +325,10 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             {/* a live region announces changes only once it exists, so it stays while the notification comes and goes */}
             <div role="status">{showNotification && notificationContent && <div className={`${prefixCls}-notification`}>{notificationContent}</div>}</div>
             <div className={clsx(controlsCls, { [`${controlsCls}-hide`]: !showControls })}>
-                <VideoProgress max={totalTime} step={seekTime} value={currentTime} bufferedValue={bufferedValue} markers={markers} onChange={(value) => foundation.handleTimeChange(value)} />
+                <VideoProgress max={totalTime} step={seekTime} value={currentTime} bufferedValue={bufferedValue} markers={markers} onChange={foundation.handleTimeChange} />
                 <div className={`${controlsCls}-menu`}>
                     <div className={`${controlsCls}-menu-left`}>
-                        {renderIconButton(isPlaying ? <IconPause /> : <IconPlay />, () => foundation.handlePlayOrPause(), strings.PLAY, isPlaying ? locale.pause : locale.play)}
+                        {renderIconButton(isPlaying ? <IconPause /> : <IconPlay />, foundation.handlePlayOrPause, strings.PLAY, isPlaying ? locale.pause : locale.play)}
                         {onNext && renderIconButton(<IconRestart rotate={180} />, onNext, strings.NEXT, locale.next)}
                         {controlsList.includes(strings.TIME) && (
                             <div className={`${controlsCls}-time`}>
@@ -336,11 +336,11 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
                             </div>
                         )}
                         {renderVolume()}
-                        {renderDropdownButton(playbackRate, playbackRateList, (option, locale) => foundation.handleRateChange(option, locale), strings.PLAYBACK_RATE, locale.playbackRate)}
+                        {renderDropdownButton(playbackRate, playbackRateList, foundation.handleRateChange, strings.PLAYBACK_RATE, locale.playbackRate)}
                     </div>
                     <div className={`${controlsCls}-menu-right`}>
-                        {qualityList && qualityList.length > 0 && renderDropdownButton(currentQuality, qualityList, (option, locale) => foundation.handleQualityChange(option, locale), strings.QUALITY, locale.quality)}
-                        {routeList && routeList.length > 0 && renderDropdownButton(currentRoute, routeList, (option, locale) => foundation.handleRouteChange(option, locale), strings.ROUTE, locale.route)}
+                        {qualityList && qualityList.length > 0 && renderDropdownButton(currentQuality, qualityList, foundation.handleQualityChange, strings.QUALITY, locale.quality)}
+                        {routeList && routeList.length > 0 && renderDropdownButton(currentRoute, routeList, foundation.handleRouteChange, strings.ROUTE, locale.route)}
                         {renderIconButton(<IconFlipHorizontal />, () => foundation.handleMirror(locale), strings.MIRROR, isMirror ? locale.cancelMirror : locale.mirror)}
                         {renderIconButton(isFullScreen ? <IconMinimize /> : <IconMaximize />, foundation.handleFullscreen, strings.FULLSCREEN, isFullScreen ? locale.exitFullscreen : locale.fullscreen)}
                         {renderIconButton(<IconMiniPlayer />, foundation.handlePictureInPicture, strings.PICTURE_IN_PICTURE, locale.pictureInPicture)}

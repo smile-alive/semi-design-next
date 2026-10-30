@@ -59,7 +59,7 @@ export default function Steps(rawProps: StepsProps) {
         }
     };
 
-    function createItem(token: Token<StepProps>, index: () => number) {
+    const createItem = (token: Token<StepProps>, index: () => number) => {
         const stepNumber = () => local.initial + index();
         const state = createMemo(() => getStepState(stepNumber(), local.current, local.status, Boolean(token.props.status)));
         const change = () => {
@@ -74,9 +74,9 @@ export default function Steps(rawProps: StepsProps) {
             onChange: () => (local.onChange ? change : undefined),
             nextErrorClass: () => (state().nextError ? clsx(token.props.class, `${local.prefixCls}-next-error`) : undefined),
         };
-    }
+    };
 
-    function basicProps(token: Token<StepProps>, index: () => number) {
+    const basicProps = (token: Token<StepProps>, index: () => number) => {
         const item = createItem(token, index);
         return mergeProps(token.props, {
             get stepNumber() {
@@ -101,9 +101,9 @@ export default function Steps(rawProps: StepsProps) {
                 return item.onChange();
             },
         });
-    }
+    };
 
-    function fillProps(token: Token<StepProps>, index: () => number) {
+    const fillProps = (token: Token<StepProps>, index: () => number) => {
         const item = createItem(token, index);
         return mergeProps(token.props, {
             get stepNumber() {
@@ -122,9 +122,9 @@ export default function Steps(rawProps: StepsProps) {
                 return item.onChange();
             },
         });
-    }
+    };
 
-    function navProps(token: Token<StepProps>, index: () => number) {
+    const navProps = (token: Token<StepProps>, index: () => number) => {
         const item = createItem(token, index);
         return mergeProps(token.props, {
             get index() {
@@ -140,7 +140,7 @@ export default function Steps(rawProps: StepsProps) {
                 return item.onChange();
             },
         });
-    }
+    };
 
     const colStyle = () => (local.direction === 'vertical' ? undefined : { width: `${100 / steps().length}%` });
 

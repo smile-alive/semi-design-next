@@ -180,7 +180,7 @@ describe('Form hooks 与 HOC', () => {
 });
 
 describe('Form.useForm 挂载前的 formApi', () => {
-    function renderUnbound() {
+    const renderUnbound = () => {
         let api: ReturnType<typeof Form.useForm>[0];
         function Demo() {
             const [formApi] = Form.useForm();
@@ -191,7 +191,7 @@ describe('Form.useForm 挂载前的 formApi', () => {
         }
         render(<Demo />);
         return api;
-    }
+    };
 
     it('读取 Symbol 属性不抛错', () => {
         const api = renderUnbound();

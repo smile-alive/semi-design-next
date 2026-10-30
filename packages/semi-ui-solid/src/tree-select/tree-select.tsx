@@ -19,6 +19,7 @@ import forwardFocus, { focusElement } from '../_base/forward-focus';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';
 import mergeRefs from '../_base/merge-refs';
+import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
@@ -26,6 +27,7 @@ import useFoundation from '../_base/use-foundation';
 import type { VirtualListHandle } from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
 import Input, { type InputProps, type ValidateStatus } from '../input';
+import { InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
 import Tag, { TagGroup, type TagGroupItem } from '../tag';
@@ -213,7 +215,6 @@ const defaultProps = {
     multiple: false,
     remote: false,
     filterTreeNode: false,
-    size: 'default',
     treeNodeFilterProp: 'label',
     onChangeWithObject: false,
     treeNodeLabelProp: 'label',
@@ -234,8 +235,33 @@ const defaultProps = {
 const isShownText = (text: unknown) => Boolean(text) || text === 0;
 
 export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(rawProps: TreeSelectProps<T, Multiple, WithObject>) {
-    const bodyProps = rawProps as unknown as TreeSelectBodyProps;
-    const props = useDefaultProps('TreeSelect', bodyProps, defaultProps);
+    const bodyProps = rawProps as TreeSelectBodyProps;
+    const defaulted = useDefaultProps('TreeSelect', bodyProps, defaultProps);
+
+    const group = useInputGroupContext();
+    const layer = usePopupLayer();
+    const config = useConfig();
+    const locale = useLocale('TreeSelect');
+    const treeLocale = useLocale('Tree');
+
+    let root: HTMLDivElement | undefined;
+    let searchInput: HTMLElement | undefined;
+    let tagInput: HTMLDivElement | undefined;
+    let clearButton: HTMLButtonElement | undefined;
+    let optionContainer: HTMLDivElement | undefined;
+    let list: VirtualListHandle | undefined;
+
+    const inGroup = group?.layer === layer ? group : undefined;
+
+    // as Input: own value, then the group's, then the global default
+    const props = mergeProps(defaulted, {
+        get size() {
+            return bodyProps.size ?? inGroup?.view().size ?? defaulted.size ?? 'default';
+        },
+        get disabled() {
+            return bodyProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
+        },
+    });
 
     // validateStatus, insetLabel and insetLabelId are read from props: the Form-injected keys never reach the split
     const [local, rest] = splitProps(omitFormInjected(props), [
@@ -331,17 +357,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     ]);
 
     const [, componentProps] = splitProps(props, ['ref']);
-
-    const config = useConfig();
-    const locale = useLocale('TreeSelect');
-    const treeLocale = useLocale('Tree');
-
-    let root: HTMLDivElement | undefined;
-    let searchInput: HTMLElement | undefined;
-    let tagInput: HTMLDivElement | undefined;
-    let clearButton: HTMLButtonElement | undefined;
-    let optionContainer: HTMLDivElement | undefined;
-    let list: VirtualListHandle | undefined;
 
     const registerTrigger = useSpecialTrigger(
         () => ({ disabled: local.disabled }),
@@ -446,8 +461,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         hasLoadData: () => Boolean(local.loadData),
         rtl: () => config().direction === 'rtl',
         editing: (event) => isTextEditor(event.target),
-        select: (event, row) => foundation.handleNodeSelect(event, row),
-        expand: (event, row) => foundation.handleNodeExpand(event, row),
+        select: foundation.handleNodeSelect,
+        expand: foundation.handleNodeExpand,
         reveal,
     });
 
@@ -477,7 +492,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
 
     const markPressInside = useClickOutside(
         [() => root, () => optionContainer],
-        (e) => foundation.handleClickOutside(e),
+        foundation.handleClickOutside,
         // blur comes from a click outside, so it is listened to while focused, not only while open
         () => state().isOpen || state().isFocus
     );
@@ -603,7 +618,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         const target = e.relatedTarget;
         const inside = target instanceof Node && (Boolean(root?.contains(target)) || Boolean(optionContainer?.closest('[popover]')?.contains(target)));
         if (!inside) {
-            foundation.handleTriggerBlur(e);
+            foundation.handleFocusLeave(e);
         }
     };
 
@@ -718,8 +733,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         forwardFocus(node, focusTarget, focusOptions);
         // React's handle methods ride on the element: a Tooltip wrapping the TreeSelect needs the element itself as its ref
         Object.assign(node, {
-            search: (value) => foundation.search(value),
-            close: () => foundation.close(),
+            search: foundation.search,
+            close: foundation.close,
         } satisfies TreeSelectHandle);
         registerTrigger(node);
     };
@@ -955,7 +970,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     [`${prefix}-selection-TriggerSearchItem-placeholder`]: (state().inputTriggerFocus || !isShownText(singleText())) && !local.disabled,
                     [`${prefix}-selection-TriggerSearchItem-disabled`]: local.disabled,
                 })}
-                onClick={() => foundation.onClickSingleTriggerSearchItem()}
+                onClick={foundation.onClickSingleTriggerSearchItem}
             >
                 <Show when={isShownText(singleText())} fallback={local.placeholder}>
                     {singleText()}
@@ -1001,7 +1016,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     );
 
     const DefaultTrigger = () => (
-        <>
+        // the search input is part of the TreeSelect, not a control of an enclosing InputGroup
+        <InputGroupContext.Provider value={undefined}>
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
@@ -1053,7 +1069,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     </Show>
                 </div>
             </Show>
-        </>
+        </InputGroupContext.Provider>
     );
 
     const renderRow = (node: Accessor<FlattenNode | undefined>, style?: Accessor<JSX.CSSProperties>) => {
@@ -1126,7 +1142,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         <Popover
             style={local.dropdownMatchSelectWidth ? { 'min-width': 'var(--semi-tooltip-trigger-width)' } : undefined}
             role="presentation"
-            afterClose={() => foundation.handleAfterClose()}
+            afterClose={foundation.handleAfterClose}
             autoAdjustOverflow={local.autoAdjustOverflow}
             content={renderContent}
             // the combobox moves through the tree itself; the focus stays on it (APG)

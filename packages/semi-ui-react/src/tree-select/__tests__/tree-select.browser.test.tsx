@@ -135,20 +135,22 @@ const treeDataEn = [
 
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 const getOptions = () => document.querySelectorAll<HTMLElement>(`.${optionCls}`);
-const getOption = async (label) => {
+async function getOption(label) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
     return within(getPopover()).getByText(label).closest<HTMLElement>(`.${optionCls}`);
-};
+}
 const clickOption = async (label) => userEvent.click(await getOption(label));
 const getTagTexts = (root: ParentNode = document) => [...root.querySelectorAll(`.${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
 const outside = () => screen.getByRole('button', { name: 'outside' });
 // Pinned to a corner so an open dropdown never covers it
-const Outside = () => <Button style={{ position: 'fixed', right: 0, bottom: 0 }}>outside</Button>;
+function Outside() {
+    return <Button style={{ position: 'fixed', right: 0, bottom: 0 }}>outside</Button>;
+}
 // Playwright's type() only focuses, but the trigger opens and takes focus on click
-const clickAndType = async (input, text) => {
+async function clickAndType(input, text) {
     await userEvent.click(input);
     await userEvent.keyboard(text);
-};
+}
 
 function LoadDataTreeSelect() {
     const [data, setData] = useState([
@@ -179,11 +181,13 @@ const checkRelationProps = {
     style: { width: 300 },
     searchPosition: 'trigger' as const,
 };
-const MultipleCheckRelation = () => (
-    <div data-testid="multiple">
-        <TreeSelect {...checkRelationProps} defaultValue={['China', 'Japan']} multiple />
-    </div>
-);
+function MultipleCheckRelation() {
+    return (
+        <div data-testid="multiple">
+            <TreeSelect {...checkRelationProps} defaultValue={['China', 'Japan']} multiple />
+        </div>
+    );
+}
 
 const triggerTreeData = [
     {
@@ -216,7 +220,9 @@ const renderTagInputTrigger = ({ value, onSearch, onRemove, inputValue }) => (
         onInputChange={onSearch}
     />
 );
-const TagInputTriggerTreeSelect = (props) => <TreeSelect style={{ width: 300 }} multiple defaultExpandAll filterTreeNode searchPosition="trigger" treeData={triggerTreeData} triggerRender={renderTagInputTrigger} {...props} />;
+function TagInputTriggerTreeSelect(props) {
+    return <TreeSelect style={{ width: 300 }} multiple defaultExpandAll filterTreeNode searchPosition="trigger" treeData={triggerTreeData} triggerRender={renderTagInputTrigger} {...props} />;
+}
 
 describe('treeSelect', () => {
     it('searchPosition 为 trigger', async () => {
@@ -733,6 +739,25 @@ describe.each([
         expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onBlur).toHaveBeenCalledTimes(1);
     });
+});
+
+it('打开时按 Tab 关闭下拉并离开，onBlur 恰好一次', async () => {
+    const onBlur = vi.fn<NonNullable<TreeSelectProps['onBlur']>>();
+    render(
+        <>
+            <TreeSelect style={{ width: 300 }} treeData={regionTreeData} onBlur={onBlur} />
+            <Button>after</Button>
+        </>
+    );
+    await tabTo(screen.getByRole('combobox'));
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(getPopover()).not.toBeNull());
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    expect(onBlur).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Tab}');
+    expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
+    await waitFor(() => expect(getPopover()).toBeNull());
+    expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
 it('焦点在弹层搜索框时按 Escape 关闭，焦点回到触发器，不额外触发 onBlur 与 onFocus', async () => {

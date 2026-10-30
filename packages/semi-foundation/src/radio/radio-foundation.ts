@@ -140,12 +140,12 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
         RadioFoundation.#standalone.delete(this);
     }
 
-    setChecked(checked: boolean) {
+    setChecked = (checked: boolean) => {
         this._adapter.setChecked(checked);
-    }
+    };
 
     /** `checked` is the value the native input reports, or false for the uncheck of advanced mode */
-    handleChange(checked: boolean, e: RadioSourceEvent) {
+    handleChange = (checked: boolean, e: RadioSourceEvent) => {
         const props = this.getProps();
         const group = this.getContexts()?.radioGroup;
         const event: RadioChangeEvent = {
@@ -167,23 +167,23 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
             this.setChecked(checked);
         }
         this._adapter.notifyChange(event);
-    }
+    };
 
     // a native radio reports no change when the checked one is clicked, so advanced mode reports the uncheck here
-    handleClick(e: RadioSourceEvent) {
+    handleClick = (e: RadioSourceEvent) => {
         const { checked, mode } = this.#getView();
         if (mode === 'advanced' && checked) {
             this.handleChange(false, e);
         }
-    }
+    };
 
     // Chrome sends no click for Space on a checked radio, so the keyboard uncheck of advanced mode is reported here;
     // preventDefault stops the activation that follows keyup from checking the radio again
-    handleKeyUp(e: RadioSourceEvent & { key: string }) {
+    handleKeyUp = (e: RadioSourceEvent & { key: string }) => {
         const { checked, mode } = this.#getView();
         if (e.key === ' ' && mode === 'advanced' && checked) {
             e.preventDefault();
             this.handleChange(false, e);
         }
-    }
+    };
 }

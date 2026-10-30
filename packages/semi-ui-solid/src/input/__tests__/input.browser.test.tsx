@@ -13,7 +13,7 @@ const longStr = 'semi design '.repeat(24).trim();
 const mediumText = 'A modern, comprehensive, flexible design system that gives you all modular blocks you need to build sensible web apps & SaaS products.';
 const longText = `${mediumText} `.repeat(8).trim();
 
-const renderAutosizeTextAreas = () => {
+function renderAutosizeTextAreas() {
     render(() => (
         <div style={{ width: '200px' }}>
             <TextArea autosize />
@@ -25,14 +25,14 @@ const renderAutosizeTextAreas = () => {
         </div>
     ));
     return screen.getAllByRole<HTMLTextAreaElement>('textbox');
-};
+}
 const styleOf = (el: Element) => getComputedStyle(el);
 const fitsContent = (el: HTMLElement) => expect(el.scrollHeight).toBe(el.clientHeight);
 // Firefox computes a textarea's own overflow as visible and scrolls an inner box, so the scrolling itself is checked
-const expectScrollable = (el: HTMLElement) => {
+function expectScrollable(el: HTMLElement) {
     el.scrollTop = el.scrollHeight;
     expect(el.scrollTop).toBeGreaterThan(0);
-};
+}
 
 describe('Input（浏览器）', () => {
     it('只读 Input 整体显示默认光标，可编辑时为文本光标', () => {

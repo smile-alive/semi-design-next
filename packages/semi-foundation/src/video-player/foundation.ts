@@ -227,7 +227,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         clearTimeout(this.#notificationTimer);
     }
 
-    handleTimeChange(value: number) {
+    handleTimeChange = (value: number) => {
         const video = this._adapter.getVideo();
         if (!video) return;
         // currentTime throws on a non-finite value, such as a ratio of a live stream's Infinity duration
@@ -238,23 +238,23 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
             video.currentTime = time;
             this._adapter.setCurrentTime(time);
         }
-    }
+    };
 
-    handleTimeUpdate() {
+    handleTimeUpdate = () => {
         const video = this._adapter.getVideo();
         if (!video) return;
         this._adapter.setCurrentTime(video.currentTime);
-    }
+    };
 
-    handleDurationChange() {
+    handleDurationChange = () => {
         const video = this._adapter.getVideo();
         if (!video) return;
         this._adapter.setTotalTime(video.duration || 0);
-    }
+    };
 
-    handleError() {
+    handleError = () => {
         this._adapter.setIsError(true);
-    }
+    };
 
     handleLoadStart = () => {
         this._adapter.setIsError(false);
@@ -265,7 +265,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         this._adapter.setBufferedValue(0);
     };
 
-    handlePlayOrPause() {
+    handlePlayOrPause = () => {
         const video = this._adapter.getVideo();
         if (!video) return;
         if (video.paused) {
@@ -273,7 +273,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         } else {
             this.handlePause();
         }
-    }
+    };
 
     handlePlay() {
         const video = this._adapter.getVideo();
@@ -312,17 +312,17 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         this._adapter.setShowNotification(false);
     };
 
-    handleWaiting(locale: VideoPlayerNotificationLocale) {
+    handleWaiting = (locale: VideoPlayerNotificationLocale) => {
         this.#stalled = false;
         this._adapter.setNotificationContent(locale.loading);
         this._adapter.setShowNotification(true);
-    }
+    };
 
-    handleStalled(locale: VideoPlayerNotificationLocale) {
+    handleStalled = (locale: VideoPlayerNotificationLocale) => {
         this.#stalled = true;
         this._adapter.setNotificationContent(locale.stall);
         this._adapter.setShowNotification(true);
-    }
+    };
 
     handleProgress = () => {
         if (this.#stalled) {
@@ -342,7 +342,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     };
 
     /** From the user (the slider); init applies the initial volume without notifying */
-    handleVolumeChange(value: number) {
+    handleVolumeChange = (value: number) => {
         const video = this._adapter.getVideo();
         if (!video) return;
         const { volume, muted } = this.getStates();
@@ -354,7 +354,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         if (next !== (muted ? 0 : volume)) {
             this._adapter.notifyVolumeChange(next);
         }
-    }
+    };
 
     /** Mutes, or unmutes to the volume before muting; to half volume when that was 0 */
     handleVolumeSilent = () => {
@@ -389,7 +389,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         }
     };
 
-    handleRateChange(rate: { label: string; value: number }, locale: VideoPlayerNotificationLocale) {
+    handleRateChange = (rate: { label: string; value: number }, locale: VideoPlayerNotificationLocale) => {
         const video = this._adapter.getVideo();
         if (!video) return;
         video.defaultPlaybackRate = video.playbackRate = rate.value;
@@ -397,9 +397,9 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         this._adapter.notifyRateChange(rate.value);
         // function replacers keep `$&` and `$$` in the option labels literal
         this.#handleTemporaryNotification(locale.rateChange.replace('${rate}', () => rate.label));
-    }
+    };
 
-    handleQualityChange(quality: { label: string; value: string }, locale: VideoPlayerNotificationLocale) {
+    handleQualityChange = (quality: { label: string; value: string }, locale: VideoPlayerNotificationLocale) => {
         const changed = quality.value !== this.getStates().currentQuality;
         this._adapter.setQuality(quality.value);
         this._adapter.notifyQualityChange(quality.value);
@@ -408,9 +408,9 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         if (changed) {
             this.#restorePlayPosition();
         }
-    }
+    };
 
-    handleRouteChange(route: { label: string; value: string }, locale: VideoPlayerNotificationLocale) {
+    handleRouteChange = (route: { label: string; value: string }, locale: VideoPlayerNotificationLocale) => {
         const changed = route.value !== this.getStates().currentRoute;
         this._adapter.setRoute(route.value);
         this._adapter.notifyRouteChange(route.value);
@@ -418,13 +418,13 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         if (changed) {
             this.#restorePlayPosition();
         }
-    }
+    };
 
-    handleMirror(locale: VideoPlayerNotificationLocale) {
+    handleMirror = (locale: VideoPlayerNotificationLocale) => {
         const { isMirror } = this.getStates();
         this._adapter.setIsMirror(!isMirror);
         this.#handleTemporaryNotification(!isMirror ? locale.mirror : locale.cancelMirror);
-    }
+    };
 
     handlePictureInPicture = () => {
         const video = this._adapter.getVideo();

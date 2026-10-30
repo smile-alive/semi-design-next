@@ -61,11 +61,11 @@ const animations = () => loadAnimation.mock.results.map((result) => result.value
 const live = () => animations().filter((animation) => animation.destroy.mock.calls.length === 0);
 // lottie-web is imported on demand, so animations appear a few microtasks after mounting
 const loaded = (count = 1) => waitFor(() => expect(loadAnimation).toHaveBeenCalledTimes(count));
-const getRoot = (container: Element) => {
+function getRoot(container: Element) {
     const root = container.querySelector<HTMLElement>('.semi-lottie');
     if (!root) throw new Error('missing .semi-lottie');
     return root;
-};
+}
 
 describe('Lottie', () => {
     // the setup's matchMedia matches every query without a width condition, which would read as reduced motion

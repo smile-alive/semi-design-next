@@ -9,10 +9,10 @@ describe('DialogueActionFoundation.copyMessage', () => {
         vi.mocked(copyText).mockReset();
     });
 
-    function create() {
+    const create = () => {
         const adapter = { getProps: () => ({ message: { id: '1', role: 'assistant', content: 'hello' } }), toastCopySuccess: vi.fn<() => void>(), notifyMessageCopy: vi.fn<() => void>() };
         return { adapter, foundation: new DialogueActionFoundation(adapter as unknown as DialogueActionAdapter) };
-    }
+    };
 
     it('复制成功后提示并通知', async () => {
         vi.mocked(copyText).mockResolvedValue(true);

@@ -6,5 +6,5 @@ const ScrollListWithItem: typeof ScrollList & { Item: typeof ScrollItem } = Obje
     Item: ScrollItem,
 });
 export default ScrollListWithItem;
-export { ScrollItem };
+export { default as ScrollItem } from './scroll-item.vue';
 export type * from './interface';

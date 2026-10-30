@@ -4,33 +4,9 @@ const IconWholeWord: IconData = {
     name: 'whole_word',
     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
     children: [
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M7.5 5c.63 0 1.2.4 1.41.99l4 11A1.5 1.5 0 1 1 10.09 18l-.55-1.51H5.46l-.55 1.51A1.5 1.5 0 1 1 2.09 17l4-11c.22-.6.78-.99 1.41-.99m-.95 8.5h1.9l-.95-2.61-.95 2.61',
-                fill: 'currentColor',
-            },
-        ],
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M2 3a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1',
-                fill: 'currentColor',
-            },
-        ],
-        [
-            'path',
-            {
-                'fill-rule': 'evenodd',
-                'clip-rule': 'evenodd',
-                d: 'M1.99 21a1 1 0 0 1 1-1H21a1 1 0 1 1 0 2H2.99a1 1 0 0 1-1-1',
-                fill: 'currentColor',
-            },
-        ],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M7.5 5c.63 0 1.2.4 1.41.99l4 11A1.5 1.5 0 1 1 10.09 18l-.55-1.51H5.46l-.55 1.51A1.5 1.5 0 1 1 2.09 17l4-11c.22-.6.78-.99 1.41-.99m-.95 8.5h1.9l-.95-2.61-.95 2.61', fill: 'currentColor' }],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M2 3a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1', fill: 'currentColor' }],
+        ['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: 'M1.99 21a1 1 0 0 1 1-1H21a1 1 0 1 1 0 2H2.99a1 1 0 0 1-1-1', fill: 'currentColor' }],
         [
             'path',
             {

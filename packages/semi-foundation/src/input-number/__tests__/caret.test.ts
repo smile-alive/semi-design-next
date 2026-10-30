@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { recordCaretTail, restoreCaretTail } from '../caret';
 
-const createInput = (value: string, caret: number) => {
+function createInput(value: string, caret: number) {
     const input = document.createElement('input');
     input.value = value;
     input.setSelectionRange(caret, caret);
     return input;
-};
+}
 
 afterEach(() => {
     vi.restoreAllMocks();

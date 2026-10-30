@@ -72,7 +72,7 @@ describe('OverflowListFoundation.handleIntersect', () => {
         const foundation = new OverflowListFoundation(adapter as unknown as OverflowListAdapter);
         const entry = (key: string, isIntersecting: boolean) =>
             ({
-                target: { dataset: { scrollkey: key } },
+                target: { getAttribute: (name: string) => (name === 'data-scrollkey' ? key : null) },
                 isIntersecting,
                 boundingClientRect: { y: 0 },
             }) as unknown as IntersectionObserverEntry;

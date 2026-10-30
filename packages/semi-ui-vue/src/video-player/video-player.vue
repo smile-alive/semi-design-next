@@ -140,15 +140,15 @@
                 :src="videoSrc"
                 @canplay="foundation.handleCanPlay"
                 @click="onVideoClick"
-                @durationchange="foundation.handleDurationChange()"
+                @durationchange="foundation.handleDurationChange"
                 @ended="foundation.handleEnded"
-                @error="foundation.handleError()"
+                @error="foundation.handleError"
                 @loadstart="foundation.handleLoadStart"
                 @pause="foundation.handleVideoPause"
                 @play="foundation.handleVideoPlay"
                 @progress="foundation.handleProgress"
                 @stalled="foundation.handleStalled(locale)"
-                @timeupdate="foundation.handleTimeUpdate()"
+                @timeupdate="foundation.handleTimeUpdate"
                 @waiting="foundation.handleWaiting(locale)"
             >
                 <!-- without default the text track stays disabled and, with no caption switch, never shows -->
@@ -180,10 +180,10 @@
             </div>
         </div>
         <div :class="[controlsCls, { [`${controlsCls}-hide`]: !state.showControls }]">
-            <VideoProgress :bufferedValue="state.bufferedValue" :markers="props.markers" :max="state.totalTime" :step="props.seekTime" :value="state.currentTime" @change="foundation.handleTimeChange($event)" />
+            <VideoProgress :bufferedValue="state.bufferedValue" :markers="props.markers" :max="state.totalTime" :step="props.seekTime" :value="state.currentTime" @change="foundation.handleTimeChange" />
             <div :class="`${controlsCls}-menu`">
                 <div :class="`${controlsCls}-menu-left`">
-                    <Button v-if="shows('play')" :aria-label="state.isPlaying ? locale.pause : locale.play" :class="menuButtonClass" theme="borderless" @click="foundation.handlePlayOrPause()">
+                    <Button v-if="shows('play')" :aria-label="state.isPlaying ? locale.pause : locale.play" :class="menuButtonClass" theme="borderless" @click="foundation.handlePlayOrPause">
                         <template #icon>
                             <IconPause v-if="state.isPlaying" />
                             <IconPlay v-else />
@@ -206,7 +206,7 @@
                         <template #content>
                             <div :class="`${controlsCls}-volume`">
                                 <div :class="`${controlsCls}-volume-title`">{{ state.muted ? 0 : state.volume }}%</div>
-                                <AudioSlider :getValueText="volumeText" :height="120" :label="locale.volume" :max="100" :showTooltip="false" :value="state.muted ? 0 : state.volume" vertical @change="foundation.handleVolumeChange($event)" />
+                                <AudioSlider :getValueText="volumeText" :height="120" :label="locale.volume" :max="100" :showTooltip="false" :value="state.muted ? 0 : state.volume" vertical @change="foundation.handleVolumeChange" />
                             </div>
                         </template>
                     </Popover>

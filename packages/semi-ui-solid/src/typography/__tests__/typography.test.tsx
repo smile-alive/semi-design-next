@@ -2,6 +2,7 @@ import { createContext, createSignal, useContext } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
+import { escapeRegExp } from 'es-toolkit';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSetting } from '@fibrae/semi-icons-solid';
@@ -972,7 +973,7 @@ describe('Typography 行为基线', () => {
         ];
         cases.forEach(([props, input, output]) => {
             const { container, unmount } = render(() => <Numeral {...props}>{input}</Numeral>);
-            expect(root(container)).toHaveTextContent(new RegExp(`^${RegExp.escape(output)}$`));
+            expect(root(container)).toHaveTextContent(new RegExp(`^${escapeRegExp(output)}$`));
             unmount();
         });
     });
@@ -990,7 +991,7 @@ describe('Typography 行为基线', () => {
         cases.forEach(([props, input, output]) => {
             const { container, unmount } = render(() => <Numeral {...props}>{input}</Numeral>);
             expect(root(container).tagName).toBe('SPAN');
-            expect(root(container)).toHaveTextContent(new RegExp(`^${RegExp.escape(output)}$`));
+            expect(root(container)).toHaveTextContent(new RegExp(`^${escapeRegExp(output)}$`));
             unmount();
         });
     });
@@ -1006,7 +1007,7 @@ describe('Typography 行为基线', () => {
         ];
         cases.forEach(([props, input, output]) => {
             const { container, unmount } = render(() => <Numeral {...props}>{input}</Numeral>);
-            expect(root(container)).toHaveTextContent(new RegExp(`^${RegExp.escape(output)}$`));
+            expect(root(container)).toHaveTextContent(new RegExp(`^${escapeRegExp(output)}$`));
             unmount();
         });
     });
@@ -1020,7 +1021,7 @@ describe('Typography 行为基线', () => {
         ];
         cases.forEach(([props, input, output]) => {
             const { container, unmount } = render(() => <Numeral {...props}>{input}</Numeral>);
-            expect(root(container)).toHaveTextContent(new RegExp(`^${RegExp.escape(output)}$`));
+            expect(root(container)).toHaveTextContent(new RegExp(`^${escapeRegExp(output)}$`));
             unmount();
         });
     });
