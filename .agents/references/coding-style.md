@@ -16,9 +16,19 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
 
 ## 函数
 
-- 模块顶层的具名函数用 `function` 声明。
-- 函数体内（组件、hook、类方法、普通函数内部）的函数用 `const f = () => {}`，并定义在第一次同步调用之前：箭头函数没有提升。不写 `const f = function () {}`。
+按函数的用途选写法，测试与文档站 demo 同样适用：
+
+| 场景                                                                 | 写法                                                           |
+| -------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 组件（大驼峰命名、返回 JSX 的函数），含 HOC 与测试回调内定义的组件   | 任何层级都用 `function` 声明：`function Demo() {}`             |
+| 函数体是单个表达式的小函数                                           | 任何层级都可以写箭头：`const isAriaKey = (key) => ...`         |
+| 函数体有多条语句、定义在模块顶层                                     | `function` 声明                                                |
+| 函数体有多条语句、定义在函数体内（组件、hook、类方法、普通函数内部） | `const f = () => {}`，并定义在第一次同步调用之前：箭头没有提升 |
+
+- 不写 `const f = function () {}`。
+- Vue 的 `<script setup>` 与 Svelte 的实例 `<script>` 编译进组件函数，顶层按函数体内处理；Vue 的普通 `<script>` 与 Svelte 的 `<script module>` 按模块顶层处理。
 - 例外：
+    - Svelte 组件的对外方法写 `export function focus() {}`（Svelte 文档的组件导出写法，component-order 按这个形式识别对外句柄）。
     - 变量要用函数类型整体标注时保留箭头：`const linear: Easing = (t) => t`。
     - 需要 `this` 参数、重载、生成器或 `asserts` 返回类型的函数，在任何位置都用 `function` 声明（`asserts` 函数写成箭头会在调用处报 TS2775）。
     - `debounce(...)`、`memo(...)` 等调用结果是值，不是函数定义，不受本节约束。
@@ -30,7 +40,7 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
 - 可选参数写 `x?: T`，不写 `x: T | undefined`；`T | null | undefined` 写成 `x?: T | null`。后面没有必选参数时才适用，函数类型、回调（如 `createMemo((previous?: T) => ...)`）的参数也一样；末尾参数改成可选后，前一个参数随之满足条件时一并改。interface 和类型字面量的属性写 `p?: T`；类字段保留 `| undefined`。
 - 变量注解与初始值的 `as` 断言写的是同一类型时只留断言：写 `const props = { ... } as Props`，不写 `const props: Props = { ... } as Props`。
 - 纯类型导入写 `import type`；同一模块既导入值又导入类型时合并成一条，类型写成行内 `type`：`import BaseFoundation, { type DefaultAdapter } from '...'`（由 `import/no-duplicates` 的 `preferInline` 检查）。oxlint 1.85 的 `--fix` 合并默认导入与 `import type` 时会生成非法的 `import X, type { Y }`，这类报错手工合并。
-- 判空写 `x == null`、`x != null`（同时覆盖 null 与 undefined），默认值用 `??`；类型判断用 `typeof`。不写 `isNullOrUndefined`、`isString` 这类包装函数。
+- 判空写 `x == null`、`x != null`（同时覆盖 null 与 undefined），默认值用 `??`；类型判断用 `typeof`。一个 `typeof`、`== null` 或 `instanceof` 就能写完的判断不封装（不写 `isNullOrUndefined`、`isString`）。要组合多个条件的类型判断（`isObject`、`isElement`、`isPromise`）只在 `semi-foundation/src/utils` 定义一次，各框架包导入使用，不在框架包里另写一份；不依赖 foundation 的包（如 `semi-json-viewer-core`）在调用处直接写判断。
 - semi-foundation 和沿用 `tsconfig.base.json` 设置的包没有开 `strictNullChecks`（D11），框架包以自己的 `tsconfig.json` 为准；`semi-animation` 单独开了 strict。
 
 ## 类成员
@@ -46,22 +56,31 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
     - UI 包、adapter 调用的保持公开。
     - 允许第三方子类覆盖或复用的纯计算、策略方法用 `protected` 原型方法，不写成箭头字段（例如 Carousel 的 `getValidIndex`、`getSwitchingTime`、`handleNewActiveIndex`）。
     - 计时器、状态字段、必须按顺序执行的内部步骤用 `#`。拿不准时先用 `#`，以后放宽比收紧容易。
-- 再按用途选写法：
+- 再按用途选写法。原型方法所有实例共享一份，子类能覆盖、能用 `super` 调用，用于类内部和子类扩展点；箭头字段在每个实例上各建一份，`this` 固定指向该实例，框架层（UI 包、adapter）既能直接调用也能直接当值传，框架层调用的成员都写成箭头字段。按先后判断，命中第一条即停：
 
-| 场景                                                                                              | 写法                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 只在类内部调用                                                                                    | `#` 原型方法                                                                                                                          |
-| 对外 API（adapter、UI 包以 `foundation.x()` 调用）                                                | 公开原型方法，名字不带 `_`                                                                                                            |
-| UI 传给组件 prop 的回调                                                                           | 公开原型方法；JSX 中写显式参数的箭头包装 `onChange={(value, e) => foundation.handleChange(value, e)}`，不用 rest 参数，有返回值时透传 |
-| 需要稳定引用的回调（成对的 add/removeEventListener、observer、subscribe、`useSyncExternalStore`） | 箭头字段；只在类内注册的用 `#`                                                                                                        |
-| 类内一次性回调（`setTimeout`、`then`、`map`）                                                     | 原型方法，调用点写 `() => this.#x()`                                                                                                  |
-| 预置参数                                                                                          | 原型方法加 `.bind(this, arg)` 或内联箭头                                                                                              |
-| 子类覆盖的扩展点（`init`、`destroy`、`getStates`）                                                | 原型方法。父类的箭头字段会遮蔽子类方法，子类的箭头字段无法用 `super` 调用                                                             |
-| debounce、throttle                                                                                | 包装字段，优先 `#`，内部写 `() => this.#x()`                                                                                          |
-| 不用 `this` 的派生计算，供外部以 `XFoundation.x()` 调用                                           | `static`                                                                                                                              |
-| 存放外部注入回调的函数槽                                                                          | 带函数类型的普通字段                                                                                                                  |
+1. 不读实例状态的纯计算 -> `static`
+2. 子类覆盖的扩展点、BaseFoundation 的共用方法 -> 原型方法（`protected` 或公开）
+3. 框架层（UI 包、adapter）调用，无论直接调用还是当值传 -> 公开箭头字段
+4. 只在类内使用但引用会被当值传出（监听器、`openLayer`、交给 Field 的 updater 对象）-> `#` 箭头字段
+5. 只在类内直接调用 -> `#` 原型方法
+6. 覆写父类成员的一律加 `override`
 
-- 原型方法不能直接当作值传出（`onClick={foundation.handleX}`），否则 `this.#x` 会抛错，要包一层箭头或先绑定。类型感知的 `typescript/unbound-method` 会拦下这种写法；只把方法交给 `expect()` 等不调用它的测试代码在文件所属框架的 `lint/<框架>/exemptions.ts`（框架无关的文件用 `lint/exemptions.ts`）按文件豁免。
+各场景对照：
+
+| 场景                                                                                                                                     | 写法                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| 只在类内部调用                                                                                                                           | `#` 原型方法                                                                                    |
+| 框架层调用的对外 API，含直接传给组件 prop、模板事件或监听器的回调（子类扩展点除外）                                                      | 公开箭头字段，名字不带 `_`；当值传时直接传 `onChange={foundation.handleChange}`，不再包一层箭头 |
+| 需要稳定引用的回调（成对的 add/removeEventListener、observer、subscribe、`useSyncExternalStore`）                                        | 箭头字段；只在类内注册的用 `#`                                                                  |
+| 类内一次性回调（`setTimeout`、`then`、`map`）                                                                                            | 原型方法，调用点写 `() => this.#x()`                                                            |
+| 预置参数                                                                                                                                 | 原型方法加 `.bind(this, arg)` 或内联箭头                                                        |
+| 子类覆盖的扩展点（`init`、`destroy`、`getStates`），BaseFoundation 供所有子类共用的方法（`getState`、`setState`、`getProp`、`getProps`） | 原型方法。父类的箭头字段会遮蔽子类方法，子类的箭头字段无法用 `super` 调用                       |
+| debounce、throttle                                                                                                                       | 包装字段，优先 `#`，内部写 `() => this.#x()`                                                    |
+| 不用 `this` 的派生计算，供外部以 `XFoundation.x()` 调用                                                                                  | `static`                                                                                        |
+| 存放外部注入回调的函数槽                                                                                                                 | 带函数类型的普通字段                                                                            |
+
+- 原型方法不能直接当作值传出，否则 `this.#x` 会抛错；UI 要直接传的回调按上表写成箭头字段，其余场景包一层箭头或先绑定。类型感知的 `typescript/unbound-method` 会拦下这种写法；只把方法交给 `expect()` 等不调用它的测试代码在文件所属框架的 `lint/<框架>/exemptions.ts`（框架无关的文件用 `lint/exemptions.ts`）按文件豁免。
+- 箭头字段的参数按逆变检查，原型方法的参数是双变的：宿主以基类泛型持有 foundation（如 `TableFoundation<any, TableBaseProps<any>>`）时，箭头字段的参数写基类类型，不写子类泛型 `P`、`S`（Table 的 `handleUpdate`）。
 - 不等待的 Promise 写 `void p`，需要结果或错误时 `await` / `.catch`（`typescript/no-floating-promises`）。不为了消掉报错吞错。
 - `#` 成员和箭头字段在 prototype 上都 spy 不到：测试断言行为，不为了 spy 改变成员写法。
 

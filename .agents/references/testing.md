@@ -76,7 +76,7 @@
 ### 目录与运行
 
 - 运行器和共用断言在 `vitest/hosts/`：`run.ts`（运行器，不写框架名）、`types.ts`（`host.ts` 的类型）、`checks.ts`（共用断言）。
-- 每个宿主一个 `vitest/<框架>/hosts/<宿主>/host.ts`，默认导出 `Host`。宿主名取自路径，跨框架不能重名。现有宿主：`next-app`、`next-pages`、`react-router`、`react-vite`、`react-webpack`、`react-rspack`、`nuxt`、`vue-vite`、`vue-webpack`、`vue-rspack`、`solidstart`、`solid-vite`、`solid-webpack`、`solid-rspack`。
+- 每个宿主一个 `vitest/<框架>/hosts/<宿主>/host.ts`，默认导出 `Host`。宿主名取自路径，跨框架不能重名。现有宿主：`next-app`、`next-pages`、`react-router`、`react-vite`、`react-webpack`、`react-rspack`、`nuxt`、`vue-vite`、`vue-webpack`、`vue-rspack`、`solidstart`、`solid-vite`、`solid-webpack`、`solid-rspack`、`sveltekit`、`svelte-vite`。
 - 运行器先对全部可发布包（含已有 `dist` 的私有包）`pnpm pack` 一次。每个变体在仓库外的临时目录写入 `host.ts` 给出的文件，`package.json` 用 `file:` 指向 tarball，`pnpm-workspace.yaml` 的 overrides 把 Semi 包之间的依赖也指向 tarball，再 `pnpm install`。
 - 安装失败时：缺的是 Semi 包，报 FAIL；否则（registry、网络或 pnpm store）报「环境」，该变体的其余检查标 SKIP。
 - 宿主端口用空闲端口；浏览器用仓库已有的 Playwright Chromium，每个 `pnpm test:hosts` 进程同一时刻 1 个。每次运行用独立的临时目录和空闲端口，进程之间互不干扰，可以并行，但全机 Chromium 总数仍受上限约束。
