@@ -121,7 +121,7 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
     }
 
     #autoFillTimeToInsetInputValue({ panel, field, insetInputValue, format }: { insetInputValue: InsetInputValue; format: string } & Pick<InsetInputChangeFoundationProps, 'panel' | 'field'>) {
-        const { type, defaultPickerValue, dateFnsLocale } = this._adapter.getProps();
+        const { type, defaultPickerValue, dateFnsLocale } = this.adapter.getProps();
         const { dateInput, timeInput } = insetInputValue[panel];
         if (!type.includes('Time') || field !== 'dateInput' || timeInput) {
             return insetInputValue;
@@ -258,23 +258,23 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
     }
 
     handleChange = (value: string, e: unknown) => {
-        this._adapter.notifyChange(value, e);
+        this.adapter.notifyChange(value, e);
     };
 
     handleInputComplete = (e: Pick<KeyboardEvent, 'key' | 'target'>) => {
         if (e.key === KEY_CODE_ENTER && e.target instanceof HTMLInputElement) {
-            this._adapter.notifyEnter(e.target.value);
+            this.adapter.notifyEnter(e.target.value);
         }
     };
 
     handleInputClear = (e: unknown) => {
-        this._adapter.notifyClear(e);
+        this.adapter.notifyClear(e);
     };
 
     handleRangeInputClear(e: Pick<Event, 'stopPropagation'>) {
         // Keeps the clear click from counting as a click outside
         e.stopPropagation();
-        this._adapter.notifyRangeInputClear(e);
+        this.adapter.notifyRangeInputClear(e);
     }
 
     // The pointer clears on mousedown; Enter and Space fire a click with detail 0
@@ -295,22 +295,22 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
 
     handleRangeInputEnterPress = (e: Pick<KeyboardEvent, 'key'>, rangeInputValue: string) => {
         if (e.key === KEY_CODE_ENTER) {
-            this._adapter.notifyEnter(rangeInputValue);
+            this.adapter.notifyEnter(rangeInputValue);
         }
     };
 
     handleRangeInputEndKeyPress = (e: Pick<KeyboardEvent, 'key'>) => {
         if (e.key === KEY_CODE_TAB) {
-            this._adapter.notifyTabPress(e);
+            this.adapter.notifyTabPress(e);
         }
     };
 
     handleRangeInputFocus = (e: unknown, rangeType: RangeInput) => {
-        this._adapter.notifyRangeInputFocus(e, rangeType);
+        this.adapter.notifyRangeInputFocus(e, rangeType);
     };
 
     handleInsetInputChange = ({ value, panel, field, insetInputValue }: InsetInputChangeFoundationProps) => {
-        const props = this._adapter.getProps();
+        const props = this.adapter.getProps();
         const { format, type, rangeSeparator } = props;
         const insetFormatToken = getInsetInputFormatToken({ type, format });
         const newInsetInputValue = { ...insetInputValue, [panel]: { ...insetInputValue[panel], [field]: value } };
@@ -329,7 +329,7 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         const finalInsetInputStr = InputFoundation.concatInsetInputValue(props, {
             insetInputValue: filledTimeInsetInputValue,
         });
-        this._adapter.notifyInsetInputChange({
+        this.adapter.notifyInsetInputChange({
             insetInputValue: filledTimeInsetInputValue,
             format: insetFormatToken,
             insetInputStr: finalInsetInputStr,

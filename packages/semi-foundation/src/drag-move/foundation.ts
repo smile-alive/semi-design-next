@@ -139,9 +139,9 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
             return;
         }
         if (this.#isTouch(e)) {
-            this._adapter.notifyTouchMove(e);
+            this.adapter.notifyTouchMove(e);
         } else {
-            this._adapter.notifyMouseMove(e);
+            this.adapter.notifyMouseMove(e);
         }
         this.#changePos(e);
     };
@@ -152,11 +152,11 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
         }
         this.#stopDrag();
         if (e.type === 'pointercancel') {
-            this._adapter.notifyTouchCancel(e);
+            this.adapter.notifyTouchCancel(e);
         } else if (this.#isTouch(e)) {
-            this._adapter.notifyTouchEnd(e);
+            this.adapter.notifyTouchEnd(e);
         } else {
-            this._adapter.notifyMouseUp(e);
+            this.adapter.notifyMouseUp(e);
         }
     };
 
@@ -201,9 +201,9 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
         this.#element = element;
         this.#calcMoveRange();
         if (this.#isTouch(e)) {
-            this._adapter.notifyTouchStart(e);
+            this.adapter.notifyTouchStart(e);
         } else {
-            this._adapter.notifyMouseDown(e);
+            this.adapter.notifyMouseDown(e);
         }
         if (!this.#allowMove(e)) {
             return;

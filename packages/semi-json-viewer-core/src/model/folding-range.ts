@@ -60,7 +60,6 @@ export class FoldingRegions {
     readonly #collapseStates: BitField;
     readonly #userDefinedStates: BitField;
     readonly #recoveredStates: BitField;
-
     #parentsComputed: boolean;
     readonly #types: Array<string | undefined> | undefined;
 

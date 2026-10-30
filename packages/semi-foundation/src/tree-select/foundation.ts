@@ -287,10 +287,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         const props = this.getProps();
         const nodes = keyList.map((key) => TreeSelectFoundation.getNodeData(key, keyEntities, props));
         if (this.getProp('onChangeWithObject')) {
-            this._adapter.notifyChangeWithObject(nodes, e);
+            this.adapter.notifyChangeWithObject(nodes, e);
         } else {
             const value = getValueOrKey(nodes, keyMaps);
-            this._adapter.notifyChange(value, nodes, e);
+            this.adapter.notifyChange(value, nodes, e);
         }
     }
 
@@ -303,9 +303,9 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             const nodes = key === undefined ? key : keyEntities[key].data;
             const value = key === undefined ? key : getValueOrKey(nodes, keyMaps);
             if (this.getProp('onChangeWithObject')) {
-                this._adapter.notifyChangeWithObject(nodes, e);
+                this.adapter.notifyChangeWithObject(nodes, e);
             } else {
-                this._adapter.notifyChange(value, nodes, e);
+                this.adapter.notifyChange(value, nodes, e);
             }
         }
     }
@@ -313,13 +313,13 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     #notifyFocus(e: E | FocusEvent) {
         if (!this.#blurPending && !this.#isDisabled()) {
             this.#blurPending = true;
-            this._adapter.notifyFocus(e);
+            this.adapter.notifyFocus(e);
         }
     }
 
     #notifyBlur(e: E | MouseEvent | FocusEvent) {
         this.#blurPending = false;
-        this._adapter.notifyBlur(e);
+        this.adapter.notifyBlur(e);
     }
 
     /** Loads a node's children once, after it is expanded */
@@ -334,11 +334,11 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 const newLoadedKeys = new Set(this.getState('loadedKeys') as Set<string>).add(key);
                 const newLoadingKeys = new Set(this.getState('loadingKeys') as Set<string>);
                 newLoadingKeys.delete(key);
-                this._adapter.notifyLoad(newLoadedKeys, data);
+                this.adapter.notifyLoad(newLoadedKeys, data);
                 if (!this.#isLoadControlled()) {
-                    this._adapter.updateState({ loadedKeys: newLoadedKeys });
+                    this.adapter.updateState({ loadedKeys: newLoadedKeys });
                 }
-                this._adapter.updateState({ loadingKeys: newLoadingKeys });
+                this.adapter.updateState({ loadingKeys: newLoadingKeys });
             })
             .finally(() => {
                 // on rejection too, so the node can be retried
@@ -346,18 +346,18 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 if (currentLoadingKeys.has(key)) {
                     const newLoadingKeys = new Set(currentLoadingKeys);
                     newLoadingKeys.delete(key);
-                    this._adapter.updateState({ loadingKeys: newLoadingKeys });
+                    this.adapter.updateState({ loadingKeys: newLoadingKeys });
                 }
             });
-        this._adapter.updateState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
+        this.adapter.updateState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
     }
 
     #focusInput() {
-        this._adapter.focusInput();
+        this.adapter.focusInput();
     }
 
     #handleTriggerFocus(e: E) {
-        this._adapter.updateIsFocus(true);
+        this.adapter.updateIsFocus(true);
         this.#notifyFocus(e);
     }
 
@@ -366,8 +366,8 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         if (this.getProp('filterTreeNode')) {
             this.#clearInput();
         }
-        this._adapter.openMenu();
-        this._adapter.notifyVisibleChange(true);
+        this.adapter.openMenu();
+        this.adapter.notifyVisibleChange(true);
     }
 
     #clearInput() {
@@ -379,7 +379,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         expandedOptsKeys.forEach((item) => newExpandedKeys.add(item));
         const newFlattenNodes = flattenTreeData(treeData, newExpandedKeys, keyMaps);
 
-        this._adapter.updateState({
+        this.adapter.updateState({
             expandedKeys: newExpandedKeys,
             flattenNodes: newFlattenNodes,
             inputValue: '',
@@ -391,13 +391,13 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     }
 
     #handleInputChange(searchValue: string) {
-        this._adapter.updateInputValue(searchValue);
+        this.adapter.updateInputValue(searchValue);
         const { expandedKeys, selectedKeys, keyEntities, treeData } = this.getStates();
         const { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps, remote } = this.getProps();
 
         // Remote search skips local filtering: only inputValue is updated and onSearch is called
         if (remote) {
-            this._adapter.notifySearch(searchValue, [], []);
+            this.adapter.notifySearch(searchValue, [], []);
             return;
         }
 
@@ -426,8 +426,8 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             newFlattenNodes = flattenTreeData(treeData, new Set(expandedOptsKeys), keyMaps, showFilteredOnly && filteredShownKeys);
         }
         const newFilteredExpandedKeys = new Set(expandedOptsKeys);
-        this._adapter.notifySearch(searchValue, Array.from(newFilteredExpandedKeys), filteredNodes);
-        this._adapter.updateState({
+        this.adapter.notifySearch(searchValue, Array.from(newFilteredExpandedKeys), filteredNodes);
+        this.adapter.updateState({
             expandedKeys: newExpandedKeys,
             flattenNodes: newFlattenNodes,
             motionKeys: new Set([]),
@@ -440,20 +440,20 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     #handleSingleSelect(e: E, { selected, eventKey, data, children }: BasicTreeNodeProps) {
         let selectedKeys = [...this.getState('selectedKeys')];
         const { clickToHide } = this.getProps();
-        this._adapter.notifySelect(eventKey, true, data);
+        this.adapter.notifySelect(eventKey, true, data);
 
         if (!selectedKeys.includes(eventKey) && !selected) {
             selectedKeys = [eventKey];
             this.#notifyChange(eventKey, e);
-            if (!this._isControlledComponent()) {
-                this._adapter.updateState({ selectedKeys });
+            if (!this.isControlledComponent()) {
+                this.adapter.updateState({ selectedKeys });
             }
         }
         if (clickToHide && (this.#isSelectToClose() || !children)) {
             // the dropdown search input or a slot field may hold the focus, and hiding the dropdown would drop it to
             // the body (APG: return it to the combobox); focus outside the component is left alone
             if (this.#blurPending) {
-                this._adapter.focusTrigger();
+                this.adapter.focusTrigger();
             }
             this.close();
             this.handleTriggerBlur(e);
@@ -465,10 +465,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         const state = this.getStates();
         const result = getMultipleSelectResult(treeNode, props, state);
         if (result) {
-            this._adapter.notifySelect(treeNode.eventKey, result.targetStatus, treeNode.data);
+            this.adapter.notifySelect(treeNode.eventKey, result.targetStatus, treeNode.data);
             this.#notifyChange(result.keys, e);
-            if (!this._isControlledComponent()) {
-                this._adapter.updateState(result.state);
+            if (!this.isControlledComponent()) {
+                this.adapter.updateState(result.state);
             }
         }
         if (props.searchPosition === strings.SEARCH_POSITION_TRIGGER && state.inputValue !== '') {
@@ -492,7 +492,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         }
 
         // keep the previous flattenNodes so the collapsing rows stay rendered; they are rebuilt, never mutated
-        this._adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
+        this.adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
 
         if (!this.#isExpandControlled()) {
             const flattenNodes = flattenTreeData(treeData, filteredExpandedKeys, keyMaps, showFilteredOnly && filteredShownKeys);
@@ -508,10 +508,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 motionType,
             };
 
-            this._adapter.updateState(newState);
+            this.adapter.updateState(newState);
         }
 
-        this._adapter.notifyExpand(filteredExpandedKeys, {
+        this.adapter.notifyExpand(filteredExpandedKeys, {
             expanded: !expanded,
             node: data,
         });
@@ -756,7 +756,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
 
     /** Writes the state derived from new props back, so handlers read what was rendered */
     syncDerivedState = (derived: Partial<BasicTreeSelectInnerData>) => {
-        this._adapter.updateState(derived);
+        this.adapter.updateState(derived);
     };
 
     /** Searches as if `value` were typed, opening the dropdown first */
@@ -780,7 +780,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         if (!this.#blurPending) {
             return;
         }
-        this._adapter.updateIsFocus(false);
+        this.adapter.updateIsFocus(false);
         this.#notifyBlur(e);
     }
 
@@ -812,7 +812,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 e.preventDefault();
                 // hiding the dropdown while it holds focus would drop focus to the body
                 // (APG: return it to the combobox)
-                this._adapter.focusTrigger();
+                this.adapter.focusTrigger();
                 this.close();
             }
         }
@@ -823,10 +823,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     };
 
     close = () => {
-        this._adapter.closeMenu();
-        this._adapter.notifyVisibleChange(false);
+        this.adapter.closeMenu();
+        this.adapter.notifyVisibleChange(false);
         if (this.getProp('motionExpand')) {
-            this._adapter.updateState({ motionKeys: new Set([]) });
+            this.adapter.updateState({ motionKeys: new Set([]) });
         }
     };
 
@@ -877,7 +877,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     handleClear = (e?: E) => {
         const { searchPosition, filterTreeNode } = this.getProps();
         const { inputValue, selectedKeys } = this.getStates();
-        const isControlled = this._isControlledComponent();
+        const isControlled = this.isControlledComponent();
         const value: string | string[] | undefined = this.#isMultiple() ? [] : undefined;
         const hasValue = TreeSelectFoundation.hasValue(this.getProps(), this.getStates());
         // the clear button also shows for search text alone; that clears no value
@@ -885,7 +885,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             this.#notifyChange(value, e);
         }
         if (hasValue && !isControlled) {
-            this._adapter.updateState({
+            this.adapter.updateState({
                 selectedKeys: [],
                 checkedKeys: new Set(),
                 halfCheckedKeys: new Set(),
@@ -901,7 +901,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 }
             }
         }
-        this._adapter.notifyClear(e);
+        this.adapter.notifyClear(e);
     };
 
     removeTag = (eventKey: BasicTreeNodeData['key']) => {
@@ -918,19 +918,19 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             const newRealCheckedKeys = new Set(realCheckedKeys);
             newRealCheckedKeys.delete(eventKey);
             this.#notifyChange([...newRealCheckedKeys], null);
-            if (!this._isControlledComponent()) {
-                this._adapter.updateState({ realCheckedKeys: newRealCheckedKeys });
+            if (!this.isControlledComponent()) {
+                this.adapter.updateState({ realCheckedKeys: newRealCheckedKeys });
             }
         } else if (checkRelation === 'related') {
             // like unchecking the node in the tree: disableStrictly keeps the checked state of disabled descendants
             const { checkedKeys, halfCheckedKeys } = calcRelatedCheckedKeys(eventKey, false, disableStrictly, state);
             this.#notifyChange([...checkedKeys], null);
-            if (!this._isControlledComponent()) {
-                this._adapter.updateState({ checkedKeys, halfCheckedKeys });
+            if (!this.isControlledComponent()) {
+                this.adapter.updateState({ checkedKeys, halfCheckedKeys });
             }
         }
 
-        this._adapter.notifySelect(eventKey, false, item);
+        this.adapter.notifySelect(eventKey, false, item);
     };
 
     handleNodeSelect = (e: E, treeNode: BasicTreeNodeProps) => {
@@ -969,7 +969,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             expandedKeys.delete(eventKey);
             motionType = 'hide';
         }
-        this._adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
+        this.adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
 
         if (!isExpandControlled) {
             const flattenNodes = flattenTreeData(treeData, expandedKeys, keyMaps);
@@ -980,10 +980,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 motionKeys: new Set(motionKeys),
                 motionType,
             };
-            this._adapter.updateState(newState);
+            this.adapter.updateState(newState);
         }
 
-        this._adapter.notifyExpand(expandedKeys, {
+        this.adapter.notifyExpand(expandedKeys, {
             expanded: !expanded,
             node: data,
         });
@@ -994,20 +994,20 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
 
     // Focus moving between the trigger's search input and the clear button stays inside; it must not clear the text
     handleInputTriggerBlur = (e?: { relatedTarget: EventTarget | null }) => {
-        if (this._adapter.isInTrigger(e?.relatedTarget)) {
+        if (this.adapter.isInTrigger(e?.relatedTarget)) {
             return;
         }
-        this._adapter.updateState({
+        this.adapter.updateState({
             inputTriggerFocus: false,
         });
     };
 
     handleInputTriggerFocus = (e?: { relatedTarget: EventTarget | null }) => {
-        if (this._adapter.isInTrigger(e?.relatedTarget)) {
+        if (this.adapter.isInTrigger(e?.relatedTarget)) {
             return;
         }
         this.#clearInput();
-        this._adapter.updateState({
+        this.adapter.updateState({
             inputTriggerFocus: true,
         });
     };

@@ -157,7 +157,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     // Updated synchronously (React state is batched), so a later async beforeUpload result builds on earlier sync
     // removals of the same batch instead of a stale snapshot
     #latestFileList: Array<BaseFileItem> | null = null;
-
     // Entered minus left elements: moving between the area and its children fires dragenter on the new element before
     // dragleave on the old one, so the area is left only when the count returns to 0
     #dragDepth = 0;
@@ -167,7 +166,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const next: Record<string, string> = {};
         if (!Array.isArray(fileList)) {
             this.#localUrls = {};
-            this._adapter.updateLocalUrls([]);
+            this.adapter.updateLocalUrls([]);
             return;
         }
         fileList.forEach((item: any) => {
@@ -179,7 +178,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
         });
         this.#localUrls = next;
-        this._adapter.updateLocalUrls(Object.values(this.#localUrls));
+        this.adapter.updateLocalUrls(Object.values(this.#localUrls));
     }
 
     #releaseFileUrl(uid: string) {
@@ -194,7 +193,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const next = { ...this.#localUrls };
         delete next[uid];
         this.#localUrls = next;
-        this._adapter.updateLocalUrls(Object.values(this.#localUrls));
+        this.adapter.updateLocalUrls(Object.values(this.#localUrls));
     }
 
     // Only for truly removed files; unmount must not revoke (see destroy)
@@ -210,7 +209,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
         });
         this.#localUrls = {};
-        this._adapter.updateLocalUrls([]);
+        this.adapter.updateLocalUrls([]);
     }
 
     #getFileIndex(file: CustomFile | BaseFileItem, fileList: Array<BaseFileItem>) {
@@ -227,7 +226,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             next[uid] = url;
         }
         this.#localUrls = next;
-        this._adapter.updateLocalUrls(Object.values(this.#localUrls));
+        this.adapter.updateLocalUrls(Object.values(this.#localUrls));
         return url;
     }
 
@@ -238,7 +237,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     // Every fileList commit goes through here so #latestFileList is current before React flushes setState
     #updateFileListInternal(newFileList: Array<BaseFileItem>, callback?: () => void) {
         this.#latestFileList = newFileList;
-        this._adapter.updateFileList(newFileList, callback);
+        this.adapter.updateFileList(newFileList, callback);
     }
 
     #getLatestFileList() {
@@ -257,7 +256,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         if (this.checkFileSize(file)) {
             file._sizeInvalid = true;
             file.status = FILE_STATUS_VALID_FAIL;
-            this._adapter.notifySizeError(file, fileList);
+            this.adapter.notifySizeError(file, fileList);
         }
         return file;
     }
@@ -267,7 +266,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         // the old list is gone, and no clear button exists at limit 1 to release its urls
         this.#releaseAllFileUrls();
         const currentFiles = files.map((item) => this.buildFileItem(item, uploadTrigger));
-        this._adapter.notifyChange({ fileList: currentFiles, currentFile: currentFiles[0] });
+        this.adapter.notifyChange({ fileList: currentFiles, currentFile: currentFiles[0] });
         this.#updateFileListInternal(currentFiles, () => {
             if (uploadTrigger === TRIGGER_AUTO) {
                 this.#startUpload(currentFiles);
@@ -290,7 +289,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
         }
         if (lastAdded) {
-            this._adapter.notifyChange({ fileList, currentFile: lastAdded });
+            this.adapter.notifyChange({ fileList, currentFile: lastAdded });
         }
         this.#updateFileListInternal(fileList, () => {
             if (uploadTrigger === TRIGGER_AUTO) {
@@ -315,7 +314,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
         if (typeof beforeUpload === 'function') {
             const fileList = this.#getLatestFileList();
-            const buResult = this._adapter.notifyBeforeUpload({ file, fileList });
+            const buResult = this.adapter.notifyBeforeUpload({ file, fileList });
             switch (true) {
                 case buResult === true: {
                     this.#post(file);
@@ -387,7 +386,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
 
         this.#updateFileListInternal(newFileList);
-        this._adapter.notifyChange({ fileList: newFileList, currentFile });
+        this.adapter.notifyChange({ fileList: newFileList, currentFile });
 
         if (shouldUpload) {
             this.#post(currentFile);
@@ -466,9 +465,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
         newFileList[index] = { ...newFileList[index], percent, status: FILE_STATUS_UPLOADING as FileItemStatus };
 
-        this._adapter.notifyProgress(percent, fileInstance, newFileList);
+        this.adapter.notifyProgress(percent, fileInstance, newFileList);
         this.#updateFileListInternal(newFileList);
-        this._adapter.notifyChange({ fileList: newFileList, currentFile: newFileList[index] });
+        this.adapter.notifyChange({ fileList: newFileList, currentFile: newFileList[index] });
     }
 
     #handleOnLoad({ e, xhr, fileInstance }: { e?: ProgressEvent; xhr: XMLHttpRequest; fileInstance: File }) {
@@ -509,11 +508,11 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             currentFile.event = e;
         }
         newFileList[index] = currentFile;
-        this._adapter.notifyProgress(100, fileInstance, newFileList);
+        this.adapter.notifyProgress(100, fileInstance, newFileList);
 
         if (afterUpload && typeof afterUpload === 'function') {
             const { autoRemove, status, validateMessage, name, url } =
-                this._adapter.notifyAfterUpload({
+                this.adapter.notifyAfterUpload({
                     response: body,
                     file: currentFile,
                     fileList: newFileList,
@@ -539,8 +538,8 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
                 newFileList.splice(index, 1);
             }
         }
-        this._adapter.notifySuccess(body, fileInstance, newFileList);
-        this._adapter.notifyChange({ fileList: newFileList, currentFile });
+        this.adapter.notifySuccess(body, fileInstance, newFileList);
+        this.adapter.notifyChange({ fileList: newFileList, currentFile });
         this.#updateFileListInternal(newFileList);
     }
 
@@ -561,9 +560,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             event: e,
         };
 
-        this._adapter.notifyError(error, fileInstance, newFileList, xhr);
+        this.adapter.notifyError(error, fileInstance, newFileList, xhr);
         this.#updateFileListInternal(newFileList);
-        this._adapter.notifyChange({ currentFile: newFileList[index], fileList: newFileList });
+        this.adapter.notifyChange({ currentFile: newFileList[index], fileList: newFileList });
     }
 
     async #handleDirectoryDrop(e: E) {
@@ -571,8 +570,8 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const items = [].slice.call(e.dataTransfer.items);
         const files = await mapFileTree(items);
         this.#selectFiles(files, false);
-        this._adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
-        this._adapter.notifyDrop(e, files, fileList);
+        this.adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
+        this.adapter.notifyDrop(e, files, fileList);
     }
 
     /**
@@ -586,7 +585,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
         const invalidFiles = files.filter((item) => !this.checkFileFormat(accept, item));
         if (invalidFiles.length !== 0) {
-            this._adapter.notifyAcceptInvalid(invalidFiles);
+            this.adapter.notifyAcceptInvalid(invalidFiles);
         }
         const accepted = files.filter((item) => !invalidFiles.includes(item));
         if (accepted.length === 0) {
@@ -606,7 +605,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         if (limit === 1) {
             return files.slice(-1);
         }
-        this._adapter.notifyExceed(files);
+        this.adapter.notifyExceed(files);
         return files.slice(0, Math.max(0, limit - used));
     }
 
@@ -627,7 +626,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         try {
             return (await beforeCrop(file, files)) !== false;
         } catch (error) {
-            this._adapter.notifyCropError(error as Error);
+            this.adapter.notifyCropError(error as Error);
             return false;
         }
     }
@@ -652,7 +651,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
 
     /** Filters by accept, then crops the images (when `crop` is on and allowed) or adds the files to the list */
     #selectFiles(currentFileList: Array<File>, allowCrop: boolean) {
-        let files = this.#acceptFiles(currentFileList, () => this._adapter.resetInput());
+        let files = this.#acceptFiles(currentFileList, () => this.adapter.resetInput());
         if (!files) {
             return;
         }
@@ -686,20 +685,20 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             if (total > limit) {
                 if (limit === 1) {
                     files = files.slice(-1);
-                    this._adapter.notifyFileSelect(files);
-                    this._adapter.resetInput();
+                    this.adapter.notifyFileSelect(files);
+                    this.adapter.resetInput();
                     this.#replaceFileList(files);
                     return;
                 }
-                this._adapter.notifyExceed(files);
+                this.adapter.notifyExceed(files);
                 // clamped: the list may already be over the limit, and a negative count would slice from the end
                 const restNum = Math.max(0, limit - fileList.length);
                 files = files.slice(0, restNum);
             }
         }
 
-        this._adapter.notifyFileSelect(files);
-        this._adapter.resetInput();
+        this.adapter.notifyFileSelect(files);
+        this.adapter.resetInput();
         this.#addFilesToList(files);
     }
 
@@ -710,19 +709,19 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const index = fileList.findIndex((item) => item.uid === replaceUid);
         if (index < 0) {
             // the item was removed while the user picked the file
-            this._adapter.resetReplaceInput();
+            this.adapter.resetReplaceInput();
             return;
         }
         const newFile = this.#prepareFile(file, fileList);
-        this._adapter.notifyFileSelect([newFile]);
+        this.adapter.notifyFileSelect([newFile]);
         const newFileItem = this.buildFileItem(newFile, uploadTrigger);
         const newFileList = [...fileList];
 
         this.#releaseFileUrl(replaceUid);
         newFileList.splice(index, 1, newFileItem);
-        this._adapter.notifyChange({ currentFile: newFileItem, fileList: newFileList });
+        this.adapter.notifyChange({ currentFile: newFileItem, fileList: newFileList });
         this.#updateFileListInternal(newFileList, () => {
-            this._adapter.resetReplaceInput();
+            this.adapter.resetReplaceInput();
             if (!newFileItem._sizeInvalid) {
                 this.#upload(newFileItem);
             }
@@ -827,8 +826,8 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             isReplaceOperation: false,
         });
         // a remounted input fires onChange again when the same file is picked
-        this._adapter.resetInput();
-        this._adapter.resetReplaceInput();
+        this.adapter.resetInput();
+        this.adapter.resetReplaceInput();
     };
 
     /** Crops the current image, then moves to the next queued one or adds every result once the queue drains */
@@ -836,7 +835,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const { cropperFile, cropperSrc, pendingImageFiles, nonImageFiles, croppedFiles, isReplaceOperation } = this.getStates();
         const { crop } = this.getProps();
         try {
-            const canvas = this._adapter.getCropperCanvas();
+            const canvas = this.adapter.getCropperCanvas();
             if (!canvas || !cropperFile) {
                 throw new Error('Cropper instance not found');
             }
@@ -864,7 +863,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             this.cancelCrop();
             this.#dispatchFiles([...nextCropped, ...nonImageFiles], isReplaceOperation);
         } catch (error) {
-            this._adapter.notifyCropError(error as Error);
+            this.adapter.notifyCropError(error as Error);
         }
     };
 
@@ -909,10 +908,10 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
                 if (file) {
                     files.push(file);
                 } else {
-                    this._adapter.notifyPastingError(new Error('Failed to read a pasted file from the clipboard'));
+                    this.adapter.notifyPastingError(new Error('Failed to read a pasted file from the clipboard'));
                 }
             } catch (error) {
-                this._adapter.notifyPastingError(error as Error);
+                this.adapter.notifyPastingError(error as Error);
             }
         }
 
@@ -930,7 +929,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
     /** Entry for the file picked to replace the item `replaceUid` names; with crop on, an image is cropped first */
     handleReplaceChange = (currentFileList: FileList | Array<File>) => {
         const newFile = Array.from(currentFileList).pop();
-        if (!newFile || !this.#acceptFiles([newFile], () => this._adapter.resetReplaceInput())) {
+        if (!newFile || !this.#acceptFiles([newFile], () => this.adapter.resetReplaceInput())) {
             return;
         }
         if (this.getProps().crop && isImageFile(newFile)) {
@@ -954,12 +953,12 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             if (total > limit) {
                 if (limit === 1) {
                     currentFileList = currentFileList.slice(-1);
-                    this._adapter.notifyFileSelect(currentFileList);
-                    this._adapter.resetInput();
+                    this.adapter.notifyFileSelect(currentFileList);
+                    this.adapter.resetInput();
                     this.#replaceFileList(currentFileList);
                     return;
                 }
-                this._adapter.notifyExceed(currentFileList);
+                this.adapter.notifyExceed(currentFileList);
                 const restNum = Math.max(0, limit - fileList.length);
                 currentFileList = currentFileList.slice(0, restNum);
             }
@@ -973,8 +972,8 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             newFileList.push(...fileItemList);
         }
 
-        this._adapter.notifyFileSelect(currentFileList);
-        this._adapter.notifyChange({ fileList: newFileList, currentFile: null });
+        this.adapter.notifyFileSelect(currentFileList);
+        this.adapter.notifyChange({ fileList: newFileList, currentFile: null });
         this.#updateFileListInternal(newFileList, () => {
             if (uploadTrigger === TRIGGER_AUTO) {
                 this.#startUpload(fileItemList);
@@ -994,7 +993,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
         const fileList = this.getFileList();
 
-        void Promise.resolve(this._adapter.notifyBeforeRemove(file, fileList)).then(
+        void Promise.resolve(this.adapter.notifyBeforeRemove(file, fileList)).then(
             (res) => {
                 if (res === false) {
                     return;
@@ -1010,9 +1009,9 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
 
                 this.#releaseFileUrl(file.uid);
 
-                this._adapter.notifyRemove(file.fileInstance, newFileList, file);
+                this.adapter.notifyRemove(file.fileInstance, newFileList, file);
                 this.#updateFileListInternal(newFileList);
-                this._adapter.notifyChange({ fileList: newFileList, currentFile: file });
+                this.adapter.notifyChange({ fileList: newFileList, currentFile: file });
             },
             () => {}
         );
@@ -1025,15 +1024,15 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             return;
         }
 
-        void Promise.resolve(this._adapter.notifyBeforeClear(fileList)).then(
+        void Promise.resolve(this.adapter.notifyBeforeClear(fileList)).then(
             (res) => {
                 if (res === false) {
                     return;
                 }
                 this.#releaseAllFileUrls();
                 this.#updateFileListInternal([]);
-                this._adapter.notifyClear();
-                this._adapter.notifyChange({ fileList: [] });
+                this.adapter.notifyClear();
+                this.adapter.notifyChange({ fileList: [] });
             },
             () => {}
         );
@@ -1045,7 +1044,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         this.#dragDepth++;
         const { disabled } = this.getProps();
         if (!disabled) {
-            this._adapter.updateDragAreaStatus(DRAG_AREA_LEGAL);
+            this.adapter.updateDragAreaStatus(DRAG_AREA_LEGAL);
         }
     };
 
@@ -1063,8 +1062,8 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
             const files: File[] = Array.from(e.dataTransfer.files);
             this.addFiles(files);
-            this._adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
-            this._adapter.notifyDrop(e, files, fileList);
+            this.adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
+            this.adapter.notifyDrop(e, files, fileList);
         }
     };
 
@@ -1078,7 +1077,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         e.stopPropagation();
         this.#dragDepth = Math.max(0, this.#dragDepth - 1);
         if (this.#dragDepth === 0) {
-            this._adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
+            this.adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
         }
     };
 
@@ -1086,13 +1085,13 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         if (this.getProps().disabled) {
             return;
         }
-        this._adapter.notifyRetry(fileItem);
+        this.adapter.notifyRetry(fileItem);
         if (fileItem.fileInstance) {
             this.#post(fileItem);
         }
     };
 
     handlePreviewClick = (fileItem: BaseFileItem) => {
-        this._adapter.notifyPreviewClick(fileItem);
+        this.adapter.notifyPreviewClick(fileItem);
     };
 }

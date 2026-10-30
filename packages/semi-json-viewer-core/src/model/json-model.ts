@@ -14,7 +14,6 @@ export class JSONModel {
     #undoStack: Command[] = [];
     #redoStack: Command[] = [];
     readonly #MAX_STACK_SIZE = 20;
-
     #jsonWorkerManager: JsonWorkerManager | null = null;
     #emitter: Emitter<GlobalEvents> | null = null;
     lastChangeBufferPos = {

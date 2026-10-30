@@ -95,9 +95,9 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         const { values, items } = this.#getValuesAndItems(selectedItems);
         // mirrors getSelectedItems: null falls back to the state like undefined
         if (!Array.isArray(this.getProp('value'))) {
-            this._adapter.updateSelected(values);
+            this.adapter.updateSelected(values);
         }
-        this._adapter.notifyChange(values, items);
+        this.adapter.notifyChange(values, items);
     }
 
     /** The flat item list of a dataSource: groupList items carry `_parent`, treeList nodes carry `_path` */
@@ -209,12 +209,12 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
 
     handleInputChange = (inputVal: string, notify: boolean) => {
         if (this.getProp('type') === strings.TYPE_TREE_TO_LIST) {
-            this._adapter.searchTree(inputVal);
+            this.adapter.searchTree(inputVal);
         }
         if (notify) {
-            this._adapter.notifySearch(inputVal);
+            this.adapter.notifySearch(inputVal);
         }
-        this._adapter.updateInput(inputVal);
+        this.adapter.updateInput(inputVal);
         // via handlePageChange so a controlled caller is told to move
         if (TransferFoundation.getPageNumber(this.getProp('pagination'), this.getState('leftCurrentPage')) !== 1) {
             this.handlePageChange(1);
@@ -268,10 +268,10 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         const changedItem = this.#injectFullPath(item);
         if (selectedItems.has(item.key)) {
             selectedItems.delete(item.key);
-            this._adapter.notifyDeselect(changedItem);
+            this.adapter.notifyDeselect(changedItem);
         } else {
             selectedItems.set(item.key, item);
-            this._adapter.notifySelect(changedItem);
+            this.adapter.notifySelect(changedItem);
         }
         this.#updateSelected(selectedItems);
     };
@@ -298,7 +298,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
      * over, since a controlled selection never writes it, so it returns to the initial selection.
      */
     handleValueRelease = () => {
-        this._adapter.updateSelected([...(this.getProp('defaultValue') ?? [])]);
+        this.adapter.updateSelected([...(this.getProp('defaultValue') ?? [])]);
     };
 
     /**
@@ -308,7 +308,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
     handleFocusOut = (e: E & Pick<FocusEvent, 'currentTarget' | 'relatedTarget'>) => {
         const { currentTarget, relatedTarget } = e;
         if (!(currentTarget instanceof Node && relatedTarget instanceof Node && currentTarget.contains(relatedTarget))) {
-            this._adapter.notifyBlur(e);
+            this.adapter.notifyBlur(e);
         }
     };
 
@@ -321,7 +321,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
     };
 
     handlePageChange = (currentPage: number) => {
-        this._adapter.updateCurrentPage(currentPage);
-        this._adapter.notifyPageChange(currentPage);
+        this.adapter.updateCurrentPage(currentPage);
+        this.adapter.notifyPageChange(currentPage);
     };
 }

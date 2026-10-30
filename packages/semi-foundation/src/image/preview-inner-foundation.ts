@@ -98,7 +98,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     #mouseMoveHandler: ThrottledFunction<(e: unknown) => void> = throttle((e: unknown) => {
         const { viewerVisible } = this.getStates();
-        const isValidTarget = this._adapter.isValidTarget(e);
+        const isValidTarget = this.adapter.isValidTarget(e);
         if (isValidTarget) {
             if (!viewerVisible) {
                 this.setState({
@@ -115,8 +115,8 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         if (!this.getProp('closeOnEsc')) {
             return false;
         }
-        this._adapter.notifyVisibleChange(false);
-        this._adapter.notifyClose();
+        this.adapter.notifyVisibleChange(false);
+        this.adapter.notifyClose();
         return true;
     };
 
@@ -189,23 +189,23 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     }
 
     beforeShow = () => {
-        this._adapter.registerKeyDownListener();
-        this._adapter.openLayer(this.#handleEscape);
-        this._adapter.disabledBodyScroll();
+        this.adapter.registerKeyDownListener();
+        this.adapter.openLayer(this.#handleEscape);
+        this.adapter.disabledBodyScroll();
         this.updateTimer();
     };
 
     afterHide = () => {
-        this._adapter.unregisterKeyDownListener();
-        this._adapter.closeLayer();
-        this._adapter.enabledBodyScroll();
+        this.adapter.unregisterKeyDownListener();
+        this.adapter.closeLayer();
+        this.adapter.enabledBodyScroll();
         this.#clearTimer();
         this.setState({
             viewerVisible: true,
             rotation: 0,
             preloadAfterVisibleChange: true,
         });
-        this._adapter.setRatio('adaptation');
+        this.adapter.setRatio('adaptation');
     };
 
     override destroy() {
@@ -223,7 +223,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
                 viewerVisible: true,
             });
         }
-        if (this._adapter.isValidTarget(e)) {
+        if (this.adapter.isValidTarget(e)) {
             this.updateTimer();
         } else {
             this.#clearTimer();
@@ -251,14 +251,14 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         }
         const { maskClosable } = this.getProps();
         // the close button closes on click, and its mouseup must not close through the mask first
-        let couldClose = this._adapter.isValidTarget(e);
+        let couldClose = this.adapter.isValidTarget(e);
         const { clientX, clientY } = e;
         const { x, y } = this.#startMouseDown;
         if (Math.abs(clientX - x) > 5 || Math.abs(y - clientY) > 5) {
             couldClose = false;
         }
         if (couldClose && maskClosable) {
-            this._adapter.notifyVisibleChange(false);
+            this.adapter.notifyVisibleChange(false);
         }
     };
 
@@ -273,7 +273,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     handleKeyDown = (e: KeyboardEvent) => {
         // the listener is on window: keys typed in a control outside the preview, such as a page button or a Modal above
         // a non-modal preview, are not meant for it
-        if (!this._adapter.isEventInPreview(e)) {
+        if (!this.adapter.isEventInPreview(e)) {
             return;
         }
         if (e.key === ESC_KEY && this.getProp('closeOnEsc')) {
@@ -298,16 +298,16 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         const step = direction === 'prev' ? -1 : 1;
         const srcLength = this.#getImgSrc().length;
         const newIndex = (this.#getCurrentIndex() + step + srcLength) % srcLength;
-        if (this._isControlledComponent('currentIndex')) {
-            if (this._adapter.getIsInGroup()) {
-                this._adapter.getContext('setCurrentIndex')?.(newIndex);
+        if (this.isControlledComponent('currentIndex')) {
+            if (this.adapter.getIsInGroup()) {
+                this.adapter.getContext('setCurrentIndex')?.(newIndex);
             }
         } else {
             this.setState({
                 currentIndex: newIndex,
             });
         }
-        this._adapter.notifyChange(newIndex, direction);
+        this.adapter.notifyChange(newIndex, direction);
         this.setState({
             direction,
             rotation: 0,
@@ -316,25 +316,25 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     handleDownload = () => {
         const currentIndex = this.#getCurrentIndex();
-        const setDownloadName = this._adapter.getSetDownloadFunc();
+        const setDownloadName = this.adapter.getSetDownloadFunc();
         const downloadSrc = this.#getImgSrc()[currentIndex];
         if (downloadSrc === undefined) {
             return;
         }
         const downloadName = setDownloadName ? setDownloadName(downloadSrc) : downloadSrc.slice(downloadSrc.lastIndexOf('/') + 1).split('?')[0];
-        void downloadImage(downloadSrc, downloadName, this._adapter.notifyDownloadError);
-        this._adapter.notifyDownload(downloadSrc, currentIndex);
+        void downloadImage(downloadSrc, downloadName, this.adapter.notifyDownloadError);
+        this.adapter.notifyDownload(downloadSrc, currentIndex);
     };
 
     handlePreviewClose = (e: Pick<Event, 'preventDefault' | 'stopPropagation'>) => {
-        this._adapter.notifyVisibleChange(false);
-        this._adapter.notifyClose();
+        this.adapter.notifyVisibleChange(false);
+        this.adapter.notifyClose();
         handlePrevent(e);
     };
 
     handleAdjustRatio = (type: RatioType) => {
-        this._adapter.setRatio(type);
-        this._adapter.notifyRatioChange(type);
+        this.adapter.setRatio(type);
+        this.adapter.notifyRatioChange(type);
     };
 
     handleRotateImage = (direction: RotateDirection) => {
@@ -345,7 +345,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         this.setState({
             rotation: newRotation,
         });
-        this._adapter.notifyRotateChange(newRotation);
+        this.adapter.notifyRotateChange(newRotation);
     };
 
     handleZoomImage = (newZoom: number, notify: boolean = true, e?: WheelEvent) => {
@@ -354,7 +354,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         const nextZoom = clampZoom(newZoom, minZoom, maxZoom);
         if (zoom !== nextZoom) {
             if (notify) {
-                this._adapter.notifyZoom(nextZoom, nextZoom > zoom);
+                this.adapter.notifyZoom(nextZoom, nextZoom > zoom);
             }
 
             this.setState({

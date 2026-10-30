@@ -132,11 +132,11 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     }
 
     #getParentRect(): DOMRect | undefined {
-        return this._adapter.getSliderNode()?.offsetParent?.getBoundingClientRect();
+        return this.adapter.getSliderNode()?.offsetParent?.getBoundingClientRect();
     }
 
     #getSliderLengths(): SliderLengths {
-        const slider = this._adapter.getSliderNode();
+        const slider = this.adapter.getSliderNode();
         if (!slider) {
             return { sliderX: 0, sliderY: 0, sliderWidth: 0, sliderHeight: 0 };
         }
@@ -151,7 +151,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     }
 
     #notifyAfterChange() {
-        this._adapter.notifyAfterChange(this.normalizeValue(this.getState('currentValue')));
+        this.adapter.notifyAfterChange(this.normalizeValue(this.getState('currentValue')));
     }
 
     /** A controlled value only moves through the value prop */
@@ -163,15 +163,15 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         if (isEqual(this.normalizeValue(this.getState('currentValue')), nextValue)) {
             return;
         }
-        if (this._isControlledComponent()) {
+        if (this.isControlledComponent()) {
             return;
         }
         this.setState({ currentValue: nextValue }, callback);
     }
 
     #commitClick(nextValue: number | number[]) {
-        this._adapter.notifyChange(nextValue);
-        if (this._isControlledComponent()) {
+        this.adapter.notifyChange(nextValue);
+        if (this.isControlledComponent()) {
             return;
         }
         this.#moveHandle(nextValue, () => this.#notifyAfterChange());
@@ -195,7 +195,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
             if (nextValue === undefined) {
                 return false;
             }
-            this._adapter.notifyChange(nextValue);
+            this.adapter.notifyChange(nextValue);
             this.#moveHandle(nextValue);
         }
         return true;
@@ -205,7 +205,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         if (this.#isOtherPointer(e)) {
             return false;
         }
-        this._adapter.notifyMouseUp(e);
+        this.adapter.notifyMouseUp(e);
         handlePrevent(e);
         this.#unbindDragEvents();
         // a drag that was cut short by disabling the slider still has to end and report
@@ -237,8 +237,8 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
      * Clamps a pointer position to the slider's start and end
      */
     protected checkMeetMinMax(position: number) {
-        const { vertical, verticalReverse } = this._adapter.getProps();
-        const direction = this._adapter.getContext('direction');
+        const { vertical, verticalReverse } = this.adapter.getProps();
+        const direction = this.adapter.getContext('direction');
         const isRTL = direction === 'rtl' && !vertical;
         const { sliderX, sliderY, sliderWidth, sliderHeight } = this.#getSliderLengths();
         const len = vertical ? sliderHeight : sliderWidth;
@@ -278,9 +278,9 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     /** Position to value snapped to step; false when nothing changes or the slider has no layout */
     protected transPosToValue(mousePos: number, isMin: boolean) {
         const pos = this.checkMeetMinMax(mousePos);
-        const { currentValue } = this._adapter.getStates();
-        const { range, vertical, step, verticalReverse, min, max } = this._adapter.getProps();
-        const direction = this._adapter.getContext('direction');
+        const { currentValue } = this.adapter.getStates();
+        const { range, vertical, step, verticalReverse, min, max } = this.adapter.getProps();
+        const direction = this.adapter.getContext('direction');
         const isRTL = direction === 'rtl' && !vertical;
         const { sliderX, sliderY, sliderWidth, sliderHeight } = this.#getSliderLengths();
         const startPos = vertical ? sliderY : sliderX;
@@ -319,8 +319,8 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     }
 
     protected transValueToPos(value: SliderProps['value']) {
-        const { vertical, range, verticalReverse, min, max } = this._adapter.getProps();
-        const direction = this._adapter.getContext('direction');
+        const { vertical, range, verticalReverse, min, max } = this.adapter.getProps();
+        const direction = this.adapter.getContext('direction');
         const isRTL = direction === 'rtl' && !vertical;
         const { sliderX, sliderY, sliderWidth, sliderHeight } = this.#getSliderLengths();
 
@@ -355,7 +355,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     }
 
     protected checkWhichHandle(pagePos: number) {
-        const { currentValue } = this._adapter.getStates();
+        const { currentValue } = this.adapter.getStates();
         const currentPos = this.transValueToPos(currentValue);
         if (!Array.isArray(currentPos)) {
             return true;
@@ -474,7 +474,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
 
     /** An event handler, so the tooltips follow a container that was hidden */
     syncIsInRenderTree = () => {
-        const slider = this._adapter.getSliderNode();
+        const slider = this.adapter.getSliderNode();
         const isInRenderTree = Boolean(slider && (slider.offsetWidth || slider.offsetHeight || slider.getClientRects().length));
         if (isInRenderTree !== this.getState('isInRenderTree')) {
             this.setState({ isInRenderTree });
@@ -548,10 +548,10 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
             outputValue = pos === 'min' ? [Math.min(value, currentValue[1]), currentValue[1]] : [currentValue[0], Math.max(value, currentValue[0])];
         }
         if (!isEqual(currentValue, outputValue)) {
-            if (!this._isControlledComponent()) {
+            if (!this.isControlledComponent()) {
                 this.setState({ currentValue: outputValue });
             }
-            this._adapter.notifyChange(outputValue);
+            this.adapter.notifyChange(outputValue);
         }
     };
 
@@ -567,7 +567,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         }
         event.stopPropagation();
         const { vertical, verticalReverse, step, min, max } = this.getProps();
-        const toMax = vertical ? (verticalReverse ? 'ArrowUp' : 'ArrowDown') : this._adapter.getContext('direction') === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const toMax = vertical ? (verticalReverse ? 'ArrowUp' : 'ArrowDown') : this.adapter.getContext('direction') === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
         const increase = [toMax, vertical ? 'ArrowRight' : 'ArrowUp'];
         const opposite = { ArrowUp: 'ArrowDown', ArrowDown: 'ArrowUp', ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
         const delta = increase.includes(event.key) ? 1 : increase.map((key) => opposite[key]).includes(event.key) ? -1 : 0;

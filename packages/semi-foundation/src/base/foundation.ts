@@ -62,17 +62,17 @@ export interface DirectionContext {
  */
 export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Record<string, any>, S = Record<string, any>> {
     #lifetime: AbortController | null = null;
-    protected _adapter!: T;
+    protected adapter: T;
 
     constructor(adapter: T) {
-        this._adapter = adapter;
+        this.adapter = adapter;
     }
 
     /**
      * A prop is controlled when its value is not `undefined`: a Vue adapter's props hold every declared key. Without
      * a key it checks `value`, the controlled prop of most components.
      */
-    protected _isControlledComponent(key: keyof P & string = 'value' as keyof P & string) {
+    protected isControlledComponent(key: keyof P & string = 'value' as keyof P & string) {
         return this.getProps()[key] !== undefined;
     }
 
@@ -86,31 +86,31 @@ export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Rec
     }
 
     getProp<K extends keyof P>(key: K) {
-        return this._adapter.getProp(key);
+        return this.adapter.getProp(key);
     }
 
     getProps() {
-        return this._adapter.getProps();
+        return this.adapter.getProps();
     }
 
     getState<K extends keyof S>(key: K) {
-        return this._adapter.getState(key);
+        return this.adapter.getState(key);
     }
 
     getStates() {
-        return this._adapter.getStates();
+        return this.adapter.getStates();
     }
 
     setState<K extends keyof S>(states: Pick<S, K>, cb?: () => void) {
-        return this._adapter.setState({ ...states }, cb);
+        return this.adapter.setState({ ...states }, cb);
     }
 
     getContext<K extends keyof ContextOf<T>>(key: K): ContextOf<T>[K] {
-        return this._adapter.getContext(key);
+        return this.adapter.getContext(key);
     }
 
     getContexts() {
-        return this._adapter.getContexts() as ContextOf<T>;
+        return this.adapter.getContexts() as ContextOf<T>;
     }
 
     // connect and disconnect belong to the framework host, which calls them around init and destroy, so a subclass

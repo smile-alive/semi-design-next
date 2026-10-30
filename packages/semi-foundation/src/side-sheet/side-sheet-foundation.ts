@@ -87,36 +87,36 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         if (!this.getProp('visible')) {
             return;
         }
-        this._adapter.notifyCancel(e);
+        this.adapter.notifyCancel(e);
     };
 
     beforeShow = () => {
         const allowDisable = this.getProp('disableScroll');
         if (allowDisable) {
-            this._adapter.disabledBodyScroll();
+            this.adapter.disabledBodyScroll();
         }
-        this._adapter.openLayer(this.#handleEscape);
-        this._adapter.trapFocus();
+        this.adapter.openLayer(this.#handleEscape);
+        this.adapter.trapFocus();
     };
 
     // the layer closes before focus returns: it releases the page's inert, and an inert element cannot take focus
     afterHide = () => {
         // unconditional: disableScroll may have changed since the lock was taken
-        this._adapter.enabledBodyScroll();
-        this._adapter.closeLayer();
-        this._adapter.releaseFocus();
+        this.adapter.enabledBodyScroll();
+        this.adapter.closeLayer();
+        this.adapter.releaseFocus();
         this.restoreFocus();
     };
 
     restoreFocus = () => {
-        this._adapter.restoreFocus();
+        this.adapter.restoreFocus();
     };
 
     onVisibleChange = (visible: boolean) => {
-        this._adapter.notifyVisibleChange(visible);
+        this.adapter.notifyVisibleChange(visible);
     };
 
     toggleDisplayNone = (displayNone: boolean) => {
-        this._adapter.toggleDisplayNone(displayNone);
+        this.adapter.toggleDisplayNone(displayNone);
     };
 }

@@ -98,7 +98,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     }
 
     #recordPosition() {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             this.#position = { top: element.scrollTop, height: element.scrollHeight };
         }
@@ -110,7 +110,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
      * scrollTop, as anchoring may already have moved it.
      */
     #keepPositionAfterPrepend() {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             element.scrollTop = this.#position.top + element.scrollHeight - this.#position.height;
         }
@@ -123,11 +123,11 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         const { backBottomVisible } = this.getStates();
         if (scrollHeight - scrollTop - clientHeight <= SHOW_SCROLL_GAP) {
             if (backBottomVisible) {
-                this._adapter.setBackBottomVisible(false);
+                this.adapter.setBackBottomVisible(false);
             }
         } else {
             if (!backBottomVisible) {
-                this._adapter.setBackBottomVisible(true);
+                this.adapter.setBackBottomVisible(true);
             }
         }
     }
@@ -193,11 +193,11 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     };
 
     stopGenerate = (e: unknown) => {
-        this._adapter.notifyStopGenerate(e);
+        this.adapter.notifyStopGenerate(e);
     };
 
     scrollToBottomImmediately = () => {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             element.scrollTop = element.scrollHeight;
         }
@@ -205,7 +205,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
 
     scrollToBottomWithAnimation = () => {
         const duration = SCROLL_ANIMATION_TIME;
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (!element) {
             return;
         }
@@ -241,7 +241,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     };
 
     handleScrollContainerResize = () => {
-        this.#updateBackBottomVisible(this._adapter.getContainerRef());
+        this.#updateBackBottomVisible(this.adapter.getContainerRef());
     };
 
     clearContext = (_e: unknown) => {
@@ -255,8 +255,8 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
             createAt: Date.now(),
         };
         const newChats = [...chats, dividerMessage];
-        this._adapter.notifyChatsChange(newChats);
-        this._adapter.notifyClearContext();
+        this.adapter.notifyChatsChange(newChats);
+        this.adapter.notifyClearContext();
     };
 
     onMessageSend = (input: string, attachment?: any[]) => {
@@ -295,10 +295,10 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
                 createAt: Date.now(),
                 content,
             };
-            this._adapter.notifyChatsChange([...this.#getChats(), newMessage]);
+            this.adapter.notifyChatsChange([...this.#getChats(), newMessage]);
         }
         this.#following = true;
-        this._adapter.notifyMessageSend(input, attachment);
+        this.adapter.notifyMessageSend(input, attachment);
     };
 
     onHintClick = (hint: string) => {
@@ -311,19 +311,19 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         };
         const newChats = [...chats, newMessage];
         this.#following = true;
-        this._adapter.notifyChatsChange(newChats);
-        this._adapter.notifyHintClick(hint);
+        this.adapter.notifyChatsChange(newChats);
+        this.adapter.notifyHintClick(hint);
     };
 
     onInputChange = (props: { inputValue: string; attachment: any[] }) => {
-        this._adapter.notifyInputChange(props);
+        this.adapter.notifyInputChange(props);
     };
 
     deleteMessage = (message: Message) => {
         const chats = this.#getChats();
-        this._adapter.notifyMessageDelete(message);
+        this.adapter.notifyMessageDelete(message);
         const newChats = chats.filter((item) => item.id !== message.id);
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     likeMessage = (message: Message) => {
@@ -332,7 +332,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         if (index === -1) {
             return;
         }
-        this._adapter.notifyLikeMessage(message);
+        this.adapter.notifyLikeMessage(message);
         const newChat = {
             ...chats[index],
             like: !chats[index].like,
@@ -340,7 +340,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         };
         const newChats = [...chats];
         newChats.splice(index, 1, newChat);
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     dislikeMessage = (message: Message) => {
@@ -349,7 +349,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         if (index === -1) {
             return;
         }
-        this._adapter.notifyDislikeMessage(message);
+        this.adapter.notifyDislikeMessage(message);
         const newChat = {
             ...chats[index],
             like: false,
@@ -357,7 +357,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         };
         const newChats = [...chats];
         newChats.splice(index, 1, newChat);
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     resetMessage = (message: Message | null) => {
@@ -373,8 +373,8 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
             createAt: Date.now(),
         };
         const newChats = chats.slice(0, -1).concat(newLastChat);
-        this._adapter.notifyChatsChange(newChats);
-        this._adapter.notifyMessageReset(message);
+        this.adapter.notifyChatsChange(newChats);
+        this.adapter.notifyMessageReset(message);
     };
 
     handleDragOver = (e: { dataTransfer: DataTransfer | null }) => {
@@ -382,7 +382,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         if (this.#dragStartedInside || !e.dataTransfer?.types.includes('Files')) {
             return;
         }
-        this._adapter.setUploadAreaVisible(true);
+        this.adapter.setUploadAreaVisible(true);
     };
 
     handleDragStart = () => {
@@ -398,24 +398,24 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     };
 
     handleContainerDrop = (e: Pick<DragEvent, 'dataTransfer' | 'stopPropagation' | 'preventDefault'>) => {
-        this._adapter.setUploadAreaVisible(false);
+        this.adapter.setUploadAreaVisible(false);
         const files = e.dataTransfer?.files;
         if (files?.length) {
-            this._adapter.manualUpload(Array.from(files));
+            this.adapter.manualUpload(Array.from(files));
         }
         handlePrevent(e);
     };
 
     handleContainerDragLeave = (e: Pick<DragEvent, 'stopPropagation' | 'preventDefault' | 'relatedTarget'>) => {
         handlePrevent(e);
-        const dropAreaElement = this._adapter.getDropAreaElement();
+        const dropAreaElement = this.adapter.getDropAreaElement();
         const enterTarget = e.relatedTarget;
         if (enterTarget instanceof Node && dropAreaElement.contains(enterTarget)) {
             return;
         }
         // deferred so the parent's mouseOver cannot fire in between and keep the area visible
         setTimeout(() => {
-            this._adapter.setUploadAreaVisible(false);
+            this.adapter.setUploadAreaVisible(false);
         });
     };
 }

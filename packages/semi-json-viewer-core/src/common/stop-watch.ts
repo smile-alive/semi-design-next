@@ -4,7 +4,6 @@ const hasPerformanceNow = globalThis.performance && typeof globalThis.performanc
 export class StopWatch {
     #startTime: number;
     #stopTime: number;
-
     readonly #now: () => number;
 
     constructor(highResolution?: boolean) {

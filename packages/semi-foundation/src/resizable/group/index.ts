@@ -49,7 +49,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     }
 
     get #groupRef(): HTMLDivElement | null {
-        return this._adapter.getGroupRef();
+        return this.adapter.getGroupRef();
     }
 
     get #groupSize() {
@@ -71,13 +71,13 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
 
     #clampItem(index: number, size: number) {
         const groupSize = this.#groupSize;
-        return clamp(size, this.#toPixels(this._adapter.getItemMin(index) ?? '0%', groupSize), this.#toPixels(this._adapter.getItemMax(index) ?? '100%', groupSize));
+        return clamp(size, this.#toPixels(this.adapter.getItemMin(index) ?? '0%', groupSize), this.#toPixels(this.adapter.getItemMax(index) ?? '100%', groupSize));
     }
 
     #applyDelta(curHandler: number, { lastItemSize, nextItemSize }: ResizeGroupOriginalPosition, delta: number, e: PointerEvent | KeyboardEvent) {
         const direction = this.#direction;
-        let lastItem = this._adapter.getItem(curHandler),
-            nextItem = this._adapter.getItem(curHandler + 1);
+        let lastItem = this.adapter.getItem(curHandler),
+            nextItem = this.adapter.getItem(curHandler + 1);
         let parentSize = this.#groupSize;
         let lastNewSize = lastItemSize + delta;
         let nextNewSize = nextItemSize - delta;
@@ -108,8 +108,8 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             nextItem.style.height = `calc(${nextNewPercent}% - ${this.#itemMinusMap.get(curHandler + 1)}px)`;
         }
 
-        let lastFunc = this._adapter.getItemChange(curHandler),
-            nextFunc = this._adapter.getItemChange(curHandler + 1);
+        let lastFunc = this.adapter.getItemChange(curHandler),
+            nextFunc = this.adapter.getItemChange(curHandler + 1);
         let [lastDir, nextDir] = getItemDirection(direction);
         if (lastFunc) {
             lastFunc({ width: lastItem.offsetWidth, height: lastItem.offsetHeight }, e, lastDir);
@@ -121,10 +121,10 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     }
 
     #notifyResizeEnd(curHandler: number, e: PointerEvent | KeyboardEvent) {
-        let lastItem = this._adapter.getItem(curHandler),
-            nextItem = this._adapter.getItem(curHandler + 1);
-        let lastFunc = this._adapter.getItemEnd(curHandler),
-            nextFunc = this._adapter.getItemEnd(curHandler + 1);
+        let lastItem = this.adapter.getItem(curHandler),
+            nextItem = this.adapter.getItem(curHandler + 1);
+        let lastFunc = this.adapter.getItemEnd(curHandler),
+            nextFunc = this.adapter.getItemEnd(curHandler + 1);
         let [lastDir, nextDir] = getItemDirection(this.#direction);
         if (lastFunc) {
             lastFunc({ width: lastItem.offsetWidth, height: lastItem.offsetHeight }, e, lastDir);
@@ -142,8 +142,8 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         }
         const percent = (px: number) => (px / parentSize) * 100;
         const limits = (index: number) => {
-            const min = this._adapter.getItemMin(index);
-            const max = this._adapter.getItemMax(index);
+            const min = this.adapter.getItemMin(index);
+            const max = this.adapter.getItemMax(index);
             const minus = this.#itemMinusMap.get(index);
             return {
                 min: percent((min ? this.#toPixels(min, parentSize) : 0) + minus),
@@ -151,9 +151,9 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             };
         };
         const round = (value: number) => String(Number(value.toFixed(1)));
-        for (let i = 0; i < this._adapter.getHandlerCount() && i + 1 < this._adapter.getItemCount(); i++) {
-            const handler = this._adapter.getHandler(i);
-            const item = this._adapter.getItem(i);
+        for (let i = 0; i < this.adapter.getHandlerCount() && i + 1 < this.adapter.getItemCount(); i++) {
+            const handler = this.adapter.getHandler(i);
+            const item = this.adapter.getItem(i);
             const last = limits(i);
             const next = limits(i + 1);
             const total = this.#itemPercentMap.get(i) + this.#itemPercentMap.get(i + 1);
@@ -167,11 +167,11 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
 
     #measureHandlerRoom() {
         const horizontal = this.#direction === 'horizontal';
-        const handlerSizes = Array.from({ length: this._adapter.getHandlerCount() }, (_, i) => {
-            const handler = this._adapter.getHandler(i);
+        const handlerSizes = Array.from({ length: this.adapter.getHandlerCount() }, (_, i) => {
+            const handler = this.adapter.getHandler(i);
             return horizontal ? handler.offsetWidth : handler.offsetHeight;
         });
-        const itemCount = this._adapter.getItemCount();
+        const itemCount = this.adapter.getItemCount();
         for (let i = 0; i < itemCount; i++) {
             const before = i > 0 ? handlerSizes[i - 1] / 2 : 0;
             const after = i < itemCount - 1 ? handlerSizes[i] / 2 : 0;
@@ -191,17 +191,17 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         let undefineLoc: Map<number, number> = new Map(),
             undefinedTotal = 0;
 
-        for (let i = 0; i < this._adapter.getItemCount(); i++) {
-            const child = this._adapter.getItem(i);
-            let minSize = this._adapter.getItemMin(i),
-                maxSize = this._adapter.getItemMax(i);
+        for (let i = 0; i < this.adapter.getItemCount(); i++) {
+            const child = this.adapter.getItem(i);
+            let minSize = this.adapter.getItemMin(i),
+                maxSize = this.adapter.getItemMax(i);
             let minSizePercent = minSize ? (this.#toPixels(minSize, parentSize) / parentSize) * 100 : 0,
                 maxSizePercent = maxSize ? (this.#toPixels(maxSize, parentSize) / parentSize) * 100 : 100;
             if (minSizePercent > maxSizePercent) {
                 console.warn('[Semi ResizableItem]: min size bigger than max size');
             }
 
-            let defaultSize = this._adapter.getItemDefaultSize(i);
+            let defaultSize = this.adapter.getItemDefaultSize(i);
             if (defaultSize) {
                 let itemSizePercent: number;
                 if (typeof defaultSize === 'string') {
@@ -244,7 +244,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         }
 
         undefineLoc.forEach((value, key) => {
-            const child = this._adapter.getItem(key);
+            const child = this.adapter.getItem(key);
             const percent = (value / undefinedTotal) * undefineSizePercent;
             this.#itemPercentMap.set(key, percent);
             if (direction === 'horizontal') {
@@ -257,8 +257,8 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     }
 
     #measure(handlerIndex: number, x: number, y: number): ResizeGroupOriginalPosition {
-        let lastItem = this._adapter.getItem(handlerIndex),
-            nextItem = this._adapter.getItem(handlerIndex + 1);
+        let lastItem = this.adapter.getItem(handlerIndex),
+            nextItem = this.adapter.getItem(handlerIndex + 1);
 
         return {
             x,
@@ -271,8 +271,8 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     /** Returns false when either item's onResizeStart returned false */
     #notifyResizeStart(handlerIndex: number, e: PointerEvent | KeyboardEvent) {
         const [lastDir, nextDir] = getItemDirection(this.#direction);
-        const lastResult = this._adapter.getItemStart(handlerIndex)?.(e, lastDir);
-        const nextResult = this._adapter.getItemStart(handlerIndex + 1)?.(e, nextDir);
+        const lastResult = this.adapter.getItemStart(handlerIndex)?.(e, lastDir);
+        const nextResult = this.adapter.getItemStart(handlerIndex + 1)?.(e, nextDir);
         return lastResult !== false && nextResult !== false;
     }
 
@@ -297,8 +297,8 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
     handleDirectionChange = () => {
         const [stale, current] = this.#direction === 'horizontal' ? ['height', 'width'] : ['width', 'height'];
         this.#measureHandlerRoom();
-        for (let i = 0; i < this._adapter.getItemCount(); i++) {
-            const item = this._adapter.getItem(i);
+        for (let i = 0; i < this.adapter.getItemCount(); i++) {
+            const item = this.adapter.getItem(i);
             item.style.removeProperty(stale);
             item.style[current] = `calc(${this.#itemPercentMap.get(i)}% - ${this.#itemMinusMap.get(i)}px)`;
         }
@@ -378,17 +378,17 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             return;
         }
         const direction = this.#direction;
-        const itemCount = this._adapter.getItemCount();
+        const itemCount = this.adapter.getItemCount();
         let continueFlag = true;
         for (let i = 0; i < itemCount; i++) {
-            const child = this._adapter.getItem(i);
+            const child = this.adapter.getItem(i);
             const childSize = direction === 'horizontal' ? child.offsetWidth : child.offsetHeight;
             const childNewSize = this.#clampItem(i, childSize);
             if (childNewSize !== childSize) {
                 // the difference goes to the nearest item within its limits: later items first, then earlier ones
                 const donors = [...Array.from({ length: itemCount - i - 1 }, (_, k) => i + 1 + k), ...Array.from({ length: i }, (_, k) => i - 1 - k)];
                 const j = donors.find((index) => {
-                    const item = this._adapter.getItem(index);
+                    const item = this.adapter.getItem(index);
                     const itemSize = direction === 'horizontal' ? item.offsetWidth : item.offsetHeight;
                     return this.#clampItem(index, itemSize) === itemSize;
                 });
@@ -396,7 +396,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
                     continueFlag = false;
                     console.warn('[Semi ResizableGroup]: no enough space to adjust min/max size');
                 } else {
-                    const item = this._adapter.getItem(j);
+                    const item = this.adapter.getItem(j);
                     const childPercent = this.#itemPercentMap.get(i);
                     const itemPercent = this.#itemPercentMap.get(j);
                     const childNewPercent = ((childNewSize + this.#itemMinusMap.get(i)) / this.#groupSize) * 100;

@@ -28,7 +28,7 @@ semi-ui-svelte 的 Svelte 5 组件写法。组件内语句顺序、foundation、
 
 - `useFoundation(Foundation, propsView, initialState, createAdapter, { context })`（`_base/use-foundation.svelte.ts`）返回 `{ foundation, states }`，`states` 是函数，模板与 `$derived` 读 `states().x`，只订阅读到的 key。不叫 `state`：组件里名为 `state` 的变量会让同一组件的 `$state` 被编译成 store 订阅。foundation 方法经宿主包装在 `untrack` 里执行。
 - `$bindable` 要求解构，foundation 读不到 props 对象：组件把 foundation 要读的 prop 写成 getter 对象交给宿主（`{ get checked() { return checked; } }`）。
-- 受控值的通知先写回可绑定 prop、再调回调：`notifyChange: (next, event) => { checked = next; onChange?.(next, event); }`。受控判断仍是 `_isControlledComponent`（值是否为 `undefined`），foundation 不改。
+- 受控值的通知先写回可绑定 prop、再调回调：`notifyChange: (next, event) => { checked = next; onChange?.(next, event); }`。受控判断仍是 `isControlledComponent`（值是否为 `undefined`），foundation 不改。
 - prop 变化同步到 foundation 用 `_base/watch.svelte.ts` 的 `watch(() => checked, (value) => foundation.setChecked(value))`：在 DOM 更新之后执行，挂载时不执行。
 - 原生复选框被拒绝的切换不会改变派生值，Svelte 也就不会回写 DOM：事件处理里调完 foundation 后手动把 `input.checked` 设回派生值。
 - 按 key 懒创建的响应式结构用 `SvelteMap`、`SvelteSet`，不在读取路径上 `new` 一个带 `$state` 字段的对象：在 reaction 里创建并立即读取的 `$state` 不被该 reaction 追踪。

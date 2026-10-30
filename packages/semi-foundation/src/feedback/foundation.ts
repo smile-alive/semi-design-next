@@ -40,22 +40,22 @@ export interface FeedbackAdapter<P extends object = object, S extends FeedbackBa
 
 export default class FeedbackFoundation<P extends object = object, S extends FeedbackBaseState = FeedbackBaseState, CE = unknown, OE = unknown, TE = unknown> extends BaseFoundation<FeedbackAdapter<P, S, CE, OE, TE>, P, S> {
     #changeValue(value: FeedbackValue) {
-        this._adapter.setValue(value);
-        this._adapter.notifyValueChange(value);
+        this.adapter.setValue(value);
+        this.adapter.notifyValueChange(value);
     }
 
     // The footer buttons of the popup report the pending state themselves; the value clears once the handler settles.
     // A rejection is rethrown, so the caller still sees it.
     #settlePopup(result: void | Promise<any>, report: (status: PromiseStatus) => void) {
         if (!isPromise(result)) {
-            this._adapter.setValue(null);
+            this.adapter.setValue(null);
             return;
         }
         report('pending');
         (result as Promise<any>)
             .then(() => {
                 report('fulfilled');
-                this._adapter.setValue(null);
+                this.adapter.setValue(null);
             })
             .catch((e) => {
                 report('rejected');
@@ -66,28 +66,28 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
     // Modal shows the pending state on its own buttons from the promise it gets back
     #settleModal(result: void | Promise<any>) {
         if (!isPromise(result)) {
-            this._adapter.setValue(null);
+            this.adapter.setValue(null);
             return null;
         }
-        return (result as Promise<any>).then(() => this._adapter.setValue(null));
+        return (result as Promise<any>).then(() => this.adapter.setValue(null));
     }
 
     handleRadioChange = (e: RadioChangeEvent) => {
         const { value } = e.target;
-        this._adapter.notifyRadioChange(e);
+        this.adapter.notifyRadioChange(e);
         this.#changeValue(value);
     };
 
     handleEmojiReasonChange = (value: string, e?: TE) => {
-        this._adapter.notifyTextAreaChange(value, e);
-        const oldValue = this._adapter.getState('value');
+        this.adapter.notifyTextAreaChange(value, e);
+        const oldValue = this.adapter.getState('value');
         // the emoji picked earlier; a string or checkbox value has none
         const emoji = typeof oldValue === 'object' && !Array.isArray(oldValue) ? oldValue?.emoji : undefined;
         this.#changeValue({ ...(emoji !== undefined && { emoji }), text: value });
     };
 
     handleTextChange = (value: string, e?: TE) => {
-        this._adapter.notifyTextAreaChange(value, e);
+        this.adapter.notifyTextAreaChange(value, e);
         this.#changeValue(value);
     };
 
@@ -96,23 +96,23 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
     };
 
     handleCheckboxChange = (value: CheckboxValue[]) => {
-        this._adapter.notifyCheckboxChange(value);
+        this.adapter.notifyCheckboxChange(value);
         this.#changeValue(value);
     };
 
     handleCancel = (e: CE) => {
-        this.#settlePopup(this._adapter.notifyCancel(e), (onCancelReturnPromiseStatus) => this._adapter.setState({ onCancelReturnPromiseStatus }));
+        this.#settlePopup(this.adapter.notifyCancel(e), (onCancelReturnPromiseStatus) => this.adapter.setState({ onCancelReturnPromiseStatus }));
     };
 
     handleSubmit = (e: OE) => {
-        this.#settlePopup(this._adapter.notifyOk(e), (onOKReturnPromiseStatus) => this._adapter.setState({ onOKReturnPromiseStatus }));
+        this.#settlePopup(this.adapter.notifyOk(e), (onOKReturnPromiseStatus) => this.adapter.setState({ onOKReturnPromiseStatus }));
     };
 
     handleModalOk = (e: OE) => {
-        return this.#settleModal(this._adapter.notifyOk(e));
+        return this.#settleModal(this.adapter.notifyOk(e));
     };
 
     handleModalCancel = (e: CE) => {
-        return this.#settleModal(this._adapter.notifyCancel(e));
+        return this.#settleModal(this.adapter.notifyCancel(e));
     };
 }

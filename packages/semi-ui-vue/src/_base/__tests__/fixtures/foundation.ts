@@ -16,22 +16,22 @@ export default class FixtureFoundation extends BaseFoundation<Adapter, Props, St
     #count = 0;
 
     override init() {
-        document.addEventListener('fixture-event', () => this._adapter.notify('event'), { signal: this.signal });
-        this._adapter.notify(`init:${this.getState('value')}`);
+        document.addEventListener('fixture-event', () => this.adapter.notify('event'), { signal: this.signal });
+        this.adapter.notify(`init:${this.getState('value')}`);
     }
 
     override destroy() {
-        this._adapter.notify('destroy');
+        this.adapter.notify('destroy');
     }
 
     update() {
         this.#count++;
         const value = `${this.getProp('value')}:${this.getProps().suffix}:${this.#count}`;
-        this.setState({ value }, () => this._adapter.notify(`callback:${document.querySelector('[data-host]')?.textContent}`));
-        this._adapter.notify(`sync:${this.getState('value')}`);
+        this.setState({ value }, () => this.adapter.notify(`callback:${document.querySelector('[data-host]')?.textContent}`));
+        this.adapter.notify(`sync:${this.getState('value')}`);
     }
 
     repeat() {
-        this.setState({ value: this.getState('value') }, () => this._adapter.notify('repeat'));
+        this.setState({ value: this.getState('value') }, () => this.adapter.notify('repeat'));
     }
 }

@@ -15,10 +15,8 @@ export interface ToastListProps {
 /** Toasts of one list, shown at the end; `defaults` are the options of the static API that owns the list */
 export default class ToastListStore {
     #items = new ListStore<ToastInstance, 'list', ToastListState>('list', 'end', { list: [], removedItems: [], updatedItems: [], order: [], stack: 0 });
-
     // ToastFactory.create(config): resetConfig returns to this, not to the built-in options
     readonly #initialConfig: ConfigProps | undefined;
-
     defaults: ToastInstance;
 
     constructor(initialConfig?: ConfigProps) {

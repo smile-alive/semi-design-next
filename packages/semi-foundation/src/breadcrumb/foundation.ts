@@ -43,11 +43,11 @@ export default class BreadcrumbFoundation<P extends object = object, S extends o
     }
 
     handleClick = (info: BreadcrumbItemInfo, event: E) => {
-        this._adapter.notifyClick(info, event);
+        this.adapter.notifyClick(info, event);
     };
 
     handleExpand = (clickEvent: unknown) => {
-        this._adapter.expandCollapsed(clickEvent);
+        this.adapter.expandCollapsed(clickEvent);
     };
 
     handleExpandKeyDown = (keyboardEvent: Pick<KeyboardEvent, 'key' | 'target' | 'preventDefault'> & { currentTarget: Node }) => {

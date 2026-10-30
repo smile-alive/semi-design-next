@@ -119,7 +119,7 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
      */
     handleOpenChange = () => {
         const { isOpen, duration, collapseHeight, collapseHeightAdaptive } = this.getProps();
-        const wrapper = this._adapter.getWrapper();
+        const wrapper = this.adapter.getWrapper();
         if (!wrapper || !CollapsibleFoundation.hasMotion(this.getProps()) || CSS.supports('height', 'calc-size(auto, size)')) {
             return;
         }
@@ -167,9 +167,9 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
             return;
         }
         if (!this.getProp('isOpen')) {
-            this._adapter.setVisible(false);
+            this.adapter.setVisible(false);
         }
-        this._adapter.setIsTransitioning(false);
-        this._adapter.notifyMotionEnd();
+        this.adapter.setIsTransitioning(false);
+        this.adapter.notifyMotionEnd();
     };
 }

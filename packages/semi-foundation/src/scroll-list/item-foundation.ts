@@ -70,14 +70,14 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     #indexOf(node: Element | null) {
-        return Array.from(this._adapter.getListNode().children).indexOf(node);
+        return Array.from(this.adapter.getListNode().children).indexOf(node);
     }
 
     // Stays in the copy `refNode` is in, so a cycled column does not jump to another copy. A cycled wheel moves by the
     // shorter way round (11 -> 0 of 12 is one row down, not eleven up), which the copies on both sides make reachable.
     #getNodeByOffset(refNode: HTMLElement | null, offset: number) {
         const { list, cycled, mode } = this.getProps();
-        const listNode = this._adapter.getListNode();
+        const listNode = this.adapter.getListNode();
         if (isElement(refNode) && isElement(listNode) && Array.isArray(list) && list.length) {
             const sameCopyStep = offset % list.length;
             if (sameCopyStep) {
@@ -105,7 +105,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         if (this.getProps().mode !== wheelMode) {
             return;
         }
-        const listNode = this._adapter.getListNode();
+        const listNode = this.adapter.getListNode();
         const node = this.#getNearestNodeInfo().nearestNode || this.#selectedNode;
         if (isElement(node) && isElement(listNode)) {
             for (const child of Array.from(listNode.children)) {
@@ -126,7 +126,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     #scrollToPos(targetTop: number, duration: number) {
-        const wrapper = this._adapter.getScrollNode();
+        const wrapper = this.adapter.getScrollNode();
         // a selection queued by an earlier scroll is stale once the column is moved on purpose
         this.#select.cancel();
         if (duration && this.getProps().motion) {
@@ -150,12 +150,12 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
             return;
         }
         const itemHeight = node.offsetHeight || numbers.DEFAULT_ITEM_HEIGHT;
-        const targetTop = (node.offsetTop || (this._adapter.getListNode().children.length * itemHeight) / 2) - (this._adapter.getScrollNode().offsetHeight - itemHeight) / 2;
+        const targetTop = (node.offsetTop || (this.adapter.getListNode().children.length * itemHeight) / 2) - (this.adapter.getScrollNode().offsetHeight - itemHeight) / 2;
         this.#scrollToPos(targetTop, duration);
     }
 
     #scrollToCenter(node: HTMLElement) {
-        const wrapper = this._adapter.getScrollNode();
+        const wrapper = this.adapter.getScrollNode();
         if (isElement(node) && isElement(wrapper)) {
             const scrollRect = wrapper.getBoundingClientRect();
             const selectedRect = node.getBoundingClientRect();
@@ -170,7 +170,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         if ((cycled && mode === wheelMode) || this.#selectedNode?.isConnected) {
             return false;
         }
-        const node = this._adapter.getListNode().children[selectedIndex > -1 ? selectedIndex : 0] as HTMLElement | undefined;
+        const node = this.adapter.getListNode().children[selectedIndex > -1 ? selectedIndex : 0] as HTMLElement | undefined;
         this.#cacheSelectedNode(node);
         this.#cacheWillSelectNode(node);
         return Boolean(node);
@@ -178,7 +178,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     #selectNode(node: HTMLElement) {
         const { type, list: data, selectedIndex } = this.getProps();
-        const listNode = this._adapter.getListNode();
+        const listNode = this.adapter.getListNode();
         if (isElement(node) && isElement(listNode)) {
             const indexInList = Array.from(listNode.children).findIndex((ele) => ele === node);
             const indexInData = indexInList % data.length;
@@ -191,7 +191,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
             // Known limit: an owner that does not write selectedIndex back is notified again when the centring scroll
             // ends; give the column a controlled selectedIndex.
             if (indexInData !== selectedIndex % data.length) {
-                this._adapter.notifySelectItem({
+                this.adapter.notifySelectItem({
                     ...item,
                     value: item.value,
                     type,
@@ -203,8 +203,8 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     #initWheelList(callback: () => void) {
         const { list } = this.getProps();
-        const listNode = this._adapter.getListNode();
-        const wrapper = this._adapter.getScrollNode();
+        const listNode = this.adapter.getListNode();
+        const wrapper = this.adapter.getScrollNode();
         if (isElement(wrapper) && isElement(listNode) && list && list.length) {
             const prependCount = this.shouldPrepend(listNode, wrapper);
             const appendCount = this.shouldAppend(listNode, wrapper);
@@ -215,8 +215,8 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     #adjustInfiniteList() {
         const { list } = this.getProps();
-        const listNode = this._adapter.getListNode();
-        const wrapper = this._adapter.getScrollNode();
+        const listNode = this.adapter.getListNode();
+        const wrapper = this.adapter.getScrollNode();
         const nodeTag = 'li';
         if (isElement(wrapper) && isElement(listNode) && list && list.length) {
             const allNodes = listNode.querySelectorAll(nodeTag);
@@ -244,8 +244,8 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     #getNearestNodeInfo() {
-        const listNode = this._adapter.getListNode();
-        const selector = this._adapter.getSelectorNode();
+        const listNode = this.adapter.getListNode();
+        const selector = this.adapter.getSelectorNode();
         if (isElement(listNode) && isElement(selector)) {
             const selectorRect = selector.getBoundingClientRect();
             const selectorTop = selectorRect.top;
@@ -273,7 +273,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     #getTargetNode(e: Pick<Event, 'target'>) {
-        const listNode = this._adapter.getListNode();
+        const listNode = this.adapter.getListNode();
         if (e && isElement(listNode)) {
             const targetTagName = 'li';
             const currentTarget = e.target instanceof Node ? e.target : null;
@@ -376,7 +376,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     override init() {
         const { mode, cycled, selectedIndex } = this.getProps();
-        const selectedNode = this._adapter.getListNode().children[typeof selectedIndex === 'number' && selectedIndex > -1 ? selectedIndex : 0] as HTMLElement | undefined;
+        const selectedNode = this.adapter.getListNode().children[typeof selectedIndex === 'number' && selectedIndex > -1 ? selectedIndex : 0] as HTMLElement | undefined;
         this.#cacheSelectedNode(selectedNode);
         this.#cacheWillSelectNode(selectedNode);
         if (mode === wheelMode && cycled) {
@@ -414,21 +414,21 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         event.preventDefault();
         this.#select.cancel();
         if (target !== selectedIndex) {
-            this._adapter.notifySelectItem({ ...list[target], type, index: target });
+            this.adapter.notifySelectItem({ ...list[target], type, index: target });
         }
     };
 
     /** Click on an item in normal mode */
     selectIndex = (index: number) => {
         const { type, list } = this.getProps();
-        const listNode = this._adapter.getListNode();
+        const listNode = this.adapter.getListNode();
         if (index > -1 && Array.isArray(list) && list.length && isElement(listNode)) {
             const indexInData = index % list.length;
 
             const item = list[indexInData];
             this.#cacheWillSelectNode(listNode.children[index]);
             this.#select.cancel();
-            this._adapter.notifySelectItem({
+            this.adapter.notifySelectItem({
                 ...item,
                 value: item.value,
                 type,

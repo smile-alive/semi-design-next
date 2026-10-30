@@ -26,10 +26,10 @@ export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps, S e
         if (spinning && delay) {
             this.#timer = setTimeout(() => {
                 this.#timer = null;
-                this._adapter.setLoading(true);
+                this.adapter.setLoading(true);
             }, delay);
         } else {
-            this._adapter.setLoading(spinning);
+            this.adapter.setLoading(spinning);
         }
     };
 

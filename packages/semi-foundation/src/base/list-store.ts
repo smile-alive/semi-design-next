@@ -14,11 +14,8 @@ export interface ListStoreState<T> {
  */
 export default class ListStore<T extends { id?: string }, K extends string, S extends ListStoreState<T> & Record<K, T[]>> {
     #state: S;
-
     #listeners = new Set<() => void>();
-
     readonly #key: K;
-
     readonly #insertAt: 'start' | 'end';
 
     constructor(key: K, insertAt: 'start' | 'end', initialState: S) {

@@ -69,15 +69,15 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
     }
 
     #changeHover(hoverValue: number, clearedValue: number) {
-        this._adapter.setHover(hoverValue, clearedValue);
-        this._adapter.notifyHoverChange(hoverValue);
+        this.adapter.setHover(hoverValue, clearedValue);
+        this.adapter.notifyHoverChange(hoverValue);
     }
 
     #updateValue(value: number) {
-        if (!this._isControlledComponent()) {
-            this._adapter.setValue(value);
+        if (!this.isControlledComponent()) {
+            this.adapter.setValue(value);
         }
-        this._adapter.notifyChange(value);
+        this.adapter.notifyChange(value);
     }
 
     protected getStarValue(index: number, pos: number) {
@@ -86,11 +86,11 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         if (index === count) {
             return 0;
         }
-        const direction = this._adapter.getContext('direction');
+        const direction = this.adapter.getContext('direction');
         const reverse = direction === 'rtl';
         let value = index + 1;
         if (allowHalf) {
-            const starEle = this._adapter.getStarDOM(index);
+            const starEle = this.adapter.getStarDOM(index);
             if (!starEle) {
                 return value;
             }
@@ -182,13 +182,13 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         this.#initialized = true;
         const { autoFocus, disabled } = this.getProps();
         if (autoFocus && !disabled) {
-            this._adapter.focusStar(RatingFoundation.deriveValue(this.getProps(), this.getStates()));
+            this.adapter.focusStar(RatingFoundation.deriveValue(this.getProps(), this.getStates()));
         }
     }
 
     /** A value prop that goes back to undefined (a form reset) returns to defaultValue, like Slider (Switch and Checkbox become unchecked) */
     resetValue = () => {
-        this._adapter.setValue(this.getProps().defaultValue);
+        this.adapter.setValue(this.getProps().defaultValue);
     };
 
     handleHover = (event: Pick<MouseEvent, 'pageX'>, index: number) => {
@@ -216,14 +216,14 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         if (isReset) {
             this.#changeHover(undefined, newValue);
         } else {
-            this._adapter.setClearedValue(null);
+            this.adapter.setClearedValue(null);
         }
-        this._adapter.notifyClick(event, index);
+        this.adapter.notifyClick(event, index);
     };
 
     handleFocus = (e: FE) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-            this._adapter.notifyFocus(e);
+            this.adapter.notifyFocus(e);
         }
     };
 
@@ -231,14 +231,14 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
     handleStarFocus = (e: { target: Element }, index: number) => {
         // an arrow key moves focus between stars before the browser reports :focus-visible for the new one
         if (e.target.matches(':focus-visible') || this.getStates().focusVisibleStar !== undefined) {
-            this._adapter.setFocusVisibleStar(index);
+            this.adapter.setFocusVisibleStar(index);
         }
     };
 
     handleBlur = (e: FE) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-            this._adapter.notifyBlur(e);
-            this._adapter.setFocusVisibleStar(undefined);
+            this.adapter.notifyBlur(e);
+            this.adapter.setFocusVisibleStar(undefined);
         }
     };
 
@@ -249,7 +249,7 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         }
         const { key } = event;
         const { count, allowHalf } = this.getProps();
-        const direction = this._adapter.getContext('direction');
+        const direction = this.adapter.getContext('direction');
         const reverse = direction === 'rtl';
         const step = allowHalf ? 0.5 : 1;
         // a value between two radios (2.5 without allowHalf) moves to the adjacent radio
@@ -276,9 +276,9 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
             newValue = tempValue;
         }
         if (['ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowDown'].includes(key)) {
-            this._adapter.notifyKeyDown(event);
+            this.adapter.notifyKeyDown(event);
             this.#updateValue(newValue);
-            this._adapter.focusStar(newValue);
+            this.adapter.focusStar(newValue);
             event.preventDefault();
             this.#changeHover(undefined, null);
         }

@@ -35,20 +35,20 @@ class CounterFoundation extends BaseFoundation<CounterAdapter, CounterProps, Cou
     }
 
     override init() {
-        this._adapter.log('init');
+        this.adapter.log('init');
     }
 
     increment() {
-        this.setState({ count: this.getState('count') + 1 }, () => this._adapter.log(`callback ${document.querySelector('button').textContent}`));
-        this._adapter.log(`read ${this.getState('count')}`);
+        this.setState({ count: this.getState('count') + 1 }, () => this.adapter.log(`callback ${document.querySelector('button').textContent}`));
+        this.adapter.log(`read ${this.getState('count')}`);
     }
 
     reportLabel() {
-        this._adapter.log(`label ${this.getProp('label')}`);
+        this.adapter.log(`label ${this.getProp('label')}`);
     }
 
     override destroy() {
-        this._adapter.log('destroy');
+        this.adapter.log('destroy');
     }
 }
 

@@ -52,11 +52,9 @@ export interface PreviewImageBaseState {
 export default class PreviewImageFoundation<P extends PreviewImageBaseProps = PreviewImageBaseProps, S extends PreviewImageBaseState = PreviewImageBaseState> extends BaseFoundation<PreviewImageAdapter<P, S>, P, S> {
     #initialZoomApplied = false;
     #initialZoomAppliedSrc: any = undefined;
-
     #startMouseClientPosition = { x: 0, y: 0 };
     #originImageWidth = null;
     #originImageHeight = null;
-
     #containerWidth = 0;
     #containerHeight = 0;
 
@@ -74,7 +72,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
     }
 
     #getContainerBoundingRectSize() {
-        const containerDOM = this._adapter.getContainer();
+        const containerDOM = this.adapter.getContainer();
         if (containerDOM) {
             this.#containerWidth = containerDOM.clientWidth;
             this.#containerHeight = containerDOM.clientHeight;
@@ -83,7 +81,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
 
     #getAdaptationZoom() {
         let _zoom = 1;
-        const containerDOM = this._adapter.getContainer();
+        const containerDOM = this.adapter.getContainer();
 
         if (containerDOM && this.#originImageWidth && this.#originImageHeight) {
             const { rotation } = this.getProps();
@@ -115,7 +113,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
     }
 
     #setLoading(loading: boolean) {
-        this._adapter.setLoading(loading);
+        this.adapter.setLoading(loading);
     }
 
     #handleRatioChange() {
@@ -129,7 +127,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
 
         if (zoom !== _zoom) {
             // the new zoom comes back as a prop, and handlePropsUpdate applies it
-            this._adapter.requestZoom(_zoom, reportToUser);
+            this.adapter.requestZoom(_zoom, reportToUser);
         } else {
             this.#applyZoom(zoom);
         }
@@ -173,7 +171,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
     }
 
     #applyZoom(prevZoom: number, e?: WheelEvent) {
-        const imageDOM = this._adapter.getImage();
+        const imageDOM = this.adapter.getImage();
         const { translate, width, height } = this.getStates();
         const { rotation, zoom: newZoom } = this.getProps();
         const changeScale = newZoom / (prevZoom || 1);
@@ -226,7 +224,7 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
             const { canDragVertical, canDragHorizontal } = this.getCanDragDirection(newImageBound.width, newImageBound.height);
             const canDrag = canDragVertical || canDragHorizontal;
 
-            this._adapter.setImageCursor(canDrag);
+            this.adapter.setImageCursor(canDrag);
         }
     }
 
@@ -301,14 +299,14 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
             });
             this.#initializeImage(false);
         }
-        this._adapter.notifyLoad(this.getProp('src'));
+        this.adapter.notifyLoad(this.getProp('src'));
     };
 
     handleError = (_e: unknown) => {
         this.setState({
             loading: false,
         });
-        this._adapter.notifyError(this.getProp('src'));
+        this.adapter.notifyError(this.getProp('src'));
     };
 
     // A new src re-initializes on load, so a ratio or rotation reset arriving with it must not re-initialize (and
@@ -359,6 +357,6 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
             y: e.clientY,
         };
         // the drag keeps following a pointer that leaves the image
-        this._adapter.capturePointer(e.pointerId);
+        this.adapter.capturePointer(e.pointerId);
     };
 }

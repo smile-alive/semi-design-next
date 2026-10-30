@@ -90,16 +90,16 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
     #caretTail: string | undefined;
 
     #recordCaret() {
-        this.#caretTail = recordCaretTail(this._adapter.getInput());
+        this.#caretTail = recordCaretTail(this.adapter.getInput());
     }
 
     /** Puts the caret back in front of the text that followed it before the last change */
     #restoreCaret() {
-        restoreCaretTail(this._adapter.getInput(), this.#caretTail);
+        restoreCaretTail(this.adapter.getInput(), this.#caretTail);
     }
 
     #focusInput() {
-        const input = this._adapter.getInput();
+        const input = this.adapter.getInput();
         if (input && FocusTrapHandle.getActiveElement(input) !== input) {
             input.focus({ preventScroll: this.getProp('preventScroll') });
         }
@@ -122,13 +122,13 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
 
         if (!this.isControlled()) {
             if (isValidNumber) {
-                this._adapter.setNumber(parsed);
+                this.adapter.setNumber(parsed);
             }
-            this._adapter.setValue(v, updateCb);
+            this.adapter.setValue(v, updateCb);
         }
 
         if (this.getProp('keepFocus')) {
-            this._adapter.setFocusing(true, () => {
+            this.adapter.setFocusing(true, () => {
                 // refocusing fires handleInputFocus, which clears the step mark, so mark the step afterwards
                 if (this.#lastChangeWasStep && this.getState('focusing')) {
                     this.#focusInput();
@@ -300,9 +300,9 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         const value = direction > 0 ? this.add(null, event) : this.minus(null, event);
         this.#commitStep(value, event);
         if (direction > 0) {
-            this._adapter.notifyUpClick(value, event);
+            this.adapter.notifyUpClick(value, event);
         } else {
-            this._adapter.notifyDownClick(value, event);
+            this.adapter.notifyDownClick(value, event);
         }
     }
 
@@ -333,15 +333,15 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
 
     #notifyChange(value: string | number | null, e: unknown) {
         if (value == null || value === '') {
-            this._adapter.notifyChange('', e);
+            this.adapter.notifyChange('', e);
         } else {
             const parsedNum = this.toNumber(value, true);
 
             if (typeof parsedNum === 'number' && !isNaN(parsedNum)) {
-                this._adapter.notifyChange(parsedNum, e);
+                this.adapter.notifyChange(parsedNum, e);
                 this.#notifyNumberChange(parsedNum, e);
             } else {
-                this._adapter.notifyChange(this.afterParser(value), e);
+                this.adapter.notifyChange(this.afterParser(value), e);
             }
         }
     }
@@ -349,12 +349,12 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
     #notifyNumberChange(value: number, e: unknown) {
         const { number } = this.getStates();
         if (this.isValidNumber(value) && value !== number) {
-            this._adapter.notifyNumberChange(value, e);
+            this.adapter.notifyNumberChange(value, e);
         }
     }
 
     protected isControlled() {
-        return this._isControlledComponent('value');
+        return this.isControlledComponent('value');
     }
 
     protected isCurrency() {
@@ -599,15 +599,15 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
                     const parsedNum = typeof number === 'number' ? number : this.doParse(strVal, false, false, false);
                     if (!Number.isNaN(parsedNum)) {
                         const fullNumberStr = this.doFormat(parsedNum, true, false);
-                        this._adapter.setValue(fullNumberStr);
+                        this.adapter.setValue(fullNumberStr);
                     }
                 }
             }
         }
         this.#recordCaret();
-        this._adapter.setFocusing(true);
+        this.adapter.setFocusing(true);
         this.#lastChangeWasStep = false;
-        this._adapter.notifyFocus(e);
+        this.adapter.notifyFocus(e);
     };
 
     handleInputChange = (value: string, event: unknown) => {
@@ -653,17 +653,17 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         this.#notifyChange(notifyVal, event);
 
         if (!this.isControlled() && (num === null || (typeof num === 'number' && !isNaN(num)))) {
-            this._adapter.setNumber(num);
+            this.adapter.setNumber(num);
         }
 
-        this._adapter.setValue(this.isControlled() && !this.isCurrency() ? formattedNum : this.doFormat(valueAfterParser, false), () => {
+        this.adapter.setValue(this.isControlled() && !this.isCurrency() ? formattedNum : this.doFormat(valueAfterParser, false), () => {
             this.#restoreCaret();
         });
     };
 
     handleInputKeyDown = (event: KE) => {
         if (this.getProp('readonly')) {
-            this._adapter.notifyKeyDown(event);
+            this.adapter.notifyKeyDown(event);
             return;
         }
         // Alt, Ctrl and Meta combinations are browser or OS shortcuts (Ctrl+Home moves the caret, Cmd+ArrowUp scrolls)
@@ -688,7 +688,7 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
             event.preventDefault();
         }
 
-        this._adapter.notifyKeyDown(event);
+        this.adapter.notifyKeyDown(event);
     };
 
     handleInputBlur = (e: FE) => {
@@ -749,29 +749,29 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
                 }
 
                 if (willSetVal != null) {
-                    this._adapter.setValue(willSetVal);
+                    this.adapter.setValue(willSetVal);
                 }
 
                 if (willSetNum != null && !this.isControlled()) {
-                    this._adapter.setNumber(willSetNum);
+                    this.adapter.setNumber(willSetNum);
                 }
             }
         }
-        this._adapter.setFocusing(false);
-        this._adapter.notifyBlur(e);
+        this.adapter.setFocusing(false);
+        this.adapter.notifyBlur(e);
     };
 
     handleInputMouseEnter = () => {
-        this._adapter.setHovering(true);
+        this.adapter.setHovering(true);
     };
 
     handleInputMouseLeave = () => {
-        this._adapter.setHovering(false);
+        this.adapter.setHovering(false);
     };
 
     handleInputMouseMove = () => {
         if (!this.getState('hovering')) {
-            this._adapter.setHovering(true);
+            this.adapter.setHovering(true);
         }
     };
 

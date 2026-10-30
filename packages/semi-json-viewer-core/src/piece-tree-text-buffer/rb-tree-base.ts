@@ -7,7 +7,6 @@ export class TreeNode {
     left: TreeNode;
     right: TreeNode;
     color: NodeColor;
-
     piece: Piece;
     size_left: number;
     lf_left: number;

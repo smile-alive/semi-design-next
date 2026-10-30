@@ -352,12 +352,12 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
     // The crop box lives in the container's padding box; a root border shifts its viewport coordinates, so pointer
     // positions are converted here once.
     #readContainerSize(): ContainerData {
-        const container = this._adapter.getContainer();
+        const container = this.adapter.getContainer();
         return { width: container.clientWidth, height: container.clientHeight };
     }
 
     #toContainerPoint(clientX: number, clientY: number): Point {
-        const container = this._adapter.getContainer();
+        const container = this.adapter.getContainer();
         const rect = container.getBoundingClientRect();
         return { x: clientX - rect.left - container.clientLeft, y: clientY - rect.top - container.clientTop };
     }
@@ -802,7 +802,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             zoom: _zoom,
         });
 
-        this._adapter.notifyZoomChange(_zoom);
+        this.adapter.notifyZoomChange(_zoom);
     };
 
     updatePreview = () => {
@@ -921,7 +921,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         const { fill } = this.getProps();
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        const img = this._adapter.getImg();
+        const img = this.adapter.getImg();
 
         const angle = (rotate * Math.PI) / 180;
         const sine = Math.abs(Math.sin(angle));

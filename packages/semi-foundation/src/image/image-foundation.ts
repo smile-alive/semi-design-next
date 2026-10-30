@@ -37,8 +37,8 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
         if (!preview) {
             return;
         }
-        if (this._adapter.getIsInGroup()) {
-            this._adapter.openGroupPreview();
+        if (this.adapter.getIsInGroup()) {
+            this.adapter.openGroupPreview();
         } else {
             this.handlePreviewVisibleChange(true);
         }
@@ -54,24 +54,24 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
     };
 
     handleLoaded = (e: unknown) => {
-        this._adapter.notifyLoad(e);
-        this._adapter.setLoadStatus('success');
+        this.adapter.notifyLoad(e);
+        this.adapter.setLoadStatus('success');
     };
 
     handleError = (e: unknown) => {
-        this._adapter.notifyError(e);
-        this._adapter.setLoadStatus('error');
+        this.adapter.notifyError(e);
+        this.adapter.setLoadStatus('error');
     };
 
     handlePreviewVisibleChange = (newVisible: boolean) => {
         const { preview } = this.getProps();
         if (typeof preview === 'object' && preview !== null) {
-            this._adapter.notifyPreviewVisibleChange(newVisible);
+            this.adapter.notifyPreviewVisibleChange(newVisible);
             if (preview.visible === undefined) {
-                this._adapter.setPreviewVisible(newVisible);
+                this.adapter.setPreviewVisible(newVisible);
             }
         } else {
-            this._adapter.setPreviewVisible(newVisible);
+            this.adapter.setPreviewVisible(newVisible);
         }
     };
 }

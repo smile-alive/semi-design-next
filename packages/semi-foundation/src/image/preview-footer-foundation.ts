@@ -25,9 +25,9 @@ export default class PreviewFooterFoundation<P extends PreviewFooterBaseProps = 
     protected handleValueChange(value: number) {
         const { zoom } = this.getProps();
         if (value > zoom) {
-            this._adapter.notifyZoomIn(Number((value / 100).toFixed(2)));
+            this.adapter.notifyZoomIn(Number((value / 100).toFixed(2)));
         } else {
-            this._adapter.notifyZoomOut(Number((value / 100).toFixed(2)));
+            this.adapter.notifyZoomOut(Number((value / 100).toFixed(2)));
         }
     }
 
@@ -47,10 +47,10 @@ export default class PreviewFooterFoundation<P extends PreviewFooterBaseProps = 
     handleRatioClick = () => {
         const { ratio } = this.getProps();
         const type = ratio === 'adaptation' ? 'realSize' : 'adaptation';
-        this._adapter.notifyAdjustRatio(type);
+        this.adapter.notifyAdjustRatio(type);
     };
 
     handleRotate = (direction: RotateDirection) => {
-        this._adapter.notifyRotate(direction);
+        this.adapter.notifyRotate(direction);
     };
 }

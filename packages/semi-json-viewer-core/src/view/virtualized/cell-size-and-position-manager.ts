@@ -28,7 +28,6 @@ export class CellSizeAndPositionManager {
     #cellCount: number;
     #cellSizeGetter: CellSizeGetter;
     #estimatedCellSize: number;
-
     #lastMeasuredIndex = -1;
     #cellSizeAndPositionData: Record<number, SizeAndPositionData> = {};
 

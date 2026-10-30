@@ -40,19 +40,19 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
         const { checked, value } = evt.target;
         const newValue = checked ? [...prevValue, value] : prevValue.filter((item) => item !== value);
 
-        if (!this._isControlledComponent()) {
-            this._adapter.updateGroupValue(newValue);
+        if (!this.isControlledComponent()) {
+            this.adapter.updateGroupValue(newValue);
         }
-        this._adapter.notifyChange(newValue);
+        this.adapter.notifyChange(newValue);
     };
 
     handlePropValueChange = (newPropValue: unknown) => {
         if (Array.isArray(newPropValue)) {
-            this._adapter.updateGroupValue(newPropValue);
+            this.adapter.updateGroupValue(newPropValue);
         } else {
             // Form.CheckboxGroup reset
             if (typeof newPropValue === 'undefined') {
-                this._adapter.updateGroupValue([]);
+                this.adapter.updateGroupValue([]);
             }
             warning(true, 'Warning: [Semi CheckboxGroup] value should be an Array');
         }

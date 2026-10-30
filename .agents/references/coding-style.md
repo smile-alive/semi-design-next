@@ -46,7 +46,8 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
 ## 类成员
 
 - 私有状态、方法、访问器和静态成员一律用 `#name`，不用 TS `private`，不加 `_` 前缀。`pnpm lint:private` 在全仓拒绝 `private`。
-- TS 只用于 JS 表达不了的部分：类型、`protected`（子类共享，如 BaseFoundation 的 `_adapter`）、`abstract`、`readonly`、`implements`、`override`、泛型。不写 `public`，不用构造参数属性（由 lint 检查）。覆写基类成员（`init`、`destroy`、`render` 等）必须写 `override`（`noImplicitOverride`，`static` 写在 `override` 之前）；不留未使用的局部变量与导入（`noUnusedLocals`）。不留未使用的参数（`noUnusedParameters`，oxlint 的 `no-unused-vars` 同样检查）：内联回调删掉末尾不用的参数，排在已用参数前面、不用的参数加 `_` 前缀；导出函数、类方法、实现接口或覆写的方法只加 `_` 前缀，不删参数，以免改变对外签名；`forwardRef` 的渲染函数保留两个参数。
+- 要附在不归自己管的对象（第三方实例、DOM 节点）上的私有数据，放进模块内的 `WeakMap`，不往对象上挂属性。
+- TS 只用于 JS 表达不了的部分：类型、`protected`（子类共享，如 BaseFoundation 的 `adapter`，同样不加 `_` 前缀）、`abstract`、`readonly`、`implements`、`override`、泛型。不写 `public`，不用构造参数属性（由 lint 检查）。覆写基类成员（`init`、`destroy`、`render` 等）必须写 `override`（`noImplicitOverride`，`static` 写在 `override` 之前）；不留未使用的局部变量与导入（`noUnusedLocals`）。不留未使用的参数（`noUnusedParameters`，oxlint 的 `no-unused-vars` 同样检查）：内联回调删掉末尾不用的参数，排在已用参数前面、不用的参数加 `_` 前缀；导出函数、类方法、实现接口或覆写的方法只加 `_` 前缀，不删参数，以免改变对外签名；`forwardRef` 的渲染函数保留两个参数。
 - 成员顺序，由 `pnpm lint:class-order` 检查：
     - 索引签名、字段、构造函数、方法。箭头函数字段和 `debounce`、`throttle`、`.bind` 包装字段算方法。
     - 字段和方法内部各按 `#` 私有、`protected`、公开排列；同一可见性内 `static` 在前，其余保持原相对顺序。

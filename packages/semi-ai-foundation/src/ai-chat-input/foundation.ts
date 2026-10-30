@@ -69,7 +69,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     #mouseDownTarget: EventTarget | null = null;
 
     #updateScrollTop(kind: 'skill' | 'suggestion', index: number) {
-        const destNode = this._adapter.getOptionNode(kind, index);
+        const destNode = this.adapter.getOptionNode(kind, index);
         if (destNode) {
             centerInScroller(destNode, destNode.parentNode as HTMLElement);
         }
@@ -77,7 +77,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
 
     protected canSend() {
         const { attachments } = this.getStates();
-        const editor = this._adapter.getEditor();
+        const editor = this.adapter.getEditor();
         return AIChatInputFoundation.getCanSend(this.getProp('canSend'), editor?.getJSON?.(), attachments);
     }
 
@@ -102,9 +102,9 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             skill: skill,
             skillVisible: false,
         });
-        this._adapter.notifySkillChange(skill);
-        this._adapter.setContent(getSkillSlotString(skill));
-        this._adapter.focusEditor();
+        this.adapter.notifySkillChange(skill);
+        this.adapter.setContent(getSkillSlotString(skill));
+        this.adapter.focusEditor();
     };
 
     changeTemplateVisible = (value: boolean) => {
@@ -116,12 +116,12 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         if (this.getProps().uploadProps?.disabled) {
             return;
         }
-        this._adapter.manualUpload(files);
+        this.adapter.manualUpload(files);
     };
 
     handleSuggestionSelect = (suggestion: Suggestion) => {
-        this._adapter.setContent(typeof suggestion === 'string' ? suggestion : suggestion.content);
-        this._adapter.focusEditor();
+        this.adapter.setContent(typeof suggestion === 'string' ? suggestion : suggestion.content);
+        this.adapter.focusEditor();
     };
 
     // The upload list is custom UI, so removal mirrors Upload: beforeRemove, then onRemove, then onUploadChange
@@ -155,7 +155,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
                     URL.revokeObjectURL(url);
                 }
 
-                this._adapter.notifyUploadRemove(attachment.fileInstance, newAttachments, attachment);
+                this.adapter.notifyUploadRemove(attachment.fileInstance, newAttachments, attachment);
 
                 this.onUploadChange({
                     currentFile: attachment,
@@ -168,7 +168,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     };
 
     handleReferenceClick = (reference: Reference) => {
-        this._adapter.notifyReferenceClick(reference);
+        this.adapter.notifyReferenceClick(reference);
     };
 
     setActiveSuggestionIndex = (index: number) => {
@@ -186,7 +186,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         }
         const { skills, suggestions, skillHotKey } = this.getProps();
         const { skillVisible, suggestionVisible } = this.getStates();
-        const editor = this._adapter.getEditor();
+        const editor = this.adapter.getEditor();
         const oldValue = editor?.getText();
         const { activeSkillIndex, activeSuggestionIndex } = this.getStates();
         if (oldValue === '' && e.key === skillHotKey && skills && skills.length) {
@@ -231,7 +231,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     };
 
     onConfigureChange = (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => {
-        this._adapter.notifyConfigureChange(value, changedValue);
+        this.adapter.notifyConfigureChange(value, changedValue);
     };
 
     showSuggestionPanel = () => {
@@ -249,27 +249,27 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     };
 
     handleCreate = () => {
-        const json = this._adapter.getEditor()?.getJSON();
+        const json = this.adapter.getEditor()?.getJSON();
         // A default content that normalizes without a transaction never reaches handleContentChange
-        this._adapter.setTransformedContent(transformJSONResult(json, this.getProps().transformer));
+        this.adapter.setTransformedContent(transformJSONResult(json, this.getProps().transformer));
         this.setState({ content: json });
     };
 
     handleContentChange = (_content: string) => {
         const { transformer } = this.getProps();
         const { skill } = this.getStates();
-        const editor = this._adapter.getEditor();
+        const editor = this.adapter.getEditor();
         const jsonResult = editor.getJSON();
         const slotSkill = findSkillSlot(jsonResult);
         if (skill && !slotSkill) {
             this.setState({ skill: undefined, templateVisible: false });
-            this._adapter.notifySkillChange(undefined);
+            this.adapter.notifySkillChange(undefined);
         } else if (slotSkill && slotSkill.value !== skill?.value) {
             this.setState({ skill: slotSkill });
-            this._adapter.notifySkillChange(slotSkill);
+            this.adapter.notifySkillChange(slotSkill);
         }
         const finalResult = transformJSONResult(jsonResult, transformer);
-        this._adapter.notifyContentChange(finalResult);
+        this.adapter.notifyContentChange(finalResult);
         this.setState({
             content: jsonResult,
         });
@@ -277,8 +277,8 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
 
     onUploadChange = (props: any) => {
         const { fileList } = props;
-        this._adapter.notifyUploadChange(props);
-        this._adapter.notifyUploadPropsChange(props);
+        this.adapter.notifyUploadChange(props);
+        this.adapter.notifyUploadPropsChange(props);
         this.setState({
             attachments: fileList,
         });
@@ -286,7 +286,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
 
     setContentWhileSaveTool = (content: string) => {
         const { skill } = this.getStates();
-        this._adapter.setContent(skill ? `<p>${getSkillSlotString(skill)}${content}</p>` : `<p>${content}</p>`);
+        this.adapter.setContent(skill ? `<p>${getSkillSlotString(skill)}${content}</p>` : `<p>${content}</p>`);
     };
 
     handleGeneratingStart = () => {
@@ -297,15 +297,15 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         if (keepSkillAfterSend) {
             this.setContentWhileSaveTool('');
         } else {
-            this._adapter.clearContent();
+            this.adapter.clearContent();
         }
-        this._adapter.clearAttachments();
+        this.adapter.clearAttachments();
     };
 
     handleStopGenerate = () => {
         const { generating } = this.getProps();
         if (generating) {
-            this._adapter.notifyStopGenerate();
+            this.adapter.notifyStopGenerate();
         }
     };
 
@@ -319,7 +319,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         }
         const references = this.getProp('references');
         const { attachments } = this.getStates();
-        const editor = this._adapter.getEditor();
+        const editor = this.adapter.getEditor();
         let richTextResult = [];
         if (editor) {
             const json = editor.getJSON?.();
@@ -330,11 +330,11 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             skillVisible: false,
             suggestionVisible: false,
         });
-        this._adapter.notifyMessageSend({
+        this.adapter.notifyMessageSend({
             references,
             attachments,
             inputContents: richTextResult,
-            setup: this._adapter.getConfigureValue() ?? {},
+            setup: this.adapter.getConfigureValue() ?? {},
         });
     };
 
@@ -348,7 +348,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             // A drag-selection released outside the editor must not refocus it, which would lose the selection
             return;
         }
-        const richTextDiv = this._adapter.getRichTextDiv();
+        const richTextDiv = this.adapter.getRichTextDiv();
         if (richTextDiv && (richTextDiv === target || (target instanceof Node && richTextDiv.contains(target)))) {
             const { suggestions } = this.getProps();
             if (suggestions && suggestions.length > 0) {
@@ -361,11 +361,11 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             return;
         }
         // A control that took focus on mousedown (a Configure.Select) keeps it, or its open list would lose the keyboard
-        const active = this._adapter.getActiveElement();
+        const active = this.adapter.getActiveElement();
         if (active?.closest(`.${cssClasses.PREFIX}-footer-configure`)) {
             return;
         }
-        this._adapter.focusEditor();
+        this.adapter.focusEditor();
     };
 
     handleRichTextAreaKeyDown = (view: any, event: KeyboardEvent) => {
@@ -377,7 +377,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         if ((suggestionVisible || skillVisible) && ['ArrowUp', 'ArrowDown', 'Enter'].includes(event.key)) {
             return true;
         }
-        const editor = this._adapter.getEditor() ?? {};
+        const editor = this.adapter.getEditor() ?? {};
         const allowHotKeySend = editor.storage?.SemiAIChatInput?.allowHotKeySend;
         if (event.key === 'Enter' && (sendHotKey === strings.SEND_HOTKEY.ENTER ? !event.shiftKey : event.shiftKey) && allowHotKeySend) {
             this.handleSend();
@@ -390,7 +390,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             }
             // A new <p> instead of Tiptap's <br /> keeps the zero-width character logic working
             event.preventDefault();
-            const editor = this._adapter.getEditor();
+            const editor = this.adapter.getEditor();
             if (editor && editor.chain && editor.chain().splitBlock) {
                 editor.chain().focus().splitBlock().run();
             } else if (editor && editor.view) {
@@ -403,7 +403,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     };
 
     handleDeleteContent = ({ uniqueKey }: Content) => {
-        const editor = this._adapter.getEditor();
+        const editor = this.adapter.getEditor();
         // Nodes without the attribute also read undefined
         if (!editor || uniqueKey === undefined) return;
 
@@ -422,10 +422,10 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     };
 
     handleFocus = (event: unknown) => {
-        this._adapter.notifyFocus(event);
+        this.adapter.notifyFocus(event);
     };
 
     handleBlur = (event: unknown) => {
-        this._adapter.notifyBlur(event);
+        this.adapter.notifyBlur(event);
     };
 }

@@ -24,21 +24,17 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
     // lottie-web is large, so it loads lazily; one import is shared
     // and a failed one is dropped so the next caller retries
     static #pending: Promise<typeof lottie> | null = null;
-
     #animation: null | AnimationItem = null;
-
     // bumped by every load and by destroy: a load that finds it changed is stale
     #generation = 0;
-
     #lottieNotified = false;
-
     // WCAG 2.2.2: autoplay must not start for a user who asked the system for less motion
     #reducedMotion: MediaQueryList | null = null;
 
     #getLoadParams() {
         const params = this.getProp('params');
         return {
-            container: params.container ?? this._adapter.getContainer(),
+            container: params.container ?? this.adapter.getContainer(),
             renderer: 'svg',
             loop: true,
             autoplay: !this.#reducedMotion?.matches,
@@ -72,7 +68,7 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
             }
         } catch (error) {
             // load() is not awaited, so this would otherwise be an unhandled rejection
-            this._adapter.notifyLoadError(error);
+            this.adapter.notifyLoadError(error);
         }
     }
 

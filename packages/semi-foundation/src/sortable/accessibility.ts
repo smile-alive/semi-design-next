@@ -21,7 +21,6 @@ export class SortableAnnouncer {
     // dnd-kit reads `draggable` when it creates that element on the first registered handle, which may come after
     // `update`, so the object it holds is kept current
     readonly #instructions: { draggable: string };
-
     readonly plugin: ReturnType<typeof Accessibility.configure>;
 
     constructor(locale: SortableLocale, total: number) {

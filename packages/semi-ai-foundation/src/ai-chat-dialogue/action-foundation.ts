@@ -47,47 +47,47 @@ export default class DialogueActionFoundation<P extends DialogueActionBaseProps 
         }
         void copyText(text).then((copied) => {
             if (copied) {
-                this._adapter.toastCopySuccess();
-                this._adapter.notifyMessageCopy();
+                this.adapter.toastCopySuccess();
+                this.adapter.notifyMessageCopy();
             }
         });
     };
 
     resetMessage = () => {
-        this._adapter.notifyResetMessage();
+        this.adapter.notifyResetMessage();
     };
 
     likeMessage = () => {
-        this._adapter.notifyLikeMessage();
+        this.adapter.notifyLikeMessage();
     };
 
     dislikeMessage = () => {
-        this._adapter.notifyDislikeMessage();
+        this.adapter.notifyDislikeMessage();
     };
 
     shareMessage = () => {
-        this._adapter.notifyShareMessage();
+        this.adapter.notifyShareMessage();
     };
 
     editMessage = () => {
-        this._adapter.notifyEditMessage();
+        this.adapter.notifyEditMessage();
     };
 
     deleteMessage = () => {
-        this._adapter.notifyDeleteMessage();
+        this.adapter.notifyDeleteMessage();
         this.hideMoreDropdown();
     };
 
     showMoreDropdown = () => {
-        this._adapter.setVisible(true);
-        this._adapter.setShowAction(true);
+        this.adapter.setVisible(true);
+        this.adapter.setShowAction(true);
     };
 
     /** Closes the more menu: after a delete, or on a mousedown outside its trigger while it is open */
     hideMoreDropdown = () => {
-        this._adapter.setVisible(false);
+        this.adapter.setVisible(false);
         setTimeout(() => {
-            this._adapter.setShowAction(false);
+            this.adapter.setShowAction(false);
         }, 150);
     };
 }

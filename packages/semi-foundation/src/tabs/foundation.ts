@@ -65,7 +65,7 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
     #notifyChange(activeKey: string) {
         const { activeKey: stateActiveKey } = this.getStates();
         if (stateActiveKey !== activeKey) {
-            this._adapter.notifyChange(activeKey);
+            this.adapter.notifyChange(activeKey);
         }
     }
 
@@ -108,7 +108,7 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
     // Walks the full tab list, disabled tabs included: a disabled tab can hold focus, and the move must start from it
     #switchTabOnArrowPress(key: string, tab: HTMLElement, allTabs: HTMLElement[]) {
         const { preventScroll } = this.getProps();
-        const rtl = this._adapter.getContext('direction') === 'rtl';
+        const rtl = this.adapter.getContext('direction') === 'rtl';
         const step = { ArrowLeft: rtl ? 1 : -1, ArrowUp: -1, ArrowRight: rtl ? -1 : 1, ArrowDown: 1 }[key];
         const start = allTabs.indexOf(tab);
         for (let offset = 1; offset < allTabs.length; offset++) {
@@ -123,7 +123,7 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
     protected handleNewActiveKey(activeKey: string | null) {
         const { activeKey: stateActiveKey } = this.getStates();
         if (stateActiveKey !== activeKey) {
-            this._adapter.setNewActiveKey(activeKey);
+            this.adapter.setNewActiveKey(activeKey);
         }
     }
 
@@ -217,10 +217,10 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
 
     handleTabClick = (activeKey: string, event: E) => {
         this.#notifyChange(activeKey);
-        if (!this._isControlledComponent('activeKey')) {
+        if (!this.isControlledComponent('activeKey')) {
             this.handleNewActiveKey(activeKey);
         }
-        this._adapter.notifyTabClick(activeKey, event);
+        this.adapter.notifyTabClick(activeKey, event);
     };
 
     // dropping a controlled activeKey later continues from the synced state
@@ -232,7 +232,7 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
 
     // panes can leave after mount: an uncontrolled key no longer among them moves to the first enabled one
     handleTabPanesChange = (panes: ReadonlyArray<TabEntry>) => {
-        if (this._isControlledComponent('activeKey')) {
+        if (this.isControlledComponent('activeKey')) {
             return;
         }
         const { activeKey } = this.getStates();
@@ -242,7 +242,7 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
     };
 
     handleTabDelete = (tabKey: string) => {
-        this._adapter.notifyTabDelete(tabKey);
+        this.adapter.notifyTabDelete(tabKey);
     };
 
     handleKeyDown = (event: E & TabKeyEvent, itemKey: string, closable: boolean) => {

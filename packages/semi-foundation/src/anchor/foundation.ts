@@ -37,12 +37,11 @@ export interface AnchorBaseState {
 export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProps, S extends AnchorBaseState = AnchorBaseState, E = unknown> extends BaseFoundation<AnchorAdapter<P, S, E>, P, S> {
     #container: HTMLElement | Window | null = null;
     #slideBarTop: number | null = null;
-
     #throttledScroll = throttle(() => this.handleScroll(), 100);
     #debouncedScrollEnd = debounce(() => this.#handleClickLink(), 100);
 
     #bind() {
-        const container = this._adapter.getContainer();
+        const container = this.adapter.getContainer();
         this.#container = container;
         container.addEventListener('scroll', this.#throttledScroll);
         container.addEventListener('scroll', this.#debouncedScrollEnd);
@@ -58,7 +57,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         const { scrollMotion, targetOffset, scrollIntoViewOptions } = this.getProps();
         const behavior = scrollMotion ? 'smooth' : 'auto';
         if (link) {
-            const destNode = this._adapter.getContentNode(link);
+            const destNode = this.adapter.getContentNode(link);
             const scrollOpts: CustomBehaviorOptions<void> = {
                 block: 'start',
                 ...scrollIntoViewOptions,
@@ -84,15 +83,15 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     #handleClickLink() {
-        this._adapter.setState({ clickLink: false } as Pick<S, 'clickLink'>);
+        this.adapter.setState({ clickLink: false } as Pick<S, 'clickLink'>);
     }
 
     #goToLink(link: string, shouldNotify: boolean) {
-        const destNode = this._adapter.getContentNode(link);
-        const prevLink = this._adapter.getState('activeLink');
+        const destNode = this.adapter.getContentNode(link);
+        const prevLink = this.adapter.getState('activeLink');
         this.setActiveLink(link, prevLink, shouldNotify);
         if (destNode) {
-            this._adapter.setState({ clickLink: true } as Pick<S, 'clickLink'>, () => {
+            this.adapter.setState({ clickLink: true } as Pick<S, 'clickLink'>, () => {
                 this.#scrollIntoView(link);
                 // no scroll event fires when already in place, so end the click by time too
                 this.#debouncedScrollEnd();
@@ -101,21 +100,21 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     protected setActiveLink(link: string, prevLink: string, shouldNotify = true) {
-        const activeLink = this._adapter.getState('activeLink');
+        const activeLink = this.adapter.getState('activeLink');
         if (activeLink !== link) {
-            this._adapter.setState({ activeLink: link } as Pick<S, 'activeLink'>, this.syncSlideBar);
+            this.adapter.setState({ activeLink: link } as Pick<S, 'activeLink'>, this.syncSlideBar);
             if (shouldNotify) {
-                this._adapter.notifyChange(link, prevLink);
+                this.adapter.notifyChange(link, prevLink);
             }
         }
     }
 
     protected getLinksTop() {
-        const container = this._adapter.getContainer();
+        const container = this.adapter.getContainer();
         const containerTop = 'getBoundingClientRect' in container ? container.getBoundingClientRect().top : 0;
         const { offsetTop } = this.getProps();
         return this.getState('links').map((link) => {
-            const node = this._adapter.getContentNode(link);
+            const node = this.adapter.getContentNode(link);
             // a missing or exactly aligned target counts as far above the top, so it never wins as the active link
             return (node && node.getBoundingClientRect().top - containerTop - offsetTop) || -Infinity;
         });
@@ -182,7 +181,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
 
     /** Rebinds scroll listeners when `getContainer` returns a different node */
     handleContainerChange = () => {
-        if (this._adapter.getContainer() !== this.#container) {
+        if (this.adapter.getContainer() !== this.#container) {
             this.#unbind();
             this.#bind();
         }
@@ -191,27 +190,27 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     // Called after every commit, since links above the active one can move it unnoticed; an unchanged position sets no
     // state, so the call cannot re-render in a loop.
     syncSlideBar = () => {
-        const linkNode = this._adapter.getAnchorNode(`.${cssClasses.PREFIX}-link-title-active`);
+        const linkNode = this.adapter.getAnchorNode(`.${cssClasses.PREFIX}-link-title-active`);
         if (linkNode && linkNode.offsetTop !== this.#slideBarTop) {
             this.#slideBarTop = linkNode.offsetTop;
-            this._adapter.setState({ slideBarTop: `${this.#slideBarTop}px` } as Pick<S, 'slideBarTop'>);
+            this.adapter.setState({ slideBarTop: `${this.#slideBarTop}px` } as Pick<S, 'slideBarTop'>);
         }
     };
 
     addLink = (link: string) => {
-        this._adapter.setState({ links: [...this.getState('links'), link] } as Pick<S, 'links'>);
+        this.adapter.setState({ links: [...this.getState('links'), link] } as Pick<S, 'links'>);
     };
 
     removeLink = (link: string) => {
         const links = this.getState('links');
         const index = links.indexOf(link);
         if (index !== -1) {
-            this._adapter.setState({ links: links.toSpliced(index, 1) } as Pick<S, 'links'>);
+            this.adapter.setState({ links: links.toSpliced(index, 1) } as Pick<S, 'links'>);
         }
     };
 
     handleClick = (e: E, link: string) => {
         this.#goToLink(link, true);
-        this._adapter.notifyClick(e, link);
+        this.adapter.notifyClick(e, link);
     };
 }

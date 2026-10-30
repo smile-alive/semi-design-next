@@ -51,10 +51,10 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     }
 
     protected changeValue(value: string, e: unknown) {
-        if (!this._isControlledComponent()) {
-            this._adapter.setValue(value);
+        if (!this.isControlledComponent()) {
+            this.adapter.setValue(value);
         }
-        this._adapter.notifyChange(value, e);
+        this.adapter.notifyChange(value, e);
     }
 
     protected handleVisibleMaxLength(value: string) {
@@ -97,7 +97,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         let nextValue = value;
         // composing: state must still follow, controlled or not, so the element shows the composing text
         if (composition && this.#compositionEnter) {
-            this._adapter.setValue(nextValue);
+            this.adapter.setValue(nextValue);
             return;
         }
         if (!this.#compositionEnter) {
@@ -109,21 +109,21 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     handleCompositionStart = (e: CE) => {
         this.#compositionEnter = true;
         this.#composedSinceFocus = true;
-        this._adapter.notifyCompositionStart(e);
+        this.adapter.notifyCompositionStart(e);
     };
 
     handleCompositionEnd = (e: CE & Pick<Event, 'target'>) => {
         const { composition } = this.getProps();
         const value = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement ? e.target.value : '';
         this.#compositionEnter = false;
-        this._adapter.notifyCompositionEnd(e);
+        this.adapter.notifyCompositionEnd(e);
         if (composition) {
             const nextValue = this.getNextValue(value);
             this.changeValue(nextValue, e);
-            if (this._isControlledComponent()) {
+            if (this.isControlledComponent()) {
                 // the parent may reject the result; the value prop then does not change
                 // and nothing else resets the text
-                this._adapter.setValue(this.getProp('value'));
+                this.adapter.setValue(this.getProp('value'));
             }
             return;
         }
@@ -138,13 +138,13 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     };
 
     handleCompositionUpdate = (e: CE) => {
-        this._adapter.notifyCompositionUpdate(e);
+        this.adapter.notifyCompositionUpdate(e);
     };
 
     handleFocus = (e: unknown) => {
         const { value } = this.getStates();
         this.#composedSinceFocus = false;
-        this._adapter.toggleFocusing(true);
-        this._adapter.notifyFocus(value, e);
+        this.adapter.toggleFocusing(true);
+        this.adapter.notifyFocus(value, e);
     };
 }

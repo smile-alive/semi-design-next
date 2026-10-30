@@ -101,20 +101,20 @@ export default class PreviewFoundation<P extends PreviewBaseProps = PreviewBaseP
     };
 
     handleVisibleChange = (newVisible: boolean) => {
-        if (!this._isControlledComponent('visible')) {
+        if (!this.isControlledComponent('visible')) {
             this.setState({
                 visible: newVisible,
             });
         }
-        this._adapter.notifyVisibleChange(newVisible);
+        this.adapter.notifyVisibleChange(newVisible);
     };
 
     handleCurrentIndexChange = (index: number) => {
-        if (!this._isControlledComponent('currentIndex')) {
+        if (!this.isControlledComponent('currentIndex')) {
             this.setState({
                 currentIndex: index,
             });
         }
-        this._adapter.notifyChange(index);
+        this.adapter.notifyChange(index);
     };
 }

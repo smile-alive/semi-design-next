@@ -129,11 +129,11 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
 
         if (selectedOptionIndex === -1 && defaultActiveFirstOption) {
             if (focusIndex !== 0) {
-                this._adapter.updateFocusIndex(0);
+                this.adapter.updateFocusIndex(0);
             }
         } else {
             if (selectedOptionIndex !== focusIndex) {
-                this._adapter.updateFocusIndex(selectedOptionIndex);
+                this.adapter.updateFocusIndex(selectedOptionIndex);
             }
         }
     }
@@ -147,9 +147,9 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         const { focusIndex, options } = this.getStates();
         const visibleOptions = options.filter((item: StateOptionItem) => item.show);
         const index = getEnabledStepIndex(offset, focusIndex, visibleOptions.length, (i) => visibleOptions[i].disabled);
-        this._adapter.updateFocusIndex(index);
+        this.adapter.updateFocusIndex(index);
         if (index !== -1) {
-            this._adapter.updateScrollTop(index);
+            this.adapter.updateScrollTop(index);
         }
     }
 
@@ -181,8 +181,8 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
     }
 
     #openDropdown() {
-        this._adapter.toggleListVisible(true);
-        this._adapter.notifyDropdownVisibleChange(true);
+        this.adapter.toggleListVisible(true);
+        this.adapter.notifyDropdownVisibleChange(true);
         this.#modifyFocusIndexOnPanelOpen();
     }
 
@@ -191,8 +191,8 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         if (!this.getState('visible')) {
             return;
         }
-        this._adapter.toggleListVisible(false);
-        this._adapter.notifyDropdownVisibleChange(false);
+        this.adapter.toggleListVisible(false);
+        this.adapter.notifyDropdownVisibleChange(false);
     }
 
     #updateSelection(option: DataItem) {
@@ -200,14 +200,14 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         if (option) {
             selection.set(option.label, option);
         }
-        this._adapter.updateSelection(selection);
+        this.adapter.updateSelection(selection);
     }
 
     #notifySelect(option: DataItem) {
         if (this.#backwardLabelInValue()) {
-            this._adapter.notifySelect(option);
+            this.adapter.notifySelect(option);
         } else {
-            this._adapter.notifySelect(option.value);
+            this.adapter.notifySelect(option.value);
         }
     }
 
@@ -268,7 +268,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
             default:
                 break;
         }
-        this._adapter.notifyKeyDown(event);
+        this.adapter.notifyKeyDown(event);
     };
 
     /** Mousedown outside the input and dropdown while shown */
@@ -297,9 +297,9 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
     };
 
     handleSearch = (inputValue: string) => {
-        this._adapter.updateInputValue(inputValue);
-        this._adapter.notifySearch(inputValue);
-        this._adapter.notifyChange(inputValue);
+        this.adapter.updateInputValue(inputValue);
+        this.adapter.notifySearch(inputValue);
+        this.adapter.notifyChange(inputValue);
         this.#modifyFocusIndex(inputValue);
         if (!this.getState('visible')) {
             this.#openDropdown();
@@ -318,46 +318,46 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
             newInputValue = option.value;
         }
 
-        if (this._isControlledComponent()) {
+        if (this.isControlledComponent()) {
             this.#closeDropdown();
             this.#notifySelect(option);
         } else {
-            this._adapter.updateInputValue(newInputValue);
+            this.adapter.updateInputValue(newInputValue);
             this.#updateSelection(option);
             this.#notifySelect(option);
             this.#closeDropdown();
         }
-        this._adapter.notifyChange(newInputValue);
-        this._adapter.updateFocusIndex(optionIndex);
+        this.adapter.notifyChange(newInputValue);
+        this.adapter.updateFocusIndex(optionIndex);
     };
 
     handleDataChange = (newData: any[]) => {
         const options = AutoCompleteFoundation.#generateList(newData);
-        this._adapter.updateOptionList(options);
+        this.adapter.updateOptionList(options);
         let { inputValue } = this.getStates();
         this.#modifyFocusIndex(inputValue);
     };
 
     handleValueChange = (selectedValue: AutoCompleteBaseProps['value']) => {
         const { inputValue, selection, focusIndex } = AutoCompleteFoundation.#valueStates(this.getProps(), selectedValue);
-        this._adapter.updateInputValue(inputValue);
-        this._adapter.updateSelection(selection);
-        this._adapter.updateFocusIndex(focusIndex);
+        this.adapter.updateInputValue(inputValue);
+        this.adapter.updateSelection(selection);
+        this.adapter.updateFocusIndex(focusIndex);
     };
 
     handleClear = () => {
-        this._adapter.notifyClear();
+        this.adapter.notifyClear();
     };
 
     handleOptionMouseEnter = (optionIndex: number) => {
-        this._adapter.updateFocusIndex(optionIndex);
+        this.adapter.updateFocusIndex(optionIndex);
     };
 
     handleFocus = (e: FE) => {
-        this._adapter.notifyFocus(e);
+        this.adapter.notifyFocus(e);
     };
 
     handleBlur = (e: FE) => {
-        this._adapter.notifyBlur(e);
+        this.adapter.notifyBlur(e);
     };
 }

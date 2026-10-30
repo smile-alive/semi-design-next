@@ -17,12 +17,9 @@ export interface AutoCloseAdapter<P extends AutoCloseBaseProps = AutoCloseBasePr
 /** Closes a toast or notice after `duration`; the list pauses the countdown on hover and restarts it after */
 export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoCloseBaseProps, S = Record<string, never>> extends BaseFoundation<AutoCloseAdapter<P, S>, P, S> {
     #timer: ReturnType<typeof setTimeout> | null = null;
-
     #id: string | null = null;
-
     // an update while hovered must not start the countdown the hover paused
     #paused = false;
-
     // removed from outside: hover/focus ending during the leave animation must not restart the countdown
     #leaving = false;
 
@@ -66,7 +63,7 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         if (this.#leaving) {
             return;
         }
-        this._adapter.notifyCloseClick?.(this.#id);
+        this.adapter.notifyCloseClick?.(this.#id);
         this.close();
     };
 
@@ -78,8 +75,8 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         }
         this.#leaving = true;
         this.clearCloseTimer();
-        this._adapter.notifyWrapperToRemove(this.#id);
-        this._adapter.notifyClose();
+        this.adapter.notifyWrapperToRemove(this.#id);
+        this.adapter.notifyClose();
     };
 
     clearCloseTimer() {

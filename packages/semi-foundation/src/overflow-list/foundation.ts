@@ -82,7 +82,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         const { items, itemKey } = this.getProps();
         const scrollOverflow = computeScrollOverflow(items, itemKey, nextVisibleState);
         if (scrollOverflow) {
-            this._adapter.updateView({ scrollOverflow });
+            this.adapter.updateView({ scrollOverflow });
         }
     }
 
@@ -90,7 +90,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
     #notifyOverflow(overflow: Array<Record<string, any>>) {
         if (!isEqual(this.#notifiedOverflow, overflow)) {
             this.#notifiedOverflow = overflow;
-            this._adapter.notifyOverflow(overflow);
+            this.adapter.notifyOverflow(overflow);
         }
     }
 
@@ -202,9 +202,9 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
             return;
         }
         this.#previousY = currentY;
-        this._adapter.updateVisibleState(visibleState);
+        this.adapter.updateVisibleState(visibleState);
         this.#syncScrollOverflowCache(visibleState);
-        this._adapter.notifyIntersect(res);
+        this.adapter.notifyIntersect(res);
     };
 
     handleCollapseOverflow = () => {
@@ -216,7 +216,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         let overflowed = false;
         // nothing is measured, so the loop below cannot settle the list and it would stay hidden
         if (items.length === 0) {
-            this._adapter.updateView({ overflowStatus: 'normal', pivot: -1, visible: items, overflow: [] });
+            this.adapter.updateView({ overflowStatus: 'normal', pivot: -1, visible: items, overflow: [] });
             this.#notifyOverflow([]);
             return;
         }
@@ -236,7 +236,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
                 break;
             }
             if (isLast) {
-                this._adapter.updateView({
+                this.adapter.updateView({
                     overflowStatus: 'normal',
                     pivot: items.length - 1,
                     visible: items,
@@ -252,7 +252,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
             const isCollapseFromStart = collapseFrom === Boundary.START;
             const visible = isCollapseFromStart ? this.getReversedItems().slice(0, pivot).toReversed() : items.slice(0, pivot);
             const overflow = isCollapseFromStart ? this.getReversedItems().slice(pivot).toReversed() : items.slice(pivot);
-            this._adapter.updateView({
+            this.adapter.updateView({
                 overflowStatus: 'overflowed',
                 pivot: pivot,
                 visible,

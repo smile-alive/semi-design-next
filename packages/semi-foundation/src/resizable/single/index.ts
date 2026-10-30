@@ -51,20 +51,16 @@ export interface AriaRange {
 
 export class ResizableFoundation<P extends ResizableBaseProps = ResizableBaseProps, S extends ResizableBaseState = ResizableBaseState> extends BaseFoundation<ResizableAdapter<P, S>, P, S> {
     #flexDirection?: 'row' | 'column';
-
     #lockAspectRatio = 1;
     // a key press ends before the host lays out the new size, so the end callback cannot read the DOM
     #changedSize: NumberSize | null = null;
     #resizable: HTMLElement | null = null;
-
     #parentLeft = 0;
     #parentTop = 0;
-
     #boundaryLeft = 0;
     #boundaryRight = 0;
     #boundaryTop = 0;
     #boundaryBottom = 0;
-
     #targetLeft = 0;
     #targetTop = 0;
 
@@ -397,7 +393,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
         if (hasChanges) {
             this.setState(newState);
 
-            this._adapter.notifyChange({ width: newState.width, height: newState.height }, event, direction);
+            this.adapter.notifyChange({ width: newState.width, height: newState.height }, event, direction);
             this.#restoreControlledSize();
         }
     }
@@ -422,7 +418,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
             return;
         }
 
-        this._adapter.notifyResizeEnd(endSize, event, direction);
+        this.adapter.notifyResizeEnd(endSize, event, direction);
 
         this.#restoreControlledSize();
 
@@ -440,7 +436,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
     }
 
     #beginResize(e: PointerEvent | KeyboardEvent, direction: Direction, { clientX, clientY }: { clientX: number; clientY: number }) {
-        this.#resizable = this._adapter.getResizable();
+        this.#resizable = this.adapter.getResizable();
         if (!this.#resizable || !this.#window) {
             return false;
         }
@@ -448,7 +444,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
         const props = this.getProps();
         const states = this.getStates();
 
-        if (this._adapter.notifyResizeStart(e, direction) === false) {
+        if (this.adapter.notifyResizeStart(e, direction) === false) {
             return false;
         }
 
@@ -535,7 +531,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
         if (this.getStates().isResizing) {
             return;
         }
-        this.#resizable = this._adapter.getResizable();
+        this.#resizable = this.adapter.getResizable();
         if (!this.#resizable || !this.#window) {
             return;
         }

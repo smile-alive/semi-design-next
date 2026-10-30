@@ -58,7 +58,7 @@ const MONTHS = Array.from({ length: 12 }, (_v, idx) => idx + 1);
 
 export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthAdapter, YearAndMonthFoundationProps, Record<string, never>> {
     #autoSelectMonth(item: YearScrollItem, panelType: PanelType, year: { left: number; right: number }, currentMonth: { left: number; right: number }) {
-        const { disabledDate } = this._adapter.getProps();
+        const { disabledDate } = this.adapter.getProps();
 
         const oppositeType = panelType === strings.PANEL_TYPE_LEFT ? 'right' : 'left';
 
@@ -84,7 +84,7 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
             finalYear = { left: item.year, right: item.year };
             finalMonth = { left: currentMonth[panelType], right: currentMonth[panelType] };
         }
-        this._adapter.notifySelect({ currentYear: finalYear, currentMonth: finalMonth });
+        this.adapter.notifySelect({ currentYear: finalYear, currentMonth: finalMonth });
     }
 
     /** The shown year and month of both panels; the props win on every render */
@@ -139,7 +139,7 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
             }
         }
 
-        this._adapter.notifySelect({ currentMonth, currentYear: year });
+        this.adapter.notifySelect({ currentMonth, currentYear: year });
         if (type !== 'year') {
             this.#autoSelectMonth(item, panelType, year, currentMonth);
         }
@@ -158,10 +158,10 @@ export default class YearAndMonthFoundation extends BaseFoundation<YearAndMonthA
             month[right] = item.month;
         }
 
-        this._adapter.notifySelect({ currentYear, currentMonth: month });
+        this.adapter.notifySelect({ currentYear, currentMonth: month });
     };
 
     backToMain = () => {
-        this._adapter.notifyBackToMain();
+        this.adapter.notifyBackToMain();
     };
 }

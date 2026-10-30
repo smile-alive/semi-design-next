@@ -48,8 +48,8 @@ export default class BreadcrumbItemFoundation<P extends object = object, S exten
     }
 
     handleClick = (item: BreadcrumbItemInfo, e: E) => {
-        this._adapter.notifyClick(item, e);
-        this._adapter.notifyParent(item, e);
+        this.adapter.notifyClick(item, e);
+        this.adapter.notifyParent(item, e);
     };
 
     /** Enter goes through a real click so handlers keep receiving a MouseEvent */

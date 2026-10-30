@@ -58,81 +58,81 @@ export default class InputFoundation<P extends InputBaseProps = InputBaseProps, 
         this.#initialized = true;
         const { disabled, autoFocus, autofocus } = this.getProps();
         if (!disabled && (autoFocus || autofocus)) {
-            this._adapter.focusInput();
+            this.adapter.focusInput();
         }
     }
 
     handleValueChange = (value: string | number) => {
-        this._adapter.setState({ value, cachedValue: value });
+        this.adapter.setState({ value, cachedValue: value });
     };
 
     handleClear = (e: unknown) => {
         const value = '';
-        if (!this._isControlledComponent('value')) {
-            this._adapter.setValue(value);
+        if (!this.isControlledComponent('value')) {
+            this.adapter.setValue(value);
         }
 
         // the flag is read by DateInput; the event object itself is marked so every callback sees it
         const eventObj = Object.assign(typeof e === 'object' && e !== null ? e : {}, { [strings.CLEARBTN_CLICKED_EVENT_FLAG]: true });
 
-        this._adapter.notifyChange(value, eventObj);
-        this._adapter.notifyClear(eventObj);
+        this.adapter.notifyChange(value, eventObj);
+        this.adapter.notifyClear(eventObj);
     };
 
     handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
-        const { disabled } = this._adapter.getProps();
-        const { isFocus } = this._adapter.getStates();
+        const { disabled } = this.adapter.getProps();
+        const { isFocus } = this.adapter.getStates();
         if (disabled || isFocus) {
             return;
         }
-        if (this._adapter.isEventTarget(e)) {
-            this._adapter.focusInput();
-            this._adapter.toggleFocusing(true);
+        if (this.adapter.isEventTarget(e)) {
+            this.adapter.focusInput();
+            this.adapter.toggleFocusing(true);
         }
     };
 
     handleModeChange = (mode: string) => {
         if (mode === 'password') {
-            this._adapter.setEyeClosed(true);
+            this.adapter.setEyeClosed(true);
         } else {
-            this._adapter.setEyeClosed(false);
+            this.adapter.setEyeClosed(false);
         }
     };
 
     handleClickEye = () => {
-        const eyeClosed = this._adapter.getState('eyeClosed');
-        this._adapter.focusInput();
-        this._adapter.toggleFocusing(true);
-        this._adapter.setEyeClosed(!eyeClosed);
+        const eyeClosed = this.adapter.getState('eyeClosed');
+        this.adapter.focusInput();
+        this.adapter.toggleFocusing(true);
+        this.adapter.setEyeClosed(!eyeClosed);
     };
 
     handleBlur = (e: unknown) => {
         const { value } = this.getStates();
-        this._adapter.toggleFocusing(false);
-        this._adapter.notifyBlur(value, e);
+        this.adapter.toggleFocusing(false);
+        this.adapter.notifyBlur(value, e);
     };
 
     handleInput = (e: IE) => {
-        this._adapter.notifyInput(e);
+        this.adapter.notifyInput(e);
     };
 
     handleKeyDown = (e: KE) => {
-        this._adapter.notifyKeyDown(e);
+        this.adapter.notifyKeyDown(e);
         if (e.key === ENTER_KEY && !isComposing(e)) {
-            this._adapter.notifyEnterPress(e);
+            this.adapter.notifyEnterPress(e);
         }
     };
 
     handleKeyUp = (e: KE) => {
-        this._adapter.notifyKeyUp(e);
+        this.adapter.notifyKeyUp(e);
     };
 
     handleClickPrefixOrSuffix = () => {
-        const { disabled } = this._adapter.getProps();
-        const { isFocus } = this._adapter.getStates();
+        const { disabled } = this.adapter.getProps();
+        const { isFocus } = this.adapter.getStates();
         if (!disabled && !isFocus) {
-            this._adapter.focusInput();
-            this._adapter.toggleFocusing(true);
+            this.adapter.focusInput();
+            this.adapter.toggleFocusing(true);
         }
     };
 }

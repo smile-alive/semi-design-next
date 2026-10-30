@@ -30,7 +30,12 @@ const builtInDefaults: NoticeInstance & Pick<ConfigProps, 'top' | 'bottom' | 'le
 
 /** Notices of one list, newest first; `defaults` are the options of the static API that owns the list */
 export default class NotificationListStore {
-    #items = new ListStore<NoticeInstance, 'notices', NotificationListState>('notices', 'start', { notices: [], removedItems: [], updatedItems: [], order: [] });
+    #items = new ListStore<NoticeInstance, 'notices', NotificationListState>('notices', 'start', {
+        notices: [],
+        removedItems: [],
+        updatedItems: [],
+        order: [],
+    });
 
     defaults = { ...builtInDefaults };
 

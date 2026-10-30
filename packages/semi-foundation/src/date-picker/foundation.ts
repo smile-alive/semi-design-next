@@ -236,7 +236,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     #initialized = false;
 
     #setRangeInputFocus(rangeInputFocus: RangeInput | false) {
-        this._adapter.setRangeInputFocus(rangeInputFocus);
+        this.adapter.setRangeInputFocus(rangeInputFocus);
         if (rangeInputFocus) {
             this.#recordFocusLater(rangeInputFocus);
         }
@@ -285,7 +285,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     }
 
     #parseValue(value: BaseValueType) {
-        const dateFnsLocale = this._adapter.getProp('dateFnsLocale');
+        const dateFnsLocale = this.adapter.getProp('dateFnsLocale');
         let dateObj: Date;
         if (isValidDate(value)) {
             dateObj = value as Date;
@@ -317,11 +317,11 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             }
 
             const changedDates = this.#getChangedDates(_value);
-            if (!this._isControlledComponent() && !this.#someDateDisabled(changedDates, _value) && !this.#needConfirm() && this.#isValueCommittable(_value)) {
-                this._adapter.updateValue(_value);
+            if (!this.isControlledComponent() && !this.#someDateDisabled(changedDates, _value) && !this.#needConfirm() && this.#isValueCommittable(_value)) {
+                this.adapter.updateValue(_value);
             }
         }
-        this._adapter.updateInputValue(input);
+        this.adapter.updateInputValue(input);
     }
 
     #isValueCommittable(value: Date[]) {
@@ -334,12 +334,12 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             return;
         }
         const { notifyValue, notifyDate } = this.disposeCallbackArgs(value);
-        this._adapter.notifyChange(notifyDate, notifyValue);
+        this.adapter.notifyChange(notifyDate, notifyValue);
     }
 
     #getChangedDates(dates: Date[]) {
-        const type = this._adapter.getProp('type');
-        const { cachedSelectedValue: lastDate } = this._adapter.getStates();
+        const type = this.adapter.getProp('type');
+        const { cachedSelectedValue: lastDate } = this.adapter.getStates();
         const changedDates = [];
 
         switch (type) {
@@ -427,7 +427,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
 
     // undefined: neither value nor defaultValue is given, so there is nothing to resolve
     #getInitialValue() {
-        return this._isControlledComponent() ? this.getProp('value') : this.getProp('defaultValue');
+        return this.isControlledComponent() ? this.getProp('value') : this.getProp('defaultValue');
     }
 
     #resolveValue(value: DatePickerFoundationProps['value'], timeZone: string | number, prevTimeZone?: string | number) {
@@ -436,24 +436,24 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     }
 
     #initPanelOpenStatus(defaultOpen?: boolean) {
-        this._adapter.togglePanel(Boolean((this.getProp('open') || defaultOpen) && !this.getProp('disabled')));
+        this.adapter.togglePanel(Boolean((this.getProp('open') || defaultOpen) && !this.getProp('disabled')));
     }
 
     // A click on the trigger of a shown panel is no request to open it
     #openPanel() {
         if (!this.getProp('disabled') && !this.#isPanelShown()) {
-            if (!this._isControlledComponent('open')) {
+            if (!this.isControlledComponent('open')) {
                 this.open();
             }
-            this._adapter.notifyOpenChange(true);
+            this.adapter.notifyOpenChange(true);
         }
     }
 
     #resetCachedSelectedValue(willUpdateDates?: Date[]) {
-        const { value, cachedSelectedValue } = this._adapter.getStates();
+        const { value, cachedSelectedValue } = this.adapter.getStates();
         const newCachedSelectedValue = Array.isArray(willUpdateDates) ? willUpdateDates : value;
         if (!isEqual(newCachedSelectedValue, cachedSelectedValue)) {
-            this._adapter.updateCachedSelectedValue(newCachedSelectedValue);
+            this.adapter.updateCachedSelectedValue(newCachedSelectedValue);
         }
     }
 
@@ -465,12 +465,12 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
 
     #resetFocus(e?: MouseEvent) {
         this.#setRangeInputFocus(false);
-        this._adapter.notifyBlur(e);
+        this.adapter.notifyBlur(e);
     }
 
     #clearInputValue() {
-        this._adapter.updateInputValue(null);
-        this._adapter.updateInsetInputValue(null);
+        this.adapter.updateInputValue(null);
+        this.adapter.updateInsetInputValue(null);
     }
 
     /**
@@ -706,7 +706,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     }
 
     protected localeFormat(date: Date, token: string) {
-        const dateFnsLocale = this._adapter.getProp('dateFnsLocale');
+        const dateFnsLocale = this.adapter.getProp('dateFnsLocale');
         return format(date, token, { locale: dateFnsLocale });
     }
 
@@ -795,20 +795,20 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
 
     initFromProps = ({ value, timeZone, prevTimeZone }: Pick<DatePickerFoundationProps, 'value' | 'timeZone'> & { prevTimeZone?: string | number }) => {
         const result = this.#resolveValue(value, timeZone, prevTimeZone);
-        this._adapter.updatePrevTimezone(prevTimeZone);
+        this.adapter.updatePrevTimezone(prevTimeZone);
         this.#clearInputValue();
-        this._adapter.updateValue(result);
+        this.adapter.updateValue(result);
         this.#resetCachedSelectedValue(result);
         this.#initRangeInputFocus(result);
 
         if (this.#needConfirm()) {
-            this._adapter.updateCachedSelectedValue(result);
+            this.adapter.updateCachedSelectedValue(result);
         }
     };
 
     /** Called for a mousedown outside the trigger and the panel while the panel is shown */
     handleClickOutside = (e: MouseEvent) => {
-        this._adapter.notifyClickOutSide(e);
+        this.adapter.notifyClickOutSide(e);
         // with needConfirm only the confirm and cancel buttons close the panel
         if (!this.#needConfirm()) {
             this.closePanel(e);
@@ -820,27 +820,27 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         // APG date picker dialog: keyboard focus inside the closing panel (the day grid, a time list) returns to the
         // input, or to a custom trigger, instead of falling to the body. A click keeps the old behavior, because
         // returning focus would fire the input's onFocus, which some pages use to reopen the panel.
-        if (this._adapter.isKeyboardFocusInPanel()) {
+        if (this.adapter.isKeyboardFocusInPanel()) {
             if (typeof this.getProp('triggerRender') === 'function') {
-                this._adapter.setTriggerFocus();
+                this.adapter.setTriggerFocus();
             } else if (this.getProp('insetInput')) {
                 // the trigger input is disabled while the panel is open, so it takes the focus only once enabled
-                this._adapter.setTriggerDisabled(false, () => this._adapter.setTriggerFocus());
+                this.adapter.setTriggerDisabled(false, () => this.adapter.setTriggerFocus());
             } else {
                 this.focus(this.getState('rangeInputFocus') || undefined);
             }
         }
-        if (!this._isControlledComponent('open')) {
+        if (!this.isControlledComponent('open')) {
             this.close(e);
         } else {
             this.#resetInnerSelectedStates(e);
         }
-        this._adapter.notifyOpenChange(false);
+        this.adapter.notifyOpenChange(false);
     }
 
     open = () => {
         this.#restartFocusRecords();
-        this._adapter.togglePanel(true);
+        this.adapter.togglePanel(true);
     };
 
     /** The controlled `open` turned true: starts what an uncontrolled open would */
@@ -858,21 +858,21 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     };
 
     close = (e?: MouseEvent) => {
-        this._adapter.togglePanel(false);
+        this.adapter.togglePanel(false);
         this.#clearFocusRecords();
         this.#resetInnerSelectedStates(e);
     };
 
     /** Closes the panel without a blur or a returned focus, as when a Vue KeepAlive deactivates the host */
     deactivate = () => {
-        if (!this._isControlledComponent('open')) {
-            this._adapter.togglePanel(false);
+        if (!this.isControlledComponent('open')) {
+            this.adapter.togglePanel(false);
             this.#clearFocusRecords();
         }
         this.#resetCachedSelectedValue();
         this.#setRangeInputFocus(false);
         this.#clearInputValue();
-        this._adapter.notifyOpenChange(false);
+        this.adapter.notifyOpenChange(false);
     };
 
     override destroy() {
@@ -883,18 +883,18 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     // a closed inset picker focuses its trigger inputs like any other
     focus = (focusType?: RangeInput) => {
         if (typeof this.getProp('triggerRender') === 'function') {
-            this._adapter.setTriggerFocus();
+            this.adapter.setTriggerFocus();
         } else if (this.#hasTwoInputs()) {
             this.#setRangeInputFocus(focusType ?? 'rangeStart');
         } else if (this.getProp('insetInput') && this.#isPanelShown()) {
-            this._adapter.setInsetInputFocus();
+            this.adapter.setInsetInputFocus();
         } else {
-            this._adapter.setInputFocus();
+            this.adapter.setInputFocus();
         }
     };
 
     blur = () => {
-        this._adapter.blurFocusedElement();
+        this.adapter.blurFocusedElement();
         if (this.#isRangeType()) {
             this.#setRangeInputFocus(false);
         }
@@ -904,8 +904,8 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     handleControlledClose = () => {
         this.#clearFocusRecords();
         // github 1375
-        const { type } = this._adapter.getProps();
-        const { rangeInputFocus } = this._adapter.getStates();
+        const { type } = this.adapter.getProps();
+        const { rangeInputFocus } = this.adapter.getStates();
         if (type === 'dateTimeRange' && rangeInputFocus) {
             this.#setRangeInputFocus(false);
         }
@@ -923,7 +923,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.#updateCachedSelectedValueFromInput(input);
         if ((result && result.length) || input === '') {
             const fromClearButton = typeof e === 'object' && e !== null && inputStrings.CLEARBTN_CLICKED_EVENT_FLAG in e && e[inputStrings.CLEARBTN_CLICKED_EVENT_FLAG];
-            if (fromClearButton && this._isControlledComponent('value')) {
+            if (fromClearButton && this.isControlledComponent('value')) {
                 this.#notifyChange(result);
                 return;
             }
@@ -935,7 +935,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                 }
             }
         } else {
-            this._adapter.updateInputValue(input);
+            this.adapter.updateInputValue(input);
         }
     };
 
@@ -952,16 +952,16 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             const changedDates = this.#getChangedDates(result);
             if (!this.#someDateDisabled(changedDates, result)) {
                 if (!isEqual(result, stateValue)) {
-                    if (!this._isControlledComponent() && !this.#needConfirm() && this.#isValueCommittable(result)) {
-                        this._adapter.updateValue(result);
+                    if (!this.isControlledComponent() && !this.#needConfirm() && this.#isValueCommittable(result)) {
+                        this.adapter.updateValue(result);
                     }
                     this.#notifyChange(result);
                 }
                 const triggerInput = _isMultiple ? this.formatMultipleDates(result) : this.formatDates(result);
-                this._adapter.updateInputValue(triggerInput);
+                this.adapter.updateInputValue(triggerInput);
             }
         }
-        this._adapter.updateInsetInputValue(insetInputValue);
+        this.adapter.updateInsetInputValue(insetInputValue);
     };
 
     handleRangeEndTabPress = () => {
@@ -973,14 +973,14 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         if (range && !this.#isRangeType()) {
             return;
         }
-        const rangeInputFocus = this._adapter.getState('rangeInputFocus');
+        const rangeInputFocus = this.adapter.getState('rangeInputFocus');
         if (range) {
             this.#setRangeInputFocus(range);
         }
         // Range types notify only when no range input was focused yet, so moving between the two inputs is silent
 
         if (!range || !rangeInputFocus) {
-            this._adapter.notifyFocus(e, range);
+            this.adapter.notifyFocus(e, range);
         }
     };
 
@@ -989,21 +989,21 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     };
 
     handleInputClear = (e: unknown) => {
-        this._adapter.notifyClear(e);
+        this.adapter.notifyClear(e);
     };
 
     // The clear button is not part of Input, so value, inputValue and cachedValue are cleared here
     handleRangeInputClear = (e: unknown) => {
         const value: Date[] = [];
         const inputValue = '';
-        if (!this._isControlledComponent('value')) {
+        if (!this.isControlledComponent('value')) {
             this.#updateValueAndInput(value, true, inputValue);
-            this._adapter.updateInsetInputValue(null);
+            this.adapter.updateInsetInputValue(null);
             this.#resetCachedSelectedValue(value);
         }
         this.#notifyChange(value);
         this.#setRangeInputFocus(false);
-        this._adapter.notifyClear(e);
+        this.adapter.notifyClear(e);
     };
 
     // Parses input only after user returns
@@ -1058,9 +1058,9 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             rangeInputFocus?: RangeInput | false;
         }
     ) => {
-        const { type, format, rangeSeparator, insetInput } = this._adapter.getProps();
+        const { type, format, rangeSeparator, insetInput } = this.adapter.getProps();
         const { value: stateValue } = this.getStates();
-        const controlled = this._isControlledComponent();
+        const controlled = this.isControlledComponent();
         const closePanel = options?.closePanel ?? true;
         // A range panel closes only after both inputs were focused (start and end picked); shortcuts such as
         // presets skip that check.
@@ -1086,12 +1086,12 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             // An incomplete range does not notify, so the input text is updated here; otherwise a picked date
             // would not show in the input when controlled (#1357). The value itself stays unchanged.
             if (isRangeTypeAndInputIncomplete) {
-                this._adapter.updateInputValue(inputValue);
-                this._adapter.updateInsetInputValue(insetInputValue);
+                this.adapter.updateInputValue(inputValue);
+                this.adapter.updateInsetInputValue(insetInputValue);
                 return;
             } else if (!controlled) {
                 this.#updateValueAndInput(dates, true, inputValue);
-                this._adapter.updateInsetInputValue(insetInputValue);
+                this.adapter.updateInsetInputValue(insetInputValue);
             }
             if (!isEqual(value, stateValue)) {
                 this.#notifyChange(value);
@@ -1124,18 +1124,18 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     };
 
     handleConfirm = () => {
-        const { cachedSelectedValue, value } = this._adapter.getStates();
+        const { cachedSelectedValue, value } = this.adapter.getStates();
         const isComplete = this.#isRangeType() ? isRangeValueComplete(cachedSelectedValue) : !cachedSelectedValue.some((date) => date == null);
         const newValue = isComplete ? cachedSelectedValue : value;
-        if (this.#needConfirm() && !this._isControlledComponent()) {
-            this._adapter.updateValue(newValue);
+        if (this.#needConfirm() && !this.isControlledComponent()) {
+            this.adapter.updateValue(newValue);
         }
         // An incomplete input falls back to the last valid value
         this.closePanel();
 
         if (isComplete) {
             const { notifyValue, notifyDate } = this.disposeCallbackArgs(cachedSelectedValue);
-            this._adapter.notifyConfirm(notifyDate, notifyValue);
+            this.adapter.notifyConfirm(notifyDate, notifyValue);
         }
     };
 
@@ -1143,7 +1143,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.closePanel();
         const value = this.getState('value');
         const { notifyValue, notifyDate } = this.disposeCallbackArgs(value);
-        this._adapter.notifyCancel(notifyDate, notifyValue);
+        this.adapter.notifyCancel(notifyDate, notifyValue);
     };
 
     handlePresetClick = (item: PresetType, e: unknown) => {
@@ -1176,7 +1176,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             default:
                 break;
         }
-        this._adapter.notifyPresetsClick(item, e);
+        this.adapter.notifyPresetsClick(item, e);
     };
 
     disabledDisposeDate = (date: Date, ...rest: any[]) => {
@@ -1193,13 +1193,13 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
      * wrapper itself from one bubbled up from a child, which already handled focus.
      */
     handleTriggerWrapperClick(e: Pick<Event, 'target' | 'currentTarget'>) {
-        const { disabled, triggerRender } = this._adapter.getProps();
-        const { rangeInputFocus } = this._adapter.getStates();
+        const { disabled, triggerRender } = this.adapter.getProps();
+        const { rangeInputFocus } = this.adapter.getStates();
         if (disabled) {
             return;
         }
         if (this.#isRangeType() && !rangeInputFocus) {
-            if (this._adapter.isEventTarget(e)) {
+            if (this.adapter.isEventTarget(e)) {
                 this.handleInputFocus(e, 'rangeStart');
             } else if (typeof triggerRender === 'function') {
                 // triggerRender has no input, so rangeStart is focused by default when the panel opens
@@ -1229,7 +1229,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
      * it). A custom trigger that is itself the Tab stop is a button, so Enter and Space open it too.
      */
     handleTriggerKeyDown = (e: Pick<KeyboardEvent, 'key' | 'preventDefault' | 'target' | 'currentTarget'>, isTriggerButton: boolean) => {
-        const open = this._isControlledComponent('open') ? this.getProp('open') : this.getState('panelShow');
+        const open = this.isControlledComponent('open') ? this.getProp('open') : this.getState('panelShow');
         const opens = e.key === 'ArrowDown' || (isTriggerButton && (e.key === 'Enter' || e.key === ' '));
         if (!open && opens) {
             e.preventDefault();
@@ -1241,12 +1241,12 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         if (visible) {
             // without the inset input there is nothing to focus, and refocusing the trigger input would fire its onFocus again
             if (this.getProp('insetInput')) {
-                this._adapter.setInsetInputFocus();
+                this.adapter.setInsetInputFocus();
             }
             // The trigger input is disabled while the panel is open
-            this._adapter.setTriggerDisabled(true);
+            this.adapter.setTriggerDisabled(true);
         } else {
-            this._adapter.setTriggerDisabled(false);
+            this.adapter.setTriggerDisabled(false);
         }
     };
 }

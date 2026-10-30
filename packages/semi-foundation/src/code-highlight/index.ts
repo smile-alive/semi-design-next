@@ -36,7 +36,7 @@ export default class CodeHighlightFoundation<P extends CodeHighlightBaseProps = 
         const html = await highlight(code.replace(/\n$/, ''), language, { languages, themes });
         // a stale result must not overwrite the current render
         if (requestId === this.#requestId) {
-            this._adapter.setHtml(html, code);
+            this.adapter.setHtml(html, code);
         }
     };
 }

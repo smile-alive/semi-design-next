@@ -38,9 +38,9 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
     }
 
     #commit(color: ColorValue) {
-        this._adapter.notifyChange(color);
-        if (!this._isControlledComponent('value')) {
-            this._adapter.setState({ currentColor: color });
+        this.adapter.notifyChange(color);
+        if (!this.isControlledComponent('value')) {
+            this.adapter.setState({ currentColor: color });
         }
     }
 
@@ -56,7 +56,7 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
     }
 
     protected getCurrentColor(): ColorValue {
-        return this._isControlledComponent('value') ? (this.getProp('value') ?? this.getProp('defaultValue')) : this.getState('currentColor');
+        return this.isControlledComponent('value') ? (this.getProp('value') ?? this.getProp('defaultValue')) : this.getState('currentColor');
     }
 
     /** The full color of a value given in `format`; without alpha support the opacity is dropped */
@@ -128,7 +128,7 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
 
     /** After a controlled `value` is dropped, the uncontrolled state restarts from `defaultValue` */
     resetToDefault = () => {
-        this._adapter.setState({ currentColor: this.getProp('defaultValue') });
+        this.adapter.setState({ currentColor: this.getProp('defaultValue') });
     };
 
     handleChange = (color: HsvaColor | RgbaColor | string, format: ColorFormat) => {

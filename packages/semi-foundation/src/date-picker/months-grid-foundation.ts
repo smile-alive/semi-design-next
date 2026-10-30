@@ -127,9 +127,9 @@ export interface MonthsGridAdapter extends DefaultAdapter<MonthsGridFoundationPr
 
 export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapter, MonthsGridFoundationProps, MonthsGridFoundationState> {
     #initDatePickerFromValue(values: Date[], refreshPicker = true) {
-        const { monthLeft } = this._adapter.getStates();
+        const { monthLeft } = this.adapter.getStates();
         const newMonthLeft = { ...monthLeft };
-        this._adapter.updateMonthOnLeft(newMonthLeft);
+        this.adapter.updateMonthOnLeft(newMonthLeft);
         const newSelected = new Set<string>();
         const isMultiple = this.#isMultiple();
         if (!isMultiple) {
@@ -155,7 +155,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         } else {
             this.#handleShowDateAndTime(strings.PANEL_TYPE_LEFT, newMonthLeft.pickerDate);
         }
-        this._adapter.updateDaySelected(newSelected);
+        this.adapter.updateDaySelected(newSelected);
     }
 
     #initDateRangePickerFromValue(values: (Date | null)[], withTime = false) {
@@ -188,9 +188,9 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         if (this.#isNeedSwap(rangeStart, rangeEnd)) {
             [rangeStart, rangeEnd] = [rangeEnd, rangeStart];
         }
-        this._adapter.setRangeStart(rangeStart);
-        this._adapter.setRangeEnd(rangeEnd);
-        this._adapter.setHoverDay(rangeEnd);
+        this.adapter.setRangeStart(rangeStart);
+        this.adapter.setRangeEnd(rangeEnd);
+        this.adapter.setHoverDay(rangeEnd);
     }
 
     #initDateTimePickerFromValue(values: Date[]) {
@@ -216,7 +216,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     #mergeDateAndTime(date: Date | string, time: Date) {
-        const dateFnsLocale = this._adapter.getProp('dateFnsLocale');
+        const dateFnsLocale = this.adapter.getProp('dateFnsLocale');
         const day = isValidDate(date) ? (date as Date) : compatibleParse(date as string, strings.FORMAT_FULL_DATE, undefined, dateFnsLocale);
         return set(day, {
             hours: time.getHours(),
@@ -262,7 +262,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                     [startDate, endDate] = [endDate, startDate];
                 }
                 if (!isControlledComponent) {
-                    this._adapter.setRangeEnd(rangeEnd);
+                    this.adapter.setRangeEnd(rangeEnd);
                 }
             } else {
                 startDate = this.#mergeDateAndTime(timeDate, timeDate);
@@ -272,24 +272,24 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                     [startDate, endDate] = [endDate, startDate];
                 }
                 if (!isControlledComponent) {
-                    this._adapter.setRangeStart(rangeStart);
+                    this.adapter.setRangeStart(rangeStart);
                 }
             }
-            this._adapter.notifySelectedChange([startDate, endDate]);
+            this.adapter.notifySelectedChange([startDate, endDate]);
         }
     }
 
     #updatePanelDetail(panelType: PanelType, kvs: Partial<PanelState>) {
         const { monthLeft, monthRight } = this.getStates();
         if (panelType === strings.PANEL_TYPE_RIGHT) {
-            this._adapter.updateMonthOnRight({ ...monthRight, ...kvs });
+            this.adapter.updateMonthOnRight({ ...monthRight, ...kvs });
         } else {
-            this._adapter.updateMonthOnLeft({ ...monthLeft, ...kvs });
+            this.adapter.updateMonthOnLeft({ ...monthLeft, ...kvs });
         }
     }
 
     #toMonth(panelType: PanelType, target: Date) {
-        const { type } = this._adapter.getProps();
+        const { type } = this.adapter.getProps();
         const diff = this.#getDiff('month', target, panelType);
         this.#handleYearOrMonthChange(diff < 0 ? 'prevMonth' : 'nextMonth', panelType, Math.abs(diff), false);
 
@@ -317,14 +317,14 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         if (panelDateHasUpdate) {
             if (!isRange) {
                 const { notifyValue, notifyDate } = toCallbackArgs(targetMonth, this.getProps());
-                this._adapter.notifyPanelChange(notifyDate, notifyValue);
+                this.adapter.notifyPanelChange(notifyDate, notifyValue);
             } else {
                 // A left-panel switch driven by the sync of the other panel is not notified on its own
                 if (!(isLeftPanelInRange && notSeparateInRange)) {
                     // Read back after the write: the panels also move by value, which no cached copy would see
                     const states = this.getStates();
                     const { notifyValue, notifyDate } = toCallbackArgs([states.monthLeft.pickerDate, states.monthRight.pickerDate], this.getProps());
-                    this._adapter.notifyPanelChange(notifyDate, notifyValue);
+                    this.adapter.notifyPanelChange(notifyDate, notifyValue);
                 }
             }
         }
@@ -351,7 +351,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             if (disabledDate(fullDate, { rangeStart, rangeEnd })) {
                 return;
             }
-            this._adapter.notifySelectedChange([fullDate], options);
+            this.adapter.notifySelectedChange([fullDate], options);
         }
     }
 
@@ -383,10 +383,10 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         this.#handleShowDateAndTime(panelType, time);
 
         if (!isControlledComponent) {
-            this._adapter.updateDaySelected(newSelected);
+            this.adapter.updateDaySelected(newSelected);
         }
 
-        this._adapter.notifySelectedChange(newSelectedDates as [Date]);
+        this.adapter.notifySelectedChange(newSelectedDates as [Date]);
     }
 
     #handleShowDateAndTime(panelType: PanelType, pickerDate: Date, showDate?: Date) {
@@ -396,7 +396,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
 
     #handleRangeSelected({ fullDate }: MonthDayInfo) {
         let { rangeStart, rangeEnd } = this.getStates();
-        const { startDateOffset, endDateOffset, type, dateFnsLocale, rangeInputFocus } = this._adapter.getProps();
+        const { startDateOffset, endDateOffset, type, dateFnsLocale, rangeInputFocus } = this.adapter.getProps();
         let rangeStartReset = false;
         let rangeEndReset = false;
 
@@ -424,24 +424,24 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
 
         if (isRangeType(type)) {
             if (isDateRangeAndHasOffset) {
-                this._adapter.setRangeStart(rangeStart);
-                this._adapter.setRangeEnd(rangeEnd);
+                this.adapter.setRangeStart(rangeStart);
+                this.adapter.setRangeEnd(rangeEnd);
             } else {
                 if (rangeInputFocus === 'rangeEnd') {
-                    this._adapter.setRangeEnd(rangeEnd);
+                    this.adapter.setRangeEnd(rangeEnd);
                     if (rangeStartReset) {
-                        this._adapter.setRangeStart(rangeStart);
+                        this.adapter.setRangeStart(rangeStart);
                     }
-                    if (!this._adapter.hasOtherRangeInputBeenFocused('rangeEnd') || !rangeStart) {
-                        this._adapter.setRangeInputFocus('rangeStart');
+                    if (!this.adapter.hasOtherRangeInputBeenFocused('rangeEnd') || !rangeStart) {
+                        this.adapter.setRangeInputFocus('rangeStart');
                     }
                 } else if (rangeInputFocus === 'rangeStart' || !rangeInputFocus) {
-                    this._adapter.setRangeStart(rangeStart);
+                    this.adapter.setRangeStart(rangeStart);
                     if (rangeEndReset) {
-                        this._adapter.setRangeEnd(rangeEnd);
+                        this.adapter.setRangeEnd(rangeEnd);
                     }
-                    if (!this._adapter.hasOtherRangeInputBeenFocused('rangeStart') || !rangeEnd) {
-                        this._adapter.setRangeInputFocus('rangeEnd');
+                    if (!this.adapter.hasOtherRangeInputBeenFocused('rangeStart') || !rangeEnd) {
+                        this.adapter.setRangeInputFocus('rangeEnd');
                     }
                 }
             }
@@ -465,7 +465,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             }
             const needCheckFocusRecord = !(type === 'dateRange' && isDateRangeAndHasOffset);
             // the focus has moved on above; the dates were picked for the input focused at the click
-            this._adapter.notifySelectedChange(date, {
+            this.adapter.notifySelectedChange(date, {
                 needCheckFocusRecord,
                 rangeInputFocus: rangeInputFocus as 'rangeStart' | 'rangeEnd' | false,
             });
@@ -480,8 +480,8 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
      *  - panelType=left, target=new Date('2021-12-01') and right panel is in '2021-12' => call it, right panel add one month to '2021-01'
      */
     protected handleSyncChangeMonths({ panelType, target }: { panelType: PanelType; target: Date }) {
-        const { type } = this._adapter.getProps();
-        const { monthLeft, monthRight } = this._adapter.getStates();
+        const { type } = this.adapter.getProps();
+        const { monthLeft, monthRight } = this.adapter.getStates();
         if (isRangeType(type)) {
             if (panelType === 'right' && differenceInCalendarMonths(target, monthLeft.pickerDate) === 0) {
                 this.#handleYearOrMonthChange('prevMonth', 'left', 1, true);
@@ -492,7 +492,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     protected getTargetChangeDate({ panelType, switchType }: { panelType: PanelType; switchType: YearMonthChangeType }) {
-        const { monthRight, monthLeft } = this._adapter.getStates();
+        const { monthRight, monthLeft } = this.adapter.getStates();
         const currentDate = panelType === 'left' ? monthLeft.pickerDate : monthRight.pickerDate;
         return dateCalcFns[switchType](currentDate, 1);
     }
@@ -685,13 +685,13 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             }
         } else if ((Array.isArray(values) && !values.length) || !values) {
             if (selected instanceof Set && selected.size) {
-                this._adapter.updateDaySelected(new Set());
+                this.adapter.updateDaySelected(new Set());
             }
             if (rangeStart) {
-                this._adapter.setRangeStart('');
+                this.adapter.setRangeStart('');
             }
             if (rangeEnd) {
-                this._adapter.setRangeEnd('');
+                this.adapter.setRangeEnd('');
             }
         }
     };
@@ -734,13 +734,13 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     handleDayHover = ({ fullDate } = { fullDate: '' }) => {
         const { startDateOffset, endDateOffset, type } = this.getProps();
 
-        this._adapter.setHoverDay(fullDate);
+        this.adapter.setHoverDay(fullDate);
 
         if ((startDateOffset || endDateOffset) && type === 'dateRange') {
             const offsetRangeStart = getFullDateOffset(startDateOffset, fullDate);
             const offsetRangeEnd = getFullDateOffset(endDateOffset, fullDate);
-            this._adapter.setOffsetRangeStart(offsetRangeStart);
-            this._adapter.setOffsetRangeEnd(offsetRangeEnd);
+            this.adapter.setOffsetRangeStart(offsetRangeStart);
+            this.adapter.setOffsetRangeEnd(offsetRangeEnd);
         }
     };
 

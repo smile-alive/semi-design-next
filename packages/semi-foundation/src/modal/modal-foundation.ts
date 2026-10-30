@@ -91,30 +91,30 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
     );
 
     #invokeCancel(e: CE) {
-        const result = this._adapter.notifyCancel(e);
+        const result = this.adapter.notifyCancel(e);
         if (isPromise(result)) {
-            this._adapter.setState({ onCancelReturnPromiseStatus: 'pending' });
+            this.adapter.setState({ onCancelReturnPromiseStatus: 'pending' });
             (result as Promise<any>)
                 ?.then(() => {
-                    this._adapter.setState({ onCancelReturnPromiseStatus: 'fulfilled' });
+                    this.adapter.setState({ onCancelReturnPromiseStatus: 'fulfilled' });
                 })
                 ?.catch((e) => {
-                    this._adapter.setState({ onCancelReturnPromiseStatus: 'rejected' });
+                    this.adapter.setState({ onCancelReturnPromiseStatus: 'rejected' });
                     throw e;
                 });
         }
     }
 
     #invokeOk(e: OE) {
-        const result = this._adapter.notifyOk(e);
+        const result = this.adapter.notifyOk(e);
         if (isPromise(result)) {
-            this._adapter.setState({ onOKReturnPromiseStatus: 'pending' });
+            this.adapter.setState({ onOKReturnPromiseStatus: 'pending' });
             (result as Promise<any>)
                 ?.then(() => {
-                    this._adapter.setState({ onOKReturnPromiseStatus: 'fulfilled' });
+                    this.adapter.setState({ onOKReturnPromiseStatus: 'fulfilled' });
                 })
                 ?.catch((e) => {
-                    this._adapter.setState({ onOKReturnPromiseStatus: 'rejected' });
+                    this.adapter.setState({ onOKReturnPromiseStatus: 'rejected' });
                     throw e;
                 });
         }
@@ -161,18 +161,18 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
     };
 
     beforeShow = () => {
-        this._adapter.disabledBodyScroll();
+        this.adapter.disabledBodyScroll();
     };
 
     afterHide = () => {
-        this._adapter.enabledBodyScroll();
+        this.adapter.enabledBodyScroll();
     };
 
     afterClose = () => {
-        this._adapter.notifyClose();
+        this.adapter.notifyClose();
     };
 
     toggleDisplayNone = (displayNone: boolean) => {
-        this._adapter.toggleDisplayNone(displayNone);
+        this.adapter.toggleDisplayNone(displayNone);
     };
 }

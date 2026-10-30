@@ -640,9 +640,7 @@
 ## 2 已知未处理的类型与工具链问题
 
 - json-viewer-core：`View.#customRenderRule` 类型漏 `| null`。待处理。
-- json-viewer-core：`_findMatchBrand` 是 `_` 前缀的类成员，改成 `#` 后因从不读取触发 `noUnusedLocals`。待决（保留，或改用 `#x in v` 品牌检查，后者要新增一个只为类型存在的方法）。
 - coding-style 导出规则的例外：Svelte `button/context.ts` 在末尾汇总导出（在解构行加 `export` 会连带导出 `getEnclosingGroup`）；React、Solid 的 `typography/copyable.tsx` 同时有具名导出和默认导出，默认导出写不到声明处。待决（是否放宽规则或调整导出）。
-- semi-ai-foundation `ai-chat-input/extension/plugins.ts` 在 ProseMirror 的 EditorView 上挂 `_semiSyntheticBackspaceGuard`、`_semiOrigSomeProp`。待决（改用模块内 WeakMap）。
 - 写成 `p: T | undefined` 的属性没有改成 `p?: T`：Svelte 的 `RadioChangeEventTarget.value`（foundation 的 `RadioChangeEvent` 要求必填）与 `ImagePreviewTitleSnippetProps.title`、`SideBarMainContentSnippetProps.activeKey`、`CascaderTriggerSnippetProps.value`（组件总会传出这个键；改可选后，测试夹具里手写成必填的参数类型报错，夹具改为导入导出的类型即可，但使用方同样手写的代码也会报错）；React `tooltip.test.tsx` 的 `vi.fn<(name: string, layer: symbol | undefined) => void>()`（改可选后 `new Map(mock.calls)` 推断不出键值对）；Vue checkbox、radio 的接口（测试用 `toEqualTypeOf` 锁定字面量）、`semi-ui-vue/src/form/hooks.ts` 的返回类型、`semi-ui-svelte/src/table/context.ts` 的一处。待决（coding-style 是否为「值总存在」的属性开例外）。
 - 依赖替换未做：semi-ui-react 与 semi-ui-solid `table/utils.ts` 的 compat `merge`（三参数，source 可为 undefined）；`tree/tree-util.ts` 与 React `tabs/tab-bar.tsx` 的 compat `pick`（会读继承属性）；Solid `navigation/item.tsx` 的 `isPlainObject`（只认纯对象，换成 foundation 的 `isObject` 会扩大 `cloneDeep` 的范围）；Svelte 测试里对 `$state` 代理的 JSON 深拷贝（`structuredClone` 会抛错）。待决。
 - Svelte：`drag-move/drag-move.ts` 的 `options` 在 attachment 闭包内解构，移到形参会提前读取、改变响应式追踪。保持原样。

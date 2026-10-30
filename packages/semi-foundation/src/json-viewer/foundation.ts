@@ -42,7 +42,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
     jsonViewer: JsonViewer | null = null;
 
     #observeResize() {
-        const el = this._adapter.getEditorRef();
+        const el = this.adapter.getEditorRef();
         if (!el) {
             return;
         }
@@ -83,19 +83,19 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
 
     override init() {
         const props = this.getProps();
-        const editorRef = this._adapter.getEditorRef();
+        const editorRef = this.adapter.getEditorRef();
         this.jsonViewer = new JsonViewer(editorRef, props.value, {
             prefixCls: cssClasses.PREFIX,
             ...props.options,
         });
         this.jsonViewer.emitter.on('customRender', (e) => {
-            this._adapter.setCustomRenderMap(e.customRenderMap);
+            this.adapter.setCustomRenderMap(e.customRenderMap);
         });
         this.jsonViewer.layout();
         // a rebuilt editor starts without results, while the search bar still shows its query
         this.#searchAgain();
         this.jsonViewer.emitter.on('contentChanged', () => {
-            this._adapter.notifyChange(this.jsonViewer?.getModel().getValue());
+            this.adapter.notifyChange(this.jsonViewer?.getModel().getValue());
             // a search made through the handle has no bar open, yet its results must follow the edit
             this.#searchAgain();
         });
@@ -113,7 +113,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         this.jsonViewer?.dispose();
         this.jsonViewer = null;
         // a re-created editor without rules never emits customRender, so the stale spans must be cleared here
-        this._adapter.setCustomRenderMap(new Map());
+        this.adapter.setCustomRenderMap(new Map());
     }
 
     search = (searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => {
@@ -164,7 +164,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
 
     /** Toggles one search option, then searches again with the input text and the new options */
     toggleSearchOption = (key: keyof SearchOptions) => {
-        this._adapter.toggleSearchOption(key);
+        this.adapter.toggleSearchOption(key);
         this.search(this.#lastSearch?.text ?? '');
     };
 
@@ -172,7 +172,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         // a reopened bar starts with an empty input, so old results and highlights go too
         this.#lastSearch = null;
         this.jsonViewer?.getSearchWidget().clear();
-        this._adapter.toggleSearchBar();
+        this.adapter.toggleSearchBar();
     };
 
     /** `null` when nothing was searched (or the bar was closed), `undefined` while there is no editor */

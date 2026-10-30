@@ -74,7 +74,7 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
             rehypePlugins: this.getProp('rehypePlugins'),
             remarkGfm: this.getProp('remarkGfm'),
         };
-        const runtime = this._adapter.getRuntime();
+        const runtime = this.adapter.getRuntime();
         if (props.format === 'md') {
             const processor = MarkdownRenderFoundation.#createMdProcessor(props);
             const tree = (await processor.run(processor.parse(raw), raw)) as Parameters<typeof toJsxRuntime>[0];
@@ -148,7 +148,7 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
             }
         } catch (error) {
             if (requestId === this.#requestId) {
-                this._adapter.notifyCompileError(error);
+                this.adapter.notifyCompileError(error);
             }
         }
     };
