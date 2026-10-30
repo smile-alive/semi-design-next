@@ -38,17 +38,17 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
 
     onInputAreaChange = (value: string) => {
         const attachment = this.getState('attachment');
-        this._adapter.setInputValue(value);
-        this._adapter.notifyInputChange({ inputValue: value, attachment });
+        this.adapter.setInputValue(value);
+        this.adapter.notifyInputChange({ inputValue: value, attachment });
     };
 
     onAttachmentAdd = (props: any) => {
         const { fileList } = props;
-        this._adapter.notifyUploadChange(props);
+        this.adapter.notifyUploadChange(props);
         const { content } = this.getStates();
         let newFileList = [...fileList];
-        this._adapter.setAttachment(newFileList);
-        this._adapter.notifyInputChange({
+        this.adapter.setAttachment(newFileList);
+        this.adapter.notifyInputChange({
             inputValue: content,
             attachment: newFileList,
         });
@@ -57,9 +57,9 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
     onAttachmentDelete = (props: any) => {
         const { content, attachment } = this.getStates();
         const newAttachMent = attachment.filter((item) => item.uid !== props.uid);
-        this._adapter.setAttachment(newAttachMent);
-        this._adapter.notifyUploadChange({ fileList: newAttachMent, currentFile: props });
-        this._adapter.notifyInputChange({
+        this.adapter.setAttachment(newAttachMent);
+        this.adapter.notifyUploadChange({ fileList: newAttachMent, currentFile: props });
+        this.adapter.notifyInputChange({
             inputValue: content,
             attachment: newAttachMent,
         });
@@ -71,9 +71,9 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         if (InputBoxFoundation.getDisableSend(content, attachment, disableSend, canSend)) {
             return;
         }
-        this._adapter.setInputValue('');
-        this._adapter.setAttachment([]);
-        this._adapter.notifySend(content, attachment);
+        this.adapter.setInputValue('');
+        this.adapter.setAttachment([]);
+        this.adapter.notifySend(content, attachment);
     };
 
     onEnterPress = (e: Pick<KeyboardEvent, 'shiftKey' | 'stopPropagation' | 'preventDefault'>) => {
@@ -99,7 +99,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
                 }
             }
             if (files.length) {
-                this._adapter.manualUpload(files);
+                this.adapter.manualUpload(files);
                 e.preventDefault();
                 e.stopPropagation();
             }

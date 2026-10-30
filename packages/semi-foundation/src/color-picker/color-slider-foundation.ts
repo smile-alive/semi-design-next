@@ -28,7 +28,7 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
     }
 
     #pickByPointer(e: { clientX: number }) {
-        const rect = this._adapter.getDOM()?.getBoundingClientRect();
+        const rect = this.adapter.getDOM()?.getBoundingClientRect();
         if (!rect) {
             return;
         }

@@ -17,8 +17,6 @@ export const enum EndOfLinePreference {
 }
 
 export class FindMatch {
-    _findMatchBrand: void = undefined;
-
     readonly range: Range;
     readonly matches: string[] | null;
 

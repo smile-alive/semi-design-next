@@ -29,7 +29,7 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
     }
 
     protected getIsControlledComponent() {
-        return this._isControlledComponent('current');
+        return this.isControlledComponent('current');
     }
 
     static deriveCurrent(props: { current?: number }, state: { current: number }) {
@@ -75,29 +75,29 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
     }
 
     override destroy() {
-        this._adapter.enabledBodyScroll();
+        this.adapter.enabledBodyScroll();
     }
 
     beforeShow = () => {
-        this._adapter.disabledBodyScroll();
+        this.adapter.disabledBodyScroll();
     };
 
     // the scroll lock follows whether a step is on screen, which can end while the guide is still visible
     releaseScroll = () => {
-        this._adapter.enabledBodyScroll();
+        this.adapter.enabledBodyScroll();
     };
 
     afterHide = () => {
         this.releaseScroll();
-        this._adapter.setCurrent(numbers.DEFAULT_CURRENT);
+        this.adapter.setCurrent(numbers.DEFAULT_CURRENT);
     };
 
     handlePrev = () => {
         const newCurrent = this.#getCurrent() - 1;
-        this._adapter.notifyChange(newCurrent);
-        this._adapter.notifyPrev(newCurrent);
+        this.adapter.notifyChange(newCurrent);
+        this.adapter.notifyPrev(newCurrent);
         if (!this.getIsControlledComponent()) {
-            this._adapter.setCurrent(newCurrent);
+            this.adapter.setCurrent(newCurrent);
         }
     };
 
@@ -105,18 +105,18 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         const { steps } = this.getProps();
         const current = this.#getCurrent();
         if (current === steps.length - 1) {
-            this._adapter.notifyFinish();
+            this.adapter.notifyFinish();
         } else {
             const newCurrent = current + 1;
-            this._adapter.notifyChange(newCurrent);
-            this._adapter.notifyNext(newCurrent);
+            this.adapter.notifyChange(newCurrent);
+            this.adapter.notifyNext(newCurrent);
             if (!this.getIsControlledComponent()) {
-                this._adapter.setCurrent(newCurrent);
+                this.adapter.setCurrent(newCurrent);
             }
         }
     };
 
     handleSkip = () => {
-        this._adapter.notifySkip();
+        this.adapter.notifySkip();
     };
 }

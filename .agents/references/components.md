@@ -27,10 +27,10 @@
 
 ## 有 foundation
 
-- 受控判断与「是否传入」只看值是否为 `undefined`，不用 `'key' in props`（props 对象可能包含所有声明过的键）。foundation 里用 `this._isControlledComponent(key)`，静态函数和组件里直接写 `props.x !== undefined`；`null` 是受控的值。受控值变回 `undefined` 时把 state 同步为空并转为非受控（表单重置）；Tabs、Collapse、Carousel、UserGuide 例外，从最后的受控值继续；Slider、Rating 例外，回到 `defaultValue`（Switch、Checkbox、Radio 变回未选中，属于同步为空）。
+- 受控判断与「是否传入」只看值是否为 `undefined`，不用 `'key' in props`（props 对象可能包含所有声明过的键）。foundation 里用 `this.isControlledComponent(key)`，静态函数和组件里直接写 `props.x !== undefined`；`null` 是受控的值。受控值变回 `undefined` 时把 state 同步为空并转为非受控（表单重置）；Tabs、Collapse、Carousel、UserGuide 例外，从最后的受控值继续；Slider、Rating 例外，回到 `defaultValue`（Switch、Checkbox、Radio 变回未选中，属于同步为空）。
 - 默认值只填 `undefined`。回调 prop 不设 `noop` 默认值，调用处一律 `?.()`：默认值不覆盖使用方显式传入的 `null`，直接调用会抛 TypeError。判断使用方是否给了回调写 `Boolean(onX)`，不和 `noop` 比较。
 - adapter 只写组件特有的方法，`getProps`、`setState` 等由 `base` 提供；adapter 接口用完整的 `DefaultAdapter<P, S>` 泛型（`Partial<DefaultAdapter>` 不满足约束）。`setState` 后立即能读到新值，所以 foundation 里需要旧值做比较或通知时，要先读或先通知，再写。
-- foundation 不直接调用 props 上的事件回调，统一经 adapter 的 `notify*` 方法发出（如 `this._adapter.notifyChange(value)`），由 adapter 负责调用 props 回调，写法参照同组件已有的 `notify*`（`base.getProps().onX?.(...)`）；回调的返回值被 foundation 使用时（Promise、boolean），`notify*` 原样返回。布尔和配置型 props（`onChangeWithObject`）与参与计算的数据函数（`loadData`、`column.onFilter`）不在此列。
+- foundation 不直接调用 props 上的事件回调，统一经 adapter 的 `notify*` 方法发出（如 `this.adapter.notifyChange(value)`），由 adapter 负责调用 props 回调，写法参照同组件已有的 `notify*`（`base.getProps().onX?.(...)`）；回调的返回值被 foundation 使用时（Promise、boolean），`notify*` 原样返回。布尔和配置型 props（`onChangeWithObject`）与参与计算的数据函数（`loadData`、`column.onFilter`）不在此列。
 - 必须和 props 在同一次提交里生效的派生状态（如 Collapsible 的高度与过渡 class；分两次提交会让过渡以 0ms 生效），用渲染期比较加条件 setState：新值和旧值不同时才调用，下一轮就收敛。
 - 渲染期要用的 foundation 逻辑写成静态纯函数直接调用（如 `DescriptionsFoundation.getHorizontalList(columns, column)`、`Foundation.getInitialState`），不经过 foundation 实例：渲染期从实例上读到的 props 可能是上一轮的值。只有无状态计算、不需要 adapter 的逻辑写成 foundation 里的普通函数，不继承 `BaseFoundation`，组件直接调用（Highlight 的 `findAll`）。
 - render 中不能有副作用，定时器等放到事件处理或值变化的回调里。

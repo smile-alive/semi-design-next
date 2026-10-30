@@ -13,7 +13,7 @@ export default class TimeInputFoundation<P extends object = object, S extends ob
     #cursorIndex: number | null = null;
 
     #storeCursor() {
-        const inputNode = this._adapter.getInputNode();
+        const inputNode = this.adapter.getInputNode();
         if (inputNode) {
             this.#cursorIndex = inputNode.selectionStart;
         }
@@ -25,21 +25,21 @@ export default class TimeInputFoundation<P extends object = object, S extends ob
 
     handleFocus = (e: E) => {
         this.#storeCursor();
-        this._adapter.notifyFocus(e);
+        this.adapter.notifyFocus(e);
     };
 
     handleChange = (v: string) => {
         this.#storeCursor();
-        this._adapter.notifyChange(v);
+        this.adapter.notifyChange(v);
     };
 
     handleBlur = (e: E) => {
         this.#clearCursor();
-        this._adapter.notifyBlur(e);
+        this.adapter.notifyBlur(e);
     };
 
     restoreCursor = () => {
-        const inputNode = this._adapter.getInputNode();
+        const inputNode = this.adapter.getInputNode();
         const cursorIndex = this.#cursorIndex;
         if (inputNode && cursorIndex !== null) {
             inputNode.selectionStart = cursorIndex;

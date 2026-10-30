@@ -29,12 +29,12 @@ export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProp
     }
 
     #pickByPointer(e: { clientX: number; clientY: number }) {
-        const rect = this._adapter.getDOM()?.getBoundingClientRect();
+        const rect = this.adapter.getDOM()?.getBoundingClientRect();
         if (!rect) {
             return;
         }
         const { width, height } = this.getProps();
-        this._adapter.notifyChange({
+        this.adapter.notifyChange({
             s: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 100),
             v: Math.round(100 - clamp((e.clientY - rect.y) / height, 0, 1) * 100),
         });
@@ -43,7 +43,7 @@ export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProp
     // assistive-technology increments arrive as input events on the range
     setValue = (axis: 's' | 'v', value: number) => {
         const { hsva } = this.getProps();
-        this._adapter.notifyChange({ s: hsva.s, v: hsva.v, [axis]: value });
+        this.adapter.notifyChange({ s: hsva.s, v: hsva.v, [axis]: value });
     };
 
     // two-dimensional: keys follow the screen whichever range has focus (Left/Right saturation, Up/Down/page keys

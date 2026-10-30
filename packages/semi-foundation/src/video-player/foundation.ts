@@ -73,12 +73,12 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     }
 
     #handleMouseMove = throttle(() => {
-        this._adapter.setShowControls(true);
+        this.adapter.setShowControls(true);
         this.#clearTimer();
         this.#controlsTimer = setTimeout(() => {
             // a paused or ended player keeps its controls, as on mouseleave
             if (this.getStates().isPlaying) {
-                this._adapter.setShowControls(false);
+                this.adapter.setShowControls(false);
             }
         }, 3000);
     }, 200);
@@ -86,29 +86,29 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     // the muted flag keeps the volume and lets a muted autoplay start under the browser's autoplay policy
     #applyMuted(video: HTMLVideoElement, muted: boolean) {
         video.muted = muted;
-        this._adapter.setMuted(muted);
+        this.adapter.setMuted(muted);
     }
 
     #handleLeavePictureInPicture = () => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
-        this._adapter.setIsPlaying(!video.paused);
+        this.adapter.setIsPlaying(!video.paused);
     };
 
     #handleTemporaryNotification(content: string) {
         this.#stalled = false;
-        this._adapter.setNotificationContent(content);
-        this._adapter.setShowNotification(true);
+        this.adapter.setNotificationContent(content);
+        this.adapter.setShowNotification(true);
         clearTimeout(this.#notificationTimer);
         this.#notificationTimer = setTimeout(() => {
-            this._adapter.setShowNotification(false);
+            this.adapter.setShowNotification(false);
         }, 1000);
     }
 
     // Known limit: a switch whose callback does not change src leaves this listener waiting for the next load, which
     // the foundation cannot tell from an unrelated one. Upgrade: have the adapter report src changes.
     #restorePlayPosition() {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         const wasPlaying = !video.paused;
         const currentTime = video.currentTime;
@@ -131,7 +131,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         if (isFullScreen === this.getStates().isFullScreen) {
             return;
         }
-        this._adapter.setIsFullScreen(isFullScreen);
+        this.adapter.setIsFullScreen(isFullScreen);
         if (isFullScreen) {
             document.addEventListener('mousemove', this.#handleMouseMove, { signal: this.signal });
         } else {
@@ -146,7 +146,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
             // a pending call or hide timer would hide the windowed player's controls; no mouseenter follows
             this.#handleMouseMove.cancel();
             this.#clearTimer();
-            this._adapter.setShowControls(true);
+            this.adapter.setShowControls(true);
         }
     };
 
@@ -163,7 +163,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
             return;
         }
 
-        const videoWrapper = this._adapter.getVideoWrapper();
+        const videoWrapper = this.adapter.getVideoWrapper();
 
         if (videoWrapper && !videoWrapper.contains(FocusTrapHandle.getActiveElement(videoWrapper))) {
             return;
@@ -185,7 +185,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     };
 
     #registerEvent() {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         document.addEventListener('keydown', this.#handleBodyKeyDown, { signal: this.signal });
         document.addEventListener('fullscreenchange', this.#handleFullscreenChange, { signal: this.signal });
@@ -193,20 +193,20 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     }
 
     protected checkFullScreen() {
-        const videoWrapper = this._adapter.getVideoWrapper();
+        const videoWrapper = this.adapter.getVideoWrapper();
         return !!videoWrapper && document.fullscreenElement === videoWrapper;
     }
 
     override init() {
         const { volume, muted } = this.getProps();
         const { playbackRate } = this.getStates();
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (video) {
             // the duration is NaN until the metadata loads
-            this._adapter.setTotalTime(video.duration || 0);
+            this.adapter.setTotalTime(video.duration || 0);
             const initialVolume = Math.floor(volume > 0 ? volume : 0);
             video.volume = initialVolume / 100;
-            this._adapter.setVolume(initialVolume);
+            this.adapter.setVolume(initialVolume);
             this.#applyMuted(video, muted || initialVolume === 0);
             // the media load algorithm resets playbackRate to defaultPlaybackRate
             video.defaultPlaybackRate = video.playbackRate = playbackRate;
@@ -228,7 +228,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     }
 
     handleTimeChange = (value: number) => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         // currentTime throws on a non-finite value, such as a ratio of a live stream's Infinity duration
         if (Number.isFinite(value)) {
@@ -236,37 +236,37 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
             // duration; Infinity for live)
             const time = Number.isFinite(video.duration) ? clamp(value, 0, video.duration) : Math.max(value, 0);
             video.currentTime = time;
-            this._adapter.setCurrentTime(time);
+            this.adapter.setCurrentTime(time);
         }
     };
 
     handleTimeUpdate = () => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
-        this._adapter.setCurrentTime(video.currentTime);
+        this.adapter.setCurrentTime(video.currentTime);
     };
 
     handleDurationChange = () => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
-        this._adapter.setTotalTime(video.duration || 0);
+        this.adapter.setTotalTime(video.duration || 0);
     };
 
     handleError = () => {
-        this._adapter.setIsError(true);
+        this.adapter.setIsError(true);
     };
 
     handleLoadStart = () => {
-        this._adapter.setIsError(false);
-        const video = this._adapter.getVideo();
+        this.adapter.setIsError(false);
+        const video = this.adapter.getVideo();
         if (!video) return;
         // the load algorithm pauses the element without a pause event, so a new src leaves isPlaying stale
-        this._adapter.setIsPlaying(!video.paused);
-        this._adapter.setBufferedValue(0);
+        this.adapter.setIsPlaying(!video.paused);
+        this.adapter.setBufferedValue(0);
     };
 
     handlePlayOrPause = () => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         if (video.paused) {
             this.handlePlay();
@@ -276,22 +276,22 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     };
 
     handlePlay() {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (video) {
             void ignoreExpectedMediaErrors(video.play());
         }
     }
 
     handlePause() {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (video) {
             video.pause();
         }
     }
 
     handleVideoPlay = () => {
-        this._adapter.setIsPlaying(true);
-        this._adapter.notifyPlay();
+        this.adapter.setIsPlaying(true);
+        this.adapter.notifyPlay();
         // fullscreen hides the controls only by the idle timer, which a pause leaves unarmed
         if (this.getStates().isFullScreen) {
             this.#handleMouseMove();
@@ -299,82 +299,82 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     };
 
     handleVideoPause = () => {
-        this._adapter.setIsPlaying(false);
-        this._adapter.notifyPause();
+        this.adapter.setIsPlaying(false);
+        this.adapter.notifyPause();
         // a paused player keeps its controls, even when the idle timer hid them earlier
         if (this.getStates().isFullScreen) {
-            this._adapter.setShowControls(true);
+            this.adapter.setShowControls(true);
         }
     };
 
     handleCanPlay = () => {
         this.#stalled = false;
-        this._adapter.setShowNotification(false);
+        this.adapter.setShowNotification(false);
     };
 
     handleWaiting = (locale: VideoPlayerNotificationLocale) => {
         this.#stalled = false;
-        this._adapter.setNotificationContent(locale.loading);
-        this._adapter.setShowNotification(true);
+        this.adapter.setNotificationContent(locale.loading);
+        this.adapter.setShowNotification(true);
     };
 
     handleStalled = (locale: VideoPlayerNotificationLocale) => {
         this.#stalled = true;
-        this._adapter.setNotificationContent(locale.stall);
-        this._adapter.setShowNotification(true);
+        this.adapter.setNotificationContent(locale.stall);
+        this.adapter.setShowNotification(true);
     };
 
     handleProgress = () => {
         if (this.#stalled) {
             this.#stalled = false;
-            this._adapter.setShowNotification(false);
+            this.adapter.setShowNotification(false);
         }
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (video && video.buffered.length > 0) {
             const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-            this._adapter.setBufferedValue(bufferedEnd);
+            this.adapter.setBufferedValue(bufferedEnd);
         }
     };
 
     handleEnded = () => {
-        this._adapter.setIsPlaying(false);
-        this._adapter.setShowControls(true);
+        this.adapter.setIsPlaying(false);
+        this.adapter.setShowControls(true);
     };
 
     /** From the user (the slider); init applies the initial volume without notifying */
     handleVolumeChange = (value: number) => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         const { volume, muted } = this.getStates();
         const next = Math.floor(value > 0 ? value : 0);
         video.volume = next / 100;
-        this._adapter.setVolume(next);
+        this.adapter.setVolume(next);
         this.#applyMuted(video, next === 0);
         // a drag reports every pixel
         if (next !== (muted ? 0 : volume)) {
-            this._adapter.notifyVolumeChange(next);
+            this.adapter.notifyVolumeChange(next);
         }
     };
 
     /** Mutes, or unmutes to the volume before muting; to half volume when that was 0 */
     handleVolumeSilent = () => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         const { volume, muted } = this.getStates();
         if (!video) return;
         if (muted) {
             const restored = volume > 0 ? volume : 50;
             video.volume = restored / 100;
-            this._adapter.setVolume(restored);
+            this.adapter.setVolume(restored);
             this.#applyMuted(video, false);
-            this._adapter.notifyVolumeChange(restored);
+            this.adapter.notifyVolumeChange(restored);
         } else {
             this.#applyMuted(video, true);
-            this._adapter.notifyVolumeChange(0);
+            this.adapter.notifyVolumeChange(0);
         }
     };
 
     handleFullscreen = () => {
-        const videoWrapper = this._adapter.getVideoWrapper();
+        const videoWrapper = this.adapter.getVideoWrapper();
         const isFullScreen = this.checkFullScreen();
         if (videoWrapper) {
             if (isFullScreen) {
@@ -390,19 +390,19 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
     };
 
     handleRateChange = (rate: { label: string; value: number }, locale: VideoPlayerNotificationLocale) => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         video.defaultPlaybackRate = video.playbackRate = rate.value;
-        this._adapter.setPlaybackRate(rate.value);
-        this._adapter.notifyRateChange(rate.value);
+        this.adapter.setPlaybackRate(rate.value);
+        this.adapter.notifyRateChange(rate.value);
         // function replacers keep `$&` and `$$` in the option labels literal
         this.#handleTemporaryNotification(locale.rateChange.replace('${rate}', () => rate.label));
     };
 
     handleQualityChange = (quality: { label: string; value: string }, locale: VideoPlayerNotificationLocale) => {
         const changed = quality.value !== this.getStates().currentQuality;
-        this._adapter.setQuality(quality.value);
-        this._adapter.notifyQualityChange(quality.value);
+        this.adapter.setQuality(quality.value);
+        this.adapter.notifyQualityChange(quality.value);
         this.#handleTemporaryNotification(locale.qualityChange.replace('${quality}', () => quality.label));
         // choosing the current item loads nothing, so a listener would wait for an unrelated load
         if (changed) {
@@ -412,8 +412,8 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
 
     handleRouteChange = (route: { label: string; value: string }, locale: VideoPlayerNotificationLocale) => {
         const changed = route.value !== this.getStates().currentRoute;
-        this._adapter.setRoute(route.value);
-        this._adapter.notifyRouteChange(route.value);
+        this.adapter.setRoute(route.value);
+        this.adapter.notifyRouteChange(route.value);
         this.#handleTemporaryNotification(locale.routeChange.replace('${route}', () => route.label));
         if (changed) {
             this.#restorePlayPosition();
@@ -422,24 +422,24 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
 
     handleMirror = (locale: VideoPlayerNotificationLocale) => {
         const { isMirror } = this.getStates();
-        this._adapter.setIsMirror(!isMirror);
+        this.adapter.setIsMirror(!isMirror);
         this.#handleTemporaryNotification(!isMirror ? locale.mirror : locale.cancelMirror);
     };
 
     handlePictureInPicture = () => {
-        const video = this._adapter.getVideo();
+        const video = this.adapter.getVideo();
         if (!video) return;
         void ignoreExpectedMediaErrors(video.requestPictureInPicture());
     };
 
     handleMouseEnterWrapper = () => {
-        this._adapter.setShowControls(true);
+        this.adapter.setShowControls(true);
     };
 
     handleMouseLeaveWrapper = () => {
         const { isPlaying } = this.getStates();
         if (isPlaying) {
-            this._adapter.setShowControls(false);
+            this.adapter.setShowControls(false);
         }
     };
 }

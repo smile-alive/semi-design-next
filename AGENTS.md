@@ -29,11 +29,12 @@
 
 改哪个框架的包或文件，就先读该框架目录下全部文件；改框架无关代码，只读共享文件。新增框架只加一行，并按 [lint](.agents/references/lint.md) 的步骤登记。
 
-| 框架  | 包                      | 规则                        | lint          | 测试项目与目录                            |
-| ----- | ----------------------- | --------------------------- | ------------- | ----------------------------------------- |
-| React | `packages/semi-*-react` | `.agents/references/react/` | `lint/react/` | `react`、`react-browser`；`vitest/react/` |
-| Vue   | `packages/semi-*-vue`   | `.agents/references/vue/`   | `lint/vue/`   | `vue`、`vue-browser`；`vitest/vue/`       |
-| Solid | `packages/semi-*-solid` | `.agents/references/solid/` | `lint/solid/` | `solid`、`solid-browser`；`vitest/solid/` |
+| 框架   | 包                       | 规则                         | lint           | 测试项目与目录                               |
+| ------ | ------------------------ | ---------------------------- | -------------- | -------------------------------------------- |
+| React  | `packages/semi-*-react`  | `.agents/references/react/`  | `lint/react/`  | `react`、`react-browser`；`vitest/react/`    |
+| Vue    | `packages/semi-*-vue`    | `.agents/references/vue/`    | `lint/vue/`    | `vue`、`vue-browser`；`vitest/vue/`          |
+| Solid  | `packages/semi-*-solid`  | `.agents/references/solid/`  | `lint/solid/`  | `solid`、`solid-browser`；`vitest/solid/`    |
+| Svelte | `packages/semi-*-svelte` | `.agents/references/svelte/` | `lint/svelte/` | `svelte`、`svelte-browser`；`vitest/svelte/` |
 
 3. 涉及公开 API、目录结构，或与已定决策冲突的修改，先说明影响，等维护者决定；已定决策不重新讨论。
 

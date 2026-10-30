@@ -63,8 +63,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         super(adapter);
         // initValues is read here too: a field set on the Form may have no Field entity,
         // so the initial value cannot rely on the register moment alone
-        let { initValues } = this._adapter.getProps();
-        initValues = this._adapter.cloneDeep(initValues);
+        let { initValues } = this.adapter.getProps();
+        initValues = this.adapter.cloneDeep(initValues);
 
         this.#data = {
             values: initValues ? initValues : {},
@@ -80,7 +80,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     }
 
     #forceUpdate(callback?: () => void) {
-        this._adapter.forceUpdate(this.getFormState(), callback);
+        this.adapter.forceUpdate(this.getFormState(), callback);
     }
 
     #updateField(store: FieldStore, snapshot: Partial<FieldSnapshot>) {
@@ -114,7 +114,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const prevErrors = this.#data.errors;
         this.#data = { ...this.#data, errors: {} };
         this.#injectErrorToField({});
-        this._adapter.notifyChange(this.#data);
+        this.adapter.notifyChange(this.#data);
         this.#notifyErrorChange(prevErrors, this.#fields.keys());
         this.#forceUpdate();
     }
@@ -127,7 +127,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const prevErrors = this.#data.errors;
         this.#data = { ...this.#data, errors: formErrors };
         this.#injectErrorToField(formErrors);
-        this._adapter.notifyChange(this.#data);
+        this.adapter.notifyChange(this.#data);
         this.#notifyErrorChange(prevErrors, this.#fields.keys());
         // the error messages the scroll looks for exist only once this update is rendered
         this.#forceUpdate(() => this.#autoScroll());
@@ -146,7 +146,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             }
         }
         if (Object.keys(changedError).length) {
-            this._adapter.notifyErrorChange(this.#data.errors, changedError);
+            this.adapter.notifyErrorChange(this.#data.errors, changedError);
         }
     }
 
@@ -168,7 +168,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
         return new Promise((resolve, reject) => {
             const pass = () => {
-                resolve(this._adapter.cloneDeep(this.#data.values));
+                resolve(this.adapter.cloneDeep(this.#data.values));
                 if (writes()) {
                     this.#clearFormErrors();
                 }
@@ -258,13 +258,13 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                     valid = ObjectUtil.isEmpty(errors);
                 }
                 if (!silent) {
-                    this._adapter.notifyChange(this.#data);
+                    this.adapter.notifyChange(this.#data);
                     this.#notifyErrorChange(prevErrors, paths);
                     // the error messages the scroll looks for exist only once this update is rendered
                     this.#forceUpdate(valid ? undefined : () => this.#autoScroll());
                 }
                 if (valid) {
-                    const _values = this._adapter.cloneDeep(this.#data.values);
+                    const _values = this.adapter.cloneDeep(this.#data.values);
                     resolve(_values);
                 } else {
                     reject(errors);
@@ -330,7 +330,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             const arrayFieldState = this.#registeredArrayField.get(path);
             // a copy: onChange and onValueChange hand out the live values, and a consumer mutating them must not change
             // the saved init value
-            const arrayFieldInitValue = this._adapter.cloneDeep(arrayFieldState.initValue);
+            const arrayFieldInitValue = this.adapter.cloneDeep(arrayFieldState.initValue);
             this.#updateStateValue(path, arrayFieldInitValue, { skipNotify: true, skipRender: true });
             this.#updateArrayField(path, { updateKey: nextUpdateKey() });
         });
@@ -595,7 +595,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#unregisterNotifyPending = true;
         this.#forceUpdate(() => {
             this.#unregisterNotifyPending = false;
-            this._adapter.notifyChange(this.#data);
+            this.adapter.notifyChange(this.#data);
         });
     };
 
@@ -628,12 +628,12 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         }));
 
         this.#registerArrayField(arrayFieldPath, val);
-        this.#updateStateValue(arrayFieldPath, this._adapter.cloneDeep(val), SILENT);
+        this.#updateStateValue(arrayFieldPath, this.adapter.cloneDeep(val), SILENT);
         nestedValues.forEach(({ path, allowEmpty, value }) => {
             this.#updateStateValue(path, value, { ...SILENT, allowEmpty });
         });
         // reset() restores what the rows show now, their own initValue included
-        this.#updateArrayField(arrayFieldPath, { initValue: this._adapter.cloneDeep(this.#getValue(arrayFieldPath)) });
+        this.#updateArrayField(arrayFieldPath, { initValue: this.adapter.cloneDeep(this.#getValue(arrayFieldPath)) });
         this.#forceUpdate();
     };
 
@@ -660,7 +660,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const values = this.#getValue(arrayFieldPath);
         const rows = values ? values.slice() : [];
         const rowIndex = typeof index === 'number' ? Math.max(0, Math.min(index, rows.length)) : rows.length;
-        rows.splice(rowIndex, 0, this._adapter.cloneDeep(rowValue));
+        rows.splice(rowIndex, 0, this.adapter.cloneDeep(rowValue));
         const updateKey = nextUpdateKey();
         this.#updateArrayField(arrayFieldPath, { updateKey });
         this.#updateStateValue(arrayFieldPath, rows, {});
@@ -726,11 +726,11 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
     #getValue = (field?: string, opts?: CallOpts) => {
         const value = typeof field === 'undefined' ? { ...this.#data.values } : ObjectUtil.get(this.#data.values, field);
-        return opts?.needClone ? this._adapter.cloneDeep(value) : value;
+        return opts?.needClone ? this.adapter.cloneDeep(value) : value;
     };
 
     #setValues(values: any, { isOverride = false }) {
-        const _values = this._adapter.cloneDeep(values);
+        const _values = this.adapter.cloneDeep(values);
         this.#fields.forEach((field) => {
             const value = ObjectUtil.get(_values, field.field);
             // onValueChange and onChange fire once for the whole setValues call, not per field
@@ -753,8 +753,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             this.#data = { ...this.#data, values: _values };
         }
 
-        this._adapter.notifyChange(this.#data);
-        this._adapter.notifyValueChange(this.#data.values, { ...values });
+        this.adapter.notifyChange(this.#data);
+        this.adapter.notifyValueChange(this.#data.values, { ...values });
         this.#forceUpdate();
     }
 
@@ -768,8 +768,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         // Registering syncs a Field's initValue into FormState without notify, but still needs a forceUpdate:
         // otherwise the first render of useFormState and useFieldState is wrong
         if (!skipNotify) {
-            this._adapter.notifyChange(this.#data);
-            this._adapter.notifyValueChange(this.#data.values, { [field]: value });
+            this.adapter.notifyChange(this.#data);
+            this.adapter.notifyValueChange(this.#data.values, { [field]: value });
         }
 
         if (!skipRender) {
@@ -790,7 +790,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#data = { ...this.#data, touched: ObjectUtil.set(this.#data.touched, field, isTouched) };
 
         if (!skipNotify) {
-            this._adapter.notifyChange(this.#data);
+            this.adapter.notifyChange(this.#data);
         }
         if (!skipRender) {
             this.#forceUpdate(callback);
@@ -811,8 +811,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
         // Batch operations skip notify here and report once when done; they would otherwise fire once per field
         if (!skipNotify) {
-            this._adapter.notifyChange(this.#data);
-            this._adapter.notifyErrorChange(this.#data.errors, { [field]: error });
+            this.adapter.notifyChange(this.#data);
+            this.adapter.notifyErrorChange(this.#data.errors, { [field]: error });
         }
 
         if (!skipRender) {
@@ -892,9 +892,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return {
             setValue: (field: string, value: any, opts?: CallOpts) => {
                 this.#getOperateFieldMap([field]).forEach((_, path) => this.#validations.delete(path));
-                this.#setByPath('values', field, this._adapter.cloneDeep(value), opts);
+                this.#setByPath('values', field, this.adapter.cloneDeep(value), opts);
             },
-            setError: (field: string, error: any, opts?: CallOpts) => this.#setByPath('errors', field, this._adapter.cloneDeep(error), opts),
+            setError: (field: string, error: any, opts?: CallOpts) => this.#setByPath('errors', field, this.adapter.cloneDeep(error), opts),
             setTouched: (field: string, isTouched: boolean | Record<string, any>, opts?: CallOpts) => this.#setByPath('touched', field, isTouched, opts),
         };
     }
@@ -905,12 +905,12 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
     // Queried from the form element rather than document, so a Form inside a ShadowRoot finds its fields (F13)
     #getFieldDOM(field: string) {
-        return this._adapter.getFormElement()?.querySelector(`.${prefix}-field[x-field-id="${CSS.escape(field)}"]`) ?? null;
+        return this.adapter.getFormElement()?.querySelector(`.${prefix}-field[x-field-id="${CSS.escape(field)}"]`) ?? null;
     }
 
     /** The root elements of the fields showing an error message, in document order */
     #getErrorFieldDOMs() {
-        const errorDOMs = this._adapter.getFormElement()?.querySelectorAll(ERROR_SELECTOR) ?? [];
+        const errorDOMs = this.adapter.getFormElement()?.querySelectorAll(ERROR_SELECTOR) ?? [];
         // a standalone ErrorMessage has no field to scroll to
         return Array.from(errorDOMs, errorField).filter((fieldDOM) => fieldDOM !== null);
     }
@@ -944,18 +944,18 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     }
 
     protected getInitValues(): any {
-        return this._adapter.getInitValues();
+        return this.adapter.getInitValues();
     }
 
     protected getInitValue(field?: string) {
         if (typeof field === 'undefined') {
-            return this._adapter.getInitValues();
+            return this.adapter.getInitValues();
         }
-        return ObjectUtil.get(this._adapter.getInitValues(), field);
+        return ObjectUtil.get(this.adapter.getInitValues(), field);
     }
 
     protected getFormProps(keys?: Array<string>): ComponentProps {
-        return this._adapter.getFormProps(keys);
+        return this.adapter.getFormProps(keys);
     }
 
     override init() {
@@ -976,16 +976,16 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 if (this.#isCancelled(epoch)) {
                     return;
                 }
-                const _values = this._adapter.cloneDeep(resolveValues);
-                this._adapter.notifySubmit(_values, e);
+                const _values = this.adapter.cloneDeep(resolveValues);
+                this.adapter.notifySubmit(_values, e);
             },
             (errors) => {
                 if (this.#isCancelled(epoch)) {
                     return;
                 }
-                const _errors = this._adapter.cloneDeep(errors);
-                const _values = this._adapter.cloneDeep(this.#data.values);
-                this._adapter.notifySubmitFail(_errors, _values, e);
+                const _errors = this.adapter.cloneDeep(errors);
+                const _values = this.adapter.cloneDeep(this.#data.values);
+                this.adapter.notifySubmitFail(_errors, _values, e);
             }
         );
     };
@@ -1001,7 +1001,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const prevErrors = this.#data.errors;
         this.#batch(() => {
             targetFields.forEach((field) => {
-                this.#setFieldValue(field, field.initValue !== null ? this._adapter.cloneDeep(field.initValue) : undefined, SILENT);
+                this.#setFieldValue(field, field.initValue !== null ? this.adapter.cloneDeep(field.initValue) : undefined, SILENT);
                 this.#setFieldError(field, undefined, SILENT);
                 this.#setFieldTouched(field, undefined, SILENT);
                 this.#updateField(field.store, { status: 'default' });
@@ -1012,10 +1012,10 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             this.#resetArrayField(fieldPaths);
         }
 
-        this._adapter.notifyChange(this.#data);
+        this.adapter.notifyChange(this.#data);
         this.#notifyErrorChange(prevErrors, targetFields.keys());
         this.#forceUpdate();
-        this._adapter.notifyReset();
+        this.adapter.notifyReset();
     };
 
     getFieldBridge = () => {
@@ -1073,7 +1073,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 ...this.#data,
             };
         } else {
-            return this._adapter.cloneDeep(this.#data);
+            return this.adapter.cloneDeep(this.#data);
         }
     };
 }

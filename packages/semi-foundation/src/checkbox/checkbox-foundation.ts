@@ -78,18 +78,18 @@ const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [contenteditab
 
 export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckboxProps, S extends CheckboxBaseState = CheckboxBaseState> extends BaseFoundation<CheckboxAdapter<P, S>, P, S> {
     #notifyChange(checked: boolean, e: CheckboxSourceEvent) {
-        const cbValue = this._adapter.generateEvent(checked, e);
-        this._adapter.notifyChange(cbValue);
+        const cbValue = this.adapter.generateEvent(checked, e);
+        this.adapter.notifyChange(cbValue);
     }
 
     #handleChangeInGroup(e: CheckboxSourceEvent) {
         const { value } = this.getProps();
-        const groupValue = this._adapter.getGroupValue();
+        const groupValue = this.adapter.getGroupValue();
         const checked = groupValue.includes(value);
         const newChecked = !checked;
-        const event = this._adapter.generateEvent(newChecked, e);
-        this._adapter.notifyChange(event);
-        this._adapter.notifyGroupChange(event);
+        const event = this.adapter.generateEvent(newChecked, e);
+        this.adapter.notifyChange(event);
+        this.adapter.notifyGroupChange(event);
     }
 
     /** How the checkbox looks and behaves, from its own props or, with a value inside a group, from the group */
@@ -132,12 +132,12 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
             return;
         }
 
-        this._adapter.focusCheckboxEntity();
+        this.adapter.focusCheckboxEntity();
 
-        const isInGroup = this._adapter.getIsInGroup();
+        const isInGroup = this.adapter.getIsInGroup();
 
         if (isInGroup) {
-            const groupDisabled = this._adapter.getGroupDisabled();
+            const groupDisabled = this.adapter.getGroupDisabled();
             if (!groupDisabled) {
                 this.#handleChangeInGroup(e);
             }
@@ -147,7 +147,7 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         const checked = this.getState('checked');
 
         const newChecked = !checked;
-        if (this._isControlledComponent('checked')) {
+        if (this.isControlledComponent('checked')) {
             this.#notifyChange(newChecked, e);
         } else {
             this.setChecked(newChecked);
@@ -156,7 +156,7 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
     };
 
     setChecked = (checked: boolean) => {
-        this._adapter.setChecked(checked);
+        this.adapter.setChecked(checked);
     };
 }
 

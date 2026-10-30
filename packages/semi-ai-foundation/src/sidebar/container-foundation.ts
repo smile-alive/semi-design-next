@@ -31,7 +31,7 @@ export interface ContainerAdapter extends DefaultAdapter<ContainerProps, Record<
 
 export default class ContainerFoundation extends BaseFoundation<ContainerAdapter, ContainerProps, Record<string, never>> {
     #handleCancel(e: KeyboardEvent) {
-        this._adapter.notifyCancel(e);
+        this.adapter.notifyCancel(e);
     }
 
     #handleEscape = (e: KeyboardEvent) => {
@@ -43,17 +43,17 @@ export default class ContainerFoundation extends BaseFoundation<ContainerAdapter
     };
 
     #toggleDisplayNone(displayNone: boolean) {
-        this._adapter.toggleDisplayNone(displayNone);
+        this.adapter.toggleDisplayNone(displayNone);
     }
 
     override init() {}
 
     beforeShow = () => {
-        this._adapter.openLayer(this.#handleEscape);
+        this.adapter.openLayer(this.#handleEscape);
     };
 
     closeLayer = () => {
-        this._adapter.closeLayer();
+        this.adapter.closeLayer();
     };
 
     // focused content unmounts with the sidebar, which would leave focus on the body
@@ -63,11 +63,11 @@ export default class ContainerFoundation extends BaseFoundation<ContainerAdapter
     };
 
     restoreFocus = () => {
-        this._adapter.restoreFocus();
+        this.adapter.restoreFocus();
     };
 
     onVisibleChange = (visible: boolean) => {
-        this._adapter.notifyVisibleChange(visible);
+        this.adapter.notifyVisibleChange(visible);
     };
 
     handleAnimationEnd = () => {

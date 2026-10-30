@@ -44,12 +44,12 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         if (this.#interval) {
             clearInterval(this.#interval);
             this.#interval = null;
-            this._adapter.setRotating(false);
+            this.adapter.setRotating(false);
         }
     }
 
     #getActiveIndex() {
-        return CarouselFoundation.deriveActiveIndex(this.getProps(), this.getStates(), this._adapter.getSlideCount());
+        return CarouselFoundation.deriveActiveIndex(this.getProps(), this.getStates(), this.adapter.getSlideCount());
     }
 
     #restartAfterManualSwitch() {
@@ -64,10 +64,10 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         if (stateActiveIndex !== activeIndex) {
             // a switch to the current index must not animate, so isInit stays until the index changes
             if (isInit) {
-                this._adapter.setIsInit(false);
+                this.adapter.setIsInit(false);
             }
-            this._adapter.setPreActiveIndex(stateActiveIndex);
-            this._adapter.notifyChange(activeIndex, stateActiveIndex);
+            this.adapter.setPreActiveIndex(stateActiveIndex);
+            this.adapter.notifyChange(activeIndex, stateActiveIndex);
         }
     }
 
@@ -78,7 +78,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         this.#interval = setInterval(() => {
             this.next();
         }, interval);
-        this._adapter.setRotating(true);
+        this.adapter.setRotating(true);
     }
 
     // only playback paused by hover resumes on leave, so a hover never starts a stopped carousel
@@ -99,7 +99,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     }
 
     protected getValidIndex(index: number) {
-        const total = this._adapter.getSlideCount();
+        const total = this.adapter.getSlideCount();
         return total === 0 ? 0 : ((index % total) + total) % total;
     }
 
@@ -115,12 +115,12 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     }
 
     protected getIsControlledComponent() {
-        return this._isControlledComponent('activeIndex');
+        return this.isControlledComponent('activeIndex');
     }
 
     protected handleNewActiveIndex(activeIndex: number) {
         if (this.#getActiveIndex() !== activeIndex) {
-            this._adapter.setNewActiveIndex(activeIndex);
+            this.adapter.setNewActiveIndex(activeIndex);
         }
     }
 
@@ -218,7 +218,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     goTo = (activeIndex: number) => {
         const stateActiveIndex = this.#getActiveIndex();
         const targetIndex = this.getValidIndex(activeIndex);
-        this._adapter.setIsReverse(stateActiveIndex > targetIndex);
+        this.adapter.setIsReverse(stateActiveIndex > targetIndex);
         this.#notifyChange(targetIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
@@ -228,7 +228,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     next = () => {
         this.#unregisterInterval();
         const targetIndex = this.getValidIndex(this.#getActiveIndex() + 1);
-        this._adapter.setIsReverse(false);
+        this.adapter.setIsReverse(false);
         this.#notifyChange(targetIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
@@ -239,7 +239,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     prev = () => {
         this.#unregisterInterval();
         const targetIndex = this.getValidIndex(this.#getActiveIndex() - 1);
-        this._adapter.setIsReverse(true);
+        this.adapter.setIsReverse(true);
         this.#notifyChange(targetIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
@@ -262,7 +262,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
         // rotation that starts by itself is motion the user opted out of; ref.play() is an explicit request
         const reduceMotion = !this.#forcePlay && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (this._adapter.getSlideCount() > 1 && !reduceMotion && (CarouselFoundation.isAutoPlayOn(autoPlay) || this.#forcePlay)) {
+        if (this.adapter.getSlideCount() > 1 && !reduceMotion && (CarouselFoundation.isAutoPlayOn(autoPlay) || this.#forcePlay)) {
             // a keyboard switch must not restart rotation while focus is inside
             if (this.#keyboardFocusWithin) {
                 this.#resumeOnFocusLeave = true;
@@ -278,7 +278,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         if (event.altKey || event.ctrlKey || event.metaKey) {
             return false;
         }
-        const isRtl = this._adapter.getContext('direction') === 'rtl';
+        const isRtl = this.adapter.getContext('direction') === 'rtl';
         switch (event.key) {
             case 'ArrowLeft':
             case 'ArrowRight':
@@ -292,7 +292,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
                 this.goTo(0);
                 break;
             case 'End':
-                this.goTo(this._adapter.getSlideCount() - 1);
+                this.goTo(this.adapter.getSlideCount() - 1);
                 break;
             default:
                 return false;
@@ -302,7 +302,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     };
 
     onIndicatorChange = (activeIndex: number) => {
-        this._adapter.setIsReverse(this.#getActiveIndex() > activeIndex);
+        this.adapter.setIsReverse(this.#getActiveIndex() > activeIndex);
         this.#notifyChange(activeIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(activeIndex);
@@ -312,7 +312,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     // dropping the prop later continues from the last controlled index
     syncActiveIndex = (activeIndex: number) => {
         if (activeIndex !== undefined && activeIndex !== this.getStates().activeIndex) {
-            this._adapter.setNewActiveIndex(activeIndex);
+            this.adapter.setNewActiveIndex(activeIndex);
         }
     };
 }

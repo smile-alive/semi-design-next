@@ -32,31 +32,31 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
 
     handleCurrentActiveIndexChange = (index: number, state: 'focus' | 'blur') => {
         if (state === 'focus') {
-            void this._adapter.onCurrentActiveIndexChange(index);
+            void this.adapter.onCurrentActiveIndexChange(index);
         }
     };
 
     async completeSingleInput(i: number, singleInputValue: string) {
-        const isControlledComponent = this._isControlledComponent('value');
+        const isControlledComponent = this.isControlledComponent('value');
         // filled cells stay a prefix (the value is reported joined, so a gap would shift characters), hence typing
         // past its end lands on the first empty cell
         const index = Math.min(i, this.getState('valueList').length);
-        await this._adapter.onCurrentActiveIndexChange(index + 1);
+        await this.adapter.onCurrentActiveIndexChange(index + 1);
         const valueList = [...this.getState('valueList')];
         valueList[index] = singleInputValue;
-        this._adapter.notifyValueChange(valueList);
+        this.adapter.notifyValueChange(valueList);
         if (!isControlledComponent) {
             await this.updateValueList(valueList);
         }
 
         const count = this.getProp('count');
         if (index + 1 > count - 1) {
-            this._adapter.changeSpecificInputFocusState(index, 'blur');
+            this.adapter.changeSpecificInputFocusState(index, 'blur');
         } else {
-            this._adapter.changeSpecificInputFocusState(index + 1, 'focus');
+            this.adapter.changeSpecificInputFocusState(index + 1, 'focus');
         }
         if (valueList.length === count) {
-            this._adapter.notifyComplete(valueList.join(''));
+            this.adapter.notifyComplete(valueList.join(''));
         }
     }
 
@@ -97,7 +97,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
     }
 
     updateValueList = async (newValueList: PinCodeBaseState['valueList']) => {
-        await this._adapter.updateValueList(newValueList);
+        await this.adapter.updateValueList(newValueList);
     };
 
     handlePaste = async (e: ClipboardEvent, startInputIndex: number) => {
@@ -125,14 +125,14 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
     removeCell(index: number) {
         const valueList = this.getState('valueList').toSpliced(index, 1);
         void this.updateValueList(valueList);
-        this._adapter.notifyValueChange(valueList);
+        this.adapter.notifyValueChange(valueList);
     }
 
     handleKeyDownOnSingleInput = (e: KeyboardEvent, index: number) => {
         const lastIndex = this.getProp('count') - 1;
         if (e.key === 'Backspace') {
             this.removeCell(index);
-            this._adapter.changeSpecificInputFocusState(Math.max(0, index - 1), 'focus');
+            this.adapter.changeSpecificInputFocusState(Math.max(0, index - 1), 'focus');
             e.preventDefault();
         } else if (e.key === 'Delete') {
             this.removeCell(index);
@@ -141,10 +141,10 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
             // browser shortcuts such as Alt+ArrowLeft (back) keep their default action
             return;
         } else if (e.key === 'ArrowLeft') {
-            this._adapter.changeSpecificInputFocusState(Math.max(0, index - 1), 'focus');
+            this.adapter.changeSpecificInputFocusState(Math.max(0, index - 1), 'focus');
             e.preventDefault();
         } else if (e.key === 'ArrowRight') {
-            this._adapter.changeSpecificInputFocusState(Math.min(lastIndex, index + 1), 'focus');
+            this.adapter.changeSpecificInputFocusState(Math.min(lastIndex, index + 1), 'focus');
             e.preventDefault();
         }
     };

@@ -46,8 +46,8 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
 
     /** Called when the dialog is shown: joins the overlay stack and moves focus into the dialog */
     show = () => {
-        this._adapter.openLayer(this.#handleEscape);
-        this._adapter.trapFocus();
+        this.adapter.openLayer(this.#handleEscape);
+        this.adapter.trapFocus();
     };
 
     /**
@@ -55,8 +55,8 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
      * the focus back.
      */
     hide = () => {
-        this._adapter.closeLayer();
-        this._adapter.releaseFocus();
+        this.adapter.closeLayer();
+        this.adapter.releaseFocus();
         clearTimeout(this.#mouseUpTimer);
         this.#dialogMouseDown = false;
         this.restoreFocus();
@@ -82,10 +82,10 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
     };
 
     close = (e: E | KeyboardEvent) => {
-        this._adapter.notifyClose(e);
+        this.adapter.notifyClose(e);
     };
 
     restoreFocus = () => {
-        this._adapter.restoreFocus();
+        this.adapter.restoreFocus();
     };
 }

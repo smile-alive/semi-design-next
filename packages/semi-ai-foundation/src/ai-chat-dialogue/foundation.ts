@@ -49,10 +49,10 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         const { backBottomVisible } = this.getStates();
         if (scrollHeight - scrollTop - clientHeight <= strings.SHOW_SCROLL_GAP) {
             if (backBottomVisible) {
-                this._adapter.setBackBottomVisible(false);
+                this.adapter.setBackBottomVisible(false);
             }
         } else if (!backBottomVisible) {
-            this._adapter.setBackBottomVisible(true);
+            this.adapter.setBackBottomVisible(true);
         }
     }
 
@@ -63,7 +63,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
     }
 
     #animateScrollTop(getTarget: (element: HTMLDivElement) => number, onEnd?: () => void) {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (!element) {
             return;
         }
@@ -81,7 +81,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
     }
 
     #recordPosition() {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             this.#position = { top: element.scrollTop, height: element.scrollHeight };
         }
@@ -92,7 +92,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
      * scrollTop, as Chrome's scroll anchoring may already have moved it.
      */
     #keepPositionAfterPrepend() {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             element.scrollTop = this.#position.top + element.scrollHeight - this.#position.height;
         }
@@ -123,7 +123,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         const prevChats = prev.chats;
         let shouldScroll = false;
         if (chats !== prevChats) {
-            this._adapter.notifyChatsChange(chats);
+            this.adapter.notifyChatsChange(chats);
             const newLastChat = chats.at(-1);
             const oldLastChat = prevChats.at(-1);
             if (chats.length > prevChats.length) {
@@ -145,7 +145,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         } else {
             // content that grows or shrinks without scrolling fires no scroll event; known limit: growth outside
             // `chats` (an image loading) is not seen, upgrade to a ResizeObserver if that shows up
-            const element = this._adapter.getContainerRef();
+            const element = this.adapter.getContainerRef();
             if (element) {
                 this.#updateBackBottomVisible(element);
             }
@@ -155,13 +155,13 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
 
     handleSelectAll = () => {
         const selectedSet = new Set<string>(this.#getChats().map((chat) => chat.id));
-        this._adapter.updateSelected(selectedSet);
-        this._adapter.notifySelect(Array.from(selectedSet));
+        this.adapter.updateSelected(selectedSet);
+        this.adapter.notifySelect(Array.from(selectedSet));
     };
 
     handleDeselectAll = () => {
-        this._adapter.updateSelected(new Set());
-        this._adapter.notifySelect([]);
+        this.adapter.updateSelected(new Set());
+        this.adapter.notifySelect([]);
     };
 
     handleSelectOrRemove = (isChecked: boolean, id: string) => {
@@ -173,8 +173,8 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         } else {
             newSelectedSet.delete(id);
         }
-        this._adapter.updateSelected(newSelectedSet);
-        this._adapter.notifySelect(Array.from(newSelectedSet));
+        this.adapter.updateSelected(newSelectedSet);
+        this.adapter.notifySelect(Array.from(newSelectedSet));
     };
 
     likeMessage = (message: Message) => {
@@ -183,7 +183,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         if (index === -1) {
             return;
         }
-        this._adapter.notifyLikeMessage(message);
+        this.adapter.notifyLikeMessage(message);
         const newChat = {
             ...chats[index],
             like: !chats[index].like,
@@ -191,7 +191,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         };
         const newChats = [...chats];
         newChats.splice(index, 1, newChat);
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     dislikeMessage = (message: Message) => {
@@ -200,7 +200,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         if (index === -1) {
             return;
         }
-        this._adapter.notifyDislikeMessage(message);
+        this.adapter.notifyDislikeMessage(message);
         const newChat = {
             ...chats[index],
             like: false,
@@ -208,7 +208,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         };
         const newChats = [...chats];
         newChats.splice(index, 1, newChat);
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     resetMessage = (message: Message) => {
@@ -227,27 +227,27 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
             createdAt: Date.now(),
         };
         const newChats = chats.slice(0, -1).concat(newLastChat);
-        this._adapter.notifyChatsChange(newChats);
-        this._adapter.notifyMessageReset(message);
+        this.adapter.notifyChatsChange(newChats);
+        this.adapter.notifyMessageReset(message);
     };
 
     editMessage = (message: Message) => {
         const chats = this.#getChats();
-        this._adapter.notifyEditMessage(message);
+        this.adapter.notifyEditMessage(message);
         const newChats = chats.map((item) => {
             if (item.id === message.id) {
                 return { ...item, editing: !item.editing };
             }
             return item.editing ? { ...item, editing: false } : item;
         });
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     deleteMessage = (message: Message) => {
         const chats = this.#getChats();
-        this._adapter.notifyMessageDelete(message);
+        this.adapter.notifyMessageDelete(message);
         const newChats = chats.filter((item) => item.id !== message.id);
-        this._adapter.notifyChatsChange(newChats);
+        this.adapter.notifyChatsChange(newChats);
     };
 
     onHintClick = (hint: string) => {
@@ -259,12 +259,12 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
             content: hint,
         };
         const newChats = [...chats, newMessage];
-        this._adapter.notifyChatsChange(newChats);
-        this._adapter.notifyHintClick(hint);
+        this.adapter.notifyChatsChange(newChats);
+        this.adapter.notifyHintClick(hint);
     };
 
     scrollToBottomImmediately = () => {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             element.scrollTop = element.scrollHeight;
         }
@@ -280,7 +280,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
     };
 
     scrollToTopImmediately = () => {
-        const element = this._adapter.getContainerRef();
+        const element = this.adapter.getContainerRef();
         if (element) {
             element.scrollTop = 0;
         }

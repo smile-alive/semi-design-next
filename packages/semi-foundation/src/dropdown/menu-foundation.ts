@@ -48,7 +48,7 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
     readonly #typeahead = new Typeahead();
 
     #focusMenuButton(menu: Element) {
-        getMenuButton(this._adapter.getContext('getPopupId')?.() ?? '', menu.getRootNode() as ParentNode)?.focus();
+        getMenuButton(this.adapter.getContext('getPopupId')?.() ?? '', menu.getRootNode() as ParentNode)?.focus();
     }
 
     // read on every keydown: items may be added, removed or disabled while the menu is open
@@ -71,9 +71,9 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
         }
         const items = this.#getItems(menu);
         const index = items.findIndex((item) => item.contains(target));
-        const isRtl = this._adapter.getContext('direction') === 'rtl';
+        const isRtl = this.adapter.getContext('direction') === 'rtl';
         // a top-level menu is at depth 1
-        const isSubmenu = this._adapter.getContext('menuDepth') > 1;
+        const isSubmenu = this.adapter.getContext('menuDepth') > 1;
 
         switch (event.key) {
             case ' ':
@@ -89,7 +89,7 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
                 break;
             case 'Escape':
                 // the popup returns focus to its trigger itself, except a custom one, which the page shows and hides
-                if (this._adapter.getContext('trigger') === 'custom') {
+                if (this.adapter.getContext('trigger') === 'custom') {
                     this.#focusMenuButton(menu);
                 }
                 break;
@@ -111,7 +111,7 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
                     handlePrevent(event);
                     // focus first: closing a hover or focus popup while the trigger is unfocused would reopen it later
                     this.#focusMenuButton(menu);
-                    this._adapter.getContext('close')?.();
+                    this.adapter.getContext('close')?.();
                 }
                 break;
             case 'Tab': {
@@ -119,12 +119,12 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
                 // of the body, so the browser has to start from that trigger. A submenu's trigger is an item of the
                 // parent menu, whose own trigger is looked up in turn.
                 const root = menu.getRootNode() as ParentNode;
-                let button = getMenuButton(this._adapter.getContext('getPopupId')?.() ?? '', root);
+                let button = getMenuButton(this.adapter.getContext('getPopupId')?.() ?? '', root);
                 while (button?.matches(ITEM_SELECTOR)) {
                     button = getMenuButton(button.closest('[popover]')?.id ?? '', root);
                 }
                 button?.focus();
-                this._adapter.getContext('closeAll')?.();
+                this.adapter.getContext('closeAll')?.();
                 break;
             }
             default:

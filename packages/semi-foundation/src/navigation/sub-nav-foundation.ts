@@ -40,13 +40,13 @@ export interface SubNavBaseProps {
 export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProps, S extends object = object> extends BaseFoundation<SubNavAdapter<P, S>, P, S> {
     handleDropdownVisibleChange = (visible: boolean) => {
         const itemKey = this.getProp('itemKey');
-        const rawOpenKeys = this._adapter.getOpenKeys();
+        const rawOpenKeys = this.adapter.getOpenKeys();
         const openKeys = visible ? addKeys(rawOpenKeys, itemKey) : removeKeys(rawOpenKeys, itemKey);
 
         // a list in a Dropdown is never driven by the openKeys prop
-        this._adapter.updateOpen(visible);
+        this.adapter.updateOpen(visible);
 
-        this._adapter.notifyGlobalOpenChange({ itemKey, openKeys, isOpen: visible });
+        this.adapter.notifyGlobalOpenChange({ itemKey, openKeys, isOpen: visible });
     };
 
     handleClick = (e: MouseEvent | KeyboardEvent) => {
@@ -54,17 +54,17 @@ export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProp
         if (disabled) {
             return;
         }
-        const isOpen = !this._adapter.getIsOpen();
+        const isOpen = !this.adapter.getIsOpen();
 
-        const openKeys = isOpen ? addKeys(this._adapter.getOpenKeys(), itemKey) : removeKeys(this._adapter.getOpenKeys(), itemKey);
+        const openKeys = isOpen ? addKeys(this.adapter.getOpenKeys(), itemKey) : removeKeys(this.adapter.getOpenKeys(), itemKey);
 
         const cbVal = { itemKey, openKeys, isOpen, domEvent: e };
 
-        if (!this._adapter.getOpenKeysIsControlled()) {
-            this._adapter.updateOpen(isOpen);
+        if (!this.adapter.getOpenKeysIsControlled()) {
+            this.adapter.updateOpen(isOpen);
         }
-        this._adapter.notifyGlobalOpenChange(cbVal);
-        this._adapter.notifyGlobalOnClick(cbVal);
+        this.adapter.notifyGlobalOpenChange(cbVal);
+        this.adapter.notifyGlobalOnClick(cbVal);
     };
 
     /**
@@ -76,10 +76,10 @@ export default class SubNavFoundation<P extends SubNavBaseProps = SubNavBaseProp
         if (disabled) {
             return;
         }
-        this._adapter.notifyGlobalOnClick({
+        this.adapter.notifyGlobalOnClick({
             itemKey,
-            openKeys: this._adapter.getOpenKeys(),
-            isOpen: this._adapter.getIsOpen(),
+            openKeys: this.adapter.getOpenKeys(),
+            isOpen: this.adapter.getIsOpen(),
             domEvent: e,
         });
     };

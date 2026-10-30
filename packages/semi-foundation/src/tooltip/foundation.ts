@@ -136,7 +136,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     // static listeners read no `this`, so they are added and removed by reference
     static #handleScroll(event: Event) {
         for (const tooltip of Tooltip.#tracking) {
-            const trigger = tooltip._adapter.getTriggerElement();
+            const trigger = tooltip.adapter.getTriggerElement();
             // a scroll elsewhere (a Select's own list, another pane) leaves the trigger where it was
             if (!trigger || isInside(trigger, event.target)) {
                 Tooltip.#pending.add(tooltip);
@@ -170,10 +170,10 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     // A press while the click-outside listener is bound. The host answers the trigger and popup checks separately: a
     // press in a portaled popup reaches its logical ancestors differently in each framework.
     #handleClickOutside = (e: MouseEvent) => {
-        if (!this._adapter.getPortalContainer() || this._adapter.isEventInTrigger(e) || this._adapter.isEventInPopup(e)) {
+        if (!this.adapter.getPortalContainer() || this.adapter.isEventInTrigger(e) || this.adapter.isEventInPopup(e)) {
             return;
         }
-        this._adapter.notifyClickOutSide(e);
+        this.adapter.notifyClickOutSide(e);
         if (this.#hidesOnClickOutside) {
             this.hide();
         }
@@ -187,11 +187,11 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     }
 
     #bindTriggerEvent(triggerEventSet: Record<string, any>) {
-        this._adapter.registerTriggerEvent(triggerEventSet);
+        this.adapter.registerTriggerEvent(triggerEventSet);
     }
 
     #bindPortalEvent(portalEventSet: Record<string, any>) {
-        this._adapter.registerPortalEvent(portalEventSet);
+        this.adapter.registerPortalEvent(portalEventSet);
     }
 
     #generateEvent(types: ArrayElement<typeof strings.TRIGGER_SET>) {
@@ -302,7 +302,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         if (this.getProp('disableArrowKeyDown') || (key !== 'ArrowUp' && key !== 'ArrowDown')) {
             return;
         }
-        const focusableElements = FocusTrapHandle.getFocusableElements(this._adapter.getPortalContainer());
+        const focusableElements = FocusTrapHandle.getFocusableElements(this.adapter.getPortalContainer());
         if (!focusableElements.length) {
             return;
         }
@@ -315,7 +315,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
 
     // the popup is portaled into the trigger's root, so either one gives the view of that tree
     #getActiveElement() {
-        return FocusTrapHandle.getActiveElement(this._adapter.getPortalContainer() ?? this._adapter.getTriggerNode());
+        return FocusTrapHandle.getActiveElement(this.adapter.getPortalContainer() ?? this.adapter.getTriggerNode());
     }
 
     #handleContainerTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
@@ -364,20 +364,20 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
             return false;
         }
         this.#requestedVisible = visible;
-        this._adapter.notifyVisibleChange(visible);
+        this.adapter.notifyVisibleChange(visible);
         return true;
     }
 
     // a controlled owner hears only requests (D-1): it made every applied change itself
     #reportVisibleChange(visible: boolean) {
         if (this.getProp('visible') === undefined) {
-            this._adapter.notifyVisibleChange(visible);
+            this.adapter.notifyVisibleChange(visible);
         }
     }
 
     #startTracking() {
         // observer callbacks run after frame callbacks, so they reposition at once: a frame callback would land a frame late
-        const popup = this._adapter.getPortalContainer();
+        const popup = this.adapter.getPortalContainer();
         this.#insetTop = popup ? Math.max(parseFloat(getComputedStyle(popup).getPropertyValue('--semi-tooltip-viewport-inset-top')) || 0, 0) : 0;
         const resizeObserver = new ResizeObserver((entries) => {
             for (const { target, borderBoxSize } of entries) {
@@ -406,16 +406,16 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         if (popup) {
             resizeObserver.observe(popup);
         }
-        this._adapter.observeTrigger(resizeObserver);
-        this._adapter.observeTrigger(intersectionObserver);
+        this.adapter.observeTrigger(resizeObserver);
+        this.adapter.observeTrigger(intersectionObserver);
         if (!Tooltip.#tracking.size) {
             window.addEventListener('scroll', Tooltip.#handleScroll, { capture: true, passive: true });
             window.addEventListener('resize', Tooltip.#handleResize, { passive: true });
         }
         Tooltip.#tracking.add(this);
         this.#stopTracking = () => {
-            this._adapter.unobserveTrigger(resizeObserver);
-            this._adapter.unobserveTrigger(intersectionObserver);
+            this.adapter.unobserveTrigger(resizeObserver);
+            this.adapter.unobserveTrigger(intersectionObserver);
             resizeObserver.disconnect();
             intersectionObserver.disconnect();
             Tooltip.#tracking.delete(this);
@@ -441,8 +441,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
 
     /** Reads the layout: the trigger, the popup size and the placement; null while there is nothing to place */
     #measure(viewport: Viewport): Layout | null {
-        const popup = this._adapter.getPortalContainer();
-        const triggerRect = this._adapter.getTriggerRect();
+        const popup = this.adapter.getPortalContainer();
+        const triggerRect = this.adapter.getTriggerRect();
         if (!this.#stopTracking || !popup || !triggerRect) {
             return null;
         }
@@ -474,7 +474,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
 
     /** Writes a measured layout to the popup unless it is already there */
     #apply(layout: Layout | null) {
-        const popup = this._adapter.getPortalContainer();
+        const popup = this.adapter.getPortalContainer();
         if (!layout || !popup) {
             return;
         }
@@ -504,7 +504,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
      * every frame while open if such a trigger is seen not following.
      */
     #watchMove({ triggerRect: rect, viewport }: Layout) {
-        const trigger = this._adapter.getTriggerElement();
+        const trigger = this.adapter.getTriggerElement();
         const rootMargin = [rect.top, viewport.width - rect.right, viewport.height - rect.bottom, rect.left].map((inset) => `${-Math.floor(inset)}px`).join(' ');
         if (this.#moveWatch?.trigger === trigger && this.#moveWatch.rootMargin === rootMargin) {
             return;
@@ -701,16 +701,16 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         // change is reported, as on unmount. A popup still leaving counts too: hiding cancels the leave that would
         // have removed it.
         if (this.#open || this.getState('visible') || this.getState('transitionState') === 'leave') {
-            this._adapter.closePopup();
+            this.adapter.closePopup();
             if (!this.getProp('keepDOM')) {
-                this._adapter.removePortal();
+                this.adapter.removePortal();
             }
         }
         this.#mounted = false;
         this.#open = false;
         this.#requestedVisible = undefined;
         this.#endTracking();
-        this._adapter.unregisterClickOutsideHandler();
+        this.adapter.unregisterClickOutsideHandler();
         this.#clearDelayTimer();
     }
 
@@ -721,7 +721,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     };
 
     removePortal = () => {
-        this._adapter.removePortal();
+        this.adapter.removePortal();
     };
 
     /** Hosts call this when the `visible` prop changes */
@@ -746,7 +746,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     };
 
     updateStateIfCursorOnTrigger = () => {
-        if (this._adapter.isTriggerHovered()) {
+        if (this.adapter.isTriggerHovered()) {
             const triggerEventSet = this.getState('triggerEventSet');
             triggerEventSet[eventNames.mouseEnter]?.();
         }
@@ -776,13 +776,13 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         this.#open = true;
         this.#clearDelayTimer();
 
-        this._adapter.insertPortal();
+        this.adapter.insertPortal();
 
         // window-level: bound only once shown, or one click would fire every instance's handler
         const hides = trigger === 'click' || clickTriggerToHide || trigger === 'contextMenu';
         if (hides || trigger === 'custom') {
             this.#hidesOnClickOutside = hides;
-            this._adapter.registerClickOutsideHandler(this.#handleClickOutside);
+            this.adapter.registerClickOutsideHandler(this.#handleClickOutside);
         }
     }
 
@@ -799,15 +799,15 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
             const activeElement = this.#getActiveElement();
             // the focus may be on a control inside the trigger element (the input of a Switch)
             // a token match: a trigger shared by nested popups lists every popup id
-            const focusOpened = !this.getProp('disableFocusListener') && activeElement?.closest?.(`[data-popupid~="${CSS.escape(this._adapter.getPopupId())}"]`) != null;
-            const focusInPopup = Boolean(this._adapter.getPortalContainer()?.contains(activeElement));
-            if (!this._adapter.isTriggerHovered() && !focusOpened && !focusInPopup) {
+            const focusOpened = !this.getProp('disableFocusListener') && activeElement?.closest?.(`[data-popupid~="${CSS.escape(this.adapter.getPopupId())}"]`) != null;
+            const focusInPopup = Boolean(this.adapter.getPortalContainer()?.contains(activeElement));
+            if (!this.adapter.isTriggerHovered() && !focusOpened && !focusInPopup) {
                 this.hide();
                 return;
             }
         }
-        this._adapter.setInitialFocus();
-        this._adapter.notifyOpen();
+        this.adapter.setInitialFocus();
+        this.adapter.notifyOpen();
         this.#reportVisibleChange(true);
     };
 
@@ -851,11 +851,11 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
             return;
         }
         // a press outside during the exit animation is not another close
-        this._adapter.unregisterClickOutsideHandler();
+        this.adapter.unregisterClickOutsideHandler();
         this.#endTracking();
         // a popup still leaving, or kept by keepDOM, is inserted but already closed
         if (wasOpen || this.getState('visible')) {
-            this._adapter.closePopup();
+            this.adapter.closePopup();
             this.#reportVisibleChange(false);
         }
     };
@@ -871,12 +871,12 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         }
         if (trigger !== 'custom') {
             // move focus before hiding, or a hover/focus popup reopens when focus returns to the trigger
-            if (this._adapter.getPortalContainer()?.contains(this.#getActiveElement())) {
+            if (this.adapter.getPortalContainer()?.contains(this.#getActiveElement())) {
                 this.focusTrigger();
             }
             this.hide();
         }
-        this._adapter.notifyEscKeydown(event);
+        this.adapter.notifyEscKeydown(event);
         return true;
     };
 
@@ -885,7 +885,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         switch (event && event.key) {
             case 'Tab':
                 if (guardFocus) {
-                    const container = this._adapter.getPortalContainer();
+                    const container = this.adapter.getPortalContainer();
                     const focusableElements = FocusTrapHandle.getFocusableElements(container);
                     const focusableNum = focusableElements.length;
 
@@ -913,7 +913,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
             return;
         }
         const before = this.#getActiveElement();
-        this._adapter.getTriggerNode()?.focus?.({ preventScroll });
+        this.adapter.getTriggerNode()?.focus?.({ preventScroll });
         // the first focusable element can be a wrapper with tabIndex -1 that only takes the pointer (around a
         // loading Button); the Tab stop is the control inside it
         const active = this.#getActiveElement();

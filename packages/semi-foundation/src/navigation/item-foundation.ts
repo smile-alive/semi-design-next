@@ -56,10 +56,10 @@ export default class ItemFoundation<P extends ItemProps = ItemProps, S extends o
         }
 
         // read before selectSelf: a state readable right after a write would otherwise skip onSelect
-        const wasSelected = this._adapter.getSelected();
+        const wasSelected = this.adapter.getSelected();
 
-        if (!isSubNav && this.isValidKey(itemKey) && !this._adapter.getSelectedKeysIsControlled() && !wasSelected) {
-            this._adapter.selectSelf();
+        if (!isSubNav && this.isValidKey(itemKey) && !this.adapter.getSelectedKeysIsControlled() && !wasSelected) {
+            this.adapter.selectSelf();
         }
 
         const selectedKeys = [itemKey];
@@ -67,12 +67,12 @@ export default class ItemFoundation<P extends ItemProps = ItemProps, S extends o
         // a SubNav triggers the click event itself
         if (!isSubNav) {
             if (!wasSelected) {
-                const selectedItems = [this._adapter.cloneDeep(this.getProps())];
+                const selectedItems = [this.adapter.cloneDeep(this.getProps())];
 
-                this._adapter.notifyGlobalOnSelect({ itemKey, selectedKeys, selectedItems, domEvent: e });
+                this.adapter.notifyGlobalOnSelect({ itemKey, selectedKeys, selectedItems, domEvent: e });
             }
-            this._adapter.notifyGlobalOnClick({ itemKey, text, domEvent: e });
+            this.adapter.notifyGlobalOnClick({ itemKey, text, domEvent: e });
         }
-        this._adapter.notifyClick({ itemKey, text, domEvent: e });
+        this.adapter.notifyClick({ itemKey, text, domEvent: e });
     };
 }

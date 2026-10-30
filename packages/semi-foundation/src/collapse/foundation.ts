@@ -66,7 +66,7 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
         if (activeKey !== undefined) {
             const newSet = toSet(activeKey);
             if (!isEqual(newSet, this.getStates().activeSet)) {
-                this._adapter.setActiveSet(newSet);
+                this.adapter.setActiveSet(newSet);
             }
         }
     };
@@ -81,9 +81,9 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
         } else {
             newSet.add(newKey);
         }
-        this._adapter.notifyChange([...newSet.values()], e);
+        this.adapter.notifyChange([...newSet.values()], e);
         if (typeof activeKey === 'undefined') {
-            this._adapter.setActiveSet(newSet);
+            this.adapter.setActiveSet(newSet);
         }
     };
 }

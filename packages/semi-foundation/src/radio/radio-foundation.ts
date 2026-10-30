@@ -80,17 +80,17 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
     }
 
     #isStandalone() {
-        return !this.getContexts()?.radioGroup && !this._isControlledComponent('checked');
+        return !this.getContexts()?.radioGroup && !this.isControlledComponent('checked');
     }
 
     /** Unchecks, without notifying, the standalone radios that share this one's native group (same form and name) */
     #uncheckPeers() {
-        const input = this._adapter.getInput();
+        const input = this.adapter.getInput();
         if (!input?.name || !this.#isStandalone()) {
             return;
         }
         for (const peer of RadioFoundation.#standalone) {
-            const peerInput = peer._adapter.getInput();
+            const peerInput = peer.adapter.getInput();
             if (peer !== this && peer.#isStandalone() && peerInput?.name === input.name && peerInput.form === input.form && peerInput.getRootNode() === input.getRootNode() && peer.getState('checked')) {
                 peer.setChecked(false);
             }
@@ -141,7 +141,7 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
     }
 
     setChecked = (checked: boolean) => {
-        this._adapter.setChecked(checked);
+        this.adapter.setChecked(checked);
     };
 
     /** `checked` is the value the native input reports, or false for the uncheck of advanced mode */
@@ -159,14 +159,14 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
             stopPropagation: () => e.stopPropagation(),
             preventDefault: () => e.preventDefault(),
         };
-        this._adapter.notifyGroupChange(event);
-        if (!this._isControlledComponent('checked')) {
+        this.adapter.notifyGroupChange(event);
+        if (!this.isControlledComponent('checked')) {
             if (checked) {
                 this.#uncheckPeers();
             }
             this.setChecked(checked);
         }
-        this._adapter.notifyChange(event);
+        this.adapter.notifyChange(event);
     };
 
     // a native radio reports no change when the checked one is clicked, so advanced mode reports the uncheck here

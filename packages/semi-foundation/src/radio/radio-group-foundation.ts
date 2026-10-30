@@ -21,7 +21,7 @@ export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioG
         const mode = this.getProp('mode');
         const lastValue = this.getState('value');
         const { checked, value } = evt.target;
-        const isControlledComponent = this._isControlledComponent();
+        const isControlledComponent = this.isControlledComponent();
 
         const cbValue = {
             ...evt,
@@ -37,18 +37,18 @@ export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioG
 
         if (!isControlledComponent) {
             if (mode === 'advanced' && !checked) {
-                this._adapter.setValue(undefined);
+                this.adapter.setValue(undefined);
             } else {
-                this._adapter.setValue(value);
+                this.adapter.setValue(value);
             }
         }
 
         if (mode === 'advanced' || lastValue !== value) {
-            this._adapter.notifyChange(cbValue);
+            this.adapter.notifyChange(cbValue);
         }
     };
 
     handlePropValueChange = (propValue: string | number | boolean) => {
-        this._adapter.setValue(propValue);
+        this.adapter.setValue(propValue);
     };
 }

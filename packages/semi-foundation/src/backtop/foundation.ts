@@ -55,7 +55,7 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
             const visible = this.#getScroll(this.#targetNode) > visibilityHeight;
             // every adapter write re-renders; scroll events outnumber visibility changes
             if (visible !== Boolean(this.getStates().visible)) {
-                this._adapter.updateVisible(visible);
+                this.adapter.updateVisible(visible);
             }
         });
     };
@@ -100,6 +100,6 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
                 },
             });
         }
-        this._adapter.notifyClick(e);
+        this.adapter.notifyClick(e);
     };
 }

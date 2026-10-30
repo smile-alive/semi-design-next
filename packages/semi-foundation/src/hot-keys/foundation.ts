@@ -76,7 +76,7 @@ export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseP
             if (preventDefault) {
                 event.preventDefault();
             }
-            this._adapter.notifyHotKey(event);
+            this.adapter.notifyHotKey(event);
             return;
         }
     };

@@ -27,23 +27,23 @@ export class ContractFoundation extends BaseFoundation<ContractAdapter, Contract
 
     override init() {
         this.signals.push(this.signal);
-        this._adapter.log(`init state=${stateText()}`);
+        this.adapter.log(`init state=${stateText()}`);
     }
 
     override destroy() {
-        this._adapter.log(`destroy attached=${stateText() !== null} aborted=${this.signal.aborted}`);
+        this.adapter.log(`destroy attached=${stateText() !== null} aborted=${this.signal.aborted}`);
     }
 
     /** An event handler that updates state first, then notifies the consumer */
     increment() {
         const x = this.getState('x') + 1;
-        this.setState({ x }, () => this._adapter.log(`callback state=${stateText()} label=${this.getProp('label')}`));
-        this._adapter.notifyChange(x);
+        this.setState({ x }, () => this.adapter.log(`callback state=${stateText()} label=${this.getProp('label')}`));
+        this.adapter.notifyChange(x);
     }
 
     /** Called by the host's native prop-change reaction (React and Vue `useDidUpdate`) */
     handleLabelChange() {
-        this._adapter.log(`labelChange prop=${this.getProp('label')} dom=${labelText()}`);
+        this.adapter.log(`labelChange prop=${this.getProp('label')} dom=${labelText()}`);
     }
 }
 

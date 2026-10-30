@@ -48,7 +48,7 @@ export interface NavigationBaseProps {
 
 export default class NavigationFoundation<P extends NavigationBaseProps = NavigationBaseProps, S extends NavigationState = NavigationState> extends BaseFoundation<NavigationAdapter<P, S>, P, S> {
     #getItemKeysMap() {
-        return NavigationFoundation.getFormattedItems(this.getProps(), this._adapter.getItemsFromChildren()).itemKeysMap;
+        return NavigationFoundation.getFormattedItems(this.getProps(), this.adapter.getItemsFromChildren()).itemKeysMap;
     }
 
     // unchanged values are not written, so a parent re-rendering with identical content costs no second render
@@ -59,10 +59,10 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         const willSelectedKeys: ItemKey[] = props.selectedKeys || props.defaultSelectedKeys || [];
         const selectedKeys = willSelectedKeys.concat(NavigationFoundation.getZeroParentKeys(itemKeysMap, ...willSelectedKeys));
         if (!isEqual(selectedKeys, this.getState('selectedKeys'))) {
-            this._adapter.updateSelectedKeys(selectedKeys);
+            this.adapter.updateSelectedKeys(selectedKeys);
         }
         if (!isEqual(willOpenKeys, this.getState('openKeys'))) {
-            this._adapter.updateOpenKeys(willOpenKeys);
+            this.adapter.updateOpenKeys(willOpenKeys);
         }
     }
 
@@ -212,14 +212,14 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         }
         if (props.selectedKeys && !isEqual(prevProps.selectedKeys, props.selectedKeys)) {
             this.updateSelectedKeys(props.selectedKeys);
-            this._adapter.updateOpenKeys(NavigationFoundation.getWillOpenKeys(props, this.getState('openKeys'), this.#getItemKeysMap()));
+            this.adapter.updateOpenKeys(NavigationFoundation.getWillOpenKeys(props, this.getState('openKeys'), this.#getItemKeysMap()));
         } else if (prevProps.selectedKeys !== undefined && props.selectedKeys === undefined) {
-            this._adapter.updateSelectedKeys([]);
+            this.adapter.updateSelectedKeys([]);
         }
         if (props.openKeys && !isEqual(prevProps.openKeys, props.openKeys)) {
-            this._adapter.updateOpenKeys(props.openKeys);
+            this.adapter.updateOpenKeys(props.openKeys);
         } else if (prevProps.openKeys !== undefined && props.openKeys === undefined) {
-            this._adapter.updateOpenKeys(NavigationFoundation.getWillOpenKeys(props, [], this.#getItemKeysMap()));
+            this.adapter.updateOpenKeys(NavigationFoundation.getWillOpenKeys(props, [], this.#getItemKeysMap()));
         }
     };
 
@@ -231,7 +231,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
      */
     updateSelectedKeys = (keys: ItemKey[]) => {
         const parentKeys = NavigationFoundation.getZeroParentKeys(this.#getItemKeysMap(), ...keys);
-        this._adapter.updateSelectedKeys(Array.from(new Set(keys.concat(parentKeys))));
+        this.adapter.updateSelectedKeys(Array.from(new Set(keys.concat(parentKeys))));
     };
 
     addOpenKey = (itemKey: ItemKey) => {
@@ -239,7 +239,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         if (itemKey != null) {
             openKeys.add(itemKey);
         }
-        this._adapter.updateOpenKeys(Array.from(openKeys));
+        this.adapter.updateOpenKeys(Array.from(openKeys));
     };
 
     removeOpenKey = (itemKey: ItemKey) => {
@@ -247,15 +247,15 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         if (itemKey != null) {
             openKeys.delete(itemKey);
         }
-        this._adapter.updateOpenKeys(Array.from(openKeys));
+        this.adapter.updateOpenKeys(Array.from(openKeys));
     };
 
     handleCollapseChange = () => {
         const isCollapsed = !NavigationFoundation.getIsCollapsed(this.getProps(), this.getStates());
 
-        if (!this._isControlledComponent('isCollapsed')) {
-            this._adapter.setIsCollapsed(isCollapsed);
+        if (!this.isControlledComponent('isCollapsed')) {
+            this.adapter.setIsCollapsed(isCollapsed);
         }
-        this._adapter.notifyCollapseChange(isCollapsed);
+        this.adapter.notifyCollapseChange(isCollapsed);
     };
 }

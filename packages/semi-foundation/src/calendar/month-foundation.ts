@@ -9,10 +9,10 @@ export interface CalendarMonthAdapter<P extends object = object, S extends objec
 export default class CalendarMonthFoundation<P extends object = object, S extends object = object> extends BaseFoundation<CalendarMonthAdapter<P, S>, P, S> {
     /** Closes the "more" card from its close button or a mousedown outside */
     closeCard = (e: unknown, key: string) => {
-        this._adapter.notifyClose(e, key);
+        this.adapter.notifyClose(e, key);
     };
 
     showCard = (key: string) => {
-        this._adapter.openCard(key);
+        this.adapter.openCard(key);
     };
 }

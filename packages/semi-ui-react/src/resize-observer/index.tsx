@@ -27,7 +27,6 @@ class ObserverRuntime {
     readonly #children = new Set<Element>();
     #first: Element | null = null;
     #parent: Element | null = null;
-
     #observer: ResizeObserver | null = null;
     #fragment: FragmentInstance | null = null;
     #observeParent = false;

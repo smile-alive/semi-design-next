@@ -27,34 +27,34 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
     override destroy() {}
 
     handleSrcChange = () => {
-        this._adapter.setImgExist(true);
+        this.adapter.setImgExist(true);
     };
 
     handleImgLoadError = () => {
-        const errorFlag = this._adapter.notifyError();
+        const errorFlag = this.adapter.notifyError();
         if (errorFlag !== false) {
-            this._adapter.setImgExist(false);
+            this.adapter.setImgExist(false);
         }
     };
 
     handleEnter = (e: E) => {
-        this._adapter.notifyEnter(e);
+        this.adapter.notifyEnter(e);
     };
 
     handleLeave = (e: E) => {
-        this._adapter.notifyLeave(e);
+        this.adapter.notifyLeave(e);
     };
 
     changeScale = () => {
         const { gap } = this.getProps();
-        const widths = this._adapter.getTextWidths();
+        const widths = this.adapter.getTextWidths();
         if (!widths) {
             return;
         }
         const { container: nodeWidth, text: stringNodeWidth } = widths;
         if (nodeWidth !== 0 && stringNodeWidth !== 0 && gap * 2 < nodeWidth) {
             const scale = nodeWidth - gap * 2 > stringNodeWidth ? 1 : (nodeWidth - gap * 2) / stringNodeWidth;
-            this._adapter.setScale(scale);
+            this.adapter.setScale(scale);
         }
     };
 }

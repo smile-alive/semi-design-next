@@ -60,7 +60,7 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
     handleSearch = (value: string) => {
         this.setState({ inputValue: value });
         this.#updateQuery(value);
-        this._adapter.notifySearch(value, this.getState('mode') === strings.MCP_MODE.CUSTOM);
+        this.adapter.notifySearch(value, this.getState('mode') === strings.MCP_MODE.CUSTOM);
     };
 
     // cancel the pending throttled search so the new mode's list is filtered by the text already typed
@@ -70,11 +70,11 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
     };
 
     onConfigureButtonClick = (e: E, option: MCPOption) => {
-        this._adapter.notifyConfigureClick(e, option);
+        this.adapter.notifyConfigureClick(e, option);
     };
 
     onEditButtonClick = (e: E, option: MCPOption) => {
-        this._adapter.notifyEditClick(e, option);
+        this.adapter.notifyEditClick(e, option);
     };
 
     handleStatusChange = (item: MCPOption, checked: boolean) => {
@@ -86,10 +86,10 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
         } else {
             newOptions = customOptions.map((option) => (option.value === item.value ? { ...option, active: checked } : option));
         }
-        this._adapter.notifyStatusChange(newOptions, mode === strings.MCP_MODE.CUSTOM);
+        this.adapter.notifyStatusChange(newOptions, mode === strings.MCP_MODE.CUSTOM);
     };
 
     handleAddClick = (e: E) => {
-        this._adapter.notifyAddClick(e);
+        this.adapter.notifyAddClick(e);
     };
 }

@@ -69,11 +69,9 @@ export class PieceTreeTextBufferFactory {
 
 export class PieceTreeTextBufferBuilder {
     readonly #chunks: StringBuffer[];
-
     #hasPreviousChar: boolean;
     #previousChar: number;
     readonly #tmpLineStarts: number[];
-
     #cr: number;
     #lf: number;
     #crlf: number;

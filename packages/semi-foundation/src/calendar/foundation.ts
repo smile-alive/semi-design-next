@@ -103,10 +103,10 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
             if (!isSameDay(this.getProp('displayValue'), getCurrDate())) {
                 // getPos reads only the time of day: the line would restart at 00:00 on a past column
                 clearInterval(this.#currTimeTimer);
-                this._adapter.setShowCurrTime(false);
+                this.adapter.setShowCurrTime(false);
                 return;
             }
-            this._adapter.updateCurrPos(round(getPos(getCurrDate())));
+            this.adapter.updateCurrPos(round(getPos(getCurrDate())));
         };
         update();
         clearInterval(this.#currTimeTimer);
@@ -271,7 +271,7 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
     override init() {
         const { showCurrTime, displayValue } = this.getProps();
         if (showCurrTime && isSameDay(displayValue, getCurrDate())) {
-            this._adapter.setShowCurrTime(true);
+            this.adapter.setShowCurrTime(true);
             this.#startCurrentTimeTicker();
         }
     }

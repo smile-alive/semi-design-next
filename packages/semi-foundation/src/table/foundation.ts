@@ -183,7 +183,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     // shortcut: these defaults belong in getInitialState, which needs the key entities and groups resolved statically;
     // move them there when the state of both hosts is created from it.
     #defaultKeysApplied = false;
-
     // Without `scroll-state` container queries (Chrome < 133) the fixed-column shadows follow data attributes written by
     // syncScrollEdges. Removable once Firefox and Safari support `container-type: scroll-state`.
     #trackScrollEdges: boolean | undefined;
@@ -223,9 +222,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         filters = filters == null ? this.#getAllFilters() : filters;
         sorter = sorter == null ? (this.#getAllSorters()[0] as BaseChangeInfoSorter<RecordType>) : sorter;
         if (this.getProp('scroll')?.scrollToFirstRowOnChange) {
-            this._adapter.resetScrollY();
+            this.adapter.resetScrollY();
         }
-        this._adapter.notifyChange({
+        this.adapter.notifyChange({
             pagination: { ...pagination },
             filters: [...filters],
             sorter,
@@ -320,9 +319,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     #getGroups() {
-        const groupBy = this._adapter.getProp('groupBy');
+        const groupBy = this.adapter.getProp('groupBy');
         if (groupBy !== null) {
-            const groups = this._adapter.getState('groups');
+            const groups = this.adapter.getState('groups');
             return groups;
         }
         return null;
@@ -343,7 +342,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             }
 
             let halfCheckedRowKeys: BaseRowKeyType[] = [];
-            if (this._adapter.getCheckRelation() === 'related') {
+            if (this.adapter.getCheckRelation() === 'related') {
                 const related = TableFoundation.#getRelatedCheckedRowKeys(rowKeys, keyEntities);
                 halfCheckedRowKeys = related.halfCheckedRowKeys;
                 if (!controlled) {
@@ -353,27 +352,27 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 }
             }
 
-            this._adapter.setSelectedRowKeys(rowKeys);
-            this._adapter.setHalfCheckedRowKeys(halfCheckedRowKeys);
+            this.adapter.setSelectedRowKeys(rowKeys);
+            this.adapter.setHalfCheckedRowKeys(halfCheckedRowKeys);
         }
     }
 
     #setAdapterPageData({ pagination, dataSource, disabledRowKeys, allRowKeys, groups }: BasePageData<RecordType> = {}) {
-        this._adapter.setPageDisabledRowKeys(disabledRowKeys);
-        this._adapter.setAllRowKeys(allRowKeys);
-        this._adapter.setPagination(pagination);
-        this._adapter.setGroups(groups);
-        this._adapter.setDataSource(dataSource);
+        this.adapter.setPageDisabledRowKeys(disabledRowKeys);
+        this.adapter.setAllRowKeys(allRowKeys);
+        this.adapter.setPagination(pagination);
+        this.adapter.setGroups(groups);
+        this.adapter.setDataSource(dataSource);
     }
 
     #setCachedFilteredSortedDataSource(filteredSortedDataSource: RecordType[]) {
-        this._adapter.setCachedFilteredSortedDataSource(filteredSortedDataSource);
+        this.adapter.setCachedFilteredSortedDataSource(filteredSortedDataSource);
         const filteredSortedRowKeys = this.getAllRowKeys(filteredSortedDataSource);
-        this._adapter.setCachedFilteredSortedRowKeys(filteredSortedRowKeys);
+        this.adapter.setCachedFilteredSortedRowKeys(filteredSortedRowKeys);
     }
 
     #setFilteredDisabledRowKeys(disabledRowKeys: BaseRowKeyType[]) {
-        this._adapter.setFilteredDisabledRowKeys(disabledRowKeys);
+        this.adapter.setFilteredDisabledRowKeys(disabledRowKeys);
     }
 
     #applyQueries(queries: BaseColumnProps<RecordType>[]) {
@@ -389,8 +388,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     /** Rebuilds the tree of a related selection; the half-checked rows follow from it and the selected keys */
     #updateKeyEntities() {
         const keyEntities = this.buildKeyEntities(this.getProp('dataSource'));
-        this._adapter.setKeyEntities(keyEntities);
-        this._adapter.setHalfCheckedRowKeys(TableFoundation.#getRelatedCheckedRowKeys(this.#getSelectedRowKeys(), keyEntities).halfCheckedRowKeys);
+        this.adapter.setKeyEntities(keyEntities);
+        this.adapter.setHalfCheckedRowKeys(TableFoundation.#getRelatedCheckedRowKeys(this.#getSelectedRowKeys(), keyEntities).halfCheckedRowKeys);
     }
 
     /**
@@ -410,7 +409,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.#setFilteredDisabledRowKeys(allDataDisabledRowKeys);
             states.dataSource = filteredSortedDataSource;
 
-            if (this._adapter.getCheckRelation() === 'related') {
+            if (this.adapter.getCheckRelation() === 'related') {
                 this.#updateKeyEntities();
             }
 
@@ -431,8 +430,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         if (Object.keys(states).length) {
             const pageData = this.getCurrentPageData(states.dataSource ?? null, states.pagination ?? (statePagination && { ...statePagination }), null);
 
-            this._adapter.setAllRowKeys(pageData.allRowKeys);
-            this._adapter.setPageDisabledRowKeys(pageData.disabledRowKeys);
+            this.adapter.setAllRowKeys(pageData.allRowKeys);
+            this.adapter.setPageDisabledRowKeys(pageData.disabledRowKeys);
 
             if ('dataSource' in states) {
                 // groups recompute with the columns too; only new data, which may bring new groups, expands them again
@@ -440,14 +439,14 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 if (expandNewGroups || expandAllRows || expandAllGroupRows) {
                     this.initExpandedRowKeys(pageData);
                 }
-                this._adapter.setDataSource(pageData.dataSource);
+                this.adapter.setDataSource(pageData.dataSource);
                 states.pagination = pageData.pagination;
             }
             if ('groups' in states) {
-                this._adapter.setGroups(pageData.groups);
+                this.adapter.setGroups(pageData.groups);
             }
             if ('pagination' in states) {
-                this._adapter.setPagination(pageData.pagination);
+                this.adapter.setPagination(pageData.pagination);
             }
         }
     }
@@ -485,7 +484,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     protected calcCheckedKeysForSelect(realKey: BaseRowKeyType, selected: boolean, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
-        const keyEntities = this._adapter.getKeyEntities();
+        const keyEntities = this.adapter.getKeyEntities();
         const keyStr = String(realKey);
 
         if (!keyEntities || !keyEntities[keyStr]) {
@@ -1033,15 +1032,15 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     syncScrollEdges = () => {
         // probed on first use, which hosts only reach after mount, so SSR never touches CSS
         this.#trackScrollEdges ??= !CSS.supports('container-type', 'scroll-state');
-        const metrics = this.#trackScrollEdges ? this._adapter.getScrollMetrics() : null;
+        const metrics = this.#trackScrollEdges ? this.adapter.getScrollMetrics() : null;
         if (metrics) {
-            this._adapter.setScrollableEdges(TableFoundation.getScrollableEdges(metrics));
+            this.adapter.setScrollableEdges(TableFoundation.getScrollableEdges(metrics));
         }
     };
 
     override init() {
         const dataSource = this.getProp('dataSource');
-        const { queries } = this._adapter.getStates();
+        const { queries } = this.adapter.getStates();
         const filteredSortedDataSource = this.getFilteredSortedDataSource(dataSource, queries);
         const allDataDisabledRowKeys = this.getAllDisabledRowKeys(filteredSortedDataSource);
         const pageData = this.getCurrentPageData(filteredSortedDataSource);
@@ -1054,9 +1053,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.initExpandedRowKeys(pageData);
         }
         let keyEntities: BaseEntitys = {};
-        if (this._adapter.getCheckRelation() === 'related' && dataSource && dataSource.length) {
+        if (this.adapter.getCheckRelation() === 'related' && dataSource && dataSource.length) {
             keyEntities = this.buildKeyEntities(dataSource);
-            this._adapter.setKeyEntities(keyEntities);
+            this.adapter.setKeyEntities(keyEntities);
         }
         if (applyDefaultKeys) {
             this.#initSelectedRowKeys(keyEntities);
@@ -1092,7 +1091,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const dataSourceChanged = props.dataSource !== prevProps.dataSource;
         const recompute = dataSourceChanged || flattenColumns !== prevFlattenColumns;
         // an unrelated selection keeps no tree
-        const becameRelated = this._adapter.getCheckRelation() === 'related' && !(isObject(prevProps.rowSelection) && prevProps.rowSelection.checkRelation === 'related');
+        const becameRelated = this.adapter.getCheckRelation() === 'related' && !(isObject(prevProps.rowSelection) && prevProps.rowSelection.checkRelation === 'related');
         if (becameRelated && !recompute) {
             this.#updateKeyEntities();
         }
@@ -1113,11 +1112,11 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         } else if (Array.isArray(propExpandedRowKeys) && propExpandedRowKeys.length) {
             this.#addNoDuplicatedItemsToArr(expandedRowKeys, propExpandedRowKeys);
         }
-        this._adapter.setExpandedRowKeys(expandedRowKeys);
+        this.adapter.setExpandedRowKeys(expandedRowKeys);
     }
 
     getCurrentPageData = (dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) => {
-        const filteredSortedDataSource = this._adapter.getCachedFilteredSortedDataSource();
+        const filteredSortedDataSource = this.adapter.getCachedFilteredSortedDataSource();
         dataSource = dataSource == null ? [...filteredSortedDataSource] : dataSource;
         pagination = pagination == null ? this.getState('pagination') && { ...this.getState('pagination') } : pagination;
         queries = queries == null ? [...this.getState('queries')] : queries;
@@ -1126,11 +1125,11 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
     /** Scrolls back to the first row; a pagination.onChange that takes over paging still gets the scroll */
     resetScrollY = () => {
-        this._adapter.resetScrollY();
+        this.adapter.resetScrollY();
     };
 
     setPage = (currentPage: number, currentPageSize: number) => {
-        currentPage = currentPage || this._adapter.getCurrentPage();
+        currentPage = currentPage || this.adapter.getCurrentPage();
         const currentPagination = this.getState('pagination');
         const { dataSource, pagination, disabledRowKeys, allRowKeys } = this.getCurrentPageData(null, {
             ...currentPagination,
@@ -1138,10 +1137,10 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             pageSize: currentPageSize,
         });
         if (!TableFoundation.#pagerIsControlled(this.getProps()) && currentPage > 0) {
-            this._adapter.setPageDisabledRowKeys(disabledRowKeys);
-            this._adapter.setAllRowKeys(allRowKeys);
-            this._adapter.setPagination(pagination);
-            this._adapter.setDataSource(dataSource);
+            this.adapter.setPageDisabledRowKeys(disabledRowKeys);
+            this.adapter.setAllRowKeys(allRowKeys);
+            this.adapter.setPagination(pagination);
+            this.adapter.setDataSource(dataSource);
         }
 
         this.#notifyChange(pagination, undefined, undefined, { changeType: 'pagination' });
@@ -1150,9 +1149,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     handleSelectRow = (realKey: BaseRowKeyType, selected: boolean, e?: Pick<Event, 'stopPropagation'>) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean' && realKey != null) {
-            const checkRelation = this._adapter.getCheckRelation();
+            const checkRelation = this.adapter.getCheckRelation();
             const selectedRowKeys = this.#getSelectedRowKeys();
-            const halfCheckedRowKeys = [...(this._adapter.getHalfCheckedRowKeys() || [])];
+            const halfCheckedRowKeys = [...(this.adapter.getHalfCheckedRowKeys() || [])];
             let foundIdx = -1;
             const selectedRow = this.getRecordsByKeys(null, [realKey])[0];
             let selectedRows: BaseIncludeGroupRecord<RecordType>[];
@@ -1163,35 +1162,35 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
                 const { checkedKeys, halfCheckedKeys } = this.calcCheckedKeysForSelect(String(realKey), selected, checkedKeysSet, halfCheckedKeysSet);
 
-                const keyEntities = this._adapter.getKeyEntities();
+                const keyEntities = this.adapter.getKeyEntities();
                 const newSelectedRowKeys = TableFoundation.#restoreRowKeys(checkedKeys, [...selectedRowKeys, realKey], keyEntities);
                 const newHalfCheckedRowKeys = TableFoundation.#restoreRowKeys(halfCheckedKeys, halfCheckedRowKeys, keyEntities);
                 selectedRows = this.getRecordsByKeys(null, newSelectedRowKeys);
 
                 // a controlled selection derives its half-checked rows from the keys the parent passes back
                 if (!this.#selectionIsControlled()) {
-                    this._adapter.setSelectedRowKeys(newSelectedRowKeys);
-                    this._adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
+                    this.adapter.setSelectedRowKeys(newSelectedRowKeys);
+                    this.adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
                 }
-                this._adapter.notifySelect(selectedRow, selected, selectedRows, e);
-                this._adapter.notifySelectionChange(newSelectedRowKeys, selectedRows);
+                this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
+                this.adapter.notifySelectionChange(newSelectedRowKeys, selectedRows);
             } else {
                 if ((foundIdx = selectedRowKeys.indexOf(realKey)) > -1 && selected === false) {
                     selectedRowKeys.splice(foundIdx, 1);
                     selectedRows = this.getRecordsByKeys(null, selectedRowKeys);
                     if (!this.#selectionIsControlled()) {
-                        this._adapter.setSelectedRowKeys(selectedRowKeys);
+                        this.adapter.setSelectedRowKeys(selectedRowKeys);
                     }
-                    this._adapter.notifySelect(selectedRow, selected, selectedRows, e);
-                    this._adapter.notifySelectionChange(selectedRowKeys, selectedRows);
+                    this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
+                    this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
                 } else if (selectedRowKeys.indexOf(realKey) === -1 && selected === true) {
                     selectedRowKeys.push(realKey);
                     selectedRows = this.getRecordsByKeys(null, selectedRowKeys);
                     if (!this.#selectionIsControlled()) {
-                        this._adapter.setSelectedRowKeys(selectedRowKeys);
+                        this.adapter.setSelectedRowKeys(selectedRowKeys);
                     }
-                    this._adapter.notifySelect(selectedRow, selected, selectedRows, e);
-                    this._adapter.notifySelectionChange(selectedRowKeys, selectedRows);
+                    this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
+                    this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
                 }
             }
         }
@@ -1200,17 +1199,17 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     handleSelectAllRow = (selected: boolean, e?: Pick<Event, 'stopPropagation'>) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean') {
-            const checkRelation = this._adapter.getCheckRelation();
+            const checkRelation = this.adapter.getCheckRelation();
             const curSelectedRowKeys = this.#getSelectedRowKeys();
             let selectedRowKeys = [...curSelectedRowKeys];
             const selectedRowKeysSet = this.#getSelectedRowKeysSet();
             // the current filter result without disabled rows, whatever the checkRelation
-            const disabledRowKeysSet = this._adapter.getFilteredDisabledRowKeysSet();
-            const scopeRowKeys = this._adapter.getCachedFilteredSortedRowKeys().filter((key) => !disabledRowKeysSet.has(key));
+            const disabledRowKeysSet = this.adapter.getFilteredDisabledRowKeysSet();
+            const scopeRowKeys = this.adapter.getCachedFilteredSortedRowKeys().filter((key) => !disabledRowKeysSet.has(key));
 
             if (checkRelation === 'related') {
-                const keyEntities = this._adapter.getKeyEntities();
-                const halfCheckedRowKeys = [...(this._adapter.getHalfCheckedRowKeys() || [])];
+                const keyEntities = this.adapter.getKeyEntities();
+                const halfCheckedRowKeys = [...(this.adapter.getHalfCheckedRowKeys() || [])];
                 let checkedKeysSet = new Set(selectedRowKeys.map((key) => String(key)));
                 let halfCheckedKeysSet = new Set(halfCheckedRowKeys.map((key) => String(key)));
 
@@ -1243,11 +1242,11 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
                 // a controlled selection derives its half-checked rows from the keys the parent passes back
                 if (!this.#selectionIsControlled()) {
-                    this._adapter.setSelectedRowKeys(selectedRowKeys);
-                    this._adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
+                    this.adapter.setSelectedRowKeys(selectedRowKeys);
+                    this.adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
                 }
-                this._adapter.notifySelectAll(selected, selectedRows, changedRows, e);
-                this._adapter.notifySelectionChange(selectedRowKeys, selectedRows);
+                this.adapter.notifySelectAll(selected, selectedRows, changedRows, e);
+                this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
             } else {
                 if (selected) {
                     for (const key of scopeRowKeys) {
@@ -1263,10 +1262,10 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 const selectedRows = this.getRecordsByKeys(null, selectedRowKeys || []);
 
                 if (!this.#selectionIsControlled()) {
-                    this._adapter.setSelectedRowKeys(selectedRowKeys);
+                    this.adapter.setSelectedRowKeys(selectedRowKeys);
                 }
-                this._adapter.notifySelectAll(selected, selectedRows, changedRows, e);
-                this._adapter.notifySelectionChange(selectedRowKeys, selectedRows);
+                this.adapter.notifySelectAll(selected, selectedRows, changedRows, e);
+                this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
             }
         }
     };
@@ -1286,7 +1285,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
 
         if (!this.#rowExpansionIsControlled()) {
-            this._adapter.setExpandedRowKeys(expandedRowKeys);
+            this.adapter.setExpandedRowKeys(expandedRowKeys);
         }
 
         const expandedRows = this.getRecordsByKeys(null, expandedRowKeys);
@@ -1305,12 +1304,12 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             }
         }
 
-        this._adapter.notifyExpand(expanded, expandedRow, domEvent);
-        this._adapter.notifyExpandedRowsChange(expandedRows, [...expandedRowKeys]);
+        this.adapter.notifyExpand(expanded, expandedRow, domEvent);
+        this.adapter.notifyExpandedRowsChange(expandedRows, [...expandedRowKeys]);
     };
 
     toggleShowFilter = (dataIndex: string, visible: boolean) => {
-        this._adapter.notifyFilterDropdownVisibleChange(visible, dataIndex);
+        this.adapter.notifyFilterDropdownVisibleChange(visible, dataIndex);
     };
 
     handleFilterSelect = (dataIndex: string, data: { filteredValue?: string[] } = {}) => {
@@ -1322,7 +1321,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const sorter = this.#getAllSorters()[0] as BaseChangeInfoSorter<RecordType>;
 
         if (!this.#filterIsControlled(dataIndex)) {
-            this._adapter.setQueries(queries);
+            this.adapter.setQueries(queries);
             this.#applyQueries(queries);
         }
 
@@ -1369,7 +1368,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const filters = this.#getAllFilters();
 
         if (!this.#sorterIsControlled(dataIndex)) {
-            this._adapter.setQueries(queries);
+            this.adapter.setQueries(queries);
             this.#applyQueries(queries);
         }
 
@@ -1384,7 +1383,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
         if (rowSelection?.clickRow && !rowSelection.disabled) {
             const getCheckboxProps = rowSelection?.getCheckboxProps;
-            const record = this._adapter.getCachedFilteredSortedDataSource().find((r: RecordType) => this.getRecordKey(r) === rowKey);
+            const record = this.adapter.getCachedFilteredSortedDataSource().find((r: RecordType) => this.getRecordKey(r) === rowKey);
 
             if (record && typeof getCheckboxProps === 'function' && getCheckboxProps(record).disabled) {
                 return;

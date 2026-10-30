@@ -89,7 +89,6 @@ class ParentsStack {
 
 export class JSONState {
     #state: IState | null;
-
     scanError: ScanError | null;
     lastWasColon: boolean;
     parents: ParentsStack | null;

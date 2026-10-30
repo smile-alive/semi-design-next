@@ -59,7 +59,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     #handleParentItemKeyDown(event: DropdownKeyEvent, popup: HTMLElement | null) {
         const { target } = event;
         const popVisible = this.#isOpen();
-        const openKey = this._adapter.getContext('direction') === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const openKey = this.adapter.getContext('direction') === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
         // a trigger that handled the key itself (Tag, Avatar) has already clicked and prevented the default
         const handled = event.defaultPrevented;
         switch (event.key) {
@@ -93,23 +93,23 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     // Tooltip.destroy closes the popup without reporting it, as on unmount, so the trigger's open state is reset here;
     // otherwise a React Activity hide leaves aria-expanded="true" on a closed menu
     override destroy() {
-        this._adapter.setPopVisible(false);
+        this.adapter.setPopVisible(false);
     }
 
     /** Closes the menu without moving focus */
     close = () => {
-        this._adapter.hidePopup();
+        this.adapter.hidePopup();
     };
 
     /** Tooltip's onVisibleChange: an actual change when uncontrolled, only a request to the owner when controlled */
     handleVisibleChange = (visible: boolean) => {
         if (this.getProp('visible') === undefined) {
-            this._adapter.setPopVisible(visible);
+            this.adapter.setPopVisible(visible);
         }
         if (!visible) {
             this.#focusOnOpen = null;
         }
-        this._adapter.notifyVisibleChange(visible);
+        this.adapter.notifyVisibleChange(visible);
     };
 
     /**
@@ -117,7 +117,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
      * afterOpen: a keyboard user would wait out the enter animation.
      */
     handleOpened = () => {
-        const popup = this._adapter.getPopup();
+        const popup = this.adapter.getPopup();
         const trigger = popup && getMenuButton(popup.id, popup.getRootNode() as ParentNode);
         // a key press that did not open the menu (disableFocusListener) must not pull focus away when the pointer
         // opens it later, so the request only holds while focus is still on the trigger
@@ -134,9 +134,9 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
      */
     handleKeyDown = (event: DropdownKeyEvent, isMenuButton = false) => {
         const { target } = event;
-        const popup = this._adapter.getPopup();
+        const popup = this.adapter.getPopup();
         // the trigger is an item of another menu, so this Dropdown opens a submenu
-        const isSubmenu = this._adapter.getContext('menuDepth') > 0;
+        const isSubmenu = this.adapter.getContext('menuDepth') > 0;
         if (isSubmenu) {
             this.#handleParentItemKeyDown(event, popup);
             return;
@@ -194,7 +194,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
                 // APG: Tab closes the menu and moves focus as it normally would
                 if (popVisible) {
                     this.close();
-                    this._adapter.getContext('closeAll')?.();
+                    this.adapter.getContext('closeAll')?.();
                 }
                 break;
             default:

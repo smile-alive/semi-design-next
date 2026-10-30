@@ -8,7 +8,7 @@ export interface BannerAdapter<P extends object = object, S extends object = obj
 
 export default class BannerFoundation<P extends object = object, S extends object = object, E = unknown> extends BaseFoundation<BannerAdapter<P, S, E>, P, S> {
     removeBanner = (e: E) => {
-        this._adapter.notifyClose(e);
-        this._adapter.hide();
+        this.adapter.notifyClose(e);
+        this.adapter.hide();
     };
 }

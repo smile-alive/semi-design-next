@@ -69,10 +69,8 @@ export function handleZeroWidthCharLogic(newState: EditorState) {
     return null;
 }
 
-type SyntheticBackspacePatchedView = EditorView & {
-    _semiSyntheticBackspaceGuard?: boolean;
-    _semiOrigSomeProp?: typeof EditorView.prototype.someProp;
-};
+/** The `someProp` each guarded view had before the guard: kept beside the view, not on it, since the view is ProseMirror's */
+const originalSomeProp = new WeakMap<EditorView, EditorView['someProp']>();
 
 /**
  * ProseMirror's `readDOMChange()` synthesizes a Backspace through `document.createEvent("Event")` for deletion-like DOM
@@ -87,14 +85,12 @@ function isSyntheticBackspaceEvent(event: KeyboardEvent) {
  * composition; a real Backspace must pass through unchanged.
  */
 function installSyntheticBackspaceGuard(view: EditorView) {
-    const patchedView = view as SyntheticBackspacePatchedView;
-    if (patchedView._semiSyntheticBackspaceGuard) {
+    if (originalSomeProp.has(view)) {
         return;
     }
 
     const origSomeProp = view.someProp.bind(view);
-    patchedView._semiSyntheticBackspaceGuard = true;
-    patchedView._semiOrigSomeProp = origSomeProp;
+    originalSomeProp.set(view, origSomeProp);
 
     function guardedSomeProp<PropName extends keyof EditorProps, Result>(propName: PropName, f: (value: NonNullable<EditorProps[PropName]>) => Result): Result | undefined;
     function guardedSomeProp<PropName extends keyof EditorProps>(propName: PropName): NonNullable<EditorProps[PropName]> | undefined;
@@ -120,14 +116,13 @@ function installSyntheticBackspaceGuard(view: EditorView) {
 }
 
 function removeSyntheticBackspaceGuard(view: EditorView) {
-    const patchedView = view as SyntheticBackspacePatchedView;
-    if (!patchedView._semiSyntheticBackspaceGuard || !patchedView._semiOrigSomeProp) {
+    const origSomeProp = originalSomeProp.get(view);
+    if (!origSomeProp) {
         return;
     }
 
-    view.someProp = patchedView._semiOrigSomeProp;
-    delete patchedView._semiOrigSomeProp;
-    delete patchedView._semiSyntheticBackspaceGuard;
+    view.someProp = origSomeProp;
+    originalSomeProp.delete(view);
 }
 
 export function ensureTrailingText(_schema: Schema) {

@@ -87,7 +87,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
     }
 
     #checkInputChangeValid(value: string) {
-        const { maxLength, separator } = this._adapter.getProps();
+        const { maxLength, separator } = this.adapter.getProps();
         const { inputValue } = this.#current();
         let allowChange = true;
         if (typeof maxLength === 'number') {
@@ -98,7 +98,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
                 if (valueArr[i] !== undefined && (inputArr[i] === undefined || valueArr[i].length > inputArr[i].length)) {
                     if (valueArr[i].length > maxLength) {
                         allowChange = false;
-                        this._adapter.notifyInputExceed(value);
+                        this.adapter.notifyInputExceed(value);
                         break;
                     }
                 }
@@ -108,7 +108,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
     }
 
     #handleAddTags(e: E) {
-        const { separator, max, allowDuplicates } = this._adapter.getProps();
+        const { separator, max, allowDuplicates } = this.adapter.getProps();
         const { inputValue, tagsArray } = this.#current();
         let addTags = this.#splitArray(inputValue, separator);
 
@@ -122,7 +122,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         });
         let newTagList = tagsArray.concat(addTags);
         if (typeof max === 'number' && newTagList.length > max) {
-            this._adapter.notifyExceed(newTagList);
+            this.adapter.notifyExceed(newTagList);
             // fill only the room left; tags already past max stay
             addTags = addTags.slice(0, Math.max(0, max - tagsArray.length));
             newTagList = tagsArray.concat(addTags);
@@ -133,24 +133,24 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         this.#onInputChange('', e);
     }
     #onRemove(newTagList: string[], removedTags: string, index: number) {
-        if (!this._isControlledComponent()) {
-            this._adapter.setTagsArray(newTagList);
+        if (!this.isControlledComponent()) {
+            this.adapter.setTagsArray(newTagList);
         }
-        this._adapter.notifyTagChange(newTagList);
-        this._adapter.notifyTagRemove(removedTags, index);
+        this.adapter.notifyTagChange(newTagList);
+        this.adapter.notifyTagRemove(removedTags, index);
     }
 
     #onAdd(newTagList: string[], addTags: string[]) {
-        if (!this._isControlledComponent()) {
-            this._adapter.setTagsArray(newTagList);
+        if (!this.isControlledComponent()) {
+            this.adapter.setTagsArray(newTagList);
         }
-        this._adapter.notifyTagChange(newTagList);
-        this._adapter.notifyTagAdd(addTags);
+        this.adapter.notifyTagChange(newTagList);
+        this.adapter.notifyTagAdd(addTags);
     }
 
     #onInputChange(value: string, e: E) {
-        this._adapter.setInputValue(value);
-        this._adapter.notifyInputChange(value, e);
+        this.adapter.setInputValue(value);
+        this.adapter.notifyInputChange(value, e);
     }
 
     /** A controlled `value` wins over state, and a controlled `null` means no tags */
@@ -211,7 +211,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
 
     /** Re-fits the inline input width without field-sizing; hosts call it when the typed text changes */
     fitInputWidth = () => {
-        const input = this.#fitInline ? this._adapter.getInput() : null;
+        const input = this.#fitInline ? this.adapter.getInput() : null;
         if (input) {
             fitInputWidth(input);
         }
@@ -232,7 +232,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         if (typeof maxLength !== 'number') {
             return;
         }
-        this._adapter.setEntering(true);
+        this.adapter.setEntering(true);
     };
 
     handleInputCompositionEnd = (e: any) => {
@@ -241,14 +241,14 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         if (typeof maxLength !== 'number') {
             return;
         }
-        this._adapter.setEntering(false);
+        this.adapter.setEntering(false);
         let allowChange = true;
         const inputArr = this.#splitArray(value, separator);
         let index = 0;
         for (; index < inputArr.length; index++) {
             if (inputArr[index].length > maxLength) {
                 allowChange = false;
-                this._adapter.notifyInputExceed(value);
+                this.adapter.notifyInputExceed(value);
                 break;
             }
         }
@@ -262,7 +262,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
             this.#onInputChange(newInputArr.join(Array.isArray(separator) ? separator[0] : separator), e);
         } else {
             // Firefox does not fire onChange after the composition ends, so the value is set here
-            this._adapter.setInputValue(value);
+            this.adapter.setInputValue(value);
         }
     };
 
@@ -281,35 +281,35 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
             const removedTag = tagsArray[length - 1];
             this.#onRemove(newTagList, removedTag, length - 1);
         }
-        this._adapter.notifyKeyDown(e);
+        this.adapter.notifyKeyDown(e);
     };
 
     handleInputBlur = (e: TagInputCursorEvent) => {
-        const { addOnBlur } = this._adapter.getProps();
+        const { addOnBlur } = this.adapter.getProps();
         if (addOnBlur === true && this.#current().inputValue !== '') {
             this.#handleAddTags(e);
         }
         // focus left the TagInput: a click-started session must not outlive it, or the focus style, expanded tags and
         // drag handles stay until a later mousedown elsewhere
         this.deactivate();
-        this._adapter.setFocusing(false);
-        this._adapter.notifyBlur(e);
+        this.adapter.setFocusing(false);
+        this.adapter.notifyBlur(e);
     };
 
     handleInputFocus = (e: TagInputCursorEvent) => {
         // Tab entry gets the same state as a click
         this.handleClick();
-        this._adapter.setFocusing(true);
-        this._adapter.notifyFocus(e);
+        this.adapter.setFocusing(true);
+        this.adapter.notifyFocus(e);
     };
 
     handleClearBtn = (e: TagInputMouseEvent) => {
         const { inputValue, tagsArray } = this.#current();
         if (tagsArray.length > 0) {
-            if (!this._isControlledComponent()) {
-                this._adapter.setTagsArray([]);
+            if (!this.isControlledComponent()) {
+                this.adapter.setTagsArray([]);
             }
-            this._adapter.notifyTagChange([]);
+            this.adapter.notifyTagChange([]);
         }
         if (inputValue.length > 0) {
             this.#onInputChange('', e);
@@ -332,29 +332,29 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
             return;
         }
         if (!this.getState('active')) {
-            this._adapter.setActive(true);
+            this.adapter.setActive(true);
         }
     };
 
     /** Ends the active session started by a click: on a mousedown outside the TagInput, or on blur() */
     deactivate = () => {
-        this._adapter.setActive(false);
+        this.adapter.setActive(false);
     };
 
     handleClickPrefixOrSuffix = () => {
-        const { disabled } = this._adapter.getProps();
-        const { focusing } = this._adapter.getStates();
+        const { disabled } = this.adapter.getProps();
+        const { focusing } = this.adapter.getStates();
         if (!disabled && !focusing) {
-            this._adapter.toggleFocusing(true);
+            this.adapter.toggleFocusing(true);
         }
     };
 
     handleSortEnd = ({ oldIndex, newIndex }: OnSortEndProps) => {
         const { tagsArray } = this.#current();
         const newTagsArray = arrayMove(tagsArray, oldIndex, newIndex);
-        if (!this._isControlledComponent()) {
-            this._adapter.setTagsArray(newTagsArray);
+        if (!this.isControlledComponent()) {
+            this.adapter.setTagsArray(newTagsArray);
         }
-        this._adapter.notifyTagChange(newTagsArray);
+        this.adapter.notifyTagChange(newTagsArray);
     };
 }

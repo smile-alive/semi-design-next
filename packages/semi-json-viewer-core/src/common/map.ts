@@ -17,7 +17,6 @@ export class LinkedMap<K, V> {
     #head: Item<K, V> | undefined;
     #tail: Item<K, V> | undefined;
     #size: number;
-
     #state: number;
     readonly [Symbol.toStringTag] = 'LinkedMap';
 
@@ -401,38 +400,38 @@ export class LinkedMap<K, V> {
 }
 
 abstract class Cache<K, V> extends LinkedMap<K, V> {
-    protected _limit: number;
-    protected _ratio: number;
+    #limit: number;
+    #ratio: number;
 
     constructor(limit: number, ratio: number = 1) {
         super();
-        this._limit = limit;
-        this._ratio = Math.min(Math.max(0, ratio), 1);
+        this.#limit = limit;
+        this.#ratio = Math.min(Math.max(0, ratio), 1);
     }
 
     protected checkTrim() {
-        if (this.size > this._limit) {
-            this.trim(Math.round(this._limit * this._ratio));
+        if (this.size > this.#limit) {
+            this.trim(Math.round(this.#limit * this.#ratio));
         }
     }
 
     protected abstract trim(newSize: number): void;
 
     get limit() {
-        return this._limit;
+        return this.#limit;
     }
 
     set limit(limit: number) {
-        this._limit = limit;
+        this.#limit = limit;
         this.checkTrim();
     }
 
     get ratio() {
-        return this._ratio;
+        return this.#ratio;
     }
 
     set ratio(ratio: number) {
-        this._ratio = Math.min(Math.max(0, ratio), 1);
+        this.#ratio = Math.min(Math.max(0, ratio), 1);
         this.checkTrim();
     }
 

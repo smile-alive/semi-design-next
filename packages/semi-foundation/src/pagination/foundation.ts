@@ -58,7 +58,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         if (page <= 0) {
             page = 1;
         }
-        this._adapter.updateQuickJumpPage('');
+        this.adapter.updateQuickJumpPage('');
         this.goPage(page);
     }
 
@@ -147,11 +147,11 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         if (targetPageIndex === currentPage) {
             return;
         }
-        if (!this._isControlledComponent('currentPage')) {
+        if (!this.isControlledComponent('currentPage')) {
             this.updatePage(targetPageIndex);
         }
-        this._adapter.notifyPageChange(targetPageIndex);
-        this._adapter.notifyChange(targetPageIndex, pageSize);
+        this.adapter.notifyPageChange(targetPageIndex);
+        this.adapter.notifyChange(targetPageIndex, pageSize);
     };
 
     // undefined means page 1: an uncontrolled pager restarts when its total or pageSize prop changes
@@ -159,10 +159,10 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         const { currentPage, pageSize: currentPageSize } = this.getStates();
         const newPageSize = pageSize ?? currentPageSize;
         if (targetPageIndex !== currentPage) {
-            this._adapter.setCurrentPage(targetPageIndex);
+            this.adapter.setCurrentPage(targetPageIndex);
         }
         if (newPageSize !== currentPageSize) {
-            this._adapter.updatePageSize(newPageSize);
+            this.adapter.updatePageSize(newPageSize);
         }
     };
 
@@ -182,8 +182,8 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
 
     changePageSize = (newPageSize: number) => {
         const { pageSize, currentPage } = this.getStates();
-        this._adapter.updatePageSize(newPageSize);
-        this._adapter.notifyPageSizeChange(newPageSize);
+        this.adapter.updatePageSize(newPageSize);
+        this.adapter.notifyPageSizeChange(newPageSize);
 
         let newCurrentPage = currentPage;
         if (!this.getProp('preventPageChangeOnPageSizeChange')) {
@@ -191,17 +191,17 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
             newCurrentPage = Math.ceil(currentPageFirstItemIndex / newPageSize);
         }
 
-        if (!this._isControlledComponent('currentPage')) {
+        if (!this.isControlledComponent('currentPage')) {
             this.updatePage(newCurrentPage, newPageSize);
         }
         if (currentPage !== newCurrentPage) {
-            this._adapter.notifyPageChange(newCurrentPage);
+            this.adapter.notifyPageChange(newCurrentPage);
         }
-        this._adapter.notifyChange(newCurrentPage, newPageSize);
+        this.adapter.notifyChange(newCurrentPage, newPageSize);
     };
 
     handleQuickJumpNumberChange = (targetPage: string | number) => {
-        this._adapter.updateQuickJumpPage(targetPage);
+        this.adapter.updateQuickJumpPage(targetPage);
     };
 
     handleQuickJumpBlur = () => {

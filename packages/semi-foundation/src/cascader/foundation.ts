@@ -383,14 +383,14 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     #notifySingleChange(item: BasicEntity | BasicData) {
         const valueProp = this.getProp('onChangeWithObject') ? [] : 'value';
-        this._adapter.notifyChange(this.getItemPropPath(item.key, valueProp));
+        this.adapter.notifyChange(this.getItemPropPath(item.key, valueProp));
     }
 
     #notifyMultipleChange(checkedKeys: Set<string>) {
         const valueProp = this.getProp('onChangeWithObject') ? [] : 'value';
         const keyEntities = this.getState('keyEntities');
         const paths = [...checkedKeys].map((checkedKey) => this.getItemPropPath(checkedKey, valueProp, keyEntities));
-        this._adapter.notifyChange([...CascaderFoundation.#missingValuePaths(this.getProps(), keyEntities), ...paths]);
+        this.adapter.notifyChange([...CascaderFoundation.#missingValuePaths(this.getProps(), keyEntities), ...paths]);
     }
 
     #isLeaf(item: BasicCascaderData) {
@@ -398,7 +398,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     }
 
     #clearInput() {
-        this._adapter.updateStates({ inputValue: '' });
+        this.adapter.updateStates({ inputValue: '' });
     }
 
     #notifyBlur(e?: E | MouseEvent | FocusEvent) {
@@ -406,7 +406,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             return;
         }
         this.#blurPending = false;
-        this._adapter.notifyBlur(e);
+        this.adapter.notifyBlur(e);
     }
 
     /** A single pick closes the dropdown and reports the blur at once, so a Form with trigger="blur" validates */
@@ -417,8 +417,8 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     #close(key?: string) {
         const { multiple } = this.getProps();
-        this._adapter.updateStates({ isOpen: false, keyboardKey: null });
-        this._adapter.notifyDropdownVisibleChange(false);
+        this.adapter.updateStates({ isOpen: false, keyboardKey: null });
+        this.adapter.notifyDropdownVisibleChange(false);
         if (this.#isFilterable()) {
             const { selectedKeys } = this.getStates();
             let inputValue = '';
@@ -428,7 +428,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 inputValue = this.renderDisplayText([...selectedKeys][0]);
             }
             // reset isSearching here, not in afterClose: open() clears inputValue while isSearching could still be true
-            this._adapter.updateStates({ inputValue, isSearching: false });
+            this.adapter.updateStates({ inputValue, isSearching: false });
             if (!multiple) {
                 this.#toggle2SearchInput(false);
             }
@@ -438,7 +438,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     #notifyFocus(e: E | FocusEvent) {
         if (!this.#blurPending && !this.#isDisabled()) {
             this.#blurPending = true;
-            this._adapter.notifyFocus(e);
+            this.adapter.notifyFocus(e);
         }
     }
 
@@ -527,7 +527,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                     curResolvedCheckedKeys.forEach((itemKey) => {
                         checkedEntities.push(keyEntities[itemKey]);
                     });
-                    this._adapter.notifyOnExceed(checkedEntities);
+                    this.adapter.notifyOnExceed(checkedEntities);
                     return;
                 }
             } else {
@@ -536,13 +536,13 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                     curCheckedKeys.forEach((itemKey: string) => {
                         checkedEntities.push(keyEntities[itemKey]);
                     });
-                    this._adapter.notifyOnExceed(checkedEntities);
+                    this.adapter.notifyOnExceed(checkedEntities);
                     return;
                 }
             }
         }
-        if (!this._isControlledComponent()) {
-            this._adapter.updateStates({
+        if (!this.isControlledComponent()) {
+            this.adapter.updateStates({
                 checkedKeys: curCheckedKeys,
                 halfCheckedKeys: curHalfCheckedKeys,
                 resolvedCheckedKeys: curResolvedCheckedKeys,
@@ -573,15 +573,15 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                     checkedKeys.forEach((itemKey) => {
                         checkedEntities.push(keyEntities[itemKey]);
                     });
-                    this._adapter.notifyOnExceed(checkedEntities);
+                    this.adapter.notifyOnExceed(checkedEntities);
                     return;
                 }
             }
             newCheckedKeys.add(key);
             targetStatus = true;
         }
-        if (!this._isControlledComponent()) {
-            this._adapter.updateStates({
+        if (!this.isControlledComponent()) {
+            this.adapter.updateStates({
                 checkedKeys: newCheckedKeys,
                 checkedEntities: keyEntities,
             });
@@ -604,14 +604,14 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             }
         });
         const formatValue: number | string | Array<string | number> = values.length === 1 ? values[0] : values;
-        this._adapter.notifySelect(formatValue);
+        this.adapter.notifySelect(formatValue);
     }
 
     #toggle2SearchInput(isShow: boolean) {
         if (isShow) {
-            this._adapter.toggleInputShow(isShow, () => this.focus());
+            this.adapter.toggleInputShow(isShow, () => this.focus());
         } else {
-            this._adapter.toggleInputShow(isShow, () => undefined);
+            this.adapter.toggleInputShow(isShow, () => undefined);
         }
     }
 
@@ -620,7 +620,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const { data, key } = item;
         const isLeaf = this.#isLeaf(data);
         const activeKeys = keyEntities[key].path;
-        this._adapter.updateStates({
+        this.adapter.updateStates({
             activeKeys: new Set(activeKeys),
         });
         if (!isLeaf) {
@@ -634,8 +634,8 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         newLoadingKeys.delete(key);
 
         // onLoad before the internal setState, or loadData triggers twice
-        this._adapter.notifyOnLoad(newLoadedKeys, data);
-        this._adapter.updateStates({
+        this.adapter.notifyOnLoad(newLoadedKeys, data);
+        this.adapter.updateStates({
             loadingKeys: newLoadingKeys,
             loadedKeys: newLoadedKeys,
         });
@@ -649,8 +649,8 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 return;
             }
             const optionPath = this.getItemPropPath(key, [], keyEntities);
-            this._adapter.updateStates({ loadingKeys: new Set(loadingKeys).add(key) });
-            this._adapter.notifyLoadData(optionPath, this.#handleNodeLoad.bind(this, item), this.#handleNodeLoadReject.bind(this, item));
+            this.adapter.updateStates({ loadingKeys: new Set(loadingKeys).add(key) });
+            this.adapter.notifyLoadData(optionPath, this.#handleNodeLoad.bind(this, item), this.#handleNodeLoadReject.bind(this, item));
         }
     }
 
@@ -658,7 +658,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     #handleNodeLoadReject(item: BasicEntity | BasicData) {
         const newLoadingKeys = new Set(this.getState('loadingKeys'));
         newLoadingKeys.delete(item.key);
-        this._adapter.updateStates({ loadingKeys: newLoadingKeys });
+        this.adapter.updateStates({ loadingKeys: newLoadingKeys });
     }
 
     #handleSingleSelect(e: E, item: BasicEntity | BasicData) {
@@ -673,29 +673,29 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const hasChanged = key !== [...selectedKeys][0];
 
         if (!isLeaf && !allowChange && !isSearching && !(multiple && clickToSelect)) {
-            this._adapter.updateStates({ activeKeys: new Set(activeKeys) });
+            this.adapter.updateStates({ activeKeys: new Set(activeKeys) });
             this.#notifyIfLoadData(item);
             return;
         }
         if (multiple) {
-            this._adapter.updateStates({ activeKeys: new Set(activeKeys) });
+            this.adapter.updateStates({ activeKeys: new Set(activeKeys) });
             if (clickToSelect || (isLeaf && enableLeafClick)) {
                 this.onItemCheckboxClick(item);
             }
         } else {
-            this._adapter.notifySelect(data.value);
+            this.adapter.notifySelect(data.value);
             if (hasChanged) {
                 this.#notifySingleChange(item);
                 this.#notifyIfLoadData(item);
-                if (this._isControlledComponent()) {
-                    this._adapter.updateStates({ activeKeys: new Set(activeKeys) });
+                if (this.isControlledComponent()) {
+                    this.adapter.updateStates({ activeKeys: new Set(activeKeys) });
                     if (isLeaf || (!filterLeafOnly && isSearching)) {
                         this.#closeAfterPick(e);
                     }
                     return;
                 }
 
-                this._adapter.updateStates({
+                this.adapter.updateStates({
                     activeKeys: new Set(activeKeys),
                     selectedKeys: new Set(selectedKey),
                 });
@@ -711,7 +711,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     #updateSelectedKey(value: BasicValue, keyEntities: BasicEntities) {
         const selection = CascaderFoundation.#selectionFor(this.getProps(), this.getStates(), value, keyEntities);
-        this._adapter.updateStates(selection.updateStates);
+        this.adapter.updateStates(selection.updateStates);
         return selection.keyEntities;
     }
 
@@ -724,7 +724,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
         const newActiveKeys: Set<string> = new Set(selectedItem.path);
         if (!isEqual(newActiveKeys, activeKeys)) {
-            this._adapter.updateStates({
+            this.adapter.updateStates({
                 activeKeys: newActiveKeys,
             });
         }
@@ -743,7 +743,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 this.#moveTo(option.children[0].key, 0);
             }
         } else if (isOpen) {
-            this._adapter.updateStates({ activeKeys: new Set(option.path.slice(0, -1)) });
+            this.adapter.updateStates({ activeKeys: new Set(option.path.slice(0, -1)) });
         } else if (option.parent) {
             const { parent } = option;
             const column = parent.parent ? parent.parent.children : CascaderFoundation.getRenderData(this.getProps(), this.getStates());
@@ -755,8 +755,8 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     }
 
     #moveTo(key: string, index: number) {
-        this._adapter.updateStates({ keyboardKey: key });
-        this._adapter.scrollToOption(key, index);
+        this.adapter.updateStates({ keyboardKey: key });
+        this.adapter.scrollToOption(key, index);
     }
 
     /** The options of the shown columns in display order, with their index in their column */
@@ -780,11 +780,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             cacheValue = this.#getCacheValue(keyEntities);
         }
 
-        const selectedValue = !this._isControlledComponent() ? cacheValue : value === undefined ? [] : value;
+        const selectedValue = !this.isControlledComponent() ? cacheValue : value === undefined ? [] : value;
         if (selectedValue != null) {
             keyEntities = this.#updateSelectedKey(selectedValue, keyEntities);
         } else {
-            this._adapter.updateStates({ keyEntities });
+            this.adapter.updateStates({ keyEntities });
         }
 
         // treeData may update while searching (remote search); stale filteredKeys would render an empty list
@@ -815,7 +815,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (nextKeyEntities) {
             updateStates.keyEntities = nextKeyEntities;
         }
-        this._adapter.updateStates(updateStates);
+        this.adapter.updateStates(updateStates);
     }
 
     #handleValueChange(value: BasicValue) {
@@ -824,7 +824,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         // a controlled pick closes before the parent writes the value back, so the closed input text follows it here
         const { isOpen, selectedKeys } = this.getStates();
         if (this.#isFilterable() && !this.getProp('multiple') && !isOpen && selectedKeys.size) {
-            this._adapter.updateStates({ inputValue: this.renderDisplayText([...selectedKeys][0]) });
+            this.adapter.updateStates({ inputValue: this.renderDisplayText([...selectedKeys][0]) });
         }
     }
 
@@ -1175,22 +1175,22 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const filterable = this.#isFilterable();
         const { multiple } = this.getProps();
         const { isSearching } = this.getStates();
-        this._adapter.updateStates({ isOpen: true });
+        this.adapter.updateStates({ isOpen: true });
         if (filterable) {
             // text typed while closed does not open the popup; opening starts from the columns, and onSearch hears
             // the keyword go
-            this._adapter.updateStates({ inputValue: '', isSearching: false, filteredKeys: new Set() });
+            this.adapter.updateStates({ inputValue: '', isSearching: false, filteredKeys: new Set() });
             if (isSearching) {
-                this._adapter.notifyOnSearch('');
+                this.adapter.notifyOnSearch('');
             }
             if (!multiple) {
                 this.#toggle2SearchInput(true);
             }
         }
-        if (this._isControlledComponent()) {
+        if (this.isControlledComponent()) {
             this.#reCalcActiveKeys();
         }
-        this._adapter.notifyDropdownVisibleChange(true);
+        this.adapter.notifyDropdownVisibleChange(true);
     };
 
     /** Mousedown outside the trigger and dropdown while open */
@@ -1227,16 +1227,16 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     };
 
     focus = () => {
-        this._adapter.focusCombobox();
+        this.adapter.focusCombobox();
     };
 
     blur = () => {
-        this._adapter.blurCombobox();
+        this.adapter.blurCombobox();
     };
 
     /** Leaves search mode after the closed dropdown finishes its exit */
     endSearching = () => {
-        this._adapter.updateStates({ isSearching: false });
+        this.adapter.updateStates({ isSearching: false });
     };
 
     /** A key that opens the dropdown sets the current option before the list mounts; it is scrolled to once shown */
@@ -1247,7 +1247,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
         const shown = this.#getShownOptions().find(({ option }) => option.key === keyboardKey);
         if (shown) {
-            this._adapter.scrollToOption(keyboardKey, shown.index);
+            this.adapter.scrollToOption(keyboardKey, shown.index);
         }
     };
 
@@ -1320,20 +1320,20 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     handleInputChange = (sugInput: string) => {
         const filteredKeys = this.#calcFilteredKeys(sugInput);
-        this._adapter.updateStates({
+        this.adapter.updateStates({
             inputValue: sugInput,
             isSearching: Boolean(sugInput),
             filteredKeys: new Set(filteredKeys),
             keyboardKey: null,
         });
-        this._adapter.notifyOnSearch(sugInput);
+        this.adapter.notifyOnSearch(sugInput);
     };
 
     handleClear = () => {
         const { isSearching, keyEntities, inputValue } = this.getStates();
         const { multiple } = this.getProps();
         const isFilterable = this.#isFilterable();
-        const isControlled = this._isControlledComponent();
+        const isControlled = this.isControlledComponent();
         const newState: Partial<BasicCascaderInnerData> = {};
         if (multiple) {
             // the button also shows for search text alone; only what changed is reported
@@ -1341,7 +1341,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             newState.isSearching = false;
             this.#clearInput();
             if (inputValue) {
-                this._adapter.notifyOnSearch('');
+                this.adapter.notifyOnSearch('');
             }
             newState.checkedKeys = new Set([]);
             newState.halfCheckedKeys = new Set([]);
@@ -1350,37 +1350,37 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             newState.resolvedCheckedKeys = new Set([]);
             newState.checkedEntities = keyEntities;
             if (hasValue) {
-                this._adapter.notifyChange([]);
+                this.adapter.notifyChange([]);
             }
         } else {
             if (isFilterable && isSearching) {
                 newState.isSearching = false;
                 this.#clearInput();
-                this._adapter.notifyOnSearch('');
+                this.adapter.notifyOnSearch('');
             } else {
                 if (isFilterable) {
                     newState.inputValue = '';
                     this.#clearInput();
-                    this._adapter.notifyOnSearch('');
+                    this.adapter.notifyOnSearch('');
                 }
                 if (!isControlled) {
                     newState.selectedKeys = new Set([]);
                 }
                 newState.activeKeys = new Set([]);
                 newState.filteredKeys = new Set([]);
-                this._adapter.notifyChange([]);
+                this.adapter.notifyChange([]);
             }
         }
 
-        this._adapter.updateStates(newState);
-        this._adapter.notifyClear();
+        this.adapter.updateStates(newState);
+        this.adapter.notifyClear();
     };
 
     handleListScroll = (e: LE, ind: number) => {
         const { activeKeys, keyEntities } = this.getStates();
         const lastActiveKey = [...activeKeys].at(-1);
         const data = lastActiveKey ? (keyEntities?.[lastActiveKey]?.data ?? null) : null;
-        this._adapter.notifyListScroll(e, { panelIndex: ind, activeNode: data });
+        this.adapter.notifyListScroll(e, { panelIndex: ind, activeNode: data });
     };
 
     handleTagRemoveByKey = (key: string) => {

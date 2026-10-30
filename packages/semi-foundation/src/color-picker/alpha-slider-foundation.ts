@@ -28,7 +28,7 @@ export default class AlphaSliderFoundation<P extends AlphaSliderBaseProps = Alph
     }
 
     #pickByPointer(e: { clientX: number }) {
-        const rect = this._adapter.getDOM()?.getBoundingClientRect();
+        const rect = this.adapter.getDOM()?.getBoundingClientRect();
         if (!rect) {
             return;
         }

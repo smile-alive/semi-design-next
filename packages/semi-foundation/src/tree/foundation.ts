@@ -373,7 +373,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         });
         // 16ms: at most one dropPosition update per frame while dragging
         this.#throttledDragOverUpdate = throttle((dropPosition: number) => {
-            this._adapter.updateState({
+            this.adapter.updateState({
                 dropPosition,
             });
         }, 16);
@@ -410,7 +410,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         // array paths keep keys containing '.' unsplit
         const selectedPath = normalizedArr(key).map((i) => i.split(strings.JSON_KEY_SPLIT));
         const value = pick(data, selectedPath);
-        this._adapter.notifyChange(value as BasicValue);
+        this.adapter.notifyChange(value as BasicValue);
     }
 
     #notifyMultipleChange(key: string[]) {
@@ -431,7 +431,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         } else {
             value = getValueOrKey(nodes, keyMaps);
         }
-        this._adapter.notifyChange(value);
+        this.adapter.notifyChange(value);
     }
 
     #notifyChange(key: string[] | string) {
@@ -450,7 +450,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
                 const { data } = get(keyEntities, key);
                 value = getValueOrKey(data, keyMaps);
             }
-            this._adapter.notifyChange(value);
+            this.adapter.notifyChange(value);
         }
     }
 
@@ -458,7 +458,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         let selectedKeys = [...this.getState('selectedKeys')];
         const targetSelected = !selected;
 
-        this._adapter.notifySelect(eventKey, true, data);
+        this.adapter.notifySelect(eventKey, true, data);
 
         if (!targetSelected) {
             return;
@@ -467,8 +467,8 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         if (!selectedKeys.includes(eventKey)) {
             selectedKeys = [eventKey];
             this.#notifyChange(eventKey);
-            if (!this._isControlledComponent()) {
-                this._adapter.updateState({ selectedKeys });
+            if (!this.isControlledComponent()) {
+                this.adapter.updateState({ selectedKeys });
             }
         }
     }
@@ -478,10 +478,10 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         if (!result) {
             return;
         }
-        this._adapter.notifySelect(treeNode.eventKey, result.targetStatus, treeNode.data);
+        this.adapter.notifySelect(treeNode.eventKey, result.targetStatus, treeNode.data);
         this.#notifyChange(result.keys);
-        if (!this._isControlledComponent()) {
-            this._adapter.updateState(result.state);
+        if (!this.isControlledComponent()) {
+            this.adapter.updateState(result.state);
         }
     }
 
@@ -501,7 +501,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             motionType = 'hide';
         }
         // flattenNodes are rebuilt, never mutated, so the pre-collapse list can be kept as is
-        this._adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
+        this.adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
 
         if (!this.#isExpandControlled()) {
             const flattenNodes = flattenTreeData(treeData, expandedKeys, keyMaps, isSearching && showFilteredOnly && filteredShownKeys);
@@ -515,7 +515,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
                 motionKeys: new Set(motionKeys),
                 motionType,
             };
-            this._adapter.updateState(newState);
+            this.adapter.updateState(newState);
         }
 
         return {
@@ -538,7 +538,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
     #clearDragState() {
         this.#clearDragEnterTimers();
-        this._adapter.updateState({
+        this.adapter.updateState({
             dragOverNodeKey: '',
             dragging: false,
         });
@@ -754,17 +754,17 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
     /** Writes the state derived from new props back, so handlers read what was rendered */
     syncDerivedState = (derived: Partial<BasicTreeInnerData>) => {
-        this._adapter.updateState(derived);
+        this.adapter.updateState(derived);
     };
 
     scrollTo = ({ key, align = 'center' }: { key: string; align?: ScrollAlign }) => {
         if (key && this.getState('flattenNodes')?.some((node: BasicFlattenNode) => node.key === key)) {
-            this._adapter.scrollToNode(key, align);
+            this.adapter.scrollToNode(key, align);
         }
     };
 
     handleInputChange = (sugInput: string) => {
-        this._adapter.updateInputValue(sugInput);
+        this.adapter.updateInputValue(sugInput);
         const { selectedKeys, keyEntities, treeData } = this.getStates();
         const expandedKeys = new Set(this.getState('expandedKeys'));
         const { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps } = this.getProps();
@@ -790,8 +790,8 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             flattenNodes = flattenTreeData(treeData, new Set(expandedOptsKeys), keyMaps, showFilteredOnly && filteredShownKeys);
         }
         const newFilteredExpandedKeys = new Set(expandedOptsKeys);
-        this._adapter.notifySearch(sugInput, Array.from(newFilteredExpandedKeys));
-        this._adapter.updateState({
+        this.adapter.notifySearch(sugInput, Array.from(newFilteredExpandedKeys));
+        this.adapter.updateState({
             expandedKeys,
             flattenNodes,
             motionKeys: new Set([]),
@@ -814,11 +814,11 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
     };
 
     handleNodeRightClick = (e: E, treeNode: BasicTreeNodeProps) => {
-        this._adapter.notifyRightClick(e, treeNode.data);
+        this.adapter.notifyRightClick(e, treeNode.data);
     };
 
     handleNodeDoubleClick = (e: E, treeNode: BasicTreeNodeProps) => {
-        this._adapter.notifyDoubleClick(e, treeNode.data);
+        this.adapter.notifyDoubleClick(e, treeNode.data);
     };
 
     handleNodeExpand = (_e: unknown, treeNode: BasicTreeNodeProps) => {
@@ -832,7 +832,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         }
 
         const { expandedKeys, data, expanded } = this.#setExpandedStatus(treeNode);
-        this._adapter.notifyExpand(expandedKeys, {
+        this.adapter.notifyExpand(expandedKeys, {
             expanded,
             node: data,
         });
@@ -858,14 +858,14 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
                 newLoadingKeys.delete(key);
 
                 // onLoad should be triggered before internal setState to avoid `loadData` being triggered twice
-                this._adapter.notifyLoad(newLoadedKeys, data);
+                this.adapter.notifyLoad(newLoadedKeys, data);
 
                 if (!this.#isLoadControlled()) {
-                    this._adapter.updateState({
+                    this.adapter.updateState({
                         loadedKeys: newLoadedKeys,
                     });
                 }
-                this._adapter.updateState({
+                this.adapter.updateState({
                     loadingKeys: newLoadingKeys,
                 });
             })
@@ -875,11 +875,11 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
                 if (currentLoadingKeys.has(key)) {
                     const newLoadingKeys = new Set(currentLoadingKeys);
                     newLoadingKeys.delete(key);
-                    this._adapter.updateState({ loadingKeys: newLoadingKeys });
+                    this.adapter.updateState({ loadingKeys: newLoadingKeys });
                 }
             });
 
-        this._adapter.updateState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
+        this.adapter.updateState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
     }
 
     handleNodeDragStart = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
@@ -903,12 +903,12 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
         this.#dragNode = treeNode;
 
-        this._adapter.updateState({
+        this.adapter.updateState({
             dragging: true,
             dragNodesKeys: new Set(getDragNodesKeys(eventKey, keyEntities)),
         });
 
-        this._adapter.notifyDragStart(this.#dragProps(e, treeNode));
+        this.adapter.notifyDragStart(this.#dragProps(e, treeNode));
     };
 
     handleNodeDragEnter = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
@@ -922,7 +922,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         const dropPosition = calcDropRelativePosition(e, treeNode);
 
         if (dragNode.eventKey === eventKey && dropPosition === 0) {
-            this._adapter.updateState({
+            this.adapter.updateState({
                 dragOverNodeKey: '',
                 dropPosition: null,
             });
@@ -932,13 +932,13 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         // after the state cleared in dragleave is applied
         const timer = setTimeout(() => {
             this.#dragEnterTimers.delete(timer);
-            this._adapter.updateState({
+            this.adapter.updateState({
                 dragOverNodeKey: eventKey,
                 dropPosition,
             });
 
             if (!autoExpandWhenDragEnter || expanded) {
-                this._adapter.notifyDragEnter(this.#dragProps(e, treeNode));
+                this.adapter.notifyDragEnter(this.#dragProps(e, treeNode));
                 return;
             }
 
@@ -946,7 +946,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             clearTimeout(this.#autoExpandTimer);
             this.#autoExpandTimer = setTimeout(() => {
                 const { expandedKeys: newExpandedKeys } = this.#setExpandedStatus(treeNode);
-                this._adapter.notifyDragEnter({
+                this.adapter.notifyDragEnter({
                     ...this.#dragProps(e, treeNode),
                     expandedKeys: [...newExpandedKeys],
                 });
@@ -971,23 +971,23 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             this.#throttledDragOverUpdate(newPos);
         }
 
-        this._adapter.notifyDragOver(this.#dragProps(e, treeNode));
+        this.adapter.notifyDragOver(this.#dragProps(e, treeNode));
     };
 
     handleNodeDragLeave = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
         this.#throttledDragOverUpdate.cancel();
         // the pending auto expand belongs to the node being left; a node entered next schedules its own
         clearTimeout(this.#autoExpandTimer);
-        this._adapter.updateState({
+        this.adapter.updateState({
             dragOverNodeKey: '',
         });
-        this._adapter.notifyDragLeave(this.#dragProps(e, treeNode));
+        this.adapter.notifyDragLeave(this.#dragProps(e, treeNode));
     };
 
     handleNodeDragEnd = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
         this.#throttledDragOverUpdate.flush();
         this.#clearDragState();
-        this._adapter.notifyDragEnd(this.#dragProps(e, treeNode));
+        this.adapter.notifyDragEnd(this.#dragProps(e, treeNode));
         this.#dragNode = null;
     };
 
@@ -1009,7 +1009,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             dropToGap: dropPosition !== 0,
         };
 
-        this._adapter.notifyDrop({ ...this.#dragProps(e, treeNode), ...dropRes });
+        this.adapter.notifyDrop({ ...this.#dragProps(e, treeNode), ...dropRes });
         this.#dragNode = null;
     };
 }

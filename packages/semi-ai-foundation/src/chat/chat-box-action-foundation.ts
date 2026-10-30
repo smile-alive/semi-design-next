@@ -27,21 +27,21 @@ export interface ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBox
 
 export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps, S extends object = object> extends BaseFoundation<ChatBoxActionAdapter<P, S>, P, S> {
     showDeletePopup = () => {
-        this._adapter.setVisible(true);
-        this._adapter.setShowAction(true);
+        this.adapter.setVisible(true);
+        this.adapter.setShowAction(true);
     };
 
     /** Closes the delete popConfirm: from its buttons, or on a mousedown outside its trigger while it is open */
     hideDeletePopup = () => {
         // The delay keeps the action bar from flickering when the popConfirm closes through its cancel button
-        this._adapter.setVisible(false);
+        this.adapter.setVisible(false);
         setTimeout(() => {
-            this._adapter.setShowAction(false);
+            this.adapter.setShowAction(false);
         }, 150);
     };
 
     deleteMessage = () => {
-        this._adapter.notifyDeleteMessage();
+        this.adapter.notifyDeleteMessage();
     };
 
     copyMessage = () => {
@@ -51,21 +51,21 @@ export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = 
         }
         void copyText(text).then((copied) => {
             if (copied) {
-                this._adapter.toastCopySuccess();
-                this._adapter.notifyMessageCopy();
+                this.adapter.toastCopySuccess();
+                this.adapter.notifyMessageCopy();
             }
         });
     };
 
     likeMessage = () => {
-        this._adapter.notifyLikeMessage();
+        this.adapter.notifyLikeMessage();
     };
 
     dislikeMessage = () => {
-        this._adapter.notifyDislikeMessage();
+        this.adapter.notifyDislikeMessage();
     };
 
     resetMessage = () => {
-        this._adapter.notifyResetMessage();
+        this.adapter.notifyResetMessage();
     };
 }

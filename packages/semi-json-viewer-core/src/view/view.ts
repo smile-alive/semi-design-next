@@ -23,13 +23,10 @@ export class View {
     #jsonModel: JSONModel;
     #selectionModel: SelectionModel;
     #foldingModel: FoldingModel;
-
     #options: JsonViewerOptions | undefined;
-
     #root: JsonDocument | null = null;
     #customRenderMap: Map<HTMLElement, any> = new Map();
     #customRenderEmittedEmpty = true;
-
     #container: HTMLElement;
     #jsonViewerDom: HTMLElement;
     #lineNumberDom: HTMLElement;
@@ -37,9 +34,7 @@ export class View {
     #contentDom: HTMLElement;
     #scrollDom: HTMLElement;
     #domBuilder: ViewDOMBuilder;
-
     #verticalOffsetAdjustment: number = 0;
-
     #searchWidget: SearchWidget;
     #editWidget: EditWidget;
     #completeWidget: CompleteWidget;
@@ -49,10 +44,8 @@ export class View {
     #scalingCellSizeAndPositionManager: ScalingCellSizeAndPositionManager;
     #customRenderRule: CustomRenderRule[];
     #measuredHeights: { [index: number]: number } = {};
-
     #emitter: Emitter<GlobalEvents> = getEmitter();
     #lineHeight: number;
-
     startLineNumber: number = 1;
     visibleLineCount: number = 0;
     prefixCls: string;

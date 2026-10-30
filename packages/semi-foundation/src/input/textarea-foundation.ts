@@ -69,7 +69,7 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
 
     /** Re-fits the inline height without field-sizing; hosts call it when the value, `autosize` or the node changes */
     fitAutosize = () => {
-        const textarea = this.#fitInline ? this._adapter.getTextarea() : null;
+        const textarea = this.#fitInline ? this.adapter.getTextarea() : null;
         if (!textarea) {
             return;
         }
@@ -99,7 +99,7 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
     };
 
     handleValueChange = (value: string) => {
-        this._adapter.setState({ value, cachedValue: value });
+        this.adapter.setState({ value, cachedValue: value });
     };
 
     handleBlur = (e: unknown) => {
@@ -111,14 +111,14 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         if (maxLength && this.composedSinceFocus) {
             realValue = this.handleVisibleMaxLength(value);
             if (realValue !== value) {
-                if (!this._isControlledComponent()) {
-                    this._adapter.setValue(realValue);
+                if (!this.isControlledComponent()) {
+                    this.adapter.setValue(realValue);
                 }
-                this._adapter.notifyChange(realValue, e);
+                this.adapter.notifyChange(realValue, e);
             }
         }
-        this._adapter.toggleFocusing(false);
-        this._adapter.notifyBlur(realValue, e);
+        this.adapter.toggleFocusing(false);
+        this.adapter.notifyBlur(realValue, e);
     };
 
     handleKeyDown = (e: KE) => {
@@ -126,9 +126,9 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         if (disabledEnterStartNewLine && e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
         }
-        this._adapter.notifyKeyDown(e);
+        this.adapter.notifyKeyDown(e);
         if (e.key === ENTER_KEY && !isComposing(e)) {
-            this._adapter.notifyEnterPress(e);
+            this.adapter.notifyEnterPress(e);
         }
     };
 
@@ -151,43 +151,43 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
             if (last && last.height === height) {
                 return;
             }
-            this._adapter.notifyResize({ height: entry.target.getBoundingClientRect().height });
+            this.adapter.notifyResize({ height: entry.target.getBoundingClientRect().height });
             return;
         }
         if (last && last.width === width && last.height === height) {
             return;
         }
-        this._adapter.notifyResize({ height, width });
+        this.adapter.notifyResize({ height, width });
     };
 
     handleClear = (e: Pick<Event, 'stopPropagation'>) => {
-        if (!this._isControlledComponent('value')) {
-            this._adapter.setValue('');
+        if (!this.isControlledComponent('value')) {
+            this.adapter.setValue('');
         }
-        this._adapter.notifyChange('', e);
-        this._adapter.notifyClear(e);
+        this.adapter.notifyChange('', e);
+        this.adapter.notifyClear(e);
         e.stopPropagation();
     };
 
     handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
-        const { disabled, readonly } = this._adapter.getProps();
-        const { isFocus } = this._adapter.getStates();
+        const { disabled, readonly } = this.adapter.getProps();
+        const { isFocus } = this.adapter.getStates();
         if (disabled || readonly || isFocus) {
             return;
         }
-        if (this._adapter.isEventTarget(e)) {
-            this._adapter.focusInput();
-            this._adapter.toggleFocusing(true);
+        if (this.adapter.isEventTarget(e)) {
+            this.adapter.focusInput();
+            this.adapter.toggleFocusing(true);
         }
     };
 
     handleCounterClick = () => {
-        const { disabled, readonly } = this._adapter.getProps();
-        const { isFocus } = this._adapter.getStates();
+        const { disabled, readonly } = this.adapter.getProps();
+        const { isFocus } = this.adapter.getStates();
         if (disabled || readonly || isFocus) {
             return;
         }
-        this._adapter.focusInput();
-        this._adapter.toggleFocusing(true);
+        this.adapter.focusInput();
+        this.adapter.toggleFocusing(true);
     };
 }

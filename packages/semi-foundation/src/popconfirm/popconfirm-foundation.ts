@@ -37,7 +37,7 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
     #closeCount = 0;
 
     #isOpen() {
-        return Boolean(this._isControlledComponent('visible') ? this.getProps().visible : this.getStates().visible);
+        return Boolean(this.isControlledComponent('visible') ? this.getProps().visible : this.getStates().visible);
     }
 
     #closeIfUnchanged(closeCountAtStart: number) {
@@ -52,16 +52,16 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
             return;
         }
         const closeCountAtStart = this.#closeCount;
-        const maybePromise = this._adapter.notifyCancel(e);
+        const maybePromise = this.adapter.notifyCancel(e);
         if (isPromise(maybePromise)) {
-            this._adapter.updateCancelLoading(true);
+            this.adapter.updateCancelLoading(true);
             maybePromise.then(
                 () => {
                     this.#closeIfUnchanged(closeCountAtStart);
-                    this._adapter.updateCancelLoading(false);
+                    this.adapter.updateCancelLoading(false);
                 },
                 () => {
-                    this._adapter.updateCancelLoading(false);
+                    this.adapter.updateCancelLoading(false);
                 }
             );
         } else {
@@ -71,16 +71,16 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
 
     handleConfirm = (e: MouseEvent) => {
         const closeCountAtStart = this.#closeCount;
-        const maybePromise = this._adapter.notifyConfirm(e);
+        const maybePromise = this.adapter.notifyConfirm(e);
         if (isPromise(maybePromise)) {
-            this._adapter.updateConfirmLoading(true);
+            this.adapter.updateConfirmLoading(true);
             maybePromise.then(
                 () => {
-                    this._adapter.updateConfirmLoading(false);
+                    this.adapter.updateConfirmLoading(false);
                     this.#closeIfUnchanged(closeCountAtStart);
                 },
                 () => {
-                    this._adapter.updateConfirmLoading(false);
+                    this.adapter.updateConfirmLoading(false);
                 }
             );
         } else {
@@ -91,31 +91,31 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
     handleVisibleChange = (visible: boolean) => {
         // a controlled close is recorded so dropping control cannot revive it; a controlled open is not, the parent
         // may have declined it
-        if (!this._isControlledComponent('visible') || !visible) {
-            this._adapter.setVisible(visible);
+        if (!this.isControlledComponent('visible') || !visible) {
+            this.adapter.setVisible(visible);
         }
         // a close request counts as a close for a pending Promise, though the owner may apply it later
         if (!visible) {
             this.#closeCount++;
         }
-        this._adapter.notifyVisibleChange(visible);
+        this.adapter.notifyVisibleChange(visible);
     };
 
     /** Hosts call this when the popup really opens, whoever set `visible` */
     handlePopupOpen = () => {
-        const { cancelButtonProps, okButtonProps } = this._adapter.getProps();
+        const { cancelButtonProps, okButtonProps } = this.adapter.getProps();
         if (cancelButtonProps?.autoFocus && !cancelButtonProps.disabled) {
-            this._adapter.focusCancelButton();
+            this.adapter.focusCancelButton();
         } else if (okButtonProps?.autoFocus && !okButtonProps.disabled) {
-            this._adapter.focusOkButton();
+            this.adapter.focusOkButton();
         }
     };
 
     /** Hosts call this when the popup really closes, whoever set `visible`; the card is still mounted */
     handlePopupClose = () => {
         // recorded like a requested close, so dropping control cannot revive it
-        this._adapter.setVisible(false);
+        this.adapter.setVisible(false);
         this.#closeCount++;
-        this._adapter.focusPrevFocusElement();
+        this.adapter.focusPrevFocusElement();
     };
 }

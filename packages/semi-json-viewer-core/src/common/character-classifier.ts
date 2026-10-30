@@ -9,12 +9,10 @@ export class CharacterClassifier<T extends number> {
      * Maintain a compact (fully initialized ASCII map for quickly classifying ASCII characters - used more often in code).
      */
     protected readonly asciiMap: Uint8Array;
-
     /**
      * The entire map (sparse array).
      */
     protected readonly map: Map<number, number>;
-
     protected readonly defaultValue: number;
 
     constructor(_defaultValue: T) {

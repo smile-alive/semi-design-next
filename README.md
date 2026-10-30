@@ -1,6 +1,6 @@
 # Semi Design Next
 
-Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的社区 fork，提供 React、Vue、Solid 三套组件库，独立演进，不合并回上游，也不保留与上游的向后兼容。包名（`@fibrae/semi-*`）、类名前缀（`semi-`）与 CSS 变量（`--semi-*`）沿用 Semi 的标识。
+Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的社区 fork，提供 React、Vue、Solid、Svelte 四套组件库，独立演进，不合并回上游，也不保留与上游的向后兼容。包名（`@fibrae/semi-*`）、类名前缀（`semi-`）与 CSS 变量（`--semi-*`）沿用 Semi 的标识。
 
 > 本项目是非官方的社区项目，与字节跳动、DouyinFE 及 Semi Design 官方团队没有关联，也未获得其认可。「Semi Design」名称归其权利人所有。
 
@@ -10,7 +10,7 @@ Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的�
 
 - 各框架包的版本范围以其 `package.json` 的 `peerDependencies` 为准
 - 浏览器、模块格式、Node.js 与构建插件的版本要求见[快速开始的环境要求](website/content/start/getting-started/index.zh-CN.mdx#环境要求)
-- React、Vue、Solid 支持服务端渲染与 hydration，React 另支持 RSC 客户端边界；宿主配置见各插件 README
+- React、Vue、Solid、Svelte 支持服务端渲染与 hydration，React 另支持 RSC 客户端边界；宿主配置见各插件 README
 - 开发本仓库：Node 26.10.0 与 pnpm 12.9.1，由 [mise](https://mise.jdx.dev) 按 `mise.toml` 安装
 
 ## 目录结构
@@ -20,20 +20,24 @@ Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的�
 | [`packages/semi-ui-react`](packages/semi-ui-react/README.md) | React 组件库 `@fibrae/semi-ui-react` |
 | [`packages/semi-ui-vue`](packages/semi-ui-vue/README.md) | Vue 组件库 `@fibrae/semi-ui-vue` |
 | [`packages/semi-ui-solid`](packages/semi-ui-solid/README.md) | Solid 组件库 `@fibrae/semi-ui-solid` |
+| [`packages/semi-ui-svelte`](packages/semi-ui-svelte/README.md) | Svelte 组件库 `@fibrae/semi-ui-svelte`，发布 `.svelte` 源码 |
 | [`packages/semi-foundation`](packages/semi-foundation/README.md) | 与框架无关的组件逻辑和 SCSS；唯一的主题（全局 token、色板、mixin）在 `src/theme/` |
 | [`packages/semi-ai-react`](packages/semi-ai-react/README.md) | AI 组件 `@fibrae/semi-ai-react`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-react |
 | [`packages/semi-ai-vue`](packages/semi-ai-vue/README.md) | Vue 版 AI 组件 `@fibrae/semi-ai-vue`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-vue |
 | [`packages/semi-ai-solid`](packages/semi-ai-solid/README.md) | Solid 版 AI 组件 `@fibrae/semi-ai-solid`，基于 semi-ui-solid |
+| [`packages/semi-ai-svelte`](packages/semi-ai-svelte/README.md) | Svelte 版 AI 组件 `@fibrae/semi-ai-svelte`，基于 semi-ui-svelte，发布 `.svelte` 源码 |
 | [`packages/semi-ai-foundation`](packages/semi-ai-foundation/README.md) | AI 组件与框架无关的逻辑、SCSS 和编辑器插件，基于 semi-foundation |
 | [`packages/semi-icons-core`](packages/semi-icons-core/README.md) | 图标的唯一源 `svgs/icons`（保留原色的彩色图标在 `svgs/lab`，插画在 `svgs/illustrations`）与由它生成的框架无关图标与插画数据 `@fibrae/semi-icons-core` |
 | [`packages/semi-icons-react`](packages/semi-icons-react/README.md) | React 图标组件 `@fibrae/semi-icons-react`，每个图标由 core 的数据经 `createIcon` 生成；彩色图标在子路径 `@fibrae/semi-icons-react/lab` |
 | [`packages/semi-icons-vue`](packages/semi-icons-vue/README.md) | Vue 图标组件 `@fibrae/semi-icons-vue`，与 React 共享 core 数据与样式；彩色图标在子路径 `/lab` |
 | [`packages/semi-icons-solid`](packages/semi-icons-solid/README.md) | Solid 图标组件 `@fibrae/semi-icons-solid`，读同一份 core 数据 |
+| [`packages/semi-icons-svelte`](packages/semi-icons-svelte/README.md) | Svelte 图标组件 `@fibrae/semi-icons-svelte`，读同一份 core 数据 |
 | [`packages/semi-animation`](packages/semi-animation/README.md) | 给 Motion 用的 Semi 预设（缓动、弹簧）与 View Transition 预设类 `@fibrae/semi-animation` |
 | [`packages/semi-polyfill`](packages/semi-polyfill/README.md) | 可选 polyfill `@fibrae/semi-polyfill`（`AbortSignal.any`、`Element.prototype.checkVisibility`），供 Safari 17.2 与 17.3 在入口最先导入 |
 | [`packages/semi-illustrations-react`](packages/semi-illustrations-react/README.md) | React 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
 | [`packages/semi-illustrations-vue`](packages/semi-illustrations-vue/README.md) | Vue 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
 | [`packages/semi-illustrations-solid`](packages/semi-illustrations-solid/README.md) | Solid 插画组件，由同一份插画数据生成 |
+| [`packages/semi-illustrations-svelte`](packages/semi-illustrations-svelte/README.md) | Svelte 插画组件，由同一份插画数据生成 |
 | [`packages/semi-json-viewer-core`](packages/semi-json-viewer-core/README.md) | JsonViewer 的编辑器内核 |
 | [`packages/semi-scss-compile`](packages/semi-scss-compile/README.md) | 把 Semi SCSS 编译为 CSS 的工具 |
 | [`packages/semi-theme-shared`](packages/semi-theme-shared/README.md) | 插件与 `semi-scss-compile` 共用的 `semi:` Sass importer 与编译管线，不发布 |

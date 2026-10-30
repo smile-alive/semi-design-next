@@ -107,7 +107,7 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
     };
 
     handleInputValueChange = (value: string) => {
-        this._adapter.setState({ inputValue: value });
+        this.adapter.setState({ inputValue: value });
     };
 
     handleFormatChange = (format: ColorFormat) => {

@@ -52,7 +52,7 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
     }
 
     #getAudioRef() {
-        return this._adapter.getAudioRef();
+        return this.adapter.getAudioRef();
     }
 
     #resetAudioState() {
