@@ -6,7 +6,13 @@
 
     let props: FieldProps<PinCodeProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     const fieldOptions: WithFieldOption = { insetLabel: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={PinCode} {fieldOptions} />
+<Field bind:this={field} {...props} component={PinCode} {fieldOptions} />

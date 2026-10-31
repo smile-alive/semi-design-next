@@ -1,4 +1,5 @@
 import { StrictMode, createRef, memo, useEffect, useState, type ReactNode } from 'react';
+import { renderToString } from 'react-dom/server';
 import { act, render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
@@ -1585,6 +1586,13 @@ describe(`Table`, () => {
         render(<Table columns={columns} dataSource={data} defaultExpandAllGroupRows groupBy="city" rowKey={rowKey} scroll={{ y: 480 }} renderGroupSection={(groupKey) => <strong>Jobs in {groupKey}:</strong>} />);
 
         expect(queryAll(`.${BASE_CLASS_PREFIX}-table-tbody .${BASE_CLASS_PREFIX}-table-row-section.on`)).toHaveLength(groupSize);
+    });
+
+    it(`服务端渲染的首帧已有分组行`, () => {
+        const data = getGroupData();
+        const groupSize = new Set(data.map((item) => item.city)).size;
+        const html = renderToString(<Table columns={getGroupColumns()} dataSource={data} groupBy="city" rowKey="job" scroll={{ y: 480 }} />);
+        expect(html.match(new RegExp(`${BASE_CLASS_PREFIX}-table-row-section`, 'g'))).toHaveLength(groupSize);
     });
 
     it(`expandAllGroupRows`, async () => {

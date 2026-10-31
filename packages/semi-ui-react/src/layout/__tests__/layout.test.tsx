@@ -1,4 +1,5 @@
 import { StrictMode, createRef } from 'react';
+import { renderToString } from 'react-dom/server';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
@@ -54,6 +55,18 @@ describe('layout', () => {
             </Layout>
         );
         expect(container.querySelector(`section.${BASE_CLASS_PREFIX}-layout-has-sider`)).not.toBeNull();
+    });
+
+    // the server never runs the Sider's registering effect, so the class must come from the children alone
+    it('服务端渲染时 Fragment 包住的 sider 也让 layout 带 has-sider', () => {
+        const html = renderToString(
+            <Layout>
+                <>
+                    <Layout.Sider />
+                </>
+            </Layout>
+        );
+        expect(html).toContain(hasSiderCls);
     });
 
     it('各部分拥有各自的类名，并包裹 sider 的子元素', () => {

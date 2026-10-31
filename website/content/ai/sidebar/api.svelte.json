@@ -46,6 +46,14 @@
                 "zh-CN": "显示或隐藏动画结束后调用，参数为当前是否可见。",
                 "en-US": "Called after the show or hide animation ends, with whether the container is visible."
             },
+            "onintroend": {
+                "zh-CN": "原生 introend 事件监听，与组件自身的动画结束处理同时执行。",
+                "en-US": "Native introend listener, run alongside the component's own handling of the animation end."
+            },
+            "onoutroend": {
+                "zh-CN": "原生 outroend 事件监听，与组件自身的动画结束处理同时执行。",
+                "en-US": "Native outroend listener, run alongside the component's own handling of the animation end."
+            },
             "header": {
                 "zh-CN": "替换整个头部，标题与关闭按钮也由它负责。",
                 "en-US": "Replaces the whole header, the title and close button included."

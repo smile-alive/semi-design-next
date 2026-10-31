@@ -5,6 +5,50 @@ import Table from '..';
 
 const dataSource = [{ key: '1', name: 'Alice' }];
 
+it('传 groupBy 时服务端首帧已有分组行', async () => {
+    const grouped = [
+        { key: '1', name: 'Alice', city: 'A' },
+        { key: '2', name: 'Bob', city: 'B' },
+        { key: '3', name: 'Carol', city: 'A' },
+    ];
+    const { html } = await renderOnServer(() => <Table columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={grouped} groupBy="city" pagination={false} />);
+    expect(html.match(/semi-table-row-section/g)).toHaveLength(2);
+});
+
+it('用 Table.Column 子列写法时服务端首帧的表头与数据行列数一致', async () => {
+    const { html } = await renderOnServer(() => (
+        <Table dataSource={[{ key: '1', name: 'Alice', age: 18 }]} pagination={false}>
+            <Table.Column title="Name" dataIndex="name" />
+            <Table.Column title="Age" dataIndex="age" />
+        </Table>
+    ));
+    expect(html.match(/<th\b/g)).toHaveLength(2);
+    expect(html.match(/<td\b/g)).toHaveLength(2);
+    expect(html).toContain('Alice');
+    expect(html).toContain('18');
+});
+
+it('用 Table.Column 子列写法时服务端首帧已应用 defaultSortOrder 与 defaultFilteredValue', async () => {
+    const rows = [
+        { key: '1', name: 'b' },
+        { key: '2', name: 'c' },
+        { key: '3', name: 'a' },
+    ];
+    const sorted = await renderOnServer(() => (
+        <Table dataSource={rows} pagination={false}>
+            <Table.Column title="Name" dataIndex="name" sorter={(x: any, y: any) => x.name.localeCompare(y.name)} defaultSortOrder="ascend" />
+        </Table>
+    ));
+    expect(sorted.html.match(/<td\b[^>]*title="(\w)"/g)?.map((cell) => cell.at(-2))).toEqual(['a', 'b', 'c']);
+
+    const filtered = await renderOnServer(() => (
+        <Table dataSource={rows} pagination={false}>
+            <Table.Column title="Name" dataIndex="name" filters={[{ text: 'a', value: 'a' }]} onFilter={(value: any, record: any) => record.name === value} defaultFilteredValue={['a']} />
+        </Table>
+    ));
+    expect(filtered.html.match(/<td\b/g)).toHaveLength(1);
+});
+
 it('虚拟化表体在列声明了数值 width 时服务端已渲染行', async () => {
     const { html, warnings } = await renderOnServer(() => <Table columns={[{ title: 'Name', dataIndex: 'name', width: 120 }]} dataSource={dataSource} pagination={false} scroll={{ y: 200 }} virtualized />);
     expect(warnings).toEqual([]);

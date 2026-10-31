@@ -71,12 +71,12 @@
     const i18n = useLocale('AIChatInput');
 
     const popupId = useId();
-    const trigger = useTemplateRef('trigger');
 
-    // explicit: the adapter reads this ref and the template binds the foundation to its target, so inference is circular (TS7022)
+    // explicit: the adapter reads these refs and the template binds the foundation to their targets, so inference is circular (TS7022)
+    const trigger = useTemplateRef<HTMLDivElement>('trigger');
     const richText = useTemplateRef<ComponentPublicInstance>('richText');
-    const skillPanel = useTemplateRef('skillPanel');
-    const suggestionPanel = useTemplateRef('suggestionPanel');
+    const skillPanel = useTemplateRef<HTMLDivElement>('skillPanel');
+    const suggestionPanel = useTemplateRef<HTMLDivElement>('suggestionPanel');
     const configure = useTemplateRef('configure');
 
     // A string ref binds to this component even when the node is placed by #actionArea, and keeps the remaining instance

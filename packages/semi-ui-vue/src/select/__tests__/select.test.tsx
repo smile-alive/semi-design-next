@@ -166,6 +166,14 @@ describe('Select', async () => {
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
     });
 
+    // a template's valueless `multiple` compiles to ''
+    it('模板里不带值的 multiple 按多选渲染', async () => {
+        await renderSelect({ multiple: '', defaultValue: ['abc', 'hotsoon'], defaultOpen: true });
+        expect(getTrigger()).toHaveClass(`${prefixCls}-multiple`);
+        expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
+        expect(getOptionList()).toHaveAttribute('aria-multiselectable', 'true');
+    });
+
     it('showClear', async () => {
         const { unmount } = await renderSelect({ defaultValue: 'semi', showClear: true });
         expect(getClearIcon()).not.toBeNull();
@@ -242,6 +250,31 @@ describe('Select', async () => {
         const list = [...defaultList, { value: 'semi', label: 'SemiDesign' }];
         await renderSelect({ defaultOpen: true, list });
         expect(getOptionTexts()).toEqual(['Abc', 'Hotsoon', 'Pipixia', 'TopBuzz', 'SemiDesign']);
+    });
+
+    // Vue exempts template slots from this warning, so the options and groups are passed with JSX
+    it('JSX 选项与分组不触发 Vue 的插槽在 render 外调用告警', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        onTestFinished(() => warn.mockRestore());
+        render(() => (
+            <Select defaultValue="c">
+                {() => (
+                    <>
+                        <SelectOption value="a">{() => 'A'}</SelectOption>
+                        <SelectOptGroup label="G">
+                            {() => (
+                                <>
+                                    <SelectOption value="b">{() => 'B'}</SelectOption>
+                                    <SelectOption value="c">{() => 'C'}</SelectOption>
+                                </>
+                            )}
+                        </SelectOptGroup>
+                    </>
+                )}
+            </Select>
+        ));
+        expect(document.querySelector(`.${prefixCls}-selection-text`)).toHaveTextContent('C');
+        expect(warn.mock.calls.filter(([message]) => String(message).includes('invoked outside of the render function'))).toEqual([]);
     });
 
     it('multiple 为 true 时可以选择多个选项', async () => {
@@ -4041,6 +4074,7 @@ describe('Select', async () => {
             expect(scope).toEqual(expect.objectContaining({ placeholder: 'Pick', disabled: false, inputValue: '' }));
             expect(scope.componentProps).toEqual(expect.objectContaining({ placeholder: 'Pick', filter: true }));
             expect(scope.componentProps).not.toHaveProperty('prefix');
+            expect(scope.componentProps).not.toHaveProperty('optionRecords');
         });
 
         it('#selectedItem 与 #tag 同时给出时 #tag 优先', async () => {

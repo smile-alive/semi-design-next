@@ -192,8 +192,9 @@
     // replace the search handle. `class` and `style` merge with Transfer's own below.
     const treeBindings = $derived(omit((treeProps ?? {}) as Record<string, unknown>, ['class', 'style', 'value', 'onChange', 'keyMaps', 'treeData', 'treeDataSimpleJson', 'onChangeWithObject', 'search', 'label']));
 
-    // the root is not a focus target: a tabindex (one injected by a wrapping Tooltip included) goes to the search box
-    const attrs = $derived(splitControlAttrs(rest, (key) => key === 'tabindex'));
+    // the root is not a focus target: a tabindex (one injected by a wrapping Tooltip included) goes to the search box;
+    // role="group" does not support aria-required
+    const attrs = $derived(splitControlAttrs(omit(rest, ['aria-required']), (key) => key === 'tabindex'));
 
     const onInputChange = (input: string) => {
         foundation.handleInputChange(input, true);

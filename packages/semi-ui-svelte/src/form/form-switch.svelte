@@ -6,8 +6,14 @@
 
     let props: FieldProps<SwitchProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     // Switch forwards native focus listeners to its input
     const fieldOptions: WithFieldOption = { valueKey: 'checked', onBlurFnName: 'onblur', insetLabel: false, validateStatus: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={Switch} {fieldOptions} />
+<Field bind:this={field} {...props} component={Switch} {fieldOptions} />

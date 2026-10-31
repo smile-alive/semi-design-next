@@ -21,8 +21,9 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // Items and handlers register when they mount, children before the group in tree order: index = layout order. The
-    // foundation reads them only after mount, so they need not be reactive.
+    // Items and handlers register when they mount: tree order on mount, but one inserted later registers last. Index =
+    // layout order, which is DOM order; it is read on use because items can come and go. The foundation reads them only
+    // after mount, so they need not be reactive.
     const items: ResizeItemEntry[] = [];
     const handlers: HTMLDivElement[] = [];
 
@@ -43,18 +44,30 @@
         }),
         () => ({
             getGroupRef: () => group ?? null,
-            getItem: (index) => items[index].el,
+            getItem: (index) => orderedItems()[index].el,
             getItemCount: () => items.length,
-            getHandler: (index) => handlers[index],
+            getHandler: (index) => orderedHandlers()[index],
             getHandlerCount: () => handlers.length,
-            getItemMin: (index) => items[index].min(),
-            getItemMax: (index) => items[index].max(),
-            getItemStart: (index) => items[index].start,
-            getItemChange: (index) => items[index].change,
-            getItemEnd: (index) => items[index].end,
-            getItemDefaultSize: (index) => items[index].defaultSize(),
+            getItemMin: (index) => orderedItems()[index].min(),
+            getItemMax: (index) => orderedItems()[index].max(),
+            getItemStart: (index) => orderedItems()[index].start,
+            getItemChange: (index) => orderedItems()[index].change,
+            getItemEnd: (index) => orderedItems()[index].end,
+            getItemDefaultSize: (index) => orderedItems()[index].defaultSize(),
         })
     );
+
+    function inDocumentOrder(a: Node, b: Node) {
+        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+    }
+
+    function orderedItems() {
+        return items.toSorted((a, b) => inDocumentOrder(a.el, b.el));
+    }
+
+    function orderedHandlers() {
+        return handlers.toSorted(inDocumentOrder);
+    }
 
     const remove =
         <T>(list: T[], value: T) =>
@@ -76,8 +89,9 @@
         },
         // a handler that left the group (unmounted mid-drag) can still send events: those are ignored
         notifyResizeStart: (handler, e) => {
-            if (handlers.includes(handler)) {
-                foundation.onResizeStart(handlers.indexOf(handler), e);
+            const index = orderedHandlers().indexOf(handler);
+            if (index >= 0) {
+                foundation.onResizeStart(index, e);
             }
         },
         notifyResizing: (handler, e) => {
@@ -90,7 +104,10 @@
                 foundation.onResizeEnd(e);
             }
         },
-        notifyKeyDown: (handler, e) => handlers.includes(handler) && foundation.resizeByKey(handlers.indexOf(handler), e),
+        notifyKeyDown: (handler, e) => {
+            const index = orderedHandlers().indexOf(handler);
+            return index >= 0 && foundation.resizeByKey(index, e);
+        },
     });
 
     const observeResize = (node: HTMLDivElement) => {

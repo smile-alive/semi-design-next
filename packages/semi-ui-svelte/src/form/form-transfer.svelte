@@ -6,8 +6,14 @@
 
     let props: FieldProps<TransferProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     // Transfer has no inset label or validateStatus
     const fieldOptions: WithFieldOption = { insetLabel: false, validateStatus: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={Transfer} {fieldOptions} />
+<Field bind:this={field} {...props} component={Transfer} {fieldOptions} />

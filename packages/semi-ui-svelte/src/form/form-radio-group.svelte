@@ -6,7 +6,13 @@
 
     let props: FieldProps<RadioGroupProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     const fieldOptions: WithFieldOption = { valuePath: 'target.value', insetLabel: false, validateStatus: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={RadioGroup} {fieldOptions} />
+<Field bind:this={field} {...props} component={RadioGroup} {fieldOptions} />

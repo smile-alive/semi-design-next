@@ -5,6 +5,12 @@
     import type { FieldProps } from './interface.js';
 
     let props: FieldProps<TagInputProps> = $props();
+
+    let field: ReturnType<typeof Field> | undefined;
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={TagInput} />
+<Field bind:this={field} {...props} component={TagInput} />

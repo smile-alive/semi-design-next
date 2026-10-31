@@ -1,4 +1,4 @@
-import { Show, children, createEffect, createMemo, createRenderEffect, createUniqueId, on, splitProps } from 'solid-js';
+import { For, Show, children, createEffect, createMemo, createUniqueId, on, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
@@ -15,7 +15,6 @@ import useLocale from '../locale/use-locale';
 import CarouselArrow from './carousel-arrow';
 import CarouselIndicator from './carousel-indicator';
 import type { CarouselHandle, CarouselProps } from './interface';
-import { originalAttr, registerSlide, writeSlideAttrs } from './slide-attrs';
 
 export interface CarouselState {
     activeIndex: number;
@@ -84,18 +83,11 @@ export default function Carousel(rawProps: CarouselProps) {
     let tablist: HTMLDivElement | undefined;
     let focusPending = false;
 
-    // Slides are the consumer's own elements: Carousel decorates them in place, as it cannot clone a Solid element
     const resolved = children(() => local.children);
 
-    // On the server a slide is a markup string that cannot be decorated: it renders as given and gains its classes and
-    // attributes at hydration (registered in component-issues)
-    const slides = createMemo(() => {
-        const elements = resolved.toArray().filter((node) => (isServer ? isMarkup(node) : node instanceof HTMLElement)) as HTMLElement[];
-        if (!isServer) {
-            elements.forEach(registerSlide);
-        }
-        return elements;
-    });
+    // Only elements are slides; each is rendered inside a wrapper Carousel owns, so the consumer's element keeps its own
+    // class, role and aria attributes
+    const slides = createMemo(() => resolved.toArray().filter((node) => (isServer ? isMarkup(node) : node instanceof HTMLElement)));
 
     const total = () => slides().length;
 
@@ -135,11 +127,7 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const getTabId = (index: number) => `${baseId}-tab-${index}`;
 
-    // a slide keeps an id of its own, so links to it still work
-    const getSlideId = (index: number) => {
-        const slide = slides()[index];
-        return (slide && originalAttr(slide, 'id')) || `${baseId}-slide-${index}`;
-    };
+    const getSlideId = (index: number) => `${baseId}-slide-${index}`;
 
     const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusIn, event);
@@ -165,37 +153,6 @@ export default function Carousel(rawProps: CarouselProps) {
         callHandler(local.onMouseLeave, event);
         foundation.handlePointerLeave();
     };
-
-    // Written before the DOM is inserted, so the first paint already has the classes
-    createRenderEffect(() => {
-        if (isServer) {
-            return;
-        }
-        const list = slides();
-        const count = list.length;
-        const current = activeIndex();
-        const { isInit, preIndex } = state();
-        const indicator = hasIndicator();
-        const { slide, slideN } = locale().locale;
-        list.forEach((element, index) => {
-            const isCurrent = index === current;
-            // APG carousel: with indicators the slides are the panels of their tabs, otherwise named groups
-            writeSlideAttrs(element, indicator ? { id: getSlideId(index), role: 'tabpanel', 'aria-labelledby': getTabId(index) } : { role: 'group', 'aria-roledescription': slide, 'aria-label': originalAttr(element, 'aria-label') ?? slideN.replace('${index}', String(index + 1)) });
-            // hidden slides are only transparent or invisible, so take them out of focus and the a11y tree
-            element.toggleAttribute('inert', !isCurrent);
-            element.style.setProperty('transition-timing-function', 'ease');
-            element.style.setProperty('transition-duration', `${local.speed}ms`);
-            element.style.setProperty('animation-timing-function', 'ease');
-            element.style.setProperty('animation-duration', `${local.speed}ms`);
-            element.classList.toggle(`${content}-item-prev`, index === (current - 1 + count) % count);
-            element.classList.toggle(`${content}-item-next`, index === (current + 1 + count) % count);
-            element.classList.toggle(`${content}-item-current`, isCurrent);
-            element.classList.add(`${content}-item`);
-            element.classList.toggle(`${content}-item-active`, isCurrent);
-            element.classList.toggle(`${content}-item-slide-in`, local.animation === 'slide' && !isInit && isCurrent);
-            element.classList.toggle(`${content}-item-slide-out`, local.animation === 'slide' && !isInit && index === preIndex);
-        });
-    });
 
     useWatch(
         () => local.activeIndex,
@@ -249,7 +206,39 @@ export default function Carousel(rawProps: CarouselProps) {
                 aria-live={state().rotating ? 'off' : 'polite'}
                 x-semi-prop="children"
             >
-                {slides()}
+                <For each={slides()}>
+                    {(slide, index) => {
+                        const isCurrent = () => index() === activeIndex();
+                        return (
+                            // with indicators the slides are the panels of their tabs (APG tabbed carousel), otherwise named groups
+                            <div
+                                aria-label={hasIndicator() ? undefined : locale().locale.slideN.replace('${index}', String(index() + 1))}
+                                aria-labelledby={hasIndicator() ? getTabId(index()) : undefined}
+                                aria-roledescription={hasIndicator() ? undefined : locale().locale.slide}
+                                class={clsx(`${content}-item`, {
+                                    [`${content}-item-prev`]: index() === (activeIndex() - 1 + total()) % total(),
+                                    [`${content}-item-next`]: index() === (activeIndex() + 1 + total()) % total(),
+                                    [`${content}-item-current`]: isCurrent(),
+                                    [`${content}-item-active`]: isCurrent(),
+                                    [`${content}-item-slide-in`]: local.animation === 'slide' && !state().isInit && isCurrent(),
+                                    [`${content}-item-slide-out`]: local.animation === 'slide' && !state().isInit && index() === state().preIndex,
+                                })}
+                                id={hasIndicator() ? getSlideId(index()) : undefined}
+                                // hidden slides are only transparent or invisible, so take them out of focus and the a11y tree
+                                inert={!isCurrent()}
+                                role={hasIndicator() ? 'tabpanel' : 'group'}
+                                style={{
+                                    'transition-timing-function': 'ease',
+                                    'transition-duration': `${local.speed}ms`,
+                                    'animation-timing-function': 'ease',
+                                    'animation-duration': `${local.speed}ms`,
+                                }}
+                            >
+                                {slide}
+                            </div>
+                        );
+                    }}
+                </For>
             </div>
             <Show when={hasIndicator()}>
                 <div class={cssClasses.CAROUSEL_INDICATOR}>

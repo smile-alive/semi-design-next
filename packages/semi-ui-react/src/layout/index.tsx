@@ -1,9 +1,10 @@
 import type React from 'react';
-import { type CSSProperties, Children, createElement, isValidElement, memo, useState } from 'react';
+import { type CSSProperties, createElement, isValidElement, memo, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
 import '@fibrae/semi-foundation/layout/layout.scss';
 import type { ElementProps } from '../_base/base';
+import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';
 import { LayoutContext, type ContextType } from './layout-context';
 import Sider from './sider';
@@ -68,7 +69,7 @@ function Layout(rawProps: BasicLayoutProps) {
     }));
 
     const classString = clsx(className, prefixCls, {
-        [`${prefixCls}-has-sider`]: hasSider === true || siders.length > 0 || Children.toArray(children).some(isSider),
+        [`${prefixCls}-has-sider`]: hasSider === true || siders.length > 0 || flattenChildren(children).some(isSider),
     });
 
     return <LayoutContext value={context}>{createElement(tagName, { ...rest, ref, className: classString }, children)}</LayoutContext>;

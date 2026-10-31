@@ -25,8 +25,8 @@
 </script>
 
 {#if type === 'text'}
-    <!-- the handler comes last: the foundation calls the caller's own onChange -->
-    <TextArea placeholder={locale().locale.placeholder} value={typeof value === 'string' ? value : ''} {...textAreaProps} onChange={onTextChange} />
+    <!-- the value and handler come last: the foundation calls the caller's own onChange -->
+    <TextArea placeholder={locale().locale.placeholder} {...textAreaProps} onChange={onTextChange} value={typeof value === 'string' ? value : ''} />
 {:else if type === 'emoji'}
     <!-- APG radio group: native radios provide the arrow keys, single Tab stop and checked state -->
     <div aria-label={locale().locale.rating} class={`${prefix}-emoji-container`} role="radiogroup">
@@ -42,11 +42,11 @@
     {/if}
 {:else if type === 'radio'}
     <div class={`${prefix}-radio-container`}>
-        <RadioGroup direction="vertical" extra={radioExtra} label={radioLabel} value={radioValue} {...radioGroupProps} onChange={onRadioChange} />
+        <RadioGroup direction="vertical" extra={radioExtra} label={radioLabel} {...radioGroupProps} onChange={onRadioChange} value={radioValue} />
     </div>
 {:else if type === 'checkbox'}
     <div class={`${prefix}-checkbox-container`}>
-        <CheckboxGroup direction="vertical" extra={checkboxExtra} label={checkboxLabel} value={Array.isArray(value) ? value : []} {...checkboxGroupProps} onChange={onCheckboxChange} />
+        <CheckboxGroup direction="vertical" extra={checkboxExtra} label={checkboxLabel} {...checkboxGroupProps} onChange={onCheckboxChange} value={Array.isArray(value) ? value : []} />
     </div>
 {:else}
     {@render children?.()}

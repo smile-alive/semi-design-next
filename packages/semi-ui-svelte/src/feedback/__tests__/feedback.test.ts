@@ -7,7 +7,7 @@ import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
-import type { FeedbackProps } from '../interface';
+import type { FeedbackCheckboxGroupProps, FeedbackProps, FeedbackRadioGroupProps, FeedbackTextAreaProps } from '../interface';
 import ConfigFixture from './config-fixture.svelte';
 import FeedbackFixture from './feedback-fixture.svelte';
 import FeedbackModes from './feedback-modes.svelte';
@@ -267,9 +267,21 @@ describe('Svelte Feedback type', () => {
         expect(onSecond).toHaveBeenCalledWith({ emoji: '😐' });
     });
 
-    it('textAreaProps.value 作为输入框的初值', async () => {
-        await setup({ type: 'text', textAreaProps: { value: 'fixed' } });
-        expect(screen.getByRole('textbox')).toHaveValue('fixed');
+    it('textAreaProps.value 不盖过 Feedback 的值', async () => {
+        const onValueChange = vi.fn<(value: unknown) => void>();
+        const onChange = vi.fn<(value: string, event: Event) => void>();
+        const textAreaProps: FeedbackTextAreaProps = {
+            // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win
+            value: 'fixed',
+            onChange,
+        };
+        await setup({ type: 'text', textAreaProps, onValueChange });
+        const textarea = screen.getByRole('textbox');
+        expect(textarea).toHaveValue('');
+        typeText(textarea, 'typed');
+        expect(textarea).toHaveValue('typed');
+        expect(onValueChange).toHaveBeenLastCalledWith('typed');
+        expect(onChange).toHaveBeenCalledTimes(1);
     });
 
     it('textAreaProps.onChange 被调用，且不替换上报的值', async () => {
@@ -288,11 +300,40 @@ describe('Svelte Feedback type', () => {
         expect(onChange).toHaveBeenCalledTimes(2);
     });
 
-    it('radioGroupProps.value 与 checkboxGroupProps.value 作为初值', async () => {
-        const { store } = await setup({ type: 'radio', radioGroupProps: { options, value: 'a' } });
-        expect(screen.getByRole('radio', { name: 'A' })).toBeChecked();
-        update(store, { type: 'checkbox', checkboxGroupProps: { options, value: ['b'] } });
+    it('radioGroupProps.value 不盖过 Feedback 的值', async () => {
+        const onValueChange = vi.fn<(value: unknown) => void>();
+        const onChange = vi.fn<(event: { target: { value: unknown } }) => void>();
+        const radioGroupProps: FeedbackRadioGroupProps = {
+            options,
+            // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win
+            value: 'a',
+            onChange,
+        };
+        await setup({ type: 'radio', radioGroupProps, onValueChange });
+        expect(screen.getByRole('radio', { name: 'A' })).not.toBeChecked();
+        await click(screen.getByRole('radio', { name: 'B' }));
+        expect(screen.getByRole('radio', { name: 'B' })).toBeChecked();
+        expect(screen.getByRole('radio', { name: 'A' })).not.toBeChecked();
+        expect(onValueChange).toHaveBeenLastCalledWith('b');
+        expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('checkboxGroupProps.value 不盖过 Feedback 的值', async () => {
+        const onValueChange = vi.fn<(value: unknown) => void>();
+        const onChange = vi.fn<(value: unknown) => void>();
+        const checkboxGroupProps: FeedbackCheckboxGroupProps = {
+            options,
+            // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win
+            value: ['a'],
+            onChange,
+        };
+        await setup({ type: 'checkbox', checkboxGroupProps, onValueChange });
+        expect(screen.getByRole('checkbox', { name: 'A' })).not.toBeChecked();
+        await click(screen.getByRole('checkbox', { name: 'B' }));
         expect(screen.getByRole('checkbox', { name: 'B' })).toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'A' })).not.toBeChecked();
+        expect(onValueChange).toHaveBeenLastCalledWith(['b']);
+        expect(onChange).toHaveBeenLastCalledWith(['b']);
     });
 });
 

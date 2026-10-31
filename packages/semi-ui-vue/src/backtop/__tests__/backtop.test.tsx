@@ -184,6 +184,14 @@ describe('BackTop', () => {
         expect(view.container.querySelectorAll('button, [role="button"]')).toHaveLength(1);
     });
 
+    it('挂载与更新时不在 render 外调用默认插槽', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = render(BackTop, { props: { visibilityHeight: -1 }, slots: { default: () => <span>UP</span> } });
+        await frame();
+        await view.rerender({ duration: 100 });
+        expect(warn.mock.calls.filter(([message]) => String(message).includes('invoked outside of the render function'))).toEqual([]);
+    });
+
     it('默认插槽只有空文本时仍显示图标', async () => {
         const view = render(BackTop, { props: { visibilityHeight: -1 }, slots: { default: () => '' } });
         await frame();

@@ -177,6 +177,20 @@ describe('Form-group', () => {
         expect(b).toBeDisabled();
     });
 
+    it('Fragment 包住的字段照常挂载', () => {
+        render(
+            <Form>
+                <Form.InputGroup>
+                    <>
+                        <Form.Input field="a" />
+                        <Form.Input field="b" />
+                    </>
+                </Form.InputGroup>
+            </Form>
+        );
+        expect(screen.getAllByRole('textbox')).toHaveLength(2);
+    });
+
     it('没有 label 时外层不设置 role="group"', () => {
         const { container } = renderFormGroup();
         expect(container.querySelector('.semi-form-field-group')).not.toHaveAttribute('role');

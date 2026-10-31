@@ -22,10 +22,13 @@
     const { Emoji } = strings;
 
     // The listeners of the control props are called by the foundation, so they must not replace the built-in ones.
+    // `modelValue` is bound after `v-bind` so a stray one cannot desync the control from the reported value.
     const textAreaRest = computed(() => {
         const { onChange: _onChange, ...rest } = props.textAreaProps ?? {};
         return rest;
     });
+
+    const textAreaBound = computed(() => ({ placeholder: locale.value.locale.placeholder, ...textAreaRest.value, modelValue: typeof props.value === 'string' ? props.value : '' }));
 
     const radioRest = computed(() => {
         const { onChange: _onChange, ...rest } = props.radioGroupProps ?? {};
@@ -47,7 +50,7 @@
 </script>
 
 <template>
-    <TextArea v-if="props.type === 'text'" :modelValue="typeof props.value === 'string' ? props.value : ''" :placeholder="locale.locale.placeholder" v-bind="textAreaRest" @change="(value, event) => emit('textChange', value, event)" />
+    <TextArea v-if="props.type === 'text'" v-bind="textAreaBound" @change="(value, event) => emit('textChange', value, event)" />
     <template v-else-if="props.type === 'emoji'">
         <!-- APG radio group: native radios provide the arrow keys, single Tab stop and checked state -->
         <div :aria-label="locale.locale.rating" :class="`${prefix}-emoji-container`" role="radiogroup">
@@ -59,7 +62,7 @@
         <TextArea v-if="emoji === Emoji.bad" :placeholder="locale.locale.placeholderOptional" v-bind="textAreaRest" @change="(value, event) => emit('reasonChange', value, event)" />
     </template>
     <div v-else-if="props.type === 'radio'" :class="`${prefix}-radio-container`">
-        <RadioGroup direction="vertical" :modelValue="radioValue" v-bind="radioRest" @change="emit('radioChange', $event)">
+        <RadioGroup direction="vertical" v-bind="radioRest" :modelValue="radioValue" @change="emit('radioChange', $event)">
             <template v-if="$slots.radioLabel" #label="slotProps">
                 <slot name="radioLabel" v-bind="slotProps" />
             </template>
@@ -69,7 +72,7 @@
         </RadioGroup>
     </div>
     <div v-else-if="props.type === 'checkbox'" :class="`${prefix}-checkbox-container`">
-        <CheckboxGroup direction="vertical" :modelValue="Array.isArray(props.value) ? props.value : []" v-bind="checkboxRest" @change="emit('checkboxChange', $event)">
+        <CheckboxGroup direction="vertical" v-bind="checkboxRest" :modelValue="Array.isArray(props.value) ? props.value : []" @change="emit('checkboxChange', $event)">
             <template v-if="$slots.checkboxLabel" #label="slotProps">
                 <slot name="checkboxLabel" v-bind="slotProps" />
             </template>

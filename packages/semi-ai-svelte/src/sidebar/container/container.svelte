@@ -18,7 +18,7 @@
     import type { ContainerProps } from './interface.js';
 
     // No fallback on `visible`: a bound `undefined` would throw with one, and undefined means hidden
-    let { visible = $bindable(), title, motion = true, resizable = true, minWidth = 150, maxWidth, defaultSize, showClose = true, closeOnEsc = false, onCancel, afterVisibleChange, header, children, ...rest }: ContainerProps = $props();
+    let { visible = $bindable(), title, motion = true, resizable = true, minWidth = 150, maxWidth, defaultSize, showClose = true, closeOnEsc = false, onCancel, afterVisibleChange, header, children, onintroend, onoutroend, ...rest }: ContainerProps = $props();
 
     const locale = useLocale('Sidebar');
 
@@ -122,8 +122,14 @@
         in:cssAnimation|global={{ className: `${prefix}-animation-content_show`, motion }}
         out:cssAnimation|global={{ className: `${prefix}-animation-content_hide`, motion }}
         role={groupRole(rest)}
-        onintroend={foundation.handleAnimationEnd}
-        onoutroend={foundation.handleAnimationEnd}
+        onintroend={(event) => {
+            foundation.handleAnimationEnd();
+            onintroend?.(event);
+        }}
+        onoutroend={(event) => {
+            foundation.handleAnimationEnd();
+            onoutroend?.(event);
+        }}
     >
         {#if header}
             {@render header()}

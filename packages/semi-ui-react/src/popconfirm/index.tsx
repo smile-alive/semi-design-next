@@ -254,10 +254,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
         );
     };
 
-    if (disabled) {
-        return children;
-    }
-
     return (
         <Popover
             {...attrs}
@@ -267,7 +263,10 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
             aria-labelledby={labelledBy}
             content={renderConfirmPopCard}
             position={position}
-            visible={open}
+            // the wrapper stays mounted while disabled so toggling it never remounts the trigger; a custom trigger with
+            // `visible` false is a Popover that cannot open
+            trigger={disabled ? 'custom' : attrs.trigger}
+            visible={disabled ? false : open}
             onVisibleChange={foundation.handleVisibleChange}
         >
             {children}

@@ -175,7 +175,8 @@
     };
 
     // $state.snapshot: a parent mutating its own array in place still shows up as a change
-    const snapshot = () => ({ items, selectedKeys: $state.snapshot(selectedKeys), openKeys: $state.snapshot(openKeys) });
+    // children is part of it so the foundation compares the previous props with the same shape, otherwise every change looks like a new tree
+    const snapshot = () => ({ children: foundationProps.children, items, selectedKeys: $state.snapshot(selectedKeys), openKeys: $state.snapshot(openKeys) });
 
     let previous = untrack(snapshot);
 

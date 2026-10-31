@@ -8,6 +8,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { mockResizeObserver } from '@test/utils/solid';
 import Select, { type OptionRenderProps, type RenderMultipleSelectedItemFn, type RenderSingleSelectedItemFn, type SelectElement, type SelectProps, type TriggerRenderProps } from '..';
 import semiGlobal from '../../_utils/semi-global';
+import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import { InputGroup } from '../../input';
 import Popover from '../../popover';
@@ -3255,6 +3256,19 @@ describe('Select 回调参数与禁用、键盘细节', () => {
             </InputGroup>
         ));
         expect(getTrigger()).not.toHaveClass(`${prefixCls}-disabled`);
+    });
+
+    it('插槽里的 Button 不继承 InputGroup 的 size 与 disabled', () => {
+        render(() => (
+            <InputGroup size="large" disabled>
+                <Select motion={false} defaultValue="abc" prefix={<Button>prefix</Button>} renderSelectedItem={() => <Button>selected</Button>} optionList={defaultList} />
+            </InputGroup>
+        ));
+        for (const name of ['prefix', 'selected']) {
+            const button = screen.getByRole('button', { name });
+            expect(button).toBeEnabled();
+            expect(button).not.toHaveClass(`${BASE_CLASS_PREFIX}-button-size-large`);
+        }
     });
 
     it('Select 自带的 size 优先于 InputGroup 的 size，没传时取组的，包装元素内也一样', () => {

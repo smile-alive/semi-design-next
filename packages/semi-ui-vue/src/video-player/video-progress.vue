@@ -18,7 +18,8 @@
 
     const localeResult = useLocale('VideoPlayer');
 
-    const slider = useTemplateRef('slider');
+    // Annotated: the adapter's getSliderRef reads this ref, so inference is circular (TS7022)
+    const slider = useTemplateRef<HTMLDivElement>('slider');
 
     const prefix = cssClasses.PREFIX_PROGRESS;
     const locale = computed(() => localeResult.value.locale);

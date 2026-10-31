@@ -211,7 +211,8 @@
         event.currentTarget.value = String(handleValue(pos));
     };
 
-    const onFocusout = (event: FocusEvent & { currentTarget: HTMLElement }) => {
+    const onFocusout = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
+        rest.onfocusout?.(event);
         if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
             onBlur?.(event);
         }
@@ -322,10 +323,19 @@
                 [`${prefix}-reverse`]: vertical && verticalReverse,
             },
         ]}
-        onfocusin={(event) => onFocus?.(event)}
+        onfocusin={(event) => {
+            rest.onfocusin?.(event);
+            onFocus?.(event);
+        }}
         onfocusout={onFocusout}
-        onmouseenter={foundation.handleWrapperEnter}
-        onmouseleave={foundation.handleWrapperLeave}
+        onmouseenter={(event) => {
+            rest.onmouseenter?.(event);
+            foundation.handleWrapperEnter();
+        }}
+        onmouseleave={(event) => {
+            rest.onmouseleave?.(event);
+            foundation.handleWrapperLeave();
+        }}
     >
         <div class={`${prefix}-rail`} style={railStyle} onclick={foundation.handleWrapClick}></div>
         <div class={cssClasses.TRACK} style={trackStyle} onclick={foundation.handleWrapClick}></div>

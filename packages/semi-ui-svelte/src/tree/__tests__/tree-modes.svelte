@@ -3,7 +3,7 @@
     import Tree from '../tree.svelte';
     import { treeData } from './data';
 
-    let { mode, store }: { mode: 'bind' | 'function' | 'one-way' | 'uncontrolled'; store: { value?: TreeValue; expandedKeys?: string[]; accept: boolean; log: string[] } } = $props();
+    let { mode, store, multiple = false }: { mode: 'bind' | 'function' | 'one-way' | 'uncontrolled'; store: { value?: TreeValue; expandedKeys?: string[]; accept: boolean; log: string[] }; multiple?: boolean } = $props();
 
     const log = (entry: string) => {
         store.log.push(entry);
@@ -11,7 +11,7 @@
 </script>
 
 {#if mode === 'bind'}
-    <Tree bind:expandedKeys={store.expandedKeys} bind:value={store.value} motion={false} onChange={(value) => log(`change ${value}`)} onExpand={(keys) => log(`expand ${keys.join()}`)} {treeData} />
+    <Tree bind:expandedKeys={store.expandedKeys} bind:value={store.value} motion={false} {multiple} onChange={(value) => log(`change ${value}`)} onExpand={(keys) => log(`expand ${keys.join()}`)} {treeData} />
 {:else if mode === 'function'}
     <Tree
         bind:expandedKeys={

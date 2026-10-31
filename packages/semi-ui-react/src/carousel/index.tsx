@@ -1,9 +1,10 @@
 import type React from 'react';
-import { Children, cloneElement, isValidElement, useEffect, useId, useImperativeHandle, useRef } from 'react';
+import { cloneElement, isValidElement, useEffect, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
 import CarouselFoundation, { type CarouselAdapter } from '@fibrae/semi-foundation/carousel/foundation';
 import '@fibrae/semi-foundation/carousel/carousel.scss';
+import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
@@ -41,7 +42,7 @@ const defaultProps = {
 } satisfies Partial<CarouselProps>;
 
 function getSlides(children: React.ReactNode) {
-    return Children.toArray(children).filter((child) => isValidElement(child)) as React.ReactElement<any>[];
+    return flattenChildren(children).filter((child) => isValidElement(child)) as React.ReactElement<any>[];
 }
 
 export default function Carousel(rawProps: CarouselProps) {

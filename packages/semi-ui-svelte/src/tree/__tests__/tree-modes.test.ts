@@ -8,9 +8,9 @@ import TreeModes from './tree-modes.svelte';
 
 type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 
-function setup(mode: Mode, init: { value?: TreeValue; expandedKeys?: string[]; accept?: boolean } = {}) {
+function setup(mode: Mode, init: { value?: TreeValue; expandedKeys?: string[]; accept?: boolean; multiple?: boolean } = {}) {
     const store = createStore<{ value: TreeValue | undefined; expandedKeys: string[] | undefined; accept: boolean; log: string[] }>({ value: init.value, expandedKeys: init.expandedKeys, accept: init.accept ?? true, log: [] });
-    render(TreeModes, { props: { mode, store } });
+    render(TreeModes, { props: { mode, store, multiple: init.multiple } });
     return store;
 }
 
@@ -51,6 +51,24 @@ describe('Svelte Tree 受控 value（$bindable）', () => {
         flushSync();
         expect(isSelected('beimeizhou')).toBe(true);
         expect(isSelected('yazhou')).toBe(false);
+    });
+
+    it('bind:value 初值为 undefined：点选后父级改回 undefined，单选清空选中', async () => {
+        const store = setup('bind');
+        await click(getNode('yazhou'));
+        expect(isSelected('yazhou')).toBe(true);
+        store.value = undefined;
+        flushSync();
+        expect(isSelected('yazhou')).toBe(false);
+    });
+
+    it('bind:value 初值为 undefined：勾选后父级改回 undefined，多选清空勾选', async () => {
+        const store = setup('bind', { multiple: true });
+        await click(getNode('beimeizhou'));
+        expect(getNode('beimeizhou')).toHaveAttribute('aria-checked', 'true');
+        store.value = undefined;
+        flushSync();
+        expect(getNode('beimeizhou')).toHaveAttribute('aria-checked', 'false');
     });
 
     it('函数绑定：setter 拒绝时组件保持原值', async () => {

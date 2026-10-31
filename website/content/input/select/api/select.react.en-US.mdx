@@ -90,5 +90,5 @@ import ApiType from '#/components/ApiType.astro';
 | focus | Focuses the trigger, or the search input when the Select is searchable. The dropdown opens only when the Select is searchable. | <ApiType detail={"() => void"}>Type</ApiType> |
 | open | Opens the dropdown. | <ApiType detail={"() => void"}>Type</ApiType> |
 | rePosition | Recomputes the dropdown position from the trigger's current position at once. The dropdown already follows scrolling, window resizing, trigger moves and size changes of the trigger or list, so this is rarely needed; following a trigger move lands a frame late, so call this to align within the same frame. | <ApiType detail={"() => void"}>Type</ApiType> |
-| search | Searches as if the value had been typed, and sets it into the search input. Without an event, the second argument of `onSearch` is `undefined`. | <ApiType detail={"(value: string, event?: any) => void"}>Type</ApiType> |
+| search | Searches as if the value had been typed, and sets it into the search input. Without an event, the second argument of `onSearch` is `undefined`. | <ApiType detail={"(value: string, event?: unknown) => void"}>Type</ApiType> |
 | selectAll | Selects every visible, enabled option. Effective in multiple mode only. | <ApiType detail={"() => void"}>Type</ApiType> |

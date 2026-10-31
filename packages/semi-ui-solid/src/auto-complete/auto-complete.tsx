@@ -15,13 +15,13 @@ import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
-import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
-import { type InputGroupContextValue, InputGroupContext, useInputGroupContext } from '../input/context';
+import type { InputGroupContextValue } from '../input/context';
+import InputGroupBoundary from '../input/group-boundary';
 import Input, { type ValidateStatus } from '../input/input';
 import Popover from '../popover';
 import { OptionView } from '../select/option';
@@ -148,15 +148,7 @@ const defaultProps = {
 } satisfies Partial<AutoCompleteProps>;
 
 export default function AutoComplete<T extends AutoCompleteItems = AutoCompleteItems>(props: AutoCompleteProps<T>) {
-    const group = useInputGroupContext();
-    const layer = usePopupLayer();
-
-    // the slots resolve in the control's body, so the whole control, not only its markup, leaves the InputGroup
-    return (
-        <InputGroupContext.Provider value={undefined}>
-            <AutoCompleteControl {...props} inGroup={group?.layer === layer ? group : undefined} />
-        </InputGroupContext.Provider>
-    );
+    return <InputGroupBoundary>{(inGroup) => <AutoCompleteControl {...props} inGroup={inGroup} />}</InputGroupBoundary>;
 }
 
 function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(all: AutoCompleteProps<T> & { inGroup?: InputGroupContextValue }) {

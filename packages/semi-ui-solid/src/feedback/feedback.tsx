@@ -1,5 +1,6 @@
 import { createMemo, createUniqueId, For, type JSX, Match, Show, splitProps, Switch } from 'solid-js';
 import clsx from 'clsx';
+import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/feedback/constants';
 import FeedbackFoundation, { type EmojiResult, type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/feedback/foundation';
 import '@fibrae/semi-foundation/feedback/feedback.scss';
@@ -25,9 +26,10 @@ export type FeedbackType = (typeof strings.TYPE)[number];
 export interface BasicFeedbackProps {
     type?: FeedbackType;
     onValueChange?: (value: FeedbackValue) => void;
-    textAreaProps?: TextAreaProps;
-    radioGroupProps?: RadioGroupProps;
-    checkboxGroupProps?: CheckboxGroupProps;
+    /** `value` is Feedback's own; `onChange` is called after Feedback has handled the change */
+    textAreaProps?: Omit<TextAreaProps, 'value'>;
+    radioGroupProps?: Omit<RadioGroupProps, 'value'>;
+    checkboxGroupProps?: Omit<CheckboxGroupProps, 'value'>;
     renderContent?: (content: JSX.Element) => JSX.Element;
 }
 
@@ -94,6 +96,9 @@ export default function Feedback(rawProps: FeedbackProps) {
         return value !== null && typeof value === 'object' ? value.emoji : undefined;
     });
 
+    // mergeProps ignores an `undefined` written after a spread, so a consumer's `value` would show through while nothing is chosen
+    const radioGroupRest = createMemo(() => omit((local.radioGroupProps ?? {}) as RadioGroupProps, ['value']));
+
     const disabledOkButton = () => isFeedbackValueEmpty(state().value);
 
     const textValue = () => {
@@ -111,12 +116,12 @@ export default function Feedback(rawProps: FeedbackProps) {
         return Array.isArray(value) ? value : [];
     };
 
-    // a consumer's `onChange` is called by the foundation; the handlers written after the spreads keep it from replacing Feedback's
+    // a consumer's `onChange` is called by the foundation; the value and handlers written after the spreads keep a consumer's from replacing Feedback's
     const content = () => (
         <Switch>
             <Match when={local.type === 'custom'}>{local.children}</Match>
             <Match when={local.type === 'text'}>
-                <TextArea placeholder={locale().locale.placeholder} value={textValue()} {...local.textAreaProps} onChange={foundation.handleTextChange} />
+                <TextArea placeholder={locale().locale.placeholder} {...local.textAreaProps} value={textValue()} onChange={foundation.handleTextChange} />
             </Match>
             <Match when={local.type === 'emoji'}>
                 <div class={`${prefixCls}-emoji-container`} aria-label={locale().locale.rating} role="radiogroup">
@@ -137,12 +142,12 @@ export default function Feedback(rawProps: FeedbackProps) {
             </Match>
             <Match when={local.type === 'radio'}>
                 <div class={`${prefixCls}-radio-container`}>
-                    <RadioGroup value={radioValue()} direction="vertical" {...local.radioGroupProps} onChange={foundation.handleRadioChange} />
+                    <RadioGroup direction="vertical" {...radioGroupRest()} value={radioValue()} onChange={foundation.handleRadioChange} />
                 </div>
             </Match>
             <Match when={local.type === 'checkbox'}>
                 <div class={`${prefixCls}-checkbox-container`}>
-                    <CheckboxGroup value={checkboxValue()} direction="vertical" {...local.checkboxGroupProps} onChange={foundation.handleCheckboxChange} />
+                    <CheckboxGroup direction="vertical" {...local.checkboxGroupProps} value={checkboxValue()} onChange={foundation.handleCheckboxChange} />
                 </div>
             </Match>
         </Switch>

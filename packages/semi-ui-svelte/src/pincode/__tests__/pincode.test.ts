@@ -625,3 +625,19 @@ describe('Svelte PinCode', () => {
         });
     });
 });
+
+describe('Svelte PinCode 使用方监听', () => {
+    it('传入 onfocusin、onfocusout 时与 onFocus、onBlur 同时触发', async () => {
+        const onfocusin = vi.fn<() => void>();
+        const onfocusout = vi.fn<() => void>();
+        const onFocus = vi.fn<() => void>();
+        const onBlur = vi.fn<() => void>();
+        mount({ onfocusin, onfocusout, onFocus, onBlur } as PinCodeProps);
+        await fireEvent.focusIn(getInputs()[0], { relatedTarget: document.body });
+        expect(onfocusin).toHaveBeenCalledTimes(1);
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        await fireEvent.focusOut(getInputs()[0], { relatedTarget: document.body });
+        expect(onfocusout).toHaveBeenCalledTimes(1);
+        expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+});

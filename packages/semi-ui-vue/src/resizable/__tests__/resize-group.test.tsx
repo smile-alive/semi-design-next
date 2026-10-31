@@ -1,5 +1,5 @@
 /** @jsxImportSource vue */
-import { ref, type ComponentPublicInstance, type VNode } from 'vue';
+import { nextTick, ref, type ComponentPublicInstance, type VNode } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { mockResizeObserver, render } from '@test/utils/vue';
@@ -102,6 +102,25 @@ describe('ResizeGroup', () => {
         view.unmount();
         renderGroup({ items: [{ defaultSize: '202px' }, { defaultSize: 1 }, { defaultSize: '3' }] });
         expect(widths()).toEqual(['calc(20% - 5px)', 'calc(20% - 10px)', 'calc(60% - 5px)']);
+    });
+
+    it('中途插入到中间的项按文档顺序参与布局：拖动它相邻的手柄只调整相邻两项', async () => {
+        const ids = ref(['a', 'c']);
+        render({
+            render: () => (
+                <div style={{ width: '1010px', height: '500px' }}>
+                    <ResizeGroup>{() => ids.value.flatMap((id, i) => [i > 0 ? <ResizeHandler key={`h-${id}`} /> : null, <ResizeItem key={id}>{() => id}</ResizeItem>])}</ResizeGroup>
+                </div>
+            ),
+        });
+        ids.value = ['a', 'b', 'c'];
+        await nextTick();
+        const before = widths();
+        await key(handler(), 'ArrowRight');
+        const after = widths();
+        expect(after[0]).not.toBe(before[0]);
+        expect(after[1]).not.toBe(before[1]);
+        expect(after[2]).toBe(before[2]);
     });
 
     it('在被拖动手柄两侧的两个项之间转移空间', async () => {

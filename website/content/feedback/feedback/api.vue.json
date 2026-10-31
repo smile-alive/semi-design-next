@@ -19,8 +19,8 @@
                 "en-US": "Plain-text title that also names the dialog. The title slot wins when both are given."
             },
             "textAreaProps": {
-                "zh-CN": "type 为 text 与 emoji 时多行输入框的属性。受控值键为 modelValue，监听键为 onChange；传入的 modelValue 优先于 Feedback 的内部值。",
-                "en-US": "Props of the multi-line input for the text and emoji types. The controlled key is modelValue and the listener key is onChange; a modelValue you pass wins over the internal value of Feedback."
+                "zh-CN": "type 为 text 与 emoji 时多行输入框的属性，不含 modelValue（值由 Feedback 管理）；其中的 onChange 在 Feedback 处理后调用。",
+                "en-US": "Props of the multi-line input for the text and emoji types, without modelValue (Feedback owns the value); its onChange is called after Feedback handles the change."
             },
             "radioGroupProps": {
                 "zh-CN": "type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。",

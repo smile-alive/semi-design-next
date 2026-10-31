@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useId } from 'react';
 import clsx from 'clsx';
-import { omit, omitBy } from 'es-toolkit';
+import { omitBy } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/feedback/constants';
 import FeedbackFoundation, { type FeedbackAdapter, type EmojiResult, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/feedback/foundation';
 import '@fibrae/semi-foundation/feedback/feedback.scss';
@@ -25,9 +25,10 @@ type FeedbackCancelEvent = React.MouseEvent | KeyboardEvent;
 export interface BasicFeedbackProps {
     type?: ArrayElement<typeof strings.TYPE>;
     onValueChange?: (value: FeedbackValue) => void;
-    textAreaProps?: TextAreaProps;
-    radioGroupProps?: RadioGroupProps;
-    checkboxGroupProps?: CheckboxGroupProps;
+    /** `value` is Feedback's own; `onChange` is called after Feedback has handled the change */
+    textAreaProps?: Omit<TextAreaProps, 'value'>;
+    radioGroupProps?: Omit<RadioGroupProps, 'value'>;
+    checkboxGroupProps?: Omit<CheckboxGroupProps, 'value'>;
     renderContent?: (content: React.ReactNode) => React.ReactNode;
     /** Attached to the Modal or SideSheet wrapper div inside the portal; null while nothing is rendered */
     ref?: React.Ref<HTMLDivElement>;
@@ -82,13 +83,11 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     const { value, onOKReturnPromiseStatus, onCancelReturnPromiseStatus } = state;
     const disabledOkButton = isFeedbackValueEmpty(value);
 
-    // the foundation calls the user's onChange; it must not replace Feedback's handler
-    const textAreaRest = omit(textAreaProps ?? {}, ['onChange']);
-
+    // Feedback's value and handlers come after the spreads: the foundation calls the user's onChange itself, and a stray `value` must not desync the UI from onValueChange
     if (type === 'custom') {
         content = children;
     } else if (type === 'text') {
-        content = <TextArea placeholder={locale.placeholder} value={typeof value === 'string' ? value : ''} onChange={foundation.handleTextChange} {...textAreaRest} />;
+        content = <TextArea placeholder={locale.placeholder} {...textAreaProps} value={typeof value === 'string' ? value : ''} onChange={foundation.handleTextChange} />;
     } else if (type === 'emoji') {
         const { emoji } = (value ?? {}) as EmojiResult;
         content = (
@@ -109,19 +108,19 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
                         </label>
                     ))}
                 </div>
-                {emoji === Emoji.bad && <TextArea placeholder={locale.placeholderOptional} onChange={foundation.handleEmojiReasonChange} {...textAreaRest} />}
+                {emoji === Emoji.bad && <TextArea placeholder={locale.placeholderOptional} {...textAreaProps} onChange={foundation.handleEmojiReasonChange} />}
             </>
         );
     } else if (type === 'radio') {
         content = (
             <div className={`${prefixCls}-radio-container`}>
-                <RadioGroup value={typeof value === 'object' ? undefined : value} direction="vertical" onChange={foundation.handleRadioChange} {...omit(radioGroupProps ?? {}, ['onChange'])} />
+                <RadioGroup direction="vertical" {...radioGroupProps} value={typeof value === 'object' ? undefined : value} onChange={foundation.handleRadioChange} />
             </div>
         );
     } else if (type === 'checkbox') {
         content = (
             <div className={`${prefixCls}-checkbox-container`}>
-                <CheckboxGroup value={Array.isArray(value) ? value : []} direction="vertical" onChange={foundation.handleCheckboxChange} {...omit(checkboxGroupProps ?? {}, ['onChange'])} />
+                <CheckboxGroup direction="vertical" {...checkboxGroupProps} value={Array.isArray(value) ? value : []} onChange={foundation.handleCheckboxChange} />
             </div>
         );
     }

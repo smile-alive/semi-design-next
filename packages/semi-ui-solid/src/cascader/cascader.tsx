@@ -17,7 +17,6 @@ import { focusElement } from '../_base/forward-focus';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';
 import mergeRefs from '../_base/merge-refs';
-import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
@@ -25,7 +24,8 @@ import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import type { VirtualListHandle } from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
-import { InputGroupContext, useInputGroupContext } from '../input/context';
+import type { InputGroupContextValue } from '../input/context';
+import InputGroupBoundary from '../input/group-boundary';
 import Input, { type ValidateStatus } from '../input/input';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
@@ -217,11 +217,13 @@ const defaultProps = {
 } satisfies Partial<CascaderBodyProps>;
 
 export default function Cascader<Multiple extends boolean | undefined = undefined>(rawProps: CascaderProps<Multiple>) {
-    const bodyProps = rawProps as CascaderBodyProps;
+    return <InputGroupBoundary>{(inGroup) => <CascaderControl {...(rawProps as CascaderBodyProps)} inGroup={inGroup} />}</InputGroupBoundary>;
+}
+
+function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextValue }) {
+    const [own, bodyProps] = splitProps(all, ['inGroup']);
     const defaulted = useDefaultProps('Cascader', bodyProps, defaultProps);
 
-    const group = useInputGroupContext();
-    const layer = usePopupLayer();
     const config = useConfig();
     const locale = useLocale('Cascader');
 
@@ -233,7 +235,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     let optionContainer: HTMLDivElement | undefined;
     let virtualList: VirtualListHandle | undefined;
 
-    const inGroup = group?.layer === layer ? group : undefined;
+    // fixed for the instance's lifetime: the layer and the context value are
+    const inGroup = untrack(() => own.inGroup);
 
     // as Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
@@ -873,8 +876,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     );
 
     const DefaultTrigger = () => (
-        // the search input is part of the Cascader, not a control of an enclosing InputGroup
-        <InputGroupContext.Provider value={undefined}>
+        <>
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
@@ -916,7 +918,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                     </Show>
                 </div>
             </Show>
-        </InputGroupContext.Provider>
+        </>
     );
 
     const renderContent = () => (

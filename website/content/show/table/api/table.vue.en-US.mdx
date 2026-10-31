@@ -4,43 +4,43 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| bordered | Whether to show the outer border and the column borders. | `boolean` | `undefined` |
-| childrenRecordName | The field of a record that holds its child records in a tree table. | `string` | `undefined` |
-| clickGroupedRowToExpand | Clicking a group row expands or collapses the group. | `boolean` | `undefined` |
-| columns | The column configuration, see Column. When given, an empty array included, it takes precedence over the Table.Column children. | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | `undefined` |
-| components | Replaces the elements Table renders, such as table, body, row, td and th, with a tag name or a Vue component that receives the attributes and listeners of the element it replaces. | `TableComponents` | `undefined` |
-| dataSource | The data. Give every record a unique key, or name the primary key field with rowKey. Rows added or removed in place (push, splice) are sorted and filtered again; a record field changed in place shows in its cell but does not sort or filter again. | `R[]` | `undefined` |
-| defaultExpandAllGroupRows | Whether all group rows start expanded. Has no effect on data loaded later. | `boolean` | `undefined` |
-| defaultExpandAllRows | Whether all rows start expanded. Has no effect on data loaded later. | `boolean` | `undefined` |
-| defaultExpandedRowKeys | The keys of the rows that start expanded. Has no effect on data loaded later. | `(string \| number)[]` | `undefined` |
+| bordered | Whether to show the outer border and the column borders. | `boolean` | `semiDefault("Table", "bordered", false)` |
+| childrenRecordName | The field of a record that holds its child records in a tree table. | `string` | `semiDefault("Table", "childrenRecordName", "children")` |
+| clickGroupedRowToExpand | Clicking a group row expands or collapses the group. | `boolean` | `semiGlobalDefault("Table", "clickGroupedRowToExpand")` |
+| columns | The column configuration, see Column. When given, an empty array included, it takes precedence over the Table.Column children. | <ApiType detail={"ColumnProps\u003cR>[]"}>Type</ApiType> | `semiGlobalDefault("Table", "columns")` |
+| components | Replaces the elements Table renders, such as table, body, row, td and th, with a tag name or a Vue component that receives the attributes and listeners of the element it replaces. | `TableComponents` | `semiGlobalDefault("Table", "components")` |
+| dataSource | The data. Give every record a unique key, or name the primary key field with rowKey. Rows added or removed in place (push, splice) are sorted and filtered again; a record field changed in place shows in its cell but does not sort or filter again. | `R[]` | `semiDefault("Table", "dataSource", []) as R[]` |
+| defaultExpandAllGroupRows | Whether all group rows start expanded. Has no effect on data loaded later. | `boolean` | `semiDefault("Table", "defaultExpandAllGroupRows", false)` |
+| defaultExpandAllRows | Whether all rows start expanded. Has no effect on data loaded later. | `boolean` | `semiDefault("Table", "defaultExpandAllRows", false)` |
+| defaultExpandedRowKeys | The keys of the rows that start expanded. Has no effect on data loaded later. | `(string \| number)[]` | `semiDefault("Table", "defaultExpandedRowKeys", [])` |
 | direction | The text direction. Defaults to the direction of ConfigProvider and can be set here per table. | `"ltr" \| "rtl"` | `semiGlobalDefault("Table", "direction")` |
-| expandAllGroupRows | Whether all group rows are expanded. | `boolean` | `undefined` |
-| expandAllRows | Whether all rows are expanded. | `boolean` | `undefined` |
-| expandCellFixed | Whether the column of the expand button is fixed, with the same values as the fixed field of a column. | `boolean \| "left" \| "right"` | `undefined` |
-| expandIcon | Accepts only false, which hides the expand buttons. Use the expandIcon slot for a custom icon. | `boolean` | `undefined` |
-| expandedRowKeys | The keys of the expanded rows. When given, row expansion is controlled; use it with v-model:expandedRowKeys. | `(string \| number)[]` | `undefined` |
-| expandRowByClick | Whether clicking a row expands an expandable row. | `boolean` | `undefined` |
-| footer | The table footer as plain text. The footer slot takes precedence. | `string` | `undefined` |
+| expandAllGroupRows | Whether all group rows are expanded. | `boolean` | `semiDefault("Table", "expandAllGroupRows", false)` |
+| expandAllRows | Whether all rows are expanded. | `boolean` | `semiDefault("Table", "expandAllRows", false)` |
+| expandCellFixed | Whether the column of the expand button is fixed, with the same values as the fixed field of a column. | `boolean \| "left" \| "right"` | `semiDefault("Table", "expandCellFixed", false)` |
+| expandIcon | Accepts only false, which hides the expand buttons. Use the expandIcon slot for a custom icon. | `boolean` | `semiGlobalDefault("Table", "expandIcon")` |
+| expandedRowKeys | The keys of the expanded rows. When given, row expansion is controlled; use it with v-model:expandedRowKeys. | `(string \| number)[]` | `semiGlobalDefault("Table", "expandedRowKeys")` |
+| expandRowByClick | Whether clicking a row expands an expandable row. | `boolean` | `semiDefault("Table", "expandRowByClick", false)` |
+| footer | The table footer as plain text. The footer slot takes precedence. | `string` | `semiGlobalDefault("Table", "footer")` |
 | groupBy | The grouping rule: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | `undefined` |
 | groupSectionColumn | The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex. | <ApiType detail={"((groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, \"title\" \u007c \"children\" \u007c \"dataIndex\">)"}>Type</ApiType> | `undefined` |
-| headerStyle | Inline style of every header cell, fixed headers included. | `CSSProperties` | `undefined` |
-| hideExpandedColumn | In an expandable table the expand button shares the first cell by default; set false to render it as its own column. | `boolean` | `undefined` |
-| indentSize | The indent of each tree level, in pixels. | `number` | `undefined` |
-| keepDOM | Whether collapsing a row keeps its DOM. | `boolean` | `undefined` |
-| loading | Whether the table shows its loading state. | `boolean` | `undefined` |
-| pagination | The pagination configuration. Pass false to turn pagination off. | `boolean \| TablePaginationProps` | `undefined` |
-| prefixCls | The prefix of the class names. | `string` | `undefined` |
-| resizable | Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName. | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | `undefined` |
+| headerStyle | Inline style of every header cell, fixed headers included. | `CSSProperties` | `semiGlobalDefault("Table", "headerStyle")` |
+| hideExpandedColumn | In an expandable table the expand button shares the first cell by default; set false to render it as its own column. | `boolean` | `semiDefault("Table", "hideExpandedColumn", true)` |
+| indentSize | The indent of each tree level, in pixels. | `number` | `semiDefault("Table", "indentSize", 20)` |
+| keepDOM | Whether collapsing a row keeps its DOM. | `boolean` | `semiGlobalDefault("Table", "keepDOM")` |
+| loading | Whether the table shows its loading state. | `boolean` | `semiDefault("Table", "loading", false)` |
+| pagination | The pagination configuration. Pass false to turn pagination off. | `boolean \| TablePaginationProps` | `semiDefault("Table", "pagination", true)` |
+| prefixCls | The prefix of the class names. | `string` | `semiDefault("Table", "prefixCls", cssClasses.PREFIX)` |
+| resizable | Whether columns can be resized; a resizable column needs a width. An object configures onResize, onResizeStart, onResizeStop and handlerClassName. | <ApiType detail={"boolean \u007c ResizableProps\u003cR>"}>Type</ApiType> | <ApiType detail={"semiDefault(\"Table\", \"resizable\", false) as NonNullable\u003cTableProps\u003cR>[\"resizable\"]>"}>Type</ApiType> |
 | rowExpandable | Tells whether a row can be expanded. A row that returns false has no expand button. | <ApiType detail={"TableRowExpandable\u003cR>"}>Type</ApiType> | `undefined` |
 | rowKey | The row key: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableRowKey\u003cR>"}>Type</ApiType> | `undefined` |
-| rowSelection | The row selection configuration. Pass true for the defaults, see rowSelection. | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | `undefined` |
-| rowSpanHover | Hovering a cell with rowSpan highlights every row the cell spans. | `boolean` | `undefined` |
-| scroll | The scroll area: x is the width and y the height, see scroll. | `TableScroll` | `undefined` |
-| showHeader | Whether to show the header. | `boolean` | `undefined` |
-| size | The table size, which sets the padding of the cells. | `"small" \| "default" \| "middle"` | `undefined` |
-| sticky | Sticks the header to the top of the page. With an object, top is the distance from the scroll container. | `TableSticky` | `undefined` |
-| title | The table title as plain text. The title slot takes precedence. | `string` | `undefined` |
-| virtualized | Turns on virtualization, which needs scroll.y as a number. An object sets the row height itemSize and the extra rows overscanCount. | `TableVirtualized` | `undefined` |
+| rowSelection | The row selection configuration. Pass true for the defaults, see rowSelection. | <ApiType detail={"boolean \u007c RowSelectionProps\u003cR>"}>Type</ApiType> | `semiGlobalDefault("Table", "rowSelection")` |
+| rowSpanHover | Hovering a cell with rowSpan highlights every row the cell spans. | `boolean` | `semiDefault("Table", "rowSpanHover", false)` |
+| scroll | The scroll area: x is the width and y the height, see scroll. | `TableScroll` | `semiGlobalDefault("Table", "scroll")` |
+| showHeader | Whether to show the header. | `boolean` | `semiDefault("Table", "showHeader", true)` |
+| size | The table size, which sets the padding of the cells. | `"small" \| "default" \| "middle"` | `semiDefault("Table", "size", "default")` |
+| sticky | Sticks the header to the top of the page. With an object, top is the distance from the scroll container. | `TableSticky` | `semiGlobalDefault("Table", "sticky")` |
+| title | The table title as plain text. The title slot takes precedence. | `string` | `semiGlobalDefault("Table", "title")` |
+| virtualized | Turns on virtualization, which needs scroll.y as a number. An object sets the row height itemSize and the extra rows overscanCount. | `TableVirtualized` | `semiGlobalDefault("Table", "virtualized")` |
 | onGroupedRow | Like onRow, for group rows. The returned object holds the attributes and listeners of the tr. index is the group's ordinal, or its position among the virtual list's rows when virtualized is on. | <ApiType detail={"((record: { groupKey: string \u007c number; records: R[]; }, index: number) => TableRowAttrs)"}>Type</ApiType> | `undefined` |
 | onHeaderRow | Sets the attributes and listeners of a header row. The returned object (without style) is merged into the row. | <ApiType detail={"((columns: ColumnProps\u003cR>[], index: number) => Omit\u003cTableRowAttrs, \"style\">)"}>Type</ApiType> | `undefined` |
 | onRow | Sets the attributes and listeners of a data row; the third argument is the row state. The returned listeners run after the row's own handling and the rowXxx events. | <ApiType detail={"((record: R, index: number, rowState: { disabled: boolean; selected: boolean; }) => TableRowAttrs)"}>Type</ApiType> | `undefined` |

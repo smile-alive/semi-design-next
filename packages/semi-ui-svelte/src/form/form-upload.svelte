@@ -6,8 +6,14 @@
 
     let props: FieldProps<UploadProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     // Upload reports `{ fileList, ... }`, so the value is read from it; it has no blur callback
     const fieldOptions: WithFieldOption = { valueKey: 'fileList', valuePath: 'fileList', onBlurFnName: '', insetLabel: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={Upload} {fieldOptions} />
+<Field bind:this={field} {...props} component={Upload} {fieldOptions} />

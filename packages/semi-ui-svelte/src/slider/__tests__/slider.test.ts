@@ -1092,3 +1092,27 @@ describe('Svelte Slider 的 tooltip 与插槽', () => {
         });
     });
 });
+
+describe('Svelte Slider 使用方监听', () => {
+    it('传入 onfocusin、onfocusout、onmouseenter、onmouseleave 时与组件自身行为同时生效', async () => {
+        const onfocusin = vi.fn<() => void>();
+        const onfocusout = vi.fn<() => void>();
+        const onmouseenter = vi.fn<() => void>();
+        const onmouseleave = vi.fn<() => void>();
+        const onFocus = vi.fn<() => void>();
+        const onBlur = vi.fn<() => void>();
+        const store = createStore<{ props: SliderProps }>({ props: { onfocusin, onfocusout, onmouseenter, onmouseleave, onFocus, onBlur } as SliderProps });
+        render(SliderFixture, { props: { store } });
+        const wrapper = document.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        await fireEvent.focusIn(wrapper);
+        expect(onfocusin).toHaveBeenCalledTimes(1);
+        expect(onFocus).toHaveBeenCalledTimes(1);
+        await fireEvent.focusOut(wrapper, { relatedTarget: document.body });
+        expect(onfocusout).toHaveBeenCalledTimes(1);
+        expect(onBlur).toHaveBeenCalledTimes(1);
+        await fireEvent.mouseEnter(wrapper);
+        await fireEvent.mouseLeave(wrapper);
+        expect(onmouseenter).toHaveBeenCalledTimes(1);
+        expect(onmouseleave).toHaveBeenCalledTimes(1);
+    });
+});

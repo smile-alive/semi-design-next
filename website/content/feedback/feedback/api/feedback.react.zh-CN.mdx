@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | afterClose | 弹层完全关闭后的回调，两种模式都会调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | bodyStyle | 内容区域的样式，透传给当前模式的 Modal 或 SideSheet。 | `CSSProperties` | - |
 | cancelButtonProps | 取消按钮的属性。popup 模式下 loading 取内置挂起态与使用方的 loading 任一为真，onClick 先于内置处理调用。 | `ButtonProps` | - |
-| checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `CheckboxGroupProps` | - |
+| checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | <ApiType detail={"Omit\u003cCheckboxGroupProps, 'value'>"}>Type</ApiType> | - |
 | children | type 为 custom 时的反馈内容。 | `React.ReactNode` | - |
 | className | 弹层根元素的类名，与内置类名合并。 | `string` | - |
 | closable | 是否显示关闭按钮，透传给当前模式的 Modal 或 SideSheet。 | `boolean` | - |
@@ -26,12 +26,12 @@ import ApiType from '#/components/ApiType.astro';
 | onCancel | 取消按钮、关闭按钮、Esc 触发时调用，按 Esc 时参数为原生 KeyboardEvent。popup 模式返回 Promise 时取消按钮保持加载，resolve 后才清空已填写的值，reject 时保留。关闭由 `visible` 控制，组件不会自行关闭。 | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
 | onOk | 点击提交按钮时调用，参数为点击事件。popup 模式返回 Promise 时提交按钮保持加载，resolve 后才清空已填写的值，reject 时保留；其他返回值立即清空。关闭由 `visible` 控制，组件不会自行关闭。 | <ApiType detail={"(e: React.MouseEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
 | onValueChange | 反馈内容变化时的回调，参数为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。 | <ApiType detail={"(value: FeedbackValue) => void"}>Type</ApiType> | - |
-| radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `RadioGroupProps` | - |
+| radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | <ApiType detail={"Omit\u003cRadioGroupProps, 'value'>"}>Type</ApiType> | - |
 | ref | 弹层在 portal 中最外层容器的引用，popup 模式为 SideSheet 的最外层元素，modal 模式为 Modal 的最外层元素；未渲染时为 null。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderContent | 包裹反馈内容：参数为内置内容（type 为 custom 时是 children），返回包裹后的节点。 | <ApiType detail={"(content: React.ReactNode) => React.ReactNode"}>Type</ApiType> | - |
 | size | 弹层尺寸，透传给当前模式的 Modal 或 SideSheet。 | `Size` | - |
 | style | 内联样式，落点随模式不同：popup 模式在 `role="dialog"` 元素上，modal 模式在 `.semi-modal` 对话框盒子上。 | `CSSProperties` | - |
-| textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。输入的 onChange 由 Feedback 接管，使用方的 onChange 仍会被调用。 | `TextAreaProps` | - |
+| textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。输入的 onChange 由 Feedback 接管，使用方的 onChange 仍会被调用。 | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | 弹层标题。 | `ReactNode` | - |
 | type | 反馈内容的类型，可选 `emoji`、`text`、`radio`、`checkbox` 或 `custom`。custom 时内容写在 children 中，或由 renderContent 生成。 | `'text' \| 'emoji' \| 'radio' \| 'checkbox' \| 'custom'` | `"emoji"` |
 | visible | 是否显示。组件不会自行关闭，由使用方在 onOk、onCancel 中把它设为 false。 | `boolean` | - |

@@ -66,7 +66,9 @@
     const locale = useLocale('Slider');
 
     const generatedId = useId();
-    const slider = useTemplateRef('slider');
+
+    // Annotated: the adapter's getSliderNode reads this ref, so inference is circular (TS7022)
+    const slider = useTemplateRef<HTMLDivElement>('slider');
 
     // The inputs are the Tab stops, and the slider role supports no aria-required (a native range has no required either).
     const DROPPED_INPUT_ATTRS = new Set(['tabindex', 'tabIndex', 'aria-required']);

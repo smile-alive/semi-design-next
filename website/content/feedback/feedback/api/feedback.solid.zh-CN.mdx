@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | afterClose | 弹层完全关闭后的回调，两种模式都会调用。 | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | bodyStyle | 内容区域的样式，透传给当前模式的 Modal 或 SideSheet。 | `JSX.CSSProperties \| string` | - |
 | cancelButtonProps | 取消按钮的属性。popup 模式下 loading 取内置挂起态与使用方的 loading 任一为真，onClick 先于内置处理调用。 | `ModalButtonProps` | - |
-| checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `CheckboxGroupProps` | - |
+| checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | <ApiType detail={"Omit\u003cCheckboxGroupProps, 'value'>"}>Type</ApiType> | - |
 | children | type 为 custom 时的反馈内容。 | `JSX.Element` | - |
 | class | 根元素的类名，与内置类名合并。 | `string` | - |
 | closable | 是否显示关闭按钮，透传给当前模式的 Modal 或 SideSheet。 | `boolean` | - |
@@ -26,13 +26,13 @@ import ApiType from '#/components/ApiType.astro';
 | onCancel | 取消按钮、关闭按钮、Esc（modal 模式另有点击遮罩）触发；按 Esc 时参数为原生 KeyboardEvent。popup 模式返回 Promise 时取消按钮保持加载，fulfill 后才清空已填写的值，reject 时保留。关闭由 visible 控制，组件不会自行关闭。 | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => unknown"}>Type</ApiType> | - |
 | onOk | 点击提交按钮时调用。popup 模式返回 Promise 时提交按钮保持加载，fulfill 后才清空已填写的值，reject 时保留；其他返回值立即清空。关闭由 visible 控制，组件不会自行关闭。 | <ApiType detail={"(e: MouseEvent) => unknown"}>Type</ApiType> | - |
 | onValueChange | 反馈内容变化时的回调，参数为当前值：text 为字符串，emoji 为 `{ emoji, text }`（text 是选了「差」后填写的原因），radio 为所选项的值，checkbox 为所选值的数组。 | <ApiType detail={"(value: FeedbackValue) => void"}>Type</ApiType> | - |
-| radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `RadioGroupProps` | - |
+| radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | <ApiType detail={"Omit\u003cRadioGroupProps, 'value'>"}>Type</ApiType> | - |
 | ref | 根元素的引用：popup 模式为 SideSheet 的根元素，modal 模式为 Modal 的最外层元素。 | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderContent | 包裹反馈内容：接收内置内容（type 为 custom 时是子节点），返回包裹后的节点。 | <ApiType detail={"(content: JSX.Element) => JSX.Element"}>Type</ApiType> | - |
 | role | 对话框的 role，可选 dialog 或 alertdialog，透传给当前模式的 Modal 或 SideSheet。 | `'dialog' \| 'alertdialog'` | - |
 | size | 弹层尺寸，透传给当前模式的 Modal 或 SideSheet。 | `Size` | - |
 | style | 内联样式，落在弹层的内容盒子上，位置见下方说明。 | `JSX.CSSProperties \| string` | - |
-| textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。 | `TextAreaProps` | - |
+| textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。 | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | 弹层标题。 | `JSX.Element` | - |
 | type | 反馈内容的类型。custom 时内容写在子节点中。 | `FeedbackType` | `"emoji"` |
 | visible | 是否显示。组件不会自行关闭，由使用方在 onOk、onCancel 中把它设为 false。 | `boolean` | - |

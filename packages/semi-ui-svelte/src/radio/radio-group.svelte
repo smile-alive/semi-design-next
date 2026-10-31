@@ -110,7 +110,8 @@
     });
 
     // Moving between the radios is not leaving the group: a form's blur validation waits until focus is outside.
-    const handleFocusout = (event: FocusEvent & { currentTarget: HTMLElement }) => {
+    const handleFocusout = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
+        rest.onfocusout?.(event);
         if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
             onBlur?.(event);
         }

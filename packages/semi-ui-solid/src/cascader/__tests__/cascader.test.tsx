@@ -8,6 +8,7 @@ import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import Cascader, { type CascaderData, type CascaderElement, type CascaderProps, type Entity, type FilterRenderProps, type SimpleValueType, type TriggerRenderProps } from '..';
 import semiGlobal from '../../_utils/semi-global';
+import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import { type FormApi, Form, FormCascader } from '../../form';
 import { InputGroup } from '../../input';
@@ -3333,6 +3334,17 @@ describe('Cascader 在 InputGroup 内', () => {
         expect(own).toHaveClass(`${prefixCls}-small`);
         expect(own).not.toHaveClass(`${prefixCls}-large`);
         expect(inherit).toHaveClass(`${prefixCls}-large`);
+    });
+
+    it('插槽里的 Button 不继承组的 size 与 disabled', () => {
+        render(() => (
+            <InputGroup size="large" disabled>
+                <Cascader motion={false} prefix={<Button>prefix</Button>} treeData={treeData} />
+            </InputGroup>
+        ));
+        const button = screen.getByRole('button', { name: 'prefix' });
+        expect(button).toBeEnabled();
+        expect(button).not.toHaveClass(`${BASE_CLASS_PREFIX}-button-size-large`);
     });
 
     it('组的 disabled 作用于未设置的控件，自身 disabled={false} 优先', () => {

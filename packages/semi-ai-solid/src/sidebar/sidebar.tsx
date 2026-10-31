@@ -62,9 +62,6 @@ function Sidebar(rawProps: SideBarProps) {
 
     const isMain = () => mode() === strings.MODE.MAIN;
 
-    const customHeader = children(() => (isMain() ? undefined : local.renderDetailHeader?.(mode(), local.detailContent)));
-    const customDetail = children(() => (isMain() ? undefined : local.renderDetailContent?.(mode())));
-
     const handleAfterVisibleChange = (isVisible: boolean) => {
         if (!isVisible) {
             toast.destroyAll();
@@ -83,46 +80,53 @@ function Sidebar(rawProps: SideBarProps) {
         });
     };
 
-    const detailHeader = () => (
-        <Show
-            when={hasContent(customHeader())}
-            fallback={
-                <div class={`${prefixCls}-detail-header`}>
-                    <span class={`${prefixCls}-detail-header-left`}>
-                        <Button type="tertiary" aria-label={locale().locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => local.onBackWard?.(e, strings.MODE.MAIN)} />
-                        <span class={`${prefixCls}-detail-header-title`}>{local.detailContent?.name}</span>
-                    </span>
-                    <span class={`${prefixCls}-detail-header-right`}>
-                        <Show when={typeof local.detailContent?.content === 'string'}>
-                            <Button type="tertiary" aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={handleCopyDetailContent} />
-                        </Show>
-                    </span>
-                </div>
-            }
-        >
-            {customHeader()}
-        </Show>
-    );
+    // Resolved where the header is inserted: a hidden Container never calls detailHeader, so the render prop is not run
+    const detailHeader = () => {
+        const customHeader = children(() => local.renderDetailHeader?.(mode(), local.detailContent));
+        return (
+            <Show
+                when={hasContent(customHeader())}
+                fallback={
+                    <div class={`${prefixCls}-detail-header`}>
+                        <span class={`${prefixCls}-detail-header-left`}>
+                            <Button type="tertiary" aria-label={locale().locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => local.onBackWard?.(e, strings.MODE.MAIN)} />
+                            <span class={`${prefixCls}-detail-header-title`}>{local.detailContent?.name}</span>
+                        </span>
+                        <span class={`${prefixCls}-detail-header-right`}>
+                            <Show when={typeof local.detailContent?.content === 'string'}>
+                                <Button type="tertiary" aria-label={locale().locale.copy} theme="borderless" icon={<IconCopyStroked />} onClick={handleCopyDetailContent} />
+                            </Show>
+                        </span>
+                    </div>
+                }
+            >
+                {customHeader()}
+            </Show>
+        );
+    };
 
-    const detail = () => (
-        <Show
-            when={hasContent(customDetail())}
-            fallback={
-                <Show when={detailKey()} keyed>
-                    <Switch>
-                        <Match when={mode() === strings.MODE.CODE}>
-                            <CodeItem {...(local.detailContent as CodeItemProps)} />
-                        </Match>
-                        <Match when={mode() === strings.MODE.FILE}>
-                            <FileItem {...(local.detailContent as FileItemProps)} editable={local.fileEditable ?? true} imgUploadProps={local.imgUploadProps} onContentChange={local.onFileContentChange} />
-                        </Match>
-                    </Switch>
-                </Show>
-            }
-        >
-            {customDetail()}
-        </Show>
-    );
+    const detail = () => {
+        const customDetail = children(() => local.renderDetailContent?.(mode()));
+        return (
+            <Show
+                when={hasContent(customDetail())}
+                fallback={
+                    <Show when={detailKey()} keyed>
+                        <Switch>
+                            <Match when={mode() === strings.MODE.CODE}>
+                                <CodeItem {...(local.detailContent as CodeItemProps)} />
+                            </Match>
+                            <Match when={mode() === strings.MODE.FILE}>
+                                <FileItem {...(local.detailContent as FileItemProps)} editable={local.fileEditable ?? true} imgUploadProps={local.imgUploadProps} onContentChange={local.onFileContentChange} />
+                            </Match>
+                        </Switch>
+                    </Show>
+                }
+            >
+                {customDetail()}
+            </Show>
+        );
+    };
 
     // Deferred rather than useWatch: the new view renders after the first effect run, so a mode set before it would
     // query the old view, and no pressed button has gone missing yet

@@ -280,3 +280,17 @@ describe('Svelte RadioGroup', () => {
         expect(document.querySelectorAll(`.${prefix}-addon-buttonRadio-small`)).toHaveLength(0);
     });
 });
+
+describe('Svelte RadioGroup 使用方监听', () => {
+    it('传入 onfocusout 时与 onBlur 同时触发，且组内移动焦点不触发 onBlur', async () => {
+        const onfocusout = vi.fn<() => void>();
+        const onBlur = vi.fn<() => void>();
+        renderOptions({ onfocusout, onBlur } as RadioGroupProps);
+        await fireEvent.focusOut(getRadio('A'), { relatedTarget: getRadio('B') });
+        expect(onfocusout).toHaveBeenCalledTimes(1);
+        expect(onBlur).not.toHaveBeenCalled();
+        await fireEvent.focusOut(getRadio('A'), { relatedTarget: document.body });
+        expect(onfocusout).toHaveBeenCalledTimes(2);
+        expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+});

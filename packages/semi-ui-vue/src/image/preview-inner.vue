@@ -107,13 +107,13 @@
     const locale = useLocale('Image');
 
     const titleId = useId();
-    const wrap = useTemplateRef('wrap');
 
-    // explicit: both feed isValidTarget, whose foundation state flows back into the template, so inference hits TS7022
+    // explicit: these feed openLayer and isValidTarget, whose foundation state flows back into the template, so inference hits TS7022
+    const wrap = useTemplateRef<HTMLDivElement>('wrap');
     const header = useTemplateRef<InstanceType<typeof PreviewHeader>>('header');
     const footer = useTemplateRef<InstanceType<typeof PreviewFooter>>('footer');
-    const leftIcon = useTemplateRef('leftIcon');
-    const rightIcon = useTemplateRef('rightIcon');
+    const leftIcon = useTemplateRef<HTMLButtonElement>('leftIcon');
+    const rightIcon = useTemplateRef<HTMLButtonElement>('rightIcon');
     const ratio = shallowRef<RatioType>('adaptation');
     const scroll = new ReleaseHolder();
     const layer = new ReleaseHolder();

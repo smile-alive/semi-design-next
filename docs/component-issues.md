@@ -203,8 +203,6 @@
 ### Carousel
 
 - 保持原样：`autoPlay`、interval 变化等下次切换；不经 onChange 改 `activeIndex` 无动画；`arrowProps.*.props` 替换内置 `onClick`；`defaultActiveIndex` 未使用；`goTo` 不重置计时。
-- Solid：幻灯片自己的响应式 `class` 更新时整体改写 `className`，去掉 Carousel 加的 `semi-carousel-content-item` 等 class 且不会补回。已知限制（幻灯片切换 class 改用 `classList`；有实际需求时用 MutationObserver 跟踪）。
-- Solid：服务端 HTML 中的幻灯片是使用方原样的标记，Carousel 加的 class、`style`、`id`、`role`、`aria-labelledby`、`inert` 在 hydration 时才写入，hydration 前所有幻灯片按普通块依次排列。已知限制（升级条件：需要首帧即正确时，由 Carousel 自己的包装元素承载这些装饰，或在服务端改写幻灯片标记的根标签）。
 - Svelte：自定义箭头是否有可访问名称只在挂载时读一次 DOM，之后 snippet 文本变化不重新判断。已知限制（升级条件：出现动态文本箭头的需求）。
 - Svelte：幻灯片的 `id`、`aria-label` 由 Carousel 在包装元素上生成，使用方不能单独指定。已知限制。
 
@@ -296,6 +294,7 @@
 - React Tooltip、Popover 无 `aria-describedby` 通道，Popconfirm 直接改弹层元素。待决（加公开 `ariaDescribedby` 属公开 API 变化，Vue 已有）。
 - Solid：与 Input（经 InputHandle 设置初始焦点）的集成用例未移植。UNKNOWN（影响：Popover 初始焦点交给 Input 的路径未经用例覆盖；解决条件：补 Solid 集成用例）。
 - Solid：Popconfirm 卡片的 click 用 `stopImmediatePropagation` 对 document 监听隐藏，同一次点击不再到达 Tooltip 容器与外层的委托处理函数（`clickToHide` 在卡片内不生效）。已知限制（升级条件：出现需要 `clickToHide` 的 Popconfirm 用法，或 Tooltip 提供卡片内点击的统一出口）。
+- Vue、Solid、Svelte：`disabled` 的 Popconfirm 直接渲染触发器，与启用之间切换时触发器重新挂载，焦点与内部状态丢失（React 已始终渲染弹层包裹层）。待处理。
 
 ### Dropdown、Dropdown.Menu、Dropdown.Item、Dropdown.Title、Dropdown.Divider
 
@@ -442,7 +441,6 @@
 - bottom 动画 keyframes 改名后视觉未核对。UNKNOWN（目视检查 Feedback 与 bottom SideSheet）。
 - radio、checkbox 选项组无默认可访问名称。已知限制（用 `radioGroupProps`、`checkboxGroupProps` 的 `aria-label`）。
 - popup 模式默认不响应 Esc：Feedback 不向 SideSheet 传 `closeOnEsc`，SideSheet 默认为 false，与 Accessibility 一节「按 Esc 触发取消」不符。待决（默认开启 `closeOnEsc`，或改文档）。
-- React：`radioGroupProps`、`checkboxGroupProps`、`textAreaProps` 展开在 Feedback 传入的受控 `value` 之后，其中的 `value` 会盖掉 Feedback 的值，选中状态与 `onValueChange` 不同步。待处理（展开前去掉 `value`，或在类型中 Omit；其他框架未核对）。
 - 保持原样：popup 的 onOk、onCancel 返回被拒绝 Promise 时再抛。
 
 ### TagInput
@@ -486,7 +484,6 @@
 - 保持原样：根类名 `semi-table-wrapper-undefined`；非受控只改 pageSize 不切页；只应用第一个排序器；受控 currentPage 不调用 onChange；RTL 虚拟化与表头阴影；`OnHeaderCell<R>` 使 `ColumnProps` 对 R 不变；`rowSelection.disabled` 阻止 `clickRow`；`handlerClassName` 默认 `'resizing'`。
 - Svelte：虚拟化只支持固定行高，`itemSize` 函数不测量实际高度。已知限制（升级条件：`_base/virtual-list.svelte` 提供测量接口后支持动态行高）。
 - Vue、Svelte：列宽拖拽的覆盖值按生成的 key 存，列既无 `key` 也无 `dataIndex` 时 key 是 `${level}-${index}`，列顺序变化后覆盖值错位。待处理。
-- Vue、Svelte：SSR 首帧没有分组，foundation 的 `getInitialState` 把 groups 设为 null，挂载后才算出。已知限制。
 - Svelte：`table.svelte` 不是泛型组件，`ColumnProps`、`TableProps` 的行类型为 `Record<string, any>`，snippet 与回调里需 `as` 收窄。已知限制。
 - Svelte：`components` 只接受标签名字符串，不能换成组件（可排序行等做不了）。已知限制。
 - Svelte：`onScroll` 只带 `scrollOffset`，没有方向。已知限制。
@@ -539,7 +536,7 @@
 - 保持原样：`isRenderInTag: false` 时无 key 告警；`#isLoadControlled` 把空数组视为非受控；点击标签后移除焦点落 body。
 - Vue、Solid：`defaultOpen` 的 TreeSelect 挂载后才打开，服务端 HTML 中触发器 `aria-expanded="false"`。已知限制（见 Select）。
 - `deriveState` 在 `treeData` 键集合变化、受控 `expandedKeys` 变化时按 `motion` 判断是否处理展开动画状态，但树的展开动画由 `motionExpand` 控制（三端共用 foundation）。待处理。
-- Svelte：不绑定也不传 `value` 的 TreeSelect 放在展开 props（`{...props}`）的包装组件里时，父级 props 变化会把 `value` 重置为 `undefined`，选中项被清空，绑定或显式传 `value` 可避免。待决（见 docs/audit/svelte.md Y-Q54，同 Y-Q25）。
+- Svelte：不绑定也不传 `value` 的 TreeSelect、Tree 放在展开 props（`{...props}`）的包装组件里时，父级 props 变化会把 `value` 重置为 `undefined`，选中项被清空，绑定或显式传 `value` 可避免。待决（见 docs/audit/svelte.md Y-Q54，同 Y-Q25）。
 - Svelte：`expandedKeys`、`loadedKeys` 被组件写出后再被父级改回 `undefined`，不会同步清空。已知限制。
 
 ### DatePicker、DateInput、MonthsGrid、Month、Navigation、YearAndMonth、QuickControl
