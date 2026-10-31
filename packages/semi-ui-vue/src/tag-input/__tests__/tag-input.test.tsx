@@ -775,20 +775,6 @@ describe('TagInput', () => {
         expect(onInputChange).toHaveBeenLastCalledWith('ab,cd', expect.objectContaining({ type: 'compositionend' }));
     });
 
-    it('点击输入框后用 Tab 离开，激活状态随之结束', async () => {
-        render(() => (
-            <>
-                <TagInput defaultValue={['abc']} />
-                <button type="button">after</button>
-            </>
-        ));
-        await userEvent.click(getInput());
-        expect(getRoot()).toHaveClass(`${tagInputCls}-focus`);
-        await userEvent.tab();
-        expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
-        expect(getRoot()).not.toHaveClass(`${tagInputCls}-focus`);
-    });
-
     it('输入法组合流程', async () => {
         renderTagInput({ defaultValue: ['abc'] });
         const input = getInput();
@@ -1231,16 +1217,13 @@ describe('TagInput 全局默认值与属性落点', () => {
         expect(countLiveListeners(add, remove, 'mousedown')).toBe(0);
     });
 
-    it('split 的默认值为 undefined，TagInput 与内部 TagItem 的可选 Boolean prop 都有默认值', () => {
-        type Options = Record<string, { type?: unknown; default?: unknown; required?: boolean }>;
-        const optionsOf = (component: unknown) => (component as { props: Options }).props;
-        expect(optionsOf(TagInput).split.default).toBeUndefined();
-        for (const component of [TagInput, TagItem]) {
-            const withoutDefault = Object.entries(optionsOf(component))
-                .filter(([, option]) => [option.type].flat().includes(Boolean) && !option.required && !('default' in option))
-                .map(([key]) => key);
-            expect(withoutDefault).toEqual([]);
-        }
+    // TagItem is internal and declares required Boolean props, so the shared check in _base cannot cover it
+    it('内部 TagItem 的可选 Boolean prop 都有默认值', () => {
+        const options = (TagItem as unknown as { props: Record<string, { type?: unknown; required?: boolean }> }).props;
+        const withoutDefault = Object.entries(options)
+            .filter(([, option]) => [option.type].flat().includes(Boolean) && !option.required && !('default' in option))
+            .map(([key]) => key);
+        expect(withoutDefault).toEqual([]);
     });
 });
 

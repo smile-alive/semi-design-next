@@ -262,7 +262,7 @@ describe('Tooltip 触发（浏览器）', () => {
         const afterClose = vi.fn<() => void>();
         render(() => (
             <Tooltip afterClose={afterClose} content="keyframe tip" keepDOM trigger="custom" visible={visible()}>
-                <Button>keyframe</Button>
+                {(t) => <Button {...t()}>keyframe</Button>}
             </Tooltip>
         ));
         await expectShown('keyframe tip');
@@ -288,7 +288,7 @@ describe('Tooltip 触发（浏览器）', () => {
         const [visible, setVisible] = createSignal(true);
         render(() => (
             <Tooltip content="still tip" motion={false} keepDOM trigger="custom" visible={visible()}>
-                <Button>still</Button>
+                {(t) => <Button {...t()}>still</Button>}
             </Tooltip>
         ));
         await expectShown('still tip');

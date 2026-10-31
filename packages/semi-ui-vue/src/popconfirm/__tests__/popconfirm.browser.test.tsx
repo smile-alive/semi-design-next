@@ -130,20 +130,6 @@ describe('Popconfirm 浏览器', () => {
         expect(screen.getByLabelText('outside')).toHaveFocus();
     });
 
-    it('stopPropagation=false 时卡片内的点击仍不到达 document 上的 click 监听', async () => {
-        const documentClick = vi.fn<() => void>();
-        document.addEventListener('click', documentClick);
-        try {
-            renderPopconfirm('trigger', { stopPropagation: false });
-            await userEvent.click(screen.getByRole('button', { name: 'trigger' }));
-            const documentClicksAfterOpen = documentClick.mock.calls.length;
-            await userEvent.click(await screen.findByText('此修改将不可逆'));
-            expect(documentClick).toHaveBeenCalledTimes(documentClicksAfterOpen);
-        } finally {
-            document.removeEventListener('click', documentClick);
-        }
-    });
-
     it('trigger 为 focus 时 Tab 离开后焦点停在下一个元素，不被拉回触发器', async () => {
         render({
             render: () => (

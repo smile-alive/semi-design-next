@@ -23,13 +23,9 @@ export const getFirstCellText = () => firstCellTexts()[0];
 export const getPageItems = () => queryAll(`.${BASE_CLASS_PREFIX}-page .${BASE_CLASS_PREFIX}-page-item`);
 export const getActivePage = () => query(`.${BASE_CLASS_PREFIX}-page .${BASE_CLASS_PREFIX}-page-item-active`);
 export const getHeaderCheckbox = () => query(`.${P}-thead .${P}-column-selection .${BASE_CLASS_PREFIX}-checkbox`);
-/** The checkbox inputs of the body rows, in order */
-export const getRowCheckboxInputs = () => queryAll<HTMLInputElement>(`.${P}-tbody .${P}-column-selection input[type="checkbox"]`);
-export const getHeaderCheckboxInput = () => query<HTMLInputElement>(`.${P}-thead .${P}-column-selection input[type="checkbox"]`);
 export const getSorters = () => queryAll<HTMLButtonElement>(`.${P}-thead .${P}-column-sorter-wrapper`);
 export const getFilterButtons = () => queryAll<HTMLButtonElement>(`.${P}-thead .${P}-column-filter`);
 export const getExpandButtons = () => queryAll<HTMLButtonElement>(`.${P}-tbody .${P}-expand-icon`);
-export const getDropdownItems = () => queryAll(`.${BASE_CLASS_PREFIX}-dropdown-item`);
 
 /** Table written with h(); `update` merges props, replaces the slots and waits for the render */
 export function mountTable(props: Record<string, unknown>, slots: Slots = {}) {

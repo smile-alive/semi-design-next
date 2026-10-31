@@ -56,7 +56,7 @@ function AutoFocusControlled({ motion }) {
     return (
         <>
             <Button onClick={() => setVisible(!visible)}>toggle</Button>
-            <Popover content={<Input data-testid="input" {...autofocusAttr} />} motion={motion} position="bottomLeft" trigger="custom" visible={visible}>
+            <Popover aria-label="Details" content={<Input data-testid="input" {...autofocusAttr} />} motion={motion} position="bottomLeft" trigger="custom" visible={visible}>
                 <Button disabled>disabled trigger</Button>
             </Popover>
         </>
@@ -114,7 +114,7 @@ describe('Tooltip（浏览器）', () => {
 
     it('autoFocusHover', async () => {
         render(
-            <Popover content={<Input data-testid="input" {...autofocusAttr} />} position="bottomLeft">
+            <Popover aria-label="Details" content={<Input data-testid="input" {...autofocusAttr} />} position="bottomLeft">
                 <Button>motion</Button>
             </Popover>
         );
@@ -124,7 +124,7 @@ describe('Tooltip（浏览器）', () => {
 
     it('autoFocusHoverNoMotion', async () => {
         render(
-            <Popover content={<Input data-testid="input" {...autofocusAttr} />} motion={false} position="bottomLeft">
+            <Popover aria-label="Details" content={<Input data-testid="input" {...autofocusAttr} />} motion={false} position="bottomLeft">
                 <Button>no motion</Button>
             </Popover>
         );
@@ -134,7 +134,7 @@ describe('Tooltip（浏览器）', () => {
 
     it('autoFocusClick', async () => {
         render(
-            <Popover content={<Input data-testid="input" {...autofocusAttr} />} position="bottomLeft" trigger="click">
+            <Popover aria-label="Details" content={<Input data-testid="input" {...autofocusAttr} />} position="bottomLeft" trigger="click">
                 <Button>motion</Button>
             </Popover>
         );
@@ -144,7 +144,7 @@ describe('Tooltip（浏览器）', () => {
 
     it('autoFocusClickNoMotion', async () => {
         render(
-            <Popover content={<Input data-testid="input" {...autofocusAttr} />} motion={false} position="bottomLeft" trigger="click">
+            <Popover aria-label="Details" content={<Input data-testid="input" {...autofocusAttr} />} motion={false} position="bottomLeft" trigger="click">
                 <Button>no motion</Button>
             </Popover>
         );
@@ -498,7 +498,7 @@ describe('Tooltip 触发事件（浏览器）', () => {
     it('点击作为触发器的 Select 弹层内部，不算点击外层 Popover 的外部', async () => {
         const onClickOutSide = vi.fn<() => void>();
         render(
-            <Popover content={<div>outer popover</div>} trigger="custom" visible onClickOutSide={onClickOutSide}>
+            <Popover aria-label="Details" content={<div>outer popover</div>} trigger="custom" visible onClickOutSide={onClickOutSide}>
                 <Select style={{ width: 160 }} defaultOpen optionList={[{ label: 'Option A', value: 'a' }]} />
             </Popover>
         );
@@ -551,8 +551,9 @@ describe('Tooltip 触发事件（浏览器）', () => {
     it('在嵌套弹层内按下鼠标不关闭外层弹层', async () => {
         render(
             <Popover
+                aria-label="Outer"
                 content={
-                    <Popover content={<button type="button">inner action</button>} trigger="click">
+                    <Popover aria-label="Inner" content={<button type="button">inner action</button>} trigger="click">
                         <Button>open inner</Button>
                     </Popover>
                 }
@@ -577,7 +578,7 @@ describe('Tooltip 触发事件（浏览器）', () => {
 
     it('以 Select 作为 click Popover 的触发器时可打开它', async () => {
         render(
-            <Popover content={<div>select popover</div>} trigger="click">
+            <Popover aria-label="Details" content={<div>select popover</div>} trigger="click">
                 <Select style={{ width: 160 }} optionList={[{ label: 'Option A', value: 'a' }]} />
             </Popover>
         );
@@ -707,7 +708,7 @@ describe('Tooltip 触发事件（浏览器）', () => {
 
     it('Escape 关闭后焦点回到 loading Button 本身，而不是外层包裹', async () => {
         render(
-            <Popover content={<button type="button">inside</button>} trigger="click">
+            <Popover aria-label="Details" content={<button type="button">inside</button>} trigger="click">
                 <Button loading>busy</Button>
             </Popover>
         );
@@ -724,7 +725,7 @@ describe('Tooltip 触发事件（浏览器）', () => {
             const [open, setOpen] = useState(false);
             return (
                 <>
-                    <Popover content={<Button onClick={() => setOpen(true)}>open modal</Button>} motion={false} trigger="custom" visible>
+                    <Popover aria-label="Details" content={<Button onClick={() => setOpen(true)}>open modal</Button>} motion={false} trigger="custom" visible>
                         <Button>anchor</Button>
                     </Popover>
                     <Modal title="Dialog" motion={false} visible={open} onCancel={() => setOpen(false)}>
@@ -783,7 +784,7 @@ describe('Tooltip 顶层弹层（浏览器）', () => {
         render(
             <div style={{ padding: 200 }}>
                 <Tooltip content="outer tip" motion={false} position="top" trigger="custom" visible>
-                    <Popover content="inner pop" motion={false} position="bottom" trigger="custom" visible>
+                    <Popover aria-label="Details" content="inner pop" motion={false} position="bottom" trigger="custom" visible>
                         <Button>nested trigger</Button>
                     </Popover>
                 </Tooltip>
@@ -823,7 +824,7 @@ describe('Tooltip 顶层弹层（浏览器）', () => {
                 <label style={{ whiteSpace: 'nowrap', fontWeight: 700 }}>
                     <input type="checkbox" />
                     agree
-                    <Popover content={<input aria-label="popup input" />} motion={false} trigger="custom" visible>
+                    <Popover aria-label="Details" content={<input aria-label="popup input" />} motion={false} trigger="custom" visible>
                         <span>label trigger</span>
                     </Popover>
                 </label>

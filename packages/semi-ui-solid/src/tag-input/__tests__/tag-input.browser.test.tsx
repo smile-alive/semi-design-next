@@ -17,6 +17,7 @@ describe('TagInput（浏览器）', () => {
     it('修复 #1149：被拖拽的标签绘制在所在 Popover 之上', async () => {
         render(() => (
             <Popover
+                aria-label="Details"
                 content={
                     <div style={{ padding: '20px', width: '300px' }}>
                         <TagInput defaultValue={['抖音', '火山', '西瓜视频']} draggable />
@@ -25,7 +26,7 @@ describe('TagInput（浏览器）', () => {
                 position="bottomLeft"
                 trigger="click"
             >
-                <Button>TagInput In Popover</Button>
+                {(t) => <Button {...t()}>TagInput In Popover</Button>}
             </Popover>
         ));
         await userEvent.click(screen.getByRole('button', { name: 'TagInput In Popover' }));

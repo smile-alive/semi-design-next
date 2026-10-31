@@ -9,7 +9,6 @@ import { endTransitions, render } from '@test/utils/vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';
 import Input from '../../input';
 import LocaleProvider from '../../locale/locale-provider.vue';
-import ConfirmModal from '../confirm-modal.vue';
 import type { ModalConfirmProps, ModalHandle, ModalProps } from '../interface';
 import Modal from '../modal.vue';
 import ConfigContainer from './fixtures/config-container.vue';
@@ -1171,21 +1170,5 @@ describe('Modal（Vue）', () => {
         expect(onAfterClose).not.toHaveBeenCalled();
         expect(onUpdate).not.toHaveBeenCalled();
         page.remove();
-    });
-
-    it('Boolean prop 有 default，Function prop 的 default 为 undefined', () => {
-        const violations: string[] = [];
-        const functionProps: string[] = [];
-        for (const component of [Modal, ConfirmModal]) {
-            const options = (component as { props?: Record<string, { type?: unknown; default?: unknown }> }).props;
-            for (const [name, option] of Object.entries(options ?? {})) {
-                const types = [option.type].flat();
-                if (types.includes(Function)) functionProps.push(name);
-                if (types.includes(Boolean) && !Object.hasOwn(option, 'default')) violations.push(name);
-                if (types.includes(Function) && option.default !== undefined) violations.push(name);
-            }
-        }
-        expect(violations).toEqual([]);
-        expect(functionProps).toEqual(expect.arrayContaining(['getPopupContainer', 'onOk', 'onCancel', 'content']));
     });
 });

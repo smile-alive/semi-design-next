@@ -12,7 +12,7 @@ const mouse = defineBrowserCommand<['move' | 'down' | 'up', number, number]>(asy
     }
 });
 
-export interface Threshold {
+interface Threshold {
     statements: number;
     branches: number;
     functions: number;

@@ -756,14 +756,6 @@ describe('Pagination', () => {
             const single = render(Shorthand, { props: { total: 5 } });
             expect(single.container.querySelector('ul')).toBeNull();
         });
-
-        it('props 运行时：Boolean prop 都有 default 键', () => {
-            const declared = (Pagination as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-            const missingDefault = Object.entries(declared)
-                .filter(([, option]) => [option.type].flat().includes(Boolean) && !('default' in option))
-                .map(([key]) => key);
-            expect(missingDefault).toEqual([]);
-        });
     });
 
     it('键盘翻页后，页码按钮保持焦点（页码移动不重挂载按钮）', async () => {

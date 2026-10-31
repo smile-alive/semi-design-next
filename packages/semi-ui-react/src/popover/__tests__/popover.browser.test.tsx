@@ -32,7 +32,7 @@ const last = () => screen.getByRole('button', { name: 'last focusable' });
 function CustomTrigger() {
     const [visible, setVisible] = useState(false);
     return (
-        <Popover content={renderContent} trigger="custom" visible={visible} onEscKeyDown={() => setVisible(false)}>
+        <Popover aria-label="Details" content={renderContent} trigger="custom" visible={visible} onEscKeyDown={() => setVisible(false)}>
             <Button onClick={() => setVisible(!visible)}>custom</Button>
         </Popover>
     );
@@ -68,7 +68,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 与键盘操作', async () => {
         render(
-            <Popover content={renderContent} motion={false} trigger="click">
+            <Popover aria-label="Details" content={renderContent} motion={false} trigger="click">
                 <Button>click</Button>
             </Popover>
         );
@@ -88,7 +88,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=focus 与键盘操作', async () => {
         render(
-            <Popover content={renderContent} trigger="focus">
+            <Popover aria-label="Details" content={renderContent} trigger="focus">
                 <Input style={{ width: 150 }} data-testid="focus" defaultValue="focus" />
             </Popover>
         );
@@ -125,7 +125,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 与焦点保护', async () => {
         render(
-            <Popover content={renderContent} motion={false} trigger="click">
+            <Popover aria-label="Details" content={renderContent} motion={false} trigger="click">
                 <Button>click</Button>
             </Popover>
         );
@@ -141,7 +141,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 与初始焦点', async () => {
         render(
-            <Popover content={initFocusContent} motion={false} trigger="click">
+            <Popover aria-label="Details" content={initFocusContent} motion={false} trigger="click">
                 <Button>custom initialFocus</Button>
             </Popover>
         );
@@ -152,6 +152,7 @@ describe('Popover（浏览器）', () => {
     it('初始焦点通过 InputHandle 设置', async () => {
         render(
             <Popover
+                aria-label="Details"
                 content={({ initialFocusRef }) => (
                     <div style={popStyle}>
                         <button>first focusable</button>
@@ -170,7 +171,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 且 closeOnEsc=false', async () => {
         render(
-            <Popover closeOnEsc={false} content={renderContent} motion={false} trigger="click">
+            <Popover aria-label="Details" closeOnEsc={false} content={renderContent} motion={false} trigger="click">
                 <Button>closeOnEsc=false</Button>
             </Popover>
         );
@@ -192,7 +193,7 @@ describe('Popover（浏览器）', () => {
                         ['leftBottom', 'LB'],
                     ] as const
                 ).map(([position, label]) => (
-                    <Popover key={position} content={<article style={{ width: 180 }}>card</article>} motion={false} position={position} showArrow trigger="click">
+                    <Popover key={position} aria-label="Details" content={<article style={{ width: 180 }}>card</article>} motion={false} position={position} showArrow trigger="click">
                         <Button>{label}</Button>
                     </Popover>
                 ))}
@@ -215,7 +216,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 且 returnFocusOnClose=false', async () => {
         render(
-            <Popover content={renderContent} motion={false} returnFocusOnClose={false} trigger="click">
+            <Popover aria-label="Details" content={renderContent} motion={false} returnFocusOnClose={false} trigger="click">
                 <Button>returnFocusOnClose=false</Button>
             </Popover>
         );
@@ -233,6 +234,7 @@ describe('Popover（浏览器）', () => {
         const { container } = render(
             <div style={{ paddingLeft: 100 }}>
                 <Popover
+                    aria-label="Details"
                     content={
                         <div style={{ padding: 20 }} data-testid="select-in-popover">
                             <Select style={{ width: 120 }} defaultValue="abc">

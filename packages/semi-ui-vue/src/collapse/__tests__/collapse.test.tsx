@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import CollapseFoundation, { type CollapseProps as CollapseFoundationProps } from '@fibrae/semi-foundation/collapse/foundation';
 import { IconCopy, IconMinus, IconPlus } from '@fibrae/semi-icons-vue';
 import { render } from '@test/utils/vue';
 import Collapse, { CollapsePanel } from '..';
@@ -669,11 +668,5 @@ describe('Collapse', () => {
         await userEvent.click(getHeaders()[0]);
         await nextTick();
         expectExpanded([true, false, false]);
-    });
-
-    it('foundation 的 activeKey 类型接受 null 作为受控的空值', () => {
-        const props: CollapseFoundationProps = { activeKey: null, defaultActiveKey: '1' };
-        expect([...CollapseFoundation.getInitialState(props).activeSet]).toEqual([]);
-        expect([...CollapseFoundation.deriveActiveSet(props, { activeSet: new Set(['1']) })]).toEqual([]);
     });
 });

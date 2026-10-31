@@ -8,7 +8,7 @@ import { svelte } from './svelte/index.ts';
 import { vue } from './vue/index.ts';
 
 // A new framework adds vitest/<name>/index.ts and an entry here
-export const testFrameworks: TestFramework[] = [react, vue, solid, svelte];
+const testFrameworks: TestFramework[] = [react, vue, solid, svelte];
 
 // Framework-free packages only; framework files are excluded by lint's frameworks so each file lands in one project
 const commonPackages = '{semi-foundation,semi-ai-foundation,semi-icons-core,semi-animation,semi-polyfill,semi-scss-compile,semi-theme-shared}';

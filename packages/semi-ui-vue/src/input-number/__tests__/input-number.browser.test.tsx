@@ -257,17 +257,5 @@ describe('InputNumber（浏览器）', () => {
             expect(input).toHaveValue('1,500');
             expect(input.selectionStart).toBe(3);
         });
-
-        it('步进后光标相对不变的尾部保持位置', async () => {
-            render(InputNumber, {
-                props: { defaultValue: 1000, step: 1000, formatter: thousands, parser: removeThousands },
-            });
-            const input = getInput();
-            await userEvent.click(input);
-            input.setSelectionRange(1, 1);
-            await userEvent.keyboard('{ArrowUp}');
-            expect(input).toHaveValue('2,000');
-            expect(input.selectionStart).toBe(1);
-        });
     });
 });

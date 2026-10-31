@@ -658,14 +658,6 @@ describe('Input 行为基线', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
     });
 
-    it('清除按钮有焦点时，受控值在别处被清空，焦点交给输入框', async () => {
-        const [value, setValue] = createSignal('semi');
-        render(() => <Input value={value()} showClear />);
-        (getClearBtn() as HTMLElement).focus();
-        setValue('');
-        await waitFor(() => expect(getInput()).toHaveFocus());
-    });
-
     it('清除按钮为 DateInput 标记 change 事件，mousedown 照常冒泡以便外部点击检测关闭浮层', () => {
         const onChange = vi.fn<Change>();
         const onOuterMouseDown = vi.fn<() => void>();

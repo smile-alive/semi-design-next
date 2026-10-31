@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import semiGlobal from '../../_utils/semi-global';
 import type { FormApi } from '../interface';
 import FormRef from './form-ref.svelte';
-import { fieldSelector, getInput, input, inputIn, labelSelector, prefix, renderForm, select, settle, sleep, typeInto } from './helpers';
+import { errorSelector, fieldSelector, getInput, input, inputIn, labelSelector, prefix, renderForm, select, settle, sleep, typeInto } from './helpers';
 
 const nameInput = () => [input('name')];
 const fields = () => [input('name'), select()];
@@ -17,6 +17,7 @@ describe('Svelte Form-baseForm', () => {
         const { container } = renderForm({ class: 'form-test', style: 'color: red' });
         const form = container.querySelector('form.form-test');
         expect(form).not.toBeNull();
+        expect(form).toHaveClass(prefix, `${prefix}-vertical`);
         expect(form).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
@@ -35,11 +36,14 @@ describe('Svelte Form-baseForm', () => {
     });
 
     it('labelWidth', () => {
-        const { container, unmount } = renderForm({ labelWidth: 200 }, fields());
+        const { container, store, unmount } = renderForm({ labelWidth: 200 }, fields());
         let labels = container.querySelectorAll(labelSelector);
         expect(labels).toHaveLength(2);
         expect(labels[0]).toHaveStyle({ width: '200px' });
         expect(labels[1]).toHaveStyle({ width: '200px' });
+        store.form.labelWidth = '250px';
+        flushSync();
+        expect(labels[1]).toHaveStyle({ width: '250px' });
         unmount();
         const second = renderForm({ labelWidth: '300px' }, fields());
         labels = second.container.querySelectorAll(labelSelector);
@@ -113,18 +117,31 @@ describe('Svelte Form-baseForm', () => {
         await waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
         expect(onSubmit).not.toHaveBeenCalled();
         expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: emptyTips, name2: emptyTips });
-        await waitFor(() => expect(container.querySelectorAll(`.${prefix}-field-error-message`)).toHaveLength(2));
+        await waitFor(() => expect(container.querySelectorAll(errorSelector)).toHaveLength(2));
+        expect(container.querySelector(errorSelector)).toHaveTextContent(emptyTips);
     });
 
-    it('reset', async () => {
+    it.each([
+        [
+            'formApi.reset()',
+            async (_container: HTMLElement, api: () => FormApi) => {
+                api().reset();
+            },
+        ],
+        ['DOM reset 事件', async (container: HTMLElement) => void (await fireEvent.reset(container.querySelector('form') as HTMLFormElement))],
+    ])('reset：%s 恢复初值、清除错误并发出 onReset', async (_name, trigger) => {
         const onReset = vi.fn<(...args: unknown[]) => void>();
-        const { api } = renderForm({ onReset, initValues: { name: 'a' } }, nameInput());
-        await typeInto(getInput(), 'b');
-        expect(getInput()).toHaveValue('b');
-        api().reset();
+        const { container, api } = renderForm({ onReset, initValues: { name: 'init' } }, [input('name', { rules: [{ required: true, message: '必填' }] })]);
+        expect(getInput()).toHaveValue('init');
+        await typeInto(getInput(), '');
+        await settle();
+        expect(container.querySelector(errorSelector)).toHaveTextContent('必填');
+        await trigger(container, api);
         await settle();
         expect(onReset).toHaveBeenCalledTimes(1);
-        expect(getInput()).toHaveValue('a');
+        expect(getInput()).toHaveValue('init');
+        expect(container.querySelector(errorSelector)).toBeNull();
+        expect(api().getValues()).toEqual({ name: 'init' });
     });
 
     it('allowEmpty', async () => {
@@ -152,10 +169,12 @@ describe('Svelte Form-baseForm', () => {
 
     it('valueChange', async () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
-        renderForm({ onValueChange }, nameInput());
+        const onChange = vi.fn<(state: { values: unknown }) => void>();
+        renderForm({ onValueChange, onChange }, nameInput());
         await typeInto(getInput(), 'semi');
         expect(onValueChange).toHaveBeenCalledTimes(1);
-        expect(onValueChange.mock.calls[0][0]).toEqual({ name: 'semi' });
+        expect(onValueChange).toHaveBeenLastCalledWith({ name: 'semi' }, { name: 'semi' });
+        expect(onChange.mock.lastCall?.[0].values).toEqual({ name: 'semi' });
     });
 
     it('initValues', () => {
@@ -178,7 +197,10 @@ describe('Svelte Form-baseForm', () => {
         const { container } = renderForm({ wrapperCol: { span: 20 }, labelCol: { span: 2 } }, fields());
         const fieldsDom = container.querySelectorAll(fieldSelector);
         expect(fieldsDom).toHaveLength(2);
+        expect(container.querySelector('.semi-row > form')).not.toBeNull();
         for (const field of fieldsDom) {
+            expect(field.querySelector('.semi-row')).toBeNull();
+            expect(field.querySelector(`.semi-col-20 .${prefix}-field-main`)).not.toBeNull();
             const [labelBox, wrapperCol] = field.children;
             const labelCol = labelBox.querySelector('.semi-col');
             expect(labelCol).toHaveClass('semi-col-2');
@@ -210,6 +232,13 @@ describe('Svelte Form-baseForm', () => {
         expect(container.querySelector('.semi-select-disabled')).not.toBeNull();
         expect(container.querySelector('.semi-input-disabled')).not.toBeNull();
         expect(getInput()).toBeDisabled();
+    });
+
+    it('字段自身的 disabled 优先于 Form 的 disabled', () => {
+        const { container } = renderForm({ disabled: true }, [input('a'), input('b', { disabled: false })]);
+        const [first, second] = container.querySelectorAll('input');
+        expect(first).toBeDisabled();
+        expect(second).not.toBeDisabled();
     });
 
     it('validateFields：同步校验失败', async () => {
@@ -284,14 +313,14 @@ describe('Svelte Form-baseForm 行为', () => {
 
     it('bind:this 拿到的实例通过 getFormApi() 暴露 formApi', () => {
         let reported: FormApi | undefined;
-        const holder: { instance?: { getFormApi: () => FormApi } } = {};
-        render(FormRef, { props: { holder, onApi: (api: FormApi) => (reported = api) } });
-        expect(holder.instance?.getFormApi()).toBe(reported);
+        const { component } = render(FormRef, { props: { onApi: (api: FormApi) => (reported = api) } });
+        expect(component.getInstance()?.getFormApi()).toBe(reported);
     });
 
     it('data-* 与 aria 属性透传到 form 元素，并将 id 用作 x-form-id', () => {
         const { container } = renderForm({ id: 'my-form', 'data-testid': 'form', 'aria-label': 'profile' });
         const form = container.querySelector('form');
+        expect(form).not.toHaveAttribute('labelposition');
         expect(form).toHaveAttribute('data-testid', 'form');
         expect(form).toHaveAttribute('aria-label', 'profile');
         expect(form).toHaveAttribute('id', 'my-form');

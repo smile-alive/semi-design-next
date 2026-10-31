@@ -374,18 +374,6 @@ describe('Timeline（Vue）', () => {
         expect(getItems(container)[0].className).toBe(`${prefixCls}-item`);
     });
 
-    it('Boolean prop 都有 default 键，Function prop 的 default 为 undefined', () => {
-        const offenders = [Timeline, TimelineItem].flatMap((component) =>
-            Object.entries((component as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props)
-                .filter(([, option]) => {
-                    const types = [option.type].flat();
-                    return (types.includes(Boolean) && !Object.hasOwn(option, 'default')) || (types.includes(Function) && option.default !== undefined);
-                })
-                .map(([name]) => name)
-        );
-        expect(offenders).toEqual([]);
-    });
-
     it('图标组件可作为 #dot', () => {
         const { container } = renderItems(() => [item({}, 'a', { dot: () => [<IconAlertTriangle />] })]);
         expect(container.querySelector(`.${prefixCls}-item-head-custom .semi-icon`)).not.toBeNull();

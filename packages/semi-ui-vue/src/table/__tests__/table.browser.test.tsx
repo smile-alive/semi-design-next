@@ -200,6 +200,8 @@ describe('Table（浏览器）', () => {
     });
 
     it('修复 #2305：scroll.y 在挂载后才给出时，expose 的 scrollToItem 可用', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        onTestFinished(() => warn.mockRestore());
         const { handle, update } = mountTable({
             style: { width: '750px' },
             columns: [
@@ -214,6 +216,7 @@ describe('Table（浏览器）', () => {
         });
         await update({ scroll: { y: 400, x: 900 } });
         await waitFor(() => expect(document.querySelectorAll(`.${prefix}-tbody .${prefix}-row`).length).toBeGreaterThan(0));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('You have to specific "scroll.y"'));
         expect(screen.queryByText('Semi Design 设计稿20.fig')).not.toBeInTheDocument();
         handle().scrollToItem(20);
         expect(await screen.findByText('Semi Design 设计稿20.fig')).toBeInTheDocument();

@@ -326,8 +326,12 @@ describe('Calendar（浏览器）', () => {
                 key: 'a',
                 start: new Date(2019, 6, 23, 9),
                 children: () => (
-                    <Popover content={<button type="button">inside nested</button>} motion={false} stopPropagation={false} trigger="click">
-                        <button type="button">nested trigger</button>
+                    <Popover aria-label="Details" content={<button type="button">inside nested</button>} motion={false} stopPropagation={false} trigger="click">
+                        {(t) => (
+                            <button type="button" {...t()}>
+                                nested trigger
+                            </button>
+                        )}
                     </Popover>
                 ),
             },

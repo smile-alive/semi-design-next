@@ -2,7 +2,10 @@
     import Form from '../form.svelte';
     import type { FormApi } from '../interface';
 
-    let { holder, onApi }: { holder: { instance?: { getFormApi: () => FormApi } }; onApi: (api: FormApi) => void } = $props();
+    let { onApi }: { onApi: (api: FormApi) => void } = $props();
+    let instance = $state<{ getFormApi: () => FormApi }>();
+
+    export const getInstance = () => instance;
 </script>
 
-<Form bind:this={holder.instance} getFormApi={onApi} />
+<Form bind:this={instance} getFormApi={onApi} />

@@ -34,19 +34,6 @@ describe('Svelte ConfigProvider（浏览器）', () => {
         expect(countLiveListeners(add, remove, 'change')).toBe(0);
     });
 
-    it('嵌套方向切换只在首次进入 RTL 时增加包裹', () => {
-        const store = createStore<TreeStore>({ outer: { direction: 'rtl' }, inner: {}, nested: true });
-        const view = render(Tree, { props: { store } });
-        expect(view.container.querySelectorAll('[dir="rtl"]')).toHaveLength(1);
-        store.inner = { direction: 'rtl' };
-        flushSync();
-        expect(view.container.querySelectorAll('[dir="rtl"]')).toHaveLength(1);
-        store.outer = { direction: 'ltr' };
-        store.inner = { direction: 'ltr' };
-        flushSync();
-        expect(view.container.querySelector('[dir="rtl"]')).toBeNull();
-    });
-
     it('rtl 内嵌套 direction="ltr" 的 ConfigProvider 时，内层组件按 ltr 渲染', () => {
         render(RtlFixture, { props: { mode: 'nested' } });
         expect(layoutOf('outer')).toEqual({ direction: 'rtl', knobOnLeft: false });

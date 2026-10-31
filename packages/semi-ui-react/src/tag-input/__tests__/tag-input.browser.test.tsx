@@ -14,6 +14,7 @@ describe('TagInput（浏览器）', () => {
     it('修复 #1149：被拖拽的标签绘制在所在 Popover 之上', async () => {
         render(
             <Popover
+                aria-label="Details"
                 content={
                     <div style={{ padding: 20, width: 300 }}>
                         <TagInput defaultValue={['抖音', '火山', '西瓜视频']} draggable />

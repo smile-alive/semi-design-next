@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { countLiveListeners } from '@test/utils/dom/common';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import { click, getPanel, getPopup, getYMLists, setupPinned } from './date-picker-dom-utils';
@@ -20,9 +22,11 @@ const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 
 describe('Svelte DatePicker 全局默认值', () => {
     it('从 semiGlobal overrideDefaultProps 读取默认值，传入的属性优先', async () => {
-        semiGlobal.config = { overrideDefaultProps: { DatePicker: { format: 'yyyy/MM/dd', density: 'compact' } } };
+        semiGlobal.config = { overrideDefaultProps: { DatePicker: { format: 'yyyy/MM/dd', density: 'compact', placeholder: '全局占位', size: 'large' } } };
         const first = await setup({ value: baseDate, open: true });
         expect(getInput()).toHaveValue('2019/09/08');
+        expect(getInput()).toHaveAttribute('placeholder', '全局占位');
+        expect(getInput()).toHaveClass(`${BASE_CLASS_PREFIX}-input-large`);
         expect(getPopup()).toHaveClass(`${dp}-compact`);
         first.unmount();
         await setup({ value: baseDate, props: { format: 'yyyy-MM-dd' } });
@@ -41,32 +45,22 @@ describe('Svelte DatePicker 全局默认值', () => {
 
 describe('Svelte DatePicker 外部点击监听', () => {
     it('打开时增加一个 mousedown 监听，关闭时移除，卸载时不残留', async () => {
-        // Svelte's own delegated listener is registered once per document and belongs to no picker
-        const pickerListeners = new Set<EventListenerOrEventListenerObject>();
-        const add = document.addEventListener.bind(document);
-        const remove = document.removeEventListener.bind(document);
-        vi.spyOn(document, 'addEventListener').mockImplementation((type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
-            if (type === 'mousedown' && (listener as { name?: string }).name !== 'handle_event_propagation') {
-                pickerListeners.add(listener);
-            }
-            add(type, listener, options);
-        });
-        vi.spyOn(document, 'removeEventListener').mockImplementation((type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) => {
-            pickerListeners.delete(listener);
-            remove(type, listener, options);
-        });
+        const add = vi.spyOn(document, 'addEventListener');
+        const remove = vi.spyOn(document, 'removeEventListener');
+        const live = () => countLiveListeners(add, remove, 'mousedown');
 
         const view = await setup({ value: baseDate });
-        expect(pickerListeners.size).toBe(0);
+        // Svelte's own delegated listener is registered once per document and belongs to no picker
+        const delegated = live();
         await click(getInput());
-        expect(pickerListeners.size).toBe(1);
+        expect(live() - delegated).toBe(1);
         await clickOutside();
         expect(getContainer()).toBeNull();
-        expect(pickerListeners.size).toBe(0);
+        expect(live() - delegated).toBe(0);
         await click(getInput());
-        expect(pickerListeners.size).toBe(1);
+        expect(live() - delegated).toBe(1);
         view.unmount();
-        expect(pickerListeners.size).toBe(0);
+        expect(live()).toBe(0);
     });
 });
 
@@ -77,6 +71,7 @@ describe('Svelte DatePicker 变化与打开状态的通知次数', () => {
         expect(changes(store)).toEqual(['change 2019-09-12 00:00:00 "2019-09-12"']);
         expect(store.log.filter((entry) => entry.startsWith('set '))).toEqual(['set 2019-09-12 00:00:00']);
         expect(store.value).toBeInstanceOf(Date);
+        expect(getInput()).toHaveValue('2019-09-12');
         expect(opens(store)).toEqual(['open false']);
     });
 
@@ -126,8 +121,9 @@ describe('Svelte DatePicker 变化与打开状态的通知次数', () => {
 describe('Svelte DatePicker aria 属性的落点', () => {
     const aria = { 'aria-describedby': 'help', 'aria-errormessage': 'error', 'aria-invalid': true, 'aria-required': true } as const;
 
-    it('data-* 落在根 div，aria 状态属性落在 combobox 输入框', async () => {
-        await setup({ props: { 'data-testid': 'dp', 'aria-labelledby': 'label', ...aria } });
+    it('class、data-* 落在根 div，aria 状态属性落在 combobox 输入框', async () => {
+        await setup({ props: { class: 'my-picker', 'data-testid': 'dp', 'aria-labelledby': 'label', ...aria } });
+        expect(getRoot()).toHaveClass('my-picker');
         expect(getRoot()).toHaveAttribute('data-testid', 'dp');
         for (const name of ['aria-labelledby', 'aria-required', 'aria-invalid', 'aria-describedby', 'aria-errormessage']) {
             expect(getRoot()).not.toHaveAttribute(name);
@@ -139,6 +135,7 @@ describe('Svelte DatePicker aria 属性的落点', () => {
         expect(input).toHaveAttribute('aria-describedby', 'help');
         expect(input).toHaveAttribute('aria-errormessage', 'error');
         expect(input).not.toHaveAttribute('data-testid');
+        expect(input).not.toHaveAttribute('aria-label');
     });
 
     it('范围类型的两个输入框都带 aria 状态属性，根 div 是 group', async () => {

@@ -22,10 +22,11 @@ describe('Svelte DatePicker 基础外观与展开', () => {
     });
 
     it('open 为 true 的首帧展开，点击外部后关闭', async () => {
-        await setup({ value: new Date(), open: true });
+        const { store } = await setup({ value: new Date(), open: true });
         expect(getPopups()).toHaveLength(1);
         await clickOutside();
         expect(getContainer()).toBeNull();
+        expect(store.open).toBe(true);
     });
 
     it('受控 open：点击外部不关闭，父级把 open 改为 false 才关闭', async () => {

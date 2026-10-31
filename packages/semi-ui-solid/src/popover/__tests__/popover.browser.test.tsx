@@ -32,7 +32,7 @@ const last = () => screen.getByRole('button', { name: 'last focusable' });
 function CustomTrigger() {
     const [visible, setVisible] = createSignal(false);
     return (
-        <Popover content={renderContent} trigger="custom" visible={visible()} onEscKeyDown={() => setVisible(false)}>
+        <Popover aria-label="Details" content={renderContent} trigger="custom" visible={visible()} onEscKeyDown={() => setVisible(false)}>
             {(t) => <Button {...t({ onClick: () => setVisible(!visible()) })}>custom</Button>}
         </Popover>
     );
@@ -70,7 +70,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 与键盘操作', async () => {
         render(() => (
-            <Popover content={renderContent} motion={false} trigger="click">
+            <Popover aria-label="Details" content={renderContent} motion={false} trigger="click">
                 {(t) => <Button {...t()}>click</Button>}
             </Popover>
         ));
@@ -90,7 +90,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=focus 与键盘操作', async () => {
         render(() => (
-            <Popover content={renderContent} trigger="focus">
+            <Popover aria-label="Details" content={renderContent} trigger="focus">
                 {(t) => <input {...t()} style={{ width: '150px' }} data-testid="focus" value="focus" />}
             </Popover>
         ));
@@ -127,7 +127,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 与焦点保护', async () => {
         render(() => (
-            <Popover content={renderContent} motion={false} trigger="click">
+            <Popover aria-label="Details" content={renderContent} motion={false} trigger="click">
                 {(t) => <Button {...t()}>click</Button>}
             </Popover>
         ));
@@ -143,7 +143,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 与初始焦点', async () => {
         render(() => (
-            <Popover content={initFocusContent} motion={false} trigger="click">
+            <Popover aria-label="Details" content={initFocusContent} motion={false} trigger="click">
                 {(t) => <Button {...t()}>custom initialFocus</Button>}
             </Popover>
         ));
@@ -153,7 +153,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 且 closeOnEsc=false', async () => {
         render(() => (
-            <Popover closeOnEsc={false} content={renderContent} motion={false} trigger="click">
+            <Popover aria-label="Details" closeOnEsc={false} content={renderContent} motion={false} trigger="click">
                 {(t) => <Button {...t()}>closeOnEsc=false</Button>}
             </Popover>
         ));
@@ -175,7 +175,7 @@ describe('Popover（浏览器）', () => {
             <div style={{ margin: '280px 0 0 420px', display: 'grid', gap: '80px' }}>
                 <For each={cases}>
                     {([position, label]) => (
-                        <Popover content={<article style={{ width: '180px' }}>card</article>} motion={false} position={position} showArrow trigger="click">
+                        <Popover aria-label="Details" content={<article style={{ width: '180px' }}>card</article>} motion={false} position={position} showArrow trigger="click">
                             {(t) => <Button {...t()}>{label}</Button>}
                         </Popover>
                     )}
@@ -199,7 +199,7 @@ describe('Popover（浏览器）', () => {
 
     it('trigger=click 且 returnFocusOnClose=false', async () => {
         render(() => (
-            <Popover content={renderContent} motion={false} returnFocusOnClose={false} trigger="click">
+            <Popover aria-label="Details" content={renderContent} motion={false} returnFocusOnClose={false} trigger="click">
                 {(t) => <Button {...t()}>returnFocusOnClose=false</Button>}
             </Popover>
         ));

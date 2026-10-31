@@ -274,7 +274,7 @@ describe('Modal（浏览器）', () => {
             const [open, setOpen] = createSignal(false);
             return (
                 <>
-                    <Popover content={<Button onClick={() => setOpen(true)}>open modal</Button>} motion={false} trigger="custom" visible>
+                    <Popover aria-label="Details" content={<Button onClick={() => setOpen(true)}>open modal</Button>} motion={false} trigger="custom" visible>
                         {(t) => <Button {...t()}>anchor</Button>}
                     </Popover>
                     <Modal

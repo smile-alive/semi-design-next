@@ -29,7 +29,7 @@ describe('Svelte Avatar 浏览器', () => {
         expect(getComputedStyle(container.querySelector(`.${prefix}-additionalBorder`) as HTMLElement).borderTopLeftRadius).toBe(radius);
     });
 
-    it.each(['image', 'text', 'element'])('%s 内容可点击头像支持键盘和主题焦点环', async (kind) => {
+    it.each(['image', 'text', 'element'])('%s 内容可点击头像支持 Tab 到达、键盘激活、Escape 保留焦点和主题焦点环', async (kind) => {
         const click = vi.fn<(event: MouseEvent) => void>();
         const { container } = setup({ alt: 'avatar', src: kind === 'image' ? image : undefined, onclick: click, node: kind === 'element', label: kind === 'text' ? 'U' : 'icon' });
         const root = container.querySelector(`.${prefix}`) as HTMLElement;
@@ -42,18 +42,11 @@ describe('Svelte Avatar 浏览器', () => {
         await userEvent.keyboard('{Enter}');
         await userEvent.keyboard(' ');
         expect(click).toHaveBeenCalledTimes(3);
-    });
-
-    it('Tab 进入图片头像后 Enter 激活，Escape 保留焦点与主题焦点环', async () => {
-        const click = vi.fn<(event: MouseEvent) => void>();
-        const { container } = setup({ alt: 'cat', src: image, onclick: click });
-        const button = screen.getByRole('button', { name: 'cat' });
-        const root = container.querySelector(`.${prefix}`) as HTMLElement;
-        await tabTo(button);
-        expectThemeFocusRing(root);
-        await userEvent.keyboard('{Enter}{Escape}{Backspace}');
-        expect(click).toHaveBeenCalledTimes(1);
+        await userEvent.keyboard('{Escape}');
         expect(button).toHaveFocus();
+        expectThemeFocusRing(root);
+        button.blur();
+        await tabTo(button);
         expectThemeFocusRing(root);
     });
 

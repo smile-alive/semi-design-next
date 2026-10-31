@@ -13,8 +13,10 @@
 
 {#if kind === 'popover'}
     <!-- Without motion: items measured mid-transition are offset from the drag overlay dnd-kit places at pick-up -->
-    <Popover {content} motion={false} position="bottomLeft" trigger="click">
-        <button type="button">Transfer In Popover</button>
+    <Popover aria-label="Transfer panel" {content} motion={false} position="bottomLeft" trigger="click">
+        {#snippet child({ props })}
+            <button {...props} type="button">Transfer In Popover</button>
+        {/snippet}
     </Popover>
 {:else}
     <Transfer {dataSource} style="width: 600px" />

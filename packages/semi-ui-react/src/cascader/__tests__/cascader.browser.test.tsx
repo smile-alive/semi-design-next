@@ -627,7 +627,6 @@ describe.each([
         expect(onBlur).not.toHaveBeenCalled();
     });
 
-    // guards the it.fails below: a focus trap would also make that test "fail as expected"
     it('Tab 能离开 Cascader 到达下一个控件', async () => {
         renderWithSpies();
         await tabTo(screen.getByRole('combobox'));

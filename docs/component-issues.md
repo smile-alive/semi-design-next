@@ -659,6 +659,7 @@
 - semi-ui-vue 的 CodeHighlight、MarkdownRender 测试直接导入 `shiki/langs/*`、`shiki/themes/*`，但 semi-ui-vue 没有声明 shiki 依赖：全新安装后这 3 个测试文件与 `vitest/vue/tsconfig.vue.json` 的类型检查失败，现有工作区靠残留的 `packages/semi-ui-vue/node_modules/shiki` 链接才通过。待处理（在 semi-ui-vue 的 devDependencies 声明 shiki）。
 - Solid：webpack、rspack 插件的规则不覆盖 Solid 包，`packages/semi-webpack/src/semi-webpack-plugin.ts` 的 `SEMI_DIST_JS_RE`、`SEMI_DIST_SCSS_RE` 与 `packages/semi-rspack/src/rule.ts` 的三个 `test` 只列了 react 与 vue 的包；Solid 包在 webpack、rspack 下使用插件时 `prefixCls` 不生效（实测 `prefixCls: 'my'` 时按钮背景为 `rgb(239, 239, 239)`）。待处理（正则补 `ui-solid`、`ai-solid`、`icons-solid` 等 Solid 包，并加带 `prefixCls` 的 `solid-webpack`、`solid-rspack` 宿主变体守护；入门页 Solid 块的说明随之更新）。
 - Solid：SolidStart 2.1.0（solid-js 1.9.17、@solidjs/router 1.0.0、nitro 3.0.260903-beta、vite 8.3.5）中，root 用 `ErrorBoundary` 包 `Suspense` 时，模块导入阶段就抛错的路由（顶层 `throw`）在 dev 与 prod 下都返回 200 且响应流永不结束，只收到约 1.2 KB 的 shell，服务端日志无该错误，页面请求挂起而不是显示错误边界；渲染时抛错的路由能正常结束并输出 fallback。不含 Semi 的最小复现（只依赖上述五个包）证实与 Semi 无关；症状同 https://github.com/solidjs/solid-start/issues/2260（该问题已随 solid-js 1.9.15 的 lazy 拒绝修复关闭，导入期抛错仍复现）。已知限制（上游问题；升级条件：上游修复后升级 `@solidjs/start` 并删去本条）。
+- 浏览器测试输出 `ResizeObserver loop completed with undelivered notifications`：Vue、Solid 的 Select，Vue、Solid、Svelte 的 OverflowList，Solid 的 TextArea autosize 回退，semi-ai-react 的 AIChatInput。保持原样（观察回调改变了布局时浏览器按规范把剩余通知推迟到下一帧并报告此错误，通知不丢、结果不变；不屏蔽，出现在别的组件或伴随断言失败时再排查）。
 - 工具链 `@vue/language-core` 3.3.12 起 URL 属性在作用域插槽内报 TS6133、TS2304。已知限制（升级条件：上游修复 https://github.com/vuejs/language-tools/pull/6241 发布后升级 vue-tsc）。
 
 ## 3 主题与站点

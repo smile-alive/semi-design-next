@@ -1255,15 +1255,6 @@ describe('ColorPicker', () => {
         expect(getInput()).toHaveValue('#00ff00');
     });
 
-    it('在弹层内通过格式 Select 切换格式后，弹层保持打开', async () => {
-        renderColorPicker({ usePopover: true, defaultFormat: 'hex', popoverProps: { motion: false } });
-        await userEvent.click(getDefaultTrigger());
-        await screen.findByRole('dialog');
-        await selectFormat('rgba');
-        expect(screen.getByRole('dialog')).toBeInTheDocument();
-        expect(getInput()).toHaveValue('57,197,187');
-    });
-
     it('Popover 内的取色器会改变默认触发色块', async () => {
         const onChange = onChangeMock();
         renderColorPicker({

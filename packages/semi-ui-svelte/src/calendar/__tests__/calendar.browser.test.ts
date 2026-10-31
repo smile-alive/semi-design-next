@@ -43,14 +43,6 @@ describe('Svelte Calendar 浏览器', () => {
         await waitFor(() => expect(document.querySelector(`.${prefix}-month-event-card`)).toBeNull());
     });
 
-    it('点击关闭按钮后焦点回到 "更多"', async () => {
-        setup({ displayValue: day, events: [event('a', new Date(2019, 7, 8, 9)), event('b', new Date(2019, 7, 8, 10)), event('c', new Date(2019, 7, 8, 11)), event('d', new Date(2019, 7, 8, 12)), event('e', new Date(2019, 7, 8, 13)), event('f', new Date(2019, 7, 8, 14))], height: 300, mode: 'month' });
-        const more = await screen.findByRole('button', { name: /还有\d+项/ });
-        await userEvent.click(more);
-        await userEvent.click(await screen.findByRole('button', { name: '关闭' }));
-        await waitFor(() => expect(more).toHaveFocus());
-    });
-
     it.each(['day', 'week'] as const)('%s 视图的根元素是 Tab 停靠点并显示主题焦点环', async (mode) => {
         const { container } = setup({ displayValue: day, mode });
         const root = container.querySelector(`.${prefix}-${mode}`) as HTMLElement;

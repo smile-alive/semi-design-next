@@ -86,7 +86,9 @@ describe('Svelte ConfigProvider', () => {
     });
 
     it('嵌套 RTL 只生成一层包裹，切换方向时响应更新', () => {
-        const { view, update } = setup({ outer: { direction: 'rtl' }, inner: { direction: 'rtl' }, nested: true });
+        const { view, update } = setup({ outer: { direction: 'rtl' }, inner: {}, nested: true });
+        expect(view.container.querySelectorAll('[dir="rtl"]')).toHaveLength(1);
+        update({ inner: { direction: 'rtl' } });
         expect(view.container.querySelectorAll('[dir="rtl"]')).toHaveLength(1);
         update({ outer: { direction: 'ltr' }, inner: {} });
         expect(view.container.querySelector('[dir="rtl"]')).toBeNull();

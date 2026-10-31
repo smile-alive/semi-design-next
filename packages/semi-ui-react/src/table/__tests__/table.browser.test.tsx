@@ -1,6 +1,6 @@
 import { Profiler, type ProfilerOnRenderCallback, useRef, useState, useEffect } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vite-plus/test';
+import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { Button, ConfigProvider, Input, Space, Switch, Table, Typography } from '@fibrae/semi-ui-react';
@@ -212,7 +212,11 @@ describe('Table（浏览器）', () => {
                 </>
             );
         }
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        onTestFinished(() => warn.mockRestore());
         render(<Demo />);
+        // The first render has no scroll.y yet, which is the guarded condition
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('"scroll.y" which must be a number'));
         await waitFor(() => expect(onRef.mock.lastCall?.[0].current).toBeTruthy());
         expect(screen.queryByText('Semi Design 设计稿20.fig')).not.toBeInTheDocument();
         await userEvent.click(screen.getByRole('button', { name: 'Scroll to 20' }));

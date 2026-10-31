@@ -30,7 +30,7 @@ describe('Feedback（浏览器）', () => {
     });
 
     it('emoji：单选按钮是一个 Tab 停靠点，方向键切换选中，标签显示主题焦点环', async () => {
-        render(() => <Feedback motion={false} visible />);
+        render(() => <Feedback title="Feedback" motion={false} visible />);
         const bad = await screen.findByRole('radio', { name: zh_CN.Feedback.bad });
         const normal = screen.getByRole('radio', { name: zh_CN.Feedback.normal });
         const item = (radio: HTMLElement) => radio.closest(`.${prefix}-emoji-item`) as HTMLElement;

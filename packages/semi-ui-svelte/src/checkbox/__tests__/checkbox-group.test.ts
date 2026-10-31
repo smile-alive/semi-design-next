@@ -252,18 +252,6 @@ describe('Svelte CheckboxGroup', () => {
         expect(list).toHaveAttribute('title', 'fruits');
     });
 
-    it('onBlur：组内两个框之间移动不触发，焦点离开整个组触发一次', async () => {
-        const blur = vi.fn<(event: FocusEvent) => void>();
-        render(CheckboxGroup, { props: { options: ['a', 'b'], onBlur: blur } });
-        await userEvent.tab();
-        await userEvent.tab();
-        expect(getCheckbox('b')).toHaveFocus();
-        expect(blur).not.toHaveBeenCalled();
-        await userEvent.tab();
-        expect(blur).toHaveBeenCalledTimes(1);
-        expect(blur.mock.calls[0]?.[0]).toBeInstanceOf(FocusEvent);
-    });
-
     it('全局默认值生效，显式 props 优先', () => {
         semiGlobal.config.overrideDefaultProps = { CheckboxGroup: { direction: 'horizontal', type: 'card' } };
         const view = renderOptions({ options: ['a'] });

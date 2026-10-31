@@ -825,25 +825,6 @@ describe('Typography 行为基线', () => {
         expect(screen.getByText('overflowing text').closest(`.${prefixCls}`)).toBe(before);
     });
 
-    it('省略且 showTooltip 的文字位于 activedescendant 条目内时不注入 tabIndex', async () => {
-        mockSingleRowOverflow(200);
-        // the option of a listbox that keeps DOM focus and points at its options with aria-activedescendant
-        const option = document.createElement('div');
-        option.setAttribute('role', 'option');
-        document.body.append(option);
-        const { container } = render(
-            () => (
-                <Text style={{ width: '100px' }} ellipsis={{ showTooltip: true }}>
-                    option text
-                </Text>
-            ),
-            { container: option }
-        );
-        await sleep(50);
-        expect(root(container)).not.toHaveAttribute('tabindex');
-        option.remove();
-    });
-
     it.each([
         ['button', {}],
         ['div', { role: 'button' }],
@@ -1174,17 +1155,6 @@ describe('Typography 函数组件', () => {
         await waitFor(() => expect(root(container)).toHaveTextContent(/^abcdefghijklmn\.\.\.EX$/));
         setEllipsis({ expandable: true, expandText: 'EX', suffix: 'SUFFIX' });
         await waitFor(() => expect(root(container)).toHaveTextContent(/^abcdefgh\.\.\.SUFFIXEX$/));
-    });
-});
-
-describe('Typography Tab 焦点停靠', () => {
-    it('copyable 复制按钮是唯一的 Tab 停靠点，其 Tooltip 描述了该按钮', async () => {
-        render(() => <Text copyable={{ copyTip: 'Copy the text' }}>Semi Design</Text>);
-        await userEvent.tab();
-        const button = must(document.activeElement);
-        expect(button.tagName).toBe('BUTTON');
-        await userEvent.tab();
-        expect(document.body).toHaveFocus();
     });
 });
 

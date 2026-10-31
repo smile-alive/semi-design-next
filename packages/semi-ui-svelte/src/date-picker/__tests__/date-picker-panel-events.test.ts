@@ -151,7 +151,7 @@ describe('Svelte DatePicker 面板的关闭与回调', () => {
         await fireEvent.mouseDown(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
         await settle();
         expect(logged(store, 'clear')).toHaveLength(1);
-        expect(changes(store)).toHaveLength(1);
+        expect(changes(store)).toEqual(['change undefined undefined']);
         expect(getInput()).toHaveValue('');
     });
 

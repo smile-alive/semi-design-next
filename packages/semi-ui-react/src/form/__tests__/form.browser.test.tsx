@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vite-plus/test';
+import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { Button, Form } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
@@ -8,12 +8,15 @@ const getInput = (field) => document.querySelector(`[x-field-id="${field}"] inpu
 
 describe('Form', () => {
     it('labelPosition 为 inset 时，不支持内嵌标签的字段回退 top，label 位于控件上方', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        onTestFinished(() => warn.mockRestore());
         render(
             <Form labelPosition="inset">
                 <Form.Switch field="on" label="Notify" />
                 <Form.Input field="name" label="Name" />
             </Form>
         );
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('has no inset label, so Field "on" is laid out with labelPosition'));
         const switchRect = screen.getByRole('switch', { name: 'Notify' }).getBoundingClientRect();
         const labelRect = screen.getByText('Notify').getBoundingClientRect();
         expect(labelRect.bottom).toBeLessThanOrEqual(switchRect.top);

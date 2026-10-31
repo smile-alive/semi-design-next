@@ -1191,19 +1191,6 @@ describe('Typography Vue', () => {
         expect(root(explicit.container).tagName).toBe('DIV');
     });
 
-    it('五个组件的 Boolean prop 都有默认值，Function prop 默认值为 undefined', () => {
-        const violations: string[] = [];
-        for (const component of [Typography, Text, Title, Paragraph, Numeral]) {
-            const options = (component as { props?: Record<string, { type?: unknown; default?: unknown }> }).props;
-            for (const [name, option] of Object.entries(options ?? {})) {
-                const types = [option.type].flat();
-                if (types.includes(Boolean) && !Object.hasOwn(option, 'default')) violations.push(`${name} 缺少 default`);
-                if (types.includes(Function) && option.default !== undefined) violations.push(`${name} default 不为 undefined`);
-            }
-        }
-        expect(violations).toEqual([]);
-    });
-
     it('带 showTooltip 时属性与监听落在文字根元素，不落在弹层', async () => {
         mockSingleRowOverflow(200);
         const onClick = vi.fn<(e: MouseEvent) => void>();

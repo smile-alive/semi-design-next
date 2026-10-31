@@ -501,7 +501,7 @@ describe('Tooltip 浏览器', () => {
 
     it('Escape 关闭后焦点回到 loading Button 本身，而不是外层包裹', async () => {
         render(Popover, {
-            props: { trigger: 'click' },
+            props: { trigger: 'click', ariaLabel: 'busy details' },
             slots: { default: () => <Button loading>{() => 'busy'}</Button>, content: () => <button type="button">inside</button> },
         });
         const button = screen.getByRole('button', { name: 'busy' });
@@ -517,7 +517,7 @@ describe('Tooltip 浏览器', () => {
         render({
             render: () => (
                 <>
-                    <Popover motion={false} trigger="custom" visible>
+                    <Popover ariaLabel="anchor details" motion={false} trigger="custom" visible>
                         {{
                             default: () => <Button>{() => 'anchor'}</Button>,
                             content: () => (

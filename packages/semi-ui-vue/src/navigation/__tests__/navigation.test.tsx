@@ -358,6 +358,7 @@ describe('Navigation', () => {
         renderJsx({ mode: 'horizontal', isCollapsed: true, header: { text: 'Semi' } });
         expect(document.querySelector(`.${prefixCls}`)).not.toHaveClass(`${prefixCls}-collapsed`);
         expect(document.querySelector(`.${prefixCls}-header-text`)).toHaveTextContent('Semi');
+        expect(screen.getByRole('button', { name: '首页' })).toHaveTextContent('首页');
     });
 
     it('折叠时，顶层项的焦点目标是其按钮，由 tooltip 描述', async () => {
@@ -1462,12 +1463,6 @@ describe('Navigation 的 Vue 用法', () => {
     it('折叠时 header 链接仍有可访问名称', () => {
         renderNav({ header: { link: '/home', text: 'Semi' }, isCollapsed: true });
         expect(screen.getByRole('link', { name: 'Semi' })).toHaveAttribute('href', '/home');
-    });
-
-    it('水平模式忽略 isCollapsed', () => {
-        renderJsx({ isCollapsed: true, mode: 'horizontal' });
-        expect(document.querySelector(`.${prefixCls}`)).not.toHaveClass(`${prefixCls}-collapsed`);
-        expect(screen.getByRole('button', { name: '首页' })).toHaveTextContent('首页');
     });
 
     it('Nav 的 click 遮住根元素的原生 click', async () => {

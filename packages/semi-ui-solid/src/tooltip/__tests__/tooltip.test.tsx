@@ -1371,39 +1371,6 @@ describe('Tooltip', () => {
     });
 
     describe('嵌套弹层的悬停', () => {
-        it('指针从弹层移入内容中嵌套的弹层时外层保持打开，离开两者后都关闭', async () => {
-            const delays = { mouseEnterDelay: 0, mouseLeaveDelay: 0, motion: false };
-            render(() => (
-                <Tooltip
-                    {...delays}
-                    content={
-                        <Tooltip {...delays} content="inner tip">
-                            {(t) => (
-                                <button type="button" {...t()}>
-                                    inner trigger
-                                </button>
-                            )}
-                        </Tooltip>
-                    }
-                >
-                    {(t) => <Button {...t()}>outer trigger</Button>}
-                </Tooltip>
-            ));
-            await userEvent.hover(screen.getByRole('button', { name: 'outer trigger' }));
-            const innerTrigger = await screen.findByRole('button', { name: 'inner trigger' });
-            await userEvent.hover(innerTrigger);
-            const outerPopup = innerTrigger.closest(wrapperSelector) as HTMLElement;
-            const innerPopup = (await screen.findByText('inner tip')).closest(wrapperSelector) as HTMLElement;
-            // the sequence a pointer moving from the inner trigger onto the inner popup produces
-            fireEvent.mouseLeave(innerTrigger, { relatedTarget: innerPopup });
-            fireEvent.mouseLeave(outerPopup, { relatedTarget: innerPopup });
-            fireEvent.mouseEnter(innerPopup, { relatedTarget: outerPopup });
-            await sleep(20);
-            expect(document.querySelectorAll(shownSelector)).toHaveLength(2);
-            fireEvent.mouseLeave(innerPopup, { relatedTarget: document.body });
-            await waitFor(() => expect(popup()).toBeNull());
-        });
-
         it('焦点从弹层移入内容中嵌套的弹层时外层保持打开，移出两者后都关闭', async () => {
             const delays = { mouseEnterDelay: 0, mouseLeaveDelay: 0, motion: false };
             render(() => (

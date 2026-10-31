@@ -10,7 +10,7 @@ export interface SsrCase {
     render: () => VNode;
 }
 
-export interface SsrRun {
+interface SsrRun {
     html: string;
     warnings: string[];
 }

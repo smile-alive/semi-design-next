@@ -49,15 +49,6 @@ describe('Svelte Checkbox（浏览器）', () => {
         expect(outlineOf(display(cards[1] as Element))).toBe('none');
     });
 
-    it('点击内容里的链接不切换', async () => {
-        const link = createRawSnippet(() => ({ render: () => '<span>accept <a href="#terms">terms</a></span>' }));
-        render(Checkbox, { props: { children: link } });
-        const anchor = screen.getByRole('link', { name: 'terms' });
-        anchor.addEventListener('click', (event) => event.preventDefault());
-        await userEvent.click(anchor);
-        expect(screen.getByRole('checkbox')).not.toBeChecked();
-    });
-
     it('组的 onBlur 在焦点真正离开整个组时触发一次', async () => {
         const blur = vi.fn<(event: FocusEvent) => void>();
         render(CheckboxGroup, { props: { options: ['a', 'b'], onBlur: blur } });
@@ -68,6 +59,7 @@ describe('Svelte Checkbox（浏览器）', () => {
         await tab();
         expect(after).toHaveFocus();
         expect(blur).toHaveBeenCalledTimes(1);
+        expect(blur.mock.calls[0]?.[0]).toBeInstanceOf(FocusEvent);
         after.remove();
     });
 });

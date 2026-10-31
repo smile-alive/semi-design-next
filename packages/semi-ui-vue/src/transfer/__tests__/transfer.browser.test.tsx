@@ -20,7 +20,7 @@ const getSortableItems = () => document.querySelectorAll(`.${prefixCls}-right-it
 async function openTransferInPopover() {
     render(Popover, {
         // Without motion: items measured mid-transition are offset from the drag overlay dnd-kit places at pick-up
-        props: { motion: false, position: 'bottomLeft', trigger: 'click' },
+        props: { ariaLabel: 'Transfer', motion: false, position: 'bottomLeft', trigger: 'click' },
         slots: {
             default: () => <Button>{() => 'Transfer In Popover'}</Button>,
             content: () => <Transfer style={{ width: '400px', height: '300px' }} defaultValue={[2, 4]} dataSource={data} draggable />,

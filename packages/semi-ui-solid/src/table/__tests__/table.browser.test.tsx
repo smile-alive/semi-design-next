@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
-import { describe, expect, it, vi } from 'vite-plus/test';
+import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
@@ -861,6 +861,8 @@ describe('Table 虚拟化（浏览器）', () => {
             { title: 'Size', dataIndex: 'size', width: 150, fixed: 'right' },
         ];
         const [scroll, setScroll] = createSignal<TableProps['scroll']>({});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        onTestFinished(() => warn.mockRestore());
         render(() => (
             <>
                 <button type="button" onClick={() => list?.scrollToItem(20)}>
@@ -869,6 +871,7 @@ describe('Table 虚拟化（浏览器）', () => {
                 <Table style={{ width: '750px' }} columns={columns} dataSource={getFileData(1000)} getVirtualizedListRef={(handle) => (list = handle)} pagination={false} scroll={scroll()} virtualized />
             </>
         ));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('You have to specific "scroll.y"'));
         setScroll({ y: 400, x: 900 });
         await waitFor(() => expect(list).toBeDefined());
         expect(screen.queryByText('Semi Design 设计稿20.fig')).not.toBeInTheDocument();

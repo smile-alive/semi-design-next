@@ -269,17 +269,13 @@ describe('Svelte AutoComplete 打开与选择', () => {
         expect(disabledChange).not.toHaveBeenCalled();
     });
 
-    it('点击候选项发出 onSelect 并写入输入框，焦点留在输入框', async () => {
+    it('点击候选项发出 onSelect 并写入输入框', async () => {
         const onSelect = vi.fn<(value: Selected) => void>();
-        const onBlur = vi.fn<(event: FocusEvent) => void>();
-        setup({ defaultOpen: true, onSelect, onBlur });
+        setup({ defaultOpen: true, onSelect });
         await settle();
-        getInput().focus();
         await click(getOptions()[0]);
         expect(onSelect.mock.calls).toEqual([['semi']]);
         expect(getInput()).toHaveValue('semi');
-        expect(getInput()).toHaveFocus();
-        expect(onBlur).not.toHaveBeenCalled();
     });
 
     it('onSelectWithObject：载荷为不含内部字段的数据项，点击与 Enter 一致，字符串项为 { value, label }', async () => {

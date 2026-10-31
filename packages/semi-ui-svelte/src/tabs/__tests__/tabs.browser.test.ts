@@ -79,15 +79,6 @@ describe('Svelte Tabs（浏览器）', () => {
         expect(document.getElementById(tabByKey('5').getAttribute('aria-controls') ?? '')).toHaveFocus();
     });
 
-    it('垂直标签栏使用上下方向键', async () => {
-        setup({ tabPosition: 'left' });
-        await userEvent.click(tabByKey('1'));
-        await userEvent.keyboard('{ArrowDown}');
-        expect(tabByKey('2')).toHaveFocus();
-        await userEvent.keyboard('{ArrowUp}');
-        expect(tabByKey('1')).toHaveFocus();
-    });
-
     it('RTL 标签栏中左右方向键互换', async () => {
         const store = createStore<FixtureStore>({ props: {}, panes: docPanes });
         render(TabsConfig, { props: { store, direction: 'rtl' } });

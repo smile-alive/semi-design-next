@@ -16,8 +16,8 @@ const getHandles = () => screen.getAllByRole('button', { name: zh_CN.Transfer.dr
 async function openTransferInPopover() {
     render(() => (
         // motionless: a scaling popup offsets the item measured before the transition ends from dnd-kit's overlay
-        <Popover content={<Transfer style={{ width: '400px', height: '300px' }} defaultValue={[2, 4]} dataSource={data} draggable />} motion={false} position="bottomLeft" trigger="click">
-            <Button>Transfer In Popover</Button>
+        <Popover aria-label="Details" content={<Transfer style={{ width: '400px', height: '300px' }} defaultValue={[2, 4]} dataSource={data} draggable />} motion={false} position="bottomLeft" trigger="click">
+            {(t) => <Button {...t()}>Transfer In Popover</Button>}
         </Popover>
     ));
     await userEvent.click(screen.getByRole('button', { name: 'Transfer In Popover' }));

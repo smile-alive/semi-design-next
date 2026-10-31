@@ -70,12 +70,6 @@ describe('Svelte Collapse', () => {
         expect(container.querySelector(`.${prefixCls}-header-right`)).toHaveTextContent('1234');
     });
 
-    it('onChange 的载荷是 activeKey 数组与点击事件', async () => {
-        const { store } = setup();
-        await click(getHeaders()[2]);
-        expect(store.log).toEqual(['change 3 click']);
-    });
-
     it('可同时展开多个面板', async () => {
         const { store } = setup();
         await click(getHeaders()[1]);
@@ -100,17 +94,13 @@ describe('Svelte Collapse', () => {
         expectExpanded([false, false, false]);
     });
 
-    it('禁用面板', () => {
-        const { container } = setup({ panel: { disabled: true } });
+    it('禁用面板：标题为禁用按钮，忽略点击，展开图标显示为禁用态', async () => {
+        const { container, store } = setup({ panel: { disabled: true } });
         const rows = getRows(container);
         expect(rows[0]).toHaveClass(`${prefixCls}-header-disabled`);
         expect(getHeaders()[0]).toBeDisabled();
         expect(rows[1]).not.toHaveClass(`${prefixCls}-header-disabled`);
         expect(getHeaders()[1]).toBeEnabled();
-    });
-
-    it('禁用面板忽略点击，展开图标显示为禁用态', async () => {
-        const { container, store } = setup({ panel: { disabled: true } });
         await click(getHeaders()[0]);
         expect(store.log).toEqual([]);
         expectExpanded([false, false, false]);

@@ -10,7 +10,7 @@ export const svelte: FrameworkLint = {
     name: 'Svelte',
     files,
     // Only the runtime and test bindings; the build plugins (@sveltejs/*) and the ESLint plugin are imported by framework-free config
-    imports: ['svelte', '@testing-library/svelte', '@test/utils/svelte', '@tanstack/svelte-virtual', '@dnd-kit/svelte', '@fibrae/semi-*-svelte', ...frameworkSpecifiers('svelte', ['svelte'])],
+    imports: ['svelte', '@testing-library/svelte', '@tanstack/svelte-virtual', '@dnd-kit/svelte', '@fibrae/semi-*-svelte', ...frameworkSpecifiers('svelte', ['svelte'])],
     packages: ['semi-ui-svelte', 'semi-ai-svelte', 'semi-icons-svelte', 'semi-illustrations-svelte'],
     overrides: [
         { files: ['**/*.svelte'], rules: typescriptRules },

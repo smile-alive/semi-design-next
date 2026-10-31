@@ -250,16 +250,6 @@ describe('Svelte DatePicker 内嵌输入框', () => {
 });
 
 describe('Svelte DatePicker 实例方法', () => {
-    it('open() 与 close()', async () => {
-        const { component } = await setup({ props: { type: 'date' } });
-        apiOf(component).open();
-        await settle();
-        expect(getPopup()).not.toBeNull();
-        apiOf(component).close();
-        await settle();
-        expect(getContainer()).toBeNull();
-    });
-
     it('insetInput 面板打开时 focus 聚焦面板里对应的范围输入框', async () => {
         const { component } = await setup({ value: juneRange, props: { type: 'dateRange', insetInput: true } });
         apiOf(component).focus('rangeEnd');

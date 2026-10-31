@@ -9,7 +9,7 @@ export interface ContractState {
     x: number;
 }
 
-export interface ContractContext {
+interface ContractContext {
     theme: string;
 }
 

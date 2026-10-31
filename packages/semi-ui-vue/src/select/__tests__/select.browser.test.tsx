@@ -144,7 +144,7 @@ function renderAllCaseOfBlur(onBlur: Mock<(name: string) => void>) {
             {blurCases.map(([name, props]) => (
                 <div key={name}>
                     <h5>{name}</h5>
-                    <Select style={{ width: '120px' }} data-cy={name} defaultValue="abc" onBlur={() => onBlur(name)} {...props}>
+                    <Select style={{ width: '120px' }} data-cy={name} defaultValue={props.multiple ? ['abc'] : 'abc'} onBlur={() => onBlur(name)} {...props}>
                         {() => (
                             <>
                                 <SelectOption value="abc">{() => '抖音'}</SelectOption>

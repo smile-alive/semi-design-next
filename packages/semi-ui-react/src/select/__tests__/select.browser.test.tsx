@@ -130,7 +130,7 @@ function AllCaseOfBlur({ onBlur }) {
             {blurCases.map(([name, props]) => (
                 <div key={name}>
                     <h5>{name}</h5>
-                    <Select style={{ width: 120 }} data-cy={name} defaultValue="abc" onBlur={() => onBlur(name)} {...props}>
+                    <Select style={{ width: 120 }} data-cy={name} defaultValue={props.multiple ? ['abc'] : 'abc'} onBlur={() => onBlur(name)} {...props}>
                         <Select.Option value="abc">抖音</Select.Option>
                         <Select.Option value="ulikecam">轻颜相机</Select.Option>
                         <Select.Option disabled value="jianying">
@@ -200,7 +200,7 @@ describe('Select', () => {
         function Demo() {
             const [loading, setLoading] = useState(false);
             const [list, setList] = useState(optionList);
-            const [value, setValue] = useState<string | string[]>('');
+            const [value, setValue] = useState<string[]>([]);
             const handleSearch = (inputValue) => {
                 setLoading(true);
                 if (inputValue) {

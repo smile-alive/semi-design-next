@@ -58,7 +58,7 @@ describe('Svelte Carousel（浏览器）', () => {
         });
     });
 
-    it('仅悬停显示的箭头在键盘聚焦进入轮播时变为可见', async () => {
+    it('仅悬停显示的箭头在键盘聚焦进入轮播时变为可见，非当前幻灯片带 inert 属性', async () => {
         const { container } = setup({ arrowType: 'hover', autoPlay: false });
         const next = container.querySelector(`.${prefix}-arrow-next`) as HTMLElement;
         expect(getComputedStyle(next).opacity).toBe('0');
@@ -67,6 +67,8 @@ describe('Svelte Carousel（浏览器）', () => {
         expect(getComputedStyle(next).opacity).toBe('1');
         await userEvent.keyboard('{Enter}');
         await expectActive('index1');
+        const slides = [...document.querySelectorAll<HTMLElement>(`.${prefix}-content-item`)];
+        expect(slides.map((item) => item.hasAttribute('inert'))).toEqual([true, false, true]);
     });
 
     it('箭头和指示点显示主题焦点环，而非浏览器默认焦点环', async () => {
@@ -82,12 +84,5 @@ describe('Svelte Carousel（浏览器）', () => {
         const arrow = document.activeElement as HTMLElement;
         expect(getComputedStyle(arrow).borderRadius).toBe('50%');
         expect(arrow.offsetWidth).toBe(arrow.offsetHeight);
-    });
-
-    it('非当前幻灯片带 inert，Tab 不会进入', async () => {
-        setup({ autoPlay: false, animation: 'fade' });
-        const slides = [...document.querySelectorAll<HTMLElement>(`.${prefix}-content-item`)];
-        expect(slides.map((item) => item.inert)).toEqual([false, true, true]);
-        expect(slides.map((item) => item.hasAttribute('inert'))).toEqual([false, true, true]);
     });
 });

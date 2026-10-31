@@ -22,7 +22,6 @@ const info: AnnotationInfo[] = [
     },
     { header: '分组二', key: 'g2', annotations: [{ title: '另一篇', url: 'https://example.com/b' }] },
 ];
-const snippet = (html: string) => createRawSnippet(() => ({ render: () => html }));
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const items = () => [...document.querySelectorAll<HTMLAnchorElement>(`.${prefix}-item`)];
 
@@ -206,12 +205,6 @@ describe('Svelte Annotation', () => {
         expect(document.querySelectorAll('.semi-icon-book_open_stroked')).toHaveLength(2);
     });
 
-    it('header snippet 替换容器头部', () => {
-        setup({ header: snippet('<div class="my-header">h</div>') });
-        expect($('.my-header')).toBeInTheDocument();
-        expect($('.semi-sidebar-container-header')).toBeNull();
-    });
-
     it('点击箭头切换面板时触发 onChange', async () => {
         const onChange = vi.fn<NonNullable<AnnotationProps['onChange']>>();
         setup({ activeKey: [], onChange });
@@ -260,10 +253,5 @@ describe('Svelte Annotation', () => {
     it('视频条目没有 logo 时不渲染 logo 图片', () => {
         render(Annotation.AnnotationContent, { props: { activeKey: ['g'], info: [{ header: 'h', key: 'g', annotations: [{ type: 'video', title: 'v', url: 'https://example.com/v' }] }] } });
         expect(document.querySelector('img')).toBeNull();
-    });
-
-    it('title 可以是 snippet', () => {
-        setup({ title: snippet('<em>来源</em>') });
-        expect($('.semi-sidebar-container-header-title em')).toHaveTextContent('来源');
     });
 });

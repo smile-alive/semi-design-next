@@ -405,14 +405,6 @@ describe('MarkdownRender', () => {
         expect(explicit.querySelector('table')).not.toBeNull();
     });
 
-    it('props 运行时：Boolean prop 都有 default 键', () => {
-        const declared = (MarkdownRender as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-        const missingDefault = Object.entries(declared)
-            .filter(([, option]) => [option.type].flat().includes(Boolean) && !('default' in option))
-            .map(([key]) => key);
-        expect(missingDefault).toEqual([]);
-    });
-
     it.each<[string, MarkdownRenderProps, RegExp]>([
         ['an mdx syntax error', { raw: 'bad <div' }, /Unexpected end of file/],
         [

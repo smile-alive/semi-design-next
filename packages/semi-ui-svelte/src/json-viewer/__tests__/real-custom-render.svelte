@@ -21,7 +21,7 @@
 
 {#snippet token({ item, content: text }: JsonViewerCustomRenderArgs)}
     {#if item.name === 'name'}
-        <Popover content={details} trigger="click"><span class="name-token">{text}</span></Popover>
+        <Popover aria-label="Mark details" content={details} trigger="click"><span class="name-token">{text}</span></Popover>
     {:else}
         <Rating class="age-token" disabled size="small" value={Number(text)} />
     {/if}
