@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-rspack-plugin",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "An rspack plugin for Semi Design Next to custom theme, replace prefix and so on.",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",

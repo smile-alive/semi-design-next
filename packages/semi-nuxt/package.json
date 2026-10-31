@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-nuxt",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "Nuxt module that supports Semi Design Next in Nuxt",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",

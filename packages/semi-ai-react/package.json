@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-ai-react",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "Semi AI components for React: AIChatInput, AIChatDialogue, Chat and Sidebar.",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",
