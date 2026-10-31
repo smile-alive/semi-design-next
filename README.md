@@ -112,6 +112,16 @@ pnpm site:stop
 ## 提交
 
 - Conventional Commits，`type(scope)` 用英文，标题与正文用中文；标题不超过 72 个字符，正文每段一行，由 commitlint 检查。
-- pre-commit 对暂存文件运行 `vp lint --fix`、`vp fmt` 与 stylelint，warning 也会阻止提交。
+- pre-commit 对暂存文件运行 `vp lint --fix`、`vp fmt`、stylelint，`.vue` 与 `.svelte` 另跑 ESLint，warning 也会阻止提交；规则见 `vite.config.ts` 的 `staged`。
+- 钩子由 `pnpm install` 的 `prepare`（`vp config`）安装，`core.hooksPath` 设为相对路径 `.vite-hooks/_`。`vp config` 不覆盖已有的其他 `core.hooksPath`，提交时钩子没有执行就先 `git config --unset core.hooksPath`，再跑 `pnpm install`。
 
-发布流程（包名、registry、版本）尚未确定。
+## 发布
+
+所有 `@fibrae/*` 包发布到 npm 公共 registry，共用一个版本号，由 [changesets](.changeset/README.md) 管理。
+
+1. 改动发布包的行为或公开 API 时，运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
+2. 推送到 `main` 后先跑 CI；CI 通过后 Release 工作流开出「chore: 发布新版本」PR，汇总版本号与各包 CHANGELOG。
+3. 这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」，CI 通过后再 squash 合入。
+4. 合入后 `main` 上的 CI 通过，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，再为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
+
+文档站由 Deploy site 工作流在 `main` 的 CI 通过后部署到 Cloudflare Pages，也可在 Actions 页手动触发。
