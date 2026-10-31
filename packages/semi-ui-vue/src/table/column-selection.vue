@@ -64,6 +64,7 @@
                 disabled,
                 indeterminate: indeterminate.value,
                 modelValue: selected.value,
+                onKeyup: table.foundation.handleSelectionKeyUp,
                 onChange: (event: CheckboxEvent) => (props.inHeader ? selectAll : selectRow)(event.target.checked, event as unknown as Event),
                 ...(props.inHeader ? {} : selection.getCheckboxProps?.(props.record as AnyRecord)),
             }),

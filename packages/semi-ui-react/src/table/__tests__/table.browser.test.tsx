@@ -7,7 +7,7 @@ import { Button, ConfigProvider, Input, Space, Switch, Table, Typography } from 
 import type { InputHandle } from '@fibrae/semi-ui-react/input';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
 import { getData } from '@test/utils/react';
-import type { ColumnProps, Data, GetVirtualizedListRef, ResizeFn } from '../interface';
+import type { ColumnProps, Data, GetVirtualizedListRef, ResizeFn, RowSelectionProps } from '../interface';
 const prefix = `${BASE_CLASS_PREFIX}-table`;
 
 const getFileData = (total) =>
@@ -1239,5 +1239,32 @@ describe('table', () => {
             return { width, height };
         });
         expect(narrow).toEqual(roomy);
+    });
+});
+
+describe('Table Shift 范围选择（浏览器）', () => {
+    const rows = ['1', '2', '3', '4'].map((key) => ({ key, name: `row ${key}` }));
+    const renderRows = (rowSelection: RowSelectionProps<Data>) => render(<Table columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={rows} pagination={false} rowSelection={rowSelection} />);
+
+    it('clickRow 时 Shift 点击行选中范围，页面上不留文字选区', async () => {
+        const onChange = vi.fn<NonNullable<RowSelectionProps<Data>['onChange']>>();
+        renderRows({ clickRow: true, onChange });
+        await userEvent.click(screen.getByText('row 1'));
+        await userEvent.keyboard('{Shift>}');
+        await userEvent.click(screen.getByText('row 3'));
+        await userEvent.keyboard('{/Shift}');
+        expect(onChange.mock.lastCall?.[0]).toEqual(['1', '2', '3']);
+        expect(document.getSelection()?.toString()).toBe('');
+    });
+
+    it('焦点在复选框上按 Shift+Space 选中范围', async () => {
+        const onChange = vi.fn<NonNullable<RowSelectionProps<Data>['onChange']>>();
+        renderRows({ onChange });
+        const checkboxes = screen.getAllByRole('checkbox');
+        checkboxes[1].focus();
+        await userEvent.keyboard('{ }');
+        checkboxes[3].focus();
+        await userEvent.keyboard('{Shift>}{ }{/Shift}');
+        expect(onChange.mock.lastCall?.[0]).toEqual(['1', '2', '3']);
     });
 });

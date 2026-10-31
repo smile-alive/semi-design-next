@@ -4439,3 +4439,127 @@ describe('Table 最后一列', () => {
         expect(queryAll(`.${BASE_CLASS_PREFIX}-table-cell-last`).map((cell) => cell.textContent)).toEqual(['C', 'b1', 'c2']);
     });
 });
+
+describe('Table Shift 范围选择', () => {
+    const rows = ['1', '2', '3', '4', '5'].map((key) => ({ key, name: `row ${key}` }));
+    const columns = [{ title: 'Name', dataIndex: 'name' }];
+    const getCheckbox = (key: string) => within(document.querySelector<HTMLElement>(`tr[data-row-key="${key}"]`)).getByRole('checkbox');
+    const getCheckedKeys = () => rows.map(({ key }) => key).filter((key) => (getCheckbox(key) as HTMLInputElement).checked);
+
+    const setup = (props: Partial<TableProps> = {}, rowSelection: RowSelectionConfig = {}) => {
+        const onChange = vi.fn<SelectionChange>();
+        const onSelect = vi.fn<SelectChange>();
+        const user = userEvent.setup();
+        render(<Table columns={columns} dataSource={rows} pagination={false} {...props} rowSelection={{ onChange, onSelect, ...rowSelection }} />);
+        const shiftClick = async (element: Element) => {
+            await user.keyboard('{Shift>}');
+            await user.click(element);
+            await user.keyboard('{/Shift}');
+        };
+        return { onChange, onSelect, user, shiftClick };
+    };
+
+    it('从锚点 Shift 点击到目标行，选中之间的全部行，只触发一次 onChange', async () => {
+        const { onChange, onSelect, user, shiftClick } = setup();
+        await user.click(getCheckbox('2'));
+        await shiftClick(getCheckbox('4'));
+        expect(getCheckedKeys()).toEqual(['2', '3', '4']);
+        expect(onChange).toHaveBeenCalledTimes(2);
+        expect(onChange.mock.lastCall[0]).toEqual(['2', '3', '4']);
+        expect(onChange.mock.lastCall[1]).toEqual([rows[1], rows[2], rows[3]]);
+        expect(onSelect).toHaveBeenCalledTimes(1);
+    });
+
+    it('锚点固定，再次 Shift 点击替换上一段范围，范围外原有的选择不变', async () => {
+        const { user, shiftClick } = setup({}, { defaultSelectedRowKeys: ['5'] });
+        await user.click(getCheckbox('2'));
+        await shiftClick(getCheckbox('4'));
+        await shiftClick(getCheckbox('1'));
+        expect(getCheckedKeys()).toEqual(['1', '2', '5']);
+    });
+
+    it('锚点未选中时，Shift 点击取消范围内的选择', async () => {
+        const { user, shiftClick } = setup({}, { defaultSelectedRowKeys: ['1', '2', '3', '4', '5'] });
+        await user.click(getCheckbox('2'));
+        await shiftClick(getCheckbox('4'));
+        expect(getCheckedKeys()).toEqual(['1', '5']);
+    });
+
+    it('范围跳过禁用的行', async () => {
+        const { user, shiftClick } = setup({}, { getCheckboxProps: (record) => ({ disabled: record.key === '3' }) });
+        await user.click(getCheckbox('1'));
+        await shiftClick(getCheckbox('5'));
+        expect(getCheckedKeys()).toEqual(['1', '2', '4', '5']);
+    });
+
+    it('没有锚点时 Shift 点击按普通点击切换', async () => {
+        const { onSelect, shiftClick } = setup();
+        await shiftClick(getCheckbox('3'));
+        expect(getCheckedKeys()).toEqual(['3']);
+        expect(onSelect).toHaveBeenCalledTimes(1);
+    });
+
+    it('clickRow 时 Shift 点击行同样选中范围', async () => {
+        const { user, shiftClick } = setup({}, { clickRow: true });
+        await user.click(screen.getByText('row 1'));
+        await shiftClick(screen.getByText('row 3'));
+        expect(getCheckedKeys()).toEqual(['1', '2', '3']);
+    });
+
+    it('受控时只通知 onChange，显示仍由 selectedRowKeys 决定', async () => {
+        const { onChange, user, shiftClick } = setup({}, { selectedRowKeys: ['1'] });
+        await user.click(getCheckbox('1'));
+        await shiftClick(getCheckbox('3'));
+        expect(onChange.mock.lastCall[0]).toEqual(['1', '2', '3']);
+        expect(getCheckedKeys()).toEqual(['1']);
+    });
+
+    it('选择在别处被改过后，Shift 点击基于改后的选择，不恢复已清掉的行', async () => {
+        function ControlledTable() {
+            const [keys, setKeys] = useState<(string | number)[]>([]);
+            return (
+                <>
+                    <button type="button" onClick={() => setKeys([])}>
+                        clear
+                    </button>
+                    <Table columns={columns} dataSource={rows} pagination={false} rowSelection={{ selectedRowKeys: keys, onChange: (selectedRowKeys) => setKeys(selectedRowKeys) }} />
+                </>
+            );
+        }
+        const user = userEvent.setup();
+        render(<ControlledTable />);
+        await user.click(getCheckbox('1'));
+        await user.keyboard('{Shift>}');
+        await user.click(getCheckbox('3'));
+        await user.keyboard('{/Shift}');
+        expect(getCheckedKeys()).toEqual(['1', '2', '3']);
+        await user.click(screen.getByRole('button', { name: 'clear' }));
+        await user.keyboard('{Shift>}');
+        await user.click(getCheckbox('2'));
+        await user.keyboard('{/Shift}');
+        expect(getCheckedKeys()).toEqual([]);
+    });
+
+    it('范围不含收起的子行', async () => {
+        const treeRows = [{ key: '1', name: 'row 1', children: [{ key: '1-1', name: 'row 1-1' }] }, ...rows.slice(1, 3)];
+        const { onChange, user, shiftClick } = setup({ dataSource: treeRows });
+        await user.click(getCheckbox('1'));
+        await shiftClick(getCheckbox('3'));
+        expect(onChange.mock.lastCall[0]).toEqual(['1', '2', '3']);
+    });
+
+    it('锚点不在当前页时，Shift 点击按普通点击切换', async () => {
+        const { onChange, user, shiftClick } = setup({ pagination: { pageSize: 2 } });
+        await user.click(getCheckbox('1'));
+        await user.click(screen.getByRole('button', { name: zh_CN.Pagination.pageN.replace('${page}', '2') }));
+        await shiftClick(getCheckbox('4'));
+        expect(onChange.mock.lastCall[0]).toEqual(['1', '4']);
+    });
+
+    it("checkRelation 为 'related' 时 Shift 点击按普通点击切换", async () => {
+        const { onChange, user, shiftClick } = setup({}, { checkRelation: 'related' });
+        await user.click(getCheckbox('1'));
+        await shiftClick(getCheckbox('3'));
+        expect(onChange.mock.lastCall[0]).toEqual(['1', '3']);
+    });
+});

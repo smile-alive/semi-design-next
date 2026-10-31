@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { Button, Notification } from '@fibrae/semi-ui-react';
+import { mouse } from '@test/utils/browser';
 
 const prefix = `${BASE_CLASS_PREFIX}-notification`;
 const TitleContext = createContext<{ title?: string }>({});
@@ -211,6 +212,8 @@ describe('Notification', () => {
         });
 
         it('底部堆叠时，通知从列表底边向上叠放，不超出视口', async () => {
+            // the pointer stays where earlier tests left it; a list mounted under it is hovered and its stack stays expanded
+            await mouse('move', 0, 0);
             render(<Demo />);
             for (const title of ['a', 'b']) {
                 await add(title, 0, { stack: 1, position: 'bottomRight' });

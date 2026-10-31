@@ -306,6 +306,7 @@ This feature can be turned on by passing in `rowSelection`.
 
 - Click the selection box in the header, and all rows in the `dataSource` that are not in the state of `disabled` will be selected. The callback function for selecting all rows is `onSelectAll`;
 - Clicking on the row selection box will select the current row. Its callback function is `onSelect`;
+- Shift+clicking a row's selection box (or the row itself with `clickRow`, or Shift+Space on the selection box) gives every visible row between the last row clicked without Shift (the anchor) and the current row the anchor's selected state, skipping disabled rows. While the anchor stays, another Shift+click replaces the previous range and leaves the selection outside it unchanged. The range stays within the current page; when the anchor is not on the current page or `checkRelation` is `'related'`, the click acts as a plain click. A range selection calls `onChange` once and does not call `onSelect`;
 
 <Framework only="react">
 

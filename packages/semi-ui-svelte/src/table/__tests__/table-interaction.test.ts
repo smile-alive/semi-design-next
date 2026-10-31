@@ -1,5 +1,5 @@
 import { flushSync, tick } from 'svelte';
-import { render } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import type { ColumnProps, RowSelectionOnChange, TableChangeInfo } from '../interface';
@@ -170,6 +170,25 @@ describe('Svelte Table 行选择', () => {
         expect(cells[0].dataset.header).toBe('true');
         await click(getRowCheckboxInputs()[0]);
         expect(queryAll('.custom-selection')[1].dataset.selected).toBe('true');
+    });
+
+    it('Shift 点击复选框选中锚点到目标之间的行', async () => {
+        const onChange = vi.fn<RowSelectionOnChange>();
+        mountTable({ columns: getColumns(), dataSource: getData(), pagination: false, rowSelection: { onChange } });
+        await click(getRowCheckboxInputs()[0]);
+        await fireEvent.click(getRowCheckboxInputs()[2], { shiftKey: true });
+        flushSync();
+        expect(onChange.mock.lastCall?.[0]).toEqual(['1', '2', '3']);
+        expect(getRowCheckboxInputs().map((input) => input.checked)).toEqual([true, true, true, false]);
+    });
+
+    it('clickRow 时 Shift 点击行选中范围', async () => {
+        const onChange = vi.fn<RowSelectionOnChange>();
+        mountTable({ columns: getColumns(), dataSource: getData(), pagination: false, rowSelection: { clickRow: true, onChange } });
+        await click(getBodyRows()[3]);
+        await fireEvent.click(getBodyRows()[1], { shiftKey: true });
+        flushSync();
+        expect(onChange.mock.lastCall?.[0]).toEqual(['4', '2', '3']);
     });
 });
 

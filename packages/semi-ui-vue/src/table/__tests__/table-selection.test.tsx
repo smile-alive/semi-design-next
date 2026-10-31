@@ -646,3 +646,37 @@ describe('Table checkRelation related 的半选随选中的 key 推导', () => {
         expect(onChange.mock.lastCall?.[0]).toEqual([1, 2, 3]);
     });
 });
+
+describe('Table Shift 范围选择', () => {
+    const mountRows = (rowSelection: RowSelectionProps) =>
+        mountTable({
+            columns: [{ title: 'Name', dataIndex: 'name' }],
+            dataSource: ['1', '2', '3', '4'].map((key) => ({ key, name: `row ${key}` })),
+            pagination: false,
+            rowSelection,
+        });
+    const shiftClick = async (user: ReturnType<typeof userEvent.setup>, element: Element) => {
+        await user.keyboard('{Shift>}');
+        await user.click(element);
+        await user.keyboard('{/Shift}');
+    };
+
+    it('Shift 点击复选框选中锚点到目标之间的行', async () => {
+        const onChange = vi.fn<Selection['onChange']>();
+        const user = userEvent.setup();
+        mountRows({ onChange });
+        const checkboxes = screen.getAllByRole('checkbox');
+        await user.click(checkboxes[1]);
+        await shiftClick(user, checkboxes[3]);
+        expect(onChange.mock.lastCall?.[0]).toEqual(['1', '2', '3']);
+    });
+
+    it('clickRow 时 Shift 点击行选中范围', async () => {
+        const onChange = vi.fn<Selection['onChange']>();
+        const user = userEvent.setup();
+        mountRows({ clickRow: true, onChange });
+        await user.click(screen.getByText('row 4'));
+        await shiftClick(user, screen.getByText('row 2'));
+        expect(onChange.mock.lastCall?.[0]).toEqual(['4', '2', '3']);
+    });
+});
