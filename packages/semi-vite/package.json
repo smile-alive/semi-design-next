@@ -1,6 +1,6 @@
 {
     "name": "@fibrae/semi-vite-plugin",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "A vite plugin for Semi Design Next to custom theme, replace prefix and so on.",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",
