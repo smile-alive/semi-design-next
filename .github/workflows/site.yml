@@ -27,7 +27,7 @@ jobs:
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v5
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             - run: pnpm site:build

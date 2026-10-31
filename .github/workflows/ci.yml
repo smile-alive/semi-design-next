@@ -23,7 +23,7 @@ jobs:
         timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v5
             - run: pnpm install --frozen-lockfile
             - run: pnpm format:check
             - run: pnpm build
@@ -34,7 +34,7 @@ jobs:
         timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v5
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             - run: pnpm typecheck
@@ -48,7 +48,7 @@ jobs:
                 shard: [1, 2, 3, 4, 5, 6]
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v5
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             # `pnpm check` also runs the browser projects; those run in browser.yml, so this job runs the jsdom and node ones

@@ -19,12 +19,12 @@ jobs:
                 project: [react, vue, solid, svelte, common]
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v5
             - run: pnpm install --frozen-lockfile
             - id: playwright
               run: echo "version=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
             - id: browsers
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: ~/.cache/ms-playwright
                   key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
@@ -36,7 +36,7 @@ jobs:
             - run: pnpm build
             - run: pnpm exec vp test run --project '${{ matrix.project }}*-browser'
             - if: failure()
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: screenshots-${{ matrix.project }}
                   path: tmp/vitest
