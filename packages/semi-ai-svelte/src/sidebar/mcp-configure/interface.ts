@@ -12,7 +12,6 @@ export interface MCPConfigureOption extends MCPOption {
 export interface MCPConfigureItemSnippetProps {
     item: MCPConfigureOption;
     index: number;
-    /** Whether the custom list is shown */
     custom: boolean;
 }
 
@@ -32,7 +31,6 @@ export interface MCPConfigureContentProps {
     onEditClick?: (event: MouseEvent, option: MCPConfigureOption) => void;
     icon?: Snippet<[MCPConfigureItemSnippetProps]>;
     desc?: Snippet<[MCPConfigureItemSnippetProps]>;
-    /** Replaces the whole built-in row */
     item?: Snippet<[MCPConfigureItemSnippetProps]>;
 }
 

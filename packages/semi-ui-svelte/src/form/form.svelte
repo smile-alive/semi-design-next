@@ -53,7 +53,6 @@
     const uid = $props.id();
     let formElement = $state<HTMLFormElement>();
 
-    // The props with their defaults resolved: the foundation reads them through getProps, the fields through the context
     const formProps: FormProps<Values> = {
         get initValues() {
             return initValues;

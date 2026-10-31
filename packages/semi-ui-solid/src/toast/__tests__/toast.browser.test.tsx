@@ -47,7 +47,6 @@ describe('Toast', () => {
         // The demo closes the fifth toast 100ms after opening it; fake timers keep the click from racing that close
         vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
         await userEvent.click(screen.getByRole('button', { name: 'Hook Toast' }));
-        // The hook renders toasts under the caller's owner, so function content reads the caller's context
         expect(toasts()[0]).toHaveTextContent('ReachableContext: Light');
         expect(toasts()).toHaveLength(5);
         vi.advanceTimersByTime(99);
@@ -81,7 +80,6 @@ describe('Toast', () => {
         const contentTop = content.getBoundingClientRect().top;
 
         await userEvent.click(first.querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement);
-        // seek the paused leave animation instead of sleeping, so frame timing cannot skew the samples
         const leave = await waitFor(() => {
             const animations = first.getAnimations({ subtree: true });
             expect(animations.some((a) => (a as CSSAnimation).animationName.includes('hide'))).toBe(true);
@@ -107,8 +105,6 @@ describe('Toast', () => {
         const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-zero-height-wrapper > .${prefix}`)];
         await waitFor(() => expect(toasts()).toHaveLength(2));
         const [first, second] = toasts();
-        // hovering the stack expands it, as it is when the pointer reaches a close button; collapsed, the toasts
-        // overlap and the newest one is in front
         await userEvent.hover(second.querySelector(`.${prefix}-content`) as HTMLElement);
         const wrappers = toasts().map((t) => t.parentElement as HTMLElement);
         await waitFor(() => expect(wrappers[0].getBoundingClientRect().height).toBeGreaterThan(0));
@@ -116,7 +112,6 @@ describe('Toast', () => {
         const firstTop = first.getBoundingClientRect().top;
 
         await userEvent.click(first.querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement);
-        // the wrapper's height transition is what moves the stack; seek it paused at the end of the leave
         const transition = await waitFor(() => {
             const animation = wrappers[0].getAnimations()[0];
             expect(animation).toBeDefined();
@@ -134,7 +129,6 @@ describe('Toast', () => {
         const toast = ToastFactory.create();
         onTestFinished(() => toast.destroyAll());
         const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-zero-height-wrapper > .${prefix}`)];
-        // the wrapper's height comes from a CSS class, so expanded state is checked through the class
         const expandedCls = `${prefix}-zero-height-wrapper-expanded`;
         const expandedStates = () => toasts().map((t) => (t.parentElement as HTMLElement).classList.contains(expandedCls));
         const ids = ['1', '2', '3'].map((content) => toast.info({ content, duration: 0, stack: true }));
@@ -171,7 +165,6 @@ describe('Toast', () => {
         wrapper.getAnimations().forEach((a) => a.finish());
         const content = (toastEl() as HTMLElement).querySelector<HTMLElement>(`.${prefix}-content`) as HTMLElement;
         const contentStyle = getComputedStyle(content);
-        // the content carries the toast's visual margin; the wrapper must open wide enough to include it
         const marginBoxHeight = content.getBoundingClientRect().height + parseFloat(contentStyle.marginTop) + parseFloat(contentStyle.marginBottom);
         await waitFor(() => expect(wrapper.getBoundingClientRect().height).toBeCloseTo(marginBoxHeight, 0));
     });
@@ -213,7 +206,6 @@ describe('Toast', () => {
         toast.info({ content: 'fourth', duration: 1, stack: 1 });
         await waitFor(() => expect(toasts()).toHaveLength(2));
         expect(list()).not.toHaveClass(`${prefix}-innerWrapper-hover`);
-        // timers run too: the pointer left, so nothing may keep them paused
         await waitFor(() => expect(toasts()).toHaveLength(0), { timeout: 3000 });
     });
 
@@ -228,7 +220,6 @@ describe('Toast', () => {
         toast.close(first);
         await waitFor(() => expect(toasts()).toHaveLength(0));
 
-        // the next toast is placed away from the pointer, so only a stale hovered flag could keep it open
         toast.info({ content: 'next', duration: 1, style: { position: 'fixed', 'inset-block-start': '600px' } });
         await waitFor(() => expect(toasts()).toHaveLength(1));
         await waitFor(() => expect(toasts()).toHaveLength(0), { timeout: 3000 });
@@ -275,7 +266,6 @@ describe('Toast', () => {
             (shadow.querySelector(`.${prefix}-close-button .${BASE_CLASS_PREFIX}-button`) as HTMLElement).focus();
             api.info({ content: 'second', duration: 0 });
             await waitFor(() => expect(toasts()).toHaveLength(2));
-            // asserting that nothing closes needs a fixed wait longer than the duration
             await new Promise((resolve) => setTimeout(resolve, 1500));
             expect(toasts()).toHaveLength(2);
         } finally {

@@ -2,7 +2,6 @@ import { createContext } from '../_base/create-context.js';
 import { getPopupLayerContext } from '../_base/popup-layer.js';
 import type { InputSize } from './interface.js';
 
-/** What an InputGroup hands to the controls inside it; read through the getters so group changes stay reactive */
 export interface InputGroupContextValue {
     /** Undefined when the group sets none, so a control falls back to the global default */
     readonly size?: InputSize;

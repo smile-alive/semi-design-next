@@ -206,7 +206,6 @@ describe('Transfer（浏览器）', () => {
         const totals = [...container.querySelectorAll<HTMLElement>(`.${prefixCls}-header-total`)];
         const [roomy, narrow] = [totals.slice(0, 2), totals.slice(2)];
         expect(narrow.map((el) => el.getBoundingClientRect().height)).toEqual(roomy.map((el) => el.getBoundingClientRect().height));
-        // only the source panel's header is too narrow for its count
         expect(narrow[0].scrollWidth).toBeGreaterThan(narrow[0].clientWidth);
     });
 });

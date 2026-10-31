@@ -54,7 +54,6 @@ describe('Descriptions（浏览器）', () => {
         const own = container.querySelector('[data-testid="own"]') as HTMLElement;
         expect(getComputedStyle(own.querySelector('tbody') as HTMLElement).display).toBe('table-row-group');
         expect(getComputedStyle(own.querySelector('tr') as HTMLElement).display).toBe('table-row');
-        // the UA padding of a td survives
         expect(getComputedStyle(own.querySelector('td') as HTMLElement).paddingTop).toBe('1px');
     });
 });

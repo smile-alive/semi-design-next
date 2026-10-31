@@ -9,7 +9,6 @@ describe('Svelte Collapse（浏览器）', () => {
     it('可滚动内容获得键盘焦点时显示主题焦点环', async () => {
         const { container } = render(Tall);
         const content = container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-content`) as HTMLElement;
-        // consumers such as Sidebar cap the height and let the content scroll
         content.style.cssText = 'max-height: 40px; overflow: auto';
         await tabTo(content);
         expectThemeFocusRing(content);

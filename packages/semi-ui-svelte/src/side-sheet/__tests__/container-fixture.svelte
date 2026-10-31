@@ -2,7 +2,6 @@
     import ConfigProvider from '../../config-provider/config-provider.svelte';
     import SideSheet from '../side-sheet.svelte';
 
-    // `config` puts the container on ConfigProvider; `own` adds a getPopupContainer on the sheet that wins over it
     let { visible = true, config = false, own }: { visible?: boolean; config?: boolean; own?: () => HTMLElement } = $props();
 
     let container = $state.raw<HTMLDivElement | null>(null);

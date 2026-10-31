@@ -65,7 +65,6 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     onCancel?: (event: MouseEvent | KeyboardEvent) => unknown;
     /** A returned Promise keeps the ok button loading until it settles; closing is the caller's job. */
     onOk?: (event: MouseEvent) => unknown;
-    /** Plain text or a snippet. */
     title?: string | Snippet;
     /** A snippet replaces the default header (title, icon, close button); null renders no header. */
     header?: Snippet | null;
@@ -78,10 +77,8 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     role?: 'dialog' | 'alertdialog';
 }
 
-/** A text, or a snippet rendered where the option belongs */
 export type ModalNode = string | Snippet;
 
-/** Options of Modal.confirm/info/success/warning/error and of the useModal methods */
 export interface ModalConfirmProps extends Omit<ModalProps, 'title' | 'visible' | 'header' | 'footer' | 'icon' | 'closeIcon' | 'children'> {
     title?: ModalNode;
     content?: ModalNode;
@@ -99,9 +96,7 @@ export interface ModalConfirmProps extends Omit<ModalProps, 'title' | 'visible' 
 }
 
 export interface ModalHookRef {
-    /** Closes the dialog through its leave animation */
     destroy: () => void;
-    /** Merges into the dialog's current options */
     update: (config: ModalConfirmProps) => void;
 }
 
@@ -113,7 +108,6 @@ export interface ModalHookApi {
     confirm: (config: ModalConfirmProps) => ModalHookRef;
 }
 
-/** A confirm's options with its type, as ConfirmModal receives them */
 export interface ConfirmProps extends ModalConfirmProps {
     type: ConfirmType;
 }

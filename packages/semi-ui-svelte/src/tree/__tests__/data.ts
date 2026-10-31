@@ -6,7 +6,6 @@ import type { TreeNodeData, TreeProps } from '../interface';
 
 type Callback<K extends keyof TreeProps> = Extract<NonNullable<TreeProps[K]>, (...args: never[]) => unknown>;
 
-/** A spy typed as the Tree callback prop `name` */
 export const spyOn = <K extends keyof TreeProps>(_name: K) => vi.fn<Callback<K>>();
 
 export const treeData: TreeNodeData[] = [

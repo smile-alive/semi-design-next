@@ -1,13 +1,11 @@
 <script lang="ts" module>
     import type { ColumnProps } from './interface.js';
 
-    /** What every level of one column's filter menu shares */
     export interface FilterMenuState {
         column: ColumnProps;
         filterMultiple: boolean;
         confirmMode: boolean;
         filteredValue: any[];
-        /** The value picked and not applied yet, in confirm mode */
         tempFilteredValue?: any[];
         filterDropdownProps: ColumnProps['filterDropdownProps'];
         setTemp: (value: any[]) => void;
@@ -35,7 +33,6 @@
 
     interface ColumnFilterMenuProps {
         filters: TableFilter[];
-        /** The depth of the menu, 0 for the top menu */
         level: number;
         state: FilterMenuState;
     }

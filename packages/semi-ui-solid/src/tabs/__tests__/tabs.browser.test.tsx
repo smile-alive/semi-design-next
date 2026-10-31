@@ -457,10 +457,8 @@ describe('Tabs 折叠（浏览器）', () => {
             let changes = 0;
             const observer = new MutationObserver(() => changes++);
             observer.observe(bar, { attributes: true, attributeFilter: ['class'] });
-            // the last tab is partly clipped: activating it scrolls it into view
             await userEvent.click(screen.getByRole('tab', { name: /^a very long tab title/ }));
             await sleep(400);
-            // back at the start every tab is at least 75% visible again
             await userEvent.click(screen.getByRole('tab', { name: 'tab-title-a' }));
             await sleep(400);
             observer.disconnect();

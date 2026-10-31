@@ -55,7 +55,6 @@
     const replaceShown = $derived(!disabled && file.status === strings.FILE_STATUS_SUCCESS && Boolean(replaceEnabled));
     const failed = $derived(file.status === strings.FILE_STATUS_VALID_FAIL || file.status === strings.FILE_STATUS_UPLOAD_FAIL);
 
-    // an item built by hand may carry the byte count
     const size = $derived.by(() => {
         const value: string | number = file.size;
         return typeof value === 'number' ? getFileSize(value) : value;

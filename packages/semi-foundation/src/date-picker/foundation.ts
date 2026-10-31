@@ -42,9 +42,6 @@ export type DayStatusType = {
 export type DisabledDateOptions = {
     rangeStart?: string;
     rangeEnd?: string;
-    /**
-     * current select of range type
-     */
     rangeInputFocus?: 'rangeStart' | 'rangeEnd' | false;
 };
 
@@ -163,10 +160,7 @@ export interface DatePickerFoundationProps extends ElementProps, RenderProps, Ev
     /** filled by the framework from the LocaleProvider, not a component prop */
     dateFnsLocale?: any;
     rangeSeparator?: string;
-    /**
-     * Only for UI render. Keep `semi-foundation` framework-agnostic (no React types).
-     * `semi-ui-react` layer should declare this as `React.ReactNode`.
-     */
+    /** `any` keeps the foundation framework-agnostic; each framework package declares its own node type */
     rangeSeparatorNode?: any;
     insetInput?: DateInputFoundationProps['insetInput'];
     preventScroll?: boolean;
@@ -175,7 +169,7 @@ export interface DatePickerFoundationProps extends ElementProps, RenderProps, Ev
 export interface DatePickerFoundationState {
     panelShow: boolean;
     isRange: boolean;
-    /** value of trigger input; `null` while the input shows the formatted value */
+    /** `null` while the input shows the formatted value */
     inputValue: string | null;
     value: Date[];
     cachedSelectedValue: (Date | null)[];
@@ -183,7 +177,6 @@ export interface DatePickerFoundationState {
     /** `undefined` until a range input is focused or the value is set */
     rangeInputFocus?: RangeInput | false;
     autofocus: boolean;
-    /** value of inset input */
     insetInputValue: InsetInputValue | null;
     triggerDisabled: boolean | null;
     /** which range inputs have been focused since the panel opened; a range closes once both have */
@@ -222,10 +215,6 @@ export interface DatePickerAdapter extends DefaultAdapter<DatePickerFoundationPr
     blurFocusedElement: () => void;
 }
 
-/**
- * Keeps the date value and the input text in sync: a selected date updates the input text, and a valid input text
- * updates the date value; both notify the change.
- */
 export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState> {
     #focusRecordTimers = new Set<ReturnType<typeof setTimeout>>();
     // StrictMode and React Activity replay init on this instance after destroy, over a value and panel the user may
@@ -414,7 +403,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         return DatePickerFoundation.isPanelShown(this.getProps(), this.getStates());
     }
 
-    // An empty value resets the range focus to rangeStart so the user can start over after clearing
     #shouldFocusRangeStart(result: Date[]) {
         return this.#isRangeType() && typeof this.getProp('triggerRender') === 'function' && result.length === 0;
     }
@@ -425,7 +413,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         }
     }
 
-    // undefined: neither value nor defaultValue is given, so there is nothing to resolve
     #getInitialValue() {
         return this.isControlledComponent() ? this.getProp('value') : this.getProp('defaultValue');
     }
@@ -439,7 +426,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.adapter.togglePanel(Boolean((this.getProp('open') || defaultOpen) && !this.getProp('disabled')));
     }
 
-    // A click on the trigger of a shown panel is no request to open it
     #openPanel() {
         if (!this.getProp('disabled') && !this.#isPanelShown()) {
             if (!this.isControlledComponent('open')) {
@@ -473,17 +459,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.adapter.updateInsetInputValue(null);
     }
 
-    /**
-     * Parses a multiple input part by part with `parse`; an empty or unparsable part, or more than `max` dates,
-     * gives `[]`. `parseInputLoose` as `parse` keeps `null` for a half typed date.
-     *
-     * @example
-     * ```javascript
-     * this.#parseMultipleInput('2021-01-01,2021-10-15', parseInputLoose); // [Date, Date];
-     * this.#parseMultipleInput('2021-01-01,2021-10-', parseInputLoose); // [Date, null];
-     * this.#parseMultipleInput('', parseInputLoose); // [];
-     * ```
-     */
     #parseMultipleInput(input: string, parse: (part: string) => Array<Date | null>, { needDedupe = false }: { needDedupe?: boolean } = {}) {
         const max = this.getProp('max');
         const result: Array<Date | null> = [];
@@ -724,10 +699,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         return (props.open !== undefined ? Boolean(props.open) : Boolean(state.panelShow)) && !props.disabled;
     }
 
-    /**
-     * The props derived from others. The rtl default of `position` stays with the
-     * frameworks, which read the direction from their config.
-     */
+    /** The rtl default of `position` stays with the frameworks, which read the direction from their config. */
     static normalizeProps<P extends string = Position>({
         type,
         format,
@@ -755,7 +727,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
      * than `getProp` and `getProps`.
      *
      * @param props the props with the defaults applied and `timeZone` resolved from the ConfigProvider
-     * @returns `value`, `cachedSelectedValue`, `rangeInputFocus`, `inputValue` and `prevTimeZone`
      */
     static getInitialState(props: DatePickerFoundationProps): Pick<DatePickerFoundationState, 'value' | 'cachedSelectedValue' | 'rangeInputFocus' | 'inputValue' | 'prevTimeZone'> {
         // shortcut: the constructor wants a whole adapter, so the two getters are asserted into one; upgrade by making
@@ -916,7 +887,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         return this.getState('focusRecords')[currentRangeInput === 'rangeStart' ? 'rangeEnd' : 'rangeStart'];
     };
 
-    // A valid date (or empty) updates the panel value; otherwise only the input text changes
     handleInputChange = (input: string, e: unknown) => {
         const result = this.#isMultiple() ? this.#parseMultipleInput(input, (part) => this.parseInput(part)) : this.parseInput(input);
         const { value: stateValue } = this.getStates();
@@ -939,9 +909,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         }
     };
 
-    /**
-     * Always updates insetInputValue; inputValue and value are updated only when the text parses to a valid date.
-     */
     handleInsetInputChange = ({ insetInputStr, format, insetInputValue }: { insetInputStr: string; format: string; insetInputValue: InsetInputValue }) => {
         const _isMultiple = this.#isMultiple();
         const result = _isMultiple ? this.#parseMultipleInput(insetInputStr, (part) => this.parseInput(part, format)) : this.parseInput(insetInputStr, format);
@@ -1006,7 +973,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.adapter.notifyClear(e);
     };
 
-    // Parses input only after user returns
     handleInputComplete = (input: string = '') => {
         let parsedResult = input ? (this.#isMultiple() ? this.#parseMultipleInput(input, (part) => this.parseInput(part), { needDedupe: true }) : this.parseInput(input)) : [];
 
@@ -1018,7 +984,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             return;
         }
 
-        // Fall back to the current date when both the input and the previous value are empty
         if (!parsedResult || !parsedResult.length) {
             const nowDate = new Date();
             const type = this.getProp('type');
@@ -1037,7 +1002,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             }
         }
 
-        // Captured before the update below so the change check compares against the old value
         const { value: stateValue } = this.getStates();
         this.#updateValueAndInput(parsedResult);
         const changedDates = this.#getChangedDates(parsedResult);
@@ -1130,7 +1094,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         if (this.#needConfirm() && !this.isControlledComponent()) {
             this.adapter.updateValue(newValue);
         }
-        // An incomplete input falls back to the last valid value
         this.closePanel();
 
         if (isComplete) {
@@ -1155,7 +1118,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         let value;
         switch (type) {
             case 'year':
-                // A year or a month is held as its first day at 00:00, as typing or picking it gives
                 value = this.parseWithTimezone([start], timeZone).map((date) => new Date(date.getFullYear(), 0));
                 this.handleSelectedChange(value);
                 break;
@@ -1188,7 +1150,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     };
 
     /**
-     * Opens the panel on trigger click and, for range types, focuses rangeStart when no range input is focused.
      * Non-range triggers are native inputs that already handle focus. isEventTarget tells a click on the input
      * wrapper itself from one bubbled up from a child, which already handled focus.
      */
@@ -1243,7 +1204,6 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             if (this.getProp('insetInput')) {
                 this.adapter.setInsetInputFocus();
             }
-            // The trigger input is disabled while the panel is open
             this.adapter.setTriggerDisabled(true);
         } else {
             this.adapter.setTriggerDisabled(false);

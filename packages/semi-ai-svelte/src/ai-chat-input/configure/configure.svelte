@@ -26,7 +26,6 @@
         },
     });
 
-    /** The current value of every item */
     export function getConfigureValue(): ReturnType<ConfigureHandle['getConfigureValue']> {
         return value;
     }

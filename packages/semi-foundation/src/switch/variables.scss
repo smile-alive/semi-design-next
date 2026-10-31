@@ -1,6 +1,6 @@
 @use 'semi:theme' as *;
 @use '../base/mixin' as *;
-// Other
+
 $spacing-switch_unchecked-translateX: 2px; // 未选中态开关滑块位移距离
 $spacing-switch_spin_unchecked-translateX: 2px; // 未选中态加载图标位移距离
 $spacing-switch_checked-translateX: 18px; // 选中态开关滑块位移距离
@@ -17,7 +17,6 @@ $spacing-switch_checked_small-translateX: 11px; // 小尺寸选中态开关滑�
 $spacing-switch_spin_checked_small-translateX: 10px; // 小尺寸选中态加载图标位移距离
 $motion-switch-transitionDuration: 200ms; // 开关动画时长
 
-// Color
 $color-switch_default-bg-default: var(--semi-color-fill-0); // 关闭态(未选中)开关背景色 - 默认
 $color-switch_default-bg-hover: var(--semi-color-fill-1); // 关闭态开关背景色 - 悬浮
 $color-switch_default-bg-active: var(--semi-color-fill-2); // 关闭态开关背景色 - 按下
@@ -42,7 +41,6 @@ $color-switch_spin_checked-bg-default: var(--semi-color-success-hover); // 已�
 $color-switch_spin_unchecked-bg-default: var(--semi-color-fill-1); // 已关闭开关加载态loading背景颜色
 $color-switch_primary-outline-focus: $color-focus-ring; // 开关轮廓 - 聚焦
 
-// Width/Height
 $width-switch: 40px; // 开关宽度
 $height-switch: 24px; // 开关高度
 $width-switch_knob_expand: 6px; // 开关滑块按压时延展宽度
@@ -63,13 +61,11 @@ $width-switch_spin-default: 18px; // 默认尺寸开关加载 spin 宽度
 $width-switch_spin-large: 28px; // 大尺寸开关加载 spin 宽度
 $width-switch-outline: $width-focus-ring; // 开关轮廓宽度
 
-// Spacing
 $spacing-switch_knob-padding: 2px; // 开关滑块顶部边距
 $spacing-switch_knob_large-padding: 3px; // 大尺寸开关滑块顶部边距
 $spacing-switch_knob_small-padding: 1px; // 小尺寸开关滑块顶部边距
 $spacing-switch_knob-left: 0px; // 开关滑块左侧偏移距离
 
-// Radius
 $radius-switch: $height-switch * 0.5; // 开关圆角
 $radius-switch_large: $height-switch_large * 0.5; // 大尺寸开关圆角
 $radius-switch_small: $height-switch_small * 0.5; // 小尺寸开关圆角

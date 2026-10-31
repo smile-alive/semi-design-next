@@ -14,7 +14,6 @@ export function iconAttrs(node: VNode, size: string, className?: string): Record
     return { class: className, ...(elementType(node) === 'Icon' && node.props?.size == null ? { size } : {}) };
 }
 
-/** A template writes item-key as well as itemKey */
 export function itemKeyOf(node: VNode): ItemKey | undefined {
     return node.props?.itemKey ?? node.props?.['item-key'];
 }

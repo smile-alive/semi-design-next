@@ -82,7 +82,6 @@ const lastArg = (spy: { mock: { calls: unknown[][] } }) => spy.mock.calls[spy.mo
 const thousands = (value: number | string) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const removeThousands = (value: string) => value.replace(/,/g, '');
 
-// A function ref receives the handle that defineExpose builds
 async function renderWithHandle(props: Props = {}) {
     let handle: InputNumberHandle | null = null;
     const view = render({

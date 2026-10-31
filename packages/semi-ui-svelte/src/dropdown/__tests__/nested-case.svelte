@@ -7,7 +7,6 @@
     interface Store {
         log: string[];
         direction?: 'ltr' | 'rtl';
-        // opens every level by `visible`, with no trigger events
         open: boolean;
         outerTrigger: 'click' | 'hover';
         innerTrigger: 'click' | 'hover';

@@ -51,9 +51,9 @@ export interface VirtualListProps<T> extends Omit<React.ComponentProps<'div'>, '
 }
 
 /**
- * Fixed or per-row-height vertical list that renders only the rows in view. Lists whose rows take no focus (Tree,
- * TreeSelect, Cascader, Select) pass `tabIndex={-1}`: Chrome would otherwise make the scroll container a tab stop of
- * its own, while the widget, which scrolls the active row into view, is the only stop.
+ * Lists whose rows take no focus (Tree, TreeSelect, Cascader, Select) pass `tabIndex={-1}`: Chrome would otherwise
+ * make the scroll container a tab stop of its own, while the widget, which scrolls the active row into view, is the
+ * only stop.
  */
 export default function VirtualList<T>({ ref, outerRef, height, width = '100%', itemCount, itemSize, itemData, itemKey, overscan = 2, outerElementType: Outer = 'div', innerElementType: Inner = 'div', onScroll, children: Row, style, ...rest }: VirtualListProps<T>) {
     // useVirtualizer returns one mutable instance for the component's life; memoized reads of it would go stale

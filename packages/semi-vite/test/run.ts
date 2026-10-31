@@ -235,7 +235,7 @@ console.log('\n== server 环境的 noExternal ==');
         assert.ok(!pattern.test(id), `${id} 保持 external`);
     }
 
-    // foundation 持有 BASE_CLASS_PREFIX：设了 prefixCls 时必须打进服务端产物，类名才与客户端一致
+    // foundation owns BASE_CLASS_PREFIX, so with prefixCls it must be bundled into the server build for class names to match the client
     const prefixed = await resolveConfig({ root: fixture, configFile: false, logLevel: 'error', plugins: [semiTheming({ prefixCls: 'my' })], environments: { ssr: {}, browser: { consumer: 'client' } } }, 'build');
     const [, foundation] = prefixed.environments.ssr.resolve.noExternal as RegExp[];
     assert.ok(foundation instanceof RegExp, 'prefixCls 时 ssr 环境追加 foundation');
@@ -244,7 +244,7 @@ console.log('\n== server 环境的 noExternal ==');
     }
     assert.deepStrictEqual(prefixed.environments.browser.resolve.noExternal, [], 'prefixCls 时客户端环境仍不设 noExternal');
 
-    // vite-plugin-solid 在 dev 中把 foundation 写进 ssr 的 resolve.external，Vite 先查 external 再查 noExternal
+    // in dev vite-plugin-solid adds foundation to ssr resolve.external, and Vite checks external before noExternal
     const solidLike: PluginOption = {
         name: 'solid-like-external',
         enforce: 'pre',

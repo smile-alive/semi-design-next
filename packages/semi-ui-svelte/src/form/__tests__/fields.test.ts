@@ -169,11 +169,8 @@ const uploaded = { uid: '1', name: 'init.txt', status: 'success', url: '' };
 interface FieldCase {
     type: string;
     props?: Record<string, unknown>;
-    /** A value to start from, other than the one `change` produces */
     init: unknown;
-    /** Makes the control report a new value through its own change */
     change: () => Promise<unknown>;
-    /** The form value the change leaves without an initValue */
     value: unknown;
 }
 

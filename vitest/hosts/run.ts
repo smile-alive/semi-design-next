@@ -200,7 +200,6 @@ async function serve(step: ServerStep, cwd: string, env: NodeJS.ProcessEnv, log:
 }
 
 let browser: Browser | undefined;
-// Printed by --keep: each variant's app directory and its dev command
 const apps: string[] = [];
 
 async function runHost({ file, framework, name }: (typeof targets)[number], results: Result[]) {
@@ -257,7 +256,6 @@ async function runVariant(host: Host, hostName: string, variant: Variant, result
             } else if (failureText(detail, log).includes(entry.evidence)) {
                 result.status = 'XFAIL';
             } else {
-                // A failure for another reason must not be filed under this entry's issue
                 result.detail = `expected ${entry.issue} (${entry.evidence}) but it failed otherwise: ${detail}`;
             }
         }
@@ -452,7 +450,6 @@ if (broken.length > 0 || crashed) {
     console.log(`\n临时目录保留在 ${workDir}`);
     process.exitCode = 1;
 } else if (options.keep) {
-    // Commands resolve against the app's node_modules/.bin and start with the variant's env; replace {port} with a free port
     console.log(`\n临时目录保留在 ${workDir}\n在 app 目录中把 node_modules/.bin 放进 PATH 后执行 dev 命令（{port} 换成空闲端口）：\n${apps.join('\n')}`);
 } else {
     execFileSync('trash', [workDir]);

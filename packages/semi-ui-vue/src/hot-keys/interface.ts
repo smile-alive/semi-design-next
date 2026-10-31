@@ -3,7 +3,6 @@ import type { VNode } from 'vue';
 export interface HotKeysProps {
     /** Keys that must be pressed together: any number of modifiers and exactly one other key */
     hotKeys: KeyboardEvent['key'][];
-    /** Shown instead of `hotKeys` */
     content?: string[];
     preventDefault?: boolean;
     /** Element that listens for keydown; defaults to document.body */

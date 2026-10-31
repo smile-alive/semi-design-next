@@ -8,14 +8,12 @@
 
     interface FieldGridProps {
         label?: Snippet;
-        /** The main content: the control, its messages and extra text */
         children?: Snippet;
         mainClass?: ClassValue;
         labelAlign?: string;
         labelCol?: ColProps;
         wrapperCol?: ColProps;
         labelPosition?: string;
-        /** Wraps the columns in their own Row, for a field whose columns the Form does not set */
         row?: boolean;
     }
 

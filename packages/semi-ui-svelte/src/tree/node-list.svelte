@@ -9,10 +9,6 @@
     import type { FlattenNode, NodeListProps } from './interface.js';
     import NodeCollapsible from './node-collapsible.svelte';
 
-    /**
-     * The rows of Tree and TreeSelect. A virtualized list renders the rows in view; otherwise every row renders, with the
-     * ones that appear or disappear (motionKeys) grouped into one animated NodeCollapsible.
-     */
     let { flattenNodes, flattenList, motionKeys, motionType = null, motion, virtualize, itemKey, searchTargetIsDeep = false, children: renderRow }: NodeListProps = $props();
 
     const config = useConfig();

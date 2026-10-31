@@ -2,7 +2,6 @@ import { ENTER_KEY, isComposing } from './../utils/key-code';
 import { strings } from './constants';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 
-/** The props the foundation reads with getProps */
 export interface InputBaseProps extends TextEntryBaseProps {
     disabled?: boolean;
     autoFocus?: boolean;

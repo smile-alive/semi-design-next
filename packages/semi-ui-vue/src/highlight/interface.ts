@@ -20,6 +20,5 @@ export interface HighlightProps {
     /** Vue does not add `px` to numbers: write lengths as strings */
     highlightStyle?: CSSProperties;
     highlightClassName?: string;
-    /** Tag of each highlighted chunk */
     component?: string;
 }

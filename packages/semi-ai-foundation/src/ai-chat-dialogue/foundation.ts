@@ -22,7 +22,6 @@ export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps
     setBackBottomVisible: (visible: boolean) => void;
 }
 
-/** The props the foundation reads with getProps */
 export interface DialogueBaseProps {
     chats?: Message[];
 }
@@ -33,7 +32,6 @@ export interface DialogueBaseState {
 }
 
 export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBaseProps, S extends DialogueBaseState = DialogueBaseState> extends BaseFoundation<DialogueAdapter<P, S>, P, S> {
-    /** Cancels the running scroll animation */
     #cancelAnimation?: () => void;
     #scrollFrame?: number;
     /** Whether new content scrolls into view: stops when the user scrolls up, resumes on return or on a new message */
@@ -98,7 +96,6 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         }
     }
 
-    /** What decides the modifier classes of a message's content: whether it sits in a bubble, is the user's, or failed inside one */
     static getContentFlags(role?: string, status?: string, mode?: string) {
         const user = role === strings.ROLE.USER;
         const bubble = mode === strings.MODE.BUBBLE || (mode === strings.MODE.USER_BUBBLE && user);

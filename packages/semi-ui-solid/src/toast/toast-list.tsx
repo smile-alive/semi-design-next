@@ -14,7 +14,6 @@ import Toast, { type ToastProps } from './toast';
 
 const prefixCls = cssClasses.PREFIX;
 
-/** Renders the toasts of a store in display order */
 export default function ToastList(props: ToastListProps) {
     const [hovered, setHovered] = createSignal(false);
     const [focused, setFocused] = createSignal(false);
@@ -30,7 +29,6 @@ export default function ToastList(props: ToastListProps) {
 
     const [state, setState] = createSignal(store.getSnapshot());
 
-    // the store holds the options as given to Toast.info and the hooks
     const list = createMemo(() => state().list as ToastProps[]);
     const shown = createMemo(() => new Set(list().map((item) => item.id)));
     const byId = createMemo(() => new Map([...list(), ...(state().removedItems as ToastProps[])].map((item) => [item.id, item])));

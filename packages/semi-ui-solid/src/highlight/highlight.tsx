@@ -22,7 +22,6 @@ export interface HighlightProps {
     searchWords?: string | SearchWords;
     highlightStyle?: JSX.CSSProperties;
     highlightClassName?: string;
-    /** Tag of each highlighted chunk */
     component?: string;
 }
 

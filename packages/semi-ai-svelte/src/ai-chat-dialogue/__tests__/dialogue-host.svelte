@@ -9,9 +9,7 @@
         hints?: string[];
         roleConfig: RoleConfig;
         locale?: Locale;
-        /** The custom snippets passed to the dialogue */
         shown: Partial<Record<Part, boolean>>;
-        /** Whether the custom snippets also render the default nodes they receive */
         withDefaults?: boolean;
         props?: Partial<AIChatDialogueProps>;
     }

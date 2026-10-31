@@ -5,7 +5,6 @@ import type { TimelineItemPosition, TimelineMode } from '@fibrae/semi-foundation
 export type { TimelineItemPosition, TimelineMode };
 export type TimelineItemType = 'default' | 'ongoing' | 'success' | 'warning' | 'error';
 
-/** An item of `dataSource`; nodes for its content, time and extra come from the Timeline snippets. Other attributes land on the li. */
 export interface TimelineData extends Omit<HTMLLiAttributes, 'color' | 'content' | 'onclick'> {
     content?: string | number;
     time?: string | number;
@@ -26,10 +25,7 @@ export interface TimelineSnippetProps {
 export interface TimelineProps extends HTMLAttributes<HTMLUListElement> {
     mode?: TimelineMode;
     dataSource?: TimelineData[];
-    /** Content of each item; defaults to `item.content` */
     content?: Snippet<[TimelineSnippetProps]>;
-    /** Time of each item; defaults to `item.time` */
     time?: Snippet<[TimelineSnippetProps]>;
-    /** Extra of each item; defaults to `item.extra` */
     extra?: Snippet<[TimelineSnippetProps]>;
 }

@@ -34,7 +34,6 @@
     // The template forwards a slot only when it is provided: a view renders its defaults when a slot is absent.
     defineSlots<CalendarSlots>();
 
-    // One "today" source per Calendar; the views read it.
     const today = useToday();
 
     // Without displayValue the first frame shows the current date, so SSR users pass displayValue to make the server and the browser agree
@@ -45,7 +44,6 @@
     const weekRange = computed(() => CalendarFoundation.getWeekRange(displayValue.value, props.weekStartsOn));
     const rootStyle = computed(() => ({ height: toCssLength(props.height), width: toCssLength(props.width) }));
 
-    // Only a non-empty, unique key identifies an event; otherwise a view keeps the layout's own copy.
     provideCalendarContext(
         computed(() => {
             const counts = new Map<string, number>();

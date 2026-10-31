@@ -18,7 +18,6 @@
             props: ButtonProps & { checked?: boolean };
             /** The trigger takes Tooltip's props through the `child` snippet instead of filling its span */
             child?: boolean;
-            /** A button after the tooltip, to count Tab stops */
             after?: boolean;
         };
     } = $props();

@@ -15,9 +15,6 @@ beforeEach(() => {
     requests = installFakeXhr();
 });
 
-/**
- * Opening the native file browser cannot be tested in jsdom; tests only check that the hidden input is clicked.
- */
 describe('Upload 请求', () => {
     it('class 与 style 落在根元素', () => {
         const { container } = renderUpload({ class: 'test', style: 'color: red', action: '' });

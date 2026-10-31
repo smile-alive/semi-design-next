@@ -3,7 +3,6 @@
     import RadioGroup from '../radio-group.svelte';
     import Radio from '../radio.svelte';
 
-    // A group of radios A, B, C whose props come from a store; `snippets` switches to options with label and extra snippets
     let { store, snippets = false }: { store: { props: RadioGroupProps }; snippets?: boolean } = $props();
 </script>
 

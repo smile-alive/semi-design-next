@@ -1,4 +1,3 @@
-/** A Motion spring transition */
 export interface SpringTransition {
     type: 'spring';
     stiffness: number;

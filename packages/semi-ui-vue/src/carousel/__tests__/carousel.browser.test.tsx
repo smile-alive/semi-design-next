@@ -11,7 +11,6 @@ import RefDemo from './fixtures/ref-demo.vue';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-carousel`;
 const style = { width: '600px', height: '240px' };
-// The default autoplay switches every DEFAULT_INTERVAL (2000ms) + speed (300ms)
 const SWITCHING_TIME = 2300;
 
 const slides = (labels: string[]) =>
@@ -22,7 +21,6 @@ const slides = (labels: string[]) =>
     ));
 
 const activeTitle = () => document.querySelector(`.${prefixCls}-content-item-active h3`)?.textContent;
-// expect.poll keeps real timers, so it also waits for click updates while the component timers are faked
 async function expectActive(title: string) {
     await expect.poll(activeTitle).toBe(title);
 }

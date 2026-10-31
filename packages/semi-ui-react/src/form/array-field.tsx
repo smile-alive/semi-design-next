@@ -45,7 +45,6 @@ class ArrayFieldRuntime {
     #cacheUpdateKey: number | null | undefined = null;
     #committed = false;
 
-    /** Remembers `updateKey`; true when it differs from the remembered one */
     changeUpdateKey(updateKey?: number) {
         const changed = updateKey !== this.#cacheUpdateKey;
         this.#cacheUpdateKey = updateKey;

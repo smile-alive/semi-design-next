@@ -5,13 +5,11 @@ export type { ResponsiveMap };
 
 export interface LayoutProps {
     prefixCls?: string;
-    /** Tag of the root element */
     tagName?: keyof HTMLElementTagNameMap;
     /** Forces the has-sider class, for server rendering where a nested Sider has not registered yet */
     hasSider?: boolean;
 }
 
-/** Props of Header, Footer and Content */
 export interface LayoutBasicProps {
     prefixCls?: string;
     tagName?: keyof HTMLElementTagNameMap;

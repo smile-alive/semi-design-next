@@ -9,7 +9,6 @@ import useNoticeListEffects from '../_base/use-notice-list-effects';
 import CSSAnimation from '../_css-animation';
 import Toast, { type ToastItemHandle } from './toast';
 
-/** Renders the toasts of a store in display order */
 export default function ToastList({ store }: ToastListProps) {
     const state = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
     const [handles] = useState(() => new Map<string, ToastItemHandle>());

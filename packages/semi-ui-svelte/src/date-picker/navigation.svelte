@@ -11,7 +11,6 @@
     const iconSize = $derived(density === 'compact' ? 'default' : 'large');
     const buttonSize = $derived(density === 'compact' ? 'small' : 'default');
 
-    // `visibility: hidden` keeps the icons in position
     const hidden = (side: string) => {
         return shouldBimonthSwitch && panelType === side ? 'visibility: hidden' : undefined;
     };

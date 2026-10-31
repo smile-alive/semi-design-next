@@ -13,12 +13,10 @@ export interface LabelProps {
     text?: string | number;
     /** Extra content after the label; the `extra` slot takes precedence */
     extra?: string | number;
-    /** text-align of the label */
     align?: string;
     disabled?: boolean;
     /** Whether to display the required * symbol; hidden while `optional` is true */
     required?: boolean;
-    /** Appends the locale's optional text */
     optional?: boolean;
     /** The id of the labeled field, written to the `for` attribute */
     name?: string;
@@ -64,7 +62,6 @@ export interface FormProps<Values extends Record<string, any> = any> {
     stopPropagation?: { submit?: boolean; reset?: boolean };
     /** Form-level validation; when set, it replaces the fields' own validation */
     validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
-    /** The `formApi` returned by `useForm()` */
     form?: FormApi<Values>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
@@ -119,9 +116,7 @@ export interface CommonFieldProps {
     initValue?: unknown;
     rules?: RuleItem[];
     validator?: (fieldValue: any, values: Record<string, any>) => FieldValidateResult | Promise<FieldValidateResult>;
-    /** Converts the value before validation */
     transform?: (fieldValue: any) => any;
-    /** Converts the value before it is stored and shown */
     convert?: (fieldValue: any) => any;
     trigger?: FieldValidateTriggerType;
     stopValidateWithError?: boolean;
@@ -145,7 +140,6 @@ export interface FieldShellSlots {
 }
 
 export interface WithFieldOptions<K extends string = 'modelValue', E extends string = 'change'> {
-    /** The wrapped component's value prop */
     valueKey?: K;
     /** The emit that reports a new value; the field emits it again with the latest form values appended */
     onKeyChangeFnName?: E;
@@ -160,12 +154,10 @@ type ValueKeys<K extends string> = K | `onUpdate:${K}` | 'defaultValue' | 'defau
 
 type Camelize<S extends string> = S extends `${infer Head}-${infer Tail}` ? `${Head}${Capitalize<Camelize<Tail>>}` : S;
 
-/** The listener prop of an emit, as `toHandlerKey(camelize(name))` names it */
 type HandlerKey<E extends string> = `on${Capitalize<Camelize<E>>}`;
 
 type AppendLatest<P, H extends string> = P extends unknown ? (H extends keyof P ? (NonNullable<P[H]> extends (...args: infer A) => any ? { [Key in H]?: (...args: [...A, latestValues: Record<string, any>]) => void } : object) : object) : never;
 
-/** Props of a field component made by `withField` from a component with props `P` and the value emit `E` */
 export type FieldProps<P, K extends string = 'modelValue', E extends string = 'change'> = Omit<P, keyof CommonFieldProps | ValueKeys<K> | HandlerKey<E> | 'insetLabelId'> & AppendLatest<P, HandlerKey<E>> & CommonFieldProps & { [V in ValueKeys<K>]?: never };
 
 /** A field's template ref; `control` is the wrapped component's own handle */

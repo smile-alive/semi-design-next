@@ -63,7 +63,6 @@
     const backwardLabel = $derived(texts.backward.replace('${skipDuration}', String(skipDuration)));
     const forwardLabel = $derived(texts.forward.replace('${skipDuration}', String(skipDuration)));
 
-    // the visible rate alone does not say what the menu sets
     const speedLabel = $derived([texts.playbackRate, states().currentRate.label].join(' '));
 
     const changeTrack = (direction: 'next' | 'prev') => {

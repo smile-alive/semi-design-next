@@ -32,16 +32,7 @@ export interface JsonViewerProps extends ElementProps<'div', 'onChange' | 'child
     style?: React.CSSProperties;
     onChange?: (value: string) => void;
     options?: JsonViewerOptions;
-    /**
-     * Limits the search button drag bounds to the container
-     * @default false
-     */
     limitSearchButtonBounds?: boolean;
-    /**
-     * Custom search button
-     * @param defaultSearchButton - Default search button
-     * @param searchControls - Search state and methods
-     */
     renderSearchButton?: (
         defaultSearchButton: React.ReactNode,
         searchControls: {

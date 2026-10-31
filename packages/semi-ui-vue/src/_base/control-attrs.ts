@@ -13,7 +13,6 @@ export const isNotClassOrStyle = (key: string) => key !== 'class' && key !== 'st
 export const isAriaKey = (key: string) => key.startsWith('aria-');
 
 const NATIVE_INPUT_KEYS = new Set(['id', 'name', 'tabindex', 'tabIndex', 'autofocus', 'onFocus', 'onBlur']);
-/** What names, identifies and focuses a native input hidden inside a styled root */
 export const isNativeInputKey = (key: string) => isAriaKey(key) || NATIVE_INPUT_KEYS.has(key);
 
 /** Vue appends Once, Capture and Passive to the listener key for those modifiers; .stop, .self and .prevent keep onClick */

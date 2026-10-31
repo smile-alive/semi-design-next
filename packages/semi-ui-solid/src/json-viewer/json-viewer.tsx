@@ -64,10 +64,6 @@ export interface JsonViewerProps extends ElementProps<'div', 'onChange' | 'child
     showSearch?: boolean;
     onChange?: (value: string) => void;
     options?: JsonViewerOptions;
-    /**
-     * Limits the search button drag bounds to the container
-     * @default false
-     */
     limitSearchButtonBounds?: boolean;
     /**
      * Custom search button. It runs once, so `searchControls.showSearchBar` is a live getter: read it inside the
@@ -141,7 +137,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         { equals: isEqual }
     );
 
-    // options is usually a fresh literal, so compare deeply
     const editorInput = createMemo(() => ({ value: local.value, options: mergedOptions() }), undefined, { equals: isEqual });
 
     // The editor calls `render` while laying out and keeps what it returns, so each result gets its own root; the
@@ -274,7 +269,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     showClear={false}
                     prefix={null}
                     suffix={null}
-                    // searches once after an IME composition ends
                     composition
                     onChange={(_value, e) => {
                         e.preventDefault();
@@ -379,7 +373,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
 
     createEffect(
         on(editorInput, (next, previous) => {
-            // the first run is the creation onMount already did
             if (!previous) {
                 return;
             }

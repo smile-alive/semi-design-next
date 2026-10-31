@@ -17,7 +17,6 @@ export interface MarkdownRenderAdapter<P extends MarkdownRenderBaseProps = Markd
  */
 export type MarkdownComponents = Record<string, any>;
 
-/** Renders the compiled source with the given element renderers */
 export type MarkdownContent = (props: { components?: MarkdownComponents }) => any;
 
 export interface MarkdownRenderBaseProps {
@@ -66,7 +65,6 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
             toJsxRuntime(tree, { ...runtime, components, ignoreInvalidStyle: true });
     }
 
-    /** Returns a function that renders the source with its `components` prop */
     protected async evaluate(raw: string): Promise<MarkdownContent> {
         const props = {
             format: this.getProp('format'),
@@ -135,10 +133,7 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
         this.#requestId++;
     }
 
-    /**
-     * Compiles the current source and stores the result as `renderContent`. A failed compile keeps the last
-     * content and goes to `notifyCompileError`.
-     */
+    /** A failed compile keeps the last content and goes to `notifyCompileError` */
     updateContent = async () => {
         const requestId = ++this.#requestId;
         try {

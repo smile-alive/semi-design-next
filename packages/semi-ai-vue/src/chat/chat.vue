@@ -174,7 +174,6 @@
     });
 
     defineExpose<ChatHandle>({
-        // no message started this reset, so messageReset reports null
         resetMessage: () => foundation.resetMessage(null),
         clearContext: () => foundation.clearContext(null),
         scrollToBottom: (animation) => {

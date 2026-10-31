@@ -2,7 +2,6 @@ import { fitTextareaHeight, onFontsLoaded, supportsFieldSizing } from '../utils/
 import { ENTER_KEY, isComposing } from '../utils/key-code';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 
-/** The props the foundation reads with getProps */
 export interface TextAreaBaseProps extends TextEntryBaseProps {
     value?: string;
     disabled?: boolean;

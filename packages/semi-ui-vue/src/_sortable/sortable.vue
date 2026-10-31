@@ -23,7 +23,6 @@
 
     const locale = useLocale('Sortable');
 
-    // the announcements run at drag time and read the latest locale and item count
     const announcer = new SortableAnnouncer(locale.value.locale, props.items.length);
 
     // dnd-kit has already moved the dropped item's element; when the parent keeps the old order (a controlled value that

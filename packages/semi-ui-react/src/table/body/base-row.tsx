@@ -21,7 +21,6 @@ export interface BaseRowProps {
     expanded?: boolean;
     expandedRow?: boolean;
     hideExpandedColumn?: boolean;
-    /** Whether the current row is hovered */
     hovered?: boolean;
     indentSize?: number;
     index?: number;
@@ -43,13 +42,9 @@ export interface BaseRowProps {
     selected?: boolean;
     style?: React.CSSProperties;
     virtualized?: Virtualized;
-    /** whether display none */
     displayNone?: boolean;
 }
 
-/**
- * Props that Body forwards to BaseRow; everything else in Body's render props is dropped.
- */
 export const baseRowPropKeys = [
     'cellWidths',
     'className',
@@ -279,9 +274,6 @@ function TableRow({
     );
 }
 
-/**
- * Shallow comparison of the props, like PureComponent, except a deep comparison of cellWidths
- */
 function arePropsEqual(prevProps: BaseRowProps, nextProps: BaseRowProps) {
     const omitProps: (keyof BaseRowProps)[] = ['cellWidths'];
     return shallowEqualObjects(omit(nextProps, omitProps), omit(prevProps, omitProps)) && isEqual(pick(nextProps, omitProps), pick(prevProps, omitProps));

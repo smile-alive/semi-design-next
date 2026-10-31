@@ -29,7 +29,6 @@ export interface NavLinkOptions extends EntryAttributes {
     onClick?: (event: MouseEvent) => void;
 }
 
-/** Dropdown props of a popup Sub, plus the listener and attributes Dropdown takes as attrs */
 export type SubDropdownProps = DropdownProps & {
     class?: EntryAttributes['class'];
     style?: EntryAttributes['style'];
@@ -45,7 +44,6 @@ export interface NavItemProps {
     level?: number;
     link?: string;
     linkOptions?: NavLinkOptions;
-    /** The item's text and payload; `#text` replaces what is shown */
     text?: string | number;
     tooltipHideDelay?: number;
     tooltipShowDelay?: number;
@@ -111,7 +109,6 @@ export interface NavCollapseTextSlotProps {
 
 export interface NavFooterSlots {
     default?: () => VNode[];
-    /** Replaces the built-in collapse button */
     collapseButton?: () => VNode[];
     /** Text of the built-in collapse button; a text-only result also names the icon-only button */
     collapseText?: (props: NavCollapseTextSlotProps) => VNode[];
@@ -121,7 +118,6 @@ export interface NavCollapseButtonProps {
     collapsed: boolean;
 }
 
-/** An entry of `items`: Item or Sub data, the attributes and listeners its li takes, and nested entries */
 export interface NavItemConfig extends EntryAttributes {
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
@@ -161,7 +157,6 @@ export interface NavProps {
     openKeys?: ItemKey[] | null;
     /** null is a controlled empty value */
     selectedKeys?: ItemKey[] | null;
-    /** Dropdown props of the Subs generated from `items` */
     subDropdownProps?: SubDropdownProps;
     subNavCloseDelay?: number;
     subNavMotion?: boolean;
@@ -210,13 +205,11 @@ export interface NavWrapperSlotProps {
     itemElement: VNode;
     isSubNav: boolean;
     isInSubNav: boolean;
-    /** The props of the Nav.Item or Nav.Sub */
     props: NavItemProps | SubNavProps;
 }
 
 export interface NavItemSlotProps {
     item: NavItemConfig;
-    /** Nesting depth of the entry, 0 at the top */
     level: number;
 }
 
@@ -227,12 +220,9 @@ export interface NavSlots {
     /** Content of the footer; it replaces the collapse button configured by `footer` */
     footer?: () => VNode[];
     wrapper?: (props: NavWrapperSlotProps) => VNode[];
-    /** For the entries of `items` */
     icon?: (props: NavItemSlotProps) => VNode[];
     /** For the entries of `items`; without it the entry's text shows */
     text?: (props: NavItemSlotProps) => VNode[];
-    /** For the entries of `items` */
     toggleIcon?: (props: NavItemSlotProps) => VNode[];
-    /** For the Subs generated from `items` */
     expandIcon?: (props: NavItemSlotProps) => VNode[];
 }

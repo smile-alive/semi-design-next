@@ -1,6 +1,5 @@
 import type { TransitionConfig } from 'svelte/transition';
 
-/** The longest `animation-duration` + `animation-delay` pair on `node`, in ms */
 function animationTime(node: Element) {
     const style = getComputedStyle(node);
     const seconds = (value: string) => value.split(',').map((item) => (item.trim().endsWith('ms') ? parseFloat(item) / 1000 : parseFloat(item)) || 0);

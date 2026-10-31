@@ -12,7 +12,6 @@ export interface ScientificNotationConfig {
     threshold?: number;
 }
 
-/** The props the foundation reads with getProps */
 export interface InputNumberBaseProps {
     value?: number | string;
     defaultValue?: number | string;
@@ -64,7 +63,6 @@ export interface InputNumberAdapter<P extends InputNumberBaseProps = InputNumber
     notifyUpClick: (value: string, e: any) => void;
     notifyDownClick: (value: string, e: any) => void;
     notifyKeyDown: (e: KE) => void;
-    /** The native input */
     getInput: () => HTMLInputElement | null;
 }
 
@@ -93,7 +91,6 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         this.#caretTail = recordCaretTail(this.adapter.getInput());
     }
 
-    /** Puts the caret back in front of the text that followed it before the last change */
     #restoreCaret() {
         restoreCaretTail(this.adapter.getInput(), this.#caretTail);
     }
@@ -110,7 +107,6 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         return typeof currency === 'string' ? currency : this.getProp('defaultCurrency');
     }
 
-    /** Commits the formatted text a step produced */
     #commitStep(v = '', event: unknown = null, updateCb: () => void = null) {
         const parsed = this.doParse(v, false);
         const isValidNumber = !isNaN(parsed);
@@ -376,7 +372,6 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         const stepPrecLen = this.#getPrecLen(step);
         const scale = Math.pow(10, Math.max(minPrecLen, maxPrecLen, curPrecLen, stepPrecLen));
 
-        // scale to integers to avoid floating point error
         curNum = Math.round(curNum * scale + step * scale) / scale;
         if (typeof min === 'number' && min > curNum) {
             curNum = min;
@@ -549,9 +544,6 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         return Number(value);
     }
 
-    /**
-     * True for a number within [min, max] whose decimal length is at most `precision` (when `needCheckPrec`).
-     */
     protected isValidNumber(num: number, needCheckPrec = true) {
         if (typeof num === 'number' && !isNaN(num)) {
             const { min, max, precision } = this.getProps();
@@ -649,7 +641,6 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
             notifyVal = this.isControlled() ? formattedNum : valueAfterParser;
         }
 
-        // before the state write: notifyNumberChange compares with the number shown so far
         this.#notifyChange(notifyVal, event);
 
         if (!this.isControlled() && (num === null || (typeof num === 'number' && !isNaN(num)))) {

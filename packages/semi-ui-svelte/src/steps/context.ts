@@ -13,7 +13,6 @@ export interface StepsContextValue {
     clickable: boolean;
     title?: Snippet<[StepSnippetProps]>;
     description?: Snippet<[StepSnippetProps]>;
-    /** Reports a click on step `stepNumber`; the current step is ignored */
     change: (stepNumber: number) => void;
 }
 

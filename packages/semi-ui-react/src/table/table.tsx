@@ -226,9 +226,6 @@ function addFnsInColumn(column: HeaderColumn = {}, queries: ColumnProps[], prefi
     return column;
 }
 
-/**
- * The columns with sorters, filters, the expand column and the selection column added
- */
 function buildColumns(queries: ColumnProps[], cachedColumns: ColumnProps[], prefixCls: string, foundation: TableFoundation<any>, expandColumn: ColumnProps | null, selectionColumn: ColumnProps | null) {
     const childrenColumnName = 'children';
     let columns: ColumnProps[] = cloneDeep(cachedColumns);

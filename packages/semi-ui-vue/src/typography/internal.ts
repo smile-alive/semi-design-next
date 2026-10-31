@@ -8,11 +8,8 @@ export interface TypographyBaseProps extends TypographyCommonProps {
     size?: TypographyBaseSize;
     spacing?: string;
     weight?: string | number;
-    /** Title's tag, which also picks the heading class */
     headingTag?: `h${1 | 2 | 3 | 4 | 5 | 6}`;
-    /** The wrapper's default slot */
     nodes: KeyedNode[];
-    /** Numeral's formatter of the text nodes */
     format?: (value: string) => string;
 }
 
@@ -33,7 +30,6 @@ export interface ContentProps {
     nodes: KeyedNode[];
     format?: (value: string) => string;
     hasEllipsis: boolean;
-    /** Show the nodes instead of the truncated text */
     showFull: boolean;
     ellipsisText: string;
     suffix: string;

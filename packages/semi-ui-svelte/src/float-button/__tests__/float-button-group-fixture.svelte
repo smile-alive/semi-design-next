@@ -2,7 +2,6 @@
     import FloatButtonGroup from '../float-button-group.svelte';
     import type { FloatButtonGroupItemSnippetArgs, FloatButtonGroupProps } from '../interface';
 
-    // the snippets are passed only when their flag is on, so absence and the default content stay observable
     let { store }: { store: { props: FloatButtonGroupProps; icon?: boolean; content?: boolean; badgeCount?: boolean } } = $props();
 </script>
 

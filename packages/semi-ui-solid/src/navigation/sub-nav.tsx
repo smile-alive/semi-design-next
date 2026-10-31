@@ -44,7 +44,6 @@ export function getSubNodes(props: object) {
     return subNodesOf.get(props)?.() ?? [];
 }
 
-// Nav renders the sub from this token (SubView); standing alone it renders nothing
 export default function SubNav(props: SubNavProps) {
     const resolved = children(() => props.children);
 
@@ -72,7 +71,6 @@ function renderNode(node: unknown) {
     return isListItem(node) ? (node as JSX.Element) : <li class={`${prefix}-list-extra`}>{node as JSX.Element}</li>;
 }
 
-/** Renders the resolved children of a Nav or Sub as list items */
 export function NavNodes(props: { nodes: readonly unknown[] }) {
     return <For each={props.nodes}>{renderNode}</For>;
 }
@@ -81,7 +79,6 @@ export function NavNodes(props: { nodes: readonly unknown[] }) {
 export function SubView(props: SubNavProps) {
     const [local, restProps] = splitProps(props, ['children', 'class', 'disabled', 'dropdownProps', 'dropdownStyle', 'expandIcon', 'icon', 'indent', 'itemKey', 'level', 'ref', 'style', 'subDropdownProps', 'text']);
 
-    // aria-* goes to the title, which takes focus
     const [aria, rest] = splitControlAttrs(restProps, isAriaKey);
 
     const outer = useNavContext('Nav.Sub');
@@ -132,7 +129,6 @@ export function SubView(props: SubNavProps) {
 
     const isPopup = () => view().isCollapsed || horizontal();
 
-    // inside a popup menu the title is the menuitem that opens a submenu
     const menuTitle = () => isPopup() && nested();
 
     const content = () => local.children as unknown[];
@@ -233,7 +229,6 @@ export function SubView(props: SubNavProps) {
         </Show>
     );
 
-    // a disabled sub opens no Dropdown; collapsed, its hidden text shows in a tooltip instead
     const titleArea = () => (
         <Switch fallback={renderTitle(plainTrigger)}>
             <Match when={view().isCollapsed && local.disabled}>
@@ -303,7 +298,6 @@ export function SubView(props: SubNavProps) {
     const inlineItem = () => (
         <li
             {...rest}
-            // the Show memo around this branch tracks this read; a spread signal object would rebuild the sub
             ref={untrack(() => mergeRefs(setWrapper, local.ref))}
             class={clsx(`${prefix}-sub-wrap`, local.class, {
                 [itemPrefix]: true,

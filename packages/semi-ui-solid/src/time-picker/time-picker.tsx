@@ -159,7 +159,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
     const [panel, setPanel] = createSignal<HTMLDivElement>();
     const panelId = createUniqueId();
 
-    // only the rendered DOM tells whether a custom trigger has its own focus target
     const [customTrigger, setCustomTrigger] = createSignal<HTMLDivElement>();
     const [customTriggerFocusable, setCustomTriggerFocusable] = createSignal(false);
 
@@ -259,7 +258,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
             notifyBlur: (e) => props.onBlur?.(e),
             isRangePicker: () => props.type === strings.TYPE_TIME_RANGE_PICKER,
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel()),
-            // the input, or the focus target of a custom trigger, which is its wrapper when it has none of its own
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root, { preventScroll: props.preventScroll }),
         })
     );
@@ -311,7 +309,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
         );
     };
 
-    // a custom trigger without a focus target of its own is a button that opens the panel
     const isTriggerButton = () => !customTriggerFocusable();
 
     const customTriggerOwn = {

@@ -53,7 +53,6 @@ export interface ResizableProps extends ElementProps<'div', 'onChange'> {
     handleClass?: HandleClassName;
     handleWrapperStyle?: Style;
     handleWrapperClass?: string;
-    /** Content of each enabled handle, in place of the default grip icon */
     renderHandle?: (direction: Direction) => JSX.Element;
     onResizeStart?: ResizeStartCallback;
     onChange?: ResizeCallback;

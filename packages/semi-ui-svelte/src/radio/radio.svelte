@@ -46,7 +46,6 @@
     // make an uncontrolled radio read as controlled; a `checked` equal to the echo counts as uncontrolled instead.
     let echoed: boolean | undefined;
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: RadioBaseProps = {
         get checked() {
             return checked === echoed ? undefined : checked;

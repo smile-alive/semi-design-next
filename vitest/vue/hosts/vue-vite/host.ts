@@ -36,7 +36,6 @@ import App from './App.vue';
 createApp(App).mount('#app');
 `;
 
-// Appears only after mount: the server response is an empty #app
 const MOUNTED = `    import { onMounted } from 'vue';
 
     onMounted(() => {
@@ -108,7 +107,6 @@ const SEMI_IMPORT = "import semi from '@fibrae/semi-vite-plugin';\n";
 
 const variants: Variant[] = [
     { name: 'default', dev: dev(defaultChecks), build, prod: prod(defaultChecks) },
-    // The dev server works without the plugin; `vite build` does not
     { name: 'no-plugin', files: { 'vite.config.ts': viteConfig('vue()') }, dev: dev(defaultChecks) },
     {
         name: 'tailwind',

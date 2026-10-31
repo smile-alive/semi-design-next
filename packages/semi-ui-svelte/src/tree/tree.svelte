@@ -79,7 +79,6 @@
         icon,
         expandIcon,
         fullLabel,
-        // renamed: the instance method `search` takes the name
         search: searchBox,
         emptyContent,
         renderDraggingNode,
@@ -191,7 +190,6 @@
         },
     };
 
-    /** Remembers whether the tree owned the prop when writing it back */
     const echo = (name: Bindable, next: unknown) => {
         echoes[name] = foundationProps[name] === undefined ? { value: next } : undefined;
     };
@@ -399,7 +397,6 @@
         foundation.handleInputChange(input);
     }
 
-    /** Scrolls a virtualized tree to an expanded node */
     export function scrollTo(scrollData: TreeScrollData) {
         foundation.scrollTo(scrollData);
     }

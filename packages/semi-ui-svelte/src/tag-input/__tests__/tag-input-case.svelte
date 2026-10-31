@@ -11,9 +11,7 @@
         clearIcon?: boolean;
         // 'text' replaces a tag with a span, 'button' with a button that closes it, 'none' with nothing
         tag?: 'text' | 'button' | 'none';
-        // the component instance, for the handle methods
         handle?: { current?: ReturnType<typeof TagInput> };
-        // a button after the input, to move the focus out
         after?: boolean;
     }
 

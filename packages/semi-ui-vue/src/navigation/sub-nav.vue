@@ -68,10 +68,8 @@
     const horizontal = computed(() => view.value.mode === strings.MODE_HORIZONTAL);
     const isPopup = computed(() => view.value.isCollapsed || horizontal.value);
 
-    // inside a popup menu the title is the menuitem that opens a submenu
     const menuTitle = computed(() => isPopup.value && view.value.isInSubNav);
 
-    // A disabled Sub opens no Dropdown; collapsed, it shows its hidden text in a tooltip instead
     const titleWrapper = computed(() => {
         if (view.value.isCollapsed && props.disabled) return Tooltip;
         return isPopup.value && !props.disabled ? Dropdown : SlotFragment;
@@ -105,7 +103,6 @@
 
     const subListWrapperAttrs = computed(() => (view.value.subNavMotion ? { fade: true, isOpen: isOpen.value, keepDOM: false, motion: true } : {}));
 
-    // the shell li belongs to the enclosing list, so it gets the outer value
     provideNavContext({ ...outer, view: computed(() => ({ ...outer.view.value, isInSubNav: true })) });
 
     const handleClick = (event: MouseEvent) => (isPopup.value ? foundation.handlePopupClick(event) : foundation.handleClick(event));

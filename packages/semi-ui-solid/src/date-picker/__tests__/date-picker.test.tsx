@@ -529,7 +529,6 @@ describe('DatePicker', () => {
         const [startInput, endInput] = inputs(container);
 
         endInput.focus();
-        // 2021-09-10
         await userEvent.click(getWeekDays('right', 1)[5]);
 
         expect(onChange).toHaveBeenCalledTimes(1);

@@ -6,9 +6,7 @@ export interface SkeletonProps {
 }
 
 export interface SkeletonSlots {
-    /** Shown once `loading` is false */
     default?: () => VNode[];
-    /** Shown while `loading` is true */
     placeholder?: () => VNode[];
 }
 

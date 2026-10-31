@@ -7,7 +7,6 @@
     export interface FixtureStore {
         props: JsonViewerProps;
         mode: Mode;
-        /** In 'search-button' mode: when the default button is drawn inside the custom one */
         show: 'open' | 'always' | 'never';
         locale?: Locale;
     }

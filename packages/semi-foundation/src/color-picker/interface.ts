@@ -28,7 +28,6 @@ export interface HslaColor extends HslColor {
     a: number;
 }
 
-/** The text formats of the color input */
 export type ColorFormat = 'hex' | 'rgba' | 'hsva';
 
 /** The keydown fields the range handlers read; a framework's synthetic event fits */

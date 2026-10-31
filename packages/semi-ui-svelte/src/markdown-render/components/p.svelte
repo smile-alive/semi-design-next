@@ -6,7 +6,6 @@
 
     const { children, node, class: className, ...rest }: TypographyParagraphProps & MarkdownRenderElementProps = $props();
 
-    // a div, since the image component renders one
     const component = $derived(node && containsImage(node.props.children) ? 'div' : undefined);
 </script>
 

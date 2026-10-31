@@ -154,7 +154,6 @@ export function semiScssLoader(
 // omitCss leaves prebuilt CSS untouched, so the plugins skip compiling; prefixCls still rewrites Semi's JS
 const STYLE_OPTIONS = ['cssLayer'] as const;
 
-/** Fails loud on plugin options that `omitCss` would otherwise ignore silently */
 export function assertNoStyleOptionsWithOmitCss(
     options: Partial<Record<(typeof STYLE_OPTIONS)[number], unknown>> & {
         omitCss?: boolean;

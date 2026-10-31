@@ -790,7 +790,6 @@ describe('AutoComplete', () => {
 
         await click(input);
         expect(input).toHaveAttribute('aria-expanded', 'true');
-        // the listbox is the popup, not a dialog around it
         expect(screen.queryByRole('dialog')).toBeNull();
         expect(root).not.toHaveAttribute('aria-describedby');
         expect(getList()).toHaveAttribute('id', input.getAttribute('aria-controls'));
@@ -875,7 +874,6 @@ describe('AutoComplete', () => {
     it('Fix2951 (#2952)：defaultActiveFirstOption 高亮输入后加载的数据的第一项', async () => {
         const onSelect = vi.fn<(value: Selected) => void>();
         const { rerender } = await renderAc({ defaultActiveFirstOption: true, onSelect, data: [] });
-        // like a remote search: loading while typing, then the results arrive
         const search = async (value: string, results: string[]) => {
             await type(value);
             await rerender({ data: [], loading: true });
@@ -1418,7 +1416,6 @@ describe('AutoComplete Vue 写法', () => {
         expect(onMouseenter).toHaveBeenCalledTimes(1);
         await click(input);
         expect(onClick).toHaveBeenCalledTimes(1);
-        // the AutoComplete's own click handler still runs
         expect(getList()).not.toBeNull();
     });
 
@@ -1454,7 +1451,6 @@ describe('AutoComplete Vue 写法', () => {
     });
 
     it('kebab-case 键与布尔简写的 props 按预期解析', async () => {
-        // the props a template compiles kebab-case attributes and boolean shorthands into
         const props = {
             data: [{ value: 'a', label: 'A' }],
             'default-active-first-option': '',

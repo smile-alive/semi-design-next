@@ -7,7 +7,6 @@ function isReachableTag(node: Element): node is HTMLElement {
     return node instanceof HTMLElement && node.matches(`.${tagCls}:not(.${tagCls}-invisible)`) && node.tabIndex >= 0;
 }
 
-/** Prefers the following tag, falling back to the preceding one. */
 function findAdjacentTag(tag: Element): HTMLElement | null {
     for (let node = tag.nextElementSibling; node; node = node.nextElementSibling) {
         if (isReachableTag(node)) {

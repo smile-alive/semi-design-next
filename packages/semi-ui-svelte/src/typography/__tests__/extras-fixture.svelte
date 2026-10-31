@@ -33,7 +33,6 @@
         text?: string;
         props?: Record<string, unknown>;
         duration?: number;
-        /** Read by the derivedEllipsis ellipsis object, whose values stay the same when `n` changes */
         counter?: { n: number };
     }
 

@@ -1,6 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from './foundation';
 
-/** The props the foundation reads with getProp */
 export interface AutoCloseBaseProps {
     id?: string;
     // seconds; 0 or unset never closes on its own

@@ -3,7 +3,6 @@
 
     type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 
-    // `visible` and `currentIndex` take the same four writings; `accept` lets the function bindings' setters refuse
     let {
         prop,
         mode,

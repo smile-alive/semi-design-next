@@ -11,7 +11,6 @@ import useFoundation from '../_base/use-foundation';
 import Input, { type InputChangeEvent, type InputProps } from '../input';
 import { InsetDateInput, InsetTimeInput } from './inset-input';
 
-/** The range wrappers and separator forward their click, the inputs their focus */
 type RangeFocusEvent = FocusEvent | MouseEvent;
 
 type ComboboxKeys = 'role' | 'aria-label' | 'aria-labelledby' | 'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'aria-describedby' | 'aria-errormessage' | 'aria-invalid' | 'aria-required' | 'insetLabelId' | 'clearIcon' | 'size' | 'tabIndex';
@@ -19,7 +18,6 @@ type ComboboxKeys = 'role' | 'aria-label' | 'aria-labelledby' | 'aria-controls' 
 export interface DateInputProps extends Omit<DateInputFoundationProps, 'insetLabel' | 'prefix' | 'rangeSeparatorNode' | 'inputStyle' | keyof DateInputFoundationEvents>, DateInputFoundationEvents, Pick<InputProps, ComboboxKeys> {
     locale: Locale['DatePicker'];
     placeholder?: string | string[];
-    /** Text shown instead of the one formatted from `value` */
     inputValue?: string | null;
     /** For a triggerRender reading the DatePicker's state; does not take part in rendering */
     multiple?: boolean;
@@ -30,7 +28,6 @@ export interface DateInputProps extends Omit<DateInputFoundationProps, 'insetLab
     prefix?: JSX.Element;
     inputStyle?: JSX.CSSProperties | string;
     value?: Date[];
-    /** The native input of a single trigger, or of the single inset date input */
     inputRef?: (element: HTMLInputElement) => void;
     rangeInputStartRef?: (element: HTMLInputElement) => void;
     rangeInputEndRef?: (element: HTMLInputElement) => void;
@@ -43,7 +40,6 @@ export interface DateInputProps extends Omit<DateInputFoundationProps, 'insetLab
 
 interface DateInputFoundationEvents {
     onChange?: (value: string, e: InputChangeEvent) => void;
-    /** Called with the text of the input, or both range inputs joined by `rangeSeparator` */
     onEnterPress?: (value: string) => void;
     onFocus?: (e: RangeFocusEvent, rangeType?: RangeInput) => void;
     onClear?: (e: MouseEvent) => void;
@@ -64,7 +60,6 @@ const defaultProps = {
     rangeSeparator: strings.DEFAULT_SEPARATOR_RANGE,
 } satisfies Partial<DateInputProps>;
 
-/** The trigger input of DatePicker (two inputs for a range), or the inset inputs at the top of its panel */
 export default function DateInput(rawProps: DateInputProps) {
     const props = mergeProps(defaultProps, rawProps);
 

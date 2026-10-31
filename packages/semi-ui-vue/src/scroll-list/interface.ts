@@ -30,7 +30,6 @@ export interface ScrollItemProps<T extends ScrollListItem = ScrollListItem> {
     type?: string | number;
 }
 
-/** The selected item with the column's `type` and the item's index in `list` */
 export type ScrollItemSelectData<T extends ScrollListItem = ScrollListItem> = T & {
     type?: string | number;
     index: number;
@@ -41,7 +40,6 @@ export interface ScrollItemEmits<T extends ScrollListItem = ScrollListItem> {
     select: [data: ScrollItemSelectData<T>];
 }
 
-/** Used by TimePicker and DatePicker to re-centre a column, e.g. after the panel resizes */
 export interface ScrollItemHandle {
     /** Scrolls to the selected item; `selectedIndex` is not used, the target is the item last selected */
     scrollToIndex: (selectedIndex?: number, duration?: number) => void;

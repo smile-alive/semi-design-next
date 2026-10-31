@@ -12,13 +12,11 @@ export type CascaderKeyMapProps = KeyMapProps;
 export type CascaderSize = Size;
 export type CascaderVirtualize = Virtualize;
 
-/** A node of `treeData`; markup for its label goes in the `label` snippet */
 export interface CascaderData extends BasicCascaderData {
     label: string | number;
     children?: CascaderData[];
 }
 
-/** A node of `treeData` with its place in the tree */
 export interface CascaderEntity extends BasicEntity {
     children?: CascaderEntity[];
     data: CascaderData;
@@ -29,7 +27,6 @@ export interface CascaderScrollPanelProps extends BasicScrollPanelProps {
     activeNode: CascaderData;
 }
 
-/** The basic type of the value of Cascader */
 export type CascaderSimpleValue = string | number | CascaderData;
 
 /** A single-mode value is one node or its path; a multiple-mode value may also be a list of paths */
@@ -43,7 +40,6 @@ export interface CascaderLabelSnippetProps {
 }
 
 export interface CascaderDisplaySnippetProps {
-    /** The `displayProp` of each node on the selected path */
     labels: Array<string | number>;
     /**
      * The nodes on the selected path; a value not found in `treeData` gives its raw values instead, as `onChange`
@@ -60,46 +56,38 @@ export interface CascaderTagSnippetProps {
     onClose: (event?: TagCloseEvent) => void;
 }
 
-/** What a custom search result row spreads on its element: the combobox's aria-activedescendant points at the id */
 export interface CascaderFilterItemDomProps {
     id: string;
     role: 'option';
     'aria-selected': boolean;
     'aria-disabled'?: true;
     class: ClassValue;
-    /** Only in virtual results: the row's position */
     style?: string;
     onclick: (event: MouseEvent) => void;
 }
 
 export interface CascaderFilterItemSnippetProps {
-    /** Spread it on the row's element: `<li {...props}>` */
     props: CascaderFilterItemDomProps;
     inputValue: string;
     disabled: boolean;
-    /** The nodes of the path */
     data: CascaderData[];
     checkStatus: {
         checked: boolean;
         halfChecked: boolean;
     };
     selected: boolean;
-    /** For the `onChange` of a Checkbox in the row */
     onCheck: (event: CheckboxEvent) => void;
 }
 
 export interface CascaderTriggerSnippetProps {
     /** The position in treeData (such as `0-0-1`) of the selected node, or in multiple mode of each checked node */
     value: string | Set<string> | undefined;
-    /** The search keyword; the selected path's text while closed in single mode */
     inputValue: string;
     placeholder?: string;
     disabled: boolean;
-    /** Updates the search keyword */
     onSearch: (inputValue: string) => void;
     /** Pass the click event when bound to a control inside the trigger, so the click does not open the dropdown */
     onClear: (event?: MouseEvent) => void;
-    /** Unchecks the node at a position of `value` */
     onRemove: (pos: string) => void;
 }
 
@@ -128,7 +116,6 @@ export interface CascaderProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     /** Loads the children of the last node; a node without `isLeaf` shows the expand arrow while it is set */
     loadData?: (selectOptions: CascaderData[]) => Promise<void>;
     filterTreeNode?: boolean | ((inputValue: string, treeNodeString: string, data?: CascaderData) => boolean);
-    /** `first` and `second` are the two result paths, from the root to the matched node */
     filterSorter?: (first: CascaderData[], second: CascaderData[], inputValue: string) => number;
     filterLeafOnly?: boolean;
     treeNodeFilterProp?: string;
@@ -177,21 +164,15 @@ export interface CascaderProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
      * options still take the key
      */
     onKeyDown?: (event: KeyboardEvent) => void;
-    /** Content of an option of the tree; the search results, the selection and the tags show the label text */
     label?: Snippet<[CascaderLabelSnippetProps]>;
-    /** The selection in single mode */
     display?: Snippet<[CascaderDisplaySnippetProps]>;
-    /** Replaces each tag in multiple mode */
     tag?: Snippet<[CascaderTagSnippetProps]>;
-    /** Replaces a row of the search results */
     filterItem?: Snippet<[CascaderFilterItemSnippetProps]>;
-    /** Replaces the trigger content */
     trigger?: Snippet<[CascaderTriggerSnippetProps]>;
     expandIcon?: Snippet;
     /** `null` hides the arrow */
     arrowIcon?: Snippet | null;
     clearIcon?: Snippet;
-    /** `null` hides the empty state */
     emptyContent?: Snippet | null;
     prefix?: Snippet;
     suffix?: Snippet;

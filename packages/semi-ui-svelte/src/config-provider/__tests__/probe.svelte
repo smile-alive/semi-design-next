@@ -6,7 +6,6 @@
 
     const config = getConfigContext();
 
-    // spreading reads every field, so the effect re-runs whenever any of them changes
     $effect(() => {
         onSeen?.({ ...config });
     });

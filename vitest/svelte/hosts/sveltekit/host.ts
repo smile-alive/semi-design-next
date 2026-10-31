@@ -154,7 +154,6 @@ export default {
             files: { 'vite.config.ts': viteConfig('semi({ omitCss: true })'), 'src/routes/+layout.svelte': layout(['@fibrae/semi-ui-svelte/styles.css']) },
             buildChecks: [cssOnce('.semi-button', 'node_modules/@fibrae/semi-ui-svelte/dist/styles.css')],
         }),
-        // A custom prefix: no component CSS (`omitCss`), one stylesheet compiled with the same prefix
         variant(
             'prefix',
             prefixed,

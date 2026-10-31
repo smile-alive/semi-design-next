@@ -7,7 +7,6 @@ export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/toa
 /** A text, a VNode, or a function rendered as a functional component (it may inject) */
 export type ToastNode = string | VNode | (() => VNodeChild);
 
-/** Options of one toast for the static API */
 export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon' | 'className' | 'style' | 'close'> {
     id?: string;
     content: ToastNode;
@@ -15,7 +14,6 @@ export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon
     motion?: boolean;
     class?: HTMLAttributes['class'];
     style?: StyleValue;
-    // forwarded to the toast element
     [attribute: `data-${string}` | `aria-${string}`]: string | number | boolean | undefined;
 }
 
@@ -33,7 +31,6 @@ export interface ToastItemEmits {
 }
 
 export interface ToastHandle {
-    /** Starts the duration over */
     restartCloseTimer: () => void;
     pauseCloseTimer: () => void;
     resumeCloseTimer: () => void;

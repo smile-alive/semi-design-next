@@ -31,7 +31,6 @@ export default function AddArea(props: AddAreaProps) {
     const area = untrack(() => local.context) ?? { hasControl: false };
     const content = children(() => <AddAreaContext.Provider value={area}>{local.children}</AddAreaContext.Provider>);
 
-    // creating the content is what lets its buttons set the flag
     const [hasControl, setHasControl] = createSignal(hasContent(content()) && area.hasControl);
 
     // Empty content has no name, so the first frame already carries the label; content is assumed to name the area until

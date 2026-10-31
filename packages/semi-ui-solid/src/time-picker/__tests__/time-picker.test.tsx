@@ -15,7 +15,6 @@ import { type FormApi, Form, FormTimePicker } from '../../form';
 import Popover from '../../popover';
 import Combobox, { type ComboboxHandle } from '../combobox';
 
-// wide enough for the onChange of both type values
 type DateFirstOnChange = (value: Date | Date[], str: string | string[]) => void;
 type Props = Record<string, unknown>;
 
@@ -74,7 +73,6 @@ describe('TimePicker', () => {
         expect(document.querySelectorAll(`.${scrollListCls}-footer`)).toHaveLength(1);
         expect(getInput()).toHaveValue('10:24:18');
 
-        // the wheel list selects it after a short debounce
         fireEvent.click((getList('minute') as HTMLElement).querySelector(`.${scrollListCls}-list-outer ul li`) as HTMLElement);
         await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
         const [selectedDate, selectedStr] = onChange.mock.calls[0] as [Date, string];
@@ -966,7 +964,6 @@ describe('TimePicker', () => {
 
             const [date, str] = lastCall<DateFirstOnChange>(onChange) as [Date, string];
             expect(date.getUTCHours()).toBe(7);
-            // the test zone is Asia/Shanghai (UTC+8)
             expect(str.startsWith('15:')).toBe(true);
             expect(getInput().value.startsWith('07:')).toBe(true);
             expect(getSelectedText('hour')).toBe('07时');

@@ -28,7 +28,6 @@ describe('Svelte Notification 服务端首帧', () => {
 
     it('useNotification 在服务端可以初始化，调用 api 抛出带说明的错误', () => {
         let api!: NotificationHookApi;
-        // the component runs its setup when the body is read
         void render(HookHost, { props: { onApi: (notification: NotificationHookApi) => (api = notification) } }).body;
         expect(() => api.info({ title: 'x' })).toThrow(/can only be called in the browser/);
     });

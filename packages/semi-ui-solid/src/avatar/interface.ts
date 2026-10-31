@@ -53,7 +53,6 @@ export type AvatarGroupShape = 'circle' | 'square';
 export type AvatarGroupSize = 'extra-extra-small' | 'extra-small' | 'small' | 'default' | 'medium' | 'large' | 'extra-large';
 export type AvatarGroupOverlapFrom = 'start' | 'end';
 
-/** Undeclared props go to the root element, the list */
 export interface AvatarGroupProps extends ElementProps<'div'> {
     children?: JSX.Element;
     shape?: AvatarGroupShape;

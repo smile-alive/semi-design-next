@@ -13,7 +13,6 @@ const content = { default: () => <div>hello</div> };
 const queryContent = () => screen.queryByText('hello');
 const getWrapper = (container: Element) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper');
 const getInner = (container: Element) => container.querySelector<HTMLElement>('[x-semi-prop="children"]');
-// the wrapper's height goes through this custom property (collapsible.scss)
 const heightVar = '--semi-collapsible-height';
 const openHeight = 'calc-size(auto, size)';
 
@@ -120,7 +119,6 @@ describe('Collapsible', () => {
 
         await fireEvent.transitionEnd(wrapper, { propertyName: 'height' });
         expect(motionEnd).toHaveBeenCalledTimes(1);
-        // the emit is synchronous and the DOM patch follows in a microtask, as in React
         await nextTick();
         expect(wrapper).not.toHaveClass('semi-collapsible-transition');
         expect(wrapper.style.transitionDuration).toBe('0ms');
@@ -261,7 +259,6 @@ describe('Collapsible', () => {
         const updated = vi.fn<(height: string, duration: string) => void>();
         const view = render(Probe, { props: { isOpen: false }, attrs: { onUpdated: updated } });
         await view.rerender({ isOpen: true });
-        // a second update would mean the view was written back after the patch
         expect(updated).toHaveBeenCalledTimes(1);
         expect(updated).toHaveBeenCalledWith(openHeight, '250ms');
     });

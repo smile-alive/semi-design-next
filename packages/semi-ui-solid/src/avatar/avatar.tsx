@@ -38,12 +38,10 @@ const defaultProps = {
     gap: 3,
 } satisfies Partial<AvatarProps>;
 
-// A preset size is a class; any other size is a pixel length that the inline style carries
 const sizeStyle = (size: string): JSX.CSSProperties => (strings.SIZE.some((preset) => preset === size) ? {} : { width: size, height: size });
 
 const slotText = (text: AvatarSlotText) => (typeof text === 'function' ? text() : text);
 
-// The avatar itself; `Avatar` decides first whether a group hides it, before any of this creates JSX
 function AvatarView(rawProps: AvatarProps) {
     const props = useDefaultProps('Avatar', rawProps, defaultProps);
     const [local, attrs] = splitProps(props, ['children', 'color', 'shape', 'size', 'hoverMask', 'src', 'srcSet', 'alt', 'gap', 'onError', 'onClick', 'onMouseEnter', 'onMouseLeave', 'imgAttr', 'bottomSlot', 'topSlot', 'border', 'contentMotion', 'class', 'style', 'ref']);
@@ -316,8 +314,6 @@ export default function Avatar(rawProps: AvatarProps) {
     const group = useAvatarGroupContext();
     const currentLayer = usePopupLayer();
 
-    // An avatar past maxCount creates nothing in the group: the branch that shows it calls `render`, which creates it
-    // there as a standalone avatar
     const token = createToken<AvatarGroupHiddenItem>(hiddenAvatar, {
         name: () => rawProps.alt ?? '',
         render: (overrides) => (

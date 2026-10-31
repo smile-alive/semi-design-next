@@ -16,7 +16,6 @@
 
     const ctx = useCollapseContext('Collapse.Panel');
 
-    // refs inside the v-for are arrays
     const buttons = useTemplateRef('button');
     const leftIcons = useTemplateRef('leftIcon');
     const rightIcons = useTemplateRef('rightIcon');

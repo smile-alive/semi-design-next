@@ -14,13 +14,11 @@
 
     let { disabled = false, href, rel, target, onclick, children, ...rest }: Props = $props();
 
-    // the props are typed for the button; the listeners and attributes a link takes are the same ones
     const linkRest = $derived(rest as HTMLAnchorAttributes);
 
     // Chrome still delivers a click from a child of a disabled button.
     const handleClick = (event: MouseEvent & { currentTarget: EventTarget & HTMLElement }) => {
         if (!disabled) {
-            // the consumer's handler is typed for the button, the link renders the same props
             onclick?.(event as MouseEvent & { currentTarget: EventTarget & HTMLButtonElement });
         }
     };

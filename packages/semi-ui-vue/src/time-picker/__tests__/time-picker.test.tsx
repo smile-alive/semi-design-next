@@ -1048,7 +1048,6 @@ describe('TimePicker', () => {
 
         it('Fix2082（#2083）：timeZone 和 disabledHours 校验显示的小时，而非本地小时', async () => {
             vi.setSystemTime(new Date('2023-05-22 12:30:45'));
-            // 07:xx at UTC+10 is 05:xx in the Asia/Shanghai test zone, which disabledHours rejects
             await renderModel({ disabledHours: () => [5], format: 'HH:mm', initValue: new Date() }, (node) => () => <ConfigProvider timeZone={10}>{node}</ConfigProvider>);
             await clickItem('hour', 7);
             await clickItem('minute', 10);
@@ -1143,7 +1142,6 @@ describe('TimePicker', () => {
         });
 
         it('全局默认值里的 insetLabelId 不影响 TimePicker', async () => {
-            // the global type omits per-instance ids; cast for an untyped app that sets one
             semiGlobal.config.overrideDefaultProps = { TimePicker: { insetLabelId: 'label-global' } } as object;
             await renderTimePicker({}, { insetLabel: () => '时间' });
             expect(document.getElementById('label-global')).toBeNull();
@@ -1954,7 +1952,6 @@ describe('TimePicker Vue 写法', () => {
     });
 
     it('模板写法的布尔简写与字符串属性', async () => {
-        // a bare template attribute arrives as '', which Vue casts to true for Boolean props
         await renderTimePicker({
             defaultValue: [new Date(2021, 5, 1, 10, 0, 0), new Date(2021, 5, 1, 14, 0, 0)],
             disabled: '',

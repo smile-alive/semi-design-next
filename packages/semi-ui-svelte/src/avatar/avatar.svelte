@@ -88,7 +88,6 @@
     const prefix = cssClasses.PREFIX;
     const more = outerMore?.layer === layer ? outerMore : undefined;
 
-    // An avatar in the `more` content keeps its own size and shape and only falls back to the group's
     const size = $derived(ownSize ?? more?.size ?? defaults('size', 'medium'));
     const shape = $derived(ownShape ?? more?.shape ?? defaults('shape', 'circle'));
     const clickable = $derived(rest.onclick !== undefined);
@@ -110,7 +109,6 @@
     const borderClass = $derived([`${prefix}-additionalBorder`, `${prefix}-additionalBorder-${size}`, `${prefix}-${shape}`]);
     const borderColor = $derived(typeof border === 'object' ? border.color : undefined);
 
-    // Avatars nested in this one's content are not items of the group
     setAvatarGroupMoreContext(undefined);
 
     const handleKeyDown = (event: KeyboardEvent & { currentTarget: HTMLElement }) => {
@@ -154,7 +152,6 @@
         isText = nextIsText;
         text = nextIsText ? next : undefined;
         if (changed) {
-            // the scale spans exist after this flush
             void tick().then(foundation.changeScale);
         }
     };

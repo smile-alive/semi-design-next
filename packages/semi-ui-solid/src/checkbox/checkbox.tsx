@@ -49,13 +49,11 @@ export interface CheckboxProps extends ElementProps<'span', 'onChange' | 'onFocu
     addonId?: string;
     extraId?: string;
     type?: CheckboxType;
-    /** Passed to `focus()` of the root element, which focuses the native input */
     preventScroll?: boolean;
     /** Attached to the native input; inside a group the group's name wins */
     name?: string;
     /** Attached to the native input: focus does not bubble, so the root would never receive it */
     onFocus?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
-    /** Attached to the native input: focus does not bubble, so the root would never receive it */
     onBlur?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
     /** The `x-semi-prop` name of the children slot */
     'x-semi-children-alias'?: string;
@@ -104,7 +102,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
                 target: { checked, value: local.value, name: name(), disabled: disabled() },
                 stopPropagation: () => event.stopPropagation(),
                 preventDefault: () => event.preventDefault(),
-                // handleClick passes the click itself as the source event
                 nativeEvent: event as MouseEvent,
             }),
             getIsInGroup: () => view().inGroup,
@@ -163,7 +160,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
 
     const hasExtra = () => hasContent(extra());
 
-    // a click on the input also bubbles here, so the native toggle and the label click take the same path
     const handleClick = (event: MouseEvent & { currentTarget: HTMLSpanElement; target: Element }) => {
         callHandler(local.onClick, event);
         if (CheckboxFoundation.isInnerInteractiveClick(event.target, event.currentTarget, input)) {

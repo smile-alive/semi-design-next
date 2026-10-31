@@ -4,7 +4,6 @@ export type IconNode = [tag: string, attrs: Record<string, string>, children?: I
 export interface IconData {
     /** Icon type: the SVG file name, rendered in the `semi-icon-<name>` class */
     name: string;
-    /** Attributes of the root svg element */
     attrs: Record<string, string>;
     children: IconNode[];
     /**

@@ -11,7 +11,6 @@ export interface GroupRecord {
     label?: string | number;
 }
 
-/** An option's data as the Select keeps it: its props plus the reader of its children */
 export interface OptionData extends OptionProps {
     /** Reads the Option's children where they render, so each place creates its own nodes */
     _slot?: () => JSX.Element;
@@ -74,7 +73,6 @@ export function readOptions(nodes: unknown[], optionList?: OptionProps[]) {
     return options;
 }
 
-/** The option without the label reader, as callbacks receive it */
 export function plain({ _slot, ...rest }: OptionData): OptionProps {
     return rest;
 }

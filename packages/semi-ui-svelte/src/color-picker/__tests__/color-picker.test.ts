@@ -522,7 +522,6 @@ describe('Svelte ColorPicker 拖拽与键盘', () => {
         await fireEvent.keyDown(getSlider(text.saturation), { key: 'ArrowRight' });
         expect(lastColor(onChange).hsva).toMatchObject({ s: 51, v: 60 });
         await fireEvent.keyDown(getSlider(text.brightness), { key: 'ArrowUp' });
-        // the one-way value is only the initial value, so the first change is kept locally
         expect(lastColor(onChange).hsva).toMatchObject({ s: 51, v: 61 });
         await fireEvent.keyDown(getSlider(text.brightness), { key: 'Home' });
         expect(lastColor(onChange).hsva.v).toBe(0);
@@ -540,7 +539,6 @@ describe('Svelte ColorPicker 拖拽与键盘', () => {
         flushSync();
         expect(hue.value).toBe('0');
         await changeInput('#00ff00');
-        // each attempt reports the setter and onChange once
         expect(store.log).toHaveLength(4);
         expect(hue.value).toBe('0');
     });

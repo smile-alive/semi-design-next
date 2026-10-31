@@ -111,7 +111,6 @@ export interface BaseTableDataProps<RecordType> {
     rowSelection?: { getCheckboxProps?: GetCheckboxProps<RecordType> } | boolean;
 }
 
-/** The rowSelection options the foundation reads */
 export interface TableBaseRowSelection<RecordType> {
     selectedRowKeys?: BaseRowKeyType[];
     defaultSelectedRowKeys?: BaseRowKeyType[];
@@ -148,22 +147,17 @@ export interface TableBaseState<RecordType> {
     /** Group key (what groupBy returns) -> the row keys in that group */
     groups?: Map<string | number, Set<BaseRowKeyType>>;
     allRowKeys?: BaseRowKeyType[];
-    /** Disabled row keys of the current page */
     pageDisabledRowKeys?: BaseRowKeyType[];
     pageDisabledRowKeysSet?: Set<BaseRowKeyType>;
     headWidths?: BaseHeadWidth[][];
     bodyHasScrollBar?: boolean;
-    /** The props the derived state was last computed from */
     prePropRowSelection?: TableBaseProps<RecordType>['rowSelection'];
     prePagination?: TableBaseProps<RecordType>['pagination'];
     preExpandedRowKeys?: BaseRowKeyType[];
-    /** Disabled row keys in sorted and filtered data */
     filteredDisabledRowKeys?: BaseRowKeyType[];
     filteredDisabledRowKeysSet?: Set<BaseRowKeyType>;
-    /** Half-checked row keys for tree selection (checkRelation='related') */
     halfCheckedRowKeys?: BaseRowKeyType[];
     halfCheckedRowKeysSet?: Set<BaseRowKeyType>;
-    /** Key entities map for tree data structure */
     keyEntities?: BaseEntitys;
     filteredSortedDataSource?: RecordType[];
     filteredSortedRowKeys?: BaseRowKeyType[];
@@ -197,7 +191,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return [...keys].map((key) => keyEntities?.[key]?.data?.rowKey ?? knownMap.get(key) ?? key);
     }
 
-    /** The checked and half-checked keys that `rowKeys` imply in a related tree selection, as the rowKey values of the data */
     static #getRelatedCheckedRowKeys(rowKeys: BaseRowKeyType[] = [], keyEntities: BaseEntitys = {}) {
         const { checkedKeys, halfCheckedKeys } = calcCheckedKeysForCheckedKeys(rowKeys.map(String), keyEntities, new Set(), new Set());
         return { checkedRowKeys: TableFoundation.#restoreRowKeys(checkedKeys, rowKeys, keyEntities), halfCheckedRowKeys: TableFoundation.#restoreRowKeys(halfCheckedKeys, rowKeys, keyEntities) };
@@ -385,7 +378,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#setAdapterPageData(pageData);
     }
 
-    /** Rebuilds the tree of a related selection; the half-checked rows follow from it and the selected keys */
     #updateKeyEntities() {
         const keyEntities = this.buildKeyEntities(this.getProp('dataSource'));
         this.adapter.setKeyEntities(keyEntities);
@@ -596,9 +588,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         );
     }
 
-    /**
-     * Group, paginate and collect the row keys of filtered and sorted data
-     */
     static getPageData<R>(props: BaseTableDataProps<R>, dataSource: R[], pagination: BasePagination, queries: BaseColumnProps<R>[]): BasePageData<R> {
         let groups;
         if (props.groupBy != null) {
@@ -912,7 +901,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return (typeof sortOrder === 'string' && strings.SORT_DIRECTIONS.includes(sortOrder)) || sortOrder === false;
     }
 
-    /** The sort and filter state a header cell shows: the column's query by dataIndex, its sort order and filtered values */
     static getColumnQueryState<Q extends { dataIndex?: unknown; sortOrder?: unknown; defaultSortOrder?: unknown; filteredValue?: unknown; defaultFilteredValue?: unknown }>(column: { dataIndex?: unknown }, queries?: Q[]): { query: Q | undefined; sortOrder: BaseSortOrder; filteredValue: Q['filteredValue'] } {
         const query = column.dataIndex != null ? queries?.find((item) => item.dataIndex === column.dataIndex) : undefined;
         const stateSortOrder = query?.sortOrder as BaseSortOrder;
@@ -993,7 +981,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     /**
-     * @param flattenColumns the leaf columns of the props
      * @param queries copies of flattenColumns with initColumnsFilteredValueAndSorterOrder applied; the framework copies
      * them, since a deep clone would break framework values held by a column
      */
@@ -1064,10 +1051,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#setFilteredDisabledRowKeys(allDataDisabledRowKeys);
     }
 
-    /**
-     * @param prevProps the props of the previous commit
-     * @param prevFlattenColumns the flattenColumns state of the previous commit
-     */
     // typed with the base shapes: an arrow field's parameters are checked contravariantly, and a host's context holds
     // the foundation as TableFoundation<any, TableBaseProps<any>>
     handleUpdate = (prevProps: TableBaseProps<RecordType>, prevFlattenColumns: TableBaseState<RecordType>['flattenColumns']) => {
@@ -1203,7 +1186,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             const curSelectedRowKeys = this.#getSelectedRowKeys();
             let selectedRowKeys = [...curSelectedRowKeys];
             const selectedRowKeysSet = this.#getSelectedRowKeysSet();
-            // the current filter result without disabled rows, whatever the checkRelation
             const disabledRowKeysSet = this.adapter.getFilteredDisabledRowKeysSet();
             const scopeRowKeys = this.adapter.getCachedFilteredSortedRowKeys().filter((key) => !disabledRowKeysSet.has(key));
 
@@ -1240,7 +1222,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 const changedRows = this.getRecordsByKeys(null, getChangedRowKeys(curSelectedRowKeys, selectedRowKeys));
                 const selectedRows = this.getRecordsByKeys(null, selectedRowKeys || []);
 
-                // a controlled selection derives its half-checked rows from the keys the parent passes back
                 if (!this.#selectionIsControlled()) {
                     this.adapter.setSelectedRowKeys(selectedRowKeys);
                     this.adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
@@ -1375,9 +1356,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#notifyChange(pagination, filters, curQuery, { changeType: 'sorter' });
     };
 
-    /**
-     * Select or deselect a row by clicking it when rowSelection.clickRow is set
-     */
     handleRowClickSelection = (rowKey: BaseRowKeyType, selected: boolean, e: Pick<Event, 'stopPropagation'>) => {
         const rowSelection = this.getState('rowSelection');
 
@@ -1410,7 +1388,6 @@ export interface BaseHeadWidth {
 }
 export interface BasePageData<RecordType> {
     dataSource?: RecordType[];
-    /** Group key (what groupBy returns) -> the row keys in that group */
     groups?: Map<string | number, Set<BaseRowKeyType>>;
     pagination?: BasePagination;
     disabledRowKeys?: BaseRowKeyType[];

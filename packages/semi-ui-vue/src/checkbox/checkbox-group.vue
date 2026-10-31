@@ -41,7 +41,6 @@
     defineSlots<CheckboxGroupSlots>();
     const attrs = useAttrs();
 
-    // One name per group, so form submission never mixes groups.
     const generatedName = useId();
 
     // role="group" supports none of these. aria-invalid and aria-errormessage go to each checkbox (the role supports

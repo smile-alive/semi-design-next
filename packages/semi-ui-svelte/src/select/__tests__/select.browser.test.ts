@@ -32,7 +32,6 @@ describe('Svelte Select 浏览器：select-only combobox（APG）', () => {
         await screen.findByRole('listbox');
         expect(combobox).toHaveAttribute('aria-expanded', 'true');
         expect(active(combobox)).toBe('Abc');
-        // the disabled option is skipped
         await userEvent.keyboard('{ArrowDown}');
         expect(active(combobox)).toBe('Pipixia');
         await userEvent.keyboard('{End}');

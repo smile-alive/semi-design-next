@@ -4,9 +4,6 @@ import isValidDate from './is-valid-date';
 import { compatibleParse } from './parser';
 import toDateArg from './to-date-arg';
 
-/**
- * get left panel picker date and right panel picker date
- */
 export default function getDefaultPickerDate({ defaultPickerValue, format, dateFnsLocale }: GetDefaultPickerValueDateOptions) {
     let nowDate = Array.isArray(defaultPickerValue) ? defaultPickerValue[0] : defaultPickerValue;
     let nextDate = Array.isArray(defaultPickerValue) ? defaultPickerValue[1] : undefined;

@@ -13,7 +13,6 @@
     // A snippet cannot be inspected, so passing children is what makes a horizontal divider carry text
     const withText = $derived(Boolean(children) && layout === 'horizontal');
 
-    // The user's style goes last so it can override the margin
     const style = $derived.by(() => {
         const length = toCssLength(margin);
         const sides = length === undefined ? [] : layout === 'vertical' ? [`margin-left: ${length}`, `margin-right: ${length}`] : [`margin-top: ${length}`, `margin-bottom: ${length}`];

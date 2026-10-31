@@ -28,15 +28,12 @@ export type AutosizeRow = {
     maxRows?: number;
 };
 
-/** The methods and nodes on a TextArea ref */
 export interface TextAreaHandle {
     focus(options?: FocusOptions): void;
     blur(): void;
     select(): void;
     setSelectionRange(start: number | null, end: number | null, direction?: 'forward' | 'backward' | 'none'): void;
-    /** The native textarea */
     readonly textarea: HTMLTextAreaElement | null;
-    /** The root element, the wrapper div */
     readonly nativeElement: HTMLElement | null;
 }
 
@@ -78,15 +75,10 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     getValueLength?: (value: string) => number;
     /** Internal, used by Chat: Enter does not start a new line, Shift+Enter does */
     disabledEnterStartNewLine?: boolean;
-    /** Whether to show line numbers */
     showLineNumber?: boolean;
-    /** The starting line number, default is 1 */
     lineNumberStart?: number;
-    /** Custom className for line number area */
     lineNumberClassName?: string;
-    /** Custom style for line number area */
     lineNumberStyle?: CSSProperties;
-    /** The style of textarea element */
     textareaStyle?: CSSProperties;
     /** When enabled, onChange fires once after an IME composition ends, not during it */
     composition?: boolean;

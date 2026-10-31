@@ -88,7 +88,6 @@
         </IconButton>
     </div>
     <component :is="props.presetPosition ? 'div' : SlotFragment" :style="{ display: 'flex' }">
-        <!-- monthRange does not support presetPosition -->
         <slot v-if="props.presetPosition === 'left' && props.type !== 'monthRange'" name="quickControls" />
         <component :is="props.presetPosition ? 'div' : SlotFragment">
             <slot name="dateInput" />

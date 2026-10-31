@@ -67,7 +67,6 @@ function combineChunks({ chunks }: { chunks: Chunk[] }): Chunk[] {
                 const prevChunk = processedChunks.pop();
                 // Touching chunks stay separate: each keeps its own className and style
                 if (nextChunk.start < prevChunk.end) {
-                    // prevChunk may fully contain nextChunk, so take the larger end
                     const endIndex = Math.max(prevChunk.end, nextChunk.end);
                     processedChunks.push({
                         highlight: true,
@@ -84,7 +83,6 @@ function combineChunks({ chunks }: { chunks: Chunk[] }): Chunk[] {
         }, []);
 }
 
-// Adds non-highlight chunks for the text between (and around) the highlighted chunks
 function fillInChunks({ chunksToHighlight, totalLength }: { chunksToHighlight: Chunk[]; totalLength: number }) {
     const allChunks: Chunk[] = [];
     const append = (start: number, end: number, highlight: boolean, className?: string, style?: HighlightStyle) => {
@@ -142,8 +140,6 @@ function fillInChunks({ chunksToHighlight, totalLength }: { chunksToHighlight: C
                 { start: 7, end: 13, highlight: true },
                 { start: 13, end: 17, highlight: false },
             ]
-
-* @return Array of "chunks" (where a Chunk is { start:number, end:number, highlight:boolean })
 */
 export function findAll({ autoEscape = true, caseSensitive = false, searchWords, sourceString }: Omit<ChunkQuery, 'searchWords'> & { searchWords: string | SearchWords }) {
     const chunks = findChunks({

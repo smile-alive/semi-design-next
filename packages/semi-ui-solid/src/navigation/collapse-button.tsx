@@ -14,7 +14,6 @@ export default function CollapseButton(props: CollapseButtonProps) {
                 {(trigger: GetTriggerProps) => (
                     <Button
                         {...trigger({
-                            // collapsed, the label is dropped from the button, so it names it
                             get 'aria-label'() {
                                 if (!props.isCollapsed) {
                                     return undefined;

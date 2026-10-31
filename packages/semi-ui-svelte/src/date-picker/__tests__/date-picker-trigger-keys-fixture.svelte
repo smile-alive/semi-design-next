@@ -2,9 +2,7 @@
     import type { DatePickerProps } from '../interface';
 
     export interface TriggerKeysFixtureStore {
-        /** inner: a button that swallows its own click; pick: a plain focusable button */
         variant: 'inner' | 'pick';
-        /** Clicks the inner button received */
         presses: number;
         props?: DatePickerProps;
     }

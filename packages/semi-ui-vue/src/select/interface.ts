@@ -9,9 +9,6 @@ export type BasicSelectValue = string | number | Record<string, any>;
 
 type IsDefaultSelectGeneric<T> = [T] extends [BasicSelectValue] ? ([BasicSelectValue] extends [T] ? true : false) : false;
 
-/**
- * Select's value type: without a generic parameter any option value or array of them, with `T` given `T | T[]`
- */
 export type SelectValue<T = BasicSelectValue> = IsDefaultSelectGeneric<T> extends true ? BasicSelectValue | any[] | undefined : T | T[] | undefined;
 
 // `true extends Multiple` rather than `Multiple extends true`: the outer conditional distributes, so a `boolean`
@@ -21,13 +18,11 @@ export type SelectChangeValue<T, Multiple> = Multiple extends unknown ? (true ex
 export type SelectSize = Size;
 
 export interface SelectVirtualize {
-    /** The height of every option row in pixels */
     itemSize: number;
     height?: number;
     width?: string | number;
 }
 
-/** What a `SelectOption` declares; any other attribute rides along in the option record */
 export interface SelectOptionBaseProps {
     value?: string | number;
     /** Text of the option; content with markup goes in the default slot */
@@ -36,7 +31,6 @@ export interface SelectOptionBaseProps {
     showTick?: boolean;
 }
 
-/** An option record: an `optionList` entry, the attributes of a `SelectOption`, and what the events report */
 export interface SelectOptionProps extends SelectOptionBaseProps {
     class?: unknown;
     style?: StyleValue;
@@ -48,7 +42,6 @@ export interface SelectOptGroupProps {
     label?: string | number;
 }
 
-/** The search input's extra attributes; listeners use Vue keys such as `onKeydown` */
 export type SelectInputProps = Omit<InputProps, 'modelValue' | 'defaultValue'> & {
     class?: unknown;
     style?: StyleValue;
@@ -115,11 +108,9 @@ export interface SelectEmits<T = BasicSelectValue, Multiple extends boolean | un
     exceed: [option: SelectOptionProps];
     create: [option: SelectOptionProps];
     clear: [];
-    /** Once when the focus enters the Select */
     focus: [event: FocusEvent];
     /** Once when the focus leaves the Select; a press outside the open dropdown passes its mousedown event */
     blur: [event: FocusEvent | MouseEvent];
-    /** After the Select has handled the key */
     keydown: [event: KeyboardEvent];
     listScroll: [event: Event];
 }
@@ -159,9 +150,7 @@ export interface SelectTriggerSlotProps {
     inputValue: string;
     placeholder?: string;
     disabled: boolean;
-    /** The Select's props */
     componentProps: Record<string, unknown>;
-    /** Updates the search keyword */
     onSearch: (inputValue: string) => void;
     /** Pass the click event when bound to a control inside the trigger, so the click does not open the list */
     onClear: (event?: MouseEvent) => void;
@@ -173,24 +162,18 @@ export interface SelectSlots {
     prefix?: () => VNode[];
     suffix?: () => VNode[];
     insetLabel?: () => VNode[];
-    /** An empty slot hides the arrow */
     arrowIcon?: () => VNode[];
     clearIcon?: () => VNode[];
-    /** An empty slot hides the empty state */
     emptyContent?: () => VNode[];
     outerTopSlot?: () => VNode[];
     innerTopSlot?: () => VNode[];
     outerBottomSlot?: () => VNode[];
     innerBottomSlot?: () => VNode[];
-    /** Replaces a whole option row */
     optionItem?: (props: SelectOptionItemSlotProps) => VNode[];
-    /** Content of the row that creates an option from the keyword */
     createItem?: (props: SelectCreateItemSlotProps) => VNode[];
     /** The selected content in single mode, the content of each tag in multiple mode */
     selectedItem?: (props: SelectSelectedItemSlotProps) => VNode[];
-    /** Replaces each tag in multiple mode */
     tag?: (props: SelectSelectedItemSlotProps) => VNode[];
-    /** Replaces the trigger content */
     trigger?: (props: SelectTriggerSlotProps) => VNode[];
 }
 
@@ -203,7 +186,6 @@ export interface SelectOptionSlots {
     default?: () => VNode[];
 }
 
-/** The methods on a Select ref */
 export interface SelectHandle {
     close: () => void;
     open: () => void;

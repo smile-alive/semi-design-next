@@ -51,9 +51,7 @@ export interface AIChatInputProps extends ElementProps<'div', 'onFocus' | 'onBlu
     onContentChange?: (contents: Content[]) => void;
     /** Read when the editor is created */
     defaultContent?: TiptapContent;
-    /** `focusin` on the editor area */
     onFocus?: (event: FocusEvent) => void;
-    /** `focusout` on the editor area */
     onBlur?: (event: FocusEvent) => void;
     /**
      * Called on paste in the editor; does not change default paste behavior.
@@ -74,9 +72,7 @@ export interface AIChatInputProps extends ElementProps<'div', 'onFocus' | 'onBlu
     showUploadFile?: boolean;
     showReference?: boolean;
     showUploadButton?: boolean;
-    /** Fully rounds the footer operate and configure buttons */
     round?: boolean;
-    /** Overrides whether the send button is enabled */
     canSend?: boolean;
     onMessageSend?: (props: MessageContent) => void;
     onStopGenerate?: () => void;
@@ -96,7 +92,6 @@ export interface AIChatInputProps extends ElementProps<'div', 'onFocus' | 'onBlu
     templatesCls?: string;
     /** `skill` is undefined when the skill is removed */
     onSkillChange?: (skill?: Skill) => void;
-    /** The icon before each skill in the skill panel */
     renderSkillIcon?: (skill: Skill) => JSX.Element;
     renderSkillItem?: (props: RenderSkillItemProps) => JSX.Element;
     /** `skill` is undefined when the template button is shown without a selected skill */

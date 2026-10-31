@@ -35,7 +35,6 @@
     const context = found;
     const prefix = cssClasses.PREFIX_OPTION;
 
-    // same rule as the foundation's #isDisabled: a disabled tree wins over a node's own disabled: false
     const isDisabled = () => Boolean(context.view.value.treeDisabled || props.row.disabled);
 
     const isLeaf = () => isTreeNodeLeaf(props.row, context.view.value.hasLoadData);
@@ -80,7 +79,6 @@
         }
     };
 
-    // the foundation reads the row element from nodeInstance, to place the drop and to build the drag image
     const withInstance = (event: DragEvent): TreeRowProps => ({ ...props.row, nodeInstance: event.currentTarget });
 
     const onDragstart = (event: DragEvent) => {

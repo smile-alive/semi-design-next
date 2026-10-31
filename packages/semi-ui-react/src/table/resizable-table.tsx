@@ -31,10 +31,6 @@ class DragOverrides {
     }
 }
 
-/**
- * A copy of the columns prop with keys, plus width placeholders for the expand and selection columns that Table adds,
- * so that those columns can be resized too
- */
 function getResizableColumns({ columns, expandedRowRender, hideExpandedColumn, rowSelection, expandCellFixed }: TableProps) {
     const resizableColumns = assignColumnKeys(cloneDeep(columns ?? []), childrenColumnName);
     // Table merges its own column into the placeholder in place, so the placeholder sits where Table puts the column

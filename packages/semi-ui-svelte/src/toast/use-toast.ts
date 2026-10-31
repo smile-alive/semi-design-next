@@ -46,7 +46,6 @@ export function createToastHookApi(store: ToastListStore, beforeAdd?: () => void
         beforeAdd?.();
         const id = createId('toast');
         store.setStack(config.stack);
-        // the store holds the options as given (ToastProps), typed as the foundation's ToastInstance
         store.add({ ...config, type, id } as ToastInstance);
         return id;
     };

@@ -49,7 +49,6 @@ function GroupItems(props: GroupItemsProps) {
 
     const [hidden, setHidden] = createSignal(split().rest);
 
-    // Names the avatars hidden by maxCount, which renderMore may show elsewhere
     const moreLabel = () => {
         const label = locale().locale.more.replace('${count}', String(hidden().length));
         const names = hidden()

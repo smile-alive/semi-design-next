@@ -11,7 +11,6 @@ import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
 import Spin from '../spin';
 
-/** A node of `treeData`; markup for its label goes through `renderLabel` */
 export interface CascaderData extends BasicCascaderData {
     label: string | number;
 }
@@ -73,7 +72,6 @@ export interface CascaderItemProps {
     expandIcon?: JSX.Element;
     /** id of the tree, or of the listbox of search results; the combobox's aria-controls points at it */
     id: string;
-    /** the popup's name, the same as the combobox's */
     labelProps: { 'aria-label'?: string; 'aria-labelledby'?: string };
     /** the option the arrow keys are on, pointed at by the combobox's aria-activedescendant */
     keyboardKey: string | null;
@@ -85,7 +83,6 @@ type Column = ReturnType<typeof getColumns<Entity>>[number];
 
 const prefixcls = cssClasses.PREFIX_OPTION;
 
-/** The inner element of the virtual search list: the rows are its `li` children */
 function VirtualListInner(props: { style?: JSX.CSSProperties; children?: JSX.Element }) {
     return (
         <ul style={props.style} class={`${prefixcls}-list`} role="none">

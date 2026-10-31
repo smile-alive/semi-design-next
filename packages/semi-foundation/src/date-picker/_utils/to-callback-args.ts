@@ -15,7 +15,6 @@ export function toCallbackDates(value: Date | Date[], timeZone?: string | number
     return isValidTimeZone(timeZone) ? dates.map((date) => zonedTimeToUtc(date, timeZone)) : dates;
 }
 
-/** Builds the date and string arguments of the callbacks, with the dates converted by `toCallbackDates` */
 export default function toCallbackArgs(value: Date | Date[], options: { type?: Type; format?: string; timeZone?: string | number; multiple?: boolean; dateFnsLocale?: any }) {
     const { type, format, timeZone, dateFnsLocale } = options;
     const dates = toCallbackDates(value, timeZone);

@@ -19,7 +19,6 @@ import type { ContainerReactProps } from '../interface';
 
 const prefixCls = cssClasses.SIDEBAR;
 
-// The root element and the overlay layer the adapter opens on show
 class ContainerRuntime {
     readonly #layer = new ReleaseHolder();
     readonly focusScope = new FocusScope();

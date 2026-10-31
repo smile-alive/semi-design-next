@@ -14,14 +14,12 @@
     import { useNoticeListContext } from './context';
     import type { NoticeHandle, NoticeProps } from './interface';
 
-    /** Props of the single notice the list renders; list-level options are stripped before they reach it */
     interface NoticeItemProps extends Omit<NoticeProps, 'onClick' | 'onClose' | 'onCloseClick' | 'class' | 'style' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer' | 'stack' | 'position'> {
         placement: NoticePosition;
         stack?: boolean;
         stackExpanded?: boolean;
         /** Shown notices in front of this one, which sets how far it sinks behind them in a collapsed stack */
         depth?: number;
-        /** z-index inside a stack, newest on top */
         layer?: number;
     }
 

@@ -3,7 +3,6 @@
     import type { ConfigProviderProps, ContextValue } from '../interface';
     import Probe from './probe.svelte';
 
-    // `props` undefined renders the probe outside any provider
     let { store }: { store: { props?: ConfigProviderProps & Record<string, unknown>; onSeen?: (value: ContextValue) => void } } = $props();
 </script>
 

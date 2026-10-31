@@ -1080,7 +1080,6 @@ describe('AIChatInput 代码审计修复', () => {
         await fireEvent.click(root(container), { detail: 1 });
         await settle(50);
         expect(pm(container)).toHaveFocus();
-        // a mouse press on the send button (which stays mounted) leaves typing where it was
         sendButton(container).focus();
         await fireEvent.click(sendButton(container), { detail: 1 });
         await settle(50);

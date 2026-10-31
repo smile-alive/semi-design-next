@@ -17,16 +17,13 @@ import type {
 } from '@fibrae/semi-foundation/tree/foundation';
 import type { ElementProps } from '../_base/base';
 
-/** A node, or a render function that receives the props the switcher needs */
 export type ExpandIcon = ReactNode | ((props: { onClick: (e: MouseEvent) => void; className: string; expanded: boolean }) => ReactNode);
 
 export type Value = string | number | TreeNodeData | Array<TreeNodeData | number | string>;
 
 export interface DragTreeNode extends TreeNodeData {
     expanded: boolean;
-    /**
-     * The node's position path in treeData, such as '0-1-2-0'
-     */
+    /** The node's position path in treeData, such as '0-1-2-0' */
     pos: string;
 }
 export interface DragProps {
@@ -91,11 +88,9 @@ export interface TreeProps extends BasicTreeProps, ElementProps<'div', 'defaultV
     expandIcon?: ExpandIcon;
     ref?: React.Ref<TreeHandle>;
 }
-/** The methods a Tree ref exposes */
 export interface TreeHandle {
     /** Searches as if typed into the search box; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Scrolls a virtualized tree to an expanded node */
     scrollTo: (scrollData: ScrollData) => void;
 }
 export interface OptionProps {
@@ -125,7 +120,6 @@ export interface TreeNodeProps extends BasicTreeNodeProps {
     isEnd?: boolean[];
     /** The row's id, which aria-activedescendant points at */
     id?: string;
-    /** The row the keyboard is on */
     focused?: boolean;
     expandIcon?: ExpandIcon;
 }

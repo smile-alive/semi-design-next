@@ -22,17 +22,12 @@
         // transfer holds without a bound value; a field of its own leaves the spread alone.
         dataSource?: TransferProps['dataSource'];
         label?: 'bold' | 'italic';
-        // 'text' is a plain element, 'button' toggles through onChange
         sourceItem?: 'text' | 'button';
-        // 'handle' wraps an icon in the drag handle, 'fullPath' prints the path
         selectedItem?: 'text' | 'handle' | 'fullPath';
         sourceHeader?: boolean;
         selectedHeader?: boolean;
-        // 'list' lists the shown items as buttons, 'select' picks two values, 'plain' prints a word
         sourcePanel?: 'list' | 'select' | 'plain';
-        // 'list' lists the selection with remove buttons, 'sort' moves the first item down, 'plain' prints a word
         selectedPanel?: 'list' | 'sort' | 'plain';
-        // 'text' fills the empty state, 'blank' is an empty snippet, 'hidden' is `false`
         emptyLeft?: EmptyKind;
         emptyRight?: EmptyKind;
         emptySearch?: EmptyKind;

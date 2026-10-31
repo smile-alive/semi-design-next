@@ -4,7 +4,6 @@ import TypographyTextPart from './text.svelte';
 import TypographyTitlePart from './title.svelte';
 import TypographyBase from './typography.svelte';
 
-// Svelte components are functions, so the parts attach to the component itself
 export const Typography: typeof TypographyBase & {
     Text: typeof TypographyTextPart;
     Title: typeof TypographyTitlePart;

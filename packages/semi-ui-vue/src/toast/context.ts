@@ -5,9 +5,8 @@ import { createContext } from '../_base/create-context';
 export interface ToastListContext {
     /** The pointer or focus is inside the list: every toast's countdown waits */
     paused: boolean;
-    /** The toasts the latest store change updated in place */
     updatedItems: readonly ToastInstance[];
-    /** Queues text for the list's live region; `read` runs when it is written */
+    /** `read` runs when the text is written to the live region */
     announce: (key: string, read: () => string) => void;
 }
 

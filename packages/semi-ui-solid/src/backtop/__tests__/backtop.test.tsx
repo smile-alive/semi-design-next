@@ -273,7 +273,6 @@ describe('BackTop 行为', () => {
         fireEvent.click(container.querySelector('.semi-backtop') as Element);
         vi.advanceTimersByTime(500);
         expect(document.documentElement.scrollTop).toBe(0);
-        // the body does not scroll the page in standards mode
         expect(document.body.scrollTop).toBe(1000);
     });
 

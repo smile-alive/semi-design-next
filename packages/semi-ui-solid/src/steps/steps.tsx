@@ -16,7 +16,6 @@ import NavStep from './nav-step';
 import { STEP } from './step';
 import type { Role } from './use-step-item';
 
-// The union of the three types' props; the type-specific ones are read only by the type that declares them
 interface AllStepsProps extends BasicStepsProps {
     type?: 'fill' | 'basic' | 'nav';
 }
@@ -70,7 +69,6 @@ export default function Steps(rawProps: StepsProps) {
         return {
             state,
             number: () => `${stepNumber() + 1}`,
-            // a step is clickable only when Steps has a handler, so the item gets none otherwise
             onChange: () => (local.onChange ? change : undefined),
             nextErrorClass: () => (state().nextError ? clsx(token.props.class, `${local.prefixCls}-next-error`) : undefined),
         };

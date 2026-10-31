@@ -19,7 +19,6 @@ describe('list', () => {
         ));
         const item = container.querySelector(`.${prefixCls}-item`) as HTMLElement;
         const rect = item.getBoundingClientRect();
-        // A blank spot far from the title text still lands on the button, so a pointer there targets the control
         const x = rect.left + rect.width / 2;
         const y = rect.bottom - 4;
         expect((document.elementFromPoint(x, y) as HTMLElement).closest('button')).toBe(screen.getByRole('button', { name: 'Title' }));

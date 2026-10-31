@@ -9,7 +9,7 @@ $color-videoPlayer_notification-bg: var(--semi-color-overlay-bg); // notificatio
 $color-videoPlayer_notification-text: var(--semi-color-default); // notification 字体色
 $color-videoPlayer_controls-bg: rgba(28, 31, 35, 0.8); // 控制栏背景色
 $color-videoPlayer_controls-text: #fff; // 控制栏文字色
-// AudioPlayer 弹层在浅色下的深灰；控制栏文字固定为白色，所以不用随主题翻转的 --semi-grey-8
+// control bar text is always white, so this cannot use --semi-grey-8, which flips with the theme
 $color-videoPlayer_controls_popup-bg: rgb(46, 50, 56); // 音量弹层与菜单背景色
 $color-videoPlayer_controls_item_popup-bg-default: var(--semi-color-overlay-bg); // 控制栏弹层背景色
 $color-videoPlayer_controls_item_popup-bg-hover: rgba(67, 68, 74, 1); // 控制栏弹层背景色 - hover

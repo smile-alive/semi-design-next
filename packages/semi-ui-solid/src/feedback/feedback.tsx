@@ -82,7 +82,6 @@ export default function Feedback(rawProps: FeedbackProps) {
         (base) => ({
             setValue: (value) => base.setState({ value }),
             notifyValueChange: (value) => local.onValueChange?.(value),
-            // the foundation tells a Promise apart from any other return
             notifyCancel: (e) => local.onCancel?.(e) as void | Promise<unknown>,
             notifyOk: (e) => local.onOk?.(e) as void | Promise<unknown>,
             notifyTextAreaChange: (value, e) => local.textAreaProps?.onChange?.(value, e),

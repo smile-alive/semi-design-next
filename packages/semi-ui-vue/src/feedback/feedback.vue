@@ -62,7 +62,6 @@
         if (isPromise(result)) {
             (result as Promise<unknown>).then(
                 () => emit('update:visible', false),
-                // the foundation rethrows the rejection; only skip the close
                 () => {}
             );
         } else {

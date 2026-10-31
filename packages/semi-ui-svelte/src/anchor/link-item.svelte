@@ -20,7 +20,6 @@
     const tooltip = $derived.by(() => {
         const { showTooltip, position } = anchor;
         const config = typeof showTooltip === 'object' ? showTooltip : {};
-        // The position can be set through showTooltip; a copy keeps the caller's object as it was
         return { ...config, opts: position ? { ...config.opts, position } : { ...config.opts } };
     });
 

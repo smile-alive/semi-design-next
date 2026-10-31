@@ -19,6 +19,5 @@ export interface HighlightProps {
     /** Camel-case or kebab-case keys; numbers are written as-is, so lengths need a unit string */
     highlightStyle?: HighlightStyle;
     highlightClassName?: string;
-    /** Tag of each highlighted chunk */
     component?: string;
 }

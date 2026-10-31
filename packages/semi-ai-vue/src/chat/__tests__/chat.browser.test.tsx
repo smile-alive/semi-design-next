@@ -29,7 +29,6 @@ const find = <T extends Element = HTMLElement>(container: Element, selector: str
         return found as T;
     });
 
-// Renders under en_US, so text assertions read the locale; `wrap` places the chat inside a host element
 function renderChat(props: Record<string, unknown>, wrap: (chat: VNode) => VNode = (chat) => chat) {
     return render(() => <LocaleProvider locale={en_US}>{() => wrap(<Chat roleConfig={roleConfig} {...props} />)}</LocaleProvider>);
 }
@@ -264,7 +263,6 @@ describe('Chat 浏览器', () => {
 
     it('确认删除消息后，焦点交给消息列表而不是落到 body', async () => {
         const list = shallowRef<ChatMessage[]>([...twoChats]);
-        // the host drops the confirmed message, as v-model:chats does
         const { container } = render(() => <LocaleProvider locale={en_US}>{() => <Chat chats={list.value} roleConfig={roleConfig} onUpdate:chats={(next: ChatMessage[]) => (list.value = next)} />}</LocaleProvider>);
         const trigger = (await find(container, '.semi-icon-delete_stroked')).closest('button') as HTMLElement;
         await tabTo(trigger);

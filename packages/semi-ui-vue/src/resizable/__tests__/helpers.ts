@@ -81,7 +81,6 @@ export async function drag(target: Element, from: number[], to: number[]) {
     await up(to);
 }
 
-/** Returns whether the key press went through without preventDefault */
 export async function key(target: Element, name: string, init: KeyboardEventInit = {}) {
     const notPrevented = target.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: name, ...init }));
     await nextTick();

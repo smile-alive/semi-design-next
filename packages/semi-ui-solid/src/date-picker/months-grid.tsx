@@ -18,7 +18,6 @@ const prefixCls = cssClasses.PREFIX;
 const { PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT } = strings;
 const { isYearOrTime } = MonthsGridFoundation;
 
-/** The time column options a caller may set; the panel owns the format, the value and the change handler */
 export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'defaultIsAM' | 'scrollItemProps'>>;
 
 export interface MonthsGridProps extends Omit<MonthsGridFoundationProps, 'renderDate' | 'renderFullDate' | 'renderQuickControls' | 'renderDateInput' | 'locale'> {
@@ -55,13 +54,11 @@ const defaultProps = {
     disabledDate: () => false,
 } satisfies Partial<MonthsGridProps>;
 
-/** The date panels of DatePicker: one month, or two for a range, each with its year and time picker */
 export default function MonthsGrid(rawProps: MonthsGridProps) {
     const props = mergeProps(defaultProps, rawProps);
 
     const titleId = createUniqueId();
 
-    // the time and year columns of the panels shown now, re-centred when the panels resize
     const columns = new Set<Reselectable>();
 
     // the cached height of both panels while they show a scroll list; 0 means measure it
@@ -98,7 +95,6 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
 
     const dateFormat = () => MonthsGridFoundation.getValidDateFormat(props);
 
-    // a ref callback that also forgets the node once the branch holding it is removed
     const attach = (part: PanelPart, panelType: PanelType) => (node: HTMLDivElement) => {
         nodes[part][panelType] = node;
         onCleanup(() => {
@@ -119,7 +115,6 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
         }
     };
 
-    /** The height of the taller panel, or 0 while the panels are not laid out */
     const calcScrollListHeight = () => {
         const height = (panelType: PanelType) => (nodes.wrap[panelType]?.getBoundingClientRect().height || 0) + (nodes.switch[panelType]?.getBoundingClientRect().height || 0);
         return Math.max(height(PANEL_TYPE_LEFT), height(PANEL_TYPE_RIGHT));

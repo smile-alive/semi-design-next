@@ -110,7 +110,6 @@ class StubObserver {
     options: unknown;
     elements = new Set<Element>();
     constructor(callback: (entries: unknown[], observer: StubObserver) => void, options?: unknown) {
-        // the platform passes the observer as the second argument
         this.callback = (entries) => callback(entries, this);
         this.options = options;
         StubObserver.instances.push(this);

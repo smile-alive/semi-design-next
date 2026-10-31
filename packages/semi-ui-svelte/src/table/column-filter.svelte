@@ -8,12 +8,10 @@
     import { getTableContext } from './context.js';
     import type { ColumnProps } from './interface.js';
 
-    /** The filter button of a column header and its Dropdown: the filter menu or the `filterDropdown` panel */
     interface ColumnFilterProps {
         column: ColumnProps;
         /** The filter options: the column's query, or the column itself when it has no dataIndex */
         query: ColumnProps;
-        /** The applied value */
         filteredValue?: any[];
     }
 

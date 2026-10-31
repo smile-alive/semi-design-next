@@ -47,13 +47,10 @@ export interface AIChatDialogueProps extends ElementProps<'div', 'onSelect'> {
     style?: React.CSSProperties;
 }
 
-/** Methods exposed on the AIChatDialogue ref */
 export interface AIChatDialogueHandle {
     selectAll: () => void;
     deselectAll: () => void;
-    /** Scrolls the message list to the bottom, animated when `animation` is true */
     scrollToBottom: (animation: boolean) => void;
-    /** Scrolls the message list to the top, animated when `animation` is true */
     scrollToTop: (animation: boolean) => void;
 }
 

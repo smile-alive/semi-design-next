@@ -11,7 +11,6 @@ export interface PinCodeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onfo
     value?: string;
     count?: number;
     format?: PinCodeFormat;
-    /** Focuses the first cell on mount */
     autofocus?: boolean;
     disabled?: boolean;
     size?: InputSize;

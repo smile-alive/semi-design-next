@@ -14,7 +14,6 @@ export interface ResizeItemEntry {
 
 export interface ResizeGroupContextValue {
     view: Accessor<{ direction: 'horizontal' | 'vertical' }>;
-    /** Returns the function that removes the entry */
     registerItem: (entry: ResizeItemEntry) => () => void;
     registerHandler: (handler: HTMLDivElement) => () => void;
     notifyResizeStart: (handler: HTMLDivElement, e: PointerEvent) => void;

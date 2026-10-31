@@ -20,15 +20,12 @@ function SvgNode(props: { node: IconNode; resolve: Resolve }) {
     );
 }
 
-/** A decorative svg component from icon or illustration data, without the Icon wrapper */
 export function createSvgComponent(data: IconData) {
     return function SemiSvg(props: SvgProps) {
-        // gradient and filter ids must be unique per instance
         const uid = createUniqueId();
         const [local, rest] = splitProps(props, ['fill']);
         const colors = createMemo(() => (data.fills ? getFillColor(local.fill, data.fills) : []));
         const resolve: Resolve = (value) => resolveValue(value, colors(), uid);
-        // A multi-colour icon spreads `fill` over its own elements; any other icon passes it to the root svg
         const rootFill = () => (!data.fills && local.fill !== undefined ? { fill: String(local.fill) } : {});
         return (
             <svg {...resolveAttrs({ ...data.attrs, focusable: 'false', 'aria-hidden': 'true' }, resolve)} {...rootFill()} {...rest}>
@@ -38,7 +35,6 @@ export function createSvgComponent(data: IconData) {
     };
 }
 
-/** A Solid icon component from the icon's data in @fibrae/semi-icons-core */
 export function createIcon(data: IconData) {
     const Svg = createSvgComponent({ ...data, attrs: { ...data.attrs, ...defaultAttrs } });
     return function SemiIcon(props: Omit<IconProps, 'svg' | 'type'>) {

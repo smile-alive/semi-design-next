@@ -45,16 +45,13 @@ export interface TriggerRenderProps<Multiple extends boolean | undefined = undef
     onClear: (e: React.MouseEvent) => void;
 }
 
-/* The basic type of the value of Cascader */
 export type SimpleValueType = string | number | CascaderData;
 
-/* The value of Cascader */
 export type Value = SimpleValueType | Array<SimpleValueType> | Array<Array<SimpleValueType>>;
 
 /** A single-mode value is one node or its path; a multiple-mode value may also be a list of paths */
 type ModeValue<Multiple> = ByMultiple<Multiple, SimpleValueType | Array<SimpleValueType>, Value>;
 
-/** The methods on a Cascader ref */
 export interface CascaderHandle {
     open: () => void;
     close: () => void;

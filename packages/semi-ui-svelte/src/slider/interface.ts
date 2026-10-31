@@ -10,7 +10,6 @@ export interface SliderMarkSnippetProps {
 }
 
 export interface SliderTipSnippetProps {
-    /** The handle's value after `tipFormatter` */
     value: string | number;
     handle: 'min' | 'max';
 }
@@ -25,7 +24,6 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, Native
     value?: number | number[];
     disabled?: boolean;
     included?: boolean;
-    /** Mark labels by value; node labels go through the `mark` snippet */
     marks?: Record<number, string | number>;
     max?: number;
     min?: number;
@@ -41,7 +39,6 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, Native
     vertical?: boolean;
     verticalReverse?: boolean;
     railStyle?: string;
-    /** One dot for a single handle, one per handle for a range */
     handleDot?: HandleDot | HandleDot[];
     /** Names the first handle's input, so a `<label for>` focuses the slider */
     id?: string;
@@ -55,8 +52,6 @@ export interface SliderProps extends Omit<HTMLAttributes<HTMLDivElement>, Native
     onBlur?: (event: FocusEvent) => void;
     /** On the handle inputs, before the slider's own handling, so `preventDefault()` keeps a value key from moving the handle */
     onKeyDown?: (event: KeyboardEvent) => void;
-    /** A mark's label next to the mark and, with `tooltipOnMark`, in its tooltip */
     mark?: Snippet<[SliderMarkSnippetProps]>;
-    /** A handle's tooltip content */
     tip?: Snippet<[SliderTipSnippetProps]>;
 }

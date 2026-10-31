@@ -28,7 +28,6 @@ export default function SplitButtonGroup(rawProps: SplitButtonGroupProps) {
     useLayoutEffect(() => {
         const container = containerRef.current;
         markEnds(container);
-        // a re-render can replace a button's className, so mark again whenever classes or buttons change
         const observer = new MutationObserver((mutations) => {
             const changed = mutations.some((mutation) => mutation.type === 'childList' || (mutation.type === 'attributes' && mutation.attributeName === 'class'));
             if (changed) {

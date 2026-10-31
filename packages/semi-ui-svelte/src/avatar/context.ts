@@ -2,7 +2,6 @@ import { createContext } from '../_base/create-context.js';
 import type { AvatarShape } from './interface.js';
 
 export interface AvatarGroupMoreValue {
-    /** The popup layer the `more` content renders in */
     readonly layer?: symbol;
     readonly size?: string;
     readonly shape?: AvatarShape;

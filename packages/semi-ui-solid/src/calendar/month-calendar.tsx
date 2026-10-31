@@ -246,7 +246,6 @@ export default function MonthCalendar(props: DayCalendarProps) {
 
     useResizeObserver(grid, measureItemLimit);
 
-    // rows split the grid height evenly, so their height follows the height prop and the week count
     createEffect(on([() => local.height, () => weeks().length], measureItemLimit));
 
     createEffect(() => {

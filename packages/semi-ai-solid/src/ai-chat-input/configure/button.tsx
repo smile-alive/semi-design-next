@@ -5,7 +5,6 @@ import Button, { type ButtonProps } from '@fibrae/semi-ui-solid/button/index';
 import getConfigureItem from './get-configure-item';
 
 type ConfigureButtonProps = Omit<ButtonProps, 'value' | 'onChange' | 'onClick'> & {
-    /** Whether the button is pressed */
     value?: boolean;
     onChange: (value: boolean) => void;
     onClick?: (value: boolean) => void;

@@ -14,7 +14,6 @@ export const query = <E extends Element = HTMLElement>(selector: string, root: P
 export const getBodyRows = () => queryAll(`.${P}-tbody .${P}-row`);
 export const getHeads = () => queryAll(`.${P}-thead .${P}-row-head`);
 export const rowKeys = () => getBodyRows().map((row) => row.getAttribute('data-row-key'));
-/** The text of the first data cell of each body row */
 export const firstCellTexts = () => getBodyRows().map((row) => row.querySelector(`.${P}-row-cell:not(.${P}-column-selection):not(.${P}-column-expand)`)?.textContent?.trim());
 export const getRowCheckboxInputs = () => queryAll<HTMLInputElement>(`.${P}-tbody .${P}-column-selection input[type="checkbox"]`);
 export const getHeaderCheckboxInput = () => query<HTMLInputElement>(`.${P}-thead .${P}-column-selection input[type="checkbox"]`);
@@ -41,7 +40,7 @@ export const getData = () => [
     { key: '4', name: 'Lisa', age: 36, address: 'Paris' },
 ];
 
-/** Renders a Table from a reactive store; change `store.props` then call `flushSync()` */
+/** Change `store.props` then call `flushSync()` */
 export function mountTable(props: TableProps, snippets: SnippetName[] = [], wrapperStyle?: string) {
     const store = createStore<{ props: TableProps; snippets: SnippetName[]; wrapperStyle?: string }>({ props, snippets, wrapperStyle });
     const result = render(TableHost, { props: { store } });

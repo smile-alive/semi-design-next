@@ -414,7 +414,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                 }
             } else if (rangeInputFocus === 'rangeStart' || !rangeInputFocus) {
                 rangeStart = fullDate;
-                // rangeEnd may carry a time ('yyyy-MM-dd HH:mm:ss') while rangeStart is a bare date
                 if (rangeStart && rangeEnd && isBefore(rangeEnd.trim().split(/\s+/)[0], rangeStart)) {
                     rangeEnd = '';
                     rangeEndReset = true;
@@ -472,13 +471,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     }
 
-    /**
-     * Shifts the other panel when the panel being changed lands on the other panel's month.
-     *
-     * @example
-     *  - panelType=right, target=new Date('2022-09-01') and left panel is in '2022-09' => call it, left panel minus one month to '2022-08'
-     *  - panelType=left, target=new Date('2021-12-01') and right panel is in '2021-12' => call it, right panel add one month to '2021-01'
-     */
+    /** Shifts the other panel when the panel being changed lands on the other panel's month. */
     protected handleSyncChangeMonths({ panelType, target }: { panelType: PanelType; target: Date }) {
         const { type } = this.adapter.getProps();
         const { monthLeft, monthRight } = this.adapter.getStates();
@@ -556,7 +549,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         return (props.format || getDefaultFormatToken(props.type)) as string;
     }
 
-    /** The disabled hours, minutes and seconds `disabledTime` gives the time panel of `panelType` */
     static calcDisabledTime({ disabledTime, type }: Pick<MonthsGridFoundationProps, 'disabledTime' | 'type'>, { rangeStart, rangeEnd, monthLeft }: Pick<MonthsGridFoundationState, 'rangeStart' | 'rangeEnd' | 'monthLeft'>, panelType: PanelType) {
         if (typeof disabledTime === 'function' && panelType && isDateTimeType(type)) {
             const selected = [];
@@ -594,7 +586,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         return 'none';
     }
 
-    /** The panel shows a scroll list, its year and month picker or its time picker, instead of the month */
     static isYearOrTime(panel: PanelState) {
         return Boolean(panel && (panel.isTimePickerOpen || panel.isYearPickerOpen));
     }
@@ -604,7 +595,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         return panel.isYearPickerOpen ? 'year' : panel.isTimePickerOpen ? 'time' : 'date';
     }
 
-    /** The title of a month in the navigation, from the locale's `monthText` pattern */
     static formatMonthText(locale: Pick<Locale['DatePicker'], 'monthText' | 'months'>, month?: Date) {
         if (!month) {
             return '';

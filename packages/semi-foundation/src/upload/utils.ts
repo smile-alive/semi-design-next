@@ -16,15 +16,10 @@ export function containsName(node: HTMLElement) {
     return (node.textContent ?? '').trim() !== '' || node.querySelector('[aria-label],[aria-labelledby],[alt]') !== null;
 }
 
-/** The position of the card that holds `target`; -1 when it is outside the cards, like the clear button */
 export function indexOfCard(cards: ArrayLike<Element>, target: Node) {
     return Array.from(cards).findIndex((card) => card.contains(target));
 }
 
-/**
- * Where focus goes once the control that held it left the list (a card removed, cleared, retried or replaced): the
- * remove button of the card now at `index`, else of the last card, else the add area.
- */
 export function getFocusHandoverTarget(cards: ArrayLike<Element>, index: number, addArea: HTMLElement | null): HTMLElement | null {
     const card = index >= 0 ? cards[Math.min(index, cards.length - 1)] : undefined;
     const cardTarget = card && (card.querySelector<HTMLElement>(`.${cssClasses.PREFIX}-file-card-close, .${cssClasses.PREFIX}-picture-file-card-close`) ?? FocusTrapHandle.getFocusableElements(card as HTMLElement).find((node) => node instanceof HTMLElement));

@@ -52,7 +52,6 @@ export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps, S e
     /** Traps focus in the sheet; a no-op without mask, which is not modal */
     trapFocus: () => void;
     releaseFocus: () => void;
-    /** Focuses the element focused before the sheet opened */
     restoreFocus: () => void;
     toggleDisplayNone: (displayNone: boolean) => void;
 }
@@ -67,11 +66,7 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         return true;
     };
 
-    /**
-     * A top or bottom sheet spans the width unless `canVerticalSetWidth`, and takes `height` (448 by default); a left or
-     * right sheet spans the height. Without a mask the width goes on the outer element and the dialog fills it: a
-     * percentage repeated on the dialog would compound.
-     */
+    /** Without a mask the width goes on the outer element and the dialog fills it: a percentage repeated on the dialog would compound. */
     static getSheetSize({ placement, canVerticalSetWidth, width, height, mask }: Pick<SideSheetProps, 'placement' | 'width' | 'height' | 'mask'> & { canVerticalSetWidth?: boolean }): SheetSize {
         const horizontal = placement === 'top' || placement === 'bottom';
         const sheetWidth = horizontal && !canVerticalSetWidth ? '100%' : width;

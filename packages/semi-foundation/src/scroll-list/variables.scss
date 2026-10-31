@@ -1,5 +1,5 @@
 @use 'semi:theme' as *;
-// Color
+
 $color-scrollList-bg: var(--semi-color-bg-3); // 滚动列表背景色
 $color-scrollList-border: var(--semi-color-border); // 滚动列表描边颜色
 $color-scrollList_header-bg: transparent; // 滚动列表 header 背景色
@@ -14,7 +14,6 @@ $color-scrollList_selected_item-text: var(--semi-color-text-0); // 滚动列表�
 $color-scrollList_selected_item-icon: var(--semi-color-text-2); // 滚动列表选中选项图标颜色
 $color-scrollList_footer-border: var(--semi-color-border); // 滚动列表底部描边颜色
 
-// Width/Height
 $height-scrollList: 300px;
 $height-scrollList_item: 36px;
 $width-scrollList_item-border: $border-thickness-control;
@@ -23,7 +22,6 @@ $width-scrollList_item_wheel_selector-border: $border-thickness-control;
 $height-scrollList_line: 1px;
 $width-scrollList_footer-border: $border-thickness-control;
 
-// Spacing
 $spacing-scrollList_header-paddingY: 0;
 $spacing-scrollList_header-paddingX: 16px;
 $spacing-scrollList_header_title-paddingY: $spacing-base;
@@ -39,12 +37,9 @@ $spacing-scrollList_item_wheel_list_shade_pre-marginTop: -1 * ($height-scrollLis
 $spacing-scrollList_item_wheel_list_shade_post-marginTop: $height-scrollList_item * 0.5 + $border-thickness-control;
 $spacing-scrollList_footer-padding: 10px;
 
-// Radius
 $radius-scrollList: var(--semi-border-radius-medium);
 
-// Font
 $font-scrollList_header_title-fontWeight: $font-weight-bold;
 $font-scrollList_item_wheel_item_selected-fontWeight: $font-weight-bold;
 
-// Other
 $shadow-scrollList: var(--semi-shadow-elevated);

@@ -34,7 +34,6 @@
         arrowPosition: 'both' | 'start' | 'end';
         visibleTabsStyle?: StyleValue;
         dropdownProps?: TabsDropdownProps;
-        /** The Tabs' aria-label and aria-labelledby, which name the tablist */
         tablistAttrs: Record<string, unknown>;
     }>();
 

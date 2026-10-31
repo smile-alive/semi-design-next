@@ -23,7 +23,6 @@ export default function TagGroup(rawProps: TagGroupProps) {
     const props = useDefaultProps('TagGroup', rawProps, defaultProps);
     const [local, rest] = splitProps(props, ['class', 'maxTagCount', 'restCount', 'size', 'avatarShape', 'showPopover', 'popoverProps', 'onTagClose', 'onPlusNMouseEnter', 'renderTag', 'tagList']);
 
-    // Rows are keyed so that a tag's own hidden state follows its key, not its position
     const keys = createMemo(() => getTagListKeys(local.tagList));
     const entries = createMemo(() => new Map<string | number, Entry>(local.tagList.map((tag, index) => [keys()[index], { tag, index }])));
 
@@ -43,7 +42,6 @@ export default function TagGroup(rawProps: TagGroupProps) {
             },
             get tagKey() {
                 const { tagKey, children } = entry().tag;
-                // the index keeps keys stable across renders, so tags are not remounted
                 return tagKey || (children ?? entry().index);
             },
             onClose(tagChildren: JSX.Element, event: TagCloseEvent, tagKey?: string | number) {

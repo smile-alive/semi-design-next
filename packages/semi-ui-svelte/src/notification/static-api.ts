@@ -17,7 +17,6 @@ let list: ReturnType<typeof mount> | null = null;
 
 function addNotice(notice: NoticeProps) {
     assertClient('Notification', 'Notification.useNotification');
-    // an explicit undefined must not replace the defaults
     const merged: NoticeProps = { ...store.defaults, ...omitInstanceIds(semiGlobal.config.overrideDefaultProps?.Notification), ...omitBy(notice, (value) => value === undefined) };
     const id = merged.id ?? createId('notification');
     if (!wrapper) {

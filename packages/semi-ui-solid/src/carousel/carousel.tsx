@@ -171,7 +171,6 @@ export default function Carousel(rawProps: CarouselProps) {
         })
     );
 
-    // the roving tabindex moves with the current slide, so focus follows it after a key changed it
     createEffect(
         on(
             activeIndex,

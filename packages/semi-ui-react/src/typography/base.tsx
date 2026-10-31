@@ -48,7 +48,6 @@ function TooltipTrigger({ focusable, tabIndex, ...props }: TypographyProps & { f
     return <TypographyElement {...props} tabIndex={focusable ? tabIndex : undefined} />;
 }
 
-/** Ellipsis state; `children` is the children it was derived from */
 interface EllipsisView {
     children: React.ReactNode;
     isOverflowed: boolean;
@@ -313,9 +312,6 @@ export default function Base({
         );
     }
 
-    /**
-     * css truncation applies while not expanded
-     */
     const cssActive = !view.expanded && cssEllipsis;
 
     const ellipsisCls = hasEllipsis
@@ -323,7 +319,6 @@ export default function Base({
               [`${prefixCls}-ellipsis`]: true,
               [`${prefixCls}-ellipsis-single-line`]: rows === 1,
               [`${prefixCls}-ellipsis-multiple-line`]: rows > 1,
-              // Text (span) stays inline
               [`${prefixCls}-ellipsis-multiple-line-text`]: rows > 1 && component === 'span',
               [`${prefixCls}-ellipsis-overflow-ellipsis`]: rows === 1 && cssActive,
               [`${prefixCls}-ellipsis-overflow-ellipsis-text`]: rows === 1 && cssActive && component === 'span',

@@ -20,7 +20,6 @@
     const sprite = $derived(typeof shown === 'object' && shown ? shown.id : undefined);
     const hasImage = $derived(Boolean(shownSnippet || src || sprite));
 
-    // Only an Empty with a darkModeImage has anything to switch, so only it observes
     $effect(() => {
         if (!darkModeImage) return;
         const sync = () => {

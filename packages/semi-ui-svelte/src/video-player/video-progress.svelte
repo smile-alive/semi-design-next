@@ -52,7 +52,6 @@
 
     const texts = $derived(locale().locale);
 
-    // the pointer's position, or the playhead when the bar is used by keyboard
     const previewValue = $derived(states().movingInfo?.value ?? value);
 
     // The popup is anchored to the bar's center, so only a translate moves it to the pointer

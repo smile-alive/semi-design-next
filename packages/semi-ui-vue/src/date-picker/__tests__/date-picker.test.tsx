@@ -40,7 +40,6 @@ const baseDate = new Date(baseYear, baseMon, baseDay, 8, 8, 8, 8);
 const popupSelector = `.${BASE_CLASS_PREFIX}-popover .${BASE_CLASS_PREFIX}-datepicker`;
 const dp = `${BASE_CLASS_PREFIX}-datepicker`;
 
-// The popup content mounts a few ticks after the popover opens
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 async function renderPicker(props: Record<string, unknown> = {}, slots: Slots = {}) {
     const view = render(DatePicker, { props, slots: slots as never });
@@ -91,7 +90,6 @@ const waitForPanelOpened = async () => {
     await settle();
 };
 const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
-// day cells carry their full date (yyyy-MM-dd) as aria-label; blank cells of adjacent months have none
 const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
 const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day-selected`)).map((d) => d.getAttribute('aria-label'));
 const getPresetButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-quick-control button`);
@@ -100,7 +98,6 @@ const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-m
 const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySelectorAll(`.${dp}-week`)[weekIndex].querySelectorAll<HTMLElement>(`.${dp}-day`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
-// year/month scroll lists in DOM order: [year, month] per panel (left first)
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
 async function typeInto(input: HTMLInputElement, text: string) {
@@ -518,7 +515,6 @@ describe(`DatePicker`, () => {
         const { container } = await renderNode(() => <ConfigProvider timeZone={zone.value}>{() => <DatePicker type="dateTime" defaultOpen defaultPickerValue={today} motion={false} />}</ConfigProvider>);
 
         const days = document.querySelectorAll(`.${dp}-day`);
-        // index 6 is always a valid date: the first row holds 7 cells, at most one of which belongs to the previous month
         await userEvent.click(days[6]);
         expect(document.querySelectorAll(`.${dp}-day-selected`)).toHaveLength(1);
         const input = container.querySelector<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
@@ -614,8 +610,6 @@ describe(`DatePicker`, () => {
         expect(endInput).toHaveValue('2021-08-10');
     });
 
-    // A range end outside the disabled month stays selectable, e.g. a September day when defaultValue is
-    // ['2021-08-06', '2021-08-15'] and August is disabled.
     it('rangeStart 禁用时仍可选择 rangeEnd', async () => {
         const onChange = vi.fn<ChangeFn>();
         const defaultValue = ['2021-08-06', '2021-08-15'];
@@ -632,7 +626,7 @@ describe(`DatePicker`, () => {
 
         endInput.focus();
         await settle();
-        await userEvent.click(getWeekDays('right', 1)[5]); // 2021-09-10
+        await userEvent.click(getWeekDays('right', 1)[5]);
 
         expect(onChange).toHaveBeenCalledTimes(1);
         const value = onChange.mock.calls[0][0] as Date[];
@@ -976,7 +970,6 @@ describe(`DatePicker`, () => {
             position: 'leftTopOver',
         });
         expect(getPopup()?.querySelector(`.${dp}-inset-input-wrapper`)).not.toBeNull();
-        // the 1px spacing only shifts the computed popup offset, which jsdom does not lay out
         expect(getPopoverWrapper()).toHaveAttribute('x-placement', 'leftTopOver');
     });
 
@@ -1480,7 +1473,6 @@ describe(`DatePicker`, () => {
             showClearIgnoreDisabled: true,
         });
 
-        // showClearIgnoreDisabled is derived from insetInput only, so a disabled range trigger has no clear button
         container.querySelectorAll('input').forEach((input) => expect(input).toBeDisabled());
         expect(screen.queryByRole('button', { name: zh_CN.DatePicker.clearRange })).toBeNull();
     });
@@ -1588,7 +1580,6 @@ describe(`DatePicker`, () => {
         await renderPicker({ defaultValue: baseDate, defaultOpen: true, motion: false, weekStartsOn: 1 });
         const weekdays = screen.getAllByRole('columnheader').map((header) => header.textContent);
         expect(weekdays).toEqual(['一', '二', '三', '四', '五', '六', '日']);
-        // 2019-09-01 is a Sunday, the last column of the first week
         expect(getWeekDays('left', 0)[6]).toHaveAttribute('aria-label', '2019-09-01');
     });
 
@@ -2141,7 +2132,6 @@ describe(`DatePicker`, () => {
         const [dateInput, timeInput] = (getPopup() as HTMLElement).querySelectorAll<HTMLInputElement>(`.${dp}-inset-input-wrapper input`);
         expect(timeInput).toHaveValue('15:30');
         await typeInto(dateInput, '2021-06-15');
-        // the default locale is zh_CN, whose day period is 下午
         expect(onChange).toHaveBeenCalledWith(new Date(2021, 5, 15, 15, 30), '2021-06-15 03:30 下午');
     });
 
@@ -2522,7 +2512,6 @@ describe(`DatePicker`, () => {
             motion: false,
             timeZone: 'Asia/Shanghai',
         });
-        // the tests run in Asia/Shanghai, so the value is shown unchanged
         expect(container.querySelector('input')).toHaveValue('2019-09-08 08:08:08');
     });
 
@@ -3825,7 +3814,6 @@ describe(`DatePicker`, () => {
         await renderPicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, motion: false, weekStartsOn: 0 });
         const weekdays = screen.getAllByRole('columnheader').map((header) => header.textContent);
         expect(weekdays).toEqual(['日', '一', '二', '三', '四', '五', '六']);
-        // 2019-09-01 is a Sunday, the first cell of the first week
         expect(getWeekDays('left', 0)[0]).toHaveAttribute('aria-label', '2019-09-01');
     });
 
@@ -4144,7 +4132,6 @@ describe(`DatePicker`, () => {
     });
 
     it('weekStartsOn 影响日期格位置', async () => {
-        // January 2021 starts on Friday
         await renderPicker({
             type: 'date',
             defaultValue: new Date(2021, 0, 1),
@@ -4153,7 +4140,6 @@ describe(`DatePicker`, () => {
             weekStartsOn: 1,
         });
         expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-day[aria-label]`)).toHaveLength(31);
-        // with Monday first, Friday is the fifth column
         expect(getWeekDays('left', 0)[4]).toHaveAttribute('aria-label', '2021-01-01');
     });
 
@@ -4187,7 +4173,6 @@ describe(`DatePicker`, () => {
         expect(weekRows('right')).toHaveLength(5);
         await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'year');
-        // May 2021 needs six week rows
         const nextMonth = () => getPanel('right').querySelector(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`) as HTMLElement;
         await userEvent.click(nextMonth());
         await userEvent.click(nextMonth());
@@ -4347,7 +4332,6 @@ describe(`DatePicker`, () => {
             defaultOpen: true,
             motion: false,
         });
-        // June and July 2021 both need five week rows
         expect(getPanel('left').querySelectorAll(`.${dp}-week`)).toHaveLength(5);
         expect(getPanel('right').querySelectorAll(`.${dp}-week`)).toHaveLength(5);
     });
@@ -4417,7 +4401,6 @@ describe(`DatePicker`, () => {
 
     it('切换月份时周行数随之变化', async () => {
         await renderPicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, motion: false });
-        // September 2019 needs five week rows, June 2019 needs six
         expect(getPanel('left').querySelectorAll(`.${dp}-week`)).toHaveLength(5);
         for (let i = 0; i < 3; i++) {
             await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.prevMonth }));
@@ -4487,7 +4470,6 @@ describe(`DatePicker`, () => {
         expect(onChange).toHaveBeenLastCalledWith([new Date(2023, 0), new Date(2023, 0)], ['2023-01', '2023-01']);
     });
 
-    // One test per previously fixed bug, named after the issue it reproduces
     describe('story 回归用例', () => {
         const getSwitchTexts = () => Array.from(document.querySelectorAll(`.${dp}-switch-text`)).map((el) => el.textContent);
 
@@ -4766,7 +4748,6 @@ describe(`DatePicker`, () => {
             await settle();
             await userEvent.click(getDay('2020-02-15'));
             expect(onChange).toHaveBeenCalledTimes(1);
-            // in GMT+00:00 the shown wall time must equal the UTC time of the emitted date
             const utcText = (onChange.mock.calls[0][0] as Date).toISOString().slice(0, 19).replace('T', ' ');
             expect(utcText.startsWith('2020-02-15')).toBe(true);
             expect(input).toHaveValue(utcText);

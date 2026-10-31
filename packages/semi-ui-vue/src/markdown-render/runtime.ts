@@ -8,7 +8,6 @@ function jsx(type: string | Component | typeof Fragment, { children, className, 
     // server, so it joins class
     if (className !== undefined) rest.class = rest.class === undefined ? className : [className, rest.class];
     if (type === Fragment) return h(Fragment, rest, (children === undefined ? [] : [children].flat()) as VNodeArrayChildren);
-    // children come from JSX as unknown, and no single h overload accepts them for a string-or-component type
     if (typeof type === 'string' || children === undefined) return h(type as Component, rest, children as never);
     return h(type as Component, rest, { default: () => children });
 }

@@ -2,7 +2,6 @@
     import Image from '../image.svelte';
     import type { ImageProps, MenuProps } from '../interface';
 
-    // A snippet is passed only when its flag is on, so absence stays observable
     let { store }: { store: { props: ImageProps; snippets: string[] } } = $props();
 
     const on = (name: string) => store.snippets.includes(name);

@@ -22,7 +22,6 @@
     type Foundation = ModalContentFoundation<FoundationProps, MouseEvent>;
     type Adapter = ModalContentAdapter<FoundationProps, MouseEvent>;
 
-    // Internal: Modal passes every prop below; the rest are the caller's attributes
     interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'children'> {
         visible: boolean;
         motion: boolean;
@@ -147,7 +146,6 @@
     const modalDialog = $derived(isModal({ mask, maskFixed, inBody }));
     const heightSet = $derived(Boolean(height) || /(^|;)\s*height\s*:/.test(userStyle ?? ''));
 
-    // only set keys, so an unset width does not wipe the caller's style
     const sizeStyle = $derived(isFullScreen ? 'width: 100%; height: 100%; margin: unset' : [width ? `width: ${toCssLength(width)}` : '', height ? `height: ${toCssLength(height)}` : ''].filter(Boolean).join('; '));
     const boxStyle = $derived([userStyle, sizeStyle].filter(Boolean).join(';') || undefined);
 
@@ -203,7 +201,6 @@
 {/snippet}
 
 {#snippet dialogPart()}
-    <!-- tabindex lets the dialog itself take focus -->
     <div
         aria-labelledby={labelledby}
         aria-modal={modalDialog ? 'true' : undefined}

@@ -19,7 +19,6 @@ const objectData = [
     { email: 'semi@vigo.com', value: 'vigo' },
 ];
 
-// lets the popup mount and the foundation's effects run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));
@@ -733,7 +732,6 @@ describe('Svelte AutoComplete data 变化', () => {
 });
 
 describe('Svelte AutoComplete trigger snippet', () => {
-    // `capture` receives the snippet's argument getter, which stays current as the state changes
     const triggerSnippet = (capture: (get: () => AutoCompleteTriggerSnippetProps) => void = () => undefined) =>
         createRawSnippet<[AutoCompleteTriggerSnippetProps]>((args) => ({
             render: () => '<div class="custom-trigger"><input class="custom-input" /><button type="button" class="custom-clear"></button></div>',

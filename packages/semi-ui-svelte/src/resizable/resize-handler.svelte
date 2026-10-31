@@ -19,7 +19,6 @@
 
     const handlePointerdown = (e: PointerEvent & { currentTarget: HTMLDivElement }) => {
         if (isSecondaryPress(e)) return;
-        // capturing keeps the moves and the release on the handler wherever the pointer goes
         e.currentTarget.setPointerCapture(e.pointerId);
         group.notifyResizeStart(e.currentTarget, e);
     };

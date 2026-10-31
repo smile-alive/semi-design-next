@@ -517,7 +517,6 @@ describe('Popconfirm', () => {
         expect(onVisibleChange).toHaveBeenCalledExactlyOnceWith(true);
         setVisible(true);
         await waitFor(() => expect(getPopconfirm()).not.toBeNull());
-        // confirming reports the close, but the popup waits for the prop
         await userEvent.click(screen.getByRole('button', { name: '确定' }));
         expect(onVisibleChange).toHaveBeenLastCalledWith(false);
         expect(getPopconfirm()).not.toBeNull();

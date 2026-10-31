@@ -8,7 +8,6 @@ export function getVisibleAnnotations(part: OutputText) {
     return (part.annotations ?? []).filter((annotation) => annotation.type !== 'file_citation' && annotation.type !== 'container_file_citation');
 }
 
-/** Whether a message holds several images, which the layout then shows as a list */
 export function isImageList(parts: readonly ({ type?: string } | undefined)[]) {
     return parts.filter((part) => part?.type === MESSAGE_ITEM_TYPE.INPUT_IMAGE).length > 1;
 }

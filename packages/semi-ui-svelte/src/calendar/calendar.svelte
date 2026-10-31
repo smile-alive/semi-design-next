@@ -37,7 +37,6 @@
         ...rest
     }: CalendarProps = $props();
 
-    // One "today" source per Calendar; the views read it.
     const today = useToday();
 
     // Without displayValue the first frame shows the current date, so server rendering passes displayValue to make the server and the browser agree

@@ -17,7 +17,6 @@ const prefix = 'semi-notification';
 const noticeCls = `${prefix}-notice`;
 const hideCls = (placement = 'topRight') => `${noticeCls}-animation-hide_${placement}`;
 const showCls = (placement = 'topRight') => `${noticeCls}-animation-show_${placement}`;
-// The list animates each notice's root wrapper, not the notice element
 const wrapperOf = (notice?: Element | null) => notice?.parentElement;
 const getList = () => document.querySelector<HTMLElement>(`.${prefix}-list`);
 const getTitle = (selector: string) => document.querySelector(`${selector} .${noticeCls}-title`);
@@ -58,7 +57,6 @@ function renderHook(props: { reachable?: string } = {}) {
             },
         },
     });
-    // hook notifications are mounted into the body
     return { ...result, holder: document.body };
 }
 const renderNotice = (props: Record<string, unknown> = {}) => render(NoticeItem, { props: { placement: 'topRight', ...props } });
@@ -447,7 +445,6 @@ describe('Notification', () => {
         await tick();
         Notification.close('5');
         await tick();
-        // the leaving newest notice keeps its layer; the shown ones sit at depths 0 to 3
         expect(items().map((item) => item.style.zIndex)).toEqual(['5', '4', '3', '2', '1']);
         expect(items().map((item) => item.style.transform)).toEqual(['', '', 'translateY(8px) scaleX(0.95)', 'translateY(16px) scaleX(0.9)', 'translateY(24px) scaleX(0.85)']);
         await endAnimations('hide');
@@ -917,7 +914,6 @@ describe('Notification', () => {
             expect(hooked).toHaveAttribute('dir', 'rtl');
             expect(hooked.querySelector('button')).toHaveAccessibleName(ja_JP.Notification.close);
             expect(hookedWrapper.querySelector(`.${prefix}-list`)).toHaveAttribute('x-placement', 'topLeft');
-            // the hook's wrapper is the one with display: contents
             const staticNotice = document.body.querySelector(`:scope > .${prefix}-wrapper:not([style*="contents"]) .${noticeCls}`) as HTMLElement;
             expect(staticNotice).toHaveTextContent('static');
             expect(staticNotice).not.toHaveAttribute('dir');

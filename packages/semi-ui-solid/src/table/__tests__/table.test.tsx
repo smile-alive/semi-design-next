@@ -902,7 +902,6 @@ describe('Table', () => {
         render(() => <Table columns={columns} dataSource={data} expandedRowRender={expandedRowRender} />);
         const expandIcons = queryAll(`.${P}-tbody .${P}-row .${P}-expand-icon`);
         await userEvent.click(expandIcons[0]);
-        // expanding a row keeps the other rows' DOM
         expect(expandIcons[1].isConnected).toBe(true);
         await userEvent.click(expandIcons[1]);
         expect(expandedRowRender).toHaveBeenCalledTimes(2);

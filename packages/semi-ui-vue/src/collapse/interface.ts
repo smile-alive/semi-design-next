@@ -36,7 +36,6 @@ export interface CollapsePanelEmits {
 
 export interface CollapsePanelSlots {
     default?: () => VNode[];
-    /** Inside the toggle button, so only phrasing content. */
     header?: () => VNode[];
     /** Outside the toggle button, so it may hold its own controls. */
     extra?: () => VNode[];

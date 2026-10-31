@@ -9,7 +9,6 @@ interface Lifecycle {
     destroy?: () => void;
 }
 
-/** A counter readers subscribe to; `bump` re-runs them even when the written value is equal */
 class Version {
     value = $state(0);
     bump() {
@@ -18,10 +17,8 @@ class Version {
 }
 
 /**
- * The foundation's state: a plain object the adapter reads and writes synchronously, plus one version per key, so a
- * reader of `view.x` re-runs only for writes to `x`. Every write notifies, equal value or not, because React and Vue
- * re-render on every `setState` and a foundation may write back a Set it mutated in place; a `$state` proxy would
- * skip an equal write and wrap the Set.
+ * Every write notifies, equal value or not, because React and Vue re-render on every `setState` and a foundation may
+ * write back a Set it mutated in place; a `$state` proxy would skip an equal write and wrap the Set.
  */
 function createStateMirror<S extends object>(initial: S) {
     // replaced on every write, never mutated: an object the foundation got from getStates() keeps its values

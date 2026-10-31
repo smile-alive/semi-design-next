@@ -33,7 +33,7 @@ export interface PercentAnimation {
     stop: () => void;
 }
 
-/** Eases the number shown in the text towards the new percent; a new update or `stop` cancels the running tween */
+/** A new update or `stop` cancels the running tween */
 export function createPercentAnimation(setShown: (value: number) => void): PercentAnimation {
     let cancel: (() => void) | undefined;
     const stop = () => {

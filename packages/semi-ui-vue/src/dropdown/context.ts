@@ -13,7 +13,6 @@ export interface DropdownContextView {
 
 export interface DropdownContext {
     view: ComputedRef<DropdownContextView>;
-    /** Closes the popup that renders the menu, without moving focus */
     close: () => void;
     /** Closes that popup and the popups of every enclosing menu */
     closeAll: () => void;
@@ -22,7 +21,6 @@ export interface DropdownContext {
 
 export const [provideDropdownContext, useDropdownContext] = createContext<DropdownContext>('Dropdown', { optional: true });
 
-/** The foundation context; outside any menu the depth is 0. */
 export function menuContext(ctx?: DropdownContext, direction?: 'ltr' | 'rtl'): DropdownMenuContext {
     return {
         ...ctx?.view.value,

@@ -13,10 +13,8 @@ type AnyRecord = Record<string, any>;
  * column type: a Vue onCell returns Vue attributes, which the foundation's column type does not describe
  */
 export type TableState = TableBaseState<AnyRecord>;
-/** The props the foundation reads: the Table props with the function props resolved */
 export type TableFoundationProps = TableBaseProps<AnyRecord> & Omit<TableProps, keyof TableBaseProps<AnyRecord>>;
 
-/** `components` merged over the default tags */
 export interface MergedTableComponents {
     header: { outer: TableComponent; wrapper: TableComponent; row: TableComponent; cell: TableComponent };
     body: {
@@ -28,13 +26,11 @@ export interface MergedTableComponents {
     };
 }
 
-/** The data every part of the table renders from */
 export interface TableContextView {
     prefixCls: string;
     direction: 'ltr' | 'rtl';
     size: TableSize;
     anyColumnFixed: boolean;
-    /** The leaf columns, the selection and expand columns included */
     flattenedColumns: ColumnProps[];
     headWidths: BaseHeadWidth[][];
     headerStyle?: CSSProperties;
@@ -46,7 +42,6 @@ export interface TableContextView {
     components: MergedTableComponents;
     tableLayout: 'fixed' | 'auto';
     bodyHasScrollbar: boolean;
-    /** The sort and filter state of the columns */
     queries: ColumnProps[];
     scroll?: TableScroll;
     sticky?: TableSticky;
@@ -59,7 +54,6 @@ export interface TableContextView {
     expandRowByClick: boolean;
     keepDOM: boolean;
     clickGroupedRowToExpand: boolean;
-    /** A `#expandedRow` slot is given */
     hasExpandedRow: boolean;
     onRow: TableProps['onRow'];
     onHeaderRow: TableProps['onHeaderRow'];
@@ -67,7 +61,6 @@ export interface TableContextView {
     groupSectionColumn: TableProps['groupSectionColumn'];
 }
 
-/** The selection and expansion state that selection cells and expand buttons read */
 export interface TableRowState {
     rowSelection?: TableBaseStateRowSelection<AnyRecord>;
     filteredDisabledRowKeysSet: Set<BaseRowKeyType>;
@@ -86,7 +79,6 @@ export interface TableContext {
     view: ComputedRef<TableContextView>;
     rowState: ComputedRef<TableRowState>;
     foundation: TableFoundation<AnyRecord, TableFoundationProps>;
-    /** The Table's own slots, called by the rows and cells in their own render */
     slots: TableSlots;
     /**
      * The slot of a `Table.Column` child, else the Table slot of that name (`title` falls back to `headerCell`);
@@ -102,13 +94,10 @@ export interface TableContext {
     handleBodyScroll: (event: Event) => void;
     handleRowExpanded: (expanded: boolean, rowKey: BaseRowKeyType, event?: Event) => void;
     handleRowSelection: (rowKey: BaseRowKeyType, selected: boolean, event: Event) => void;
-    /** Whether the row gets an expand button */
     rowExpandable: (record: AnyRecord) => boolean;
     emitRowEvent: (name: RowEventName, record: AnyRecord, event: MouseEvent) => void;
-    /** The props as the foundation sees them, with function defaults resolved */
     getProps: () => TableProps;
     getState: () => TableState;
 }
 
-/** The context the parts of a table read; they render only inside Table */
 export const [provideTableContext, useTableContext] = createContext<TableContext>('Table');

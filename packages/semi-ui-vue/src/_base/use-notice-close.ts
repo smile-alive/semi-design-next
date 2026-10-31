@@ -1,7 +1,6 @@
 import { type ComputedRef, onMounted, watch } from 'vue';
 import type AutoCloseFoundation from '@fibrae/semi-foundation/base/auto-close-foundation';
 
-/** What a Toast or Notification list gives each item */
 interface NoticeListState {
     paused: boolean;
     updatedItems: readonly { id?: string }[];

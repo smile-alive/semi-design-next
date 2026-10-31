@@ -17,16 +17,13 @@ export interface ContainerProps {
 export interface ContainerEmits {
     /** Emitted before `cancel`, so `v-model:visible` closes the container */
     'update:visible': [visible: false];
-    /** The close button or Esc */
     cancel: [event: MouseEvent | KeyboardEvent];
-    /** After the show or hide animation ends */
     afterVisibleChange: [visible: boolean];
 }
 
 export interface ContainerSlots {
     default?: () => VNode[];
     title?: () => VNode[];
-    /** Replaces the whole header; empty content falls back to the default header */
     header?: () => VNode[];
 }
 

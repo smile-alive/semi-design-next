@@ -154,7 +154,6 @@ export interface BasicCascaderProps {
     onFocus?: (e: any) => void;
 }
 
-/** The multiple-mode checked sets */
 export interface BasicCheckedState {
     checkedKeys: Set<string>;
     halfCheckedKeys: Set<string>;
@@ -297,7 +296,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             .map(({ path }) => path);
     }
 
-    /** The states that select `value` from `state`, and the entities with a placeholder for a value treeData lacks */
     static #selectionFor(props: BasicCascaderProps, state: BasicCascaderInnerData, value: BasicValue, keyEntities: BasicEntities) {
         const { changeOnSelect, onChangeWithObject, keyMaps, loadData, multiple } = props;
         const { activeKeys, loadingKeys, keyEntities: keyEntityState, selectedKeys: selectedKeysState } = state;
@@ -454,10 +452,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return CascaderFoundation.#missingEntities.has(entity) ? entity.path : entity.valuePath;
     }
 
-    /**
-     * Filtered keys for the current props: remote mode treats the current treeData nodes as results without
-     * matching; local mode matches by filterTreeNode.
-     */
     #calcFilteredKeys(sugInput: string, keyEntities?: BasicEntities) {
         if (!sugInput) {
             return [];
@@ -759,7 +753,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         this.adapter.scrollToOption(key, index);
     }
 
-    /** The options of the shown columns in display order, with their index in their column */
     #getShownOptions() {
         const { activeKeys } = this.getStates();
         const topLevel = CascaderFoundation.getRenderData(this.getProps(), this.getStates()) as BasicEntity[];
@@ -901,7 +894,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return checkedKeys.size > 0 || CascaderFoundation.#missingValuePaths(props, keyEntities).length > 0;
     }
 
-    /** Checked, half checked and merged keys for a list of checked keys */
     static calcCheckedState(keys: string[], keyEntities: BasicEntities, { checkRelation, autoMergeValue, leafOnly }: BasicCascaderProps): BasicCheckedState {
         if (checkRelation !== strings.RELATED) {
             return { checkedKeys: new Set(keys), halfCheckedKeys: new Set(), resolvedCheckedKeys: new Set() };
@@ -986,7 +978,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return state;
     }
 
-    /** The flattened search results while searching, otherwise the top level */
     static getRenderData(props: BasicCascaderProps, state: BasicCascaderInnerData): Array<BasicEntity | BasicData> {
         const { keyEntities, isSearching } = state;
         if (isSearching && Boolean(props.filterTreeNode)) {
@@ -997,14 +988,13 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             .sort((a, b) => a.ind - b.ind);
     }
 
-    /** Whether an option opens a column: it has children, or loadData may load some */
     static isBranch(data: BasicCascaderData, loadData: unknown) {
         return Boolean(data.children?.length) || Boolean(loadData && !data.isLeaf);
     }
 
     /**
-     * What a treeitem in a column shows and exposes. An option that is both active and selected shows only as selected,
-     * and in multiple mode selection is the checkbox's, so the row is never marked selected.
+     * An option that is both active and selected shows only as selected, and in multiple mode selection is the
+     * checkbox's, so the row is never marked selected.
      */
     static getTreeItemState(key: string, sets: Record<'activeKeys' | 'selectedKeys' | 'loadedKeys' | 'loadingKeys' | 'checkedKeys' | 'halfCheckedKeys', Set<string>>, multiple: boolean, expandable: boolean): TreeItemState {
         const active = sets.activeKeys.has(key);

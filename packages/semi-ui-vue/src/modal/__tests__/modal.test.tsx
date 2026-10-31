@@ -26,7 +26,6 @@ const body = () => <p>This is content of basic modal</p>;
 type Props = ModalProps & Record<string, unknown>;
 type SlotMap = Record<string, (...args: never[]) => unknown>;
 
-// The dialog renders once Portal has mounted, a tick after the Modal itself.
 async function renderModal(props: Props = {}, slots: SlotMap = {}) {
     const view = render(Modal, {
         props: { motion: false, ...props },
@@ -1131,7 +1130,6 @@ describe('Modal（Vue）', () => {
     });
 
     it('getPopupContainer 返回 null 时报错', () => {
-        // a deliberately invalid container: the type says it returns an element
         const getPopupContainer = () => null as unknown as HTMLElement;
         expect(() => render(Modal, { props: { visible: true, motion: false, getPopupContainer } })).toThrow('getPopupContainer returned no element');
     });

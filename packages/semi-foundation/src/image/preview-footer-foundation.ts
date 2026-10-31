@@ -3,7 +3,6 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import type { RatioType, RotateDirection } from './preview-inner-foundation';
 import { clampZoom } from './utils';
 
-/** The props the foundation reads */
 export interface PreviewFooterBaseProps {
     zoom?: number;
     step?: number;

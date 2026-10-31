@@ -9,9 +9,7 @@
         hints?: string[];
         roleConfig?: ChatRoleConfig;
         locale?: Locale;
-        /** The custom snippets passed to the chat */
         shown: Partial<Record<Part, boolean>>;
-        /** Whether the custom snippets also render the default nodes they receive */
         withDefaults?: boolean;
         props?: Partial<ChatProps>;
     }

@@ -33,10 +33,7 @@ export function isValidTimezoneIANAString(timeZoneString: string) {
 const MILLISECONDS_IN_MINUTE = 60000;
 const MILLISECONDS_IN_DAY = 86400000;
 
-/**
- * UTC offset of `timeZone` (IANA name or ±HH[:MM]) at the instant `time` in milliseconds, positive east of UTC. No
- * zone or Z means UTC; an unknown zone gives NaN.
- */
+/** UTC offset of `timeZone` (IANA name or ±HH[:MM]) at the instant `time` in milliseconds, positive east of UTC */
 function zoneOffset(timeZone: string | undefined, time: number) {
     if (!timeZone || timeZone === 'Z') {
         return 0;
@@ -61,7 +58,6 @@ function wallTimeToInstant(wallTime: number, timeZone?: string) {
     return candidates.find((time) => time + zoneOffset(timeZone, time) === wallTime) ?? wallTime - offsetBefore;
 }
 
-/** Wall-clock fields of a system-local Date read as UTC */
 function wallTimeAsUtc(date: Date) {
     const utc = new Date(0);
     utc.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());

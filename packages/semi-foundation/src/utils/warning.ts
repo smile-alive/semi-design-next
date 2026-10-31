@@ -7,7 +7,6 @@ export function isDev() {
     return process.env.NODE_ENV !== 'production';
 }
 
-/** Prints `info` as a development-time warning when `flag` holds; production builds print nothing */
 export default function warning(flag: boolean, info: string) {
     if (flag && isDev()) {
         console.warn(`Warning: ${info}`);

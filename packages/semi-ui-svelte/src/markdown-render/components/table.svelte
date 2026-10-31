@@ -5,7 +5,6 @@
     import MarkdownChildren from '../markdown-children.svelte';
     import { parseTable } from './tree.js';
 
-    // the cells come from `node`, so the children snippet is dropped
     const { children: _children, node, ...rest }: TableProps & MarkdownRenderElementProps = $props();
 
     const parsed = $derived(parseTable(node?.props.children));

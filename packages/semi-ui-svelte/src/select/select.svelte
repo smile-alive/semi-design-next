@@ -89,7 +89,6 @@
         stopPropagation = defaults('stopPropagation', true),
         virtualize = defaults('virtualize'),
         preventScroll = defaults('preventScroll'),
-        // a global id would repeat on every instance, and aria-controls and aria-activedescendant would point elsewhere
         id,
         onChange,
         onDropdownVisibleChange,
@@ -146,10 +145,8 @@
     const size = $derived(sizeProp ?? group?.size ?? defaults('size', 'default'));
     const cls = cssClasses.PREFIX;
 
-    // the foundation filters by the group label and the list renders runs of one group through the record's group
     const collectedOptions: OptionRecord[] = $derived((optionList ?? []).map((item, index) => toOptionRecord(item, index, item.group)));
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: FoundationProps = {
         get allowCreate() {
             return allowCreate;
@@ -232,7 +229,6 @@
             updateSelection: (selections) => base.setState({ selections }),
             getSelections: () => new Map(base.getState('selections')),
             notifyChange: (next) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next as SelectValue;
                 onChange?.(next as SelectValue);
             },
@@ -240,7 +236,6 @@
             notifyDropdownVisibleChange: (visible) => onDropdownVisibleChange?.(visible),
             notifySearch: (inputValue, event) => onSearch?.(inputValue, event),
             notifyCreate: (option) => onCreate?.(option as SelectOptionProps),
-            // mouseenter and mouseleave reach the root as native listeners through the rest props
             notifyMouseEnter: () => undefined,
             notifyMouseLeave: () => undefined,
             notifyFocus: (event) => onFocus?.(event),
@@ -280,7 +275,6 @@
     const selectedItems = $derived([...states().selections.values()] as SelectOptionProps[]);
     const optionRuns = $derived(getOptionRuns(visibleOptions));
 
-    // while loading the list shows a spinner instead of the options
     const activeDescendant = $derived.by(() => {
         const { isOpen, focusIndex } = states();
         return isOpen && !loading && focusIndex !== -1 && focusIndex < visibleOptions.length ? optionId(focusIndex) : undefined;
@@ -345,12 +339,10 @@
         return `${selectId}-option-${index}`;
     };
 
-    // the record's index, not the visible index: a row that filtering moves up keeps its node
     const rowKey = ({ data, childKey, index }: OptionRecord) => {
         return String(data.key ?? childKey ?? `${data.label}${data.value}${index}`);
     };
 
-    // a group needs a title for its accessible name, so a group without a label renders its options bare
     const hasTitle = (group?: SelectOptionGroup): group is SelectOptionGroup => {
         return Boolean(group && (group.label || group.label === 0));
     };
@@ -372,7 +364,6 @@
         foundation.handleClearClick(event);
     };
 
-    // the option as kept in state, the same object Enter selects
     const handleSelect = (option: OptionRecord, index: number, event: MouseEvent) => {
         foundation.onSelect(option as BaseOptionRecord, index, event);
     };
@@ -487,7 +478,6 @@
     const removeTag = (option: SelectOptionProps, event?: TagCloseEvent) => {
         // keeps the Tag from hiding itself in controlled mode
         event?.preventDefault();
-        // as with the clear button, a tag going while it has the focus hands the focus to the combobox
         const target = event?.currentTarget instanceof Element ? event.currentTarget.closest(`.${tagCssClasses.PREFIX}`) : null;
         if (target && target === FocusTrapHandle.getActiveElement(target)) {
             foundation.focus(undefined, false);
@@ -546,7 +536,6 @@
         foundation.clearInput();
     }
 
-    /** Selects every shown, enabled option (multiple only) */
     export function selectAll() {
         foundation.selectAll();
     }
@@ -555,7 +544,6 @@
         foundation.clearSelected();
     }
 
-    /** Searches as if `keyword` were typed into the search input */
     export function search(keyword: string, event?: Event) {
         foundation.handleInputChange(keyword, event);
     }
@@ -860,7 +848,6 @@
                     class={[`${cls}-dropdown-input`, multiple ? `${cls}-dropdown-input-multiple` : `${cls}-dropdown-input-single`, inputProps?.class]}
                     onKeyDown={(event) => {
                         inputProps?.onKeyDown?.(event);
-                        // the popup is not a DOM descendant of the trigger, so the key does not bubble to it
                         foundation.handleKeyDown(event);
                     }}
                 />

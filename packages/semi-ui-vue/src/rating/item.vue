@@ -32,7 +32,6 @@
     );
 
     const emit = defineEmits<{
-        /** The pointer moved over the star: a preview of its value */
         preview: [event: MouseEvent];
         pick: [event: MouseEvent];
         /** Enter or Space on a radio, or a click without a pointer (assistive technology): the value that radio stands for */

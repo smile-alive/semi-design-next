@@ -7,7 +7,6 @@
     import type { ConfirmProps, ModalNode } from './interface.js';
     import Modal from './modal.svelte';
 
-    // The options Modal declares itself reach it through `...rest`
     let { type, title, content, icon, closeIcon, header, footer, direction, visible, onOk, onCancel, class: className, ...rest }: ConfirmProps = $props();
 
     const config = getConfigContext();

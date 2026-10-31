@@ -10,14 +10,9 @@ import { cloneDeep } from './utils';
 
 export interface UseFieldOptions {
     valuePath: string;
-    /** Reports a committed change: the wrapped component's emit arguments and the latest form values */
     onChange: (args: unknown[], latestValues: Record<string, any>) => void;
 }
 
-/**
- * A field's state and its registration with the Form. The field renders from its own store snapshot, its props and
- * the Form props, so an update of another field does not render it.
- */
 export default function useField(props: Readonly<Partial<CommonFieldProps>>, options: UseFieldOptions) {
     const form = useFormContext();
     const arrayField = useArrayFieldContext();

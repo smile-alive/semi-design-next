@@ -52,7 +52,6 @@
     // Used to find the indicator tab to focus, from the root: slides may contain tabs or nested carousels
     let root: HTMLElement | undefined;
 
-    // the roving tabindex moves with the current slide, so focus follows it after a key changed it
     let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would
@@ -62,7 +61,6 @@
     let leftNamed = $state(false);
     let rightNamed = $state(false);
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: CarouselBaseProps = {
         get activeIndex() {
             return activeIndex;
@@ -84,7 +82,6 @@
         },
         (base) => ({
             notifyChange: (next, preIndex) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 activeIndex = next;
                 onChange?.(next, preIndex);
             },

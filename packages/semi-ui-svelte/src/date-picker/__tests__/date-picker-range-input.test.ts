@@ -180,7 +180,6 @@ describe('Svelte DatePicker 面板属性', () => {
     it('weekStartsOn：星期表头与第一周的列顺序跟着变', async () => {
         await setup({ value: baseDate, open: true, props: { weekStartsOn: 1 } });
         expect(screen.getAllByRole('columnheader').map((header) => header.textContent)).toEqual(['一', '二', '三', '四', '五', '六', '日']);
-        // 2019-09-01 is a Sunday, the last column of the first week
         expect(getWeekDays('left', 0)[6]).toHaveAttribute('aria-label', '2019-09-01');
     });
 });

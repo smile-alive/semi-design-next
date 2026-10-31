@@ -202,7 +202,6 @@ function serverIds(html: string) {
     return ID_ATTRIBUTES.flatMap((attribute) => [...body.matchAll(new RegExp(`\\s${attribute}="([^"]*)"`, 'g'))].filter((match) => !STREAM_PLACEHOLDER.test(match[1])).map((match) => `${attribute}=${match[1]}`));
 }
 
-// Browser-side code is an expression string: tsconfig.node.json has no DOM lib, so DOM APIs do not typecheck here
 function domIds(page: Page) {
     const attributes = JSON.stringify(ID_ATTRIBUTES);
     return page.evaluate<string[]>(`${attributes}.flatMap((name) => [...document.querySelectorAll('body [' + name + ']:not(script)')].map((element) => name + '=' + element.getAttribute(name)))`);
@@ -222,7 +221,6 @@ export function idsStable(): PageCheck {
     };
 }
 
-// 20 concurrent requests alternating `?lang=en` and `?lang=zh`; each response carries only its own locale's marker
 export function langIsolation(pathname: string, markers: { en: string; zh: string }): ServerCheck {
     return {
         name: 'lang',

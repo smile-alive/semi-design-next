@@ -47,7 +47,6 @@
         hourStep: semiGlobalDefault('TimePicker', 'hourStep'),
         minuteStep: semiGlobalDefault('TimePicker', 'minuteStep'),
         secondStep: semiGlobalDefault('TimePicker', 'secondStep'),
-        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
         disabled: undefined,
 
         // Function-typed props cannot take a factory default; global defaults are read in `disabledFns`
@@ -75,7 +74,6 @@
         popupClassName: semiGlobalDefault('TimePicker', 'popupClassName'),
         popupStyle: semiGlobalDefault('TimePicker', 'popupStyle'),
         stopPropagation: () => semiDefault('TimePicker', 'stopPropagation', true),
-        // read in the computed below: ConfigProvider's timeZone comes before the global default
         timeZone: undefined,
         scrollItemProps: semiGlobalDefault('TimePicker', 'scrollItemProps'),
     });
@@ -241,7 +239,6 @@
     // only the text changes: syncing the value again would re-zone it a second time
     watch(() => [TimePickerFoundation.getValidFormat(props), locale.value.dateFnsLocale, props.rangeSeparator], foundation.refreshInputValue);
 
-    // isPanelShown is already false for a disabled picker, so the check leaves `disabled` out
     watch(
         () => looks.disabled,
         (disabled) => {

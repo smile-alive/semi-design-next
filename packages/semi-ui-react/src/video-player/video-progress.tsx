@@ -12,7 +12,6 @@ export interface VideoProgressProps {
     value: number;
     onChange: (value: number) => void;
     max: number;
-    /** Seconds an arrow key moves */
     step: number;
     showTooltip?: boolean;
     markers?: Marker[];
@@ -92,7 +91,6 @@ export default function VideoProgress(props: VideoProgressProps) {
         </div>
     );
 
-    // the pointer's position, or the playhead when the bar is used by keyboard
     const renderTooltipContent = () => {
         const previewValue = movingInfo ? movingInfo.value : currentValue;
         if (markersList.length > 0) {

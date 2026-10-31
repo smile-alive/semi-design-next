@@ -35,7 +35,6 @@ interface OverflowListCommonProps<T> extends ElementProps<'div', 'children'> {
     visibleItemRenderer?: (item: T, index: number) => ReactElement;
     wrapperClassName?: string;
     wrapperStyle?: CSSProperties;
-    /** Attributes of the scroll-mode wrapper holding the visible items */
     wrapperProps?: HTMLAttributes<HTMLDivElement>;
     itemKey?: Key | ((item: T) => Key);
     onVisibleStateChange?: (visibleState: Map<string, boolean>) => void;
@@ -46,19 +45,16 @@ interface OverflowListCommonProps<T> extends ElementProps<'div', 'children'> {
 
 interface OverflowListCollapseProps<T> extends OverflowListCommonProps<T> {
     renderMode?: 'collapse';
-    /** Renders the items that do not fit */
     overflowRenderer?: (overflowItems: Array<T>) => ReactNode;
 }
 
 interface OverflowListScrollProps<T> extends OverflowListCommonProps<T> {
     renderMode: 'scroll';
-    /** Renders the items scrolled out before and after the visible ones */
     overflowRenderer?: (overflowItems: [Array<T>, Array<T>]) => [ReactNode, ReactNode];
 }
 
 export type OverflowListProps<T = OverflowItem> = OverflowListCollapseProps<T> | OverflowListScrollProps<T>;
 
-/** Measured widths and scroll-mode visibility */
 export interface OverflowListState {
     containerWidth: number;
     overflowWidth: number;

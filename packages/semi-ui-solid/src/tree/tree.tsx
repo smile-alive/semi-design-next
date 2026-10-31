@@ -162,7 +162,6 @@ export default function Tree(rawProps: TreeProps) {
     // read here, untracked: the Provider's children run in a memo that would track it
     const ref = props.ref;
 
-    // the state that new props imply; written back before the DOM updates, so rows and handlers read one state
     const derived = createMemo(() => TreeFoundation.deriveState(snapshot(), state()));
     const resolvedEmpty = children(() => local.emptyContent);
 
@@ -246,7 +245,6 @@ export default function Tree(rawProps: TreeProps) {
 
     const searchRender = () => (typeof local.searchRender === 'function' ? local.searchRender : undefined);
 
-    // the row a pointer acts on becomes the keyboard's row, in the same commit as the foundation's update
     const activate = (row: TreeRowProps, action: () => void) =>
         batch(() => {
             setKeyboardKey(row.key);
@@ -282,7 +280,6 @@ export default function Tree(rawProps: TreeProps) {
     };
 
     const handleTreeKeyDown = (event: KeyboardEvent & { currentTarget: HTMLDivElement; target: Element }) => {
-        // a tabbable control inside a row handles its own keys
         if (event.target !== event.currentTarget && event.target instanceof HTMLElement && event.target.tabIndex >= 0) {
             return;
         }

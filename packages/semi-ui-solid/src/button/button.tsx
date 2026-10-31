@@ -39,7 +39,6 @@ export interface ButtonProps extends ElementProps<'button', 'type'> {
     icon?: JSX.Element | Component<{ fill?: IconFill }>;
     iconPosition?: 'left' | 'right';
     loading?: boolean;
-    /** Removes the horizontal padding of a button that shows an icon or the loading spinner */
     noHorizontalPadding?: boolean | HorizontalPaddingType | HorizontalPaddingType[];
     size?: Size;
     theme?: Theme;
@@ -57,10 +56,7 @@ const defaultProps = {
 
 const prefix = cssClasses.PREFIX;
 
-/**
- * The one renderer behind Button and IconButton, which differ only in the global key they read. Rendering a single
- * native button keeps it mounted, and focused, while loading or the icon toggles.
- */
+// One native button for every state keeps it mounted, and focused, while loading or the icon toggles.
 export function renderButton(name: 'Button' | 'IconButton', rawProps: ButtonProps) {
     const props = useDefaultProps(name, rawProps, defaultProps);
     const [local, rest] = splitProps(props, ['block', 'children', 'class', 'colorful', 'contentClassName', 'disabled', 'htmlType', 'icon', 'iconPosition', 'loading', 'noHorizontalPadding', 'ref', 'size', 'style', 'theme', 'type']);

@@ -63,7 +63,6 @@ function ExpandArrow(props: NodeArrowProps) {
     );
 }
 
-/** The switcher of a row: a spinner while loading, the expand arrow on a branch, a spacer or a line on a leaf */
 export default function NodeArrow(props: NodeArrowProps) {
     const context = useTreeContext('Tree.Node');
 

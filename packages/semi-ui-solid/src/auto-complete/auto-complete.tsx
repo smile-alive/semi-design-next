@@ -53,7 +53,6 @@ type ComboboxAria = Pick<JSX.AriaAttributes, 'aria-label' | 'aria-labelledby' | 
 
 /** What `triggerRender` receives: wire `onChange`, `onFocus` and `onBlur` to the custom trigger's text field */
 export interface AutoCompleteTriggerRenderProps<T extends AutoCompleteItems = AutoCompleteItems> extends ComboboxAria {
-    /** The selected item, if any */
     value: BaseDataItem[];
     inputValue?: string | number;
     disabled?: boolean;
@@ -63,7 +62,6 @@ export interface AutoCompleteTriggerRenderProps<T extends AutoCompleteItems = Au
     validateStatus?: ValidateStatus;
     showClear?: boolean;
     insetLabelId?: string;
-    /** `prefix`, or `insetLabel` without a prefix */
     prefix: JSX.Element;
     suffix: JSX.Element;
     clearIcon: JSX.Element;
@@ -165,7 +163,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     // fixed for the instance's lifetime: the layer and the context value are
     const inGroup = untrack(() => own.inGroup);
 
-    // as Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
         get size() {
             return rawProps.size ?? inGroup?.view().size ?? defaulted.size;
@@ -232,7 +229,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
         (base) => ({
             updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
             updateScrollTop: (index) => {
-                // the rows are the listbox's direct children
                 const destNode = listbox?.children[index] as HTMLElement | undefined;
                 if (listbox && destNode) {
                     centerInScroller(destNode, listbox);
@@ -256,7 +252,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     const markPressInside = useClickOutside(
         [() => root, () => listbox],
         (e) => {
-            // without a rendered list there is nothing to close
             if (listbox) {
                 foundation.handleClickOutside(e);
             }
@@ -347,7 +342,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
 
     const inputId = () => local.id ?? `${listboxId}-input`;
 
-    // Input's own rule for rendering the inset label: a prefix takes its place
     const insetLabelShown = () => hasContent(insetLabelNode()) && !hasContent(prefixNode()) && !local.triggerRender;
 
     const prefixId = () => props.insetLabelId ?? (insetLabelShown() ? `${listboxId}-inset-label` : undefined);

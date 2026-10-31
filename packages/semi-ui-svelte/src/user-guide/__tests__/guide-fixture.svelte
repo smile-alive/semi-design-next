@@ -15,10 +15,8 @@
             accept: boolean;
             log: string[];
             steps: UserGuideStepItem[];
-            // titles and the second description come from snippets
             rich: boolean;
             covers: 'none' | 'first' | 'all';
-            // nextText and prevText snippets
             texts: boolean;
             props: Omit<UserGuideProps, 'visible' | 'current' | 'steps' | 'nextText' | 'prevText' | 'onChange' | 'onNext' | 'onPrev' | 'onSkip' | 'onFinish'>;
         };

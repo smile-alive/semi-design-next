@@ -10,7 +10,6 @@ interface TextEntry {
 
 interface Options {
     element: Accessor<HTMLInputElement | HTMLTextAreaElement | undefined>;
-    /** The text the element should show */
     text: Accessor<string>;
     foundation: TextEntry;
     state: Accessor<{ isFocus: boolean }>;
@@ -20,7 +19,6 @@ interface Options {
 
 type FocusHandlerEvent = FocusEvent & { currentTarget: HTMLElement };
 
-/** Keeps the native element showing the controlled text, and the wrapper's focus state, for Input and TextArea */
 export default function useControlledInput({ element, text, foundation, state, allowClear, clearButton }: Options) {
     // Solid writes `value` only when it changes, so a value the parent rejected (an unchanged controlled prop) or
     // replaced after an IME composition is written back here; equal text is left alone, which keeps the caret

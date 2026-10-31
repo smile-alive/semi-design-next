@@ -38,10 +38,8 @@ export type InputMode = 'password';
 // Form passes 'success' as validateStatus, though Input styles nothing for it
 export type ValidateStatus = 'default' | 'error' | 'warning' | 'success';
 
-/** A native event on the input, typed as Solid hands it to a handler */
 export type InputElementEvent<E extends Event> = E & { currentTarget: HTMLInputElement; target: Element };
 
-/** What `onChange` receives: typing, an IME composition ending, or the clear button */
 export type InputChangeEvent = InputElementEvent<InputEvent> | InputElementEvent<CompositionEvent> | MouseEvent;
 
 export interface InputProps extends ElementProps<'input', 'onChange' | 'prefix' | 'placeholder' | 'onFocus' | 'onBlur' | 'ref'> {
@@ -87,7 +85,6 @@ export interface InputProps extends ElementProps<'input', 'onChange' | 'prefix' 
     composition?: boolean;
     /** The wrapper div; other attributes go to the native input, `class` and `style` to the wrapper */
     ref?: Ref<HTMLDivElement>;
-    /** The native input */
     inputRef?: (element: HTMLInputElement) => void;
 }
 

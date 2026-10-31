@@ -49,7 +49,6 @@ function createBaseToast(initialConfig?: ConfigProps) {
                 wrapper.id = createId('toast-wrapper');
                 wrapper.setAttribute(KEEP_INTERACTIVE_ATTRIBUTE, '');
                 (mergedOpts.getPopupContainer ? mergedOpts.getPopupContainer() : document.body).appendChild(wrapper);
-                // the app context exposes app-level provides and global components to the toasts
                 const vnode = <ToastList store={store} />;
                 vnode.appContext = rootAppContext();
                 // render() mounts synchronously, so the list subscribes before the first toast is added.

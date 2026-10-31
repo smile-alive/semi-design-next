@@ -171,7 +171,6 @@ describe('Typography（浏览器）', () => {
         const icon = must(button.querySelector('svg'));
         const rect = (el: Element) => el.getBoundingClientRect().toJSON();
         const before = { paragraph: rect(paragraph), button: rect(button) };
-        // the button adds no box of its own, so the ring is drawn around the icon
         const buttonRect = button.getBoundingClientRect();
         const iconRect = icon.getBoundingClientRect();
         for (const side of ['left', 'top', 'right', 'bottom'] as const) {

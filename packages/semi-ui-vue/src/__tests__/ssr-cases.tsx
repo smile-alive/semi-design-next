@@ -176,7 +176,6 @@ const popupSlots = (content: string) => ({ default: trigger, content: () => cont
 const pane = (tab: string) => ({ tab: () => tab, default: () => tab.toLowerCase() });
 
 export const ssrCases: SsrCase[] = [
-    // Base and layout
     { name: 'config-provider/基本', covers: ['ConfigProvider', 'ConfigConsumer'], render: () => <ConfigProvider>{() => <ConfigConsumer>{(config: { direction?: string }) => <span>{config.direction}</span>}</ConfigConsumer>}</ConfigProvider> },
     { name: 'locale/基本', covers: ['LocaleProvider', 'LocaleConsumer'], render: () => <LocaleProvider>{() => <LocaleConsumer componentName="Pagination">{({ locale }: { locale: object }) => <span>{Object.keys(locale).length}</span>}</LocaleConsumer>}</LocaleProvider> },
     { name: 'spin/基本', covers: ['Spin'], render: () => <Spin /> },
@@ -240,7 +239,6 @@ export const ssrCases: SsrCase[] = [
     { name: 'float-button/基本', covers: ['FloatButton', 'FloatButtonGroup'], render: () => <FloatButtonGroup items={[{ content: 'a' }]} /> },
     { name: 'float-button/单个', covers: ['FloatButton'], render: () => <FloatButton /> },
     { name: 'backtop/基本', covers: ['BackTop'], render: () => <BackTop /> },
-    // Form controls
     { name: 'checkbox/基本', covers: ['Checkbox', 'CheckboxGroup'], render: () => <CheckboxGroup>{() => <Checkbox value="a">{() => 'a'}</Checkbox>}</CheckboxGroup> },
     { name: 'radio/基本', covers: ['Radio', 'RadioGroup'], render: () => <RadioGroup>{() => <Radio value="a">{() => 'a'}</Radio>}</RadioGroup> },
     { name: 'switch/基本', covers: ['Switch'], render: () => <Switch /> },
@@ -271,7 +269,6 @@ export const ssrCases: SsrCase[] = [
     { name: 'upload/文件卡片', covers: ['UploadFileCard'], render: () => <UploadFileCard file={{ uid: '1', name: 'a.txt', size: '1KB', status: 'success' }} /> },
     { name: 'transfer/基本', covers: ['Transfer'], render: () => <Transfer dataSource={[{ key: '1', label: 'a', value: '1' }]} /> },
     { name: 'transfer/draggable', covers: ['Transfer'], render: () => <Transfer dataSource={[{ key: '1', label: 'a', value: '1' }]} draggable /> },
-    // Form
     {
         name: 'form/基本',
         covers: ['Form', 'FormInput', 'FormLabel', 'FormErrorMessage', 'FormSection', 'FormSlot', 'FormInputGroup'],
@@ -340,7 +337,6 @@ export const ssrCases: SsrCase[] = [
         covers: ['ArrayField'],
         render: () => <Form initValues={{ rows: [{ v: 'a' }, { v: 'b' }] }}>{() => <ArrayField field="rows">{{ default: ({ arrayFields }: { arrayFields: { key: string; field: string }[] }) => arrayFields.map(({ key, field }) => <FormInput key={key} field={`${field}[v]`} />) }}</ArrayField>}</Form>,
     },
-    // Navigation
     { name: 'breadcrumb/基本', covers: ['Breadcrumb', 'BreadcrumbItem'], render: () => <Breadcrumb>{() => [<BreadcrumbItem>{() => 'a'}</BreadcrumbItem>, <BreadcrumbItem>{() => 'b'}</BreadcrumbItem>]}</Breadcrumb> },
     { name: 'anchor/基本', covers: ['Anchor', 'AnchorLink'], render: () => <Anchor>{() => <AnchorLink href="#a" title="a" />}</Anchor> },
     {
@@ -380,7 +376,6 @@ export const ssrCases: SsrCase[] = [
             </Steps>
         ),
     },
-    // Data display
     { name: 'calendar/基本', covers: ['Calendar'], render: () => <Calendar mode="month" displayValue={day} /> },
     { name: 'calendar/week', covers: ['Calendar'], render: () => <Calendar mode="week" displayValue={day} /> },
     { name: 'calendar/range', covers: ['Calendar'], render: () => <Calendar mode="range" displayValue={day} range={[day, new Date(2019, 7, 12)]} /> },
@@ -419,7 +414,6 @@ export const ssrCases: SsrCase[] = [
     { name: 'audio-player/基本', covers: ['AudioPlayer'], render: () => <AudioPlayer audioUrl="/a.mp3" /> },
     { name: 'video-player/基本', covers: ['VideoPlayer'], render: () => <VideoPlayer src="/a.mp4" /> },
     { name: 'user-guide/基本', covers: ['UserGuide'], render: () => <UserGuide steps={[{ target: () => null, title: 't' }]} visible={false} /> },
-    // Popups, default closed
     { name: 'tooltip/基本', covers: ['Tooltip'], render: () => <Tooltip>{popupSlots('tip')}</Tooltip> },
     { name: 'popover/基本', covers: ['Popover'], render: () => <Popover>{popupSlots('pop')}</Popover> },
     { name: 'popconfirm/基本', covers: ['Popconfirm'], render: () => <Popconfirm title="sure">{() => <Button>{() => 'a'}</Button>}</Popconfirm> },

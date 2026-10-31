@@ -4,9 +4,6 @@ export interface IOffsetRange {
     readonly endExclusive: number;
 }
 
-/**
- * A range of offsets (0-based).
- */
 export class OffsetRange implements IOffsetRange {
     readonly start: number;
     readonly endExclusive: number;
@@ -88,20 +85,11 @@ export class OffsetRange implements IOffsetRange {
         return this.start <= offset && offset < this.endExclusive;
     }
 
-    /**
-     * for all numbers n: range1.contains(n) or range2.contains(n) => range1.join(range2).contains(n)
-     * The joined range is the smallest range that contains both ranges.
-     */
     join(other: OffsetRange) {
         return new OffsetRange(Math.min(this.start, other.start), Math.max(this.endExclusive, other.endExclusive));
     }
 
-    /**
-     * for all numbers n: range1.contains(n) and range2.contains(n) <=> range1.intersect(range2).contains(n)
-     *
-     * The resulting range is empty if the ranges do not intersect, but touch.
-     * If the ranges don't even touch, the result is undefined.
-     */
+    /** The result is empty if the ranges only touch, undefined if they don't even touch. */
     intersect(other: OffsetRange): OffsetRange | undefined {
         const start = Math.max(this.start, other.start);
         const end = Math.min(this.endExclusive, other.endExclusive);
@@ -139,10 +127,6 @@ export class OffsetRange implements IOffsetRange {
         return str.substring(this.start, this.endExclusive);
     }
 
-    /**
-     * Returns the given value if it is contained in this instance, otherwise the closest value that is contained.
-     * The range must not be empty.
-     */
     clip(value: number) {
         if (this.isEmpty) {
             throw new Error(`Invalid clipping range: ${this.toString()}`);
@@ -150,12 +134,7 @@ export class OffsetRange implements IOffsetRange {
         return Math.max(this.start, Math.min(this.endExclusive - 1, value));
     }
 
-    /**
-     * Returns `r := value + k * length` such that `r` is contained in this range.
-     * The range must not be empty.
-     *
-     * E.g. `[5, 10).clipCyclic(10) === 5`, `[5, 10).clipCyclic(11) === 6` and `[5, 10).clipCyclic(4) === 9`.
-     */
+    /** Returns `r := value + k * length` contained in this range, e.g. `[5, 10).clipCyclic(4) === 9`. */
     clipCyclic(value: number) {
         if (this.isEmpty) {
             throw new Error(`Invalid clipping range: ${this.toString()}`);
@@ -209,9 +188,6 @@ export class OffsetRangeSet {
         return this.#sortedRanges.map((r) => r.toString()).join(', ');
     }
 
-    /**
-     * Returns of there is a value that is contained in this instance and the given range.
-     */
     intersectsStrict(other: OffsetRange) {
         // Known limitation: linear scan; switch to binary search if range sets grow large.
         let i = 0;

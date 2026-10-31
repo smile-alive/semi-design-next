@@ -539,7 +539,6 @@ describe('Tree', () => {
 
     it('异步加载数据', async () => {
         const then = vi.fn<() => Promise<void>>(() => Promise.resolve());
-        // a thenable: loadData's result must be treated by the Promise protocol
         const loadData = vi.fn<() => { then: typeof then }>(() => ({ then }));
         const data = { label: '亚洲', value: 'Asia', key: 'asia' };
         renderTree({ loadData: loadData as unknown as TreeProps['loadData'], treeData: [data] });

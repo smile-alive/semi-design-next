@@ -9,7 +9,6 @@ interface StepItemOptions {
     onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
 }
 
-/** Click and keyboard behavior shared by step items; a step with a handler is a button */
 export function useStepItem({ role, onChange, onClick, onKeyDown }: StepItemOptions, named: React.AriaAttributes) {
     const clickable = Boolean(onChange || onClick);
     return {

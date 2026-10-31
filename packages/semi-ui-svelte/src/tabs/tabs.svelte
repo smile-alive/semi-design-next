@@ -57,7 +57,6 @@
 
     const config = getConfigContext();
 
-    // itemKeys repeat across Tabs on a page, so ids are scoped per instance
     const uid = $props.id();
 
     // The key this component last wrote to `activeKey` itself. A prop equal to it is the component's own state (what an

@@ -19,16 +19,13 @@
         column: ColumnProps;
         attrs: Record<string, unknown>;
         sortTip?: string;
-        /** Sorting, filtering or full render: ColumnTitle composes the title */
         needsTitle: boolean;
         title?: KeyedNode[] | string;
     }
 
     const props = defineProps<{
         row: TableHeaderCell<ColumnProps>[];
-        /** The header row index, the level of its columns */
         index: number;
-        /** The column tree */
         columns: ColumnProps[];
     }>();
 

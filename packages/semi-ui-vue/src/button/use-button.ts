@@ -10,7 +10,6 @@ import type { Size, Theme, Type } from './interface';
 // Boolean shorthand reaches vnode props as ''.
 const flag = (value: unknown) => (value === '' ? true : (value as boolean | undefined));
 
-// Pure so ButtonGroup can resolve the looks of a slot vnode exactly as the Button resolves itself.
 export function resolveLooks(own: Record<string, unknown>, group: ButtonGroupContext | undefined, semi: SemiGlobal, name: 'Button' | 'IconButton') {
     const normalized = {
         disabled: flag(own.disabled),
@@ -29,6 +28,5 @@ export default function useButtonLooks(props: Record<string, unknown>, name: 'Bu
 
     const inputGroup = useInputGroupInScope();
 
-    // a ButtonGroup in scope has already folded the InputGroup into its context
     return computed(() => resolveLooks(props, group && group.value.layer === layer ? group.value : inputGroup?.value, semi, name));
 }

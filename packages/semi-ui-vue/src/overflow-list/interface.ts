@@ -1,6 +1,5 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
 
-/** The default item shape: any record, read by `itemKey` */
 export type OverflowListItem = Record<string, any>;
 
 export type OverflowListKey = string | number;
@@ -32,7 +31,6 @@ export interface OverflowListEmits<T> {
 
 export interface OverflowListItemSlotProps<T> {
     item: T;
-    /** The item's position in `items` */
     index: number;
 }
 

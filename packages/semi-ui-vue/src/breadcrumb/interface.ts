@@ -1,7 +1,6 @@
 import type { StyleValue, VNode } from 'vue';
 import type { TooltipProps } from '../tooltip/interface';
 
-/** A route of the `routes` prop. Nodes are slots: the icon is `#icon`, a custom title is `#item` */
 export interface Route {
     [x: string]: unknown;
     name?: string;
@@ -12,7 +11,6 @@ export interface Route {
     key?: string | number;
 }
 
-/** What a click on an item written in the default slot reports: `name` is the item's text */
 export interface BreadcrumbItemInfo {
     name?: string;
     href?: string;
@@ -47,13 +45,11 @@ export interface BreadcrumbProps {
 }
 
 export interface BreadcrumbRouteSlotProps {
-    /** The route as passed in; a string route is `{ name }` */
     route: Route;
     index: number;
 }
 
 export interface BreadcrumbMoreSlotProps {
-    /** The collapsed items, without their separators, ready for `<component :is>` */
     restItems: VNode[];
 }
 
@@ -70,7 +66,6 @@ export interface BreadcrumbItemProps {
     href?: string;
     noLink?: boolean;
     route?: Route;
-    /** Text separator; the `#separator` slot wins when both are given */
     separator?: string;
     shouldRenderSeparator?: boolean;
     onClick?: BreadcrumbClick;

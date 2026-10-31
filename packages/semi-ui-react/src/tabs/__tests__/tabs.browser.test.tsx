@@ -328,7 +328,6 @@ describe('Tabs（浏览器）', () => {
         await waitFor(() => expect(document.querySelector('[data-tabkey=semiTab1]')).toBeNull());
     });
 
-    // Reads Chrome's accessibility tree over CDP
     it.skipIf(!isChromium)('可关闭页签的关闭按钮出现在 Chrome 的无障碍树中', async () => {
         render(<TabClosableDemo />);
         const { frameTree } = await cdp().send('Page.getFrameTree');

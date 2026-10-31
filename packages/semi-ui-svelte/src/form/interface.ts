@@ -22,14 +22,11 @@ export type FieldValidateResult = FieldError;
 export interface LabelProps extends Omit<HTMLLabelAttributes, 'children'> {
     /** Content of the label; the `children` snippet takes precedence */
     text?: string | number;
-    /** text-align of the label */
     align?: string;
     disabled?: boolean;
     /** Whether to display the required * symbol; hidden while `optional` is true */
     required?: boolean;
-    /** Appends the locale's optional text */
     optional?: boolean;
-    /** The id of the labeled field, written to the `for` attribute */
     name?: string;
     /** Width of the label; a number is in px */
     width?: number | string;
@@ -75,7 +72,6 @@ export interface FormProps<Values extends Record<string, any> = any> extends Omi
     stopPropagation?: { submit?: boolean; reset?: boolean };
     /** Form-level validation; when set, it replaces the fields' own validation */
     validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
-    /** The `formApi` returned by `useForm()` */
     form?: FormApi<Values>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
@@ -129,12 +125,10 @@ export interface CommonFieldProps {
     id?: string;
     fieldClassName?: string;
     fieldStyle?: string;
-    /** Replaces the label text */
     fieldLabel?: Snippet;
     labelExtra?: Snippet;
     /** Shown in the error message's place while the field has no error */
     helpText?: Snippet;
-    /** Shown together with the error or the help text */
     extraText?: Snippet;
     /** Renders the error; the default joins the messages with commas */
     error?: Snippet<[{ error: FieldError }]>;
@@ -230,7 +224,6 @@ export interface SlotProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
     noLabel?: boolean;
     error?: FieldError;
     children?: Snippet;
-    /** Replaces the label text */
     fieldLabel?: Snippet;
     labelExtra?: Snippet;
     errorContent?: Snippet<[{ error: FieldError }]>;

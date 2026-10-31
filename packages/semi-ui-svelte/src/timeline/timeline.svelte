@@ -23,7 +23,6 @@
         onClick(event);
     };
 
-    // only a clickable item is a keyboard target; extra and time stay outside
     const handleKeydown = (event: KeyboardEvent & { currentTarget: HTMLElement }) => {
         if (event.target !== event.currentTarget || (event.key !== 'Enter' && event.key !== ' ')) return;
         event.preventDefault();

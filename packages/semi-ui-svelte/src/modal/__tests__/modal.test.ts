@@ -252,7 +252,6 @@ describe('Svelte Modal', () => {
         mouseUp(getWrap());
         click(getWrap());
         expect(onCancel).not.toHaveBeenCalled();
-        // the press mark clears one task after the mouseup
         await new Promise((resolve) => setTimeout(resolve, 0));
         click(getWrap());
         expect(onCancel).toHaveBeenCalledTimes(1);

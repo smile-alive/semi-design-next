@@ -33,8 +33,6 @@ interface ReducedMotionList {
     set: (matches: boolean) => void;
 }
 
-// the setup's matchMedia never matches and never fires changes; this one reports the reduced-motion setting and can
-// flip it
 function mockReducedMotion(initial: boolean) {
     const original = window.matchMedia;
     const list: ReducedMotionList = {
@@ -59,7 +57,6 @@ function mockReducedMotion(initial: boolean) {
 
 const animations = () => loadAnimation.mock.results.map((result) => result.value);
 const live = () => animations().filter((animation) => animation.destroy.mock.calls.length === 0);
-// lottie-web is imported on demand, so animations appear a few microtasks after mounting
 const loaded = (count = 1) => waitFor(() => expect(loadAnimation).toHaveBeenCalledTimes(count));
 function getRoot(container: Element) {
     const root = container.querySelector<HTMLElement>('.semi-lottie');

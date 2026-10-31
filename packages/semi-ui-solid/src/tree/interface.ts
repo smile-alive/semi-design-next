@@ -28,7 +28,6 @@ export type Value = string | number | TreeNodeData | Array<TreeNodeData | number
 
 export interface DragTreeNode extends TreeNodeData {
     expanded: boolean;
-    /** The node's position path in treeData, such as '0-1-2-0' */
     pos: string;
 }
 
@@ -53,12 +52,10 @@ export interface ExpandedOtherProps extends BasicExpandedOtherProps {
 
 /** A live object: read its fields in the returned JSX, destructuring takes only the values of the first render */
 export interface RenderFullLabelProps extends Omit<BasicRenderFullLabelProps, 'className' | 'style' | 'data' | 'expandIcon' | 'onClick' | 'onContextMenu' | 'onDoubleClick' | 'onExpand' | 'onCheck'> {
-    /** The row's classes: level, selection, focus, drag state */
     class: string;
     data: TreeNodeData;
     /** Creates the built-in switcher on every call: call it where the switcher is inserted */
     expandIcon: () => JSX.Element;
-    /** Selects the row, or checks it in a multiple tree */
     onClick: (e: MouseEvent) => void;
     onCheck: (e: MouseEvent) => void;
     onExpand: (e: MouseEvent) => void;
@@ -132,7 +129,6 @@ export interface TreeProps
 export interface TreeHandle {
     /** Searches as if typed into the search box; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Scrolls a virtualized tree to an expanded node */
     scrollTo: (scrollData: ScrollData) => void;
 }
 
@@ -146,12 +142,9 @@ export interface ScrollData {
 
 export interface TreeNodeProps {
     row: TreeRowProps;
-    /** The row's id, which the tree's aria-activedescendant points at */
     id: string;
-    /** The row the keyboard is on */
     focused?: boolean;
     showLine?: boolean;
-    /** The position of a virtual row */
     style?: JSX.CSSProperties;
     expandIcon?: ExpandIcon;
 }

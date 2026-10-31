@@ -44,7 +44,6 @@ describe('Notification', () => {
         Notification.resetConfig();
         semiGlobal.config.overrideDefaultProps = {};
         vi.useRealTimers();
-        // the detached tree is released in a microtask
         await Promise.resolve();
     });
 
@@ -230,7 +229,6 @@ describe('Notification', () => {
         render(() => <NotificationItem title="title" content="content" onClick={spyOnClick} onClose={spyOnClose} />);
         await userEvent.click(screen.getByRole('button'));
         expect(spyOnClose).toHaveBeenCalledTimes(1);
-        // the close button stops propagation, so the notice itself is not clicked
         expect(spyOnClick).not.toHaveBeenCalled();
     });
 
@@ -255,7 +253,6 @@ describe('Notification', () => {
     });
 
     it('回调显式为 null 时点击与关闭不抛错', async () => {
-        // an untyped caller may pass null
         const none = null as unknown as () => void;
         render(() => <NotificationItem title="title" content="content" onClick={none} onClose={none} onCloseClick={none} />);
         await userEvent.click(screen.getByRole('status'));
@@ -502,7 +499,6 @@ describe('Notification', () => {
         api.info({ title: 'hooked', duration: 0 });
         Notification.success({ title: 'static', duration: 0 });
         const holderList = screen.getByTestId('holder').querySelector(`.${prefixCls}-list`) as HTMLElement;
-        // no position: rtl falls back to the top left corner
         expect(holderList).toHaveAttribute('x-placement', 'topLeft');
         const hooked = screen.getByRole('status', { name: 'hooked' });
         expect(hooked).toHaveAttribute('dir', 'rtl');

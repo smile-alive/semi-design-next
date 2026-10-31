@@ -7,9 +7,7 @@ import type { ModalProps } from './modal';
 export type { ConfirmProps };
 
 export interface ModalHookRef {
-    /** Closes the dialog through its leave animation */
     destroy: () => void;
-    /** Merges into the dialog's current props */
     update: (config: ModalProps) => void;
 }
 
@@ -54,7 +52,6 @@ export default function confirm(props: ConfirmProps): ModalHookRef {
     return { destroy: close, update };
 }
 
-/** The props of `Modal.<type>()`; ConfirmModal adds the type's icon */
 export function withType(type: ConfirmProps['type'], props: ModalProps): ConfirmProps {
     return { type, ...resolveConfirmProps(type, props) };
 }

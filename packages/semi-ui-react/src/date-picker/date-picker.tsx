@@ -65,11 +65,8 @@ export interface DatePickerProps extends Omit<DatePickerFoundationProps, 'dateFn
     ref?: React.Ref<DatePickerHandle>;
 }
 
-/** The methods on a DatePicker ref */
 export interface DatePickerHandle {
-    /** Opens the panel */
     open: () => void;
-    /** Closes the panel */
     close: () => void;
     /**
      * Focuses the input; a range focuses its start input unless `rangeEnd` is given. With `insetInput` and the panel

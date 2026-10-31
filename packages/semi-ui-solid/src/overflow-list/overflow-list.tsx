@@ -163,7 +163,6 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
     const isScroll = createMemo(() => props.renderMode === 'scroll');
     const threshold = createMemo(() => props.threshold);
 
-    // renderers create new elements on every call, so they run again only when their own inputs change
     const items = createMemo(() => props.items);
     const overflowRenderer = createMemo(() => local.overflowRenderer);
     const overflowRenderDirection = createMemo(() => local.overflowRenderDirection);
@@ -181,7 +180,6 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
 
     const visibleKeys = createMemo(() => [...entries().keys()], [], { equals: shallowEqual });
 
-    // the shared default overflowRenderer returns null, which means "render nothing at either end"
     const scrollSides = createMemo((): [JSX.Element, JSX.Element] => {
         if (!isScroll()) {
             return [undefined, undefined];

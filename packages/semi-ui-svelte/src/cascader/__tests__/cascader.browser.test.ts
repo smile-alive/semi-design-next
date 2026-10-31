@@ -314,7 +314,6 @@ describe.each([
         try {
             await userEvent.click(combobox);
             await waitFor(() => expect(screen.getByRole('tree')).toBeInTheDocument());
-            // a searchable Cascader hands the combobox role to its input while open
             const active = document.activeElement as HTMLElement;
             await userEvent.keyboard('{Tab}');
             expect(getClear()).toHaveFocus();

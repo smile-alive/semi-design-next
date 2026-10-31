@@ -23,7 +23,6 @@ export interface RegisterMediaQueryOption {
     callInInit?: boolean;
 }
 
-/** Returns the function that removes the listener */
 export function registerMediaQuery(media: string, { match, unmatch, callInInit = true }: RegisterMediaQueryOption) {
     if (typeof window !== 'undefined') {
         const mediaQueryList = window.matchMedia(media);

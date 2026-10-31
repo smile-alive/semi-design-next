@@ -1107,9 +1107,6 @@ describe('Upload', () => {
         const file_1 = new File([new ArrayBuffer(1024)], 'chucknorris_1.png', { type: 'image/png' });
         const file_2 = new File([new ArrayBuffer(1024)], 'chucknorris_2.png', { type: 'image/png' });
 
-        /**
-         * test fileList should be [] => [file_0] => [file_1, file_0] => [file_1, file_2, file_0]
-         */
         act(() => ref.current?.insert([file_0]));
         act(() => ref.current?.insert([file_1], 0));
         act(() => ref.current?.insert([file_2], 1));

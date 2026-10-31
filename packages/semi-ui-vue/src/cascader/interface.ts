@@ -17,13 +17,11 @@ export type CascaderKeyMapProps = KeyMapProps;
 export type CascaderSize = Size;
 export type CascaderVirtualize = Virtualize;
 
-/** A node of `treeData`; markup for its label goes in the `label` slot */
 export interface CascaderData extends BasicCascaderData {
     label: string | number;
     children?: CascaderData[];
 }
 
-/** A node of `treeData` with its place in the tree */
 export interface CascaderEntity extends BasicEntity {
     children?: CascaderEntity[];
     data: CascaderData;
@@ -34,16 +32,12 @@ export interface CascaderScrollPanelProps extends BasicScrollPanelProps {
     activeNode: CascaderData;
 }
 
-/* The basic type of the value of Cascader */
 export type CascaderSimpleValue = string | number | CascaderData;
 
-/* The value of Cascader */
 export type CascaderValue = CascaderSimpleValue | CascaderSimpleValue[] | CascaderSimpleValue[][];
 
-/** A single-mode value is one node or its path; a multiple-mode value may also be a list of paths */
 type ModeValue<Multiple> = ByMultiple<Multiple, CascaderSimpleValue | CascaderSimpleValue[], CascaderValue>;
 
-/** The selected path, or in multiple mode the checked paths; their nodes with `changeWithObject` */
 export type CascaderChangeValue<Multiple> = ByMultiple<Multiple, CascaderSimpleValue[], CascaderSimpleValue[][]>;
 
 /**
@@ -137,7 +131,6 @@ export interface CascaderLabelSlotProps {
 }
 
 export interface CascaderDisplaySlotProps {
-    /** The `displayProp` of each node on the selected path */
     labels: Array<string | number>;
     /**
      * The nodes on the selected path; a value not found in `treeData` gives its raw values instead, as `change` does
@@ -158,7 +151,6 @@ export interface CascaderFilterItemSlotProps {
     class: ClassValue;
     inputValue: string;
     disabled: boolean;
-    /** The nodes of the path */
     data: CascaderData[];
     checkStatus: {
         checked: boolean;
@@ -177,26 +169,20 @@ export interface CascaderTriggerSlotProps<Multiple extends boolean | undefined =
     inputValue: string;
     placeholder?: string;
     disabled: boolean;
-    /** The Cascader's props */
     componentProps: CascaderProps<Multiple>;
-    /** Updates the search keyword */
     onSearch: (inputValue: string) => void;
     /** Pass the click event when bound to a control inside the trigger, so the click does not open the dropdown */
     onClear: (event?: MouseEvent) => void;
-    /** Unchecks the node at a position of `value` */
     onRemove: (pos: string) => void;
 }
 
 export interface CascaderSlots<Multiple extends boolean | undefined = undefined> {
-    /** Content of an option of the tree; the search results, the selection and the tags show the label text */
     label?: (props: CascaderLabelSlotProps) => VNode[];
     /** The selection in single mode; empty content shows the placeholder */
     display?: (props: CascaderDisplaySlotProps) => VNode[];
-    /** Replaces each tag in multiple mode */
     tag?: (props: CascaderTagSlotProps) => VNode[];
     /** Replaces a row of the search results; a single element root gets the option's id, role and state */
     filterItem?: (props: CascaderFilterItemSlotProps) => VNode[];
-    /** Replaces the trigger content */
     trigger?: (props: CascaderTriggerSlotProps<Multiple>) => VNode[];
     /** Empty content keeps the default icon */
     expandIcon?: () => VNode[];
@@ -213,7 +199,6 @@ export interface CascaderSlots<Multiple extends boolean | undefined = undefined>
     bottomSlot?: () => VNode[];
 }
 
-/** The methods on a Cascader ref */
 export interface CascaderHandle {
     open: () => void;
     close: () => void;

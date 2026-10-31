@@ -11,7 +11,6 @@ import type { RenderContent, RenderContentProps } from '../../tooltip';
 
 const wrapSelector = `.${BASE_CLASS_PREFIX}-popover`;
 const arrowSelector = `.${BASE_CLASS_PREFIX}-popover-icon-arrow`;
-// Tooltip names its wrapper after Popover's prefixCls
 const tooltipWrapperSelector = `.${BASE_CLASS_PREFIX}-popover-wrapper`;
 
 function spyWarn() {
@@ -124,7 +123,6 @@ describe('Popover', () => {
         await waitFor(() => expect(document.querySelector(tooltipWrapperSelector)).toHaveAttribute('x-placement', 'top'));
         const topPaths = document.querySelectorAll<SVGPathElement>(`${arrowSelector} path`);
         expect(topPaths[0].getAttribute('d')?.startsWith('M0 0.5L0 1.5')).toBe(true);
-        // without arrowStyle the arrow takes the popup background
         expect(topPaths[1].style.fill).toBe('blue');
     });
 

@@ -3,7 +3,6 @@
     import type { NavItemType } from '@fibrae/semi-foundation/navigation/foundation';
     import type { NavExpandIconArgs, NavIconArgs, NavItemConfig, NavItemRenderProps, SubDropdownProps } from './interface.js';
     import NavItem from './nav-item.svelte';
-    // the template recurses through its own file
     import NavItems from './nav-items.svelte';
     import SubNav from './sub-nav.svelte';
 

@@ -11,7 +11,6 @@ export interface FooterButton {
     onClick: () => void;
 }
 
-/** What one footer item renders from; built once per footer render and shared by all items */
 export interface FooterView {
     showTooltip: boolean;
     curPage: number;

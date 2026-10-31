@@ -17,7 +17,6 @@ function setup(store: { kind?: 'text' | 'title' | 'paragraph' | 'numeral'; text?
 
 const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
 
-// The full text stays in the DOM, hidden, while the truncated text shows; what a reader sees skips it
 function visibleText(node: Element): string {
     return [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
 }

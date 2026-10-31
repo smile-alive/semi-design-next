@@ -4,9 +4,7 @@
     export interface ContextFixtureStore {
         props: Omit<DatePickerProps, 'trigger'>;
         direction?: 'ltr' | 'rtl';
-        /** Renders a label element with id `external-label` before the picker */
         label?: string;
-        /** A trigger snippet without a focus target of its own */
         textTrigger?: boolean;
     }
 </script>

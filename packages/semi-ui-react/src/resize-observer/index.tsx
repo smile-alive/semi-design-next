@@ -1,6 +1,5 @@
 import { Children, Fragment, useCallback, useEffectEvent, useLayoutEffect, useState, type FragmentInstance, type ReactElement } from 'react';
 
-/** The subset of `ResizeObserverEntry` that callbacks receive. */
 export interface ResizeEntry {
     contentRect: DOMRectReadOnly;
     target: Element;
@@ -22,7 +21,6 @@ export const ObserverProperty = {
 } as const;
 export type ObserverProperty = (typeof ObserverProperty)[keyof typeof ObserverProperty];
 
-/** Holds the observer, the observed elements and the last size per target. */
 class ObserverRuntime {
     readonly #children = new Set<Element>();
     #first: Element | null = null;

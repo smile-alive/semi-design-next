@@ -3,7 +3,6 @@ import { type DecorationWithType, type Editor, NodeView, type NodeViewRenderer, 
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import type { Decoration, DecorationSource, EditorView } from '@tiptap/pm/view';
 
-/** What a slot view component receives; `node` follows ProseMirror's updates */
 export interface SlotViewProps {
     editor: Editor;
     view: EditorView;
@@ -16,10 +15,6 @@ export interface SlotViewProps {
 /** Decides whether a node update reaches the view: return false to redraw the node, call updateProps to pass it on */
 export type SlotViewUpdate = (editor: Editor, update: { oldNode: ProseMirrorNode; newNode: ProseMirrorNode; updateProps: () => void }) => boolean;
 
-/**
- * A ProseMirror node view whose DOM a Svelte component renders. The component is mounted with `context`, the
- * AIChatInput's contexts, so it reads the same locale and config; ProseMirror disposes it through `destroy()`.
- */
 class SvelteNodeView extends NodeView<Component<SlotViewProps>> {
     #root: HTMLElement;
     #contentDOM: HTMLElement | null;

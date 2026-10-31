@@ -94,7 +94,6 @@ export interface TagInputState {
     inputValue?: string;
     focusing?: boolean;
     active?: boolean;
-    // whether the user is in a new IME composition session
     entering?: boolean;
 }
 
@@ -299,7 +298,6 @@ export default function TagInput(rawProps: TagInputProps) {
 
     const nextSortIds = sortIds.values === tagsArray ? sortIds : TagInputFoundation.getSortIds(tagsArray, sortIds);
 
-    // the placeholder shows only while there are no tags
     const showPlaceholder = tagsArray.length === 0;
 
     useDidUpdate(props.value, (value) => {

@@ -41,7 +41,6 @@ export default function DropdownItem(props: DropdownItemProps) {
     const topLevel = () => context?.view().menuDepth === 1;
 
     const handleClick = (e: MouseEvent & { currentTarget: HTMLLIElement; target: Element }) => {
-        // detail 0: activated from the keyboard
         if (!local.disabled && (topLevel() || e.detail === 0)) {
             callHandler(local.onClick, e);
         }

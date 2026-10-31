@@ -168,7 +168,6 @@ describe('Svelte Anchor（浏览器）', () => {
 
         nav.scrollTop = nav.scrollHeight - nav.clientHeight;
         await waitFor(() => expect(nav.scrollTop).toBeGreaterThan(0));
-        // the rail is a descendant of the scrolling root, so it (and the indicator inside it) scrolls with it
         expect(bar.getBoundingClientRect().top).toBeCloseTo(activeTitleTop(), 0);
     });
 
@@ -178,7 +177,6 @@ describe('Svelte Anchor（浏览器）', () => {
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
-        // the container is already at the bottom, so the click scrolls nothing
         await userEvent.click(screen.getByRole('link', { name: 'contact' }));
         await waitFor(() => expect(activeTitle()).toHaveTextContent('contact'));
         // longer than the 100ms debounce that ends a click without a scroll

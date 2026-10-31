@@ -16,6 +16,5 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'child
     overflowCount?: number;
     countClassName?: string;
     countStyle?: string;
-    /** The element the badge is attached to */
     children?: Snippet;
 }

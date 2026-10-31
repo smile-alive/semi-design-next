@@ -1,14 +1,12 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 
-/** The default item shape: any record, read by `itemKey` */
 export type OverflowListItem = Record<string, any>;
 
 export type OverflowListKey = string | number;
 
 export interface OverflowListItemSnippetProps<T> {
     item: T;
-    /** The item's position in `items` */
     index: number;
 }
 

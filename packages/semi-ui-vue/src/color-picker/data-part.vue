@@ -40,7 +40,6 @@
         foundation.handleInputValueChange(text);
     };
 
-    // the same path as the alpha slider, so hue and the other channels are kept as they are
     const onAlphaChange = (percent: number) => {
         props.foundation.handleAlphaChangeByHandle({ a: Number((percent / 100).toFixed(2)) });
     };

@@ -12,7 +12,6 @@ function query(container: Element, selector: string) {
     return found;
 }
 
-// a real image, so the box is laid out from its natural size the way a page sees it
 const src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect width="800" height="400" fill="teal"/></svg>');
 
 async function renderLoaded() {
@@ -34,7 +33,6 @@ describe('Cropper（浏览器）', () => {
         expect(getComputedStyle(root).touchAction).toBe('none');
 
         await userEvent.dragAndDrop(box, outside);
-        // the pointer ends past the right edge, so the box stops at the right edge of the cropper
         const rootRect = root.getBoundingClientRect();
         const boxRect = box.getBoundingClientRect();
         expect(boxRect.right).toBeCloseTo(rootRect.right, 0);

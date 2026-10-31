@@ -110,7 +110,6 @@ export interface BasicFlattenNode {
     value?: string;
 }
 
-/** `show` while rows expand, `hide` while they collapse */
 export type TreeMotionType = 'show' | 'hide';
 
 /** The values and the `smart` rule are those of the adapter's virtual list */
@@ -712,7 +711,6 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         return newState;
     }
 
-    /** The state of a new tree: the empty state with what the props imply */
     static getInitialState(props: BasicTreeProps): BasicTreeInnerData {
         const state: BasicTreeInnerData = {
             inputValue: '',

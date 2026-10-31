@@ -14,7 +14,6 @@ export interface InputBoxAdapter<P = Record<string, any>, S = Record<string, any
     manualUpload: (files: File[]) => void;
 }
 
-/** The props the foundation reads with getProps */
 export interface InputBoxBaseProps {
     disableSend?: boolean;
     canSend?: boolean;

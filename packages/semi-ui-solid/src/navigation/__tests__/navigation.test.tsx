@@ -54,7 +54,6 @@ let matchesSpy: { mockRestore: () => void } | undefined;
 
 function hover(element: Element) {
     matchesSpy = vi.spyOn(Element.prototype, 'matches').mockImplementation(function (this: Element, selector: string) {
-        // closest() starts at the element itself, so it stands in for the mocked matches()
         return selector === ':hover' ? this === element : this.closest(selector) === this;
     });
     fireEvent.mouseEnter(element);
@@ -345,7 +344,6 @@ describe('Navigation', () => {
         expect(title).toHaveAttribute('aria-haspopup', 'menu');
         expect(title).toHaveAttribute('aria-expanded', 'false');
         expect(title).not.toHaveAttribute('aria-controls');
-        // a hover trigger also opens on focus
         title.focus();
         await waitFor(() => expect(screen.getByRole('menu')).toHaveTextContent('用户列表'));
         await waitFor(() => expect(title).toHaveAttribute('aria-expanded', 'true'));
@@ -375,7 +373,6 @@ describe('Navigation', () => {
 
 describe('Navigation 行为', () => {
     it('由 items 与 children 渲染相同的菜单', () => {
-        // the ids that tie each sub title to its list and its tooltip are generated per render
         const normalized = (html: string) => html.replaceAll(/ (?:id|aria-controls|data-popupid)="[^"]*"/g, '');
         const { unmount } = render(() => <Nav defaultSelectedKeys={['list']} items={treeItems} />);
         const fromItems = normalized(getList().innerHTML);
@@ -1006,7 +1003,6 @@ describe('Navigation 行为', () => {
         expectTypeOf<ClickData['domEvent']>().toEqualTypeOf<MouseEvent | KeyboardEvent | undefined>();
         expectTypeOf<ClickData['text']>().toEqualTypeOf<JSX.Element>();
         expectTypeOf<ClickData['openKeys']>().toEqualTypeOf<ItemKey[] | undefined>();
-        // onSelect never reports whether a sub is open
         expectTypeOf<OnSelectedData>().not.toHaveProperty('isOpen');
         expectTypeOf<Parameters<NonNullable<NavItemProps['onClick']>>[0]['domEvent']>().toEqualTypeOf<MouseEvent | KeyboardEvent | undefined>();
         expectTypeOf<Parameters<NonNullable<NavProps['onSelect']>>[0]['domEvent']>().toEqualTypeOf<MouseEvent | KeyboardEvent>();
@@ -1234,7 +1230,6 @@ describe('Navigation 的属性落点', () => {
         expect(isSelected('任务查询')).toBe(false);
         setSelectedKeys(['query']);
         expect(isSelected('任务查询')).toBe(true);
-        // renderWrapper is called once per item; a change of selection updates the element in place
         expect(seen).toHaveLength(1);
     });
 

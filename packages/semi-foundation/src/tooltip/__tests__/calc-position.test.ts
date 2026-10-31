@@ -103,7 +103,6 @@ describe('calcPosition', () => {
             const flipped = createFoundation({ position: 'top', spacing: 8, autoAdjustOverflow: true }, new DOMRect(400, 70, 80, 20), undefined, null, '60px');
             expect(flipped.popup.getAttribute('x-placement')).toBe('bottom');
             expect(options[0]?.rootMargin).toBe('-60px 0px 0px 0px');
-            // an "Over" placement reaching above the header is clamped to its lower edge
             const clamped = createFoundation({ position: 'rightTopOver', spacing: 4 }, new DOMRect(400, 62, 80, 20), undefined, null, '60px');
             expect(clamped.popup.style.top).toBe('60px');
             flipped.popup.remove();

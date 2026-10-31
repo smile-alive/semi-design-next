@@ -204,7 +204,6 @@ describe('ConfigProvider', () => {
             expect(media.handlerCount(custom.xs)).toBe(0);
             expect(media.handlerCount(defaultResponsiveMap.xs)).toBe(1);
             expect(media.totalHandlers()).toBe(6);
-            // the new map no longer matches xs: subscribers hear it once
             expect(callback).toHaveBeenCalledTimes(2);
             expect(callback).toHaveBeenLastCalledWith(allFalse);
         });

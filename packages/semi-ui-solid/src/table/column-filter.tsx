@@ -36,14 +36,12 @@ interface FilterMenuProps {
     filter: ColumnFilterProps;
     filters: Filter[];
     level: number;
-    /** The values checked in the menu, unconfirmed ones included */
     displayValue: () => any[];
     toggle: (value: any) => void;
     confirm: () => void;
     reset: () => void;
 }
 
-/** The options of one menu level; an option with children opens its own menu on hover */
 function FilterMenuItems(props: FilterMenuProps) {
     const locale = useLocale('Table');
 
@@ -84,7 +82,6 @@ function FilterMenuItems(props: FilterMenuProps) {
         );
 
         if (Array.isArray(filter.children) && filter.children.length) {
-            // a submenu opening or closing is not the root menu opening or closing
             return (
                 <FilterDropdown filter={props.filter} trigger="hover" position="right" render={() => <FilterMenuItems {...props} filters={filter.children ?? []} level={props.level + 1} />}>
                     {/* the user's item cannot take the trigger props, so the Dropdown wraps it */}
@@ -131,7 +128,6 @@ function FilterDropdown(props: FilterDropdownComponentProps) {
     return (
         <Dropdown
             {...dropdownProps()}
-            // the column's own class is not the menu's
             class={clsx(`${cssClasses.PREFIX}-column-filter-dropdown`, dropdownProps().class)}
             trigger={dropdownProps().trigger ?? props.trigger}
             position={dropdownProps().position ?? props.position}
@@ -186,7 +182,6 @@ export default function ColumnFilter(props: ColumnFilterProps) {
         if (isCustomDropdownVisible()) {
             setDropdownVisible(visible);
         }
-        // an unconfirmed check is dropped on close, so the next opening starts from the applied value
         if (!visible && confirmMode()) {
             setPendingFilteredValue(undefined);
         }

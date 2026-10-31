@@ -11,7 +11,6 @@ interface Options {
     fieldProps?: Record<string, unknown>;
 }
 
-/** A Form with the ArrayField `data`: two buttons, then a name input, a type input and a remove button per row */
 export function renderArrayForm({ formProps = {}, arrayFieldProps = {}, fieldProps = {} }: Options = {}) {
     return renderForm(formProps, () =>
         h(

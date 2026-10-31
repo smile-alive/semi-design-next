@@ -11,7 +11,6 @@
     import { Spin } from '../spin/index.js';
     import type { CascaderData, CascaderEntity, CascaderFilterItemSnippetProps, CascaderLabelSnippetProps, CascaderVirtualize } from './interface.js';
 
-    /** The tree or the search results of a Cascader; not a public component */
     interface SearchData extends BasicData {
         data: CascaderData;
         pathData?: CascaderData[];
@@ -25,7 +24,6 @@
         checkedKeys: Set<string>;
         halfCheckedKeys: Set<string>;
         showNext: 'click' | 'hover';
-        /** The search results, a listbox, rather than the tree */
         searchable: boolean;
         keyword: string;
         /** A node without isLeaf is a branch while loadData is set */
@@ -36,10 +34,8 @@
         virtualize?: CascaderVirtualize;
         /** Id of the tree, or of the listbox of search results; the combobox's aria-controls points at it */
         id: string;
-        /** The popup's name, the same as the combobox's */
         ariaLabel?: string;
         ariaLabelledby?: string;
-        /** The option the arrow keys are on, pointed at by the combobox's aria-activedescendant */
         keyboardKey: string | null;
         optionId: (key: string) => string;
         label?: Snippet<[CascaderLabelSnippetProps]>;

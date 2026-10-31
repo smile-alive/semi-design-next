@@ -30,7 +30,6 @@ import MonthsGrid, { type DatePickerTimePickerOpts, type MonthsGridHandle } from
 import QuickControl from './quick-control';
 import YearAndMonth, { type YearAndMonthOpts } from './year-and-month';
 
-// the foundation types these as `any` or with React-free shapes; DatePickerProps declares the Solid ones
 type RedeclaredKeys =
     | 'dateFnsLocale'
     | 'className'
@@ -56,7 +55,6 @@ type RedeclaredKeys =
 
 /** Undeclared props (data-*, aria-label, id, title) go to the root element */
 export interface DatePickerProps extends Omit<DatePickerFoundationProps, RedeclaredKeys>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus' | 'onCancel' | 'placeholder' | 'autofocus' | 'ref'> {
-    /** Focuses the input once mounted */
     autofocus?: boolean;
     bottomSlot?: JSX.Element;
     /** On the root element */
@@ -99,15 +97,12 @@ export interface DatePickerProps extends Omit<DatePickerFoundationProps, Redecla
     onClickOutSide?: (e: MouseEvent) => void;
     /** Gets arrays in range and multiple mode */
     onChange?: (date: Date | Date[], dateString: string | string[]) => void;
-    /** The root element, which carries the DatePickerHandle methods */
     ref?: Ref<DatePickerElement>;
 }
 
 /** React's DatePickerHandle methods; the root element passed to `ref` carries them */
 export interface DatePickerHandle {
-    /** Opens the panel */
     open: () => void;
-    /** Closes the panel */
     close: () => void;
     /**
      * Focuses the input; a range focuses its start input unless `rangeEnd` is given. With `insetInput` and the panel
@@ -453,7 +448,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const disabledDisposeTime = (date: Date | Date[], panelType?: string) => DatePickerFoundation.disposeDateFn(local.timeZone, local.disabledTime, date, panelType);
 
-    // a ref callback that also forgets the input once it unmounts
     const keepInput = (key: keyof typeof inputs) => (node: HTMLInputElement) => {
         inputs[key] = node;
         onCleanup(() => {

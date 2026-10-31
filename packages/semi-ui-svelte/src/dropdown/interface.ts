@@ -8,7 +8,6 @@ import type { TooltipProps, TooltipTriggerProps } from '../tooltip/index.js';
  * caller (`class={[props.class, 'own']}`), and the attachment under a symbol key must survive the spread.
  */
 export type DropdownTriggerProps = Omit<TooltipTriggerProps, 'aria-haspopup' | 'aria-expanded' | 'aria-controls'> & {
-    /** `semi-dropdown-showing` while the menu is open */
     class?: string;
     'aria-haspopup'?: 'menu';
     'aria-expanded'?: boolean;
@@ -24,7 +23,6 @@ export interface DropdownMenuIconArgs {
  * wraps a special trigger only in its own span, and Dropdown always renders the trigger itself. No element props: F11.
  */
 export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPointAtCenter' | 'disableArrowKeyDown' | 'arrow' | 'child' | 'children' | 'content' | 'wrapWhenSpecial'> {
-    /** Wrapped in a span, which takes the trigger attributes */
     children?: Snippet;
     /** Renders the trigger element itself, which takes `props`; use it for a button, a link or a parent `DropdownItem` */
     child?: Snippet<[{ props: DropdownTriggerProps }]>;
@@ -47,7 +45,6 @@ export interface DropdownProps extends Omit<TooltipProps, 'showArrow' | 'arrowPo
 }
 
 export interface DropdownHandle {
-    /** Focuses the trigger (a non-custom trigger only) */
     focusTrigger: () => void;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
     rePosition: () => void;
@@ -61,7 +58,6 @@ export interface DropdownItemProps extends HTMLAttributes<HTMLLIElement> {
     /** Takes effect only outside a Dropdown; inside one, the Dropdown's showTick applies. */
     showTick?: boolean;
     type?: 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
-    /** The icon container is rendered even when the snippet outputs nothing */
     icon?: Snippet;
 }
 

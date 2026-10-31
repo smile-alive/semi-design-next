@@ -35,7 +35,6 @@ describe('Svelte ColorPicker（浏览器）', () => {
         outside.style.cssText = 'position:fixed;left:400px;top:0;width:100px;height:100px';
         expect(getComputedStyle(slider).touchAction).toBe('none');
 
-        // the pointer is released over another element, past the slider's right end
         await userEvent.dragAndDrop(handle, outside);
         expect(onChange.mock.lastCall?.[0].hsva.h).toBeGreaterThan(300);
 

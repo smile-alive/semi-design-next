@@ -38,7 +38,6 @@ export interface CalendarEmits {
 }
 
 export interface CalendarEventSlotProps {
-    /** The object from `events`, found by its key */
     event: EventObject;
 }
 

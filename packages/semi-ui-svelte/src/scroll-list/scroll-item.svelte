@@ -30,7 +30,6 @@
     const current = $derived(selectedIndex ?? defaults('selectedIndex', 0));
     const isWheel = $derived(mode === 'wheel');
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: ScrollItemBaseProps<T> = {
         get cycled() {
             return cycled;
@@ -101,7 +100,6 @@
         return [...copies(states().prependCount, 'pre').toReversed().flat(), ...items(''), ...copies(states().appendCount, 'app').flat()];
     });
 
-    // Focus stays on the listbox and the selected option is its active descendant
     const optionId = (index: number) => {
         return `${uid}-option-${index}`;
     };

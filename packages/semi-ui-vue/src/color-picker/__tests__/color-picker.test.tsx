@@ -55,7 +55,6 @@ const greyColor: ColorValue = {
 
 const saturationBrightness = (s: number, v: number) => text.saturationBrightness.replace('${saturation}', String(s)).replace('${brightness}', String(v));
 
-// the popup content mounts a few ticks after the popover opens
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 
 // Every render uses a non-Chinese locale, so a hard-coded Chinese name cannot pass
@@ -163,7 +162,6 @@ describe('ColorPicker 审计修复', () => {
             renderColorPicker({ alpha: true, defaultFormat: defaultFormat as 'rgba', defaultValue: translucent, onChange });
             await changeInput(value);
             expect(lastColor(onChange).rgba.g).toBe(255);
-            // hex stores opacity in 8 bits, so 0.5 comes back as 128/255
             expect(lastColor(onChange).rgba.a).toBeCloseTo(0.5, 2);
         });
 
@@ -400,7 +398,6 @@ describe('ColorPicker', () => {
 
     it('渲染自定义 style', () => {
         renderColorPicker({ style: { border: '1px solid red' } });
-        // jsdom computes the color as rgb()
         expect(getPicker()).toHaveStyle({ border: '1px solid rgb(255, 0, 0)' });
     });
 
@@ -777,7 +774,6 @@ describe('ColorPicker', () => {
         expect(getAlphaInput()).toHaveValue('100');
     });
 
-    // controlled and not written back, so the handle stays where the value puts it
     it('选色区受控时 handle 始终对应 modelValue', async () => {
         const onChange = onChangeMock();
         renderColorPicker({ onChange, modelValue: defaultColor });
@@ -818,7 +814,6 @@ describe('ColorPicker', () => {
         };
         const view = renderColorPicker({ modelValue: color, width: 280, height: 280 });
         await view.rerender({ height: 100, width: 200 });
-        // x = s * width - 10, y = (1 - v) * height - 10
         expect(getAreaHandle()).toHaveStyle({ left: '90px', top: '-10px' });
         expect(getColorSliderHandle()).toHaveStyle({ left: '91px' });
         expect(getAlphaHandle()).toHaveStyle({ left: '91px' });
@@ -1105,7 +1100,6 @@ describe('ColorPicker', () => {
 
     it('取色期间卸载会取消取色，之后不再通知', async () => {
         const onChange = onChangeMock();
-        // like the real EyeDropper, a pick that is aborted rejects with an AbortError
         const open = vi.fn<(options: { signal: AbortSignal }) => Promise<{ sRGBHex: string }>>(({ signal }) => new Promise((_resolve, reject) => signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')))));
         window.EyeDropper = class {
             open = open;

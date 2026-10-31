@@ -65,7 +65,6 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
     const remarkPluginList = usePluginList(remarkPlugins);
     const rehypePluginList = usePluginList(rehypePlugins);
 
-    // components apply at render; only what changes the compiled tree compiles again
     useEffect(() => {
         void foundation.updateContent();
     }, [foundation, raw, format, remarkGfm, remarkPluginList, rehypePluginList]);

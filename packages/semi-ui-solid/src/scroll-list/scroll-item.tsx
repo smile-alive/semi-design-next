@@ -22,7 +22,6 @@ export interface ScrollItemProps<T extends Item = Item> extends ElementProps<'di
     motion?: boolean;
     /** Identifies the item to the Semi components that use it; not for end users */
     type?: string | number;
-    /** The root element with the ScrollItemHandle method, which TimePicker and DatePicker call to re-centre a column */
     ref?: Ref<ScrollItemElement>;
 }
 
@@ -60,7 +59,6 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
     let listbox!: HTMLUListElement;
     const listId = createUniqueId();
 
-    // only wheel mode renders these; the foundation reads them in wheel mode only
     let outer!: HTMLDivElement;
     let selector!: HTMLDivElement;
 

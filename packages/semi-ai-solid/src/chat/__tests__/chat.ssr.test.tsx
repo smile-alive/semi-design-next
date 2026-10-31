@@ -45,7 +45,6 @@ it('renderChatBoxAction 按顺序调用 defaultActions 的渲染函数', async (
         ),
     });
     expect(errors).toEqual([]);
-    // the last assistant message: copy, like, dislike, reset and delete
     expect(html.match(/semi-chat-chatBox-action-btn/g)).toHaveLength(5);
 });
 

@@ -169,7 +169,6 @@ export default {
     },
     variants: [
         { name: 'default', ...steps(defaultChecks) },
-        // The dev server works without the plugin; `vite build` does not
         { name: 'no-plugin', files: { 'vite.config.ts': NO_PLUGIN_VITE_CONFIG }, dev: dev(defaultChecks) },
         {
             name: 'tailwind',

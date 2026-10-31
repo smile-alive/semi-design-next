@@ -192,7 +192,6 @@
         return foundation.afterHide;
     });
 
-    // the unmount of a shown dialog reports its close once
     onMount(() => () => {
         if (takePendingClose()) {
             foundation.afterClose();

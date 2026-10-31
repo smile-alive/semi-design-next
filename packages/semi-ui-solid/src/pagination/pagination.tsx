@@ -160,7 +160,6 @@ export default function Pagination(rawProps: PaginationProps) {
 
     const small = () => local.size === 'small';
 
-    // the small size has no size changer
     const sizeChangerShown = () => local.showSizeChanger && !small();
 
     const sizeChangerKeepsSinglePage = createMemo(() => sizeChangerShown() && local.hideOnSinglePage);

@@ -3,9 +3,7 @@
 
     withDefaults(
         defineProps<{
-            /** The column dataIndex the table-level #sortIcon renders for, or `all` */
             sortIconFor?: string;
-            /** Whether the Name column has its own slots */
             columnSlots?: boolean;
         }>(),
         { sortIconFor: 'all', columnSlots: true }

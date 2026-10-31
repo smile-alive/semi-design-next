@@ -5,7 +5,6 @@ import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { Position } from '../tooltip/interface';
 import type { ShowTooltip } from '../typography/interface';
 
-/** A link is activated by a click or by Enter */
 export type AnchorClickEvent = MouseEvent | KeyboardEvent;
 
 export interface AnchorProps {
@@ -50,7 +49,6 @@ export interface LinkProps {
 }
 
 export interface AnchorLinkSlots {
-    /** Nested Anchor.Link */
     default?: () => VNode[];
     title?: () => VNode[];
 }

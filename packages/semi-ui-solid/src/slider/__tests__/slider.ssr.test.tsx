@@ -19,7 +19,6 @@ it('slider/刻度节点由 renderMark 在服务端只为标签创建', async () 
         ),
     });
     expect(errors).toEqual([]);
-    // the mark tooltips stay closed, so only the labels call it
     expect(created).toEqual(['20:20c', '40:40c']);
     expect(html).toMatch(/<b[^>]*>20c<\/b>/);
 });

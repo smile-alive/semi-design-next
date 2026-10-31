@@ -9,7 +9,6 @@ import type { CodeHighlightProps } from '../interface';
 import CodeHighlightStore from './code-highlight-store.svelte';
 import { grammar } from './grammars';
 
-// counts the highlights that actually start, to tell a skipped update from a repeated one
 const highlights = vi.hoisted(() => ({ count: 0 }));
 vi.mock('@fibrae/semi-foundation/code-highlight/highlighter', async (importOriginal) => {
     const original = await importOriginal<typeof import('@fibrae/semi-foundation/code-highlight/highlighter')>();
@@ -149,7 +148,6 @@ describe('Svelte CodeHighlight', () => {
         store.code = 'latest';
         store.language = 'not-a-language';
         flushSync();
-        // a second block in the same language finishes after the first block's pending request
         const other = setup({ code: 'const other: number = 2;', language: 'ts' });
         await waitForShiki(other.container);
         await sleep(50);

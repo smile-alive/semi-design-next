@@ -131,7 +131,6 @@
         return tags.filter((tag) => tag !== false);
     });
 
-    // The description goes to the focusable link inside, unless the caller set their own
     const linkDescribes = $derived.by(() => {
         const first = decorations[0];
         return tooltip !== false && !tooltip.popover && first?.tag === 'a' && Boolean(first.attrs.href || first.attrs.role === 'link') && !rest['aria-describedby'];
@@ -328,7 +327,6 @@
         return () => observer.disconnect();
     });
 
-    // truncating renders the expand button, so the text is measured again with its width
     $effect(() => {
         void [fullText, truncated, view.expanded, rows, pos, suffix, expandText, tooltipEnabled, Boolean(copyable), strong, root];
         if (hasEllipsis) runtime.schedule();

@@ -226,7 +226,6 @@ describe('Tooltip', () => {
         await waitFor(() => expect(clicked.emitted().afterClose).toHaveLength(1));
         clicked.unmount();
 
-        // no real pointer is over the trigger, so handleOpened backs out
         const hovered = renderTip({ mouseEnterDelay: 0 });
         await fireEvent.mouseEnter(screen.getByRole('button'));
         await waitFor(() => expect(hovered.emitted().afterClose).toHaveLength(1));

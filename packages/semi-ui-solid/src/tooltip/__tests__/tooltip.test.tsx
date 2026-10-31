@@ -21,7 +21,6 @@ const shown = () => document.querySelector<HTMLElement>(shownSelector);
 const clickOutside = (target: EventTarget = document) => target.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
 // Tooltip takes the popup's role as a prop; there is no element to swap for a native <dialog>
 const dialogRole = 'dialog';
-// a string style is a supported prop type under test
 const stringStyle: string = 'color: blue';
 type VisibleChange = NonNullable<TooltipProps['onVisibleChange']>;
 type Callback = () => void;
@@ -1616,7 +1615,6 @@ describe('Tooltip', () => {
             const object = await screen.findByRole('tooltip', { name: 'object' });
             expect(object).toHaveClass('custom');
             expect(object.style.backgroundColor).toBe('red');
-            // jsdom puts the trigger's box at 0, so a bottom popup's top is the spacing along y
             expect(object.style.top).toBe('6px');
             expect(object.querySelector('svg')?.style.color).toBe('red');
             const string = screen.getByRole('tooltip', { name: 'string' });

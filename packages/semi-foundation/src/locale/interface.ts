@@ -1,13 +1,10 @@
 import type { Locale as dateFnsLocale } from 'date-fns';
 
-/** Keys of `Locale` that hold a component's strings */
 export type LocaleComponentName = Exclude<keyof Locale, 'code' | 'dateFnsLocale' | 'currency'>;
 
 export interface LocaleResult<T> {
-    /** `locale[componentName]`: the component's own strings */
     locale: T;
     localeCode: string;
-    /** For formatting dates in the locale's language, e.g. `format(date, 'EEEE', { locale: dateFnsLocale })` */
     dateFnsLocale: dateFnsLocale;
     currency: string;
 }

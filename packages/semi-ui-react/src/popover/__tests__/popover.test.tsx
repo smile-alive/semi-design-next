@@ -93,7 +93,6 @@ describe(`Popover`, () => {
         await userEvent.click(screen.getByRole('button', { name: 'toggle' }));
         await waitFor(() => expect(screen.getByText('pop content')).toBeInTheDocument());
         await waitFor(() => expect(onVisibleChange).toHaveBeenLastCalledWith(true));
-        // clickTriggerToHide is off: a second click on the trigger keeps it open
         await userEvent.click(screen.getByRole('button', { name: 'toggle' }));
         expect(screen.getByText('pop content')).toBeInTheDocument();
         // a click inside the popup is not a click outside (F3)
@@ -154,7 +153,6 @@ describe(`Popover`, () => {
         await waitFor(() => expect(document.querySelector(tooltipWrapperSelector)).toHaveAttribute('x-placement', 'top'));
         const topPaths = document.querySelectorAll<SVGPathElement>(`${arrowSelector} path`);
         expect(topPaths[0].getAttribute('d').startsWith('M0 0.5L0 1.5')).toBe(true);
-        // without arrowStyle the arrow takes the popup background
         expect(topPaths[1].style.fill).toBe('blue');
     });
 

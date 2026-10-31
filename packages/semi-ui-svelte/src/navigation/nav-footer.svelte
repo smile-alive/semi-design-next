@@ -11,7 +11,6 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // the button only takes an empty footer of a vertical nav
     const showButton = $derived(!children && Boolean(collapseButton) && ctx.mode !== strings.MODE_HORIZONTAL);
 </script>
 

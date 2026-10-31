@@ -21,7 +21,6 @@
     import FormTreeSelect from '../form-tree-select.svelte';
     import FormUpload from '../form-upload.svelte';
 
-    // every field the package exports, so a test picks one by name
     export const allFieldComponents = {
         input: FormInput,
         textArea: FormTextArea,
@@ -48,7 +47,6 @@
     export interface AnyFieldSpec {
         type: keyof typeof allFieldComponents;
         props: Record<string, unknown>;
-        /** Rendered only while true */
         shown?: boolean;
     }
 

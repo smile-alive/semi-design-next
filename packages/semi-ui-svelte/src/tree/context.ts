@@ -19,7 +19,6 @@ export interface TreeContextValue {
     onNodeCheck: (event: MouseEvent | KeyboardEvent, row: TreeRowProps) => void;
     onNodeRightClick?: (event: MouseEvent, row: TreeRowProps) => void;
     onNodeDoubleClick?: (event: MouseEvent, row: TreeRowProps) => void;
-    /** The drag handlers get the row element as `nodeInstance` */
     onNodeDragStart?: (event: DragEvent, row: TreeRowProps) => void;
     onNodeDragEnter?: (event: DragEvent, row: TreeRowProps) => void;
     onNodeDragOver?: (event: DragEvent, row: TreeRowProps) => void;

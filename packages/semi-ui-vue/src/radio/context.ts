@@ -17,7 +17,6 @@ export interface RadioGroupContextView {
 export interface RadioGroupContext {
     view: ComputedRef<RadioGroupContextView>;
     onChange: (event: RadioChangeEvent) => void;
-    /** Registers a radio's DOM write-back and returns its unregister function. */
     register: (sync: () => void) => () => void;
     /** Asks every registered radio to write its rendered state back to its native input once rendering settles. */
     sync: () => void;

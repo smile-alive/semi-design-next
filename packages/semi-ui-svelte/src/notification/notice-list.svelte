@@ -12,7 +12,6 @@
 
     interface NoticeListProps {
         placement: NoticePosition;
-        /** The position's notices, newest first, leaving ones included */
         items: ListedNotice[];
         removedItems: readonly NoticeInstance[];
         updatedItems: readonly NoticeInstance[];
@@ -35,7 +34,6 @@
     const threshold = $derived(getStackThreshold(items[0].stack ?? defaults('stack')));
     const expanded = $derived(paused || shownCount <= threshold);
 
-    // The newest notice decides the list's offsets
     const listStyle = $derived.by(() => {
         const newest = items[0];
         return {

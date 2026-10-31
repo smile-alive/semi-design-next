@@ -55,7 +55,6 @@ const transSize = (size: string | number) => (typeof size === 'number' ? getFile
 // props carry every file-item field, so only data-* and aria-* may reach the DOM
 const isDataOrAria = (key: string): key is `data-${string}` | `aria-${string}` => key.startsWith('data-') || key.startsWith('aria-');
 
-// the card's own click previews the file
 function stopThen(e: MouseEvent, callback?: () => void) {
     e.stopPropagation();
     callback?.();

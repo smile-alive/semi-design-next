@@ -108,7 +108,6 @@ describe('DatePicker 根元素与 ref', () => {
     });
 
     it('未声明的属性（如 id、name 与 title）落在根 div，已声明的属性不落在任何地方', () => {
-        // name is not a native div attribute, so the spread keeps the call type-checked
         const undeclared = { name: 'day-name' };
         render(() => <DatePicker id="day" title="tip" {...undeclared} density="compact" timeZone="Asia/Tokyo" />);
         const root = document.querySelector(`.${dp}`);

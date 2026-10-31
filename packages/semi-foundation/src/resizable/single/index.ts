@@ -4,7 +4,6 @@ import { isSecondaryPress } from '../../utils/pointer';
 import { type Size, type NumberSize, type Direction, type NewSize, type ResizeCallback, type ResizeStartCallback, DEFAULT_SIZE, KEYBOARD_STEP } from '../types';
 import { getStringSize, getNumberSize, has, calculateNewMax, findNextSnap, snap, clamp } from '../utils';
 
-/** The props the foundation reads */
 export interface ResizableBaseProps extends SizeProps {
     grid?: [number, number];
     snap?: { x?: number[]; y?: number[] };
@@ -522,10 +521,7 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
         this.updateAriaRange();
     }
 
-    /**
-     * Reads the size and limits for aria-valuenow, -valuemin and -valuemax. A change of the limits alone goes
-     * unnoticed until the next resize.
-     */
+    /** A change of the limits alone goes unnoticed until the next resize. */
     updateAriaRange = () => {
         // the boundary snapshot is taken when the drag starts; the box growing under the pointer must not move it
         if (this.getStates().isResizing) {

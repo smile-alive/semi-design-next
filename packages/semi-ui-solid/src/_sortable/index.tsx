@@ -28,7 +28,6 @@ export function Sortable(rawProps: SortableProps) {
 
     const locale = useLocale('Sortable');
 
-    // the announcements run at drag time and read the latest locale and item count, kept current below
     const announcer = untrack(() => new SortableAnnouncer(locale().locale, props.items.length));
 
     const plugins: DragDropProviderProps['plugins'] = (defaults) => [...defaults, announcer.plugin];

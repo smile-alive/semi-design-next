@@ -58,7 +58,6 @@ describe('Table（浏览器）', () => {
         });
     });
 
-    // Reads Chrome's accessibility tree over CDP
     it.skipIf(!isChromium).each([
         ['scroll.y', { scroll: { y: 300 } }],
         ['sticky', { sticky: true }],

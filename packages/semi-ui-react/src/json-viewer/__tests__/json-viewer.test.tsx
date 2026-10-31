@@ -143,7 +143,6 @@ describe('JsonViewer', () => {
 
     it('value 等于编辑器当前文本时不重新创建编辑器，不同时重新创建', () => {
         const { rerender } = render(<JsonViewer value="1" />);
-        // what typing into the editor and writing it back through onChange looks like
         current().value = '{"a":2}';
         rerender(<JsonViewer value='{"a":2}' />);
         expect(instances()).toHaveLength(1);

@@ -18,7 +18,6 @@ const KEY_CODE_ENTER = 'Enter';
 const KEY_CODE_TAB = 'Tab';
 
 export type Type = 'date' | 'dateRange' | 'year' | 'month' | 'dateTime' | 'dateTimeRange' | 'monthRange';
-/** The range input, start or end, that a focus or a value belongs to */
 export type RangeInput = 'rangeStart' | 'rangeEnd';
 export type PanelType = 'left' | 'right';
 
@@ -61,10 +60,7 @@ export interface DateInputFoundationProps extends DateInputElementProps, DateInp
     validateStatus?: ValidateStatus;
     prefixCls?: string;
     rangeSeparator?: string;
-    /**
-     * Only for UI render. Keep `semi-foundation` framework-agnostic (no React types).
-     * `semi-ui-react` layer should declare this as `React.ReactNode`.
-     */
+    /** `any` keeps the foundation framework-agnostic; each framework package declares its own node type */
     rangeSeparatorNode?: any;
     panelType?: PanelType;
     insetInput?: boolean | InsetInputProps;
@@ -140,7 +136,6 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         };
     }
 
-    /** The text the trigger input shows for `value` */
     static formatShowText({ type, dateFnsLocale, format, rangeSeparator }: InputProps, value: BaseValueType[], customFormat?: string) {
         const formatToken = customFormat || format || getDefaultFormatTokenByType(type);
         switch (type) {
@@ -158,7 +153,6 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         }
     }
 
-    /** The trigger text: the text being typed, else `value` formatted */
     static getShowText(props: InputProps & { inputValue?: string | null; value?: BaseValueType[] }) {
         if (props.inputValue != null) {
             return props.inputValue;
@@ -179,7 +173,6 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         return { start, end, startTime: timeName(start), endTime: timeName(end) };
     }
 
-    // The user's format is used only when it conforms to formatReg; otherwise the default format is the placeholder
     static getInsetInputPlaceholder({ type, format, rangeSeparator }: InputProps) {
         const insetInputFormat = getInsetInputFormatToken({ type, format });
         let datePlaceholder, timePlaceholder;

@@ -11,7 +11,6 @@ export interface TablePaginationProps {
 }
 
 export default function TablePagination(props: TablePaginationProps) {
-    // called again when the pagination changes
     const customPagination = createMemo(() => {
         const render = props.renderPagination;
         const pagination = props.pagination;

@@ -14,7 +14,6 @@ const Modal: typeof ModalBase & {
     warning: (props: ModalConfirmProps) => ReturnType<typeof confirm>;
     confirm: (props: ModalConfirmProps) => ReturnType<typeof confirm>;
     destroyAll: typeof destroyAll;
-    /** Optional: static confirms (and the other static APIs) then render with this app's context. */
     install: typeof install;
 } = Object.assign(ModalBase, {
     useModal,

@@ -1,7 +1,6 @@
 import type { JSX } from 'solid-js';
 import { isServer, render } from 'solid-js/web';
 
-/** Imperative APIs render into the page, which a server render does not have */
 export function assertClient() {
     if (isServer) {
         throw new Error('[Semi] Modal.confirm, Toast and Notification render into the page, which a server render does not have: call them from an event handler or an effect after mount.');

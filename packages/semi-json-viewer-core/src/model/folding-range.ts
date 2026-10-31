@@ -164,7 +164,6 @@ export class FoldingRegions {
     }
 
     /**
-     * Two inputs, each a FoldingRegions or a FoldRange[], are merged.
      * Each input must be pre-sorted on startLineNumber.
      * The first list is assumed to always include all regions currently defined by range providers.
      * The second list only contains the previously collapsed and all manual ranges.

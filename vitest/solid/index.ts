@@ -63,7 +63,6 @@ export const solid: TestFramework = {
     coverage: {
         include: ['packages/{semi-ui-solid,semi-ai-solid}/src/**/*.{ts,tsx}'],
         exclude: ['packages/{semi-ui-solid,semi-ai-solid}/src/index.ts'],
-        // Solid packages carry their own thresholds on top of the global ones in vitest/index.ts
         thresholds: {
             'packages/semi-ui-solid/**': { statements: 99, branches: 91, functions: 97, lines: 99 },
             'packages/semi-ai-solid/**': { statements: 96, branches: 85, functions: 96, lines: 96 },

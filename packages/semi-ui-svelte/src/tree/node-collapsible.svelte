@@ -18,7 +18,6 @@
 
     let isOpen = $state(untrack(() => open));
 
-    // the flip has to land after the mounted state for Collapsible to animate between them
     onMount(() => {
         const timer = setTimeout(() => {
             isOpen = !isOpen;

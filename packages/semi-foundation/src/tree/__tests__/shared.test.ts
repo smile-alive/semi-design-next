@@ -154,7 +154,6 @@ describe('tree 共享逻辑', () => {
         const nodes = ['a', 'b', 'c', 'd'].map((key) => ({ key }));
         const [a, b, c, d] = nodes;
         expect(getTransitionNodes(nodes, new Set(['b', 'c']), 'show')).toEqual([a, [b, c], d]);
-        // collapsing rows come from the list cached before the collapse
         expect(getTransitionNodes([a, d], new Set(['b', 'c']), 'hide', nodes)).toEqual([a, [b, c], d]);
         expect(getTransitionNodes(nodes, new Set(['b']), 'hide')).toEqual([a, [b], c, d]);
         expect(getTransitionNodes([a], new Set(['z']), 'show')).toEqual([[], a]);

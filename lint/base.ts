@@ -1,6 +1,5 @@
 import type { OxlintConfig, OxlintOverride } from 'vite-plus/lint';
 
-// Rules for every file, whatever framework it is written for
 export const baseLint = {
     plugins: ['typescript', 'unicorn', 'oxc', 'import', 'vitest'],
     // A prototype method passed as a value loses `this` (`this.#x` throws); also unhandled promises

@@ -11,7 +11,6 @@
     const prefixCls = cssClasses.PREFIX_REFERENCES;
     const referencePrefixCls = cssClasses.PREFIX_REFERENCE;
 
-    // A thumbnail replaces the icon for images, so the image kind has none
     const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo };
 
     const items = computed(() =>

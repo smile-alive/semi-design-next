@@ -47,7 +47,6 @@ export interface PopconfirmProps extends PopoverProps {
 }
 
 export interface PopconfirmHandle {
-    /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     focusTrigger: () => void;
 }
 
@@ -187,7 +186,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
     // by value: a state write notifies even when equal, and handlePopupClose writes the state
     const open = createMemo(() => (props.visible !== undefined ? props.visible : state().visible));
 
-    // the title names the dialog; without one, the content is the question being confirmed
     const labelledBy = () => {
         if (local['aria-labelledby'] || props['aria-label']) {
             return local['aria-labelledby'];
@@ -325,7 +323,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
         }
     );
 
-    // delivered once while created, like an element ref
     if (typeof ref === 'function') {
         ref({ focusTrigger: () => popover?.focusTrigger() });
     }

@@ -82,7 +82,6 @@
     let prefixKind = $state<SlotKind>();
     let suffixKind = $state<SlotKind>();
 
-    // loaded on first use, so an app that never drags does not pay for dnd-kit
     let Sortable = $state.raw<typeof SortableComponent>();
 
     // not reactive: only the focus handlers read it, to ignore the blur dnd-kit causes when it moves the picked-up handle
@@ -283,7 +282,6 @@
         }
     );
 
-    // the placeholder shows only while there are no tags
     watch(() => [inputText, tags.length === 0, placeholder, size], foundation.fitInputWidth);
 
     // the sort ids are settled before the DOM patch, or one frame would show tags under the wrong ids

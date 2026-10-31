@@ -40,7 +40,6 @@ const typographyTexts = () => [...document.querySelectorAll('.semi-typography')]
 // the item element is the wrap's first element; Vue fragments add empty text anchors around children
 const itemOf = (wrap: Element) => wrap.firstElementChild as HTMLElement;
 const routesOf = (count: number) => 'abcdefghij'.slice(0, count).split('');
-// the visible row: item texts, with the more button as 'more'
 const visibleRow = () => [...nav().children].map((el) => (el.classList.contains(`${prefix}-collapse`) ? 'more' : el.querySelector('.semi-typography')?.textContent));
 
 afterEach(() => {
@@ -114,7 +113,6 @@ describe('Breadcrumb', () => {
         const links = document.querySelectorAll(`.${prefix}-item-wrap a`);
         expect(links).toHaveLength(1);
         expect(links[0]).toHaveAttribute('href', href);
-        // an Item's own separator is not wrapped in .semi-breadcrumb-separator
         const [first] = getItemWraps();
         expect(first.textContent).toBe('semi???');
         expect(first.querySelector(`.${prefix}-separator`)).toBeNull();
@@ -150,7 +148,6 @@ describe('Breadcrumb', () => {
         ];
         const icon = vi.fn<(scope: BreadcrumbRouteSlotProps) => VNode | VNode[]>(({ route }) => (route.path === '/' ? <IconHome /> : route.path ? <IconArticle /> : []));
         render(Breadcrumb, { props: { routes: [...routes, 'string only'] }, slots: { icon } });
-        // each call receives its own route's index; a string route arrives as { name }
         expect(new Set(icon.mock.calls.map(([{ route, index }]) => `${index}:${route.path ?? route.name}`))).toEqual(new Set(['0:/', '1:/breadcrumb', '2:string only']));
         const [first, second, third] = getItemWraps();
         expect(first.querySelector('.semi-icon-home')).not.toBeNull();
@@ -160,7 +157,6 @@ describe('Breadcrumb', () => {
         expect(second.querySelector('a')).toHaveAttribute('href', '/components/breadcrumb');
         expect(second.querySelector('.semi-typography')).toHaveTextContent(/^breadcrumb$/);
         expect(third.querySelector('.semi-typography')).toHaveTextContent(/^string only$/);
-        // a route without a name renders no title
         expect(first.querySelector(`.${prefix}-item-title`)).toBeNull();
     });
 
@@ -198,7 +194,6 @@ describe('Breadcrumb', () => {
         getBr({ routes: routesOf(6), activeIndex: 2, moreType: 'popover' });
         const current = screen.getByText('c').closest(`.${prefix}-item-wrap`) as HTMLElement;
         expect(current).toHaveAttribute('aria-current', 'page');
-        // a, b, c (current), more, f: the hidden items are d and e, the last item stays
         expect(typographyTexts()).toEqual(['a', 'b', 'c', 'f']);
         expect(nav().children[3]).toHaveClass(`${prefix}-collapse`);
         await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
@@ -240,7 +235,6 @@ describe('Breadcrumb', () => {
         expect(a).toHaveClass(`${prefix}-item-link`);
         expect(b.tagName).toBe('SPAN');
         expect(b).not.toHaveClass(`${prefix}-item-link`);
-        // the active last item stays a span even with href
         expect(c.tagName).toBe('SPAN');
         expect(c).not.toHaveAttribute('href');
     });
@@ -336,7 +330,6 @@ describe('Breadcrumb', () => {
 
     it('routes 超过 maxItemCount 时折叠', () => {
         getBr({ routes: routesOf(6) });
-        // default maxItemCount 4: first item, more, then the last 3
         expect(nav().children).toHaveLength(5);
         expect(nav().children[1]).toHaveClass(`${prefix}-collapse`);
         expect(typographyTexts()).toEqual(['a', 'd', 'e', 'f']);
@@ -443,7 +436,6 @@ describe('Breadcrumb', () => {
         });
         await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
         const link = (await screen.findByText('two', { selector: '.semi-popover-content *' })).closest('a') as HTMLElement;
-        // dispatchEvent returns false when a handler called preventDefault
         expect(link.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }))).toBe(true);
         link.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
         link.addEventListener('click', (e) => e.preventDefault());
@@ -630,7 +622,6 @@ describe('Breadcrumb', () => {
     it('无 href 且有点击处理的项可用键盘聚焦，Enter 以 MouseEvent 触发 onClick', async () => {
         const onClick = vi.fn<Click>();
         getBr({ onClick });
-        // the last item is the current page, not a link
         const links = screen.getAllByRole('link');
         expect(links.map((link) => link.textContent)).toEqual(['semi', 'design']);
         await userEvent.tab();
@@ -675,7 +666,6 @@ describe('Breadcrumb', () => {
         await view.rerender({ order: ['c', 'a', 'b'] });
         const states = Object.fromEntries(screen.getAllByRole('button').map((button) => [button.textContent?.split(':')[0], button.textContent]));
         expect(states).toEqual({ a: 'a:1', b: 'b:0', c: 'c:0' });
-        // the current page follows the position
         expect(screen.getByRole('button', { name: 'b:0' }).closest(`.${prefix}-item-wrap`)).toHaveAttribute('aria-current', 'page');
     });
 

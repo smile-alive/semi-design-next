@@ -31,7 +31,6 @@
     const hasTitle = $derived(Boolean(steps.title) || plainTitle !== '');
     const hasDescription = $derived(Boolean(steps.description) || plainDescription !== '');
 
-    // a plain title is also the hover tooltip of a clipped one; a snippet has no text to offer
     const titleText = $derived(steps.title ? undefined : plainTitle || undefined);
     const descriptionText = $derived(steps.description ? undefined : plainDescription || undefined);
 
@@ -48,7 +47,6 @@
         // keys typed in a focusable child (an input in the title) must not switch the step
         if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
             event.preventDefault(); // Space would otherwise scroll the page
-            // a real click runs the click listeners and the change exactly as a pointer does
             event.currentTarget.click();
         }
     };

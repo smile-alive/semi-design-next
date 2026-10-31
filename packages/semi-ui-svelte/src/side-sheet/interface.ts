@@ -35,6 +35,5 @@ export interface SideSheetProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ch
     zIndex?: number;
     children?: Snippet;
     footer?: Snippet;
-    /** Replaces the default icon; `closable={false}` removes the button. */
     closeIcon?: Snippet;
 }

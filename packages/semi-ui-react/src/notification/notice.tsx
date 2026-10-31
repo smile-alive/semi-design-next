@@ -15,7 +15,6 @@ import useLocale from '../locale/use-locale';
 
 export interface NoticeHandle {
     restartCloseTimer: () => void;
-    /** The list pauses notices while the pointer or focus is on it */
     pauseCloseTimer: () => void;
     resumeCloseTimer: () => void;
     /** The text a screen reader should announce for this notice: title, then content */

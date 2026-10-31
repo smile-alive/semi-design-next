@@ -5,7 +5,6 @@ export interface SpinAdapter<P extends SpinBaseProps = SpinBaseProps, S extends 
     setLoading: (val: boolean) => void;
 }
 
-/** The props the foundation reads with getProps */
 export interface SpinBaseProps {
     delay?: number;
 }
@@ -19,7 +18,6 @@ export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps, S e
         this.#timer = null;
     }
 
-    /** Shows the spinner after `delay`; stopping hides it at once and drops a pending show */
     handleSpinningChange = (spinning: boolean) => {
         this.#clearTimer();
         const { delay } = this.getProps();

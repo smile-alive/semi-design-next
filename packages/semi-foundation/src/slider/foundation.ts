@@ -154,7 +154,6 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         this.adapter.notifyAfterChange(this.normalizeValue(this.getState('currentValue')));
     }
 
-    /** A controlled value only moves through the value prop */
     #moveHandle(nextValue: number | number[], callback?: () => void) {
         this.syncIsInRenderTree();
         if (!this.getState('isInRenderTree')) {
@@ -233,9 +232,6 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         return { x: clientX - parentX, y: clientY - parentY };
     }
 
-    /**
-     * Clamps a pointer position to the slider's start and end
-     */
     protected checkMeetMinMax(position: number) {
         const { vertical, verticalReverse } = this.adapter.getProps();
         const direction = this.adapter.getContext('direction');
@@ -377,18 +373,13 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         };
     }
 
-    /**
-     * Percentages of the current value; they increase with value whatever the visual direction.
-     */
+    /** The percentages increase with value whatever the visual direction. */
     static getMinAndMaxPercent({ range, min, max }: SliderProps, value: SliderState['currentValue']) {
         const minPercent = range ? (value[0] - min) / (max - min) : ((value as number) - min) / (max - min);
         const maxPercent = range ? (value[1] - min) / (max - min) : 1;
         return { min: clamp(minPercent, 0, 1), max: clamp(maxPercent, 0, 1) };
     }
 
-    /**
-     * Whether each handle shows its tooltip, and the tooltip contents
-     */
     static computeHandleVisibleVal({ tooltipVisible, tipFormatter: formatter, range, step, min }: SliderProps, { activeHandle, currentValue, isInRenderTree }: SliderState) {
         const visible = tooltipVisible && isInRenderTree;
         const output = (value: number) => SliderFoundation.normalizeValue(step, min, activeHandle, value) as number;
@@ -481,9 +472,6 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         }
     };
 
-    /**
-     * Syncs a changed value prop, clamped to min and max
-     */
     handleValueChange = (nextValue: SliderProps['value']) => {
         if (!this.valueFormatIsCorrect(nextValue)) {
             return;

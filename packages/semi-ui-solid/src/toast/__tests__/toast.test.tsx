@@ -526,7 +526,6 @@ describe('Toast', () => {
     it('style 为对象或字符串时都保留，并带上层级用的 transform', () => {
         Toast.info({ content: 'object', duration: 0, style: { color: 'red' } });
         Toast.success({ content: 'string', duration: 0, style: 'color: blue' });
-        // one newer toast sits in front of the first
         expect(getInfoToast()).toHaveStyle({ color: 'rgb(255, 0, 0)', transform: 'translate3d(0,0,-10px)' });
         expect(document.querySelector(`.${prefix}-success`)).toHaveStyle({ color: 'rgb(0, 0, 255)', transform: 'translate3d(0,0,0px)' });
     });

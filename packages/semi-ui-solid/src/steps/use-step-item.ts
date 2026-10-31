@@ -18,7 +18,6 @@ interface StepItemNames {
     'aria-labelledby'?: string;
 }
 
-/** Click and keyboard behavior shared by step items; a step with a handler is a button */
 export function createStepItem(local: StepItemProps, named: StepItemNames) {
     const clickable = () => Boolean(local.onChange || local.onClick);
     return {

@@ -46,7 +46,6 @@ const lastArg = (spy: { mock: { calls: unknown[][] } }) => spy.mock.calls[spy.mo
 const thousands = (value: number | string) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const removeThousands = (value: string) => value.replace(/,/g, '');
 
-// owns `value` the way a parent would, feeding every onChange back in
 function ControlledInputNumber({ initValue, onChange, ...props }: Omit<InputNumberProps, 'value' | 'defaultValue'> & { initValue: number | string }) {
     const [value, setValue] = useState<number | string>(initValue);
     return (

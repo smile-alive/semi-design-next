@@ -235,7 +235,6 @@ describe('Svelte Collapse', () => {
     it('标题控制内容，内容为由标题命名的 region', async () => {
         const { container } = setup({ collapse: { motion: false } });
         const [header] = getHeaders();
-        // collapsed without keepDOM: no content in the DOM, so no dangling aria-controls
         expect(header).not.toHaveAttribute('aria-controls');
         await click(header);
         const region = document.getElementById(header.getAttribute('aria-controls') as string) as HTMLElement;

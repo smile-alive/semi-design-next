@@ -30,7 +30,6 @@ export function hasErrorContent(error: unknown) {
     return (typeof error === 'string' && error !== '') || isMarkup(error);
 }
 
-/** A label given as props rather than as content */
 export function isLabelConfig(label: unknown): label is LabelProps {
     return typeof label === 'object' && label !== null && !Array.isArray(label) && !isMarkup(label);
 }

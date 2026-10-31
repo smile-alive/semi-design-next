@@ -3,7 +3,6 @@ import type { IconData, IconNode } from '@fibrae/semi-icons-core';
 import { defaultAttrs, getFillColor, resolveValue } from '@fibrae/semi-icons-core/utils';
 import { convertIcon } from './icon';
 
-// fill-rule -> fillRule, xlink:href -> xlinkHref, mask-type -> maskType
 function camelCase(name: string) {
     return name.replace(/[-:]([a-z])/g, (_match, letter: string) => letter.toUpperCase());
 }
@@ -35,12 +34,10 @@ function renderNode([tag, attrs, children = []]: IconNode, resolve: (value: stri
     return React.createElement(tag, toProps(attrs, resolve), ...children.map((child) => renderNode(child, resolve)));
 }
 
-/** A decorative svg component from icon or illustration data, without the Icon wrapper */
 export function createSvgComponent(data: IconData) {
     function SvgComponent(props: React.SVGProps<SVGSVGElement>) {
         // gradient and filter ids must be unique per instance; every icon pays for useId rather than a per-icon branch
         const uid = React.useId();
-        // A multi-colour icon spreads `fill` over its own elements; any other icon passes it to the root svg
         const { fill, ...rest } = props;
         const colors = data.fills ? getFillColor(fill, data.fills) : [];
         const resolve = (value: string) => resolveValue(value, colors, uid);
@@ -56,7 +53,6 @@ export function createSvgComponent(data: IconData) {
     return SvgComponent;
 }
 
-/** A React icon component from the icon's data in @fibrae/semi-icons-core */
 export function createIcon(data: IconData) {
     return convertIcon(createSvgComponent({ ...data, attrs: { ...data.attrs, ...defaultAttrs } }), data.name);
 }

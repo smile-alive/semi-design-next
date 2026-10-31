@@ -3,7 +3,6 @@ import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { ModelModifiers, ValidateStatus } from '../input/interface';
 import type { Position } from '../tooltip/interface';
 
-/** An object item of `data`; markup for its row goes in the `item` slot */
 export interface AutoCompleteDataItem {
     [key: string]: any;
     value?: string | number;
@@ -15,7 +14,6 @@ export interface AutoCompleteDataItem {
 
 export type AutoCompleteItems = AutoCompleteDataItem | string | number;
 
-/** A string or number item arrives as `{ value, label }`, an object item as itself */
 export type AutoCompleteSelectedItem<T extends AutoCompleteItems> = T extends string | number ? AutoCompleteDataItem : T;
 
 export interface AutoCompleteProps<T extends AutoCompleteItems = AutoCompleteItems> {
@@ -54,9 +52,7 @@ export interface AutoCompleteEmits {
     /** The item's value, or the item without internal fields when `selectWithObject` is set */
     select: [value: string | number | AutoCompleteDataItem];
     clear: [];
-    /** Once when the focus enters the input */
     focus: [event: FocusEvent];
-    /** Once when the focus leaves the input */
     blur: [event: FocusEvent];
     dropdownVisibleChange: [visible: boolean];
     /** After the AutoComplete has handled the key */
@@ -66,12 +62,10 @@ export interface AutoCompleteEmits {
 export interface AutoCompleteItemSlotProps<T extends AutoCompleteItems = AutoCompleteItems> {
     /** The data item as given: a string item stays a string */
     item: T;
-    /** Position among the rendered items */
     index: number;
 }
 
 export interface AutoCompleteTriggerSlotProps<T extends AutoCompleteItems = AutoCompleteItems> {
-    /** The selected item, if any */
     value: AutoCompleteDataItem[];
     inputValue?: string | number;
     placeholder?: string;
@@ -88,7 +82,6 @@ export interface AutoCompleteTriggerSlotProps<T extends AutoCompleteItems = Auto
     onBlur: (event: FocusEvent) => void;
     /** The aria-* attributes given to the AutoComplete, for the custom trigger's focusable element */
     controlAttrs: Record<string, unknown>;
-    /** The AutoComplete's props */
     componentProps: AutoCompleteProps<T>;
 }
 
@@ -97,11 +90,9 @@ export interface AutoCompleteSlots<T extends AutoCompleteItems = AutoCompleteIte
     suffix?: () => VNode[];
     insetLabel?: () => VNode[];
     clearIcon?: () => VNode[];
-    /** Shown in the list when `data` is empty */
     emptyContent?: () => VNode[];
     /** Content of an item row; without content the row shows the item's label */
     item?: (props: AutoCompleteItemSlotProps<T>) => VNode[];
-    /** Replaces the input */
     trigger?: (props: AutoCompleteTriggerSlotProps<T>) => VNode[];
 }
 

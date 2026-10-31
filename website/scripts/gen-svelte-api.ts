@@ -94,7 +94,6 @@ function extract(checker: ts.TypeChecker, file: ts.SourceFile, script: Script, p
     return { props: [...own, ...taken].toSorted((a, b) => a.name.localeCompare(b.name, 'en')), methods };
 }
 
-/** Reads each `.svelte` component: the props type its `$props()` is annotated with, their fallbacks, and its exported functions */
 export function extractApis(sources: string[]): ComponentApi[] {
     const targets = sources.map((path) => {
         if (!existsSync(path)) throw new Error(`组件源文件不存在：${path}`);
@@ -136,7 +135,6 @@ export function extractApis(sources: string[]): ComponentApi[] {
     });
 }
 
-/** Writes, or with `check` verifies, the fragments of every `api.svelte.json` among the pages */
 export function generateApis(check: boolean, pages: string[]) {
     const entries = apiFiles('svelte', pages).flatMap((file) => {
         const json = join(website, file);

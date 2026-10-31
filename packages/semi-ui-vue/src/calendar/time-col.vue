@@ -17,7 +17,6 @@
     <div :class="prefixCls" role="cell">
         <div :class="`${prefixCls}-items`">
             <div v-for="hour in hours" :key="hour" :class="`${prefixCls}-item`">
-                <!-- the grid starts at 00:00, which has no label -->
                 <span v-if="hour === 0" />
                 <span v-else>
                     <slot name="timeDisplay" :time="hour">{{ label(hour) }}</slot>

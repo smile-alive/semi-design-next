@@ -56,12 +56,12 @@ $ignoreIcon: '.#{$prefix}-icon-checkbox_tick, .#{$prefix}-icon-radio, .#{$prefix
                 display: flex;
                 align-content: center;
 
+                // :not(:not(&-icon)) outranks the generic icon rules
                 &-icon:not(:not(&-icon)) {
                     display: flex;
                     flex-shrink: 0;
                     align-items: center;
                     margin-inline: $spacing-tabs_tab-more_trigger_icon-marginLeft $spacing-tabs_tab-more_trigger_icon-marginRight;
-                    // :not(:not(&-icon)) outranks the generic icon rules
                     margin-top: $spacing-tabs_tab-more_trigger_icon-marginTop;
                     margin-bottom: $spacing-tabs_tab-more_trigger_icon-marginBottom;
                 }

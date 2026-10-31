@@ -65,7 +65,6 @@ export default function ResizeHandler(rawProps: ResizeHandlerProps) {
                 onCleanup(group.registerHandler(node));
             })}
             class={clsx(local.class, `${prefixCls}-handler`, `${prefixCls}-handler-${direction()}`)}
-            // the bar between side-by-side panes is vertical
             aria-orientation={direction() === 'horizontal' ? 'vertical' : 'horizontal'}
             role="separator"
             tabindex={0}

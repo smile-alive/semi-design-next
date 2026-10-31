@@ -12,14 +12,11 @@
      * option record. The Select and AutoComplete render their rows with it, passing the props below.
      */
     interface OptionRowProps {
-        /** The row stands for the empty state; the default slot holds its content */
         empty?: boolean;
         selected?: boolean;
-        /** Highlighted by the keyboard or the pointer */
         focused?: boolean;
         /** The row aria-activedescendant points at; AutoComplete marks it aria-selected */
         current?: boolean;
-        /** Highlighted in a plain-text label */
         inputValue?: string;
         semiOptionId?: string;
         prefixCls?: string;

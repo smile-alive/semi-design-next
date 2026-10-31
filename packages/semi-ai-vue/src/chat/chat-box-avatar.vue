@@ -11,7 +11,6 @@
 
     const avatarProps = computed(() => ({
         class: [`${PREFIX_CHAT_BOX}-avatar`, { [`${PREFIX_CHAT_BOX}-avatar-hidden`]: props.continueSend }],
-        // the title next to it names the sender
         alt: '',
         color: props.role.color,
         size: 'extra-small' as const,

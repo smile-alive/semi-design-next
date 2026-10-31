@@ -5,7 +5,6 @@ import type { AnchorClickEvent, AnchorProps } from './interface';
 export interface AnchorView {
     activeLink: string;
     autoCollapse: boolean;
-    /** Hrefs nested below each href, read by a collapsed link to see whether the active link is inside it */
     childMap: Record<string, Set<string>>;
     position: AnchorProps['position'];
     showTooltip: NonNullable<AnchorProps['showTooltip']>;

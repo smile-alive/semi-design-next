@@ -2,7 +2,6 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { Item } from '@fibrae/semi-foundation/scroll-list/item-foundation';
 
-/** An entry of a column: `text` (or `value`) is shown, `transform` formats the selected one */
 export type ScrollListItem = Item;
 
 export interface ScrollListProps extends HTMLAttributes<HTMLDivElement> {
@@ -27,7 +26,6 @@ export interface ScrollItemProps<T extends ScrollListItem = ScrollListItem> exte
     onSelect?: (data: ScrollItemSelectData<T>) => void;
 }
 
-/** The selected item with the column's `type` and the item's index in `list` */
 export type ScrollItemSelectData<T extends ScrollListItem = ScrollListItem> = T & {
     type?: string | number;
     index: number;

@@ -95,7 +95,6 @@
     const isPresetSize = computed(() => strings.SIZE.some((preset) => preset === size.value));
     const sizeStyle = computed(() => (isPresetSize.value ? {} : { width: size.value, height: size.value }));
 
-    // Top and bottom slots have no style for extra-extra-small or custom sizes.
     const hasSlotSize = computed(() => isPresetSize.value && size.value !== 'extra-extra-small');
 
     const avatarClass = computed(() => [
@@ -113,7 +112,6 @@
     const borderClass = computed(() => [`${prefix}-additionalBorder`, `${prefix}-additionalBorder-${size.value}`, `${prefix}-${shape.value}`]);
     const borderStyle = computed(() => (typeof props.border === 'object' ? { borderColor: props.border.color } : {}));
 
-    // Avatars nested in this one's slots are not items of the group.
     provideAvatarGroupMoreContext(undefined);
     provideAvatarGroupContext(undefined);
 
@@ -125,7 +123,6 @@
 
     const text = () => (isImg.value ? undefined : getAvatarText(slots.default?.() ?? []));
 
-    // The avatar span sits at the root or inside the wrapper; style always sizes the outermost element.
     const contentBinding = () => {
         const { root, control } = splitControlAttrs(attrs, isControlKey);
         const { style: _style, ...rest } = root;

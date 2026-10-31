@@ -21,18 +21,13 @@
     type AnyRecord = Record<string, any>;
 
     const props = defineProps<{
-        /** The column tree */
         columns: ColumnProps[];
-        /** The records of the current page */
         dataSource: AnyRecord[];
         groups?: Map<BaseRowKeyType, Set<BaseRowKeyType>> | null;
         expandedRowKeys: BaseRowKeyType[];
         pageDisabledRowKeysSet: Set<BaseRowKeyType>;
-        /** The rows of a virtualized body */
         virtualizedData: (FlattenData | GroupFlattenData)[];
-        /** The header renders inside the body table, since it is not fixed */
         includeHeader: boolean;
-        /** The accessible name of the body table, when it is the table */
         tableAttrs?: Record<string, unknown>;
     }>();
 
@@ -109,7 +104,6 @@
 
     const groupRecords = (group: Set<BaseRowKeyType>) => [...group].flatMap((key) => recordsByKey.value.get(key) ?? []);
 
-    /** The props of a record row that depend on the table state */
     const baseRowState = (record: AnyRecord, rowKey: BaseRowKeyType, level: number) => {
         const expandable = table.rowExpandable(record);
         const inRow = expandable || expandBtnInRow.value;
@@ -203,7 +197,6 @@
     );
 
     defineExpose({
-        /** The scrolling body element, whose horizontal offset the separate header follows */
         element: bodyElement,
         scrollTo: (offset: number) => listRef.value?.scrollTo(offset),
         scrollToItem: (index: number, align?: VirtualListAlign) => listRef.value?.scrollToItem(index, align),

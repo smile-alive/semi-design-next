@@ -39,10 +39,10 @@ export function docUrl(locale: Locale, framework: Framework, category: string, p
     return `/${locale}/${framework}/${category}/${page}`;
 }
 
-// 侧栏按内容目录的这个顺序分组。分组名在 src/i18n 的 category_<目录名> 里。
+// sidebar group order; labels are category_<folder> in src/i18n
 const categories = ['start', 'advanced', 'experience', 'ecosystem', 'ai', 'basic', 'plus', 'input', 'navigation', 'show', 'feedback', 'other'] as const;
 
-// 页头搜索只收组件所在的分类，开始、设计协作等文档页不参与
+// header search indexes component categories only
 const componentCategories: ReadonlySet<string> = new Set(['ai', 'basic', 'plus', 'input', 'navigation', 'show', 'feedback', 'other']);
 
 const docIcons = import.meta.glob<string>('../assets/doc-icons/*.svg', {
@@ -68,7 +68,7 @@ export async function getSidebar(locale: Locale, framework: Framework) {
     }));
 }
 
-// 同一页面的各语言标题合成一条，任何语言的页面都能用中英文名搜到；顺序与侧栏一致
+// one entry per page with every locale's title, so any locale finds it by either name; sidebar order
 export async function getComponentIndex(framework: Framework): Promise<ComponentEntry[]> {
     const docs = await getDocs();
     const titleOf = (category: string, page: string, locale: Locale) => {

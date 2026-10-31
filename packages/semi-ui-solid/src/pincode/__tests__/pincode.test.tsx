@@ -164,7 +164,6 @@ describe('PinCode', () => {
         render(() => <PinCode defaultValue="123456" onChange={onChange} />);
         await userEvent.click(getInputs()[2]);
         await userEvent.keyboard('{Delete}');
-        // Delete removes the current character, the following ones move forward and the caret stays
         expect(getValues()).toEqual(['1', '2', '4', '5', '6', '']);
         expect(onChange).toHaveBeenCalledWith('12456');
         expect(getInputs()[2]).toHaveFocus();
@@ -563,7 +562,6 @@ describe('PinCode', () => {
             expect(getInputs()).toHaveLength(4);
             expect(getInputs()[0]).toHaveFocus();
             unmount();
-            // an explicit prop wins over the global default
             render(() => <PinCode count={2} />);
             expect(getInputs()).toHaveLength(2);
         });
@@ -635,7 +633,6 @@ describe('PinCode', () => {
             expect(wrapper).toHaveAttribute('title', 'tip');
             expect(wrapper).not.toHaveAttribute('id');
             expect(wrapper).not.toHaveAttribute('insetlabel');
-            // no single input can carry the whole code's name
             expect(document.querySelector('[name]')).toBeNull();
             const [first, second] = getInputs();
             expect(first).toHaveAttribute('id', 'code');

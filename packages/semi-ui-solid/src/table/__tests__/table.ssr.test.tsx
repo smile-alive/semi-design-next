@@ -94,7 +94,6 @@ it('rowSelection.renderCell 在插入处调用 originNode', async () => {
         render: () => <Table columns={columns} dataSource={rows} rowSelection={{ renderCell: (cell) => <div class="custom-selection">{cell.originNode()}</div> }} pagination={false} />,
     });
     expect(errors).toEqual([]);
-    // the header cell and the two rows
     expect(html.match(/class="custom-selection"/g)).toHaveLength(3);
     expect(html.match(/semi-checkbox-inner/g)).toBeTruthy();
 });

@@ -792,7 +792,6 @@ describe('AutoComplete', () => {
     });
 
     it('【点击外部处理】在 suffix 内已打开的嵌套 Popover 里按下鼠标不关闭下拉，在外部按下才关闭', async () => {
-        // with its default stopPropagation the AutoComplete stops the native mousedown before the document sees it
         renderAc({
             ...commonProps,
             defaultOpen: true,

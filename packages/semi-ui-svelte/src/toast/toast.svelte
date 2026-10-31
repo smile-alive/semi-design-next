@@ -95,7 +95,6 @@
     };
 
     const handleAnimationEnd = (event: AnimationEvent) => {
-        // the content's own slide animation bubbles up to here
         if (event.target !== event.currentTarget) return;
         if (!leaving) {
             entered = true;

@@ -30,7 +30,6 @@ export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' 
 /** The year and month column options a caller may set; the panel owns the list and the selection */
 export type DatePickerYearAndMonthOpts = Partial<Pick<ScrollItemProps, 'cycled' | 'mode' | 'motion' | 'transform'>>;
 
-/** The methods a `bind:this` reference to DatePicker exposes */
 export interface DatePickerHandle {
     open: () => void;
     close: () => void;
@@ -41,7 +40,6 @@ export interface DatePickerHandle {
 
 export interface DatePickerDateSnippetProps {
     dayNumber: number;
-    /** yyyy-MM-dd */
     fullDate: string;
 }
 
@@ -56,7 +54,6 @@ type NativeRootKeys = 'children' | 'prefix' | 'placeholder' | 'onchange' | 'onfo
 export interface DatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeRootKeys> {
     /** Bindable. `null` is a controlled empty value; only `undefined` leaves the picker uncontrolled */
     value?: DatePickerValueType | null;
-    /** Bindable */
     open?: boolean;
     /** A format without time tokens turns dateTime into date and dateTimeRange into dateRange */
     type?: DatePickerType;
@@ -84,9 +81,7 @@ export interface DatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     borderless?: boolean;
     showClear?: boolean;
     inputReadOnly?: boolean;
-    /** Style of the Input's root element */
     inputStyle?: string;
-    /** Moves the inputs into the panel */
     insetInput?: boolean | DatePickerInsetInputProps;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;
@@ -132,7 +127,6 @@ export interface DatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     onClickOutSide?: (event: MouseEvent) => void;
     /** Replaces the inputs; with no focusable element of its own, its wrapper is the button that opens the panel */
     trigger?: Snippet<[DatePickerTriggerRenderProps]>;
-    /** The content of a day cell */
     date?: Snippet<[DatePickerDateSnippetProps]>;
     /** The whole day cell, which then keeps only its base and active classes */
     fullDate?: Snippet<[DatePickerFullDateSnippetProps]>;
@@ -162,7 +156,6 @@ export interface DatePickerTriggerRenderProps {
     format?: string;
     multiple: boolean;
     autofocus: boolean;
-    /** The declared props, without snippets, callbacks and undeclared attributes */
     componentProps: Omit<DatePickerProps, keyof HTMLAttributes<HTMLDivElement> | `on${string}` | 'trigger' | 'date' | 'fullDate' | 'topSlot' | 'bottomSlot' | 'leftSlot' | 'rightSlot' | 'prefix' | 'insetLabel' | 'clearIcon' | 'rangeSeparatorNode'>;
     onChange: (inputValue: string) => void;
     onEnterPress: (inputValue: string) => void;

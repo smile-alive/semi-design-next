@@ -56,7 +56,6 @@
     const popupSpacing = $derived(getPopoverSpacing(spacing, showArrow));
     const stop = $derived(stopPropagation === undefined ? undefined : Boolean(stopPropagation));
 
-    /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     export function focusTrigger() {
         tooltip?.focusTrigger();
     }

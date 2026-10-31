@@ -11,14 +11,12 @@
     import { slotOutput } from './utils';
 
     interface TitleView {
-        /** The output of a full render title, which replaces the whole composition */
         full: KeyedNode[] | null;
         flags: ColumnFlags;
         title?: KeyedNode[] | string;
         titleAttr?: string;
     }
 
-    /** The title of a sortable, filterable or full render column header: the title, the sort button, the filter button */
     defineOptions({ inheritAttrs: false });
     const props = defineProps<{ column: ColumnProps }>();
 

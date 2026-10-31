@@ -33,7 +33,6 @@ const byPlaceholder = (text: string) => screen.getByPlaceholderText(text);
 function settle() {
     vi.setSystemTime(Date.now() + 10);
 }
-// A function ref receives the component instance, whose $el is the rendered root
 function renderGroup(props: InputGroupProps = {}) {
     let instance: ComponentPublicInstance | null = null;
     const Host = () => (

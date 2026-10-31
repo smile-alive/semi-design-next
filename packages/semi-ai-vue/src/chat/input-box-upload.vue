@@ -31,7 +31,6 @@
         action: props.uploadProps?.action ?? '',
     }));
 
-    // a function, not a computed: slots are not reactive
     const tipShown = () => props.clickUpload && Boolean(slots.uploadTip || props.uploadTipProps);
 
     // Tooltip makes its trigger a Tab stop, so a text or plain-element trigger is kept out of the Tab order and Upload's

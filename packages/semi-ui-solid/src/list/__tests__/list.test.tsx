@@ -111,7 +111,6 @@ describe('List', () => {
         const { container } = renderList({ grid: { gutter: 18, span: 6 } });
         const cols = container.querySelectorAll(`.${BASE_CLASS_PREFIX}-col-6`);
         expect(cols).toHaveLength(4);
-        // Row hands the gutter to grid.scss, which pads every Col with half of it
         expect(cols[0].parentElement).toHaveStyle({ '--semi-row-gutter-x-xs': '18px' });
     });
 

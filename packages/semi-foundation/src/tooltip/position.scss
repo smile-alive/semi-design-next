@@ -38,7 +38,6 @@
         animation: none;
     }
 
-    // opacity takes half the duration while scale runs throughout
     @keyframes #{$module}-zoom-in {
         from {
             opacity: 0;

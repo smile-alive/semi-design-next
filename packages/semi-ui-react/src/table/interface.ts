@@ -71,7 +71,6 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     onRowMouseLeave?: (record: RecordType, e: React.MouseEvent<HTMLElement>) => void;
     sticky?: Sticky;
     direction?: Direction;
-    /** Exposes the table methods */
     ref?: React.Ref<TableHandle<RecordType>>;
 }
 
@@ -91,9 +90,7 @@ export interface ColumnProps<RecordType extends Record<string, any> = any> {
     defaultSortOrder?: SortOrder;
     filterChildrenRecord?: boolean;
     filterDropdown?: ColumnFilterProps['filterDropdown'];
-    /** render filter Dropdown panel content  */
     renderFilterDropdown?: ColumnFilterProps['renderFilterDropdown'];
-    /** filter Dropdown props  */
     filterDropdownProps?: ColumnFilterProps['filterDropdownProps'];
     filterDropdownVisible?: boolean;
     filterIcon?: FilterIcon;
@@ -175,7 +172,6 @@ export interface RenderOptions {
     expandIcon?: React.ReactNode;
     selection?: React.ReactNode;
     indentText?: React.ReactNode;
-    /** Whether the current row is being hovered */
     isHovering?: boolean;
 }
 export interface OnCellReturnObject extends React.TdHTMLAttributes<HTMLElement> {
@@ -246,7 +242,6 @@ export interface RowSelectionProps<RecordType extends Record<string, any>> {
     /** Selected row keys on mount when selectedRowKeys is not set */
     defaultSelectedRowKeys?: (string | number)[];
     width?: string | number;
-    /** Whether to enable click row to select */
     clickRow?: boolean;
     /** When set to 'related', parent and child nodes will be associated during selection. Default is 'unRelated' */
     checkRelation?: CheckRelation;
@@ -290,9 +285,6 @@ export type FormatPageText = ((pageInfo?: { currentStart?: number; currentEnd?: 
  */
 export type GetVirtualizedListRef = (
     ref: React.RefObject<{
-        /**
-         * Scroll to the specified vertical offset (scrollTop) in pixels.
-         */
         scrollTo(scrollOffset: number): void;
         /**
          * Scroll to the specified item.

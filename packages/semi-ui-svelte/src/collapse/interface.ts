@@ -22,9 +22,7 @@ export interface CollapsePanelProps extends HTMLAttributes<HTMLDivElement> {
     showArrow?: boolean;
     disabled?: boolean;
     onMotionEnd?: () => void;
-    /** Inside the toggle button, so only phrasing content. */
     header?: Snippet;
-    /** Outside the toggle button, so it may hold its own controls. */
     extra?: Snippet;
     children?: Snippet;
 }

@@ -2,7 +2,6 @@
     import FloatButton from '../float-button.svelte';
     import type { FloatButtonProps } from '../interface';
 
-    // the snippets are passed only when their flag is on, so absence stays observable
     let { store }: { store: { props?: FloatButtonProps; icon?: boolean; badgeCount?: boolean } } = $props();
 </script>
 

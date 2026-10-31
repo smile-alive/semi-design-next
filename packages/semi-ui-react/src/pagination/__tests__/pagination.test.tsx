@@ -20,7 +20,6 @@ const pageName = (page) => zh_CN.Pagination.pageN.replace('${page}', String(page
 const getRestPages = () => within(document.querySelector(`.${prefixCls}-rest-list`)).getAllByRole('button');
 
 describe('Pagination', () => {
-    // Checks the number of rendered page items and the last page number
     it('Pagination total 与 pageSize', () => {
         let maxItemCount = 9;
 

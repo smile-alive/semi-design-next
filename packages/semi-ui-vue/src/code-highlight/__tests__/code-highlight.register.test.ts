@@ -18,10 +18,8 @@ describe('CodeHighlight 注册', () => {
         expect(container.querySelector('.shiki')).toBeNull();
         expect(container.querySelector('pre code')).toHaveTextContent('print(1)');
 
-        // the block mounted first: registering later highlights it again
         CodeHighlight.register({ languages: [python] });
         await waitForShiki(container);
-        // an alias of a registered grammar works too
         const alias = render(CodeHighlight, { props: { code: 'x = 1', language: 'py' } });
         await waitForShiki(alias.container);
     });
@@ -31,7 +29,6 @@ describe('CodeHighlight 注册', () => {
             props: { code: 'int main () { return 0; }', language: 'vala', languages: [vala] },
         });
         await waitForShiki(own.container);
-        // the grammar is now loaded, so a later block without the prop finds it too
         const other = render(CodeHighlight, { props: { code: 'int x = 1;', language: 'vala' } });
         await waitForShiki(other.container);
         expect(other.container.querySelector('pre.shiki')).toHaveTextContent('int x = 1;');

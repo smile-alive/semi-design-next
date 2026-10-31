@@ -27,7 +27,6 @@
 </script>
 
 <template>
-    <!-- tabindex lets the dialog itself take focus -->
     <div :aria-labelledby="labelledby($attrs['aria-label'])" :class="`${prefix}-content`" role="dialog" :tabindex="-1">
         <template v-for="(part, i) in [parts()]" :key="i">
             <slot v-if="part.header" name="header" />

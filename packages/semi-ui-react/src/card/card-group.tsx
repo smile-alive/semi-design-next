@@ -10,14 +10,10 @@ const prefixcls = cssClasses.PREFIX;
 export type CardGroupType = 'grid';
 
 export interface CardGroupProps extends Omit<SpaceProps, 'spacing'> {
-    /** Card group style class name */
     className?: string;
     children?: React.ReactNode;
-    /** Card Spacing */
     spacing?: number | [number, number];
-    /** Card group inline style */
     style?: React.CSSProperties;
-    /** Card set type */
     type?: CardGroupType;
     /** Attached to the root div of the Space */
     ref?: React.Ref<HTMLDivElement>;

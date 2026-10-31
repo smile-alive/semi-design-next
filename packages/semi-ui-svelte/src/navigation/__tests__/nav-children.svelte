@@ -7,7 +7,6 @@
     import Nav from '../nav.svelte';
     import SubNav from '../sub-nav.svelte';
 
-    // Nav.Item and Nav.Sub written as children; header and footer are snippets that hold NavHeader and NavFooter
     let { props = {}, header = true, footer = false }: { props?: NavProps; header?: boolean; footer?: boolean } = $props();
 </script>
 

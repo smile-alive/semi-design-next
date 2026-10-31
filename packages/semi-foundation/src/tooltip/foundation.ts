@@ -36,7 +36,6 @@ export interface TooltipAdapter<P extends TooltipBaseProps = TooltipBaseProps, S
     getTriggerRect(): DOMRect | null;
     /** The element getTriggerRect measures; null while unknown, and then every scroll repositions the popup */
     getTriggerElement(): Element | null;
-    /** Starts observing every trigger element with `observer` */
     observeTrigger(observer: ResizeObserver | IntersectionObserver): void;
     unobserveTrigger(observer: ResizeObserver | IntersectionObserver): void;
 }
@@ -67,7 +66,6 @@ function isInside(node: Node, target: EventTarget | null) {
     return false;
 }
 
-/** The props the foundation reads with getProp */
 export interface TooltipBaseProps {
     arrowPointAtCenter?: boolean;
     autoAdjustOverflow?: boolean;
@@ -90,7 +88,6 @@ export interface TooltipBaseProps {
     visible?: boolean;
 }
 
-/** The state the foundation reads with getState */
 export interface TooltipBaseState {
     isInsert: boolean;
     transitionState: 'enter' | 'leave' | '';
@@ -114,11 +111,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
     #requestedVisible: boolean | undefined;
     // decided when the click-outside listener is bound: a custom trigger only reports the press
     #hidesOnClickOutside = false;
-    // set while an open popup follows its trigger
     #stopTracking: (() => void) | null = null;
-    // false once every trigger element is scrolled or clipped out of view
     #triggerVisible = true;
-    // the last layout written to the popup; scroll and resize keep repeating it
     #applied: Layout | null = null;
     // watches the trigger leave the rect it was last placed by, for moves no scroll or resize reports
     #moveWatch: { trigger: Element; rootMargin: string; observer: IntersectionObserver } | null = null;
@@ -133,7 +127,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         this.#timer = null;
     }
 
-    // static listeners read no `this`, so they are added and removed by reference
     static #handleScroll(event: Event) {
         for (const tooltip of Tooltip.#tracking) {
             const trigger = tooltip.adapter.getTriggerElement();
@@ -167,8 +160,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         batch.forEach((tooltip, i) => tooltip.#apply(layouts[i]));
     }
 
-    // A press while the click-outside listener is bound. The host answers the trigger and popup checks separately: a
-    // press in a portaled popup reaches its logical ancestors differently in each framework.
+    // The host answers the trigger and popup checks separately: a press in a portaled popup reaches its logical ancestors differently in each framework.
     #handleClickOutside = (e: MouseEvent) => {
         if (!this.adapter.getPortalContainer() || this.adapter.isEventInTrigger(e) || this.adapter.isEventInPopup(e)) {
             return;
@@ -439,7 +431,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         this.#moveWatch = null;
     }
 
-    /** Reads the layout: the trigger, the popup size and the placement; null while there is nothing to place */
     #measure(viewport: Viewport): Layout | null {
         const popup = this.adapter.getPortalContainer();
         const triggerRect = this.adapter.getTriggerRect();
@@ -472,7 +463,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         return { placement, style, triggerRect, viewport };
     }
 
-    /** Writes a measured layout to the popup unless it is already there */
     #apply(layout: Layout | null) {
         const popup = this.adapter.getPortalContainer();
         if (!layout || !popup) {
@@ -575,7 +565,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         switch (position) {
             case 'top':
                 left = isWidthOverFlow ? (isTriggerNearLeft ? container.left + popupSize.width / 2 : container.right - popupSize.width / 2 + offsetWidth) : middleX + crossSpacing;
-                // pinned to the viewport's top once neither side has room
                 top = isHeightOverFlow ? container.top : triggerRect.top - spacing;
                 translateX = -0.5;
                 translateY = isHeightOverFlow ? 0 : -1;
@@ -670,13 +659,11 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps, S ex
         const clamp = (value: number, size: number, min: number, max: number) => (size <= max - min ? Math.min(Math.max(value, min), max - size) : value);
         const popupLeft = clamp(left + translateX * popupSize.width, popupSize.width, container.left, container.right);
         const popupTop = clamp(top + translateY * popupSize.height, popupSize.height, container.top, container.bottom);
-        // the popup's center, which the arrow offsets below compare with the trigger's
         const centerX = popupLeft + popupSize.width / 2;
         const centerY = popupTop + popupSize.height / 2;
         const style: PositionStyle = {
             left: `${popupLeft}px`,
             top: `${popupTop}px`,
-            // the zoom grows from the corner or edge facing the trigger
             'transform-origin': `${-translateX * 100}% ${-translateY * 100}%`,
             '--semi-tooltip-trigger-width': `${Math.round(triggerRect.width)}px`,
         };

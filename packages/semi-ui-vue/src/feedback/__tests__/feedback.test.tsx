@@ -63,7 +63,6 @@ describe('Feedback', () => {
     });
 
     describe('渲染', () => {
-        // the SideSheet root receives unknown attrs, so Feedback must not hand it its own Modal-only props
         it('popup 模式渲染 SideSheet，且不把 Feedback 属性泄漏到 DOM', async () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             await renderFeedback({ type: 'text', 'data-testid': 'feedback', title: 'T', mode: 'popup', visible: true });

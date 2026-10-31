@@ -6,7 +6,6 @@ export type TabType = 'line' | 'card' | 'button' | 'slash';
 export type TabSize = 'small' | 'medium' | 'large';
 export type TabPosition = 'top' | 'left';
 
-/** A `tabList` entry holds data only; markup for its tab and icon goes to the Tabs `tab` and `icon` snippets */
 export interface PlainTab {
     itemKey: string;
     tab?: string | number;
@@ -21,13 +20,11 @@ export interface TabsDropdownProps {
     end?: TabsDropdownItemProps;
 }
 
-/** The menu content is the `moreContent` snippet and the trigger the `moreTrigger` snippet */
 export interface TabsMore {
     count: number;
     dropdownProps?: TabsDropdownItemProps;
 }
 
-/** A tab of the collapsed bar as OverflowList keeps it */
 export interface OverflowItem extends PlainTab {
     /** `${itemKey}-bar` */
     key: string;
@@ -43,7 +40,6 @@ export interface TabsPanelSnippetProps extends TabsTabSnippetProps {
     itemKey: string;
 }
 
-/** The data of the default tab bar; its behavior reaches the TabItems inside the Tabs on its own */
 export interface TabBarProps {
     activeKey: string | null;
     list: PlainTab[];
@@ -62,22 +58,17 @@ export interface TabBarProps {
 
 export interface TabsTabBarSnippetProps {
     tabBarProps: TabBarProps;
-    /** The default tab bar, ready for `{@render tabBar()}` */
     tabBar: Snippet;
 }
 
 export interface TabsArrowSnippetProps {
-    /** The tabs scrolled out on this side */
     items: OverflowItem[];
     position: 'start' | 'end';
-    /** Scrolls the next hidden tab of this side into view */
     onClick: () => void;
-    /** The default arrow, ready for `{@render defaultNode()}` */
     defaultNode: Snippet;
 }
 
 export interface TabsMoreContentSnippetProps {
-    /** The tabs moved into the more menu */
     items: PlainTab[];
 }
 
@@ -114,13 +105,9 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
     /** The icon of each `tabList` entry; the icon container renders even when the snippet outputs nothing */
     icon?: Snippet<[TabsTabSnippetProps]>;
     tabBarExtraContent?: Snippet;
-    /** Replaces the tab bar */
     tabBar?: Snippet<[TabsTabBarSnippetProps]>;
-    /** Replaces each arrow of the collapsed bar */
     arrow?: Snippet<[TabsArrowSnippetProps]>;
-    /** Replaces the trigger of the more menu */
     moreTrigger?: Snippet;
-    /** Replaces the content of the more menu */
     moreContent?: Snippet<[TabsMoreContentSnippetProps]>;
 }
 

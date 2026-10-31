@@ -9,7 +9,6 @@ import Content, { type ContentProps } from './content';
 
 const prefixCls = cssClasses.ANNOTATION;
 
-// Element props come from the container, where the rest of the props land
 export interface AnnotationProps extends Omit<ContainerSolidProps, 'onChange' | 'onClick'>, Pick<ContentProps, 'activeKey' | 'info' | 'renderItem' | 'onChange' | 'onClick'> {
     /** AnnotationContent's `renderHeader`, renamed beside the container's `renderHeader` */
     renderInfoHeader?: ContentProps['renderHeader'];

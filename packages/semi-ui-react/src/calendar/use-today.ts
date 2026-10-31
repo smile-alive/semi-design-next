@@ -3,7 +3,6 @@ import { startOfDay } from 'date-fns';
 import { getCurrDate } from '@fibrae/semi-foundation/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
 
-// getSnapshot only re-renders when the day differs.
 function getSnapshot() {
     return startOfDay(getCurrDate()).getTime();
 }

@@ -45,7 +45,6 @@ describe('AI 组件的可访问名称跟随语言包', () => {
     it('AIChatDialogue 为代码块复制按钮命名', async () => {
         const chats = [{ id: '1', role: 'assistant', content: '```js\nconst a = 1;\n```', status: 'completed' }];
         const { container } = inJapanese(() => <AIChatDialogue chats={chats} roleConfig={{ assistant: { name: 'A' } }} />);
-        // the message action bar has a copy button of the same name
         const codeBlock = container.querySelector<HTMLElement>('.semi-ai-chat-dialogue-code');
         expect(codeBlock).not.toBeNull();
         expect(within(codeBlock as HTMLElement).getByRole('button', { name: ja.AIChatDialogue.copy })).toBeInTheDocument();

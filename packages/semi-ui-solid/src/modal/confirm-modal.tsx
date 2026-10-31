@@ -36,7 +36,6 @@ export default function ConfirmModal(props: ConfirmProps) {
 
     const contentId = `${confirmCls}-content-${createUniqueId()}`;
 
-    // `null` removes the icon; only an omitted one takes the type's default
     const icon = createIconSlot(
         () => (local.icon === undefined ? <Dynamic component={defaultIcons[local.type]} /> : local.icon),
         () => 'extra-large'
@@ -44,7 +43,6 @@ export default function ConfirmModal(props: ConfirmProps) {
 
     const settle = (result: unknown, setLoading: (loading: boolean) => void) => settleConfirm(result, { setLoading, close: () => setVisible(false) });
 
-    // the type colors only a Semi icon, which a custom element cannot be recognized as otherwise
     createRenderEffect(() => {
         const tokens = [`${confirmCls}-icon`, `${cssClasses.DIALOG}-${local.type}-icon`];
         const nodes = icon.toArray().filter((node): node is Element => node instanceof Element && node.classList.contains(`${BASE_CLASS_PREFIX}-icon`));

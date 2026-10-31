@@ -43,7 +43,6 @@
     const reasoning = computed(() => props.item as Reasoning);
     const toolCall = computed(() => props.item as FunctionToolCall & CustomToolCall);
 
-    // slots are not reactive, so the slot runs while rendering
     const customNodes = () => {
         const nodes = slotNodes(
             slots.contentItem?.({

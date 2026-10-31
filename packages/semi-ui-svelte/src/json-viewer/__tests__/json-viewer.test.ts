@@ -33,7 +33,6 @@ interface FakeViewer {
     dispose: FakeFn;
 }
 
-// the mocked core below keeps every instance it creates
 const instances = vi.hoisted((): FakeViewer[] => []);
 
 // jsdom has no Worker, so the editor core is faked; layout, editing and real search are covered by the browser test

@@ -34,7 +34,6 @@ export interface ListProps<T> extends ElementProps<'div', 'onClick'> {
     onRightClick?: ListItemEventHandler;
 }
 
-// The Row is a div that stands in for the ul, so it carries the list role itself
 const listRole = { role: 'list' } as const;
 
 // namedRole yields a plain string, which the typed role attribute does not accept

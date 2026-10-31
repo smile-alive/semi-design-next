@@ -29,7 +29,6 @@
     import QuickControl from './quick-control.vue';
     import YearAndMonth from './year-and-month.vue';
 
-    // The root takes class, style and the other attributes; the field state goes to the input that gets the focus.
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<DatePickerProps & /* @vue-ignore */ ElementProps<'div', keyof DatePickerProps | EmitHandlers<DatePickerEmits>>>(), {
@@ -74,7 +73,6 @@
         presetPosition: () => semiDefault('DatePicker', 'presetPosition', 'bottom'),
         timePickerOpts: semiGlobalDefault('DatePicker', 'timePickerOpts'),
         yearAndMonthOpts: semiGlobalDefault('DatePicker', 'yearAndMonthOpts'),
-        // read in the computed below: ConfigProvider's timeZone comes before the global default
         timeZone: undefined,
         motion: () => semiDefault('DatePicker', 'motion', true),
         autoAdjustOverflow: () => semiDefault('DatePicker', 'autoAdjustOverflow', true),
@@ -139,7 +137,6 @@
     // tabindex, which Tooltip adds to its child, belongs to the input, the Tab stop
     const controlKeys = ['aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required', 'tabindex'];
 
-    // the Inputs inside are parts of this control, not members of the group
     provideInputGroupContext(undefined);
 
     const enabledDate = () => false;
@@ -167,7 +164,6 @@
             focusRecords: { rangeStart: false, rangeEnd: false },
         }),
         (base) => {
-            // the inset inputs of the panel take the range focus while there are any
             const rangeInputs = () => insetDateInput.value ?? triggerInput.value;
             const setRangeInputFocus: DatePickerAdapter['setRangeInputFocus'] = (rangeInputFocus) => {
                 // the focus comes first: the focus handler still reads the previous rangeInputFocus
@@ -315,7 +311,6 @@
     };
 
     const onTriggerKeyDown = (event: KeyboardEvent) => {
-        // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys
         if (!isInnerControlKey(event)) {
             foundation.handleTriggerKeyDown(event, isTriggerButton() && event.target === event.currentTarget);
         }
@@ -423,7 +418,6 @@
                             <div v-if="$slots.topSlot" :class="`${prefix}-topSlot`" x-semi-prop="topSlot">
                                 <slot name="topSlot" />
                             </div>
-                            <!-- monthRange does not support presetPosition -->
                             <QuickControl v-if="props.presetPosition === 'top' && type !== 'monthRange'" v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
                             <YearAndMonth
                                 v-if="isYearOrMonth"

@@ -7,7 +7,6 @@ export type CardGroupType = 'grid';
 
 // `title` is the text or snippet of the header, not the native tooltip attribute HTMLAttributes declares
 export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
-    /** Content area inline style */
     bodyStyle?: string;
     bordered?: boolean;
     footerLine?: boolean;
@@ -19,10 +18,8 @@ export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'>
     /** A string renders as a 6th-level title with a single-line ellipsis tooltip; a snippet renders as it is */
     title?: string | Snippet;
     headerExtraContent?: Snippet;
-    /** Replaces the title and headerExtraContent */
     header?: Snippet;
     cover?: Snippet;
-    /** One snippet per action */
     actions?: Snippet[];
     footer?: Snippet;
     children?: Snippet;

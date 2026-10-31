@@ -338,7 +338,6 @@ describe('RadioGroup', () => {
         expect(typeof event.stopPropagation).toBe('function');
         expect(typeof event.preventDefault).toBe('function');
         expect(radioChange.mock.calls[0][0].target.value).toBe('A');
-        // the Radio's own state is not used inside a group: the group value decides
         await userEvent.click(getRadio('B'));
         expect(getRadio('A')).not.toBeChecked();
         expect(getRadio('B')).toBeChecked();

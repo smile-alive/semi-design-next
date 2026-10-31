@@ -14,11 +14,8 @@ export interface ContainerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ti
     showClose?: boolean;
     /** Whether pressing Esc calls `onCancel`; off by default */
     closeOnEsc?: boolean;
-    /** The close button or Esc */
     onCancel?: (event: MouseEvent | KeyboardEvent) => void;
-    /** After the show or hide animation ends */
     afterVisibleChange?: (visible: boolean) => void;
-    /** Replaces the whole header, the title and close button included */
     header?: Snippet;
     children?: Snippet;
 }

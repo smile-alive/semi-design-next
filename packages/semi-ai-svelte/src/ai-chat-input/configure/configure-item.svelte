@@ -5,15 +5,10 @@
     import { getConfigureContext } from './context.js';
 
     interface ConfigureItemProps {
-        /** The component the item wraps: it receives the field's value and reports changes */
         component: Component<any>;
-        /** The key of this item in the Configure value */
         field: string;
-        /** Seeds the field when the item is mounted */
         initValue?: unknown;
-        /** The prop that receives the value, `value` by default */
         valueKey?: string;
-        /** The prop that takes the change callback, `onChange` by default */
         changeKey?: string;
         /** Where the value sits in the change callback's first argument, the argument itself by default */
         valuePath?: string;

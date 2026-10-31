@@ -17,7 +17,6 @@ function setup(store: { kind?: 'text' | 'title' | 'paragraph' | 'numeral'; text?
 
 const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
 
-// The full text stays in the DOM, hidden, while the truncated text shows; what a reader sees skips it
 function visibleText(node: Element): string {
     return [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
 }
@@ -146,7 +145,6 @@ describe('Svelte Typography 复制：内容与外观', () => {
 
     it('copyable 复制配置的内容，并显示自定义成功提示与复制提示', async () => {
         const { container } = render(Extras, { props: { mode: 'copyTips' } });
-        // the tooltip wraps the button, so the action's own span carries no inline margin
         expect(container.querySelector(`.${prefix}-action-copy`)).not.toHaveAttribute('style');
         await userEvent.hover(container.querySelector('.semi-icon-copy') as Element);
         await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent('press'));

@@ -36,7 +36,6 @@ export interface TransferVirtualize {
 }
 
 export interface TransferPagination {
-    /** Controlled page of the left list */
     currentPage?: number;
     defaultCurrentPage?: number;
     pageSize?: number;
@@ -77,7 +76,6 @@ export interface TransferProps {
     inputProps?: TransferInputProps;
     /** treeList only; of the Tree's slots only `#label` is forwarded */
     treeProps?: TransferTreeProps;
-    /** Pages the left list */
     pagination?: TransferPagination;
     /** Renders the selected list virtually; ignored while `draggable` */
     virtualize?: TransferVirtualize;
@@ -125,7 +123,6 @@ export interface TransferSourceHeaderSlotProps {
     showButton: boolean;
     allChecked: boolean;
     onAllClick: () => void;
-    /** treeList only: the number of leaves among the shown nodes */
     leafOnlyNum?: number;
 }
 
@@ -136,12 +133,9 @@ export interface TransferSelectedHeaderSlotProps {
 }
 
 export interface TransferSourcePanelSlotProps {
-    /** The values of the selected items */
     value: TransferValue;
     loading?: boolean;
-    /** Whether a search is on and matches nothing */
     noMatch: boolean;
-    /** The items that match the search */
     filterData: TransferDataItem[];
     sourceData: TransferDataItem[];
     propsDataSource: TransferDataSource;
@@ -150,10 +144,8 @@ export interface TransferSourcePanelSlotProps {
     inputValue: string;
     selectedItems: Map<string | number, TransferDataItem>;
     onSearch: (searchString: string) => void;
-    /** Selects every shown item, or clears them when all are selected */
     onAllClick: () => void;
     onSelectOrRemove: (item: TransferDataItem) => void;
-    /** Replaces the selection with the items of these values */
     onSelect: (values: TransferValue) => void;
 }
 
@@ -166,7 +158,6 @@ export interface TransferSelectedPanelSlotProps {
 }
 
 export interface TransferSlots {
-    /** Content of an item in both lists; the dataSource label is the default */
     label?: (props: TransferLabelSlotProps) => VNode[];
     sourceItem?: (props: TransferSourceItemSlotProps) => VNode[];
     selectedItem?: (props: TransferSelectedItemSlotProps) => VNode[];
@@ -174,10 +165,10 @@ export interface TransferSlots {
     selectedHeader?: (props: TransferSelectedHeaderSlotProps) => VNode[];
     sourcePanel?: (props: TransferSourcePanelSlotProps) => VNode[];
     selectedPanel?: (props: TransferSelectedPanelSlotProps) => VNode[];
-    /** No data; an empty slot hides the empty state */
+    /** An empty slot hides the empty state */
     emptyLeft?: () => VNode[];
-    /** Nothing selected; an empty slot hides the empty state */
+    /** An empty slot hides the empty state */
     emptyRight?: () => VNode[];
-    /** The search matches nothing; an empty slot hides the empty state */
+    /** An empty slot hides the empty state */
     emptySearch?: () => VNode[];
 }

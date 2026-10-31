@@ -18,7 +18,6 @@ export interface BaseRowProps {
     expandableRow?: boolean;
     expanded?: boolean;
     expandedRow?: boolean;
-    /** Whether the current row is hovered */
     hovered?: boolean;
     index?: number;
     /** A group section row: its button expands the group, even with a separate expand column */
@@ -30,13 +29,11 @@ export interface BaseRowProps {
     record?: Record<string, any>;
     /** The expand button of an expandable row; the tree button of the record by default */
     renderExpandIcon?: () => JSX.Element;
-    /** Replaces the row classes the table adds */
     replaceClass?: string;
     rowExpandable?: (record: Record<string, any>) => boolean;
     rowKey?: BaseRowKeyType;
     selected?: boolean;
     style?: JSX.CSSProperties;
-    /** whether display none */
     displayNone?: boolean;
 }
 
@@ -45,7 +42,6 @@ type RowEvent = MouseEvent & { currentTarget: HTMLTableRowElement; target: Eleme
 export default function BaseRow(props: BaseRowProps) {
     const table = useTableContext('Table.Row');
 
-    // called again when the record, its index or its selected and disabled state change
     const rowProps = createMemo(() => {
         const onRow = props.onRow;
         const record = props.record;
@@ -77,7 +73,6 @@ export default function BaseRow(props: BaseRowProps) {
 
     const components = () => table.view().components;
 
-    // the first data column gets the indent and the expand button
     const firstIndex = () =>
         Math.max(
             0,

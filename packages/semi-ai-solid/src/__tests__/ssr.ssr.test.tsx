@@ -4,7 +4,6 @@ import { ssrCases } from './ssr-cases';
 
 const [entrySource] = Object.values(import.meta.glob<string>('../index.ts', { eager: true, query: '?raw', import: 'default' }));
 
-// Value exports that are not components: the message data adapters and a configure-item factory
 const nonComponents = ['getConfigureItem', 'chatCompletionToMessage', 'streamingChatCompletionToMessage', 'streamingResponseToMessage', 'responseToMessage', 'chatInputToMessage', 'chatInputToChatCompletion'];
 
 it('守卫：AI 用例表覆盖入口的全部组件导出', () => {

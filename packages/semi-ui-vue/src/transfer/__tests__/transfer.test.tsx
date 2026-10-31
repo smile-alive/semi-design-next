@@ -1106,7 +1106,6 @@ describe('Transfer 语言与 KeepAlive', () => {
         render(() => <ConfigProvider locale={ja_JP}>{() => <Transfer defaultValue={['a']} dataSource={items} draggable />}</ConfigProvider>);
         expect(screen.getByRole('list', { name: ja_JP.Transfer.optionList })).toBeInTheDocument();
         expect(screen.getByRole('list', { name: ja_JP.Transfer.selectedList })).toBeInTheDocument();
-        // dom-testing-library has no implicit role for the native <search> element
         expect(document.querySelector('search')).toHaveAttribute('aria-label', ja_JP.Transfer.filter);
         expect(screen.getByRole('button', { name: ja_JP.Transfer.remove })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: ja_JP.Transfer.dragSort })).toBeInTheDocument();
@@ -1420,7 +1419,6 @@ describe('Transfer 排序、禁用与 tabindex', () => {
                 <Transfer draggable defaultValue={['1']} dataSource={defaultItems} />
             </>
         ));
-        // once the enabled one shows sortable items, the sortable chunk has loaded for both
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-right-item-sortable-item`)).not.toBeNull());
         const disabledTransfer = document.querySelector(`.${prefixCls}`) as HTMLElement;
         const handles = within(disabledTransfer).getAllByRole('button', { name: zh_CN.Transfer.dragSort });

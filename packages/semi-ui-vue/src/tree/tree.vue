@@ -150,7 +150,6 @@
         }
     );
 
-    // State implied by new props renders with them; the pre-flush watcher writes it back for the handlers before render
     const derived = computed(() => TreeFoundation.deriveState(foundation.getProps(), state.value));
     const view = computed(() => (derived.value ? { ...state.value, ...derived.value } : state.value));
 
@@ -184,7 +183,6 @@
 
     const handleSearch = (value: string) => foundation.handleInputChange(value);
 
-    // the tree takes the Tab stop, so a tabindex given to Tree (or injected by a wrapping Tooltip) goes there too
     const splitAttrs = () => splitControlAttrs(attrs, (key) => isAriaKey(key) || key === 'tabindex' || key === 'tabIndex');
 
     const treeTabIndex = () => (attrs.tabindex ?? attrs.tabIndex ?? 0) as number | string;
@@ -211,7 +209,6 @@
     const listClass = () => [`${prefix}-option-list`, { [`${prefix}-option-list-block`]: props.blockNode }];
 
     const handleTreeKeyDown = (event: KeyboardEvent) => {
-        // a tabbable control inside a row handles its own keys
         if (event.target !== event.currentTarget && (event.target as HTMLElement).tabIndex >= 0) {
             return;
         }

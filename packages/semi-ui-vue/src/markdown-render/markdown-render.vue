@@ -28,7 +28,6 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, MarkdownRenderProps, MarkdownRenderBaseState>(
         MarkdownRenderFoundation,
         props,
-        // md compiles synchronously, so the server HTML and the first client render already hold the content
         () => ({ renderContent: MarkdownRenderFoundation.compileMdSync(props, runtime) }),
         () => ({
             getRuntime: () => runtime,

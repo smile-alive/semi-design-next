@@ -15,7 +15,6 @@
 
     const scheduleTimeout = useTimeout();
 
-    // the flip has to land after the mounted state for Collapsible to animate between them
     onMounted(() =>
         scheduleTimeout(() => {
             isOpen.value = !isOpen.value;

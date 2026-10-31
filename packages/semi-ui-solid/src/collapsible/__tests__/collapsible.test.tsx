@@ -10,7 +10,6 @@ const getInner = (container: HTMLElement) => container.querySelector<HTMLElement
 const heightVar = '--semi-collapsible-height';
 const openHeight = 'calc-size(auto, size)';
 
-/** Renders Collapsible with props a test can change through the returned setter */
 function setup(initial: CollapsibleProps = {}, content: JSX.Element = <div>hello</div>) {
     const [props, setProps] = createSignal(initial);
     const view = render(() => <Collapsible {...props()}>{content}</Collapsible>);

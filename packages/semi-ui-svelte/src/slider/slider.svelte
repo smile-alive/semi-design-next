@@ -76,7 +76,6 @@
     let seen = untrack(() => value);
     let written: number | number[] | undefined;
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: BasicSliderProps = {
         get disabled() {
             return disabled;
@@ -117,7 +116,6 @@
         () => ({
             getSliderNode: () => slider,
             notifyChange: (next) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 written = next;
                 value = next;
                 onChange?.(next);
@@ -154,7 +152,6 @@
 
     const shownMarks = $derived(markList.filter((item) => item.active !== false));
 
-    // aria-*, name and autofocus name and focus the inputs; the wrapper takes the rest
     const attrs = $derived(splitControlAttrs(rest, (key) => key.startsWith('aria-') || key === 'name' || key === 'autofocus' || key === 'tabindex'));
 
     // The inputs are the Tab stops, and the slider role supports no aria-required (a native range has no required either);
@@ -227,18 +224,15 @@
             }
             seen = next;
             if (next === undefined) {
-                // a form reset: back to the default position, nothing to report
                 controlled = false;
                 foundation.resetValue();
                 return;
             }
-            // the echo of a change the foundation already applied
             if (!controlled && isEqual(next, written)) {
                 return;
             }
             controlled = true;
             foundation.handleValueChange(next);
-            // a controlled value change ends a change too
             onAfterChange?.(next);
         }
     );

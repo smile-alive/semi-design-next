@@ -78,7 +78,6 @@ export interface TreeSelectProps<T = TreeSelectValue, Multiple extends boolean |
     size?: TreeSelectSize;
     borderless?: boolean;
     validateStatus?: ValidateStatus;
-    /** The id of the element around the `insetLabel` slot */
     insetLabelId?: string;
     showClear?: boolean;
 
@@ -96,7 +95,6 @@ export interface TreeSelectProps<T = TreeSelectValue, Multiple extends boolean |
     /** Goes on the `role="tree"` element */
     optionListStyle?: StyleValue;
     preventScroll?: boolean;
-    /** Lets the tags of a multiple trigger search wrap onto more lines */
     triggerTagWrap?: boolean;
 }
 
@@ -125,7 +123,6 @@ export interface TreeSelectEmits<T = TreeSelectValue, Multiple extends boolean |
      */
     blur: [event: MouseEvent | KeyboardEvent | FocusEvent];
     clear: [event: TreeSelectChangeEvent];
-    /** Before the TreeSelect handles the key */
     keydown: [event: KeyboardEvent];
 }
 
@@ -141,18 +138,14 @@ export interface TreeSelectSelectedItemSlotProps {
 }
 
 export interface TreeSelectTriggerSlotProps<T = TreeSelectValue, Multiple extends boolean | undefined = undefined> {
-    /** The selected nodes */
     value: TreeNodeData[];
     inputValue: string;
     placeholder?: string;
     disabled: boolean;
-    /** The TreeSelect's props */
     componentProps: TreeSelectProps<T, Multiple>;
-    /** Updates the search keyword */
     onSearch: (inputValue: string) => void;
     /** Pass the click event when bound to a control inside the trigger, so the click does not open the dropdown */
     onClear: (event?: MouseEvent) => void;
-    /** Unchecks the node with the key */
     onRemove: (key: string) => void;
 }
 
@@ -163,7 +156,6 @@ export interface TreeSelectTriggerSlotProps<T = TreeSelectValue, Multiple extend
 export interface TreeSelectSearchSlotProps extends TreeSearchSlotProps {
     inputRef: (element: Element | ComponentPublicInstance | null) => void;
     preventScroll?: boolean;
-    /** The trigger search box: `searchAutoFocus` */
     autofocus?: boolean;
     disabled?: boolean;
     role?: 'combobox';
@@ -183,9 +175,7 @@ export interface TreeSelectSearchSlotProps extends TreeSearchSlotProps {
 }
 
 export interface TreeSelectSlots<T = TreeSelectValue, Multiple extends boolean | undefined = undefined> {
-    /** Content of a row's label */
     label?: (props: TreeLabelSlotProps) => VNode[];
-    /** A row's icon */
     icon?: (props: TreeIconSlotProps) => VNode[];
     /** A single element gets the class and the click that expands */
     expandIcon?: (props: TreeExpandIconSlotProps) => VNode[];
@@ -198,7 +188,6 @@ export interface TreeSelectSlots<T = TreeSelectValue, Multiple extends boolean |
     selectedItem?: (props: TreeSelectSelectedItemSlotProps) => VNode[];
     /** Replaces each tag in multiple mode, ahead of `selectedItem`; empty content leaves the tag out */
     tag?: (props: TreeSelectSelectedItemSlotProps) => VNode[];
-    /** Replaces the trigger content */
     trigger?: (props: TreeSelectTriggerSlotProps<T, Multiple>) => VNode[];
     /** Replaces the search box; an empty slot hides it */
     search?: (props: TreeSelectSearchSlotProps) => VNode[];
@@ -216,10 +205,8 @@ export interface TreeSelectSlots<T = TreeSelectValue, Multiple extends boolean |
     outerBottomSlot?: () => VNode[];
 }
 
-/** The methods on a TreeSelect ref */
 export interface TreeSelectHandle {
     /** Searches as if `value` were typed, opening the dropdown first; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Closes the dropdown */
     close: () => void;
 }

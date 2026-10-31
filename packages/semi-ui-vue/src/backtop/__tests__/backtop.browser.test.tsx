@@ -60,7 +60,6 @@ describe('BackTop 浏览器', () => {
         await userEvent.click(screen.getByTestId('start'));
         await userEvent.keyboard('{Tab}');
         if (document.activeElement === scroller) {
-            // a scrollable region is focusable in some browsers
             await userEvent.keyboard('{Tab}');
         }
         expect(document.activeElement).toBe(button);

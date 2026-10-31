@@ -7,7 +7,6 @@ import type { AIChatDialogueMessage, AIChatInputProps, ChatMessage, ChatProps } 
 const packageRoot = path.resolve(import.meta.dirname, '../..');
 const entry = path.join(packageRoot, 'src/index.ts');
 
-// Building the program takes seconds, so the cases share one
 let entryExportNames: Set<string> | undefined;
 function readEntryExports() {
     if (entryExportNames) return entryExportNames;

@@ -63,7 +63,6 @@ describe('Checkbox', () => {
         expect(innerChecked()).toBeNull();
         await view.rerender({ modelValue: true });
         expect(getInput()).toBeChecked();
-        // formApi.reset() turns a controlled value into undefined
         await view.rerender({ modelValue: undefined });
         expect(getInput()).not.toBeChecked();
         expect(innerChecked()).toBeNull();

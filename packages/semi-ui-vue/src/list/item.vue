@@ -20,7 +20,6 @@
         return { ...rest, role: 'none' };
     });
 
-    // default is rendered by the plain <slot /> below
     const passedSlots = () => Object.keys(slots).filter((name) => name !== 'default');
 </script>
 

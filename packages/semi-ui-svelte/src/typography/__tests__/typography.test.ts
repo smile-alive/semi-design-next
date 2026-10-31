@@ -74,7 +74,6 @@ describe('Svelte Typography 基础', () => {
         const inner = container.querySelector(`.${prefix} > span`) as HTMLElement;
         expect(inner.hasAttribute('href')).toBe(false);
         await fireEvent.click(inner);
-        // the handler on the root still hears the click: only link.onclick is dropped
         expect(clicks).toBe(1);
     });
 

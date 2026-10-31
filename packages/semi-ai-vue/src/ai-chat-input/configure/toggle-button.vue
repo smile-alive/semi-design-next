@@ -7,7 +7,6 @@
 
     const emit = defineEmits<{
         'update:modelValue': [value: boolean];
-        /** The value after the toggle */
         click: [value: boolean];
     }>();
 

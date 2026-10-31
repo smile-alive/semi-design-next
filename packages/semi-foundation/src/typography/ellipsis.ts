@@ -8,7 +8,7 @@ const ellipsisStr = '...';
 // Widget items, buttons and links already own focus; a tab stop inside would nest focusables
 const WIDGET_ITEM = '[role="option"], [role="treeitem"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="gridcell"], [role="row"], button, [role="button"], [role="link"], a[href]';
 
-/** The ellipsis fields the foundation resolves; `showTooltip` carries each framework's own tooltip config */
+/** `showTooltip` carries each framework's own tooltip config */
 export interface EllipsisConfig<Tooltip> {
     collapseText?: string;
     collapsible?: boolean;
@@ -35,7 +35,6 @@ export function getEllipsisOpt<Tooltip>(ellipsis: EllipsisConfig<Tooltip> | bool
     };
 }
 
-/** Whether CSS can truncate the text; every other option needs the measured JS truncation */
 export function canUseCSSEllipsis({ expandable, expandText, pos, suffix }: Pick<EllipsisConfig<unknown>, 'expandable' | 'expandText' | 'pos' | 'suffix'>, copyable: unknown) {
     return !expandable && expandText === undefined && !copyable && pos === 'end' && !suffix;
 }
@@ -195,7 +194,6 @@ function isSingleRowOverflowing(containerNode: HTMLElement) {
     return contentWidth > contentAreaWidth;
 }
 
-/** Whether the text overflows: in width for a single row, in height for several rows */
 export function isOverflowing(node: HTMLElement, rows: number) {
     if (!rows || rows < 1) {
         return false;

@@ -237,7 +237,6 @@ describe('MCPConfigure', () => {
         vi.useFakeTimers();
         const { container } = render(MCPConfigure, { props: { customOptions, options, visible: true } });
         await fireEvent.update(search(container), 'o');
-        // a second keystroke inside the window leaves a trailing search pending
         await fireEvent.update(search(container), 'other');
         await switchToCustom();
         expect(labels(container)).toEqual(['Other']);

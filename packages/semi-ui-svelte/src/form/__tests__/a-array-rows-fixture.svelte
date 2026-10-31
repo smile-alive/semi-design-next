@@ -1,12 +1,9 @@
 <script lang="ts" module>
     export interface ArrayRowsStore {
-        /** The ArrayField's path; changing it renames the field */
         field: string;
         formProps?: Record<string, unknown>;
         arrayInitValue?: unknown[];
-        /** Spread onto the name and type inputs of every row */
         fieldProps?: Record<string, unknown>;
-        /** Adds a plain input outside the ArrayField */
         withName?: boolean;
     }
 

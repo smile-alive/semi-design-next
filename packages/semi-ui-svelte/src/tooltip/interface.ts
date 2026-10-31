@@ -36,9 +36,7 @@ export interface TooltipProps extends TooltipBaseProps {
     /** Renders the trigger element itself, which takes `props`; wins over children */
     child?: Snippet<[{ props: TooltipTriggerProps }]>;
     content?: Snippet<[RenderContentProps]>;
-    /** Replaces the default arrow while showArrow is true */
     arrow?: Snippet;
-    /** On the popup */
     class?: string;
     /** On the popup, before the positioning declarations; its `background-color` also colors the arrow */
     style?: string;

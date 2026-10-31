@@ -10,7 +10,6 @@ const properties = ['display', 'font-family', 'font-size', 'font-weight', 'font-
 
 function setup(props: CardProps, parts: Parts, dir: 'ltr' | 'rtl' = 'ltr') {
     const store = createStore({ props, parts });
-    // the fixture has one root; the direction and width come from the container
     const container = document.createElement('div');
     container.dir = dir;
     container.style.width = '400px';
@@ -67,7 +66,6 @@ describe('Svelte Card 阴影（浏览器）', () => {
         const card = container.querySelector('.semi-card') as Element;
         expect(shadowOf(card)()).toBe('none');
         await userEvent.hover(card);
-        // box-shadow transitions in, so poll until it has started
         await expect.poll(shadowOf(card)).not.toBe('none');
     });
 });

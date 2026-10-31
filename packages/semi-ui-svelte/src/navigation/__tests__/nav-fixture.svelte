@@ -3,7 +3,6 @@
     import type { NavProps, NavWrapperArgs } from '../interface';
     import Nav from '../nav.svelte';
 
-    // `snippets` turns on the per-entry content snippets of `items`
     let { store }: { store: { props: NavProps; snippets: boolean; wrap: boolean } } = $props();
 </script>
 

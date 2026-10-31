@@ -9,7 +9,6 @@
     import type { ConfirmModalProps, ModalEmits } from './interface';
     import Modal from './modal.vue';
 
-    // Modal's listeners reach it through attrs; typed behind `@vue-ignore` so callers can pass onAfterClose
     const props = withDefaults(defineProps<ConfirmModalProps & /* @vue-ignore */ EmitProps<ModalEmits>>(), {
         title: undefined,
         content: undefined,
@@ -35,7 +34,6 @@
     // not useId: it counts per render root, and every imperative confirm is its own root
     const contentId = createId('modal-confirm-content');
 
-    // Modal.confirm renders outside any ConfigProvider and passes the direction itself
     const direction = computed(() => props.direction ?? config.value.direction);
 
     const settle = (result: unknown, loading: ShallowRef<boolean | undefined>) =>

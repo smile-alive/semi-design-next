@@ -5,7 +5,6 @@ export type Shadows = 'hover' | 'always';
 export type CardGroupType = 'grid';
 
 export interface CardProps {
-    /** Content area inline style */
     bodyStyle?: StyleValue;
     bordered?: boolean;
     footerLine?: boolean;
@@ -25,7 +24,6 @@ export interface CardSlots {
     /** Replaces the title and headerExtraContent */
     header?: () => VNode[];
     cover?: () => VNode[];
-    /** Every direct child becomes one action */
     actions?: () => VNode[];
     footer?: () => VNode[];
 }

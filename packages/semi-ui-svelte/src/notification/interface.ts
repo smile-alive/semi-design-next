@@ -22,23 +22,19 @@ export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'cont
     right?: ConfigProps['right'];
 }
 
-/** Props of the single notice the list renders; list-level options are stripped before they reach it */
 export interface NoticeItemProps extends Omit<NoticeProps, 'top' | 'bottom' | 'left' | 'right' | 'zIndex' | 'getPopupContainer' | 'stack' | 'position'> {
     placement: NoticePosition;
     stack?: boolean;
     stackExpanded?: boolean;
     /** Shown notices in front of this one, which sets how far it sinks behind them in a collapsed stack */
     depth?: number;
-    /** z-index inside a stack, newest on top */
     layer?: number;
     /** The store removed the notice: it plays its leave animation, then calls `onLeaveEnd` */
     leaving?: boolean;
     onLeaveEnd?: () => void;
-    /** Asks the list to remove the notice, with its id */
     close?: (id: string) => void;
 }
 
-/** A hook mounts its own wrapper, so the wrapper-level options do not apply */
 export type NotificationHookOptions = Omit<NoticeProps, 'type' | 'id' | 'zIndex' | 'getPopupContainer'>;
 
 export interface NotificationHookApi {
@@ -51,7 +47,6 @@ export interface NotificationHookApi {
 }
 
 export interface NoticeHandle {
-    /** Starts the duration over */
     restartCloseTimer: () => void;
     pauseCloseTimer: () => void;
     resumeCloseTimer: () => void;

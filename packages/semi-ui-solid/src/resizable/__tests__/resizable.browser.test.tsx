@@ -45,7 +45,6 @@ describe('Resizable', () => {
         const handler = find(container, '.semi-resizable-handler');
         expect(getComputedStyle(handler).touchAction).toBe('none');
 
-        // released past the group's right end: the next item shrinks to nothing
         await userEvent.dragAndDrop(handler, find(container, '[data-testid="outside"]'), { force: true });
         expect(second.offsetWidth).toBe(0);
         const width = first.offsetWidth;
@@ -72,7 +71,6 @@ describe('Resizable 边界', () => {
             const fire = (type: string, clientX: number) => handle.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, clientX, clientY: 10, button: 0 }));
             const startX = handle.getBoundingClientRect().left;
             const parentLeft = find(container, '[data-testid="parent"]').getBoundingClientRect().left;
-            // the box's right edge, measured from the parent's left edge: the widest the box may become
             const limit = box.getBoundingClientRect().right - parentLeft;
 
             fire('pointerdown', startX);

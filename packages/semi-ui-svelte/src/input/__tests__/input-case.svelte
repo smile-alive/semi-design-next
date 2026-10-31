@@ -4,11 +4,9 @@
     import type { InputProps } from '../interface';
 
     type SlotName = 'prefix' | 'suffix' | 'addonBefore' | 'addonAfter' | 'insetLabel' | 'clearIcon';
-    // 'icon' renders a Semi icon, 'node' a custom element, anything else is the text
     interface Case {
         props?: InputProps;
         slots?: Partial<Record<SlotName, string>>;
-        // the component instance, for the handle methods
         handle?: { current?: ReturnType<typeof Input> };
     }
 

@@ -99,28 +99,13 @@ export function createLineStarts(r: number[], str: string) {
 }
 
 interface NodePosition {
-    /**
-     * Piece Index
-     */
     node: TreeNode;
-    /**
-     * remainder in current piece.
-     */
     remainder: number;
-    /**
-     * node start offset in document.
-     */
     nodeStartOffset: number;
 }
 
 export interface BufferCursor {
-    /**
-     * Line number in current buffer
-     */
     line: number;
-    /**
-     * Column number in current buffer
-     */
     column: number;
 }
 
@@ -150,12 +135,6 @@ export class StringBuffer {
     }
 }
 
-/**
- * Readonly snapshot for piece tree.
- * In a real multiple thread environment, to make snapshot reading always work correctly, we need to
- * 1. Make TreeNode.piece immutable, then reading and writing can run in parallel.
- * 2. TreeNode/Buffers normalization should not happen during snapshot reading.
- */
 class PieceTreeSnapshot implements ITextSnapshot {
     readonly #pieces: Piece[];
     #index: number;
@@ -572,7 +551,6 @@ export class PieceTreeBase {
         this.#searchCache.validate(this.length);
     }
 
-    // #region node operations
     #getIndexOf(node: TreeNode, accumulatedValue: number) {
         const piece = node.piece;
         const pos = this.#positionInBuffer(node, accumulatedValue);
@@ -818,9 +796,6 @@ export class PieceTreeBase {
         return pos;
     }
 
-    // #endregion
-
-    // #region CRLF
     #shouldCheckCRLF() {
         return !(this.EOLNormalized && this.EOL === '\n');
     }
@@ -1104,7 +1079,6 @@ export class PieceTreeBase {
         this.create(chunks, eol, true);
     }
 
-    // #region Buffer API
     getEOL() {
         return this.EOL;
     }
@@ -1521,9 +1495,6 @@ export class PieceTreeBase {
         return result;
     }
 
-    // #endregion
-
-    // #region Piece Table
     insert(offset: number, value: string, eolNormalized: boolean = false) {
         this.EOLNormalized = this.EOLNormalized && eolNormalized;
         this.#lastVisitedLine.lineNumber = 0;
@@ -1749,11 +1720,6 @@ export class PieceTreeBase {
         return ret;
     }
 
-    // #endregion
-
-    // #endregion
-
-    // #region Tree operations
     iterate(node: TreeNode, callback: (node: TreeNode) => boolean): boolean {
         if (node === SENTINEL) {
             return callback(SENTINEL);
@@ -1774,5 +1740,4 @@ export class PieceTreeBase {
         const currentContent = buffer.buffer.substring(startOffset, endOffset);
         return currentContent;
     }
-    // #endregion
 }

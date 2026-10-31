@@ -55,7 +55,6 @@ async function pointer(el: Element, type: 'pointerDown' | 'pointerMove', init: P
     flushSync();
 }
 
-// an 800 x 400 image fits the 400 x 300 container at scale 0.5: 400 x 200, centered
 async function loadImage(container: Element, naturalWidth = 800, naturalHeight = 400) {
     const img = getImg(container);
     Object.defineProperty(img, 'naturalWidth', { value: naturalWidth, configurable: true });
@@ -647,7 +646,6 @@ describe('Svelte Cropper', () => {
     });
 
     describe('preview', () => {
-        // the node's size follows its inline style, as a real layout does
         const createPreviewNode = (style = '') => {
             const node = document.createElement('div');
             node.style.cssText = style;

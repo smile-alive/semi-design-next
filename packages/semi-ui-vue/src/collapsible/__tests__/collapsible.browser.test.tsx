@@ -43,7 +43,6 @@ describe('Collapsible（浏览器）', () => {
 
         state.height = 120;
         await nextTick();
-        // no observer tick awaited on purpose: the new height must already be in effect right after the patch
         expect(wrapper.getBoundingClientRect().height).toBe(120);
     });
 

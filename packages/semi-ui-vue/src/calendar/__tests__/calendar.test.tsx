@@ -48,7 +48,6 @@ const evtSlot = {
     event: ({ event: item }: CalendarEventSlotProps) => <div class="evt">{String(item.children)}</div>,
 };
 const renderCal = (props: CalendarProps & Listeners = {}, slots: Slots = {}) => render(Calendar, { props, slots });
-// The positions measured on mount (grid height, current time line) render on the next tick.
 async function renderLaidOut(props: CalendarProps & Listeners = {}, slots: Slots = {}) {
     const view = renderCal(props, slots);
     await nextTick();
@@ -119,7 +118,6 @@ describe('Calendar', () => {
         const month = renderCal({ mode: 'month', onClick: onMonthClick });
         await userEvent.click(month.container.querySelector(`.${prefixCls}-month-skeleton [role="cell"]`) as HTMLElement);
         expect(onMonthClick).toHaveBeenCalledTimes(1);
-        // August 2019 starts on Thursday, so the month grid begins on Sunday 2019-07-28
         expect(onMonthClick.mock.calls[0][1]).toEqual(new Date(2019, 6, 28));
     });
 
@@ -141,7 +139,6 @@ describe('Calendar', () => {
         try {
             const { container } = renderCal({ mode: 'month' });
             const todayCell = () => container.querySelector(`.${prefixCls}-today`)?.textContent;
-            // today is marked once mounted
             expect(todayCell()).toBeUndefined();
             await nextTick();
             expect(todayCell()).toMatch(/\b8$/);
@@ -635,7 +632,6 @@ describe('Calendar 行为', () => {
         const onClose = vi.fn<CloseHandler>();
         const events = [event('a', new Date(2019, 7, 8, 9)), event('b', new Date(2019, 7, 8, 10))];
         renderCal({ displayValue: today, events, mode: 'month', onClose, onMoreClick });
-        // jsdom measures 0px rows, so the row limit is 0 and the day collapses entirely
         await userEvent.click(screen.getByText('还有2项'));
         expect(onMoreClick).toHaveBeenCalledTimes(1);
         expect(onMoreClick.mock.calls[0].slice(1)).toEqual([today, 2]);
@@ -1101,7 +1097,6 @@ describe('Calendar（Vue）', () => {
     it('#event 的参数是 events 中的原对象，每处渲染各调用一次', async () => {
         mockLayout();
         const timed = event('timed', new Date(2019, 7, 8, 10), new Date(2019, 7, 8, 11), { color: 'red' });
-        // spans Saturday 08-10 to Monday 08-12, across two week rows of the month
         const span = event('span', new Date(2019, 7, 10), new Date(2019, 7, 12), { allDay: true, color: 'blue' });
         const events = [timed, span];
         const seen: EventObject[] = [];

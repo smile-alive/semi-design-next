@@ -314,7 +314,6 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
         </Show>
     );
 
-    // css truncation applies while not expanded
     const cssActive = () => !expanded() && cssEllipsis();
 
     const ellipsisCls = () =>
@@ -323,7 +322,6 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
                   [`${prefixCls}-ellipsis`]: true,
                   [`${prefixCls}-ellipsis-single-line`]: rows() === 1,
                   [`${prefixCls}-ellipsis-multiple-line`]: rows() > 1,
-                  // Text (span) stays inline
                   [`${prefixCls}-ellipsis-multiple-line-text`]: rows() > 1 && local.component === 'span',
                   [`${prefixCls}-ellipsis-overflow-ellipsis`]: rows() === 1 && cssActive(),
                   [`${prefixCls}-ellipsis-overflow-ellipsis-text`]: rows() === 1 && cssActive() && local.component === 'span',

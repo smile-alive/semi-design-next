@@ -33,7 +33,6 @@ export default function Space(rawProps: SpaceProps) {
         return { horizontal, vertical };
     };
 
-    // the consumer's style comes last so it can override a gap
     const style = () => {
         const { horizontal, vertical } = axes();
         const gap: Record<string, string> = {};

@@ -61,13 +61,10 @@ export interface AIChatDialogueEmits {
     select: [selectedIds: string[]];
 }
 
-/** Methods exposed on the AIChatDialogue ref */
 export interface AIChatDialogueHandle {
     selectAll: () => void;
     deselectAll: () => void;
-    /** Scrolls the message list to the bottom, animated when `animation` is true */
     scrollToBottom: (animation: boolean) => void;
-    /** Scrolls the message list to the top, animated when `animation` is true */
     scrollToTop: (animation: boolean) => void;
 }
 
@@ -122,7 +119,6 @@ export interface AIChatDialogueFullDialogueSlotProps {
     class: string;
 }
 
-/** An item inside a message item's content array */
 export type MessageInnerItem = InputText | InputImage | InputFile | OutputText | Refusal;
 
 export interface AIChatDialogueContentItemSlotProps {
@@ -156,9 +152,7 @@ export interface AIChatDialogueSlots {
     fullDialogue?: (props: AIChatDialogueFullDialogueSlotProps) => VNode[];
     /** Called for every content item; an empty result leaves the item to the built-in rendering */
     contentItem?: (props: AIChatDialogueContentItemSlotProps) => VNode[];
-    /** Replaces the markdown rendering of a message whose content is plain text */
     messageText?: (props: AIChatDialogueMessageTextSlotProps) => VNode[];
-    /** The editor shown while a user message is being edited */
     messageEdit?: (props: AIChatDialogueMessageEditSlotProps) => VNode[];
     hintBox?: (props: AIChatDialogueHintBoxSlotProps) => VNode[];
 }
@@ -190,7 +184,6 @@ export interface ReasoningWidgetProps {
 export type ReasoningWidgetContentSlotProps = ReasoningWidgetProps;
 
 export interface ReasoningWidgetSlots {
-    /** Replaces the markdown rendering of the reasoning text */
     content?: (props: ReasoningWidgetContentSlotProps) => VNode[];
 }
 
@@ -218,6 +211,5 @@ export interface DialogueStepWidgetActionIconSlotProps {
 }
 
 export interface DialogueStepWidgetSlots {
-    /** Shown before each action's description */
     actionIcon?: (props: DialogueStepWidgetActionIconSlotProps) => VNode[];
 }

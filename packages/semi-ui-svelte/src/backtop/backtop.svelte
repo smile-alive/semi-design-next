@@ -39,7 +39,6 @@
 
     let button = $state<HTMLElement>();
 
-    // the foundation reads the props through getters, since $props() cannot be handed over as one object
     const { foundation, states } = useFoundation<Foundation, Adapter, BackTopBaseProps, BackTopState>(
         BackTopFoundation,
         {
@@ -66,7 +65,6 @@
     const ariaLabel = $derived(rest['aria-label'] ?? (children ? undefined : locale().locale.backToTop));
     const throttledClick = $derived(throttle((event: ClickEvent) => foundation.onClick(event), duration));
 
-    // FloatButton hands its rest props, attachments included, to the native button
     const captureButton: Attachment<HTMLElement> = (node) => {
         button = node;
         return () => {

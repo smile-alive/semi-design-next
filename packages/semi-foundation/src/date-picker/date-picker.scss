@@ -94,7 +94,6 @@ $module-list: #{$prefix}-scrolllist;
             }
         }
 
-        // With a left or right preset panel and no inset input, the month panel gets a fixed height
         &[x-preset-position='left'][x-insetinput='false'],
         &[x-preset-position='right'][x-insetinput='false'] {
             .#{$module}-month {
@@ -1229,7 +1228,6 @@ $module-list: #{$prefix}-scrolllist;
             }
         }
 
-        // Keeps the year/month ScrollList from scrolling when the number of weeks changes the height
         &[x-panel-yearandmonth-open-type='left'],
         &[x-panel-yearandmonth-open-type='right'] {
             .#{$module}-weeks {
@@ -1604,7 +1602,6 @@ $module-list: #{$prefix}-scrolllist;
 
         &-dateTimeRange {
             width: max-content;
-            // Capped at the viewport limit so min-width never exceeds max-width (forced overflow)
             min-width: min(#{$width-datepicker_panel_compact * 2}, #{$compact-max-width});
             max-width: $compact-max-width;
 

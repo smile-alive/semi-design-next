@@ -24,7 +24,6 @@ interface NavigationProps {
     locale: Locale['DatePicker'];
 }
 
-/** The year and month switch buttons above a month panel */
 export default function Navigation({ monthText = '', titleId, onMonthClick = noop, onNextMonth = noop, onPrevMonth = noop, onPrevYear = noop, onNextYear = noop, density, shouldBimonthSwitch, panelType, locale }: NavigationProps) {
     const btnTheme = 'borderless';
     const iconBtnSize = density === 'compact' ? 'default' : 'large';

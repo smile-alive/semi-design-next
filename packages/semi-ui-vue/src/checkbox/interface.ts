@@ -7,7 +7,6 @@ export type CheckboxDirection = 'horizontal' | 'vertical';
 export interface CheckboxProps {
     modelValue?: boolean;
     defaultChecked?: boolean;
-    /** Identifies the checkbox inside a CheckboxGroup; a checkbox without it works on its own. */
     value?: CheckboxValue;
     disabled?: boolean;
     indeterminate?: boolean;

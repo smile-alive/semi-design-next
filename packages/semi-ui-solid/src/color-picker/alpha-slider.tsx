@@ -19,7 +19,6 @@ export default function AlphaSlider(props: AlphaSliderProps) {
         AlphaSliderFoundation,
         props,
         () => ({ isHandleGrabbing: false }),
-        // the foundation guards a missing element itself
         () => ({ getDOM: () => dom as HTMLDivElement })
     );
 

@@ -34,7 +34,6 @@
                     <IconAlertTriangle class={iconClass} />
                 {/if}
             {/if}
-            <!-- the span id is the target of aria-errormessage and aria-describedby -->
             {#if error}
                 <span id={errorMessageId}>
                     {#if errorContent}{@render errorContent({ error })}{:else}{errorText(error)}{/if}

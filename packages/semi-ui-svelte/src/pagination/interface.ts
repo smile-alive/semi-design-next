@@ -11,7 +11,6 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLUListElement>, 
     size?: 'small' | 'default';
     /** Bindable; leave it out for an uncontrolled page. `bind:currentPage={get, set}` makes it fully controlled */
     currentPage?: number;
-    /** Not rendered when `size` is `small` */
     showSizeChanger?: boolean;
     showQuickJumper?: boolean;
     /** Position of the omitted pages popover and the size changer dropdown; not used by the `small` size */

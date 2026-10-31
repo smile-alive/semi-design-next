@@ -414,9 +414,6 @@ export const reactExemptions: Exemption[] = [
         files: ['packages/semi-ui-react/src/audio-player/index.tsx', 'packages/semi-ui-react/src/video-player/index.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
-
-    // Tests and demos
-
     // Like Select's Option: aria-activedescendant keeps focus on the input; native <option> needs <select>
     {
         files: ['website/content/input/select/demos/render-option-item.react.tsx'],

@@ -15,7 +15,6 @@
 
     type ClickEvent = MouseEvent | KeyboardEvent;
 
-    // the DOM typings give relatedTarget as an EventTarget, but a focus event's is a Node or null
     type ListFocusEvent = FocusEvent & RatingFocusEvent;
     type Foundation = RatingFoundation<RatingBaseProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
     type Adapter = RatingAdapter<RatingBaseProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
@@ -54,12 +53,10 @@
     // roving Tab stop. A radiogroup has no control to carry a name.
     const DROPPED_ATTRS = new Set(['tabindex', 'name']);
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: RatingBaseProps = {
         get value() {
             return value;
         },
-        // an unset value starts empty, and a value that goes back to undefined returns to it
         defaultValue: 0,
         get count() {
             return count;
@@ -87,7 +84,6 @@
         (view) => RatingFoundation.getInitialState(view),
         (base) => ({
             focusStar: (starValue) => {
-                // a value between radios has no radio to focus: Tab's landing radio stands in, as for focus()
                 if (!RatingFoundation.isRadioValue(starValue, count, allowHalf)) {
                     focusTabStop();
                     return;
@@ -100,7 +96,6 @@
             notifyHoverChange: (hoverValue) => onHoverChange?.(hoverValue),
             setValue: (next) => base.setState({ value: next }),
             notifyChange: (next) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next;
                 onChange?.(next);
             },
@@ -176,7 +171,6 @@
         }
     );
 
-    /** Focuses the radio that Tab would reach */
     export function focus() {
         if (!disabled) {
             focusTabStop();

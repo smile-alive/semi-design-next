@@ -18,7 +18,6 @@ function renderGroup(props: PreviewProps = {}, images: ImageProps[] = srcList.ma
     return { ...view, store };
 }
 
-// The group without thumbnails, already open
 const renderPreview = (props: PreviewProps = {}, snippets: string[] = []) => renderGroup({ visible: true, ...props }, [], snippets);
 
 let restoreLayout: (() => void) | null = null;

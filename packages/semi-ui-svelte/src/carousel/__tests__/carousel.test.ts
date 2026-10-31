@@ -27,7 +27,6 @@ function must<V>(value?: V | null): V {
 }
 const tabs = () => screen.getAllByRole('tab');
 
-// Props and the slide count live in reactive state so a test can change them, as a parent re-render would.
 function setup(props: FixtureStore['props'] = {}, { count = 3, mode = 'uncontrolled', activeIndex, accept = true }: { count?: number; mode?: Mode; activeIndex?: number; accept?: boolean } = {}) {
     const store = createStore<FixtureStore>({ count, activeIndex, accept, log: [], props: { autoPlay: false, ...props } });
     const ref: { current?: { play: () => void; stop: () => void; goTo: (index: number) => void; prev: () => void; next: () => void } } = {};
@@ -404,7 +403,6 @@ describe('Svelte Carousel', () => {
             expect(store.log).toHaveLength(1);
             store.props.speed = 1000;
             flushSync();
-            // the timer already running keeps the old speed; the one it schedules uses the new one
             await tick(1300);
             expect(store.log).toHaveLength(2);
             await tick(1300);
@@ -715,7 +713,6 @@ describe('Svelte Carousel', () => {
             expect(tabs().map((tab) => tab.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
             expect(tabs().map((tab) => tab.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
             expect(tabs()[0]).toHaveAccessibleName(zh_CN.Carousel.slideN.replace('${index}', '1'));
-            // Tab order: only the current tab of the tablist, then the arrows
             await userEvent.tab();
             expect(tabs()[1]).toHaveFocus();
             await userEvent.tab();

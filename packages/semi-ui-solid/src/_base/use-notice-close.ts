@@ -1,7 +1,6 @@
 import { type Accessor, createEffect, createMemo, on } from 'solid-js';
 import type AutoCloseFoundation from '@fibrae/semi-foundation/base/auto-close-foundation';
 
-/** What a Toast or Notification list gives each item */
 interface NoticeListValue {
     paused: Accessor<boolean>;
     state: Accessor<{ removedItems: readonly { id?: string }[]; updatedItems: readonly { id?: string }[] }>;

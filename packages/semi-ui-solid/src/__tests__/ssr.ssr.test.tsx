@@ -5,7 +5,6 @@ import { ssrCases } from './ssr-cases';
 
 const [entrySource] = Object.values(import.meta.glob<string>('../index.ts', { eager: true, query: '?raw', import: 'default' }));
 
-// Value exports that are not components: hooks, the field HOC, config objects and the class behind Toast
 const nonComponents = ['semiGlobal', 'useConfig', 'defaultResponsiveMap', 'useFieldApi', 'useFieldState', 'useForm', 'useFormApi', 'useFormState', 'withField', 'useLocale', 'ToastFactory'];
 
 it('守卫：用例表覆盖入口的全部组件导出', () => {
@@ -30,7 +29,6 @@ it('calendar/今天只在挂载后标记', async () => {
         const { html, errors } = await renderServer({ render: () => <Calendar mode="month" displayValue={new Date(2019, 7, 8, 12)} /> });
         expect(errors).toEqual([]);
         expect(html).not.toContain('aria-current');
-        // `-today-date` sits on every date; `-today` alone marks the current one
         expect(html).not.toMatch(/-today(?!-date)/);
     } finally {
         vi.useRealTimers();

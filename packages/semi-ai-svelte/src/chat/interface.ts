@@ -54,14 +54,12 @@ export interface ChatHandle {
 export interface ChatTitleSnippetProps {
     message: ChatMessage;
     role: ChatMetadata;
-    /** The built-in title */
     defaultTitle: Snippet;
 }
 
 export interface ChatAvatarSnippetProps {
     message: ChatMessage;
     role: ChatMetadata;
-    /** The built-in avatar */
     defaultAvatar: Snippet;
 }
 
@@ -73,7 +71,6 @@ export interface ChatRoleAvatarSnippetProps {
 export interface ChatContentSnippetProps {
     message: ChatMessage;
     role: ChatMetadata;
-    /** The built-in content */
     defaultContent: Snippet;
     class: string;
 }
@@ -118,7 +115,6 @@ export interface ChatInputAreaSnippetProps {
     sendNode: Snippet;
     onSend: (content?: string, attachment?: FileItem[]) => void;
     onClear: () => void;
-    /** Focuses the input */
     onClick: () => void;
 }
 
@@ -147,7 +143,6 @@ export interface ChatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' 
     enableUpload?: boolean | ChatEnableUploadProps;
     /** Overrides the built-in send state when given */
     canSend?: boolean;
-    /** Escapes HTML in the user's messages */
     escapeHtml?: boolean;
     uploadProps?: ChatUploadProps;
     /** The tooltip of the upload button; its text is the `uploadTip` snippet */
@@ -176,7 +171,6 @@ export interface ChatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' 
     title?: Snippet<[ChatTitleSnippetProps]>;
     /** Provided and empty hides the avatar */
     avatar?: Snippet<[ChatAvatarSnippetProps]>;
-    /** The avatar content for a role without an image URL */
     roleAvatar?: Snippet<[ChatRoleAvatarSnippetProps]>;
     content?: Snippet<[ChatContentSnippetProps]>;
     action?: Snippet<[ChatActionSnippetProps]>;
@@ -184,8 +178,6 @@ export interface ChatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' 
     inputArea?: Snippet<[ChatInputAreaSnippetProps]>;
     hintBox?: Snippet<[ChatHintBoxSnippetProps]>;
     divider?: Snippet<[ChatDividerSnippetProps]>;
-    /** Replaces the upload button */
     uploadButton?: Snippet;
-    /** The upload button's tooltip text */
     uploadTip?: Snippet;
 }

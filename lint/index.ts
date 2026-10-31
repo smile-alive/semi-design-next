@@ -8,7 +8,6 @@ import { solid } from './solid/index.ts';
 import { svelte } from './svelte/index.ts';
 import { vue } from './vue/index.ts';
 
-// A new framework gets its own lint/<name>/ module and an entry here
 export const frameworks: FrameworkLint[] = [react, vue, solid, svelte];
 
 // oxlint ignores override rules of plugins enabled neither at top level nor in the override, so an exemption lists them

@@ -5,7 +5,6 @@ import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 
 export interface DragMoveProps {
-    // the drag trigger; defaults to the element
     handler?: () => HTMLElement | null;
     // limits the movement range; must be relatively positioned
     constrainer?: 'parent' | (() => HTMLElement | null);

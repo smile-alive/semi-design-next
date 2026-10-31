@@ -44,7 +44,6 @@ export interface VisibleLayout {
     fromStart: boolean;
 }
 
-/** The props the foundation reads */
 export interface OverflowListBaseProps {
     collapseFrom?: 'start' | 'end';
     items?: Array<Record<string, any>>;
@@ -148,7 +147,6 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         return { first: fromStart ? items.length - visible.length : 0, step: 1, fromStart };
     }
 
-    /** The view a change of items or style starts from; the measurement then settles it */
     static resetView({ items, style, renderMode, collapseFrom, itemKey }: OverflowListBaseProps, view: OverflowListView, containerWidth: number): OverflowListView {
         const keys = OverflowListFoundation.getItemKeys(items, itemKey);
         const next: OverflowListView = { ...view, items, style, keys, overflowStatus: 'calculating' };

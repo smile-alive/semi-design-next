@@ -9,7 +9,6 @@ export type MarkdownRenderComponents = Partial<{ [K in keyof SvelteHTMLElements]
 
 /** Props a component in `components` receives besides the attributes of its element */
 export interface MarkdownRenderElementProps {
-    /** The content, rendered */
     children?: Snippet;
     /**
      * The compiled element. `node.props.children` is the source tree of the content: `codeText(node.props.children)` is

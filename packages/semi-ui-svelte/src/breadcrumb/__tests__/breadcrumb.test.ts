@@ -24,7 +24,6 @@ const getItemWraps = () => [...document.querySelectorAll<HTMLElement>(`.${prefix
 const getSeparatorTexts = () => [...document.querySelectorAll(`.${prefix}-separator`)].map((el) => el.textContent);
 const typographyTexts = () => [...document.querySelectorAll('.semi-typography')].map((el) => el.textContent);
 const itemOf = (wrap: Element) => wrap.firstElementChild as HTMLElement;
-// the visible row: item texts, with the more button as 'more'
 const visibleRow = () => [...nav().children].map((el) => (el.classList.contains(`${prefix}-collapse`) ? 'more' : el.querySelector('.semi-typography')?.textContent));
 const expandButton = () => screen.getByRole('button', { name: zh_CN.Breadcrumb.expand });
 
@@ -90,7 +89,6 @@ describe('Svelte Breadcrumb', () => {
 
     it('routes 超过 maxItemCount 时折叠', () => {
         setup({ routes: routesOf(6) });
-        // default maxItemCount 4: first item, more, then the last 3
         expect(nav().children).toHaveLength(5);
         expect(nav().children[1]).toHaveClass(`${prefix}-collapse`);
         expect(typographyTexts()).toEqual(['a', 'd', 'e', 'f']);
@@ -100,7 +98,6 @@ describe('Svelte Breadcrumb', () => {
     it('activeIndex 指向会被折叠的项时，当前项保持可见，折叠其后的项', () => {
         setup({ routes: routesOf(6), activeIndex: 2, moreType: 'popover' });
         expect(screen.getByText('c').closest(`.${prefix}-item-wrap`)).toHaveAttribute('aria-current', 'page');
-        // a, b, c (current), more, f: the hidden items are d and e, the last item stays
         expect(typographyTexts()).toEqual(['a', 'b', 'c', 'f']);
         expect(nav().children[3]).toHaveClass(`${prefix}-collapse`);
     });
@@ -187,7 +184,6 @@ describe('Svelte Breadcrumb', () => {
         setup({ routes: ['one', 'two', 'three', 'four'].map((name) => ({ name, href: 'https://semi.design/' })), maxItemCount: 2, moreType: 'popover', onClick });
         await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
         const link = (await screen.findByText('two', { selector: '.semi-popover-content *' })).closest('a') as HTMLElement;
-        // dispatchEvent returns false when a handler called preventDefault
         expect(link.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }))).toBe(true);
         link.addEventListener('click', (event) => event.preventDefault());
         link.click();
@@ -206,7 +202,6 @@ describe('Svelte Breadcrumb', () => {
         expect(second.querySelector('a')).toHaveAttribute('href', '/components/breadcrumb');
         expect(second.querySelector('.semi-typography')).toHaveTextContent(/^breadcrumb$/);
         expect(third.querySelector('.semi-typography')).toHaveTextContent(/^string only$/);
-        // a route without a name renders no title
         expect(first.querySelector(`.${prefix}-item-title`)).toBeNull();
         (store.props as BreadcrumbProps).compact = false;
         flushSync();
@@ -237,7 +232,6 @@ describe('Svelte Breadcrumb', () => {
         expect(a).toHaveClass(`${prefix}-item-link`);
         expect(b.tagName).toBe('A');
         expect(b).not.toHaveClass(`${prefix}-item-link`);
-        // the active last item stays a span even with href
         expect(c.tagName).toBe('SPAN');
         expect(c).not.toHaveAttribute('href');
     });
@@ -281,7 +275,6 @@ describe('Svelte Breadcrumb', () => {
     it('无 href 且有点击处理的项可用键盘聚焦，Enter 以 MouseEvent 触发 onClick', async () => {
         const onClick = vi.fn<BreadcrumbClick>();
         setup({ onClick });
-        // the last item is the current page, not a link
         const links = screen.getAllByRole('link');
         expect(links.map((link) => link.textContent?.trim())).toEqual(['a', 'b']);
         await userEvent.tab();

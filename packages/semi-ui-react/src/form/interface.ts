@@ -30,18 +30,10 @@ export type CommonFieldProps = {
     fieldClassName?: string;
     fieldStyle?: React.CSSProperties;
     initValue?: any;
-    /**
-     * Custom field validation function
-     * @param fieldValue - The current field value
-     * @param values - All form values
-     * @returns Error message string, empty string for valid, or Promise that resolves to error message
-     */
+    /** Returns an error message, an empty string for valid, or a Promise of either */
     validator?: (fieldValue: any, values: Record<string, any>) => FieldValidateResult | Promise<FieldValidateResult>;
-    /** Check rules, check library based on async-validator */
     rules?: Array<RuleItem>;
-    /** Check trigger timing */
     trigger?: FieldValidateTriggerType;
-    /** Converts form control values before validation */
     transform?: (fieldValue: any) => any;
     /** Make a second change to the component's value before the UI update */
     convert?: (fieldValue: any) => any;
@@ -50,15 +42,11 @@ export type CommonFieldProps = {
     allowEmpty?: boolean;
     /** A changed value equal to this is stored as undefined, unless allowEmptyString or allowEmpty; defaults to `''` */
     emptyValue?: unknown;
-    /** Overrides the Form's `labelCol` for this field */
     labelCol?: Record<string, any>;
-    /** Overrides the Form's `wrapperCol` for this field */
     wrapperCol?: Record<string, any>;
-    /** Stops checking further rules after the first one fails */
     stopValidateWithError?: boolean;
     /* Prompt shown in the error message slot while the field has no error */
     helpText?: React.ReactNode;
-    /* Extra message shown together with the error and prompt text, after helpText/errorMessage */
     extraText?: React.ReactNode;
     extraTextPosition?: 'middle' | 'bottom';
     /** Takes over only the data stream: no ErrorMessage, Label or extraText is inserted */
@@ -124,18 +112,12 @@ export interface BaseFormProps<Values extends Record<string, any> = any> extends
     onErrorChange?: (errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError>>) => void;
     onChange?: (formState: FormState<Values>) => void;
     allowEmpty?: boolean;
-    /**
-     * Custom form-level validation function
-     * @param values - All form values
-     * @returns Errors nested like the values, an empty object or empty string for valid, or Promise that resolves to errors
-     */
+    /** Returns errors nested like the values, an empty object or empty string for valid, or a Promise of either */
     validator?: (values: Values) => BatchValidateResult<Values> | Promise<BatchValidateResult<Values>>;
-    /** Use this if you want to populate the form with initial values. */
     initValues?: Values;
     id?: string;
     /** Called once when the Form mounts, to save the formApi reference */
     getFormApi?: (formApi: FormApi<Values>) => void;
-    /** External formApi created by Form.useForm() */
     form?: ReturnType<typeof useForm<Values>>[0];
     style?: React.CSSProperties;
     className?: string;
@@ -158,6 +140,5 @@ export interface BaseFormProps<Values extends Record<string, any> = any> extends
         reset?: boolean;
     };
     trigger?: FieldValidateTriggerType;
-    /** Receives `{ formApi }` */
     ref?: React.Ref<FormHandle<Values>>;
 }

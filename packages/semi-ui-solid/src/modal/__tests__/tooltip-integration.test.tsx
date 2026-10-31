@@ -51,7 +51,6 @@ describe('Modal 与 Tooltip 的集成', () => {
         expect(onCancel).not.toHaveBeenCalled();
     });
 
-    // the Modal renders outside the Popover's DOM, so it registers itself as part of the popup
     it('在弹层内容打开的 Modal 中点击，弹层不当作点击外部而关闭', async () => {
         const onClickOutSide = vi.fn<() => void>();
         function Demo() {

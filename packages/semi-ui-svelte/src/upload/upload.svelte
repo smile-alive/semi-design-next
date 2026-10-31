@@ -292,7 +292,6 @@
         replaceInput?.click();
     };
 
-    // Moving between the controls inside is not leaving the Upload
     const handleFocusout = (event: FocusEvent & { currentTarget: HTMLDivElement }) => {
         rest.onfocusout?.(event);
         if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {

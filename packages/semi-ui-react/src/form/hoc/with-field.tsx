@@ -479,9 +479,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
 }
 
 /**
- * Wraps a component as a form field: takes over its value and onChange and syncs them to the Form foundation,
- * and inserts <Label> and <ErrorMessage>. With labelPosition 'inset' the component receives insetLabel and
- * insetLabelId and must render the label with that id.
+ * With labelPosition 'inset' the component receives insetLabel and insetLabelId and must render the label with
+ * that id.
  */
 export default function withField<C extends React.ElementType>(Component: C, opts?: WithFieldOption): React.ComponentType<FieldProps<React.ComponentProps<C>>> {
     return createField(Component, opts, true);

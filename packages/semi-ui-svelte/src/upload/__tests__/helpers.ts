@@ -25,7 +25,6 @@ export function query<E extends Element = HTMLElement>(selector: string, root: P
     return found;
 }
 
-/** What a test passes besides the Upload's own props */
 export interface RenderOptions {
     trigger?: HostStore['trigger'];
     snippets?: string[];
@@ -39,7 +38,6 @@ export function renderUpload(props: Record<string, unknown> = {}, { trigger = 'b
     return {
         ...view,
         store,
-        /** Writes new props and flushes, as a parent re-rendering would */
         update(next: Record<string, unknown>) {
             Object.assign(store.props, next);
             flushSync();

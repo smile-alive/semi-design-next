@@ -73,7 +73,6 @@ export default class FocusScope {
         }
     }
 
-    /** `activate` for a modal overlay, `enter` for a non-modal one */
     engage = (container: HTMLElement, modal: boolean, preventScroll?: boolean) => {
         if (modal) {
             this.activate(container, preventScroll);

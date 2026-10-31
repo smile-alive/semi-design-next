@@ -98,7 +98,6 @@
     const trigger = useTemplateRef('trigger');
     const content = useTemplateRef('content');
 
-    // refs inside the v-for are arrays
     const searchInputs = useTemplateRef<InputHandle[]>('searchInput');
     const tagInputs = useTemplateRef<TagInputHandle[]>('tagInput');
     const item = useTemplateRef('item');
@@ -127,7 +126,6 @@
     const position = computed(() => props.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
     const inputPlaceholder = computed(() => props.searchPlaceholder || props.placeholder);
 
-    // the Input and TagInput inside are parts of this control, not members of the group
     provideInputGroupContext(undefined);
 
     const combobox = () => searchInputs.value?.[0] ?? tagInputs.value?.[0];
@@ -199,7 +197,6 @@
                 if (search) {
                     search.focus({ preventScroll: props.preventScroll });
                 } else if (tags) {
-                    // TagInput reads preventScroll from its own prop
                     tags.focus();
                 } else {
                     trigger.value?.focus({ preventScroll: props.preventScroll });
@@ -265,7 +262,6 @@
         }
     );
 
-    // controlled values and the multiple-mode tree are derived here, so they reach the DOM in the render that receives them
     const foundationProps = computed(() => foundation.getProps());
     const view = computed(() => (multiple.value ? { ...state.value, ...CascaderFoundation.deriveMultipleState(foundationProps.value, state.value) } : state.value));
     const renderData = computed(() => CascaderFoundation.getRenderData(foundationProps.value, view.value));
@@ -364,7 +360,6 @@
 
     const triggerSlotProps = (): CascaderTriggerSlotProps<Multiple> => {
         const { keyEntities, checkedKeys, resolvedCheckedKeys, selectedKeys } = view.value;
-        // the trigger gets positions; mergeType decides which checked set they come from, whatever checkRelation is
         const keys = mergeType.value === strings.NONE_MERGE_TYPE ? checkedKeys : resolvedCheckedKeys;
         const value = multiple.value ? new Set([...keys].map((key) => keyEntities[key]?.pos)) : keyEntities[[...selectedKeys][0]]?.pos;
         return {
@@ -455,7 +450,6 @@
         nestedPopups
     );
 
-    // The dropdown follows the foundation state, which a cached KeepAlive subtree would keep open
     onDeactivated(() => {
         if (state.value.isOpen) {
             foundation.deactivate();
@@ -488,7 +482,6 @@
         @afterClose="foundation.endSearching"
         @open="foundation.handlePopoverOpen"
     >
-        <!-- the combobox is the Tab stop -->
         <div ref="trigger" v-bind="rootAttrs()" :class="rootClass(kinds())" :tabindex="looks.disabled || inputIsCombobox() ? -1 : 0" @click="foundation.handleClick" @focusin="foundation.handleFocusEnter" @focusout="handleFocusOut" @keydown="handleKeyDown" @keydown.capture="handleKeyDownCapture">
             <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />
             <template v-else>

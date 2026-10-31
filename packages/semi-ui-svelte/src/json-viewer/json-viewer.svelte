@@ -37,7 +37,6 @@
     let customRenderEntries = $state.raw<CustomRenderEntry[]>([]);
     let nextEntryId = 0;
 
-    // the options the editor was created with
     let appliedOptions: JsonViewerOptions;
 
     const prefix = cssClasses.PREFIX;
@@ -55,7 +54,6 @@
 
     const sizeStyle = $derived(`width: ${toCssLength(width)}; height: ${toCssLength(height)}`);
 
-    // untracked, since only a change after creation matters
     appliedOptions = untrack(() => mergedOptions);
 
     // $bindable needs destructuring, so the foundation reads the props through getters. The core hands a rule's render

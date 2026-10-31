@@ -81,7 +81,6 @@ describe('Svelte DatePicker insetInput 键入', () => {
         const [dateInput, timeInput] = insetInputs();
         expect(timeInput).toHaveValue('15:30');
         await typeText('2021-06-15', dateInput);
-        // the default locale is zh_CN, whose day period is 下午
         expect(changes(store)).toEqual(['change 2021-06-15 15:30:00 "2021-06-15 03:30 下午"']);
     });
 

@@ -56,7 +56,6 @@ describe('AI 组件的可访问名称跟随语言包', () => {
             chats: [{ id: '1', role: 'assistant', content: '```js\nconst a = 1;\n```', status: 'completed' }],
             roleConfig: { assistant: { name: 'A' } },
         });
-        // the message action and the code block each carry a copy button
         expect(await screen.findAllByRole('button', { name: ja.AIChatDialogue.copy })).toHaveLength(2);
     });
 

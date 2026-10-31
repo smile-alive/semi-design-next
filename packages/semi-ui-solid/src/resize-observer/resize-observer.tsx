@@ -1,7 +1,6 @@
 import { children, createEffect, createMemo, onCleanup, onMount, type JSX } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-/** The subset of `ResizeObserverEntry` that callbacks receive. */
 export interface ResizeEntry {
     contentRect: DOMRectReadOnly;
     target: Element;

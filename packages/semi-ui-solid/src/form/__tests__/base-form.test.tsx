@@ -168,7 +168,6 @@ describe('Form-baseForm', () => {
             () => <FormInput field="input" />
         );
         api?.submitForm();
-        // formApi.submitForm validates asynchronously before submitting
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmit.mock.calls[0][0]).toEqual({});
     });

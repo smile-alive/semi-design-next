@@ -9,7 +9,6 @@ import warning from '../utils/warning';
 import { strings } from './constants';
 import type { BasicOptionProps, OptionRecord } from './option-foundation';
 
-/** The props the foundation reads with getProps */
 export interface SelectBaseProps {
     allowCreate?: boolean;
     autoClearSearchValue?: boolean;
@@ -118,7 +117,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     static #resolveSingle({ onChangeWithObject }: SelectBaseProps, propValue: PropValue, originalOptions: OptionRecord[]) {
         const selections = new Map();
 
-        // with onChangeWithObject the value prop is an option object
         const selectedValue = onChangeWithObject ? (propValue as BasicOptionProps)?.value : propValue;
         const selectedOption = originalOptions.find((option) => option.data.value === selectedValue);
 
@@ -255,7 +253,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
                 this.#focusInput();
             }
         } else {
-            // before writing: #notifyChange diffs against the selections in state
             this.#notifyChange(selections);
             this.adapter.updateSelection(selections);
             this.updateOverflowItemCount(selections.size);
@@ -929,7 +926,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (event.key === 'Tab') {
             this.#handleTabKeyDown(event);
         } else if (event.key === 'Escape') {
-            // claiming the key keeps the overlay stack from also closing an enclosing dialog
             event.preventDefault();
             // the focused slot element leaves with the dropdown
             this.#focusTrigger();
@@ -1021,7 +1017,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (selections.size === sizeBefore) {
             return;
         }
-        // before writing: #notifyChange diffs against the selections in state
         this.#notifyChange(selections);
         if (!this.isControlledComponent()) {
             this.adapter.updateSelection(selections);

@@ -14,7 +14,6 @@ export interface CopyableConfig {
     duration?: number;
     /** Applied to the wrapping span */
     className?: string;
-    /** Applied to the wrapping span */
     style?: React.CSSProperties;
 
     onCopy?: (e: React.MouseEvent, content: string, res: boolean) => void;
@@ -42,7 +41,6 @@ export type Ellipsis = {
     suffix?: string;
     onExpand?: (expanded: boolean, event: React.MouseEvent<HTMLButtonElement>) => void;
 };
-/** Props every Typography component takes besides its own tag's attributes */
 export interface TypographyCommonProps {
     className?: string;
     component?: React.ElementType;
@@ -57,7 +55,6 @@ export interface TypographyCommonProps {
     underline?: boolean;
 }
 
-/** Props of the components that can truncate their text; Numeral cannot */
 export interface TypographyEllipsisProps {
     /**
      * Truncation options. Only plain-text (string) children can be truncated.

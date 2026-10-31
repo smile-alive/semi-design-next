@@ -8,7 +8,6 @@ export interface TimeInputAdapter<P extends object = object, S extends object = 
     getInputNode: () => HTMLInputElement | null;
 }
 
-// The foundation reads no props or state
 export default class TimeInputFoundation<P extends object = object, S extends object = object, E = unknown> extends BaseFoundation<TimeInputAdapter<P, S, E>, P, S> {
     #cursorIndex: number | null = null;
 

@@ -4,7 +4,6 @@ import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type Too
 function createFoundation(initialProps: TooltipBaseProps = {}) {
     const props: TooltipBaseProps = { trigger: 'click', ...initialProps };
     let state: TooltipBaseState = { isInsert: false, transitionState: '', triggerEventSet: {}, visible: false };
-    // what the host's window mousedown listener would call
     let clickOutsideHandler: ((e: MouseEvent) => void) | undefined;
     const adapter = {
         getProp: (key: string) => props[key],
@@ -38,7 +37,6 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
     };
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
     foundation.init();
-    // the owner applies a new `visible`, as a host's prop watcher does
     const setVisible = (visible?: boolean) => {
         props.visible = visible;
         foundation.handleVisiblePropChange();
@@ -80,7 +78,6 @@ describe('show', () => {
         foundation.init();
         foundation.show();
 
-        // destroy() does not close the previous open by itself; the re-initialised foundation still opens fresh
         expect(adapter.insertPortal).toHaveBeenCalledTimes(2);
     });
 

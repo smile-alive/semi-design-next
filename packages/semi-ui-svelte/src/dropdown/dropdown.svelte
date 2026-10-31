@@ -76,7 +76,6 @@
 
     let tooltip = $state<Tooltip>();
 
-    // the trigger element: the span below, or the element the `child` snippet spread the trigger props on
     let triggerElement = $state.raw<HTMLElement | null>(null);
     let popupElement = $state<HTMLDivElement>();
     let textOnly = $state(false);
@@ -100,7 +99,6 @@
         () => ({ popVisible: false }),
         (base) => ({
             setPopVisible: (popVisible) => base.setState({ popVisible }),
-            // Tooltip has already written the bindable `visible`
             notifyVisibleChange: (next) => onVisibleChange?.(next),
             getPopup: () => popupElement?.closest<HTMLElement>('[popover]') ?? null,
             hidePopup: () => tooltip?.hide(),
@@ -124,7 +122,6 @@
         return ownRole ? canRoleCarryPopupState(ownRole) : element.matches('button, a[href]');
     });
 
-    // a disabled parent item opens no submenu
     const disabledItem = $derived(triggerElement ? Boolean(menuItems.get(triggerElement)?.()) : false);
 
     const tooltipProps: TooltipProps = $derived({
@@ -185,7 +182,6 @@
         getPopupId: () => tooltip?.getPopupId() ?? '',
     };
 
-    // Moves focus into the menu when Tooltip gives the popup its initial focus.
     const focusTarget = { focus: foundation.handleOpened };
 
     // The trigger's own onkeydown goes first: a trigger that clicks itself on Enter (Tag, Avatar) calls preventDefault,
@@ -218,7 +214,6 @@
         return {
             ...tooltipTrigger,
             class: popVisible ? `${prefixCls}-showing` : undefined,
-            // undefined also drops a value the trigger set itself
             'aria-haspopup': menuButton ? 'menu' : undefined,
             'aria-expanded': menuButton ? popVisible : undefined,
             [triggerKey]: attachTrigger,
@@ -246,7 +241,6 @@
         tooltip?.focusTrigger();
     }
 
-    /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves */
     export function rePosition() {
         tooltip?.rePosition();
     }

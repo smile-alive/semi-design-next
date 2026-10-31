@@ -72,7 +72,6 @@ export default function TabBar(props: TabBarProps) {
     const showRestInDropdown = createMemo(() => local.showRestInDropdown);
     const renderArrow = createMemo(() => local.renderArrow);
 
-    // The tabs `more` moves into its menu; undefined when it moves none
     const moreLayout = createMemo(() => {
         const more = local.more;
         if (!more) {
@@ -124,7 +123,6 @@ export default function TabBar(props: TabBarProps) {
 
     const shownKeys = () => (collapsed() ? keys() : (moreLayout()?.kept ?? keys()));
 
-    // Overrides the Tabs' Tab stop with the one among the tabs this bar puts in its tablist
     const tabbableKey = createMemo(() =>
         TabsFoundation.getTabbableKey(
             shownKeys().flatMap((key) => byKey().get(key) ?? []),
@@ -134,7 +132,6 @@ export default function TabBar(props: TabBarProps) {
 
     const barContext = ctx && { ...ctx, view: () => ({ ...ctx.view(), tabbableKey: tabbableKey() }) };
 
-    // only float moves to the wrapper; the element keeps its other style
     const extraFloat = () => {
         const node = extra();
         if (isServer) {
@@ -159,8 +156,6 @@ export default function TabBar(props: TabBarProps) {
 
     const scrollActiveTabItemIntoView = (logicalPosition?: ScrollLogicalPosition, behavior?: ScrollBehavior) => TabsFoundation.scrollTabIntoView(bar(), getBarItemKey(local.activeKey ?? ''), logicalPosition, behavior);
 
-    // Each place that shows a tab calls these once where it inserts the result, so renderTab and renderIcon create the
-    // content there; they run again only when the entry object or its index changes
     const tabContent = (key: string) => {
         const pane = createMemo(() => byKey().get(key));
         const index = createMemo(() => keys().indexOf(key));
@@ -240,7 +235,6 @@ export default function TabBar(props: TabBarProps) {
         if (!showRestInDropdown()) {
             return <div {...own}>{arrowButton()}</div>;
         }
-        // the menu opens after an arrow click has already taken an item off `items`
         const menuKeys = items.map((item) => item.itemKey);
         return (
             <Dropdown
@@ -295,7 +289,6 @@ export default function TabBar(props: TabBarProps) {
             return renderCollapse(items, pos);
         }
         const onArrowClick = () => handleArrowClick(items, pos);
-        // the default arrow is created only where renderArrow calls defaultNode, so one it leaves out never exists
         const defaultNode = () => renderCollapse(items, pos);
         return render(items, pos, onArrowClick, defaultNode);
     };
@@ -328,7 +321,6 @@ export default function TabBar(props: TabBarProps) {
         )
     );
 
-    // tabs added, removed or reordered change how wide the bar must be, so the remembered width no longer applies
     createEffect(
         on(
             keys,

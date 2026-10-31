@@ -29,7 +29,6 @@ function center(element: Element) {
     return { x: left + width / 2, y: top + height / 2 };
 }
 
-// A real pointer press: pointerdown with capture on the button, as a finger or mouse gives it
 async function pressAt(element: Element) {
     const { x, y } = center(element);
     await mouse('move', x, y);

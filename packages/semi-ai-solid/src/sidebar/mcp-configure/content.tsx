@@ -27,7 +27,6 @@ export interface MCPSolidOption extends MCPOption {
 
 export interface MCPRenderItemProps {
     option: MCPSolidOption;
-    /** Whether the custom list is shown */
     custom: boolean;
 }
 
@@ -43,7 +42,6 @@ export interface MCPConfigureContentSolidProps extends Omit<MCPConfigureContentP
     onEditClick?: (e: MouseEvent, option: MCPSolidOption) => void;
     renderIcon?: (props: MCPRenderItemProps) => JSX.Element;
     renderDesc?: (props: MCPRenderItemProps) => JSX.Element;
-    /** Replaces the whole built-in row */
     renderItem?: (props: MCPRenderItemProps) => JSX.Element;
 }
 

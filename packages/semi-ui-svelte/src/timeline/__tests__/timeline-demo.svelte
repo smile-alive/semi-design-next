@@ -2,7 +2,6 @@
     import { Timeline } from '../index';
     import type { TimelineProps } from '../interface';
 
-    // `snippets` picks which Timeline snippets the fixture supplies
     let { snippets = [], ...props }: TimelineProps & { snippets?: Array<'content' | 'dot' | 'time' | 'extra' | 'button-extra'> } = $props();
 
     // 'dot' gives only the second item a dot snippet

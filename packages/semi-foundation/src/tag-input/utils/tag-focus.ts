@@ -8,7 +8,6 @@ function tagStops(wrapper: HTMLElement) {
     return tabbable(wrapper, { displayCheck: 'none' }).filter((node) => !node.closest(`.${cssClasses.PREFIX}-wrapper-input, .${cssClasses.PREFIX}-sortable-handle`));
 }
 
-/** The place of the focused element among the tags' tab stops in the TagInput's wrapper, or -1 */
 export function getFocusedTagStop(wrapper: HTMLElement | null) {
     return wrapper ? tagStops(wrapper).indexOf(FocusTrapHandle.getActiveElement(wrapper) as FocusableElement) : -1;
 }

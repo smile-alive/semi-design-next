@@ -17,7 +17,6 @@ const defaultList: SelectOptionProps[] = [
     { value: 'toutiao', label: 'TopBuzz' },
 ];
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));
@@ -494,7 +493,6 @@ describe('Svelte Select 分组与 optionLabel', () => {
                 .getAllByRole('option')
                 .map((option) => option.textContent?.trim())
         ).toEqual(['Carrot', 'Leek']);
-        // the entry without a group sits directly in the listbox
         expect(groups.some((group) => group.contains(screen.getByRole('option', { name: 'Rice' })))).toBe(false);
         expect(getOptionTexts()).toEqual(['Apple', 'Banana', 'Carrot', 'Leek', 'Rice']);
     });
@@ -621,7 +619,6 @@ describe('Svelte Select 分组与 optionLabel', () => {
         await fireEvent.click(rows[0]);
         await settle();
         expect(store.value).toBe('apple');
-        // the trigger shows the plain label
         expect(getSelectionText()).toBe('Apple');
     });
 

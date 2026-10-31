@@ -2,8 +2,6 @@ import type { strings } from '../constants';
 import { getDefaultFormatTokenByType } from './get-default-format-token';
 
 /**
- * Get the placeholder of the insetInput input
- *
  * If type is time related, we only recognize the format like `dateFormat timeFormat`
  *  - 'yyyy-MM-dd HH:mm:ss' // ok
  *  - 'yyyy-MM-dd  HH:mm:ss' // bad format

@@ -7,20 +7,16 @@ export type { ScientificNotationConfig };
 /** What changed the value: typing, a step button press, a step or bound key, or the blur that reformats the text */
 export type InputNumberChangeEvent = InputChangeEvent | PointerEvent | KeyboardEvent | FocusEvent;
 
-/** The methods and nodes on an InputNumber ref */
 export interface InputNumberHandle {
     /** Focuses the native input; `preventScroll` defaults to the prop */
     focus(options?: FocusOptions): void;
     blur(): void;
     select(): void;
     setSelectionRange(start: number | null, end: number | null, direction?: 'forward' | 'backward' | 'none'): void;
-    /** The native input */
     readonly input: HTMLInputElement | null;
-    /** The root element, the number wrapper div */
     readonly nativeElement: HTMLElement | null;
 }
 
-/** InputNumber's own props plus the Input props it passes on to the Input inside */
 export interface InputNumberProps extends Omit<InputProps, 'modelValue' | 'defaultValue' | 'modelModifiers' | 'type' | 'mode' | 'getValueLength' | 'showClearIgnoreDisabled'> {
     modelValue?: number | string;
     defaultValue?: number | string;

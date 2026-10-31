@@ -33,7 +33,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Skip link: lets keyboard users bypass ~100 sidebar links; visually hidden until focused */
 .skip-link {
     position: fixed;
     top: 12px;
@@ -62,7 +61,6 @@ body {
     text-decoration: none;
 }
 
-/* Shared by SiteHeader, ThemeToggle and LocaleMenu */
 .site-icon-button {
     display: inline-flex;
     gap: 4px;
@@ -79,8 +77,6 @@ body {
 .site-icon-button:hover {
     color: var(--semi-color-text-0);
 }
-
-/* Prose takes 80% right of the sidebar, shifted left to make room for the fixed Toc */
 
 .site-main {
     padding: var(--site-header-height) 0 0 var(--site-sidebar-width);
@@ -212,8 +208,6 @@ body {
     border: 1px solid var(--semi-color-border);
     border-radius: 4px;
 }
-
-/* rehype-table-container wraps tables so wide ones scroll inside the prose */
 
 .table-container {
     margin-bottom: 30px;

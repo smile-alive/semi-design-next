@@ -79,7 +79,6 @@
     const weekCount = $derived(Object.keys(monthlyData).length);
     const stale = $derived(CalendarFoundation.isOpenCardStale(openCardKey, monthlyData, parsedEvents, itemLimit));
 
-    // A day's events are a sparse array indexed by row, so the holes are dropped before listing or counting them.
     const weeks = $derived(
         Object.values(monthlyData).map((weekDays, weekInd) => {
             const parsed = parsedEvents[weekInd];
@@ -103,7 +102,6 @@
 
     const isOpen = (key: string) => states().showCard[key] ?? false;
 
-    // rows split the grid height evenly; the last row is measured because it always renders
     const measure = () => {
         const row = grid?.lastElementChild;
         if (row) {
@@ -113,7 +111,6 @@
 
     const observe = observeResize(measure);
 
-    // Registers an element under its day's key for as long as it is mounted
     const track =
         <E extends HTMLElement>(map: Map<string, E>, key: string): Attachment<E> =>
         (element) => {
@@ -233,7 +230,6 @@
                 {#each weeks as week, weekInd (weekInd)}
                     <div class={`${prefixCls}-weekrow`}>
                         <div class={`${prefixCls}-skeleton`} role="row">
-                            <!-- a collapsed day is the anchor of its "more" card -->
                             {#each week.days as day (day.date.valueOf())}
                                 {#if day.hidden > 0}
                                     <Popover aria-labelledby={day.titleId} bind:visible={() => isOpen(day.key), () => {}} onEscKeyDown={(keyEvent) => closeCardToMore(keyEvent, day.key)} position="leftTopOver" trigger="custom">

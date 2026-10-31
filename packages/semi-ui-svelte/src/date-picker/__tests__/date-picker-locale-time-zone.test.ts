@@ -34,7 +34,6 @@ describe('Svelte DatePicker locale 格式', () => {
     });
 });
 
-// Zone offsets are indexes into -11..+14, the same range the zone picker of the Vue suite draws from
 describe('Svelte DatePicker timeZone', () => {
     const zones = [
         [5, 20],

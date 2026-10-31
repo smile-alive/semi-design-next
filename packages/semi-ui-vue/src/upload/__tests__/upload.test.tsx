@@ -55,9 +55,6 @@ const pasteFile = (name: string) =>
         clipboardData: { items: [{ kind: 'file', getAsFile: () => createFile(100, name) }] },
     });
 
-/**
- * Opening the native file browser cannot be tested in jsdom; tests only check that the hidden input is clicked.
- */
 describe('Upload', () => {
     it('class 与 style', () => {
         const { container } = renderUpload({ class: 'test', style: { color: 'red' }, action: '' });

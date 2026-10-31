@@ -47,7 +47,6 @@ export interface TriggerRenderProps extends Omit<BasicTriggerRenderProps, 'compo
     onClear: (e: React.MouseEvent) => void;
 }
 
-/** The value of a tree node */
 export type TreeSelectNodeValue = string | number;
 
 type ChangeEvent = React.MouseEvent | React.KeyboardEvent | null;
@@ -79,15 +78,12 @@ export type RenderSelectedItem = RenderSelectedItemInSingle | RenderSelectedItem
 
 export type OverrideCommonProps = 'renderFullLabel' | 'renderLabel' | 'emptyContent' | 'filterTreeNode' | 'style' | 'treeData' | 'onExpand' | 'keyMaps' | 'showLine';
 
-/** The methods on a TreeSelect ref */
 export interface TreeSelectHandle {
     /** Searches as if `value` were typed, opening the dropdown first; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Closes the dropdown */
     close: () => void;
 }
 
-/** One node value, or in multiple mode also a list of them; nodes instead with `onChangeWithObject` */
 type ModeValue<T, Multiple> = ByMultiple<Multiple, T | TreeNodeData, T | TreeNodeData | Array<T | TreeNodeData>>;
 
 /**
@@ -151,11 +147,8 @@ export interface TreeSelectProps<T extends TreeSelectNodeValue = TreeSelectNodeV
     /** Called when the dropdown opens or closes; Select, Cascader and AutoComplete call it `onDropdownVisibleChange` */
     onVisibleChange?: (isVisible: boolean) => void;
     onClear?: (e: React.MouseEvent) => void;
-    /**
-     * Lets selected tags wrap onto multiple lines in the trigger (multiple + searchPosition="trigger")
-     */
+    /** Only with multiple + searchPosition="trigger" */
     triggerTagWrap?: boolean;
-    /** Imperative handle */
     ref?: React.Ref<TreeSelectHandle>;
 }
 
@@ -433,7 +426,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         [foundation]
     );
 
-    // closing drops the row too, so a reopened popup starts without one
     if (!isOpen && keyboardKey !== null) {
         setKeyboardKey(null);
     }
@@ -701,9 +693,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
         />
     );
 
-    /**
-     * Single selection with the search box on the trigger: the selected text shown beside the input
-     */
     const renderSingleTriggerSearchItem = () => {
         const renderText = getRenderTextInSingle();
         const shown = isShownText(renderText);

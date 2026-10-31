@@ -50,15 +50,11 @@ function compileStylesheets({ foundationPath, isMin = false, prefixCls, cssLayer
     ).css;
 }
 
-/** Compiles all of Semi's styles into one stylesheet */
 export function compileSemiCss({ iconPath = resolveIconPath(), foundationPath = resolveFoundationPath(), ...options }: Omit<Options, 'outputPath'>) {
     return compileStylesheets({ ...options, foundationPath }, ['@use "semi:theme/global";', '@use "semi:theme/animation";'], componentStylesheets(foundationPath, iconPath));
 }
 
-/**
- * Compiles the AI components' styles (semi-ai-foundation) into one stylesheet. It carries no tokens, so it is loaded
- * after the full stylesheet
- */
+/** The AI stylesheet carries no tokens, so it is loaded after the full stylesheet */
 export function compileSemiAiCss({ aiFoundationPath, foundationPath = resolveFoundationPath(), ...options }: Omit<AiOptions, 'outputPath'>) {
     const folders = new Set(fs.globSync('*/*.scss', { cwd: aiFoundationPath }).map((file) => path.dirname(file)));
     return compileStylesheets(
@@ -113,7 +109,6 @@ export function compileTailwindTheme({ foundationPath }: Required<Pick<Options, 
             }
             mapped.set(rule[1] + name.slice(rule[0].length) + (rule[2] ?? ''), name);
         } else if (/^#[\da-f]+$/i.test(value)) {
-            // Palette: `--semi-blue-5` -> `--color-semi-blue-5`
             mapped.set(`--color-${name.slice(2)}`, name);
         }
     }

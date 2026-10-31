@@ -30,7 +30,6 @@ function normalizeChildren(children: React.ReactNode): AnchorNode[] {
 
 export type { LinkProps } from './link';
 
-/** A link is activated by a click or by Enter */
 type AnchorClickEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 
 export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'> {

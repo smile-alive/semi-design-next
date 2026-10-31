@@ -43,9 +43,7 @@ export interface BreadcrumbProps extends BaseProps, ElementProps<'nav', 'onClick
     showTooltip?: boolean | showToolTipProps;
     maxItemCount?: number;
     autoCollapse?: boolean;
-    /* Customize the contents of the ellipsis area */
     renderMore?: (restItem: Array<React.ReactNode>) => React.ReactNode;
-    /* Style type for ellipsis area */
     moreType?: MoreType;
     'aria-label'?: React.AriaAttributes['aria-label'];
     activeIndex?: number;

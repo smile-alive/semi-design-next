@@ -1,8 +1,6 @@
 import type { strings } from '../constants';
 
 /**
- * Parse the insetInputValue object from the insetInputStr string
- *
  * @example
  * ```
  * '2022-02-01' => { monthLeft: { dateInput: '2022-02-01' } }

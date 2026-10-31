@@ -43,7 +43,6 @@
         }
     );
 
-    // markup for earlier code would lag behind a streaming `code`, so it only shows while it matches
     const html = computed(() => (state.value.highlightedCode === (props.code ?? '') ? state.value.html : ''));
     const rootClass = computed(() => [cssClasses.PREFIX, `${BASE_CLASS_PREFIX}-scrollbar`, { [`${cssClasses.PREFIX}-lineNumber`]: props.lineNumber }]);
 

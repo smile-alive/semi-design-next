@@ -4,7 +4,6 @@ import type { BasicCheckboxEvent } from './checkbox-foundation';
 
 export type CheckboxValue = string | number | boolean;
 
-/** The props the foundation reads with getProps */
 export interface CheckboxGroupBaseProps {
     defaultValue?: CheckboxValue[];
     value?: CheckboxValue[];

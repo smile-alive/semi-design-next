@@ -42,7 +42,6 @@ export function setFocusToLastItem(itemNodes: HTMLElement[]) {
 }
 
 export interface ListNavigationOptions {
-    /** Arrows past either end wrap around instead of staying */
     loop?: boolean;
     /** Which arrows step: Up and Down for a vertical list, Left and Right (swapped in RTL) for a horizontal one */
     orientation?: 'vertical' | 'horizontal';
@@ -197,10 +196,7 @@ export class Typeahead {
     }
 }
 
-/**
- * Development-only: warns when a dialog has no accessible name, which screen readers would announce as just
- * "dialog". The name comes from `aria-label` or from the element `aria-labelledby` points at (usually the title).
- */
+/** Development-only: warns when a dialog has no accessible name, which screen readers would announce as just "dialog" */
 export function warnIfDialogUnnamed(dialog: HTMLElement | null, component: string) {
     if (!isDev() || !dialog) {
         return;

@@ -37,7 +37,6 @@ function getShownSiblings(entity: BasicKeyEntity, keyEntities: BasicKeyEntities,
     return shown;
 }
 
-/** The props a tree node renders with */
 export function getTreeNodeProps(
     key: string,
     {
@@ -147,7 +146,6 @@ export interface TreeRowAria {
     'aria-setsize': number;
 }
 
-/** The treeitem attributes of a row: a multiple tree states each row's check, a single one its selection */
 export function getTreeRowAria(row: BasicTreeNodeProps, { disabled, isLeaf, multiple }: { disabled: boolean; isLeaf: boolean; multiple?: boolean }): TreeRowAria {
     return {
         'aria-busy': row.loading || undefined,
@@ -161,7 +159,7 @@ export function getTreeRowAria(row: BasicTreeNodeProps, { disabled, isLeaf, mult
     };
 }
 
-/** What a row's classes depend on besides its own state; `fullLabel` is whether a custom full label renders it */
+/** `fullLabel` is whether a custom full label renders the row */
 export interface TreeRowFlags {
     disabled: boolean;
     focused?: boolean;

@@ -56,7 +56,6 @@
         return rest.style ? { css: rest.style } : undefined;
     };
 
-    // The foundation reads the props through one object
     const foundationProps: OverflowListBaseProps = {
         get items() {
             return readItems();
@@ -172,7 +171,6 @@
         });
     };
 
-    // Reset the view when items, style, keys or collapseFrom change, before the DOM shows the new props
     $effect.pre(() => {
         const next = viewProps();
         // read keys here so in-place edits of a $state array are tracked

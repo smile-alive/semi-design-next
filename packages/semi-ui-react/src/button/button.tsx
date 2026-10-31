@@ -26,7 +26,6 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
     iconPosition?: 'left' | 'right';
     loading?: boolean;
     htmlType?: HtmlType;
-    /** Removes the horizontal padding of a button that shows an icon or the loading spinner */
     noHorizontalPadding?: boolean | HorizontalPaddingType | HorizontalPaddingType[];
     size?: Size;
     style?: React.CSSProperties;

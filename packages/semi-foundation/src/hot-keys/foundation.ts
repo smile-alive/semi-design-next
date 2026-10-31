@@ -5,7 +5,6 @@ export interface HotKeysAdapter<P extends HotKeysBaseProps = HotKeysBaseProps, S
     notifyHotKey: (e: KeyboardEvent) => void;
 }
 
-/** The props the foundation reads with getProps */
 export interface HotKeysBaseProps {
     hotKeys: KeyboardEvent['key'][];
     preventDefault?: boolean;

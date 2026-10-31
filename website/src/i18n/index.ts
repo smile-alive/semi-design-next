@@ -81,7 +81,6 @@ const enUS = {
 
 const ui = { 'zh-CN': zhCN, 'en-US': enUS } satisfies Record<Locale, Record<UIKey, string>>;
 
-// Each language is shown in its own name, whatever the page locale
 export const languageLabels = { 'zh-CN': '简体中文', 'en-US': 'English' } satisfies Record<Locale, string>;
 
 export function translate(locale: Locale) {

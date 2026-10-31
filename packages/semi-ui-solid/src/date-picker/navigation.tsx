@@ -23,7 +23,6 @@ interface NavigationProps {
     locale: Locale['DatePicker'];
 }
 
-/** The year and month switch buttons above a month panel */
 export default function Navigation(props: NavigationProps) {
     const iconSize = () => (props.density === 'compact' ? 'default' : 'large');
 

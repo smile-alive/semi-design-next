@@ -7,7 +7,6 @@ export type CalendarMode = ArrayElement<typeof strings.MODE>;
 export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface EventObject {
-    // Custom fields (color, title, ...) are what the `event` snippet usually renders, so any key is allowed.
     [x: string]: any;
     key: string;
     allDay?: boolean;
@@ -17,7 +16,6 @@ export interface EventObject {
 }
 
 export interface CalendarEventArgs {
-    /** The object from `events`, found by its key */
     event: EventObject;
 }
 
@@ -61,20 +59,13 @@ export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
     header?: Snippet;
     /** Content of an event, called once per place the event shows. Defaults to the event's `children` text */
     event?: Snippet<[CalendarEventArgs]>;
-    /** The date in a week or range column header and in every month cell. Not used by the day view */
     dateDisplay?: Snippet<[CalendarDateDisplayArgs]>;
-    /** Extra content in every day column, or in every month cell */
     dateGrid?: Snippet<[CalendarDateGridArgs]>;
-    /** The hour labels from 1 to 23 */
     timeDisplay?: Snippet<[CalendarTimeDisplayArgs]>;
     /** Replaces the all-day events of the day, week and range views; renders `li` items */
     allDayEvents?: Snippet<[CalendarAllDayEventsArgs]>;
 }
 
-/**
- * What every view takes from Calendar, which resolves `mode`, `range` and the defaults: every other attribute goes to
- * the view's root element
- */
 export interface CalendarViewProps extends Pick<CalendarProps, 'width' | 'height' | 'header' | 'event' | 'dateGrid' | 'onClick'>, Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onclick' | 'onclose'> {
     events: EventObject[];
     markWeekend: boolean;

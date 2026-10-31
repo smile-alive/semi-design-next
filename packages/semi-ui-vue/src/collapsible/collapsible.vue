@@ -27,7 +27,6 @@
     const emit = defineEmits<CollapsibleEmits>();
     defineSlots<CollapsibleSlots>();
 
-    // Derived once up front, so an adapter write never starts from an underived view.
     const view = shallowRef(CollapsibleFoundation.deriveView(props, CollapsibleFoundation.getInitialView(props)));
     const wrapper = useTemplateRef('wrapper');
 

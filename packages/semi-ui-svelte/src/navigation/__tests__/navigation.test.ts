@@ -456,7 +456,6 @@ describe('Svelte Navigation 的内容 snippet 与属性落点', () => {
         }
         expect(screen.getByText('首页!')).toHaveAttribute('data-level', '0');
         expect(screen.getByText('用户列表!')).toHaveAttribute('data-level', '1');
-        // text snippet replaces what is shown, the item's `text` stays the payload
         expect(screen.getByRole('button', { name: '首页!' })).toBeInTheDocument();
         expect(screen.getAllByTestId('toggle')).toHaveLength(3);
         const expands = screen.getAllByTestId('expand');
@@ -494,7 +493,6 @@ describe('Svelte Navigation 的内容 snippet 与属性落点', () => {
         expect(item).toHaveAttribute('data-x', '1');
         expect(item).not.toHaveAttribute('path');
         expect(item).not.toHaveAttribute('aria-label');
-        // aria-* describes the control that takes focus, not the li
         expect(screen.getByRole('button', { name: '甲项' })).toBeInTheDocument();
         expect(getItem('乙')).toHaveAttribute('data-y', '2');
     });

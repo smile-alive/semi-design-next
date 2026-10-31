@@ -36,10 +36,6 @@ const columnFields: Record<Exclude<keyof ColumnProps, 'key'>, true> = {
     width: true,
 };
 
-/**
- * A column given as a child of Table: its props are the column data and its slots render the column's cells and
- * title. Table reads it and it renders nothing, like the React Column.
- */
 const Column = defineComponent(
     <R extends Record<string, any> = Record<string, any>>(_props: ColumnProps<R>, _context: SetupContext<Record<string, never>, SlotsType<TableColumnSlots<R>>>) =>
         () =>

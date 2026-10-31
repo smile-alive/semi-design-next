@@ -3,7 +3,6 @@
     import { omitBy } from 'es-toolkit';
     import { type MarkdownChild, Fragment, isNode, voidTags } from './runtime.js';
 
-    // The compiled tree is data, so the table component can render the cells it picks out of it with this same component.
     const { content }: { content: MarkdownChild } = $props();
 
     // the compiled `children` is a node tree, which would compete with the `children` snippet
@@ -43,7 +42,6 @@
             {/if}
         {:else}
             {@const Element = child.type as Component<any>}
-            <!-- `node` is the compiled element: a component reads the source of its children there, which a children snippet hides -->
             {#if child.props.children === undefined}
                 <Element {...child.props} node={child} />
             {:else}

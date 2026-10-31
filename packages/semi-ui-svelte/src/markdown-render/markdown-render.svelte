@@ -52,7 +52,6 @@
         })
     );
 
-    // An explicit role wins; a named div is a group.
     const role = $derived(rest.role ?? (rest['aria-label'] || rest['aria-labelledby'] ? 'group' : undefined));
     const renderContent = $derived(states().renderContent);
 

@@ -11,7 +11,6 @@ const prefix = cssClasses.PREFIX;
 
 export const NAV_HEADER = 'Nav.Header';
 
-// Nav renders the header from this token (HeaderView); standing alone it renders nothing
 export default function NavHeader(props: NavHeaderProps) {
     return createToken(NAV_HEADER, props);
 }

@@ -18,7 +18,6 @@ export interface MonthProps extends Omit<MonthFoundationProps, 'renderDate' | 'r
     labelledby?: string;
 }
 
-/** One month of day cells */
 export default function Month(props: MonthProps) {
     const config = useConfig();
 

@@ -23,17 +23,12 @@ function roleOf(element: Element) {
     return { TEXTAREA: 'textbox', SELECT: 'combobox' }[element.tagName] ?? element.tagName.toLowerCase();
 }
 
-/** The roles under `root` that carry aria-required="true" without supporting it */
 export function misplacedAriaRequired(root: ParentNode = document) {
     return [...root.querySelectorAll('[aria-required="true"]')].map(roleOf).filter((role) => !ARIA_REQUIRED_ROLES.has(role));
 }
 
 type ListenerSpy = MockInstance<EventTarget['addEventListener']>;
 
-/**
- * Counts the `type` listeners recorded by spies on addEventListener and removeEventListener that are still attached:
- * a listener goes away through removeEventListener or by aborting the signal it was added with.
- */
 export function countLiveListeners(add: ListenerSpy, remove: ListenerSpy, type: string) {
     const removed = new Set(remove.mock.calls.filter(([name]) => name === type).map(([, listener]) => listener));
     return add.mock.calls.filter(([name, listener, options]) => name === type && !removed.has(listener) && !(typeof options === 'object' && options.signal?.aborted)).length;

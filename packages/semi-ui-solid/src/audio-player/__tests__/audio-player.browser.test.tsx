@@ -73,7 +73,6 @@ describe('AudioPlayer（浏览器）', () => {
         const { container } = render(() => <AudioPlayer audioUrl={audioUrl} />);
         await tabTo(query(container, `.${prefixCls}-slider-input`));
         expectThemeFocusRing(query(container, `.${prefixCls}-slider-wrapper`));
-        // the dot's opacity transitions over 0.2s, so poll
         await expect.poll(() => getComputedStyle(query(container, `.${prefixCls}-slider-dot`)).opacity).toBe('1');
     });
 
@@ -98,7 +97,6 @@ describe('AudioPlayer（浏览器）', () => {
 
         await userEvent.click(query(container, `.${prefixCls}-slider-wrapper`), { position: { x: 40, y: 2 } });
         await expect.poll(() => audio.currentTime).toBeGreaterThan(0);
-        // a pointer press focuses the input without the keyboard focus ring
         expect(query(container, `.${prefixCls}-slider-input`).matches(':focus-visible')).toBe(false);
         const tooltip = await vi.waitFor(() => {
             const el = preview();

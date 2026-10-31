@@ -17,7 +17,6 @@ export type TreeValue = string | number | TreeNodeData | Array<TreeNodeData | nu
 
 export interface TreeDragNode extends TreeNodeData {
     expanded: boolean;
-    /** Where the node sits in treeData, such as '0-1-2-0' for the first child of the third child of the second root */
     pos: string;
 }
 
@@ -43,7 +42,6 @@ export interface TreeExpandedOtherProps extends BasicExpandedOtherProps {
 
 export interface TreeScrollData {
     key: string;
-    /** `center` by default */
     align?: ScrollAlign;
 }
 
@@ -113,7 +111,6 @@ export interface TreeEmits {
 export interface TreeLabelSlotProps {
     item: TreeNodeData;
     label?: string | number;
-    /** The search keyword, empty while not searching */
     searchWord: string;
 }
 
@@ -137,9 +134,7 @@ export interface TreeExpandIconSlotProps {
 export interface TreeFullLabelSlotProps {
     data: TreeNodeData;
     level: number;
-    /** The row's classes: indentation, selection, focus, drag state */
     class: string;
-    /** The built-in expand arrow */
     expandIcon: VNode;
     checkStatus: { checked: boolean; halfChecked: boolean };
     expandStatus: { expanded: boolean; loading: boolean };
@@ -162,13 +157,11 @@ export interface TreeSearchSlotProps {
 }
 
 export interface TreeDraggingNodeSlotProps {
-    /** The dragged row element */
     nodeInstance: HTMLElement;
     node: TreeNodeData;
 }
 
 export interface TreeSlots {
-    /** Content of a row's label */
     label?: (props: TreeLabelSlotProps) => VNode[];
     /** A row's icon; empty content keeps the directory icon */
     icon?: (props: TreeIconSlotProps) => VNode[];
@@ -184,7 +177,6 @@ export interface TreeSlots {
     renderDraggingNode?: (props: TreeDraggingNodeSlotProps) => VNode[];
 }
 
-/** The methods on a Tree ref */
 export interface TreeHandle {
     /** Searches as if typed into the search box; needs `filterTreeNode` */
     search: (value: string) => void;
@@ -218,24 +210,19 @@ export interface TreeRowProps extends BasicTreeNodeProps {
 
 export interface TreeNodeProps {
     row: TreeRowProps;
-    /** The row's id, which the tree's aria-activedescendant points at */
     id: string;
-    /** The row the keyboard is on */
     focused?: boolean;
     showLine?: boolean;
-    /** The position of a virtual row */
     rowStyle?: StyleValue;
 }
 
 export interface NodeListProps {
     flattenNodes: FlattenNode[];
-    /** The rows from before a collapse, which its animation still shows */
     flattenList?: FlattenNode[];
     motionKeys: Set<string>;
     motionType?: TreeMotionType | null;
     motion: boolean;
     virtualize?: TreeVirtualize;
-    /** The key of a row's element, `node.key` by default */
     itemKey?: (node: FlattenNode) => PropertyKey;
     /** A search hit while expandedKeys is controlled: the rows render without the animated group */
     searchTargetIsDeep?: boolean;

@@ -93,7 +93,6 @@
         (base) => ({
             updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
             updateScrollTop: (index) => {
-                // the rows are the listbox's direct children
                 const list = listbox.value;
                 const destNode = list?.children[index] as HTMLElement | undefined;
                 if (list && destNode) {
@@ -218,7 +217,6 @@
     useClickOutside(
         [root, listbox],
         (event) => {
-            // without a rendered list there is nothing to close
             if (listbox.value) {
                 foundation.handleClickOutside(event);
             }

@@ -8,17 +8,15 @@ interface Lifecycle {
     destroy?: () => void;
 }
 
-/** A signal without a value: `notify()` re-runs every `track()` reader, always */
 function createTrigger() {
     const [track, notify] = createSignal(undefined, { equals: false });
     return { track, notify: () => notify() };
 }
 
 /**
- * The foundation's state: a plain object the adapter reads and writes synchronously, plus one trigger per key.
- * `view.x` subscribes to key `x` only; `write` notifies every written key, even with an equal value, because React and
- * Vue re-render on every `setState` and a foundation may write back a Set it mutated in place. That is also why this
- * is not a `createStore`: a store skips an equal write and does not wrap a Set.
+ * `write` notifies every written key, even with an equal value, because React and Vue re-render on every `setState`
+ * and a foundation may write back a Set it mutated in place. That is also why this is not a `createStore`: a store
+ * skips an equal write and does not wrap a Set.
  */
 function createStateMirror<S extends object>(initial: S) {
     // replaced on every write, never mutated: an object the foundation got from getStates() keeps its values

@@ -197,7 +197,6 @@ describe('Svelte DatePicker 触发器键盘访问（浏览器）', () => {
 describe('Svelte DatePicker 清除范围值后的焦点（浏览器）', () => {
     const rangeValue = [new Date(2019, 8, 1), new Date(2019, 8, 5)];
     const clearButton = () => screen.getByRole('button', { name: zh_CN.DatePicker.clearRange });
-    // the clear button shows on hover or focus only
     const tabToClear = async () => {
         await tabTo(getInputs()[1]);
         await userEvent.keyboard('{Tab}');

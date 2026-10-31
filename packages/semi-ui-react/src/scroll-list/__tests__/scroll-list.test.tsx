@@ -128,7 +128,6 @@ describe(`ScrollList`, () => {
         await waitFor(() => expect(minuteOnSelect).toHaveBeenCalledTimes(2));
         expect(minuteOnSelect).toHaveBeenLastCalledWith(expect.objectContaining({ value: 0, index: 0 }));
 
-        // set selected index manually: the selected item shows its transformed text
         expect(getItemTexts(ampmList)).toEqual(['AM', '下午']);
         rerender(<Demo {...props} selectedAmpmIndex={0} />);
         expect(getItemTexts(ampmList)).toEqual(['上午', 'PM']);
@@ -300,7 +299,6 @@ describe('ScrollItem 行为', () => {
     it('wheel 列的 listbox 按空格不触发原生翻页', () => {
         render(<ScrollItem aria-label="wheel" list={numbers(10)} mode="wheel" motion={false} selectedIndex={4} />);
         const listbox = screen.getByRole('listbox');
-        // fireEvent returns false when the default action was prevented
         expect(fireEvent.keyDown(listbox, { key: ' ' })).toBe(false);
     });
 

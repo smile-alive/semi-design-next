@@ -1,5 +1,3 @@
-// Generates the data modules from the SVG sources: svgs/icons -> src/icons, svgs/lab -> src/lab/icons,
-// svgs/illustrations -> src/illustrations/icons
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { basename, extname, resolve } from 'node:path';
@@ -23,19 +21,16 @@ const convertPathData: PluginConfig = {
 // Monochrome icons follow the text colour; the `{fillN}` placeholders of multi-colour icons are left for the factories
 const convertColors: PluginConfig = { name: 'convertColors', params: { currentColor: /^(?!url|none|\{)./ } };
 const cleanup: PluginConfig[] = [{ name: 'cleanupListOfValues' }, { name: 'removeStyleElement' }];
-// Icons are sized by font-size; illustrations keep their width and height as the default size
 const removeDimensions: PluginConfig = { name: 'removeDimensions' };
 // Gradient, mask and filter ids get the per-instance `{uid}` prefix; a fixed id is shared by every copy on the page
 const prefixIds: PluginConfig = { name: 'prefixIds', params: { prefix: '{uid}' } };
 // Hand-tuned path data that differs from convertPathData's output; optimising it would change the markup
 const keepPathData = /^(ai_\w+_level_[23]|ai_loading|maximize_2(_stroked)?|restore(_stroked)?)$/;
 
-// ai_bell_level_1 -> IconAIBellLevel1, back-top -> IconBackTop
 function iconName(name: string) {
     return `Icon${pascalCase(name.replace(/^ai_/, 'a_i_'))}`;
 }
 
-// noContent-dark -> IllustrationNoContentDark
 function illustrationName(name: string) {
     return `Illustration${pascalCase(name)}`;
 }
@@ -65,7 +60,6 @@ const outDirs = {
     illustrations: resolve(srcDir, 'illustrations/icons'),
 };
 const count = build(resolve(svgsDir, 'icons'), outDirs.icons, '../types', iconName, (name) => [convertColors, ...(keepPathData.test(name) ? [] : [convertPathData]), ...cleanup, removeDimensions, prefixIds]);
-// Full-colour (lab) icons and illustrations keep their own colours
 const labCount = build(resolve(svgsDir, 'lab'), outDirs.lab, '../../types', iconName, () => [convertPathData, ...cleanup, removeDimensions, prefixIds]);
 const illustrationCount = build(resolve(svgsDir, 'illustrations'), outDirs.illustrations, '../../types', illustrationName, () => [convertPathData, ...cleanup, prefixIds]);
 const rootDir = resolve(import.meta.dirname, '../../..');

@@ -3,11 +3,9 @@ import type { ImgHTMLAttributes, StyleValue } from 'vue';
 export type CropperShape = 'rect' | 'round' | 'roundRect';
 
 export interface CropperProps {
-    /** The address of the image that needs to be cropped */
     src?: string;
     /** Passed to the image; `src`, the layout style and the order of `onLoad` are owned by the cropper */
     imgProps?: ImgHTMLAttributes;
-    /** The shape to crop, defaults to rectangle */
     shape?: CropperShape;
     /** Controlled crop ratio */
     aspectRatio?: number;
@@ -17,11 +15,9 @@ export interface CropperProps {
     zoom?: number;
     /** Image rotation angle; one-way, the cropper never changes it */
     rotate?: number;
-    /** Show crop box resizing handles */
     showResizeBox?: boolean;
     cropperBoxStyle?: StyleValue;
     cropperBoxCls?: string;
-    /** The fill color of the non-picture parts in the cut result */
     fill?: string;
     maxZoom?: number;
     minZoom?: number;

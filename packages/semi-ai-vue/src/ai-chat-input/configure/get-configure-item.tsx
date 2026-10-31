@@ -6,10 +6,6 @@ import type { ConfigureItemOpts, ConfigureItemProps, PropsOf } from './interface
 
 type ItemEmits = { change: [value: unknown] };
 
-/**
- * Turns a component into a Configure item: the item declares only `field` and `initValue`, binds the field's value to
- * `valueKey` and listens on `onKeyChangeFnName`; every other prop, listener and slot is passed on to the component.
- */
 export default function getConfigureItem<C extends Component, VK extends keyof PropsOf<C> = 'modelValue' & keyof PropsOf<C>, CK extends keyof PropsOf<C> = 'onUpdate:modelValue' & keyof PropsOf<C>>(component: C, opts: ConfigureItemOpts<PropsOf<C>, VK, CK> = {}) {
     const { valueKey = 'modelValue', onKeyChangeFnName = 'onUpdate:modelValue', className, defaultProps } = opts as ConfigureItemOpts<Record<string, unknown>, string, string>;
     const Wrapped = component as DefineComponent;

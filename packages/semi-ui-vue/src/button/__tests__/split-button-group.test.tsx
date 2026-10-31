@@ -13,7 +13,6 @@ function renderGroup(labels: string[]) {
     const current = shallowRef(labels);
     const view = render(SplitButtonGroup, {
         props: { 'aria-label': 'split' },
-        // the slot reads the ref while the group renders, so assigning it re-renders the group
         slots: { default: () => current.value.map((label) => <Button key={label}>{() => label}</Button>) },
     });
     return { view, current };

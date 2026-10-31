@@ -28,7 +28,6 @@
     interface Layout {
         total: number;
         collapsed: boolean;
-        /** Indexes of the first and last item hidden behind the more button */
         start: number;
         end: number;
         items: (Entry | { kind: 'more'; key: string })[];

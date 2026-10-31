@@ -12,7 +12,6 @@ import Sidebar, { type ImageUploadNodeOptions } from '..';
 const { FileItem, FileContent } = Sidebar;
 const text = zh_CN.Sidebar;
 
-// a documented `extensions` entry that hands out every editor FileItem creates
 function captureEditors() {
     const editors: Editor[] = [];
     const extension = Extension.create({
@@ -138,7 +137,6 @@ describe('Sidebar.FileItem', () => {
         expect(onContentChange).toHaveBeenLastCalledWith('<p><strong>text</strong></p>');
     });
 
-    // the trailing paragraph comes from the trailing-node extension
     it.each([
         ['bold', (c: Element) => menuButton(c, 'bold'), '<p><strong>text</strong></p>'],
         ['italic', (c: Element) => menuButton(c, 'italic'), '<p><em>text</em></p>'],

@@ -16,7 +16,6 @@ export default function Code(props: MarkdownCodeProps) {
 
     const language = () => MarkdownRenderFoundation.getCodeLanguage(props.class);
 
-    // a rehype plugin may split the text into elements, which have no source text to highlight
     const text = () => {
         const content = resolved();
         return typeof content === 'string' ? content : undefined;

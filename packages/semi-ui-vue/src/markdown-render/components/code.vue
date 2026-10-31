@@ -6,17 +6,14 @@
     import CodeHighlight from '../../code-highlight';
     import codeText from '../code-text';
 
-    // only the class (the fence language) carries meaning
     defineOptions({ inheritAttrs: false });
     const slots = defineSlots<{ default?(): VNode[] }>();
     const attrs = useAttrs();
 
-    // the class is an array when an MDX author writes class and className together
     const language = () => MarkdownRenderFoundation.getCodeLanguage(normalizeClass(attrs.class));
 
     const nodes = () => slotNodes(slots.default?.() ?? []);
 
-    // a rehype plugin may split the text into elements, which have no source text to highlight
     const isPlainText = () => nodes().every(([node]) => node.type === Text);
 </script>
 

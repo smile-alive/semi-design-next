@@ -4,7 +4,6 @@
 
     type Part = 'default' | 'custom' | 'none';
 
-    // each snippet is passed only when asked for, so absence stays observable; `none` passes null
     let {
         store,
     }: {

@@ -17,9 +17,7 @@
 
     interface TableHeaderRowProps {
         row: TableHeaderCell<ColumnProps>[];
-        /** The header row index, the level of its columns */
         index: number;
-        /** The column tree */
         columns: ColumnProps[];
     }
 

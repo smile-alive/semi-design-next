@@ -21,7 +21,6 @@
         { value: 'PM', text: locale().locale.PM },
     ]);
 
-    // the caller's mode wins over the panel's normal mode, as in the other frameworks
     const mode = $derived(scrollItemProps?.mode ?? 'normal');
 
     const columnClass = (type: ColumnType) => {

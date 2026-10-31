@@ -6,7 +6,6 @@ import type { TooltipProps } from './interface';
 type Attrs = Record<string, unknown>;
 
 export interface TriggerBinding {
-    /** The trigger renders inside a wrapper span that receives the trigger attributes. */
     wrapped: boolean;
     wrapperAttrs: Attrs;
     /** Merged into the child VNode by `<component :is>`; the child's own values win. */
@@ -21,7 +20,6 @@ export function canCarryPopupState(node: VNode) {
     return elementType(node) === 'Button' || elementType(node) === 'IconButton';
 }
 
-/** The popup's open state and whether its node is in the document */
 interface PopupState {
     visible: boolean;
     inserted: boolean;

@@ -2,15 +2,13 @@ import { type VNode, Text, createTextVNode } from 'vue';
 import { toVNodes } from '../_base/read-vnode';
 import slotNodes, { type KeyedNode } from '../_base/slot-nodes';
 
-/** The child nodes of an element whose children are an array */
 export function elementChildren(node: VNode): KeyedNode[] {
     // h() children may hold strings, numbers and nested arrays, which Vue only normalizes on mount
     return slotNodes(Array.isArray(node.children) ? toVNodes(node.children) : []);
 }
 
 /**
- * Slot nodes without the space templates keep at each end, so the full content reads the same as the trimmed text the
- * ellipsis shows before it is measured. New text nodes replace the edges: cached static nodes must not change in place.
+ * New text nodes replace the edges: cached static nodes must not change in place.
  */
 export function trimEdgeText(nodes: KeyedNode[]) {
     if (nodes.length === 0) return nodes;
@@ -25,7 +23,6 @@ export function trimEdgeText(nodes: KeyedNode[]) {
 }
 
 /**
- * The text of slot nodes: text nodes and the text inside elements, formatted piece by piece when `format` is given.
  * Components are not text, so `pure` turns false. The result is trimmed because templates keep one space at each
  * end of the slot content, which JSX drops.
  */

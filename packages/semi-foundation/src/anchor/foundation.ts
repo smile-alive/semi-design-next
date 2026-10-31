@@ -17,7 +17,6 @@ export interface AnchorAdapter<P extends AnchorBaseProps = AnchorBaseProps, S ex
     notifyClick: (e: E, link: string) => void;
 }
 
-/** The props the foundation reads */
 export interface AnchorBaseProps {
     defaultAnchor?: string;
     scrollMotion?: boolean;
@@ -26,7 +25,6 @@ export interface AnchorBaseProps {
     scrollIntoViewOptions?: Options;
 }
 
-/** The state the foundation reads */
 export interface AnchorBaseState {
     activeLink: string;
     links: string[];
@@ -179,7 +177,6 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         this.#debouncedScrollEnd.cancel();
     }
 
-    /** Rebinds scroll listeners when `getContainer` returns a different node */
     handleContainerChange = () => {
         if (this.adapter.getContainer() !== this.#container) {
             this.#unbind();

@@ -1,5 +1,5 @@
 @use 'semi:theme' as *;
-// Spacing
+
 $spacing-table-paddingY: $spacing-base; // 表格空数据占位及虚拟列表分组垂直内边距
 $spacing-table-paddingX: $spacing-base-tight; // 表格空数据占位及虚拟列表分组水平内边距
 $spacing-table_middle-paddingY: $spacing-base-tight; // 中尺寸表格单元格垂直内边距
@@ -26,11 +26,9 @@ $spacing-table_expand_icon-marginRight: 8px; // 行展开按钮右侧外边距
 $spacing-table_panel_operation-paddingX: $spacing-base; // 表格操作栏水平内边距
 $spacing-table_panel_operation-paddingY: $spacing-tight; // 表格操作栏垂直内边距
 
-// Size
 $width-table_base_border: 1px; // 表格单元格分割线宽度
 $width-table_header_border: 1px; // 表格表头分割线宽度
 $width-table_resizer_border: 2px; // 表格拉伸列标示线宽度
-// $radius-table_base: 4px;
 $width-table_column_selection: 48px; // 表格选择列及展开列宽度
 $width-table_column_sorter-icon: 16px; // 表格排序按钮宽度
 $height-table_column_sorter-icon: 16px; // 表格排序按钮高度
@@ -42,7 +40,6 @@ $width-table_react_resizable_handle: 9px; // 表格伸缩列调节热区宽度
 $height-table_pagination_outer_min: 60px; // 表格分页器高度
 $height-table_column_filter_dropdown: 290px; // 表格过滤筛选列表最大高度
 
-// Color no need to change
 $color-table_panel-bg-default: var(--semi-color-primary); // 操作区域样式默认背景颜色
 $color-table_panel-text-default: var(--semi-color-primary-light-active); // 表格操作栏选中项文本颜色
 $color-table-bg-default: var(--semi-color-bg-1); // 表格固定列及吸顶表头背景颜色
@@ -77,7 +74,6 @@ $color-table_placeholder-text-default: var(--semi-color-text-2); // 表格空数
 
 $color-table_cell-bg-hover: var(--semi-color-bg-0); // 让表格在 hover 时正确显示 $color-table_body-bg-hover 颜色，如无必要不要修改
 
-// Other
 $font-table_base-fontSize: 14px; // 表格默认文本字号
 $border-table_base-borderStyle: solid; // 表格描边样式
 $width-table_fixed_shadow: 6px; // 表格固定列滚动阴影宽度

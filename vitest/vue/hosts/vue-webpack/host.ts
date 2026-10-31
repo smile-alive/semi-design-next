@@ -48,7 +48,6 @@ import App from './App.vue';
 createApp(App).mount('#app');
 `;
 
-// Appears only after mount: the server response is an empty #app
 const APP = `<script setup>
     import { onMounted, ref } from 'vue';
     import { Button, Modal } from '@fibrae/semi-ui-vue';
@@ -75,7 +74,6 @@ const pages = [{ name: 'home', path: '/', ready: 'body[data-hydrated]', checks }
 // webpack-dev-server exits when an explicit port is taken
 const dev: ServerStep = { command: ['webpack', 'serve', '--mode', 'development', '--port', '{port}'], pages };
 
-// The built app is static files
 const prod: ServerStep = { command: ['serve', 'dist', '--listen', '{port}', '--no-port-switching'], pages };
 
 export default {

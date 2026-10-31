@@ -26,7 +26,6 @@ export default defineConfig({
         coverage: {
             provider: 'istanbul',
             reportsDirectory: './vitest/coverage',
-            // Each framework module may add per-package thresholds
             ...coverageFiles,
         },
         projects: testProjects,

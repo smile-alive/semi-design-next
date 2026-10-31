@@ -40,7 +40,6 @@ export interface ResizableProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
     onChange?: ResizeCallback;
     onResizeEnd?: ResizeCallback;
     children?: Snippet;
-    /** Content of each enabled handle */
     handle?: Snippet<[ResizableHandleSnippetProps]>;
 }
 
@@ -62,6 +61,5 @@ export interface ResizeItemProps extends Omit<HTMLAttributes<HTMLDivElement>, 'o
 }
 
 export interface ResizeHandlerProps extends HTMLAttributes<HTMLDivElement> {
-    /** Replaces the default grip icon */
     children?: Snippet;
 }

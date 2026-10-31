@@ -557,7 +557,6 @@ describe('AIChatDialogue 内容块', () => {
                 value?: string;
                 children?: HastNode[];
             }
-            // splits the code text into spans, as a highlighter does
             const splitCode = () => (tree: HastNode) => {
                 const walk = (node: HastNode) => {
                     if (node.tagName === 'code') {
@@ -699,7 +698,6 @@ describe('AIChatDialogue 自定义渲染', () => {
     ] as const)('%s snippet 打开与关闭后不残留', (part, selector) => {
         const { container, store } = renderHost();
         const custom = `.custom-${part === 'fullDialogue' ? 'full' : part}`;
-        // the custom node takes the class the snippet receives
         const defaultSelector = `${selector}:not(${custom})`;
         expect(container.querySelectorAll(defaultSelector)).toHaveLength(2);
 

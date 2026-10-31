@@ -7,7 +7,6 @@ const SYSTEM_ZONES = ['Asia/Shanghai', 'UTC', 'America/New_York', 'Europe/London
 type WallTime = [year: number, monthIndex: number, day: number, hours: number, minutes: number];
 type WallTimeCase = [timeZone: string, wall: WallTime, expected: string];
 
-// [target zone, wall time [year, monthIndex, day, hours, minutes], expected instant]
 const REPEATED_WALL_TIMES: WallTimeCase[] = [
     ['America/New_York', [2026, 10, 1, 1, 30], '2026-11-01T05:30:00.000Z'],
     ['Europe/London', [2026, 9, 25, 1, 30], '2026-10-25T00:30:00.000Z'],

@@ -4,7 +4,6 @@ import type { FormApi, FormProps } from './interface.js';
 
 export interface FormContextValue {
     readonly formState: FormState;
-    /** The Form props with their defaults resolved, read by the fields while rendering */
     readonly formProps: FormProps;
     formApi: FormApi;
     bridge: FieldBridge;
@@ -16,7 +15,6 @@ export interface ArrayFieldContextValue {
     readonly values?: Record<string, any>;
 }
 
-/** The ids FormInputGroup adds to each field's own aria references */
 export interface FormInputGroupAria {
     labelledby?: string;
     describedby?: string;

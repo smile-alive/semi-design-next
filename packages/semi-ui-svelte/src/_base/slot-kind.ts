@@ -22,7 +22,6 @@ export function getSlotKind(container: Element): SlotKind | undefined {
     return (node as Element).classList?.contains(`${BASE_CLASS_PREFIX}-icon`) ? 'icon' : 'node';
 }
 
-/** Reports the slot kind of the element's content after mount and whenever its child nodes change */
 export function trackSlotKind(report: (kind?: SlotKind) => void): Attachment<Element> {
     return (container) => {
         const update = () => report(getSlotKind(container));

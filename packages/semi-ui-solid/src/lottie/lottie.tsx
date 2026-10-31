@@ -22,7 +22,6 @@ function Lottie(rawProps: LottieProps) {
 
     let wrapper: HTMLDivElement | undefined;
 
-    // the baseline the next params is compared against, deeply: params is usually a fresh literal
     let committedParams = props.params;
 
     const { foundation } = useFoundation<LottieFoundation<LottieProps, LottieState>, LottieAdapter<LottieProps, LottieState>, LottieProps, LottieState>(
@@ -39,7 +38,6 @@ function Lottie(rawProps: LottieProps) {
         })
     );
 
-    // a named animation is an image; an unnamed one is decoration
     const named = () => Boolean(rest['aria-label'] || rest['aria-labelledby']);
 
     const style = () => {

@@ -58,7 +58,6 @@ export const treeDataWithDisabledLeaf: TreeNodeData[] = [
 
 export const treeDataWithLoad: TreeNodeData[] = [{ label: 'Node 1', value: 'node1', key: 'node1', isLeaf: false }];
 
-// lets the foundation's timers and the effects they schedule run
 export async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));

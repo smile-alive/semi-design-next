@@ -40,7 +40,6 @@ export interface SubNavProps extends ElementProps<'li', 'onClick'> {
     icon?: JSX.Element;
     indent?: boolean | number;
     itemKey?: ItemKey;
-    /** As on NavItemProps */
     level?: number;
     text?: JSX.Element;
     expandIcon?: JSX.Element;
@@ -155,11 +154,9 @@ export interface NavProps extends ElementProps<'nav', 'onClick' | 'onSelect'> {
     onCollapseChange?: (isCollapse: boolean) => void;
     onOpenChange?: (data: OnOpenChangeData) => void;
     onSelect?: (data: OnSelectedData) => void;
-    /** For the entries of `items` */
     renderItemIcon?: (props: NavItemRenderProps) => JSX.Element;
     /** For the entries of `items`; without it the entry's `text` shows */
     renderItemText?: (props: NavItemRenderProps) => JSX.Element;
-    /** For the items made from `items` */
     renderItemToggleIcon?: (props: NavItemRenderProps) => JSX.Element;
     /** For the Subs made from `items`; given, it replaces `expandIcon` */
     renderItemExpandIcon?: (props: NavItemRenderProps) => JSX.Element;

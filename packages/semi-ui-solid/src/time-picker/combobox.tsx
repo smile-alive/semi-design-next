@@ -36,7 +36,6 @@ interface AMPMOptionItem {
     text: string;
 }
 
-/** One time panel: a scroll column each for AM/PM, hours, minutes and seconds */
 export default function Combobox(props: ComboboxProps) {
     const locale = useLocale('TimePicker');
 

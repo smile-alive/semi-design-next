@@ -15,7 +15,6 @@ export interface SwitchState {
     checked?: boolean;
 }
 
-/** The props the foundation reads with getProps */
 export interface SwitchBaseProps extends SwitchCheckedProps {
     loading?: boolean;
 }

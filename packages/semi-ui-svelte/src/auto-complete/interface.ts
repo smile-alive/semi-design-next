@@ -4,15 +4,12 @@ import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { ValidateStatus } from '../input/index.js';
 import type { Position } from '../tooltip/index.js';
 
-/** An object item of `data`; markup for its row goes in the `item` snippet */
 export interface AutoCompleteDataItem {
     [key: string]: any;
     value?: string | number;
     label?: string | number;
     disabled?: boolean;
-    /** On the item's row */
     class?: ClassValue;
-    /** On the item's row */
     style?: string;
 }
 
@@ -24,12 +21,10 @@ export type AutoCompleteSelectedItem<T extends AutoCompleteItems> = T extends st
 export interface AutoCompleteItemSnippetProps<T extends AutoCompleteItems = AutoCompleteItems> {
     /** The data item as given: a string item stays a string */
     item: T;
-    /** Position among the rendered items */
     index: number;
 }
 
 export interface AutoCompleteTriggerSnippetProps {
-    /** The selected item, if any */
     value: AutoCompleteDataItem[];
     inputValue?: string | number;
     placeholder?: string;
@@ -44,7 +39,6 @@ export interface AutoCompleteTriggerSnippetProps {
     onClear: () => void;
     onFocus: (event: FocusEvent) => void;
     onBlur: (event: FocusEvent) => void;
-    /** The aria-* attributes given to the AutoComplete, for the custom trigger's focusable element */
     controlAttrs: Record<string, unknown>;
 }
 
@@ -94,10 +88,7 @@ export interface AutoCompleteProps<T extends AutoCompleteItems = AutoCompleteIte
     suffix?: Snippet;
     insetLabel?: Snippet;
     clearIcon?: Snippet;
-    /** Shown in the list when `data` is empty */
     emptyContent?: Snippet;
-    /** Content of an item row; without it the row shows the item's label */
     item?: Snippet<[AutoCompleteItemSnippetProps<T>]>;
-    /** Replaces the input */
     trigger?: Snippet<[AutoCompleteTriggerSnippetProps]>;
 }

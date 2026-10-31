@@ -1,10 +1,8 @@
 <script lang="ts" module>
     export interface GroupStore {
         formProps?: Record<string, unknown>;
-        /** Spread onto FormInputGroup, including its snippet props */
         groupProps?: Record<string, unknown>;
         fieldA?: Record<string, unknown>;
-        /** The second field is rendered only when given */
         fieldB?: Record<string, unknown>;
     }
 </script>
@@ -17,7 +15,6 @@
     let { store }: { store: GroupStore } = $props();
 </script>
 
-<!-- referenced by the aria-* props the tests give the group and its fields -->
 <span id="own-name">Own</span>
 <span id="own-desc">Note</span>
 <span id="phone-hint">Hint</span>

@@ -21,19 +21,16 @@ const { ITEM_SELECTOR } = strings;
 // elements the browser clicks on both Enter and Space
 const NATIVE_KEY_CLICK_SELECTOR = 'button, summary, input[type="button"], input[type="submit"], input[type="reset"]';
 
-/** The props the foundation reads */
 export interface DropdownBaseProps {
     trigger?: string;
     visible?: boolean;
 }
 
-/** The state the foundation reads */
 export interface DropdownBaseState {
     popVisible: boolean;
 }
 
 export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBaseProps, S extends DropdownBaseState = DropdownBaseState> extends BaseFoundation<DropdownAdapter<P, S>, P, S> {
-    // a menu asked to open from the keyboard gets focus on this item once it is shown
     #focusOnOpen: 'first' | 'last' | null = null;
 
     #focusEdgeItem(popup: HTMLElement | null, edge: 'first' | 'last') {
@@ -135,7 +132,6 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     handleKeyDown = (event: DropdownKeyEvent, isMenuButton = false) => {
         const { target } = event;
         const popup = this.adapter.getPopup();
-        // the trigger is an item of another menu, so this Dropdown opens a submenu
         const isSubmenu = this.adapter.getContext('menuDepth') > 0;
         if (isSubmenu) {
             this.#handleParentItemKeyDown(event, popup);
@@ -150,7 +146,6 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
                     break;
                 }
                 // the browser already turns these keys into a click on a button; clicking here too runs its handlers twice.
-                // A trigger that handled the key itself (Tag, Avatar) has already clicked and prevented the default.
                 if (!event.defaultPrevented && target instanceof HTMLElement && !target.matches(NATIVE_KEY_CLICK_SELECTOR)) {
                     target.click();
                     // otherwise the same Enter also presses a button the click moved focus to

@@ -23,7 +23,6 @@ type Store = {
 const popup = () => document.querySelector<HTMLElement>('.semi-popover-wrapper');
 const shown = () => document.querySelector<HTMLElement>('.semi-popover-wrapper-show');
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));

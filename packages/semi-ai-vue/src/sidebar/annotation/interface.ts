@@ -10,7 +10,6 @@ export interface AnnotationItem {
     logo?: string;
     siteName?: string;
     order?: number;
-    /** The video cover */
     img?: string;
     /** The video length in seconds */
     duration?: number;
@@ -29,7 +28,6 @@ export interface AnnotationContentProps {
 
 export interface AnnotationContentEmits {
     'update:activeKey': [activeKey: string[]];
-    /** A group opened or closed */
     change: [activeKey: string | string[]];
     /** An item was clicked; the native click of the root is not reported apart from it */
     click: [event: MouseEvent, item: AnnotationItem];
@@ -42,14 +40,12 @@ export interface AnnotationHeaderSlotProps {
 
 export interface AnnotationItemSlotProps {
     item: AnnotationItem;
-    /** The position within its group */
     index: number;
 }
 
 export interface AnnotationContentSlots {
     /** A group's header after its icon; the `header` field is its plain-text form */
     header?: (props: AnnotationHeaderSlotProps) => VNode[];
-    /** Replaces the built-in item */
     item?: (props: AnnotationItemSlotProps) => VNode[];
 }
 
@@ -59,7 +55,6 @@ export interface AnnotationEmits extends ContainerEmits, AnnotationContentEmits 
 
 export interface AnnotationSlots {
     title?: () => VNode[];
-    /** Replaces the container header; empty content falls back to the default header */
     header?: () => VNode[];
     /** AnnotationContent's `#header`, renamed beside the container's */
     infoHeader?: (props: AnnotationHeaderSlotProps) => VNode[];

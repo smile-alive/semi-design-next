@@ -18,7 +18,6 @@ interface CodeItemOwnProps {
 export interface CodeItemSnippets {
     /** JsonViewer's snippet, for the tokens matched by `jsonViewerProps.options.customRenderRule` */
     customRender?: Snippet<[JsonViewerCustomRenderArgs]>;
-    /** JsonViewer's snippet, replacing its search button */
     searchButton?: Snippet<[JsonViewerSearchButtonArgs]>;
 }
 
@@ -29,7 +28,6 @@ export type CodeItemData = CodeItemOwnProps & { key?: string };
 
 /** Upload props and listeners for the image slot, which binds them to its Upload; `class` goes on the slot node */
 export interface ImageUploadNodeOptions extends Partial<UploadProps> {
-    /** Attributes of the slot node in the editor's HTML */
     HTMLAttributes?: Record<string, unknown>;
     /** The uploaded image's src from the upload response; by default the response itself or its `src` */
     getUploadImageSrc?: (response: any) => string;
@@ -47,7 +45,6 @@ interface FileItemOwnProps {
 }
 
 export interface FileItemProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>, FileItemOwnProps {
-    /** The document as HTML after an edit */
     onContentChange?: (content: string) => void;
 }
 
@@ -57,7 +54,6 @@ export type FileItemData = FileItemOwnProps & { key?: string };
 interface CollapseListProps<T> {
     /** Bindable; the open panels */
     activeKey?: string | string[];
-    /** A panel opened or closed through its arrow */
     onChange?: (activeKey: string | string[]) => void;
     /** The expand button beside a panel's header; without it the button is not rendered */
     onExpand?: (event: MouseEvent, item: T, mode: string) => void;

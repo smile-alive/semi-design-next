@@ -11,7 +11,6 @@ export interface BannerProps {
 }
 
 export interface BannerSlots {
-    /** Content below the message, in the `-extra` area */
     default?: () => VNode[];
     description?: () => VNode[];
     /** Replaces the icon of the type; an empty slot hides the icon */

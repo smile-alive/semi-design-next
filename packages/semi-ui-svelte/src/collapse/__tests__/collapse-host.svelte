@@ -10,7 +10,6 @@
         accept?: boolean;
         activeKey?: CollapseProps['activeKey'];
         collapse?: Omit<CollapseProps, 'activeKey' | 'onChange' | 'children' | 'expandIcon' | 'collapseIcon'>;
-        // the first panel's own options
         panel?: { disabled?: boolean; extra?: string; showArrow?: boolean; class?: string; style?: string; 'data-testid'?: string };
         icons?: boolean;
         log: string[];

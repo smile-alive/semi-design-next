@@ -5,9 +5,7 @@ import type { ItemKey, Mode, NavClickData, NavOpenChangeData, NavProps, OnSelect
 export interface NavContextValue {
     readonly isCollapsed: boolean;
     readonly mode: Mode;
-    /** True below a Sub: its title and list, inline or in the popup */
     readonly isInSubNav: boolean;
-    /** Nesting depth of the items and Subs rendered at this point, 0 at the top */
     readonly level: number;
     readonly openKeys: ItemKey[];
     readonly openKeysIsControlled: boolean;

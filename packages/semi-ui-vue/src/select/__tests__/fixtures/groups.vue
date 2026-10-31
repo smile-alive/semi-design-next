@@ -4,7 +4,6 @@
 
     interface Group {
         label?: string;
-        /** Renders the title through the `label` slot instead of the prop */
         labelSlot?: boolean;
         attrs?: Record<string, unknown>;
         options: string[];

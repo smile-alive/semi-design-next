@@ -42,20 +42,7 @@ export function createEditorHandlers(onPasteFiles?: (files: File[]) => void) {
 }
 
 /** The attributes of the editable element; only a string `placeholder` is exposed, a function one is not static text */
-export function getEditorAttributes({
-    id,
-    label,
-    placeholder,
-    controls,
-    activeDescendant,
-}: {
-    id?: string;
-    label: string;
-    placeholder?: unknown;
-    /** The list the editor drives while its panel is open */
-    controls?: string;
-    activeDescendant?: string;
-}) {
+export function getEditorAttributes({ id, label, placeholder, controls, activeDescendant }: { id?: string; label: string; placeholder?: unknown; controls?: string; activeDescendant?: string }) {
     return {
         id,
         'aria-label': label,

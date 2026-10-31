@@ -3,7 +3,6 @@ import type { HTMLAttributes } from 'svelte/elements';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { ColProps, RowProps } from '../grid/interface.js';
 
-/** Row and Col layout props shared by every item; `class` and `style` land on each item's Col */
 export interface Grid extends Pick<RowProps, 'align' | 'gutter' | 'justify' | 'type'>, Pick<ColProps, 'span' | 'offset' | 'order' | 'push' | 'pull' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'class' | 'style'> {}
 
 export interface ListItemSnippetProps<T> {
@@ -25,7 +24,6 @@ export interface ListProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, 'oncl
     split?: boolean;
     onClick?: (event: MouseEvent) => void;
     onRightClick?: (event: MouseEvent) => void;
-    /** Renders each entry of `dataSource`, usually a ListItem */
     item?: Snippet<[ListItemSnippetProps<T>]>;
     header?: Snippet;
     footer?: Snippet;

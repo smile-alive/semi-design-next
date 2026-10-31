@@ -4,8 +4,6 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { render } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableHandle } from '..';
 
-/** Shared by the feature test files: mounting a Table with h() and reading its rows */
-
 export const P = `${BASE_CLASS_PREFIX}-table`;
 
 export type Row = Record<string, any>;
@@ -17,7 +15,6 @@ export const getBodyRows = () => queryAll(`.${P}-tbody .${P}-row`);
 export const getHeads = () => queryAll(`.${P}-thead .${P}-row-head`);
 export const rowKeys = () => getBodyRows().map((row) => row.getAttribute('data-row-key'));
 export const cellTexts = (row: Element) => Array.from(row.children, (cell) => cell.textContent);
-/** The text of the first data cell of each body row */
 export const firstCellTexts = () => getBodyRows().map((row) => row.querySelector(`.${P}-row-cell:not(.${P}-column-selection)`)?.textContent);
 export const getFirstCellText = () => firstCellTexts()[0];
 export const getPageItems = () => queryAll(`.${BASE_CLASS_PREFIX}-page .${BASE_CLASS_PREFIX}-page-item`);
@@ -27,7 +24,6 @@ export const getSorters = () => queryAll<HTMLButtonElement>(`.${P}-thead .${P}-c
 export const getFilterButtons = () => queryAll<HTMLButtonElement>(`.${P}-thead .${P}-column-filter`);
 export const getExpandButtons = () => queryAll<HTMLButtonElement>(`.${P}-tbody .${P}-expand-icon`);
 
-/** Table written with h(); `update` merges props, replaces the slots and waits for the render */
 export function mountTable(props: Record<string, unknown>, slots: Slots = {}) {
     const state = shallowReactive({ props, slots });
     const handle = shallowRef<TableHandle | null>(null);

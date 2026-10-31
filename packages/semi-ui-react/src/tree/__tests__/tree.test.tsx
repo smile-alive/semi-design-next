@@ -778,9 +778,6 @@ describe('Tree', () => {
         expect(getSelected()).toHaveLength(0);
     });
 
-    /**
-     * Expansion follows value or treeData changes while expandedKeys is uncontrolled
-     */
     const treeJsonData1 = {
         Node0: {
             'Child Node0-0': '0-0',

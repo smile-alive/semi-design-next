@@ -29,10 +29,8 @@ export interface DatePickerNavigationProps {
     locale: DatePickerLocale;
     monthText?: string;
     density?: DatePickerDensity;
-    /** Whether the two panels switch together (syncSwitchMonth) */
     shouldBimonthSwitch?: boolean;
     panelType?: PanelType;
-    /** id of the month button, which names the month grid */
     titleId?: string;
 }
 
@@ -70,7 +68,6 @@ export interface DatePickerMonthProps {
     hoverDay: string;
     rangeInputFocus: string | boolean;
     focusRecords: FocusRecords;
-    /** id of the element naming the grid */
     labelledby?: string;
 }
 
@@ -238,7 +235,6 @@ export interface DatePickerDateInputSlots {
 }
 
 export interface DatePickerDateInputHandle {
-    /** The single input of the trigger */
     readonly input: DatePickerFocusTarget | null;
     /** The start input of a range trigger, or the first inset date input */
     readonly rangeStart: DatePickerFocusTarget | null;

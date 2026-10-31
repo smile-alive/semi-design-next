@@ -65,7 +65,6 @@ export default function CustomExpandIcon(props: CustomExpandIconProps) {
     );
 }
 
-/** The expand button of a row or, given its key, of a group section, following the table's expansion state */
 export function TableExpandIcon(props: { record: Record<string, any>; isNested?: boolean; groupKey?: string | number }) {
     const table = useTableContext('Table.ExpandIcon');
 

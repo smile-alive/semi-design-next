@@ -26,9 +26,7 @@
     }>();
 
     const emit = defineEmits<{
-        /** The editor exists; emitted before its content is normalized */
         ready: [editor: Editor];
-        /** The content is normalized */
         create: [];
         change: [text: string];
         pasteFiles: [files: File[]];

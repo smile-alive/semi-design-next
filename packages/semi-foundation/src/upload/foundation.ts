@@ -133,17 +133,13 @@ export interface UploadBaseState {
     /** The uid of the item a pending replace will overwrite; the list may change while the user picks the file */
     replaceUid: string;
     cropperVisible: boolean;
-    /** The image file currently being cropped */
     cropperFile: File | null;
-    /** Object URL for the image currently being cropped */
     cropperSrc: string;
-    /** Remaining image files queued for cropping (cropped one at a time) */
     pendingImageFiles: File[];
     /** Non-image files that bypass cropping but are uploaded together */
     nonImageFiles: File[];
     /** Image files already cropped, accumulated until the queue drains */
     croppedFiles: File[];
-    /** The round was started by a replace, so the result replaces one item */
     isReplaceOperation: boolean;
 }
 
@@ -574,10 +570,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         this.adapter.notifyDrop(e, files, fileList);
     }
 
-    /**
-     * Keeps the files accept allows and reports the others. When accept leaves nothing it returns undefined after
-     * calling `reset`: a remounted input fires change again when the same file is picked.
-     */
+    /** When accept leaves nothing it returns undefined after calling `reset`: a remounted input fires change again when the same file is picked */
     #acceptFiles(files: Array<File>, reset?: () => void): Array<File> | undefined {
         const { accept } = this.getProps();
         if (typeof accept === 'undefined') {
@@ -649,7 +642,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         });
     }
 
-    /** Filters by accept, then crops the images (when `crop` is on and allowed) or adds the files to the list */
     #selectFiles(currentFileList: Array<File>, allowCrop: boolean) {
         let files = this.#acceptFiles(currentFileList, () => this.adapter.resetInput());
         if (!files) {
@@ -669,10 +661,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         this.#addSelected(files);
     }
 
-    /**
-     * Pipeline for files that passed accept: transform and assign uid, flag invalid sizes, apply limit, add to the
-     * list; with uploadTrigger 'auto', each file with a valid size then goes through beforeUpload and the upload.
-     */
     #addSelected(selected: Array<File>) {
         const { limit } = this.getProps();
 
@@ -825,12 +813,10 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             croppedFiles: [],
             isReplaceOperation: false,
         });
-        // a remounted input fires onChange again when the same file is picked
         this.adapter.resetInput();
         this.adapter.resetReplaceInput();
     };
 
-    /** Crops the current image, then moves to the next queued one or adds every result once the queue drains */
     confirmCrop = async () => {
         const { cropperFile, cropperSrc, pendingImageFiles, nonImageFiles, croppedFiles, isReplaceOperation } = this.getStates();
         const { crop } = this.getProps();
@@ -879,7 +865,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
     };
 
-    /** The list on screen: the fileList prop when controlled, otherwise the fileList state. */
     getFileList() {
         const props = this.getProps();
         return props.fileList === undefined ? this.getState('fileList') : props.fileList || [];

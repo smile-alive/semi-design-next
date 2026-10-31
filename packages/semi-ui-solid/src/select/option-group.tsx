@@ -6,7 +6,6 @@ export const OPTGROUP = 'Select.OptGroup';
 /** Other attributes land on the group title, which renders only when `label` has content */
 export interface OptionGroupProps {
     [key: string]: unknown;
-    /** `Select.Option`s */
     children?: JSX.Element;
     label?: string | number;
     class?: string;

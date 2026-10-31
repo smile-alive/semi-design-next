@@ -60,7 +60,6 @@
         ...rest
     }: InnerProps = $props();
 
-    // rendered only inside a Form, see field.svelte
     const form = getFormContext() as FormContextValue;
     const arrayField = getArrayFieldContext();
     const group = getFormInputGroupContext();
@@ -98,7 +97,6 @@
     const ownLayout = $derived(!group && !pure);
     const shellLabel = $derived(ownLayout && !noLabel && shownLabelPosition !== 'inset');
 
-    // FormInputGroup adds its ids to the field's own references
     const ownAria = $derived.by((): Record<string, unknown> => {
         if (!group) {
             return rest;

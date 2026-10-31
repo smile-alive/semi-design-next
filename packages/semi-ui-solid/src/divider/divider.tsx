@@ -10,13 +10,9 @@ import useDefaultProps from '../_base/use-default-props';
 const prefixCls = cssClasses.PREFIX;
 
 export interface DividerProps extends ElementProps<'div'> {
-    /** The position of title inside divider */
     align?: 'left' | 'right' | 'center';
-    /** space between divider and surroundings **/
     margin?: number | string;
-    /** Whether line is dashed  */
     dashed?: boolean;
-    /** The direction type of divider */
     layout?: 'horizontal' | 'vertical';
 }
 

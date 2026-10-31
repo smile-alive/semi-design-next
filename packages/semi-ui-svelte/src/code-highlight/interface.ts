@@ -11,6 +11,5 @@ export interface CodeHighlightProps extends HTMLAttributes<HTMLDivElement> {
     lineNumber?: boolean;
     /** Grammars this block needs beyond the registered ones, loaded once into the shared highlighter. Declare it at module level: a new array on every render highlights again */
     languages?: LanguageInput[];
-    /** Overrides the registered themes for this block */
     themes?: CodeHighlightThemes;
 }

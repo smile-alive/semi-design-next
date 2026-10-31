@@ -238,7 +238,6 @@ export interface UploadedImage {
     getUploadImageSrc?: (response: any) => string;
 }
 
-/** Replaces the upload slot with the uploaded image */
 export function insertUploadedImage({ editor, pos, nodeSize, type, response, name, getUploadImageSrc }: UploadedImage) {
     let src: string | undefined;
     if (getUploadImageSrc) {

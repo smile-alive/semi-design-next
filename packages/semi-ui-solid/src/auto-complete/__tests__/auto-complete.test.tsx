@@ -36,7 +36,6 @@ const focusInput = () => getInput().focus();
 const keyNames = { UP: 'ArrowUp', DOWN: 'ArrowDown', ENTER: 'Enter', ESC: 'Escape', TAB: 'Tab' };
 const pressKey = (name: keyof typeof keyNames) => fireEvent.keyDown(getInput(), { key: keyNames[name] });
 const typeText = (value: string) => fireEvent.input(getInput(), { target: { value } });
-// the clear button reacts to mousedown
 const clickClear = () => fireEvent.mouseDown(getClearBtn());
 const expectClosed = () => waitFor(() => expect(getList()).toBeNull());
 
@@ -570,7 +569,6 @@ describe('AutoComplete', () => {
     });
 
     it('在 suffix 内已打开的嵌套 Popover 里按下鼠标不关闭下拉，在外部按下才关闭', async () => {
-        // created inside the render root, so the nested popup is disposed with the test
         render(() => (
             <AutoComplete
                 {...commonProps}

@@ -5,7 +5,6 @@ export interface PreviewContextValue {
     readonly srcList: string[];
     readonly lazyLoad: boolean;
     readonly lazyLoadMargin: string;
-    /** Opens the group preview at `index` */
     open: (index: number) => void;
 }
 

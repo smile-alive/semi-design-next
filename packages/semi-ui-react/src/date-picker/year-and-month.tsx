@@ -33,7 +33,6 @@ function noDisabledDate() {
     return false;
 }
 
-/** The year and month scroll columns, for the month, monthRange and year types and the year switch of a date panel */
 export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
     const yearRef = useRef<ScrollItemHandle>(null);
     const monthRef = useRef<ScrollItemHandle>(null);

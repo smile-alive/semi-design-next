@@ -143,7 +143,6 @@ const clickOption = async (label: string) => userEvent.click(await getOption(lab
 const clickCheckbox = async (label: string) => userEvent.click((await getOption(label)).querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
 const getTagTexts = () => [...document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
 const getSearchText = () => document.querySelector(`.${prefixCls}-search-wrapper span`)?.textContent;
-// The clear button renders once the hover over the trigger has updated the component
 const findClearButton = () =>
     waitFor(() => {
         const button = document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);

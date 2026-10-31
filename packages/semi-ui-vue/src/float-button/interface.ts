@@ -28,7 +28,6 @@ export interface FloatButtonProps {
 }
 
 export interface FloatButtonSlots {
-    /** Custom badge count, in place of `badge.count` */
     badgeCount?: () => VNode[];
     icon?: () => VNode[];
 }
@@ -42,7 +41,6 @@ export interface FloatButtonGroupItem extends Pick<FloatButtonProps, 'badge' | '
     /** Accessible name, required when the item shows only an icon */
     'aria-label'?: string;
     class?: HTMLAttributes['class'];
-    /** Text; richer content is the `content` slot */
     content?: string | number;
     id?: string;
     /** Called before the group's `click` */

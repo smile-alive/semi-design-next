@@ -11,7 +11,6 @@ export interface TimelineItemProps extends ElementProps<'li', 'content' | 'type'
     position?: 'left' | 'right';
 }
 
-/** An item of `dataSource`; nodes for its content, dot, time and extra come from the Timeline render functions */
 export interface Data extends Omit<TimelineItemProps, 'children' | 'dot' | 'extra' | 'time'> {
     content?: string | number;
     time?: string | number;
@@ -23,7 +22,6 @@ export interface TimelineProps extends ElementProps<'ul'> {
     dataSource?: Data[];
     /** Content of each dataSource item; defaults to `item.content` */
     renderContent?: (item: Data, index: number) => JSX.Element;
-    /** Dot of each dataSource item */
     renderDot?: (item: Data, index: number) => JSX.Element;
     /** Time of each dataSource item; defaults to `item.time` */
     renderTime?: (item: Data, index: number) => JSX.Element;

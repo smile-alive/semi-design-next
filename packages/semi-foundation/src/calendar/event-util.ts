@@ -31,7 +31,6 @@ export function getCurrDate() {
     return new Date();
 }
 
-/** A 0-1 fraction of the day or week row as a CSS percentage, capped at 100% */
 export function toPercent(num: number) {
     return `${num < 1 ? num * 100 : 100}%`;
 }
@@ -50,9 +49,6 @@ export function isAllDayEvent(event: EventObject) {
     return 'allDay' in event && event.allDay;
 }
 
-/**
- * Fills a missing start (end - 1h) or end (start + 1h), clamped to the day.
- */
 export function amendEvent(event: EventObject): EventObject | undefined {
     const { start, end } = event;
     if (!start && !end) {
@@ -92,7 +88,6 @@ export function normalizeEvent(event: EventObject): NormalizedEvent | undefined 
     return amendEvent(event) as NormalizedEvent;
 }
 
-/** The max topInd is the row height */
 export function calcRowHeight(events: ParsedRangeEvent[]) {
     const topIndArr = events.map((item) => item.topInd);
     return topIndArr.length ? Math.max(...topIndArr) + 1 : 1;
@@ -130,16 +125,12 @@ export function calcRangeData(value: Date, start: Date, rangeLen: number, mode: 
     });
 }
 
-/**
- * The days of a week as { date, dayString, ind, isToday, isWeekend, weekday }; `monthStart` is for month mode
- */
 export function calcWeekData(value: Date, monthStart: Date | null, mode = 'week', locale: Locale, weekStartsOn: weekStartsOnEnum, today?: Date | number | null) {
     const start = startOfWeek(value, { weekStartsOn });
     const realValue = monthStart || value;
     return calcRangeData(realValue, start, 7, mode, locale, weekStartsOn, today);
 }
 
-/** Splits an all-day event into one event per day it spans */
 export function parseAllDayEvent(event: NormalizedEvent, allDay = true) {
     const { start, end } = event;
     const diff = end ? differenceInCalendarDays(end, start) : 0;
@@ -165,7 +156,6 @@ export function parseEvent(rawEvent: EventObject) {
     return parseAllDayEvent(event);
 }
 
-/** Groups events into a map keyed by the date string of `key`, normalized by `func` */
 export function convertEventsArrToMap(arr: EventObject[], key: 'start' | 'date', func: (val: Date) => Date) {
     return new Map(Object.entries(groupBy(arr, (item) => (func ? func(item[key]) : item[key]).toString())));
 }

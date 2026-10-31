@@ -2,7 +2,6 @@
     import Empty from '../empty.svelte';
     import type { EmptyProps } from '../interface';
 
-    // each snippet is passed only when its flag is on, so absence stays observable
     let {
         store,
     }: {

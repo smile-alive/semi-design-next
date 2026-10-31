@@ -23,7 +23,6 @@
     const clickable = () => hasClickListener(attrs);
 
     const handleClick = (event: MouseEvent) => {
-        // Interactive content in this item's own extra must not also trigger the item
         if (extra.value?.contains(event.target as Node)) return;
         for (const listener of [attrs.onClick].flat() as Array<((event: MouseEvent) => void) | undefined>) {
             listener?.(event);
@@ -38,7 +37,6 @@
             <slot name="dot" />
         </div>
         <div :class="`${prefixCls}-content`">
-            <!-- only a clickable item is a keyboard target; extra and time stay outside -->
             <div v-if="clickable()" :class="`${prefixCls}-content-main`" role="button" tabindex="0" @keydown.self.enter.space.prevent="($event.currentTarget as HTMLElement).click()">
                 <slot />
             </div>

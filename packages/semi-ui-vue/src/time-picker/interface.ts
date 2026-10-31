@@ -25,7 +25,6 @@ export interface TimePickerProps {
     defaultOpen?: boolean;
 
     type?: TimePickerType;
-    /** Defaults to `a h:mm:ss` with `use12Hours`, else `HH:mm:ss` */
     format?: string;
     use12Hours?: boolean;
     hourStep?: number;
@@ -42,7 +41,6 @@ export interface TimePickerProps {
     disabledTime?: (value: (Date | undefined)[], panelType: PanelType) => DisabledTimeFns;
     hideDisabledOptions?: boolean;
 
-    /** Defaults to the locale's placeholder of `type` */
     placeholder?: string;
     rangeSeparator?: string;
     size?: InputSize;
@@ -51,11 +49,9 @@ export interface TimePickerProps {
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;
     insetLabelId?: string;
-    /** Style of the Input's root element */
     inputStyle?: StyleValue;
     /** Focuses the input on mount, which opens the panel */
     autofocus?: boolean;
-    /** Focuses and selects the input once mounted */
     focusOnOpen?: boolean;
     preventScroll?: boolean;
 
@@ -65,7 +61,6 @@ export interface TimePickerProps {
     popupClassName?: string;
     popupStyle?: StyleValue;
     stopPropagation?: boolean;
-    /** Falls back to ConfigProvider's timeZone */
     timeZone?: string | number;
     scrollItemProps?: TimePickerScrollItemProps;
 }
@@ -89,7 +84,6 @@ export interface TimePickerTriggerSlotProps {
     inputValue: string;
     placeholder: string;
     disabled: boolean;
-    /** A shallow copy of the props, without slots and attributes */
     componentProps: TimePickerProps;
     onChange: (inputValue: string) => void;
 }
@@ -124,9 +118,7 @@ export interface TimePickerState {
     invalid: boolean;
 }
 
-/** TimePicker's input; the other Input props and attributes reach the Input as they are */
 export interface TimeInputProps {
-    /** The input text */
     modelValue?: string;
     inputReadOnly?: boolean;
     invalid?: boolean;
@@ -147,14 +139,12 @@ export interface TimeInputSlots {
     clearIcon?: () => VNode[];
 }
 
-/** One time panel, which DatePicker renders as well */
 export interface ComboboxProps {
     timeStampValue?: TimeStamp;
     format?: string;
     /** Prefix of the column class names (`${prefixCls}-list-hour` and so on); without it the columns get none */
     prefixCls?: string;
     use12Hours?: boolean;
-    /** The half day the AM/PM and hour columns show while there is no value */
     defaultIsAM?: boolean;
     hideDisabledOptions?: boolean;
     hourStep?: number;

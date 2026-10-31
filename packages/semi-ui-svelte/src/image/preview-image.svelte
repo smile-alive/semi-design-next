@@ -18,7 +18,6 @@
         disableDownload: boolean;
         crossOrigin?: 'anonymous' | 'use-credentials';
         initialZoom?: number;
-        /** The wheel event that set `zoom`, which the zoom centers on */
         zoomEvent?: WheelEvent;
         onZoom: (zoom: number, reportToUser: boolean) => void;
         onLoad: (src: string) => void;
@@ -33,7 +32,6 @@
     let container = $state.raw<HTMLDivElement | null>(null);
     let image = $state.raw<HTMLImageElement | null>(null);
 
-    // What the foundation compares the next props against
     let previous = untrack(() => ({ src, ratio, rotation, zoom }));
 
     const { foundation, states } = useFoundation<Foundation, Adapter, PreviewImageBaseProps, PreviewImageBaseState>(

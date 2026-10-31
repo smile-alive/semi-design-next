@@ -20,7 +20,6 @@
 
     const locale = useLocale('PinCode');
 
-    // each cell stores its own handle by index
     let inputs = $state<(ReturnType<typeof Input> | undefined)[]>([]);
 
     // The inputs are the focus targets, so their description and state go to each one; on the root a Tooltip's
@@ -30,7 +29,6 @@
     // injected by Form: not DOM attributes, and no single cell carries the code's name
     const dropped = new Set(['name', 'insetLabel', 'insetLabelId']);
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: PinCodeBaseProps = {
         get value() {
             return value;
@@ -107,7 +105,6 @@
         (next) => foundation.updateValueList(Array.from(next || ''))
     );
 
-    /** Focuses the input at `index` (0-based) with the caret after its character */
     export function focus(index: number) {
         inputs[index]?.focus();
         inputs[index]?.setSelectionRange(1, 1);

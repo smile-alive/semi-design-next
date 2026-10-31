@@ -81,7 +81,6 @@ describe('Popconfirm（浏览器）', () => {
         await userEvent.click(screen.getByRole('button', { name: 'trigger' }));
         await userEvent.click(await screen.findByText('此修改将不可逆'));
         expect(onClick).toHaveBeenCalledTimes(1);
-        // Esc still closes the popup after a click on its non-focusable content
         await userEvent.keyboard('{Escape}');
         await waitFor(() => expect(document.querySelector('.test-ok')).toBeNull());
     });

@@ -19,7 +19,6 @@
     type Foundation = SubNavFoundation<SubNavBaseProps>;
     type Adapter = SubNavAdapter<SubNavBaseProps>;
 
-    // the title takes the trigger props of a Dropdown, of a Tooltip, or none
     type TitleTriggerProps = Omit<Partial<DropdownTriggerProps>, 'aria-haspopup' | 'aria-expanded'> & { 'aria-haspopup'?: 'menu' | 'dialog'; 'aria-expanded'?: boolean | 'true' | 'false' };
 
     // Left undefined when not passed, so `wrapper` receives only what the Sub was given
@@ -66,7 +65,6 @@
     const horizontal = $derived(outer.mode === strings.MODE_HORIZONTAL);
     const isPopup = $derived(outer.isCollapsed || horizontal);
 
-    // inside a popup menu the title is the menuitem that opens a submenu
     const menuTitle = $derived(isPopup && outer.isInSubNav);
 
     // A disabled Sub opens no Dropdown; collapsed, it shows its hidden text in a tooltip instead
@@ -119,7 +117,6 @@
     // the title is a button (or a menuitem div); a disabled one stays focusable so that it can be found
     const inlineAttrs = $derived(isPopup ? {} : { 'aria-controls': isOpen ? subListId : undefined, 'aria-expanded': isOpen });
 
-    // the child context: the Sub's own title and list are below it
     setNavContext(
         Object.create(outer, {
             isInSubNav: { get: () => true },

@@ -420,7 +420,6 @@ describe('Button', () => {
             expect(tip).toBeDisabled();
             expect(custom).toBeDisabled();
             expect(tip).toHaveClass(`${prefixCls}-danger-disabled`);
-            // the inner group's type wins for its buttons; the outer disabled still reaches them
             expect(nested).toHaveClass(`${prefixCls}-warning-disabled`);
             expect(own).toHaveClass(`${prefixCls}-secondary-disabled`);
         });

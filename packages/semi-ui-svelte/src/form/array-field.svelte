@@ -51,7 +51,6 @@
         },
     });
 
-    // an outside update (formApi.setValue, setValues) renews updateKey
     const syncKeys = () => {
         const updateKey = bridge.getArrayField(field)?.updateKey;
         if (updateKey !== cachedUpdateKey) {
@@ -75,7 +74,6 @@
             // a new key at the position: regenerating by position would keep the old keys, so fields keep stale values
             keys = keys.toSpliced(added.index, 0, createId());
             cachedUpdateKey = added.updateKey;
-            // the new row's fields take the given row value, as after syncKeys
             shouldUseInitValue = false;
         }
     };

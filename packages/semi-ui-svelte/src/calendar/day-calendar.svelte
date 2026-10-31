@@ -37,7 +37,6 @@
     const allDayCls = `${cssClasses.PREFIX}-all-day`;
     const parsedEvents = $derived(CalendarFoundation.getParseDailyEvents(events, displayValue));
 
-    // every view hands the dateGrid snippet the day's midnight, not the caller's time of day
     const dayStart = $derived(startOfDay(displayValue));
     const isWeekend = $derived(markWeekend && checkWeekend(displayValue));
 </script>
@@ -79,7 +78,6 @@
     <div class={`${prefixCls}-scroll-wrapper`} role="rowgroup">
         <div {@attach grid.observe} bind:this={scroll} class={`${prefixCls}-scroll`} role="row">
             <TimeCol class={`${prefixCls}-sticky-left`} {timeDisplay} />
-            <!-- a new day, a new showCurrTime or a day that becomes today gets a new column, which decides again whether to show the line -->
             {#key `${dayStart.toDateString()}|${showCurrTime}|${today !== null && isSameDay(dayStart, today)}`}
                 <DayCol {dateGrid} displayValue={dayStart} {event} events={parsedEvents.day} {isWeekend} {minEventHeight} onSlotClick={(mouseEvent, value) => onClick?.(mouseEvent, value)} scrollHeight={grid.scrollHeight()} {showCurrTime} />
             {/key}

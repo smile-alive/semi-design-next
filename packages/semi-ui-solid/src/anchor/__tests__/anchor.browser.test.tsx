@@ -370,7 +370,6 @@ describe('Anchor scrollIntoViewOptions（浏览器）', () => {
             </>
         ));
         const box = document.getElementById('box') as HTMLElement;
-        // the target's top inside the visible part of the box
         const offset = () => (document.getElementById('docs') as HTMLElement).getBoundingClientRect().top - box.getBoundingClientRect().top;
         return { box, offset };
     };

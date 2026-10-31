@@ -73,7 +73,6 @@ async function openPreview(index = 0) {
     await waitFor(() => expect(preview()).toBeInTheDocument());
 }
 
-// The preview image is sized once it has loaded, from its natural size and the container
 async function expectPreviewSize(width: number, height: number) {
     await waitFor(() => {
         const style = getComputedStyle(previewImg());

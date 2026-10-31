@@ -330,7 +330,6 @@ describe('Svelte Tabs 折叠（浏览器）', () => {
         const longTitle = 'a very long tab title that is wide enough to stay mostly visible beside the arrows';
         const autoPanes: Pane[] = ['a', 'b', 'c', 'd', 'e'].map((key) => ({ itemKey: key, tab: key === 'e' ? longTitle : `tab-title-${key}`, content: key }));
 
-        // the width the five tabs need side by side, measured without collapsing
         const measure = () => {
             const probe = setup({ type: 'card', style: 'width: 2000px' }, autoPanes);
             const nodes = [...document.querySelectorAll<HTMLElement>(`.${prefix}-tab`)];
@@ -362,10 +361,8 @@ describe('Svelte Tabs 折叠（浏览器）', () => {
                 let changes = 0;
                 const observer = new MutationObserver(() => changes++);
                 observer.observe(getBar(), { attributes: true, attributeFilter: ['class'] });
-                // the last tab is partly clipped: activating it scrolls it into view
                 await userEvent.click(screen.getByRole('tab', { name: /^a very long tab title/ }));
                 await sleep(400);
-                // back at the start every tab is at least 75% visible again
                 await userEvent.click(screen.getByRole('tab', { name: 'tab-title-a' }));
                 await sleep(400);
                 observer.disconnect();

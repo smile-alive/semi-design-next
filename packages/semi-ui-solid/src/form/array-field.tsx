@@ -126,7 +126,6 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
                 // a new key at the position: regenerating by position would keep the old keys, so fields keep stale values
                 setKeys((current) => current.toSpliced(added.index, 0, createId()));
                 cachedUpdateKey = added.updateKey;
-                // the new row's fields take the given row value, as after syncKeys
                 setShouldUseInitValue(false);
             }
         });

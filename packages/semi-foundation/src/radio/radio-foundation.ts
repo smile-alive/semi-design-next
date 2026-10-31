@@ -11,7 +11,6 @@ export interface RadioChangeEvent {
     preventDefault: () => void;
 }
 
-/** What a radio reads from the enclosing RadioGroup */
 export interface RadioGroupView {
     value?: unknown;
     disabled?: boolean;
@@ -29,7 +28,6 @@ export interface RadioContextView {
     radioGroup?: RadioGroupView;
 }
 
-/** The props the foundation reads with getProps */
 export interface RadioBaseProps {
     checked?: boolean;
     defaultChecked?: boolean;
@@ -64,7 +62,6 @@ export interface RadioView {
     prefixCls?: string;
 }
 
-/** The part of the native event the foundation forwards */
 interface RadioSourceEvent {
     stopPropagation: () => void;
     preventDefault: () => void;
@@ -102,7 +99,6 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
         return { checked: typeof props.checked === 'boolean' ? props.checked : Boolean(props.defaultChecked) };
     }
 
-    /** How the radio looks and behaves, from its own props or, inside a group, from the group */
     static deriveView(props: RadioBaseProps, state: RadioBaseState, context?: RadioContextView | null): RadioView {
         const group = context?.radioGroup;
         if (group) {

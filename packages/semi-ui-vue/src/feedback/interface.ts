@@ -54,12 +54,10 @@ export interface FeedbackProps {
     onCancel?: (event: MouseEvent | KeyboardEvent) => Promise<unknown> | void;
 }
 
-/** What a template can pass for `mode="modal"`: the Modal props, which fall through to the Modal. */
 export interface FeedbackModalProps extends Omit<FeedbackProps, 'mode'>, Omit<ModalProps, keyof FeedbackProps> {
     mode: 'modal';
 }
 
-/** What a template can pass for `mode="popup"`: the SideSheet props, which fall through to the SideSheet. */
 export interface FeedbackSideSheetProps extends Omit<FeedbackProps, 'mode'>, Omit<SideSheetProps, keyof FeedbackProps> {
     mode?: 'popup';
 }
@@ -89,7 +87,6 @@ export type FeedbackRadioSlotProps = RadioGroupOptionSlotProps;
 export type FeedbackCheckboxSlotProps = CheckboxGroupOptionSlotProps;
 
 export interface FeedbackSlots {
-    /** Content of type="custom". */
     default?: () => VNode[];
     /** Wraps or replaces the built-in content, whatever the type. */
     content?: (props: FeedbackContentSlotProps) => VNode[];
@@ -114,7 +111,6 @@ export interface FeedbackHandle {
     readonly root: HTMLDivElement | null;
 }
 
-/** Internal props of FeedbackContent */
 export interface FeedbackContentProps {
     type: FeedbackType;
     value: FeedbackValue | null;

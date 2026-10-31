@@ -102,7 +102,6 @@ describe('Svelte MarkdownRender', () => {
         await update({ remarkPlugins: [second] });
         await waitFor(() => expect(second).toHaveBeenCalledTimes(1));
 
-        // an options literal is a new object each time, so it compiles again
         await update({ remarkPlugins: [[second, { a: 1 }]] });
         await waitFor(() => expect(second).toHaveBeenCalledTimes(2));
 

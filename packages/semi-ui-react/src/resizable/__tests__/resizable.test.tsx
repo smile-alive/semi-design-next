@@ -249,7 +249,6 @@ describe('Resizable', () => {
             </div>
         );
         drag(getHandle(container, 'right'), [100, 100], [100, 100]);
-        // 230 is nearer to 300 than to 100
         expect(sizeOf(container).width).toBe('300px');
     });
 

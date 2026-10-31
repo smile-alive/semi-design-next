@@ -75,7 +75,6 @@ function slotProps<P extends object>(value: ResolvedChildren, type: string) {
         return value.props;
     }
     if (isSlotConfig(value)) {
-        // the views read logo and collapseButton through children(), which calls a config's render functions where they are shown
         return value as P;
     }
     return hasContent(value) ? ({ children: value } as P) : undefined;
@@ -138,7 +137,6 @@ export default function Nav(rawProps: NavProps) {
     // remount every row
     const itemsSource = createMemo(() => local.items);
 
-    // the foundation reads the item tree where React hands it the children
     const foundationProps: FoundationProps = mergeProps(props, {
         get children() {
             return tree();
@@ -174,7 +172,6 @@ export default function Nav(rawProps: NavProps) {
     const selectedKeysSource = createMemo(() => local.selectedKeys);
     const openKeysSource = createMemo(() => local.openKeys);
 
-    // a props object resolves to itself
     const headerContent = children(() => local.header as JSX.Element);
     const footerContent = children(() => local.footer as JSX.Element);
     const headerSlot = createMemo(() => slotProps<NavHeaderProps>(headerContent(), NAV_HEADER));
@@ -238,7 +235,6 @@ export default function Nav(rawProps: NavProps) {
         removeOpenKey: foundation.removeOpenKey,
     };
 
-    // React compares the previous props; the snapshot is what the foundation reads of them
     const snapshot = () => ({ items: itemsSource(), children: tree(), selectedKeys: local.selectedKeys, openKeys: local.openKeys });
 
     let previous = untrack(snapshot);
@@ -253,7 +249,6 @@ export default function Nav(rawProps: NavProps) {
             const subItems: NavItemType[] | undefined = item.items;
             if (Array.isArray(subItems) && subItems.length) {
                 return (
-                    // the Nav-level subDropdownProps is a default: a config's own wins
                     <SubNav
                         subDropdownProps={local.subDropdownProps}
                         {...(pickConfigProps(item, SUB_CONFIG_KEYS) as SubNavProps)}
@@ -305,7 +300,6 @@ export default function Nav(rawProps: NavProps) {
             {/* APG disclosure navigation: a landmark holding lists of links and buttons */}
             <nav
                 {...rest}
-                // the Provider's children memo tracks this read; a spread signal object would rebuild every item
                 ref={untrack(() => mergeRefs(local.ref, (node: HTMLElement) => (navElement = node)))}
                 class={clsx(prefix, local.class, {
                     [`${prefix}-collapsed`]: isCollapsed(),

@@ -6,7 +6,6 @@
     import type { MarkdownRenderElementProps } from '../interface.js';
     import { isPlainText } from './tree.js';
 
-    // only the class (the fence language) carries meaning
     const { children, node, class: className }: { class?: string } & MarkdownRenderElementProps = $props();
 
     const language = $derived(MarkdownRenderFoundation.getCodeLanguage(className));

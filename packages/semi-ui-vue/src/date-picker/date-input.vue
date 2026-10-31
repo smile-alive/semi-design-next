@@ -87,7 +87,6 @@
     const allowRangeClear = computed(() => DateInputFoundation.getRangeClearVisible({ ...rangeParts.value, showClear: props.showClear, disabled: props.disabled, showClearIgnoreDisabled: props.showClearIgnoreDisabled }));
 
     const insetValue = computed(() =>
-        // a missing insetInputValue makes the foundation format `value` instead
         DateInputFoundation.getInsetInputValue(props, {
             value: props.value,
             insetInputValue: props.insetInputValue as InsetInputValue,

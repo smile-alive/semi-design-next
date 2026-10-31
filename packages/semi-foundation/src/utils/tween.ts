@@ -14,7 +14,6 @@ export interface TweenOptions {
     onEnd?: () => void;
 }
 
-/** Animates a number from `from` to `to` once per frame; returns a function that cancels it */
 export function tween({ from, to, duration, easing = linear, onFrame, onEnd }: TweenOptions) {
     let start: number | undefined;
     let frame = requestAnimationFrame(function step(now) {

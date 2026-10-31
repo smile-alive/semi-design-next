@@ -1,6 +1,5 @@
 import type { Exemption } from './framework.ts';
 
-// Exemptions for files that belong to no framework (the foundations, scripts)
 export const exemptions: Exemption[] = [
     // DOM methods go only to expect()/vi.mocked(), or are kept to restore or run with .call(this); none runs unbound
     {

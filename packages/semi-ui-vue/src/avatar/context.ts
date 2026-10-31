@@ -17,8 +17,6 @@ export interface AvatarGroupItem {
     layer?: symbol;
 }
 
-/** Reaches avatars that Tooltip or Popover wrap, which the group's direct-child prop binding cannot touch. */
 export const [provideAvatarGroupContext, useAvatarGroupContext] = createContext<ComputedRef<AvatarGroupItem> | undefined>('AvatarGroup', { optional: true });
 
-/** Set around AvatarGroup's `more` slot so the avatar in it becomes a list item styled like the group. */
 export const [provideAvatarGroupMoreContext, useAvatarGroupMoreContext] = createContext<ComputedRef<AvatarGroupMoreItem> | undefined>('AvatarGroupMore', { optional: true });

@@ -71,7 +71,6 @@
         }
     };
 
-    /** Focuses the radio of this star that stands for `starValue`: the first half for a half value */
     export function starFocus(starValue: number) {
         const radio = RatingFoundation.isFirstRadio(starValue, index, allowHalf) ? first : second;
         radio?.focus({ preventScroll });

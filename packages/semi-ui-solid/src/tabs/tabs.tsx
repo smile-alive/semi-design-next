@@ -112,7 +112,6 @@ export default function Tabs(rawProps: TabsProps) {
             setNewActiveKey: (key) => base.setState({ activeKey: key }),
             notifyTabDelete: (key) => base.getProps().onTabClose?.(key),
         }),
-        // direction: RTL swaps ArrowLeft and ArrowRight
         { context: config }
     );
 
@@ -122,7 +121,6 @@ export default function Tabs(rawProps: TabsProps) {
 
     const content = createMemo(() => resolved.toArray().filter((node) => local.keepDOM || !isPane(node) || node.props.itemKey === activeKey()));
 
-    // with tabList there is no TabPane, so the content area is the single panel of the active tab, if there is one
     const tabListPanel = createMemo(() => {
         const key = activeKey();
         return isTabListMode() && key !== null && panes().some((pane) => pane.itemKey === key) ? { id: getPanelId(tabsId, key), labelledby: getTabId(tabsId, key) } : undefined;
@@ -138,7 +136,6 @@ export default function Tabs(rawProps: TabsProps) {
         tabbableKey: TabsFoundation.getTabbableKey(panes(), activeKey()),
     }));
 
-    // the pane's tab and icon are read where the bar inserts them, so each place gets its own node
     const paneProps = (item: PlainTab) => tokens().find((token) => token.props.itemKey === item.itemKey)?.props;
 
     const paneTab: TabRender = (item) => paneProps(item)?.tab;
@@ -218,7 +215,6 @@ export default function Tabs(rawProps: TabsProps) {
         handleKeyDown: foundation.handleKeyDown,
     };
 
-    // called only from the For callback, so the For item owns the pane and everything it renders
     const renderPane = (token: Token<TabPaneProps>) => {
         const [pane, paneRest] = splitProps(token.props, ['children', 'class', 'closable', 'disabled', 'icon', 'itemKey', 'tab', 'tabIndex']);
         const key = () => pane.itemKey ?? '';
@@ -274,7 +270,6 @@ export default function Tabs(rawProps: TabsProps) {
 
     useWatch(() => local.activeKey, foundation.syncActiveKey);
 
-    // panes can leave after mount: an uncontrolled key no longer among them moves to the first enabled one
     useWatch(paneKeys, () => foundation.handleTabPanesChange(panes()));
 
     return (

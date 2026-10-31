@@ -7,7 +7,6 @@
 
     interface StepButtonProps {
         kind: 'prev' | 'next';
-        /** The locale name, kept unless the content is a lone text */
         label: string;
         disabled: boolean;
         text?: string | Snippet;
@@ -20,7 +19,6 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // A string names the button from the first frame; a snippet only after its rendered content is known
     const namedByContent = $derived(typeof text === 'string' ? text !== '' : text !== undefined && contentKind === 'text');
 
     // A snippet exposes nothing to read before it renders, so a lone text names the button from the second frame on;

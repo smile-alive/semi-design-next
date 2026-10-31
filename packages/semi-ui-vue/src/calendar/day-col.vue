@@ -62,7 +62,6 @@
                 <div :class="`${prefixCls}-curr-line`" :style="{ top: `${state.currPos * props.scrollHeight}px` }" />
             </template>
             <div :class="[`${prefixCls}-skeleton`, { [`${cssClasses.PREFIX}-weekend`]: props.isWeekend }]">
-                <!-- pointer-only time slots: the cell has no keyboard way to pick a time, as in React -->
                 <template v-for="hour in hours" :key="hour">
                     <div :class="`${prefixCls}-skeleton-row-line`" :data-time="`${pad(hour)}:00:00`" @click="slotClick($event, hour, 0)" />
                     <div :data-time="`${pad(hour)}:30:00`" @click="slotClick($event, hour, 30)" />

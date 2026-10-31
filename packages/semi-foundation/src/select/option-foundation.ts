@@ -10,8 +10,8 @@ export interface BasicOptionProps {
 }
 
 /**
- * What Select keeps for an option. `data` is what the host read from an optionList item or an option child, and is
- * all that callbacks and the selections receive; the rest is Select's own state, kept off the user's object.
+ * `data` is what the host read from an optionList item or an option child, and is all that callbacks and the
+ * selections receive; the rest is Select's own state, kept off the user's object.
  */
 export interface OptionRecord<D = BasicOptionProps, G = { label?: unknown }> {
     data: D;
@@ -36,7 +36,6 @@ export interface OptionRun<R extends { group?: unknown }> {
     rows: { option: R; index: number }[];
 }
 
-/** Splits the visible options into runs of adjacent options of the same group, keeping each option's visible index */
 export function getOptionRuns<R extends { group?: { key?: unknown } }>(options: readonly R[]) {
     const runs: OptionRun<R>[] = [];
     options.forEach((option, index) => {

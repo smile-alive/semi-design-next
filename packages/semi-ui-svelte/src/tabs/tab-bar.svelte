@@ -14,7 +14,6 @@
     import TabItem from './tab-item.svelte';
 
     interface Props extends TabBarProps {
-        /** The Tabs' aria-label and aria-labelledby, which name the tablist */
         tablistAttrs: Record<string, unknown>;
         tab?: Snippet<[TabsTabSnippetProps]>;
         icon?: Snippet<[TabsTabSnippetProps]>;
@@ -111,7 +110,6 @@
         onVisibleTabsChange?.(visibleState);
     };
 
-    // the remembered width no longer applies once tabs are added, removed or retitled
     watch(
         () => labelsSignature,
         () => {
@@ -134,7 +132,6 @@
         untrack(checkOverflow);
     });
 
-    // fallback for when ResizeObserver does not report after mount
     onMount(() => {
         const frame = requestAnimationFrame(checkOverflow);
         return () => cancelAnimationFrame(frame);

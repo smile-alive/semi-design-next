@@ -16,7 +16,6 @@
         rowKey: BaseRowKeyType;
         expanded: boolean;
         displayNone?: boolean;
-        /** The index of the row in a virtualized body */
         virtualIndex?: number;
         style?: CSSProperties;
     }>();

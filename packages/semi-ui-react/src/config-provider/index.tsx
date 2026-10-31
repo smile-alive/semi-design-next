@@ -7,18 +7,9 @@ import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
 import { ConfigContext, useConfigContext, type ContextValue } from './context';
 
 export interface ConfigProviderProps extends Omit<ContextValue, 'onBreakpoint' | 'screens'> {
-    /**
-     * Custom responsive map configuration
-     * If not provided, default responsive map will be used
-     */
     responsiveMap?: ResponsiveMap;
 
-    /**
-     * Enable responsive observing in ConfigProvider.
-     *
-     * - When false (default): ConfigProvider will not register any matchMedia listeners.
-     * - When true: listeners will be registered lazily on first subscription.
-     */
+    /** When false (default), no matchMedia listener is registered; when true, listeners register lazily on first subscription */
     responsiveObserve?: boolean;
 }
 
@@ -71,7 +62,6 @@ function ConfigProvider(props: ConfigProviderProps) {
 }
 
 export default Object.assign(ConfigProvider, {
-    /** Default responsive map */
     defaultResponsiveMap,
 });
 

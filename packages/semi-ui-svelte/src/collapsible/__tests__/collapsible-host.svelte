@@ -2,7 +2,6 @@
     import Collapsible from '../collapsible.svelte';
     import type { CollapsibleProps } from '../interface';
 
-    // the test drives every prop through one store, so a change flows in as a prop update
     let { store }: { store: CollapsibleProps & { text?: string; height?: string; inside?: boolean; log?: string[] } } = $props();
 </script>
 

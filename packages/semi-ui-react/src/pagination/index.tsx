@@ -141,7 +141,6 @@ export default function Pagination(rawProps: PaginationProps) {
         })
     );
 
-    // the small size has no size changer
     const sizeChangerShown = Boolean(props.showSizeChanger && props.size !== 'small');
     const sizeChangerKeepsSinglePage = sizeChangerShown && Boolean(props.hideOnSinglePage);
     const { currentPage, pageSize, quickJumpPage } = state;

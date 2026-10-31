@@ -261,7 +261,6 @@ describe('Svelte SideSheet 取消', () => {
         await pressEsc();
         expect(cancel).toHaveBeenCalledTimes(1);
 
-        // a leaked layer is observed through its side effects
         const page = document.body.appendChild(document.createElement('main'));
         update(store, { visible: true });
         expect(page.inert).toBe(true);

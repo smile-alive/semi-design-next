@@ -5,7 +5,6 @@ import { Typeahead } from '@fibrae/semi-foundation/utils/a11y';
 import type { FlattenNode, TreeNodeProps } from './interface';
 
 export interface TreeKeyboardOptions {
-    /** The visible rows the keys act on */
     rows: FlattenNode[];
     /** The row the keys act on before any is chosen, -1 for none */
     defaultIndex: number;
@@ -19,7 +18,6 @@ export interface TreeKeyboardOptions {
     editing?: (event: React.KeyboardEvent) => boolean;
     /** Enter, and Space outside a text field: selects, or checks in a multiple tree */
     select: (event: React.KeyboardEvent, row: TreeNodeProps) => void;
-    /** Expands or collapses the row */
     expand: (event: React.KeyboardEvent, row: TreeNodeProps) => void;
     /** Scrolls the row the keys moved to into view; a deferred list may render it at another index */
     reveal: (key: string) => void;
@@ -35,12 +33,7 @@ export interface TreeKeyboard {
     handleKeyDown: (event: React.KeyboardEvent) => boolean;
 }
 
-/**
- * The keys of an APG tree view: focus stays on the tree (or the combobox) and the keys act on the active row, which
- * aria-activedescendant points at. Up and Down move between the visible rows, Home and End go to the ends, Right
- * and Left open, enter, close or leave a branch (swapped in RTL), typed characters move to the next row starting
- * with them.
- */
+/** The keys of an APG tree view: focus stays on the tree (or the combobox) and the keys act on the active row, which aria-activedescendant points at */
 export default function useTreeKeyboard({ rows, defaultIndex, rowProps, hasLoadData, rtl, editing, select, expand, reveal }: TreeKeyboardOptions): TreeKeyboard {
     const [typeahead] = useState(() => new Typeahead());
     const [keyboardKey, setKeyboardKey] = useState<string | null>(null);

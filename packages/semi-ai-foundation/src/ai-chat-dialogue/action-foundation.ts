@@ -21,7 +21,6 @@ export function getDialogueActionFlags({ role, status = STATUS.COMPLETED, isLast
     };
 }
 
-/** The props the foundation reads with getProps */
 export interface DialogueActionBaseProps {
     message?: Message;
 }

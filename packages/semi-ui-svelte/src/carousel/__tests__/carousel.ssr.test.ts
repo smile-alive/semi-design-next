@@ -7,7 +7,6 @@ import type { CarouselSlideContext } from '../interface';
 
 const slide = createRawSnippet<[CarouselSlideContext<unknown>]>((context) => ({ render: () => `<h3>index${context().item}</h3>` }));
 
-// the server build has no DOM, so the slide wrappers are read from the markup
 const slideTags = (body: string) => body.match(/<div [^>]*id="[^"]*-slide-\d"[^>]*>/g) ?? [];
 
 describe('Svelte Carousel 服务端渲染', () => {

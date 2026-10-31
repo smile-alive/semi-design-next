@@ -24,11 +24,9 @@ export type FeedbackRadioSnippetProps = RadioGroupOptionSnippetParams;
 export type FeedbackCheckboxSnippetProps = CheckboxGroupOptionSnippetProps;
 
 export interface FeedbackContentSnippetProps {
-    /** The built-in content; place it with `{@render content()}`. */
     content: Snippet;
 }
 
-/** The props Feedback declares itself; the rest go to the Modal or SideSheet of the current mode. */
 export interface FeedbackOwnProps {
     mode?: FeedbackMode;
     type?: FeedbackType;
@@ -47,11 +45,9 @@ export interface FeedbackOwnProps {
     /** Cancel button, close button, Escape and (modal) mask click. `visible` becomes false once it returns, or once a returned Promise fulfills. */
     onCancel?: (event: MouseEvent | KeyboardEvent) => unknown;
     onValueChange?: (value: FeedbackValue) => void;
-    /** Called once the dialog has closed. */
     afterClose?: () => void;
     /** Popup only. */
     afterVisibleChange?: (visible: boolean) => void;
-    /** Content of type="custom". */
     children?: Snippet;
     /** Wraps or replaces the built-in content, whatever the type. */
     content?: Snippet<[FeedbackContentSnippetProps]>;
@@ -60,7 +56,6 @@ export interface FeedbackOwnProps {
     closeIcon?: Snippet;
     /** Modal only. A snippet replaces the default header; null renders no header. */
     header?: Snippet | null;
-    /** Modal only. */
     icon?: Snippet;
     /** Modal only. `modal` is the role="dialog" element; place it with `{@render modal()}`. */
     modal?: Snippet<[{ modal: Snippet }]>;
@@ -70,12 +65,10 @@ export interface FeedbackOwnProps {
     checkboxExtra?: Snippet<[FeedbackCheckboxSnippetProps]>;
 }
 
-/** What a template can pass for `mode="modal"`: the Modal props. */
 export interface FeedbackModalProps extends Omit<FeedbackOwnProps, 'mode'>, Omit<ModalProps, keyof FeedbackOwnProps> {
     mode: 'modal';
 }
 
-/** What a template can pass for `mode="popup"`: the SideSheet props. */
 export interface FeedbackSideSheetProps extends FeedbackOwnProps, Omit<SideSheetProps, keyof FeedbackOwnProps> {
     mode?: 'popup';
 }
@@ -86,7 +79,6 @@ export interface FeedbackSideSheetProps extends FeedbackOwnProps, Omit<SideSheet
  */
 export type FeedbackProps = FeedbackOwnProps & Omit<ModalProps, keyof FeedbackOwnProps> & Omit<SideSheetProps, keyof FeedbackOwnProps>;
 
-/** Internal props of FeedbackContent */
 export interface FeedbackContentProps extends Pick<FeedbackOwnProps, 'children' | 'radioLabel' | 'radioExtra' | 'checkboxLabel' | 'checkboxExtra'> {
     type: FeedbackType;
     value: FeedbackValue | null;

@@ -36,7 +36,6 @@ export interface DropdownMenuContext extends DirectionContext {
     getPopupId?: () => string;
 }
 
-/** The adapter of a foundation that reads DropdownMenuContext */
 export interface DropdownContextAdapter<P = object, S = object> extends DefaultAdapter<P, S, DropdownMenuContext> {}
 
 /**
@@ -72,7 +71,6 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
         const items = this.#getItems(menu);
         const index = items.findIndex((item) => item.contains(target));
         const isRtl = this.adapter.getContext('direction') === 'rtl';
-        // a top-level menu is at depth 1
         const isSubmenu = this.adapter.getContext('menuDepth') > 1;
 
         switch (event.key) {

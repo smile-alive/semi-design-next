@@ -134,7 +134,6 @@ describe('Grid 浏览器', () => {
         });
 
         describe('响应式 gutter 对象在各断点下的实际值', () => {
-            // breakpoints: xs <576, sm >=576, md >=768, lg >=992, xl >=1200, xxl >=1600
             const gutter = { xs: 4, md: 16, xl: 24 };
 
             it.each([

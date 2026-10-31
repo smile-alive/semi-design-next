@@ -130,7 +130,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const visible = createMemo(() => Boolean(props.visible));
     const currentIndex = createMemo(() => PreviewInnerFoundation.getCurrentIndex(props, state()));
 
-    // the popup is not inserted until it is mounted and visible, so the slots below are created only then
     const shown = createMemo(() => mounted() && visible());
 
     // by content: a group builds a new list on every change, which must not restart the delay
@@ -165,7 +164,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const hideCls = () => (state().viewerVisible ? '' : `${previewPrefixCls}-hide`);
 
-    // one function for the whole show: the listener added on show is the one removed on hide
     const handleKeyDown = (e: KeyboardEvent) => foundation.handleKeyDown(e);
 
     const handlePrev = () => foundation.handleSwitchImage('prev');
@@ -192,7 +190,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         });
     });
 
-    // a non-modal preview leaves focus the user moved elsewhere where it is
     createEffect(
         on(
             visible,

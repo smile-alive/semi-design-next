@@ -10,7 +10,6 @@ import ProbeControl from './probe-control.svelte';
 
 const textbox = () => screen.getByRole('textbox');
 
-/** One FormField named `name` (unless the props say otherwise); `rerender` replaces its props */
 function renderField(fieldProps: Record<string, unknown>, formProps: Record<string, unknown> = {}, component: unknown = MountChangeControl) {
     const view = renderForm(formProps, [{ type: 'field', props: { field: 'name', component, ...fieldProps } }]);
     return {

@@ -68,7 +68,6 @@ describe('Svelte dragMove（浏览器）', () => {
         await expect.element(element).toHaveStyle({ position: 'absolute' });
 
         drag(element, [100, 100], [900, 900], 'mouse');
-        // the box is 200 × 100 and the element 80 × 40
         await expectLeftTop(element, 120, 60);
 
         drag(element, [100, 100], [-900, -900], 'mouse');

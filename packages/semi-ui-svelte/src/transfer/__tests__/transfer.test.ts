@@ -65,7 +65,6 @@ async function settle() {
 
 const renderTransfer = (props: TransferProps = {}) => render(Transfer, { props });
 
-// the case fixture hosts the props in a store, so a test can change them after the mount
 function mount(props: TransferProps = {}, extra: Partial<Case> = {}) {
     const store = createStore<Case>({ props, handle: {}, ...extra });
     render(TransferCase, { props: { store } });
@@ -628,7 +627,6 @@ describe('Svelte Transfer 行为', () => {
 
     it('筛选框容器是带名称的原生 search 元素', () => {
         renderTransfer({ dataSource: defaultItems });
-        // dom-testing-library has no implicit role for the native <search> element
         const search = document.querySelector('search');
         expect(search).toHaveAttribute('aria-label', zh_CN.Transfer.filter);
         expect(search).not.toHaveAttribute('role');

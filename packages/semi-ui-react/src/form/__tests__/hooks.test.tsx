@@ -119,7 +119,6 @@ describe('Form hooks 与 HOC', () => {
         expect(getInput('name')).toHaveValue('semi');
 
         const setValue = vi.fn<FormApi['setValue']>();
-        // Only setValue is needed, so the partial api is cast
         const override = { setValue } as unknown as FormApi;
         const { unmount } = render(
             <Form>

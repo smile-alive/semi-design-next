@@ -8,7 +8,6 @@ const elementsOf = (node?: MarkdownElement) => [node?.props.children].flat().fil
 function parseTable(content: unknown): { columns: ColumnProps[]; dataSource: { key: string }[] } {
     const sections = [content].flat().filter(isMarkdownElement);
     const thead = sections.find((node) => node.type === 'thead');
-    // a custom rehype plugin can put a tr directly under the table
     const tbodyRows = sections.flatMap((node) => (node.type === 'tbody' ? elementsOf(node) : node.type === 'tr' ? [node] : []));
     // rehype-raw puts every row of a thead-less table in the tbody, so the first row is the header
     const [headRow, ...bodyRows] = thead ? [elementsOf(thead)[0], ...tbodyRows] : tbodyRows;

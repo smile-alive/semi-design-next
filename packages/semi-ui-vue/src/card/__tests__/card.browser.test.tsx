@@ -61,7 +61,6 @@ describe('Card 阴影（浏览器）', () => {
         const card = container.firstElementChild as Element;
         expect(shadowOf(card)()).toBe('none');
         await userEvent.hover(card);
-        // box-shadow transitions in, so poll until it has started
         await expect.poll(shadowOf(card)).not.toBe('none');
     });
 });

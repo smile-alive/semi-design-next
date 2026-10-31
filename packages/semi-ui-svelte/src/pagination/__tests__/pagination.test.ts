@@ -30,7 +30,6 @@ const getPageTexts = (container: Element) =>
         .slice(1, -1)
         .map((item) => item.textContent?.trim());
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));
@@ -60,7 +59,6 @@ async function chooseSize(label: string) {
     await click(await screen.findByRole('option', { name: label }));
 }
 
-// Pagination with a reactive props object; the callbacks are spies
 function setup(props: PaginationProps = {}, extra: { locale?: typeof zh_CN; direction?: 'ltr' | 'rtl' } = {}) {
     const onChange = vi.fn<(page: number, size: number) => void>();
     const onPageChange = vi.fn<(page: number) => void>();
@@ -495,7 +493,6 @@ describe('Svelte Pagination 受控值（pageSize）', () => {
         const { store } = setupModes('pageSize', 'uncontrolled');
         await chooseSize('每页条数：20');
         await waitFor(() => expect(selection()).toBe('每页条数：20'));
-        // page 5 of 10 per page starts at item 41, which is on page 3 of 20 per page
         expect(active()).toBe('3');
         expect(store.log).toContain('size 20');
     });

@@ -36,7 +36,6 @@
         }
     };
 
-    // everOpened: whether the panel has been open since its body appeared; it resets with the body, as Collapsible's own latch does
     $effect.pre(() => {
         const next = CollapseFoundation.isEverOpened({ hasBody, active, everOpened });
         if (next !== everOpened) {

@@ -19,7 +19,6 @@ import type { HeaderCell } from './table-header';
 export interface TableHeaderRowProps {
     row: HeaderCell[];
     index: number;
-    /** All columns of the table, which the cells of this row are a level of */
     columns: ColumnProps[];
 }
 
@@ -34,7 +33,6 @@ function titleNode(title: ColumnProps['title'], parts: ColumnTitleProps): JSX.El
     return typeof title === 'function' ? title(parts) : title;
 }
 
-/** How the header cell of a column sorts and filters, decided as React Table does */
 function useColumnFlags(column: () => ColumnProps) {
     const table = useTableContext('Table.HeaderCell');
 
@@ -52,10 +50,6 @@ function useColumnFlags(column: () => ColumnProps) {
     return { hasSorter, hasFilter, needsTitle, query, clickToSort, showSortTip, sortOrder, filteredValue };
 }
 
-/**
- * The title of a column with sorting, filtering or useFullRender: the sorter and filter beside the title, or a
- * useFullRender title function given them as parts
- */
 function ColumnTitle(props: { column: ColumnProps; flags: ReturnType<typeof useColumnFlags> }) {
     const table = useTableContext('Table.HeaderCell');
 
@@ -116,7 +110,6 @@ function ColumnTitle(props: { column: ColumnProps; flags: ReturnType<typeof useC
 
     const selectionNode = () => <TableSelection inHeader />;
 
-    // the parts are render functions, so one the title function leaves out is never created
     const titleParts: ColumnTitleProps = {
         selection: selectionNode,
         get sorter() {
@@ -152,7 +145,6 @@ function HeaderCellView(props: { cell: HeaderCell; cellIndex: number; rowIndex: 
 
     const flags = useColumnFlags(column);
 
-    // called again when the column changes
     const custom = createMemo(() => {
         const col = column();
         const onHeaderCell = col.onHeaderCell;
@@ -214,7 +206,6 @@ function HeaderCellView(props: { cell: HeaderCell; cellIndex: number; rowIndex: 
         const sticky = getHeaderStickyOffset(column(), props.slicedColumns, props.headWidths, isRTL());
         const position: JSX.CSSProperties | undefined = sticky ? { position: 'sticky', [sticky.side]: toCssLength(sticky.offset) } : undefined;
         const align = textAlign() ? { 'text-align': textAlign() } : undefined;
-        // headerStyle is the default for every header cell; the column's onHeaderCell style overrides it
         return mergeStyles(table.props.headerStyle, custom().style, align, position);
     };
 

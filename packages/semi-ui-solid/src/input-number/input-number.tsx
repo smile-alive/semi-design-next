@@ -18,7 +18,6 @@ import { useSpecialTrigger } from '../tooltip/context';
 
 export type { ScientificNotationConfig };
 
-/** What changed the value: typing, a step button or key, or the blur that reformats the text */
 export type InputNumberChangeEvent = InputChangeEvent | PointerEvent | InputElementEvent<KeyboardEvent> | FocusEvent;
 
 /** `class`, `style` and `ref` go to the root; other attributes go to the native input */
@@ -98,7 +97,6 @@ export default function InputNumber(rawProps: InputNumberProps) {
 
     const inGroup = group?.layer === layer ? group : undefined;
 
-    // see Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
         get size() {
             return rawProps.size ?? inGroup?.view().size ?? defaulted.size ?? strings.DEFAULT_SIZE;

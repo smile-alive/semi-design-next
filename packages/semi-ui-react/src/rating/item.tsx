@@ -32,11 +32,9 @@ export interface RatingItemProps extends BaseProps {
     character: React.ReactNode;
     disabled: boolean;
     count: number;
-    /** the unit named after n stars: singular for 1, plural otherwise */
     unitOf: (n: number) => string;
     size: number | ArrayElement<typeof strings.SIZE_SET>;
     'aria-describedby'?: React.AriaAttributes['aria-describedby'];
-    /** A radio of this star got focus; `index` is this star's index */
     onFocus?: (e: React.FocusEvent, index: number) => void;
     preventScroll?: boolean;
     ref?: React.Ref<RatingItemHandle>;

@@ -5,7 +5,6 @@
     import type { PaginationProps } from '../interface';
     import Pagination from '../pagination.svelte';
 
-    // `props` is a reactive object, so a test changes the pager's props by writing its fields
     let { store }: { store: { props: PaginationProps; locale?: Locale; direction?: 'ltr' | 'rtl' } } = $props();
 </script>
 

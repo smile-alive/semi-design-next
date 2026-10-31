@@ -12,13 +12,11 @@ export interface UserGuideAdapter<P extends UserGuideBaseProps = UserGuideBasePr
     enabledBodyScroll: () => void;
 }
 
-/** The props the foundation reads */
 export interface UserGuideBaseProps {
     current?: number;
     steps: unknown[];
 }
 
-/** The state the foundation reads */
 export interface UserGuideBaseState {
     current: number;
 }

@@ -2,47 +2,19 @@
 
 import { type IPosition, Position } from './position';
 
-/**
- * A range in the editor. This interface is suitable for serialization.
- */
 export interface IRange {
-    /**
-     * Line number on which the range starts (starts at 1).
-     */
+    /** Line and column numbers start at 1. */
     readonly startLineNumber: number;
-    /**
-     * Column on which the range starts in line `startLineNumber` (starts at 1).
-     */
     readonly startColumn: number;
-    /**
-     * Line number on which the range ends.
-     */
     readonly endLineNumber: number;
-    /**
-     * Column on which the range ends in line `endLineNumber`.
-     */
     readonly endColumn: number;
 }
 
-/**
- * A range in the editor. (startLineNumber,startColumn) is <= (endLineNumber,endColumn)
- */
+/** (startLineNumber,startColumn) is always <= (endLineNumber,endColumn) */
 export class Range {
-    /**
-     * Line number on which the range starts (starts at 1).
-     */
     readonly startLineNumber: number;
-    /**
-     * Column on which the range starts in line `startLineNumber` (starts at 1).
-     */
     readonly startColumn: number;
-    /**
-     * Line number on which the range ends.
-     */
     readonly endLineNumber: number;
-    /**
-     * Column on which the range ends in line `endLineNumber`.
-     */
     readonly endColumn: number;
 
     constructor(startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number) {
@@ -63,9 +35,7 @@ export class Range {
         return new Range(start.lineNumber, start.column, end.lineNumber, end.column);
     }
 
-    /**
-     * Test if the two ranges are intersecting. If the ranges are touching it returns true.
-     */
+    /** Touching ranges count as intersecting. */
     static areIntersecting(a: IRange, b: IRange) {
         if (a.endLineNumber < b.startLineNumber || (a.endLineNumber === b.startLineNumber && a.endColumn <= b.startColumn)) {
             return false;
@@ -78,10 +48,6 @@ export class Range {
         return true;
     }
 
-    /**
-     * A reunion of the two ranges.
-     * The smallest position will be used as the start point, and the largest one as the end point.
-     */
     static plusRange(a: IRange, b: IRange) {
         let startLineNumber: number;
         let startColumn: number;
@@ -113,24 +79,14 @@ export class Range {
         return new Range(startLineNumber, startColumn, endLineNumber, endColumn);
     }
 
-    /**
-     * Return the start position (which will be before or equal to the end position)
-     */
     static getStartPosition(range: IRange) {
         return new Position(range.startLineNumber, range.startColumn);
     }
 
-    /**
-     * A reunion of the two ranges.
-     * The smallest position will be used as the start point, and the largest one as the end point.
-     */
     plusRange(range: IRange) {
         return Range.plusRange(this, range);
     }
 
-    /**
-     * Return the start position (which will be before or equal to the end position)
-     */
     getStartPosition() {
         return Range.getStartPosition(this);
     }

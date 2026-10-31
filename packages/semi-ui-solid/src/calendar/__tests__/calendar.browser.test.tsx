@@ -118,7 +118,6 @@ describe('Calendar（浏览器）', () => {
 
         await userEvent.click(screen.getByText('日视图'));
         expect(eventItems()).toContain('7月23日 8:32');
-        // Event blocks may cover the time slot, the click only needs to reach the slot's handler
         await userEvent.click(timeSlot('01:30:00'), { force: true });
         expect(screen.getByText('当前点击的日期是23号')).toBeInTheDocument();
 

@@ -20,12 +20,9 @@ export interface TableCellProps {
     lastFixedLeft?: boolean;
     fixedRight?: number | false;
     firstFixedRight?: boolean;
-    /** The columns from this one to the table's end, itself included */
     columnsToEnd?: number;
-    /** The tree level the content is indented by */
     indent?: number;
     column?: ColumnProps;
-    /** The cell shows its row's expand button before the content */
     showExpandIcon?: boolean;
     /** The expand button of the row, for the first data cell of an expandable row */
     renderExpandIcon?: () => JSX.Element;
@@ -33,7 +30,6 @@ export interface TableCellProps {
     width?: string | number;
     height?: string | number;
     hovered?: boolean;
-    /** The cell of a group section row */
     isSection?: boolean;
 }
 
@@ -125,7 +121,6 @@ export default function TableCell(props: TableCellProps) {
         });
     };
 
-    // called again when the column, the record or the index changes; only a shown cell creates its content
     const renderContent = () => {
         const col = column();
         const record = props.record ?? {};

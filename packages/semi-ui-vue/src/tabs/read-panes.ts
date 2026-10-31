@@ -4,13 +4,11 @@ import { childSlots, normalizeVNodeProps, toVNodes as toNodes } from '../_base/r
 import slotNodes from '../_base/slot-nodes';
 import type { OverflowItem, PlainTab } from './interface';
 
-/** A tab as the bar renders it: its data plus the slots holding the markup of its tab and icon */
 export interface TabEntry extends PlainTab {
     tabSlot?: () => VNode[];
     iconSlot?: () => VNode[];
 }
 
-/** A tab of the collapsed bar */
 export type BarItem = TabEntry & OverflowItem;
 
 export const isTabPane = (node: VNode) => elementType(node) === 'Tabs.TabPane';

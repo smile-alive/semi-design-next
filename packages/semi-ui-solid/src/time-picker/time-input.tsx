@@ -21,7 +21,6 @@ export interface TimeInputProps extends Omit<InputProps, 'value' | 'defaultValue
 type Foundation = TimeInputFoundation<TimeInputProps, Record<string, never>, FocusEvent>;
 type Adapter = TimeInputAdapter<TimeInputProps, Record<string, never>, FocusEvent>;
 
-/** The Input that TimePicker shows as its trigger; keeps the caret in place while the text is re-formatted */
 export default function TimeInput(props: TimeInputProps) {
     const [local, rest] = splitProps(props, ['prefixCls', 'inputReadOnly', 'validateStatus', 'value', 'invalid', 'focusOnOpen', 'onChange', 'onFocus', 'onBlur', 'inputRef', 'prefix', 'insetLabel']);
 

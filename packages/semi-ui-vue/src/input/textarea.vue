@@ -70,7 +70,6 @@
     const clearButton = useTemplateRef('clearButton');
     const lineLayout = shallowRef({ width: 0, height: 0 });
 
-    // see input.vue
     const draft = shallowRef<string>();
 
     // only `looks.disabled` is used: a TextArea has no size

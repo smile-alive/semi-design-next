@@ -18,13 +18,10 @@ export interface TagInputProps {
     /** The tags, for `v-model`; `null` means controlled with no tags */
     modelValue?: string[] | null;
     defaultValue?: string[];
-    /** The input text, for `v-model:inputValue` */
     inputValue?: string;
     inputValueModifiers?: ModelModifiers;
     disabled?: boolean;
-    /** Maximum length of one tag */
     maxLength?: number;
-    /** Maximum number of tags */
     max?: number;
     maxTagCount?: number;
     showRestTagsPopover?: boolean;
@@ -41,7 +38,6 @@ export interface TagInputProps {
     size?: TagInputSize;
     split?: (originString: string, separators: string | string[] | null) => string[];
     validateStatus?: TagInputValidateStatus;
-    /** Focuses the input on mount, with `preventScroll` */
     autofocus?: boolean;
     preventScroll?: boolean;
 }
@@ -64,7 +60,6 @@ export interface TagInputEmits {
     focus: [event: FocusEvent];
     /** focusout on the root, once when the focus leaves the whole TagInput */
     blur: [event: FocusEvent];
-    /** keydown in the input, after the TagInput handled it */
     keydown: [event: KeyboardEvent];
 }
 

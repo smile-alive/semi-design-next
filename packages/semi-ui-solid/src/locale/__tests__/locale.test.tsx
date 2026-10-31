@@ -150,7 +150,6 @@ describe('locale', () => {
     });
 
     it('缺少 dateFnsLocale 时保持 undefined 交给 date-fns 默认语言，不借用 zh_CN', () => {
-        // Runtime locale packs may omit dateFnsLocale, which date-fns explicitly accepts.
         const locale = { ...en_US, dateFnsLocale: undefined } as unknown as Locale;
         const onSeen = vi.fn<(value: AnyResult) => void>();
         render(() => (

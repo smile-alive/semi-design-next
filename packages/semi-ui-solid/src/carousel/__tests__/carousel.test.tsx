@@ -14,7 +14,6 @@ type OnChange = (index: number, preIndex: number) => void;
 
 const contentStyle = { display: 'flex', 'justify-content': 'center', 'align-items': 'center', color: '#fff', background: 'lightBlue' };
 
-/** Renders slides for the given labels; `set` swaps the Carousel props and `setLabels` the slides */
 function setup(initial: CarouselProps = {}, initialLabels = ['index0', 'index1', 'index2']) {
     const [props, setProps] = createSignal(initial);
     const [labels, setLabels] = createSignal(initialLabels);

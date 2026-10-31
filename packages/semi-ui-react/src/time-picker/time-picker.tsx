@@ -114,7 +114,6 @@ export interface TimePickerTriggerRenderProps {
  */
 export type TimePickerProps = TimePickerCommonProps & ({ type?: 'time'; onChange?: (value: Date, str: string) => void } | { type: 'timeRange'; onChange?: (value: Date[], str: string[]) => void });
 
-/** The methods on a TimePicker ref */
 export interface TimePickerHandle {
     /** Focuses the input, which opens the panel; `preventScroll` applies */
     focus: () => void;

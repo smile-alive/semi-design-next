@@ -45,7 +45,6 @@ export interface ModalProps extends Omit<FoundationModalProps, 'className' | 'st
      * keeps the button loading until it settles; any other return is ignored, such as a setter's.
      */
     onCancel?: (e: MouseEvent | KeyboardEvent) => unknown;
-    /** A returned Promise keeps the button loading until it settles; any other return is ignored */
     onOk?: (e: MouseEvent) => unknown;
     /** Role of the dialog element, `dialog` by default; the confirm dialogs use `alertdialog` */
     role?: 'dialog' | 'alertdialog';
@@ -144,7 +143,6 @@ export default function Modal(rawProps: ModalProps) {
 
     const visible = createMemo(() => Boolean(local.visible));
 
-    // showing reaches the DOM at once; hiding waits for the leave animation (reported at once without motion)
     const hidden = createMemo(() => (visible() ? false : displayNone()));
     const everShown = createMemo((shown: boolean) => shown || visible(), false);
 

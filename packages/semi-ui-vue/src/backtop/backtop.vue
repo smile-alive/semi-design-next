@@ -56,7 +56,6 @@
         { props: { target: () => target.value } }
     );
 
-    // While cached, a target change must not bind the scroll listener.
     const { isDeactivated } = useKeepAliveFoundation(foundation);
 
     const throttledClick = computed(() => throttle((event: MouseEvent) => foundation.onClick(event), props.duration));

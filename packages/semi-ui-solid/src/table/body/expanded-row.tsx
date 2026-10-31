@@ -9,7 +9,6 @@ import BaseRow from './base-row';
 export interface TableExpandedRowProps {
     cellWidths: number[];
     class?: string;
-    /** The leaf columns of the table, which the expanded content spans */
     columns: ColumnProps[];
     expanded?: boolean;
     expandedRowRender?: ExpandedRowRender<any>;
@@ -23,7 +22,6 @@ export interface TableExpandedRowProps {
 export default function TableExpandedRow(props: TableExpandedRowProps) {
     const table = useTableContext('Table.ExpandedRow');
 
-    // called again when the record, its index or its expanded state change
     const cell = createMemo(() => {
         const render = props.expandedRowRender;
         const record = props.record ?? {};

@@ -39,7 +39,6 @@ const defaultProps = {
     maxItemCount: 4,
 } satisfies Partial<BreadcrumbProps>;
 
-// stands for the ellipsis area in the list of what is shown
 const MORE = Symbol('more');
 
 const isRenderable = (node: unknown) => node != null && typeof node !== 'boolean' && node !== '';

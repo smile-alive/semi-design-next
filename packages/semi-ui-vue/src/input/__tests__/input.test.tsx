@@ -28,7 +28,6 @@ function expectMouseDownPrevented(el: Element) {
     el.dispatchEvent(event);
     expect(event.defaultPrevented).toBe(true);
 }
-// A function ref receives the handle that defineExpose builds
 function renderWithHandle(props: InputProps & Record<string, unknown> = {}) {
     const refFn = vi.fn<(handle: InputHandle | null) => void>();
     const Host = (hostProps: Record<string, unknown>) => <Input {...hostProps} ref={(value) => refFn(value as InputHandle | null)} />;

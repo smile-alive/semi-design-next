@@ -581,7 +581,6 @@ describe('Dropdown 行为', () => {
                 </Dropdown.Menu>
             </>
         );
-        // the Dropdown's showTick (false by default) wins over the item's
         expect(item('inside')).not.toHaveClass('semi-dropdown-item-withTick');
         expect(item('outside')).toHaveClass('semi-dropdown-item-withTick');
         expect(item('outside').querySelector('.semi-icon-tick')).not.toBeNull();

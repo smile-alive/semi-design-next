@@ -108,7 +108,6 @@ export interface RowSelectionProps<R extends Record<string, any> = Record<string
     selectedRowKeys?: (string | number)[];
     defaultSelectedRowKeys?: (string | number)[];
     width?: number | string;
-    /** Clicking a row toggles its selection */
     clickRow?: boolean;
     checkRelation?: CheckRelation;
     onChange?: RowSelectionOnChange<R>;
@@ -132,7 +131,6 @@ export interface ResizableProps<R extends Record<string, any> = Record<string, a
     onResize?: TableResizeFn<R>;
     onResizeStart?: TableResizeFn<R>;
     onResizeStop?: TableResizeFn<R>;
-    /** Added to the column's class while it is resized */
     handlerClassName?: string;
 }
 /** The returned fields are merged into the column */
@@ -155,7 +153,6 @@ export type TableVirtualizedItemSize = number | TableVirtualizedItemSizeFn;
 export interface TableVirtualizedProps {
     /** Row height in pixels; 53, 45 or 37 by size when absent */
     itemSize?: TableVirtualizedItemSize;
-    /** Rows rendered above and below the visible area */
     overscanCount?: number;
 }
 export type TableVirtualized = boolean | TableVirtualizedProps;
@@ -200,14 +197,11 @@ export interface TableProps<R extends Record<string, any> = Record<string, any>>
     expandAllGroupRows?: boolean;
     expandAllRows?: boolean;
     expandCellFixed?: ColumnFixed;
-    /** `false` hides the expand buttons */
     expandIcon?: boolean;
     expandedRowKeys?: (string | number)[];
     expandRowByClick?: boolean;
-    /** Plain text; the `#footer` slot takes precedence */
     footer?: string;
     groupBy?: TableGroupBy<R>;
-    /** The column config of a group section's single cell */
     groupSectionColumn?: (groupKey: string | number, group: (string | number)[]) => Omit<ColumnProps<R>, 'title' | 'children' | 'dataIndex'>;
     headerStyle?: CSSProperties;
     hideExpandedColumn?: boolean;
@@ -220,13 +214,11 @@ export interface TableProps<R extends Record<string, any> = Record<string, any>>
     rowExpandable?: TableRowExpandable<R>;
     rowKey?: TableRowKey<R>;
     rowSelection?: boolean | RowSelectionProps<R>;
-    /** Hovering a cell with rowSpan highlights every row it spans */
     rowSpanHover?: boolean;
     scroll?: TableScroll;
     showHeader?: boolean;
     size?: TableSize;
     sticky?: TableSticky;
-    /** Plain text; the `#title` slot takes precedence */
     title?: string;
     virtualized?: TableVirtualized;
     onGroupedRow?: (record: { groupKey: string | number; records: R[] }, index: number) => TableRowAttrs;
@@ -288,7 +280,6 @@ export interface TableHeaderCellSlotProps<R extends Record<string, any> = Record
 }
 
 export interface TableTitleSlotProps<R extends Record<string, any> = Record<string, any>> {
-    /** The records of the current page */
     pageData: R[];
 }
 
@@ -309,7 +300,6 @@ export interface TableSortIconSlotProps<R extends Record<string, any> = Record<s
 }
 
 export interface TableFilterIconSlotProps<R extends Record<string, any> = Record<string, any>> {
-    /** The column has a filtered value applied */
     filtered: boolean;
     column: ColumnProps<R>;
 }
@@ -337,9 +327,7 @@ export interface TableFilterDropdownItemSlotProps<R extends Record<string, any> 
     /** The value the menu shows: the temporary one in confirm mode */
     filteredValue: any[];
     filterMultiple: boolean;
-    /** The depth of the menu the item sits in, 0 for the top menu */
     level: number;
-    /** Toggles the item; bind it to the item's click */
     onChange: (event: MouseEvent) => void;
 }
 
@@ -351,7 +339,6 @@ export interface TableSelectionCellSlotProps<R extends Record<string, any> = Rec
     inHeader: boolean;
     disabled?: boolean;
     indeterminate: boolean;
-    /** The default checkbox */
     originNode: VNode;
     /** Row cells only */
     onSelectRow?: (selected: boolean, event: Event) => void;
@@ -373,7 +360,6 @@ export interface TableSlots<R extends Record<string, any> = Record<string, any>>
     default?: () => VNode[];
     /** The content of a data cell; empty output shows the value */
     cell?: (props: TableCellSlotProps<R>) => VNode[];
-    /** The title of a column header; empty output shows `column.title` */
     headerCell?: (props: TableHeaderCellSlotProps<R>) => VNode[];
     title?: (props: TableTitleSlotProps<R>) => VNode[];
     footer?: (props: TableTitleSlotProps<R>) => VNode[];
@@ -382,17 +368,13 @@ export interface TableSlots<R extends Record<string, any> = Record<string, any>>
     /** The content of an expanded row; empty output leaves the row out */
     expandedRow?: (props: TableExpandedRowSlotProps<R>) => VNode[];
     groupSection?: (props: TableGroupSectionSlotProps) => VNode[];
-    /** The sort icon of a column; empty output shows the default arrows */
     sortIcon?: (props: TableSortIconSlotProps<R>) => VNode[];
-    /** The content of a column's filter button; empty output shows the default icon */
     filterIcon?: (props: TableFilterIconSlotProps<R>) => VNode[];
     /** The filter panel of a column with `filterDropdown: true`; empty output shows the filter menu */
     filterDropdown?: (props: TableFilterDropdownSlotProps<R>) => VNode[];
-    /** An item of a filter menu; empty output shows the default item */
     filterDropdownItem?: (props: TableFilterDropdownItemSlotProps<R>) => VNode[];
     /** A selection cell, header and rows; empty output shows the default checkbox */
     selectionCell?: (props: TableSelectionCellSlotProps<R>) => VNode[];
-    /** The icon of an expand button; empty output shows the default icon */
     expandIcon?: (props: TableExpandIconSlotProps) => VNode[];
     /** Replaces the pagination info and Pagination; empty output shows them */
     pagination?: (props: TablePaginationSlotProps) => VNode[];
@@ -400,7 +382,6 @@ export interface TableSlots<R extends Record<string, any> = Record<string, any>>
 
 /** The slots a `Table.Column` takes for its own column, before the Table's slots of the same name */
 export interface TableColumnSlots<R extends Record<string, any> = Record<string, any>> {
-    /** Nested `Table.Column` children, grouped under this column's header */
     default?: () => VNode[];
     cell?: (props: TableCellSlotProps<R>) => VNode[];
     title?: (props: TableHeaderCellSlotProps<R>) => VNode[];

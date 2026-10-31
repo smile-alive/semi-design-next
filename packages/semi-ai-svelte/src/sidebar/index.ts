@@ -8,7 +8,6 @@ import FileItem from './widget/file-item.svelte';
 export { Annotation } from './annotation/index.js';
 export { MCPConfigure } from './mcp-configure/index.js';
 
-// Svelte components are functions, so the parts attach to the component itself
 export const Sidebar: typeof SidebarBase & {
     FileContent: typeof FileContent;
     CodeContent: typeof CodeContent;

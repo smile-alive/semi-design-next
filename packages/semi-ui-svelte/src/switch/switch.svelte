@@ -21,7 +21,6 @@
 
     let root = $state<HTMLDivElement>();
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: SwitchBaseProps = {
         get checked() {
             return checked;
@@ -38,7 +37,6 @@
         (base) => ({
             setChecked: (next) => base.setState({ checked: next }),
             notifyChange: (next, event) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 checked = next;
                 onChange?.(next, event);
             },
